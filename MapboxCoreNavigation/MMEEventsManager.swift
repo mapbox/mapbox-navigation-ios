@@ -11,63 +11,6 @@ extension MMEEventsManager {
     public static var unrated: Int { return -1 }
 }
 
-extension UIApplicationState {
-    var telemetryString: String {
-        get {
-            switch self {
-            case .active:
-                return "Foreground"
-            case .inactive:
-                return "Inactive"
-            case .background:
-                return "Background"
-            }
-        }
-    }
-}
-
-extension AVAudioSession {
-    var audioType: String {
-        if isOutputBluetooth() {
-            return "bluetooth"
-        }
-        if isOutputHeadphones() {
-            return "headphones"
-        }
-        if isOutputSpeaker() {
-            return "speaker"
-        }
-        return "unknown"
-    }
-    
-    func isOutputBluetooth() -> Bool {
-        for output in currentRoute.outputs {
-            if [AVAudioSessionPortBluetoothA2DP, AVAudioSessionPortBluetoothLE].contains(output.portType) {
-                return true
-            }
-        }
-        return false
-    }
-    
-    func isOutputHeadphones() -> Bool {
-        for output in currentRoute.outputs {
-            if [AVAudioSessionPortHeadphones, AVAudioSessionPortAirPlay, AVAudioSessionPortHDMI, AVAudioSessionPortLineOut].contains(output.portType) {
-                return true
-            }
-        }
-        return false
-    }
-    
-    func isOutputSpeaker() -> Bool {
-        for output in currentRoute.outputs {
-            if [AVAudioSessionPortBuiltInSpeaker, AVAudioSessionPortBuiltInReceiver].contains(output.portType) {
-                return true
-            }
-        }
-        return false
-    }
-}
-
 extension UIDevice {
     @nonobjc var machine: String {
         get {

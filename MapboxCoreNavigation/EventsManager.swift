@@ -49,33 +49,32 @@ open class EventsManager: NSObject, RouteControllerEventsDelegate {
         }
     }
     
-    func navigationCancelEvent(rating potentialRating: Int? = nil, comment: String? = nil) -> [String: Any] {
+    func navigationCancelEvent(rating potentialRating: Int? = nil, comment: String? = nil) -> EventDetails {
         let rating = potentialRating ?? MMEEventsManager.unrated
-        var eventDictionary = EventDetails.defaultEvents(routeController: routeController)
-        eventDictionary["event"] = MMEEventTypeNavigationCancel
-        eventDictionary["arrivalTimestamp"] = sessionState.arrivalTimestamp?.ISO8601 ?? NSNull()
+        var event = EventDetails.defaultEvents(routeController: routeController)
+        event.event = MMEEventTypeNavigationCancel
+        event.arrivalTimestamp = sessionState.arrivalTimestamp
         
         let validRating: Bool = (rating >= MMEEventsManager.unrated && rating <= 100)
         assert(validRating, "MMEEventsManager: Invalid Rating. Values should be between \(MMEEventsManager.unrated) (none) and 100.")
-        guard validRating else { return eventDictionary }
-        eventDictionary["rating"] = rating
+        guard validRating else { return event }
         
-        if comment != nil {
-            eventDictionary["comment"] = comment
-        }
-        return eventDictionary
+        event.rating = rating
+        event.comment = comment
+        
+        return event
     }
     
-    func navigationDepartEvent() -> [String: Any] {
-        var eventDictionary = EventDetails.defaultEvents(routeController: routeController)
-        eventDictionary["event"] = MMEEventTypeNavigationDepart
-        return eventDictionary
+    func navigationDepartEvent() -> EventDetails {
+        var event = EventDetails.defaultEvents(routeController: routeController)
+        event.event = MMEEventTypeNavigationDepart
+        return event
     }
     
-    func navigationArriveEvent() -> [String: Any] {
-        var eventDictionary = EventDetails.defaultEvents(routeController: routeController)
-        eventDictionary["event"] = MMEEventTypeNavigationArrive
-        return eventDictionary
+    func navigationArriveEvent() -> EventDetails {
+        var event = EventDetails.defaultEvents(routeController: routeController)
+        event.event = MMEEventTypeNavigationArrive
+        return event
     }
     
     func navigationFeedbackEventWithLocationsAdded(event: CoreFeedbackEvent) -> [String: Any] {
@@ -86,56 +85,60 @@ open class EventsManager: NSObject, RouteControllerEventsDelegate {
         return eventDictionary
     }
     
-    func navigationFeedbackEvent(type: FeedbackType, description: String?) -> [String: Any] {
-        var eventDictionary = EventDetails.defaultEvents(routeController: routeController)
-        eventDictionary["event"] = MMEEventTypeNavigationFeedback
+    func navigationFeedbackEvent(type: FeedbackType, description: String?) -> EventDetails {
+        var event = EventDetails.defaultEvents(routeController: routeController)
+        event.event = MMEEventTypeNavigationFeedback
         
-        eventDictionary["userId"] = UIDevice.current.identifierForVendor?.uuidString
-        eventDictionary["feedbackType"] = type.description
-        eventDictionary["description"] = description
+        event.userId = UIDevice.current.identifierForVendor?.uuidString
+        event.feedbackType = type.description
+        event.description = description
         
-        eventDictionary["step"] = routeController.routeProgress.currentLegProgress.stepDictionary
-        eventDictionary["screenshot"] = captureScreen(scaledToFit: 250)?.base64EncodedString()
+        // TODO: add step = stepDictionary to EventDetails
+        //eventDictionary["step"] = routeController.routeProgress.currentLegProgress.stepDictionary
+        event.screenshot = captureScreen(scaledToFit: 250)?.base64EncodedString()
         
-        return eventDictionary
+        return event
     }
     
-    func navigationRerouteEvent(eventType: String = MMEEventTypeNavigationReroute) -> [String: Any] {
+    func navigationRerouteEvent(eventType: String = MMEEventTypeNavigationReroute) -> EventDetails {
         let timestamp = Date()
         
-        var eventDictionary = EventDetails.defaultEvents(routeController: routeController)
-        eventDictionary["event"] = eventType
+        var event = EventDetails.defaultEvents(routeController: routeController)
+        event.event = eventType
+        event.secondsSinceLastReroute = sessionState.lastRerouteDate != nil ? round(timestamp.timeIntervalSince(sessionState.lastRerouteDate!)) : -1
         
-        eventDictionary["secondsSinceLastReroute"] = sessionState.lastRerouteDate != nil ? round(timestamp.timeIntervalSince(sessionState.lastRerouteDate!)) : -1
-        eventDictionary["step"] = routeController.routeProgress.currentLegProgress.stepDictionary
+        // TODO: Fix
+        //eventDictionary["step"] = routeController.routeProgress.currentLegProgress.stepDictionary
         
         // These are placeholders until the route controller's RouteProgress is updated after rerouting
-        eventDictionary["newDistanceRemaining"] = -1
-        eventDictionary["newDurationRemaining"] = -1
-        eventDictionary["newGeometry"] = nil
-        eventDictionary["screenshot"] = captureScreen(scaledToFit: 250)?.base64EncodedString()
+        event.newDistanceRemaining = -1
+        event.newDurationRemaining = -1
+        event.newGeometry = nil
+        event.screenshot = captureScreen(scaledToFit: 250)?.base64EncodedString()
         
-        return eventDictionary
+        return event
     }
 }
 
 extension EventsManager {
     
     func sendDepartEvent() {
-        manager.enqueueEvent(withName: MMEEventTypeNavigationDepart, attributes: navigationDepartEvent())
+        guard let attributes = try? navigationDepartEvent().asDictionary() else { return }
+        manager.enqueueEvent(withName: MMEEventTypeNavigationDepart, attributes: attributes)
         manager.flush()
     }
     
     
     func sendArriveEvent() {
-        manager.enqueueEvent(withName: MMEEventTypeNavigationArrive, attributes: navigationArriveEvent())
+        guard let attributes = try? navigationArriveEvent().asDictionary() else { return }
+        manager.enqueueEvent(withName: MMEEventTypeNavigationArrive, attributes: attributes)
         manager.flush()
     }
     
     func sendCancelEvent(rating: Int? = nil, comment: String? = nil) {
         // TODO: Fix routeController is nilled out too early
         guard routeController != nil else { return }
-        let attributes = navigationCancelEvent(rating: rating, comment: comment)
+        guard let attributes = try? navigationCancelEvent(rating: rating, comment: comment).asDictionary() else { return }
         manager.enqueueEvent(withName: MMEEventTypeNavigationCancel, attributes: attributes)
         manager.flush()
     }
@@ -156,17 +159,15 @@ extension EventsManager {
     }
     
     func enqueueFeedbackEvent(type: FeedbackType, description: String?) -> UUID {
-        let eventDictionary = navigationFeedbackEvent(type: type, description: description)
+        let eventDictionary = try! navigationFeedbackEvent(type: type, description: description).asDictionary()
         let event = FeedbackEvent(timestamp: Date(), eventDictionary: eventDictionary)
-        
         outstandingFeedbackEvents.append(event)
-        
         return event.id
     }
     
     func enqueueRerouteEvent() -> String {
         let timestamp = Date()
-        let eventDictionary = navigationRerouteEvent()
+        let eventDictionary = try! navigationRerouteEvent().asDictionary()
         
         sessionState.lastRerouteDate = timestamp
         sessionState.numberOfReroutes += 1
@@ -193,7 +194,7 @@ extension EventsManager {
     
     func enqueueFoundFasterRouteEvent() -> String {
         let timestamp = Date()
-        let eventDictionary = navigationRerouteEvent(eventType: FasterRouteFoundEvent)
+        let eventDictionary = try! navigationRerouteEvent(eventType: FasterRouteFoundEvent).asDictionary()
         
         sessionState.lastRerouteDate = timestamp
         

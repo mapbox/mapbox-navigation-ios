@@ -4,7 +4,7 @@ import Polyline
 import UIKit
 import AVFoundation
 
-struct EventDetails {
+struct EventDetails: Encodable {
     
     let originalRequestIdentifier: String?
     let requestIdentifier: String?
@@ -45,8 +45,20 @@ struct EventDetails {
     let legCount: Int
     let totalStepCount: Int
     
+    var event: String?
+    var arrivalTimestamp: Date?
+    var rating: Int?
+    var comment: String?
+    var userId: String?
+    var feedbackType: String?
+    var description: String?
+    var screenshot: String?
+    var secondsSinceLastReroute: TimeInterval?
+    var newDistanceRemaining: CLLocationDistance?
+    var newDurationRemaining: TimeInterval?
+    var newGeometry: String?
+    
     init(routeController: RouteController, session: SessionState) {
-        
         
         startTimestamp = session.departureTimestamp ?? nil
         sdkIdentifier = routeController.usesDefaultUserInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
@@ -128,78 +140,188 @@ struct EventDetails {
         totalStepCount = routeController.routeProgress.route.legs.map { $0.steps.count }.reduce(0, +)
     }
     
-    var eventDictionary: [String: Any] {
-        var modifiedEventDictionary: [String: Any] = [:]
-        
-        modifiedEventDictionary["created"] = created.ISO8601
-        
-        if let startTimestamp = startTimestamp {
-            modifiedEventDictionary["startTimestamp"] = startTimestamp.ISO8601
-        }
-        
-        modifiedEventDictionary["eventVersion"] = EventVersion
-        
-        modifiedEventDictionary["platform"] = ProcessInfo.systemName
-        modifiedEventDictionary["operatingSystem"] = "\(ProcessInfo.systemName) \(ProcessInfo.systemVersion)"
-        modifiedEventDictionary["device"] = UIDevice.current.machine
-        
-        modifiedEventDictionary["sdkIdentifier"] = sdkIdentifier
-        modifiedEventDictionary["sdkVersion"] = sdkVersion
-        
-        modifiedEventDictionary["profile"] = profile
-        modifiedEventDictionary["simulation"] = simulation
-        
-        modifiedEventDictionary["sessionIdentifier"] = sessionIdentifier
-        modifiedEventDictionary["originalRequestIdentifier"] = originalRequestIdentifier
-        modifiedEventDictionary["requestIdentifier"] = requestIdentifier
-        
-        modifiedEventDictionary["lat"] = coordinate?.latitude
-        modifiedEventDictionary["lng"] = coordinate?.longitude
-        
-        modifiedEventDictionary["originalGeometry"] = originalGeometry?.encodedPolyline
-        modifiedEventDictionary["originalEstimatedDistance"] = originalDistance
-        modifiedEventDictionary["originalEstimatedDuration"] = originalEstimatedDuration
-        modifiedEventDictionary["originalStepCount"] = originalStepCount
-        
-        modifiedEventDictionary["geometry"] = geometry?.encodedPolyline
-        modifiedEventDictionary["estimatedDistance"] = distance
-        modifiedEventDictionary["estimatedDuration"] = estimatedDuration
-        
-        modifiedEventDictionary["distanceCompleted"] = distanceCompleted
-        modifiedEventDictionary["distanceRemaining"] = distanceRemaining
-        modifiedEventDictionary["durationRemaining"] = durationRemaining
-        
-        modifiedEventDictionary["rerouteCount"] = rerouteCount
-        
-        modifiedEventDictionary["volumeLevel"] = volumeLevel
-        modifiedEventDictionary["audioType"] = audioType
-        modifiedEventDictionary["screenBrightness"] = screenBrightness
-        
-        modifiedEventDictionary["batteryPluggedIn"] = batteryPluggedIn
-        modifiedEventDictionary["batteryLevel"] = batteryLevel
-        modifiedEventDictionary["applicationState"] = applicationState.telemetryString
-        modifiedEventDictionary["absoluteDistanceToDestination"] = userAbsoluteDistanceToDestination
+    private enum CodingKeys: String, CodingKey {
+        case originalRequestIdentifier
+        case requestIdentifier
+        case latitude = "lat"
+        case longitude = "lng"
+        case originalGeometry
+        case originalDistance
+        case originalEstimatedDuration
+        case originalStepCount
+        case geometry
+        case distance
+        case estimatedDuration
+        case created
+        case startTimestamp
+        case sdkIdentifier
+        case sdkVersion
+        case profile
+        case simulation
+        case sessionIdentifier
+        case distanceCompleted
+        case distanceRemaining
+        case durationRemaining
+        case rerouteCount
+        case volumeLevel
+        case audioType
+        case screenBrightness
+        case batteryPluggedIn
+        case batteryLevel
+        case applicationState
+        case userAbsoluteDistanceToDestination
+        case locationEngine
+        case percentTimeInPortrait
+        case percentTimeInForeground
+        case locationManagerDesiredAccuracy
+        case stepIndex
+        case stepCount
+        case legIndex
+        case legCount
+        case totalStepCount
+        case event
+        case arrivalTimestamp
+        case rating
+        case comment
+        case userId
+        case feedbackType
+        case description
+        case screenshot
+        case secondsSinceLastReroute
+        case newDistanceRemaining
+        case newDurationRemaining
+        case newGeometry
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encodeIfPresent(originalRequestIdentifier, forKey: .originalRequestIdentifier)
+        try container.encodeIfPresent(requestIdentifier, forKey: .requestIdentifier)
+        try container.encodeIfPresent(coordinate?.latitude, forKey: .latitude)
+        try container.encodeIfPresent(coordinate?.longitude, forKey: .longitude)
+        try container.encodeIfPresent(originalGeometry?.encodedPolyline, forKey: .originalGeometry)
+        try container.encodeIfPresent(originalDistance, forKey: .originalDistance)
+        try container.encodeIfPresent(originalEstimatedDuration, forKey: .originalEstimatedDuration)
+        try container.encodeIfPresent(geometry?.encodedPolyline, forKey: .geometry)
+        try container.encodeIfPresent(distance, forKey: .distance)
+        try container.encodeIfPresent(estimatedDuration, forKey: .estimatedDuration)
+        try container.encode(created.ISO8601, forKey: .created)
+        try container.encodeIfPresent(startTimestamp, forKey: .startTimestamp)
+        try container.encode(sdkIdentifier, forKey: .sdkIdentifier)
+        try container.encode(sdkVersion, forKey: .sdkVersion)
+        try container.encode(profile, forKey: .profile)
+        try container.encode(simulation, forKey: .simulation)
+        try container.encode(sessionIdentifier, forKey: .sessionIdentifier)
+        try container.encode(distanceCompleted, forKey: .distanceCompleted)
+        try container.encode(distanceRemaining, forKey: .distanceRemaining)
+        try container.encode(durationRemaining, forKey: .durationRemaining)
+        try container.encode(rerouteCount, forKey: .rerouteCount)
+        try container.encode(volumeLevel, forKey: .volumeLevel)
+        try container.encode(audioType, forKey: .audioType)
+        try container.encode(screenBrightness, forKey: .screenBrightness)
+        try container.encode(batteryPluggedIn, forKey: .batteryPluggedIn)
+        try container.encode(batteryLevel, forKey: .batteryLevel)
+        try container.encode(applicationState, forKey: .applicationState)
+        try container.encodeIfPresent(userAbsoluteDistanceToDestination, forKey: .userAbsoluteDistanceToDestination)
         if let locationEngine = locationEngine {
-            modifiedEventDictionary["locationEngine"] = String(describing: locationEngine)
-            modifiedEventDictionary["locationManagerDesiredAccuracy"] = locationManagerDesiredAccuracy
+            try container.encode(String(describing: locationEngine), forKey: .locationEngine)
         }
-        
-        modifiedEventDictionary["percentTimeInPortrait"] = percentTimeInPortrait
-        modifiedEventDictionary["percentTimeInForeground"] = percentTimeInForeground
-        
-        modifiedEventDictionary["stepIndex"] = stepIndex
-        modifiedEventDictionary["stepCount"] = stepCount
-        modifiedEventDictionary["legIndex"] = legIndex
-        modifiedEventDictionary["legCount"] = legCount
-        modifiedEventDictionary["totalStepCount"] = totalStepCount
-        
-        return modifiedEventDictionary
+        try container.encode(percentTimeInPortrait, forKey: .percentTimeInPortrait)
+        try container.encode(percentTimeInForeground, forKey: .percentTimeInForeground)
+        try container.encodeIfPresent(locationManagerDesiredAccuracy, forKey: .locationManagerDesiredAccuracy)
+        try container.encode(stepIndex, forKey: .stepIndex)
+        try container.encode(stepCount, forKey: .stepCount)
+        try container.encode(legIndex, forKey: .legIndex)
+        try container.encode(legCount, forKey: .legCount)
+        try container.encode(totalStepCount, forKey: .totalStepCount)
+        try container.encodeIfPresent(event, forKey: .event)
+        try container.encodeIfPresent(arrivalTimestamp?.ISO8601, forKey: .arrivalTimestamp)
+        try container.encodeIfPresent(comment, forKey: .comment)
+        try container.encodeIfPresent(userId, forKey: .userId)
+        try container.encodeIfPresent(feedbackType, forKey: .feedbackType)
+        try container.encodeIfPresent(description, forKey: .description)
+        try container.encodeIfPresent(screenshot, forKey: .screenshot)
+        try container.encodeIfPresent(secondsSinceLastReroute, forKey: .secondsSinceLastReroute)
+        try container.encodeIfPresent(newDistanceRemaining, forKey: .newDistanceRemaining)
+        try container.encodeIfPresent(newDurationRemaining, forKey: .newDurationRemaining)
     }
 }
 
+
 extension EventDetails {
     
-    static func defaultEvents(routeController: RouteController) -> [String: Any] {
-        return EventDetails(routeController: routeController, session: routeController.eventsManager.sessionState).eventDictionary
+    enum EventDetailsError: Error {
+        case EncodingError(String)
+    }
+    
+    func asDictionary() throws -> [String: Any] {
+        let data = try JSONEncoder().encode(self)
+        if let dictionary = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] {
+            return dictionary
+        } else {
+            throw EventDetailsError.EncodingError("Failed to encode event details")
+        }
+    }
+    
+    static func defaultEvents(routeController: RouteController) -> EventDetails {
+        return EventDetails(routeController: routeController, session: routeController.eventsManager.sessionState)
+    }
+}
+
+extension UIApplicationState: Encodable {
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        let stringRepresentation: String
+        switch self {
+        case .active:
+            stringRepresentation = "Foreground"
+        case .inactive:
+            stringRepresentation = "Inactive"
+        case .background:
+            stringRepresentation = "Background"
+        }
+        try container.encode(stringRepresentation)
+    }
+}
+
+extension AVAudioSession {
+    var audioType: String {
+        if isOutputBluetooth() {
+            return "bluetooth"
+        }
+        if isOutputHeadphones() {
+            return "headphones"
+        }
+        if isOutputSpeaker() {
+            return "speaker"
+        }
+        return "unknown"
+    }
+    
+    func isOutputBluetooth() -> Bool {
+        for output in currentRoute.outputs {
+            if [AVAudioSessionPortBluetoothA2DP, AVAudioSessionPortBluetoothLE].contains(output.portType) {
+                return true
+            }
+        }
+        return false
+    }
+    
+    func isOutputHeadphones() -> Bool {
+        for output in currentRoute.outputs {
+            if [AVAudioSessionPortHeadphones, AVAudioSessionPortAirPlay, AVAudioSessionPortHDMI, AVAudioSessionPortLineOut].contains(output.portType) {
+                return true
+            }
+        }
+        return false
+    }
+    
+    func isOutputSpeaker() -> Bool {
+        for output in currentRoute.outputs {
+            if [AVAudioSessionPortBuiltInSpeaker, AVAudioSessionPortBuiltInReceiver].contains(output.portType) {
+                return true
+            }
+        }
+        return false
     }
 }
