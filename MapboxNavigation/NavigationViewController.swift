@@ -583,10 +583,8 @@ extension NavigationViewController: RouteControllerDelegate {
             let snappedLocation = routeController.location ?? locations.last,
             let rawLocation = locations.last,
             userHasArrivedAndShouldPreventRerouting {
-            mapViewController?.mapView.updateCourseTracking(location: snappedLocation, animated: true)
             mapViewController?.labelCurrentRoad(at: rawLocation, for: snappedLocation)
         } else if let rawlocation = locations.last {
-            mapViewController?.mapView.updateCourseTracking(location: rawlocation, animated: true)
             mapViewController?.labelCurrentRoad(at: rawlocation)
         }
     }

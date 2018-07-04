@@ -288,7 +288,7 @@ open class RouteController: NSObject {
 
         super.init()
 
-        self.locationManager.delegate = self
+        self.resume()
         resumeNotifications()
         resetSession()
 
@@ -569,6 +569,10 @@ extension RouteController: CLLocationManagerDelegate {
 
     @objc public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
         heading = newHeading
+    }
+    
+    @objc public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        locationManager.delegate?.locationManager?(manager, didFailWithError: error)
     }
 
     @objc public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {

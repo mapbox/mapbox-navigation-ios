@@ -284,9 +284,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     @objc func progressDidChange(_ notification: Notification) {
-        guard tracksUserCourse else { return }
+        guard !isAnimatingToOverheadMode else { return }
         
         let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
+        let location = notification.userInfo![RouteControllerNotificationUserInfoKey.locationKey] as! CLLocation
         
         let stepProgress = routeProgress.currentLegProgress.currentStepProgress
         let expectedTravelTime = stepProgress.step.expectedTravelTime
@@ -306,6 +307,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         } else {
             preferredFramesPerSecond = FrameIntervalOptions.pluggedInFramesPerSecond
         }
+        
+        updateCourseTracking(location: location, animated: true)
     }
     
     
@@ -329,7 +332,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         tracksUserCourse = false
     }
     
-    @objc public func updateCourseTracking(location: CLLocation?, animated: Bool) {
+    @objc func updateCourseTracking(location: CLLocation?, animated: Bool) {
         // While animating to overhead mode, don't animate the puck.
         let duration: TimeInterval = animated && !isAnimatingToOverheadMode ? 1 : 0
         animatesUserLocation = animated
