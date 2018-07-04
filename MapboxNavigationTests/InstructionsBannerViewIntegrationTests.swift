@@ -56,6 +56,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
+        continueAfterFailure = false
 
         imageRepository.disableDiskCache()
         resetImageCache()
