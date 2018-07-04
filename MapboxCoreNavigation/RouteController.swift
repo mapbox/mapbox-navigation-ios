@@ -287,8 +287,8 @@ open class RouteController: NSObject {
         UIDevice.current.isBatteryMonitoringEnabled = true
 
         super.init()
+        self.locationManager.delegate = self
 
-        self.resume()
         resumeNotifications()
         resetSession()
 
