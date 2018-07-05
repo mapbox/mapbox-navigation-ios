@@ -2,6 +2,7 @@
 
 ## master
 
+* `NavigationMapView.updateCourseTracking(location:animated:)` is no longer public and it is no longer necessary to call if you have created a custom navigation experience. `NavigationMapView` will now automatically update the user puck as locations become available. [#1542](https://github.com/mapbox/mapbox-navigation-ios/pull/1542)
 * Fixed an issue when selecting a step from the steps list, you could be brought to the wrong step. [#1524](https://github.com/mapbox/mapbox-navigation-ios/pull/1524/)
 * `StyleManager.locationFor(styleManager:)` now allows for an optional CLLocation to be returned. [#1523](https://github.com/mapbox/mapbox-navigation-ios/pull/1523)
 * NavigationViewController now uses the recommended way `.preferredStatusBarStyle` to set the style of the status bar. [#1535](https://github.com/mapbox/mapbox-navigation-ios/pull/1535)
