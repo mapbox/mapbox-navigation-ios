@@ -269,6 +269,15 @@ open class RouteController: NSObject {
 
     var userSnapToStepDistanceFromManeuver: CLLocationDistance?
     
+    private var currentVisualInstructionIndex: Int {
+        let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
+        guard let visualInstructions = currentStepProgress.remainingVisualInstructions else { return 0 }
+        
+        let visualInstructionDistances = visualInstructions.map { $0.distanceAlongStep }
+        
+        return visualInstructionDistances.index { currentStepProgress.distanceRemaining <= $0 } ?? visualInstructions.startIndex
+    }
+    
     /**
      Intializes a new `RouteController`.
 
@@ -650,7 +659,7 @@ extension RouteController: CLLocationManagerDelegate {
         }
 
         updateSpokenInstructionProgress(for: location)
-        updateVisualInstructionProgress(for: location)
+        updateVisualInstructionProgress()
 
         // Check for faster route given users current location
         guard reroutesProactively else { return }
@@ -978,13 +987,10 @@ extension RouteController: CLLocationManagerDelegate {
         }
     }
     
-    func updateVisualInstructionProgress(for location: CLLocation) {
+    func updateVisualInstructionProgress() {
         let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
-        guard let visualInstructions = currentStepProgress.remainingVisualInstructions else { return }
-        
-        let visualInstructionDistances = visualInstructions.map { $0.distanceAlongStep }
-        currentStepProgress.visualInstructionIndex = visualInstructionDistances.index { currentStepProgress.distanceRemaining <= $0 } ?? visualInstructions.startIndex
-
+        guard currentVisualInstructionIndex != currentStepProgress.visualInstructionIndex else { return }
+        currentStepProgress.visualInstructionIndex = currentVisualInstructionIndex
     }
 
     func advanceStepIndex(to: Array<RouteStep>.Index? = nil) {
