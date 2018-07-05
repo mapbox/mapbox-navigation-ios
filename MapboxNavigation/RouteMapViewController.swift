@@ -127,6 +127,7 @@ class RouteMapViewController: UIViewController {
         super.viewDidLoad()
         
         mapView.contentInset = contentInsets
+        mapView.routeController = routeController
         view.layoutIfNeeded()
         
         mapView.tracksUserCourse = true

@@ -160,12 +160,23 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                               contentFrame.minY + contentFrame.height * 0.5))
     }
     
+    open var routeController: RouteController? {
+        didSet {
+            resumeNotifications()
+        }
+    }
+    
     /**
      Determines whether the map should follow the user location and rotate when the course changes.
      - seealso: NavigationMapViewCourseTrackingDelegate
      */
     open var tracksUserCourse: Bool = false {
         didSet {
+            guard let _ = routeController, tracksUserCourse == true else {
+                print("NavigationMapView.routeController must non-nil to set tracksUserCourse to true.")
+                tracksUserCourse = false
+                return
+            }
             if tracksUserCourse {
                 enableFrameByFrameCourseViewTracking(for: 3)
                 altitude = NavigationMapView.defaultAltitude
@@ -221,8 +232,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     fileprivate func commonInit() {
         makeGestureRecognizersRespectCourseTracking()
         makeGestureRecognizersUpdateCourseView()
-        
-        resumeNotifications()
     }
     
     deinit {
@@ -271,7 +280,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     // MARK: - Notifications
     
     func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_:)), name: .routeControllerProgressDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_:)), name: .routeControllerProgressDidChange, object: routeController!)
         
         let gestures = gestureRecognizers ?? []
         let mapTapGesture = self.mapTapGesture
