@@ -12,7 +12,7 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
     var shieldHeight: CGFloat = 30
     var imageRepository: ImageRepository = .shared
     var imageDownloadCompletion: (() -> Void)?
-    var instructionDelegate: VisualInstructionDelegate?
+    weak var instructionDelegate: VisualInstructionDelegate?
     
     var instruction: VisualInstruction? {
         didSet {
