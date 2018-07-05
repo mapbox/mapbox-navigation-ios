@@ -603,6 +603,10 @@ extension RouteMapViewController: NavigationViewDelegate {
         delegate?.mapViewDidFinishLoadingMap?(mapView)
     }
     
+    func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
+        return delegate?.label?(label, willPresent: instruction, as: presented)
+    }
+    
     // MARK: NavigationMapViewCourseTrackingDelegate
     func navigationMapViewDidStartTrackingCourse(_ mapView: NavigationMapView) {
         navigationView.resumeButton.isHidden = true
@@ -956,7 +960,7 @@ fileprivate extension UIViewAnimationOptions {
         }
     }
 }
-@objc protocol RouteMapViewControllerDelegate: NavigationMapViewDelegate, MGLMapViewDelegate {
+@objc protocol RouteMapViewControllerDelegate: NavigationMapViewDelegate, MGLMapViewDelegate, VisualInstructionDelegate {
 
     func mapViewControllerDidOpenFeedback(_ mapViewController: RouteMapViewController)
     func mapViewControllerDidCancelFeedback(_ mapViewController: RouteMapViewController)
