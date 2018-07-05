@@ -282,15 +282,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         let navigationViewController = NavigationViewController(for: route, locationManager: navigationLocationManager())
         navigationViewController.delegate = self
         
-        if let carViewController = carViewController, let trip = route.asCPTrip {
-            guard let carPlayNavigationViewController = carPlayNavigationView(for: trip, route: route) else { return }
-            carViewController.present(carPlayNavigationViewController, animated: true, completion: nil)
-            if let appViewFromCarPlayWindow = appViewFromCarPlayWindow {
-                appViewFromCarPlayWindow.present(navigationViewController, animated: true)
-            } 
-        } else {
-            presentAndRemoveMapview(navigationViewController)
-        }
+        presentAndRemoveMapview(navigationViewController)
     }
     
     func startNavigation(styles: [Style]) {
@@ -357,9 +349,26 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     }
     
     func presentAndRemoveMapview(_ navigationViewController: NavigationViewController) {
-        present(navigationViewController, animated: true) {
-            self.mapView?.removeFromSuperview()
-            self.mapView = nil
+        
+        let route = navigationViewController.routeController.routeProgress.route
+        
+        // If we have a CarPlay window, show it.
+        if let carViewController = carViewController, let trip = route.asCPTrip, let mapTemplate = mapTemplate, let interfaceController = interfaceController {
+            let session = mapTemplate.startNavigationSession(for: trip)
+            
+            mapTemplate.update(route.travelEstimates, for: trip, with: .default)
+            mapTemplate.hideTripPreviews()
+            let carPlayNavigationViewController = CarPlayNavigationViewController(for: navigationViewController.routeController, session: session, template: mapTemplate, interfaceController: interfaceController)
+            carViewController.present(carPlayNavigationViewController, animated: true, completion: nil)
+            
+            if let appViewFromCarPlayWindow = appViewFromCarPlayWindow {
+                appViewFromCarPlayWindow.present(navigationViewController, animated: true)
+            }
+        } else {
+            present(navigationViewController, animated: true) {
+                self.mapView?.removeFromSuperview()
+                self.mapView = nil
+            }
         }
     }
     
@@ -441,17 +450,6 @@ extension ViewController: NavigationMapViewDelegate {
         barbutton.title = "Pan map"
         
         mapTemplate.trailingNavigationBarButtons = [barbutton]
-    }
-
-    
-    func carPlayNavigationView(for trip: CPTrip, route: Route) -> CarPlayNavigationViewController? {
-        guard let mapTemplate = mapTemplate, let interfaceController = interfaceController else { return nil }
-        let session = mapTemplate.startNavigationSession(for: trip)
-        
-        mapTemplate.update(route.travelEstimates, for: trip, with: .default)
-        mapTemplate.hideTripPreviews()
-        
-        return CarPlayNavigationViewController(for: route, session: session, template: mapTemplate, interfaceController: interfaceController, locationManager: navigationLocationManager())
     }
 }
 

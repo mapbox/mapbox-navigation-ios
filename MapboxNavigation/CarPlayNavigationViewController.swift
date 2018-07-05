@@ -10,10 +10,8 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     
     public var drivingSide: DrivingSide = .right
     
-    var routeController: RouteController!
-    var styleManager: StyleManager!
+    var routeController: RouteController
     var mapView: NavigationMapView?
-    var styles: [Style]
     var voiceController: MapboxVoiceController?
     var currentStepIndex: Int?
     let decelerationRate:CGFloat = 0.9
@@ -33,29 +31,16 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
                             right: view.safeAreaInsets.right + padding)
     }
     
-    public init(for route: Route,
-                directions: Directions = Directions.shared,
-                styles: [Style]? = [DayStyle(), NightStyle()],
+    public init(for routeController: RouteController,
                 session: CPNavigationSession,
                 template: CPMapTemplate,
-                interfaceController: CPInterfaceController,
-                locationManager: NavigationLocationManager? = NavigationLocationManager()) {
+                interfaceController: CPInterfaceController) {
         self.carSession = session
         self.carMaptemplate = template
         self.voiceController = MapboxVoiceController()
         self.carInterfaceController = interfaceController
-        var carStyles = styles ?? [DayStyle(), NightStyle()]
-        carStyles = carStyles.map {
-            $0.overrideStyleForCarPlay = true
-            return $0
-        }
-        self.styles = carStyles
-        if let locationManager = locationManager as? SimulatedLocationManager {
-            locationManager.speedMultiplier = 10.0
-        }
-        self.routeController = RouteController(along: route, locationManager: locationManager ?? NavigationLocationManager())
+        self.routeController = routeController
         super.init(nibName: nil, bundle: nil)
-        self.styleManager = StyleManager(self)
         self.carFeedbackTemplate = createFeedbackUI()
         self.routeController.delegate = self
         
@@ -75,8 +60,6 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         mapView?.logoView.isHidden = true
         mapView?.delegate = self
         self.mapView?.mapTemplateDelegate = self
-        self.styleManager.styles = self.styles
-        
         view.addSubview(mapView!)
         
         resumeNotifications()
@@ -86,9 +69,6 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     
     override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        // For some reason, these objects are not getting released when this view is dismissed.
-        voiceController = nil
-        routeController = nil
         suspendNotifications()
     }
     
@@ -292,11 +272,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
 @available(iOS 12.0, *)
 extension CarPlayNavigationViewController: StyleManagerDelegate {
     public func locationFor(styleManager: StyleManager) -> CLLocation? {
-        if routeController != nil {
-            return routeController.location
-        } else {
-            return nil
-        }
+        return routeController.location
     }
     
     public func styleManager(_ styleManager: StyleManager, didApply style: Style) {
