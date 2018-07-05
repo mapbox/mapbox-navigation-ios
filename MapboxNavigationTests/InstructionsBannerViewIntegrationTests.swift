@@ -25,6 +25,9 @@ func makeVisualInstruction(_ maneuverType: ManeuverType = .arrive,
 
 class InstructionsBannerViewIntegrationTests: XCTestCase {
 
+    private lazy var reverseDelegate = TextReversingDelegate()
+    private lazy var silentDelegate = DefaultBehaviorDelegate()
+    
     lazy var imageRepository: ImageRepository = {
         let repo = ImageRepository.shared
         repo.sessionConfiguration = URLSessionConfiguration.default
@@ -74,7 +77,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
     
     func testCustomVisualInstructionDelegate() {
         let view = instructionsView()
-        view.instructionDelegate = TextReversingDelegate()
+        view.instructionDelegate = reverseDelegate
         
         view.set(typicalInstruction)
         
@@ -84,7 +87,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
     
     func testCustomDelegateReturningNilTriggersDefaultBehavior() {
         let view = instructionsView()
-        view.instructionDelegate = DefaultBehaviorDelegate()
+        view.instructionDelegate = silentDelegate
         
         view.set(typicalInstruction)
         
