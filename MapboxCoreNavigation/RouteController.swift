@@ -288,7 +288,6 @@ open class RouteController: NSObject {
 
         self.locationManager.delegate = self
         resumeNotifications()
-        eventsManager.resetSession()
 
         checkForUpdates()
         checkForLocationUsageDescription()
