@@ -451,7 +451,7 @@ extension ViewController: NavigationMapViewDelegate {
         mapTemplate.update(route.travelEstimates, for: trip, with: .default)
         mapTemplate.hideTripPreviews()
         
-        return CarPlayNavigationViewController(for: route, session: session, template: mapTemplate, interfaceController: interfaceController)
+        return CarPlayNavigationViewController(for: route, session: session, template: mapTemplate, interfaceController: interfaceController, locationManager: navigationLocationManager())
     }
 }
 
