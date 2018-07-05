@@ -4,7 +4,7 @@ import MapboxDirections
 
 
 @objc(MBEventsManager)
-open class EventsManager: NSObject, RouteControllerEventsDelegate {
+open class EventsManager: NSObject {
     
     @objc public var manager = MMEEventsManager.shared()
     
