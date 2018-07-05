@@ -46,6 +46,13 @@ extension Notification.Name {
      The user info dictionary contains the key `RouteControllerNotificationUserInfoKey.routeProgressKey`.
      */
     public static let routeControllerDidPassSpokenInstructionPoint = MBRouteControllerDidPassSpokenInstructionPoint
+    
+    /**
+     Posted when `RouteController` detects that the user has passed an ideal point for displaying an instruction.
+     
+     The user info dictionary contains the key `RouteControllerNotificationUserInfoKey.routeProgressKey`.
+     */
+    public static let routeControllerDidPassVisualInstructionPoint = MBRouteControllerDidPassVisualInstructionPoint
 }
 
 /**
@@ -277,6 +284,8 @@ open class RouteController: NSObject {
         
         return visualInstructionDistances.index { currentStepProgress.distanceRemaining <= $0 } ?? visualInstructions.startIndex
     }
+    
+    private var currentStepIndex: Int = NSNotFound
     
     /**
      Intializes a new `RouteController`.
@@ -988,9 +997,19 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     func updateVisualInstructionProgress() {
-        let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
-        guard currentVisualInstructionIndex != currentStepProgress.visualInstructionIndex else { return }
+        let currentLegProgress = routeProgress.currentLegProgress
+        let currentStepProgress = currentLegProgress.currentStepProgress
+        guard currentStepIndex != currentLegProgress.stepIndex ||
+              currentVisualInstructionIndex != currentStepProgress.visualInstructionIndex else {
+                return
+        }
+        
+        currentStepIndex = currentLegProgress.stepIndex
         currentStepProgress.visualInstructionIndex = currentVisualInstructionIndex
+
+        NotificationCenter.default.post(name: .routeControllerDidPassVisualInstructionPoint, object: self, userInfo: [
+            RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress
+            ])
     }
 
     func advanceStepIndex(to: Array<RouteStep>.Index? = nil) {

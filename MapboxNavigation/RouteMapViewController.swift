@@ -190,6 +190,7 @@ class RouteMapViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(rerouteDidFail(notification:)), name: .routeControllerDidFailToReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground(notification:)), name: .UIApplicationWillEnterForeground, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(removeTimer), name: .UIApplicationDidEnterBackground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateVisualInstruction(notification:)), name: .routeControllerDidPassVisualInstructionPoint, object: routeController)
         subscribeToKeyboardNotifications()
     }
     
@@ -199,6 +200,7 @@ class RouteMapViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: .routeControllerDidFailToReroute, object: nil)
         NotificationCenter.default.removeObserver(self, name: .UIApplicationWillEnterForeground, object: nil)
         NotificationCenter.default.removeObserver(self, name: .UIApplicationDidEnterBackground, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .routeControllerDidPassVisualInstructionPoint, object: nil)
         unsubscribeFromKeyboardNotifications()
     }
 
@@ -340,6 +342,11 @@ class RouteMapViewController: UIViewController {
             let title = NSLocalizedString("FASTER_ROUTE_FOUND", bundle: .mapboxNavigation, value: "Faster Route Found", comment: "Indicates a faster route was found")
             showStatus(title: title, withSpinner: true, for: 3)
         }
+    }
+    
+    @objc func updateVisualInstruction(notification: NSNotification) {
+        guard let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as? RouteProgress else { return }
+        instructionsBannerView.set(routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
     }
 
     func updateMapOverlays(for routeProgress: RouteProgress) {
