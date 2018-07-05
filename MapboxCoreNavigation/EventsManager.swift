@@ -178,16 +178,8 @@ extension EventsManager {
     }
     
     func resetSession() {
-        let currentRoute = routeController.routeProgress.route
-        let originalRoute: Route
-        if sessionState != nil {
-            originalRoute = sessionState.originalRoute
-        } else {
-            originalRoute = currentRoute
-        }
-        
-        //TODO: Why was original route updated?
-        sessionState = SessionState(currentRoute: currentRoute, originalRoute: originalRoute)
+        let route = routeController.routeProgress.route
+        sessionState = SessionState(currentRoute: route, originalRoute: route)
     }
     
     func enqueueFoundFasterRouteEvent() -> String {
