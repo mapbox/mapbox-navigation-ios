@@ -3,6 +3,7 @@ import CoreLocation
 import Polyline
 import UIKit
 import AVFoundation
+import MapboxDirections
 
 struct EventDetails: Encodable {
     
@@ -57,6 +58,7 @@ struct EventDetails: Encodable {
     var newDistanceRemaining: CLLocationDistance?
     var newDurationRemaining: TimeInterval?
     var newGeometry: String?
+    var routeLegProgress: RouteLegProgress?
     
     init(routeController: RouteController, session: SessionState) {
         
@@ -191,6 +193,7 @@ struct EventDetails: Encodable {
         case newDistanceRemaining
         case newDurationRemaining
         case newGeometry
+        case routeLegProgress = "step"
     }
     
     func encode(to encoder: Encoder) throws {
@@ -244,9 +247,43 @@ struct EventDetails: Encodable {
         try container.encodeIfPresent(secondsSinceLastReroute, forKey: .secondsSinceLastReroute)
         try container.encodeIfPresent(newDistanceRemaining, forKey: .newDistanceRemaining)
         try container.encodeIfPresent(newDurationRemaining, forKey: .newDurationRemaining)
+        try container.encodeIfPresent(routeLegProgress, forKey: .routeLegProgress)
     }
 }
 
+extension RouteLegProgress: Encodable {
+    
+    private enum CodingKeys: String, CodingKey {
+        case upcomingInstruction
+        case upcomingType
+        case upcomingModifier
+        case upcomingName
+        case previousInstruction
+        case previousType
+        case previousModifier
+        case previousName
+        case distance
+        case duration
+        case distanceRemaining
+        case durationRemaining
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encodeIfPresent(upComingStep?.instructions, forKey: .upcomingInstruction)
+        try container.encodeIfPresent(upComingStep?.maneuverType.description, forKey: .upcomingType)
+        try container.encodeIfPresent(upComingStep?.maneuverDirection.description, forKey: .upcomingModifier)
+        try container.encodeIfPresent(upComingStep?.names?.joined(separator: ";"), forKey: .upcomingName)
+        try container.encodeIfPresent(currentStep.instructions, forKey: .previousInstruction)
+        try container.encode(currentStep.maneuverType.description, forKey: .previousType)
+        try container.encode(currentStep.maneuverDirection.description, forKey: .previousModifier)
+        try container.encode(currentStep.names?.joined(separator: ";"), forKey: .previousName)
+        try container.encode(Int(currentStep.distance), forKey: .distance)
+        try container.encode(Int(currentStep.expectedTravelTime), forKey: .duration)
+        try container.encode(Int(currentStepProgress.distanceRemaining), forKey: .distanceRemaining)
+        try container.encode(Int(currentStepProgress.durationRemaining), forKey: .durationRemaining)
+    }
+}
 
 extension EventDetails {
     

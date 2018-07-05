@@ -25,24 +25,3 @@ extension UIDevice {
     }
 }
 
-extension RouteLegProgress {
-    var stepDictionary: [String: Any] {
-        get {
-            return [
-                "upcomingInstruction": upComingStep?.instructions ?? NSNull(),
-                "upcomingType": upComingStep?.maneuverType.description ?? NSNull(),
-                "upcomingModifier": upComingStep?.maneuverDirection.description ?? NSNull(),
-                "upcomingName": upComingStep?.names?.joined(separator: ";") ?? NSNull(),
-                "previousInstruction": currentStep.instructions,
-                "previousType": currentStep.maneuverType.description,
-                "previousModifier": currentStep.maneuverDirection.description,
-                "previousName": currentStep.names?.joined(separator: ";") ?? NSNull(),
-                "distance": Int(currentStep.distance),
-                "duration": Int(currentStep.expectedTravelTime),
-                "distanceRemaining": Int(currentStepProgress.distanceRemaining),
-                "durationRemaining": Int(currentStepProgress.durationRemaining)
-            ]
-        }
-    }
-}
-
