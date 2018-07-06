@@ -71,7 +71,7 @@ class RouteMapViewController: UIViewController {
     }
     
     weak var delegate: RouteMapViewControllerDelegate?
-    var routeController: RouteController! {
+    var routeController: Router! {
         didSet {
             navigationView.statusView.canChangeValue = routeController.locationManager is SimulatedLocationManager
             guard let destination = route.legs.last?.destination else { return }
@@ -420,8 +420,8 @@ class RouteMapViewController: UIViewController {
         }
     }
     
-func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackViewController.SendFeedbackHandler, dismiss: () -> Void) {
-        let uuid = routeController.recordFeedback()
+    func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackViewController.SendFeedbackHandler, dismiss: () -> Void) {
+        let uuid = routeController.eventsManager.recordFeedback()
         let send = defaultSendFeedbackHandler(uuid: uuid)
         let dismiss = defaultDismissFeedbackHandler(uuid: uuid)
         
@@ -433,7 +433,7 @@ func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackV
             guard let strongSelf = self, let parent = strongSelf.parent else { return }
         
             strongSelf.delegate?.mapViewController(strongSelf, didSendFeedbackAssigned: uuid, feedbackType: item.feedbackType)
-            strongSelf.routeController.updateFeedback(uuid: uuid, type: item.feedbackType, source: source, description: nil)
+            strongSelf.routeController.eventsManager.updateFeedback(uuid: uuid, type: item.feedbackType, source: source, description: nil)
             strongSelf.dismiss(animated: true) {
                 DialogViewController().present(on: parent)
             }
@@ -444,7 +444,7 @@ func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackV
         return { [weak self ] in
             guard let strongSelf = self else { return }
             strongSelf.delegate?.mapViewControllerDidCancelFeedback(strongSelf)
-            strongSelf.routeController.cancelFeedback(uuid: uuid)
+            strongSelf.routeController.eventsManager.cancelFeedback(uuid: uuid)
             strongSelf.dismiss(animated: true, completion: nil)
         }
     }
@@ -466,7 +466,7 @@ func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackV
         
         endOfRoute.dismissHandler = { [weak self] (stars, comment) in
             guard let rating = self?.rating(for: stars) else { return }
-            self?.routeController.setEndOfRoute(rating: rating, comment: comment)
+            self?.routeController.eventsManager.setEndOfRoute(rating: rating, comment: comment)
             self?.delegate?.mapViewControllerDidDismiss(self!, byCanceling: false)
         }
     }
@@ -506,7 +506,7 @@ func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackV
         guard let height = navigationView.endOfRouteHeightConstraint?.constant else { return }
         let insets = UIEdgeInsets(top: navigationView.instructionsBannerView.bounds.height, left: 20, bottom: height + 20, right: 20)
         
-        if let coordinates = routeController.routeProgress.route.coordinates, let userLocation = routeController.locationManager.location?.coordinate {
+        if let coordinates = routeController.routeProgress.route.coordinates, let userLocation = routeController?.locationManager.location?.coordinate {
             let slicedLine = Polyline(coordinates).sliced(from: userLocation).coordinates
             let line = MGLPolyline(coordinates: slicedLine, count: UInt(slicedLine.count))
             

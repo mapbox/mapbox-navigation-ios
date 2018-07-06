@@ -18,6 +18,9 @@ open class EventsManager: NSObject {
     /// :nodoc: This is used internally when the navigation UI is being used
     var usesDefaultUserInterface = false
     
+    var endOfRouteStarRating: Int?
+    var endOfRouteComment: String?
+    
     /**
      When set to `false`, flushing of telemetry events is not delayed. Is set to `true` by default.
      */
@@ -212,5 +215,50 @@ extension EventsManager {
     
     private func shouldDelayEvents() -> Bool {
         return delaysEventFlushing
+    }
+    
+    /**
+     Send feedback about the current road segment/maneuver to the Mapbox data team.
+     
+     You can pair this with a custom feedback UI in your app to flag problems during navigation such as road closures, incorrect instructions, etc.
+     
+     @param type A `FeedbackType` used to specify the type of feedback
+     @param description A custom string used to describe the problem in detail.
+     @return Returns a UUID used to identify the feedback event
+     
+     If you provide a custom feedback UI that lets users elaborate on an issue, you should call this before you show the custom UI so the location and timestamp are more accurate.
+     
+     You can then call `updateFeedback(uuid:type:source:description:)` with the returned feedback UUID to attach any additional metadata to the feedback.
+     */
+    @objc public func recordFeedback(type: FeedbackType = .general, description: String? = nil) -> UUID {
+        return enqueueFeedbackEvent(type: type, description: description)
+    }
+    
+    /**
+     Update the feedback event with a specific feedback identifier. If you implement a custom feedback UI that lets a user elaborate on an issue, you can use this to update the metadata.
+     
+     Note that feedback is sent 20 seconds after being recorded, so you should promptly update the feedback metadata after the user discards any feedback UI.
+     */
+    @objc public func updateFeedback(uuid: UUID, type: FeedbackType, source: FeedbackSource, description: String?) {
+        if let lastFeedback = outstandingFeedbackEvents.first(where: { $0.id == uuid}) as? FeedbackEvent {
+            lastFeedback.update(type: type, source: source, description: description)
+        }
+    }
+    
+    /**
+     Discard a recorded feedback event, for example if you have a custom feedback UI and the user canceled feedback.
+     */
+    @objc public func cancelFeedback(uuid: UUID) {
+        if let index = outstandingFeedbackEvents.index(where: {$0.id == uuid}) {
+            outstandingFeedbackEvents.remove(at: index)
+        }
+    }
+    
+    /**
+     Set the rating and any comment the user may have about their route. Only used when exiting navigaiton.
+     */
+    @objc public func setEndOfRoute(rating: Int, comment: String?) {
+        endOfRouteStarRating = rating
+        endOfRouteComment = comment
     }
 }

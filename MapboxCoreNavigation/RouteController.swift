@@ -175,19 +175,19 @@ open class RouteController: NSObject {
     @objc public weak var delegate: RouteControllerDelegate?
 
     /**
-     The Directions object used to create the route.
-     */
-    @objc public var directions: Directions
-
-    /**
      The route controller’s associated location manager.
      */
-    @objc public var locationManager: NavigationLocationManager! {
+    public var locationManager: NavigationLocationManager! {
         didSet {
-            oldValue?.delegate = nil
+            oldValue.delegate = nil
             locationManager.delegate = self
         }
     }
+    
+    /**
+     The Directions object used to create the route.
+     */
+    @objc public var directions: Directions
 
     /**
      If true, location updates will be simulated when driving through tunnels or other areas where there is none or bad GPS reception.
@@ -233,9 +233,6 @@ open class RouteController: NSObject {
         }
     }
 
-    var endOfRouteStarRating: Int?
-    var endOfRouteComment: String?
-
     var isRerouting = false
     var lastRerouteLocation: CLLocation?
 
@@ -249,7 +246,7 @@ open class RouteController: NSObject {
         }
     }
     
-    var eventsManager: EventsManager
+    public var eventsManager: EventsManager!
 
     var hasFoundOneQualifiedLocation = false
 
@@ -298,7 +295,7 @@ open class RouteController: NSObject {
     }
 
     deinit {
-        eventsManager.sendCancelEvent(rating: endOfRouteStarRating, comment: endOfRouteComment)
+        eventsManager.sendCancelEvent(rating: eventsManager.endOfRouteStarRating, comment: eventsManager.endOfRouteComment)
         suspendLocationUpdates()
         eventsManager.sendOutstandingFeedbackEvents(forceAll: true)
         suspendNotifications()
@@ -429,51 +426,6 @@ open class RouteController: NSObject {
         }
         return RouteControllerMaximumDistanceBeforeRecalculating
     }
-
-    /**
-     Send feedback about the current road segment/maneuver to the Mapbox data team.
-
-     You can pair this with a custom feedback UI in your app to flag problems during navigation such as road closures, incorrect instructions, etc.
-
-     @param type A `FeedbackType` used to specify the type of feedback
-     @param description A custom string used to describe the problem in detail.
-     @return Returns a UUID used to identify the feedback event
-
-     If you provide a custom feedback UI that lets users elaborate on an issue, you should call this before you show the custom UI so the location and timestamp are more accurate.
-
-     You can then call `updateFeedback(uuid:type:source:description:)` with the returned feedback UUID to attach any additional metadata to the feedback.
-     */
-    @objc public func recordFeedback(type: FeedbackType = .general, description: String? = nil) -> UUID {
-        return eventsManager.enqueueFeedbackEvent(type: type, description: description)
-    }
-
-    /**
-     Update the feedback event with a specific feedback identifier. If you implement a custom feedback UI that lets a user elaborate on an issue, you can use this to update the metadata.
-
-     Note that feedback is sent 20 seconds after being recorded, so you should promptly update the feedback metadata after the user discards any feedback UI.
-     */
-    @objc public func updateFeedback(uuid: UUID, type: FeedbackType, source: FeedbackSource, description: String?) {
-        if let lastFeedback = eventsManager.outstandingFeedbackEvents.first(where: { $0.id == uuid}) as? FeedbackEvent {
-            lastFeedback.update(type: type, source: source, description: description)
-        }
-    }
-
-    /**
-     Discard a recorded feedback event, for example if you have a custom feedback UI and the user canceled feedback.
-     */
-    @objc public func cancelFeedback(uuid: UUID) {
-        if let index = eventsManager.outstandingFeedbackEvents.index(where: {$0.id == uuid}) {
-            eventsManager.outstandingFeedbackEvents.remove(at: index)
-        }
-    }
-
-    /**
-     Set the rating and any comment the user may have about their route. Only used when exiting navigaiton.
-     */
-    @objc public func setEndOfRoute(rating: Int, comment: String?) {
-        endOfRouteStarRating = rating
-        endOfRouteComment = comment
-    }
 }
 
 extension RouteController {
@@ -535,7 +487,7 @@ extension RouteController: CLLocationManagerDelegate {
                                               speed: location.speed,
                                               timestamp: Date())
 
-        self.locationManager(self.locationManager, didUpdateLocations: [interpolatedLocation])
+        self.locationManager(locationManager, didUpdateLocations: [interpolatedLocation])
     }
 
     @objc public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
@@ -976,5 +928,12 @@ extension RouteController: TunnelIntersectionManagerDelegate {
     
     public func tunnelIntersectionManager(_ manager: TunnelIntersectionManager, willDisableAnimationAt location: CLLocation) {
         tunnelIntersectionManager.suspendTunnelAnimation(at: location, routeController: self)
+    }
+}
+
+extension RouteController: Router {
+    
+    public func locationIsOnRoute(_ location: CLLocation) -> Bool {
+        return userIsOnRoute(location)
     }
 }
