@@ -2,10 +2,9 @@ import Foundation
 import CoreLocation
 import MapboxDirections
 
-@objc public protocol Router: class {
-    @objc var eventsManager: EventsManager! { get }
-    @objc var locationManager: NavigationLocationManager! { get }
-    @objc optional func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
+@objc public protocol Router: class, CLLocationManagerDelegate {
+    @objc var eventsManager: EventsManager! { get } //todo: remove this
+    @objc var locationManager: NavigationLocationManager! { get } //todo: also remove this
     
     var usesDefaultUserInterface: Bool { get }
     var routeProgress: RouteProgress { get } // TODO: Protocolize RouteProgress
