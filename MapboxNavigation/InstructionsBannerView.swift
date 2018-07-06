@@ -83,7 +83,7 @@ open class BaseInstructionsBannerView: UIControl {
         }
     }
     
-    func set(_ instruction: VisualInstructionBanner?) {
+    public func set(_ instruction: VisualInstructionBanner?) {
         let secondaryInstruction = instruction?.secondaryInstruction
         primaryLabel.numberOfLines = secondaryInstruction == nil ? 2 : 1
         
@@ -109,11 +109,10 @@ open class BaseInstructionsBannerView: UIControl {
     }
     
     /**
-     Updates the instructions banner for a given `RouteProgress`.
+     Updates the instructions banner distance info for a given `RouteStepProgress`.
      */
-    public func update(for currentLegProgress: RouteLegProgress) {
-        let stepProgress = currentLegProgress.currentStepProgress
-        let distanceRemaining = stepProgress.distanceRemaining
+    public func updateDistance(for currentStepProgress: RouteStepProgress) {
+        let distanceRemaining = currentStepProgress.distanceRemaining
         distance = distanceRemaining > 5 ? distanceRemaining : 0
     }
 }
