@@ -13,7 +13,7 @@ open class EventsManager: NSObject {
     var outstandingFeedbackEvents = [CoreFeedbackEvent]()
     
     // TODO: replace by the `delegate`
-    weak var routeController: RouteController! // TODO: avoid IUO
+    weak var routeController: Router! // TODO: avoid IUO
     
     /// :nodoc: This is used internally when the navigation UI is being used
     var usesDefaultUserInterface = false
@@ -54,7 +54,7 @@ open class EventsManager: NSObject {
     
     func navigationCancelEvent(rating potentialRating: Int? = nil, comment: String? = nil) -> EventDetails {
         let rating = potentialRating ?? MMEEventsManager.unrated
-        var event = EventDetails.defaultEvents(routeController: routeController)
+        var event = EventDetails.defaultEvents(router: routeController)
         event.event = MMEEventTypeNavigationCancel
         event.arrivalTimestamp = sessionState.arrivalTimestamp
         
@@ -69,13 +69,13 @@ open class EventsManager: NSObject {
     }
     
     func navigationDepartEvent() -> EventDetails {
-        var event = EventDetails.defaultEvents(routeController: routeController)
+        var event = EventDetails.defaultEvents(router: routeController)
         event.event = MMEEventTypeNavigationDepart
         return event
     }
     
     func navigationArriveEvent() -> EventDetails {
-        var event = EventDetails.defaultEvents(routeController: routeController)
+        var event = EventDetails.defaultEvents(router: routeController)
         event.event = MMEEventTypeNavigationArrive
         return event
     }
@@ -89,7 +89,7 @@ open class EventsManager: NSObject {
     }
     
     func navigationFeedbackEvent(type: FeedbackType, description: String?) -> EventDetails {
-        var event = EventDetails.defaultEvents(routeController: routeController)
+        var event = EventDetails.defaultEvents(router: routeController)
         event.event = MMEEventTypeNavigationFeedback
         
         event.userId = UIDevice.current.identifierForVendor?.uuidString
@@ -105,7 +105,7 @@ open class EventsManager: NSObject {
     func navigationRerouteEvent(eventType: String = MMEEventTypeNavigationReroute) -> EventDetails {
         let timestamp = Date()
         
-        var event = EventDetails.defaultEvents(routeController: routeController)
+        var event = EventDetails.defaultEvents(router: routeController)
         event.event = eventType
         event.secondsSinceLastReroute = sessionState.lastRerouteDate != nil ? round(timestamp.timeIntervalSince(sessionState.lastRerouteDate!)) : -1
         

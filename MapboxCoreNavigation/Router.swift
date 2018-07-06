@@ -6,7 +6,10 @@ import MapboxDirections
     @objc var eventsManager: EventsManager! { get }
     @objc var locationManager: NavigationLocationManager! { get }
     @objc optional func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
+    
+    var usesDefaultUserInterface: Bool { get }
     var routeProgress: RouteProgress { get } // TODO: Protocolize RouteProgress
+
     func locationIsOnRoute(_ location: CLLocation) -> Bool //userIsOnRoute(_ location: CLLocation)
     
     /**

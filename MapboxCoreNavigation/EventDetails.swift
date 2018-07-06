@@ -20,7 +20,7 @@ struct EventDetails: Encodable {
     let created: Date = Date()
     let startTimestamp: Date?
     let sdkIdentifier: String
-    let sdkVersion: String = String(describing: Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString")!)
+    let sdkVersion: String = String(describing: Bundle.mapboxCoreNavigation.object(forInfoDictionaryKey: "CFBundleShortVersionString")!)
     let profile: String
     let simulation: Bool
     let sessionIdentifier: String
@@ -60,21 +60,21 @@ struct EventDetails: Encodable {
     var newGeometry: String?
     var routeLegProgress: RouteLegProgress?
     
-    init(routeController: RouteController, session: SessionState) {
+    init(router: Router, session: SessionState) {
         
         startTimestamp = session.departureTimestamp ?? nil
-        sdkIdentifier = routeController.usesDefaultUserInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
-        profile = routeController.routeProgress.route.routeOptions.profileIdentifier.rawValue
-        simulation = routeController.locationManager is ReplayLocationManager || routeController.locationManager is SimulatedLocationManager ? true : false
+        sdkIdentifier = router.usesDefaultUserInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
+        profile = router.routeProgress.route.routeOptions.profileIdentifier.rawValue
+        simulation = router.locationManager is ReplayLocationManager || router.locationManager is SimulatedLocationManager ? true : false
         
         sessionIdentifier = session.identifier.uuidString
         originalRequestIdentifier = session.originalRoute.routeIdentifier
-        requestIdentifier = routeController.routeProgress.route.routeIdentifier
+        requestIdentifier = router.routeProgress.route.routeIdentifier
         
-        let location = routeController.locationManager.location
+        let location = router.locationManager.location
         coordinate = location?.coordinate ?? nil
         
-        if let coordinates = routeController.routeProgress.route.coordinates, let lastCoord = coordinates.last {
+        if let coordinates = router.routeProgress.route.coordinates, let lastCoord = coordinates.last {
             userAbsoluteDistanceToDestination = location?.distance(from: CLLocation(latitude: lastCoord.latitude, longitude: lastCoord.longitude)) ?? nil
         } else {
             userAbsoluteDistanceToDestination = nil
@@ -102,14 +102,14 @@ struct EventDetails: Encodable {
             estimatedDuration = nil
         }
         
-        distanceCompleted = round(session.totalDistanceCompleted + routeController.routeProgress.distanceTraveled)
-        distanceRemaining = round(routeController.routeProgress.distanceRemaining)
-        durationRemaining = round(routeController.routeProgress.durationRemaining)
+        distanceCompleted = round(session.totalDistanceCompleted + router.routeProgress.distanceTraveled)
+        distanceRemaining = round(router.routeProgress.distanceRemaining)
+        durationRemaining = round(router.routeProgress.durationRemaining)
         
         rerouteCount = session.numberOfReroutes
         
         
-        if let manager = routeController.locationManager {
+        if let manager = router.locationManager {
             locationEngine = type(of: manager)
             locationManagerDesiredAccuracy = manager.desiredAccuracy
         } else {
@@ -135,11 +135,12 @@ struct EventDetails: Encodable {
         }
         percentTimeInForeground = totalTimeInPortrait + totalTimeInLandscape == 0 ? 100 : Int((totalTimeInPortrait / (totalTimeInPortrait + totalTimeInLandscape) * 100))
         
-        stepIndex = routeController.routeProgress.currentLegProgress.stepIndex
-        stepCount = routeController.routeProgress.currentLeg.steps.count
-        legIndex = routeController.routeProgress.legIndex
-        legCount = routeController.routeProgress.route.legs.count
-        totalStepCount = routeController.routeProgress.route.legs.map { $0.steps.count }.reduce(0, +)
+        
+        stepIndex = router.routeProgress.currentLegProgress.stepIndex
+        stepCount = router.routeProgress.currentLeg.steps.count
+        legIndex = router.routeProgress.legIndex
+        legCount = router.routeProgress.route.legs.count
+        totalStepCount = router.routeProgress.route.legs.map { $0.steps.count }.reduce(0, +)
     }
     
     private enum CodingKeys: String, CodingKey {
@@ -300,8 +301,8 @@ extension EventDetails {
         }
     }
     
-    static func defaultEvents(routeController: RouteController) -> EventDetails {
-        return EventDetails(routeController: routeController, session: routeController.eventsManager.sessionState)
+    static func defaultEvents(router: Router) -> EventDetails {
+        return EventDetails(router: router, session: router.eventsManager.sessionState)
     }
 }
 
