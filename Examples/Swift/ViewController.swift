@@ -12,6 +12,7 @@ private typealias RouteRequestFailure = ((NSError) -> Void)
 enum ExampleMode {
     case `default`
     case custom
+    case customInstruction
     case styled
     case multipleWaypoints
 }
@@ -95,23 +96,28 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         startButton.isEnabled = false
         
         alertController = UIAlertController(title: "Start Navigation", message: "Select the navigation type", preferredStyle: .actionSheet)
-        alertController.addAction(UIAlertAction(title: "Default UI", style: .default, handler: { (action) in
-            self.startBasicNavigation()
-        }))
-        alertController.addAction(UIAlertAction(title: "DayStyle UI", style: .default, handler: { (action) in
-            self.startNavigation(styles: [DayStyle()])
-        }))
-        alertController.addAction(UIAlertAction(title: "NightStyle UI", style: .default, handler: { (action) in
-            self.startNavigation(styles: [NightStyle()])
-        }))
-        alertController.addAction(UIAlertAction(title: "Custom UI", style: .default, handler: { (action) in
-            self.startCustomNavigation()
-        }))
-        alertController.addAction(UIAlertAction(title: "Styled UI", style: .default, handler: { (action) in
-            self.startStyledNavigation()
-        }))
+        
+        typealias ActionHandler = (UIAlertAction) -> Void
+        
+        let basic: ActionHandler = {_ in self.startBasicNavigation() }
+        let day: ActionHandler = {_ in self.startNavigation(styles: [DayStyle()]) }
+        let night: ActionHandler = {_ in self.startNavigation(styles: [NightStyle()]) }
+        let custom: ActionHandler = {_ in self.startCustomNavigation() }
+        let customInstruction: ActionHandler = {_ in self.startCustomInstructionNavigation() }
+        let styled: ActionHandler = {_ in self.startStyledNavigation() }
+        
+        let actionPayloads: [(String, UIAlertActionStyle, ActionHandler?)] = [("Default UI", .default, basic),
+                                                ("DayStyle UI", .default, day),
+                                                ("NightStyle UI", .default, night),
+                                                ("Custom UI", .default, custom),
+                                                ("Custom Instructions", .default, customInstruction),
+                                                ("Styled UI", .default, styled),
+                                                ("Cancel", .cancel, nil)]
+        
+        let actions = actionPayloads.map { payload in UIAlertAction(title: payload.0, style: payload.1, handler: payload.2)}
+        
+        actions.forEach(alertController.addAction(_:))
 
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 
         if let popoverController = alertController.popoverPresentationController {
             popoverController.sourceView = self.startButton
@@ -227,10 +233,10 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
     // MARK: Basic Navigation
 
-    func startBasicNavigation() {
+    func startBasicNavigation(mode: ExampleMode = .default) {
         guard let route = currentRoute else { return }
 
-        exampleMode = .default
+        exampleMode = mode
 
         let navigationViewController = NavigationViewController(for: route, locationManager: navigationLocationManager())
         navigationViewController.delegate = self
@@ -249,8 +255,12 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         presentAndRemoveMapview(navigationViewController)
     }
 
+    // MARK: Custom Instruction Example
+    func startCustomInstructionNavigation() {
+        startBasicNavigation(mode: .customInstruction)
+    }
+    
     // MARK: Custom Navigation UI
-
     func startCustomNavigation() {
         guard let route = self.currentRoute else { return }
 
@@ -439,6 +449,20 @@ extension ViewController: NavigationViewControllerDelegate {
     // If implemented, you are responsible for also dismissing the UI.
     func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool) {
         navigationViewController.dismiss(animated: true, completion: nil)
+    }
+}
+
+// Mark: VisualInstructionDelegate
+extension ViewController: VisualInstructionDelegate {
+    func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
+        guard exampleMode == .customInstruction else { return nil }
+        
+        let range = NSRange(location: 0, length: presented.length)
+        let mutable = NSMutableAttributedString(attributedString: presented)
+        
+        mutable.mutableString.applyTransform(.latinToKatakana, reverse: false, range: range, updatedRange: nil)
+        
+        return mutable
     }
 }
 

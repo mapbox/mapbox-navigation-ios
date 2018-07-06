@@ -4,6 +4,7 @@
 
 * Fixed an issue when selecting a step from the steps list, you could be brought to the wrong step. [#1524](https://github.com/mapbox/mapbox-navigation-ios/pull/1524/)
 * `StyleManager.locationFor(styleManager:)` now allows for an optional CLLocation to be returned. [#1523](https://github.com/mapbox/mapbox-navigation-ios/pull/1523)
+* NavigationViewController now uses the recommended way `.preferredStatusBarStyle` to set the style of the status bar. [#1535](https://github.com/mapbox/mapbox-navigation-ios/pull/1535)
 
 ## v0.18.1 (June 19, 2018)
 

@@ -34,6 +34,13 @@ open class BaseInstructionsBannerView: UIControl {
         }
     }
     
+    weak var instructionDelegate: VisualInstructionDelegate? {
+        didSet {
+            primaryLabel.instructionDelegate = instructionDelegate
+            secondaryLabel.instructionDelegate = instructionDelegate
+        }
+    }
+    
     var centerYConstraints = [NSLayoutConstraint]()
     var baselineConstraints = [NSLayoutConstraint]()
     

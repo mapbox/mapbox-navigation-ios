@@ -7,7 +7,7 @@ import Mapbox
  The `NavigationViewControllerDelegate` provides methods for configuring the map view shown by a `NavigationViewController` and responding to the cancellation of a navigation session.
  */
 @objc(MBNavigationViewControllerDelegate)
-public protocol NavigationViewControllerDelegate {
+public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     /**
      Called when the navigation view controller is dismissed, such as when the user ends a trip.
      
@@ -324,6 +324,14 @@ open class NavigationViewController: UIViewController {
     
     var styleManager: StyleManager!
     
+    var currentStatusBarStyle: UIStatusBarStyle = .default
+    
+    open override var preferredStatusBarStyle: UIStatusBarStyle {
+        get {
+            return currentStatusBarStyle
+        }
+    }
+    
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
@@ -538,6 +546,10 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
         }
         return roadName
     }
+    
+    @objc public func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
+        return delegate?.label?(label, willPresent: instruction, as: presented)
+    }
 }
 
 //MARK: - RouteControllerDelegate
@@ -623,6 +635,9 @@ extension NavigationViewController: StyleManagerDelegate {
             mapView?.style?.transition = MGLTransition(duration: 0.5, delay: 0)
             mapView?.styleURL = style.mapStyleURL
         }
+        
+        currentStatusBarStyle = style.statusBarStyle ?? .default
+        setNeedsStatusBarAppearanceUpdate()
     }
     
     public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
