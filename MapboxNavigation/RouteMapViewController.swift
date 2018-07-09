@@ -127,6 +127,7 @@ class RouteMapViewController: UIViewController {
         super.viewDidLoad()
         
         mapView.contentInset = contentInsets
+        mapView.routeController = routeController
         view.layoutIfNeeded()
         
         mapView.tracksUserCourse = true
@@ -159,13 +160,6 @@ class RouteMapViewController: UIViewController {
         
         if let camera = pendingCamera {
             mapView.camera = camera
-        } else if let location = routeController.location, location.course > 0 {
-            mapView.updateCourseTracking(location: location, animated: false)
-        } else if let coordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates, let firstCoordinate = coordinates.first, coordinates.count > 1 {
-            let secondCoordinate = coordinates[1]
-            let course = firstCoordinate.direction(to: secondCoordinate)
-            let newLocation = CLLocation(coordinate: routeController.location?.coordinate ?? firstCoordinate, altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: course, speed: 0, timestamp: Date())
-            mapView.updateCourseTracking(location: newLocation, animated: false)
         } else {
             mapView.setCamera(tiltedCamera, animated: false)
         }

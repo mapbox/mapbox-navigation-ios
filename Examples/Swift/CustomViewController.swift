@@ -31,6 +31,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
         
         mapView.delegate = self
         mapView.compassView.isHidden = true
+        mapView.routeController = routeController
 
         // Add listeners for progress updates
         resumeNotifications()
@@ -69,7 +70,6 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
     // Notifications sent on all location updates
     @objc func progressDidChange(_ notification: NSNotification) {
         let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
-        let location = notification.userInfo![RouteControllerNotificationUserInfoKey.locationKey] as! CLLocation
         
         // Add maneuver arrow
         if routeProgress.currentLegProgress.followOnStep != nil {
@@ -81,9 +81,6 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
         // Update the top banner with progress updates
         instructionsBannerView.update(for: routeProgress.currentLegProgress)
         instructionsBannerView.isHidden = false
-        
-        // Update the user puck
-        mapView.updateCourseTracking(location: location, animated: true)
     }
 
     // Fired when the user is no longer on the route.
