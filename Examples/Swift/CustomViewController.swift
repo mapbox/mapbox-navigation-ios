@@ -89,7 +89,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
     }
     
     @objc func updateInstructionsBanner(notification: NSNotification) {
-        guard let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as? RouteProgress else { return }
+        guard let routeProgress = notification.userInfo?[RouteControllerNotificationUserInfoKey.routeProgressKey] as? RouteProgress else { return }
         instructionsBannerView.set(routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
     }
 
