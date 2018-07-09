@@ -349,10 +349,9 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     }
     
     func presentAndRemoveMapview(_ navigationViewController: NavigationViewController) {
-        
         let route = navigationViewController.routeController.routeProgress.route
         
-        // If we have a CarPlay window, show it.
+        // If we have a CarPlay window, show navigation on it as well as on the phone.
         if let carViewController = carViewController, let trip = route.asCPTrip, let mapTemplate = mapTemplate, let interfaceController = interfaceController {
             let session = mapTemplate.startNavigationSession(for: trip)
             
@@ -365,6 +364,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
                 appViewFromCarPlayWindow.present(navigationViewController, animated: true)
             }
         } else {
+            // If no CarPlay window, just start navigation on the phone.
             present(navigationViewController, animated: true) {
                 self.mapView?.removeFromSuperview()
                 self.mapView = nil
@@ -514,6 +514,12 @@ extension ViewController: NavigationViewControllerDelegate {
     // If implemented, you are responsible for also dismissing the UI.
     func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool) {
         navigationViewController.dismiss(animated: true, completion: nil)
+    }
+}
+
+extension ViewController: CarPlayNavigationDelegate {
+    func carPlaynavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool) {
+        // cleanup maptemplate
     }
 }
 
