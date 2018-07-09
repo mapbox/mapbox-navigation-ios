@@ -90,7 +90,7 @@ open class BaseInstructionsBannerView: UIControl {
         }
     }
     
-    public func set(_ instruction: VisualInstructionBanner?) {
+    public func updateInstruction(_ instruction: VisualInstructionBanner?) {
         let secondaryInstruction = instruction?.secondaryInstruction
         primaryLabel.numberOfLines = secondaryInstruction == nil ? 2 : 1
         

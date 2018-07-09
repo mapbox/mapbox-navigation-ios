@@ -346,7 +346,7 @@ class RouteMapViewController: UIViewController {
     
     @objc func updateInstructionsBanner(notification: NSNotification) {
         guard let routeProgress = notification.userInfo?[RouteControllerNotificationUserInfoKey.routeProgressKey] as? RouteProgress else { return }
-        instructionsBannerView.set(routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
+        instructionsBannerView.updateInstruction(routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
     }
 
     func updateMapOverlays(for routeProgress: RouteProgress) {
@@ -888,7 +888,7 @@ extension RouteMapViewController: StepsViewControllerDelegate {
         navigationView.instructionsBannerContentView.backgroundColor = instructionsView.backgroundColor
         
         view.addSubview(instructionsView)
-        instructionsView.set(instructions)
+        instructionsView.updateInstruction(instructions)
         previewInstructionsView = instructionsView
     }
     
