@@ -91,11 +91,10 @@ open class BaseInstructionsBannerView: UIControl {
     }
     
     /**
-     Updates the instructions banner info with a given `RouteStepProgress`.
+     Updates the instructions banner info with a given `VisualInstructionBanner`.
      */
-    public func updateInstruction(for currentStepProgress: RouteStepProgress?) {
-        guard let instruction = currentStepProgress?.currentVisualInstruction else { return }
-        let secondaryInstruction = instruction.secondaryInstruction
+    public func updateInstruction(_ instruction: VisualInstructionBanner?) {
+        let secondaryInstruction = instruction?.secondaryInstruction
         primaryLabel.numberOfLines = secondaryInstruction == nil ? 2 : 1
         
         if secondaryInstruction == nil {
@@ -104,7 +103,7 @@ open class BaseInstructionsBannerView: UIControl {
             baselineAlignInstructions()
         }
         
-        primaryLabel.instruction = instruction.primaryInstruction
+        primaryLabel.instruction = instruction?.primaryInstruction
         secondaryLabel.instruction = secondaryInstruction
         maneuverView.visualInstruction = instruction
     }
