@@ -357,6 +357,7 @@ open class NavigationViewController: UIViewController {
         self.directions = directions
         self.route = route
         NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
+        routeController.resume()
         
         let mapViewController = RouteMapViewController(routeController: self.routeController, delegate: self)
         self.mapViewController = mapViewController
@@ -396,7 +397,6 @@ open class NavigationViewController: UIViewController {
         _ = voiceController
         
         UIApplication.shared.isIdleTimerDisabled = true
-        routeController.resume()
         
         if routeController.locationManager is SimulatedLocationManager {
             let format = NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation at %d×", comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled.")
