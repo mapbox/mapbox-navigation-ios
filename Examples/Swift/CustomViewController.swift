@@ -90,7 +90,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
     
     @objc func updateInstructionsBanner(notification: NSNotification) {
         guard let routeProgress = notification.userInfo?[RouteControllerNotificationUserInfoKey.routeProgressKey] as? RouteProgress else { return }
-        instructionsBannerView.updateInstruction(routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
+        instructionsBannerView.updateInstruction(for: routeProgress.currentLegProgress.currentStepProgress)
     }
 
     // Fired when the user is no longer on the route.

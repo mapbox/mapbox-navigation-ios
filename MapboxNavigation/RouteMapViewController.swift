@@ -346,7 +346,7 @@ class RouteMapViewController: UIViewController {
     
     @objc func updateInstructionsBanner(notification: NSNotification) {
         guard let routeProgress = notification.userInfo?[RouteControllerNotificationUserInfoKey.routeProgressKey] as? RouteProgress else { return }
-        instructionsBannerView.updateInstruction(routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
+        instructionsBannerView.updateInstruction(for: routeProgress.currentLegProgress.currentStepProgress)
     }
 
     func updateMapOverlays(for routeProgress: RouteProgress) {
@@ -859,11 +859,10 @@ extension RouteMapViewController: StepsViewControllerDelegate {
     func stepsViewController(_ viewController: StepsViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell) {
         
         let legProgress = RouteLegProgress(leg: routeController.routeProgress.route.legs[legIndex], stepIndex: stepIndex)
-        let step = legProgress.currentStep
         guard let upcomingStep = legProgress.upComingStep else { return }
         
         viewController.dismiss {
-            self.addPreviewInstructions(step: step, maneuverStep: upcomingStep, distance: cell.instructionsView.distance)
+            self.addPreviewInstructions(legProgress: legProgress, maneuverStep: upcomingStep, distance: cell.instructionsView.distance)
             self.stepsViewController = nil
         }
         
@@ -875,10 +874,8 @@ extension RouteMapViewController: StepsViewControllerDelegate {
         mapView.addArrow(route: routeController.routeProgress.route, legIndex: legIndex, stepIndex: stepIndex + 1)
     }
     
-    func addPreviewInstructions(step: RouteStep, maneuverStep: RouteStep, distance: CLLocationDistance?) {
+    func addPreviewInstructions(legProgress: RouteLegProgress, maneuverStep: RouteStep, distance: CLLocationDistance?) {
         removePreviewInstructions()
-        
-        guard let instructions = step.instructionsDisplayedAlongStep?.last else { return }
         
         let instructionsView = StepInstructionsView(frame: navigationView.instructionsBannerView.frame)
         instructionsView.backgroundColor = StepInstructionsView.appearance().backgroundColor
@@ -888,7 +885,7 @@ extension RouteMapViewController: StepsViewControllerDelegate {
         navigationView.instructionsBannerContentView.backgroundColor = instructionsView.backgroundColor
         
         view.addSubview(instructionsView)
-        instructionsView.updateInstruction(instructions)
+        instructionsView.updateInstruction(for: legProgress.currentStepProgress)
         previewInstructionsView = instructionsView
     }
     
