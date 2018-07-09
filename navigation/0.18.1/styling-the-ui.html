@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Using Map Matching  Reference</title>
+    <title>Styling the UI  Reference</title>
     <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="css/highlight.css" />
     <meta charset="utf-8">
@@ -10,8 +10,8 @@
     <link rel='shortcut icon' href='https://www.mapbox.com/img/favicon.ico' type='image/x-icon' />
 
     <style type="text/css">
-      .nav-group-name[data-name="Using Map Matching"] > .small-heading,
-      .nav-group-task[data-name="Using Map Matching"] {
+      .nav-group-name[data-name="Styling the UI"] > .small-heading,
+      .nav-group-task[data-name="Styling the UI"] {
         background-color: #f5f8fc;
         font-family: "Open Sans Bold";
         border-left: 3px solid #3a68d8;
@@ -40,7 +40,7 @@
   <body>
 
 
-    <a title="Using Map Matching  Reference"></a>
+    <a title="Styling the UI  Reference"></a>
 
     <header class="header-container">
       <div class="limiter">
@@ -76,7 +76,7 @@
       <div class="limiter">
         <a class="breadcrumb" href="index.html">Mapbox Navigation SDK for iOS Reference</a>
         <img class="carat" src="img/carat.png" />
-        Using Map Matching  Reference
+        Styling the UI  Reference
       </div>
     </div>
 
@@ -448,41 +448,70 @@
         <section class="section">
           <div class="section-content">
             
-            <h1 id='using-map-matching-with-the-navigation-sdk' class='heading'>Using Map Matching with the Navigation SDK</h1>
+            <h1 id='styling-the-ui' class='heading'>Styling the UI</h1>
 
-<p>In some cases, you may want to have the user stick to a very specific route, one that does not fit into the scope covered by the Mapbox Directions API. For example, a company would like to use their custom truck routing API but allow people to navigate on it with the Mapbox Navigation SDK. In this case, the Mapbox Map Matching API is an appropriate fit.</p>
+<p>If you&rsquo;re using <code>NavigationMapViewController</code>, it&rsquo;s possible to apply custom fonts and colors to various parts of the UI.</p>
+<h3 id='create-a-new-style-class' class='heading'>Create a new Style class</h3>
 
-<p>Map Matching is the art of taking coordinates and aligning them along a road network. In the truck example above, you would hit your own truck routing API, give us the coordinates and then we&rsquo;d return a Route that can plug into the Navigation SDK.</p>
+<p>Subclass <code><a href="Classes/DayStyle.html">DayStyle</a></code>, and make the necessary changes:</p>
+<pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">CustomDayStyle</span><span class="p">:</span> <span class="nf">DayStyle</span> <span class="p">{</span>
 
-<p>When using the Map Matching SDK with the Navigation SDK, there are a few rules you must adhere to:</p>
-<h3 id='code-navigationviewcontroller-shouldreroutefrom-code-to-false' class='heading'><code>navigationViewController(:shouldRerouteFrom:)</code> to false</h3>
-<pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">navigationViewController</span><span class="p">(</span><span class="n">_</span> <span class="nv">navigationViewController</span><span class="p">:</span> <span class="kt">NavigationViewController</span><span class="p">,</span> <span class="n">shouldRerouteFrom</span> <span class="nv">location</span><span class="p">:</span> <span class="kt">CLLocation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nf">Bool</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="kc">false</span>
+    <span class="kd">required</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">init</span><span class="p">()</span>
+
+        <span class="c1">// Use a custom map style.</span>
+        <span class="n">mapStyleURL</span> <span class="o">=</span> <span class="nf">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"mapbox://styles/mapbox/satellite-streets-v9"</span><span class="p">)</span><span class="o">!</span>
+
+        <span class="c1">// Specify that the style should be used during the day.</span>
+        <span class="n">styleType</span> <span class="o">=</span> <span class="o">.</span><span class="n">day</span>
+    <span class="p">}</span>
+
+    <span class="k">override</span> <span class="kd">func</span> <span class="nf">apply</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">apply</span><span class="p">()</span>
+
+        <span class="c1">// Begin styling the UI</span>
+        <span class="kt">BottomBannerView</span><span class="o">.</span><span class="nf">appearance</span><span class="p">()</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="o">.</span><span class="n">orange</span>
+    <span class="p">}</span>
 <span class="p">}</span>
 </code></pre>
 
-<p>If the user were to go off route immediately after starting along their route, the Navigation SDK would fetch a new route via the Mapbox Directions API. This would throw the initial route out that contained the custom truck profile.</p>
-<h3 id='fetch-a-new-route-after-rerouting' class='heading'>Fetch a new route after rerouting</h3>
+<p>You can even provide a custom night style that will be used at night and while the user is in tunnels.</p>
+<pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">CustomNightStyle</span><span class="p">:</span> <span class="nf">NightStyle</span> <span class="p">{</span>
 
-<p>It is up to you to listen in on reroutes and:</p>
+    <span class="kd">required</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">init</span><span class="p">()</span>
+
+        <span class="c1">// Specify that the style should be used at night.</span>
+        <span class="n">styleType</span> <span class="o">=</span> <span class="o">.</span><span class="n">night</span>
+    <span class="p">}</span>
+
+    <span class="k">override</span> <span class="kd">func</span> <span class="nf">apply</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">apply</span><span class="p">()</span>
+
+        <span class="c1">// Begin styling the UI</span>
+        <span class="kt">BottomBannerView</span><span class="o">.</span><span class="nf">appearance</span><span class="p">()</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="o">.</span><span class="n">purple</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+<h3 id='initialize-code-navigationmapviewcontroller-code-with-these-styles' class='heading'>Initialize <code>NavigationMapViewController</code> with these styles</h3>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">navigation</span> <span class="o">=</span> <span class="nf">NavigationViewController</span><span class="p">(</span><span class="nv">for</span><span class="p">:</span> <span class="n">route</span><span class="p">,</span> <span class="nv">directions</span><span class="p">:</span> <span class="kt"><a href="https://www.mapbox.com/mapbox-navigation-ios/directions/0.21.0/Classes/Directions.html">Directions</a></span><span class="p">,</span> <span class="nv">styles</span><span class="p">:</span> <span class="p">[</span><span class="nf">CustomDayStyle</span><span class="p">(),</span> <span class="nf">CustomNightStyle</span><span class="p">()],</span> <span class="nv">locationManager</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+</code></pre>
+<h3 id='finding-elements-to-style' class='heading'>Finding elements to style</h3>
+
+<p>The easiest way to find elements and their class name to style is to use the Debug View Hierarchy feature in Xcode.</p>
+
+<p><img src="img/view-hierarchy.png" /></p>
 
 <ol>
-<li>Fetch a new route from your server.</li>
-<li>Make a map matching request against the Mapbox Map Matching appropriate.</li>
-<li>Update the <code><a href="Classes/RouteProgress.html">RouteProgress</a></code> with a the new route (covered below).</li>
+<li>While running your app, select the Debug View Hierarchy button.</li>
+<li>Select the view you wish to style.</li>
+<li>On the right side of your screen, note the class name.</li>
+<li>Apply your styling:</li>
 </ol>
-<h3 id='update-the-routeprogress' class='heading'>Update the RouteProgress</h3>
-
-<p>Once you have a fresh route after rerouting, you need to tell the UI to update according to this new route.</p>
-<pre class="highlight plaintext"><code>yourNavigationViewController.route = route
+<pre class="highlight swift"><code><span class="kt">DistanceLabel</span><span class="o">.</span><span class="nf">appearance</span><span class="p">(</span><span class="nv">whenContainedInInstancesOf</span><span class="p">:</span> <span class="p">[</span><span class="kt">InstructionsBannerView</span><span class="o">.</span><span class="k">self</span><span class="p">])</span><span class="o">.</span><span class="n">unitTextColor</span> <span class="o">=</span> <span class="o">.</span><span class="n">red</span>
 </code></pre>
 
-<p>This will cause a waterfall effect, everything downstream should react to the addition of a new route.</p>
-<h3 id='making-the-request' class='heading'>Making the request</h3>
-
-<p>Always make sure to use <code><a href="Classes/NavigationMatchOptions.html">NavigationMatchOptions</a></code> when creating a map matching request. This is subclass of <code>MatchOptions</code> which applies a good set of default options for navigation.</p>
-
-<p>It is also import to use <code>Directions.calculateRoutes(matching:completionHandler:).</code> when creating the request. This returns a <code>Route</code> instead of <code>Match</code> which allows us to navigate on it.</p>
+<p>It is also helpful to view the default styling applied by the <code><a href="Classes/DayStyle.html">DayStyle</a></code>.</p>
 
           </div>
         </section>
