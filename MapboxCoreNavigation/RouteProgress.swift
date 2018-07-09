@@ -7,6 +7,9 @@ import Turf
  */
 @objc(MBRouteProgress)
 open class RouteProgress: NSObject {
+    
+    private static let reroutingAccuracy: CLLocationAccuracy = 90
+    
     /**
      Returns the current `Route`.
      */
@@ -140,6 +143,21 @@ open class RouteProgress: NSObject {
             
             congestionTravelTimesSegmentsByStep.append(congestionTravelTimesSegmentsByLeg)
         }
+    }
+    
+    func reroutingOptions(with current: CLLocation) -> RouteOptions {
+        let oldOptions = route.routeOptions
+        let user = Waypoint(coordinate: current.coordinate)
+        
+        if (current.course >= 0) {
+            user.heading = current.course
+            user.headingAccuracy = RouteProgress.reroutingAccuracy
+        }
+        let newWaypoints = [] + remainingWaypoints
+        let newOptions = oldOptions.copy() as! RouteOptions
+        newOptions.waypoints = newWaypoints
+        
+        return newOptions
     }
 }
 
@@ -322,6 +340,7 @@ open class RouteLegProgress: NSObject {
         
         return currentClosest
     }
+
 }
 
 /**

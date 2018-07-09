@@ -415,7 +415,7 @@ extension RouteController: CLLocationManagerDelegate {
         updateRouteLegProgress(for: location)
 
         guard userIsOnRoute(location) || !(delegate?.routeController?(self, shouldRerouteFrom: location) ?? true) else {
-            reroute(from: location)
+            reroute(from: location, along: routeProgress)
             return
         }
 
@@ -523,7 +523,7 @@ extension RouteController: CLLocationManagerDelegate {
         }
         let durationRemaining = routeProgress.durationRemaining
 
-        getDirections(from: location) { [weak self] (route, error) in
+        getDirections(from: location, along: routeProgress) { [weak self] (route, error) in
             guard let strongSelf = self else {
                 return
             }
@@ -553,7 +553,7 @@ extension RouteController: CLLocationManagerDelegate {
         }
     }
 
-    func reroute(from location: CLLocation) {
+    func reroute(from location: CLLocation, along progress: RouteProgress) {
         if let lastRerouteLocation = lastRerouteLocation {
             guard location.distance(from: lastRerouteLocation) >= RouteControllerMaximumDistanceBeforeRecalculating else {
                 return
@@ -573,7 +573,7 @@ extension RouteController: CLLocationManagerDelegate {
 
         self.lastRerouteLocation = location
 
-        getDirections(from: location) { [weak self] (route, error) in
+        getDirections(from: location, along: progress) { [weak self] (route, error) in
             guard let strongSelf = self else {
                 return
             }
@@ -621,51 +621,31 @@ extension RouteController: CLLocationManagerDelegate {
         }
     }
 
-    func getDirections(from location: CLLocation, completion: @escaping (_ route: Route?, _ error: Error?)->Void) {
+    func getDirections(from location: CLLocation, along progress: RouteProgress, completion: @escaping (_ route: Route?, _ error: Error?)->Void) {
         routeTask?.cancel()
-
-        let options = routeProgress.route.routeOptions
-        options.waypoints = [Waypoint(coordinate: location.coordinate)] + routeProgress.remainingWaypoints
-        if let firstWaypoint = options.waypoints.first, location.course >= 0 {
-            firstWaypoint.heading = location.course
-            firstWaypoint.headingAccuracy = 90
-        }
+        let options = progress.reroutingOptions(with: location)
 
         self.lastRerouteLocation = location
 
-        if let accessToken = routeProgress.route.accessToken, let apiEndpoint = routeProgress.route.apiEndpoint, let host = apiEndpoint.host {
-            directions = Directions(accessToken: accessToken, host: host)
+        let complete = { [weak self] (route: Route?, error: NSError?) in
+            self?.isRerouting = false
+            completion(route, error)
         }
+        
+        routeTask = directions.calculate(options) {(waypoints, potentialRoutes, potentialError) in
 
-        routeTask = directions.calculate(options) { [weak self] (waypoints, routes, error) in
-            defer {
-                self?.isRerouting = false
+            guard let routes = potentialRoutes else {
+                return complete(nil, potentialError)
             }
-            if let error = error {
-                return completion(nil, error)
-            }
-
-            guard let routes = routes else {
-                return completion(nil, nil)
-            }
-
-            if let route = self?.mostSimilarRoute(in: routes) {
-                return completion(route, error)
-            } else if let route = routes.first {
-                return completion(route, error)
-            } else {
-                return completion(nil, nil)
-            }
+            
+            let mostSimilar = routes.mostSimilar(to: progress.route)
+            
+            return complete(mostSimilar ?? routes.first, potentialError)
+            
         }
     }
 
-    func mostSimilarRoute(in routes: [Route]) -> Route? {
-        return routes.min { (left, right) -> Bool in
-            let leftDistance = left.description.minimumEditDistance(to: routeProgress.route.description)
-            let rightDistance = right.description.minimumEditDistance(to: routeProgress.route.description)
-            return leftDistance < rightDistance
-        }
-    }
+
 
     func updateDistanceToIntersection(from location: CLLocation) {
         guard var intersections = routeProgress.currentLegProgress.currentStepProgress.step.intersections else { return }

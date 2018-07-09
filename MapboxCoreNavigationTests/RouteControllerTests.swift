@@ -236,7 +236,7 @@ class RouteControllerTests: XCTestCase {
         }
 
         // MARK: When told to re-route from location -- `reroute(from:)`
-        routeController.reroute(from: testLocation)
+        routeController.reroute(from: testLocation, along: routeController.routeProgress)
 
         // MARK: it tells the delegate & posts a willReroute notification
         XCTAssertTrue(delegate.recentMessages.contains("routeController(_:willRerouteFrom:)"))

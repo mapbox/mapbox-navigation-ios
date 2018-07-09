@@ -142,7 +142,7 @@ class MapboxCoreNavigationTests: XCTestCase {
             return true
         }
         
-        navigation.reroute(from: CLLocation(latitude: 0, longitude: 0))
+        navigation.reroute(from: CLLocation(latitude: 0, longitude: 0), along: navigation.routeProgress)
         directionsClientSpy.fireLastCalculateCompletion(with: nil, routes: nil, error: NSError())
         
         waitForExpectations(timeout: 2) { (error) in
