@@ -50,24 +50,25 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
             mapView?.showRoutes(routes)
             mapView?.showWaypoints(current)
             
-            if #available(iOS 12.0, *) {
-                guard let carViewController = carViewController, let route = routes.first else { return }
+            guard #available(iOS 12.0, *), let carViewController = carViewController else { return }
                 
-                // Use custom extension on CPMaptemplate to make it easy to preview a `Route`.
-                mapTemplate?.showTripPreviews(routes, textConfiguration: nil)
-                
-                carViewController.mapView?.showRoutes(routes)
-                carViewController.mapView?.showWaypoints(current)
-                
+            // Use custom extension on CPMaptemplate to make it easy to preview a `Route`.
+            mapTemplate?.showTripPreviews(routes, textConfiguration: nil)
+            
+            
+            carViewController.mapView?.showRoutes(routes)
+            carViewController.mapView?.showWaypoints(current)
+            
+            // Wait for preview UI to show up so we can get the proper safeAreaInsets.
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 let padding: CGFloat = 25
                 let bounds = UIEdgeInsets(top: carViewController.view.safeAreaInsets.top + padding,
                                           left: carViewController.view.safeAreaInsets.left + padding,
                                           bottom: carViewController.view.safeAreaInsets.bottom + padding,
                                           right: carViewController.view.safeAreaInsets.right + padding)
                 
-                let line = MGLPolyline(coordinates: route.coordinates!, count: UInt(route.coordinates!.count))
+                let line = MGLPolyline(coordinates: current.coordinates!, count: UInt(current.coordinates!.count))
                 carViewController.mapView?.setVisibleCoordinateBounds(line.overlayBounds, edgePadding: bounds, animated: true)
-                carViewController.routes = routes
             }
         }
     }
@@ -540,12 +541,15 @@ extension ViewController: CarPlayNavigationDelegate {
 extension ViewController: CPMapTemplateDelegate {
     func mapTemplate(_ mapTemplate: CPMapTemplate, startedTrip trip: CPTrip, using routeChoice: CPRouteChoice) {
         startBasicNavigation()
-//        guard let routes = routes, let routeIndex = trip.routeChoices.lastIndex(where: {$0 == routeChoice}) else { return }
-//        let route = routes[routeIndex]
-//
-//        guard let carPlayViewController = carPlayNavigationView(for: trip, route: route) else { return }
-//        present(carPlayViewController, animated: true, completion: nil)
-
+    }
+    
+    func mapTemplate(_ mapTemplate: CPMapTemplate, selectedPreviewFor trip: CPTrip, using routeChoice: CPRouteChoice) {
+        guard let routeIndex = trip.routeChoices.lastIndex(where: {$0 == routeChoice}), var routes = appViewFromCarPlayWindow?.routes else { return }
+        let route = routes[routeIndex]
+        guard let foundRoute = routes.firstIndex(where: {$0 == route}) else { return }
+        routes.remove(at: foundRoute)
+        routes.insert(route, at: 0)
+        appViewFromCarPlayWindow?.routes = routes
     }
 }
 
