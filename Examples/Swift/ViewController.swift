@@ -282,7 +282,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     // MARK: Basic Navigation
 
     func startBasicNavigation(mode: ExampleMode = .default) {
-        guard let route = currentRoute else { return }
+        guard let route = appViewFromCarPlayWindow?.currentRoute else { return }
 
         exampleMode = mode
 
@@ -342,7 +342,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     }
 
     func navigationLocationManager() -> NavigationLocationManager {
-        guard let route = currentRoute else { return NavigationLocationManager() }
+        guard let route = appViewFromCarPlayWindow?.currentRoute ?? currentRoute else { return NavigationLocationManager() }
         return simulationButton.isSelected ? SimulatedLocationManager(route: route) : NavigationLocationManager()
     }
 
