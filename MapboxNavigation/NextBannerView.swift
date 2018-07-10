@@ -14,6 +14,11 @@ open class NextBannerView: UIView {
     weak var maneuverView: ManeuverView!
     weak var instructionLabel: NextInstructionLabel!
     weak var bottomSeparatorView: SeparatorView!
+    weak var instructionDelegate: VisualInstructionDelegate? {
+        didSet {
+            instructionLabel.instructionDelegate = instructionDelegate
+        }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -39,6 +44,7 @@ open class NextBannerView: UIView {
         self.maneuverView = maneuverView
         
         let instructionLabel = NextInstructionLabel()
+        instructionLabel.instructionDelegate = instructionDelegate
         instructionLabel.shieldHeight = instructionLabel.font.pointSize
         instructionLabel.translatesAutoresizingMaskIntoConstraints = false
         addSubview(instructionLabel)

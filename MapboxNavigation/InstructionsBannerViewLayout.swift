@@ -23,6 +23,7 @@ extension BaseInstructionsBannerView {
         self.distanceLabel = distanceLabel
         
         let primaryLabel = PrimaryLabel()
+        primaryLabel.instructionDelegate = instructionDelegate
         primaryLabel.translatesAutoresizingMaskIntoConstraints = false
         primaryLabel.allowsDefaultTighteningForTruncation = true
         primaryLabel.adjustsFontSizeToFitWidth = true
@@ -33,6 +34,7 @@ extension BaseInstructionsBannerView {
         self.primaryLabel = primaryLabel
         
         let secondaryLabel = SecondaryLabel()
+        secondaryLabel.instructionDelegate = instructionDelegate
         secondaryLabel.translatesAutoresizingMaskIntoConstraints = false
         secondaryLabel.allowsDefaultTighteningForTruncation = true
         secondaryLabel.numberOfLines = 1
