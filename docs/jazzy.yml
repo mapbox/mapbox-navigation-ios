@@ -13,8 +13,6 @@ hide_documentation_coverage: Yes
 custom_categories:
   - name: Guides
     children:
-      - Storyboards
-      - Localization and Internationalization
       - Using Map Matching
       - Reduce Memory Usage
   - name: Examples

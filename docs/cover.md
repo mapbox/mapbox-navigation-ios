@@ -41,7 +41,7 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
 
 1. Users expect the SDK to continue to track the user’s location and deliver audible instructions even while a different application is visible or the device is locked. Go to the Capabilities tab. Under the Background Modes section, enable “Audio, AirPlay, and Picture in Picture” and “Location updates”. (Alternatively, add the `audio` and `location` values to the `UIBackgroundModes` array in the Info tab.)
 
-Now import the relevant modules and present a new `NavigationViewController`. You can also [push to a navigation view controller from within a storyboard](storyboards.html) if your application’s UI is laid out in Interface Builder.
+Now import the relevant modules and present a new `NavigationViewController`. You can also [push to a navigation view controller from within a storyboard](https://www.mapbox.com/ios-sdk/navigation/overview/storyboards/) if your application’s UI is laid out in Interface Builder.
 
 ```swift
 import MapboxDirections
