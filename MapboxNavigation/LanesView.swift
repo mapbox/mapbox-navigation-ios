@@ -66,11 +66,12 @@ open class LanesView: UIView {
         separatorView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
     }
     
-    func update(for visualInstruction: VisualInstructionBanner, currentStepProgress: RouteStepProgress) {
+    func update(for currentStepProgress: RouteStepProgress) {
         clearLaneViews()
         
         let distanceTraveled = currentStepProgress.distanceTraveled
-        guard let tertiaryInstruction = visualInstruction.tertiaryInstruction,
+        guard let visualInstruction = currentStepProgress.currentVisualInstruction,
+              let tertiaryInstruction = visualInstruction.tertiaryInstruction,
                   distanceTraveled <= visualInstruction.distanceAlongStep,
                   tertiaryInstruction.containsLaneIndications
                 else {

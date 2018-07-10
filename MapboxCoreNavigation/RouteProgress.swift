@@ -453,11 +453,20 @@ open class RouteStepProgress: NSObject {
     }
     
     /**
-     Current Instruction for the user's progress along a step.
+     Current spoken instruction for the user's progress along a step.
      */
     @objc public var currentSpokenInstruction: SpokenInstruction? {
         guard let instructionsSpokenAlongStep = step.instructionsSpokenAlongStep else { return nil }
         guard spokenInstructionIndex < instructionsSpokenAlongStep.count else { return nil }
         return instructionsSpokenAlongStep[spokenInstructionIndex]
+    }
+    
+    /**
+     Current visual instruction for the user's progress along a step.
+     */
+    @objc public var currentVisualInstruction: VisualInstructionBanner? {
+        guard let instructionsDisplayedAlongStep = step.instructionsDisplayedAlongStep else { return nil }
+        guard visualInstructionIndex < instructionsDisplayedAlongStep.count else { return nil }
+        return instructionsDisplayedAlongStep[visualInstructionIndex]
     }
 }

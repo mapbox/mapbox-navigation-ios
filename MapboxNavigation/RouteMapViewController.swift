@@ -190,6 +190,7 @@ class RouteMapViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(rerouteDidFail(notification:)), name: .routeControllerDidFailToReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground(notification:)), name: .UIApplicationWillEnterForeground, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(removeTimer), name: .UIApplicationDidEnterBackground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateInstructionsBanner(notification:)), name: .routeControllerDidPassVisualInstructionPoint, object: routeController)
         subscribeToKeyboardNotifications()
     }
     
@@ -199,6 +200,7 @@ class RouteMapViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: .routeControllerDidFailToReroute, object: nil)
         NotificationCenter.default.removeObserver(self, name: .UIApplicationWillEnterForeground, object: nil)
         NotificationCenter.default.removeObserver(self, name: .UIApplicationDidEnterBackground, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .routeControllerDidPassVisualInstructionPoint, object: nil)
         unsubscribeFromKeyboardNotifications()
     }
 
@@ -274,7 +276,11 @@ class RouteMapViewController: UIViewController {
         updateETA()
         currentStepIndexMapped = 0
         
-        instructionsBannerView.update(for: routeController.routeProgress.currentLegProgress, navigationView: navigationView)
+        instructionsBannerView.updateDistance(for: routeController.routeProgress.currentLegProgress.currentStepProgress)
+        lanesView.update(for: routeController.routeProgress.currentLegProgress.currentStepProgress)
+        if lanesView.isHidden {
+            nextBannerView.update(for: routeController.routeProgress.currentLegProgress.currentStepProgress)
+        }
         
         mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
         mapView.showRoutes([routeController.routeProgress.route], legIndex: routeController.routeProgress.legIndex)
@@ -337,6 +343,11 @@ class RouteMapViewController: UIViewController {
             showStatus(title: title, withSpinner: true, for: 3)
         }
     }
+    
+    @objc func updateInstructionsBanner(notification: NSNotification) {
+        guard let routeProgress = notification.userInfo?[RouteControllerNotificationUserInfoKey.routeProgressKey] as? RouteProgress else { return }
+        instructionsBannerView.updateInstruction(routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
+    }
 
     func updateMapOverlays(for routeProgress: RouteProgress) {
         if routeProgress.currentLegProgress.followOnStep != nil {
@@ -392,7 +403,11 @@ class RouteMapViewController: UIViewController {
         resetETATimer()
         updateETA()
         
-        instructionsBannerView.update(for: routeProgress.currentLegProgress, navigationView: navigationView)
+        lanesView.update(for: routeProgress.currentLegProgress.currentStepProgress)
+        instructionsBannerView.updateDistance(for: routeProgress.currentLegProgress.currentStepProgress)
+        if lanesView.isHidden {
+            nextBannerView.update(for: routeProgress.currentLegProgress.currentStepProgress)
+        }
         
         if currentLegIndexMapped != routeProgress.legIndex {
             mapView.showWaypoints(routeProgress.route, legIndex: routeProgress.legIndex)
@@ -592,6 +607,10 @@ extension RouteMapViewController: NavigationViewDelegate {
     
     func mapViewDidFinishLoadingMap(_ mapView: MGLMapView) {
         delegate?.mapViewDidFinishLoadingMap?(mapView)
+    }
+    
+    func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
+        return delegate?.label?(label, willPresent: instruction, as: presented)
     }
     
     // MARK: NavigationMapViewCourseTrackingDelegate
@@ -868,7 +887,7 @@ extension RouteMapViewController: StepsViewControllerDelegate {
         navigationView.instructionsBannerContentView.backgroundColor = instructionsView.backgroundColor
         
         view.addSubview(instructionsView)
-        instructionsView.set(instructions)
+        instructionsView.updateInstruction(instructions)
         previewInstructionsView = instructionsView
     }
     
@@ -947,7 +966,7 @@ fileprivate extension UIViewAnimationOptions {
         }
     }
 }
-@objc protocol RouteMapViewControllerDelegate: NavigationMapViewDelegate, MGLMapViewDelegate {
+@objc protocol RouteMapViewControllerDelegate: NavigationMapViewDelegate, MGLMapViewDelegate, VisualInstructionDelegate {
 
     func mapViewControllerDidOpenFeedback(_ mapViewController: RouteMapViewController)
     func mapViewControllerDidCancelFeedback(_ mapViewController: RouteMapViewController)

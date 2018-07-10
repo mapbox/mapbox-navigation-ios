@@ -34,6 +34,13 @@ open class BaseInstructionsBannerView: UIControl {
         }
     }
     
+    weak var instructionDelegate: VisualInstructionDelegate? {
+        didSet {
+            primaryLabel.instructionDelegate = instructionDelegate
+            secondaryLabel.instructionDelegate = instructionDelegate
+        }
+    }
+    
     var centerYConstraints = [NSLayoutConstraint]()
     var baselineConstraints = [NSLayoutConstraint]()
     
@@ -83,7 +90,10 @@ open class BaseInstructionsBannerView: UIControl {
         }
     }
     
-    func set(_ instruction: VisualInstructionBanner?) {
+    /**
+     Updates the instructions banner info with a given `VisualInstructionBanner`.
+     */
+    public func updateInstruction(_ instruction: VisualInstructionBanner?) {
         let secondaryInstruction = instruction?.secondaryInstruction
         primaryLabel.numberOfLines = secondaryInstruction == nil ? 2 : 1
         
@@ -109,29 +119,10 @@ open class BaseInstructionsBannerView: UIControl {
     }
     
     /**
-     Updates the instructions banner for a given `RouteProgress` and an optional `NavigationView`.
-     
-     - Note: Provide a navigation view to set the lanes and next banner views for tertiary visual instructions.
+     Updates the instructions banner distance info for a given `RouteStepProgress`.
      */
-    public func update(for currentLegProgress: RouteLegProgress,  navigationView: NavigationView? = nil) {
-        let stepProgress = currentLegProgress.currentStepProgress
-        let distanceRemaining = stepProgress.distanceRemaining
-        
-        guard let visualInstructions = stepProgress.remainingVisualInstructions else { return }
-        
-        for visualInstruction in visualInstructions {
-            if stepProgress.distanceRemaining <= visualInstruction.distanceAlongStep || stepProgress.visualInstructionIndex == 0 {
-                
-                navigationView?.lanesView.update(for: visualInstruction, currentStepProgress: stepProgress)
-                navigationView?.nextBannerView.update(for: visualInstruction, currentStepProgress: stepProgress)
-                
-                set(visualInstruction)
-                
-                stepProgress.visualInstructionIndex += 1
-                break
-            }
-        }
-        
+    public func updateDistance(for currentStepProgress: RouteStepProgress) {
+        let distanceRemaining = currentStepProgress.distanceRemaining
         distance = distanceRemaining > 5 ? distanceRemaining : 0
     }
 }

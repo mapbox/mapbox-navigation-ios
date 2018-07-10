@@ -14,6 +14,10 @@
 			<string>ld</string>
 			<key>one</key>
 			<string>קבע דירוג של %ld כוכבים</string>
+			<key>two</key>
+			<string>קבע דירוג של %ld כוכבים</string>
+			<key>many</key>
+			<string>קבע דירוג של %ld כוכבים</string>
 			<key>other</key>
 			<string>קבע דירוג של %ld כוכבים</string>
 		</dict>
@@ -30,6 +34,10 @@
 			<string>ld</string>
 			<key>one</key>
 			<string> דורג ב%ld כוכב</string>
+			<key>two</key>
+			<string> דורג ב%ld כוכבים</string>
+			<key>many</key>
+			<string> דורג ב%ld כוכבים</string>
 			<key>other</key>
 			<string> דורג ב%ld כוכבים</string>
 		</dict>

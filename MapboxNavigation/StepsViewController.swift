@@ -254,7 +254,7 @@ extension StepsViewController: UITableViewDataSource {
         let step = sections[indexPath.section][indexPath.row]
         
         if let instructions = step.instructionsDisplayedAlongStep?.last {
-            cell.instructionsView.set(instructions)
+            cell.instructionsView.updateInstruction(instructions)
             cell.instructionsView.secondaryLabel.instruction = instructions.secondaryInstruction
         }
         cell.instructionsView.distance = step.distance
@@ -336,7 +336,7 @@ open class StepTableViewCell: UITableViewCell {
 
     open override func prepareForReuse() {
         super.prepareForReuse()
-        instructionsView.set(nil)
+        instructionsView.updateInstruction(nil)
     }
 }
 

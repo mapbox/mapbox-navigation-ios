@@ -3,6 +3,7 @@
 
 const NSNotificationName MBRouteControllerProgressDidChangeNotification             = @"RouteControllerProgressDidChange";
 const NSNotificationName MBRouteControllerDidPassSpokenInstructionPointNotification = @"RouteControllerDidPassSpokenInstructionPoint";
+const NSNotificationName MBRouteControllerDidPassVisualInstructionPointNotification = @"MBRouteControllerDidPassVisualInstructionPoint";
 const NSNotificationName MBRouteControllerWillRerouteNotification                   = @"RouteControllerWillReroute";
 const NSNotificationName MBRouteControllerDidRerouteNotification                    = @"RouteControllerDidReroute";
 const NSNotificationName MBRouteControllerDidFailToRerouteNotification              = @"RouteControllerDidFailToReroute";

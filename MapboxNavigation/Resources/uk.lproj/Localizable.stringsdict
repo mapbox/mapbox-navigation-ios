@@ -16,6 +16,8 @@
 			<string>Встановити %ld-зірковий рейтинг</string>
 			<key>few</key>
 			<string>Встановити %ld-зірковий рейтинг</string>
+			<key>many</key>
+			<string>Встановити %ld-зірковий рейтинг</string>
 			<key>other</key>
 			<string>Встановити %ld-зірковий рейтинг</string>
 		</dict>
@@ -34,6 +36,8 @@
 			<string>%ld зірка.</string>
 			<key>few</key>
 			<string>%ld зірки.</string>
+			<key>many</key>
+			<string>%ld зірок.</string>
 			<key>other</key>
 			<string>%ld зірок.</string>
 		</dict>
