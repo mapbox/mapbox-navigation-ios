@@ -15,16 +15,7 @@ custom_categories:
     children:
       - Using Map Matching
       - Reduce Memory Usage
-  - name: Examples
-    children:
-      - Basic
-      - Styled UI Elements
-      - Waypoint Arrival Screen
-      - Embedded Navigation
-      - Advanced
-      - Custom Voice Controller
-      - Custom Destination Marker
-      - Custom Server
+      - Styling the UI
   - name: Turn-by-turn UI
     children:
       - NavigationViewController
