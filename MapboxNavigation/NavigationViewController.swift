@@ -315,6 +315,15 @@ open class NavigationViewController: UIViewController {
         }
     }
     
+    /**
+     Bool which should be set to true if a CarPlayNavigationView is also being used.
+     */
+    @objc public var isUsedInConjunctionWithCarPlayWindow = false {
+        didSet {
+            mapViewController?.isUsedInConjunctionWithCarPlayWindow = isUsedInConjunctionWithCarPlayWindow
+        }
+    }
+    
     var mapViewController: RouteMapViewController?
     
     /**

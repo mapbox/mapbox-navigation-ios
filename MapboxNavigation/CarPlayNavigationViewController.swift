@@ -70,6 +70,8 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         suspendNotifications()
+        //Todo: For some reason, when deiniting this view controller, the voice controller sticks around.
+        voiceController = nil
     }
     
     func resumeNotifications() {
@@ -139,7 +141,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
             .reportTraffic,
             .confusingInstructions,
             .generalMapError,
-            .badRoute,
+            .badRoute
             ]
         
         let feedbackButtonHandler: (_: CPGridButton) -> Void = { [weak self] (button) in
@@ -202,13 +204,13 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         // Update the user puck
         mapView?.updateCourseTracking(location: location, animated: true)
         
-        let index = routeController.routeProgress.currentLegProgress.stepIndex
+        let index = routeProgress.currentLegProgress.stepIndex
         
         if index != currentStepIndex {
             updateManeuvers()
-            mapView?.showWaypoints(routeController.routeProgress.route)
+            mapView?.showWaypoints(routeProgress.route)
             currentStepIndex = index
-            mapView?.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
+            mapView?.addArrow(route: routeProgress.route, legIndex: routeProgress.legIndex, stepIndex: routeProgress.currentLegProgress.stepIndex + 1)
         }
         
         let congestionLevel = routeProgress.averageCongestionLevelRemainingOnLeg ?? .unknown
@@ -226,46 +228,47 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     }
     
     func updateManeuvers() {
+        guard let visualInstructions = routeController.routeProgress.currentLegProgress.currentStep.instructionsDisplayedAlongStep else { return }
         let step = routeController.routeProgress.currentLegProgress.currentStep
         
-        let maneuver = CPManeuver()
-        let backupText = step.instructionsDisplayedAlongStep?.first?.primaryInstruction.text ?? step.instructions
-        
-        maneuver.instructionVariants = [backupText]
-
-        // todo get this to work and not crash
-        if let visual = step.instructionsDisplayedAlongStep?.last {
+        let maneuvers: [CPManeuver] = visualInstructions.map { visualInstruction in
+            let maneuver = CPManeuver()
+            let backupText = visualInstructions.first?.primaryInstruction.text ?? step.instructions
+            
+            maneuver.instructionVariants = [backupText]
+            
             let instructionLabel = InstructionLabel()
             instructionLabel.availableBounds = {
                 // Estimating the width of Apple's maneuver view
                 let widthOfManeuverView = max(self.view.safeArea.left, self.view.safeArea.right)
                 return CGRect(x: 0, y: 0, width: widthOfManeuverView, height: 30)
             }
-            instructionLabel.instruction = visual.primaryInstruction
+            instructionLabel.instruction = visualInstruction.primaryInstruction
             if let attributed = instructionLabel.attributedText {
                 maneuver.attributedInstructionVariants = [attributed]
             }
+            
+            maneuver.initialTravelEstimates = CPTravelEstimates(distanceRemaining: Measurement(value: step.distance, unit: UnitLength.meters), timeRemaining: step.expectedTravelTime)
+            
+            let primaryColors: [UIColor] = [.black, .white]
+            
+            if let visual = step.instructionsDisplayedAlongStep?.last {
+                let blackAndWhiteManeuverIcons: [UIImage] = primaryColors.compactMap { (color) in
+                    let mv = ManeuverView()
+                    mv.frame = CGRect(x: 0, y: 0, width: 38, height: 38)
+                    mv.primaryColor = color
+                    mv.backgroundColor = .clear
+                    mv.visualInstruction = visual
+                    return mv.imageRepresentation
+                }
+                if blackAndWhiteManeuverIcons.count == 2 {
+                    maneuver.symbolSet = CPImageSet(lightContentImage: blackAndWhiteManeuverIcons[1], darkContentImage: blackAndWhiteManeuverIcons[0])
+                }
+            }
+            return maneuver
         }
         
-        maneuver.initialTravelEstimates = CPTravelEstimates(distanceRemaining: Measurement(value: step.distance, unit: UnitLength.meters), timeRemaining: step.expectedTravelTime)
-        
-        let primaryColors: [UIColor] = [.black, .white]
-        
-        if let visual = step.instructionsDisplayedAlongStep?.last {
-            let blackAndWhiteManeuverIcons: [UIImage] = primaryColors.compactMap { (color) in
-                let mv = ManeuverView()
-                mv.frame = CGRect(x: 0, y: 0, width: 38, height: 38)
-                mv.primaryColor = color
-                mv.backgroundColor = .clear
-                mv.visualInstruction = visual
-                return mv.imageRepresentation
-            }
-            if blackAndWhiteManeuverIcons.count == 2 {
-                maneuver.symbolSet = CPImageSet(lightContentImage: blackAndWhiteManeuverIcons[1], darkContentImage: blackAndWhiteManeuverIcons[0])
-            }
-        }
-        
-        carSession.upcomingManeuvers = [maneuver]
+        carSession.upcomingManeuvers = maneuvers
     }
 }
 

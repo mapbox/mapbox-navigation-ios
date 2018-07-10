@@ -51,6 +51,11 @@ class RouteMapViewController: UIViewController {
     var stepsViewController: StepsViewController?
     private lazy var geocoder: CLGeocoder = CLGeocoder()
     var destination: Waypoint?
+    var isUsedInConjunctionWithCarPlayWindow = false {
+        didSet {
+            displayPreviewInstructions()
+        }
+    }
     
     var showsEndOfRoute: Bool = true
 

@@ -373,6 +373,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
             carViewController.present(carPlayNavigationViewController, animated: true, completion: nil)
             
             if let appViewFromCarPlayWindow = appViewFromCarPlayWindow {
+                navigationViewController.isUsedInConjunctionWithCarPlayWindow = true
                 appViewFromCarPlayWindow.present(navigationViewController, animated: true)
             }
         } else {
