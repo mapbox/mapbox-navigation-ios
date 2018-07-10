@@ -46,6 +46,13 @@ extension Notification.Name {
      The user info dictionary contains the key `RouteControllerNotificationUserInfoKey.routeProgressKey`.
      */
     public static let routeControllerDidPassSpokenInstructionPoint = MBRouteControllerDidPassSpokenInstructionPoint
+    
+    /**
+     Posted when `RouteController` detects that the user has passed an ideal point for displaying an instruction.
+     
+     The user info dictionary contains the key `RouteControllerNotificationUserInfoKey.routeProgressKey`.
+     */
+    public static let routeControllerDidPassVisualInstructionPoint = MBRouteControllerDidPassVisualInstructionPoint
 }
 
 /**
@@ -268,6 +275,17 @@ open class RouteController: NSObject {
     }
 
     var userSnapToStepDistanceFromManeuver: CLLocationDistance?
+    
+    private var currentVisualInstructionIndex: Int {
+        let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
+        guard let visualInstructions = currentStepProgress.remainingVisualInstructions else { return 0 }
+        
+        let visualInstructionDistances = visualInstructions.map { $0.distanceAlongStep }
+        
+        return visualInstructionDistances.index { currentStepProgress.distanceRemaining <= $0 } ?? visualInstructions.startIndex
+    }
+    
+    private var currentStepIndex: Int = NSNotFound
     
     /**
      Intializes a new `RouteController`.
@@ -650,6 +668,7 @@ extension RouteController: CLLocationManagerDelegate {
         }
 
         updateSpokenInstructionProgress(for: location)
+        updateVisualInstructionProgress()
 
         // Check for faster route given users current location
         guard reroutesProactively else { return }
@@ -975,6 +994,22 @@ extension RouteController: CLLocationManagerDelegate {
                 return
             }
         }
+    }
+    
+    func updateVisualInstructionProgress() {
+        let currentLegProgress = routeProgress.currentLegProgress
+        let currentStepProgress = currentLegProgress.currentStepProgress
+        guard currentStepIndex != currentLegProgress.stepIndex ||
+              currentVisualInstructionIndex != currentStepProgress.visualInstructionIndex else {
+                return
+        }
+        
+        currentStepIndex = currentLegProgress.stepIndex
+        currentStepProgress.visualInstructionIndex = currentVisualInstructionIndex
+
+        NotificationCenter.default.post(name: .routeControllerDidPassVisualInstructionPoint, object: self, userInfo: [
+            RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress
+            ])
     }
 
     func advanceStepIndex(to: Array<RouteStep>.Index? = nil) {

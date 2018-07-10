@@ -190,6 +190,7 @@ class RouteMapViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(rerouteDidFail(notification:)), name: .routeControllerDidFailToReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground(notification:)), name: .UIApplicationWillEnterForeground, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(removeTimer), name: .UIApplicationDidEnterBackground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateInstructionsBanner(notification:)), name: .routeControllerDidPassVisualInstructionPoint, object: routeController)
         subscribeToKeyboardNotifications()
     }
     
@@ -199,6 +200,7 @@ class RouteMapViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: .routeControllerDidFailToReroute, object: nil)
         NotificationCenter.default.removeObserver(self, name: .UIApplicationWillEnterForeground, object: nil)
         NotificationCenter.default.removeObserver(self, name: .UIApplicationDidEnterBackground, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .routeControllerDidPassVisualInstructionPoint, object: nil)
         unsubscribeFromKeyboardNotifications()
     }
 
@@ -274,7 +276,7 @@ class RouteMapViewController: UIViewController {
         updateETA()
         currentStepIndexMapped = 0
         
-        instructionsBannerView.update(for: routeController.routeProgress.currentLegProgress)
+        instructionsBannerView.updateDistance(for: routeController.routeProgress.currentLegProgress.currentStepProgress)
         lanesView.update(for: routeController.routeProgress.currentLegProgress)
         if lanesView.isHidden {
             nextBannerView.update(for: routeController.routeProgress)
@@ -341,6 +343,11 @@ class RouteMapViewController: UIViewController {
             showStatus(title: title, withSpinner: true, for: 3)
         }
     }
+    
+    @objc func updateInstructionsBanner(notification: NSNotification) {
+        guard let routeProgress = notification.userInfo?[RouteControllerNotificationUserInfoKey.routeProgressKey] as? RouteProgress else { return }
+        instructionsBannerView.updateInstruction(routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
+    }
 
     func updateMapOverlays(for routeProgress: RouteProgress) {
         if routeProgress.currentLegProgress.followOnStep != nil {
@@ -398,7 +405,7 @@ class RouteMapViewController: UIViewController {
         updateETA()
         
         lanesView.update(for: routeProgress.currentLegProgress)
-        instructionsBannerView.update(for: routeProgress.currentLegProgress)
+        instructionsBannerView.updateDistance(for: routeProgress.currentLegProgress.currentStepProgress)
         if lanesView.isHidden {
             nextBannerView.update(for: routeProgress)
         }
@@ -881,7 +888,7 @@ extension RouteMapViewController: StepsViewControllerDelegate {
         navigationView.instructionsBannerContentView.backgroundColor = instructionsView.backgroundColor
         
         view.addSubview(instructionsView)
-        instructionsView.set(instructions)
+        instructionsView.updateInstruction(instructions)
         previewInstructionsView = instructionsView
     }
     
