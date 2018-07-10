@@ -361,8 +361,9 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     func presentAndRemoveMapview(_ navigationViewController: NavigationViewController) {
         let route = navigationViewController.routeController.routeProgress.route
         
+        
         // If we have a CarPlay window, show navigation on it as well as on the phone.
-        if let carViewController = carViewController, let trip = route.asCPTrip, let mapTemplate = mapTemplate, let interfaceController = interfaceController {
+        if #available(iOS 12.0, *), let carViewController = carViewController, let trip = route.asCPTrip, let mapTemplate = mapTemplate, let interfaceController = interfaceController {
             let session = mapTemplate.startNavigationSession(for: trip)
             
             mapTemplate.update(route.travelEstimates, for: trip, with: .default)
