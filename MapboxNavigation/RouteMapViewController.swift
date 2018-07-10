@@ -277,10 +277,6 @@ class RouteMapViewController: UIViewController {
         currentStepIndexMapped = 0
         
         instructionsBannerView.updateDistance(for: routeController.routeProgress.currentLegProgress.currentStepProgress)
-        lanesView.update(for: routeController.routeProgress.currentLegProgress.currentStepProgress)
-        if lanesView.isHidden {
-            nextBannerView.update(for: routeController.routeProgress.currentLegProgress.currentStepProgress)
-        }
         
         mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
         mapView.showRoutes([routeController.routeProgress.route], legIndex: routeController.routeProgress.legIndex)
@@ -347,6 +343,9 @@ class RouteMapViewController: UIViewController {
     @objc func updateInstructionsBanner(notification: NSNotification) {
         guard let routeProgress = notification.userInfo?[RouteControllerNotificationUserInfoKey.routeProgressKey] as? RouteProgress else { return }
         instructionsBannerView.updateInstruction(routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
+        lanesView.update(for: routeProgress.currentLegProgress.currentStepProgress)
+        nextBannerView.update(for: routeProgress.currentLegProgress.currentStepProgress)
+
     }
 
     func updateMapOverlays(for routeProgress: RouteProgress) {
@@ -403,11 +402,7 @@ class RouteMapViewController: UIViewController {
         resetETATimer()
         updateETA()
         
-        lanesView.update(for: routeProgress.currentLegProgress.currentStepProgress)
         instructionsBannerView.updateDistance(for: routeProgress.currentLegProgress.currentStepProgress)
-        if lanesView.isHidden {
-            nextBannerView.update(for: routeProgress.currentLegProgress.currentStepProgress)
-        }
         
         if currentLegIndexMapped != routeProgress.legIndex {
             mapView.showWaypoints(routeProgress.route, legIndex: routeProgress.legIndex)
