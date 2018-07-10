@@ -1,6 +1,6 @@
 #import <Mapbox/Mapbox.h>
 
-@interface MGLMapView (MGLNavigationAdditions) <CLLocationManagerDelegate>
+@interface MGLMapView (MGLNavigationAdditions)
 
 - (void)mapViewDidFinishRenderingFrameFullyRendered:(BOOL)fullyRendered;
 
