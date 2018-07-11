@@ -246,7 +246,6 @@
 		C549F8321F17F2C5001A0A2D /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
 		C549F8331F17F2C5001A0A2D /* MapboxMobileEvents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C54C655220336F2600D338E0 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54C655120336F2600D338E0 /* Constants.swift */; };
-		C551129A20F6854400100A89 /* Example-CarPlay.plist in Resources */ = {isa = PBXBuildFile; fileRef = C551129920F6854400100A89 /* Example-CarPlay.plist */; };
 		C551B0E620D42222009A986F /* NavigationLocationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C551B0E520D42222009A986F /* NavigationLocationManagerTests.swift */; };
 		C55C299920D2E2F600B0406C /* NavigationMapViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55C299820D2E2F600B0406C /* NavigationMapViewTests.swift */; };
 		C561735B1F182113005954F6 /* RouteStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = C561735A1F182113005954F6 /* RouteStep.swift */; };
@@ -696,7 +695,6 @@
 		C53F2F0920EBE66E00D9798F /* Route.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
 		C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxMobileEvents.framework; path = Carthage/Build/iOS/MapboxMobileEvents.framework; sourceTree = "<group>"; };
 		C54C655120336F2600D338E0 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		C551129920F6854400100A89 /* Example-CarPlay.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Example-CarPlay.plist"; sourceTree = "<group>"; };
 		C551B0E520D42222009A986F /* NavigationLocationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationLocationManagerTests.swift; sourceTree = "<group>"; };
 		C55C299820D2E2F600B0406C /* NavigationMapViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationMapViewTests.swift; sourceTree = "<group>"; };
 		C561735A1F182113005954F6 /* RouteStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteStep.swift; sourceTree = "<group>"; };
@@ -980,7 +978,6 @@
 				35002D5F1E5F6ADB0090E733 /* Assets.xcassets */,
 				35002D601E5F6ADB0090E733 /* Base.lproj */,
 				35002D5D1E5F6ABB0090E733 /* Info.plist */,
-				C551129920F6854400100A89 /* Example-CarPlay.plist */,
 				C57AD98920EAA39A0087B24B /* Entitlements.plist */,
 				C57AD98B20EAB3990087B24B /* Navigation_Example.mobileprovision */,
 			);
@@ -1782,7 +1779,6 @@
 				35002D691E5F6B2F0090E733 /* Main.storyboard in Resources */,
 				354D9F891EF2FE900006FAA8 /* tunnel.json in Resources */,
 				35002D611E5F6ADB0090E733 /* Assets.xcassets in Resources */,
-				C551129A20F6854400100A89 /* Example-CarPlay.plist in Resources */,
 				35002D621E5F6ADB0090E733 /* Base.lproj in Resources */,
 				355D20DC1EF30A6D0012B1E0 /* tunnel.route in Resources */,
 			);
@@ -2745,7 +2741,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/Examples/Swift/Example-CarPlay.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Examples/Swift/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.Example-CarPlay";
@@ -2774,7 +2770,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/Examples/Swift/Example-CarPlay.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Examples/Swift/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.Example-CarPlay";
