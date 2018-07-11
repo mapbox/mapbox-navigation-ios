@@ -34,7 +34,7 @@ class LaneTests: FBSnapshotTestCase {
         
         routeController.advanceStepIndex(to: stepIndex)
         
-        navigationView.lanesView.update(for: routeController.routeProgress.currentLegProgress)
+        navigationView.lanesView.update(for: routeController.routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
         navigationView.lanesView.show(animated: false)
         
         FBSnapshotVerifyView(navigationView.lanesView)

@@ -8,7 +8,7 @@ let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String : Any]
 let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
 let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
 let directions = Directions(accessToken: "pk.feedCafeDeadBeefBadeBede")
-let route = Route(json: jsonRoute, waypoints: [waypoint1, waypoint2], routeOptions: NavigationRouteOptions(waypoints: [waypoint1, waypoint2]))
+let route = Route(json: jsonRoute, waypoints: [waypoint1, waypoint2], options: NavigationRouteOptions(waypoints: [waypoint1, waypoint2]))
 
 let waitForInterval: TimeInterval = 5
 
@@ -108,7 +108,7 @@ class MapboxCoreNavigationTests: XCTestCase {
     
     func testArrive() {
         route.accessToken = "foo"
-        let locations: [CLLocation] = route.coordinates!.map { CLLocation(latitude: $0.latitude, longitude: $0.longitude) }
+        let locations: [CLLocation] = route.legs.first!.steps.first!.coordinates!.map { CLLocation(latitude: $0.latitude, longitude: $0.longitude) }
         let locationManager = ReplayLocationManager(locations: locations)
         locationManager.speedMultiplier = 20
         
