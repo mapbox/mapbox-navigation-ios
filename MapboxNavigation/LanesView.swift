@@ -83,10 +83,9 @@ open class LanesView: UIView {
             return lane
         })
         
-        guard let lanes = laneIndications, !lanes.isEmpty
-            else {
-                hide()
-                return
+        guard let lanes = laneIndications, !lanes.isEmpty else {
+            hide()
+            return
         }
         
         let subviews = lanes.map { LaneView(component: $0) }
