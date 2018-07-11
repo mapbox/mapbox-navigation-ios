@@ -95,7 +95,6 @@ open class NextBannerView: UIView {
         let distanceTraveled = currentStepProgress.distanceTraveled
         guard let visualInstruction = currentStepProgress.currentVisualInstruction,
               let tertiaryInstruction = visualInstruction.tertiaryInstruction,
-                  distanceTraveled <= visualInstruction.distanceAlongStep,
                   !tertiaryInstruction.containsLaneIndications
             else {
                     hide()
