@@ -8,36 +8,23 @@ import CarPlay
 private typealias RouteRequestSuccess = (([Route]) -> Void)
 private typealias RouteRequestFailure = ((NSError) -> Void)
 
-enum ExampleMode {
-    case `default`
-    case custom
-    case customInstruction
-    case styled
-    case multipleWaypoints
-}
 
-class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate {
-
+class ViewController: UIViewController, MGLMapViewDelegate {
+    
     // MARK: - IBOutlets
     @IBOutlet weak var longPressHintView: UIView!
-
     @IBOutlet weak var simulationButton: UIButton!
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var bottomBar: UIView!
-    
     @IBOutlet weak var clearMap: UIButton!
 
     // MARK: Properties
     var mapView: NavigationMapView?
-    var waypoints: [Waypoint] = []
-    var currentRoute: Route? {
-        get {
-            return routes?.first
-        }
-        set {
-            guard let selected = newValue else { routes?.remove(at: 0); return }
-            guard let routes = routes else { self.routes = [selected]; return }
-            self.routes = [selected] + routes.filter { $0 != selected }
+    var waypoints: [Waypoint] = [] {
+        didSet {
+            waypoints.forEach {
+                $0.coordinateAccuracy = -1
+            }
         }
     }
 
@@ -80,6 +67,8 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         self?.mapView?.removeWaypoints()
         self?.routes = routes
         self?.waypoints = current.routeOptions.waypoints
+        self?.clearMap.isHidden = false
+        self?.longPressHintView.isHidden = true
     }
 
     fileprivate lazy var defaultFailure: RouteRequestFailure = { [weak self] (error) in
@@ -87,17 +76,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         print(error.localizedDescription)
     }
 
-    var exampleMode: ExampleMode?
-
-    var locationManager = CLLocationManager()
-
     var alertController: UIAlertController!
-    
-    lazy var multipleStopsAction: UIAlertAction = {
-        return UIAlertAction(title: "Multiple Stops", style: .default, handler: { (action) in
-            self.startMultipleWaypoints()
-        })
-    }()
     
     // MARK: - CarPlay Properties
     
@@ -129,13 +108,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        locationManager.delegate = self
-        locationManager.requestWhenInUseAuthorization()
-
-        automaticallyAdjustsScrollViewInsets = false
-
-        simulationButton.isSelected = true
-        startButton.isEnabled = false
+        CLLocationManager().requestWhenInUseAuthorization()
         
         alertController = UIAlertController(title: "Start Navigation", message: "Select the navigation type", preferredStyle: .actionSheet)
         
@@ -145,21 +118,20 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         let day: ActionHandler = {_ in self.startNavigation(styles: [DayStyle()]) }
         let night: ActionHandler = {_ in self.startNavigation(styles: [NightStyle()]) }
         let custom: ActionHandler = {_ in self.startCustomNavigation() }
-        let customInstruction: ActionHandler = {_ in self.startCustomInstructionNavigation() }
         let styled: ActionHandler = {_ in self.startStyledNavigation() }
         
-        let actionPayloads: [(String, UIAlertActionStyle, ActionHandler?)] = [("Default UI", .default, basic),
-                                                ("DayStyle UI", .default, day),
-                                                ("NightStyle UI", .default, night),
-                                                ("Custom UI", .default, custom),
-                                                ("Custom Instructions", .default, customInstruction),
-                                                ("Styled UI", .default, styled),
-                                                ("Cancel", .cancel, nil)]
+        let actionPayloads: [(String, UIAlertActionStyle, ActionHandler?)] = [
+            ("Default UI", .default, basic),
+            ("DayStyle UI", .default, day),
+            ("NightStyle UI", .default, night),
+            ("Custom UI", .default, custom),
+            ("Styled UI", .default, styled),
+            ("Cancel", .cancel, nil)
+        ]
         
-        let actions = actionPayloads.map { payload in UIAlertAction(title: payload.0, style: payload.1, handler: payload.2)}
-        
-        actions.forEach(alertController.addAction(_:))
-
+        actionPayloads
+            .map { payload in UIAlertAction(title: payload.0, style: payload.1, handler: payload.2)}
+            .forEach(alertController.addAction(_:))
 
         if let popoverController = alertController.popoverPresentationController {
             popoverController.sourceView = self.startButton
@@ -181,20 +153,12 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         if (presentedViewController != nil) {
             DayStyle().apply()
         }
-        
     }
 
     // MARK: Gesture Recognizer Handlers
 
     @objc func didLongPress(tap: UILongPressGestureRecognizer) {
-        guard tap.state == .began else {
-            return
-        }
-
-        clearMap.isHidden = false
-        longPressHintView.isHidden = true
-        
-        guard let mapView = mapView else { return }
+        guard let mapView = mapView, tap.state == .began else { return }
 
         if let annotation = mapView.annotations?.last, waypoints.count > 2 {
             mapView.removeAnnotation(annotation)
@@ -202,22 +166,12 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
         if waypoints.count > 1 {
             waypoints = Array(waypoints.suffix(1))
-            multipleStopsAction.isEnabled = true
-        } else { //single waypoint
-            multipleStopsAction.isEnabled = false
         }
-
         
         let coordinates = mapView.convert(tap.location(in: mapView), toCoordinateFrom: mapView)
         // Note: The destination name can be modified. The value is used in the top banner when arriving at a destination.
-        let destinationName = "Dropped Pin #\(waypoints.endIndex + 1)"
-        let waypoint = Waypoint(coordinate: coordinates, name: destinationName)
-        waypoint.coordinateAccuracy = -1
+        let waypoint = Waypoint(coordinate: coordinates, name: "Dropped Pin #\(waypoints.endIndex + 1)")
         waypoints.append(waypoint)
-
-        if waypoints.count >= 2, !alertController.actions.contains(multipleStopsAction) {
-            alertController.addAction(multipleStopsAction)
-        }
 
         requestRoute()
     }
@@ -246,7 +200,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         mapView?.removeRoutes()
         mapView?.removeWaypoints()
         waypoints.removeAll()
-        multipleStopsAction.isEnabled = false
+        longPressHintView.isHidden = false
     }
 
     @IBAction func startButtonPressed(_ sender: Any) {
@@ -259,8 +213,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         guard waypoints.count > 0 else { return }
         guard let mapView = mapView else { return }
 
-        let departureName = "User location"
-        let userWaypoint = Waypoint(location: mapView.userLocation!.location!, heading: mapView.userLocation?.heading, name: departureName)
+        let userWaypoint = Waypoint(location: mapView.userLocation!.location!, heading: mapView.userLocation?.heading, name: "User location")
         waypoints.insert(userWaypoint, at: 0)
 
         let options = NavigationRouteOptions(waypoints: waypoints)
@@ -281,10 +234,8 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
     // MARK: Basic Navigation
 
-    func startBasicNavigation(mode: ExampleMode = .default) {
-        guard let route = appViewFromCarPlayWindow?.currentRoute else { return }
-
-        exampleMode = mode
+    func startBasicNavigation() {
+        guard let route = appViewFromCarPlayWindow?.routes?.first else { return }
 
         let navigationViewController = NavigationViewController(for: route, locationManager: navigationLocationManager())
         navigationViewController.delegate = self
@@ -293,28 +244,19 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     }
     
     func startNavigation(styles: [Style]) {
-        guard let route = currentRoute else { return }
-        
-        exampleMode = .default
+        guard let route = routes?.first else { return }
         
         let navigationViewController = NavigationViewController(for: route, styles: styles, locationManager: navigationLocationManager())
         navigationViewController.delegate = self
         
         presentAndRemoveMapview(navigationViewController)
     }
-
-    // MARK: Custom Instruction Example
-    func startCustomInstructionNavigation() {
-        startBasicNavigation(mode: .customInstruction)
-    }
     
     // MARK: Custom Navigation UI
     func startCustomNavigation() {
-        guard let route = self.currentRoute else { return }
+        guard let route = routes?.first else { return }
 
         guard let customViewController = storyboard?.instantiateViewController(withIdentifier: "custom") as? CustomViewController else { return }
-
-        exampleMode = .custom
 
         customViewController.userRoute = route
 
@@ -329,9 +271,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     // MARK: Styling the default UI
 
     func startStyledNavigation() {
-        guard let route = self.currentRoute else { return }
-
-        exampleMode = .styled
+        guard let route = routes?.first else { return }
 
         let styles = [CustomDayStyle(), CustomNightStyle()]
 
@@ -342,23 +282,10 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     }
 
     func navigationLocationManager() -> NavigationLocationManager {
-        guard let route = appViewFromCarPlayWindow?.currentRoute ?? currentRoute else { return NavigationLocationManager() }
+        guard let route = appViewFromCarPlayWindow?.routes?.first else { return NavigationLocationManager() }
         return simulationButton.isSelected ? SimulatedLocationManager(route: route) : NavigationLocationManager()
     }
 
-    // MARK: Navigation with multiple waypoints
-
-    func startMultipleWaypoints() {
-        guard let route = self.currentRoute else { return }
-
-        exampleMode = .multipleWaypoints
-
-        let navigationViewController = NavigationViewController(for: route, locationManager: navigationLocationManager())
-        navigationViewController.delegate = self
-
-        presentAndRemoveMapview(navigationViewController)
-    }
-    
     func presentAndRemoveMapview(_ navigationViewController: NavigationViewController) {
         let route = navigationViewController.routeController.routeProgress.route
         
@@ -395,21 +322,20 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         mapView.navigationMapDelegate = self
         mapView.userTrackingMode = .follow
         
-        view.insertSubview(mapView, belowSubview: bottomBar)
+        view.insertSubview(mapView, belowSubview: longPressHintView)
         
         let singleTap = UILongPressGestureRecognizer(target: self, action: #selector(didLongPress(tap:)))
         mapView.gestureRecognizers?.filter({ $0 is UILongPressGestureRecognizer }).forEach(singleTap.require(toFail:))
         mapView.addGestureRecognizer(singleTap)
-    
     }
     
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
         self.mapView?.localizeLabels()
         
-        if let routes = routes, let coords = currentRoute?.coordinates, let coordCounts = currentRoute?.coordinateCount {
-            mapView.setVisibleCoordinateBounds(MGLPolygon(coordinates: coords, count: coordCounts).overlayBounds, animated: false)
+        if let routes = routes, let currentRoute = routes.first, let coords = currentRoute.coordinates {
+            mapView.setVisibleCoordinateBounds(MGLPolygon(coordinates: coords, count: currentRoute.coordinateCount).overlayBounds, animated: false)
             self.mapView?.showRoutes(routes)
-            self.mapView?.showWaypoints(currentRoute!)
+            self.mapView?.showWaypoints(currentRoute)
         }
     }
 }
@@ -417,7 +343,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 // MARK: - NavigationMapViewDelegate
 extension ViewController: NavigationMapViewDelegate {
     func navigationMapView(_ mapView: NavigationMapView, didSelect waypoint: Waypoint) {
-        guard let routeOptions = currentRoute?.routeOptions else { return }
+        guard let routeOptions = routes?.first?.routeOptions else { return }
         let modifiedOptions = routeOptions.without(waypoint: waypoint)
 
         presentWaypointRemovalActionSheet { _ in
@@ -426,7 +352,10 @@ extension ViewController: NavigationMapViewDelegate {
     }
 
     func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route) {
-        currentRoute = route
+        guard let routes = routes else { return }
+        guard let index = routes.index(where: { $0 == route }) else { return }
+        self.routes!.remove(at: index)
+        self.routes!.insert(route, at: 0)
     }
 
     private func presentWaypointRemovalActionSheet(completionHandler approve: @escaping ((UIAlertAction) -> Void)) {
@@ -510,9 +439,6 @@ extension ViewController: NavigationViewControllerDelegate {
     // Return false to remain on the current leg, for example to allow the user to provide input.
     // If you return false, you must manually advance to the next leg. See the example above in `confirmationControllerDidConfirm(_:)`.
     func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool {
-        // Multiple waypoint demo
-        guard exampleMode == .multipleWaypoints else { return true }
-
         // When the user arrives, present a view controller that prompts the user to continue to their next destination
         // This type of screen could show information about a destination, pickup/dropoff confirmation, instructions upon arrival, etc.
         guard let confirmationController = self.storyboard?.instantiateViewController(withIdentifier: "waypointConfirmation") as? WaypointConfirmationViewController else { return true }
@@ -557,46 +483,13 @@ extension ViewController: CPMapTemplateDelegate {
 // Mark: VisualInstructionDelegate
 extension ViewController: VisualInstructionDelegate {
     func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
-        guard exampleMode == .customInstruction else { return nil }
         
-        let range = NSRange(location: 0, length: presented.length)
-        let mutable = NSMutableAttributedString(attributedString: presented)
+        // Uncomment to mutate the instruction shown in the top instruction banner
+        // let range = NSRange(location: 0, length: presented.length)
+        // let mutable = NSMutableAttributedString(attributedString: presented)
+        // mutable.mutableString.applyTransform(.latinToKatakana, reverse: false, range: range, updatedRange: nil)
+        // return mutable
         
-        mutable.mutableString.applyTransform(.latinToKatakana, reverse: false, range: range, updatedRange: nil)
-        
-        return mutable
-    }
-}
-
-/**
- To find more pieces of the UI to customize, checkout DayStyle.swift.
- */
-// MARK: CustomDayStyle
-class CustomDayStyle: DayStyle {
-    
-    required init() {
-        super.init()
-        mapStyleURL = URL(string: "mapbox://styles/mapbox/satellite-streets-v9")!
-        styleType = .day
-    }
-    
-    override func apply() {
-        super.apply()
-        BottomBannerView.appearance().backgroundColor = .orange
-    }
-}
-
-// MARK: CustomNightStyle
-class CustomNightStyle: NightStyle {
-
-    required init() {
-        super.init()
-        mapStyleURL = URL(string: "mapbox://styles/mapbox/satellite-streets-v9")!
-        styleType = .night
-    }
-
-    override func apply() {
-        super.apply()
-        BottomBannerView.appearance().backgroundColor = .purple
+        return presented
     }
 }
