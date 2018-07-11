@@ -343,8 +343,8 @@ class RouteMapViewController: UIViewController {
     @objc func updateInstructionsBanner(notification: NSNotification) {
         guard let routeProgress = notification.userInfo?[RouteControllerNotificationUserInfoKey.routeProgressKey] as? RouteProgress else { return }
         instructionsBannerView.update(for: routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
-        lanesView.update(for: routeProgress.currentLegProgress.currentStepProgress)
-        nextBannerView.update(for: routeProgress.currentLegProgress.currentStepProgress)
+        lanesView.update(for: routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
+        nextBannerView.update(for: routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
 
     }
 

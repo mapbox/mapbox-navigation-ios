@@ -66,19 +66,16 @@ open class LanesView: UIView {
         separatorView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
     }
     
-    func update(for currentStepProgress: RouteStepProgress) {
+    func update(for visualInstruction: VisualInstructionBanner?) {
         clearLaneViews()
         
-        let distanceTraveled = currentStepProgress.distanceTraveled
-        guard let visualInstruction = currentStepProgress.currentVisualInstruction, 
-              let tertiaryInstruction = visualInstruction.tertiaryInstruction,
-                  tertiaryInstruction.containsLaneIndications
-                else {
+        guard let tertiaryInstruction = visualInstruction?.tertiaryInstruction,
+                  tertiaryInstruction.containsLaneIndications else {
                     hide()
                     return
         }
         
-        let laneIndications: [LaneIndicationComponent]? = visualInstruction.tertiaryInstruction?.components.compactMap({ component in
+        let laneIndications: [LaneIndicationComponent]? = tertiaryInstruction.components.compactMap({ component in
             guard let lane = component as? LaneIndicationComponent else { return nil }
             return lane
         })
