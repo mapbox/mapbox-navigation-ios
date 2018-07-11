@@ -53,6 +53,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
             mapView?.showRoutes(routes)
             mapView?.showWaypoints(current)
+            mapView?.addArrow(route: current, legIndex: max(current.legs.count - 1, 0), stepIndex: 0)
         }
     }
 
