@@ -1,6 +1,5 @@
 import UIKit
 import MapboxDirections
-import MapboxCoreNavigation
 
 /**
  A view that represents the root view of the MapboxNavigation drop-in UI.
