@@ -47,7 +47,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
             VisualInstructionComponent(type: .text, text: "Chicago", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)
         ]
         
-        view.updateInstruction(makeVisualInstruction(.turn, .right, primaryInstruction: instructions, secondaryInstruction: nil))
+        view.update(for: makeVisualInstruction(.turn, .right, primaryInstruction: instructions, secondaryInstruction: nil))
         
         verifyView(view, size: view.bounds.size)
     }
@@ -64,7 +64,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
             VisualInstructionComponent(type: .text, text: "US 45 / Chicago / US 45 / Chicago", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)
         ]
         
-        view.updateInstruction(makeVisualInstruction(.turn, .right, primaryInstruction: instructions, secondaryInstruction: nil))
+        view.update(for: makeVisualInstruction(.turn, .right, primaryInstruction: instructions, secondaryInstruction: nil))
         
         verifyView(view, size: view.bounds.size)
     }
@@ -82,7 +82,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         ]
         let secondary = [VisualInstructionComponent(type: .text, text: "US 45 / Chicago", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)]
         
-        view.updateInstruction(makeVisualInstruction(.turn, .right, primaryInstruction: primary, secondaryInstruction: secondary))
+        view.update(for: makeVisualInstruction(.turn, .right, primaryInstruction: primary, secondaryInstruction: secondary))
         
         verifyView(view, size: view.bounds.size)
     }
@@ -99,7 +99,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         ]
         let secondary = [VisualInstructionComponent(type: .text, text: "Mountain View Test", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)]
         
-        view.updateInstruction(makeVisualInstruction(.turn, .right, primaryInstruction: primary, secondaryInstruction: secondary))
+        view.update(for: makeVisualInstruction(.turn, .right, primaryInstruction: primary, secondaryInstruction: secondary))
         
         verifyView(view, size: view.bounds.size)
     }
@@ -119,7 +119,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
                        VisualInstructionComponent(type: .text, text: "East", imageURL: nil, abbreviation: "E", abbreviationPriority: 2),
                        VisualInstructionComponent(type: .text, text: "North", imageURL: nil, abbreviation: "N", abbreviationPriority: 1)]
         
-        view.updateInstruction(makeVisualInstruction(.continue, .straightAhead, primaryInstruction: primary, secondaryInstruction: nil))
+        view.update(for: makeVisualInstruction(.continue, .straightAhead, primaryInstruction: primary, secondaryInstruction: nil))
         
         verifyView(view, size: view.bounds.size)
     }
@@ -140,7 +140,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
                        VisualInstructionComponent(type: .text, text: "20 West", imageURL: nil, abbreviation: "20 W", abbreviationPriority: 1)]
         
         imageRepository.storeImage(ShieldImage.i280.image, forKey: primary.first!.cacheKey!)
-        view.updateInstruction(makeVisualInstruction(.continue, .straightAhead, primaryInstruction: primary, secondaryInstruction: nil))
+        view.update(for: makeVisualInstruction(.continue, .straightAhead, primaryInstruction: primary, secondaryInstruction: nil))
         
         verifyView(view, size: view.bounds.size)
     }
@@ -157,7 +157,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
             VisualInstructionComponent(type: .text, text: "Avenue", imageURL: nil, abbreviation: "Ave", abbreviationPriority: 1)
         ]
         
-        view.updateInstruction(makeVisualInstruction(.continue, .straightAhead, primaryInstruction: primary, secondaryInstruction: nil))
+        view.update(for: makeVisualInstruction(.continue, .straightAhead, primaryInstruction: primary, secondaryInstruction: nil))
         
         verifyView(view, size: view.bounds.size)
     }
@@ -174,7 +174,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
             VisualInstructionComponent(type: .image, text: "US-101", imageURL: ShieldImage.us101.url, abbreviation: nil, abbreviationPriority: NSNotFound)
         ]
         
-        view.updateInstruction(makeVisualInstruction(.continue, .straightAhead, primaryInstruction: primary, secondaryInstruction: nil))
+        view.update(for: makeVisualInstruction(.continue, .straightAhead, primaryInstruction: primary, secondaryInstruction: nil))
         
         verifyView(view, size: view.bounds.size)
     }
@@ -198,7 +198,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         ]
         let secondary = [VisualInstructionComponent(type: .text, text: "US 45 / Chicago", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)]
         
-        instructionsBannerView.updateInstruction(makeVisualInstruction(.turn, .right, primaryInstruction: primary, secondaryInstruction: secondary))
+        instructionsBannerView.update(for: makeVisualInstruction(.turn, .right, primaryInstruction: primary, secondaryInstruction: secondary))
         
         let primaryThen = [
             VisualInstructionComponent(type: .image, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
@@ -222,7 +222,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.distance = 1000 * 999
         
         let primary = [VisualInstructionComponent(type: .text, text: "中国 安徽省 宣城市 郎溪县", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)]
-        view.updateInstruction(makeVisualInstruction(.continue, .straightAhead, primaryInstruction: primary, secondaryInstruction: nil))
+        view.update(for: makeVisualInstruction(.continue, .straightAhead, primaryInstruction: primary, secondaryInstruction: nil))
         
         verifyView(view, size: view.bounds.size)
     }
@@ -236,7 +236,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.distance = 1000 * 999
         
         let primary = [VisualInstructionComponent(type: .text, text: "Lorem Ipsum / Dolor Sit Amet", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)]
-        view.updateInstruction(makeVisualInstruction(primaryInstruction: primary, secondaryInstruction: nil))
+        view.update(for: makeVisualInstruction(primaryInstruction: primary, secondaryInstruction: nil))
         
         verifyView(view, size: view.bounds.size)
     }
@@ -250,7 +250,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.distance = 1000 * 999
         
         let primary = [VisualInstructionComponent(type: .text, text: "Lorem Ipsum / Dolor Sit Amet", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)]
-        view.updateInstruction(makeVisualInstruction(primaryInstruction: primary, secondaryInstruction: nil))
+        view.update(for: makeVisualInstruction(primaryInstruction: primary, secondaryInstruction: nil))
         
         verifyView(view, size: view.bounds.size)
     }
@@ -273,7 +273,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         window.addSubview(view)
         DayStyle().apply()
         
-        view.updateInstruction(makeVisualInstruction(.takeOffRamp, .right, primaryInstruction: primary, secondaryInstruction: [secondary]))
+        view.update(for: makeVisualInstruction(.takeOffRamp, .right, primaryInstruction: primary, secondaryInstruction: [secondary]))
         verifyView(view, size: view.bounds.size)
     }
     
@@ -294,7 +294,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         window.addSubview(view)
         DayStyle().apply()
         
-        view.updateInstruction(makeVisualInstruction(.reachFork, .right, primaryInstruction: primary, secondaryInstruction: secondary))
+        view.update(for: makeVisualInstruction(.reachFork, .right, primaryInstruction: primary, secondaryInstruction: secondary))
         verifyView(view, size: view.bounds.size)
     }
 }

@@ -80,7 +80,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         let view = instructionsView()
         view.instructionDelegate = reverseDelegate
         
-        view.updateInstruction(typicalInstruction)
+        view.update(for: typicalInstruction)
         
         XCTAssert(view.primaryLabel.attributedText?.string == "teertS niaM")
         
@@ -90,7 +90,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         let view = instructionsView()
         view.instructionDelegate = silentDelegate
         
-        view.updateInstruction(typicalInstruction)
+        view.update(for: typicalInstruction)
         
         XCTAssert(view.primaryLabel.attributedText?.string == "Main Street")
         
@@ -100,7 +100,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
     func testDelimiterIsShownWhenShieldsNotLoaded() {
         let view = instructionsView()
 
-        view.updateInstruction(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
+        view.update(for: makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
 
         XCTAssertNotNil(view.primaryLabel.text!.index(of: "/"))
     }
@@ -114,7 +114,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         imageRepository.storeImage(ShieldImage.us101.image, forKey: instruction2.cacheKey!, toDisk: false)
 
         let view = instructionsView()
-        view.updateInstruction(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
+        view.update(for: makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
 
         //the delimiter should NOT be present since both shields are already in the cache
         XCTAssertNil(view.primaryLabel.text!.index(of: "/"))
@@ -136,7 +136,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         }
         
         //set visual instructions on the view, which triggers the instruction image fetch
-        view.updateInstruction(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
+        view.update(for: makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
 
         //Slash should be present until an adjacent shield is downloaded
         XCTAssertNotNil(view.primaryLabel.text!.index(of: "/"))
@@ -165,7 +165,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         let view = instructionsView()
         let instruction = makeVisualInstruction(primaryInstruction: genericInstructions, secondaryInstruction: nil)
         //set the instruction, triggering the generic shield generation
-        view.updateInstruction(instruction)
+        view.update(for: instruction)
         
         guard let attributed = view.primaryLabel.attributedText else { return XCTFail("No attributed string") }
         let stringRange = NSRange(location: 0, length: attributed.length)
@@ -203,7 +203,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         }
         
         //set visual instructions on the view, which triggers the instruction image fetch
-        view.updateInstruction(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
+        view.update(for: makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
         
         let firstAttachmentRange = NSRange(location: 0, length: 1)
         let secondAttachmentRange = NSRange(location: 4, length: 1)
