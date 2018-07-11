@@ -51,17 +51,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      */
     public weak var courseTrackingDelegate: NavigationMapViewCourseTrackingDelegate?
     
-    private var _mapTemplateDelegate: NSObjectProtocol?
-    @available(iOS 12.0, *)
-    public weak var mapTemplateDelegate: CPMapTemplateDelegate? {
-        get {
-            return _mapTemplateDelegate as? CPMapTemplateDelegate
-        }
-        set {
-            _mapTemplateDelegate = newValue
-        }
-    }
-    
     let sourceOptions: [MGLShapeSourceOption: Any] = [.maximumZoomLevel: 16]
 
     // MARK: - Instance Properties
@@ -1220,36 +1209,4 @@ public protocol NavigationMapViewCourseTrackingDelegate: class {
      */
     @objc(navigationMapViewDidStopTrackingCourse:)
     optional func navigationMapViewDidStopTrackingCourse(_ mapView: NavigationMapView)
-}
-
-
-@available(iOS 12.0, *)
-extension NavigationMapView: CPMapTemplateDelegate {
-    public func mapTemplateDidBeginPanGesture(_ mapTemplate: CPMapTemplate) {
-        tracksUserCourse = false
-        mapTemplateDelegate?.mapTemplateDidBeginPanGesture?(mapTemplate)
-    }
-    
-//    public func mapTemplate(_ mapTemplate: CPMapTemplate, didUpdatePanGestureWithDelta delta: CGPoint, velocity: CGPoint) {
-//        mapTemplateDelegate?.mapTemplate?(mapTemplate, didUpdatePanGestureWithDelta: delta, velocity: velocity)
-//    }
-    
-    public func mapTemplate(_ mapTemplate: CPMapTemplate, didEndPanGestureWithVelocity velocity: CGPoint) {
-        mapTemplateDelegate?.mapTemplate?(mapTemplate, didEndPanGestureWithVelocity: velocity)
-        // Not enough velocity to overcome friction
-        guard sqrtf(Float(velocity.x * velocity.x + velocity.y * velocity.y)) > 100 else { return }
-        
-        let offset = CGPoint(x: velocity.x * decelerationRate / 4, y: velocity.y * decelerationRate / 4)
-        guard let toCamera = camera(whenPanningTo: offset) else { return }
-        setCamera(toCamera, animated: true)
-    }
-    
-    func camera(whenPanningTo endPoint: CGPoint) -> MGLMapCamera? {
-        let camera = self.camera
-        let centerPoint = CGPoint(x: bounds.midX, y: bounds.midY)
-        let endCameraPoint = CGPoint(x: centerPoint.x - endPoint.x, y: centerPoint.y - endPoint.y)
-        camera.centerCoordinate = convert(endCameraPoint, toCoordinateFrom: self)
-        
-        return camera
-    }
 }
