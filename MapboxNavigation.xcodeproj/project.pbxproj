@@ -216,7 +216,7 @@
 		C53C196D1F38EA25008DB406 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C53C196F1F38EA25008DB406 /* Localizable.strings */; };
 		C53F2EE420EBC95600D9798F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358D14671E5E3B7700ADE590 /* ViewController.swift */; };
 		C53F2EE520EBC95600D9798F /* CustomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D9800C1EFA8BA9006DBF2E /* CustomViewController.swift */; };
-		C53F2EE620EBC95600D9798F /* MGLMapView+CustomAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DA23C9631F4FC0A600BA9522 /* MGLMapView+CustomAdditions.m */; };
+		C53F2EE620EBC95600D9798F /* (null) in Sources */ = {isa = PBXBuildFile; };
 		C53F2EE720EBC95600D9798F /* WaypointConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */; };
 		C53F2EE820EBC95600D9798F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358D14651E5E3B7700ADE590 /* AppDelegate.swift */; };
 		C53F2EEA20EBC95600D9798F /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigation.framework */; };
@@ -246,6 +246,7 @@
 		C549F8321F17F2C5001A0A2D /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
 		C549F8331F17F2C5001A0A2D /* MapboxMobileEvents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C54C655220336F2600D338E0 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54C655120336F2600D338E0 /* Constants.swift */; };
+		C551129A20F6854400100A89 /* Example-CarPlay.plist in Resources */ = {isa = PBXBuildFile; fileRef = C551129920F6854400100A89 /* Example-CarPlay.plist */; };
 		C551B0E620D42222009A986F /* NavigationLocationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C551B0E520D42222009A986F /* NavigationLocationManagerTests.swift */; };
 		C55C299920D2E2F600B0406C /* NavigationMapViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55C299820D2E2F600B0406C /* NavigationMapViewTests.swift */; };
 		C561735B1F182113005954F6 /* RouteStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = C561735A1F182113005954F6 /* RouteStep.swift */; };
@@ -692,10 +693,10 @@
 		C53C19771F38EAE4008DB406 /* ca */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ca; path = ca.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C53C197A1F38EAEA008DB406 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C53F2F0720EBC95600D9798F /* Example-CarPlay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Example-CarPlay.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		C53F2F0820EBC95600D9798F /* Example-CarPlay.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Example-CarPlay.plist"; path = "/Users/bobby/Documents/mapbox/mapbox-navigation-ios-beta/Example-CarPlay.plist"; sourceTree = "<absolute>"; };
 		C53F2F0920EBE66E00D9798F /* Route.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
 		C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxMobileEvents.framework; path = Carthage/Build/iOS/MapboxMobileEvents.framework; sourceTree = "<group>"; };
 		C54C655120336F2600D338E0 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		C551129920F6854400100A89 /* Example-CarPlay.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Example-CarPlay.plist"; sourceTree = "<group>"; };
 		C551B0E520D42222009A986F /* NavigationLocationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationLocationManagerTests.swift; sourceTree = "<group>"; };
 		C55C299820D2E2F600B0406C /* NavigationMapViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationMapViewTests.swift; sourceTree = "<group>"; };
 		C561735A1F182113005954F6 /* RouteStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteStep.swift; sourceTree = "<group>"; };
@@ -979,7 +980,7 @@
 				35002D5F1E5F6ADB0090E733 /* Assets.xcassets */,
 				35002D601E5F6ADB0090E733 /* Base.lproj */,
 				35002D5D1E5F6ABB0090E733 /* Info.plist */,
-				C53F2F0820EBC95600D9798F /* Example-CarPlay.plist */,
+				C551129920F6854400100A89 /* Example-CarPlay.plist */,
 				C57AD98920EAA39A0087B24B /* Entitlements.plist */,
 				C57AD98B20EAB3990087B24B /* Navigation_Example.mobileprovision */,
 			);
@@ -1781,6 +1782,7 @@
 				35002D691E5F6B2F0090E733 /* Main.storyboard in Resources */,
 				354D9F891EF2FE900006FAA8 /* tunnel.json in Resources */,
 				35002D611E5F6ADB0090E733 /* Assets.xcassets in Resources */,
+				C551129A20F6854400100A89 /* Example-CarPlay.plist in Resources */,
 				35002D621E5F6ADB0090E733 /* Base.lproj in Resources */,
 				355D20DC1EF30A6D0012B1E0 /* tunnel.route in Resources */,
 			);
@@ -2116,7 +2118,7 @@
 			files = (
 				C53F2EE420EBC95600D9798F /* ViewController.swift in Sources */,
 				C53F2EE520EBC95600D9798F /* CustomViewController.swift in Sources */,
-				C53F2EE620EBC95600D9798F /* MGLMapView+CustomAdditions.m in Sources */,
+				C53F2EE620EBC95600D9798F /* (null) in Sources */,
 				C53F2EE720EBC95600D9798F /* WaypointConfirmationViewController.swift in Sources */,
 				C53F2EE820EBC95600D9798F /* AppDelegate.swift in Sources */,
 			);
@@ -2743,7 +2745,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = "Example-CarPlay.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Examples/Swift/Example-CarPlay.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.Example-CarPlay";
@@ -2772,7 +2774,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = "Example-CarPlay.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Examples/Swift/Example-CarPlay.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.Example-CarPlay";
