@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="aCx-td-5El">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14295.6" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="aCx-td-5El">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14270.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -12,7 +12,7 @@
         <!--Mapbox Navigation-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="mainMap" id="BYZ-38-t0r" customClass="ViewController" customModule="Example_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="mainMap" id="BYZ-38-t0r" customClass="ViewController" customModule="Example_CarPlay" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -100,6 +100,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="bottomBar" destination="tgD-cs-dAn" id="bIA-KH-Xa9"/>
+                        <outlet property="bottomBarBackground" destination="52U-cY-V4s" id="wSk-Ee-ww2"/>
                         <outlet property="clearMap" destination="6ux-mK-LQF" id="9M7-CK-q1M"/>
                         <outlet property="longPressHintView" destination="Tfo-Ic-OqD" id="gYu-YW-6FX"/>
                         <outlet property="simulationButton" destination="iiq-Gf-SKY" id="DHR-zB-Mwv"/>
@@ -130,7 +131,7 @@
         <!--Custom View Controller-->
         <scene sceneID="uy4-fi-XVj">
             <objects>
-                <viewController storyboardIdentifier="custom" id="j9p-fX-jo4" customClass="CustomViewController" customModule="Example_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="custom" id="j9p-fX-jo4" customClass="CustomViewController" customModule="Example_CarPlay" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="gqy-oH-EyZ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -223,7 +224,7 @@
         <!--Waypoint Confirmation View Controller-->
         <scene sceneID="VHA-oq-pTR">
             <objects>
-                <viewController storyboardIdentifier="waypointConfirmation" id="JoY-h8-mcz" customClass="WaypointConfirmationViewController" customModule="Example_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="waypointConfirmation" id="JoY-h8-mcz" customClass="WaypointConfirmationViewController" customModule="Example_CarPlay" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="wgq-AG-cad">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

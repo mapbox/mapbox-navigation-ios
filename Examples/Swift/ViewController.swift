@@ -17,7 +17,8 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var bottomBar: UIView!
     @IBOutlet weak var clearMap: UIButton!
-
+    @IBOutlet weak var bottomBarBackground: UIView!
+    
     // MARK: Properties
     var mapView: NavigationMapView?
     var waypoints: [Waypoint] = [] {
@@ -294,6 +295,8 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         if #available(iOS 12.0, *), let carViewController = carViewController, let trip = route.asCPTrip, let mapTemplate = mapTemplate, let interfaceController = interfaceController {
             let session = mapTemplate.startNavigationSession(for: trip)
             
+            mapTemplate.dismissPanningInterface(animated: true)
+            
             mapTemplate.update(route.travelEstimates, for: trip, with: .default)
             mapTemplate.hideTripPreviews()
             let carPlayNavigationViewController = CarPlayNavigationViewController(for: navigationViewController.routeController, session: session, template: mapTemplate, interfaceController: interfaceController)
@@ -337,6 +340,10 @@ class ViewController: UIViewController, MGLMapViewDelegate {
             self.mapView?.showRoutes(routes)
             self.mapView?.showWaypoints(currentRoute)
         }
+        
+        if #available(iOS 12.0, *) {
+            buildCarPlayUI()
+        }
     }
 }
 
@@ -376,22 +383,15 @@ extension ViewController: NavigationMapViewDelegate {
     
     @available(iOS 12.0, *)
     func buildCarPlayUI() {
-        guard let mapTemplate = mapTemplate else { return }
+        guard let mapView = mapView, let mapTemplate = mapTemplate else { return }
+        bottomBar.isHidden = true
+        bottomBarBackground.isHidden = true
+        longPressHintView.isHidden = true
         bottomBar.isHidden = true
         
-        let barbutton = CPBarButton(type: .text) { (button) in
-            if mapTemplate.isPanningInterfaceVisible {
-                button.title = "Pan map"
-                self.mapView?.userTrackingMode = .follow
-                mapTemplate.dismissPanningInterface(animated: true)
-            } else {
-                button.title = "Dismiss"
-                mapTemplate.showPanningInterface(animated: true)
-            }
-        }
-        barbutton.title = "Pan map"
-        
-        mapTemplate.trailingNavigationBarButtons = [barbutton]
+        mapTemplate.mapDelegate = self
+        mapTemplate.mapButtons = [CPMapButton.zoomInButton(for: mapView), CPMapButton.zoomOutButton(for: mapView)]
+        mapTemplate.trailingNavigationBarButtons = [CPBarButton.panButton(for: mapView, mapTemplate: mapTemplate)]
     }
 }
 
