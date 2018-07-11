@@ -558,7 +558,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         style.setImage(triangleImage, forName: "triangle-tip-navigation")
         
-//        guard step.maneuverType != .arrive else { return }
+        guard step.maneuverType != .arrive else { return }
         
         let minimumZoomLevel: Float = 14.5
         
