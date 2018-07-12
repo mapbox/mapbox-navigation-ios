@@ -85,11 +85,9 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     }
     
     func exitNavigation() {
-        dismiss(animated: true, completion: {
-            self.carSession.finishTrip()
-            self.carInterfaceController.popTemplate(animated: true)
-            self.carPlayNavigationDelegate?.carPlaynavigationViewControllerDidDismiss(self, byCanceling: true)
-        })
+        carSession.finishTrip()
+        dismiss(animated: true, completion: nil)
+        carPlayNavigationDelegate?.carPlaynavigationViewControllerDidDismiss(self, byCanceling: true)
     }
     
     func createMapTemplateUI() {

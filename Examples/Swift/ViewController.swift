@@ -300,6 +300,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
             mapTemplate.update(route.travelEstimates, for: trip, with: .default)
             mapTemplate.hideTripPreviews()
             let carPlayNavigationViewController = CarPlayNavigationViewController(for: navigationViewController.routeController, session: session, template: mapTemplate, interfaceController: interfaceController)
+            carPlayNavigationViewController.carPlayNavigationDelegate = self
             carViewController.present(carPlayNavigationViewController, animated: true, completion: nil)
             
             if let appViewFromCarPlayWindow = appViewFromCarPlayWindow {
@@ -393,6 +394,13 @@ extension ViewController: NavigationMapViewDelegate {
         mapTemplate.mapButtons = [CPMapButton.zoomInButton(for: mapView), CPMapButton.zoomOutButton(for: mapView)]
         mapTemplate.trailingNavigationBarButtons = [CPBarButton.panButton(for: mapView, mapTemplate: mapTemplate)]
     }
+    
+    func dismissAndCleanupUI() {
+        appViewFromCarPlayWindow?.dismiss(animated: true, completion: nil)
+        carViewController?.dismiss(animated: true, completion: nil)
+        buildCarPlayUI()
+        mapTemplate?.hideTripPreviews()
+    }
 }
 
 // MARK: VoiceControllerDelegate methods
@@ -452,14 +460,14 @@ extension ViewController: NavigationViewControllerDelegate {
     // Called when the user hits the exit button.
     // If implemented, you are responsible for also dismissing the UI.
     func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool) {
-        navigationViewController.dismiss(animated: true, completion: nil)
+        dismissAndCleanupUI()
     }
 }
 
 @available(iOS 12.0, *)
 extension ViewController: CarPlayNavigationDelegate {
     func carPlaynavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool) {
-        // cleanup maptemplate
+        dismissAndCleanupUI()
     }
 }
 
