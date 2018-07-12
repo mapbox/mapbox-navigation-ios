@@ -1,4 +1,4 @@
-# [Mapbox Navigation SDK for iOS](https://github.com/ios-sdk/navigation/)
+# [Mapbox Navigation SDK for iOS](https://www.mapbox.com/ios-sdk/navigation/)
 
 <img alt="Mapbox Navigation SDK" src="./img/navigation.png" width="272" style="margin: auto;display: block;" />
 
