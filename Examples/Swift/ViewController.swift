@@ -138,10 +138,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
             popoverController.sourceView = self.startButton
         }
         
-        if #available(iOS 12.0, *) {
-            buildCarPlayUI()
-            mapTemplate?.mapDelegate = self
-        }
+        buildCarPlayUI()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -342,9 +339,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
             self.mapView?.showWaypoints(currentRoute)
         }
         
-        if #available(iOS 12.0, *) {
-            buildCarPlayUI()
-        }
+        buildCarPlayUI()
     }
 }
 
@@ -382,9 +377,8 @@ extension ViewController: NavigationMapViewDelegate {
     
     // MARK: CarPlay Specific functions
     
-    @available(iOS 12.0, *)
     func buildCarPlayUI() {
-        guard let mapView = mapView, let mapTemplate = mapTemplate else { return }
+        guard #available(iOS 12.0, *), let mapView = mapView, let mapTemplate = mapTemplate else { return }
         bottomBar.isHidden = true
         bottomBarBackground.isHidden = true
         longPressHintView.isHidden = true
@@ -396,6 +390,7 @@ extension ViewController: NavigationMapViewDelegate {
     }
     
     func dismissAndCleanupUI() {
+        guard #available(iOS 12.0, *) else { return }
         appViewFromCarPlayWindow?.dismiss(animated: true, completion: nil)
         carViewController?.dismiss(animated: true, completion: nil)
         buildCarPlayUI()
@@ -464,6 +459,22 @@ extension ViewController: NavigationViewControllerDelegate {
     }
 }
 
+
+// Mark: VisualInstructionDelegate
+extension ViewController: VisualInstructionDelegate {
+    func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
+        
+        // Uncomment to mutate the instruction shown in the top instruction banner
+        // let range = NSRange(location: 0, length: presented.length)
+        // let mutable = NSMutableAttributedString(attributedString: presented)
+        // mutable.mutableString.applyTransform(.latinToKatakana, reverse: false, range: range, updatedRange: nil)
+        // return mutable
+        
+        return presented
+    }
+}
+
+
 @available(iOS 12.0, *)
 extension ViewController: CarPlayNavigationDelegate {
     func carPlaynavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool) {
@@ -485,19 +496,5 @@ extension ViewController: CPMapTemplateDelegate {
         routes.remove(at: foundRoute)
         routes.insert(route, at: 0)
         appViewFromCarPlayWindow?.routes = routes
-    }
-}
-
-// Mark: VisualInstructionDelegate
-extension ViewController: VisualInstructionDelegate {
-    func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
-        
-        // Uncomment to mutate the instruction shown in the top instruction banner
-        // let range = NSRange(location: 0, length: presented.length)
-        // let mutable = NSMutableAttributedString(attributedString: presented)
-        // mutable.mutableString.applyTransform(.latinToKatakana, reverse: false, range: range, updatedRange: nil)
-        // return mutable
-        
-        return presented
     }
 }
