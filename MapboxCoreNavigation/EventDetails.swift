@@ -58,7 +58,6 @@ struct EventDetails: Encodable {
     var newDistanceRemaining: CLLocationDistance?
     var newDurationRemaining: TimeInterval?
     var newGeometry: String?
-    var routeLegProgress: RouteLegProgress?
     
     init(router: Router, session: SessionState) {
         
@@ -210,7 +209,7 @@ struct EventDetails: Encodable {
         try container.encodeIfPresent(distance, forKey: .distance)
         try container.encodeIfPresent(estimatedDuration, forKey: .estimatedDuration)
         try container.encode(created.ISO8601, forKey: .created)
-        try container.encodeIfPresent(startTimestamp, forKey: .startTimestamp)
+        try container.encodeIfPresent(startTimestamp?.ISO8601, forKey: .startTimestamp)
         try container.encode(sdkIdentifier, forKey: .sdkIdentifier)
         try container.encode(sdkVersion, forKey: .sdkVersion)
         try container.encode(profile, forKey: .profile)
@@ -248,7 +247,6 @@ struct EventDetails: Encodable {
         try container.encodeIfPresent(secondsSinceLastReroute, forKey: .secondsSinceLastReroute)
         try container.encodeIfPresent(newDistanceRemaining, forKey: .newDistanceRemaining)
         try container.encodeIfPresent(newDurationRemaining, forKey: .newDurationRemaining)
-        try container.encodeIfPresent(routeLegProgress, forKey: .routeLegProgress)
     }
 }
 
