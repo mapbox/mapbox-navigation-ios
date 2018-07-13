@@ -1,10 +1,10 @@
-# [Mapbox Navigation SDK for iOS](https://github.com/mapbox/mapbox-navigation-ios/)
+# [Mapbox Navigation SDK for iOS](https://www.mapbox.com/ios-sdk/navigation/)
 
 <img alt="Mapbox Navigation SDK" src="./img/navigation.png" width="272" style="margin: auto;display: block;" />
 
 The Mapbox Navigation SDK gives you all the tools you need to add turn-by-turn navigation to your application. It takes just a few minutes to drop a full-fledged turn-by-turn navigation view controller into your application. Or use the Core Navigation framework directly to build something truly custom.
 
-The Mapbox Navigation SDK and Core Navigation are compatible with applications written in Swift 4 or Objective-C in Xcode 9.0. The Mapbox Navigation framework runs on iOS 9.0 and above, while the Core Navigation framework runs on iOS 8.0 and above.
+The Mapbox Navigation SDK and Core Navigation are compatible with applications written in Swift 4 or Objective-C in Xcode 9.0. The Mapbox Navigation and Mapbox Core Navigation frameworks run on iOS 9.0 and above.
 
 ## Installation
 
@@ -41,7 +41,7 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
 
 1. Users expect the SDK to continue to track the user’s location and deliver audible instructions even while a different application is visible or the device is locked. Go to the Capabilities tab. Under the Background Modes section, enable “Audio, AirPlay, and Picture in Picture” and “Location updates”. (Alternatively, add the `audio` and `location` values to the `UIBackgroundModes` array in the Info tab.)
 
-Now import the relevant modules and present a new `NavigationViewController`. You can also [push to a navigation view controller from within a storyboard](storyboards.html) if your application’s UI is laid out in Interface Builder.
+Now import the relevant modules and present a new `NavigationViewController`. You can also [push to a navigation view controller from within a storyboard](https://www.mapbox.com/ios-sdk/navigation/overview/storyboards/) if your application’s UI is laid out in Interface Builder.
 
 ```swift
 import MapboxDirections

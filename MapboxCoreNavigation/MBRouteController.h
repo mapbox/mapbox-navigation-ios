@@ -45,6 +45,8 @@ extern const NSNotificationName MBRouteControllerDidFailToRerouteNotification;
  */
 extern const NSNotificationName MBRouteControllerDidPassSpokenInstructionPointNotification;
 
+extern const NSNotificationName MBRouteControllerDidPassVisualInstructionPointNotification;
+
 /**
  Keys in the user info dictionaries of various notifications posted by instances of `MBRouteController`.
  

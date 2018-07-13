@@ -4,6 +4,10 @@
       "idiom" : "universal",
       "filename" : "feedback_turn_not_allowed.pdf",
       "language-direction" : "left-to-right"
+    },
+    {
+      "idiom" : "universal",
+      "language-direction" : "right-to-left"
     }
   ],
   "info" : {

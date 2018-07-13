@@ -2,9 +2,17 @@
 
 ## master
 
+### Packaging
+
+* Moved guides and examples to [a new Mapbox Navigation SDK for iOS website](https://www.mapbox.com/ios-sdk/navigation/). ([#1552](https://github.com/mapbox/mapbox-navigation-ios/pull/1552))
+
+### Other changes
+
 * Fixed an issue when selecting a step from the steps list, you could be brought to the wrong step. [#1524](https://github.com/mapbox/mapbox-navigation-ios/pull/1524/)
 * `StyleManager.locationFor(styleManager:)` now allows for an optional CLLocation to be returned. [#1523](https://github.com/mapbox/mapbox-navigation-ios/pull/1523)
 * NavigationViewController now uses the recommended way `.preferredStatusBarStyle` to set the style of the status bar. [#1535](https://github.com/mapbox/mapbox-navigation-ios/pull/1535)
+* Deleted `InstructionsBannerView.update(_:)`, which previously updated the banner instruction and the current distance.
+* This is replaced with `InstructionsBannerView.updateDistance(for:)` and `InstructionsBannerView.updateInstruction(_:)`. `InstructionsBannerView.updateDistance(for:)` should be called on every location update, while `InstructionsBannerView.updateInstruction(_:)` should be called when `NSNotification.Name. routeControllerDidPassVisualInstructionPoint` is emitted.
 
 ## v0.18.1 (June 19, 2018)
 

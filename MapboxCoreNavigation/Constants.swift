@@ -162,4 +162,11 @@ extension Notification.Name {
      The user info dictionary contains the key `RouteControllerNotificationUserInfoKey.routeProgressKey`.
      */
     public static let routeControllerDidPassSpokenInstructionPoint = MBRouteControllerDidPassSpokenInstructionPoint
+    
+    /**
+     Posted when `RouteController` detects that the user has passed an ideal point for displaying an instruction.
+     
+     The user info dictionary contains the key `RouteControllerNotificationUserInfoKey.routeProgressKey`.
+     */
+    public static let routeControllerDidPassVisualInstructionPoint = MBRouteControllerDidPassVisualInstructionPoint
 }

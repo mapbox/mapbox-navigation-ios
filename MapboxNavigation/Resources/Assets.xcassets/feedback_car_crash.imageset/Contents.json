@@ -4,6 +4,10 @@
       "idiom" : "universal",
       "filename" : "feedback_car_crash.pdf",
       "language-direction" : "left-to-right"
+    },
+    {
+      "idiom" : "universal",
+      "language-direction" : "right-to-left"
     }
   ],
   "info" : {

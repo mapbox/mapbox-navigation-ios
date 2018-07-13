@@ -5,8 +5,6 @@ import Polyline
 import MapboxMobileEvents
 import Turf
 
-
-
 /**
  A `RouteController` tracks the user’s progress along a route, posting notifications as the user reaches significant points along the route. On every location update, the route controller evaluates the user’s location, determining whether the user remains on the route. If not, the route controller calculates a new route.
 
@@ -413,13 +411,14 @@ extension RouteController: CLLocationManagerDelegate {
         updateDistanceToIntersection(from: location)
         updateRouteStepProgress(for: location)
         updateRouteLegProgress(for: location)
+        updateVisualInstructionProgress()
 
         guard userIsOnRoute(location) || !(delegate?.routeController?(self, shouldRerouteFrom: location) ?? true) else {
             reroute(from: location, along: routeProgress)
             return
         }
 
-        updateSpokenInstructionProgress(for: location)
+        updateSpokenInstructionProgress()
 
         // Check for faster route given users current location
         guard reroutesProactively else { return }
@@ -707,7 +706,7 @@ extension RouteController: CLLocationManagerDelegate {
         routeProgress.currentLegProgress.currentStepProgress.userDistanceToManeuverLocation = userAbsoluteDistance
     }
 
-    func updateSpokenInstructionProgress(for location: CLLocation) {
+    func updateSpokenInstructionProgress() {
         guard let userSnapToStepDistanceFromManeuver = userSnapToStepDistanceFromManeuver else { return }
         guard let spokenInstructions = routeProgress.currentLegProgress.currentStepProgress.remainingSpokenInstructions else { return }
 
@@ -722,6 +721,25 @@ extension RouteController: CLLocationManagerDelegate {
                 ])
 
                 routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex += 1
+                return
+            }
+        }
+    }
+    
+    func updateVisualInstructionProgress() {
+        guard let userSnapToStepDistanceFromManeuver = userSnapToStepDistanceFromManeuver else { return }
+        guard let visualInstructions = routeProgress.currentLegProgress.currentStepProgress.remainingVisualInstructions else { return }
+        
+        let firstInstructionOnFirstStep = routeProgress.currentLegProgress.stepIndex == 0 && routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex == 0
+        
+        for visualInstruction in visualInstructions {
+            if userSnapToStepDistanceFromManeuver <= visualInstruction.distanceAlongStep || firstInstructionOnFirstStep {
+                
+                NotificationCenter.default.post(name: .routeControllerDidPassVisualInstructionPoint, object: self, userInfo: [
+                    RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress
+                    ])
+                
+                routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex += 1
                 return
             }
         }

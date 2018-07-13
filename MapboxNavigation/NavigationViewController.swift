@@ -7,7 +7,7 @@ import Mapbox
  The `NavigationViewControllerDelegate` provides methods for configuring the map view shown by a `NavigationViewController` and responding to the cancellation of a navigation session.
  */
 @objc(MBNavigationViewControllerDelegate)
-public protocol NavigationViewControllerDelegate {
+public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     /**
      Called when the navigation view controller is dismissed, such as when the user ends a trip.
      
@@ -357,6 +357,7 @@ open class NavigationViewController: UIViewController {
         self.directions = directions
         self.route = route
         NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
+        routeController.resume()
         
         let mapViewController = RouteMapViewController(routeController: self.routeController, delegate: self)
         self.mapViewController = mapViewController
@@ -396,7 +397,6 @@ open class NavigationViewController: UIViewController {
         _ = voiceController
         
         UIApplication.shared.isIdleTimerDisabled = true
-        routeController.resume()
         
         if routeController.locationManager is SimulatedLocationManager {
             let format = NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation at %d×", comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled.")
@@ -545,6 +545,10 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
             return nil
         }
         return roadName
+    }
+    
+    @objc public func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
+        return delegate?.label?(label, willPresent: instruction, as: presented)
     }
 }
 

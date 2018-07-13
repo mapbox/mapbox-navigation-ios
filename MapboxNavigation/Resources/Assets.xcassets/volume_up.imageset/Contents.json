@@ -4,6 +4,10 @@
       "idiom" : "universal",
       "filename" : "volume_up.pdf",
       "language-direction" : "left-to-right"
+    },
+    {
+      "idiom" : "universal",
+      "language-direction" : "right-to-left"
     }
   ],
   "info" : {
