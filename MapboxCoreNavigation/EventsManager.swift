@@ -96,7 +96,6 @@ open class EventsManager: NSObject {
         event.feedbackType = type.description
         event.description = description
         
-        event.routeLegProgress = routeController.routeProgress.currentLegProgress
         event.screenshot = captureScreen(scaledToFit: 250)?.base64EncodedString()
         
         return event
@@ -109,7 +108,6 @@ open class EventsManager: NSObject {
         event.event = eventType
         event.secondsSinceLastReroute = sessionState.lastRerouteDate != nil ? round(timestamp.timeIntervalSince(sessionState.lastRerouteDate!)) : -1
         
-        event.routeLegProgress = routeController.routeProgress.currentLegProgress
         
         // These are placeholders until the route controller's RouteProgress is updated after rerouting
         event.newDistanceRemaining = -1
