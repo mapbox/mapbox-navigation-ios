@@ -104,8 +104,9 @@ open class BaseInstructionsBannerView: UIControl {
         }
         
         primaryLabel.instruction = instruction?.primaryInstruction
+        maneuverView.visualInstruction = instruction?.primaryInstruction
+        maneuverView.drivingSide = instruction?.drivingSide ?? .right
         secondaryLabel.instruction = secondaryInstruction
-        maneuverView.visualInstruction = instruction
     }
     
     override open func prepareForInterfaceBuilder() {
