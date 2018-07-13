@@ -90,7 +90,7 @@ open class ManeuverView: UIView {
             flip = [.left, .slightLeft, .sharpLeft].contains(direction)
         case .takeRoundabout, .turnAtRoundabout, .takeRotary:
             ManeuversStyleKit.drawRoundabout(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor, roundabout_angle: CGFloat(visualInstruction.finalHeading))
-            flip = drivingSide == .left
+            flip = drivingSide == .right
             
         case .arrive:
             switch direction {
