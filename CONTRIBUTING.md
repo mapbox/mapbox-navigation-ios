@@ -85,4 +85,3 @@ The .strings files should still be in the original English – that’s expecte
 1. Run `tx pull -a` to fetch translations from Transifex. You can restrict the operation to just the new language using `tx pull -l xyz`, where _xyz_ is the language code.
 1. To facilitate diffing and merging, convert any added .strings files from UTF-16 encoding to UTF-8 encoding. You can convert the file encoding using Xcode’s File inspector or by running `scripts/convert_string_files.sh`.
 1. For each of the localizable files in the project, open the file, then, in the File inspector, check the box for your new localization.
-1. Add the new language to [the language support matrix](docs/guides/Localization%20and%20Internationalization.md).

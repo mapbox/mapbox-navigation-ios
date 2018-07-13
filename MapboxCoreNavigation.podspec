@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   Mapbox Core Navigation provides the core spatial and timing logic for turn-by-turn navigation along a route. For a complete turn-by-turn navigation interface, use the Mapbox Navigation SDK for iOS (MapboxNavigation).
                    DESC
 
-  s.homepage = "https://www.mapbox.com/navigation-sdk/"
+  s.homepage = "https://www.mapbox.com/ios-sdk/navigation/"
   s.documentation_url = "https://www.mapbox.com/mapbox-navigation-ios/navigation/"
 
   # ―――  Spec License  ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
