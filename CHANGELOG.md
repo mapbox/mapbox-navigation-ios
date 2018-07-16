@@ -11,9 +11,7 @@
 * Fixed an issue when selecting a step from the steps list, you could be brought to the wrong step. [#1524](https://github.com/mapbox/mapbox-navigation-ios/pull/1524/)
 * `StyleManager.locationFor(styleManager:)` now allows for an optional CLLocation to be returned. [#1523](https://github.com/mapbox/mapbox-navigation-ios/pull/1523)
 * NavigationViewController now uses the recommended way `.preferredStatusBarStyle` to set the style of the status bar. [#1535](https://github.com/mapbox/mapbox-navigation-ios/pull/1535)
-* Renamed `InstructionsBannerView.updateInstruction(_:)` to `InstructionsBannerView.update(for:)`.
-* Deleted `InstructionsBannerView.update(_:)`, which previously updated the banner instruction and the current distance.
-* This is replaced with `InstructionsBannerView.updateDistance(for:)` and `InstructionsBannerView.update(for:)`. `InstructionsBannerView.updateDistance(for:)` should be called on every location update, while `InstructionsBannerView.update(for:)` should be called when `NSNotification.Name. routeControllerDidPassVisualInstructionPoint` is emitted.
+* Replaced `InstructionsBannerView.update(_:)`, which previously updated the banner instruction and the current distance, with `InstructionsBannerView.updateDistance(for:)` and `InstructionsBannerView.update(for:)`. Hence, `InstructionsBannerView.updateDistance(for:)` should be called on every location update, while `InstructionsBannerView.update(for:)` should be called when `NSNotification.Name.routeControllerDidPassVisualInstructionPoint` is emitted. [#1514](https://github.com/mapbox/mapbox-navigation-ios/pull/1514)
 
 ## v0.18.1 (June 19, 2018)
 
