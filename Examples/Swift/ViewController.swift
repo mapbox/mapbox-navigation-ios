@@ -387,6 +387,7 @@ extension ViewController: NavigationMapViewDelegate {
         mapTemplate.mapDelegate = self
         mapTemplate.mapButtons = [CPMapButton.zoomInButton(for: mapView), CPMapButton.zoomOutButton(for: mapView)]
         mapTemplate.trailingNavigationBarButtons = [CPBarButton.panButton(for: mapView, mapTemplate: mapTemplate)]
+        mapTemplate.leadingNavigationBarButtons = []
     }
     
     func dismissAndCleanupUI() {

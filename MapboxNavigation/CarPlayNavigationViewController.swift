@@ -90,6 +90,91 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         carPlayNavigationDelegate?.carPlaynavigationViewControllerDidDismiss(self, byCanceling: true)
     }
     
+    public func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
+        self.mapView?.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
+        self.mapView?.showRoutes([routeController.routeProgress.route])
+        self.mapView?.showWaypoints(routeController.routeProgress.route)
+        self.mapView?.recenterMap()
+    }
+    
+    @objc func progressDidChange(_ notification: NSNotification) {
+        let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
+        let location = notification.userInfo![RouteControllerNotificationUserInfoKey.locationKey] as! CLLocation
+        
+        // Update the user puck
+        mapView?.updateCourseTracking(location: location, animated: true)
+        
+        let index = routeProgress.currentLegProgress.stepIndex
+        
+        if index != currentStepIndex {
+            updateManeuvers()
+            mapView?.showWaypoints(routeProgress.route)
+            currentStepIndex = index
+            mapView?.addArrow(route: routeProgress.route, legIndex: routeProgress.legIndex, stepIndex: routeProgress.currentLegProgress.stepIndex + 1)
+        }
+        
+        let congestionLevel = routeProgress.averageCongestionLevelRemainingOnLeg ?? .unknown
+        guard let maneuver = carSession.upcomingManeuvers.first else { return }
+        carSession.updateEstimates(routeProgress.currentLegProgress.currentStepProgress.travelEstimates, for: maneuver)
+        carMaptemplate.update(routeProgress.currentLegProgress.travelEstimates, for: carSession.trip, with: congestionLevel.asCPTimeRemainingColor)
+    }
+    
+    @objc func rerouted(_ notification: NSNotification) {
+        updateManeuvers()
+        updateRouteOnMap()
+        self.mapView?.recenterMap()
+    }
+    
+    func updateRouteOnMap() {
+        mapView?.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
+        mapView?.showRoutes([routeController.routeProgress.route], legIndex: routeController.routeProgress.legIndex)
+        mapView?.showWaypoints(routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex)
+    }
+    
+    func updateManeuvers() {
+        guard let visualInstructions = routeController.routeProgress.currentLegProgress.currentStep.instructionsDisplayedAlongStep else { return }
+        let step = routeController.routeProgress.currentLegProgress.currentStep
+        
+        let maneuvers: [CPManeuver] = visualInstructions.map { visualInstruction in
+            let maneuver = CPManeuver()
+            let backupText = visualInstructions.first?.primaryInstruction.text ?? step.instructions
+            
+            maneuver.instructionVariants = [backupText]
+            
+            let instructionLabel = InstructionLabel()
+            instructionLabel.availableBounds = {
+                // Estimating the width of Apple's maneuver view
+                let widthOfManeuverView = max(self.view.safeArea.left, self.view.safeArea.right)
+                return CGRect(x: 0, y: 0, width: widthOfManeuverView, height: 30)
+            }
+            instructionLabel.instruction = visualInstruction.primaryInstruction
+            if let attributed = instructionLabel.attributedText {
+                maneuver.attributedInstructionVariants = [attributed]
+            }
+            
+            maneuver.initialTravelEstimates = CPTravelEstimates(distanceRemaining: Measurement(value: step.distance, unit: UnitLength.meters), timeRemaining: step.expectedTravelTime)
+            
+            let primaryColors: [UIColor] = [.black, .white]
+            
+            if let visual = step.instructionsDisplayedAlongStep?.last {
+                let blackAndWhiteManeuverIcons: [UIImage] = primaryColors.compactMap { (color) in
+                    let mv = ManeuverView()
+                    mv.frame = CGRect(x: 0, y: 0, width: 38, height: 38)
+                    mv.primaryColor = color
+                    mv.backgroundColor = .clear
+                    mv.visualInstruction = visual
+                    return mv.imageRepresentation
+                }
+                if blackAndWhiteManeuverIcons.count == 2 {
+                    maneuver.symbolSet = CPImageSet(lightContentImage: blackAndWhiteManeuverIcons[1], darkContentImage: blackAndWhiteManeuverIcons[0])
+                }
+            }
+            return maneuver
+        }
+        
+        carSession.upcomingManeuvers = maneuvers
+    }
+    
     func createMapTemplateUI() {
         let showFeedbackButton = CPMapButton { [weak self] (button) in
             guard let strongSelf = self else { return }
@@ -140,7 +225,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
             .confusingInstructions,
             .generalMapError,
             .badRoute
-            ]
+        ]
         
         let feedbackButtonHandler: (_: CPGridButton) -> Void = { [weak self] (button) in
             self?.carInterfaceController.popTemplate(animated: true)
@@ -164,6 +249,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     func createEndOfRouteFeedbackUI() -> CPGridTemplate {
         let buttonHandler: (_: CPGridButton) -> Void = { [weak self] (button) in
             self?.routeController.setEndOfRoute(rating: Int(button.titleVariants.first!.components(separatedBy: CharacterSet.decimalDigits.inverted).joined())!, comment: nil)
+            self?.carInterfaceController.popTemplate(animated: true)
             self?.exitNavigation()
         }
         
@@ -188,85 +274,20 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         carInterfaceController.presentTemplate(alert, animated: true)
     }
     
-    public func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
-        self.mapView?.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
-        self.mapView?.showRoutes([routeController.routeProgress.route])
-        self.mapView?.showWaypoints(routeController.routeProgress.route)
-        self.mapView?.recenterMap()
-    }
-    
-    @objc func progressDidChange(_ notification: NSNotification) {
-        let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
-        let location = notification.userInfo![RouteControllerNotificationUserInfoKey.locationKey] as! CLLocation
-        
-        // Update the user puck
-        mapView?.updateCourseTracking(location: location, animated: true)
-        
-        let index = routeProgress.currentLegProgress.stepIndex
-        
-        if index != currentStepIndex {
-            updateManeuvers()
-            mapView?.showWaypoints(routeProgress.route)
-            currentStepIndex = index
-            mapView?.addArrow(route: routeProgress.route, legIndex: routeProgress.legIndex, stepIndex: routeProgress.currentLegProgress.stepIndex + 1)
+    func presentWayointArrivalUI(for waypoint: Waypoint) {
+        var title = "You have arrived"
+        if let name = waypoint.name {
+            title = name
         }
         
-        let congestionLevel = routeProgress.averageCongestionLevelRemainingOnLeg ?? .unknown
-        guard let maneuver = carSession.upcomingManeuvers.first else { return }
-        carSession.updateEstimates(routeProgress.currentLegProgress.currentStepProgress.travelEstimates, for: maneuver)
-        carMaptemplate.update(routeProgress.currentLegProgress.travelEstimates, for: carSession.trip, with: congestionLevel.asCPTimeRemainingColor)
-    }
-    
-    @objc func rerouted(_ notification: NSNotification) {
-        updateManeuvers()
-        self.mapView?.recenterMap()
-        self.mapView?.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
-        self.mapView?.showRoutes([routeController.routeProgress.route])
-        self.mapView?.showWaypoints(routeController.routeProgress.route)
-    }
-    
-    func updateManeuvers() {
-        guard let visualInstructions = routeController.routeProgress.currentLegProgress.currentStep.instructionsDisplayedAlongStep else { return }
-        let step = routeController.routeProgress.currentLegProgress.currentStep
-        
-        let maneuvers: [CPManeuver] = visualInstructions.map { visualInstruction in
-            let maneuver = CPManeuver()
-            let backupText = visualInstructions.first?.primaryInstruction.text ?? step.instructions
-            
-            maneuver.instructionVariants = [backupText]
-            
-            let instructionLabel = InstructionLabel()
-            instructionLabel.availableBounds = {
-                // Estimating the width of Apple's maneuver view
-                let widthOfManeuverView = max(self.view.safeArea.left, self.view.safeArea.right)
-                return CGRect(x: 0, y: 0, width: widthOfManeuverView, height: 30)
-            }
-            instructionLabel.instruction = visualInstruction.primaryInstruction
-            if let attributed = instructionLabel.attributedText {
-                maneuver.attributedInstructionVariants = [attributed]
-            }
-            
-            maneuver.initialTravelEstimates = CPTravelEstimates(distanceRemaining: Measurement(value: step.distance, unit: UnitLength.meters), timeRemaining: step.expectedTravelTime)
-            
-            let primaryColors: [UIColor] = [.black, .white]
-            
-            if let visual = step.instructionsDisplayedAlongStep?.last {
-                let blackAndWhiteManeuverIcons: [UIImage] = primaryColors.compactMap { (color) in
-                    let mv = ManeuverView()
-                    mv.frame = CGRect(x: 0, y: 0, width: 38, height: 38)
-                    mv.primaryColor = color
-                    mv.backgroundColor = .clear
-                    mv.visualInstruction = visual
-                    return mv.imageRepresentation
-                }
-                if blackAndWhiteManeuverIcons.count == 2 {
-                    maneuver.symbolSet = CPImageSet(lightContentImage: blackAndWhiteManeuverIcons[1], darkContentImage: blackAndWhiteManeuverIcons[0])
-                }
-            }
-            return maneuver
+        let continueAlert = CPAlertAction(title: "Continue", style: .default) { (action) in
+            self.routeController.routeProgress.legIndex += 1
+            self.carInterfaceController.dismissTemplate(animated: true)
+            self.updateRouteOnMap()
         }
         
-        carSession.upcomingManeuvers = maneuvers
+        let waypointArrival = CPAlertTemplate(titleVariants: [title], actions: [continueAlert])
+        carInterfaceController.presentTemplate(waypointArrival, animated: true)
     }
 }
 
@@ -293,9 +314,11 @@ extension CarPlayNavigationViewController: RouteControllerDelegate {
     public func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) -> Bool {
         if routeController.routeProgress.isFinalLeg {
             presentArrivalUI()
+        } else {
+            presentWayointArrivalUI(for: waypoint)
         }
         
-        return true
+        return false
     }
 }
 
