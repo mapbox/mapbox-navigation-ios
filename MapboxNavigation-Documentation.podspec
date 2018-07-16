@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   The Mapbox Navigation SDK for iOS is a drop-in interface for turn-by-turn navigation along a route, complete with a well-designed map and easy-to-understand spoken directions. Routes are powered by Mapbox Directions.
                    DESC
 
-  s.homepage = "https://www.mapbox.com/navigation-sdk/"
+  s.homepage = "https://www.mapbox.com/ios-sdk/navigation/"
   s.documentation_url = "https://www.mapbox.com/mapbox-navigation-ios/navigation/"
 
   # ―――  Spec License  ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #

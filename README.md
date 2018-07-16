@@ -1,4 +1,4 @@
-# Mapbox Navigation SDK for iOS
+# [Mapbox Navigation SDK for iOS](https://www.mapbox.com/ios-sdk/navigation/)
 
 [![Build Status](https://app.bitrise.io/app/6fc45a7e2817b859/status.svg?token=XTgNMVxObhd8w8EmsAgJ1Q&branch=master)](https://www.bitrise.io/app/6fc45a7e2817b859)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
@@ -17,7 +17,7 @@ Get up and running in a few minutes with our drop-in turn-by-turn navigation `Na
 * Worldwide driving, cycling, and walking directions powered by [open data](https://www.mapbox.com/about/open/) and user feedback
 * Traffic avoidance and proactive rerouting based on current conditions in [over 30 countries](https://www.mapbox.com/api-documentation/pages/traffic-countries.html)
 * Natural-sounding turn instructions powered by [Amazon Polly](https://aws.amazon.com/polly/) (no configuration needed)
-* [Support for over a dozen languages](./docs/guides/Localization%20and%20Internationalization.md)
+* [Support for over a dozen languages](https://www.mapbox.com/ios-sdk/navigation/overview/localization-and-internationalization/)
 
 ## [Documentation](https://www.mapbox.com/mapbox-navigation-ios/navigation/)
 
@@ -64,7 +64,7 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
 
 1. Users expect the SDK to continue to track the user’s location and deliver audible instructions even while a different application is visible or the device is locked. Go to the Capabilities tab. Under the Background Modes section, enable “Audio, AirPlay, and Picture in Picture” and “Location updates”. (Alternatively, add the `audio` and `location` values to the `UIBackgroundModes` array in the Info tab.)
 
-Now import the relevant modules and present a new `NavigationViewController`. You can also [push to a navigation view controller from within a storyboard](./docs/guides/Storyboards.md) if your application’s UI is laid out in Interface Builder.
+Now import the relevant modules and present a new `NavigationViewController`. You can also [push to a navigation view controller from within a storyboard](https://www.mapbox.com/ios-sdk/navigation/overview/storyboards/) if your application’s UI is laid out in Interface Builder.
 
 ```swift
 import MapboxDirections

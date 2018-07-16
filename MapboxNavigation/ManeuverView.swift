@@ -39,7 +39,13 @@ open class ManeuverView: UIView {
         }
     }
 
-    @objc public var visualInstruction: VisualInstructionBanner? {
+    @objc public var visualInstruction: VisualInstruction? {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+    
+    @objc public var drivingSide: DrivingSide = .right {
         didSet {
             setNeedsDisplay()
         }
@@ -66,8 +72,8 @@ open class ManeuverView: UIView {
         }
 
         var flip: Bool = false
-        let maneuverType = visualInstruction.primaryInstruction.maneuverType
-        let maneuverDirection = visualInstruction.primaryInstruction.maneuverDirection
+        let maneuverType = visualInstruction.maneuverType
+        let maneuverDirection = visualInstruction.maneuverDirection
         
         let type = maneuverType != .none ? maneuverType : .turn
         let direction = maneuverDirection != .none ? maneuverDirection : .straightAhead
@@ -83,8 +89,8 @@ open class ManeuverView: UIView {
             ManeuversStyleKit.drawFork(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor)
             flip = [.left, .slightLeft, .sharpLeft].contains(direction)
         case .takeRoundabout, .turnAtRoundabout, .takeRotary:
-            ManeuversStyleKit.drawRoundabout(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor, roundabout_angle: CGFloat(visualInstruction.primaryInstruction.finalHeading))
-            flip = visualInstruction.drivingSide == .left
+            ManeuversStyleKit.drawRoundabout(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor, roundabout_angle: CGFloat(visualInstruction.finalHeading))
+            flip = drivingSide == .right
             
         case .arrive:
             switch direction {
@@ -118,7 +124,7 @@ open class ManeuverView: UIView {
                 flip = true
             case .uTurn:
                 ManeuversStyleKit.drawArrow180right(frame: bounds, resizing: resizing, primaryColor: primaryColor)
-                flip = visualInstruction.drivingSide == .right
+                flip = drivingSide == .left
             default:
                 ManeuversStyleKit.drawArrowstraight(frame: bounds, resizing: resizing, primaryColor: primaryColor)
             }

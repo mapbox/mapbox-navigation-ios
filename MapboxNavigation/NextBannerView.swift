@@ -92,13 +92,13 @@ open class NextBannerView: UIView {
     }
     
     @objc public func update(for visualInstruction: VisualInstructionBanner?) {
-        guard let tertiaryInstruction = visualInstruction?.tertiaryInstruction,
-                  !tertiaryInstruction.containsLaneIndications else {
-                    hide()
-                    return
+        guard let tertiaryInstruction = visualInstruction?.tertiaryInstruction, !tertiaryInstruction.containsLaneIndications else {
+            hide()
+            return
         }
         
-        maneuverView.visualInstruction = visualInstruction
+        maneuverView.visualInstruction = tertiaryInstruction
+        maneuverView.drivingSide = visualInstruction?.drivingSide ?? .right
         instructionLabel.instruction = tertiaryInstruction
         show()
     }

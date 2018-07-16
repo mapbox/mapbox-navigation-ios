@@ -205,6 +205,7 @@
 		C51245F31F19471C00E33B52 /* MapboxMobileEvents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C51DF8661F38C31C006C6A15 /* Locale.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51DF8651F38C31C006C6A15 /* Locale.swift */; };
 		C51DF8671F38C337006C6A15 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D9800E1EFBCDAD006DBF2E /* Date.swift */; };
+		C51FC31720F689F800400CE7 /* CustomStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51FC31620F689F800400CE7 /* CustomStyles.swift */; };
 		C520EE901EBB84F9008805BC /* Navigation.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C520EE921EBB84F9008805BC /* Navigation.storyboard */; };
 		C52AC1261DF0E48600396B9F /* RouteProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */; };
 		C52D09CE1DEF5E5100BE3C5C /* route.json in Resources */ = {isa = PBXBuildFile; fileRef = C52D09CD1DEF5E5100BE3C5C /* route.json */; };
@@ -611,6 +612,7 @@
 		AED2156E208F7FEA009AA673 /* NavigationViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewControllerTests.swift; sourceTree = "<group>"; };
 		AEF2C8F12072B603007B061F /* routeWithTunnels_9thStreetDC.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = routeWithTunnels_9thStreetDC.json; sourceTree = "<group>"; };
 		C51DF8651F38C31C006C6A15 /* Locale.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Locale.swift; sourceTree = "<group>"; };
+		C51FC31620F689F800400CE7 /* CustomStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomStyles.swift; sourceTree = "<group>"; };
 		C520EE911EBB84F9008805BC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Navigation.storyboard; sourceTree = "<group>"; };
 		C520EE941EBBBD55008805BC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Base.lproj/Navigation.strings; sourceTree = "<group>"; };
 		C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteProgressTests.swift; sourceTree = "<group>"; };
@@ -1036,6 +1038,7 @@
 				358D14671E5E3B7700ADE590 /* ViewController.swift */,
 				C5D9800C1EFA8BA9006DBF2E /* CustomViewController.swift */,
 				6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */,
+				C51FC31620F689F800400CE7 /* CustomStyles.swift */,
 			);
 			name = Swift;
 			path = Examples/Swift;
@@ -1915,6 +1918,7 @@
 			files = (
 				358D14681E5E3B7700ADE590 /* ViewController.swift in Sources */,
 				C5D9800D1EFA8BA9006DBF2E /* CustomViewController.swift in Sources */,
+				C51FC31720F689F800400CE7 /* CustomStyles.swift in Sources */,
 				6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */,
 				358D14661E5E3B7700ADE590 /* AppDelegate.swift in Sources */,
 			);
