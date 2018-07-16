@@ -146,15 +146,35 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         let backupText = visualInstruction.primaryInstruction.text ?? step.instructions
         maneuver.instructionVariants = [backupText]
         
-        let instructionLabel = InstructionLabel()
-        instructionLabel.availableBounds = {
+        let bounds: () -> (CGRect) = {
             // Estimating the width of Apple's maneuver view
             let widthOfManeuverView = max(self.view.safeArea.left, self.view.safeArea.right)
             return CGRect(x: 0, y: 0, width: widthOfManeuverView, height: 30)
         }
-        instructionLabel.instruction = visualInstruction.primaryInstruction
-        if let attributed = instructionLabel.attributedText {
-            maneuver.attributedInstructionVariants = [attributed]
+        
+        let shieldHeight: CGFloat = 16
+        
+        // Create primary label
+        let instructionLabelPrimary = InstructionLabel()
+        instructionLabelPrimary.availableBounds = bounds
+        instructionLabelPrimary.shieldHeight = shieldHeight
+        instructionLabelPrimary.instruction = visualInstruction.primaryInstruction
+        
+        // Create secondary label
+        let instructionLabelSecondary = InstructionLabel()
+        instructionLabelSecondary.availableBounds = bounds
+        instructionLabelSecondary.shieldHeight = shieldHeight
+        instructionLabelSecondary.instruction = visualInstruction.secondaryInstruction
+        
+        if let attributedPrimary = instructionLabelPrimary.attributedText {
+            let instruction = NSMutableAttributedString(attributedString: attributedPrimary)
+            
+            if let attributedSecondary = instructionLabelSecondary.attributedText {
+                instruction.append(NSAttributedString(string: "\n"))
+                instruction.append(attributedSecondary)
+            }
+            
+            maneuver.attributedInstructionVariants = [instruction]
         }
         
         maneuver.initialTravelEstimates = CPTravelEstimates(distanceRemaining: Measurement(value: step.distance, unit: UnitLength.meters), timeRemaining: step.expectedTravelTime)
@@ -163,9 +183,10 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     
         let blackAndWhiteManeuverIcons: [UIImage] = primaryColors.compactMap { (color) in
             let mv = ManeuverView()
-            mv.frame = CGRect(x: 0, y: 0, width: 38, height: 38)
+            mv.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
             mv.primaryColor = color
             mv.backgroundColor = .clear
+            mv.scale = UIScreen.main.scale
             mv.visualInstruction = visualInstruction
             return mv.imageRepresentation
         }
