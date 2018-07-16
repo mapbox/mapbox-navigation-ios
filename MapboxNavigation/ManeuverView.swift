@@ -39,12 +39,18 @@ open class ManeuverView: UIView {
         }
     }
 
+    /**
+     The current instruction displayed in the maneuver view.
+     */
     @objc public var visualInstruction: VisualInstruction? {
         didSet {
             setNeedsDisplay()
         }
     }
     
+    /**
+     This indicates the side of the road currently driven on.
+     */
     @objc public var drivingSide: DrivingSide = .right {
         didSet {
             setNeedsDisplay()
@@ -54,7 +60,7 @@ open class ManeuverView: UIView {
     override open func draw(_ rect: CGRect) {
         super.draw(rect)
 
-        transform = CGAffineTransform.identity
+        transform = .identity
         let resizing: ManeuversStyleKit.ResizingBehavior = .aspectFit
 
         #if TARGET_INTERFACE_BUILDER

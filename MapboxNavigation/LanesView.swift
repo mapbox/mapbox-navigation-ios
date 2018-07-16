@@ -66,6 +66,9 @@ open class LanesView: UIView {
         separatorView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
     }
     
+    /**
+     Updates the tertiary instructions banner info with a given `VisualInstructionBanner`.
+     */
     @objc(updateForVisualInstructionBanner:)
     public func update(for visualInstruction: VisualInstructionBanner?) {
         clearLaneViews()
