@@ -66,7 +66,7 @@ open class LanesView: UIView {
         separatorView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
     }
     
-    func update(for visualInstruction: VisualInstructionBanner?) {
+    @objc public func update(for visualInstruction: VisualInstructionBanner?) {
         clearLaneViews()
         
         guard let tertiaryInstruction = visualInstruction?.tertiaryInstruction,
@@ -75,10 +75,7 @@ open class LanesView: UIView {
                     return
         }
         
-        let laneIndications: [LaneIndicationComponent]? = tertiaryInstruction.components.compactMap({ component in
-            guard let lane = component as? LaneIndicationComponent else { return nil }
-            return lane
-        })
+        let laneIndications: [LaneIndicationComponent]? = tertiaryInstruction.components.compactMap({ $0 as? LaneIndicationComponent })
         
         guard let lanes = laneIndications, !lanes.isEmpty else {
             hide()
