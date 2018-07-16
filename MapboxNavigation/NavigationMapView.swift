@@ -946,6 +946,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      to call this method on the value of `NavigationViewController.mapView`.
      */
     @objc public func localizeLabels() {
+        if(NetworkConfiguration.sharedConfiguration.isChinaMap()){
+            return
+        }
+        
         guard let style = style else {
             return
         }
