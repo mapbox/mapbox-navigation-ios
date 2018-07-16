@@ -93,7 +93,7 @@ open class BaseInstructionsBannerView: UIControl {
     /**
      Updates the instructions banner info with a given `VisualInstructionBanner`.
      */
-    @objc(updateForVisualInstruction:)
+    @objc(updateForVisualInstructionBanner:)
     public func update(for instruction: VisualInstructionBanner?) {
         let secondaryInstruction = instruction?.secondaryInstruction
         primaryLabel.numberOfLines = secondaryInstruction == nil ? 2 : 1
