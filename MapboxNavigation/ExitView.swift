@@ -142,6 +142,9 @@ class ExitView: StylableView {
         return [imageLeading, imageLabelSpacing, labelTrailing]
     }
     
+    /**
+     `criticalHash(side:dataSource:)` generates the cache key needed to hold the `ExitView`'s `imageRepresentation` in the `ImageCache` caching engine.
+     */
     static func criticalHash(side: ExitSide, dataSource: DataSource) -> String {
         let proxy = ExitView.appearance()
         let criticalProperties: [AnyHashable?] = [side, dataSource.font.pointSize, proxy.backgroundColor, proxy.foregroundColor, proxy.borderWidth, proxy.cornerRadius]

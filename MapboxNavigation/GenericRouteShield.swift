@@ -91,6 +91,9 @@ public class GenericRouteShield: StylableView {
         addConstraints(constraints)
     }
     
+    /**
+     `criticalHash(side:dataSource:)` generates the cache key needed to hold the `GenericRouteShield`'s `imageRepresentation` in the `ImageCache` caching engine.
+     */
     static func criticalHash(dataSource: DataSource) -> String {
         let proxy = GenericRouteShield.appearance()
         let criticalProperties: [AnyHashable?] = [dataSource.font.pointSize, proxy.backgroundColor, proxy.foregroundColor, proxy.borderWidth, proxy.cornerRadius]
