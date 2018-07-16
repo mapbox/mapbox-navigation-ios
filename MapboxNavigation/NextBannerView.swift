@@ -91,7 +91,8 @@ open class NextBannerView: UIView {
         bottomSeparatorView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale).isActive = true
     }
     
-    @objc public func update(for visualInstruction: VisualInstructionBanner?) {
+    @objc(updateForVisualInstruction:)
+    public func update(for visualInstruction: VisualInstructionBanner?) {
         guard let tertiaryInstruction = visualInstruction?.tertiaryInstruction, !tertiaryInstruction.containsLaneIndications else {
             hide()
             return

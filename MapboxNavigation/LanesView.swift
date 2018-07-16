@@ -66,7 +66,8 @@ open class LanesView: UIView {
         separatorView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
     }
     
-    @objc public func update(for visualInstruction: VisualInstructionBanner?) {
+    @objc(updateForVisualInstruction:)
+    public func update(for visualInstruction: VisualInstructionBanner?) {
         clearLaneViews()
         
         guard let tertiaryInstruction = visualInstruction?.tertiaryInstruction,
