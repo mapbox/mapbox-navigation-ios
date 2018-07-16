@@ -1,6 +1,6 @@
 module: MapboxNavigation
 author: Mapbox
-author_url: https://www.mapbox.com/navigation-sdk/
+author_url: https://www.mapbox.com/ios-sdk/navigation/
 github_url: https://github.com/mapbox/mapbox-navigation-ios
 dash_url: https://www.mapbox.com/mapbox-navigation-ios/navigation/docsets/MapboxNavigation.xml
 copyright: '© 2014–2018 [Mapbox](https://www.mapbox.com/). See [license](https://github.com/mapbox/mapbox-navigation-ios/blob/master/LICENSE.md) for more details.'
@@ -13,21 +13,9 @@ hide_documentation_coverage: Yes
 custom_categories:
   - name: Guides
     children:
-      - Storyboards
-      - Localization and Internationalization
       - Using Map Matching
       - Reduce Memory Usage
-      - Simulating Routes
-  - name: Examples
-    children:
-      - Basic
-      - Styled UI Elements
-      - Waypoint Arrival Screen
-      - Embedded Navigation
-      - Advanced
-      - Custom Voice Controller
-      - Custom Destination Marker
-      - Custom Server
+      - Styling the UI
   - name: Turn-by-turn UI
     children:
       - NavigationViewController
