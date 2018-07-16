@@ -60,6 +60,11 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         mapView?.compassView.isHidden = true
         mapView?.logoView.isHidden = true
         mapView?.delegate = self
+        
+        mapView?.defaultAltitude = 500
+        mapView?.zoomedOutMotorwayAltitude = 1000
+        mapView?.longManeuverDistance = 500
+        
         view.addSubview(mapView!)
         
         resumeNotifications()
@@ -132,47 +137,43 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     }
     
     func updateManeuvers() {
-        guard let visualInstructions = routeController.routeProgress.currentLegProgress.currentStep.instructionsDisplayedAlongStep else { return }
+        guard let visualInstruction = routeController.routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction else { return }
         let step = routeController.routeProgress.currentLegProgress.currentStep
         
-        let maneuvers: [CPManeuver] = visualInstructions.map { visualInstruction in
-            let maneuver = CPManeuver()
-            let backupText = visualInstructions.first?.primaryInstruction.text ?? step.instructions
-            
-            maneuver.instructionVariants = [backupText]
-            
-            let instructionLabel = InstructionLabel()
-            instructionLabel.availableBounds = {
-                // Estimating the width of Apple's maneuver view
-                let widthOfManeuverView = max(self.view.safeArea.left, self.view.safeArea.right)
-                return CGRect(x: 0, y: 0, width: widthOfManeuverView, height: 30)
-            }
-            instructionLabel.instruction = visualInstruction.primaryInstruction
-            if let attributed = instructionLabel.attributedText {
-                maneuver.attributedInstructionVariants = [attributed]
-            }
-            
-            maneuver.initialTravelEstimates = CPTravelEstimates(distanceRemaining: Measurement(value: step.distance, unit: UnitLength.meters), timeRemaining: step.expectedTravelTime)
-            
-            let primaryColors: [UIColor] = [.black, .white]
-            
-            if let visual = step.instructionsDisplayedAlongStep?.last {
-                let blackAndWhiteManeuverIcons: [UIImage] = primaryColors.compactMap { (color) in
-                    let mv = ManeuverView()
-                    mv.frame = CGRect(x: 0, y: 0, width: 38, height: 38)
-                    mv.primaryColor = color
-                    mv.backgroundColor = .clear
-                    mv.visualInstruction = visual
-                    return mv.imageRepresentation
-                }
-                if blackAndWhiteManeuverIcons.count == 2 {
-                    maneuver.symbolSet = CPImageSet(lightContentImage: blackAndWhiteManeuverIcons[1], darkContentImage: blackAndWhiteManeuverIcons[0])
-                }
-            }
-            return maneuver
+        let maneuver = CPManeuver()
+        
+        // Just incase, set some default text
+        let backupText = visualInstruction.primaryInstruction.text ?? step.instructions
+        maneuver.instructionVariants = [backupText]
+        
+        let instructionLabel = InstructionLabel()
+        instructionLabel.availableBounds = {
+            // Estimating the width of Apple's maneuver view
+            let widthOfManeuverView = max(self.view.safeArea.left, self.view.safeArea.right)
+            return CGRect(x: 0, y: 0, width: widthOfManeuverView, height: 30)
+        }
+        instructionLabel.instruction = visualInstruction.primaryInstruction
+        if let attributed = instructionLabel.attributedText {
+            maneuver.attributedInstructionVariants = [attributed]
         }
         
-        carSession.upcomingManeuvers = maneuvers
+        maneuver.initialTravelEstimates = CPTravelEstimates(distanceRemaining: Measurement(value: step.distance, unit: UnitLength.meters), timeRemaining: step.expectedTravelTime)
+        
+        let primaryColors: [UIColor] = [.black, .white]
+    
+        let blackAndWhiteManeuverIcons: [UIImage] = primaryColors.compactMap { (color) in
+            let mv = ManeuverView()
+            mv.frame = CGRect(x: 0, y: 0, width: 38, height: 38)
+            mv.primaryColor = color
+            mv.backgroundColor = .clear
+            mv.visualInstruction = visualInstruction
+            return mv.imageRepresentation
+        }
+        if blackAndWhiteManeuverIcons.count == 2 {
+            maneuver.symbolSet = CPImageSet(lightContentImage: blackAndWhiteManeuverIcons[1], darkContentImage: blackAndWhiteManeuverIcons[0])
+        }
+        
+        carSession.upcomingManeuvers = [maneuver]
     }
     
     func createMapTemplateUI() {
@@ -364,8 +365,6 @@ extension CarPlayNavigationViewController: CPMapTemplateDelegate {
     }
     
     public func mapTemplate(_ mapTemplate: CPMapTemplate, displayStyleFor maneuver: CPManeuver) -> CPManeuverDisplayStyle {
-        // Unsure what this does right now
-        return [.instructionOnly, .symbolOnly, .trailingSymbol, .leadingSymbol]
+        return [.instructionOnly]
     }
-
 }

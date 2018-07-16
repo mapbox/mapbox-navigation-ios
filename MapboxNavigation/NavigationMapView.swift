@@ -24,17 +24,17 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Returns the altitude that the map camera initally defaults to.
      */
-    @objc public static let defaultAltitude: CLLocationDistance = 1000.0
+    @objc public var defaultAltitude: CLLocationDistance = 1000.0
     
     /**
      Returns the altitude the map conditionally zooms out to when user is on a motorway, and the maneuver length is sufficently long.
     */
-    @objc public static let zoomedOutMotorwayAltitude: CLLocationDistance = 2000.0
+    @objc public var zoomedOutMotorwayAltitude: CLLocationDistance = 2000.0
     
     /**
      Returns the threshold for what the map considers a "long-enough" maneuver distance to trigger a zoom-out when the user enters a motorway.
      */
-    @objc public static let longManeuverDistance: CLLocationDistance = 1000.0
+    @objc public var longManeuverDistance: CLLocationDistance = 1000.0
     
     /**
      Maximum distance the user can tap for a selection to be valid when selecting an alternate route.
@@ -85,7 +85,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     
     var userLocationForCourseTracking: CLLocation?
     var animatesUserLocation: Bool = false
-    var altitude: CLLocationDistance = defaultAltitude
+    var altitude: CLLocationDistance
     var routes: [Route]?
     var isAnimatingToOverheadMode = false
     
@@ -169,7 +169,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         didSet {
             if tracksUserCourse {
                 enableFrameByFrameCourseViewTracking(for: 3)
-                altitude = NavigationMapView.defaultAltitude
+                altitude = defaultAltitude
                 showsUserLocation = true
                 courseTrackingDelegate?.navigationMapViewDidStartTrackingCourse?(self)
             } else {
@@ -205,16 +205,19 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     //MARK: - Initalizers
     
     public override init(frame: CGRect) {
+        altitude = defaultAltitude
         super.init(frame: frame)
         commonInit()
     }
     
     public required init?(coder decoder: NSCoder) {
+        altitude = defaultAltitude
         super.init(coder: decoder)
         commonInit()
     }
     
     public override init(frame: CGRect, styleURL: URL?) {
+        altitude = defaultAltitude
         super.init(frame: frame, styleURL: styleURL)
         commonInit()
     }
@@ -1041,7 +1044,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             camera.pitch = 0
             camera.heading = 0
             camera.centerCoordinate = userLocation
-            camera.altitude = NavigationMapView.defaultAltitude
+            camera.altitude = self.defaultAltitude
             setCamera(camera, withDuration: 1, animationTimingFunction: nil) { [weak self] in
                 self?.isAnimatingToOverheadMode = false
             }

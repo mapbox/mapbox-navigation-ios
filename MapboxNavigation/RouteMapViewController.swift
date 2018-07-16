@@ -365,9 +365,9 @@ class RouteMapViewController: UIViewController {
     func updateCameraAltitude(for routeProgress: RouteProgress) {
         guard mapView.tracksUserCourse else { return } //only adjust when we are actively tracking user course
         
-        let zoomOutAltitude = NavigationMapView.zoomedOutMotorwayAltitude
-        let defaultAltitude = NavigationMapView.defaultAltitude
-        let isLongRoad = routeProgress.distanceRemaining >= NavigationMapView.longManeuverDistance
+        let zoomOutAltitude = mapView.zoomedOutMotorwayAltitude
+        let defaultAltitude = mapView.defaultAltitude
+        let isLongRoad = routeProgress.distanceRemaining >= mapView.longManeuverDistance
         let currentStep = routeProgress.currentLegProgress.currentStep
         let upComingStep = routeProgress.currentLegProgress.upComingStep
         
