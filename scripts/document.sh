@@ -30,7 +30,7 @@ BASE_URL="https://www.mapbox.com/mapbox-navigation-ios"
 
 # Link to directions documentation
 DIRECTIONS_VERSION=$(grep 'MapboxDirections.swift' Cartfile.resolved | grep -oE '"v.+?"' | grep -oE '[^"v]+')
-DIRECTIONS_SYMBOLS="Directions|DirectionsOptions|DirectionsResult|Intersection|Lane|Match|MatchOptions|Route|RouteLeg|RouteOptions|RouteStep|SpokenInstruction|Tracepoint|VisualInstruction|VisualInstructionComponent|Waypoint"
+DIRECTIONS_SYMBOLS="Directions|DirectionsOptions|DirectionsResult|Intersection|Lane|Match|MatchOptions|Route|RouteLeg|RouteOptions|RouteStep|SpokenInstruction|Tracepoint|VisualInstruction|VisualInstructionComponent|Waypoint|RoadClasses|ComponentRepresentable"
 
 rm -rf ${OUTPUT}
 mkdir -p ${OUTPUT}
