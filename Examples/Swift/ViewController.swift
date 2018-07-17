@@ -39,10 +39,11 @@ class ViewController: UIViewController, MGLMapViewDelegate {
             mapView?.showWaypoints(current)
             
             guard #available(iOS 12.0, *), let carViewController = carViewController else { return }
+            
+            mapTemplate?.mapButtons = []
                 
             // Use custom extension on CPMaptemplate to make it easy to preview a `Route`.
             mapTemplate?.showTripPreviews(routes, textConfiguration: nil)
-            
             
             carViewController.mapView?.showRoutes(routes)
             carViewController.mapView?.showWaypoints(current)
@@ -322,6 +323,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         mapView.delegate = self
         mapView.navigationMapDelegate = self
         mapView.userTrackingMode = .follow
+        mapView.logoView.isHidden = true
         
         view.insertSubview(mapView, belowSubview: longPressHintView)
         
