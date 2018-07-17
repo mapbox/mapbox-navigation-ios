@@ -66,7 +66,7 @@ open class NextBannerView: UIView {
         super.prepareForInterfaceBuilder()
         maneuverView.isEnd = true
         let component = VisualInstructionComponent(type: .text, text: "Next step", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)
-        let instruction = VisualInstruction(text: nil, maneuverType: .none, maneuverDirection: .none, textComponents: [component])
+        let instruction = VisualInstruction(text: nil, maneuverType: .none, maneuverDirection: .none, components: [component])
         instructionLabel.instruction = instruction
     }
     
@@ -91,30 +91,19 @@ open class NextBannerView: UIView {
         bottomSeparatorView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale).isActive = true
     }
     
-    func shouldShowNextBanner(for routeProgress: RouteProgress) -> Bool {
-        guard let upcomingStep = routeProgress.currentLegProgress.upComingStep else { return false }
-        
-        let durationForNext = RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier
-
-        guard routeProgress.currentLegProgress.currentStepProgress.durationRemaining <= durationForNext, upcomingStep.expectedTravelTime <= durationForNext else {
-            return false
-        }
-        
-        guard let _ = upcomingStep.instructionsDisplayedAlongStep?.last else { return false }
-        
-        return true
-    }
-    
-    public func update(for routeProgress: RouteProgress) {
-        guard shouldShowNextBanner(for: routeProgress) else {
+    /**
+     Updates the instructions banner info with a given `VisualInstructionBanner`.
+     */
+    @objc(updateForVisualInstructionBanner:)
+    public func update(for visualInstruction: VisualInstructionBanner?) {
+        guard let tertiaryInstruction = visualInstruction?.tertiaryInstruction, !tertiaryInstruction.containsLaneIndications else {
             hide()
             return
         }
         
-        guard let instruction = routeProgress.currentLegProgress.upComingStep?.instructionsDisplayedAlongStep?.last else { return }
-        
-        maneuverView.visualInstruction = instruction
-        instructionLabel.instruction = instruction.primaryInstruction
+        maneuverView.visualInstruction = tertiaryInstruction
+        maneuverView.drivingSide = visualInstruction?.drivingSide ?? .right
+        instructionLabel.instruction = tertiaryInstruction
         show()
     }
     

@@ -141,4 +141,13 @@ class ExitView: StylableView {
         let labelTrailing = trailingAnchor.constraint(equalTo: exitNumberLabel.trailingAnchor, constant: 8)
         return [imageLeading, imageLabelSpacing, labelTrailing]
     }
+    
+    /**
+     This generates the cache key needed to hold the `ExitView`'s `imageRepresentation` in the `ImageCache` caching engine.
+     */
+    static func criticalHash(side: ExitSide, dataSource: DataSource) -> String {
+        let proxy = ExitView.appearance()
+        let criticalProperties: [AnyHashable?] = [side, dataSource.font.pointSize, proxy.backgroundColor, proxy.foregroundColor, proxy.borderWidth, proxy.cornerRadius]
+        return String(describing: criticalProperties.reduce(0, { $0 ^ ($1?.hashValue ?? 0)}))
+    }
 }

@@ -14,7 +14,7 @@ let tunnelResponse = Fixture.JSONFromFileNamed(name: TunnelDetectorTestData.nint
 let tunnelJsonRoute = (tunnelResponse[TunnelDetectorTestData.kRouteKey] as! [AnyObject]).first as! [String: Any]
 let tunnelWayPoint1 = Waypoint(coordinate: TunnelDetectorTestData.startLocation)
 let tunnelWaypoint2 = Waypoint(coordinate: TunnelDetectorTestData.endLocation)
-let tunnelRoute = Route(json: tunnelJsonRoute, waypoints: [tunnelWayPoint1, tunnelWaypoint2], routeOptions: NavigationRouteOptions(waypoints: [tunnelWayPoint1, tunnelWaypoint2]))
+let tunnelRoute = Route(json: tunnelJsonRoute, waypoints: [tunnelWayPoint1, tunnelWaypoint2], options: NavigationRouteOptions(waypoints: [tunnelWayPoint1, tunnelWaypoint2]))
 
 class TunnelIntersectionManagerTests: XCTestCase {
     

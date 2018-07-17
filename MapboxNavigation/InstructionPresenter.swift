@@ -8,8 +8,9 @@ protocol InstructionPresenterDataSource: class {
     var shieldHeight: CGFloat { get }
 }
 
+typealias DataSource = InstructionPresenterDataSource
+
 class InstructionPresenter {
-    typealias DataSource = InstructionPresenterDataSource
     
     private let instruction: VisualInstruction
     private weak var dataSource: DataSource?
@@ -66,7 +67,7 @@ class InstructionPresenter {
     typealias AttributedInstructionComponents = (components: [VisualInstructionComponent], attributedStrings: [NSAttributedString])
     
     func attributedPairs(for instruction: VisualInstruction, dataSource: DataSource, imageRepository: ImageRepository, onImageDownload: @escaping ImageDownloadCompletion) -> AttributedInstructionComponents {
-        let components = instruction.textComponents
+        let components = instruction.components.compactMap { $0 as? VisualInstructionComponent }
         var strings: [NSAttributedString] = []
         var processedComponents: [VisualInstructionComponent] = []
         
@@ -134,7 +135,7 @@ class InstructionPresenter {
     
     func attributedString(forGenericShield component: VisualInstructionComponent, dataSource: DataSource) -> NSAttributedString? {
         guard component.type == .image, let text = component.text else { return nil }
-        return genericShield(text: text, cacheKey: component.genericCacheKey, dataSource: dataSource)
+        return genericShield(text: text, component: component, dataSource: dataSource)
     }
     
     func attributedString(forShieldComponent shield: VisualInstructionComponent, repository:ImageRepository, dataSource: DataSource, onImageDownload: @escaping ImageDownloadCompletion) -> NSAttributedString? {
@@ -166,7 +167,10 @@ class InstructionPresenter {
     }
 
     private func instructionHasDownloadedAllShields() -> Bool {
-        for component in instruction.textComponents {
+        let textComponents = instruction.components.compactMap { $0 as? VisualInstructionComponent }
+        guard !textComponents.isEmpty else { return false }
+        
+        for component in textComponents {
             guard let key = component.cacheKey else {
                 continue
             }
@@ -189,11 +193,10 @@ class InstructionPresenter {
         return NSAttributedString(attachment: attachment)
     }
     
-    private func genericShield(text: String, cacheKey: String, dataSource: DataSource) -> NSAttributedString? {
-        let proxy = GenericRouteShield.appearance()
-        let criticalProperties: [AnyHashable?] = [dataSource.font.pointSize, proxy.backgroundColor, proxy.foregroundColor, proxy.borderWidth, proxy.cornerRadius]
-        let additionalKey = String(describing: criticalProperties.reduce(0, { $0 ^ ($1?.hashValue ?? 0)}))
+    private func genericShield(text: String, component: VisualInstructionComponent, dataSource: DataSource) -> NSAttributedString? {
+        guard let cacheKey = component.cacheKey else { return nil }
 
+        let additionalKey = GenericRouteShield.criticalHash(dataSource: dataSource)
         let attachment = GenericShieldAttachment()
         
         let key = [cacheKey, additionalKey].joined(separator: "-")
@@ -212,19 +215,18 @@ class InstructionPresenter {
     }
     
     private func exitShield(side: ExitSide = .right, text: String, component: VisualInstructionComponent, dataSource: DataSource) -> NSAttributedString? {
-        
-        let proxy = ExitView.appearance()
-        let criticalProperties: [AnyHashable?] = [side, dataSource.font.pointSize, proxy.backgroundColor, proxy.foregroundColor, proxy.borderWidth, proxy.cornerRadius]
-        let additionalKey = String(describing: criticalProperties.reduce(0, { $0 ^ ($1?.hashValue ?? 0)}))
-        let attachment = ExitAttachment()
         guard let cacheKey = component.cacheKey else { return nil }
         
-        if let image = imageRepository.cachedImageForKey(cacheKey) {
+        let additionalKey = ExitView.criticalHash(side: side, dataSource: dataSource)
+        let attachment = ExitAttachment()
+        
+        let key = [cacheKey, additionalKey].joined(separator: "-")
+        if let image = imageRepository.cachedImageForKey(key) {
             attachment.image = image
         } else {
             let view = ExitView(pointSize: dataSource.font.pointSize, side: side, text: text)
             guard let image = takeSnapshot(on: view) else { return nil }
-            imageRepository.storeImage(image, forKey: [cacheKey, additionalKey].joined(separator: "-"), toDisk: false)
+            imageRepository.storeImage(image, forKey: key, toDisk: false)
             attachment.image = image
         }
         
