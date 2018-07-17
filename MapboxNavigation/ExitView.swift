@@ -143,7 +143,7 @@ class ExitView: StylableView {
     }
     
     /**
-     `criticalHash(side:dataSource:)` generates the cache key needed to hold the `ExitView`'s `imageRepresentation` in the `ImageCache` caching engine.
+     This generates the cache key needed to hold the `ExitView`'s `imageRepresentation` in the `ImageCache` caching engine.
      */
     static func criticalHash(side: ExitSide, dataSource: DataSource) -> String {
         let proxy = ExitView.appearance()
