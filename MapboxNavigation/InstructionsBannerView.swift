@@ -93,7 +93,8 @@ open class BaseInstructionsBannerView: UIControl {
     /**
      Updates the instructions banner info with a given `VisualInstructionBanner`.
      */
-    public func updateInstruction(_ instruction: VisualInstructionBanner?) {
+    @objc(updateForVisualInstructionBanner:)
+    public func update(for instruction: VisualInstructionBanner?) {
         let secondaryInstruction = instruction?.secondaryInstruction
         primaryLabel.numberOfLines = secondaryInstruction == nil ? 2 : 1
         
@@ -104,15 +105,16 @@ open class BaseInstructionsBannerView: UIControl {
         }
         
         primaryLabel.instruction = instruction?.primaryInstruction
+        maneuverView.visualInstruction = instruction?.primaryInstruction
+        maneuverView.drivingSide = instruction?.drivingSide ?? .right
         secondaryLabel.instruction = secondaryInstruction
-        maneuverView.visualInstruction = instruction
     }
     
     override open func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         maneuverView.isStart = true
         let component = VisualInstructionComponent(type: .text, text: "Primary text label", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)
-        let instruction = VisualInstruction(text: nil, maneuverType: .none, maneuverDirection: .none, textComponents: [component])
+        let instruction = VisualInstruction(text: nil, maneuverType: .none, maneuverDirection: .none, components: [component])
         primaryLabel.instruction = instruction
         
         distance = 100

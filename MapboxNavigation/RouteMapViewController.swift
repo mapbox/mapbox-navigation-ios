@@ -282,10 +282,6 @@ class RouteMapViewController: UIViewController {
         currentStepIndexMapped = 0
         
         instructionsBannerView.updateDistance(for: routeController.routeProgress.currentLegProgress.currentStepProgress)
-        lanesView.update(for: routeController.routeProgress.currentLegProgress)
-        if lanesView.isHidden {
-            nextBannerView.update(for: routeController.routeProgress)
-        }
         
         mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
         mapView.showRoutes([routeController.routeProgress.route], legIndex: routeController.routeProgress.legIndex)
@@ -351,7 +347,10 @@ class RouteMapViewController: UIViewController {
     
     @objc func updateInstructionsBanner(notification: NSNotification) {
         guard let routeProgress = notification.userInfo?[RouteControllerNotificationUserInfoKey.routeProgressKey] as? RouteProgress else { return }
-        instructionsBannerView.updateInstruction(routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
+        instructionsBannerView.update(for: routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
+        lanesView.update(for: routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
+        nextBannerView.update(for: routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
+
     }
 
     func updateMapOverlays(for routeProgress: RouteProgress) {
@@ -403,17 +402,12 @@ class RouteMapViewController: UIViewController {
     func mapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
         return navigationMapView(mapView, viewFor: annotation)
     }
-
+    
     func notifyDidChange(routeProgress: RouteProgress, location: CLLocation, secondsRemaining: TimeInterval) {
         resetETATimer()
-        
         updateETA()
         
-        lanesView.update(for: routeProgress.currentLegProgress)
         instructionsBannerView.updateDistance(for: routeProgress.currentLegProgress.currentStepProgress)
-        if lanesView.isHidden {
-            nextBannerView.update(for: routeProgress)
-        }
         
         if currentLegIndexMapped != routeProgress.legIndex {
             mapView.showWaypoints(routeProgress.route, legIndex: routeProgress.legIndex)
@@ -893,7 +887,7 @@ extension RouteMapViewController: StepsViewControllerDelegate {
         navigationView.instructionsBannerContentView.backgroundColor = instructionsView.backgroundColor
         
         view.addSubview(instructionsView)
-        instructionsView.updateInstruction(instructions)
+        instructionsView.update(for: instructions)
         previewInstructionsView = instructionsView
     }
     
