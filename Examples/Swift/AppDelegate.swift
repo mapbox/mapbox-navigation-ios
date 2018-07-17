@@ -50,12 +50,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CPApplicationDelegate {
     }
     
     @available(iOS 12.0, *)
-    var carWindow: CPMapContentWindow? {
-        return _carWindow as? CPMapContentWindow
+    var carWindow: CPWindow? {
+        return _carWindow as? CPWindow
     }
     
     @available(iOS 12.0, *)
-    func application(_ application: UIApplication, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPMapContentWindow) {
+    func application(_ application: UIApplication, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPWindow) {
         let mapTemplate = CPMapTemplate()
         let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "mainMap") as! ViewController
         
@@ -67,7 +67,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CPApplicationDelegate {
     }
     
     @available(iOS 12.0, *)
-    func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPMapContentWindow) {
+    func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPWindow) {
         print("Disconnected")
     }
 
