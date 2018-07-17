@@ -15,17 +15,17 @@ class NetworkConfiguration : NSObject{
     // The URL String of China map style.
     public let mapboxChinaStyleURL = "mapbox://styles/mapbox/streets-zh-v1"
     
-    private override init() {
-        super.init()
-        apiBaseURL = Bundle.main.object(forInfoDictionaryKey:"MGLMapboxAPIBaseURL") as? String
-    }
-    
-    // Return of whether the map is China map or not
-    public func isChinaMap() -> Bool{
-        guard apiBaseURL != nil, apiBaseURL == mapboxChinaBaseAPIURL else {
+    // Value of whether the map is China map or not
+    public var isChinaMap : Bool!{
+        guard apiBaseURL == mapboxChinaBaseAPIURL else {
             return false
         }
         return true
+    }
+    
+    private override init() {
+        super.init()
+        apiBaseURL = Bundle.main.object(forInfoDictionaryKey:"MGLMapboxAPIBaseURL") as? String
     }
     
 }
