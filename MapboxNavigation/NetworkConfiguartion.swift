@@ -16,11 +16,11 @@ class NetworkConfiguration : NSObject{
     public let mapboxChinaStyleURL = "mapbox://styles/mapbox/streets-zh-v1"
     
     // Value of whether the map is China map or not
-    public var isChinaMap : Bool!{
-        guard apiBaseURL == mapboxChinaBaseAPIURL else {
-            return false
+    public var hasChinaBaseURL : Bool{
+        if(apiBaseURL == mapboxChinaBaseAPIURL){
+            return true
         }
-        return true
+        return false
     }
     
     private override init() {
