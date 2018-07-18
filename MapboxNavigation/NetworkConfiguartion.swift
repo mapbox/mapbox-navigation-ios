@@ -17,15 +17,7 @@ class NetworkConfiguration : NSObject{
     
     // Value of whether the map is China map or not
     public var hasChinaBaseURL : Bool{
-        if(apiBaseURL == mapboxChinaBaseAPIURL){
-            return true
-        }
-        return false
-    }
-    
-    private override init() {
-        super.init()
         apiBaseURL = Bundle.main.object(forInfoDictionaryKey:"MGLMapboxAPIBaseURL") as? String
+        return apiBaseURL == mapboxChinaBaseAPIURL
     }
-    
 }
