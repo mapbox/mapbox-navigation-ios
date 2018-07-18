@@ -63,26 +63,6 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     let audioQueue = DispatchQueue(label: Bundle.mapboxNavigation.bundleIdentifier! + ".audio")
     
     /**
-     A boolean value indicating whether instructions should be announced by voice or not.
-     */
-    @objc public var isEnabled: Bool = true
-    
-    /**
-     Volume of announcements.
-     */
-    @objc public var volume: Float = 1.0
-    
-    /**
-     SSML option which controls at which speed Polly instructions are read.
-     */
-    @objc public var instructionVoiceSpeedRate = 1.08
-    
-    /**
-     SSML option that specifies the voice loudness.
-     */
-    @objc public var instructionVoiceVolume = "default"
-    
-    /**
      If true, a noise indicating the user is going to be rerouted will play prior to rerouting.
      */
     @objc public var playRerouteSound = true
@@ -91,11 +71,6 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
      Sound to play prior to reroute. Inherits volume level from `volume`.
      */
     @objc public var rerouteSoundPlayer: AVAudioPlayer = try! AVAudioPlayer(data: NSDataAsset(name: "reroute-sound", bundle: .mapboxNavigation)!.data, fileTypeHint: AVFileType.mp3.rawValue)
-    
-    /**
-     Buffer time between announcements. After an announcement is given any announcement given within this `TimeInterval` will be suppressed.
-     */
-    @objc public var bufferBetweenAnnouncements: TimeInterval = 3
     
     /**
      Delegate used for getting metadata information about a particular spoken instruction.
@@ -179,7 +154,6 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         } catch {
             voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
         }
-        rerouteSoundPlayer.volume = volume
         rerouteSoundPlayer.play()
     }
     
@@ -263,7 +237,6 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         if utterance?.voice == nil {
             utterance?.voice = AVSpeechSynthesisVoice(language: Locale.preferredLocalLanguageCountryCode)
         }
-        utterance?.volume = volume
         
         if let utterance = utterance {
             speechSynth.speak(utterance)
