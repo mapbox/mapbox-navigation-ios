@@ -50,7 +50,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
             
             // Wait for preview UI to show up so we can get the proper safeAreaInsets.
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                let padding: CGFloat = 25
+                let padding: CGFloat = 10
                 let bounds = UIEdgeInsets(top: carViewController.view.safeAreaInsets.top + padding,
                                           left: carViewController.view.safeAreaInsets.left + padding,
                                           bottom: carViewController.view.safeAreaInsets.bottom + padding,
@@ -380,7 +380,7 @@ extension ViewController: NavigationMapViewDelegate {
     // MARK: CarPlay Specific functions
     
     func buildCarPlayUI() {
-        guard #available(iOS 12.0, *), let mapView = mapView, let mapTemplate = mapTemplate else { return }
+        guard #available(iOS 12.0, *), let mapView = mapView, let mapTemplate = mapTemplate, let _ = carViewController else { return }
         bottomBar.isHidden = true
         bottomBarBackground.isHidden = true
         longPressHintView.isHidden = true

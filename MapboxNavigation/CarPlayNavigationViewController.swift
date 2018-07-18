@@ -48,13 +48,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         self.carMaptemplate.mapDelegate = self
         
         self.styleManager = StyleManager(self)
-        
-        // TODO: Fix me, this also changes the color of exit and generic shield images on the phone.
-        // Somehow, they are shared.
-        self.styleManager.styles =  [DayStyle(), NightStyle()].map {
-            $0.overrideStyleForCarPlay = true
-            return $0
-        }
+        self.styleManager.styles =  [CarPlayDayStyle(), CarPlayNightStyle()]
         
         createMapTemplateUI()
     }
@@ -99,6 +93,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     func suspendNotifications() {
         NotificationCenter.default.removeObserver(self, name: .routeControllerProgressDidChange, object: nil)
         NotificationCenter.default.removeObserver(self, name: .routeControllerDidReroute, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .routeControllerDidPassVisualInstructionPoint, object: nil)
     }
     
     func exitNavigation() {
@@ -162,7 +157,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         
         // Estimating the width of Apple's maneuver view
         let bounds: () -> (CGRect) = {
-            let widthOfManeuverView = max(self.view.bounds.width - self.view.safeArea.left, self.view.bounds.width - self.view.safeArea.right)
+            let widthOfManeuverView = min(self.view.bounds.width - self.view.safeArea.left, self.view.bounds.width - self.view.safeArea.right)
             return CGRect(x: 0, y: 0, width: widthOfManeuverView, height: 30)
         }
         

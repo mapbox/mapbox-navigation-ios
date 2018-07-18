@@ -88,13 +88,13 @@ open class DayStyle: Style {
         ExitView.appearance().backgroundColor = .clear
         ExitView.appearance().borderWidth = 1.0
         ExitView.appearance().cornerRadius = 5.0
-        ExitView.appearance().foregroundColor = overrideStyleForCarPlay ? .white : .black
+        ExitView.appearance().foregroundColor = .black
         FloatingButton.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         FloatingButton.appearance().tintColor = tintColor
         GenericRouteShield.appearance().backgroundColor = .clear
         GenericRouteShield.appearance().borderWidth = 1.0
         GenericRouteShield.appearance().cornerRadius = 5.0
-        GenericRouteShield.appearance().foregroundColor = overrideStyleForCarPlay ? .white : .black 
+        GenericRouteShield.appearance().foregroundColor = .black
         InstructionsBannerContentView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         InstructionsBannerView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         LaneView.appearance().primaryColor = .defaultLaneArrowPrimary
@@ -230,5 +230,21 @@ open class NightStyle: DayStyle {
         TimeRemainingLabel.appearance().normalTextColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         TimeRemainingLabel.appearance().trafficUnknownColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         WayNameView.appearance().borderColor = #colorLiteral(red: 0.2802129388, green: 0.3988235593, blue: 0.5260632038, alpha: 1)
+    }
+}
+
+
+open class CarPlayDayStyle: DayStyle {
+    open override func apply() {
+        super.apply()
+        ExitView.appearance().foregroundColor = .white
+        GenericRouteShield.appearance().foregroundColor = .white
+    }
+}
+
+open class CarPlayNightStyle: NightStyle {open override func apply() {
+    super.apply()
+        ExitView.appearance().foregroundColor = .white
+        GenericRouteShield.appearance().foregroundColor = .white
     }
 }

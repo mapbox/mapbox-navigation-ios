@@ -36,8 +36,6 @@ open class Style: NSObject {
      */
     @objc open var mapStyleURL: URL = MGLStyle.navigationGuidanceDayStyleURL
     
-    @objc open var overrideStyleForCarPlay: Bool = false
-    
     /**
      Applies the style for all changed properties.
      */
