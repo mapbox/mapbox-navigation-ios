@@ -1046,13 +1046,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return
         }
         
-        // Sadly, `MGLMapView.cameraThatFitsShape(_:direction:edgePadding:)` uses the current pitch of the mapview.
-        // Because of this, we need to set it before or it will create a camera for the current pitch instead of 0.
-        let camera = self.camera
-        camera.pitch = 0
-        self.camera = camera
+        let cam = self.camera
+        cam.pitch = 0
+        cam.direction = 0
         
-        let cameraForLine = cameraThatFitsShape(line, direction: 0, edgePadding: bounds)
+        let cameraForLine = camera(cam, fitting: line, edgePadding: bounds)
         setCamera(cameraForLine, withDuration: 1, animationTimingFunction: nil) { [weak self] in
             self?.isAnimatingToOverheadMode = false
         }
