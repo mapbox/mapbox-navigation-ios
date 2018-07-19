@@ -21,35 +21,40 @@ open class EventsManager: NSObject {
     var endOfRouteStarRating: Int?
     var endOfRouteComment: String?
     
+    lazy var accessToken: String = {
+        guard let path = Bundle.main.path(forResource: "Info", ofType: "plist"),
+        let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject],
+        let token = dict["MGLMapboxAccessToken"] as? String else {
+            //we can assert here because if the token was passed in, it would of overriden this closure.
+            //we return an empty string so we don't crash in production (in keeping with behavior of `assert`)
+            assertionFailure("`accessToken` must be set in the Info.plist as `MGLMapboxAccessToken` or the `Route` passed into the `RouteController` must have the `accessToken` property set.")
+            return ""
+        }
+        return token
+    }()
+    
+    @objc public init(accessToken possibleToken: String? = nil) {
+        super.init()
+        if let tokenOverride = possibleToken {
+            accessToken = tokenOverride
+        }
+    }
+    
     /**
      When set to `false`, flushing of telemetry events is not delayed. Is set to `true` by default.
      */
     @objc public var delaysEventFlushing = true
     
-    func startEvents(accessToken: String?) {
+    func start() {
         let eventLoggingEnabled = UserDefaults.standard.bool(forKey: NavigationMetricsDebugLoggingEnabled)
         
-        var mapboxAccessToken: String? = nil
-        
-        if let accessToken = accessToken {
-            mapboxAccessToken = accessToken
-        } else if let path = Bundle.main.path(forResource: "Info", ofType: "plist"),
-            let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject],
-            let token = dict["MGLMapboxAccessToken"] as? String {
-            mapboxAccessToken = token
-        }
-        
-        if let mapboxAccessToken = mapboxAccessToken {
-            manager.isDebugLoggingEnabled = eventLoggingEnabled
-            manager.isMetricsEnabledInSimulator = true
-            manager.isMetricsEnabledForInUsePermissions = true
-            let userAgent = usesDefaultUserInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
-            manager.initialize(withAccessToken: mapboxAccessToken, userAgentBase: userAgent, hostSDKVersion: String(describing: Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString")!))
-            manager.disableLocationMetrics()
-            manager.sendTurnstileEvent()
-        } else {
-            assert(false, "`accessToken` must be set in the Info.plist as `MGLMapboxAccessToken` or the `Route` passed into the `RouteController` must have the `accessToken` property set.")
-        }
+        manager.isDebugLoggingEnabled = eventLoggingEnabled
+        manager.isMetricsEnabledInSimulator = true
+        manager.isMetricsEnabledForInUsePermissions = true
+        let userAgent = usesDefaultUserInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
+        manager.initialize(withAccessToken: accessToken, userAgentBase: userAgent, hostSDKVersion: String(describing: Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString")!))
+        manager.disableLocationMetrics()
+        manager.sendTurnstileEvent()
     }
     
     func navigationCancelEvent(rating potentialRating: Int? = nil, comment: String? = nil) -> EventDetails {

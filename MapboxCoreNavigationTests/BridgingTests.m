@@ -24,7 +24,7 @@
     MBRoute *route = [[MBRoute alloc] initWithJSON:routeDict waypoints:waypoints routeOptions:options];
     route.accessToken = @"garbage";
     XCTAssertNotNil(route);
-    MBEventsManager *eventsManager = [[MBEventsManager alloc] init];
+    MBEventsManager *eventsManager = [[MBEventsManager alloc] initWithAccessToken:route.accessToken];
     eventsManager.manager = [[MBEventsManagerSpy alloc] init];
     
     MBDirectionsSpy *directions = [[MBDirectionsSpy alloc] initWithAccessToken:@"garbage" host:nil];

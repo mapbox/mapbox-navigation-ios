@@ -91,7 +91,7 @@ open class RouteController: NSObject {
         }
     }
     
-    public var eventsManager: EventsManager!
+    public var eventsManager: EventsManager
 
     var hasFoundOneQualifiedLocation = false
 
@@ -116,12 +116,12 @@ open class RouteController: NSObject {
      - parameter locationManager: The associated location manager.
      */
     @objc(initWithRoute:directions:locationManager:eventsManager:)
-    public init(along route: Route, directions: Directions = Directions.shared, locationManager: NavigationLocationManager = NavigationLocationManager(), eventsManager: EventsManager = EventsManager()) {
+    public init(along route: Route, directions: Directions = Directions.shared, locationManager: NavigationLocationManager = NavigationLocationManager(), eventsManager eventsOverride: EventsManager? = nil) {
         self.directions = directions
         self.routeProgress = RouteProgress(route: route)
         self.locationManager = locationManager
         self.locationManager.activityType = route.routeOptions.activityType
-        self.eventsManager = eventsManager
+        self.eventsManager = eventsOverride ?? EventsManager(accessToken: nil)
         UIDevice.current.isBatteryMonitoringEnabled = true
 
         super.init()
@@ -136,7 +136,7 @@ open class RouteController: NSObject {
         
         tunnelIntersectionManager.delegate = self
 
-        eventsManager.startEvents(accessToken: route.accessToken)
+        eventsManager.start()
     }
 
     deinit {
