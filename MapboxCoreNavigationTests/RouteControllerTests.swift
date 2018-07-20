@@ -20,7 +20,7 @@ class RouteControllerTests: XCTestCase {
     typealias RouteLocations = (firstLocation: CLLocation, penultimateLocation: CLLocation, lastLocation: CLLocation)
 
     lazy var dependencies: (routeController: RouteController, routeLocations: RouteLocations) = {
-        let eventsManager = EventsManager()
+        let eventsManager = EventsManager(accessToken: initialRoute.accessToken)
         eventsManager.manager = eventsManagerSpy
         let routeController = RouteController(along: initialRoute, directions: directionsClientSpy, locationManager: NavigationLocationManager(), eventsManager: eventsManager)
         routeController.delegate = delegate
@@ -207,7 +207,7 @@ class RouteControllerTests: XCTestCase {
 
     func testTurnstileEventSentUponInitialization() {
         // MARK: it sends a turnstile event upon initialization
-        let eventsManager = EventsManager()
+        let eventsManager = EventsManager(accessToken: initialRoute.accessToken)
         eventsManager.manager = eventsManagerSpy
         let _ = RouteController(along: initialRoute, directions: directionsClientSpy, locationManager: NavigationLocationManager(), eventsManager: eventsManager)
 

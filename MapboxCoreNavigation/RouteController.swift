@@ -121,7 +121,7 @@ open class RouteController: NSObject {
         self.routeProgress = RouteProgress(route: route)
         self.locationManager = locationManager
         self.locationManager.activityType = route.routeOptions.activityType
-        self.eventsManager = eventsOverride ?? EventsManager(accessToken: nil)
+        self.eventsManager = eventsOverride ?? EventsManager(accessToken: route.accessToken)
         UIDevice.current.isBatteryMonitoringEnabled = true
 
         super.init()
