@@ -386,15 +386,15 @@ open class NavigationViewController: UIViewController {
     
     override open func viewDidLoad() {
         super.viewDidLoad()
+        // Initialize voice controller if it hasn't been overridden.
+        // This is optional and lazy so it can be mutated by the developer after init.
+        _ = voiceController
         resumeNotifications()
         view.clipsToBounds = true
     }
     
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        //initialize voice controller if it hasn't been overridden
-        _ = voiceController
         
         UIApplication.shared.isIdleTimerDisabled = true
         
