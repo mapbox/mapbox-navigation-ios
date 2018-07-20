@@ -264,4 +264,43 @@ extension EventsManager {
         endOfRouteStarRating = rating
         endOfRouteComment = comment
     }
+    
+    //MARK: - Session State Management
+    @objc(reportChangeToOrientation:)
+    public func reportChange(to orientation: UIDeviceOrientation) {
+        sessionState.reportChange(to: orientation)
+    }
+    
+    @objc(reportChangeToApplicationState:)
+    public func reportChange(to applicationState: UIApplicationState) {
+        sessionState.reportChange(to: applicationState)
+    }
+    
+    @objc(reportRerouteTo:proactive:)
+    public func reportReroute(newRoute: Route, proactive: Bool) {
+        if (proactive) {
+            _ = enqueueFoundFasterRouteEvent()
+        }
+        let latestReroute = outstandingFeedbackEvents.compactMap({ $0 as? RerouteEvent }).last
+        latestReroute?.update(newRoute: newRoute)
+    }
+    
+    
+    @objc func update(progress: RouteProgress) {
+        if sessionState.departureTimestamp == nil {
+            sessionState.departureTimestamp = Date()
+            sendDepartEvent()
+        }
+        
+        if sessionState.arrivalTimestamp == nil,
+            progress.currentLegProgress.userHasArrivedAtWaypoint {
+            sessionState.arrivalTimestamp = Date()
+            sendArriveEvent()
+        }
+        
+        sendOutstandingFeedbackEvents(forceAll: false)
+    }
+
+    
+    
 }

@@ -75,6 +75,8 @@ open class RouteController: NSObject {
             }
             userInfo[.isProactiveKey] = didFindFasterRoute
             NotificationCenter.default.post(name: .routeControllerDidReroute, object: self, userInfo: userInfo)
+            eventsManager.reportReroute(newRoute: routeProgress.route, proactive: didFindFasterRoute)
+            movementsAwayFromRoute = 0
         }
     }
 
@@ -156,9 +158,6 @@ open class RouteController: NSObject {
     }
 
     func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(notification:)), name: .routeControllerProgressDidChange, object: self)
-        NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: .routeControllerWillReroute, object: self)
-        NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: .routeControllerDidReroute, object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(didChangeOrientation), name: .UIDeviceOrientationDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didChangeApplicationState), name: .UIApplicationWillEnterForeground, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didChangeApplicationState), name: .UIApplicationDidEnterBackground, object: nil)
@@ -169,27 +168,11 @@ open class RouteController: NSObject {
     }
 
     @objc func didChangeOrientation() {
-        if UIDevice.current.orientation.isPortrait {
-            eventsManager.sessionState.timeSpentInLandscape += abs(eventsManager.sessionState.lastTimeInPortrait.timeIntervalSinceNow)
-
-            eventsManager.sessionState.lastTimeInPortrait = Date()
-        } else if UIDevice.current.orientation.isLandscape {
-            eventsManager.sessionState.timeSpentInPortrait += abs(eventsManager.sessionState.lastTimeInLandscape.timeIntervalSinceNow)
-
-            eventsManager.sessionState.lastTimeInLandscape = Date()
-        }
+        eventsManager.reportChange(to: UIDevice.current.orientation)
     }
 
     @objc func didChangeApplicationState() {
-        if UIApplication.shared.applicationState == .active {
-            eventsManager.sessionState.timeSpentInForeground += abs(eventsManager.sessionState.lastTimeInBackground.timeIntervalSinceNow)
-
-            eventsManager.sessionState.lastTimeInForeground = Date()
-        } else if UIApplication.shared.applicationState == .background {
-            eventsManager.sessionState.timeSpentInBackground += abs(eventsManager.sessionState.lastTimeInForeground.timeIntervalSinceNow)
-
-            eventsManager.sessionState.lastTimeInBackground = Date()
-        }
+        eventsManager.reportChange(to: UIApplication.shared.applicationState)
     }
 
     /**
@@ -270,39 +253,6 @@ open class RouteController: NSObject {
             }
         }
         return RouteControllerMaximumDistanceBeforeRecalculating
-    }
-}
-
-extension RouteController {
-    @objc func progressDidChange(notification: NSNotification) {
-        if eventsManager.sessionState.departureTimestamp == nil {
-            eventsManager.sessionState.departureTimestamp = Date()
-            eventsManager.sendDepartEvent()
-        }
-
-        if eventsManager.sessionState.arrivalTimestamp == nil,
-            routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
-            eventsManager.sessionState.arrivalTimestamp = Date()
-            eventsManager.sendArriveEvent()
-        }
-
-        eventsManager.sendOutstandingFeedbackEvents(forceAll: false)
-    }
-
-    @objc func willReroute(notification: NSNotification) {
-        _ = eventsManager.enqueueRerouteEvent()
-    }
-
-    @objc func didReroute(notification: NSNotification) {
-        if let didFindFasterRoute = notification.userInfo?[RouteControllerNotificationUserInfoKey.isProactiveKey] as? Bool, didFindFasterRoute {
-            _ = eventsManager.enqueueFoundFasterRouteEvent()
-        }
-
-        if let lastReroute: RerouteEvent? = eventsManager.outstandingFeedbackEvents.map({$0 as? RerouteEvent }).last {
-            lastReroute?.update(newRoute: routeProgress.route)
-        }
-
-        movementsAwayFromRoute = 0
     }
 }
 
@@ -403,6 +353,7 @@ extension RouteController: CLLocationManagerDelegate {
                 RouteControllerNotificationUserInfoKey.locationKey: self.location!, //guaranteed value
                 RouteControllerNotificationUserInfoKey.rawLocationKey: location //raw
                 ])
+                eventsManager.update(progress: routeProgress)
             
             // Check for a tunnel intersection whenever the current route step progresses.
             tunnelIntersectionManager.checkForTunnelIntersection(at: location, routeProgress: routeProgress)
@@ -545,8 +496,8 @@ extension RouteController: CLLocationManagerDelegate {
                 // If the upcoming maneuver in the new route is the same as the current upcoming maneuver, don't announce it
                 strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, spokenInstructionIndex: strongSelf.routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex)
                 strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
-                strongSelf.didReroute(notification: NSNotification(name: .routeControllerDidReroute, object: nil, userInfo: [
-                    RouteControllerNotificationUserInfoKey.isProactiveKey: true]))
+                strongSelf.eventsManager.reportReroute(newRoute: route, proactive: true)
+                strongSelf.movementsAwayFromRoute = 0
                 strongSelf.didFindFasterRoute = false
             }
         }
@@ -569,6 +520,7 @@ extension RouteController: CLLocationManagerDelegate {
         NotificationCenter.default.post(name: .routeControllerWillReroute, object: self, userInfo: [
             RouteControllerNotificationUserInfoKey.locationKey: location
         ])
+        _ = eventsManager.enqueueRerouteEvent()
 
         self.lastRerouteLocation = location
 

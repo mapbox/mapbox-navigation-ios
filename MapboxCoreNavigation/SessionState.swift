@@ -1,6 +1,7 @@
 import Foundation
 import CoreLocation
 import MapboxDirections
+import UIKit.UIDevice
 
 
 struct SessionState {
@@ -16,23 +17,44 @@ struct SessionState {
     var currentRoute: Route
     var originalRoute: Route
     
-    var timeSpentInPortrait: TimeInterval = 0
-    var timeSpentInLandscape: TimeInterval = 0
+    private(set) var timeSpentInPortrait: TimeInterval = 0
+    private(set) var timeSpentInLandscape: TimeInterval = 0
     
-    var lastTimeInLandscape = Date()
-    var lastTimeInPortrait = Date()
+    private(set) var lastTimeInLandscape = Date()
+    private(set) var lastTimeInPortrait = Date()
     
-    var timeSpentInForeground: TimeInterval = 0
-    var timeSpentInBackground: TimeInterval = 0
+    private(set) var timeSpentInForeground: TimeInterval = 0
+    private(set) var timeSpentInBackground: TimeInterval = 0
     
-    var lastTimeInForeground = Date()
-    var lastTimeInBackground = Date()
+    private(set) var lastTimeInForeground = Date()
+    private(set) var lastTimeInBackground = Date()
     
     var pastLocations = FixedLengthQueue<CLLocation>(length: 40)
     
     init(currentRoute: Route, originalRoute: Route) {
         self.currentRoute = currentRoute
         self.originalRoute = originalRoute
+    }
+    
+    public mutating func reportChange(to orientation: UIDeviceOrientation) {
+        if orientation.isPortrait {
+            timeSpentInLandscape += abs(lastTimeInPortrait.timeIntervalSinceNow)
+            lastTimeInPortrait = Date()
+        } else if orientation.isLandscape {
+            timeSpentInPortrait += abs(lastTimeInLandscape.timeIntervalSinceNow)
+            lastTimeInLandscape = Date()
+        }
+    }
+    
+    public mutating func reportChange(to applicationState: UIApplicationState) {
+        if applicationState == .active {
+            timeSpentInForeground += abs(lastTimeInBackground.timeIntervalSinceNow)
+            
+            lastTimeInForeground = Date()
+        } else if applicationState == .background {
+            timeSpentInBackground += abs(lastTimeInForeground.timeIntervalSinceNow)
+            lastTimeInBackground = Date()
+        }
     }
 }
 
