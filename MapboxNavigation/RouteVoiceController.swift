@@ -110,6 +110,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     deinit {
         suspendNotifications()
         speechSynth.stopSpeaking(at: .immediate)
+        audioPlayer?.delegate = nil
     }
     
     func resumeNotifications() {
