@@ -339,42 +339,33 @@ class RouteControllerTests: XCTestCase {
     }
 
 
-    //  TODO: Fix ref cycle
-//    func testRouteControllerDoesNotHaveRetainCycle() {
-//        let locationManager = NavigationLocationManager()
-//        let eventsManager = EventsManager()
-//        eventsManager.manager = eventsManagerSpy
-//        routeControllerSpy = RouteControllerSpy(along: initialRoute, directions: directionsClientSpy, locationManager: locationManager, eventsManager: eventsManager)
-//        eventsManager.delegate = routeControllerSpy
-//        let expectation = XCTestExpectation(description: "Deinit")
-//        routeControllerSpy?.deinitCalled = expectation.fulfill
-//        routeControllerSpy = nil
-//
-//        wait(for: [expectation], timeout: 5)
-//    }
+    func testRouteControllerDoesNotHaveRetainCycle() {
+        
+        weak var subject: RouteController? = nil
+        
+        autoreleasepool {
+            let locationManager = NavigationLocationManager()
+            let eventsManager = EventsManager(accessToken: initialRoute.accessToken)
+            eventsManager.manager = eventsManagerSpy
+            let routeController: RouteController? = RouteController(along: initialRoute, directions: directionsClientSpy, locationManager: locationManager, eventsManager: eventsManager)
+            subject = routeController
+            eventsManager.routeController = routeController
+        }
 
-    //  TODO: Fix ref cycle
-//    func testRouteControllerNilsOutLocationDelegateOnDeinit() {
-//        let locationManager = NavigationLocationManager()
-//        let eventsManager = EventsManager()
-//        eventsManager.manager = eventsManagerSpy
-//        routeControllerSpy = RouteControllerSpy(along: initialRoute, directions: directionsClientSpy, locationManager: locationManager, eventsManager: eventsManager)
-//        eventsManager.delegate = routeControllerSpy
-//        let expectation = XCTestExpectation(description: "Deinit")
-//        routeControllerSpy?.deinitCalled = expectation.fulfill
-//        routeControllerSpy = nil
-//
-//        wait(for: [expectation], timeout: 5)
-//
-//        XCTAssertNil(locationManager.delegate, "Location Manager Delegate should be nil")
-//    }
-}
+        XCTAssertNil(subject, "Expected RouteController not to live beyond autorelease pool")
+    }
 
-
-class RouteControllerSpy: RouteController {
-    var deinitCalled: (() -> Void)?
-    override func suspendLocationUpdates() {
-        super.suspendLocationUpdates()
-        deinitCalled?() //suspendLocationUpdates is the first thing called on deinit
+    func testRouteControllerNilsOutLocationDelegateOnDeinit() {
+        
+        weak var subject: CLLocationManagerDelegate? = nil
+        autoreleasepool {
+            let locationManager = NavigationLocationManager()
+            let eventsManager = EventsManager(accessToken: initialRoute.accessToken)
+            eventsManager.manager = eventsManagerSpy
+            _ = RouteController(along: initialRoute, directions: directionsClientSpy, locationManager: locationManager, eventsManager: eventsManager)
+            subject = locationManager.delegate
+        }
+        
+        XCTAssertNil(subject, "Expected LocationManager's Delegate to be nil after RouteController Deinit")
     }
 }
