@@ -8,12 +8,11 @@ open class EventsManager: NSObject {
     
     @objc public var manager = MMEEventsManager.shared()
     
-    var sessionState: SessionState! // TODO: avoid IUO
+    var sessionState: SessionState!
     
     var outstandingFeedbackEvents = [CoreFeedbackEvent]()
     
-    // TODO: replace by the `delegate`
-    weak var routeController: Router! // TODO: avoid IUO
+    weak var routeController: Router!
     
     /// :nodoc: This is used internally when the navigation UI is being used
     var usesDefaultUserInterface = false
@@ -140,7 +139,6 @@ extension EventsManager {
     }
     
     func sendCancelEvent(rating: Int? = nil, comment: String? = nil) {
-        // TODO: Fix routeController is nilled out too early
         guard routeController != nil else { return }
         guard let attributes = try? navigationCancelEvent(rating: rating, comment: comment).asDictionary() else { return }
         manager.enqueueEvent(withName: MMEEventTypeNavigationCancel, attributes: attributes)
