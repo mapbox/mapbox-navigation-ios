@@ -1,5 +1,56 @@
 struct HighwayShield {
     
+    enum RoadClass: String {
+        case alternate, duplex, business, truck, bypass
+        case oneB = "1b", twoA = "2a", twoB = "2b", b
+    }
+    
+    enum RoadType {
+        case generic, motorway, expressway, state(RoadClass), highway(RoadClass)
+        case national, federal, main, road, primary, secondary, trunk, regional
+        case voivodeship, county, communal, interstate(RoadClass)
+    }
+    
+    enum Country {
+        case us(RoadType), at(RoadType), bg(RoadType), br(RoadType), ch(RoadType)
+        case cz(RoadType), de(RoadType), dk(RoadType), fi(RoadType), gr(RoadType)
+        case hr(RoadType), hu(RoadType), `in`(RoadType), mx(RoadType), nz(RoadType)
+        case pe(RoadType), pl(RoadType), ro(RoadType), rs(RoadType), se(RoadType)
+        case si(RoadType), sk(RoadType), za(RoadType), e(RoadType)
+        case `default`
+        
+        func textColor() -> UIColor {
+            switch self {
+            case .us(.interstate(let roadClass)):
+                switch roadClass {
+                case .duplex, .business, .truck:
+                    return .white
+                default:
+                    return .black
+                }
+            case .us(.highway(let roadClass)):
+                switch roadClass {
+                case .duplex, .alternate, .business, .bypass, .truck: fallthrough
+                default:
+                    return .black
+                }
+            case .default:
+                return .black
+            case .at(.motorway):
+                return .white
+            case .at(.state(let roadClass)):
+                switch roadClass {
+                case .b:
+                    return .white
+                default:
+                    return .black
+                }
+            default:
+                return .black
+            }
+        }
+    }
+    
     enum Identifier: String {
         case generic = "default"
         case atMotorway = "at-motorway"
