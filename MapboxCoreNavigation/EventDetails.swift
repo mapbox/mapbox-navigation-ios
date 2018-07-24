@@ -226,9 +226,10 @@ struct EventDetails: Encodable {
         try container.encode(batteryLevel, forKey: .batteryLevel)
         try container.encode(applicationState, forKey: .applicationState)
         try container.encodeIfPresent(userAbsoluteDistanceToDestination, forKey: .userAbsoluteDistanceToDestination)
-        if let locationEngine = locationEngine {
-            try container.encode(String(describing: locationEngine), forKey: .locationEngine)
-        }
+        
+        let engine: String? = locationEngine != nil ? String(describing: locationEngine) : nil
+        
+        try container.encodeIfPresent(engine, forKey: .locationEngine)
         try container.encode(percentTimeInPortrait, forKey: .percentTimeInPortrait)
         try container.encode(percentTimeInForeground, forKey: .percentTimeInForeground)
         try container.encodeIfPresent(locationManagerDesiredAccuracy, forKey: .locationManagerDesiredAccuracy)
