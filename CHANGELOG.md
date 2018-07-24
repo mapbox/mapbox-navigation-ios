@@ -9,7 +9,7 @@
 ### User interface
 
 * Fixed an issue where selecting a step from the steps list would take the user to the wrong step. ([#1524](https://github.com/mapbox/mapbox-navigation-ios/pull/1524/))
-* `StyleManagerDelegate.locationFor(styleManager:)` now allows for an optional `CLLocation` to be returned. [#1523](https://github.com/mapbox/mapbox-navigation-ios/pull/1523)
+* The `StyleManagerDelegate.locationFor(styleManager:)` method’s return value is now optional. ([#1523](https://github.com/mapbox/mapbox-navigation-ios/pull/1523))
 * `NavigationViewController` smoothly fades between light and dark status bars. ([#1535](https://github.com/mapbox/mapbox-navigation-ios/pull/1535))
 * Renamed the `InstructionsBannerView.updateInstruction(_:)` method to `InstructionsBannerView.update(for:)`. Added the `NextBannerView.update(for:)` and `LanesView.update(for:)` methods. These methods are intended to be called in response to `Notification.Name.routeControllerDidPassVisualInstructionPoint` if the views are used outside a `NavigationViewController`. By contrast, `InstructionsBannerView.updateDistance(for:)` should be called on every location update. ([#1514](https://github.com/mapbox/mapbox-navigation-ios/pull/1514))
 * Added the `ManeuverView.visualInstruction` and `ManeuverView.drivingSide` properties. ([#1514](https://github.com/mapbox/mapbox-navigation-ios/pull/1514))
