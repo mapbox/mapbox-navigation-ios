@@ -12,7 +12,7 @@ import Turf
  `NavigationViewController` is responsible for displaying a default drop-in navigation UI.
  */
 @objc(MBRouteController)
-open class RouteController: NSObject {
+open class RouteController: NSObject, Router {
 
     /**
      The route controller’s delegate.
@@ -725,12 +725,5 @@ extension RouteController: TunnelIntersectionManagerDelegate {
     
     public func tunnelIntersectionManager(_ manager: TunnelIntersectionManager, willDisableAnimationAt location: CLLocation) {
         tunnelIntersectionManager.suspendTunnelAnimation(at: location, routeController: self)
-    }
-}
-
-extension RouteController: Router {
-    
-    public func locationIsOnRoute(_ location: CLLocation) -> Bool {
-        return userIsOnRoute(location)
     }
 }

@@ -8,8 +8,6 @@ import MapboxDirections
     
     var usesDefaultUserInterface: Bool { get }
     var routeProgress: RouteProgress { get }
-
-    func locationIsOnRoute(_ location: CLLocation) -> Bool
     
     @objc var location: CLLocation? { get }
 }
