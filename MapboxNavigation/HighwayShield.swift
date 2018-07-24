@@ -72,56 +72,5 @@ struct HighwayShield {
                 return .black
             }
         }
-        
-        func fillColor() -> UIColor {
-            switch self {
-            case .generic:
-                return .white
-            case .atMotorway:
-                return .blue
-            case .atExpressway:
-                return .blue
-            case .atStateB:
-                return .blue
-            case .bgMotorway:
-                return .green
-            case .bgNational:
-                return .blue
-            case .brFederal:
-                return .white
-            case .brState:
-                return .white
-            case .chMotorway:
-                return .red
-            case .chMain:
-                return .blue
-            case .czMotorway:
-                return .blue
-            case .czRoad:
-                return .blue
-            case .deMotorway:
-                return .blue
-            case .deFederal:
-                return .yellow
-            case .dkPrimary:
-                return .yellow
-            case .dkSecondary:
-                return .white
-            case .fiMain:
-                return .red
-            case .fiTrunk:
-                return .yellow
-            case .fiRegional:
-                return .white
-            case .grMotorway:
-                return .green
-            case .grNational:
-                return .blue
-            case .usHighway:
-                return .white
-            }
-        }
-        
-        // TODO: borderColor
     }
 }
