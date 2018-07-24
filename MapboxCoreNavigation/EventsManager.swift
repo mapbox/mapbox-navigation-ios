@@ -2,7 +2,11 @@ import Foundation
 import MapboxMobileEvents
 import MapboxDirections
 
-
+/**
+ The `EventsManager` is responsible for being the liaison between the RouteController and the telemetry framework.
+ 
+ `SessionState` is a struct that stores all memoized statistics that we later send to the telemetry engine.
+ */
 @objc(MBEventsManager)
 open class EventsManager: NSObject {
     
