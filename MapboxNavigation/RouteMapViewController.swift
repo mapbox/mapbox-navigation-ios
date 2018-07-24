@@ -813,7 +813,7 @@ extension RouteMapViewController: NavigationViewDelegate {
                     if let line = feature as? MGLPolylineFeature {
                         if let text = line.attribute(forKey: "ref") as? String, let shieldRawValue = line.attribute(forKey: "shield") as? String, let reflen = line.attribute(forKey: "reflen") {
                             
-                            let currentShield = HighwayShield.shield(rawValue: shieldRawValue)
+                            let currentShield = HighwayShield.Identifier(rawValue: shieldRawValue)
                             let textColor = currentShield?.textColor()
                             
                             let imageName = "\(shieldRawValue)-\(reflen)"
@@ -848,11 +848,11 @@ extension RouteMapViewController: NavigationViewDelegate {
         let textHeight = font.lineHeight
         let pointY = (shieldImage.size.height - textHeight) / 2
         
-        let compositeImage = shieldImage.insert(text: (text as NSString),
-                                               color: color ?? .black,
-                                                font: font,
-                                             atPoint: CGPoint(x: 0, y: pointY),
-                                               scale: UIScreen.main.scale)
+        let compositeImage = shieldImage.composited(text: (text as NSString),
+                                                   color: color ?? .black,
+                                                    font: font,
+                                                 atPoint: CGPoint(x: 0, y: pointY),
+                                                   scale: UIScreen.main.scale)
         
         attachment.image = compositeImage
         

@@ -10,7 +10,7 @@ extension UIImage {
         return tintedImage
     }
     
-    func insert(text: NSString, color: UIColor, font: UIFont, atPoint: CGPoint, scale: CGFloat) -> UIImage? {
+    func composited(text: NSString, color: UIColor, font: UIFont, atPoint: CGPoint, scale: CGFloat) -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(size, false, scale)
         
         let textStyle = NSMutableParagraphStyle()
@@ -22,9 +22,9 @@ extension UIImage {
         let rect = CGRect(x: atPoint.x, y: atPoint.y, width: size.width, height: size.height)
         text.draw(in: rect.integral, withAttributes: textFontAttributes)
         
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        let compositedImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        return newImage
+        return compositedImage
     }
 }

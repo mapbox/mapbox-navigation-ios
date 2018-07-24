@@ -1,19 +1,7 @@
 struct HighwayShield {
     
-    enum textColor {
-        case black, white
-    }
-
-    enum fillColor {
-        case red, yellow, blue, green, white
-    }
-    
-    enum borderColor {
-        case black, white
-    }
-    
-    enum shield: String {
-        case `default`
+    enum Identifier: String {
+        case generic = "default"
         case atMotorway = "at-motorway"
         case atExpressway = "at-expressway"
         case atStateB = "at-state-b"
@@ -38,7 +26,7 @@ struct HighwayShield {
         
         func textColor() -> UIColor? {
             switch self {
-            case .default:
+            case .generic:
                 return .black
             case .atMotorway:
                 return .white
@@ -87,7 +75,7 @@ struct HighwayShield {
         
         func fillColor() -> UIColor {
             switch self {
-            case .default:
+            case .generic:
                 return .white
             case .atMotorway:
                 return .blue
@@ -133,5 +121,7 @@ struct HighwayShield {
                 return .white
             }
         }
+        
+        // TODO: borderColor
     }
 }
