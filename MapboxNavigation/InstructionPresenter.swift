@@ -254,13 +254,18 @@ class InstructionPresenter {
 
 }
 
-protocol ImagePresenter {
+protocol ImagePresenter: TextPresenter {
     var image: UIImage? { get }
+}
+
+protocol TextPresenter {
+    var text: String? { get }
     var font: UIFont { get }
 }
 
 class ImageInstruction: NSTextAttachment, ImagePresenter {
     var font: UIFont = UIFont.systemFont(ofSize: UIFont.systemFontSize)
+    var text: String?
     
     override func attachmentBounds(for textContainer: NSTextContainer?, proposedLineFragment lineFrag: CGRect, glyphPosition position: CGPoint, characterIndex charIndex: Int) -> CGRect {
         guard let image = image else {
@@ -269,12 +274,13 @@ class ImageInstruction: NSTextAttachment, ImagePresenter {
         let yOrigin = (font.capHeight - image.size.height).rounded() / 2
         return CGRect(x: 0, y: yOrigin, width: image.size.width, height: image.size.height)
     }
-
 }
 
+class TextInstruction: ImageInstruction {}
 class ShieldAttachment: ImageInstruction {}
 class GenericShieldAttachment: ShieldAttachment {}
 class ExitAttachment: ImageInstruction {}
+class RoadNameLabelAttachment: TextInstruction {}
 
 extension CGSize {
     fileprivate static var greatestFiniteSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
