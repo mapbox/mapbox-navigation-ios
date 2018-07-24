@@ -774,6 +774,7 @@ extension RouteMapViewController: NavigationViewDelegate {
         let features = mapView.visibleFeatures(at: userPuck, styleLayerIdentifiers: Set([roadLabelLayerIdentifier]))
         var smallestLabelDistance = Double.infinity
         var currentName: String?
+        var currentShieldName: NSAttributedString?
         
         for feature in features {
             var allLines: [MGLPolyline] = []
@@ -808,16 +809,54 @@ extension RouteMapViewController: NavigationViewDelegate {
                     } else {
                         currentName = nil
                     }
+                    
+                    if let line = feature as? MGLPolylineFeature {
+                        if let text = line.attribute(forKey: "ref") as? String, let shieldRawValue = line.attribute(forKey: "shield") as? String, let reflen = line.attribute(forKey: "reflen") {
+                            
+                            let currentShield = HighwayShield.shield(rawValue: shieldRawValue)
+                            let textColor = currentShield?.textColor()
+                            
+                            let imageName = "\(shieldRawValue)-\(reflen)"
+                            if let image = mapView.style?.image(forName: imageName) {
+                                currentShieldName = attributedString(withFont: UIFont.systemFont(ofSize: 12.0), shieldImage: image, text: text, color: textColor)
+                            }
+                        }
+                    }
+                    
                 }
             }
         }
         
-        if smallestLabelDistance < 5 && currentName != nil {
-            navigationView.wayNameView.text = currentName
+        let hasWayName = currentName != nil || currentShieldName != nil
+        if smallestLabelDistance < 5 && hasWayName  {
+            if let currentShieldName = currentShieldName {
+                navigationView.wayNameView.attributedText = currentShieldName
+            } else if let currentName = currentName {
+                navigationView.wayNameView.text = currentName
+            }
             navigationView.wayNameView.isHidden = false
         } else {
             navigationView.wayNameView.isHidden = true
         }
+    }
+    
+    private func attributedString(withFont font: UIFont, shieldImage: UIImage, text: String, color: UIColor?) -> NSAttributedString {
+        let attachment = RoadNameLabelAttachment()
+        attachment.font = font
+        attachment.text = text
+        
+        let textHeight = font.lineHeight
+        let pointY = (shieldImage.size.height - textHeight) / 2
+        
+        let compositeImage = shieldImage.insert(text: (text as NSString),
+                                               color: color ?? .black,
+                                                font: font,
+                                             atPoint: CGPoint(x: 0, y: pointY),
+                                               scale: UIScreen.main.scale)
+        
+        attachment.image = compositeImage
+        
+        return NSAttributedString(attachment: attachment)
     }
     
     @objc func updateETA() {
