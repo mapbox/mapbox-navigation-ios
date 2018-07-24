@@ -348,9 +348,14 @@ extension ViewController: NavigationViewControllerDelegate {
         // This type of screen could show information about a destination, pickup/dropoff confirmation, instructions upon arrival, etc.
         
         //If we're not in a "Multiple Stops" demo, show the normal EORVC
-        guard waypoints.count > 2 else { return true }
+        let waypoints = navigationViewController.routeController.routeProgress.route.routeOptions.waypoints
+        if waypoint == waypoints.last {
+            return true
+        }
         
-        guard let confirmationController = self.storyboard?.instantiateViewController(withIdentifier: "waypointConfirmation") as? WaypointConfirmationViewController else { return true }
+        guard let confirmationController = self.storyboard?.instantiateViewController(withIdentifier: "waypointConfirmation") as? WaypointConfirmationViewController else {
+            return true
+        }
 
         confirmationController.delegate = self
 
