@@ -11,7 +11,7 @@ extension MGLAccountManager{
     static let mapboxChinaBaseURLHost = "api.mapbox.cn"
     
     /**
-     The value of whether the map is China map or not
+     The value of whether the map is China map or not.
      */
     @objc
     public class var hasChinaBaseURL : Bool{
