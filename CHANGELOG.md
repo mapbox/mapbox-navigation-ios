@@ -2,6 +2,8 @@
 
 ## master
 
+* Map labels are no longer blank and using China Map Style URLs if the application is configured to use Mapbox China APIs. [#1558](https://github.com/mapbox/mapbox-navigation-ios/pull/1558)
+
 ### Packaging
 
 * Moved guides and examples to [a new Mapbox Navigation SDK for iOS website](https://www.mapbox.com/ios-sdk/navigation/). ([#1552](https://github.com/mapbox/mapbox-navigation-ios/pull/1552))
