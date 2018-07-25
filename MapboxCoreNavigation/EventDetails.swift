@@ -5,6 +5,7 @@ import UIKit
 import AVFoundation
 import MapboxDirections
 
+
 struct EventDetails: Encodable {
     
     let originalRequestIdentifier: String?
@@ -35,7 +36,7 @@ struct EventDetails: Encodable {
     let batteryLevel: Int = UIDevice.current.batteryLevel >= 0 ? Int(UIDevice.current.batteryLevel * 100) : -1
     let applicationState: UIApplicationState = UIApplication.shared.applicationState
     let userAbsoluteDistanceToDestination: CLLocationDistance?
-    let locationEngine: CLLocationManager.Type?
+    let locationEngine: String?
     let percentTimeInPortrait: Int
     let percentTimeInForeground: Int
     let locationManagerDesiredAccuracy: CLLocationAccuracy?
@@ -107,9 +108,8 @@ struct EventDetails: Encodable {
         
         rerouteCount = session.numberOfReroutes
         
-        
         if let manager = router.locationManager {
-            locationEngine = type(of: manager)
+            locationEngine = String(describing: manager)
             locationManagerDesiredAccuracy = manager.desiredAccuracy
         } else {
             locationEngine = nil
@@ -226,10 +226,7 @@ struct EventDetails: Encodable {
         try container.encode(batteryLevel, forKey: .batteryLevel)
         try container.encode(applicationState, forKey: .applicationState)
         try container.encodeIfPresent(userAbsoluteDistanceToDestination, forKey: .userAbsoluteDistanceToDestination)
-        
-        let engine: String? = locationEngine != nil ? String(describing: locationEngine) : nil
-        
-        try container.encodeIfPresent(engine, forKey: .locationEngine)
+        try container.encodeIfPresent(locationEngine, forKey: .locationEngine)
         try container.encode(percentTimeInPortrait, forKey: .percentTimeInPortrait)
         try container.encode(percentTimeInForeground, forKey: .percentTimeInForeground)
         try container.encodeIfPresent(locationManagerDesiredAccuracy, forKey: .locationManagerDesiredAccuracy)
