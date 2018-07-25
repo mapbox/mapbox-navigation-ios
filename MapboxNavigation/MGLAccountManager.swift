@@ -4,12 +4,16 @@ import Mapbox
 
 extension MGLAccountManager{
     
+    // Mapbox China base API URL
     static let mapboxChinaBaseAPIURL = "https://api.mapbox.cn"
-    static let mapboxChinaBaseURLHost = "api.mapbox.cn"
-    static let mapboxChinaDayStyleURL = "mapbox://styles/mapbox/streets-zh-v1"
-    static let mapboxChinaNightStyleURL = "mapbox://styles/mapbox/dark-zh-v1"
     
-    // Value of whether the map is China map or not
+    //Mapbox China base URL host.
+    static let mapboxChinaBaseURLHost = "api.mapbox.cn"
+    
+    /**
+     The value of whether the map is China map or not
+     */
+    @objc
     public class var hasChinaBaseURL : Bool{
         let apiBaseURL = Bundle.main.object(forInfoDictionaryKey:"MGLMapboxAPIBaseURL") as? String
         return apiBaseURL == mapboxChinaBaseAPIURL
