@@ -46,6 +46,10 @@ struct HighwayShield {
                 return "communal"
             case .interstate:
                 return "interstate"
+            case .metropolitan:
+                return "metropolitan"
+            case .provincial:
+                return "provincial"
             }
         }
         
@@ -99,6 +103,10 @@ struct HighwayShield {
                 return localeOnlyTransform(RoadType.county)
             case "communal":
                 return localeOnlyTransform(RoadType.communal)
+            case "provincial":
+                return localeOnlyTransform(RoadType.provincial)
+            case "metropolitan":
+                return localeOnlyTransform(RoadType.metropolitan)
             case "state":
                 return RoadType.state
             case "highway":
@@ -124,14 +132,35 @@ struct HighwayShield {
                     return .white
                 }
                 return .black
-            case .generic, .communal:
+            case .generic, .communal, .voivodeship, .trunk, .primary, .secondary:
                 return .black
-            case .motorway, .expressway:
+            case .motorway, .expressway, .road, .interstate:
                 return .white
             case let .state(locale, roadClass):
-                switch (locale) {
+                switch locale {
                 case .austria, .croatia, .newZealand,
                      .serbia where roadClass == RoadClass.oneB:
+                    return .white
+                default:
+                    return .black
+                }
+            case .regional, .metropolitan, .provincial:
+                return .yellow
+            case let .county(locale):
+                if locale == .romania {
+                    return .white
+                }
+                return .black
+            case let .main(locale):
+                if locale == .slovenia {
+                    return .black
+                }
+                return .white
+            case let .national(locale):
+                switch locale {
+                case .southAfrica:
+                    return .yellow
+                case .poland, .romania, .greece, .bulgeria:
                     return .white
                 default:
                     return .black
@@ -143,10 +172,10 @@ struct HighwayShield {
         
         case generic, motorway(Locale), expressway(Locale), state(Locale, RoadClass?), highway(Locale, RoadClass?)
         case national(Locale), federal(Locale), main(Locale), road(Locale), primary(Locale), secondary(Locale), trunk(Locale), regional(Locale)
-        case voivodeship(Locale), county(Locale), communal(Locale), interstate(Locale, RoadClass?)
+        case voivodeship(Locale), county(Locale), communal(Locale), interstate(Locale, RoadClass?), metropolitan(Locale), provincial(Locale)
     }
     
     enum Locale: String {
-        case austria = "at", bulgeria = "bg", brazil = "br", switzerland = "ch", czech = "cz", germany = "de", denmark = "dk", finland = "fi", greece = "gr", croatia = "hr", hungary = "hu", india = "in", mexico = "mx", newZealand = "nz", peru = "pe", poland = "pl", romania = "ro", serbia = "rs", sweden = "se", slovenia = "si", slovakia = "sk", usa = "us", southAfrica = "za", eRoad = "e"
+        case austria = "at", bulgeria = "bg", brazil = "br", switzerland = "ch", czech = "cz", germany = "de", denmark = "dk", finland = "fi", greece = "gr", croatia = "hr", hungary = "hu", india = "in", mexico = "mx", newZealand = "nz", peru = "pe", poland = "pl", romania = "ro", serbia = "rs", sweden = "se", slovenia = "si", slovakia = "sk", usa = "us", southAfrica = "za", e
     }
 }
