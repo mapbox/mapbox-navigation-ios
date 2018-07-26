@@ -110,6 +110,8 @@ open class RouteController: NSObject, Router {
 
     var userSnapToStepDistanceFromManeuver: CLLocationDistance?
     
+    private var didSendCancelEvent = false
+    
     /**
      Intializes a new `RouteController`.
 
@@ -142,10 +144,7 @@ open class RouteController: NSObject, Router {
     }
 
     deinit {
-        eventsManager.sendCancelEvent(rating: eventsManager.endOfRouteStarRating, comment: eventsManager.endOfRouteComment)
-        suspendLocationUpdates()
-        eventsManager.sendOutstandingFeedbackEvents(forceAll: true)
-        suspendNotifications()
+        endNavigation()
         
         guard let shouldDisable = delegate?.routeControllerShouldDisableBatteryMonitoring?(self) else {
             UIDevice.current.isBatteryMonitoringEnabled = false
@@ -193,6 +192,20 @@ open class RouteController: NSObject, Router {
         locationManager.stopUpdatingLocation()
         locationManager.stopUpdatingHeading()
         locationManager.delegate = nil
+    }
+    
+    /**
+     End the current navigation session.
+     */
+    @objc public func endNavigation(rating: Int = MMEEventsManager.unrated, comment: String? = nil) {
+        if !didSendCancelEvent {
+            eventsManager.sendCancelEvent(rating: rating, comment: comment)
+            didSendCancelEvent = true
+        }
+        
+        suspendLocationUpdates()
+        eventsManager.sendOutstandingFeedbackEvents(forceAll: true)
+        suspendNotifications()
     }
 
     /**
