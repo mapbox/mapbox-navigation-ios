@@ -333,6 +333,7 @@ extension ViewController: WaypointConfirmationViewControllerDelegate {
 
             guard navigationViewController.routeController.routeProgress.route.legs.count > navigationViewController.routeController.routeProgress.legIndex + 1 else { return }
             navigationViewController.routeController.routeProgress.legIndex += 1
+            navigationViewController.routeController.resume()
         })
     }
 }
