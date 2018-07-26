@@ -60,6 +60,6 @@ internal class Fixture {
     class func route(from jsonFile: String, waypoints: [Waypoint]) -> Route {
         let response = JSONFromFileNamed(name: jsonFile)
         let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String : Any]
-        return Route(json: jsonRoute, waypoints: waypoints, routeOptions: RouteOptions(waypoints: waypoints))
+        return Route(json: jsonRoute, waypoints: waypoints, options: RouteOptions(waypoints: waypoints))
     }
 }

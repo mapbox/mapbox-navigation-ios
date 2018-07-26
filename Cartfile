@@ -1,5 +1,5 @@
-binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" ~> 4.1
-github "mapbox/MapboxDirections.swift" ~> 0.21.0
+binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" ~> 4.2
+github "mapbox/MapboxDirections.swift" ~> 0.22.0
 github "mapbox/turf-swift" ~> 0.2
 github "mapbox/mapbox-events-ios" ~> 0.4
 github "ceeK/Solar" ~> 2.1.0
