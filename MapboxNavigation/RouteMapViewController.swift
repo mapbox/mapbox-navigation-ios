@@ -813,8 +813,8 @@ extension RouteMapViewController: NavigationViewDelegate {
                     if let line = feature as? MGLPolylineFeature {
                         if let text = line.attribute(forKey: "ref") as? String, let shieldRawValue = line.attribute(forKey: "shield") as? String, let reflen = line.attribute(forKey: "reflen") {
                             
-                            let currentShield = HighwayShield.Identifier(rawValue: shieldRawValue)
-                            let textColor = currentShield?.textColor()
+                            let currentShield = HighwayShield.RoadType(rawValue: shieldRawValue)
+                            let textColor = currentShield?.textColor ?? .black
                             
                             let imageName = "\(shieldRawValue)-\(reflen)"
                             if let image = mapView.style?.image(forName: imageName) {
