@@ -22,7 +22,7 @@ open class RouteController: NSObject, Router {
     /**
      The route controller’s associated location manager.
      */
-    public var locationManager: NavigationLocationManager! {
+    @objc public var locationManager: NavigationLocationManager! {
         didSet {
             oldValue.delegate = nil
             locationManager.delegate = self
