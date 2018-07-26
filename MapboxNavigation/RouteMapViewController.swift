@@ -818,7 +818,7 @@ extension RouteMapViewController: NavigationViewDelegate {
                             
                             let imageName = "\(shieldRawValue)-\(reflen)"
                             if let image = mapView.style?.image(forName: imageName) {
-                                currentShieldName = attributedString(withFont: UIFont.systemFont(ofSize: 12.0), shieldImage: image, text: text, color: textColor)
+                                currentShieldName = attributedString(withFont: UIFont.boldSystemFont(ofSize: 12.0), shieldImage: image, text: text, color: textColor)
                             }
                         }
                     }
