@@ -848,11 +848,11 @@ extension RouteMapViewController: NavigationViewDelegate {
         let textHeight = font.lineHeight
         let pointY = (shieldImage.size.height - textHeight) / 2
         
-        let compositeImage = shieldImage.composited(text: (text as NSString),
-                                                   color: color ?? .black,
-                                                    font: font,
-                                                 atPoint: CGPoint(x: 0, y: pointY),
-                                                   scale: UIScreen.main.scale)
+        let compositeImage = shieldImage.insert(text: (text as NSString),
+                                               color: color ?? .black,
+                                                font: font,
+                                             atPoint: CGPoint(x: 0, y: pointY),
+                                               scale: UIScreen.main.scale)
         
         attachment.image = compositeImage
         
