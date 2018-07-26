@@ -1,13 +1,14 @@
 struct HighwayShield {
     
     enum RoadClass: String {
-        case alternate, duplex, business, truck, bypass
-        case oneB = "1b", twoA = "2a", twoB = "2b", b
+        case alternate, duplex, business, truck, bypass, b
+        case oneB = "1b", twoA = "2a", twoB = "2b"
     }
     
     enum RoadType: RawRepresentable {
         typealias RawValue = String
-        typealias RoadTypeTemplate = (Locale, RoadClass?) -> RoadType
+        typealias RoadTypeForLocaleRoadClassClosure = (Locale, RoadClass?) -> RoadType
+        typealias RoadTypeForLocaleClosure = (Locale) -> RoadType
         
         var rawValue: String {
             switch self {
@@ -70,7 +71,7 @@ struct HighwayShield {
             }
         }
         
-        private static func type(for identifier: String) -> RoadTypeTemplate? {
+        private static func type(for identifier: String) -> RoadTypeForLocaleRoadClassClosure? {
             switch identifier {
             case "motorway":
                 return localeOnlyTransform(RoadType.motorway)
@@ -109,8 +110,8 @@ struct HighwayShield {
             }
         }
         
-        typealias LocaleOnly = (Locale) -> RoadType
-        static func localeOnlyTransform(_ closure: @escaping LocaleOnly) -> RoadTypeTemplate {
+        
+        static func localeOnlyTransform(_ closure: @escaping RoadTypeForLocaleClosure) -> RoadTypeForLocaleRoadClassClosure {
             return { locale, _ in
                 return closure(locale)
             }
@@ -146,6 +147,6 @@ struct HighwayShield {
     }
     
     enum Locale: String {
-        case usa = "us", austria = "at", bulgeria = "bg", brazil = "br", switzerland = "ch", czech = "cz", germany = "de", denmark = "dk", finland = "fi", greece = "gr", croatia = "hr", hungary = "hu", india = "in", mexico = "mx", newZealand = "nz", peru = "pe", poland = "pl", romania = "ro", serbia = "rs", sweden = "se", slovenia = "si", slovakia = "sk", southAfrica = "za", eRoad = "e"
+        case austria = "at", bulgeria = "bg", brazil = "br", switzerland = "ch", czech = "cz", germany = "de", denmark = "dk", finland = "fi", greece = "gr", croatia = "hr", hungary = "hu", india = "in", mexico = "mx", newZealand = "nz", peru = "pe", poland = "pl", romania = "ro", serbia = "rs", sweden = "se", slovenia = "si", slovakia = "sk", usa = "us", southAfrica = "za", eRoad = "e"
     }
 }
