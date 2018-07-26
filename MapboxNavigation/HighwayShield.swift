@@ -5,123 +5,147 @@ struct HighwayShield {
         case oneB = "1b", twoA = "2a", twoB = "2b", b
     }
     
-    enum RoadType {
-        case generic, motorway, expressway, state(RoadClass), highway(RoadClass)
-        case national, federal, main, road, primary, secondary, trunk, regional
-        case voivodeship, county, communal, interstate(RoadClass)
-    }
-    
-    enum Country {
-        case us(RoadType), at(RoadType), bg(RoadType), br(RoadType), ch(RoadType)
-        case cz(RoadType), de(RoadType), dk(RoadType), fi(RoadType), gr(RoadType)
-        case hr(RoadType), hu(RoadType), `in`(RoadType), mx(RoadType), nz(RoadType)
-        case pe(RoadType), pl(RoadType), ro(RoadType), rs(RoadType), se(RoadType)
-        case si(RoadType), sk(RoadType), za(RoadType), e(RoadType)
-        case `default`
+    enum RoadType: RawRepresentable {
+        typealias RawValue = String
+        typealias RoadTypeTemplate = (Locale, RoadClass?) -> RoadType
         
-        func textColor() -> UIColor {
+        var rawValue: String {
             switch self {
-            case .us(.interstate(let roadClass)):
-                switch roadClass {
-                case .duplex, .business, .truck:
+            case .generic:
+                return "generic"
+            case .motorway:
+                return "motorway"
+            case .expressway:
+                return "expressway"
+            case .state:
+                return "state"
+            case .highway:
+                return "highway"
+            case .national:
+                return "national"
+            case .federal:
+                return "federal"
+            case .main:
+                return "main"
+            case .road:
+                return "road"
+            case .primary:
+                return "primary"
+            case .secondary:
+                return "secondary"
+            case .trunk:
+                return "trunk"
+            case .regional:
+                return "regional"
+            case .voivodeship:
+                return "voivodeship"
+            case .county:
+                return "county"
+            case .communal:
+                return "communal"
+            case .interstate:
+                return "interstate"
+            }
+        }
+        
+        init?(rawValue: RawValue) {
+            let fields  = rawValue.split(separator: "-").compactMap(String.init(_:))
+            switch fields.count {
+            case 1 where rawValue == "default":
+                self = .generic
+            case 2:
+                guard let roadType = RoadType.type(for: fields.last!),
+                      let locale = Locale(rawValue: fields.first!) else {
+                    return nil
+                }
+                self = roadType(locale, nil)
+            case 3:
+                guard let roadType = RoadType.type(for: fields[1]),
+                      let locale = Locale(rawValue: fields[0]), let roadClass = RoadClass(rawValue: fields[2]) else {
+                    return nil
+                }
+                self = roadType(locale, roadClass)
+            default:
+                return nil
+            }
+        }
+        
+        private static func type(for identifier: String) -> RoadTypeTemplate? {
+            switch identifier {
+            case "motorway":
+                return localeOnlyTransform(RoadType.motorway)
+            case "expressway":
+                return localeOnlyTransform(RoadType.expressway)
+            case "national":
+                return localeOnlyTransform(RoadType.national)
+            case "federal":
+                return localeOnlyTransform(RoadType.federal)
+            case "main":
+                return localeOnlyTransform(RoadType.main)
+            case "road":
+                return localeOnlyTransform(RoadType.road)
+            case "primary":
+                return localeOnlyTransform(RoadType.primary)
+            case "secondary":
+                return localeOnlyTransform(RoadType.secondary)
+            case "trunk":
+                return localeOnlyTransform(RoadType.trunk)
+            case "regional":
+                return localeOnlyTransform(RoadType.regional)
+            case "voivodeship":
+                return localeOnlyTransform(RoadType.voivodeship)
+            case "county":
+                return localeOnlyTransform(RoadType.county)
+            case "communal":
+                return localeOnlyTransform(RoadType.communal)
+            case "state":
+                return RoadType.state
+            case "highway":
+                return RoadType.highway
+            case "interstate":
+                return RoadType.interstate
+            default:
+                return nil
+            }
+        }
+        
+        typealias LocaleOnly = (Locale) -> RoadType
+        static func localeOnlyTransform(_ closure: @escaping LocaleOnly) -> RoadTypeTemplate {
+            return { locale, _ in
+                return closure(locale)
+            }
+        }
+        
+        var textColor: UIColor? {
+            switch self {
+            case let .highway(locale, _):
+                if locale == .slovakia {
                     return .white
-                default:
-                    return .black
                 }
-            case .us(.highway(let roadClass)):
-                switch roadClass {
-                case .duplex, .alternate, .business, .bypass, .truck: fallthrough
-                default:
-                    return .black
-                }
-            case .default:
                 return .black
-            case .at(.motorway):
+            case .generic, .communal:
+                return .black
+            case .motorway, .expressway:
                 return .white
-            case .at(.state(let roadClass)):
-                switch roadClass {
-                case .b:
+            case let .state(locale, roadClass):
+                switch (locale) {
+                case .austria, .croatia, .newZealand,
+                     .serbia where roadClass == RoadClass.oneB:
                     return .white
                 default:
                     return .black
                 }
             default:
-                return .black
+                return nil
             }
         }
+        
+        case generic, motorway(Locale), expressway(Locale), state(Locale, RoadClass?), highway(Locale, RoadClass?)
+        case national(Locale), federal(Locale), main(Locale), road(Locale), primary(Locale), secondary(Locale), trunk(Locale), regional(Locale)
+        case voivodeship(Locale), county(Locale), communal(Locale), interstate(Locale, RoadClass?)
     }
     
-    enum Identifier: String {
-        case generic = "default"
-        case atMotorway = "at-motorway"
-        case atExpressway = "at-expressway"
-        case atStateB = "at-state-b"
-        case bgMotorway = "bg-motorway"
-        case bgNational = "bg-national"
-        case brFederal = "br-federal"
-        case brState = "br-state"
-        case chMotorway = "ch-motorway"
-        case chMain = "ch-main"
-        case czMotorway = "cz-motorway"
-        case czRoad = "cz-road"
-        case deMotorway = "de-motorway"
-        case deFederal = "de-federal"
-        case dkPrimary = "dk-primary"
-        case dkSecondary = "dk-secondary"
-        case fiMain = "fi-main"
-        case fiTrunk = "fi-trunk"
-        case fiRegional = "fi-regional"
-        case grMotorway = "gr-motorway"
-        case grNational = "gr-national"
-        case usHighway = "us-highway"
-        
-        func textColor() -> UIColor? {
-            switch self {
-            case .generic:
-                return .black
-            case .atMotorway:
-                return .white
-            case .atExpressway:
-                return .white
-            case .atStateB:
-                return .white
-            case .bgMotorway:
-                return .white
-            case .bgNational:
-                return .white
-            case .brFederal:
-                return .black
-            case .brState:
-                return .black
-            case .chMotorway:
-                return .white
-            case .chMain:
-                return .white
-            case .czMotorway:
-                return .white
-            case .czRoad:
-                return .white
-            case .deMotorway:
-                return .white
-            case .deFederal:
-                return .black
-            case .dkPrimary:
-                return .black
-            case .dkSecondary:
-                return .black
-            case .fiMain:
-                return .white
-            case .fiTrunk:
-                return .black
-            case .fiRegional:
-                return .black
-            case .grMotorway:
-                return .white
-            case .grNational:
-                return .white
-            case .usHighway:
-                return .black
-            }
-        }
+    enum Locale: String {
+        case usa = "us", austria = "at", bulgeria = "bg", brazil = "br", switzerland = "ch", czech = "cz", germany = "de", denmark = "dk", finland = "fi", greece = "gr", croatia = "hr", hungary = "hu", india = "in", mexico = "mx", newZealand = "nz", peru = "pe", poland = "pl", romania = "ro", serbia = "rs", sweden = "se", slovenia = "si", slovakia = "sk", southAfrica = "za", eRoad = "e"
     }
 }
