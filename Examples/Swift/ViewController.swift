@@ -333,6 +333,7 @@ extension ViewController: WaypointConfirmationViewControllerDelegate {
 
             guard navigationViewController.routeController.routeProgress.route.legs.count > navigationViewController.routeController.routeProgress.legIndex + 1 else { return }
             navigationViewController.routeController.routeProgress.legIndex += 1
+            navigationViewController.routeController.resume()
         })
     }
 }
@@ -346,7 +347,15 @@ extension ViewController: NavigationViewControllerDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool {
         // When the user arrives, present a view controller that prompts the user to continue to their next destination
         // This type of screen could show information about a destination, pickup/dropoff confirmation, instructions upon arrival, etc.
-        guard let confirmationController = self.storyboard?.instantiateViewController(withIdentifier: "waypointConfirmation") as? WaypointConfirmationViewController else { return true }
+        
+        //If we're not in a "Multiple Stops" demo, show the normal EORVC
+        if navigationViewController.routeController.routeProgress.isFinalLeg {
+            return true
+        }
+        
+        guard let confirmationController = self.storyboard?.instantiateViewController(withIdentifier: "waypointConfirmation") as? WaypointConfirmationViewController else {
+            return true
+        }
 
         confirmationController.delegate = self
 
