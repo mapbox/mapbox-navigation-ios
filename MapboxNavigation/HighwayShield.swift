@@ -14,42 +14,45 @@ struct HighwayShield {
             switch self {
             case .generic:
                 return "generic"
-            case .motorway:
-                return "motorway"
-            case .expressway:
-                return "expressway"
-            case .state:
-                return "state"
-            case .highway:
-                return "highway"
-            case .national:
-                return "national"
-            case .federal:
-                return "federal"
-            case .main:
-                return "main"
-            case .road:
-                return "road"
-            case .primary:
-                return "primary"
-            case .secondary:
-                return "secondary"
-            case .trunk:
-                return "trunk"
-            case .regional:
-                return "regional"
-            case .voivodeship:
-                return "voivodeship"
-            case .county:
-                return "county"
-            case .communal:
-                return "communal"
-            case .interstate:
-                return "interstate"
-            case .metropolitan:
-                return "metropolitan"
-            case .provincial:
-                return "provincial"
+            case let .motorway(locale):
+                return "\(locale.rawValue)-motorway"
+            case let .expressway(locale):
+                return "\(locale.rawValue)-expressway"
+            case let .state(locale, roadClass):
+                guard let currentRoadClass = roadClass else { return "\(locale)-state" }
+                return "\(locale.rawValue)-state-\(currentRoadClass.rawValue)"
+            case let .highway(locale, roadClass):
+                guard let currentRoadClass = roadClass else { return "\(locale)-highway" }
+                return "\(locale.rawValue)-highway-\(currentRoadClass.rawValue)"
+            case let .national(locale):
+                return "\(locale.rawValue)-national"
+            case let .federal(locale):
+                return "\(locale.rawValue)-federal"
+            case let .main(locale):
+                return "\(locale.rawValue)-main"
+            case let .road(locale):
+                return "\(locale.rawValue)-road"
+            case let .primary(locale):
+                return "\(locale.rawValue)-primary"
+            case let .secondary(locale):
+                return "\(locale.rawValue)-secondary"
+            case let .trunk(locale):
+                return "\(locale.rawValue)-trunk"
+            case let .regional(locale):
+                return "\(locale.rawValue)-regional"
+            case let .voivodeship(locale):
+                return "\(locale.rawValue)-voivodeship"
+            case let .county(locale):
+                return "\(locale.rawValue)-county"
+            case let .communal(locale):
+                return "\(locale)-communal"
+            case let .interstate(locale, roadClass):
+                guard let currentRoadClass = roadClass else { return "\(locale.rawValue)-interstate"}
+                return "\(locale.rawValue)-interstate-\(currentRoadClass.rawValue)"
+            case let .metropolitan(locale):
+                return "\(locale.rawValue)-metropolitan"
+            case let .provincial(locale):
+                return "\(locale.rawValue)-provincial"
             }
         }
         
@@ -117,7 +120,6 @@ struct HighwayShield {
                 return nil
             }
         }
-        
         
         static func localeOnlyTransform(_ closure: @escaping RoadTypeForLocaleClosure) -> RoadTypeForLocaleRoadClassClosure {
             return { locale, _ in

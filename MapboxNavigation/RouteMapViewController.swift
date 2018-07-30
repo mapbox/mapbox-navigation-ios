@@ -811,17 +811,12 @@ extension RouteMapViewController: NavigationViewDelegate {
                             currentName = nil
                         }
                         
-                        if let text = line.attribute(forKey: "ref") as? String, let shieldRawValue = line.attribute(forKey: "shield") as? String, let reflen = line.attribute(forKey: "reflen") {
-                            
-                            let currentShield = HighwayShield.RoadType(rawValue: shieldRawValue)
-                            let textColor = currentShield?.textColor ?? .black
-                            
-                            let imageName = "\(shieldRawValue)-\(reflen)"
-                            if let image = mapView.style?.image(forName: imageName) {
-                                let attachment = RoadNameLabelAttachment(image: image, text: text, color: textColor, font: UIFont.boldSystemFont(ofSize: UIFont.systemFontSize), scale: UIScreen.main.scale)
-                                currentShieldName = NSAttributedString(attachment: attachment)
-                            }
+                        if let text = line.attribute(forKey: "ref") as? String, let shield = line.attribute(forKey: "shield") as? String, let reflen = line.attribute(forKey: "reflen") as? Int {
+                            currentShieldName = roadShieldName(for: text, shield: shield, reflen: reflen)
                         }
+                        
+                    } else if let line = feature as? MGLMultiPolylineFeature, let text = line.attribute(forKey: "ref") as? String, let shield = line.attribute(forKey: "shield") as? String, let reflen = line.attribute(forKey: "reflen") as? Int {
+                        currentShieldName = roadShieldName(for: text, shield: shield, reflen: reflen)
                     }
                 }
             }
@@ -839,6 +834,23 @@ extension RouteMapViewController: NavigationViewDelegate {
             navigationView.wayNameView.isHidden = true
         }
     }
+    
+    private func roadShieldName(for text: String?, shield: String?, reflen: Int?) -> NSAttributedString? {
+        guard let text = text, let shield = shield, let reflen = reflen else { return nil }
+        
+        let currentShield = HighwayShield.RoadType(rawValue: shield)
+        let textColor = currentShield?.textColor ?? .black
+        
+        let imageName = "\(shield)-\(reflen)"
+        
+        guard let image = mapView.style?.image(forName: imageName) else {
+            return nil
+        }
+        
+        let attachment = RoadNameLabelAttachment(image: image, text: text, color: textColor, font: UIFont.boldSystemFont(ofSize: UIFont.systemFontSize), scale: UIScreen.main.scale)
+        return NSAttributedString(attachment: attachment)
+    }
+    
     
     @objc func updateETA() {
         guard isViewLoaded, routeController != nil else { return }
