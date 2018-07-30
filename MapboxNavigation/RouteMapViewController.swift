@@ -840,7 +840,6 @@ extension RouteMapViewController: NavigationViewDelegate {
         
         let currentShield = HighwayShield.RoadType(rawValue: shield)
         let textColor = currentShield?.textColor ?? .black
-        
         let imageName = "\(shield)-\(reflen)"
         
         guard let image = mapView.style?.image(forName: imageName) else {
