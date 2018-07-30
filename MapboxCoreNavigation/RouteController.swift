@@ -157,6 +157,7 @@ open class RouteController: NSObject, Router {
     }
 
     func resumeNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(didRecieveTerminationWarning), name: .UIApplicationWillTerminate, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didChangeOrientation), name: .UIDeviceOrientationDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didChangeApplicationState), name: .UIApplicationWillEnterForeground, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didChangeApplicationState), name: .UIApplicationDidEnterBackground, object: nil)
@@ -173,7 +174,10 @@ open class RouteController: NSObject, Router {
     @objc func didChangeApplicationState() {
         eventsManager.reportChange(to: UIApplication.shared.applicationState)
     }
-
+    @objc private func didRecieveTerminationWarning() {
+        endNavigation()
+    }
+    
     /**
      Starts monitoring the user’s location along the route.
 
@@ -195,7 +199,7 @@ open class RouteController: NSObject, Router {
     }
     
     /**
-     End the current navigation session.
+     Ends the current navigation session.
      */
     @objc public func endNavigation(feedback: EndOfRouteFeedback? = nil) {
         if !didSendCancelEvent {
