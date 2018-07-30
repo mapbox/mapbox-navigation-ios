@@ -802,15 +802,15 @@ extension RouteMapViewController: NavigationViewDelegate {
                 if minDistanceBetweenPoints < smallestLabelDistance {
                     smallestLabelDistance = minDistanceBetweenPoints
                     
-                    if let line = feature as? MGLPolylineFeature, let name = line.attribute(forKey: "name") as? String {
-                        currentName = name
-                    } else if let line = feature as? MGLMultiPolylineFeature, let name = line.attribute(forKey: "name") as? String {
-                        currentName = name
-                    } else {
-                        currentName = nil
-                    }
-                    
                     if let line = feature as? MGLPolylineFeature {
+                        if let name = line.attribute(forKey: "name") as? String {
+                            currentName = name
+                        } else if let line = feature as? MGLMultiPolylineFeature, let name = line.attribute(forKey: "name") as? String {
+                            currentName = name
+                        } else {
+                            currentName = nil
+                        }
+                        
                         if let text = line.attribute(forKey: "ref") as? String, let shieldRawValue = line.attribute(forKey: "shield") as? String, let reflen = line.attribute(forKey: "reflen") {
                             
                             let currentShield = HighwayShield.RoadType(rawValue: shieldRawValue)
@@ -818,11 +818,11 @@ extension RouteMapViewController: NavigationViewDelegate {
                             
                             let imageName = "\(shieldRawValue)-\(reflen)"
                             if let image = mapView.style?.image(forName: imageName) {
-                                currentShieldName = attributedString(withFont: UIFont.boldSystemFont(ofSize: 12.0), shieldImage: image, text: text, color: textColor)
+                                let attachment = RoadNameLabelAttachment(image: image, text: text, color: textColor, font: UIFont.boldSystemFont(ofSize: UIFont.systemFontSize), scale: UIScreen.main.scale)
+                                currentShieldName = NSAttributedString(attachment: attachment)
                             }
                         }
                     }
-                    
                 }
             }
         }
@@ -838,25 +838,6 @@ extension RouteMapViewController: NavigationViewDelegate {
         } else {
             navigationView.wayNameView.isHidden = true
         }
-    }
-    
-    private func attributedString(withFont font: UIFont, shieldImage: UIImage, text: String, color: UIColor?) -> NSAttributedString {
-        let attachment = RoadNameLabelAttachment()
-        attachment.font = font
-        attachment.text = text
-        
-        let textHeight = font.lineHeight
-        let pointY = (shieldImage.size.height - textHeight) / 2
-        
-        let compositeImage = shieldImage.insert(text: (text as NSString),
-                                               color: color ?? .black,
-                                                font: font,
-                                             atPoint: CGPoint(x: 0, y: pointY),
-                                               scale: UIScreen.main.scale)
-        
-        attachment.image = compositeImage
-        
-        return NSAttributedString(attachment: attachment)
     }
     
     @objc func updateETA() {
