@@ -197,9 +197,9 @@ open class RouteController: NSObject, Router {
     /**
      End the current navigation session.
      */
-    @objc public func endNavigation(rating: Int = MMEEventsManager.unrated, comment: String? = nil) {
+    @objc public func endNavigation(feedback: EndOfRouteFeedback? = nil) {
         if !didSendCancelEvent {
-            eventsManager.sendCancelEvent(rating: rating, comment: comment)
+            eventsManager.sendCancelEvent(rating: feedback?.rating, comment: feedback?.comment)
             didSendCancelEvent = true
         }
         
