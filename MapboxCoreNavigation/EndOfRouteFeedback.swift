@@ -14,7 +14,7 @@ import Foundation
     */
     let comment: String?
     
-    @nonobjc public init(rating: Int?, comment: String?) {
+    @nonobjc public init(rating: Int? = nil, comment: String? = nil) {
         self.rating = rating
         self.comment = comment
         super.init()
