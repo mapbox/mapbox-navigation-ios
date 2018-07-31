@@ -849,8 +849,8 @@ extension RouteMapViewController: NavigationViewDelegate {
     private func roadFeatureHelper(ref: Any?, shield: Any?, reflen: Any?, name: Any?) -> (roadName: String?, shieldName: NSAttributedString?) {
         var currentShieldName: NSAttributedString?, currentRoadName: String?
         
-        if let t = ref as? String, let s = shield as? String, let r = reflen as? Int {
-            currentShieldName = roadShieldName(for: t, shield: s, reflen: r)
+        if let text = ref as? String, let shieldID = shield as? String, let reflenDigit = reflen as? Int {
+            currentShieldName = roadShieldName(for: text, shield: shieldID, reflen: reflenDigit)
         } else if let roadName = name as? String {
             currentRoadName = roadName
         }
