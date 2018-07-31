@@ -21,9 +21,6 @@ open class EventsManager: NSObject {
     /// :nodoc: This is used internally when the navigation UI is being used
     var usesDefaultUserInterface = false
     
-    var endOfRouteStarRating: Int?
-    var endOfRouteComment: String?
-    
     lazy var accessToken: String = {
         guard let path = Bundle.main.path(forResource: "Info", ofType: "plist"),
         let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject],
@@ -257,14 +254,6 @@ extension EventsManager {
         if let index = outstandingFeedbackEvents.index(where: {$0.id == uuid}) {
             outstandingFeedbackEvents.remove(at: index)
         }
-    }
-    
-    /**
-     Set the rating and any comment the user may have about their route. Only used when exiting navigaiton.
-     */
-    @objc public func setEndOfRoute(rating: Int, comment: String?) {
-        endOfRouteStarRating = rating
-        endOfRouteComment = comment
     }
     
     //MARK: - Session State Management
