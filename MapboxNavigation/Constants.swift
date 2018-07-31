@@ -35,3 +35,13 @@ public let MBCongestionAttribute = "congestion"
  The minimum volume for the device before a gentle warning is emitted when beginning navigation.
  */
 public let NavigationViewMinimumVolumeForWarning: Float = 0.3
+
+/**
+ The formatted text description of the current speed the navigation simulation is set.
+ */
+public let NavigationViewSimulationSpeedSummary = "Simulating Navigation at %d×"
+
+/**
+ The purpose of the simulation summary text displayed in the navigation banner.
+ */
+public let NavigationViewSimulationSummaryComment = "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled."
