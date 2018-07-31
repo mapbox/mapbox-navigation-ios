@@ -331,7 +331,7 @@ class RouteMapViewController: UIViewController {
         guard self.isViewLoaded else { return }
         
         if let locationManager = routeController.locationManager as? SimulatedLocationManager {
-            let format = NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: NavigationViewSimulationSpeedSummary, comment: NavigationViewSimulationSummaryComment)
+            let format = NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation at %f×", comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled.")
             let localized = String.localizedStringWithFormat(format, Int(locationManager.speedMultiplier))
             showStatus(title: localized, for: .infinity, interactive: true)
         } else {
@@ -899,7 +899,7 @@ extension RouteMapViewController: StepsViewControllerDelegate {
     
     func statusView(_ statusView: StatusView, valueChangedTo value: Double) {
         let displayValue = 1+min(Int(9 * value), 8)
-        let title = String.localizedStringWithFormat(NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: NavigationViewSimulationSpeedSummary, comment: NavigationViewSimulationSummaryComment), displayValue)
+        let title = String.localizedStringWithFormat(NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation at %d×", comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled."), displayValue)
         showStatus(title: title, for: .infinity, interactive: true)
         
         if let locationManager = routeController.locationManager as? SimulatedLocationManager {
