@@ -803,20 +803,13 @@ extension RouteMapViewController: NavigationViewDelegate {
                     smallestLabelDistance = minDistanceBetweenPoints
                     
                     if let line = feature as? MGLPolylineFeature {
-                        if let name = line.attribute(forKey: "name") as? String {
-                            currentName = name
-                        } else if let line = feature as? MGLMultiPolylineFeature, let name = line.attribute(forKey: "name") as? String {
-                            currentName = name
-                        } else {
-                            currentName = nil
-                        }
-                        
-                        if let text = line.attribute(forKey: "ref") as? String, let shield = line.attribute(forKey: "shield") as? String, let reflen = line.attribute(forKey: "reflen") as? Int {
-                            currentShieldName = roadShieldName(for: text, shield: shield, reflen: reflen)
-                        }
-                        
-                    } else if let line = feature as? MGLMultiPolylineFeature, let text = line.attribute(forKey: "ref") as? String, let shield = line.attribute(forKey: "shield") as? String, let reflen = line.attribute(forKey: "reflen") as? Int {
-                        currentShieldName = roadShieldName(for: text, shield: shield, reflen: reflen)
+                        let roadNameRecord = roadFeature(for: line)
+                        currentShieldName = roadNameRecord.shieldName
+                        currentName = roadNameRecord.roadName
+                    } else if let line = feature as? MGLMultiPolylineFeature {
+                        let roadNameRecord = roadFeature(for: line)
+                        currentShieldName = roadNameRecord.shieldName
+                        currentName = roadNameRecord.roadName
                     }
                 }
             }
@@ -833,6 +826,36 @@ extension RouteMapViewController: NavigationViewDelegate {
         } else {
             navigationView.wayNameView.isHidden = true
         }
+    }
+    
+    private func roadFeature(for line: MGLPolylineFeature) -> (roadName: String?, shieldName: NSAttributedString?) {
+        let roadNameRecord = roadFeatureHelper(ref: line.attribute(forKey: "ref"),
+                                               shield: line.attribute(forKey: "shield"),
+                                               reflen: line.attribute(forKey: "reflen"),
+                                               name: line.attribute(forKey: "name"))
+
+        return (roadName: roadNameRecord.roadName, shieldName: roadNameRecord.shieldName)
+    }
+    
+    private func roadFeature(for line: MGLMultiPolylineFeature) -> (roadName: String?, shieldName: NSAttributedString?) {
+        let roadNameRecord = roadFeatureHelper(ref: line.attribute(forKey: "ref"),
+                                            shield: line.attribute(forKey: "shield"),
+                                            reflen: line.attribute(forKey: "reflen"),
+                                              name: line.attribute(forKey: "name"))
+            
+        return (roadName: roadNameRecord.roadName, shieldName: roadNameRecord.shieldName)
+    }
+    
+    private func roadFeatureHelper(ref: Any?, shield: Any?, reflen: Any?, name: Any?) -> (roadName: String?, shieldName: NSAttributedString?) {
+        var currentShieldName: NSAttributedString?, currentRoadName: String?
+        
+        if let t = ref as? String, let s = shield as? String, let r = reflen as? Int {
+            currentShieldName = roadShieldName(for: t, shield: s, reflen: r)
+        } else if let roadName = name as? String {
+            currentRoadName = roadName
+        }
+        
+        return (roadName: currentRoadName, shieldName: currentShieldName)
     }
     
     private func roadShieldName(for text: String?, shield: String?, reflen: Int?) -> NSAttributedString? {
