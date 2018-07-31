@@ -331,7 +331,7 @@ class RouteMapViewController: UIViewController {
         guard self.isViewLoaded else { return }
         
         if let locationManager = routeController.locationManager as? SimulatedLocationManager {
-            let localized = String.localizedStringWithFormat(String.localizedSimulationSpeedSummary, Int(locationManager.speedMultiplier))
+            let localized = String.Localized.simulationStatus(speed: Int(locationManager.speedMultiplier))
             showStatus(title: localized, for: .infinity, interactive: true)
         } else {
             statusView.hide(delay: 2, animated: true)
@@ -898,7 +898,7 @@ extension RouteMapViewController: StepsViewControllerDelegate {
     
     func statusView(_ statusView: StatusView, valueChangedTo value: Double) {
         let displayValue = 1+min(Int(9 * value), 8)
-        let title = String.localizedStringWithFormat(String.localizedSimulationSpeedSummary, displayValue)
+        let title = String.Localized.simulationStatus(speed: displayValue)
         showStatus(title: title, for: .infinity, interactive: true)
         
         if let locationManager = routeController.locationManager as? SimulatedLocationManager {

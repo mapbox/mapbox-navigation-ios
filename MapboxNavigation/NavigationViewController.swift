@@ -399,7 +399,7 @@ open class NavigationViewController: UIViewController {
         UIApplication.shared.isIdleTimerDisabled = true
         
         if routeController.locationManager is SimulatedLocationManager {
-            let localized = String.localizedStringWithFormat(String.localizedSimulationSpeedSummary, 1)
+            let localized = String.Localized.simulationStatus(speed: 1)
             mapViewController?.statusView.show(localized, showSpinner: false, interactive: true)
         }
     }
