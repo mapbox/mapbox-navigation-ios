@@ -873,7 +873,6 @@ extension RouteMapViewController: NavigationViewDelegate {
         return NSAttributedString(attachment: attachment)
     }
     
-    
     @objc func updateETA() {
         guard isViewLoaded, routeController != nil else { return }
         navigationView.bottomBannerView.updateETA(routeProgress: routeController.routeProgress)
