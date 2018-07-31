@@ -330,7 +330,11 @@ class RouteMapViewController: UIViewController {
     @objc func didReroute(notification: NSNotification) {
         guard self.isViewLoaded else { return }
         
-        if !(routeController.locationManager is SimulatedLocationManager) {
+        if let locationManager = routeController.locationManager as? SimulatedLocationManager {
+            let format = NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation at %f×", comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled.")
+            let localized = String.localizedStringWithFormat(format, Int(locationManager.speedMultiplier))
+            showStatus(title: localized, for: .infinity, interactive: true)
+        } else {
             statusView.hide(delay: 2, animated: true)
         }
         
