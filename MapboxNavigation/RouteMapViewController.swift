@@ -331,8 +331,7 @@ class RouteMapViewController: UIViewController {
         guard self.isViewLoaded else { return }
         
         if let locationManager = routeController.locationManager as? SimulatedLocationManager {
-            let format = String.localizedSimulationSpeedSummary
-            let localized = String.localizedStringWithFormat(format, Int(locationManager.speedMultiplier))
+            let localized = String.localizedStringWithFormat(String.localizedSimulationSpeedSummary, Int(locationManager.speedMultiplier))
             showStatus(title: localized, for: .infinity, interactive: true)
         } else {
             statusView.hide(delay: 2, animated: true)
