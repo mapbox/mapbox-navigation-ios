@@ -851,8 +851,16 @@ extension RouteMapViewController: NavigationViewDelegate {
         
         if let text = ref as? String, let shieldID = shield as? String, let reflenDigit = reflen as? Int {
             currentShieldName = roadShieldName(for: text, shield: shieldID, reflen: reflenDigit)
-        } else if let roadName = name as? String {
+        }
+        
+        if let roadName = name as? String {
             currentRoadName = roadName
+        }
+        
+        if let compositeShieldImage = currentShieldName, let roadName = currentRoadName {
+            let compositeShield = NSMutableAttributedString(string: " \(roadName)")
+            compositeShield.insert(compositeShieldImage, at: 0)
+            currentShieldName = compositeShield
         }
         
         return (roadName: currentRoadName, shieldName: currentShieldName)
