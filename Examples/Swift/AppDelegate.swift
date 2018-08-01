@@ -13,8 +13,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CPApplicationDelegate {
         if isRunningTests() {
             window!.rootViewController = UIViewController()
         } else {
-            let setting = UIUserNotificationSettings(types: [.badge, .alert, .sound], categories: nil)
-            UIApplication.shared.registerUserNotificationSettings(setting)
+            DispatchQueue.main.async {
+                UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .alert, .sound]) { _,_ in
+
+                }
+            }
         }
         return true
     }
