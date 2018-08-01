@@ -19,14 +19,8 @@ import Foundation
         self.comment = comment
         super.init()
     }
-    
-    @objc public convenience init(rating: Int) {
-        self.init(rating: rating, comment: nil)
-    }
-    @objc public convenience init(comment: String?) {
-        self.init(rating: nil, comment: comment)
-    }
-    @objc public convenience init(rating: Int, comment: String?) {
+    @objc public convenience init(rating ratingNumber: NSNumber?, comment: String?) {
+        let rating = ratingNumber?.intValue
         self.init(rating: rating, comment: comment)
     }
 }
