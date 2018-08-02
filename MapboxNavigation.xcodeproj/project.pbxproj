@@ -134,6 +134,7 @@
 		359D283C1F9DC14F00FDE9C9 /* UICollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359D283B1F9DC14F00FDE9C9 /* UICollectionView.swift */; };
 		35A262B92050A5CD00AEFF6D /* InstructionsBannerViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35A262B82050A5CD00AEFF6D /* InstructionsBannerViewSnapshotTests.swift */; };
 		35A5413B1EFC052700E49846 /* RouteOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35A5413A1EFC052700E49846 /* RouteOptions.swift */; };
+		35ACF87E211357D7001500C6 /* MapboxCoreNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */; };
 		35B1AEBC20AD9B3C00C8544E /* LeaksSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B1AEBB20AD9B3C00C8544E /* LeaksSpec.swift */; };
 		35B1AEBE20AD9C7800C8544E /* LeakTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B1AEBD20AD9C7800C8544E /* LeakTest.swift */; };
 		35B1E2951F1FF8EC00A13D32 /* UserCourseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B1E2941F1FF8EC00A13D32 /* UserCourseView.swift */; };
@@ -820,6 +821,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3513E90820E53E9A006ED523 /* MapboxNavigationNative.framework in Frameworks */,
+				35ACF87E211357D7001500C6 /* MapboxCoreNavigation.framework in Frameworks */,
 				35E9B0AD1F9E0F8F00BF84AB /* MapboxNavigation.framework in Frameworks */,
 				354A01CF1E66266100D765C2 /* MapboxDirections.framework in Frameworks */,
 				C57607B11F4CC9E800C27423 /* Solar.framework in Frameworks */,

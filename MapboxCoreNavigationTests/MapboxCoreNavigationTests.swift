@@ -3,9 +3,12 @@ import MapboxDirections
 import Turf
 @testable import MapboxCoreNavigation
 
+let response = Fixture.JSONFromFileNamed(name: "routeWithInstructions")
+let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String : Any]
+let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
+let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
 let waitForInterval: TimeInterval = 5
 let directions = Directions(accessToken: "pk.feedCafeDeadBeefBadeBede")
-let response = Fixture.JSONFromFileNamed(name: "routeWithInstructions")
 
 var route: Route = {
     let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String : Any]
@@ -22,7 +25,6 @@ var route: Route = {
 class MapboxCoreNavigationTests: XCTestCase {
     
     func testDepart() {
-        route.accessToken = "foo"
         let navigation = RouteController(along: route, directions: directions)
         let depart = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165), altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 0, speed: 10, timestamp: Date())
         
