@@ -830,9 +830,9 @@ extension RouteMapViewController: NavigationViewDelegate {
     
     private func roadFeature(for line: MGLPolylineFeature) -> (roadName: String?, shieldName: NSAttributedString?) {
         let roadNameRecord = roadFeatureHelper(ref: line.attribute(forKey: "ref"),
-                                               shield: line.attribute(forKey: "shield"),
-                                               reflen: line.attribute(forKey: "reflen"),
-                                               name: line.attribute(forKey: "name"))
+                                            shield: line.attribute(forKey: "shield"),
+                                            reflen: line.attribute(forKey: "reflen"),
+                                              name: line.attribute(forKey: "name"))
 
         return (roadName: roadNameRecord.roadName, shieldName: roadNameRecord.shieldName)
     }
