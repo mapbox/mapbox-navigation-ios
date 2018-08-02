@@ -66,31 +66,29 @@ open class LanesView: UIView {
         separatorView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
     }
     
-    func update(for currentLegProgress: RouteLegProgress) {
-        guard let step = currentLegProgress.upComingStep else { return }
-        guard !currentLegProgress.userHasArrivedAtWaypoint else { return }
-        let durationRemaining = currentLegProgress.currentStepProgress.durationRemaining
-        
+    /**
+     Updates the tertiary instructions banner info with a given `VisualInstructionBanner`.
+     */
+    @objc(updateForVisualInstructionBanner:)
+    public func update(for visualInstruction: VisualInstructionBanner?) {
         clearLaneViews()
         
-        if let allLanes = step.intersections?.first?.approachLanes,
-            let usableLanes = step.intersections?.first?.usableApproachLanes,
-            durationRemaining < RouteControllerMediumAlertInterval {
-            
-            for (i, lane) in allLanes.enumerated() {
-                let laneView = laneArrowView()
-                laneView.lane = lane
-                laneView.maneuverDirection = step.maneuverDirection
-                laneView.isValid = usableLanes.contains(i as Int)
-                stackView.addArrangedSubview(laneView)
-            }
+        guard let tertiaryInstruction = visualInstruction?.tertiaryInstruction,
+                  tertiaryInstruction.containsLaneIndications else {
+                    hide()
+                    return
         }
         
-        if stackView.arrangedSubviews.count > 0 {
-            show()
-        } else {
+        let laneIndications: [LaneIndicationComponent]? = tertiaryInstruction.components.compactMap({ $0 as? LaneIndicationComponent })
+        
+        guard let lanes = laneIndications, !lanes.isEmpty else {
             hide()
+            return
         }
+        
+        let subviews = lanes.map { LaneView(component: $0) }
+        stackView.addArrangedSubviews(subviews)
+        show()
     }
     
     public func show(animated: Bool = true) {

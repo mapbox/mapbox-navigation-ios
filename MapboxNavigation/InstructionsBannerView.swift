@@ -34,6 +34,13 @@ open class BaseInstructionsBannerView: UIControl {
         }
     }
     
+    weak var instructionDelegate: VisualInstructionDelegate? {
+        didSet {
+            primaryLabel.instructionDelegate = instructionDelegate
+            secondaryLabel.instructionDelegate = instructionDelegate
+        }
+    }
+    
     var centerYConstraints = [NSLayoutConstraint]()
     var baselineConstraints = [NSLayoutConstraint]()
     
@@ -83,7 +90,11 @@ open class BaseInstructionsBannerView: UIControl {
         }
     }
     
-    func set(_ instruction: VisualInstructionBanner?) {
+    /**
+     Updates the instructions banner info with a given `VisualInstructionBanner`.
+     */
+    @objc(updateForVisualInstructionBanner:)
+    public func update(for instruction: VisualInstructionBanner?) {
         let secondaryInstruction = instruction?.secondaryInstruction
         primaryLabel.numberOfLines = secondaryInstruction == nil ? 2 : 1
         
@@ -94,39 +105,26 @@ open class BaseInstructionsBannerView: UIControl {
         }
         
         primaryLabel.instruction = instruction?.primaryInstruction
+        maneuverView.visualInstruction = instruction?.primaryInstruction
+        maneuverView.drivingSide = instruction?.drivingSide ?? .right
         secondaryLabel.instruction = secondaryInstruction
-        maneuverView.visualInstruction = instruction
     }
     
     override open func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         maneuverView.isStart = true
         let component = VisualInstructionComponent(type: .text, text: "Primary text label", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)
-        let instruction = VisualInstruction(text: nil, maneuverType: .none, maneuverDirection: .none, textComponents: [component])
+        let instruction = VisualInstruction(text: nil, maneuverType: .none, maneuverDirection: .none, components: [component])
         primaryLabel.instruction = instruction
         
         distance = 100
     }
     
     /**
-     Updates the instructions banner for a given `RouteProgress`.
+     Updates the instructions banner distance info for a given `RouteStepProgress`.
      */
-    public func update(for currentLegProgress: RouteLegProgress) {
-        let stepProgress = currentLegProgress.currentStepProgress
-        let distanceRemaining = stepProgress.distanceRemaining
-        
-        guard let visualInstructions = stepProgress.remainingVisualInstructions else { return }
-        
-        for visualInstruction in visualInstructions {
-            if stepProgress.distanceRemaining <= visualInstruction.distanceAlongStep || stepProgress.visualInstructionIndex == 0 {
-                
-                set(visualInstruction)
-                
-                stepProgress.visualInstructionIndex += 1
-                break
-            }
-        }
-        
+    public func updateDistance(for currentStepProgress: RouteStepProgress) {
+        let distanceRemaining = currentStepProgress.distanceRemaining
         distance = distanceRemaining > 5 ? distanceRemaining : 0
     }
 }

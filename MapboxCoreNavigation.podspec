@@ -3,14 +3,14 @@ Pod::Spec.new do |s|
   # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.name = "MapboxCoreNavigation"
-  s.version = "0.18.1"
+  s.version = "0.19.0"
   s.summary = "Core components for turn-by-turn navigation on iOS."
 
   s.description  = <<-DESC
   Mapbox Core Navigation provides the core spatial and timing logic for turn-by-turn navigation along a route. For a complete turn-by-turn navigation interface, use the Mapbox Navigation SDK for iOS (MapboxNavigation).
                    DESC
 
-  s.homepage = "https://www.mapbox.com/navigation-sdk/"
+  s.homepage = "https://www.mapbox.com/ios-sdk/navigation/"
   s.documentation_url = "https://www.mapbox.com/mapbox-navigation-ios/navigation/"
 
   # ―――  Spec License  ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
@@ -41,9 +41,9 @@ Pod::Spec.new do |s|
   s.module_name = "MapboxCoreNavigation"
 
   s.dependency "MapboxNavigationNative"
-  s.dependency "MapboxDirections.swift", "~> 0.21.0"
+  s.dependency "MapboxDirections.swift", "~> 0.22.0"
   s.dependency "MapboxMobileEvents", "~> 0.4"
-  s.dependency "Turf", "~> 0.1"
+  s.dependency "Turf", "~> 0.2"
 
   # `swift_version` was introduced in CocoaPods 1.4.0. Without this check, if a user were to
   # directly specify this podspec while using <1.4.0, ruby would throw an unknown method error.

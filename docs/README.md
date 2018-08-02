@@ -1,6 +1,6 @@
 ## Generating documentation locally
 
-Run `scripts/document.sh`
+Make sure you’ve got the latest version of jazzy installed, then run `scripts/document.sh`.
 
 ## Update the Mapbox Navigation SDK documentation site:
 1. Clone mapbox-navigation-ios to a mapbox-navigation-ios-docs folder alongside your main mapbox-navigation-ios clone, and check out the `mb-pages` branch.

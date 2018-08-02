@@ -40,3 +40,7 @@
 1. Push MapboxCoreNavigation: `pod trunk push MapboxCoreNavigation.podspec`
 1. Update pods: `pod repo update`
 1. Push MapboxNavigation: `pod trunk push MapboxNavigation.podspec`
+
+### Next steps
+
+See [this wiki page](https://github.com/mapbox/navigation/wiki/Releasing-the-iOS-navigation-SDK) for information on updating Mapbox documentation.

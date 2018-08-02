@@ -10,10 +10,11 @@ let directions = Directions(accessToken: bogusToken)
 
 class LaneTests: FBSnapshotTestCase {
 
-    let route = Fixture.route(from: "route-for-lane-testing", waypoints: [Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165)), Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))])
+    let route = Fixture.route(from: "route-for-lane-testing", waypoints: [Waypoint(coordinate: CLLocationCoordinate2D(latitude: 39.132063, longitude: -84.531074)), Waypoint(coordinate: CLLocationCoordinate2D(latitude: 39.138953, longitude: -84.532934))])
     
     var steps: [RouteStep]!
     var routeProgress: RouteProgress!
+    var routeController: RouteController!
     
     override func setUp() {
         super.setUp()
@@ -21,28 +22,30 @@ class LaneTests: FBSnapshotTestCase {
         isDeviceAgnostic = true
 
         route.accessToken = bogusToken
-        let routeController = RouteController(along: route, directions: directions)
+        routeController = RouteController(along: route, directions: directions)
 
         steps = routeController.routeProgress.currentLeg.steps
         routeProgress = routeController.routeProgress
     }
     
-    func assertLanes(step: RouteStep) {
+    func assertLanes(stepIndex: Array<RouteStep>.Index) {
         let rect = CGRect(origin: .zero, size: .iPhone6Plus)
         let navigationView = NavigationView(frame: rect)
         
-        navigationView.lanesView.update(for: routeProgress.currentLegProgress)
+        routeController.advanceStepIndex(to: stepIndex)
+        
+        navigationView.lanesView.update(for: routeController.routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
         navigationView.lanesView.show(animated: false)
         
         FBSnapshotVerifyView(navigationView.lanesView)
     }
     
-    func testRightRight() {
-        assertLanes(step: steps[0])
+    func testStraightRight() {
+        assertLanes(stepIndex: 0)
     }
     
-    func testRightNone() {
-        assertLanes(step: steps[1])
+    func testRightRight() {
+        assertLanes(stepIndex: 1)
     }
     
     func testSlightRight() {

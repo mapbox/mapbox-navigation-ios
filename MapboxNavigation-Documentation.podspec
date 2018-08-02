@@ -3,14 +3,14 @@ Pod::Spec.new do |s|
   # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.name = "MapboxNavigation-Documentation"
-  s.version = "0.18.1"
+  s.version = "0.19.0"
   s.summary = "Complete turn-by-turn navigation interface for iOS."
 
   s.description  = <<-DESC
   The Mapbox Navigation SDK for iOS is a drop-in interface for turn-by-turn navigation along a route, complete with a well-designed map and easy-to-understand spoken directions. Routes are powered by Mapbox Directions.
                    DESC
 
-  s.homepage = "https://www.mapbox.com/navigation-sdk/"
+  s.homepage = "https://www.mapbox.com/ios-sdk/navigation/"
   s.documentation_url = "https://www.mapbox.com/mapbox-navigation-ios/navigation/"
 
   # ―――  Spec License  ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
@@ -43,11 +43,11 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.module_name = "MapboxNavigation"
 
-  s.dependency "MapboxDirections.swift", "~> 0.21.0"
-  s.dependency "Mapbox-iOS-SDK", "~> 4.0"
+  s.dependency "MapboxDirections.swift", "~> 0.22.0"
+  s.dependency "Mapbox-iOS-SDK", "~> 4.2"
   s.dependency "MapboxMobileEvents", "~> 0.4"
   s.dependency "Solar", "~> 2.1"
-  s.dependency "Turf", "~> 0.1"
+  s.dependency "Turf", "~> 0.2"
   s.dependency "MapboxSpeech", "~> 0.0.1"
 
   # `swift_version` was introduced in CocoaPods 1.4.0. Without this check, if a user were to

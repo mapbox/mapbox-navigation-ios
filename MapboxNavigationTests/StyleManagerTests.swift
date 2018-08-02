@@ -79,7 +79,7 @@ extension StyleManagerTests: StyleManagerDelegate {
     func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) { }
     func styleManager(_ styleManager: StyleManager, didApply style: Style) { }
     
-    func locationFor(styleManager: StyleManager) -> CLLocation {
+    func locationFor(styleManager: StyleManager) -> CLLocation? {
         return location
     }
 }

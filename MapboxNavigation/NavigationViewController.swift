@@ -7,7 +7,7 @@ import Mapbox
  The `NavigationViewControllerDelegate` provides methods for configuring the map view shown by a `NavigationViewController` and responding to the cancellation of a navigation session.
  */
 @objc(MBNavigationViewControllerDelegate)
-public protocol NavigationViewControllerDelegate {
+public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     /**
      Called when the navigation view controller is dismissed, such as when the user ends a trip.
      
@@ -324,6 +324,14 @@ open class NavigationViewController: UIViewController {
     
     var styleManager: StyleManager!
     
+    var currentStatusBarStyle: UIStatusBarStyle = .default
+    
+    open override var preferredStatusBarStyle: UIStatusBarStyle {
+        get {
+            return currentStatusBarStyle
+        }
+    }
+    
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
@@ -349,6 +357,7 @@ open class NavigationViewController: UIViewController {
         self.directions = directions
         self.route = route
         NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
+        routeController.resume()
         
         let mapViewController = RouteMapViewController(routeController: self.routeController, delegate: self)
         self.mapViewController = mapViewController
@@ -377,6 +386,9 @@ open class NavigationViewController: UIViewController {
     
     override open func viewDidLoad() {
         super.viewDidLoad()
+        // Initialize voice controller if it hasn't been overridden.
+        // This is optional and lazy so it can be mutated by the developer after init.
+        _ = voiceController
         resumeNotifications()
         view.clipsToBounds = true
     }
@@ -384,11 +396,7 @@ open class NavigationViewController: UIViewController {
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        //initialize voice controller if it hasn't been overridden
-        _ = voiceController
-        
         UIApplication.shared.isIdleTimerDisabled = true
-        routeController.resume()
         
         if routeController.locationManager is SimulatedLocationManager {
             let format = NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation at %d×", comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled.")
@@ -538,6 +546,10 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
         }
         return roadName
     }
+    
+    @objc public func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
+        return delegate?.label?(label, willPresent: instruction, as: presented)
+    }
 }
 
 //MARK: - RouteControllerDelegate
@@ -608,16 +620,14 @@ extension NavigationViewController: TunnelIntersectionManagerDelegate {
 
 extension NavigationViewController: StyleManagerDelegate {
     
-    public func locationFor(styleManager: StyleManager) -> CLLocation {
-        guard let location = routeController.location else {
-            if let coordinate = routeController.routeProgress.route.coordinates?.first {
-                return CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
-            } else {
-                return CLLocation()
-            }
+    public func locationFor(styleManager: StyleManager) -> CLLocation? {
+        if let location = routeController.location {
+            return location
+        } else if let firstCoord = routeController.routeProgress.route.coordinates?.first {
+            return CLLocation(latitude: firstCoord.latitude, longitude: firstCoord.longitude)
+        } else {
+            return nil
         }
-        
-        return location
     }
     
     public func styleManager(_ styleManager: StyleManager, didApply style: Style) {
@@ -625,6 +635,9 @@ extension NavigationViewController: StyleManagerDelegate {
             mapView?.style?.transition = MGLTransition(duration: 0.5, delay: 0)
             mapView?.styleURL = style.mapStyleURL
         }
+        
+        currentStatusBarStyle = style.statusBarStyle ?? .default
+        setNeedsStatusBarAppearanceUpdate()
     }
     
     public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
