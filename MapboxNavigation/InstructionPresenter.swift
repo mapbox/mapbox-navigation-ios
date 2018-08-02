@@ -254,13 +254,18 @@ class InstructionPresenter {
 
 }
 
-protocol ImagePresenter {
+protocol ImagePresenter: TextPresenter {
     var image: UIImage? { get }
+}
+
+protocol TextPresenter {
+    var text: String? { get }
     var font: UIFont { get }
 }
 
 class ImageInstruction: NSTextAttachment, ImagePresenter {
     var font: UIFont = UIFont.systemFont(ofSize: UIFont.systemFontSize)
+    var text: String?
     
     override func attachmentBounds(for textContainer: NSTextContainer?, proposedLineFragment lineFrag: CGRect, glyphPosition position: CGPoint, characterIndex charIndex: Int) -> CGRect {
         guard let image = image else {
@@ -269,12 +274,39 @@ class ImageInstruction: NSTextAttachment, ImagePresenter {
         let yOrigin = (font.capHeight - image.size.height).rounded() / 2
         return CGRect(x: 0, y: yOrigin, width: image.size.width, height: image.size.height)
     }
-
 }
 
+class TextInstruction: ImageInstruction {}
 class ShieldAttachment: ImageInstruction {}
 class GenericShieldAttachment: ShieldAttachment {}
 class ExitAttachment: ImageInstruction {}
+class RoadNameLabelAttachment: TextInstruction {
+    var scale: CGFloat?
+    var color: UIColor?
+
+    var compositeImage: UIImage? {
+        guard let image = image, let text = text, let color = color, let scale = scale else {
+            return nil
+        }
+        
+        var currentImage: UIImage?
+        let textHeight = font.lineHeight
+        let pointY = (image.size.height - textHeight) / 2
+        currentImage = image.insert(text: text as NSString, color: color, font: font, atPoint: CGPoint(x: 0, y: pointY), scale: scale)
+        
+        return currentImage
+    }
+    
+    convenience init(image: UIImage, text: String, color: UIColor, font: UIFont, scale: CGFloat) {
+        self.init()
+        self.image = image
+        self.font = font
+        self.text = text
+        self.color = color
+        self.scale = scale
+        self.image = compositeImage ?? image
+    }
+}
 
 extension CGSize {
     fileprivate static var greatestFiniteSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)

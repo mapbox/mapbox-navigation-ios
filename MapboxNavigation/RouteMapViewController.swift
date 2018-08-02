@@ -777,6 +777,7 @@ extension RouteMapViewController: NavigationViewDelegate {
         let features = mapView.visibleFeatures(at: userPuck, styleLayerIdentifiers: Set([roadLabelLayerIdentifier]))
         var smallestLabelDistance = Double.infinity
         var currentName: String?
+        var currentShieldName: NSAttributedString?
         
         for feature in features {
             var allLines: [MGLPolyline] = []
@@ -804,23 +805,83 @@ extension RouteMapViewController: NavigationViewDelegate {
                 if minDistanceBetweenPoints < smallestLabelDistance {
                     smallestLabelDistance = minDistanceBetweenPoints
                     
-                    if let line = feature as? MGLPolylineFeature, let name = line.attribute(forKey: "name") as? String {
-                        currentName = name
-                    } else if let line = feature as? MGLMultiPolylineFeature, let name = line.attribute(forKey: "name") as? String {
-                        currentName = name
-                    } else {
-                        currentName = nil
+                    if let line = feature as? MGLPolylineFeature {
+                        let roadNameRecord = roadFeature(for: line)
+                        currentShieldName = roadNameRecord.shieldName
+                        currentName = roadNameRecord.roadName
+                    } else if let line = feature as? MGLMultiPolylineFeature {
+                        let roadNameRecord = roadFeature(for: line)
+                        currentShieldName = roadNameRecord.shieldName
+                        currentName = roadNameRecord.roadName
                     }
                 }
             }
         }
         
-        if smallestLabelDistance < 5 && currentName != nil {
-            navigationView.wayNameView.text = currentName
+        let hasWayName = currentName != nil || currentShieldName != nil
+        if smallestLabelDistance < 5 && hasWayName  {
+            if let currentShieldName = currentShieldName {
+                navigationView.wayNameView.attributedText = currentShieldName
+            } else if let currentName = currentName {
+                navigationView.wayNameView.text = currentName
+            }
             navigationView.wayNameView.isHidden = false
         } else {
             navigationView.wayNameView.isHidden = true
         }
+    }
+    
+    private func roadFeature(for line: MGLPolylineFeature) -> (roadName: String?, shieldName: NSAttributedString?) {
+        let roadNameRecord = roadFeatureHelper(ref: line.attribute(forKey: "ref"),
+                                            shield: line.attribute(forKey: "shield"),
+                                            reflen: line.attribute(forKey: "reflen"),
+                                              name: line.attribute(forKey: "name"))
+
+        return (roadName: roadNameRecord.roadName, shieldName: roadNameRecord.shieldName)
+    }
+    
+    private func roadFeature(for line: MGLMultiPolylineFeature) -> (roadName: String?, shieldName: NSAttributedString?) {
+        let roadNameRecord = roadFeatureHelper(ref: line.attribute(forKey: "ref"),
+                                            shield: line.attribute(forKey: "shield"),
+                                            reflen: line.attribute(forKey: "reflen"),
+                                              name: line.attribute(forKey: "name"))
+            
+        return (roadName: roadNameRecord.roadName, shieldName: roadNameRecord.shieldName)
+    }
+    
+    private func roadFeatureHelper(ref: Any?, shield: Any?, reflen: Any?, name: Any?) -> (roadName: String?, shieldName: NSAttributedString?) {
+        var currentShieldName: NSAttributedString?, currentRoadName: String?
+        
+        if let text = ref as? String, let shieldID = shield as? String, let reflenDigit = reflen as? Int {
+            currentShieldName = roadShieldName(for: text, shield: shieldID, reflen: reflenDigit)
+        }
+        
+        if let roadName = name as? String {
+            currentRoadName = roadName
+        }
+        
+        if let compositeShieldImage = currentShieldName, let roadName = currentRoadName {
+            let compositeShield = NSMutableAttributedString(string: " \(roadName)")
+            compositeShield.insert(compositeShieldImage, at: 0)
+            currentShieldName = compositeShield
+        }
+        
+        return (roadName: currentRoadName, shieldName: currentShieldName)
+    }
+    
+    private func roadShieldName(for text: String?, shield: String?, reflen: Int?) -> NSAttributedString? {
+        guard let text = text, let shield = shield, let reflen = reflen else { return nil }
+        
+        let currentShield = HighwayShield.RoadType(rawValue: shield)
+        let textColor = currentShield?.textColor ?? .black
+        let imageName = "\(shield)-\(reflen)"
+        
+        guard let image = mapView.style?.image(forName: imageName) else {
+            return nil
+        }
+        
+        let attachment = RoadNameLabelAttachment(image: image, text: text, color: textColor, font: UIFont.boldSystemFont(ofSize: UIFont.systemFontSize), scale: UIScreen.main.scale)
+        return NSAttributedString(attachment: attachment)
     }
     
     @objc func updateETA() {
