@@ -18,6 +18,8 @@ open class EventsManager: NSObject {
     
     weak var routeController: Router!
     
+    private var didSendCancelEvent = false
+    
     /// :nodoc: This is used internally when the navigation UI is being used
     var usesDefaultUserInterface = false
     
@@ -38,6 +40,23 @@ open class EventsManager: NSObject {
         if let tokenOverride = possibleToken {
             accessToken = tokenOverride
         }
+        
+        resumeNotifications()
+    }
+    
+    deinit {
+        suspendNotifications()
+    }
+    
+    private func resumeNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillTerminate(_:)), name: .UIApplicationWillTerminate, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didChangeOrientation(_:)), name: .UIDeviceOrientationDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didChangeApplicationState(_:)), name: .UIApplicationWillEnterForeground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didChangeApplicationState(_:)), name: .UIApplicationDidEnterBackground, object: nil)
+    }
+    
+    private func suspendNotifications() {
+        NotificationCenter.default.removeObserver(self)
     }
     
     /**
@@ -257,25 +276,30 @@ extension EventsManager {
     }
     
     //MARK: - Session State Management
-    @objc(reportChangeToOrientation:)
-    public func reportChange(to orientation: UIDeviceOrientation) {
-        sessionState.reportChange(to: orientation)
+    @objc private func didChangeOrientation(_ notification: NSNotification) {
+        sessionState.reportChange(to: UIDevice.current.orientation)
     }
     
-    @objc(reportChangeToApplicationState:)
-    public func reportChange(to applicationState: UIApplicationState) {
-        sessionState.reportChange(to: applicationState)
+    @objc private func didChangeApplicationState(_ notification: NSNotification) {
+        sessionState.reportChange(to: UIApplication.shared.applicationState)
     }
     
-    @objc(reportRerouteTo:proactive:)
-    public func reportReroute(newRoute: Route, proactive: Bool) {
+    @objc private func applicationWillTerminate(_ notification: NSNotification) {
+        if !didSendCancelEvent {
+            sendCancelEvent(rating: nil, comment: nil)
+            didSendCancelEvent = true
+        }
+        
+        sendOutstandingFeedbackEvents(forceAll: true)
+    }
+    
+    func reportReroute(newRoute: Route, proactive: Bool) {
         if (proactive) {
             _ = enqueueFoundFasterRouteEvent()
         }
         let latestReroute = outstandingFeedbackEvents.compactMap({ $0 as? RerouteEvent }).last
         latestReroute?.update(newRoute: newRoute)
     }
-    
     
     @objc func update(progress: RouteProgress) {
         if sessionState.departureTimestamp == nil {
@@ -291,7 +315,4 @@ extension EventsManager {
         
         sendOutstandingFeedbackEvents(forceAll: false)
     }
-
-    
-    
 }

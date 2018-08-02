@@ -110,8 +110,6 @@ open class RouteController: NSObject, Router {
 
     var userSnapToStepDistanceFromManeuver: CLLocationDistance?
     
-    private var didSendCancelEvent = false
-    
     /**
      Intializes a new `RouteController`.
 
@@ -157,24 +155,14 @@ open class RouteController: NSObject, Router {
     }
 
     func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(didReceiveTerminationWarning), name: .UIApplicationWillTerminate, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(didChangeOrientation), name: .UIDeviceOrientationDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(didChangeApplicationState), name: .UIApplicationWillEnterForeground, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(didChangeApplicationState), name: .UIApplicationDidEnterBackground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillTerminate(_:)), name: .UIApplicationWillTerminate, object: nil)
     }
 
     func suspendNotifications() {
         NotificationCenter.default.removeObserver(self)
     }
 
-    @objc func didChangeOrientation() {
-        eventsManager.reportChange(to: UIDevice.current.orientation)
-    }
-
-    @objc func didChangeApplicationState() {
-        eventsManager.reportChange(to: UIApplication.shared.applicationState)
-    }
-    @objc private func didReceiveTerminationWarning() {
+    @objc private func applicationWillTerminate(_ notification: NSNotification) {
         endNavigation()
     }
     
@@ -202,13 +190,7 @@ open class RouteController: NSObject, Router {
      Ends the current navigation session.
      */
     @objc public func endNavigation(feedback: EndOfRouteFeedback? = nil) {
-        if !didSendCancelEvent {
-            eventsManager.sendCancelEvent(rating: feedback?.rating, comment: feedback?.comment)
-            didSendCancelEvent = true
-        }
-        
         suspendLocationUpdates()
-        eventsManager.sendOutstandingFeedbackEvents(forceAll: true)
         suspendNotifications()
     }
 
