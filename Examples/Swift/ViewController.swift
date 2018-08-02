@@ -215,8 +215,6 @@ class ViewController: UIViewController, MGLMapViewDelegate {
 
         guard let customViewController = storyboard?.instantiateViewController(withIdentifier: "custom") as? CustomViewController else { return }
 
-        exampleMode = .custom
-
         customViewController.userRoute = route
 
         let destination = MGLPointAnnotation()
