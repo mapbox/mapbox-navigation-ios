@@ -37,6 +37,9 @@
 		3512C7C81FB0A0C100CDD2A3 /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3512C7C71FB0A0C100CDD2A3 /* UIViewController.swift */; };
 		3513E90520E53E30006ED523 /* MapboxNavigationNative.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 350D084B20DA43F8007C6D6D /* MapboxNavigationNative.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3513E90820E53E9A006ED523 /* MapboxNavigationNative.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 350D084B20DA43F8007C6D6D /* MapboxNavigationNative.framework */; };
+		3513E90A20E57E9D006ED523 /* Routable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3513E90920E57E9D006ED523 /* Routable.swift */; };
+		3513E90C20E57EC7006ED523 /* NativeRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3513E90B20E57EC7006ED523 /* NativeRouteController.swift */; };
+		3513E90E20E65B19006ED523 /* SessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3513E90D20E65B19006ED523 /* SessionState.swift */; };
 		351927361F0FA072003A702D /* ScreenCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351927351F0FA072003A702D /* ScreenCapture.swift */; };
 		351BEBF11E5BCC63006FE110 /* MGLMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBDF1E5BCC63006FE110 /* MGLMapView.swift */; };
 		351BEBF21E5BCC63006FE110 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBE01E5BCC63006FE110 /* Style.swift */; };
@@ -131,6 +134,7 @@
 		359D283C1F9DC14F00FDE9C9 /* UICollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359D283B1F9DC14F00FDE9C9 /* UICollectionView.swift */; };
 		35A262B92050A5CD00AEFF6D /* InstructionsBannerViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35A262B82050A5CD00AEFF6D /* InstructionsBannerViewSnapshotTests.swift */; };
 		35A5413B1EFC052700E49846 /* RouteOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35A5413A1EFC052700E49846 /* RouteOptions.swift */; };
+		35ACF87E211357D7001500C6 /* MapboxCoreNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */; };
 		35B1AEBC20AD9B3C00C8544E /* LeaksSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B1AEBB20AD9B3C00C8544E /* LeaksSpec.swift */; };
 		35B1AEBE20AD9C7800C8544E /* LeakTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B1AEBD20AD9C7800C8544E /* LeakTest.swift */; };
 		35B1E2951F1FF8EC00A13D32 /* UserCourseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B1E2941F1FF8EC00A13D32 /* UserCourseView.swift */; };
@@ -460,6 +464,9 @@
 		351030101F54B72000E3B7E7 /* route-for-lane-testing.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "route-for-lane-testing.json"; sourceTree = "<group>"; };
 		351174F31EF1C0530065E248 /* ReplayLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplayLocationManager.swift; sourceTree = "<group>"; };
 		3512C7C71FB0A0C100CDD2A3 /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
+		3513E90920E57E9D006ED523 /* Routable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Routable.swift; sourceTree = "<group>"; };
+		3513E90B20E57EC7006ED523 /* NativeRouteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeRouteController.swift; sourceTree = "<group>"; };
+		3513E90D20E65B19006ED523 /* SessionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionState.swift; sourceTree = "<group>"; };
 		35190E911F461A32007C1393 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
 		35190E921F461A32007C1393 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
 		35190E931F461A32007C1393 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Navigation.strings; sourceTree = "<group>"; };
@@ -814,6 +821,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3513E90820E53E9A006ED523 /* MapboxNavigationNative.framework in Frameworks */,
+				35ACF87E211357D7001500C6 /* MapboxCoreNavigation.framework in Frameworks */,
 				35E9B0AD1F9E0F8F00BF84AB /* MapboxNavigation.framework in Frameworks */,
 				354A01CF1E66266100D765C2 /* MapboxDirections.framework in Frameworks */,
 				C57607B11F4CC9E800C27423 /* Solar.framework in Frameworks */,
@@ -1280,6 +1288,9 @@
 				C5ADFBFB1DDCC9AD0011824B /* RouteProgress.swift */,
 				353E69031EF0C4E5007B2AE5 /* SimulatedLocationManager.swift */,
 				C5E7A31B1F4F6828001CB015 /* NavigationRouteOptions.swift */,
+				3513E90920E57E9D006ED523 /* Routable.swift */,
+				3513E90B20E57EC7006ED523 /* NativeRouteController.swift */,
+				3513E90D20E65B19006ED523 /* SessionState.swift */,
 			);
 			path = MapboxCoreNavigation;
 			sourceTree = "<group>";
@@ -2001,6 +2012,7 @@
 				DADAD829203504C6002E25CA /* MBNavigationSettings.m in Sources */,
 				35A5413B1EFC052700E49846 /* RouteOptions.swift in Sources */,
 				353E69041EF0C4E5007B2AE5 /* SimulatedLocationManager.swift in Sources */,
+				3513E90A20E57E9D006ED523 /* Routable.swift in Sources */,
 				AE8B1B95207BFAEF003050F6 /* TunnelIntersectionManager.swift in Sources */,
 				3538421820DBEF4C00921CAB /* MBFixLocation.swift in Sources */,
 				DAFA92071F01735000A7FB09 /* DistanceFormatter.swift in Sources */,
@@ -2012,7 +2024,9 @@
 				64847A041F04629D003F3A69 /* Feedback.swift in Sources */,
 				C58D6BAD1DDCF2AE00387F53 /* Constants.swift in Sources */,
 				35C77F621FE8219900338416 /* NavigationSettings.swift in Sources */,
+				3513E90C20E57EC7006ED523 /* NativeRouteController.swift in Sources */,
 				C51DF8661F38C31C006C6A15 /* Locale.swift in Sources */,
+				3513E90E20E65B19006ED523 /* SessionState.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
