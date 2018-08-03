@@ -2,8 +2,8 @@
 
 ## master
 
-* Fixed banner stuck on rerouting past the reroute threshold when navigation is set to simulation mode. ([#1583](https://github.com/mapbox/mapbox-navigation-ios/pull/1583))
-* Modified the current road name displayed with new map attribute fields. We use the road feature `ref` attribute's `shield` and `reflen` to retrieve the shield image presented next to the current road name. ([#1576](https://github.com/mapbox/mapbox-navigation-ios/pull/1576)) 
+* Fixed an issue where the banner was stuck on rerouting past the reroute threshold, when navigation was set to simulation mode. ([#1583](https://github.com/mapbox/mapbox-navigation-ios/pull/1583))
+* Modified the label at the bottom of the map to display the route shield in addition to the road name. ([#1576](https://github.com/mapbox/mapbox-navigation-ios/pull/1576)) 
 
 ## v0.19.0 (July, 24, 2018)
 
