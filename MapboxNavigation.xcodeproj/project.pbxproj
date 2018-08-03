@@ -119,7 +119,6 @@
 		35718BE71EF3194200AFA3D1 /* tunnel.json in Resources */ = {isa = PBXBuildFile; fileRef = 35718BE41EF316BA00AFA3D1 /* tunnel.json */; };
 		35718BE81EF3194500AFA3D1 /* tunnel.route in Resources */ = {isa = PBXBuildFile; fileRef = 35718BE31EF316BA00AFA3D1 /* tunnel.route */; };
 		35726EE81F0856E900AFA1B6 /* DayStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35726EE71F0856E900AFA1B6 /* DayStyle.swift */; };
-		3582A24E20EEC4420029C5DE /* NavigationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3582A24D20EEC4420029C5DE /* NavigationService.swift */; };
 		3582A25020EEC46B0029C5DE /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3582A24F20EEC46B0029C5DE /* Router.swift */; };
 		3582A25220EFA9680029C5DE /* RouteControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3582A25120EFA9680029C5DE /* RouteControllerDelegate.swift */; };
 		358D14661E5E3B7700ADE590 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358D14651E5E3B7700ADE590 /* AppDelegate.swift */; };
@@ -531,7 +530,6 @@
 		35726EE71F0856E900AFA1B6 /* DayStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayStyle.swift; sourceTree = "<group>"; };
 		357F0DF01EB9D99F00A0B53C /* sv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
 		357F0DF11EB9DAB400A0B53C /* vi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Localizable.strings; sourceTree = "<group>"; };
-		3582A24D20EEC4420029C5DE /* NavigationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationService.swift; sourceTree = "<group>"; };
 		3582A24F20EEC46B0029C5DE /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		3582A25120EFA9680029C5DE /* RouteControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteControllerDelegate.swift; sourceTree = "<group>"; };
 		358D14631E5E3B7700ADE590 /* Example-Swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Example-Swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1061,16 +1059,6 @@
 			path = Fixtures;
 			sourceTree = "<group>";
 		};
-		3582A24C20EEC42E0029C5DE /* Navigation */ = {
-			isa = PBXGroup;
-			children = (
-				3582A24D20EEC4420029C5DE /* NavigationService.swift */,
-				3582A24F20EEC46B0029C5DE /* Router.swift */,
-				3582A25120EFA9680029C5DE /* RouteControllerDelegate.swift */,
-			);
-			name = Navigation;
-			sourceTree = "<group>";
-		};
 		358D14641E5E3B7700ADE590 /* Swift */ = {
 			isa = PBXGroup;
 			children = (
@@ -1287,28 +1275,29 @@
 		C5ADFBCB1DDCC7840011824B /* MapboxCoreNavigation */ = {
 			isa = PBXGroup;
 			children = (
-				3582A24C20EEC42E0029C5DE /* Navigation */,
 				354A9BC920EA9BC100F03325 /* Events */,
-				C53C196A1F38E9C1008DB406 /* Resources */,
 				C56173591F182103005954F6 /* Extensions */,
+				C53C196A1F38E9C1008DB406 /* Resources */,
 				C5ADFBCC1DDCC7840011824B /* MapboxCoreNavigation.h */,
-				C5ADFBCD1DDCC7840011824B /* Info.plist */,
 				DADAD826203504C6002E25CA /* MBNavigationSettings.h */,
+				35D457A61E2D253100A89946 /* MBRouteController.h */,
 				DADAD827203504C6002E25CA /* MBNavigationSettings.m */,
-				35375EC01F31FA86004CE727 /* NavigationSettings.swift */,
+				35B839481E2E3D5D0045A868 /* MBRouteController.m */,
+				C5ADFBCD1DDCC7840011824B /* Info.plist */,
 				C58D6BAC1DDCF2AE00387F53 /* Constants.swift */,
 				351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */,
-				353E68FB1EF0B7F8007B2AE5 /* NavigationLocationManager.swift */,
-				351174F31EF1C0530065E248 /* ReplayLocationManager.swift */,
-				35D457A61E2D253100A89946 /* MBRouteController.h */,
-				35B839481E2E3D5D0045A868 /* MBRouteController.m */,
-				C5ADFBF91DDCC9580011824B /* RouteController.swift */,
 				8DCE104F210FC5880048B0FB /* EndOfRouteFeedback.swift */,
-				AE09EC13207BD88200782A33 /* TunnelIntersectionManager.swift */,
 				64847A031F04629D003F3A69 /* Feedback.swift */,
-				C5ADFBFB1DDCC9AD0011824B /* RouteProgress.swift */,
-				353E69031EF0C4E5007B2AE5 /* SimulatedLocationManager.swift */,
+				353E68FB1EF0B7F8007B2AE5 /* NavigationLocationManager.swift */,
 				C5E7A31B1F4F6828001CB015 /* NavigationRouteOptions.swift */,
+				35375EC01F31FA86004CE727 /* NavigationSettings.swift */,
+				351174F31EF1C0530065E248 /* ReplayLocationManager.swift */,
+				C5ADFBF91DDCC9580011824B /* RouteController.swift */,
+				3582A25120EFA9680029C5DE /* RouteControllerDelegate.swift */,
+				C5ADFBFB1DDCC9AD0011824B /* RouteProgress.swift */,
+				3582A24F20EEC46B0029C5DE /* Router.swift */,
+				353E69031EF0C4E5007B2AE5 /* SimulatedLocationManager.swift */,
+				AE09EC13207BD88200782A33 /* TunnelIntersectionManager.swift */,
 			);
 			path = MapboxCoreNavigation;
 			sourceTree = "<group>";
@@ -2022,7 +2011,6 @@
 				35BF8CA21F28EB60003F6125 /* Array.swift in Sources */,
 				3582A25220EFA9680029C5DE /* RouteControllerDelegate.swift in Sources */,
 				353E68FC1EF0B7F8007B2AE5 /* NavigationLocationManager.swift in Sources */,
-				3582A24E20EEC4420029C5DE /* NavigationService.swift in Sources */,
 				353E68FE1EF0B985007B2AE5 /* BundleAdditions.swift in Sources */,
 				354A9BCD20EA9C8100F03325 /* CoreFeedbackEvent.swift in Sources */,
 				3582A25020EEC46B0029C5DE /* Router.swift in Sources */,
