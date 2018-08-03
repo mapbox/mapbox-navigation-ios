@@ -1,6 +1,5 @@
 import UIKit
-import Mapbox
-import UserNotifications
+import MapboxNavigation
 import CarPlay
 
 @UIApplicationMain
@@ -9,17 +8,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CPApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        
+
         if isRunningTests() {
             window!.rootViewController = UIViewController()
-        } else {
-            if #available(iOS 10.0, *) {
-                DispatchQueue.main.async {
-                    UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .alert, .sound]) { _,_ in
-
-                    }
-                }
-            }
         }
         return true
     }
@@ -45,32 +36,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CPApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-    
+
     var _carWindow: UIWindow?
     var _interfaceController: NSObject?
-    
+
     @available(iOS 12.0, *)
     var interfaceController: CPInterfaceController? {
         return _interfaceController as? CPInterfaceController
     }
-    
+
     @available(iOS 12.0, *)
     var carWindow: CPWindow? {
         return _carWindow as? CPWindow
     }
-    
+
     @available(iOS 12.0, *)
     func application(_ application: UIApplication, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPWindow) {
         let mapTemplate = CPMapTemplate()
         let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "mainMap") as! ViewController
-        
+
         self._interfaceController = interfaceController
         self._carWindow = window
-        
+
         interfaceController.setRootTemplate(mapTemplate, animated: false)
         window.rootViewController = viewController
     }
-    
+
     @available(iOS 12.0, *)
     func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPWindow) {
         print("Disconnected")
