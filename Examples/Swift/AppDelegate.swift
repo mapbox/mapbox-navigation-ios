@@ -13,9 +13,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CPApplicationDelegate {
         if isRunningTests() {
             window!.rootViewController = UIViewController()
         } else {
-            DispatchQueue.main.async {
-                UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .alert, .sound]) { _,_ in
+            if #available(iOS 10.0, *) {
+                DispatchQueue.main.async {
+                    UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .alert, .sound]) { _,_ in
 
+                    }
                 }
             }
         }
