@@ -81,8 +81,8 @@ class NavigationViewControllerTests: XCTestCase {
         routeController.locationManager(routeController.locationManager, didUpdateLocations: [taylorStreetLocation])
         
         let wayNameView = (navigationViewController.mapViewController?.navigationView.wayNameView)!
-        let currentRoadName = wayNameView.text!
-        XCTAssertEqual(currentRoadName, roadName, "Expected: \(roadName); Actual: \(currentRoadName)")
+        let currentRoadName = wayNameView.text
+        XCTAssertEqual(currentRoadName, roadName, "Expected: \(roadName); Actual: \(String(describing: currentRoadName))")
         XCTAssertFalse(wayNameView.isHidden, "WayNameView should be visible.")
     }
     
@@ -147,8 +147,8 @@ class NavigationViewControllerTests: XCTestCase {
         routeController.locationManager(routeController.locationManager, didUpdateLocations: [turkStreetLocation])
         
         let wayNameView = (navigationViewController.mapViewController?.navigationView.wayNameView)!
-        let currentRoadName = wayNameView.text!
-        XCTAssertEqual(currentRoadName, roadName, "Expected: \(roadName); Actual: \(currentRoadName)")
+        let currentRoadName = wayNameView.text
+        XCTAssertEqual(currentRoadName, roadName, "Expected: \(roadName); Actual: \(String(describing: currentRoadName))")
         XCTAssertTrue(wayNameView.isHidden, "WayNameView should be hidden.")
     }
     
@@ -159,9 +159,7 @@ class NavigationViewControllerTests: XCTestCase {
         // We break the communication between CLLocation and MBRouteController
         // Intent: Prevent the routecontroller from being fed real location updates
         navigationViewController.routeController.locationManager.delegate = nil
-        
-        UIApplication.shared.delegate!.window!!.addSubview(navigationViewController.view)
-        
+
         let routeController = navigationViewController.routeController!
         
         // Identify a location without a custom road name.
