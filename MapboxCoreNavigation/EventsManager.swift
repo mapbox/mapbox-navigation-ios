@@ -18,8 +18,6 @@ open class EventsManager: NSObject {
     
     weak var routeController: Router!
     
-    private var didSendCancelEvent = false
-    
     /// :nodoc: This is used internally when the navigation UI is being used
     var usesDefaultUserInterface = false
     
@@ -163,6 +161,7 @@ extension EventsManager {
         guard let attributes = try? navigationCancelEvent(rating: rating, comment: comment).asDictionary() else { return }
         manager.enqueueEvent(withName: MMEEventTypeNavigationCancel, attributes: attributes)
         manager.flush()
+        sessionState.didSendCancelEvent = true
     }
     
     func sendFeedbackEvents(_ events: [CoreFeedbackEvent]) {
@@ -285,9 +284,8 @@ extension EventsManager {
     }
     
     @objc private func applicationWillTerminate(_ notification: NSNotification) {
-        if !didSendCancelEvent {
+        if !sessionState.didSendCancelEvent {
             sendCancelEvent(rating: nil, comment: nil)
-            didSendCancelEvent = true
         }
         
         sendOutstandingFeedbackEvents(forceAll: true)

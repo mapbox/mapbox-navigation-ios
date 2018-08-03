@@ -17,6 +17,8 @@ struct SessionState {
     var currentRoute: Route
     var originalRoute: Route
     
+    var didSendCancelEvent = false
+    
     private(set) var timeSpentInPortrait: TimeInterval = 0
     private(set) var timeSpentInLandscape: TimeInterval = 0
     
