@@ -57,7 +57,7 @@ class NavigationViewControllerTests: XCTestCase {
         let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 38.901166, longitude: -77.036548))
         let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 38.900206, longitude: -77.033792))
         let options = NavigationRouteOptions(waypoints: [waypoint1, waypoint2])
-        options.shapeFormat = .geoJSON
+        options.shapeFormat = .polyline
         let route     = Route(json: jsonRoute, waypoints: [waypoint1, waypoint2], options: options)
         
         route.accessToken = "bar"
@@ -181,7 +181,7 @@ class NavigationViewControllerTests: XCTestCase {
     func testDestinationAnnotationUpdatesUponReroute() {
         let styleLoaded = XCTestExpectation(description: "Style Loaded")
         let navigationViewController = NavigationViewControllerTestable(for: initialRoute, styles: [TestableDayStyle()], styleLoaded: styleLoaded)
-        
+        //
         //wait for the style to load -- routes won't show without it.
         wait(for: [styleLoaded], timeout: 5)
         navigationViewController.route = initialRoute

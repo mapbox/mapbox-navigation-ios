@@ -5,7 +5,7 @@ import Turf
 
 let waitForInterval: TimeInterval = 5
 let directions = Directions(accessToken: "pk.feedCafeDeadBeefBadeBede")
-let route = Route(json: jsonRoute, waypoints: [waypoint1, waypoint2], options: NavigationRouteOptions(waypoints: [waypoint1, waypoint2]))
+let response = Fixture.JSONFromFileNamed(name: "routeWithInstructions")
 
 var route: Route = {
     let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String : Any]
