@@ -161,7 +161,6 @@ extension EventsManager {
         guard let attributes = try? navigationCancelEvent(rating: rating, comment: comment).asDictionary() else { return }
         manager.enqueueEvent(withName: MMEEventTypeNavigationCancel, attributes: attributes)
         manager.flush()
-        sessionState.didSendCancelEvent = true
     }
     
     func sendFeedbackEvents(_ events: [CoreFeedbackEvent]) {
@@ -284,8 +283,9 @@ extension EventsManager {
     }
     
     @objc private func applicationWillTerminate(_ notification: NSNotification) {
-        if !sessionState.didSendCancelEvent {
+        if !sessionState.terminated {
             sendCancelEvent(rating: nil, comment: nil)
+            sessionState.terminated = true
         }
         
         sendOutstandingFeedbackEvents(forceAll: true)
