@@ -5,7 +5,7 @@
 @import MapboxDirections;
 
 @interface BridgingTests : XCTestCase
-    
+@property (nonatomic) MBRouteController *routeController;
 @end
 
 @implementation BridgingTests
@@ -24,17 +24,19 @@
     MBRoute *route = [[MBRoute alloc] initWithJSON:routeDict waypoints:waypoints routeOptions:options];
     route.accessToken = @"garbage";
     XCTAssertNotNil(route);
-    MBEventsManagerSpy *eventsManager = [[MBEventsManagerSpy alloc] init];
+    MBEventsManager *eventsManager = [[MBEventsManager alloc] initWithAccessToken:route.accessToken];
+    eventsManager.manager = [[MBEventsManagerSpy alloc] init];
+    
     MBDirectionsSpy *directions = [[MBDirectionsSpy alloc] initWithAccessToken:@"garbage" host:nil];
     MBNavigationLocationManager *locationManager = [[MBNavigationLocationManager alloc] init];
-    MBRouteController *routeController = [[MBRouteController alloc] initWithRoute:route directions:directions locationManager:locationManager eventsManager:eventsManager];
-    XCTAssertNotNil(routeController);
+    _routeController = [[MBRouteController alloc] initWithRoute:route directions:directions locationManager:locationManager eventsManager:eventsManager];
+    XCTAssertNotNil(_routeController);
     
     XCTestExpectation *expectation = [self expectationForNotification:MBRouteControllerDidRerouteNotification object:nil handler:^BOOL(NSNotification * _Nonnull notification) {
         return YES;
     }];
     
-    routeController.routeProgress = [[MBRouteProgress alloc] initWithRoute:route legIndex:0 spokenInstructionIndex:0];
+    _routeController.routeProgress = [[MBRouteProgress alloc] initWithRoute:route legIndex:0 spokenInstructionIndex:0];
     [self waitForExpectations:@[expectation] timeout:5];
 }
     

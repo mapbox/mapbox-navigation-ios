@@ -36,8 +36,6 @@ public var RouteControllerManeuverZoneRadius: CLLocationDistance = 40
  */
 public var RouteControllerDeadReckoningTimeInterval: TimeInterval = 1.0
 
-
-
 /**
  :nodoc This is used internally for debugging metrics
  */
@@ -122,3 +120,53 @@ public var RouteControllerMinimumSpeedAtTunnelEntranceRadius: CLLocationSpeed = 
  When calculating the user's snapped location, this constant will be used for deciding upon which step coordinates to include in the calculation.
  */
 public var RouteControllerMaximumSpeedForUsingCurrentStep: CLLocationSpeed = 1
+
+/**
+ Keys in the user info dictionaries of various notifications posted by instances
+ of `RouteController`.
+ */
+public typealias RouteControllerNotificationUserInfoKey = MBRouteControllerNotificationUserInfoKey
+
+extension Notification.Name {
+    /**
+     Posted when `RouteController` fails to reroute the user after the user diverges from the expected route.
+     
+     The user info dictionary contains the key `RouteControllerNotificationUserInfoKey.errorKey`.
+     */
+    public static let routeControllerDidFailToReroute = MBRouteControllerDidFailToReroute
+    
+    /**
+     Posted after the user diverges from the expected route, just before `RouteController` attempts to calculate a new route.
+     
+     The user info dictionary contains the key `RouteControllerNotificationUserInfoKey.locationKey`.
+     */
+    public static let routeControllerWillReroute = MBRouteControllerWillReroute
+    
+    /**
+     Posted when `RouteController` obtains a new route in response to the user diverging from a previous route.
+     
+     The user info dictionary contains the keys `RouteControllerNotificationUserInfoKey.locationKey` and `RouteControllerNotificationUserInfoKey.isProactiveKey`.
+     */
+    public static let routeControllerDidReroute = MBRouteControllerDidReroute
+    
+    /**
+     Posted when `RouteController` receives a user location update representing movement along the expected route.
+     
+     The user info dictionary contains the keys `RouteControllerNotificationUserInfoKey.routeProgressKey`, `RouteControllerNotificationUserInfoKey.locationKey`, and `RouteControllerNotificationUserInfoKey.rawLocationKey`.
+     */
+    public static let routeControllerProgressDidChange = MBRouteControllerProgressDidChange
+    
+    /**
+     Posted when `RouteController` detects that the user has passed an ideal point for saying an instruction aloud.
+     
+     The user info dictionary contains the key `RouteControllerNotificationUserInfoKey.routeProgressKey`.
+     */
+    public static let routeControllerDidPassSpokenInstructionPoint = MBRouteControllerDidPassSpokenInstructionPoint
+    
+    /**
+     Posted when `RouteController` detects that the user has passed an ideal point for displaying an instruction.
+     
+     The user info dictionary contains the key `RouteControllerNotificationUserInfoKey.routeProgressKey`.
+     */
+    public static let routeControllerDidPassVisualInstructionPoint = MBRouteControllerDidPassVisualInstructionPoint
+}
