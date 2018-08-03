@@ -4,7 +4,7 @@ import MapboxMobileEvents
 typealias MockTelemetryEvent = (name: String, attributes: [String: Any])
 
 @objc(MBEventsManagerSpy)
-class EventsManagerSpy: MMEEventsManager {
+class MMEEventsManagerSpy: MMEEventsManager {
 
     private var enqueuedEvents = [MockTelemetryEvent]()
     private var flushedEvents = [MockTelemetryEvent]()

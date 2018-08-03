@@ -411,6 +411,15 @@ open class WayNameView: UIView {
         }
     }
     
+    var attributedText: NSAttributedString? {
+        get {
+            return label.attributedText
+        }
+        set {
+            label.attributedText = newValue
+        }
+    }
+    
     @objc dynamic public var borderColor: UIColor? {
         get {
             guard let color = layer.borderColor else { return nil }

@@ -128,20 +128,21 @@ open class MapboxVoiceController: RouteVoiceController {
             options.locale = locale
         }
         
-        audioTask = speech.audioData(with: options) { (data, error) in
+        audioTask = speech.audioData(with: options) { [weak self] (data, error) in
+            guard let strongSelf = self else { return }
             if let error = error as? URLError, error.code == .cancelled {
                 return
             } else if let error = error {
-                self.speakWithDefaultSpeechSynthesizer(instruction, error: error)
+                strongSelf.speakWithDefaultSpeechSynthesizer(instruction, error: error)
                 return
             }
             
             guard let data = data else {
-                self.speakWithDefaultSpeechSynthesizer(instruction, error: NSError(code: .spokenInstructionFailed, localizedFailureReason: self.localizedErrorMessage, spokenInstructionCode: .emptyMapboxSpeechResponse))
+                strongSelf.speakWithDefaultSpeechSynthesizer(instruction, error: NSError(code: .spokenInstructionFailed, localizedFailureReason: strongSelf.localizedErrorMessage, spokenInstructionCode: .emptyMapboxSpeechResponse))
                 return
             }
-            self.play(data)
-            self.cache(data, forKey: ssmlText)
+            strongSelf.play(data)
+            strongSelf.cache(data, forKey: ssmlText)
         }
         
         audioTask?.resume()
@@ -161,11 +162,11 @@ open class MapboxVoiceController: RouteVoiceController {
             options.locale = locale
         }
 
-        speech.audioData(with: options) { (data, error) in
+        speech.audioData(with: options) { [weak self] (data, error) in
             guard let data = data else {
                 return
             }
-            self.cache(data, forKey: ssmlText)
+            self?.cache(data, forKey: ssmlText)
         }
     }
 
