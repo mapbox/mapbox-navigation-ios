@@ -244,10 +244,12 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         
         let feedbackButtonHandler: (_: CPGridButton) -> Void = { [weak self] (button) in
             self?.carInterfaceController.popTemplate(animated: true)
-            guard let uuid = self?.routeController.recordFeedback() else { return }
+
+            //TODO: fix this Demeter violation with proper encapsulation
+            guard let uuid = self?.routeController.eventsManager.recordFeedback() else { return }
             let foundItem = feedbackItems.filter { $0.image == button.image }
             guard let feedbackItem = foundItem.first else { return }
-            self?.routeController.updateFeedback(uuid: uuid, type: feedbackItem.feedbackType, source: .user, description: nil)
+            self?.routeController.eventsManager.updateFeedback(uuid: uuid, type: feedbackItem.feedbackType, source: .user, description: nil)
             
             let action = CPAlertAction(title: "Dismiss", style: .default, handler: {_ in })
             let alert = CPNavigationAlert(titleVariants: ["Submitted"], subtitleVariants: nil, imageSet: nil, primaryAction: action, secondaryAction: nil, duration: 2.5)
@@ -263,7 +265,8 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     
     func createEndOfRouteFeedbackUI() -> CPGridTemplate {
         let buttonHandler: (_: CPGridButton) -> Void = { [weak self] (button) in
-            self?.routeController.setEndOfRoute(rating: Int(button.titleVariants.first!.components(separatedBy: CharacterSet.decimalDigits.inverted).joined())!, comment: nil)
+            //TODO: no such method exists, and the replacement candidate ignores the feedback sent, so ... ?
+//            self?.routeController.setEndOfRoute(rating: Int(button.titleVariants.first!.components(separatedBy: CharacterSet.decimalDigits.inverted).joined())!, comment: nil)
             self?.carInterfaceController.popTemplate(animated: true)
             self?.exitNavigation()
         }
