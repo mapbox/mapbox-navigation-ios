@@ -36,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CPApplicationDelegate {
 
     @available(iOS 12.0, *)
     func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPWindow) {
-        carPlayManager.application(application, didConnectCarInterfaceController: interfaceController, to: window)
+        carPlayManager.application(application, didDisconnectCarInterfaceController: interfaceController, from: window)
     }
 
 }
