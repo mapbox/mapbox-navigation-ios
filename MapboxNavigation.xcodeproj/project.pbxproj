@@ -315,13 +315,6 @@
 			remoteGlobalIDString = C5ADFBC81DDCC7840011824B;
 			remoteInfo = MapboxCoreNavigation;
 		};
-		352BBC3E1E5E6ADC00703DF1 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 358D14621E5E3B7700ADE590;
-			remoteInfo = "Example-Swift";
-		};
 		352BBC4C1E5E78D700703DF1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
@@ -727,7 +720,6 @@
 		C57607B01F4CC97D00C27423 /* Solar.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Solar.framework; path = Carthage/Build/iOS/Solar.framework; sourceTree = "<group>"; };
 		C578DA071EFD0FFF0052079F /* ProcessInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProcessInfo.swift; sourceTree = "<group>"; };
 		C57AD98920EAA39A0087B24B /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
-		C57AD98B20EAB3990087B24B /* Navigation_Example.mobileprovision */ = {isa = PBXFileReference; lastKnownFileType = file; path = Navigation_Example.mobileprovision; sourceTree = "<group>"; };
 		C58159001EA6D02700FC6C3D /* MGLVectorTileSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MGLVectorTileSource.swift; sourceTree = "<group>"; };
 		C582BA2B2073E77E00647DAA /* StringTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringTests.swift; sourceTree = "<group>"; };
 		C582FD5E203626E900A9086E /* CLLocationDirection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationDirection.swift; sourceTree = "<group>"; };
@@ -1005,7 +997,6 @@
 				35002D601E5F6ADB0090E733 /* Base.lproj */,
 				35002D5D1E5F6ABB0090E733 /* Info.plist */,
 				C57AD98920EAA39A0087B24B /* Entitlements.plist */,
-				C57AD98B20EAB3990087B24B /* Navigation_Example.mobileprovision */,
 			);
 			name = "Supporting files";
 			sourceTree = "<group>";
@@ -1646,7 +1637,6 @@
 			);
 			dependencies = (
 				C5ADFBD51DDCC7840011824B /* PBXTargetDependency */,
-				352BBC3F1E5E6ADC00703DF1 /* PBXTargetDependency */,
 			);
 			name = MapboxCoreNavigationTests;
 			productName = MapboxNavigationTests;
@@ -2246,11 +2236,6 @@
 			isa = PBXTargetDependency;
 			target = C5ADFBC81DDCC7840011824B /* MapboxCoreNavigation */;
 			targetProxy = 3525449B1E663D2C004C8F1C /* PBXContainerItemProxy */;
-		};
-		352BBC3F1E5E6ADC00703DF1 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 358D14621E5E3B7700ADE590 /* Example-Swift */;
-			targetProxy = 352BBC3E1E5E6ADC00703DF1 /* PBXContainerItemProxy */;
 		};
 		352BBC4D1E5E78D700703DF1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
