@@ -163,8 +163,12 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .alert, .sound]) { _,_ in
-            CLLocationManager().requestWhenInUseAuthorization()
+        if #available(iOS 10.0, *) {
+            UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .alert, .sound]) { _,_ in
+                DispatchQueue.main.async {
+                    CLLocationManager().requestWhenInUseAuthorization()
+                }
+            }
         }
     }
 
