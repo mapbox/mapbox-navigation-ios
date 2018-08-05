@@ -100,12 +100,12 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     
     @available(iOS 12.0, *)
     var carViewController: ViewController? {
-        return appDelegate?.carPlayManager.carWindow?.rootViewController as? ViewController
+        return CarPlayManager.shared.carWindow?.rootViewController as? ViewController
     }
     
     @available(iOS 12.0, *)
     var interfaceController: CPInterfaceController? {
-        return appDelegate?.carPlayManager.interfaceController
+        return CarPlayManager.shared.interfaceController
     }
     
     @available(iOS 12.0, *)

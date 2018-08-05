@@ -7,8 +7,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CPApplicationDelegate {
 
     var window: UIWindow?
 
-    let carPlayManager: CarPlayManager = CarPlayManager()
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 
         if isRunningTests() {
@@ -26,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CPApplicationDelegate {
     @available(iOS 12.0, *)
     func application(_ application: UIApplication, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPWindow) {
 
-        carPlayManager.application(application, didConnectCarInterfaceController: interfaceController, to: window)
+        CarPlayManager.shared.application(application, didConnectCarInterfaceController: interfaceController, to: window)
 
         let mapTemplate = CPMapTemplate()
         let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "mainMap") as! ViewController
@@ -36,7 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CPApplicationDelegate {
 
     @available(iOS 12.0, *)
     func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPWindow) {
-        carPlayManager.application(application, didDisconnectCarInterfaceController: interfaceController, from: window)
+        CarPlayManager.shared.application(application, didDisconnectCarInterfaceController: interfaceController, from: window)
     }
 
 }

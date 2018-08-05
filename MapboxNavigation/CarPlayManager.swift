@@ -6,7 +6,7 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate {
     public fileprivate(set) var interfaceController: CPInterfaceController?
     public fileprivate(set) var carWindow: UIWindow?
 
-//    public static let shared = CarPlayManager()
+    public static let shared = CarPlayManager()
 
 
     // MARK: CPApplicationDelegate
