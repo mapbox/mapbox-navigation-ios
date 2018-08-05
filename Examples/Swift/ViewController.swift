@@ -22,8 +22,8 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     // MARK: Properties
     var mapView: NavigationMapView? {
         didSet {
+            oldValue?.removeFromSuperview()
             if let mapView = mapView {
-                oldValue?.removeFromSuperview()
                 configureMapView(mapView)
                 view.insertSubview(mapView, belowSubview: longPressHintView)
             }

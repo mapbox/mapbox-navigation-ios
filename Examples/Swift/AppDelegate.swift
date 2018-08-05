@@ -27,8 +27,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CPApplicationDelegate {
         CarPlayManager.shared.application(application, didConnectCarInterfaceController: interfaceController, to: window)
 
         let mapTemplate = CPMapTemplate()
-        let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "mainMap") as! ViewController
         interfaceController.setRootTemplate(mapTemplate, animated: false)
+        let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "mainMap") as! ViewController
         window.rootViewController = viewController
     }
 

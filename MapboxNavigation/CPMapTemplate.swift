@@ -1,11 +1,3 @@
-//
-//  CPMapTemplate.swift
-//  MapboxNavigation
-//
-//  Created by Bobby Sudekum on 7/2/18.
-//  Copyright © 2018 Mapbox. All rights reserved.
-//
-
 import Foundation
 import CarPlay
 import MapboxDirections

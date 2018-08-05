@@ -4,10 +4,6 @@ import CoreLocation
 import UIKit
 #endif
 
-#if os(iOS)
-import UIKit
-#endif
-
 /**
  `NavigationLocationManager` is the base location manager which handles permissions and background modes.
  */

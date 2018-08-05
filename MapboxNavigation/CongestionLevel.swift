@@ -1,11 +1,3 @@
-//
-//  CongestionLevel.swift
-//  MapboxNavigation
-//
-//  Created by Bobby Sudekum on 6/21/18.
-//  Copyright © 2018 Mapbox. All rights reserved.
-//
-
 import Foundation
 import CarPlay
 import MapboxDirections
