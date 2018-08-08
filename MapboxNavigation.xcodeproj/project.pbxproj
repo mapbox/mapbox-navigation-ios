@@ -22,6 +22,8 @@
 		16C2A421211526EE00FE6E68 /* CarPlayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C2A420211526EE00FE6E68 /* CarPlayManager.swift */; };
 		16E3625C201265D600DF0592 /* ImageDownloadOperationSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E3625B201265D600DF0592 /* ImageDownloadOperationSpy.swift */; };
 		16E4F97F205B05FE00531791 /* MapboxVoiceControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E4F97E205B05FE00531791 /* MapboxVoiceControllerTests.swift */; };
+		16EF6C1E21193A9600AA580B /* CarPlayManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EF6C1D21193A9600AA580B /* CarPlayManagerTests.swift */; };
+		16EF6C22211BA4B300AA580B /* CarPlayMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EF6C21211BA4B300AA580B /* CarPlayMapViewController.swift */; };
 		35002D611E5F6ADB0090E733 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35002D5F1E5F6ADB0090E733 /* Assets.xcassets */; };
 		35002D621E5F6ADB0090E733 /* Base.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 35002D601E5F6ADB0090E733 /* Base.lproj */; };
 		35002D691E5F6B2F0090E733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35002D661E5F6B1B0090E733 /* Main.storyboard */; };
@@ -510,6 +512,8 @@
 		16C2A420211526EE00FE6E68 /* CarPlayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayManager.swift; sourceTree = "<group>"; };
 		16E3625B201265D600DF0592 /* ImageDownloadOperationSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDownloadOperationSpy.swift; sourceTree = "<group>"; };
 		16E4F97E205B05FE00531791 /* MapboxVoiceControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxVoiceControllerTests.swift; sourceTree = "<group>"; };
+		16EF6C1D21193A9600AA580B /* CarPlayManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayManagerTests.swift; sourceTree = "<group>"; };
+		16EF6C21211BA4B300AA580B /* CarPlayMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayMapViewController.swift; sourceTree = "<group>"; };
 		35002D5D1E5F6ABB0090E733 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		35002D5F1E5F6ADB0090E733 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		35002D601E5F6ADB0090E733 /* Base.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Base.lproj; sourceTree = "<group>"; };
@@ -1022,39 +1026,40 @@
 				356B7D8A1EE166E100FE5B89 /* scripts */,
 				351BEC201E5BD4DC006FE110 /* Supporting files */,
 				C51923B51EA55CD4002AF9E1 /* Views */,
-				CFD47D8F20FD85EC00BC1E49 /* MGLAccountManager.swift */,
 				3EA93A10227A7DAF1861D9F5 /* Cache.swift */,
+				16C2A420211526EE00FE6E68 /* CarPlayManager.swift */,
+				16EF6C21211BA4B300AA580B /* CarPlayMapViewController.swift */,
+				C54C655120336F2600D338E0 /* Constants.swift */,
 				160D8278205996DA00D278D6 /* DataCache.swift */,
 				35726EE71F0856E900AFA1B6 /* DayStyle.swift */,
+				35025F3E1F051DD2002BA3EA /* DialogViewController.swift */,
+				8DE879651FBB9980002F06C0 /* EndOfRouteViewController.swift */,
 				C58821FF1FB0F0D7008B0A2D /* Error.swift */,
 				C5D1C9931FB236900067C619 /* ErrorCode.swift */,
+				8D8EA9BB20575CD80077F478 /* FeedbackCollectionViewCell.swift */,
+				35CB1E121F97DD740011CC44 /* FeedbackItem.swift */,
+				35F611C31F1E1C0500C43249 /* FeedbackViewController.swift */,
+				AEC3AC992106703100A26F34 /* HighwayShield.swift */,
 				3EA938479CF48D7AD1B6369B /* ImageCache.swift */,
 				16A509D6202BC0CA0011D788 /* ImageDownload.swift */,
 				3EA934C5D8DBAA19DB0F5271 /* ImageDownloader.swift */,
 				3EA938BE5468824787100228 /* ImageRepository.swift */,
 				3EA93230997B8D59E3B76C8C /* InstructionPresenter.swift */,
 				35D825FD1E6A2EC60088F83B /* MapboxNavigation.h */,
-				C53208AA1E81FFB900910266 /* NavigationMapView.swift */,
-				351BEBEA1E5BCC63006FE110 /* NavigationViewController.swift */,
-				351BEBE41E5BCC63006FE110 /* RouteMapViewController.swift */,
-				8DE879651FBB9980002F06C0 /* EndOfRouteViewController.swift */,
+				C565168A1FE1E23E00A0AD18 /* MapboxVoiceController.swift */,
 				DADAD82C20350849002E25CA /* MBRouteVoiceController.h */,
 				DADAD82D20350849002E25CA /* MBRouteVoiceController.m */,
+				CFD47D8F20FD85EC00BC1E49 /* MGLAccountManager.swift */,
+				C53208AA1E81FFB900910266 /* NavigationMapView.swift */,
+				359D1B271FFE70D30052FA42 /* NavigationView.swift */,
+				351BEBEA1E5BCC63006FE110 /* NavigationViewController.swift */,
+				351BEBE41E5BCC63006FE110 /* RouteMapViewController.swift */,
 				35C9973E1E732C1B00544D1C /* RouteVoiceController.swift */,
-				C565168A1FE1E23E00A0AD18 /* MapboxVoiceController.swift */,
-				35F611C31F1E1C0500C43249 /* FeedbackViewController.swift */,
-				8D8EA9BB20575CD80077F478 /* FeedbackCollectionViewCell.swift */,
-				35025F3E1F051DD2002BA3EA /* DialogViewController.swift */,
-				C5A6B2DC1F4CE8E8004260EA /* StyleType.swift */,
-				35B1E2941F1FF8EC00A13D32 /* UserCourseView.swift */,
-				35CB1E121F97DD740011CC44 /* FeedbackItem.swift */,
 				353EC9D61FB09708002EB0AB /* StepsViewController.swift */,
 				351BEBE01E5BCC63006FE110 /* Style.swift */,
 				353AA55F1FCEF583009F0384 /* StyleManager.swift */,
-				359D1B271FFE70D30052FA42 /* NavigationView.swift */,
-				C54C655120336F2600D338E0 /* Constants.swift */,
-				AEC3AC992106703100A26F34 /* HighwayShield.swift */,
-				16C2A420211526EE00FE6E68 /* CarPlayManager.swift */,
+				C5A6B2DC1F4CE8E8004260EA /* StyleType.swift */,
+				35B1E2941F1FF8EC00A13D32 /* UserCourseView.swift */,
 			);
 			path = MapboxNavigation;
 			sourceTree = "<group>";
@@ -1180,29 +1185,30 @@
 		35B711D01E5E7AD2001EDA8D /* MapboxNavigationTests */ = {
 			isa = PBXGroup;
 			children = (
-				35B711D31E5E7AD2001EDA8D /* Info.plist */,
+				355DB5731EFA73410091BFB7 /* Fixtures */,
+				3527D2B61EC45FBD00C07FC9 /* Fixtures.xcassets */,
+				16E3625A2012656C00DF0592 /* Support */,
+				16EF6C1D21193A9600AA580B /* CarPlayManagerTests.swift */,
+				35022319205BC94E00E1449A /* Constants.swift */,
 				160D827A2059973C00D278D6 /* DataCacheTests.swift */,
-				8D9CD7FD20880581004DC4B3 /* XCTestCase.swift */,
 				1662244A2029059C00EA4824 /* ImageCacheTests.swift */,
 				16A509D4202A87B20011D788 /* ImageDownloaderTests.swift */,
 				166224442025699600EA4824 /* ImageRepositoryTests.swift */,
-				35DC585C1FABC61100B5A956 /* InstructionsBannerViewIntegrationTests.swift */,
+				35B711D31E5E7AD2001EDA8D /* Info.plist */,
 				8D54F149206ECF720038736D /* InstructionPresenterTests.swift */,
+				35DC585C1FABC61100B5A956 /* InstructionsBannerViewIntegrationTests.swift */,
 				35A262B82050A5CD00AEFF6D /* InstructionsBannerViewSnapshotTests.swift */,
 				3510300E1F54B67000E3B7E7 /* LaneTests.swift */,
-				3540514E1F73F3F300ED572D /* ManeuverViewTests.swift */,
-				35B711D11E5E7AD2001EDA8D /* MapboxNavigationTests.swift */,
-				35F1F5921FD57EFD00F8E502 /* StyleManagerTests.swift */,
-				3527D2B61EC45FBD00C07FC9 /* Fixtures.xcassets */,
-				355DB5731EFA73410091BFB7 /* Fixtures */,
-				16E3625A2012656C00DF0592 /* Support */,
-				35022319205BC94E00E1449A /* Constants.swift */,
-				16E4F97E205B05FE00531791 /* MapboxVoiceControllerTests.swift */,
-				AED2156E208F7FEA009AA673 /* NavigationViewControllerTests.swift */,
-				AE00A739209A2C38006A3DC7 /* StepsViewControllerTests.swift */,
 				35B1AEBB20AD9B3C00C8544E /* LeaksSpec.swift */,
 				35B1AEBD20AD9C7800C8544E /* LeakTest.swift */,
+				3540514E1F73F3F300ED572D /* ManeuverViewTests.swift */,
+				35B711D11E5E7AD2001EDA8D /* MapboxNavigationTests.swift */,
+				16E4F97E205B05FE00531791 /* MapboxVoiceControllerTests.swift */,
 				C55C299820D2E2F600B0406C /* NavigationMapViewTests.swift */,
+				AED2156E208F7FEA009AA673 /* NavigationViewControllerTests.swift */,
+				AE00A739209A2C38006A3DC7 /* StepsViewControllerTests.swift */,
+				35F1F5921FD57EFD00F8E502 /* StyleManagerTests.swift */,
+				8D9CD7FD20880581004DC4B3 /* XCTestCase.swift */,
 			);
 			path = MapboxNavigationTests;
 			sourceTree = "<group>";
@@ -1376,16 +1382,16 @@
 				354A9BC920EA9BC100F03325 /* Events */,
 				C56173591F182103005954F6 /* Extensions */,
 				C53C196A1F38E9C1008DB406 /* Resources */,
-				C5ADFBCC1DDCC7840011824B /* MapboxCoreNavigation.h */,
-				DADAD826203504C6002E25CA /* MBNavigationSettings.h */,
-				35D457A61E2D253100A89946 /* MBRouteController.h */,
-				DADAD827203504C6002E25CA /* MBNavigationSettings.m */,
-				35B839481E2E3D5D0045A868 /* MBRouteController.m */,
-				C5ADFBCD1DDCC7840011824B /* Info.plist */,
 				C58D6BAC1DDCF2AE00387F53 /* Constants.swift */,
 				351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */,
 				8DCE104F210FC5880048B0FB /* EndOfRouteFeedback.swift */,
 				64847A031F04629D003F3A69 /* Feedback.swift */,
+				C5ADFBCD1DDCC7840011824B /* Info.plist */,
+				C5ADFBCC1DDCC7840011824B /* MapboxCoreNavigation.h */,
+				DADAD826203504C6002E25CA /* MBNavigationSettings.h */,
+				DADAD827203504C6002E25CA /* MBNavigationSettings.m */,
+				35D457A61E2D253100A89946 /* MBRouteController.h */,
+				35B839481E2E3D5D0045A868 /* MBRouteController.m */,
 				353E68FB1EF0B7F8007B2AE5 /* NavigationLocationManager.swift */,
 				C5E7A31B1F4F6828001CB015 /* NavigationRouteOptions.swift */,
 				35375EC01F31FA86004CE727 /* NavigationSettings.swift */,
@@ -1403,22 +1409,22 @@
 		C5ADFBD61DDCC7840011824B /* MapboxCoreNavigationTests */ = {
 			isa = PBXGroup;
 			children = (
-				16120A4B20645D2C007EA21D /* Support */,
 				C52D09CF1DEF5E5F00BE3C5C /* Fixtures */,
-				C52D09D21DEF636C00BE3C5C /* Fixture.swift */,
-				C5ADFBD71DDCC7840011824B /* MapboxCoreNavigationTests.swift */,
+				16120A4B20645D2C007EA21D /* Support */,
+				35C57D69208DD4A200BDD2A6 /* BridgingTests.m */,
+				C5BF7371206AB0DF00CDBB6D /* CLHeadingPrivate.h */,
 				359A8AEC1FA78D3000BDB486 /* DistanceFormatterTests.swift */,
-				C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */,
+				C52D09D21DEF636C00BE3C5C /* Fixture.swift */,
 				C5ADFBD91DDCC7840011824B /* Info.plist */,
 				359574A91F28CCBB00838209 /* LocationTests.swift */,
-				C5ABB50D20408D2C00AFA92C /* RouteControllerTests.swift */,
-				AE8B1B96207D2B2B003050F6 /* TunnelIntersectionManagerTests.swift */,
-				C5BF7371206AB0DF00CDBB6D /* CLHeadingPrivate.h */,
 				C5BF7370206AB0DE00CDBB6D /* MapboxCoreNavigationTests-Bridging-Header.h */,
-				C582BA2B2073E77E00647DAA /* StringTests.swift */,
-				35C57D69208DD4A200BDD2A6 /* BridgingTests.m */,
+				C5ADFBD71DDCC7840011824B /* MapboxCoreNavigationTests.swift */,
 				C5A60EC820A2417200C21178 /* MD5Tests.swift */,
 				C551B0E520D42222009A986F /* NavigationLocationManagerTests.swift */,
+				C5ABB50D20408D2C00AFA92C /* RouteControllerTests.swift */,
+				C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */,
+				C582BA2B2073E77E00647DAA /* StringTests.swift */,
+				AE8B1B96207D2B2B003050F6 /* TunnelIntersectionManagerTests.swift */,
 			);
 			path = MapboxCoreNavigationTests;
 			sourceTree = "<group>";
@@ -2019,6 +2025,7 @@
 				C588C3C21F33882100520EF2 /* String.swift in Sources */,
 				3512C7C81FB0A0C100CDD2A3 /* UIViewController.swift in Sources */,
 				C53208AB1E81FFB900910266 /* NavigationMapView.swift in Sources */,
+				16EF6C22211BA4B300AA580B /* CarPlayMapViewController.swift in Sources */,
 				351BEBF61E5BCC63006FE110 /* RouteMapViewController.swift in Sources */,
 				16A509D7202BC0CA0011D788 /* ImageDownload.swift in Sources */,
 				8DB63A3A1FBBCA2200928389 /* RatingControl.swift in Sources */,
@@ -2137,6 +2144,7 @@
 				C55C299920D2E2F600B0406C /* NavigationMapViewTests.swift in Sources */,
 				1662244720256C0700EA4824 /* ImageLoadingURLProtocolSpy.swift in Sources */,
 				AE291FFF20975A7E00F23DFC /* NavigationViewControllerTests.swift in Sources */,
+				16EF6C1E21193A9600AA580B /* CarPlayManagerTests.swift in Sources */,
 				35EFD009207CA5E800BF3873 /* ManeuverViewTests.swift in Sources */,
 				16E4F97F205B05FE00531791 /* MapboxVoiceControllerTests.swift in Sources */,
 				35A262B92050A5CD00AEFF6D /* InstructionsBannerViewSnapshotTests.swift in Sources */,
