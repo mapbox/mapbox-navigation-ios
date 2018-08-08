@@ -18,6 +18,7 @@ class RouteMapViewController: UIViewController {
     var lanesView: LanesView { return navigationView.lanesView }
     var nextBannerView: NextBannerView { return navigationView.nextBannerView }
     var instructionsBannerView: InstructionsBannerView { return navigationView.instructionsBannerView }
+    var instructionsBannerContentView: InstructionsBannerContentView { return navigationView.instructionsBannerContentView }
     
     lazy var endOfRouteViewController: EndOfRouteViewController = {
         let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
@@ -226,6 +227,7 @@ class RouteMapViewController: UIViewController {
         if let view = previewInstructionsView {
             view.removeFromSuperview()
             navigationView.instructionsBannerContentView.backgroundColor = InstructionsBannerView.appearance().backgroundColor
+            navigationView.instructionsBannerView.delegate = self
             previewInstructionsView = nil
         }
     }

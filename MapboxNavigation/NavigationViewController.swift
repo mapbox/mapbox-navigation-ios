@@ -324,7 +324,12 @@ open class NavigationViewController: UIViewController {
     
     var styleManager: StyleManager!
     
-    var currentStatusBarStyle: UIStatusBarStyle = .default
+    var currentStatusBarStyle: UIStatusBarStyle = .default {
+        didSet {
+            mapViewController?.instructionsBannerView.backgroundColor = InstructionsBannerView.appearance().backgroundColor
+            mapViewController?.instructionsBannerContentView.backgroundColor = InstructionsBannerContentView.appearance().backgroundColor
+        }
+    }
     
     open override var preferredStatusBarStyle: UIStatusBarStyle {
         get {
