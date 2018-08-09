@@ -14,6 +14,14 @@ import Turf
 @objc(MBRouteController)
 open class RouteController: NSObject, Router {
 
+    enum DefaultBehavior {
+        static let shouldRerouteFromLocation: Bool = true
+        static let shouldDiscardLocation: Bool = true
+        static let didArriveAtWaypoint: Bool = true
+        static let shouldPreventReroutesWhenArrivingAtWaypoint: Bool = true
+        static let shouldDisableBatteryMonitoring: Bool = true
+        
+    }
     /**
      The route controller’s delegate.
      */
@@ -144,14 +152,10 @@ open class RouteController: NSObject, Router {
     deinit {
         endNavigation()
         
-        guard let shouldDisable = delegate?.routeControllerShouldDisableBatteryMonitoring?(self) else {
-            UIDevice.current.isBatteryMonitoringEnabled = false
-            return
-        }
-        
-        if shouldDisable {
+        if delegate?.routeControllerShouldDisableBatteryMonitoring?(self) ?? DefaultBehavior.shouldDisableBatteryMonitoring {
             UIDevice.current.isBatteryMonitoringEnabled = false
         }
+  
     }
 
     func resumeNotifications() {
@@ -307,7 +311,7 @@ extension RouteController: CLLocationManagerDelegate {
             potentialLocation = lastFiltered
         // `filteredLocations` does not contain good locations and we have found at least one good location previously.
         } else if hasFoundOneQualifiedLocation {
-            if let lastLocation = locations.last, delegate?.routeController?(self, shouldDiscard: lastLocation) ?? true {
+            if let lastLocation = locations.last, delegate?.routeController?(self, shouldDiscard: lastLocation) ?? DefaultBehavior.shouldDiscardLocation {
                 
                 // Allow the user puck to advance. A stationary puck is not great.
                 self.rawLocation = lastLocation
@@ -363,7 +367,7 @@ extension RouteController: CLLocationManagerDelegate {
         updateRouteLegProgress(for: location)
         updateVisualInstructionProgress()
 
-        guard userIsOnRoute(location) || !(delegate?.routeController?(self, shouldRerouteFrom: location) ?? true) else {
+        guard userIsOnRoute(location) || !(delegate?.routeController?(self, shouldRerouteFrom: location) ?? DefaultBehavior.shouldRerouteFromLocation) else {
             reroute(from: location, along: routeProgress)
             return
         }
@@ -394,7 +398,7 @@ extension RouteController: CLLocationManagerDelegate {
 
             routeProgress.currentLegProgress.userHasArrivedAtWaypoint = true
 
-            let advancesToNextLeg = delegate?.routeController?(self, didArriveAt: currentDestination) ?? true
+            let advancesToNextLeg = delegate?.routeController?(self, didArriveAt: currentDestination) ?? DefaultBehavior.didArriveAtWaypoint
 
             if !routeProgress.isFinalLeg && advancesToNextLeg {
                 routeProgress.legIndex += 1
@@ -431,7 +435,7 @@ extension RouteController: CLLocationManagerDelegate {
     @objc public func userIsOnRoute(_ location: CLLocation) -> Bool {
         
         // If the user has arrived, do not continue monitor reroutes, step progress, etc
-        guard !routeProgress.currentLegProgress.userHasArrivedAtWaypoint && (delegate?.routeController?(self, shouldPreventReroutesWhenArrivingAt: routeProgress.currentLeg.destination) ?? true) else {
+        guard !routeProgress.currentLegProgress.userHasArrivedAtWaypoint && (delegate?.routeController?(self, shouldPreventReroutesWhenArrivingAt: routeProgress.currentLeg.destination) ?? DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint) else {
             return true
         }
 
