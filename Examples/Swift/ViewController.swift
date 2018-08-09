@@ -150,8 +150,6 @@ class ViewController: UIViewController, MGLMapViewDelegate {
             popoverController.sourceView = self.startButton
         }
 
-        self.mapView = NavigationMapView(frame: view.bounds)
-
 #if canImport(CarPlay)
         buildCarPlayUI()
 #endif
@@ -159,6 +157,8 @@ class ViewController: UIViewController, MGLMapViewDelegate {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+
+        self.mapView = NavigationMapView(frame: view.bounds)
 
         // Reset the navigation styling to the defaults if we are returning from a presentation.
         if (presentedViewController != nil) {
