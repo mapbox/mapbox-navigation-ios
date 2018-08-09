@@ -226,7 +226,7 @@ class RouteMapViewController: UIViewController {
         if let view = previewInstructionsView {
             view.removeFromSuperview()
             navigationView.instructionsBannerContentView.backgroundColor = InstructionsBannerView.appearance().backgroundColor
-            navigationView.instructionsBannerView.stepListIndicatorView.isHidden = false
+            navigationView.instructionsBannerView.delegate = self
             previewInstructionsView = nil
         }
     }
