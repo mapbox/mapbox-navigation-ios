@@ -3,7 +3,6 @@ import Mapbox
 import MapboxDirections
 import MapboxCoreNavigation
 import Turf
-import CarPlay
 
 /**
  `NavigationMapView` is a subclass of `MGLMapView` with convenience functions for adding `Route` lines to a map.

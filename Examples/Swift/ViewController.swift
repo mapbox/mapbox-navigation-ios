@@ -2,8 +2,10 @@ import UIKit
 import MapboxCoreNavigation
 import MapboxNavigation
 import MapboxDirections
-import CarPlay
 import UserNotifications
+#if canImport(CarPlay)
+import CarPlay
+#endif
 
 private typealias RouteRequestSuccess = (([Route]) -> Void)
 private typealias RouteRequestFailure = ((NSError) -> Void)
@@ -45,7 +47,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
 
             mapView?.showRoutes(routes)
             mapView?.showWaypoints(current)
-            
+#if canImport(CarPlay)
             guard #available(iOS 12.0, *), let carViewController = carViewController else { return }
             
             mapTemplate?.mapButtons = []
@@ -67,6 +69,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
                 let line = MGLPolyline(coordinates: current.coordinates!, count: UInt(current.coordinates!.count))
                 carViewController.mapView?.setVisibleCoordinateBounds(line.overlayBounds, edgePadding: bounds, animated: true)
             }
+#endif
         }
     }
 
@@ -97,7 +100,8 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     var appDelegate: AppDelegate? {
         return UIApplication.shared.delegate as? AppDelegate
     }
-    
+
+#if canImport(CarPlay)
     @available(iOS 12.0, *)
     var carViewController: ViewController? {
         return CarPlayManager.shared().carWindow?.rootViewController as? ViewController
@@ -112,7 +116,8 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     var mapTemplate: CPMapTemplate? {
         return interfaceController?.rootTemplate as? CPMapTemplate
     }
-
+#endif
+    
     // MARK: - Lifecycle Methods
 
     override func viewDidLoad() {
@@ -147,8 +152,9 @@ class ViewController: UIViewController, MGLMapViewDelegate {
 
         self.mapView = NavigationMapView(frame: view.bounds)
 
-        //TODO: this doesn't belong here; only do this if needed
+#if canImport(CarPlay)
         buildCarPlayUI()
+#endif
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -304,32 +310,31 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     }
 
     func presentAndRemoveMapview(_ navigationViewController: NavigationViewController) {
-        let route = navigationViewController.routeController.routeProgress.route
-        
-        
-        // If we have a CarPlay window, show navigation on it as well as on the phone.
-        if #available(iOS 12.0, *), let carViewController = carViewController, let trip = route.asCPTrip, let mapTemplate = mapTemplate, let interfaceController = interfaceController {
-            let session = mapTemplate.startNavigationSession(for: trip)
-            
-            mapTemplate.dismissPanningInterface(animated: true)
-            
-            mapTemplate.update(route.travelEstimates, for: trip, with: .default)
-            mapTemplate.hideTripPreviews()
-            let carPlayNavigationViewController = CarPlayNavigationViewController(for: navigationViewController.routeController, session: session, template: mapTemplate, interfaceController: interfaceController)
-            carPlayNavigationViewController.carPlayNavigationDelegate = self
-            carViewController.present(carPlayNavigationViewController, animated: true, completion: nil)
-            
-            if let appViewFromCarPlayWindow = appViewFromCarPlayWindow {
-                navigationViewController.isUsedInConjunctionWithCarPlayWindow = true
-                appViewFromCarPlayWindow.present(navigationViewController, animated: true)
-            }
-        } else {
+//        let route = navigationViewController.routeController.routeProgress.route
+
+//        // If we have a CarPlay window, show navigation on it as well as on the phone.
+//        if #available(iOS 12.0, *), let carViewController = carViewController, let trip = route.asCPTrip, let mapTemplate = mapTemplate, let interfaceController = interfaceController {
+//            let session = mapTemplate.startNavigationSession(for: trip)
+//
+//            mapTemplate.dismissPanningInterface(animated: true)
+//
+//            mapTemplate.update(route.travelEstimates, for: trip, with: .default)
+//            mapTemplate.hideTripPreviews()
+//            let carPlayNavigationViewController = CarPlayNavigationViewController(for: navigationViewController.routeController, session: session, template: mapTemplate, interfaceController: interfaceController)
+//            carPlayNavigationViewController.carPlayNavigationDelegate = self
+//            carViewController.present(carPlayNavigationViewController, animated: true, completion: nil)
+//
+//            if let appViewFromCarPlayWindow = appViewFromCarPlayWindow {
+//                navigationViewController.isUsedInConjunctionWithCarPlayWindow = true
+//                appViewFromCarPlayWindow.present(navigationViewController, animated: true)
+//            }
+//        } else {
             // If no CarPlay window, just start navigation on the phone.
             present(navigationViewController, animated: true) {
                 self.mapView?.removeFromSuperview()
                 self.mapView = nil
             }
-        }
+//        }
     }
 
     func configureMapView(_ mapView: NavigationMapView) {
@@ -352,8 +357,9 @@ class ViewController: UIViewController, MGLMapViewDelegate {
             self.mapView?.showRoutes(routes)
             self.mapView?.showWaypoints(currentRoute)
         }
-        
+#if canImport(CarPlay)
         buildCarPlayUI()
+#endif
     }
 }
 
@@ -390,7 +396,7 @@ extension ViewController: NavigationMapViewDelegate {
     }
     
     // MARK: CarPlay Specific functions
-    
+#if canImport(CarPlay)
     func buildCarPlayUI() {
         guard #available(iOS 12.0, *), let mapView = mapView, let mapTemplate = mapTemplate, let _ = carViewController else { return }
         bottomBar.isHidden = true
@@ -411,6 +417,7 @@ extension ViewController: NavigationMapViewDelegate {
         buildCarPlayUI()
         mapTemplate?.hideTripPreviews()
     }
+#endif
 }
 
 // MARK: VoiceControllerDelegate methods
@@ -479,7 +486,9 @@ extension ViewController: NavigationViewControllerDelegate {
     // Called when the user hits the exit button.
     // If implemented, you are responsible for also dismissing the UI.
     func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool) {
+#if canImport(CarPlay)
         dismissAndCleanupUI()
+#endif
     }
 }
 
@@ -498,7 +507,7 @@ extension ViewController: VisualInstructionDelegate {
     }
 }
 
-
+#if canImport(CarPlay)
 @available(iOS 12.0, *)
 extension ViewController: CarPlayNavigationDelegate {
     func carPlaynavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool) {
@@ -514,11 +523,14 @@ extension ViewController: CPMapTemplateDelegate {
     }
     
     func mapTemplate(_ mapTemplate: CPMapTemplate, selectedPreviewFor trip: CPTrip, using routeChoice: CPRouteChoice) {
-        guard let routeIndex = trip.routeChoices.lastIndex(where: {$0 == routeChoice}), var routes = appViewFromCarPlayWindow?.routes else { return }
-        let route = routes[routeIndex]
-        guard let foundRoute = routes.firstIndex(where: {$0 == route}) else { return }
-        routes.remove(at: foundRoute)
-        routes.insert(route, at: 0)
-        appViewFromCarPlayWindow?.routes = routes
+//        guard let routeIndex = trip.routeChoices.lastIndex(where: {$0 == routeChoice}), var routes = appViewFromCarPlayWindow?.routes else { return }
+//        let route = routes[routeIndex]
+//        guard let foundRoute = routes.firstIndex(where: {$0 == route}) else { return }
+//        routes.remove(at: foundRoute)
+//        routes.insert(route, at: 0)
+//        appViewFromCarPlayWindow?.routes = routes
+        let textConfiguration = CPTripPreviewTextConfiguration.init(startButtonTitle: "Let's GO!", additionalRoutesButtonTitle: "Meh, show me more", overviewButtonTitle: "Take me Back")
+        mapTemplate.showRouteChoicesPreview(for: trip, textConfiguration: textConfiguration)
     }
 }
+#endif

@@ -1,12 +1,15 @@
 import MapboxDirections
+#if canImport(CarPlay)
 import CarPlay
+#endif
 
 extension VisualInstruction {
     
     var containsLaneIndications: Bool {
         return components.contains(where: { $0 is LaneIndicationComponent })
     }
-    
+
+#if canImport(CarPlay)
     @available(iOS 12.0, *)
     var maneuverImageSet: CPImageSet? {
         let colors: [UIColor] = [.black, .white]
@@ -22,7 +25,8 @@ extension VisualInstruction {
         guard blackAndWhiteManeuverIcons.count == 2 else { return nil }
         return CPImageSet(lightContentImage: blackAndWhiteManeuverIcons[1], darkContentImage: blackAndWhiteManeuverIcons[0])
     }
-    
+#endif
+
     @available(iOS 12.0, *)
     func maneuverLabelAttributedText(bounds: @escaping () -> (CGRect), shieldHeight: CGFloat) -> NSAttributedString? {
         let instructionLabelPrimary = InstructionLabel()

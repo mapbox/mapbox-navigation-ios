@@ -1,3 +1,4 @@
+#if canImport(CarPlay)
 import CarPlay
 
 @available(iOS 12.0, *)
@@ -47,3 +48,4 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate {
         carWindow?.isHidden = true
     }
 }
+#endif

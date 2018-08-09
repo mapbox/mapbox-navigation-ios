@@ -1,6 +1,8 @@
 import UIKit
 import MapboxNavigation
+#if canImport(CarPlay)
 import CarPlay
+#endif
 
 /**
  This example application delegate implementation is used in both our "Example-Swift" and our "Example-CarPlay" example apps.
@@ -13,7 +15,7 @@ import CarPlay
   - Be sure to select an iOS simulator or device running iOS 12 or greater
  **/
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, CPApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
@@ -29,12 +31,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CPApplicationDelegate {
         return NSClassFromString("XCTestCase") != nil
     }
 
+#if canImport(CarPlay)
     // MARK: Mapbox CarPlay support
 
     @available(iOS 12.0, *)
     lazy var carPlayManager = {
         return CarPlayManager.shared()
     }()
+#endif
+}
+
+#if canImport(CarPlay)
+extension AppDelegate: CPApplicationDelegate {
 
     // MARK: CPApplicationDelegate
 
@@ -47,5 +55,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CPApplicationDelegate {
     func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPWindow) {
         carPlayManager.application(application, didDisconnectCarInterfaceController: interfaceController, from: window)
     }
-
 }
+#endif

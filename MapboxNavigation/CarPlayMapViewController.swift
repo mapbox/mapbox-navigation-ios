@@ -1,4 +1,5 @@
 import Foundation
+#if canImport(CarPlay)
 import CarPlay
 
 class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
@@ -31,3 +32,5 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
         }
     }
 }
+#endif
+

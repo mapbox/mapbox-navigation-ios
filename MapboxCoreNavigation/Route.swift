@@ -1,15 +1,9 @@
-//
-//  Route.swift
-//  MapboxCoreNavigation
-//
-//  Created by Bobby Sudekum on 7/3/18.
-//  Copyright © 2018 Mapbox. All rights reserved.
-//
-
 import Foundation
 import MapboxDirections
+#if canImport(CarPlay)
 import CarPlay
 
+@available(iOS 12.0, *)
 extension Route {
     /**
      Creates a `CPTravelEstimates` from a given route.
@@ -37,3 +31,4 @@ extension Route {
                       routeChoices: [summary])
     }
 }
+#endif

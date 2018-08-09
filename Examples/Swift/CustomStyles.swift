@@ -1,11 +1,3 @@
-//
-//  CustomStyles.swift
-//  Example-Swift
-//
-//  Created by Bobby Sudekum on 7/11/18.
-//  Copyright © 2018 Mapbox. All rights reserved.
-//
-
 import Foundation
 import MapboxNavigation
 

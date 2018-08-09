@@ -1,4 +1,5 @@
 import Foundation
+#if canImport(CarPlay)
 import CarPlay
 
 @available(iOS 12.0, *)
@@ -41,3 +42,4 @@ extension CPBarButton {
         return panButton
     }
 }
+#endif

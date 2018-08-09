@@ -1,11 +1,3 @@
-//
-//  NavigationMapViewTests.swift
-//  MapboxNavigationTests
-//
-//  Created by Bobby Sudekum on 6/14/18.
-//  Copyright © 2018 Mapbox. All rights reserved.
-//
-
 import XCTest
 @testable import MapboxNavigation
 import MapboxDirections

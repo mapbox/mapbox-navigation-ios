@@ -1,5 +1,6 @@
 import XCTest
 import MapboxNavigation
+#if canImport(CarPlay)
 import CarPlay
 
 @available(iOS 12.0, *)
@@ -74,3 +75,4 @@ class CPInterfaceControllerSpy: CPInterfaceController {
 //    open var topTemplate: CPTemplate? { get }
 //    open var templates: [CPTemplate] { get }
 }
+#endif

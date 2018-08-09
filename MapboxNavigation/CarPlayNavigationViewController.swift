@@ -1,6 +1,7 @@
 import Foundation
 import MapboxDirections
 import MapboxCoreNavigation
+#if canImport(CarPlay)
 import CarPlay
 
 @available(iOS 12.0, *)
@@ -381,3 +382,5 @@ extension CarPlayNavigationViewController: CPMapTemplateDelegate {
         return camera
     }
 }
+#endif
+
