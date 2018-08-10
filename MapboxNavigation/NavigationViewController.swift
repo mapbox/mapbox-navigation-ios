@@ -314,6 +314,11 @@ open class NavigationViewController: UIViewController {
             styleManager.automaticallyAdjustsStyleForTimeOfDay = automaticallyAdjustsStyleForTimeOfDay
         }
     }
+
+    /**
+     If `true`, `UIApplication.isIdleTimerDisabled` is set to `true` in `viewWillAppear(_:)` and `false` in `viewWillDisappear(_:)`. If your application manages the idle timer itself, set this property to `false`.
+     */
+    @objc public var shouldManageApplicationIdleTimer = true
     
     var mapViewController: RouteMapViewController?
     
@@ -324,7 +329,12 @@ open class NavigationViewController: UIViewController {
     
     var styleManager: StyleManager!
     
-    var currentStatusBarStyle: UIStatusBarStyle = .default
+    var currentStatusBarStyle: UIStatusBarStyle = .default {
+        didSet {
+            mapViewController?.instructionsBannerView.backgroundColor = InstructionsBannerView.appearance().backgroundColor
+            mapViewController?.instructionsBannerContentView.backgroundColor = InstructionsBannerContentView.appearance().backgroundColor
+        }
+    }
     
     open override var preferredStatusBarStyle: UIStatusBarStyle {
         get {
@@ -395,8 +405,10 @@ open class NavigationViewController: UIViewController {
     
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        UIApplication.shared.isIdleTimerDisabled = true
+
+        if shouldManageApplicationIdleTimer {
+            UIApplication.shared.isIdleTimerDisabled = true
+        }
         
         if routeController.locationManager is SimulatedLocationManager {
             let localized = String.Localized.simulationStatus(speed: 1)
@@ -406,8 +418,10 @@ open class NavigationViewController: UIViewController {
     
     open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
-        UIApplication.shared.isIdleTimerDisabled = false
+
+        if shouldManageApplicationIdleTimer {
+            UIApplication.shared.isIdleTimerDisabled = false
+        }
         
         routeController.suspendLocationUpdates()
     }
