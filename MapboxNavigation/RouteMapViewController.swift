@@ -984,10 +984,11 @@ extension RouteMapViewController {
     @objc fileprivate func keyboardWillShow(notification: NSNotification) {
         guard navigationView.endOfRouteView != nil else { return }
         guard let userInfo = notification.userInfo else { return }
-        guard let curveValue = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? Int, let curve = UIViewAnimationCurve(rawValue: curveValue) else { return }
+        guard let curveValue = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? Int else { return }
         guard let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? Double else { return }
         guard let keyBoardRect = userInfo[UIKeyboardFrameEndUserInfoKey] as? CGRect else { return }
         
+        let curve = UIViewAnimationCurve(rawValue: curveValue) ?? UIViewAnimationCurve.easeIn
         let options = (duration: duration, curve: curve)
         let keyboardHeight = keyBoardRect.size.height
 
