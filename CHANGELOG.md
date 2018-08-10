@@ -3,7 +3,8 @@
 ## master
 
 * Fixed banner stuck on rerouting past the reroute threshold when navigation is set to simulation mode. ([#1583](https://github.com/mapbox/mapbox-navigation-ios/pull/1583))
-* Modified the current road name displayed with new map attribute fields. We use the road feature `ref` attribute's `shield` and `reflen` to retrieve the shield image presented next to the current road name. ([#1576](https://github.com/mapbox/mapbox-navigation-ios/pull/1576)) 
+* Modified the current road name displayed with new map attribute fields. We use the road feature `ref` attribute's `shield` and `reflen` to retrieve the shield image presented next to the current road name. ([#1576](https://github.com/mapbox/mapbox-navigation-ios/pull/1576))
+* Fixed a crash with the keyboard when showing the end of route view controller. [#1599](https://github.com/mapbox/mapbox-navigation-ios/pull/1599/)
 
 ## v0.19.0 (July, 24, 2018)
 
