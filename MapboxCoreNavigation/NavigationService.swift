@@ -9,7 +9,7 @@ public protocol NavigationService: class, CLLocationManagerDelegate {
     var router: Router { get }
     var route: Route { get set }
     var eventsManager: EventsManager { get }
-    var delegate: NavigationServiceDelegate? { get set }
+    weak var delegate: NavigationServiceDelegate? { get set }
     
     func start()
     func stop()
@@ -21,7 +21,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
     var directionsService: Directions
     public var router: Router
     public var eventsManager: EventsManager
-    public var delegate: NavigationServiceDelegate?
+    public weak var delegate: NavigationServiceDelegate?
     
     @objc convenience init(route: Route) {
         self.init(route: route, directions: nil, locationSource: nil, eventsManager: nil)

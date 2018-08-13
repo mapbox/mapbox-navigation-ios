@@ -223,18 +223,6 @@ open class NavigationViewController: UIViewController {
                         mapViewController?.notifyDidReroute(route: route)
         }
     }
-//    @objc public var route: Route! {
-//        didSet {
-//            if routeController == nil {
-//                routeController = RouteController(along: route, directions: directions, locationManager: NavigationLocationManager())
-//                routeController.delegate = self
-//            } else {
-//                routeController.route = route
-//            }
-//            NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
-//            mapViewController?.notifyDidReroute(route: route)
-//        }
-//    }
     
     /**
      An instance of `Directions` need for rerouting. See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
@@ -365,16 +353,6 @@ open class NavigationViewController: UIViewController {
         
         navigationService.start()
         
-//        self.routeController = RouteController(along: route, directions: directions, locationManager: locationManager ?? NavigationLocationManager())
-//        self.routeController.usesDefaultUserInterface = true
-//        self.routeController.delegate = self
-//        self.routeController.tunnelIntersectionManager.delegate = self
-//
-//        self.directions = directions
-//        self.route = route
-//        NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
-//        routeController.resume()
-//
         let mapViewController = RouteMapViewController(navigationService: navigationService, delegate: self)
         self.mapViewController = mapViewController
         mapViewController.destination = route.legs.last?.destination
@@ -619,11 +597,13 @@ extension NavigationViewController: NavigationServiceDelegate {
         return advancesToNextLeg
     }
     public func tunnelIntersectionManager(_ manager: TunnelIntersectionManager, willEnableAnimationAt location: CLLocation) {
+        //TODO: Bring this into NavigationService
 //        routeController.tunnelIntersectionManager(manager, willEnableAnimationAt: location)
         styleManager.applyStyle(type: .night)
     }
     
     public func tunnelIntersectionManager(_ manager: TunnelIntersectionManager, willDisableAnimationAt location: CLLocation) {
+        //TODO: Bring this call into NavigationService
 //        routeController.tunnelIntersectionManager(manager, willDisableAnimationAt: location)
         styleManager.timeOfDayChanged()
     }
