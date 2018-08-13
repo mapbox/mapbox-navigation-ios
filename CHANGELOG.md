@@ -2,6 +2,8 @@
 
 ## master
 
+* It is now safe to set the `NavigationMapView.delegate` property of the `NavigationMapView` in `NavigationViewController.mapView`. Implement `MGLMapViewDelegate` in your own class to customize annotations and other details. ([#1601](https://github.com/mapbox/mapbox-navigation-ios/pull/1601))
+* Fixed an issue where the map view while navigating in CarPlay showed labels in the style’s original language instead of the local language. ([#1601](https://github.com/mapbox/mapbox-navigation-ios/pull/1601))
 * `NavigationMapViewDelegate.navigationMapView(_:routeStyleLayerWithIdentifier:source:)`, `NavigationMapViewDelegate.navigationMapView(_:routeCasingStyleLayerWithIdentifier:source:)`, `NavigationViewControllerDelegate.navigationViewController(_:routeStyleLayerWithIdentifier:source:)`, and `NavigationViewControllerDelegate.navigationViewController(_:routeCasingStyleLayerWithIdentifier:source:)` can now set the `MGLLineStyleLayer.lineGradient` property. ([#1799](https://github.com/mapbox/mapbox-navigation-ios/pull/1799))
 
 ## v0.23.0 (October 24, 2018)
