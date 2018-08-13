@@ -16,6 +16,8 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
 //        mapView.navigationMapDelegate = self
         mapView.userTrackingMode = .follow
         mapView.logoView.isHidden = true
+        mapView.attributionButton.isHidden = true
+        
         self.view = mapView
     }
 
