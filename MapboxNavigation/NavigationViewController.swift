@@ -213,18 +213,28 @@ open class NavigationViewController: UIViewController {
      
      In cases where you need to update the route after navigation has started you can set a new `route` here and `NavigationViewController` will update its UI accordingly.
      */
-    @objc public var route: Route! {
-        didSet {
-            if routeController == nil {
-                routeController = RouteController(along: route, directions: directions, locationManager: NavigationLocationManager())
-                routeController.delegate = self
-            } else {
-                routeController.routeProgress = RouteProgress(route: route)
-            }
+    @objc public var route: Route {
+        get {
+            return navigationService.route
+        }
+        set {
+            navigationService.route = newValue
             NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
-            mapViewController?.notifyDidReroute(route: route)
+            //            mapViewController?.notifyDidReroute(route: route)
         }
     }
+//    @objc public var route: Route! {
+//        didSet {
+//            if routeController == nil {
+//                routeController = RouteController(along: route, directions: directions, locationManager: NavigationLocationManager())
+//                routeController.delegate = self
+//            } else {
+//                routeController.route = route
+//            }
+//            NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
+//            mapViewController?.notifyDidReroute(route: route)
+//        }
+//    }
     
     /**
      An instance of `Directions` need for rerouting. See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
@@ -258,9 +268,9 @@ open class NavigationViewController: UIViewController {
 
      See `RouteController` for more information.
      */
-    @objc public var routeController: RouteController! {
+    @objc public var navigationService: NavigationService! {
         didSet {
-            mapViewController?.routeController = routeController
+            mapViewController?.navigationService = navigationService
         }
     }
     
@@ -349,17 +359,21 @@ open class NavigationViewController: UIViewController {
         
         super.init(nibName: nil, bundle: nil)
         
-        self.routeController = RouteController(along: route, directions: directions, locationManager: locationManager ?? NavigationLocationManager())
-        self.routeController.usesDefaultUserInterface = true
-        self.routeController.delegate = self
-        self.routeController.tunnelIntersectionManager.delegate = self
+        self.navigationService = MapboxNavigationService(route: route, directions: directions, locationSource: locationManager)
+        navigationService.router.usesDefaultUserInterface = true
+        navigationService.delegate = self
         
-        self.directions = directions
-        self.route = route
-        NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
-        routeController.resume()
-        
-        let mapViewController = RouteMapViewController(routeController: self.routeController, delegate: self)
+//        self.routeController = RouteController(along: route, directions: directions, locationManager: locationManager ?? NavigationLocationManager())
+//        self.routeController.usesDefaultUserInterface = true
+//        self.routeController.delegate = self
+//        self.routeController.tunnelIntersectionManager.delegate = self
+//
+//        self.directions = directions
+//        self.route = route
+//        NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
+//        routeController.resume()
+//
+        let mapViewController = RouteMapViewController(navigationService: navigationService, delegate: self)
         self.mapViewController = mapViewController
         mapViewController.destination = route.legs.last?.destination
         mapViewController.willMove(toParentViewController: self)
@@ -398,7 +412,7 @@ open class NavigationViewController: UIViewController {
         
         UIApplication.shared.isIdleTimerDisabled = true
         
-        if routeController.locationManager is SimulatedLocationManager {
+        if navigationService.locationSource is SimulatedLocationManager {
             let localized = String.Localized.simulationStatus(speed: 1)
             mapViewController?.statusView.show(localized, showSpinner: false, interactive: true)
         }
@@ -409,19 +423,19 @@ open class NavigationViewController: UIViewController {
         
         UIApplication.shared.isIdleTimerDisabled = false
         
-        routeController.suspendLocationUpdates()
+        navigationService.stop()
     }
     
     // MARK: Route controller notifications
     
     func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(notification:)), name: .routeControllerProgressDidChange, object: routeController)
-        NotificationCenter.default.addObserver(self, selector: #selector(didPassInstructionPoint(notification:)), name: .routeControllerDidPassSpokenInstructionPoint, object: routeController)
+        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(notification:)), name: .routeControllerProgressDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didPassInstructionPoint(notification:)), name: .routeControllerDidPassSpokenInstructionPoint, object: nil)
     }
     
     func suspendNotifications() {
-        NotificationCenter.default.removeObserver(self, name: .routeControllerProgressDidChange, object: routeController)
-        NotificationCenter.default.removeObserver(self, name: .routeControllerDidPassSpokenInstructionPoint, object: routeController)
+        NotificationCenter.default.removeObserver(self, name: .routeControllerProgressDidChange, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .routeControllerDidPassSpokenInstructionPoint, object: nil)
     }
     
     @objc func progressDidChange(notification: NSNotification) {
@@ -552,7 +566,7 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
 }
 
 //MARK: - RouteControllerDelegate
-extension NavigationViewController: RouteControllerDelegate {
+extension NavigationViewController: NavigationServiceDelegate {
     @objc public func routeController(_ routeController: RouteController, shouldRerouteFrom location: CLLocation) -> Bool {
         return delegate?.navigationViewController?(self, shouldRerouteFrom: location) ?? true
     }
@@ -602,16 +616,13 @@ extension NavigationViewController: RouteControllerDelegate {
         }
         return advancesToNextLeg
     }
-}
-
-extension NavigationViewController: TunnelIntersectionManagerDelegate {
     public func tunnelIntersectionManager(_ manager: TunnelIntersectionManager, willEnableAnimationAt location: CLLocation) {
-        routeController.tunnelIntersectionManager(manager, willEnableAnimationAt: location)
+//        routeController.tunnelIntersectionManager(manager, willEnableAnimationAt: location)
         styleManager.applyStyle(type: .night)
     }
     
     public func tunnelIntersectionManager(_ manager: TunnelIntersectionManager, willDisableAnimationAt location: CLLocation) {
-        routeController.tunnelIntersectionManager(manager, willDisableAnimationAt: location)
+//        routeController.tunnelIntersectionManager(manager, willDisableAnimationAt: location)
         styleManager.timeOfDayChanged()
     }
 }
@@ -620,9 +631,9 @@ extension NavigationViewController: TunnelIntersectionManagerDelegate {
 extension NavigationViewController: StyleManagerDelegate {
     
     public func locationFor(styleManager: StyleManager) -> CLLocation? {
-        if let location = routeController.location {
+        if let location = navigationService.router.location {
             return location
-        } else if let firstCoord = routeController.routeProgress.route.coordinates?.first {
+        } else if let firstCoord = route.coordinates?.first {
             return CLLocation(latitude: firstCoord.latitude, longitude: firstCoord.longitude)
         } else {
             return nil

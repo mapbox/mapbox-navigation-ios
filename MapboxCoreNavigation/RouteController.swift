@@ -87,6 +87,15 @@ open class RouteController: NSObject, Router {
             movementsAwayFromRoute = 0
         }
     }
+    
+    public var route: Route {
+        get {
+            return routeProgress.route
+        }
+        set {
+            routeProgress = RouteProgress(route: newValue)
+        }
+    }
 
     var isRerouting = false
     var lastRerouteLocation: CLLocation?
