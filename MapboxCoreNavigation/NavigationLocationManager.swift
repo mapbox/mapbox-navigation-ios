@@ -15,6 +15,14 @@ import UIKit
 open class NavigationLocationManager: CLLocationManager {
     
     var lastKnownLocation: CLLocation?
+    override open var delegate: CLLocationManagerDelegate? {
+        get {
+            return super.delegate
+        }
+        set {
+            super.delegate = newValue
+        }
+    }
     
     override public init() {
         super.init()

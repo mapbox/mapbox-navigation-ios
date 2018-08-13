@@ -30,12 +30,7 @@ open class RouteController: NSObject, Router {
     /**
      The route controller’s associated location manager.
      */
-    @objc public var locationManager: NavigationLocationManager! {
-        didSet {
-            oldValue.delegate = nil
-            locationManager.delegate = self
-        }
-    }
+    @objc public weak var locationManager: NavigationLocationManager!
     
     /**
      The Directions object used to create the route.
@@ -139,7 +134,6 @@ open class RouteController: NSObject, Router {
         self.directions = directions
         self.routeProgress = RouteProgress(route: route)
         self.locationManager = locationManager
-        self.locationManager.activityType = route.routeOptions.activityType
         self.eventsManager = eventsOverride ?? EventsManager(accessToken: route.accessToken)
         UIDevice.current.isBatteryMonitoringEnabled = true
 
@@ -147,7 +141,6 @@ open class RouteController: NSObject, Router {
         eventsManager.routeController = self
         eventsManager.resetSession()
 
-        self.locationManager.delegate = self
         resumeNotifications()
 
         checkForUpdates()
@@ -179,31 +172,12 @@ open class RouteController: NSObject, Router {
         endNavigation()
     }
     
-    /**
-     Starts monitoring the user’s location along the route.
 
-     Will continue monitoring until `suspendLocationUpdates()` is called.
-     */
-    @objc public func resume() {
-        locationManager.delegate = self
-        locationManager.startUpdatingLocation()
-        locationManager.startUpdatingHeading()
-    }
-
-    /**
-     Stops monitoring the user’s location along the route.
-     */
-    @objc public func suspendLocationUpdates() {
-        locationManager.stopUpdatingLocation()
-        locationManager.stopUpdatingHeading()
-        locationManager.delegate = nil
-    }
-    
     /**
      Ends the current navigation session.
      */
     @objc public func endNavigation(feedback: EndOfRouteFeedback? = nil) {
-        suspendLocationUpdates()
+        eventsManager.sendCancelEvent(rating: feedback?.rating, comment: feedback?.comment)
         suspendNotifications()
     }
 

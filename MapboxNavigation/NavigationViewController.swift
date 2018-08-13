@@ -220,7 +220,7 @@ open class NavigationViewController: UIViewController {
         set {
             navigationService.route = newValue
             NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
-            //            mapViewController?.notifyDidReroute(route: route)
+                        mapViewController?.notifyDidReroute(route: route)
         }
     }
 //    @objc public var route: Route! {
@@ -363,6 +363,8 @@ open class NavigationViewController: UIViewController {
         navigationService.router.usesDefaultUserInterface = true
         navigationService.delegate = self
         
+        navigationService.start()
+        
 //        self.routeController = RouteController(along: route, directions: directions, locationManager: locationManager ?? NavigationLocationManager())
 //        self.routeController.usesDefaultUserInterface = true
 //        self.routeController.delegate = self
@@ -429,13 +431,13 @@ open class NavigationViewController: UIViewController {
     // MARK: Route controller notifications
     
     func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(notification:)), name: .routeControllerProgressDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(didPassInstructionPoint(notification:)), name: .routeControllerDidPassSpokenInstructionPoint, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(notification:)), name: .routeControllerProgressDidChange, object: navigationService.router)
+        NotificationCenter.default.addObserver(self, selector: #selector(didPassInstructionPoint(notification:)), name: .routeControllerDidPassSpokenInstructionPoint, object: navigationService.router)
     }
     
     func suspendNotifications() {
-        NotificationCenter.default.removeObserver(self, name: .routeControllerProgressDidChange, object: nil)
-        NotificationCenter.default.removeObserver(self, name: .routeControllerDidPassSpokenInstructionPoint, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .routeControllerProgressDidChange, object: navigationService.router)
+        NotificationCenter.default.removeObserver(self, name: .routeControllerDidPassSpokenInstructionPoint, object: navigationService.router)
     }
     
     @objc func progressDidChange(notification: NSNotification) {

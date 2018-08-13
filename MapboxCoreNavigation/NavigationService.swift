@@ -35,9 +35,12 @@ public class MapboxNavigationService: NSObject, NavigationService {
         eventsManager = eventsOverride ?? EventsManager(accessToken: route.accessToken)
         directionsService = directionsOverride ?? Directions.shared
         locationSource = locationOverride ?? NavigationLocationManager()
+        locationSource.activityType = route.routeOptions.activityType
+        
         router = RouteController(along: route, directions: directionsService, locationManager: locationSource, eventsManager: eventsManager)
         super.init()
         
+        router.delegate = self
         locationSource.delegate = self
     }
     
@@ -61,11 +64,19 @@ public class MapboxNavigationService: NSObject, NavigationService {
     
 }
 
+extension MapboxNavigationService: CLLocationManagerDelegate {
+    public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+        router.locationManager?(manager, didUpdateHeading: newHeading)
+    }
+    public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        router.locationManager?(manager, didUpdateLocations: locations)
+    }
+}
+
 //MARK: - RouteControllerDelegate
 extension MapboxNavigationService: RouteControllerDelegate {
     typealias Default = RouteController.DefaultBehavior
     
-    //MARK: Messages
     public func routeController(_ routeController: RouteController, willRerouteFrom location: CLLocation) {
         delegate?.routeController?(routeController, willRerouteFrom: location)
     }
