@@ -176,9 +176,9 @@ class NavigationViewControllerTests: XCTestCase {
     }
     
     func testDestinationAnnotationUpdatesUponReroute() {
-        let styleLoaded = XCTestExpectation(description: "Style Loaded")
         let service = MapboxNavigationService(route: initialRoute, directions: DirectionsSpy(accessToken: "beef"), simulating: .never)
-        let navigationViewController = NavigationViewControllerTestable(for: initialRoute,  styles: [TestableDayStyle()], navigationService: service, styleLoaded: styleLoaded)
+        let navigationViewController = NavigationViewController(for: initialRoute,  styles: [TestableDayStyle()], navigationService: service)
+        let styleLoaded = keyValueObservingExpectation(for: navigationViewController, keyPath: "mapView.style", expectedValue: nil)
         
         //wait for the style to load -- routes won't show without it.
         wait(for: [styleLoaded], timeout: 5)
@@ -241,37 +241,13 @@ extension CLLocationCoordinate2D: Hashable {
 }
 
 extension NavigationViewControllerTests {
-        fileprivate func location(at coordinate: CLLocationCoordinate2D) -> CLLocation {
-                return CLLocation(coordinate: coordinate,
-                                    altitude: 5,
+    fileprivate func location(at coordinate: CLLocationCoordinate2D) -> CLLocation {
+        return CLLocation(coordinate: coordinate,
+                          altitude: 5,
                           horizontalAccuracy: 10,
-                            verticalAccuracy: 5,
-                                      course: 20,
-                                       speed: 15,
-                                   timestamp: Date())
-            }
-}
-
-class NavigationViewControllerTestable: NavigationViewController {
-    var styleLoadedExpectation: XCTestExpectation
-    
-    required init(for route: Route,
-                  styles: [Style]? = [DayStyle(), NightStyle()],
-                  navigationService: NavigationService? = nil,
-                  styleLoaded: XCTestExpectation) {
-        styleLoadedExpectation = styleLoaded
-        super.init(for: route, styles: styles, navigationService: navigationService, voiceController: RouteVoiceControllerStub())
-    }
-    
-    required init(for route: Route, styles: [Style]?, navigationService: NavigationService?, voiceController: RouteVoiceController?) {
-        fatalError("This initalizer is not supported in this testing subclass.")
-    }
-    
-    func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
-        styleLoadedExpectation.fulfill()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("This initalizer is not supported in this testing subclass.")
+                          verticalAccuracy: 5,
+                          course: 20,
+                          speed: 15,
+                          timestamp: Date())
     }
 }

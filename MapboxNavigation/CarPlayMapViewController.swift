@@ -3,7 +3,7 @@ import Foundation
 import CarPlay
 
 @available(iOS 12.0, *)
-class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
+class CarPlayMapViewController: UIViewController {
     
     static let defaultAltitude: CLLocationDistance = 16000
     
@@ -38,12 +38,20 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
         return recenterButton
     }()
     
+    var styleObservation: NSKeyValueObservation?
+    
     override func loadView() {
         let mapView = NavigationMapView()
-        mapView.delegate = self
 //        mapView.navigationMapDelegate = self
         mapView.logoView.isHidden = true
         mapView.attributionButton.isHidden = true
+        
+        styleObservation = mapView.observe(\.style, options: .new) { (mapView, change) in
+            guard change.newValue != nil else {
+                return
+            }
+            mapView.localizeLabels()
+        }
         
         self.view = mapView
     }
@@ -56,6 +64,11 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
         
         resetCamera(animated: false, altitude: CarPlayMapViewController.defaultAltitude)
         mapView.setUserTrackingMode(.followWithCourse, animated: true)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        styleObservation = nil
     }
     
     public func zoomInButton() -> CPMapButton {
@@ -82,14 +95,6 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
         return zoomInOut
     }
 
-    
-    // MARK: - MGLMapViewDelegate
-
-    func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
-        if let mapView = mapView as? NavigationMapView {
-            mapView.localizeLabels()
-        }
-    }
     
     func resetCamera(animated: Bool = false, altitude: CLLocationDistance? = nil) {
         let camera = mapView.camera

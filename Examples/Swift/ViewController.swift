@@ -8,8 +8,7 @@ import UserNotifications
 private typealias RouteRequestSuccess = (([Route]) -> Void)
 private typealias RouteRequestFailure = ((NSError) -> Void)
 
-
-class ViewController: UIViewController, MGLMapViewDelegate {
+class ViewController: UIViewController {
     
     // MARK: - IBOutlets
     @IBOutlet weak var longPressHintView: UIView!
@@ -207,6 +206,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
 
         let navigationViewController = NavigationViewController(for: route, navigationService: navigationService())
         navigationViewController.delegate = self
+        navigationViewController.mapView?.delegate = self
         
         presentAndRemoveMapview(navigationViewController)
     }
@@ -274,8 +274,14 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         mapView.gestureRecognizers?.filter({ $0 is UILongPressGestureRecognizer }).forEach(singleTap.require(toFail:))
         mapView.addGestureRecognizer(singleTap)
     }
+}
 
+extension ViewController: MGLMapViewDelegate {
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
+        guard mapView == self.mapView else {
+            return
+        }
+        
         self.mapView?.localizeLabels()
         
         if let routes = routes, let currentRoute = routes.first, let coords = currentRoute.coordinates {

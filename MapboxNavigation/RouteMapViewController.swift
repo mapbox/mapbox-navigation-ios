@@ -68,7 +68,9 @@ class RouteMapViewController: UIViewController {
             return camera
         }
     }
-
+    
+    var styleObservation: NSKeyValueObservation?
+    
     weak var delegate: RouteMapViewControllerDelegate?
     var navService: NavigationService! {
         didSet {
@@ -125,13 +127,22 @@ class RouteMapViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        let mapView = self.mapView
         mapView.contentInset = contentInsets
         view.layoutIfNeeded()
 
         mapView.tracksUserCourse = true
         instructionsBannerView.swipeable = true
-
+        
+        styleObservation = mapView.observe(\.style, options: .new) { [weak self] (mapView, change) in
+            guard change.newValue != nil else {
+                return
+            }
+            self?.showRouteIfNeeded()
+            mapView.localizeLabels()
+        }
+        
         distanceFormatter.numberFormatter.locale = .nationalizedCurrent
 
         makeGestureRecognizersResetFrameRate()
@@ -183,6 +194,7 @@ class RouteMapViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         removeTimer()
+        styleObservation = nil
     }
 
     func resumeNotifications() {
@@ -399,15 +411,7 @@ class RouteMapViewController: UIViewController {
         guard mapView.altitude != altitude else { return }
         mapView.altitude = altitude
     }
-
-    func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
-        return navigationMapView(mapView, imageFor: annotation)
-    }
-
-    func mapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
-        return navigationMapView(mapView, viewFor: annotation)
-    }
-
+    
     func notifyDidChange(routeProgress: RouteProgress, location: CLLocation, secondsRemaining: TimeInterval) {
         resetETATimer()
         updateETA()
@@ -578,30 +582,9 @@ extension RouteMapViewController: NavigationViewDelegate {
     func navigationView(_ view: NavigationView, didTapCancelButton: CancelButton) {
         delegate?.mapViewControllerDidDismiss(self, byCanceling: true)
     }
-
-    // MARK: MGLMapViewDelegate
-    func mapView(_ mapView: MGLMapView, regionDidChangeAnimated animated: Bool) {
-        var userTrackingMode = mapView.userTrackingMode
-        if let mapView = mapView as? NavigationMapView, mapView.tracksUserCourse {
-            userTrackingMode = .followWithCourse
-        }
-        if userTrackingMode == .none && !isInOverviewMode {
-            navigationView.wayNameView.isHidden = true
-        }
-    }
-
-    func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
-        // This method is called before the view is added to a window
-        // (if the style is cached) preventing UIAppearance to apply the style.
-        showRouteIfNeeded()
-        self.mapView.localizeLabels()
-        delegate?.mapView?(mapView, didFinishLoading: style)
-    }
-
-    func mapViewDidFinishLoadingMap(_ mapView: MGLMapView) {
-        delegate?.mapViewDidFinishLoadingMap?(mapView)
-    }
-
+    
+    // MARK: VisualInstructionDelegate
+    
     func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
         return delegate?.label?(label, willPresent: instruction, as: presented)
     }
@@ -1088,7 +1071,7 @@ internal extension UIViewAnimationOptions {
         }
     }
 }
-@objc protocol RouteMapViewControllerDelegate: NavigationMapViewDelegate, MGLMapViewDelegate, VisualInstructionDelegate {
+@objc protocol RouteMapViewControllerDelegate: NavigationMapViewDelegate, VisualInstructionDelegate {
     func mapViewControllerDidDismiss(_ mapViewController: RouteMapViewController, byCanceling canceled: Bool)
     func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool
 
