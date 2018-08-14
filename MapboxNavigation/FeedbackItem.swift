@@ -7,7 +7,7 @@ extension UIImage {
     }
 }
 
-public struct FeedbackItem {
+public class FeedbackItem: NSObject {
     var title: String
     var image: UIImage
     var feedbackType: FeedbackType
