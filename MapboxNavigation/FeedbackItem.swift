@@ -7,6 +7,7 @@ extension UIImage {
     }
 }
 
+@objc(MBFeedbackItem)
 public class FeedbackItem: NSObject {
     var title: String
     var image: UIImage
