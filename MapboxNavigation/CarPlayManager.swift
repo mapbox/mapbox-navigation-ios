@@ -28,12 +28,19 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate {
         let mapTemplate = CPMapTemplate()
 
         //TODO: find image or use built-in style?
-        let searchButton: CPBarButton = CPBarButton(type: .text) { button in
+        let searchButton: CPBarButton = CPBarButton(type: .image) { button in
             //TODO: push Search Template
         }
-        searchButton.title = "Search!"
+        let favoriteButton: CPBarButton = CPBarButton(type: .image) { button in
+            // TODO: push Favorite Template
+        }
+        
+        searchButton.image = UIImage(named: "search-monocle", in: .mapboxNavigation, compatibleWith: nil)
+        favoriteButton.image = UIImage(named: "star", in: .mapboxNavigation, compatibleWith: nil)
+        
         mapTemplate.leadingNavigationBarButtons = [searchButton]
-
+        mapTemplate.trailingNavigationBarButtons = [favoriteButton]
+        
         interfaceController.setRootTemplate(mapTemplate, animated: false)
         interfaceController.delegate = self
         self.interfaceController = interfaceController
