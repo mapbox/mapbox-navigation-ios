@@ -3,29 +3,25 @@ import MapboxCoreNavigation
 import AVFoundation
 
 extension FeedbackViewController: UIViewControllerTransitioningDelegate {
-    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         abortAutodismiss()
         return DismissAnimator()
     }
     
-    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return PresentAnimator()
     }
     
-    func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+    public func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
         return interactor.hasStarted ? interactor : nil
     }
 }
 
-typealias FeedbackSection = [FeedbackItem]
-
-class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecognizerDelegate {
+@objc(FeedbackViewController)
+public class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecognizerDelegate {
     
-    typealias SendFeedbackHandler = (FeedbackItem) -> Void
-    
-    var sendFeedbackHandler: SendFeedbackHandler?
+    var sendFeedbackHandler: ((FeedbackItem) -> Void)?
     var dismissFeedbackHandler: (() -> Void)?
-    var sections = [FeedbackSection]()
     var activeFeedbackItem: FeedbackItem?
     
     static let sceneTitle = NSLocalizedString("FEEDBACK_TITLE", value: "Report Problem", comment: "Title of view controller for sending feedback")
@@ -34,6 +30,8 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
     static let verticalCellPadding: CGFloat = 20.0
     
     let interactor = Interactor()
+    
+    public var sections: [[FeedbackItem]] = [[.turnNotAllowed, .closure, .reportTraffic, .confusingInstructions, .generalMapError, .badRoute]]
     
     lazy var collectionView: UICollectionView = {
         let view: UICollectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
@@ -71,7 +69,18 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
         return fullHeight
     }
     
-    override func viewDidLoad() {
+    var eventsManager: EventsManager
+    
+    public init(for eventsManager: EventsManager) {
+        self.eventsManager = eventsManager
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required public init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override public func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
         setupConstraints()
@@ -80,14 +89,18 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
         view.backgroundColor = .white
         progressBar.barColor = #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1)
         enableDraggableDismiss()
+        
+        let defaults = defaultFeedbackHandlers() //this is done every time to refresh the feedback UUID
+        sendFeedbackHandler = defaults.send
+        dismissFeedbackHandler = defaults.dismiss
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         progressBar.progress = 1
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         UIView.animate(withDuration: FeedbackViewController.autoDismissInterval) {
@@ -97,7 +110,7 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
         enableAutoDismiss()
     }
     
-    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+    override public func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         super.willTransition(to: newCollection, with: coordinator)
         
         // Dismiss the feedback view when switching between landscape and portrait mode.
@@ -131,7 +144,7 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
         dismissFeedbackHandler?()
     }
     
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         // Only respond to touches outside/behind the view
         let isDescendant = touch.view?.isDescendant(of: view) ?? true
         return !isDescendant
@@ -165,10 +178,48 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
         progressBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         progressBar.bottomAnchor.constraint(equalTo: view.safeBottomAnchor).isActive = true
     }
+    
+    func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: (FeedbackItem) -> Void, dismiss: () -> Void) {
+        let uuid = eventsManager.recordFeedback()
+        let send = defaultSendFeedbackHandler(uuid: uuid)
+        let dismiss = defaultDismissFeedbackHandler(uuid: uuid)
+        
+        return (send, dismiss)
+    }
+    
+    func defaultSendFeedbackHandler(source: FeedbackSource = .user, uuid: UUID) -> (FeedbackItem) -> Void {
+        return { [weak self] (item) in
+            guard let strongSelf = self else { return }
+            
+            // todo, can this be moved as a delegate on this view controller?
+            //strongSelf.delegate?.mapViewController(strongSelf, didSendFeedbackAssigned: uuid, feedbackType: item.feedbackType)
+            strongSelf.eventsManager.updateFeedback(uuid: uuid, type: item.feedbackType, source: source, description: nil)
+            
+            guard let parent = strongSelf.parent else {
+                strongSelf.dismiss(animated: true)
+                return
+            }
+            
+            strongSelf.dismiss(animated: true) {
+                DialogViewController().present(on: parent)
+            }
+        }
+    }
+    
+    func defaultDismissFeedbackHandler(uuid: UUID) -> (() -> Void) {
+        return { [weak self ] in
+            guard let strongSelf = self else { return }
+            
+            // todo, can this be moved as a delegate on this view controller?
+            // strongSelf.delegate?.mapViewControllerDidCancelFeedback(strongSelf)
+            strongSelf.eventsManager.cancelFeedback(uuid: uuid)
+            strongSelf.dismiss(animated: true, completion: nil)
+        }
+    }
 }
 
 extension FeedbackViewController: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedbackCollectionViewCell.defaultIdentifier, for: indexPath) as! FeedbackCollectionViewCell
         let item = sections[indexPath.section][indexPath.row]
         
@@ -179,15 +230,15 @@ extension FeedbackViewController: UICollectionViewDataSource {
         return cell
     }
     
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
+    public func numberOfSections(in collectionView: UICollectionView) -> Int {
         return sections.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return sections[section].count
     }
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         // In case the view is scrolled, dismiss the feedback window immediately
         // and reset the `progressBar` back to a full progress.
         abortAutodismiss()
@@ -196,7 +247,7 @@ extension FeedbackViewController: UICollectionViewDataSource {
 }
 
 extension FeedbackViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         abortAutodismiss()
         let item = sections[indexPath.section][indexPath.row]
         sendFeedbackHandler?(item)
@@ -204,8 +255,7 @@ extension FeedbackViewController: UICollectionViewDelegate {
 }
 
 extension FeedbackViewController: UICollectionViewDelegateFlowLayout {
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let availableWidth = collectionView.bounds.width
         // 3 columns and 2 rows in portrait mode.
         // 6 columns and 1 row in landscape mode.
