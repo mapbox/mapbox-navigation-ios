@@ -489,7 +489,7 @@ extension RouteController: CLLocationManagerDelegate {
         }
     }
 
-    func reroute(from location: CLLocation, along progress: RouteProgress) {
+    public func reroute(from location: CLLocation, along progress: RouteProgress) {
         if let lastRerouteLocation = lastRerouteLocation {
             guard location.distance(from: lastRerouteLocation) >= RouteControllerMaximumDistanceBeforeRecalculating else {
                 return

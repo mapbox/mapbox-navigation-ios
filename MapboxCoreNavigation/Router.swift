@@ -15,5 +15,7 @@ public typealias RouterDelegate = RouteControllerDelegate
     var route: Route { get set }
     func endNavigation(feedback: EndOfRouteFeedback?)
 
+    @objc func userIsOnRoute(_ location: CLLocation) -> Bool
+    @objc func reroute(from: CLLocation, along: RouteProgress)
     @objc var location: CLLocation? { get }
 }

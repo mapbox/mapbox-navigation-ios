@@ -17,10 +17,12 @@ let tunnelWaypoint2 = Waypoint(coordinate: TunnelDetectorTestData.endLocation)
 let tunnelRoute = Route(json: tunnelJsonRoute, waypoints: [tunnelWayPoint1, tunnelWaypoint2], options: NavigationRouteOptions(waypoints: [tunnelWayPoint1, tunnelWaypoint2]))
 
 class TunnelIntersectionManagerTests: XCTestCase {
-    
+    lazy var locationManager = NavigationLocationManager()
     lazy var tunnelSetup: (tunnelIntersectionManager: TunnelIntersectionManager, routeController: RouteController, firstLocation: CLLocation) = {
         tunnelRoute.accessToken = "foo"
-        let navigation = RouteController(along: tunnelRoute, directions: directions)
+
+        let navigation = RouteController(along: tunnelRoute, directions: directions, locationManager: locationManager)
+        locationManager.delegate = navigation
         let firstCoord = navigation.routeProgress.currentLegProgress.nearbyCoordinates.first!
         let tunnelIntersectionManager = TunnelIntersectionManager()
         

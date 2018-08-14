@@ -2,7 +2,7 @@ import Foundation
 import MapboxCoreNavigation
 import MapboxDirections
 
-class RouteControllerDelegateSpy: RouteControllerDelegate {
+class NavigationServiceDelegateSpy: NavigationServiceDelegate {
     private(set) var recentMessages: [String] = []
 
     public func reset() {
