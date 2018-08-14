@@ -24,7 +24,7 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
     /**
      An `AVAudioPlayer` through which spoken instructions are played.
      */
-    public var audioPlayer: AVAudioPlayer?
+    @objc public var audioPlayer: AVAudioPlayer?
     
     var audioTask: URLSessionDataTask?
     var cache: BimodalDataCache
