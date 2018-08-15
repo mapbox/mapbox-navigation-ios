@@ -23,19 +23,11 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
         privateShared = nil
     }
 
-    private enum CPFavoritesList {
+    enum CPFavoritesList {
 
-        enum POI {
+        enum POI: RawRepresentable {
+            typealias RawValue = String
             case mapboxSF, timesSquare
-
-            var description: String {
-                switch self {
-                case .mapboxSF:
-                    return "Mapbox SF"
-                case .timesSquare:
-                    return "Times Square"
-                }
-            }
 
             var subTitle: String {
                 switch self {
@@ -54,6 +46,27 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
                     return CLLocation(latitude: 40.758899, longitude: -73.9873197)
                 }
             }
+            
+            var rawValue: String {
+                switch self {
+                case .mapboxSF:
+                    return "Mapbox SF"
+                case .timesSquare:
+                    return "Times Square"
+                }
+            }
+            
+            init?(rawValue: String) {
+                let value = rawValue.lowercased()
+                switch value {
+                case "mapbox sf":
+                    self = .mapboxSF
+                case "times square":
+                    self = .timesSquare
+                default:
+                    return nil
+                }
+            }
         }
     }
 
@@ -61,46 +74,27 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
 
     public func application(_ application: UIApplication, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPWindow) {
         let mapTemplate = CPMapTemplate()
+        mapTemplate.mapDelegate = self
 
         let searchTemplate = CPSearchTemplate()
         searchTemplate.delegate = self
 
-        let searchButton: CPBarButton = CPBarButton(type: .image) { button in
-            interfaceController.pushTemplate(searchTemplate, animated: true)
-        }
-        
-        let favoriteButton: CPBarButton = CPBarButton(type: .image) { button in
-            let mapboxSFItem = CPListItem(text: CPFavoritesList.POI.mapboxSF.description, detailText: CPFavoritesList.POI.mapboxSF.subTitle)
-            let timesSquareItem = CPListItem(text: CPFavoritesList.POI.timesSquare.description, detailText: CPFavoritesList.POI.timesSquare.subTitle)
-            let listSection = CPListSection(items: [mapboxSFItem, timesSquareItem])
-            let listTemplate = CPListTemplate(title: "Favorites List", sections: [listSection])
-            listTemplate.delegate = self
-            interfaceController.pushTemplate(listTemplate, animated: true)
-        }
-        
+        let searchButton = searchTemplateButton(searchTemplate: searchTemplate, interfaceController: interfaceController)
+        let favoriteButton = favoriteTemplateButton(interfaceController: interfaceController)
         
         let viewController = CarPlayMapViewController()
         window.rootViewController = viewController
         self.carWindow = window
         
-        searchButton.image = UIImage(named: "search-monocle", in: .mapboxNavigation, compatibleWith: nil)
-        favoriteButton.image = UIImage(named: "star", in: .mapboxNavigation, compatibleWith: nil)
-        
         mapTemplate.leadingNavigationBarButtons = [searchButton]
         mapTemplate.trailingNavigationBarButtons = [favoriteButton]
         mapTemplate.mapButtons = [viewController.zoomInButton(), viewController.zoomOutButton()]
-        mapTemplate.mapDelegate = self
+        
+        mapTemplate.showPanningInterface(animated: true)
         
         interfaceController.setRootTemplate(mapTemplate, animated: false)
         interfaceController.delegate = self
         self.interfaceController = interfaceController
-    }
-    
-    private func trip(from origin: CLLocationCoordinate2D, to destination: CLLocationCoordinate2D) -> CPTrip {
-        let routeChoice = CPRouteChoice(summaryVariants: ["Fastest Route"], additionalInformationVariants: ["Traffic is light."], selectionSummaryVariants: ["N/A"])
-        
-        let trip = CPTrip(origin: MKMapItem(placemark: MKPlacemark(coordinate: origin)), destination: MKMapItem(placemark: MKPlacemark(coordinate: destination)), routeChoices: [routeChoice])
-        return trip
     }
 
     public func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPWindow) {
@@ -129,20 +123,36 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
 
     }
 
-    public func searchButton() -> CPBarButton {
-        let searchButton = CPBarButton(type: .image) { button in
-            // TODO: Show Map Template
+    public func searchTemplateButton(searchTemplate: CPSearchTemplate, interfaceController: CPInterfaceController) -> CPBarButton {
+        
+        let searchTemplateButton = CPBarButton(type: .image) { button in
+            interfaceController.pushTemplate(searchTemplate, animated: true)
         }
-        searchButton.image = Bundle.mapboxNavigation.image(named: "search-monocle")
-        return searchButton
+        
+        searchTemplateButton.image = Bundle.mapboxNavigation.image(named: "search-monocle")
+        
+        return searchTemplateButton
     }
     
-    public static func favoriteButton() -> CPBarButton {
-        let favoriteButton = CPBarButton(type: .image) { button in
+    public func favoriteTemplateButton(interfaceController: CPInterfaceController) -> CPBarButton {
+        
+        let favoriteTemplateButton = CPBarButton(type: .image) { button in
             // TODO: Show List Template
+            let mapboxSFItem = CPListItem(text: CPFavoritesList.POI.mapboxSF.rawValue,
+                                    detailText: CPFavoritesList.POI.mapboxSF.subTitle)
+            let timesSquareItem = CPListItem(text: CPFavoritesList.POI.timesSquare.rawValue,
+                                       detailText: CPFavoritesList.POI.timesSquare.subTitle)
+            let listSection = CPListSection(items: [mapboxSFItem, timesSquareItem])
+            let listTemplate = CPListTemplate(title: "Favorites List", sections: [listSection])
+            
+            listTemplate.delegate = self
+            
+            interfaceController.pushTemplate(listTemplate, animated: true)
         }
-        favoriteButton.image = Bundle.mapboxNavigation.image(named: "star")
-        return favoriteButton
+        
+        favoriteTemplateButton.image = Bundle.mapboxNavigation.image(named: "star")
+        
+        return favoriteTemplateButton
     }
 }
 
@@ -156,20 +166,29 @@ extension CarPlayManager: CPListTemplateDelegate {
             let userLocation = mapView.userLocation
             let originLocation = CLLocationCoordinate2D(latitude: userLocation!.coordinate.latitude, longitude: userLocation!.coordinate.longitude)
 
-            let mapboxSFLocation = CLLocationCoordinate2D(latitude: 37.7820776, longitude: -122.4155262)
-            let timesSquareLocation = CLLocationCoordinate2D(latitude: 40.758899, longitude: -73.9873197)
-
-            let mapboxSFTrip = self.trip(from: originLocation, to: mapboxSFLocation)
-            let timesSquareTrip = self.trip(from: originLocation, to: timesSquareLocation)
-
-            let defaultPreviewText = CPTripPreviewTextConfiguration(startButtonTitle: "Go", additionalRoutesButtonTitle: "Addition Routes", overviewButtonTitle: "Overview")
-            
-            // TODO: Dismiss list before displaying the trip previews
-            
-            mapTemplate.showTripPreviews([mapboxSFTrip, timesSquareTrip], textConfiguration: defaultPreviewText)
-            
-            completionHandler()
+            if let rawValue = item.text, let favoritePOI = CPFavoritesList.POI(rawValue: rawValue), let interfaceController = interfaceController {
+                interfaceController.popToRootTemplate(animated: false)
+                
+                let mapboxSFTrip: CPTrip = self.trip(from: originLocation, to: favoritePOI.location.coordinate, destinationNickname: favoritePOI.rawValue)
+                let defaultPreviewText = CPTripPreviewTextConfiguration(startButtonTitle: "Let's GO!", additionalRoutesButtonTitle: "Directions Overview", overviewButtonTitle: "Take me Back.")
+                
+                mapTemplate.showTripPreviews([mapboxSFTrip], textConfiguration: defaultPreviewText)
+                completionHandler()
+            }
         }
+    }
+    
+    private func trip(from origin: CLLocationCoordinate2D, to destination: CLLocationCoordinate2D, destinationNickname: String) -> CPTrip {
+        let routeChoice = CPRouteChoice(summaryVariants: ["Fastest Route"],
+                          additionalInformationVariants: ["Traffic is light."],
+                               selectionSummaryVariants: ["Ready to navigate."])
+        
+        let trip = CPTrip(origin: MKMapItem(placemark: MKPlacemark(coordinate: origin)),
+                     destination: MKMapItem(placemark: MKPlacemark(coordinate: destination,
+                                    addressDictionary: ["street": destinationNickname])),
+                    routeChoices: [routeChoice])
+        
+        return trip
     }
 }
 
@@ -178,6 +197,7 @@ extension CarPlayManager: CPListTemplateDelegate {
 extension CarPlayManager: CPMapTemplateDelegate {
     public func mapTemplate(_ mapTemplate: CPMapTemplate, startedTrip trip: CPTrip, using routeChoice: CPRouteChoice) {
 //        startBasicNavigation()
+        mapTemplate.hideTripPreviews()
     }
     
     public func mapTemplate(_ mapTemplate: CPMapTemplate, selectedPreviewFor trip: CPTrip, using routeChoice: CPRouteChoice) {
@@ -187,8 +207,8 @@ extension CarPlayManager: CPMapTemplateDelegate {
         //        routes.remove(at: foundRoute)
         //        routes.insert(route, at: 0)
         //        appViewFromCarPlayWindow?.routes = routes
-        let textConfiguration = CPTripPreviewTextConfiguration.init(startButtonTitle: "Let's GO!", additionalRoutesButtonTitle: "Meh, show me more", overviewButtonTitle: "Take me Back")
-        mapTemplate.showRouteChoicesPreview(for: trip, textConfiguration: textConfiguration)
+//        let textConfiguration = CPTripPreviewTextConfiguration.init(startButtonTitle: "Let's GO!", additionalRoutesButtonTitle: "Meh, show me more", overviewButtonTitle: "Take me Back")
+//        mapTemplate.showRouteChoicesPreview(for: trip, textConfiguration: textConfiguration)
     }
 }
 #endif

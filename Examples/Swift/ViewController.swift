@@ -47,29 +47,29 @@ class ViewController: UIViewController, MGLMapViewDelegate {
 
             mapView?.showRoutes(routes)
             mapView?.showWaypoints(current)
-#if canImport(CarPlay)
-            guard #available(iOS 12.0, *), let carViewController = carViewController else { return }
-            
-            mapTemplate?.mapButtons = []
-                
-            // Use custom extension on CPMaptemplate to make it easy to preview a `Route`.
-            mapTemplate?.showTripPreviews(routes, textConfiguration: nil)
-            
-            carViewController.mapView?.showRoutes(routes)
-            carViewController.mapView?.showWaypoints(current)
-            
-            // Wait for preview UI to show up so we can get the proper safeAreaInsets.
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                let padding: CGFloat = 10
-                let bounds = UIEdgeInsets(top: carViewController.view.safeAreaInsets.top + padding,
-                                          left: carViewController.view.safeAreaInsets.left + padding,
-                                          bottom: carViewController.view.safeAreaInsets.bottom + padding,
-                                          right: carViewController.view.safeAreaInsets.right + padding)
-                
-                let line = MGLPolyline(coordinates: current.coordinates!, count: UInt(current.coordinates!.count))
-                carViewController.mapView?.setVisibleCoordinateBounds(line.overlayBounds, edgePadding: bounds, animated: true)
-            }
-#endif
+//#if canImport(CarPlay)
+//            guard #available(iOS 12.0, *), let carViewController = carViewController else { return }
+//
+//            mapTemplate?.mapButtons = []
+//
+//            // Use custom extension on CPMaptemplate to make it easy to preview a `Route`.
+//            mapTemplate?.showTripPreviews(routes, textConfiguration: nil)
+//
+//            carViewController.mapView?.showRoutes(routes)
+//            carViewController.mapView?.showWaypoints(current)
+//
+//            // Wait for preview UI to show up so we can get the proper safeAreaInsets.
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+//                let padding: CGFloat = 10
+//                let bounds = UIEdgeInsets(top: carViewController.view.safeAreaInsets.top + padding,
+//                                          left: carViewController.view.safeAreaInsets.left + padding,
+//                                          bottom: carViewController.view.safeAreaInsets.bottom + padding,
+//                                          right: carViewController.view.safeAreaInsets.right + padding)
+//
+//                let line = MGLPolyline(coordinates: current.coordinates!, count: UInt(current.coordinates!.count))
+//                carViewController.mapView?.setVisibleCoordinateBounds(line.overlayBounds, edgePadding: bounds, animated: true)
+//            }
+//#endif
         }
     }
 
@@ -100,23 +100,6 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     var appDelegate: AppDelegate? {
         return UIApplication.shared.delegate as? AppDelegate
     }
-
-#if canImport(CarPlay)
-    @available(iOS 12.0, *)
-    var carViewController: ViewController? {
-        return CarPlayManager.shared().carWindow?.rootViewController as? ViewController
-    }
-    
-    @available(iOS 12.0, *)
-    var interfaceController: CPInterfaceController? {
-        return CarPlayManager.shared().interfaceController
-    }
-    
-    @available(iOS 12.0, *)
-    var mapTemplate: CPMapTemplate? {
-        return interfaceController?.rootTemplate as? CPMapTemplate
-    }
-#endif
     
     // MARK: - Lifecycle Methods
 

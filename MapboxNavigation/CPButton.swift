@@ -1,27 +1,6 @@
 import Foundation
 #if canImport(CarPlay)
 import CarPlay
-
-@available(iOS 12.0, *)
-extension CPMapButton {
-    
-    public static func zoomInButton(for mapView: MGLMapView) -> CPMapButton {
-        let zoomInButton = CPMapButton { (button) in
-            mapView.setZoomLevel(mapView.zoomLevel + 1, animated: true)
-        }
-        zoomInButton.image = Bundle.mapboxNavigation.image(named: "plus")!
-        return zoomInButton
-    }
-    
-    public static func zoomOutButton(for mapView: MGLMapView) -> CPMapButton {
-        let zoomInButton = CPMapButton { (button) in
-            mapView.setZoomLevel(mapView.zoomLevel - 1, animated: true)
-        }
-        zoomInButton.image = Bundle.mapboxNavigation.image(named: "minus")!
-        return zoomInButton
-    }
-}
-
 @available(iOS 12.0, *)
 extension CPBarButton {
     
