@@ -32,8 +32,8 @@ class CarPlayManagerTests: XCTestCase {
         XCTAssert((view?.isKind(of: NavigationMapView.self))!, "CarPlay window's root view should be a map view")
 
         let template: CPMapTemplate = interfaceControllerSpy.rootTemplate as! CPMapTemplate
-        XCTAssertEqual(2, template.leadingNavigationBarButtons.count)
-        XCTAssertEqual(2, template.trailingNavigationBarButtons.count)
+        XCTAssertEqual(1, template.leadingNavigationBarButtons.count)
+        XCTAssertEqual(1, template.trailingNavigationBarButtons.count)
     }
 
     //MARK: TODO:

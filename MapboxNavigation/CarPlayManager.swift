@@ -3,7 +3,8 @@ import CarPlay
 
 @available(iOS 12.0, *)
 @objc(MBCarPlayManager)
-public class CarPlayManager: NSObject, CPInterfaceControllerDelegate {
+public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTemplateDelegate {
+
     public fileprivate(set) var interfaceController: CPInterfaceController?
     public fileprivate(set) var carWindow: UIWindow?
 
@@ -27,9 +28,12 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate {
     public func application(_ application: UIApplication, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPWindow) {
         let mapTemplate = CPMapTemplate()
 
+        let searchTemplate = CPSearchTemplate()
+        searchTemplate.delegate = self
+
         //TODO: find image or use built-in style?
         let searchButton: CPBarButton = CPBarButton(type: .image) { button in
-            //TODO: push Search Template
+            interfaceController.pushTemplate(searchTemplate, animated: true)
         }
         let favoriteButton: CPBarButton = CPBarButton(type: .image) { button in
             // TODO: push Favorite Template
@@ -54,5 +58,27 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate {
         self.interfaceController = nil
         carWindow?.isHidden = true
     }
+
+    // MARK: CPSearchTemplateDelegate
+
+    private func cannedResults() -> Array<(String, CLLocationCoordinate2D)> {
+        let nobHill: (String, CLLocationCoordinate2D) = ("Nob Hill", CLLocationCoordinate2D(latitude: 37.7910, longitude: -122.4131))
+        return [nobHill]
+    }
+
+    public func searchTemplate(_ searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void) {
+        // TODO: autocomplete immediately based on Favorites; calls to the search/geocoding client might require a minimum number of characters before firing
+        // Results passed into this completionHandler will be displayed directly on the search template. Might want to limit the results set based on available screen real estate after testing.
+    }
+
+    public func searchTemplateSearchButtonPressed(_ searchTemplate: CPSearchTemplate) {
+        // TODO: based on this callback we should push a CPListTemplate with a longer list of results.
+        // Need to coordinate delegation of list item selection from this template vs items displayed directly in the search template
+    }
+
+    public func searchTemplate(_ searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void) {
+
+    }
+
 }
 #endif
