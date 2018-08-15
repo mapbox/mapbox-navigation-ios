@@ -9,7 +9,11 @@
 * Resolved the partially styled user interface issue that occurs when the style theme is switched between the `NightStyle` and `DayStyle`, after the resume  button was tapped. ([#1589](https://github.com/mapbox/mapbox-navigation-ios/pull/1589))
 * Fixed a rare crash associated with the keyboard when showing the end of route view controller. [#1599](https://github.com/mapbox/mapbox-navigation-ios/pull/1599/)
 
-## v0.19.0 (July, 24, 2018)
+## v0.19.1 (August 15, 2018)
+
+* Fixed build errors when installing this SDK with Mapbox Maps SDK for iOS v4.3.0 or above. ([#1608](https://github.com/mapbox/mapbox-navigation-ios/pull/1608))
+
+## v0.19.0 (July 24, 2018)
 
 ### Packaging
 
