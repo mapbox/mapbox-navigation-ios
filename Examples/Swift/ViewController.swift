@@ -150,9 +150,6 @@ class ViewController: UIViewController, MGLMapViewDelegate {
             popoverController.sourceView = self.startButton
         }
 
-#if canImport(CarPlay)
-        buildCarPlayUI()
-#endif
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -357,9 +354,6 @@ class ViewController: UIViewController, MGLMapViewDelegate {
             self.mapView?.showRoutes(routes)
             self.mapView?.showWaypoints(currentRoute)
         }
-#if canImport(CarPlay)
-        buildCarPlayUI()
-#endif
     }
 }
 
@@ -394,30 +388,6 @@ extension ViewController: NavigationMapViewDelegate {
 
         self.present(actionSheet, animated: true, completion: nil)
     }
-    
-    // MARK: CarPlay Specific functions
-#if canImport(CarPlay)
-    func buildCarPlayUI() {
-        guard #available(iOS 12.0, *), let mapView = mapView, let mapTemplate = mapTemplate, let _ = carViewController else { return }
-        bottomBar.isHidden = true
-        bottomBarBackground.isHidden = true
-        longPressHintView.isHidden = true
-        bottomBar.isHidden = true
-        
-        mapTemplate.mapDelegate = self
-        mapTemplate.mapButtons = [CPMapButton.zoomInButton(for: mapView), CPMapButton.zoomOutButton(for: mapView)]
-        mapTemplate.trailingNavigationBarButtons = [CPBarButton.panButton(for: mapView, mapTemplate: mapTemplate)]
-        mapTemplate.leadingNavigationBarButtons = []
-    }
-    
-    func dismissAndCleanupUI() {
-        guard #available(iOS 12.0, *) else { return }
-        appViewFromCarPlayWindow?.dismiss(animated: true, completion: nil)
-        carViewController?.dismiss(animated: true, completion: nil)
-        buildCarPlayUI()
-        mapTemplate?.hideTripPreviews()
-    }
-#endif
 }
 
 // MARK: VoiceControllerDelegate methods
@@ -486,9 +456,7 @@ extension ViewController: NavigationViewControllerDelegate {
     // Called when the user hits the exit button.
     // If implemented, you are responsible for also dismissing the UI.
     func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool) {
-#if canImport(CarPlay)
-        dismissAndCleanupUI()
-#endif
+        
     }
 }
 
@@ -511,26 +479,6 @@ extension ViewController: VisualInstructionDelegate {
 @available(iOS 12.0, *)
 extension ViewController: CarPlayNavigationDelegate {
     func carPlaynavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool) {
-        dismissAndCleanupUI()
-    }
-}
-
-// MARK: CPMapTemplateDelegate
-@available(iOS 12.0, *)
-extension ViewController: CPMapTemplateDelegate {
-    func mapTemplate(_ mapTemplate: CPMapTemplate, startedTrip trip: CPTrip, using routeChoice: CPRouteChoice) {
-        startBasicNavigation()
-    }
-    
-    func mapTemplate(_ mapTemplate: CPMapTemplate, selectedPreviewFor trip: CPTrip, using routeChoice: CPRouteChoice) {
-//        guard let routeIndex = trip.routeChoices.lastIndex(where: {$0 == routeChoice}), var routes = appViewFromCarPlayWindow?.routes else { return }
-//        let route = routes[routeIndex]
-//        guard let foundRoute = routes.firstIndex(where: {$0 == route}) else { return }
-//        routes.remove(at: foundRoute)
-//        routes.insert(route, at: 0)
-//        appViewFromCarPlayWindow?.routes = routes
-        let textConfiguration = CPTripPreviewTextConfiguration.init(startButtonTitle: "Let's GO!", additionalRoutesButtonTitle: "Meh, show me more", overviewButtonTitle: "Take me Back")
-        mapTemplate.showRouteChoicesPreview(for: trip, textConfiguration: textConfiguration)
     }
 }
 #endif
