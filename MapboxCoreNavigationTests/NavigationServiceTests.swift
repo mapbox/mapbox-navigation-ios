@@ -24,8 +24,7 @@ class NavigationServiceTests: XCTestCase {
         eventsManager.manager = eventsManagerSpy
         let navigationService = MapboxNavigationService(route: initialRoute, directions: directionsClientSpy, eventsManager: eventsManager)
         navigationService.delegate = delegate
-//        let routeController = RouteController(along: initialRoute, directions: directionsClientSpy, locationManager: NavigationLocationManager(), eventsManager: eventsManager)
-//        routeController.delegate = delegate
+
 
         let legProgress: RouteLegProgress = navigationService.router.routeProgress.currentLegProgress
 

@@ -156,19 +156,13 @@ class NavigationViewControllerTests: XCTestCase {
         
 //        let navigationViewController = NavigationViewController(for: initialRoute, directions: Directions(accessToken: "garbage"), locationManager: NavigationLocationManagerFake())
         let navigationViewController = dependencies.navigationViewController
-        // We break the communication between CLLocation and MBRouteController
-        // Intent: Prevent the routecontroller from being fed real location updates
-        
-        
-//        navigationViewController.routeController.locationManager.delegate = nil
-        
         UIApplication.shared.delegate!.window!!.addSubview(navigationViewController.view)
         
         let service = dependencies.navigationService
         
         // Identify a location without a custom road name.
         let fultonStreetLocation = dependencies.poi[2]
-//        let fultonStreetLocation = service.router.route.legs.first!.steps[5].intersections!.first!.location
+
         
         navigationViewController.mapViewController!.labelRoadNameCompletionHandler = { (defaultRaodNameAssigned) in
             XCTAssertTrue(defaultRaodNameAssigned, "label road name was not successfully set")
