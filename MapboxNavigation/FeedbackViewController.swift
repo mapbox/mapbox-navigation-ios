@@ -74,12 +74,22 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     public init(eventsManager: EventsManager) {
         self.eventsManager = eventsManager
         super.init(nibName: nil, bundle: nil)
-        self.modalPresentationStyle = .custom
-        self.transitioningDelegate = self
+        commonInit()
+    }
+
+    public override func encode(with aCoder: NSCoder) {
+        aCoder.encode(eventsManager, forKey: "EventsManager")
     }
     
     required public init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        eventsManager = aDecoder.decodeObject(of: [EventsManager.self], forKey: "EventsManager") as? EventsManager ?? EventsManager(accessToken: nil)
+        super.init(coder: aDecoder)
+        commonInit()
+    }
+    
+    func commonInit() {
+        self.modalPresentationStyle = .custom
+        self.transitioningDelegate = self
     }
     
     override public func viewDidLoad() {
