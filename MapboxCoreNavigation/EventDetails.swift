@@ -8,38 +8,41 @@ import MapboxDirections
 
 struct EventDetails: Encodable {
     
-    let originalRequestIdentifier: String?
-    let requestIdentifier: String?
+    let audioType: String = AVAudioSession.sharedInstance().audioType
+    let applicationState: UIApplicationState = UIApplication.shared.applicationState
+    let batteryLevel: Int = UIDevice.current.batteryLevel >= 0 ? Int(UIDevice.current.batteryLevel * 100) : -1
+    let batteryPluggedIn: Bool = [.charging, .full].contains(UIDevice.current.batteryState)
     let coordinate: CLLocationCoordinate2D?
-    let originalGeometry: Polyline?
-    let originalDistance: CLLocationDistance?
-    let originalEstimatedDuration: TimeInterval?
-    let originalStepCount: Int?
-    let geometry: Polyline?
-    let distance: CLLocationDistance?
-    let estimatedDuration: TimeInterval?
     let created: Date = Date()
-    let startTimestamp: Date?
-    let sdkIdentifier: String
-    let sdkVersion: String = String(describing: Bundle.mapboxCoreNavigation.object(forInfoDictionaryKey: "CFBundleShortVersionString")!)
-    let profile: String
-    let simulation: Bool
-    let sessionIdentifier: String
+    let device: String = UIDevice.current.machine
+    let distance: CLLocationDistance?
     let distanceCompleted: CLLocationDistance
     let distanceRemaining: TimeInterval
     let durationRemaining: TimeInterval
-    let rerouteCount: Int
-    let volumeLevel: Int = Int(AVAudioSession.sharedInstance().outputVolume * 100)
-    let audioType: String = AVAudioSession.sharedInstance().audioType
-    let screenBrightness: Int = Int(UIScreen.main.brightness * 100)
-    let batteryPluggedIn: Bool = [.charging, .full].contains(UIDevice.current.batteryState)
-    let batteryLevel: Int = UIDevice.current.batteryLevel >= 0 ? Int(UIDevice.current.batteryLevel * 100) : -1
-    let applicationState: UIApplicationState = UIApplication.shared.applicationState
-    let userAbsoluteDistanceToDestination: CLLocationDistance?
+    let estimatedDuration: TimeInterval?
+    let geometry: Polyline?
     let locationEngine: String?
+    let locationManagerDesiredAccuracy: CLLocationAccuracy?
+    let operatingSystem: String = "\(ProcessInfo.systemName) \(ProcessInfo.systemVersion)"
+    let originalDistance: CLLocationDistance?
+    let originalEstimatedDuration: TimeInterval?
+    let originalGeometry: Polyline?
+    let originalRequestIdentifier: String?
+    let originalStepCount: Int?
+    let profile: String
+    let platform: String = ProcessInfo.systemName
     let percentTimeInPortrait: Int
     let percentTimeInForeground: Int
-    let locationManagerDesiredAccuracy: CLLocationAccuracy?
+    let requestIdentifier: String?
+    let rerouteCount: Int
+    let screenBrightness: Int = Int(UIScreen.main.brightness * 100)
+    let sessionIdentifier: String
+    let simulation: Bool
+    let startTimestamp: Date?
+    let sdkIdentifier: String
+    let sdkVersion: String = String(describing: Bundle.mapboxCoreNavigation.object(forInfoDictionaryKey: "CFBundleShortVersionString")!)
+    let userAbsoluteDistanceToDestination: CLLocationDistance?
+    let volumeLevel: Int = Int(AVAudioSession.sharedInstance().outputVolume * 100)
     
     let stepIndex: Int
     let stepCount: Int
@@ -159,6 +162,9 @@ struct EventDetails: Encodable {
         case sdkIdentifier
         case sdkVersion
         case profile
+        case platform
+        case operatingSystem
+        case device
         case simulation
         case sessionIdentifier
         case distanceCompleted
@@ -213,6 +219,9 @@ struct EventDetails: Encodable {
         try container.encode(sdkIdentifier, forKey: .sdkIdentifier)
         try container.encode(sdkVersion, forKey: .sdkVersion)
         try container.encode(profile, forKey: .profile)
+        try container.encode(platform, forKey: .platform)
+        try container.encode(operatingSystem, forKey: .operatingSystem)
+        try container.encode(device, forKey: .device)
         try container.encode(simulation, forKey: .simulation)
         try container.encode(sessionIdentifier, forKey: .sessionIdentifier)
         try container.encode(distanceCompleted, forKey: .distanceCompleted)
