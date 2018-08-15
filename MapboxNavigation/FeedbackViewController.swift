@@ -71,9 +71,11 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     
     var eventsManager: EventsManager
     
-    public init(for eventsManager: EventsManager) {
+    public init(eventsManager: EventsManager) {
         self.eventsManager = eventsManager
         super.init(nibName: nil, bundle: nil)
+        self.modalPresentationStyle = .custom
+        self.transitioningDelegate = self
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -195,7 +197,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
             //strongSelf.delegate?.mapViewController(strongSelf, didSendFeedbackAssigned: uuid, feedbackType: item.feedbackType)
             strongSelf.eventsManager.updateFeedback(uuid: uuid, type: item.feedbackType, source: source, description: nil)
             
-            guard let parent = strongSelf.parent else {
+            guard let parent = strongSelf.presentingViewController else {
                 strongSelf.dismiss(animated: true)
                 return
             }

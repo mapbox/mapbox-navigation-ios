@@ -23,12 +23,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var instructionsBannerView: InstructionsBannerView!
     
-    lazy var feedbackViewController: FeedbackViewController = {
-        let controller = FeedbackViewController(for: routeController.eventsManager)
-        controller.modalPresentationStyle = .custom
-        controller.transitioningDelegate = controller
-        return controller
-    }()
+    var feedbackViewController: FeedbackViewController!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +33,8 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
         
         mapView.delegate = self
         mapView.compassView.isHidden = true
+        
+        feedbackViewController = FeedbackViewController(eventsManager: routeController.eventsManager)
 
         // Add listeners for progress updates
         resumeNotifications()

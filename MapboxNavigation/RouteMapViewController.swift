@@ -26,13 +26,7 @@ class RouteMapViewController: UIViewController {
         return viewController
     }()
     
-    lazy var feedbackViewController: FeedbackViewController = {
-        let controller = FeedbackViewController(for: routeController.eventsManager)
-        
-        controller.modalPresentationStyle = .custom
-        controller.transitioningDelegate = controller
-        return controller
-    }()
+    var feedbackViewController: FeedbackViewController!
     
     private struct Actions {
         static let overview: Selector = #selector(RouteMapViewController.toggleOverview(_:))
@@ -111,6 +105,7 @@ class RouteMapViewController: UIViewController {
         self.init()
         self.routeController = routeController
         self.delegate = delegate
+        feedbackViewController = FeedbackViewController(eventsManager: routeController.eventsManager)
         automaticallyAdjustsScrollViewInsets = false
     }
     
