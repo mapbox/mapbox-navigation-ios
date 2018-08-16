@@ -25,6 +25,18 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
     public static func resetSharedInstance() {
         privateShared = nil
     }
+    
+    var edgePadding: UIEdgeInsets {
+        guard let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController else {
+            return .zero
+        }
+        
+        let padding:CGFloat = 15
+        return UIEdgeInsets(top: carPlayMapViewController.mapView.safeAreaInsets.top + padding,
+                            left: carPlayMapViewController.mapView.safeAreaInsets.left + padding,
+                            bottom: carPlayMapViewController.mapView.safeAreaInsets.bottom + padding,
+                            right: carPlayMapViewController.mapView.safeAreaInsets.right + padding)
+    }
 
     enum CPFavoritesList {
 
@@ -243,14 +255,13 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let nearestLocation = userLocation.coordinate(at: 20, facing: panDirection)
         let newLocation = CLLocationCoordinate2DMake(nearestLocation.latitude, nearestLocation.longitude)
         
-        carPlayMapViewController.mapView.setOverheadCameraView(from: newLocation, along: coordinates, for: .zero)
+        carPlayMapViewController.mapView.setOverheadCameraView(from: newLocation, along: coordinates, for: edgePadding)
     }
     
     public func mapTemplateDidDismissPanningInterface(_ mapTemplate: CPMapTemplate) {
         guard let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController else {
             return
         }
-        
         carPlayMapViewController.mapView.userTrackingMode = .none
     }
 }
