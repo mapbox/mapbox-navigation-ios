@@ -4,8 +4,6 @@ set -e
 set -o pipefail
 set -u
 
-./scripts/update-guides.sh
-
 if [ -z `which jazzy` ]; then
     echo "Installing jazzy…"
     gem install jazzy

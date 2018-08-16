@@ -15,9 +15,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     struct FrameIntervalOptions {
         fileprivate static let durationUntilNextManeuver: TimeInterval = 7
         fileprivate static let durationSincePreviousManeuver: TimeInterval = 3
-        fileprivate static let defaultFramesPerSecond: Int = 60
-        fileprivate static let pluggedInFramesPerSecond: Int = 30
-        fileprivate static let decreasedFramesPerSecond: Int = 5
+        fileprivate static let defaultFramesPerSecond = MGLMapViewPreferredFramesPerSecond.maximum
+        fileprivate static let pluggedInFramesPerSecond = MGLMapViewPreferredFramesPerSecond.lowPower
+        fileprivate static let decreasedFramesPerSecond = MGLMapViewPreferredFramesPerSecond(rawValue: 5)
     }
     
     /**
@@ -87,16 +87,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     var altitude: CLLocationDistance
     var routes: [Route]?
     var isAnimatingToOverheadMode = false
-    
-    fileprivate var preferredFramesPerSecond: Int = 60 {
-        didSet {
-            if #available(iOS 10.0, *) {
-                displayLink?.preferredFramesPerSecond = preferredFramesPerSecond
-            } else {
-                displayLink?.frameInterval = FrameIntervalOptions.defaultFramesPerSecond / preferredFramesPerSecond
-            }
-        }
-    }
     
     var shouldPositionCourseViewFrameByFrame = false {
         didSet {
