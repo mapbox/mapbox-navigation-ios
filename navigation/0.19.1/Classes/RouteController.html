@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>RouteController Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    <link rel='shortcut icon' href='https://www.mapbox.com/img/favicon.ico' type='image/x-icon' />
+
+    <style type="text/css">
+      .nav-group-name[data-name="RouteController"] > .small-heading,
+      .nav-group-task[data-name="RouteController"] {
+        background-color: #f5f8fc;
+        font-family: "Open Sans Bold";
+        border-left: 3px solid #3a68d8;
+        padding-left: 5px
+      }
+    </style>
+    <script type="text/javascript">
+      !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="4.0.0";
+          analytics.load("fl0c8p240n");
+          var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function() {
+            if(this.readyState == 4 && this.status == 200) {
+              var resp = JSON.parse(xhttp.responseText);
+              analytics.identify(resp.id, {email: resp.email}, {}, function() {
+                analytics.page();
+              });
+            } else {
+              analytics.page();
+            }
+          }
+          xhttp.open("GET", "https://www.mapbox.com/api/session", true);
+          xhttp.send();
+        }}();
+    </script>
+  </head>
+  <body>
+
+    <a name="//apple_ref/swift/Class/RouteController" class="dashAnchor"></a>
+
+    <a title="RouteController Class Reference"></a>
+
+    <header class="header-container">
+      <div class="limiter">
+        <div class="header">
+        <p class="header-col header-col--primary">
+          <a class="header-link" href="../index.html">
+            <img style="height: 25px;"  class="header-icon" src="../img/mapbox.svg" alt="Mapbox Navigation SDK for iOS Docs"/>
+            <span class='header-tag'>Navigation SDK for iOS  Reference</span>
+          </a>
+          
+        </p>
+    
+          <p class="header-col header-col--secondary">
+            <a class="header-link space-right2" href="https://github.com/mapbox/mapbox-navigation-ios">
+              <svg style="margin-bottom: 1px;" class="header-icon" viewBox="0 0 33 33" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      		      <path stroke="none" stroke-width="1" fill="white" fill-rule="evenodd" d="M16.6,0.4 C7.6,0.4 0.3,7.7 0.3,16.7 C0.3,23.9 5,30 11.4,32.2 C12.2,32.3 12.5,31.8 12.5,31.4 L12.5,28.6 C8,29.6 7,26.4 7,26.4 C6.3,24.5 5.2,24 5.2,24 C3.7,23 5.3,23 5.3,23 C6.9,23.1 7.8,24.7 7.8,24.7 C9.3,27.2 11.6,26.5 12.5,26.1 C12.6,25 13.1,24.3 13.5,23.9 C9.9,23.5 6.1,22.1 6.1,15.8 C6.1,14 6.7,12.6 7.8,11.4 C7.6,11 7.1,9.3 8,7.1 C8,7.1 9.4,6.7 12.5,8.8 C13.8,8.4 15.2,8.3 16.6,8.3 C18,8.3 19.4,8.5 20.7,8.8 C23.8,6.7 25.2,7.1 25.2,7.1 C26.1,9.3 25.5,11 25.4,11.4 C26.4,12.5 27.1,14 27.1,15.8 C27.1,22.1 23.3,23.4 19.7,23.8 C20.3,24.3 20.8,25.3 20.8,26.8 L20.8,31.3 C20.8,31.7 21.1,32.2 21.9,32.1 C28.4,29.9 33,23.8 33,16.6 C32.9,7.7 25.6,0.4 16.6,0.4 L16.6,0.4 Z"></path>
+              </svg>
+              View on GitHub
+            </a>
+          </p>
+    
+          <p class="header-col header-col--secondary">
+            <a class="header-link bold" href="dash-feed://https%3A%2F%2Fwww%2Emapbox%2Ecom%2Fmapbox%2Dnavigation%2Dios%2Fnavigation%2Fdocsets%2FMapboxNavigation%2Exml">
+              <img style="margin-bottom: 1px;" class="header-icon" src="../img/dash.png"/>
+              Install in Dash
+            </a>
+          </p>
+      </div>
+      </div>
+    </header>
+
+    <div class="breadcrumbs">
+      <div class="limiter">
+        <a class="breadcrumb" href="../index.html">Mapbox Navigation SDK for iOS Reference</a>
+        <img class="carat" src="../img/carat.png" />
+        RouteController Class Reference
+      </div>
+    </div>
+
+    <div class="content-wrapper limiter">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name" data-name="Guides">
+            <a class="small-heading" href="../Guides.html">Guides<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="Using Map Matching" data-url="using-map-matching.html">
+                <a title="Using Map Matching" class="nav-group-task-link" href="../using-map-matching.html">Using Map Matching</a>
+              </li>
+              <li class="nav-group-task" data-name="Reduce Memory Usage" data-url="reduce-memory-usage.html">
+                <a title="Reduce Memory Usage" class="nav-group-task-link" href="../reduce-memory-usage.html">Reduce Memory Usage</a>
+              </li>
+              <li class="nav-group-task" data-name="Styling the UI" data-url="styling-the-ui.html">
+                <a title="Styling the UI" class="nav-group-task-link" href="../styling-the-ui.html">Styling the UI</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Turn-by-turn UI">
+            <a class="small-heading" href="../Turn-by-turn UI.html">Turn-by-turn UI<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="NavigationViewController" data-url="Classes/NavigationViewController.html">
+                <a title="NavigationViewController" class="nav-group-task-link" href="../Classes/NavigationViewController.html">NavigationViewController</a>
+              </li>
+              <li class="nav-group-task" data-name="NavigationViewControllerDelegate" data-url="Protocols/NavigationViewControllerDelegate.html">
+                <a title="NavigationViewControllerDelegate" class="nav-group-task-link" href="../Protocols/NavigationViewControllerDelegate.html">NavigationViewControllerDelegate</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteVoiceController" data-url="Classes/RouteVoiceController.html">
+                <a title="RouteVoiceController" class="nav-group-task-link" href="../Classes/RouteVoiceController.html">RouteVoiceController</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Core Navigation Logic">
+            <a class="small-heading" href="../Core Navigation Logic.html">Core Navigation Logic<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="RouteController" data-url="Classes/RouteController.html">
+                <a title="RouteController" class="nav-group-task-link" href="../Classes/RouteController.html">RouteController</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerDelegate" data-url="Protocols/RouteControllerDelegate.html">
+                <a title="RouteControllerDelegate" class="nav-group-task-link" href="../Protocols/RouteControllerDelegate.html">RouteControllerDelegate</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteProgress" data-url="Classes/RouteProgress.html">
+                <a title="RouteProgress" class="nav-group-task-link" href="../Classes/RouteProgress.html">RouteProgress</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteLegProgress" data-url="Classes/RouteLegProgress.html">
+                <a title="RouteLegProgress" class="nav-group-task-link" href="../Classes/RouteLegProgress.html">RouteLegProgress</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteStepProgress" data-url="Classes/RouteStepProgress.html">
+                <a title="RouteStepProgress" class="nav-group-task-link" href="../Classes/RouteStepProgress.html">RouteStepProgress</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerNotificationUserInfoKey" data-url="Core Navigation Logic.html#/s:16MapboxNavigation38RouteControllerNotificationUserInfoKeya">
+                <a title="RouteControllerNotificationUserInfoKey" class="nav-group-task-link" href="../Core Navigation Logic.html#/s:16MapboxNavigation38RouteControllerNotificationUserInfoKeya">RouteControllerNotificationUserInfoKey</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Maps">
+            <a class="small-heading" href="../Maps.html">Maps<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="NavigationMapView" data-url="Classes/NavigationMapView.html">
+                <a title="NavigationMapView" class="nav-group-task-link" href="../Classes/NavigationMapView.html">NavigationMapView</a>
+              </li>
+              <li class="nav-group-task" data-name="NavigationMapViewDelegate" data-url="Protocols/NavigationMapViewDelegate.html">
+                <a title="NavigationMapViewDelegate" class="nav-group-task-link" href="../Protocols/NavigationMapViewDelegate.html">NavigationMapViewDelegate</a>
+              </li>
+              <li class="nav-group-task" data-name="MGLMapView" data-url="Extensions/MGLMapView.html">
+                <a title="MGLMapView" class="nav-group-task-link" href="../Extensions/MGLMapView.html">MGLMapView</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Styling">
+            <a class="small-heading" href="../Styling.html">Styling<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="Style" data-url="Classes/Style.html">
+                <a title="Style" class="nav-group-task-link" href="../Classes/Style.html">Style</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Formatters">
+            <a class="small-heading" href="../Formatters.html">Formatters<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="DistanceFormatter" data-url="Classes/DistanceFormatter.html">
+                <a title="DistanceFormatter" class="nav-group-task-link" href="../Classes/DistanceFormatter.html">DistanceFormatter</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Configuration">
+            <a class="small-heading" href="../Configuration.html">Configuration<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="RouteControllerDeadReckoningTimeInterval" data-url="Configuration.html#/s:16MapboxNavigation40RouteControllerDeadReckoningTimeIntervalSdvp">
+                <a title="RouteControllerDeadReckoningTimeInterval" class="nav-group-task-link" href="../Configuration.html#/s:16MapboxNavigation40RouteControllerDeadReckoningTimeIntervalSdvp">RouteControllerDeadReckoningTimeInterval</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerHighAlertInterval" data-url="Configuration.html#/s:16MapboxNavigation32RouteControllerHighAlertIntervalSdvp">
+                <a title="RouteControllerHighAlertInterval" class="nav-group-task-link" href="../Configuration.html#/s:16MapboxNavigation32RouteControllerHighAlertIntervalSdvp">RouteControllerHighAlertInterval</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerManeuverZoneRadius" data-url="Configuration.html#/s:16MapboxNavigation33RouteControllerManeuverZoneRadiusSdvp">
+                <a title="RouteControllerManeuverZoneRadius" class="nav-group-task-link" href="../Configuration.html#/s:16MapboxNavigation33RouteControllerManeuverZoneRadiusSdvp">RouteControllerManeuverZoneRadius</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion" data-url="Configuration.html#/s:16MapboxNavigation58RouteControllerMaximumAllowedDegreeOffsetForTurnCompletionSdvp">
+                <a title="RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion" class="nav-group-task-link" href="../Configuration.html#/s:16MapboxNavigation58RouteControllerMaximumAllowedDegreeOffsetForTurnCompletionSdvp">RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerMaximumDistanceBeforeRecalculating" data-url="Configuration.html#/s:16MapboxNavigation49RouteControllerMaximumDistanceBeforeRecalculatingSdvp">
+                <a title="RouteControllerMaximumDistanceBeforeRecalculating" class="nav-group-task-link" href="../Configuration.html#/s:16MapboxNavigation49RouteControllerMaximumDistanceBeforeRecalculatingSdvp">RouteControllerMaximumDistanceBeforeRecalculating</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerMediumAlertInterval" data-url="Configuration.html#/s:16MapboxNavigation34RouteControllerMediumAlertIntervalSdvp">
+                <a title="RouteControllerMediumAlertInterval" class="nav-group-task-link" href="../Configuration.html#/s:16MapboxNavigation34RouteControllerMediumAlertIntervalSdvp">RouteControllerMediumAlertInterval</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerUserLocationSnappingDistance" data-url="Configuration.html#/s:16MapboxNavigation43RouteControllerUserLocationSnappingDistanceSdvp">
+                <a title="RouteControllerUserLocationSnappingDistance" class="nav-group-task-link" href="../Configuration.html#/s:16MapboxNavigation43RouteControllerUserLocationSnappingDistanceSdvp">RouteControllerUserLocationSnappingDistance</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Other Classes">
+            <a class="small-heading" href="../Other Classes.html">Other Classes<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="DayStyle" data-url="Classes/DayStyle.html">
+                <a title="DayStyle" class="nav-group-task-link" href="../Classes/DayStyle.html">DayStyle</a>
+              </li>
+              <li class="nav-group-task" data-name="GenericRouteShield" data-url="Other Classes.html#/c:@M@MapboxNavigation@objc(cs)GenericRouteShield">
+                <a title="GenericRouteShield" class="nav-group-task-link" href="../Other Classes.html#/c:@M@MapboxNavigation@objc(cs)GenericRouteShield">GenericRouteShield</a>
+              </li>
+              <li class="nav-group-task" data-name="MapboxVoiceController" data-url="Classes/MapboxVoiceController.html">
+                <a title="MapboxVoiceController" class="nav-group-task-link" href="../Classes/MapboxVoiceController.html">MapboxVoiceController</a>
+              </li>
+              <li class="nav-group-task" data-name="NavigationLocationManager" data-url="Other Classes.html#/c:@M@MapboxNavigation@objc(cs)MBNavigationLocationManager">
+                <a title="NavigationLocationManager" class="nav-group-task-link" href="../Other Classes.html#/c:@M@MapboxNavigation@objc(cs)MBNavigationLocationManager">NavigationLocationManager</a>
+              </li>
+              <li class="nav-group-task" data-name="NavigationMatchOptions" data-url="Classes/NavigationMatchOptions.html">
+                <a title="NavigationMatchOptions" class="nav-group-task-link" href="../Classes/NavigationMatchOptions.html">NavigationMatchOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="NavigationRouteOptions" data-url="Classes/NavigationRouteOptions.html">
+                <a title="NavigationRouteOptions" class="nav-group-task-link" href="../Classes/NavigationRouteOptions.html">NavigationRouteOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="NavigationSettings" data-url="Classes/NavigationSettings.html">
+                <a title="NavigationSettings" class="nav-group-task-link" href="../Classes/NavigationSettings.html">NavigationSettings</a>
+              </li>
+              <li class="nav-group-task" data-name="NavigationView" data-url="Other Classes.html#/c:@M@MapboxNavigation@objc(cs)MBNavigationView">
+                <a title="NavigationView" class="nav-group-task-link" href="../Other Classes.html#/c:@M@MapboxNavigation@objc(cs)MBNavigationView">NavigationView</a>
+              </li>
+              <li class="nav-group-task" data-name="NightStyle" data-url="Classes/NightStyle.html">
+                <a title="NightStyle" class="nav-group-task-link" href="../Classes/NightStyle.html">NightStyle</a>
+              </li>
+              <li class="nav-group-task" data-name="ReplayLocationManager" data-url="Classes/ReplayLocationManager.html">
+                <a title="ReplayLocationManager" class="nav-group-task-link" href="../Classes/ReplayLocationManager.html">ReplayLocationManager</a>
+              </li>
+              <li class="nav-group-task" data-name="SimulatedLocationManager" data-url="Classes/SimulatedLocationManager.html">
+                <a title="SimulatedLocationManager" class="nav-group-task-link" href="../Classes/SimulatedLocationManager.html">SimulatedLocationManager</a>
+              </li>
+              <li class="nav-group-task" data-name="StylableView" data-url="Other Classes.html#/c:@M@MapboxNavigation@objc(cs)MBStylableView">
+                <a title="StylableView" class="nav-group-task-link" href="../Other Classes.html#/c:@M@MapboxNavigation@objc(cs)MBStylableView">StylableView</a>
+              </li>
+              <li class="nav-group-task" data-name="StyleManager" data-url="Classes/StyleManager.html">
+                <a title="StyleManager" class="nav-group-task-link" href="../Classes/StyleManager.html">StyleManager</a>
+              </li>
+              <li class="nav-group-task" data-name="UserPuckCourseView" data-url="Classes/UserPuckCourseView.html">
+                <a title="UserPuckCourseView" class="nav-group-task-link" href="../Classes/UserPuckCourseView.html">UserPuckCourseView</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Other Global Variables">
+            <a class="small-heading" href="../Other Global Variables.html">Other Global Variables<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MBCongestionAttribute" data-url="Other Global Variables.html#/s:16MapboxNavigation21MBCongestionAttributeSSvp">
+                <a title="MBCongestionAttribute" class="nav-group-task-link" href="../Other Global Variables.html#/s:16MapboxNavigation21MBCongestionAttributeSSvp">MBCongestionAttribute</a>
+              </li>
+              <li class="nav-group-task" data-name="MBCurrentLegAttribute" data-url="Other Global Variables.html#/s:16MapboxNavigation21MBCurrentLegAttributeSSvp">
+                <a title="MBCurrentLegAttribute" class="nav-group-task-link" href="../Other Global Variables.html#/s:16MapboxNavigation21MBCurrentLegAttributeSSvp">MBCurrentLegAttribute</a>
+              </li>
+              <li class="nav-group-task" data-name="MBRouteLineWidthByZoomLevel" data-url="Other Global Variables.html#/s:16MapboxNavigation27MBRouteLineWidthByZoomLevels10DictionaryVySiSo12NSExpressionCGvp">
+                <a title="MBRouteLineWidthByZoomLevel" class="nav-group-task-link" href="../Other Global Variables.html#/s:16MapboxNavigation27MBRouteLineWidthByZoomLevels10DictionaryVySiSo12NSExpressionCGvp">MBRouteLineWidthByZoomLevel</a>
+              </li>
+              <li class="nav-group-task" data-name="NavigationMapViewMinimumDistanceForOverheadZooming" data-url="Other Global Variables.html#/s:16MapboxNavigation0B40MapViewMinimumDistanceForOverheadZoomingSdvp">
+                <a title="NavigationMapViewMinimumDistanceForOverheadZooming" class="nav-group-task-link" href="../Other Global Variables.html#/s:16MapboxNavigation0B40MapViewMinimumDistanceForOverheadZoomingSdvp">NavigationMapViewMinimumDistanceForOverheadZooming</a>
+              </li>
+              <li class="nav-group-task" data-name="NavigationMetricsDebugLoggingEnabled" data-url="Other Global Variables.html#/s:16MapboxNavigation0B26MetricsDebugLoggingEnabledSSvp">
+                <a title="NavigationMetricsDebugLoggingEnabled" class="nav-group-task-link" href="../Other Global Variables.html#/s:16MapboxNavigation0B26MetricsDebugLoggingEnabledSSvp">NavigationMetricsDebugLoggingEnabled</a>
+              </li>
+              <li class="nav-group-task" data-name="NavigationViewMinimumVolumeForWarning" data-url="Other Global Variables.html#/s:16MapboxNavigation0B27ViewMinimumVolumeForWarningSfvp">
+                <a title="NavigationViewMinimumVolumeForWarning" class="nav-group-task-link" href="../Other Global Variables.html#/s:16MapboxNavigation0B27ViewMinimumVolumeForWarningSfvp">NavigationViewMinimumVolumeForWarning</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerIncorrectCourseMultiplier" data-url="Other Global Variables.html#/s:16MapboxNavigation40RouteControllerIncorrectCourseMultiplierSivp">
+                <a title="RouteControllerIncorrectCourseMultiplier" class="nav-group-task-link" href="../Other Global Variables.html#/s:16MapboxNavigation40RouteControllerIncorrectCourseMultiplierSivp">RouteControllerIncorrectCourseMultiplier</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerLinkedInstructionBufferMultiplier" data-url="Other Global Variables.html#/s:16MapboxNavigation48RouteControllerLinkedInstructionBufferMultiplierSdvp">
+                <a title="RouteControllerLinkedInstructionBufferMultiplier" class="nav-group-task-link" href="../Other Global Variables.html#/s:16MapboxNavigation48RouteControllerLinkedInstructionBufferMultiplierSdvp">RouteControllerLinkedInstructionBufferMultiplier</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerMaximumSpeedForUsingCurrentStep" data-url="Other Global Variables.html#/s:16MapboxNavigation46RouteControllerMaximumSpeedForUsingCurrentStepSdvp">
+                <a title="RouteControllerMaximumSpeedForUsingCurrentStep" class="nav-group-task-link" href="../Other Global Variables.html#/s:16MapboxNavigation46RouteControllerMaximumSpeedForUsingCurrentStepSdvp">RouteControllerMaximumSpeedForUsingCurrentStep</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerMinNumberOfInCorrectCourses" data-url="Other Global Variables.html#/s:16MapboxNavigation42RouteControllerMinNumberOfInCorrectCoursesSivp">
+                <a title="RouteControllerMinNumberOfInCorrectCourses" class="nav-group-task-link" href="../Other Global Variables.html#/s:16MapboxNavigation42RouteControllerMinNumberOfInCorrectCoursesSivp">RouteControllerMinNumberOfInCorrectCourses</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerMinimumBacktrackingDistanceForRerouting" data-url="Other Global Variables.html#/s:16MapboxNavigation54RouteControllerMinimumBacktrackingDistanceForReroutingSdvp">
+                <a title="RouteControllerMinimumBacktrackingDistanceForRerouting" class="nav-group-task-link" href="../Other Global Variables.html#/s:16MapboxNavigation54RouteControllerMinimumBacktrackingDistanceForReroutingSdvp">RouteControllerMinimumBacktrackingDistanceForRerouting</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerMinimumDistanceForContinueInstruction" data-url="Other Global Variables.html#/s:16MapboxNavigation52RouteControllerMinimumDistanceForContinueInstructionSdvp">
+                <a title="RouteControllerMinimumDistanceForContinueInstruction" class="nav-group-task-link" href="../Other Global Variables.html#/s:16MapboxNavigation52RouteControllerMinimumDistanceForContinueInstructionSdvp">RouteControllerMinimumDistanceForContinueInstruction</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerMinimumDistanceToTunnelEntrance" data-url="Other Global Variables.html#/s:16MapboxNavigation46RouteControllerMinimumDistanceToTunnelEntranceSdvp">
+                <a title="RouteControllerMinimumDistanceToTunnelEntrance" class="nav-group-task-link" href="../Other Global Variables.html#/s:16MapboxNavigation46RouteControllerMinimumDistanceToTunnelEntranceSdvp">RouteControllerMinimumDistanceToTunnelEntrance</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerMinimumNumberLocationUpdatesBackwards" data-url="Other Global Variables.html#/s:16MapboxNavigation52RouteControllerMinimumNumberLocationUpdatesBackwardsSivp">
+                <a title="RouteControllerMinimumNumberLocationUpdatesBackwards" class="nav-group-task-link" href="../Other Global Variables.html#/s:16MapboxNavigation52RouteControllerMinimumNumberLocationUpdatesBackwardsSivp">RouteControllerMinimumNumberLocationUpdatesBackwards</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerMinimumSpeedAtTunnelEntranceRadius" data-url="Other Global Variables.html#/s:16MapboxNavigation49RouteControllerMinimumSpeedAtTunnelEntranceRadiusSdvp">
+                <a title="RouteControllerMinimumSpeedAtTunnelEntranceRadius" class="nav-group-task-link" href="../Other Global Variables.html#/s:16MapboxNavigation49RouteControllerMinimumSpeedAtTunnelEntranceRadiusSdvp">RouteControllerMinimumSpeedAtTunnelEntranceRadius</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerNumberOfSecondsForRerouteFeedback" data-url="Other Global Variables.html#/s:16MapboxNavigation48RouteControllerNumberOfSecondsForRerouteFeedbackSdvp">
+                <a title="RouteControllerNumberOfSecondsForRerouteFeedback" class="nav-group-task-link" href="../Other Global Variables.html#/s:16MapboxNavigation48RouteControllerNumberOfSecondsForRerouteFeedbackSdvp">RouteControllerNumberOfSecondsForRerouteFeedback</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerProactiveReroutingInterval" data-url="Other Global Variables.html#/s:16MapboxNavigation41RouteControllerProactiveReroutingIntervalSdvp">
+                <a title="RouteControllerProactiveReroutingInterval" class="nav-group-task-link" href="../Other Global Variables.html#/s:16MapboxNavigation41RouteControllerProactiveReroutingIntervalSdvp">RouteControllerProactiveReroutingInterval</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteSnappingMaxManipulatedCourseAngle" data-url="Other Global Variables.html#/s:16MapboxNavigation38RouteSnappingMaxManipulatedCourseAngleSdvp">
+                <a title="RouteSnappingMaxManipulatedCourseAngle" class="nav-group-task-link" href="../Other Global Variables.html#/s:16MapboxNavigation38RouteSnappingMaxManipulatedCourseAngleSdvp">RouteSnappingMaxManipulatedCourseAngle</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteSnappingMinimumHorizontalAccuracy" data-url="Other Global Variables.html#/s:16MapboxNavigation38RouteSnappingMinimumHorizontalAccuracySdvp">
+                <a title="RouteSnappingMinimumHorizontalAccuracy" class="nav-group-task-link" href="../Other Global Variables.html#/s:16MapboxNavigation38RouteSnappingMinimumHorizontalAccuracySdvp">RouteSnappingMinimumHorizontalAccuracy</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteSnappingMinimumSpeed" data-url="Other Global Variables.html#/s:16MapboxNavigation25RouteSnappingMinimumSpeedSdvp">
+                <a title="RouteSnappingMinimumSpeed" class="nav-group-task-link" href="../Other Global Variables.html#/s:16MapboxNavigation25RouteSnappingMinimumSpeedSdvp">RouteSnappingMinimumSpeed</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Other Enumerations">
+            <a class="small-heading" href="../Other Enumerations.html">Other Enumerations<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="FeedbackType" data-url="Enums/FeedbackType.html">
+                <a title="FeedbackType" class="nav-group-task-link" href="../Enums/FeedbackType.html">FeedbackType</a>
+              </li>
+              <li class="nav-group-task" data-name="MBErrorCode" data-url="Enums/MBErrorCode.html">
+                <a title="MBErrorCode" class="nav-group-task-link" href="../Enums/MBErrorCode.html">MBErrorCode</a>
+              </li>
+              <li class="nav-group-task" data-name="SpokenInstructionErrorCode" data-url="Enums/SpokenInstructionErrorCode.html">
+                <a title="SpokenInstructionErrorCode" class="nav-group-task-link" href="../Enums/SpokenInstructionErrorCode.html">SpokenInstructionErrorCode</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Other Extensions">
+            <a class="small-heading" href="../Other Extensions.html">Other Extensions<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="Array" data-url="Extensions/Array.html">
+                <a title="Array" class="nav-group-task-link" href="../Extensions/Array.html">Array</a>
+              </li>
+              <li class="nav-group-task" data-name="Bundle" data-url="Extensions/Bundle.html">
+                <a title="Bundle" class="nav-group-task-link" href="../Extensions/Bundle.html">Bundle</a>
+              </li>
+              <li class="nav-group-task" data-name="CGPoint" data-url="Extensions/CGPoint.html">
+                <a title="CGPoint" class="nav-group-task-link" href="../Extensions/CGPoint.html">CGPoint</a>
+              </li>
+              <li class="nav-group-task" data-name="CGSize" data-url="Extensions/CGSize.html">
+                <a title="CGSize" class="nav-group-task-link" href="../Extensions/CGSize.html">CGSize</a>
+              </li>
+              <li class="nav-group-task" data-name="CLLocation" data-url="Extensions/CLLocation.html">
+                <a title="CLLocation" class="nav-group-task-link" href="../Extensions/CLLocation.html">CLLocation</a>
+              </li>
+              <li class="nav-group-task" data-name="Dictionary" data-url="Extensions/Dictionary.html">
+                <a title="Dictionary" class="nav-group-task-link" href="../Extensions/Dictionary.html">Dictionary</a>
+              </li>
+              <li class="nav-group-task" data-name="Locale" data-url="Extensions/Locale.html">
+                <a title="Locale" class="nav-group-task-link" href="../Extensions/Locale.html">Locale</a>
+              </li>
+              <li class="nav-group-task" data-name="MGLAccountManager" data-url="Extensions/MGLAccountManager.html">
+                <a title="MGLAccountManager" class="nav-group-task-link" href="../Extensions/MGLAccountManager.html">MGLAccountManager</a>
+              </li>
+              <li class="nav-group-task" data-name="MGLStyle" data-url="Extensions/MGLStyle.html">
+                <a title="MGLStyle" class="nav-group-task-link" href="../Extensions/MGLStyle.html">MGLStyle</a>
+              </li>
+              <li class="nav-group-task" data-name="Notification" data-url="Extensions/Notification.html">
+                <a title="Notification" class="nav-group-task-link" href="../Extensions/Notification.html">Notification</a>
+              </li>
+              <li class="nav-group-task" data-name="– Name" data-url="Extensions/Notification/Name.html">
+                <a title="– Name" class="nav-group-task-link" href="../Extensions/Notification/Name.html">– Name</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteOptions" data-url="Extensions/RouteOptions.html">
+                <a title="RouteOptions" class="nav-group-task-link" href="../Extensions/RouteOptions.html">RouteOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteStep" data-url="Extensions/RouteStep.html">
+                <a title="RouteStep" class="nav-group-task-link" href="../Extensions/RouteStep.html">RouteStep</a>
+              </li>
+              <li class="nav-group-task" data-name="String" data-url="Extensions/String.html">
+                <a title="String" class="nav-group-task-link" href="../Extensions/String.html">String</a>
+              </li>
+              <li class="nav-group-task" data-name="UIDevice" data-url="Extensions/UIDevice.html">
+                <a title="UIDevice" class="nav-group-task-link" href="../Extensions/UIDevice.html">UIDevice</a>
+              </li>
+              <li class="nav-group-task" data-name="UIEdgeInsets" data-url="Extensions/UIEdgeInsets.html">
+                <a title="UIEdgeInsets" class="nav-group-task-link" href="../Extensions/UIEdgeInsets.html">UIEdgeInsets</a>
+              </li>
+              <li class="nav-group-task" data-name="UIFont" data-url="Extensions/UIFont.html">
+                <a title="UIFont" class="nav-group-task-link" href="../Extensions/UIFont.html">UIFont</a>
+              </li>
+              <li class="nav-group-task" data-name="UIWindow" data-url="Extensions/UIWindow.html">
+                <a title="UIWindow" class="nav-group-task-link" href="../Extensions/UIWindow.html">UIWindow</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Other Protocols">
+            <a class="small-heading" href="../Other Protocols.html">Other Protocols<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="BimodalCache" data-url="Other Protocols.html#/c:@M@MapboxNavigation@objc(pl)MBBimodalCache">
+                <a title="BimodalCache" class="nav-group-task-link" href="../Other Protocols.html#/c:@M@MapboxNavigation@objc(pl)MBBimodalCache">BimodalCache</a>
+              </li>
+              <li class="nav-group-task" data-name="BimodalDataCache" data-url="Other Protocols.html#/c:@M@MapboxNavigation@objc(pl)MBBimodalDataCache">
+                <a title="BimodalDataCache" class="nav-group-task-link" href="../Other Protocols.html#/c:@M@MapboxNavigation@objc(pl)MBBimodalDataCache">BimodalDataCache</a>
+              </li>
+              <li class="nav-group-task" data-name="BimodalImageCache" data-url="Other Protocols.html#/c:@M@MapboxNavigation@objc(pl)MBBimodalImageCache">
+                <a title="BimodalImageCache" class="nav-group-task-link" href="../Other Protocols.html#/c:@M@MapboxNavigation@objc(pl)MBBimodalImageCache">BimodalImageCache</a>
+              </li>
+              <li class="nav-group-task" data-name="NavigationMapViewCourseTrackingDelegate" data-url="Protocols/NavigationMapViewCourseTrackingDelegate.html">
+                <a title="NavigationMapViewCourseTrackingDelegate" class="nav-group-task-link" href="../Protocols/NavigationMapViewCourseTrackingDelegate.html">NavigationMapViewCourseTrackingDelegate</a>
+              </li>
+              <li class="nav-group-task" data-name="StyleManagerDelegate" data-url="Protocols/StyleManagerDelegate.html">
+                <a title="StyleManagerDelegate" class="nav-group-task-link" href="../Protocols/StyleManagerDelegate.html">StyleManagerDelegate</a>
+              </li>
+              <li class="nav-group-task" data-name="TunnelIntersectionManagerDelegate" data-url="Protocols/TunnelIntersectionManagerDelegate.html">
+                <a title="TunnelIntersectionManagerDelegate" class="nav-group-task-link" href="../Protocols/TunnelIntersectionManagerDelegate.html">TunnelIntersectionManagerDelegate</a>
+              </li>
+              <li class="nav-group-task" data-name="UserCourseView" data-url="Protocols/UserCourseView.html">
+                <a title="UserCourseView" class="nav-group-task-link" href="../Protocols/UserCourseView.html">UserCourseView</a>
+              </li>
+              <li class="nav-group-task" data-name="VisualInstructionDelegate" data-url="Protocols/VisualInstructionDelegate.html">
+                <a title="VisualInstructionDelegate" class="nav-group-task-link" href="../Protocols/VisualInstructionDelegate.html">VisualInstructionDelegate</a>
+              </li>
+              <li class="nav-group-task" data-name="VoiceControllerDelegate" data-url="Protocols/VoiceControllerDelegate.html">
+                <a title="VoiceControllerDelegate" class="nav-group-task-link" href="../Protocols/VoiceControllerDelegate.html">VoiceControllerDelegate</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content">
+            <a href="#/RouteController"><h1 id="RouteController">RouteController<span class="anchor-icon" /></h1></a>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight swift"><code><span class="kd">@objc(MBRouteController)</span>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kt">RouteController</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+
+                </div>
+              </div>
+            <p>A <code>RouteController</code> tracks the user’s progress along a route, posting notifications as the user reaches significant points along the route. On every location update, the route controller evaluates the user’s location, determining whether the user remains on the route. If not, the route controller calculates a new route.</p>
+
+<p><code>RouteController</code> is responsible for the core navigation logic whereas
+<code><a href="../Classes/NavigationViewController.html">NavigationViewController</a></code> is responsible for displaying a default drop-in navigation UI.</p>
+
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxNavigation@objc(cs)MBRouteController(py)delegate"></a>
+                    <a name="//apple_ref/swift/Property/delegate" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxNavigation@objc(cs)MBRouteController(py)delegate"><span class="token-name">delegate</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>The route controller’s delegate.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">delegate</span><span class="p">:</span> <span class="kt"><a href="../Protocols/RouteControllerDelegate.html">RouteControllerDelegate</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.19.1/MapboxCoreNavigation/RouteController.swift#L182">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxNavigation@objc(cs)MBRouteController(py)directions"></a>
+                    <a name="//apple_ref/swift/Property/directions" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxNavigation@objc(cs)MBRouteController(py)directions"><span class="token-name">directions</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>The Directions object used to create the route.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">directions</span><span class="p">:</span> <span class="kt"><a href="https://www.mapbox.com/mapbox-navigation-ios/directions/0.22.0/Classes/Directions.html">Directions</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.19.1/MapboxCoreNavigation/RouteController.swift#L187">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxNavigation@objc(cs)MBRouteController(py)locationManager"></a>
+                    <a name="//apple_ref/swift/Property/locationManager" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxNavigation@objc(cs)MBRouteController(py)locationManager"><span class="token-name">locationManager</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>The route controller’s associated location manager.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">locationManager</span><span class="p">:</span> <span class="kt"><a href="../Other Classes.html#/c:@M@MapboxNavigation@objc(cs)MBNavigationLocationManager">NavigationLocationManager</a></span><span class="o">!</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.19.1/MapboxCoreNavigation/RouteController.swift#L192-L197">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxNavigation@objc(cs)MBRouteController(py)isDeadReckoningEnabled"></a>
+                    <a name="//apple_ref/swift/Property/isDeadReckoningEnabled" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxNavigation@objc(cs)MBRouteController(py)isDeadReckoningEnabled"><span class="token-name">isDeadReckoningEnabled</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>If true, location updates will be simulated when driving through tunnels or other areas where there is none or bad GPS reception.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">isDeadReckoningEnabled</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.19.1/MapboxCoreNavigation/RouteController.swift#L202">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxNavigation@objc(cs)MBRouteController(py)reroutesProactively"></a>
+                    <a name="//apple_ref/swift/Property/reroutesProactively" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxNavigation@objc(cs)MBRouteController(py)reroutesProactively"><span class="token-name">reroutesProactively</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>If true, the <code>RouteController</code> attempts to calculate a more optimal route for the user on an interval defined by <code><a href="../Other Global Variables.html#/s:16MapboxNavigation41RouteControllerProactiveReroutingIntervalSdvp">RouteControllerProactiveReroutingInterval</a></code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">reroutesProactively</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.19.1/MapboxCoreNavigation/RouteController.swift#L207">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxNavigation@objc(cs)MBRouteController(py)delaysEventFlushing"></a>
+                    <a name="//apple_ref/swift/Property/delaysEventFlushing" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxNavigation@objc(cs)MBRouteController(py)delaysEventFlushing"><span class="token-name">delaysEventFlushing</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>When set to <code>false</code>, flushing of telemetry events is not delayed. Is set to <code>true</code> by default.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">delaysEventFlushing</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.19.1/MapboxCoreNavigation/RouteController.swift#L212">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16MapboxNavigation15RouteControllerC25tunnelIntersectionManagerAA06TunnelfG0Cvp"></a>
+                    <a name="//apple_ref/swift/Property/tunnelIntersectionManager" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16MapboxNavigation15RouteControllerC25tunnelIntersectionManagerAA06TunnelfG0Cvp"><span class="token-name">tunnelIntersectionManager</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>A <code>TunnelIntersectionManager</code> used for animating the use user puck when and if a user enters a tunnel.</p>
+
+<p>Will only be enabled if <code>tunnelSimulationEnabled</code> is true.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">tunnelIntersectionManager</span><span class="p">:</span> <span class="kt">TunnelIntersectionManager</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.19.1/MapboxCoreNavigation/RouteController.swift#L219">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxNavigation@objc(cs)MBRouteController(py)routeProgress"></a>
+                    <a name="//apple_ref/swift/Property/routeProgress" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxNavigation@objc(cs)MBRouteController(py)routeProgress"><span class="token-name">routeProgress</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Details about the user’s progress along the current route, leg, and step.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">routeProgress</span><span class="p">:</span> <span class="kt"><a href="../Classes/RouteProgress.html">RouteProgress</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.19.1/MapboxCoreNavigation/RouteController.swift#L226-L246">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxNavigation@objc(cs)MBRouteController(im)initWithRoute:directions:locationManager:eventsManager:"></a>
+                    <a name="//apple_ref/swift/Method/init(along:directions:locationManager:eventsManager:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxNavigation@objc(cs)MBRouteController(im)initWithRoute:directions:locationManager:eventsManager:"><span class="token-name">init(along:directions:locationManager:eventsManager:)</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Intializes a new <code>RouteController</code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc(initWithRoute:directions:locationManager:eventsManager:)</span>
+<span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="n">along</span> <span class="nv">route</span><span class="p">:</span> <span class="kt"><a href="https://www.mapbox.com/mapbox-navigation-ios/directions/0.22.0/Classes/Route.html">Route</a></span><span class="p">,</span> <span class="nv">directions</span><span class="p">:</span> <span class="kt">Directions</span> <span class="o">=</span> <span class="kt">Directions</span><span class="o">.</span><span class="n">shared</span><span class="p">,</span> <span class="nv">locationManager</span><span class="p">:</span> <span class="kt"><a href="../Other Classes.html#/c:@M@MapboxNavigation@objc(cs)MBNavigationLocationManager">NavigationLocationManager</a></span> <span class="o">=</span> <span class="kt"><a href="../Other Classes.html#/c:@M@MapboxNavigation@objc(cs)MBNavigationLocationManager">NavigationLocationManager</a></span><span class="p">(),</span> <span class="nv">eventsManager</span><span class="p">:</span> <span class="kt">MMEEventsManager</span> <span class="o">=</span> <span class="kt">MMEEventsManager</span><span class="o">.</span><span class="nf">shared</span><span class="p">())</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                  route
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The route to follow.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                  directions
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The Directions object that created <code>route</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                  locationManager
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The associated location manager.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.19.1/MapboxCoreNavigation/RouteController.swift#L287-L308">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxNavigation@objc(cs)MBRouteController(im)resume"></a>
+                    <a name="//apple_ref/swift/Method/resume()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxNavigation@objc(cs)MBRouteController(im)resume"><span class="token-name">resume()</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Starts monitoring the user’s location along the route.</p>
+
+<p>Will continue monitoring until <code><a href="../Classes/RouteController.html#/c:@M@MapboxNavigation@objc(cs)MBRouteController(im)suspendLocationUpdates">suspendLocationUpdates()</a></code> is called.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">resume</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.19.1/MapboxCoreNavigation/RouteController.swift#L394-L398">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxNavigation@objc(cs)MBRouteController(im)suspendLocationUpdates"></a>
+                    <a name="//apple_ref/swift/Method/suspendLocationUpdates()" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxNavigation@objc(cs)MBRouteController(im)suspendLocationUpdates"><span class="token-name">suspendLocationUpdates()</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Stops monitoring the user’s location along the route.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">suspendLocationUpdates</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.19.1/MapboxCoreNavigation/RouteController.swift#L403-L407">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxNavigation@objc(cs)MBRouteController(py)location"></a>
+                    <a name="//apple_ref/swift/Property/location" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxNavigation@objc(cs)MBRouteController(py)location"><span class="token-name">location</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>The idealized user location. Snapped to the route line, if applicable, otherwise raw.</p>
+<div class="aside aside-see-also">
+    <p class="aside-title">See also</p>
+    snappedLocation, rawLocation
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">location</span><span class="p">:</span> <span class="kt">CLLocation</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.19.1/MapboxCoreNavigation/RouteController.swift#L413-L425">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxNavigation@objc(cs)MBRouteController(im)recordFeedbackWithType:description:"></a>
+                    <a name="//apple_ref/swift/Method/recordFeedback(type:description:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxNavigation@objc(cs)MBRouteController(im)recordFeedbackWithType:description:"><span class="token-name">recordFeedback(type:description:)</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Send feedback about the current road segment/maneuver to the Mapbox data team.</p>
+
+<p>You can pair this with a custom feedback UI in your app to flag problems during navigation such as road closures, incorrect instructions, etc.</p>
+
+<p>@param type A <code><a href="../Enums/FeedbackType.html">FeedbackType</a></code> used to specify the type of feedback
+@param description A custom string used to describe the problem in detail.
+@return Returns a UUID used to identify the feedback event</p>
+
+<p>If you provide a custom feedback UI that lets users elaborate on an issue, you should call this before you show the custom UI so the location and timestamp are more accurate.</p>
+
+<p>You can then call <code><a href="../Classes/RouteController.html#/c:@M@MapboxNavigation@objc(cs)MBRouteController(im)updateFeedbackWithUuid:type:source:description:">updateFeedback(uuid:type:source:description:)</a></code> with the returned feedback UUID to attach any additional metadata to the feedback.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">recordFeedback</span><span class="p">(</span><span class="nv">type</span><span class="p">:</span> <span class="kt"><a href="../Enums/FeedbackType.html">FeedbackType</a></span> <span class="o">=</span> <span class="o">.</span><span class="n">general</span><span class="p">,</span> <span class="nv">description</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UUID</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.19.1/MapboxCoreNavigation/RouteController.swift#L482-L484">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxNavigation@objc(cs)MBRouteController(im)updateFeedbackWithUuid:type:source:description:"></a>
+                    <a name="//apple_ref/swift/Method/updateFeedback(uuid:type:source:description:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxNavigation@objc(cs)MBRouteController(im)updateFeedbackWithUuid:type:source:description:"><span class="token-name">updateFeedback(uuid:type:source:description:)</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Update the feedback event with a specific feedback identifier. If you implement a custom feedback UI that lets a user elaborate on an issue, you can use this to update the metadata.</p>
+
+<p>Note that feedback is sent 20 seconds after being recorded, so you should promptly update the feedback metadata after the user discards any feedback UI.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">updateFeedback</span><span class="p">(</span><span class="nv">uuid</span><span class="p">:</span> <span class="kt">UUID</span><span class="p">,</span> <span class="nv">type</span><span class="p">:</span> <span class="kt"><a href="../Enums/FeedbackType.html">FeedbackType</a></span><span class="p">,</span> <span class="nv">source</span><span class="p">:</span> <span class="kt">FeedbackSource</span><span class="p">,</span> <span class="nv">description</span><span class="p">:</span> <span class="kt">String</span><span class="p">?)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.19.1/MapboxCoreNavigation/RouteController.swift#L491-L495">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxNavigation@objc(cs)MBRouteController(im)cancelFeedbackWithUuid:"></a>
+                    <a name="//apple_ref/swift/Method/cancelFeedback(uuid:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxNavigation@objc(cs)MBRouteController(im)cancelFeedbackWithUuid:"><span class="token-name">cancelFeedback(uuid:)</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Discard a recorded feedback event, for example if you have a custom feedback UI and the user canceled feedback.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">cancelFeedback</span><span class="p">(</span><span class="nv">uuid</span><span class="p">:</span> <span class="kt">UUID</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.19.1/MapboxCoreNavigation/RouteController.swift#L500-L504">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxNavigation@objc(cs)MBRouteController(im)setEndOfRouteWithRating:comment:"></a>
+                    <a name="//apple_ref/swift/Method/setEndOfRoute(rating:comment:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxNavigation@objc(cs)MBRouteController(im)setEndOfRouteWithRating:comment:"><span class="token-name">setEndOfRoute(rating:comment:)</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Set the rating and any comment the user may have about their route. Only used when exiting navigaiton.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">setEndOfRoute</span><span class="p">(</span><span class="nv">rating</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">comment</span><span class="p">:</span> <span class="kt">String</span><span class="p">?)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.19.1/MapboxCoreNavigation/RouteController.swift#L509-L512">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@MapboxNavigation@objc(cs)MBRouteController(im)userIsOnRoute:"></a>
+                    <a name="//apple_ref/swift/Method/userIsOnRoute(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@MapboxNavigation@objc(cs)MBRouteController(im)userIsOnRoute:"><span class="token-name">userIsOnRoute(_:)</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Given a users current location, returns a Boolean whether they are currently on the route.</p>
+
+<p>If the user is not on the route, they should be rerouted.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">userIsOnRoute</span><span class="p">(</span><span class="n">_</span> <span class="nv">location</span><span class="p">:</span> <span class="kt">CLLocation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.19.1/MapboxCoreNavigation/RouteController.swift#L720-L746">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Telemetry"></a>
+                <a name="//apple_ref/swift/Section/Telemetry" class="dashAnchor"></a>
+                <a href="#/Telemetry">
+                  <h3 id="Telemetry" class="section-name">Telemetry<span class="anchor-icon" /></h3>
+                </a>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxNavigation@objc(pl)MBTunnelIntersectionManagerDelegate(im)tunnelIntersectionManager:willEnableAnimationAtLocation:"></a>
+                    <a name="//apple_ref/swift/Method/tunnelIntersectionManager(_:willEnableAnimationAt:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxNavigation@objc(pl)MBTunnelIntersectionManagerDelegate(im)tunnelIntersectionManager:willEnableAnimationAtLocation:"><span class="token-name">tunnelIntersectionManager(_:willEnableAnimationAt:)</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">tunnelIntersectionManager</span><span class="p">(</span><span class="n">_</span> <span class="nv">manager</span><span class="p">:</span> <span class="kt">TunnelIntersectionManager</span><span class="p">,</span> <span class="n">willEnableAnimationAt</span> <span class="nv">location</span><span class="p">:</span> <span class="kt">CLLocation</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.19.1/MapboxCoreNavigation/RouteController.swift#L1158-L1160">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxNavigation@objc(pl)MBTunnelIntersectionManagerDelegate(im)tunnelIntersectionManager:willDisableAnimationAtLocation:"></a>
+                    <a name="//apple_ref/swift/Method/tunnelIntersectionManager(_:willDisableAnimationAt:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxNavigation@objc(pl)MBTunnelIntersectionManagerDelegate(im)tunnelIntersectionManager:willDisableAnimationAtLocation:"><span class="token-name">tunnelIntersectionManager(_:willDisableAnimationAt:)</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">tunnelIntersectionManager</span><span class="p">(</span><span class="n">_</span> <span class="nv">manager</span><span class="p">:</span> <span class="kt">TunnelIntersectionManager</span><span class="p">,</span> <span class="n">willDisableAnimationAt</span> <span class="nv">location</span><span class="p">:</span> <span class="kt">CLLocation</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.19.1/MapboxCoreNavigation/RouteController.swift#L1162-L1164">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer limiter">
+      <p>© 2014–2018 <a class="link" href="https://www.mapbox.com/" target="_blank" rel="external">Mapbox</a>. See <a class="link" href="https://github.com/mapbox/mapbox-navigation-ios/blob/master/LICENSE.md" target="_blank" rel="external">license</a> for more details.</p> Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.
+    </section>
+  </body>
+</div>
+</html>
