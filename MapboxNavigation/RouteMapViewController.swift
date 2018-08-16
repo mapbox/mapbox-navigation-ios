@@ -18,6 +18,7 @@ class RouteMapViewController: UIViewController {
     var lanesView: LanesView { return navigationView.lanesView }
     var nextBannerView: NextBannerView { return navigationView.nextBannerView }
     var instructionsBannerView: InstructionsBannerView { return navigationView.instructionsBannerView }
+    var instructionsBannerContentView: InstructionsBannerContentView { return navigationView.instructionsBannerContentView }
     
     lazy var endOfRouteViewController: EndOfRouteViewController = {
         let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
@@ -71,7 +72,7 @@ class RouteMapViewController: UIViewController {
     }
     
     weak var delegate: RouteMapViewControllerDelegate?
-    var routeController: RouteController! {
+    var routeController: Router! {
         didSet {
             navigationView.statusView.canChangeValue = routeController.locationManager is SimulatedLocationManager
             guard let destination = route.legs.last?.destination else { return }
@@ -226,6 +227,7 @@ class RouteMapViewController: UIViewController {
         if let view = previewInstructionsView {
             view.removeFromSuperview()
             navigationView.instructionsBannerContentView.backgroundColor = InstructionsBannerView.appearance().backgroundColor
+            navigationView.instructionsBannerView.delegate = self
             previewInstructionsView = nil
         }
     }
@@ -330,7 +332,10 @@ class RouteMapViewController: UIViewController {
     @objc func didReroute(notification: NSNotification) {
         guard self.isViewLoaded else { return }
         
-        if !(routeController.locationManager is SimulatedLocationManager) {
+        if let locationManager = routeController.locationManager as? SimulatedLocationManager {
+            let localized = String.Localized.simulationStatus(speed: Int(locationManager.speedMultiplier))
+            showStatus(title: localized, for: .infinity, interactive: true)
+        } else {
             statusView.hide(delay: 2, animated: true)
         }
         
@@ -421,8 +426,8 @@ class RouteMapViewController: UIViewController {
         }
     }
     
-func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackViewController.SendFeedbackHandler, dismiss: () -> Void) {
-        let uuid = routeController.recordFeedback()
+    func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackViewController.SendFeedbackHandler, dismiss: () -> Void) {
+        let uuid = routeController.eventsManager.recordFeedback()
         let send = defaultSendFeedbackHandler(uuid: uuid)
         let dismiss = defaultDismissFeedbackHandler(uuid: uuid)
         
@@ -434,7 +439,7 @@ func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackV
             guard let strongSelf = self, let parent = strongSelf.parent else { return }
         
             strongSelf.delegate?.mapViewController(strongSelf, didSendFeedbackAssigned: uuid, feedbackType: item.feedbackType)
-            strongSelf.routeController.updateFeedback(uuid: uuid, type: item.feedbackType, source: source, description: nil)
+            strongSelf.routeController.eventsManager.updateFeedback(uuid: uuid, type: item.feedbackType, source: source, description: nil)
             strongSelf.dismiss(animated: true) {
                 DialogViewController().present(on: parent)
             }
@@ -445,7 +450,7 @@ func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackV
         return { [weak self ] in
             guard let strongSelf = self else { return }
             strongSelf.delegate?.mapViewControllerDidCancelFeedback(strongSelf)
-            strongSelf.routeController.cancelFeedback(uuid: uuid)
+            strongSelf.routeController.eventsManager.cancelFeedback(uuid: uuid)
             strongSelf.dismiss(animated: true, completion: nil)
         }
     }
@@ -467,7 +472,8 @@ func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackV
         
         endOfRoute.dismissHandler = { [weak self] (stars, comment) in
             guard let rating = self?.rating(for: stars) else { return }
-            self?.routeController.setEndOfRoute(rating: rating, comment: comment)
+            let feedback = EndOfRouteFeedback(rating: rating, comment: comment)
+            self?.routeController.endNavigation(feedback: feedback)
             self?.delegate?.mapViewControllerDidDismiss(self!, byCanceling: false)
         }
     }
@@ -507,7 +513,7 @@ func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackV
         guard let height = navigationView.endOfRouteHeightConstraint?.constant else { return }
         let insets = UIEdgeInsets(top: navigationView.instructionsBannerView.bounds.height, left: 20, bottom: height + 20, right: 20)
         
-        if let coordinates = routeController.routeProgress.route.coordinates, let userLocation = routeController.locationManager.location?.coordinate {
+        if let coordinates = routeController.routeProgress.route.coordinates, let userLocation = routeController?.locationManager.location?.coordinate {
             let slicedLine = Polyline(coordinates).sliced(from: userLocation).coordinates
             let line = MGLPolyline(coordinates: slicedLine, count: UInt(slicedLine.count))
             
@@ -774,6 +780,7 @@ extension RouteMapViewController: NavigationViewDelegate {
         let features = mapView.visibleFeatures(at: userPuck, styleLayerIdentifiers: Set([roadLabelLayerIdentifier]))
         var smallestLabelDistance = Double.infinity
         var currentName: String?
+        var currentShieldName: NSAttributedString?
         
         for feature in features {
             var allLines: [MGLPolyline] = []
@@ -801,23 +808,83 @@ extension RouteMapViewController: NavigationViewDelegate {
                 if minDistanceBetweenPoints < smallestLabelDistance {
                     smallestLabelDistance = minDistanceBetweenPoints
                     
-                    if let line = feature as? MGLPolylineFeature, let name = line.attribute(forKey: "name") as? String {
-                        currentName = name
-                    } else if let line = feature as? MGLMultiPolylineFeature, let name = line.attribute(forKey: "name") as? String {
-                        currentName = name
-                    } else {
-                        currentName = nil
+                    if let line = feature as? MGLPolylineFeature {
+                        let roadNameRecord = roadFeature(for: line)
+                        currentShieldName = roadNameRecord.shieldName
+                        currentName = roadNameRecord.roadName
+                    } else if let line = feature as? MGLMultiPolylineFeature {
+                        let roadNameRecord = roadFeature(for: line)
+                        currentShieldName = roadNameRecord.shieldName
+                        currentName = roadNameRecord.roadName
                     }
                 }
             }
         }
         
-        if smallestLabelDistance < 5 && currentName != nil {
-            navigationView.wayNameView.text = currentName
+        let hasWayName = currentName != nil || currentShieldName != nil
+        if smallestLabelDistance < 5 && hasWayName  {
+            if let currentShieldName = currentShieldName {
+                navigationView.wayNameView.attributedText = currentShieldName
+            } else if let currentName = currentName {
+                navigationView.wayNameView.text = currentName
+            }
             navigationView.wayNameView.isHidden = false
         } else {
             navigationView.wayNameView.isHidden = true
         }
+    }
+    
+    private func roadFeature(for line: MGLPolylineFeature) -> (roadName: String?, shieldName: NSAttributedString?) {
+        let roadNameRecord = roadFeatureHelper(ref: line.attribute(forKey: "ref"),
+                                            shield: line.attribute(forKey: "shield"),
+                                            reflen: line.attribute(forKey: "reflen"),
+                                              name: line.attribute(forKey: "name"))
+
+        return (roadName: roadNameRecord.roadName, shieldName: roadNameRecord.shieldName)
+    }
+    
+    private func roadFeature(for line: MGLMultiPolylineFeature) -> (roadName: String?, shieldName: NSAttributedString?) {
+        let roadNameRecord = roadFeatureHelper(ref: line.attribute(forKey: "ref"),
+                                            shield: line.attribute(forKey: "shield"),
+                                            reflen: line.attribute(forKey: "reflen"),
+                                              name: line.attribute(forKey: "name"))
+            
+        return (roadName: roadNameRecord.roadName, shieldName: roadNameRecord.shieldName)
+    }
+    
+    private func roadFeatureHelper(ref: Any?, shield: Any?, reflen: Any?, name: Any?) -> (roadName: String?, shieldName: NSAttributedString?) {
+        var currentShieldName: NSAttributedString?, currentRoadName: String?
+        
+        if let text = ref as? String, let shieldID = shield as? String, let reflenDigit = reflen as? Int {
+            currentShieldName = roadShieldName(for: text, shield: shieldID, reflen: reflenDigit)
+        }
+        
+        if let roadName = name as? String {
+            currentRoadName = roadName
+        }
+        
+        if let compositeShieldImage = currentShieldName, let roadName = currentRoadName {
+            let compositeShield = NSMutableAttributedString(string: " \(roadName)")
+            compositeShield.insert(compositeShieldImage, at: 0)
+            currentShieldName = compositeShield
+        }
+        
+        return (roadName: currentRoadName, shieldName: currentShieldName)
+    }
+    
+    private func roadShieldName(for text: String?, shield: String?, reflen: Int?) -> NSAttributedString? {
+        guard let text = text, let shield = shield, let reflen = reflen else { return nil }
+        
+        let currentShield = HighwayShield.RoadType(rawValue: shield)
+        let textColor = currentShield?.textColor ?? .black
+        let imageName = "\(shield)-\(reflen)"
+        
+        guard let image = mapView.style?.image(forName: imageName) else {
+            return nil
+        }
+        
+        let attachment = RoadNameLabelAttachment(image: image, text: text, color: textColor, font: UIFont.boldSystemFont(ofSize: UIFont.systemFontSize), scale: UIScreen.main.scale)
+        return NSAttributedString(attachment: attachment)
     }
     
     @objc func updateETA() {
@@ -895,7 +962,7 @@ extension RouteMapViewController: StepsViewControllerDelegate {
     
     func statusView(_ statusView: StatusView, valueChangedTo value: Double) {
         let displayValue = 1+min(Int(9 * value), 8)
-        let title = String.localizedStringWithFormat(NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation at %d×", comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled."), displayValue)
+        let title = String.Localized.simulationStatus(speed: displayValue)
         showStatus(title: title, for: .infinity, interactive: true)
         
         if let locationManager = routeController.locationManager as? SimulatedLocationManager {
@@ -919,10 +986,13 @@ extension RouteMapViewController {
     @objc fileprivate func keyboardWillShow(notification: NSNotification) {
         guard navigationView.endOfRouteView != nil else { return }
         guard let userInfo = notification.userInfo else { return }
-        let curve = UIViewAnimationCurve(rawValue: userInfo[UIKeyboardAnimationCurveUserInfoKey] as! Int)
-        let options = (duration: userInfo[UIKeyboardAnimationDurationUserInfoKey] as! Double,
-                       curve: curve!)
-        let keyboardHeight = (userInfo[UIKeyboardFrameEndUserInfoKey] as! CGRect).size.height
+        guard let curveValue = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? Int else { return }
+        guard let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? Double else { return }
+        guard let keyBoardRect = userInfo[UIKeyboardFrameEndUserInfoKey] as? CGRect else { return }
+        
+        let curve = UIViewAnimationCurve(rawValue: curveValue) ?? UIViewAnimationCurve.easeIn
+        let options = (duration: duration, curve: curve)
+        let keyboardHeight = keyBoardRect.size.height
 
         if #available(iOS 11.0, *) {
             navigationView.endOfRouteShowConstraint?.constant = -1 * (keyboardHeight - view.safeAreaInsets.bottom) //subtract the safe area, which is part of the keyboard's frame
