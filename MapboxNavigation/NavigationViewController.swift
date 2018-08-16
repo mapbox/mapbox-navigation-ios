@@ -50,7 +50,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      - parameter location: The user’s current location.
      */
     @objc(navigationViewController:willRerouteFromLocation:)
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, willRerouteFrom location: CLLocation)
+    optional func navigationViewController(_ navigationViewController: NavigationViewController, willRerouteFrom location: CLLocation?)
     
     /**
      Called immediately after the navigation view controller receives a new route.
@@ -358,7 +358,7 @@ open class NavigationViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         
         self.navigationService = MapboxNavigationService(route: route, directions: directions, locationSource: locationManager)
-        navigationService.router.usesDefaultUserInterface = true
+        navigationService.usesDefaultUserInterface = true
         navigationService.delegate = self
         
         navigationService.start()
@@ -404,7 +404,7 @@ open class NavigationViewController: UIViewController {
             UIApplication.shared.isIdleTimerDisabled = true
         }
         
-        if navigationService.locationSource is SimulatedLocationManager {
+        if navigationService.locationManager is SimulatedLocationManager {
             let localized = String.Localized.simulationStatus(speed: 1)
             mapViewController?.statusView.show(localized, showSpinner: false, interactive: true)
         }
@@ -582,23 +582,23 @@ extension NavigationViewController: NavigationServiceDelegate {
         return delegate?.navigationViewController?(self, shouldDiscard: location) ?? true
     }
     
-    @objc public func routeController(_ routeController: RouteController, didUpdate locations: [CLLocation]) {
+    @objc public func routeController(_ routeController: RouteController, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         
         // If the user has arrived, don't snap the user puck.
         // In the case the user drives beyond the waypoint,
         // we should accurately depict this.
+        
+        // Delegate method is trying to figure
         let shouldPreventReroutesWhenArrivingAtWaypoint = routeController.delegate?.routeController?(routeController, shouldPreventReroutesWhenArrivingAt: routeController.routeProgress.currentLeg.destination) ?? true
         let userHasArrivedAndShouldPreventRerouting = shouldPreventReroutesWhenArrivingAtWaypoint && !routeController.routeProgress.currentLegProgress.userHasArrivedAtWaypoint
         
         if snapsUserLocationAnnotationToRoute,
-            let snappedLocation = routeController.location ?? locations.last,
-            let rawLocation = locations.last,
             userHasArrivedAndShouldPreventRerouting {
-            mapViewController?.mapView.updateCourseTracking(location: snappedLocation, animated: true)
-            mapViewController?.labelCurrentRoad(at: rawLocation, for: snappedLocation)
-        } else if let rawlocation = locations.last {
-            mapViewController?.mapView.updateCourseTracking(location: rawlocation, animated: true)
-            mapViewController?.labelCurrentRoad(at: rawlocation)
+            mapViewController?.mapView.updateCourseTracking(location: location, animated: true)
+            mapViewController?.labelCurrentRoad(at: rawLocation, for: location)
+        } else {
+            mapViewController?.mapView.updateCourseTracking(location: rawLocation, animated: true)
+            mapViewController?.labelCurrentRoad(at: rawLocation)
         }
     }
     

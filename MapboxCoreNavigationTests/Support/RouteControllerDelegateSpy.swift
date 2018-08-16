@@ -23,7 +23,7 @@ class NavigationServiceDelegateSpy: NavigationServiceDelegate {
         return true
     }
 
-    internal func routeController(_ routeController: RouteController, didRerouteAlong route: Route) {
+    internal func routeController(_ routeController: RouteController, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
         recentMessages.append(#function)
     }
 
@@ -31,7 +31,7 @@ class NavigationServiceDelegateSpy: NavigationServiceDelegate {
         recentMessages.append(#function)
     }
 
-    internal func routeController(_ routeController: RouteController, didUpdate locations: [CLLocation]) {
+    internal func routeController(_ routeController: RouteController, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         recentMessages.append(#function)
     }
 

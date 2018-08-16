@@ -31,7 +31,7 @@ class MapboxCoreNavigationTests: XCTestCase {
         }
         
         navigation.start()
-        navigation.locationManager(navigation.locationSource, didUpdateLocations: [depart])
+        navigation.locationManager(navigation.locationManager, didUpdateLocations: [depart])
         
         waitForExpectations(timeout: waitForInterval) { (error) in
             XCTAssertNil(error)

@@ -74,7 +74,7 @@ class RouteMapViewController: UIViewController {
     weak var delegate: RouteMapViewControllerDelegate?
     var navigationService: NavigationService! {
         didSet {
-            navigationView.statusView.canChangeValue = navigationService.locationSource is SimulatedLocationManager
+            navigationView.statusView.canChangeValue = navigationService.locationManager is SimulatedLocationManager
             guard let destination = route.legs.last?.destination else { return }
             populateName(for: destination, populated: { self.destination = $0 })
         }
@@ -324,7 +324,7 @@ class RouteMapViewController: UIViewController {
     }
   
     func notifyUserAboutLowVolume() {
-        guard !(navigationService.locationSource is SimulatedLocationManager) else { return }
+        guard !(navigationService.locationManager is SimulatedLocationManager) else { return }
         guard !NavigationSettings.shared.voiceMuted else { return }
         guard AVAudioSession.sharedInstance().outputVolume <= NavigationViewMinimumVolumeForWarning else { return }
         
@@ -336,7 +336,7 @@ class RouteMapViewController: UIViewController {
     @objc func didReroute(notification: NSNotification) {
         guard self.isViewLoaded else { return }
         
-        if let locationManager = navigationService.locationSource as? SimulatedLocationManager {
+        if let locationManager = navigationService.locationManager as? SimulatedLocationManager {
             let localized = String.Localized.simulationStatus(speed: Int(locationManager.speedMultiplier))
             showStatus(title: localized, for: .infinity, interactive: true)
         } else {
@@ -477,7 +477,7 @@ class RouteMapViewController: UIViewController {
         endOfRoute.dismissHandler = { [weak self] (stars, comment) in
             guard let rating = self?.rating(for: stars) else { return }
             let feedback = EndOfRouteFeedback(rating: rating, comment: comment)
-            self?.navigationService.router.endNavigation(feedback: feedback)
+            self?.navigationService.endNavigation(feedback: feedback)
             self?.delegate?.mapViewControllerDidDismiss(self!, byCanceling: false)
         }
     }
@@ -972,7 +972,7 @@ extension RouteMapViewController: StepsViewControllerDelegate {
         let title = String.Localized.simulationStatus(speed: displayValue)
         showStatus(title: title, for: .infinity, interactive: true)
         
-        if let locationManager = navigationService.locationSource as? SimulatedLocationManager {
+        if let locationManager = navigationService.locationManager as? SimulatedLocationManager {
             locationManager.speedMultiplier = Double(displayValue)
         }
     }

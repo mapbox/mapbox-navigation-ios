@@ -4,23 +4,24 @@ import MapboxDirections
 
 @objc public protocol NavigationServiceDelegate: RouterDelegate, TunnelIntersectionManagerDelegate {}
 @objc(MBNavigationService)
-public protocol NavigationService: class, CLLocationManagerDelegate {
-    var locationSource: NavigationLocationManager { get }
+public protocol NavigationService: CLLocationManagerDelegate, EventsManagerDataSource {
+    var locationManager: NavigationLocationManager { get }
     var router: Router { get }
+    var eventsManager: EventsManager! { get }
     var route: Route { get set }
-    var eventsManager: EventsManager { get }
     weak var delegate: NavigationServiceDelegate? { get set }
     
     func start()
     func stop()
+    func endNavigation(feedback: EndOfRouteFeedback?)
 }
 
 @objc(MBNavigationService)
 public class MapboxNavigationService: NSObject, NavigationService {
-    public var locationSource: NavigationLocationManager
+    public var locationManager: NavigationLocationManager
     var directionsService: Directions
     public var router: Router
-    public var eventsManager: EventsManager
+    public var eventsManager: EventsManager!
     public weak var delegate: NavigationServiceDelegate?
     
     @objc convenience init(route: Route) {
@@ -30,18 +31,21 @@ public class MapboxNavigationService: NSObject, NavigationService {
     @objc required public init(route: Route,
                   directions directionsOverride: Directions? = nil,
                   locationSource locationOverride: NavigationLocationManager? = nil,
-                  eventsManager eventsOverride: EventsManager? = nil)
+                  eventsManager eventsOverride: EventsManager.Type? = nil)
     {
-        eventsManager = eventsOverride ?? EventsManager(accessToken: route.accessToken)
+        locationManager = locationOverride ?? NavigationLocationManager()
         directionsService = directionsOverride ?? Directions.shared
-        locationSource = locationOverride ?? NavigationLocationManager()
-        locationSource.activityType = route.routeOptions.activityType
-        
-        router = RouteController(along: route, directions: directionsService, locationManager: locationSource, eventsManager: eventsManager)
+        router = RouteController(along: route, directions: directionsService, locationManager: locationManager)
         super.init()
+        let eventType = eventsOverride ?? EventsManager.self
+        eventsManager = eventType.init(dataSource: self, accessToken: route.accessToken)
+        locationManager.activityType = route.routeOptions.activityType
+        
+        bootstrapEvents(with: router)
+        
         
         router.delegate = self
-        locationSource.delegate = self
+        locationManager.delegate = self
     }
     
     public var route: Route {
@@ -53,13 +57,23 @@ public class MapboxNavigationService: NSObject, NavigationService {
         }
     }
     public func start() {
-        locationSource.startUpdatingHeading()
-        locationSource.startUpdatingLocation()
+        locationManager.startUpdatingHeading()
+        locationManager.startUpdatingLocation()
     }
     
     public func stop() {
-        locationSource.stopUpdatingHeading()
-        locationSource.stopUpdatingLocation()
+        locationManager.stopUpdatingHeading()
+        locationManager.stopUpdatingLocation()
+    }
+    public func endNavigation(feedback: EndOfRouteFeedback? = nil) {
+        eventsManager.sendCancelEvent(rating: feedback?.rating, comment: feedback?.comment)
+        stop()
+    }
+
+    private func bootstrapEvents(with router: Router) {
+        eventsManager.dataSource = self
+        eventsManager.resetSession()
+        eventsManager.start()
     }
     
 }
@@ -69,6 +83,11 @@ extension MapboxNavigationService: CLLocationManagerDelegate {
         router.locationManager?(manager, didUpdateHeading: newHeading)
     }
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
+        //update the events manager with the received locations
+        eventsManager.record(locations: locations)
+        
+        //feed the location update to the router
         router.locationManager?(manager, didUpdateLocations: locations)
     }
 }
@@ -78,16 +97,32 @@ extension MapboxNavigationService: RouteControllerDelegate {
     typealias Default = RouteController.DefaultBehavior
     
     public func routeController(_ routeController: RouteController, willRerouteFrom location: CLLocation) {
+        
+        //save any progress made by the router until now
+        eventsManager.enqueueRerouteEvent()
+        eventsManager.incrementDistanceTraveled(by: routeController.routeProgress.distanceTraveled)
+        
+        //notify our consumer
         delegate?.routeController?(routeController, willRerouteFrom: location)
     }
-    public func routeController(_ routeController: RouteController, didRerouteAlong route: Route) {
-        delegate?.routeController?(routeController, didRerouteAlong: route)
+    public func routeController(_ routeController: RouteController, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
+        
+        //notify the events manager that the route has changed
+        eventsManager.reportReroute(progress: routeController.routeProgress, proactive: proactive)
+        
+        //notify our consumer
+        delegate?.routeController?(routeController, didRerouteAlong: route, at: location, proactive: proactive)
     }
     public func routeController(_ routeController: RouteController, didFailToRerouteWith error: Error) {
         delegate?.routeController?(routeController, didFailToRerouteWith: error)
     }
-    public func routeController(_ routeController: RouteController, didUpdate locations: [CLLocation]) {
-        delegate?.routeController?(routeController, didUpdate: locations)
+    public func routeController(_ routeController: RouteController, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
+        
+        //notify the events manager of the progress update
+        eventsManager.update(progress: progress)
+        
+        //pass the update on to consumers
+        delegate?.routeController?(routeController, didUpdate: progress, with: location, rawLocation: rawLocation)
     }
     
     //MARK: Questions
@@ -98,6 +133,10 @@ extension MapboxNavigationService: RouteControllerDelegate {
         return delegate?.routeController?(routeController,shouldDiscard: location) ?? Default.shouldDiscardLocation
     }
     public func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) -> Bool {
+        
+        //Notify the events manager that we've arrived at a waypoint
+        eventsManager.arriveAtWaypoint()
+        
         return delegate?.routeController?(routeController, didArriveAt: waypoint) ?? Default.didArriveAtWaypoint
     }
     public func routeController(_ routeController: RouteController, shouldPreventReroutesWhenArrivingAt waypoint: Waypoint) -> Bool {
@@ -105,6 +144,53 @@ extension MapboxNavigationService: RouteControllerDelegate {
     }
     public func routeControllerShouldDisableBatteryMonitoring(_ routeController: RouteController) -> Bool {
         return delegate?.routeControllerShouldDisableBatteryMonitoring?(routeController) ?? Default.shouldDisableBatteryMonitoring
+    }
+}
+
+//MARK: EventsManagerDataSource Logic
+extension MapboxNavigationService {
+    public var locationSource: LocationSource {
+        switch locationManager {
+        case is SimulatedLocationManager:
+            return .simulated
+        default:
+            return .device
+        }
+    }
+    
+    public var routeProgress: RouteProgress {
+        return self.router.routeProgress
+    }
+    
+    public var location: CLLocation? {
+        return self.locationManager.location
+    }
+    
+    public var desiredAccuracy: CLLocationAccuracy {
+        return self.locationManager.desiredAccuracy
+    }
+    
+    /// :nodoc: This is used internally when the navigation UI is being used
+    public var usesDefaultUserInterface: Bool {
+        get {
+            return eventsManager.usesDefaultUserInterface
+        }
+        set {
+            eventsManager.usesDefaultUserInterface = newValue
+        }
+    }
+}
+
+fileprivate extension EventsManager {
+    func incrementDistanceTraveled(by distance: CLLocationDistance) {
+       sessionState.totalDistanceCompleted += distance
+    }
+    func arriveAtWaypoint() {
+        sessionState.departureTimestamp = nil
+        sessionState.arrivalTimestamp = nil
+    }
+    func record(locations: [CLLocation]) {
+        locations.forEach(sessionState.pastLocations.push(_:))
     }
 }
 

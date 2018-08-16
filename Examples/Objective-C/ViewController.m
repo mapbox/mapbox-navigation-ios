@@ -123,11 +123,9 @@
         
         MBSimulatedLocationManager *locationManager = [[MBSimulatedLocationManager alloc] initWithRoute:self.route];
         
-        MBEventsManager *events = [[MBEventsManager alloc] initWithAccessToken:self.route.accessToken];
-        
         controller.directions = [MBDirections sharedDirections];
         controller.route = self.route;
-        controller.navigationService = [[MBNavigationService alloc] initWithRoute:self.route directions:controller.directions locationSource:locationManager eventsManager:events];
+        controller.navigationService = [[MBNavigationService alloc] initWithRoute:self.route directions:controller.directions locationSource:locationManager eventsManager:nil];
         
 
     }

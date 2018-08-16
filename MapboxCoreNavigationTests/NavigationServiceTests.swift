@@ -6,6 +6,50 @@ import MapboxMobileEvents
 
 fileprivate let mbTestHeading: CLLocationDirection = 50
 
+//class DataSourcePromise: EventsManagerDataSource {
+//    var forwardee: EventsManagerDataSource!
+//
+//    var routeProgress: RouteProgress {
+//        return forwardee.routeProgress
+//    }
+//
+//    var usesDefaultUserInterface: Bool {
+//        get {
+//        return forwardee.usesDefaultUserInterface
+//        }
+//        set {
+//            forwardee.usesDefaultUserInterface = uses
+//        }
+//    }
+//
+//    var location: CLLocation? {
+//        return forwardee.location
+//    }
+//
+//    var desiredAccuracy: CLLocationAccuracy {
+//        return forwardee.desiredAccuracy
+//    }
+//
+//    var locationSource: LocationSource {
+//        return forwardee.locationSource
+//    }
+//}
+class EventsManagerSpy: EventsManager {
+    override var manager: MMEEventsManager {
+        get {
+            return spy
+        }
+        set {
+            fatalError("Don't do this")
+        }
+    }
+    
+    var spy: MMEEventsManagerSpy = MMEEventsManagerSpy()
+    func reset() {
+        spy.reset()
+    }
+}
+
 class NavigationServiceTests: XCTestCase {
 
     struct Constants {
@@ -13,16 +57,16 @@ class NavigationServiceTests: XCTestCase {
         static let accessToken = "nonsense"
     }
 
-    let eventsManagerSpy = MMEEventsManagerSpy()
+    var eventsManagerSpy: EventsManagerSpy!
     let directionsClientSpy = DirectionsSpy(accessToken: "garbage", host: nil)
     let delegate = NavigationServiceDelegateSpy()
 
     typealias RouteLocations = (firstLocation: CLLocation, penultimateLocation: CLLocation, lastLocation: CLLocation)
 
-    lazy var dependencies: (navigationService: NavigationService, routeLocations: RouteLocations) = {
-        let eventsManager = EventsManager(accessToken: initialRoute.accessToken)
-        eventsManager.manager = eventsManagerSpy
-        let navigationService = MapboxNavigationService(route: initialRoute, directions: directionsClientSpy, eventsManager: eventsManager)
+    lazy var dependencies: (navigationService: NavigationService, routeLocations: RouteLocations, eventSpy: EventsManagerSpy) = {
+//        let eventsManager = EventsManager(dataSource: promise, accessToken: initialRoute.accessToken)
+//        eventsManager.manager = eventsManagerSpy
+        let navigationService = MapboxNavigationService(route: initialRoute, directions: directionsClientSpy, eventsManager: EventsManagerSpy.self)
         navigationService.delegate = delegate
 
 
@@ -40,7 +84,7 @@ class NavigationServiceTests: XCTestCase {
 
         let routeLocations = RouteLocations(firstLocation, penultimateLocation, lastLocation)
 
-        return (navigationService: navigationService, routeLocations: routeLocations)
+        return (navigationService: navigationService, routeLocations: routeLocations, eventSpy: navigationService.eventsManager as! EventsManagerSpy)
     }()
 
     lazy var initialRoute: Route = {
@@ -62,7 +106,7 @@ class NavigationServiceTests: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        eventsManagerSpy.reset()
+        dependencies.eventSpy.reset()
         directionsClientSpy.reset()
         delegate.reset()
     }
@@ -71,7 +115,7 @@ class NavigationServiceTests: XCTestCase {
         let navigation = dependencies.navigationService
         let firstLocation = dependencies.routeLocations.firstLocation
 
-        navigation.locationManager!(navigation.locationSource, didUpdateLocations: [firstLocation])
+        navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocation])
         XCTAssertTrue(navigation.router.userIsOnRoute(firstLocation), "User should be on route")
     }
 
@@ -81,21 +125,21 @@ class NavigationServiceTests: XCTestCase {
 
         let coordinateOffRoute = firstLocation.coordinate.coordinate(at: 100, facing: 90)
         let locationOffRoute = CLLocation(latitude: coordinateOffRoute.latitude, longitude: coordinateOffRoute.longitude)
-        navigation.locationManager!(navigation.locationSource, didUpdateLocations: [locationOffRoute])
+        navigation.locationManager!(navigation.locationManager, didUpdateLocations: [locationOffRoute])
         XCTAssertFalse(navigation.router.userIsOnRoute(locationOffRoute), "User should be off route")
     }
 
     func testAdvancingToFutureStepAndNotRerouting() {
         let navigation = dependencies.navigationService
         let firstLocation = dependencies.routeLocations.firstLocation
-        navigation.locationManager!(navigation.locationSource, didUpdateLocations: [firstLocation])
+        navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocation])
         XCTAssertTrue(navigation.router.userIsOnRoute(firstLocation), "User should be on route")
         XCTAssertEqual(navigation.router.routeProgress.currentLegProgress.stepIndex, 0, "User is on first step")
 
         let futureCoordinate = navigation.router.routeProgress.currentLegProgress.leg.steps[2].coordinates![10]
         let futureLocation = CLLocation(latitude: futureCoordinate.latitude, longitude: futureCoordinate.longitude)
 
-        navigation.locationManager!(navigation.locationSource, didUpdateLocations: [futureLocation])
+        navigation.locationManager!(navigation.locationManager, didUpdateLocations: [futureLocation])
         XCTAssertTrue(navigation.router.userIsOnRoute(futureLocation), "User should be on route")
         XCTAssertEqual(navigation.router.routeProgress.currentLegProgress.stepIndex, 2, "User should be on route and we should increment all the way to the 4th step")
     }
@@ -103,7 +147,7 @@ class NavigationServiceTests: XCTestCase {
     func testSnappedLocation() {
         let navigation = dependencies.navigationService
         let firstLocation = dependencies.routeLocations.firstLocation
-        navigation.locationManager!(navigation.locationSource, didUpdateLocations: [firstLocation])
+        navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocation])
         XCTAssertEqual(navigation.router.location!.coordinate, firstLocation.coordinate, "Check snapped location is working")
     }
     
@@ -111,17 +155,17 @@ class NavigationServiceTests: XCTestCase {
         let navigation = dependencies.navigationService
         let firstLocation = dependencies.routeLocations.firstLocation
         
-        navigation.locationManager!(navigation.locationSource, didUpdateLocations: [firstLocation])
+        navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocation])
         XCTAssertEqual(navigation.router.location!.coordinate, firstLocation.coordinate, "Check snapped location is working")
         
         let firstCoordinateOnUpcomingStep = navigation.router.routeProgress.currentLegProgress.upComingStep!.coordinates!.first!
         let firstLocationOnNextStepWithNoSpeed = CLLocation(coordinate: firstCoordinateOnUpcomingStep, altitude: 0, horizontalAccuracy: 10, verticalAccuracy: 10, course: 10, speed: 0, timestamp: Date())
         
-        navigation.locationManager!(navigation.locationSource, didUpdateLocations: [firstLocationOnNextStepWithNoSpeed])
+        navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocationOnNextStepWithNoSpeed])
         XCTAssertEqual(navigation.router.location!.coordinate, navigation.router.routeProgress.currentLegProgress.currentStep.coordinates!.last!, "When user is not moving, snap to current leg only")
         
         let firstLocationOnNextStepWithSpeed = CLLocation(coordinate: firstCoordinateOnUpcomingStep, altitude: 0, horizontalAccuracy: 10, verticalAccuracy: 10, course: 10, speed: 5, timestamp: Date())
-        navigation.locationManager!(navigation.locationSource, didUpdateLocations: [firstLocationOnNextStepWithSpeed])
+        navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocationOnNextStepWithSpeed])
         XCTAssertEqual(navigation.router.location!.coordinate, firstCoordinateOnUpcomingStep, "User is snapped to upcoming step when moving")
     }
     
@@ -129,7 +173,7 @@ class NavigationServiceTests: XCTestCase {
         let navigation = dependencies.navigationService
         let firstLocation = dependencies.routeLocations.firstLocation
         
-        navigation.locationManager!(navigation.locationSource, didUpdateLocations: [firstLocation])
+        navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocation])
         XCTAssertEqual(navigation.router.location!.coordinate, firstLocation.coordinate, "Check snapped location is working")
         
         let firstCoordinateOnUpcomingStep = navigation.router.routeProgress.currentLegProgress.upComingStep!.coordinates!.first!
@@ -137,24 +181,24 @@ class NavigationServiceTests: XCTestCase {
         let finalHeading = navigation.router.routeProgress.currentLegProgress.upComingStep!.finalHeading!
         let firstLocationOnNextStepWithDifferentCourse = CLLocation(coordinate: firstCoordinateOnUpcomingStep, altitude: 0, horizontalAccuracy: 30, verticalAccuracy: 10, course: -finalHeading, speed: 5, timestamp: Date())
         
-        navigation.locationManager!(navigation.locationSource, didUpdateLocations: [firstLocationOnNextStepWithDifferentCourse])
+        navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocationOnNextStepWithDifferentCourse])
         XCTAssertEqual(navigation.router.location!.coordinate, navigation.router.routeProgress.currentLegProgress.currentStep.coordinates!.last!, "When user's course is dissimilar from the finalHeading, they should not snap to upcoming step")
         
         let firstLocationOnNextStepWithCorrectCourse = CLLocation(coordinate: firstCoordinateOnUpcomingStep, altitude: 0, horizontalAccuracy: 30, verticalAccuracy: 10, course: finalHeading, speed: 0, timestamp: Date())
-        navigation.locationManager!(navigation.locationSource, didUpdateLocations: [firstLocationOnNextStepWithCorrectCourse])
+        navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocationOnNextStepWithCorrectCourse])
         XCTAssertEqual(navigation.router.location!.coordinate, firstCoordinateOnUpcomingStep, "User is snapped to upcoming step when their course is similar to the final heading")
     }
 
     func testSnappedLocationForUnqualifiedLocation() {
         let navigation = dependencies.navigationService
         let firstLocation = dependencies.routeLocations.firstLocation
-        navigation.locationManager!(navigation.locationSource, didUpdateLocations: [firstLocation])
+        navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocation])
         XCTAssertEqual(navigation.router.location!.coordinate, firstLocation.coordinate, "Check snapped location is working")
 
         let futureCoord = Polyline(navigation.router.routeProgress.currentLegProgress.nearbyCoordinates).coordinateFromStart(distance: 100)!
         let futureInaccurateLocation = CLLocation(coordinate: futureCoord, altitude: 0, horizontalAccuracy: 1, verticalAccuracy: 200, course: 0, speed: 5, timestamp: Date())
 
-        navigation.locationManager!(navigation.locationSource, didUpdateLocations: [futureInaccurateLocation])
+        navigation.locationManager!(navigation.locationManager, didUpdateLocations: [futureInaccurateLocation])
         XCTAssertEqual(navigation.router.location!.coordinate, futureInaccurateLocation.coordinate, "Inaccurate location is still snapped")
     }
 
@@ -174,14 +218,14 @@ class NavigationServiceTests: XCTestCase {
         let firstLocation = CLLocation(latitude: firstCoord.latitude, longitude: firstCoord.longitude)
         let coordNearStart = Polyline(router.routeProgress.currentLegProgress.nearbyCoordinates).coordinateFromStart(distance: 10)!
 
-        navigation.locationManager(navigation.locationSource, didUpdateLocations: [firstLocation])
+        navigation.locationManager(navigation.locationManager, didUpdateLocations: [firstLocation])
 
         // We're now 10 meters away from the last coord, looking at the start.
         // Basically, simulating moving backwards.
         let directionToStart = coordNearStart.direction(to: firstCoord)
         let facingTowardsStartLocation = CLLocation(coordinate: coordNearStart, altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: directionToStart, speed: 0, timestamp: Date())
 
-        navigation.locationManager(navigation.locationSource, didUpdateLocations: [facingTowardsStartLocation])
+        navigation.locationManager(navigation.locationManager, didUpdateLocations: [facingTowardsStartLocation])
 
         // The course should not be the interpolated course, rather the raw course.
         XCTAssertEqual(directionToStart, router.location!.course, "The course should be the raw course and not an interpolated course")
@@ -191,7 +235,7 @@ class NavigationServiceTests: XCTestCase {
     func testLocationShouldUseHeading() {
         let navigation = dependencies.navigationService
         let firstLocation = dependencies.routeLocations.firstLocation
-        navigation.locationManager!(navigation.locationSource, didUpdateLocations: [firstLocation])
+        navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocation])
 
         XCTAssertEqual(navigation.router.location!.course, firstLocation.course, "Course should be using course")
 
@@ -199,8 +243,8 @@ class NavigationServiceTests: XCTestCase {
 
         let heading = CLHeading(heading: mbTestHeading, accuracy: 1)!
 
-        navigation.locationManager!(navigation.locationSource, didUpdateLocations: [invalidCourseLocation])
-        navigation.locationManager!(navigation.locationSource, didUpdateHeading: heading)
+        navigation.locationManager!(navigation.locationManager, didUpdateLocations: [invalidCourseLocation])
+        navigation.locationManager!(navigation.locationManager, didUpdateHeading: heading)
 
         XCTAssertEqual(navigation.router.location!.course, mbTestHeading, "Course should be using bearing")
     }
@@ -209,11 +253,10 @@ class NavigationServiceTests: XCTestCase {
 
     func testTurnstileEventSentUponInitialization() {
         // MARK: it sends a turnstile event upon initialization
-        let eventsManager = EventsManager(accessToken: initialRoute.accessToken)
-        eventsManager.manager = eventsManagerSpy
-        let _ = MapboxNavigationService(route: initialRoute, directions: directionsClientSpy, locationSource: NavigationLocationManager(), eventsManager: eventsManager)
 
-        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeAppUserTurnstile))
+        let service = MapboxNavigationService(route: initialRoute, directions: directionsClientSpy, locationSource: NavigationLocationManager(), eventsManager: EventsManagerSpy.self)
+        let spyManager = service.eventsManager as! EventsManagerSpy
+        XCTAssertTrue(spyManager.spy.hasFlushedEvent(with: MMEEventTypeAppUserTurnstile))
     }
 
     func testReroutingFromALocationSendsEvents() {
@@ -221,7 +264,7 @@ class NavigationServiceTests: XCTestCase {
         let router = navigationService.router
         let testLocation = dependencies.routeLocations.firstLocation
 
-        router.eventsManager.delaysEventFlushing = false
+        navigationService.eventsManager.delaysEventFlushing = false
 
         let willRerouteNotificationExpectation = expectation(forNotification: .routeControllerWillReroute, object: router) { (notification) -> Bool in
             let fromLocation = notification.userInfo![RouteControllerNotificationUserInfoKey.locationKey] as? CLLocation
@@ -249,22 +292,23 @@ class NavigationServiceTests: XCTestCase {
         directionsClientSpy.fireLastCalculateCompletion(with: nil, routes: [alternateRoute], error: nil)
 
         // MARK: It tells the delegate & posts a didReroute notification
-        XCTAssertTrue(delegate.recentMessages.contains("routeController(_:didRerouteAlong:)"))
+        XCTAssertTrue(delegate.recentMessages.contains("routeController(_:didRerouteAlong:at:proactive:)"))
         wait(for: [didRerouteNotificationExpectation], timeout: 0.1)
 
         // MARK: On the next call to `locationManager(_, didUpdateLocations:)`
-        navigationService.locationManager!(navigationService.locationSource, didUpdateLocations: [testLocation])
+        navigationService.locationManager!(navigationService.locationManager, didUpdateLocations: [testLocation])
 
         // MARK: It tells the delegate & posts a routeProgressDidChange notification
-        XCTAssertTrue(delegate.recentMessages.contains("routeController(_:didUpdate:)"))
+        XCTAssertTrue(delegate.recentMessages.contains("routeController(_:didUpdate:with:rawLocation:)"))
         wait(for: [routeProgressDidChangeNotificationExpectation], timeout: 0.1)
 
         // MARK: It enqueues and flushes a NavigationRerouteEvent
         let expectedEventName = MMEEventTypeNavigationReroute
-        XCTAssertTrue(eventsManagerSpy.hasEnqueuedEvent(with: expectedEventName))
-        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
-        XCTAssertEqual(eventsManagerSpy.enqueuedEventCount(with: expectedEventName), 1)
-        XCTAssertEqual(eventsManagerSpy.flushedEventCount(with: expectedEventName), 1)
+        let spyManager = navigationService.eventsManager as! EventsManagerSpy
+        XCTAssertTrue(spyManager.spy.hasEnqueuedEvent(with: expectedEventName))
+        XCTAssertTrue(spyManager.spy.hasFlushedEvent(with: expectedEventName))
+        XCTAssertEqual(spyManager.spy.enqueuedEventCount(with: expectedEventName), 1)
+        XCTAssertEqual(spyManager.spy.flushedEventCount(with: expectedEventName), 1)
     }
 
     func testGeneratingAnArrivalEvent() {
@@ -274,29 +318,30 @@ class NavigationServiceTests: XCTestCase {
         let lastLocation = dependencies.routeLocations.lastLocation
 
         // MARK: When navigation begins with a location update
-        navigationService.locationManager!(navigationService.locationSource, didUpdateLocations: [firstLocation])
+        navigationService.locationManager!(navigationService.locationManager, didUpdateLocations: [firstLocation])
 
         // MARK: It queues and flushes a Depart event
-        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeNavigationDepart))
+        let spyManager = navigationService.eventsManager as! EventsManagerSpy
+        XCTAssertTrue(spyManager.spy.hasFlushedEvent(with: MMEEventTypeNavigationDepart))
         // TODO: should there be a delegate message here as well?
 
         // MARK: When at a valid location just before the last location (should this really be necessary?)
-        navigationService.locationManager!(navigationService.locationSource, didUpdateLocations: [penultimateLocation])
+        navigationService.locationManager!(navigationService.locationManager, didUpdateLocations: [penultimateLocation])
 
         // MARK: When navigation continues with a location update to the last location
-        navigationService.locationManager!(navigationService.locationSource, didUpdateLocations: [lastLocation])
+        navigationService.locationManager!(navigationService.locationManager, didUpdateLocations: [lastLocation])
 
         // MARK: And then navigation continues with another location update at the last location
         let currentLocation = navigationService.router.location!
-        navigationService.locationManager!(navigationService.locationSource, didUpdateLocations: [currentLocation])
+        navigationService.locationManager!(navigationService.locationManager, didUpdateLocations: [currentLocation])
 
         // MARK: It tells the delegate that the user did arrive
         XCTAssertTrue(delegate.recentMessages.contains("routeController(_:didArriveAt:)"))
 
         // MARK: It enqueues and flushes an arrival event
         let expectedEventName = MMEEventTypeNavigationArrive
-        XCTAssertTrue(eventsManagerSpy.hasEnqueuedEvent(with: expectedEventName))
-        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
+        XCTAssertTrue(spyManager.spy.hasEnqueuedEvent(with: expectedEventName))
+        XCTAssertTrue(spyManager.spy.hasFlushedEvent(with: expectedEventName))
     }
     
     func testNoReroutesAfterArriving() {
@@ -306,28 +351,29 @@ class NavigationServiceTests: XCTestCase {
         let lastLocation = dependencies.routeLocations.lastLocation
 
         // MARK: When navigation begins with a location update
-        navigationService.locationManager!(navigationService.locationSource, didUpdateLocations: [firstLocation])
+        navigationService.locationManager!(navigationService.locationManager, didUpdateLocations: [firstLocation])
         
         // MARK: It queues and flushes a Depart event
-        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeNavigationDepart))
+        let spyManager = navigationService.eventsManager as! EventsManagerSpy
+        XCTAssertTrue(spyManager.spy.hasFlushedEvent(with: MMEEventTypeNavigationDepart))
         // TODO: should there be a delegate message here as well?
         
         // MARK: When at a valid location just before the last location (should this really be necessary?)
-        navigationService.locationManager!(navigationService.locationSource, didUpdateLocations: [penultimateLocation])
+        navigationService.locationManager!(navigationService.locationManager, didUpdateLocations: [penultimateLocation])
 
         // MARK: When navigation continues with a location update to the last location
-        navigationService.locationManager!(navigationService.locationSource, didUpdateLocations: [lastLocation])
+        navigationService.locationManager!(navigationService.locationManager, didUpdateLocations: [lastLocation])
         
         // MARK: And then navigation continues with another location update at the last location
         let currentLocation = navigationService.router.location!
-        navigationService.locationManager!(navigationService.locationSource, didUpdateLocations: [currentLocation])
+        navigationService.locationManager!(navigationService.locationManager, didUpdateLocations: [currentLocation])
         
         // MARK: It tells the delegate that the user did arrive
         XCTAssertTrue(delegate.recentMessages.contains("routeController(_:didArriveAt:)"))
         
         // Find a location that is very far off route
         let locationBeyondRoute = navigationService.router.location!.coordinate.coordinate(at: 2000, facing: 0)
-        navigationService.locationManager!(navigationService.locationSource, didUpdateLocations: [CLLocation(latitude: locationBeyondRoute.latitude, longitude: locationBeyondRoute.latitude)])
+        navigationService.locationManager!(navigationService.locationManager, didUpdateLocations: [CLLocation(latitude: locationBeyondRoute.latitude, longitude: locationBeyondRoute.latitude)])
         
         // Make sure configurable delegate is called
         XCTAssertTrue(delegate.recentMessages.contains("routeController(_:shouldPreventReroutesWhenArrivingAt:)"))
@@ -337,8 +383,8 @@ class NavigationServiceTests: XCTestCase {
         
         // MARK: It enqueues and flushes an arrival event
         let expectedEventName = MMEEventTypeNavigationArrive
-        XCTAssertTrue(eventsManagerSpy.hasEnqueuedEvent(with: expectedEventName))
-        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
+        XCTAssertTrue(spyManager.spy.hasEnqueuedEvent(with: expectedEventName))
+        XCTAssertTrue(spyManager.spy.hasFlushedEvent(with: expectedEventName))
     }
 
 
@@ -349,11 +395,9 @@ class NavigationServiceTests: XCTestCase {
         
         autoreleasepool {
             let locationManager = NavigationLocationManager()
-            let eventsManager = EventsManager(accessToken: initialRoute.accessToken)
-            eventsManager.manager = eventsManagerSpy
-            let routeController: RouteController? = RouteController(along: initialRoute, directions: directionsClientSpy, locationManager: locationManager, eventsManager: eventsManager)
+  
+            let routeController: RouteController? = RouteController(along: initialRoute, directions: directionsClientSpy, locationManager: locationManager)
             subject = routeController
-            eventsManager.routeController = routeController
         }
 
         XCTAssertNil(subject, "Expected RouteController not to live beyond autorelease pool")
@@ -365,9 +409,7 @@ class NavigationServiceTests: XCTestCase {
         weak var subject: CLLocationManagerDelegate? = nil
         autoreleasepool {
             let locationManager = NavigationLocationManager()
-            let eventsManager = EventsManager(accessToken: initialRoute.accessToken)
-            eventsManager.manager = eventsManagerSpy
-            _ = RouteController(along: initialRoute, directions: directionsClientSpy, locationManager: locationManager, eventsManager: eventsManager)
+            _ = RouteController(along: initialRoute, directions: directionsClientSpy, locationManager: locationManager)
             subject = locationManager.delegate
         }
         

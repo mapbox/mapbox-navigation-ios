@@ -78,7 +78,7 @@ class NavigationViewControllerTests: XCTestCase {
         let roadName = "Taylor Swift Street"
         customRoadName[taylorStreetLocation.coordinate] = roadName
         
-        service.locationManager!(service.locationSource, didUpdateLocations: [taylorStreetLocation])
+        service.locationManager!(service.locationManager, didUpdateLocations: [taylorStreetLocation])
         
         let wayNameView = (navigationViewController.mapViewController?.navigationView.wayNameView)!
         let currentRoadName = wayNameView.text!
@@ -93,7 +93,7 @@ class NavigationViewControllerTests: XCTestCase {
         
         let someLocation = dependencies.poi.first!
         
-        let test: (Any) -> Void = { _ in service.locationManager!(service.locationSource, didUpdateLocations: [someLocation]) }
+        let test: (Any) -> Void = { _ in service.locationManager!(service.locationManager, didUpdateLocations: [someLocation]) }
         
         (0...2).forEach(test)
         
@@ -109,7 +109,7 @@ class NavigationViewControllerTests: XCTestCase {
         
         let someLocation = dependencies.poi.first!
         
-        let test: (Any) -> Void = { _ in service.locationManager!(service.locationSource, didUpdateLocations: [someLocation]) }
+        let test: (Any) -> Void = { _ in service.locationManager!(service.locationManager, didUpdateLocations: [someLocation]) }
         
         (0...2).forEach(test)
         
@@ -124,7 +124,7 @@ class NavigationViewControllerTests: XCTestCase {
         
         let someLocation = dependencies.poi.first!
         
-        let test: (Any) -> Void = { _ in service.locationManager!(service.locationSource, didUpdateLocations: [someLocation]) }
+        let test: (Any) -> Void = { _ in service.locationManager!(service.locationManager, didUpdateLocations: [someLocation]) }
         
         (0...2).forEach(test)
         
@@ -144,7 +144,7 @@ class NavigationViewControllerTests: XCTestCase {
         let roadName = ""
         customRoadName[turkStreetLocation.coordinate] = roadName
         
-        service.locationManager!(service.locationSource, didUpdateLocations: [turkStreetLocation])
+        service.locationManager!(service.locationManager, didUpdateLocations: [turkStreetLocation])
         
         let wayNameView = (navigationViewController.mapViewController?.navigationView.wayNameView)!
         let currentRoadName = wayNameView.text!
@@ -168,7 +168,7 @@ class NavigationViewControllerTests: XCTestCase {
             XCTAssertTrue(defaultRaodNameAssigned, "label road name was not successfully set")
         }
         
-        service.locationManager!(service.locationSource, didUpdateLocations: [fultonStreetLocation])
+        service.locationManager!(service.locationManager, didUpdateLocations: [fultonStreetLocation])
     }
     
     func testDestinationAnnotationUpdatesUponReroute() {
