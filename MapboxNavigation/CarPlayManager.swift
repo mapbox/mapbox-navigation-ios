@@ -88,9 +88,7 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
         
         mapTemplate.leadingNavigationBarButtons = [searchButton]
         mapTemplate.trailingNavigationBarButtons = [favoriteButton]
-        mapTemplate.mapButtons = [viewController.zoomInButton(), viewController.zoomOutButton()]
-        
-        mapTemplate.showPanningInterface(animated: true)
+        mapTemplate.mapButtons = [viewController.zoomInButton(), viewController.zoomOutButton(), viewController.panButton(mapTemplate: mapTemplate)]
         
         interfaceController.setRootTemplate(mapTemplate, animated: false)
         interfaceController.delegate = self
