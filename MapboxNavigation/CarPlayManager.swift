@@ -1,5 +1,7 @@
 #if canImport(CarPlay)
 import CarPlay
+import Turf
+import MapboxCoreNavigation
 
 @available(iOS 12.0, *)
 @objc(MBCarPlayManager)
@@ -7,6 +9,7 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
 
     public fileprivate(set) var interfaceController: CPInterfaceController?
     public fileprivate(set) var carWindow: UIWindow?
+    public fileprivate(set) var routeController: RouteController?
 
     private static var privateShared: CarPlayManager?
 
@@ -207,6 +210,48 @@ extension CarPlayManager: CPMapTemplateDelegate {
         //        appViewFromCarPlayWindow?.routes = routes
 //        let textConfiguration = CPTripPreviewTextConfiguration.init(startButtonTitle: "Let's GO!", additionalRoutesButtonTitle: "Meh, show me more", overviewButtonTitle: "Take me Back")
 //        mapTemplate.showRouteChoicesPreview(for: trip, textConfiguration: textConfiguration)
+    }
+    
+    public func mapTemplateDidShowPanningInterface(_ mapTemplate: CPMapTemplate) {
+        // TODO: Shows panning interface
+        guard let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController else {
+            return
+        }
+        carPlayMapViewController.mapView.userTrackingMode = .follow
+    }
+    
+    public func mapTemplate(_ mapTemplate: CPMapTemplate, panWith direction: CPMapTemplate.PanDirection) {
+        
+        // TODO: Move mapview along the direction
+        guard let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController, let userLocation = carPlayMapViewController.mapView.userLocation?.coordinate, let coordinates = self.routeController?.routeProgress.route.coordinates else {
+            return
+        }
+        
+        var panDirection = Double.infinity
+        
+        switch direction {
+        case CPMapTemplate.PanDirection.right:
+            panDirection = 90
+        case CPMapTemplate.PanDirection.down:
+            panDirection = 180
+        case CPMapTemplate.PanDirection.left:
+            panDirection = 270
+        default:
+            panDirection = 0
+        }
+        
+        let nearestLocation = userLocation.coordinate(at: 20, facing: panDirection)
+        let newLocation = CLLocationCoordinate2DMake(nearestLocation.latitude, nearestLocation.longitude)
+        
+        carPlayMapViewController.mapView.setOverheadCameraView(from: newLocation, along: coordinates, for: .zero)
+    }
+    
+    public func mapTemplateDidDismissPanningInterface(_ mapTemplate: CPMapTemplate) {
+        guard let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController else {
+            return
+        }
+        
+        carPlayMapViewController.mapView.userTrackingMode = .none
     }
 }
 #endif
