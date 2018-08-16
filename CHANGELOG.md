@@ -1,5 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v0.19.2 (August 23, 2018)
+
+* Added an `MGLMapView.showsIncidents` property to toggle the visibility of any Mapbox Incidents data on a map view. ([#1613](https://github.com/mapbox/mapbox-navigation-ios/pull/1613))
+
 ## v0.19.1 (August 15, 2018)
 
 * Fixed build errors when installing this SDK with Mapbox Maps SDK for iOS v4.3.0 or above. ([#1609](https://github.com/mapbox/mapbox-navigation-ios/pull/1609))
