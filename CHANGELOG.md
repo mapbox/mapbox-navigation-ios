@@ -2,6 +2,7 @@
 
 ## master
 
+* Added an `MGLMapView.showsIncidents` property to toggle the visibility of any Mapbox Incidents data on a map view. ([#1613](https://github.com/mapbox/mapbox-navigation-ios/pull/1613))
 * Added the `shouldManageApplicationIdleTimer` flag to `NavigationViewController` to allow applications to opt out of automatic `UIApplication.isIdleTimerDisabled` management. ([#1591](https://github.com/mapbox/mapbox-navigation-ios/pull/1591))
 * Fixed an issue where the banner was stuck on rerouting past the reroute threshold, when navigation was set to simulation mode. ([#1583](https://github.com/mapbox/mapbox-navigation-ios/pull/1583))
 * Modified the label at the bottom of the map to display the route shield in addition to the road name. ([#1576](https://github.com/mapbox/mapbox-navigation-ios/pull/1576)) 
