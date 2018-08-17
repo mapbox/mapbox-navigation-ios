@@ -9,6 +9,7 @@
 * Fixed an issue where the steps list drag handlebar disappears whenever the user taps the resume button. ([#1588](https://github.com/mapbox/mapbox-navigation-ios/pull/1588))
 * Resolved the partially styled user interface issue that occurs when the style theme is switched between the `NightStyle` and `DayStyle`, after the resume  button was tapped. ([#1589](https://github.com/mapbox/mapbox-navigation-ios/pull/1589))
 * Fixed a rare crash associated with the keyboard when showing the end of route view controller. [#1599](https://github.com/mapbox/mapbox-navigation-ios/pull/1599/)
+* Made functions on `StatusView`  allowing for better interaction. [#1612](https://github.com/mapbox/mapbox-navigation-ios/pull/1612)
 
 ## v0.19.0 (July 24, 2018)
 
