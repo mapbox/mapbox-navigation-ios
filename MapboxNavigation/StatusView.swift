@@ -1,7 +1,13 @@
 import UIKit
 
-protocol StatusViewDelegate: class {
-    func statusView(_ statusView: StatusView, valueChangedTo value: Double)
+/**
+ A protocol for listening in on changed mades made to a `StatusView`.
+ */
+public protocol StatusViewDelegate: class {
+    /**
+     Indicates a value in the status view has changed by the user interacting with it.
+     */
+    @objc optional func statusView(_ statusView: StatusView, valueChangedTo value: Double)
 }
 
 /// :nodoc:
@@ -18,7 +24,7 @@ public class StatusView: UIView {
     var canChangeValue = false
     var value: Double = 0 {
         didSet {
-            delegate?.statusView(self, valueChangedTo: value)
+            delegate?.statusView?(self, valueChangedTo: value)
         }
     }
     
@@ -95,7 +101,10 @@ public class StatusView: UIView {
         }
     }
     
-    func show(_ title: String, showSpinner: Bool, interactive: Bool = false) {
+    /**
+     Shows the status view with an optional spinner.
+     */
+    public func show(_ title: String, showSpinner: Bool, interactive: Bool = false) {
         canChangeValue = interactive
         textLabel.text = title
         activityIndicatorView.hidesWhenStopped = true
@@ -117,7 +126,10 @@ public class StatusView: UIView {
         })
     }
     
-    func hide(delay: TimeInterval = 0, animated: Bool = true) {
+    /**
+     Hides the status view.
+     */
+    public func hide(delay: TimeInterval = 0, animated: Bool = true) {
         
         let hide = {
             self.isHidden = true
