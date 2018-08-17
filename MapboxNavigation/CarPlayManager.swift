@@ -26,6 +26,33 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
         privateShared = nil
     }
     
+    // TODO: In case we set routes here.
+    var routes: [Any /* Route */]? {
+        didSet {
+        //            guard #available(iOS 12.0, *), let carViewController = carViewController else { return }
+        //
+        //            mapTemplate?.mapButtons = []
+        //
+        //            // Use custom extension on CPMaptemplate to make it easy to preview a `Route`.
+        //            mapTemplate?.showTripPreviews(routes, textConfiguration: nil)
+        //
+        //            carViewController.mapView?.showRoutes(routes)
+        //            carViewController.mapView?.showWaypoints(current)
+        //
+        //            // Wait for preview UI to show up so we can get the proper safeAreaInsets.
+        //            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        //                let padding: CGFloat = 10
+        //                let bounds = UIEdgeInsets(top: carViewController.view.safeAreaInsets.top + padding,
+        //                                          left: carViewController.view.safeAreaInsets.left + padding,
+        //                                          bottom: carViewController.view.safeAreaInsets.bottom + padding,
+        //                                          right: carViewController.view.safeAreaInsets.right + padding)
+        //
+        //                let line = MGLPolyline(coordinates: current.coordinates!, count: UInt(current.coordinates!.count))
+        //                carViewController.mapView?.setVisibleCoordinateBounds(line.overlayBounds, edgePadding: bounds, animated: true)
+        //            }
+        }
+    }
+    
     var edgePadding: UIEdgeInsets {
         guard let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController else {
             return .zero
@@ -83,6 +110,25 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
                 }
             }
         }
+    }
+    
+    public func beginTrip(_ trip: CPTrip) {
+
+//    guard #available(iOS 12.0, *), let carViewController = carViewController, let mapTemplate = mapTemplate, let trip = route.asCPTrip, let interfaceController = interfaceController else { return }
+//    let session = mapTemplate.startNavigationSession(for: trip)
+//
+//    mapTemplate.dismissPanningInterface(animated: true)
+//
+//    mapTemplate.update(route.travelEstimates, for: trip, with: .default)
+//    mapTemplate.hideTripPreviews()
+//    let carPlayNavigationViewController = CarPlayNavigationViewController(for: navigationViewController.routeController, session: session, template: mapTemplate, interfaceController: interfaceController)
+//    carPlayNavigationViewController.carPlayNavigationDelegate = self
+//    carViewController.present(carPlayNavigationViewController, animated: true, completion: nil)
+//
+//    if let appViewFromCarPlayWindow = appViewFromCarPlayWindow {
+//        navigationViewController.isUsedInConjunctionWithCarPlayWindow = true
+//        appViewFromCarPlayWindow.present(navigationViewController, animated: true)
+//    }
     }
 
     // MARK: CPApplicationDelegate
