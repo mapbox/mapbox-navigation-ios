@@ -9,7 +9,7 @@ import MapboxDirections
  `MapboxVoiceController` extends the default `RouteVoiceController` by providing a more robust speech synthesizer via the Mapbox Speech API. `RouteVoiceController` will be used as a fallback during poor network conditions.
  */
 @objc(MBMapboxVoiceController)
-open class MapboxVoiceController: RouteVoiceController {
+open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
     
     /**
      Number of seconds a request can wait before it is canceled and the default speech synthesizer speaks the instruction.
@@ -20,6 +20,11 @@ open class MapboxVoiceController: RouteVoiceController {
      Number of steps ahead of the current step to cache spoken instructions.
      */
     @objc public var stepsAheadToCache: Int = 3
+    
+    /**
+     An `AVAudioPlayer` through which spoken instructions are played.
+     */
+    @objc public var audioPlayer: AVAudioPlayer?
     
     var audioTask: URLSessionDataTask?
     var cache: BimodalDataCache
@@ -32,8 +37,32 @@ open class MapboxVoiceController: RouteVoiceController {
     @objc public init(speechClient: SpeechSynthesizer = SpeechSynthesizer(accessToken: nil), dataCache: BimodalDataCache = DataCache()) {
         speech = speechClient
         cache = dataCache
-
         super.init()
+        
+        audioPlayer?.delegate = self
+        
+        volumeToken = NavigationSettings.shared.observe(\.voiceVolume) { [weak self] (settings, change) in
+            self?.audioPlayer?.volume = settings.voiceVolume
+        }
+        
+        muteToken = NavigationSettings.shared.observe(\.voiceMuted) { [weak self] (settings, change) in
+            if settings.voiceMuted {
+                self?.audioPlayer?.stop()
+            }
+        }
+    }
+    
+    deinit {
+        audioPlayer?.stop()
+        audioPlayer?.delegate = nil
+    }
+    
+    @objc public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        do {
+            try unDuckAudio()
+        } catch {
+            voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
+        }
     }
 
     @objc open override func didPassSpokenInstructionPoint(notification: NSNotification) {
