@@ -3,7 +3,7 @@ import UIKit
 /**
  A protocol for listening in on changed mades made to a `StatusView`.
  */
-public protocol StatusViewDelegate: class {
+@objc public protocol StatusViewDelegate: class {
     /**
      Indicates a value in the status view has changed by the user interacting with it.
      */
