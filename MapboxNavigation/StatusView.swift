@@ -17,11 +17,11 @@ public class StatusView: UIView {
     
     weak var activityIndicatorView: UIActivityIndicatorView!
     weak var textLabel: UILabel!
-    weak var delegate: StatusViewDelegate?
+    public weak var delegate: StatusViewDelegate?
     var panStartPoint: CGPoint?
     
     var isCurrentlyVisible: Bool = false
-    var canChangeValue = false
+    public var canChangeValue = false
     var value: Double = 0 {
         didSet {
             delegate?.statusView?(self, valueChangedTo: value)
