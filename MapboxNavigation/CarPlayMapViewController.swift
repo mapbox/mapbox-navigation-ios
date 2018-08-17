@@ -34,19 +34,21 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
             }
             strongSelf.mapView.setZoomLevel(strongSelf.mapView.zoomLevel + 1, animated: true)
         }
-        zoomInButton.image = Bundle.mapboxNavigation.image(named: "plus")!
+        let bundle = Bundle.mapboxNavigation
+        zoomInButton.image = UIImage(named: "plus", in: bundle, compatibleWith: traitCollection)
         return zoomInButton
     }
     
     public func zoomOutButton() -> CPMapButton {
-        let zoomInButton = CPMapButton { [weak self] (button) in
+        let zoomInOut = CPMapButton { [weak self] (button) in
             guard let strongSelf = self else {
                 return
             }
             strongSelf.mapView.setZoomLevel(strongSelf.mapView.zoomLevel - 1, animated: true)
         }
-        zoomInButton.image = Bundle.mapboxNavigation.image(named: "minus")!
-        return zoomInButton
+        let bundle = Bundle.mapboxNavigation
+        zoomInOut.image = UIImage(named: "minus", in: bundle, compatibleWith: traitCollection)
+        return zoomInOut
     }
     
     public func panButton(mapTemplate: CPMapTemplate) -> CPMapButton {
@@ -62,9 +64,10 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
                 mapTemplate.showPanningInterface(animated: true)
             }
         }
-        
-        panButton.image = Bundle.mapboxNavigation.image(named: "pan-map")
-        
+
+        let bundle = Bundle.mapboxNavigation
+        panButton.image = UIImage(named: "pan-map", in: bundle, compatibleWith: traitCollection)
+
         return panButton
     }
     

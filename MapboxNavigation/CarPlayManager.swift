@@ -134,26 +134,30 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
     // MARK: CPApplicationDelegate
 
     public func application(_ application: UIApplication, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPWindow) {
+        //TODO: event
+        interfaceController.delegate = self
+        self.interfaceController = interfaceController
+
+        let viewController = CarPlayMapViewController()
+        window.rootViewController = viewController
+        self.carWindow = window
+        
+        let traitCollection = viewController.traitCollection
+
         let mapTemplate = CPMapTemplate()
         mapTemplate.mapDelegate = self
 
         let searchTemplate = CPSearchTemplate()
         searchTemplate.delegate = self
 
-        let searchButton = searchTemplateButton(searchTemplate: searchTemplate, interfaceController: interfaceController)
-        let favoriteButton = favoriteTemplateButton(interfaceController: interfaceController)
-        
-        let viewController = CarPlayMapViewController()
-        window.rootViewController = viewController
-        self.carWindow = window
-        
+        let searchButton = searchTemplateButton(searchTemplate: searchTemplate, interfaceController: interfaceController, traitCollection: traitCollection)
+        let favoriteButton = favoriteTemplateButton(interfaceController: interfaceController, traitCollection: traitCollection)
+
         mapTemplate.leadingNavigationBarButtons = [searchButton]
         mapTemplate.trailingNavigationBarButtons = [favoriteButton]
         mapTemplate.mapButtons = [viewController.zoomInButton(), viewController.zoomOutButton(), viewController.panButton(mapTemplate: mapTemplate)]
         
         interfaceController.setRootTemplate(mapTemplate, animated: false)
-        interfaceController.delegate = self
-        self.interfaceController = interfaceController
     }
 
     public func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPWindow) {
@@ -182,18 +186,19 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
 
     }
 
-    public func searchTemplateButton(searchTemplate: CPSearchTemplate, interfaceController: CPInterfaceController) -> CPBarButton {
+    private func searchTemplateButton(searchTemplate: CPSearchTemplate, interfaceController: CPInterfaceController, traitCollection: UITraitCollection) -> CPBarButton {
         
         let searchTemplateButton = CPBarButton(type: .image) { button in
             interfaceController.pushTemplate(searchTemplate, animated: true)
         }
-        
-        searchTemplateButton.image = Bundle.mapboxNavigation.image(named: "search-monocle")
+
+        let bundle = Bundle.mapboxNavigation
+        searchTemplateButton.image = UIImage(named: "search-monocle", in: bundle, compatibleWith: traitCollection)
         
         return searchTemplateButton
     }
     
-    public func favoriteTemplateButton(interfaceController: CPInterfaceController) -> CPBarButton {
+    public func favoriteTemplateButton(interfaceController: CPInterfaceController, traitCollection: UITraitCollection) -> CPBarButton {
         
         let favoriteTemplateButton = CPBarButton(type: .image) { button in
             // TODO: Show List Template
@@ -208,8 +213,9 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
             
             interfaceController.pushTemplate(listTemplate, animated: true)
         }
-        
-        favoriteTemplateButton.image = Bundle.mapboxNavigation.image(named: "star")
+
+        let bundle = Bundle.mapboxNavigation
+        favoriteTemplateButton.image = UIImage(named: "star", in: bundle, compatibleWith: traitCollection)
         
         return favoriteTemplateButton
     }
