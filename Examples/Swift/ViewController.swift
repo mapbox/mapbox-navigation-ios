@@ -258,6 +258,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
         self.mapView?.localizeLabels()
+        self.mapView?.showsIncidents = true
         
         if let routes = routes, let currentRoute = routes.first, let coords = currentRoute.coordinates {
             mapView.setVisibleCoordinateBounds(MGLPolygon(coordinates: coords, count: currentRoute.coordinateCount).overlayBounds, animated: false)
