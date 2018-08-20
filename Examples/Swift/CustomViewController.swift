@@ -35,8 +35,6 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
         
         mapView.delegate = self
         mapView.compassView.isHidden = true
-        
-        feedbackViewController = FeedbackViewController(eventsManager: routeController.eventsManager)
 
         // Add listeners for progress updates
         resumeNotifications()
