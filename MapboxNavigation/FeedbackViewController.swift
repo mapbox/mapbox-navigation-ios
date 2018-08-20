@@ -3,21 +3,24 @@ import MapboxCoreNavigation
 import AVFoundation
 
 extension FeedbackViewController: UIViewControllerTransitioningDelegate {
-    public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    @objc public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         abortAutodismiss()
         return DismissAnimator()
     }
     
-    public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    @objc public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return PresentAnimator()
     }
     
-    public func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+    @objc public func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
         return interactor.hasStarted ? interactor : nil
     }
 }
 
-@objc(FeedbackViewController)
+/**
+ A view controller containing a grid of buttons the user can use to denote an issue their current navigation experience.
+ */
+@objc(MBFeedbackViewController)
 public class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecognizerDelegate {
     
     var sendFeedbackHandler: ((FeedbackItem) -> Void)?
@@ -31,6 +34,9 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     
     let interactor = Interactor()
     
+    /**
+     The feedback items that are visible and selectable by the user.
+     */
     public var sections: [[FeedbackItem]] = [[.turnNotAllowed, .closure, .reportTraffic, .confusingInstructions, .generalMapError, .badRoute]]
     
     lazy var collectionView: UICollectionView = {
@@ -71,7 +77,10 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     
     var eventsManager: EventsManager
     
-    public init(eventsManager: EventsManager) {
+    /**
+     Initialize a new FeedbackViewController from an `EventsManager`.
+     */
+    @objc public init(eventsManager: EventsManager) {
         self.eventsManager = eventsManager
         super.init(nibName: nil, bundle: nil)
         commonInit()
@@ -151,7 +160,10 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(dismissFeedback), object: nil)
     }
     
-    @objc func dismissFeedback() {
+    /**
+     Instantly dismisses the FeedbackViewController if it is currently presented.
+     */
+    @objc public func dismissFeedback() {
         abortAutodismiss()
         dismissFeedbackHandler?()
     }
@@ -231,7 +243,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
 }
 
 extension FeedbackViewController: UICollectionViewDataSource {
-    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    @objc public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedbackCollectionViewCell.defaultIdentifier, for: indexPath) as! FeedbackCollectionViewCell
         let item = sections[indexPath.section][indexPath.row]
         
@@ -242,15 +254,15 @@ extension FeedbackViewController: UICollectionViewDataSource {
         return cell
     }
     
-    public func numberOfSections(in collectionView: UICollectionView) -> Int {
+    @objc public func numberOfSections(in collectionView: UICollectionView) -> Int {
         return sections.count
     }
     
-    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    @objc public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return sections[section].count
     }
     
-    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    @objc public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         // In case the view is scrolled, dismiss the feedback window immediately
         // and reset the `progressBar` back to a full progress.
         abortAutodismiss()
@@ -259,7 +271,7 @@ extension FeedbackViewController: UICollectionViewDataSource {
 }
 
 extension FeedbackViewController: UICollectionViewDelegate {
-    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    @objc public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         abortAutodismiss()
         let item = sections[indexPath.section][indexPath.row]
         sendFeedbackHandler?(item)
@@ -267,7 +279,7 @@ extension FeedbackViewController: UICollectionViewDelegate {
 }
 
 extension FeedbackViewController: UICollectionViewDelegateFlowLayout {
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    @objc public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let availableWidth = collectionView.bounds.width
         // 3 columns and 2 rows in portrait mode.
         // 6 columns and 1 row in landscape mode.
