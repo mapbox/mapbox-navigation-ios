@@ -187,8 +187,8 @@ class InstructionPresenter {
     }
 
     private func attributedString(withFont font: UIFont, shieldImage: UIImage) -> NSAttributedString {
-        let attachment = NSTextAttachment()
-//        attachment.font = font
+        let attachment = ShieldAttachment()
+        attachment.font = font
         attachment.image = shieldImage
         return NSAttributedString(attachment: attachment)
     }
@@ -197,7 +197,7 @@ class InstructionPresenter {
         guard let cacheKey = component.cacheKey else { return nil }
 
         let additionalKey = GenericRouteShield.criticalHash(dataSource: dataSource)
-        let attachment = NSTextAttachment()
+        let attachment = GenericShieldAttachment()
         
         let key = [cacheKey, additionalKey].joined(separator: "-")
         if let image = imageRepository.cachedImageForKey(key) {
@@ -209,8 +209,8 @@ class InstructionPresenter {
             attachment.image = image
         }
         
-//        attachment.font = dataSource.font
-        
+        attachment.font = dataSource.font
+
         return NSAttributedString(attachment: attachment)
     }
     
