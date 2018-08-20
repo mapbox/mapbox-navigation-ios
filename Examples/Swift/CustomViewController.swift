@@ -23,7 +23,9 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var instructionsBannerView: InstructionsBannerView!
     
-    var feedbackViewController: FeedbackViewController!
+    lazy var feedbackViewController: FeedbackViewController = {
+        return FeedbackViewController(eventsManager: routeController.eventsManager)
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
