@@ -5,8 +5,4 @@
 @implementation MGLMapView (MGLNavigationAdditions)
 #pragma clang diagnostic pop
 
-- (CADisplayLink *)displayLink {
-    return [self valueForKey:@"_displayLink"];
-}
-
 @end
