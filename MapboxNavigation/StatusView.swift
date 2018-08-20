@@ -17,23 +17,23 @@ public class StatusView: UIView {
     
     weak var activityIndicatorView: UIActivityIndicatorView!
     weak var textLabel: UILabel!
-    public weak var delegate: StatusViewDelegate?
+    @objc public weak var delegate: StatusViewDelegate?
     var panStartPoint: CGPoint?
     
     var isCurrentlyVisible: Bool = false
-    public var canChangeValue = false
+    @objc public var canChangeValue = false
     var value: Double = 0 {
         didSet {
             delegate?.statusView?(self, valueChangedTo: value)
         }
     }
     
-    public override init(frame: CGRect) {
+    @objc public override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
     }
     
-    public required init?(coder aDecoder: NSCoder) {
+    @objc public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit()
     }
