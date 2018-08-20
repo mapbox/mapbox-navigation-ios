@@ -3,9 +3,7 @@ import MapboxCoreNavigation
 import MapboxNavigation
 import MapboxDirections
 import UserNotifications
-#if canImport(CarPlay)
-import CarPlay
-#endif
+
 
 private typealias RouteRequestSuccess = (([Route]) -> Void)
 private typealias RouteRequestFailure = ((NSError) -> Void)
@@ -67,16 +65,6 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     }
 
     var alertController: UIAlertController!
-    
-    // MARK: - CarPlay Properties
-    
-    var appViewFromCarPlayWindow: ViewController? {
-        return ((appDelegate?.window?.rootViewController as? UINavigationController)?.viewControllers)?.first as? ViewController
-    }
-    
-    var appDelegate: AppDelegate? {
-        return UIApplication.shared.delegate as? AppDelegate
-    }
     
     // MARK: - Lifecycle Methods
 
@@ -215,7 +203,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     // MARK: Basic Navigation
 
     func startBasicNavigation() {
-        guard let route = appViewFromCarPlayWindow?.routes?.first else { return }
+        guard let route = routes?.first else { return }
 
         let navigationViewController = NavigationViewController(for: route, locationManager: navigationLocationManager())
         navigationViewController.delegate = self
@@ -262,7 +250,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     }
 
     func navigationLocationManager() -> NavigationLocationManager {
-        guard let route = appViewFromCarPlayWindow?.routes?.first else { return NavigationLocationManager() }
+        guard let route = routes?.first else { return NavigationLocationManager() }
         return simulationButton.isSelected ? SimulatedLocationManager(route: route) : NavigationLocationManager()
     }
 
