@@ -219,7 +219,7 @@ class InstructionPresenter {
         
 
         let additionalKey = ExitView.criticalHash(side: side, dataSource: dataSource)
-        let attachment = NSTextAttachment()
+        let attachment = ExitAttachment()
 
         let key = [cacheKey, additionalKey].joined(separator: "-")
         if let image = imageRepository.cachedImageForKey(key) {
