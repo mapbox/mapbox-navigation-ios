@@ -55,9 +55,6 @@ public class MapboxNavigationService: NSObject, NavigationService {
     private var nativeLocationSource: NavigationLocationManager
     private var simulatedLocationSource: SimulatedLocationManager?
     
-    private var tunnelAuthority: TunnelAuthority = TunnelAuthority()
-    
-    
     @objc convenience init(route: Route) {
         self.init(route: route, directions: nil, locationSource: nil, eventsManagerType: nil)
     }
@@ -157,7 +154,7 @@ extension MapboxNavigationService: CLLocationManagerDelegate {
         
         guard let location = locations.first else { return }
         
-        let inTunnel = tunnelAuthority.isInTunnel(at: location, along: router.routeProgress)
+        let inTunnel = TunnelAuthority.isInTunnel(at: location, along: router.routeProgress)
         let currentlySimulating = simulatedLocationSource != nil
         
         if inTunnel, !currentlySimulating { //we're entering a tunnel

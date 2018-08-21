@@ -38,7 +38,7 @@ class NavigationServiceTests: XCTestCase {
     lazy var dependencies: (navigationService: NavigationService, routeLocations: RouteLocations, eventSpy: EventsManagerSpy) = {
 //        let eventsManager = EventsManager(dataSource: promise, accessToken: initialRoute.accessToken)
 //        eventsManager.manager = eventsManagerSpy
-        let navigationService = MapboxNavigationService(route: initialRoute, directions: directionsClientSpy, eventsManager: EventsManagerSpy.self)
+        let navigationService = MapboxNavigationService(route: initialRoute, directions: directionsClientSpy, eventsManagerType: EventsManagerSpy.self)
         navigationService.delegate = delegate
 
 
@@ -226,7 +226,7 @@ class NavigationServiceTests: XCTestCase {
     func testTurnstileEventSentUponInitialization() {
         // MARK: it sends a turnstile event upon initialization
 
-        let service = MapboxNavigationService(route: initialRoute, directions: directionsClientSpy, locationSource: NavigationLocationManager(), eventsManager: EventsManagerSpy.self)
+        let service = MapboxNavigationService(route: initialRoute, directions: directionsClientSpy, locationSource: NavigationLocationManager(), eventsManagerType: EventsManagerSpy.self)
         let spyManager = service.eventsManager as! EventsManagerSpy
         XCTAssertTrue(spyManager.spy.hasFlushedEvent(with: MMEEventTypeAppUserTurnstile))
     }

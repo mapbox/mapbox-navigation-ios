@@ -7,14 +7,10 @@ class TunnelAuthority {
         static let tunnelEntranceRadius: CLLocationDistance = 15
         static let minimumTunnelEntranceSpeed: CLLocationSpeed = 5
         static let validLocationThreshold: Int = 3
+        static let minimumAdjacentSurfaceRoadLength: CLLocationDistance = 500
     }
     
-    
-    
-    private var validExitUpdates: [CLLocation] = []
-    private var currentlyInTunnel: Bool = false
-    
-    func isInTunnel(at location: CLLocation, along progress: RouteProgress) -> Bool {
+    static func isInTunnel(at location: CLLocation, along progress: RouteProgress) -> Bool {
         let currentStepProgress = progress.currentLegProgress.currentStepProgress
         guard let currentIntersection = currentStepProgress.currentIntersection else {
             return false
@@ -28,40 +24,28 @@ class TunnelAuthority {
         }
         
         // Ensure the upcoming intersection is a tunnel intersection
-        // OR the location speed is either at least 5 m/s or is considered a bad location update
-        guard let upcomingIntersection = currentStepProgress.upcomingIntersection,
-            let roadClasses = upcomingIntersection.outletRoadClasses, roadClasses.contains(.tunnel),
-            (location.speed >= Constants.minimumTunnelEntranceSpeed || !location.isQualified) else {
-                return false
+        if let upcomingIntersection = currentStepProgress.upcomingIntersection,
+            let outletRoadClasses = upcomingIntersection.outletRoadClasses,
+            outletRoadClasses.contains(.tunnel) {
+            
+            // If we are entering sufficiently fast and we are either within the
+            // tunnel entrance radius or the location is not qualified
+            if location.speed >= Constants.minimumTunnelEntranceSpeed,
+                let distanceToTunnel = currentStepProgress.userDistanceToUpcomingIntersection,
+                (distanceToTunnel <= Constants.tunnelEntranceRadius || !location.isQualified)  {
+                return true
+            }
+            
+            // If the next intersection is a tunnel and distance between
+            // intersections is suffiently short
+            let distanceToUpcomingTunnel = currentIntersection.location.distance(to: upcomingIntersection.location)
+            if distanceToUpcomingTunnel < Constants.minimumAdjacentSurfaceRoadLength {
+                return true
+            }
         }
         
-        // Distance to the upcoming tunnel entrance
-        guard let distanceToTunnelEntrance = currentStepProgress.userDistanceToUpcomingIntersection else { return false }
-        
-        let tunnelDetected = distanceToTunnelEntrance < Constants.tunnelEntranceRadius
-        
-        let state = (tunnelDetected, currentlyInTunnel)
-        switch state {
-        case (true, true): //we are progressing in the tunnel
-            return true
-        case (true, false): //we are entering the tunnel
-            currentlyInTunnel = true
-            return true
-        case (false, false): //we're nowhere near a tunnel
-            return false
-        case (false, true): //we're just exiting a tunnel
-            if validExitUpdates.count >= Constants.validLocationThreshold {
-                //we've found enough valid location updates, lets offically exit
-                validExitUpdates = []
-                currentlyInTunnel = false
-                return false
-            } else {
-                //we don't have enough valid updates yet
-                if location.isQualified {
-                    validExitUpdates.append(location)
-                }
-                return true //declare we're still in the tunnel, even though we're not
-            }
-         }
+        return false
     }
 }
+
+
