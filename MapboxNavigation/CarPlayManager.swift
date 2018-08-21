@@ -2,6 +2,7 @@
 import CarPlay
 import Turf
 import MapboxCoreNavigation
+import MapboxDirections
 
 @available(iOS 12.0, *)
 @objc(MBCarPlayManagerDelegate)
@@ -250,21 +251,66 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
 @available(iOS 12.0, *)
 extension CarPlayManager: CPListTemplateDelegate {
     public func listTemplate(_ listTemplate: CPListTemplate, didSelect item: CPListItem, completionHandler: @escaping () -> Void) {
+        guard let rootViewController = self.carWindow?.rootViewController as? CarPlayMapViewController,
+            let mapTemplate = self.interfaceController?.rootTemplate as? CPMapTemplate else {
+            return
+        }
+        let mapView = rootViewController.mapView
         
-        if let rootViewController = self.carWindow?.rootViewController as? CarPlayMapViewController, let mapTemplate = self.interfaceController?.rootTemplate as? CPMapTemplate {
-            let mapView = rootViewController.mapView
-            let userLocation = mapView.userLocation
-            let originLocation = CLLocationCoordinate2D(latitude: userLocation!.coordinate.latitude, longitude: userLocation!.coordinate.longitude)
-
-            if let rawValue = item.text, let favoritePOI = CPFavoritesList.POI(rawValue: rawValue), let interfaceController = interfaceController {
-                interfaceController.popToRootTemplate(animated: false)
-                
-                let mapboxSFTrip: CPTrip = self.trip(from: originLocation, to: favoritePOI.location.coordinate, destinationNickname: favoritePOI.rawValue)
-                let defaultPreviewText = CPTripPreviewTextConfiguration(startButtonTitle: "Let's GO!", additionalRoutesButtonTitle: "Directions Overview", overviewButtonTitle: "Take me Back.")
-                
-                mapTemplate.showTripPreviews([mapboxSFTrip], textConfiguration: defaultPreviewText)
-                completionHandler()
+        guard let rawValue = item.text,
+            let userLocation = mapView.userLocation,
+            let favoritePOI = CPFavoritesList.POI(rawValue: rawValue),
+            let interfaceController = interfaceController else {
+            return
+        }
+        interfaceController.popToRootTemplate(animated: false)
+        
+        let waypoints = [
+            Waypoint(location: userLocation.location!, heading: userLocation.heading, name: "Current Location"),
+            Waypoint(location: favoritePOI.location, heading: nil, name: favoritePOI.rawValue),
+        ]
+        let options = NavigationRouteOptions(waypoints: waypoints)
+        Directions.shared.calculate(options) { [weak mapTemplate] (waypoints, routes, error) in
+            guard let mapTemplate = mapTemplate, let waypoints = waypoints, let routes = routes else {
+                return
             }
+            
+            if let error = error {
+                let okAction = CPAlertAction(title: "OK", style: .default) { _ in }
+                let alert = CPNavigationAlert(titleVariants: [error.localizedDescription], subtitleVariants: [error.localizedFailureReason ?? ""], imageSet: nil, primaryAction: okAction, secondaryAction: nil, duration: 0)
+                mapTemplate.present(navigationAlert: alert, animated: true)
+            }
+            
+            let briefDateComponentsFormatter = DateComponentsFormatter()
+            briefDateComponentsFormatter.unitsStyle = .brief
+            briefDateComponentsFormatter.allowedUnits = [.day, .hour, .minute]
+            let abbreviatedDateComponentsFormatter = DateComponentsFormatter()
+            abbreviatedDateComponentsFormatter.unitsStyle = .abbreviated
+            abbreviatedDateComponentsFormatter.allowedUnits = [.day, .hour, .minute]
+            
+            var routeChoices: [CPRouteChoice] = []
+            for (i, route) in routes.enumerated() {
+                let additionalInformationVariants: [String]
+                if i == 0 {
+                    additionalInformationVariants = ["Fastest Route"]
+                } else {
+                    let delay = route.expectedTravelTime - routes.first!.expectedTravelTime
+                    let briefDelay = briefDateComponentsFormatter.string(from: delay)!
+                    let abbreviatedDelay = abbreviatedDateComponentsFormatter.string(from: delay)!
+                    additionalInformationVariants = ["\(briefDelay) Slower", "+\(abbreviatedDelay)"]
+                }
+                let routeChoice = CPRouteChoice(summaryVariants: [route.description], additionalInformationVariants: additionalInformationVariants, selectionSummaryVariants: [])
+                routeChoices.append(routeChoice)
+            }
+            
+            let originPlacemark = MKPlacemark(coordinate: waypoints.first!.coordinate)
+            let destinationPlacemark = MKPlacemark(coordinate: waypoints.last!.coordinate, addressDictionary: ["street": favoritePOI.subTitle])
+            let trip = CPTrip(origin: MKMapItem(placemark: originPlacemark), destination: MKMapItem(placemark: destinationPlacemark), routeChoices: routeChoices)
+            
+            let defaultPreviewText = CPTripPreviewTextConfiguration(startButtonTitle: "Go", additionalRoutesButtonTitle: "Routes", overviewButtonTitle: "Overview")
+            
+            mapTemplate.showTripPreviews([trip], textConfiguration: defaultPreviewText)
+            completionHandler()
         }
     }
     
