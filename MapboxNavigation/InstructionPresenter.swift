@@ -231,7 +231,7 @@ class InstructionPresenter {
             attachment.image = image
         }
         
-//        attachment.font = dataSource.font
+        attachment.font = dataSource.font
         
         return NSAttributedString(attachment: attachment)
     }
