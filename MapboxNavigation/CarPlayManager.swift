@@ -6,11 +6,11 @@ import MapboxCoreNavigation
 @available(iOS 12.0, *)
 @objc(MBCarPlayManagerDelegate)
 public protocol CarPlayManagerDelegate {
-    @objc(leadingNavigationBarButtonsSatisfyingTraitCollection:)
-    func leadingNavigationBarButtons(satisfying traitCollection: UITraitCollection) -> [CPBarButton]?
+    @objc(leadingNavigationBarButtonsWithTraitCollection:)
+    func leadingNavigationBarButtons(compatibleWith traitCollection: UITraitCollection) -> [CPBarButton]?
 
-    @objc(trailingNavigationBarButtonsSatisfyingTraitCollection:)
-    func trailingNavigationBarButtons(satisfying traitCollection: UITraitCollection) -> [CPBarButton]?
+    @objc(trailingNavigationBarButtonsWithTraitCollection:)
+    func trailingNavigationBarButtons(compatibleWith traitCollection: UITraitCollection) -> [CPBarButton]?
 }
 
 @available(iOS 12.0, *)
@@ -162,7 +162,7 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
         let mapTemplate = CPMapTemplate()
         mapTemplate.mapDelegate = self
 
-        if let leadingButtons = delegate?.leadingNavigationBarButtons(satisfying: traitCollection) {
+        if let leadingButtons = delegate?.leadingNavigationBarButtons(compatibleWith: traitCollection) {
             mapTemplate.leadingNavigationBarButtons = leadingButtons
         } else {
             let searchTemplate = CPSearchTemplate()
@@ -172,7 +172,7 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
             mapTemplate.leadingNavigationBarButtons = [searchButton]
         }
 
-        if let trailingButtons = delegate?.trailingNavigationBarButtons(satisfying: traitCollection) {
+        if let trailingButtons = delegate?.trailingNavigationBarButtons(compatibleWith: traitCollection) {
             mapTemplate.trailingNavigationBarButtons = trailingButtons
         } else {
             let favoriteButton = favoriteTemplateButton(interfaceController: interfaceController, traitCollection: traitCollection)

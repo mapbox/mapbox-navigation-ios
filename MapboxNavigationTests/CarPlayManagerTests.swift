@@ -103,11 +103,11 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
     var leadingBarButtons: [CPBarButton]?
     var trailingBarButtons: [CPBarButton]?
 
-    func leadingNavigationBarButtons(satisfying traitCollection: UITraitCollection) -> [CPBarButton]? {
+    func leadingNavigationBarButtons(compatibleWith traitCollection: UITraitCollection) -> [CPBarButton]? {
         return leadingBarButtons
     }
 
-    func trailingNavigationBarButtons(satisfying traitCollection: UITraitCollection) -> [CPBarButton]? {
+    func trailingNavigationBarButtons(compatibleWith traitCollection: UITraitCollection) -> [CPBarButton]? {
         return trailingBarButtons
     }
 
