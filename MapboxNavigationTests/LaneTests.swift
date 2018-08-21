@@ -19,7 +19,7 @@ class LaneTests: FBSnapshotTestCase {
     override func setUp() {
         super.setUp()
         recordMode = false
-        isDeviceAgnostic = true
+        isDeviceAgnostic = false
 
         route.accessToken = bogusToken
         routeController = RouteController(along: route, directions: directions)
@@ -37,7 +37,7 @@ class LaneTests: FBSnapshotTestCase {
         navigationView.lanesView.update(for: routeController.routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
         navigationView.lanesView.show(animated: false)
         
-        FBSnapshotVerifyView(navigationView.lanesView, suffixes: ["_64"])
+        FBSnapshotVerifyView(navigationView.lanesView)
     }
     
     func testStraightRight() {
@@ -54,6 +54,6 @@ class LaneTests: FBSnapshotTestCase {
         view.lane = Lane(indications: [.slightRight])
         view.maneuverDirection = .slightRight
         view.isValid = true
-        FBSnapshotVerifyView(view, suffixes: ["_64"])
+        FBSnapshotVerifyView(view)
     }
 }
