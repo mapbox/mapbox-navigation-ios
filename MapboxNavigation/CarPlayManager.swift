@@ -230,9 +230,17 @@ extension CarPlayManager: CPListTemplateDelegate {
             }
             
             if let error = error {
-                let okAction = CPAlertAction(title: "OK", style: .default) { _ in }
-                let alert = CPNavigationAlert(titleVariants: [error.localizedDescription], subtitleVariants: [error.localizedFailureReason ?? ""], imageSet: nil, primaryAction: okAction, secondaryAction: nil, duration: 0)
+                let okAction = CPAlertAction(title: "OK", style: .default) { _ in
+                    interfaceController.popToRootTemplate(animated: true)
+                }
+                let alert = CPNavigationAlert(titleVariants: [error.localizedDescription],
+                                              subtitleVariants: [error.localizedFailureReason ?? ""],
+                                              imageSet: nil,
+                                              primaryAction: okAction,
+                                              secondaryAction: nil,
+                                              duration: 0)
                 mapTemplate.present(navigationAlert: alert, animated: true)
+                return
             }
             
             let briefDateComponentsFormatter = DateComponentsFormatter()
