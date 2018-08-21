@@ -165,6 +165,9 @@ extension MapboxNavigationService: CLLocationManagerDelegate {
         if !inTunnel, currentlySimulating { //we're exiting a tunnel
             endSimulation(intent: .tunnel)
         }
+
+        //If we're simulating, don't pass organic updates onto the router.
+        guard !(currentlySimulating && manager == nativeLocationSource) else { return }
         
         //Finally, pass the update onto the router.
         router.locationManager?(manager, didUpdateLocations: locations)
