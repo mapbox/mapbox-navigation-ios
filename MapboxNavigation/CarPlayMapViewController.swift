@@ -78,6 +78,10 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
             mapView.localizeLabels()
         }
     }
+    
+    func mapView(_ mapView: MGLMapView, lineWidthForPolylineAnnotation annotation: MGLPolyline) -> CGFloat {
+        return 6
+    }
 }
 #endif
 

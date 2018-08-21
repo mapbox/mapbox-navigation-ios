@@ -42,33 +42,6 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
         privateShared = nil
     }
     
-    // TODO: In case we set routes here.
-    var routes: [Any /* Route */]? {
-        didSet {
-        //            guard #available(iOS 12.0, *), let carViewController = carViewController else { return }
-        //
-        //            mapTemplate?.mapButtons = []
-        //
-        //            // Use custom extension on CPMaptemplate to make it easy to preview a `Route`.
-        //            mapTemplate?.showTripPreviews(routes, textConfiguration: nil)
-        //
-        //            carViewController.mapView?.showRoutes(routes)
-        //            carViewController.mapView?.showWaypoints(current)
-        //
-        //            // Wait for preview UI to show up so we can get the proper safeAreaInsets.
-        //            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-        //                let padding: CGFloat = 10
-        //                let bounds = UIEdgeInsets(top: carViewController.view.safeAreaInsets.top + padding,
-        //                                          left: carViewController.view.safeAreaInsets.left + padding,
-        //                                          bottom: carViewController.view.safeAreaInsets.bottom + padding,
-        //                                          right: carViewController.view.safeAreaInsets.right + padding)
-        //
-        //                let line = MGLPolyline(coordinates: current.coordinates!, count: UInt(current.coordinates!.count))
-        //                carViewController.mapView?.setVisibleCoordinateBounds(line.overlayBounds, edgePadding: bounds, animated: true)
-        //            }
-        }
-    }
-    
     var edgePadding: UIEdgeInsets {
         guard let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController else {
             return .zero
@@ -269,8 +242,8 @@ extension CarPlayManager: CPListTemplateDelegate {
             Waypoint(location: userLocation.location!, heading: userLocation.heading, name: "Current Location"),
             Waypoint(location: favoritePOI.location, heading: nil, name: favoritePOI.rawValue),
         ]
-        let options = NavigationRouteOptions(waypoints: waypoints)
-        Directions.shared.calculate(options) { [weak mapTemplate] (waypoints, routes, error) in
+        let routeOptions = NavigationRouteOptions(waypoints: waypoints)
+        Directions.shared.calculate(routeOptions) { [weak mapTemplate] (waypoints, routes, error) in
             guard let mapTemplate = mapTemplate, let waypoints = waypoints, let routes = routes else {
                 return
             }
@@ -300,31 +273,20 @@ extension CarPlayManager: CPListTemplateDelegate {
                     additionalInformationVariants = ["\(briefDelay) Slower", "+\(abbreviatedDelay)"]
                 }
                 let routeChoice = CPRouteChoice(summaryVariants: [route.description], additionalInformationVariants: additionalInformationVariants, selectionSummaryVariants: [])
+                routeChoice.userInfo = route
                 routeChoices.append(routeChoice)
             }
             
             let originPlacemark = MKPlacemark(coordinate: waypoints.first!.coordinate)
             let destinationPlacemark = MKPlacemark(coordinate: waypoints.last!.coordinate, addressDictionary: ["street": favoritePOI.subTitle])
             let trip = CPTrip(origin: MKMapItem(placemark: originPlacemark), destination: MKMapItem(placemark: destinationPlacemark), routeChoices: routeChoices)
+            trip.userInfo = routeOptions
             
             let defaultPreviewText = CPTripPreviewTextConfiguration(startButtonTitle: "Go", additionalRoutesButtonTitle: "Routes", overviewButtonTitle: "Overview")
             
             mapTemplate.showTripPreviews([trip], textConfiguration: defaultPreviewText)
             completionHandler()
         }
-    }
-    
-    private func trip(from origin: CLLocationCoordinate2D, to destination: CLLocationCoordinate2D, destinationNickname: String) -> CPTrip {
-        let routeChoice = CPRouteChoice(summaryVariants: ["Fastest Route"],
-                          additionalInformationVariants: ["Traffic is light."],
-                               selectionSummaryVariants: ["Ready to navigate."])
-        
-        let trip = CPTrip(origin: MKMapItem(placemark: MKPlacemark(coordinate: origin)),
-                     destination: MKMapItem(placemark: MKPlacemark(coordinate: destination,
-                                    addressDictionary: ["street": destinationNickname])),
-                    routeChoices: [routeChoice])
-        
-        return trip
     }
 }
 
@@ -334,17 +296,38 @@ extension CarPlayManager: CPMapTemplateDelegate {
     public func mapTemplate(_ mapTemplate: CPMapTemplate, startedTrip trip: CPTrip, using routeChoice: CPRouteChoice) {
 //        startBasicNavigation()
         mapTemplate.hideTripPreviews()
+//        let routeController = RouteController(along: routeChoice.userInfo as! Route)
+//        let carPlayNavigationViewController = CarPlayNavigationViewController(for: routeController, session: session, template: mapTemplate, interfaceController: interfaceController)
+//        carPlayNavigationViewController.carPlayNavigationDelegate = self
+//        carViewController.present(carPlayNavigationViewController, animated: true, completion: nil)
+//
+//        if let appViewFromCarPlayWindow = appViewFromCarPlayWindow {
+//            navigationViewController.isUsedInConjunctionWithCarPlayWindow = true
+//            appViewFromCarPlayWindow.present(navigationViewController, animated: true)
+//        }
     }
     
     public func mapTemplate(_ mapTemplate: CPMapTemplate, selectedPreviewFor trip: CPTrip, using routeChoice: CPRouteChoice) {
+        guard let carPlayMapViewController = carWindow?.rootViewController as? CarPlayMapViewController else {
+            return
+        }
+        
+        let mapView = carPlayMapViewController.mapView
+        let route = routeChoice.userInfo as! Route
+        let line = MGLPolyline(coordinates: route.coordinates!, count: UInt(route.coordinates!.count))
+        mapView.removeAnnotations(mapView.annotations ?? [])
+        mapView.addAnnotation(line)
+        let padding = UIEdgeInsets(top: carPlayMapViewController.view.safeAreaInsets.top + 10,
+                                   left: carPlayMapViewController.view.safeAreaInsets.left + 10,
+                                   bottom: carPlayMapViewController.view.safeAreaInsets.bottom + 10,
+                                   right: carPlayMapViewController.view.safeAreaInsets.right + 10)
+        mapView.showAnnotations([line], edgePadding: padding, animated: true)
         //        guard let routeIndex = trip.routeChoices.lastIndex(where: {$0 == routeChoice}), var routes = appViewFromCarPlayWindow?.routes else { return }
         //        let route = routes[routeIndex]
         //        guard let foundRoute = routes.firstIndex(where: {$0 == route}) else { return }
         //        routes.remove(at: foundRoute)
         //        routes.insert(route, at: 0)
         //        appViewFromCarPlayWindow?.routes = routes
-//        let textConfiguration = CPTripPreviewTextConfiguration.init(startButtonTitle: "Let's GO!", additionalRoutesButtonTitle: "Meh, show me more", overviewButtonTitle: "Take me Back")
-//        mapTemplate.showRouteChoicesPreview(for: trip, textConfiguration: textConfiguration)
     }
     
     public func mapTemplateDidShowPanningInterface(_ mapTemplate: CPMapTemplate) {
