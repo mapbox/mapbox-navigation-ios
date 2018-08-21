@@ -5,6 +5,13 @@ import Polyline
 import MapboxMobileEvents
 import Turf
 
+
+protocol RouteControllerDataSource: class {
+    var location: CLLocation? { get }
+    var locationProvider: NavigationLocationManager.Type { get }
+}
+
+
 /**
  A `RouteController` tracks the user’s progress along a route, posting notifications as the user reaches significant points along the route. On every location update, the route controller evaluates the user’s location, determining whether the user remains on the route. If not, the route controller calculates a new route.
 
@@ -32,29 +39,18 @@ open class RouteController: NSObject, Router {
     /**
      The route controller’s associated location manager.
      */
-    @objc public weak var locationManager: NavigationLocationManager!
+    @objc public unowned var dataSource: RouterDataSource
     
     /**
      The Directions object used to create the route.
      */
     @objc public var directions: Directions
 
-    /**
-     If true, location updates will be simulated when driving through tunnels or other areas where there is none or bad GPS reception.
-     */
-    @objc public var isDeadReckoningEnabled = false
 
     /**
      If true, the `RouteController` attempts to calculate a more optimal route for the user on an interval defined by `RouteControllerProactiveReroutingInterval`.
      */
     @objc public var reroutesProactively = false
-
-    /**
-     A `TunnelIntersectionManager` used for animating the use user puck when and if a user enters a tunnel.
-     
-     Will only be enabled if `tunnelSimulationEnabled` is true.
-     */
-    public var tunnelIntersectionManager: TunnelIntersectionManager = TunnelIntersectionManager()
 
     var didFindFasterRoute = false
 
@@ -70,7 +66,7 @@ open class RouteController: NSObject, Router {
                 delegate?.routeController?(self, willRerouteFrom: location)
             }
             _routeProgress = newValue
-            announce(reroute: routeProgress.route, at: locationManager.location, proactive: didFindFasterRoute)
+            announce(reroute: routeProgress.route, at: dataSource.location, proactive: didFindFasterRoute)
         }
 
     }
@@ -114,10 +110,10 @@ open class RouteController: NSObject, Router {
      - parameter locationManager: The associated location manager.
      */
     @objc(initWithRoute:directions:locationManager:)
-    public init(along route: Route, directions: Directions = Directions.shared, locationManager: NavigationLocationManager = NavigationLocationManager()) {
+    public init(along route: Route, directions: Directions = Directions.shared, dataSource source: RouterDataSource) {
         self.directions = directions
         self._routeProgress = RouteProgress(route: route)
-        self.locationManager = locationManager
+        self.dataSource = source
         UIDevice.current.isBatteryMonitoringEnabled = true
 
         super.init()
@@ -127,8 +123,6 @@ open class RouteController: NSObject, Router {
 
         checkForUpdates()
         checkForLocationUsageDescription()
-        
-        tunnelIntersectionManager.delegate = self
     }
 
     deinit {
@@ -224,32 +218,6 @@ open class RouteController: NSObject, Router {
 
 extension RouteController: CLLocationManagerDelegate {
 
-    @objc func interpolateLocation() {
-        guard let location = locationManager.lastKnownLocation else { return }
-        guard let coordinates = routeProgress.route.coordinates else { return }
-        let polyline = Polyline(coordinates)
-
-        let distance = location.speed as CLLocationDistance
-
-        guard let interpolatedCoordinate = polyline.coordinateFromStart(distance: routeProgress.distanceTraveled+distance) else {
-            return
-        }
-
-        var course = location.course
-        if let upcomingCoordinate = polyline.coordinateFromStart(distance: routeProgress.distanceTraveled+(distance*2)) {
-            course = interpolatedCoordinate.direction(to: upcomingCoordinate)
-        }
-
-        let interpolatedLocation = CLLocation(coordinate: interpolatedCoordinate,
-                                              altitude: location.altitude,
-                                              horizontalAccuracy: location.horizontalAccuracy,
-                                              verticalAccuracy: location.verticalAccuracy,
-                                              course: course,
-                                              speed: location.speed,
-                                              timestamp: Date())
-
-        self.locationManager(locationManager, didUpdateLocations: [interpolatedLocation])
-    }
 
     @objc public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
         heading = newHeading
@@ -278,9 +246,6 @@ extension RouteController: CLLocationManagerDelegate {
                 // Allow the user puck to advance. A stationary puck is not great.
                 self.rawLocation = lastLocation
                 
-                // Check for a tunnel intersection at the current step we found the bad location update.
-                tunnelIntersectionManager.checkForTunnelIntersection(at: lastLocation, routeProgress: routeProgress)
-                
                 return
             }
         // This case handles the first location.
@@ -295,11 +260,6 @@ extension RouteController: CLLocationManagerDelegate {
 
         self.rawLocation = location
 
-        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(interpolateLocation), object: nil)
-
-        if isDeadReckoningEnabled {
-            perform(#selector(interpolateLocation), with: nil, afterDelay: 1.1)
-        }
 
         updateIntersectionIndex(for: currentStepProgress)
 
@@ -349,9 +309,6 @@ extension RouteController: CLLocationManagerDelegate {
                 RouteControllerNotificationUserInfoKey.locationKey: location, //guaranteed value
                 RouteControllerNotificationUserInfoKey.rawLocationKey: rawLocation //raw
                 ])
-
-            // Check for a tunnel intersection whenever the current route step progresses.
-            tunnelIntersectionManager.checkForTunnelIntersection(at: location, routeProgress: routeProgress)
         }
     }
     
@@ -362,7 +319,7 @@ extension RouteController: CLLocationManagerDelegate {
             }
             userInfo[.isProactiveKey] = didFindFasterRoute
             NotificationCenter.default.post(name: .routeControllerDidReroute, object: self, userInfo: userInfo)
-        delegate?.routeController?(self, didRerouteAlong: routeProgress.route, at: locationManager.location, proactive: didFindFasterRoute)
+        delegate?.routeController?(self, didRerouteAlong: routeProgress.route, at: dataSource.location, proactive: didFindFasterRoute)
     }
         
     func updateIntersectionIndex(for currentStepProgress: RouteStepProgress) {
@@ -698,15 +655,5 @@ extension RouteController: CLLocationManagerDelegate {
             let distances: [CLLocationDistance] = intersections.map { polyline.distance(from: coordinates.first, to: $0.location) }
             routeProgress.currentLegProgress.currentStepProgress.intersectionDistances = distances
         }
-    }
-}
-
-extension RouteController: TunnelIntersectionManagerDelegate {
-    public func tunnelIntersectionManager(_ manager: TunnelIntersectionManager, willEnableAnimationAt location: CLLocation) {
-        tunnelIntersectionManager.enableTunnelAnimation(routeController: self, routeProgress: routeProgress)
-    }
-    
-    public func tunnelIntersectionManager(_ manager: TunnelIntersectionManager, willDisableAnimationAt location: CLLocation) {
-        tunnelIntersectionManager.suspendTunnelAnimation(at: location, routeController: self)
     }
 }

@@ -30,7 +30,6 @@ fileprivate class SimulatedLocation: CLLocation {
 @objc(MBSimulatedLocationManager)
 open class SimulatedLocationManager: NavigationLocationManager {
     fileprivate var currentDistance: CLLocationDistance = 0
-    fileprivate var currentLocation = CLLocation()
     fileprivate var currentSpeed: CLLocationSpeed = 30
     
     fileprivate var locations: [SimulatedLocation]!
@@ -40,10 +39,13 @@ open class SimulatedLocationManager: NavigationLocationManager {
      Specify the multiplier to use when calculating speed based on the RouteLeg’s `expectedSegmentTravelTimes`.
      */
     @objc public var speedMultiplier: Double = 1
-    
+    fileprivate var simulatedLocation: CLLocation?
     @objc override open var location: CLLocation? {
         get {
-            return currentLocation
+            return simulatedLocation
+        }
+        set {
+            simulatedLocation = newValue
         }
     }
     
@@ -164,10 +166,10 @@ open class SimulatedLocationManager: NavigationLocationManager {
                                   course: newCoordinate.direction(to: lookAheadCoordinate).wrap(min: 0, max: 360),
                                   speed: currentSpeed,
                                   timestamp: Date())
-        currentLocation = location
-        lastKnownLocation = location
         
-        delegate?.locationManager?(self, didUpdateLocations: [currentLocation])
+        self.simulatedLocation = location
+        
+        delegate?.locationManager?(self, didUpdateLocations: [location])
         currentDistance = calculateCurrentDistance(currentDistance)
         perform(#selector(tick), with: nil, afterDelay: 1)
     }

@@ -68,7 +68,7 @@ struct EventDetails: Encodable {
         startTimestamp = session.departureTimestamp ?? nil
         sdkIdentifier = dataSource.usesDefaultUserInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
         profile = dataSource.routeProgress.route.routeOptions.profileIdentifier.rawValue
-        simulation = dataSource.locationSource.isSimulated
+        simulation = dataSource.locationProvider is SimulatedLocationManager.Type
         
         sessionIdentifier = session.identifier.uuidString
         originalRequestIdentifier = session.originalRoute.routeIdentifier
@@ -110,7 +110,7 @@ struct EventDetails: Encodable {
         
         rerouteCount = session.numberOfReroutes
         
-        locationEngine = dataSource.locationSource.description
+        locationEngine = String(describing: dataSource.locationProvider)
         locationManagerDesiredAccuracy = dataSource.desiredAccuracy
         
         

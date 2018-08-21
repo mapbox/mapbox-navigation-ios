@@ -610,15 +610,12 @@ extension NavigationViewController: NavigationServiceDelegate {
         }
         return advancesToNextLeg
     }
-    public func tunnelIntersectionManager(_ manager: TunnelIntersectionManager, willEnableAnimationAt location: CLLocation) {
-        //TODO: Bring this into NavigationService
-//        routeController.tunnelIntersectionManager(manager, willEnableAnimationAt: location)
+    public func navigationService(_ service: NavigationService, willBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
+        guard reason == .tunnel else { return }
         styleManager.applyStyle(type: .night)
     }
-    
-    public func tunnelIntersectionManager(_ manager: TunnelIntersectionManager, willDisableAnimationAt location: CLLocation) {
-        //TODO: Bring this call into NavigationService
-//        routeController.tunnelIntersectionManager(manager, willDisableAnimationAt: location)
+    public func navigationService(_ service: NavigationService, didEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
+        guard reason == .tunnel else { return }
         styleManager.timeOfDayChanged()
     }
 }

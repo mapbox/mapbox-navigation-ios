@@ -4,11 +4,14 @@ import MapboxDirections
 
 public typealias RouterDelegate = RouteControllerDelegate
 
+@objc public protocol RouterDataSource {
+    var location: CLLocation? { get }
+    var locationProvider: NavigationLocationManager.Type { get }
+}
+
 @objc public protocol Router: class, CLLocationManagerDelegate {
-//    @objc var eventsManager: EventsManager! { get }
-    @objc var locationManager: NavigationLocationManager! { get }
+    @objc unowned var dataSource: RouterDataSource { get }
     @objc var delegate: RouterDelegate? { get set }
-    @objc var tunnelIntersectionManager: TunnelIntersectionManager { get }
     
 //    var usesDefaultUserInterface: Bool { get set }
     var routeProgress: RouteProgress { get }

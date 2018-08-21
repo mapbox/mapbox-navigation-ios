@@ -8,27 +8,12 @@ import MapboxDirections
  `SessionState` is a struct that stores all memoized statistics that we later send to the telemetry engine.
  */
 
-@objc public enum LocationSource: Int {
-    case device, simulated
-    
-    var isSimulated: Bool { return self == .simulated }
-    
-    var description: String {
-        switch self {
-        case .device:
-            return String(describing: CLLocationManager.self)
-        case .simulated:
-            return String(describing: SimulatedLocationManager.self)
-        }
-    }
-    
-}
 @objc public protocol EventsManagerDataSource: class {
     var routeProgress: RouteProgress { get }
     var usesDefaultUserInterface: Bool { get set }
     var location: CLLocation? { get }
     var desiredAccuracy: CLLocationAccuracy { get }
-    var locationSource: LocationSource { get }
+    var locationProvider: NavigationLocationManager.Type { get }
     //todo: change MNS proto to `locationManager`
 }
 

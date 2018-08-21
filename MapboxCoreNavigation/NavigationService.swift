@@ -2,11 +2,37 @@ import Foundation
 import CoreLocation
 import MapboxDirections
 
-@objc public protocol NavigationServiceDelegate: RouterDelegate, TunnelIntersectionManagerDelegate {}
+
+@objc public enum LocationSource: Int {
+    case device, simulated
+    
+    var isSimulated: Bool { return self == .simulated }
+    
+    var description: String {
+        switch self {
+        case .device:
+            return String(describing: CLLocationManager.self)
+        case .simulated:
+            return String(describing: SimulatedLocationManager.self)
+        }
+    }
+}
+
+@objc public enum SimulationIntent: Int{
+    case manual, tunnel
+}
+
+
+@objc public protocol NavigationServiceDelegate: RouterDelegate {
+    @objc optional func navigationService(_ service: NavigationService, willBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent)
+    @objc optional func navigationService(_ service: NavigationService, didBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent)
+    @objc optional func navigationService(_ service: NavigationService, willEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent)
+    @objc optional func navigationService(_ service: NavigationService, didEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent)
+}
 @objc(MBNavigationService)
-public protocol NavigationService: CLLocationManagerDelegate, EventsManagerDataSource {
+public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, EventsManagerDataSource {
     var locationManager: NavigationLocationManager { get }
-    var router: Router { get }
+    var router: Router! { get }
     var eventsManager: EventsManager! { get }
     var route: Route { get set }
     weak var delegate: NavigationServiceDelegate? { get set }
@@ -18,11 +44,19 @@ public protocol NavigationService: CLLocationManagerDelegate, EventsManagerDataS
 
 @objc(MBNavigationService)
 public class MapboxNavigationService: NSObject, NavigationService {
-    public var locationManager: NavigationLocationManager
+    public var locationManager: NavigationLocationManager {
+        return simulatedLocationSource ?? nativeLocationSource
+    }
     var directionsService: Directions
-    public var router: Router
+    public var router: Router!
     public var eventsManager: EventsManager!
     public weak var delegate: NavigationServiceDelegate?
+    
+    private var nativeLocationSource: NavigationLocationManager
+    private var simulatedLocationSource: SimulatedLocationManager?
+    
+    private var tunnelAuthority: TunnelAuthority = TunnelAuthority()
+    
     
     @objc convenience init(route: Route) {
         self.init(route: route, directions: nil, locationSource: nil, eventsManager: nil)
@@ -31,21 +65,44 @@ public class MapboxNavigationService: NSObject, NavigationService {
     @objc required public init(route: Route,
                   directions directionsOverride: Directions? = nil,
                   locationSource locationOverride: NavigationLocationManager? = nil,
-                  eventsManager eventsOverride: EventsManager.Type? = nil)
+                  eventsManager eventsOverride: EventsManager.Type? = nil, simulated: Bool = false)
     {
-        locationManager = locationOverride ?? NavigationLocationManager()
+        nativeLocationSource = locationOverride ?? NavigationLocationManager()
         directionsService = directionsOverride ?? Directions.shared
-        router = RouteController(along: route, directions: directionsService, locationManager: locationManager)
         super.init()
+        router = RouteController(along: route, directions: directionsService, dataSource: self)
         let eventType = eventsOverride ?? EventsManager.self
         eventsManager = eventType.init(dataSource: self, accessToken: route.accessToken)
         locationManager.activityType = route.routeOptions.activityType
         
         bootstrapEvents(with: router)
         
-        
         router.delegate = self
-        locationManager.delegate = self
+        nativeLocationSource.delegate = self
+    
+        if (simulated) {
+            simulate(on: router.routeProgress)
+        }
+        
+    }
+    
+    private func simulate(on potentialProgress: RouteProgress? = nil, intent: SimulationIntent = .manual) {
+        let progress = potentialProgress ?? router.routeProgress
+        delegate?.navigationService?(self, willBeginSimulating: progress, becauseOf: intent)
+        simulatedLocationSource = SimulatedLocationManager(routeProgress: progress)
+        simulatedLocationSource?.delegate = self
+        simulatedLocationSource?.startUpdatingLocation()
+        simulatedLocationSource?.startUpdatingHeading()
+        delegate?.navigationService?(self, didBeginSimulating: progress, becauseOf: intent)
+    }
+    private func endSimulation(intent: SimulationIntent = .manual) {
+        let progress = simulatedLocationSource?.routeProgress ?? router.routeProgress
+        delegate?.navigationService?(self, willEndSimulating: progress, becauseOf: intent)
+        simulatedLocationSource?.stopUpdatingLocation()
+        simulatedLocationSource?.stopUpdatingHeading()
+        simulatedLocationSource?.delegate = nil
+        simulatedLocationSource = nil
+        delegate?.navigationService?(self, didEndSimulating: progress, becauseOf: intent)
     }
     
     public var route: Route {
@@ -59,11 +116,14 @@ public class MapboxNavigationService: NSObject, NavigationService {
     public func start() {
         locationManager.startUpdatingHeading()
         locationManager.startUpdatingLocation()
+        
     }
     
     public func stop() {
-        locationManager.stopUpdatingHeading()
-        locationManager.stopUpdatingLocation()
+        nativeLocationSource.stopUpdatingHeading()
+        nativeLocationSource.stopUpdatingLocation()
+        
+        
     }
     public func endNavigation(feedback: EndOfRouteFeedback? = nil) {
         eventsManager.sendCancelEvent(rating: feedback?.rating, comment: feedback?.comment)
@@ -76,6 +136,12 @@ public class MapboxNavigationService: NSObject, NavigationService {
         eventsManager.start()
     }
     
+    private func enterTunnel() {
+        simulate(on: router.routeProgress)
+    }
+    private func exitTunnel() {
+        endSimulation()
+    }
 }
 
 extension MapboxNavigationService: CLLocationManagerDelegate {
@@ -87,7 +153,20 @@ extension MapboxNavigationService: CLLocationManagerDelegate {
         //update the events manager with the received locations
         eventsManager.record(locations: locations)
         
-        //feed the location update to the router
+        guard let location = locations.first else { return }
+        
+        let inTunnel = tunnelAuthority.isInTunnel(at: location, along: router.routeProgress)
+        let currentlySimulating = simulatedLocationSource != nil
+        
+        if inTunnel, !currentlySimulating { //we're entering a tunnel
+            simulate(on: router.routeProgress, intent: .tunnel)
+        }
+        
+        if !inTunnel, currentlySimulating { //we're exiting a tunnel
+            endSimulation(intent: .tunnel)
+        }
+        
+        //Finally, pass the update onto the router.
         router.locationManager?(manager, didUpdateLocations: locations)
     }
 }
@@ -149,15 +228,6 @@ extension MapboxNavigationService: RouteControllerDelegate {
 
 //MARK: EventsManagerDataSource Logic
 extension MapboxNavigationService {
-    public var locationSource: LocationSource {
-        switch locationManager {
-        case is SimulatedLocationManager:
-            return .simulated
-        default:
-            return .device
-        }
-    }
-    
     public var routeProgress: RouteProgress {
         return self.router.routeProgress
     }
@@ -178,6 +248,13 @@ extension MapboxNavigationService {
         set {
             eventsManager.usesDefaultUserInterface = newValue
         }
+    }
+}
+
+//MARK: RouterDataSource
+extension MapboxNavigationService {
+    public var locationProvider: NavigationLocationManager.Type {
+        return type(of: locationManager)
     }
 }
 

@@ -6,34 +6,6 @@ import MapboxMobileEvents
 
 fileprivate let mbTestHeading: CLLocationDirection = 50
 
-//class DataSourcePromise: EventsManagerDataSource {
-//    var forwardee: EventsManagerDataSource!
-//
-//    var routeProgress: RouteProgress {
-//        return forwardee.routeProgress
-//    }
-//
-//    var usesDefaultUserInterface: Bool {
-//        get {
-//        return forwardee.usesDefaultUserInterface
-//        }
-//        set {
-//            forwardee.usesDefaultUserInterface = uses
-//        }
-//    }
-//
-//    var location: CLLocation? {
-//        return forwardee.location
-//    }
-//
-//    var desiredAccuracy: CLLocationAccuracy {
-//        return forwardee.desiredAccuracy
-//    }
-//
-//    var locationSource: LocationSource {
-//        return forwardee.locationSource
-//    }
-//}
 class EventsManagerSpy: EventsManager {
     override var manager: MMEEventsManager {
         get {
@@ -213,7 +185,7 @@ class NavigationServiceTests: XCTestCase {
 
         route.accessToken = "foo"
         let navigation = MapboxNavigationService(route: route, directions: directions)
-        let router = navigation.router
+        let router = navigation.router!
         let firstCoord = router.routeProgress.currentLegProgress.nearbyCoordinates.first!
         let firstLocation = CLLocation(latitude: firstCoord.latitude, longitude: firstCoord.longitude)
         let coordNearStart = Polyline(router.routeProgress.currentLegProgress.nearbyCoordinates).coordinateFromStart(distance: 10)!
@@ -261,7 +233,7 @@ class NavigationServiceTests: XCTestCase {
 
     func testReroutingFromALocationSendsEvents() {
         let navigationService = dependencies.navigationService
-        let router = navigationService.router
+        let router = navigationService.router!
         let testLocation = dependencies.routeLocations.firstLocation
 
         navigationService.eventsManager.delaysEventFlushing = false
@@ -394,9 +366,8 @@ class NavigationServiceTests: XCTestCase {
         weak var subject: RouteController? = nil
         
         autoreleasepool {
-            let locationManager = NavigationLocationManager()
-  
-            let routeController: RouteController? = RouteController(along: initialRoute, directions: directionsClientSpy, locationManager: locationManager)
+            let fakeDataSource = RouteControllerDataSourceFake()
+            let routeController = RouteController(along: initialRoute, directions: directionsClientSpy, dataSource: fakeDataSource)
             subject = routeController
         }
 
@@ -404,15 +375,30 @@ class NavigationServiceTests: XCTestCase {
     }
 
     //TODO: Update with NavigationService
-    func testRouteControllerNilsOutLocationDelegateOnDeinit() {
+    func testRouteControllerDoesNotRetainDataSource() {
         
-        weak var subject: CLLocationManagerDelegate? = nil
+        weak var subject: RouterDataSource? = nil
         autoreleasepool {
-            let locationManager = NavigationLocationManager()
-            _ = RouteController(along: initialRoute, directions: directionsClientSpy, locationManager: locationManager)
-            subject = locationManager.delegate
+            let fakeDataSource = RouteControllerDataSourceFake()
+            _ = RouteController(along: initialRoute, directions: directionsClientSpy, dataSource: fakeDataSource)
+            subject = fakeDataSource
         }
         
         XCTAssertNil(subject, "Expected LocationManager's Delegate to be nil after RouteController Deinit")
     }
+}
+
+class RouteControllerDataSourceFake: RouterDataSource {
+    
+    let manager = NavigationLocationManager()
+    
+    var location: CLLocation? {
+        return manager.location
+    }
+    
+    var locationProvider: NavigationLocationManager.Type {
+        return type(of: manager)
+    }
+    
+    
 }

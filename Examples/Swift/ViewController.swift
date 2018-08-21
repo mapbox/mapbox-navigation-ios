@@ -332,7 +332,7 @@ extension ViewController: WaypointConfirmationViewControllerDelegate {
             guard let navigationViewController = self.presentedViewController as? NavigationViewController,
                   let navService = navigationViewController.navigationService else { return }
 
-            let router = navService.router
+            let router = navService.router!
             guard router.route.legs.count > router.routeProgress.legIndex + 1 else { return }
             
             router.routeProgress.legIndex += 1
