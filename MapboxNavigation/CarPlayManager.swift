@@ -203,7 +203,7 @@ extension CarPlayManager: CPListTemplateDelegate {
         let mapView = rootViewController.mapView
         
         guard let rawValue = item.text,
-            let userLocation = mapView.userLocation,
+            let userLocation = mapView.userLocation?.location,
             let favoritePOI = CPFavoritesList.POI(rawValue: rawValue),
             let interfaceController = interfaceController else {
             return
@@ -211,7 +211,7 @@ extension CarPlayManager: CPListTemplateDelegate {
         interfaceController.popToRootTemplate(animated: false)
         
         let waypoints = [
-            Waypoint(location: userLocation.location!, heading: userLocation.heading, name: "Current Location"),
+            Waypoint(location: userLocation, heading: mapView.userLocation?.heading, name: "Current Location"),
             Waypoint(location: favoritePOI.location, heading: nil, name: favoritePOI.rawValue),
         ]
         let routeOptions = NavigationRouteOptions(waypoints: waypoints)
