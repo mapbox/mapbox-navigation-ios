@@ -21,7 +21,7 @@ class InstructionPresenterTests: XCTestCase {
 
         let attachment = attributed.attribute(.attachment, at: 0, effectiveRange: nil)
 
-        XCTAssert(attachment is ExitAttachment, "Attachment for exit shield should be of type ExitAttachment")
+        XCTAssert(attachment is ExitAttachment, "Attachment for exit shield should be of type ExitAttachment; got \(String(describing: attachment.self))")
     }
 
     /// NOTE: This test is disabled pending https://github.com/mapbox/mapbox-navigation-ios/issues/1468
