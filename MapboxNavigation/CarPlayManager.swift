@@ -100,25 +100,6 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
             }
         }
     }
-    
-    public func beginTrip(_ trip: CPTrip) {
-
-//    guard #available(iOS 12.0, *), let carViewController = carViewController, let mapTemplate = mapTemplate, let trip = route.asCPTrip, let interfaceController = interfaceController else { return }
-//    let session = mapTemplate.startNavigationSession(for: trip)
-//
-//    mapTemplate.dismissPanningInterface(animated: true)
-//
-//    mapTemplate.update(route.travelEstimates, for: trip, with: .default)
-//    mapTemplate.hideTripPreviews()
-//    let carPlayNavigationViewController = CarPlayNavigationViewController(for: navigationViewController.routeController, session: session, template: mapTemplate, interfaceController: interfaceController)
-//    carPlayNavigationViewController.carPlayNavigationDelegate = self
-//    carViewController.present(carPlayNavigationViewController, animated: true, completion: nil)
-//
-//    if let appViewFromCarPlayWindow = appViewFromCarPlayWindow {
-//        navigationViewController.isUsedInConjunctionWithCarPlayWindow = true
-//        appViewFromCarPlayWindow.present(navigationViewController, animated: true)
-//    }
-    }
 
     // MARK: CPApplicationDelegate
 
@@ -294,13 +275,21 @@ extension CarPlayManager: CPListTemplateDelegate {
 @available(iOS 12.0, *)
 extension CarPlayManager: CPMapTemplateDelegate {
     public func mapTemplate(_ mapTemplate: CPMapTemplate, startedTrip trip: CPTrip, using routeChoice: CPRouteChoice) {
-//        startBasicNavigation()
+        guard let interfaceController = interfaceController,
+            let carPlayMapViewController = carWindow?.rootViewController as? CarPlayMapViewController else {
+            return
+        }
+        
         mapTemplate.hideTripPreviews()
-//        let routeController = RouteController(along: routeChoice.userInfo as! Route)
-//        let carPlayNavigationViewController = CarPlayNavigationViewController(for: routeController, session: session, template: mapTemplate, interfaceController: interfaceController)
+        let navigationSession = mapTemplate.startNavigationSession(for: trip)
+        let routeController = RouteController(along: routeChoice.userInfo as! Route)
+        let carPlayNavigationViewController = CarPlayNavigationViewController(for: routeController,
+                                                                              session: navigationSession,
+                                                                              template: mapTemplate,
+                                                                              interfaceController: interfaceController)
 //        carPlayNavigationViewController.carPlayNavigationDelegate = self
-//        carViewController.present(carPlayNavigationViewController, animated: true, completion: nil)
-//
+        carPlayMapViewController.present(carPlayNavigationViewController, animated: true, completion: nil)
+        
 //        if let appViewFromCarPlayWindow = appViewFromCarPlayWindow {
 //            navigationViewController.isUsedInConjunctionWithCarPlayWindow = true
 //            appViewFromCarPlayWindow.present(navigationViewController, animated: true)
