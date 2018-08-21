@@ -1048,6 +1048,7 @@
 				3EA93A10227A7DAF1861D9F5 /* Cache.swift */,
 				16C2A420211526EE00FE6E68 /* CarPlayManager.swift */,
 				16EF6C21211BA4B300AA580B /* CarPlayMapViewController.swift */,
+				C5FFAC1420D96F5B009E7F98 /* CarPlayNavigationViewController.swift */,
 				C54C655120336F2600D338E0 /* Constants.swift */,
 				160D8278205996DA00D278D6 /* DataCache.swift */,
 				35726EE71F0856E900AFA1B6 /* DayStyle.swift */,
@@ -1315,7 +1316,6 @@
 				35DA85781FC45787004092EC /* StatusView.swift */,
 				8DB63A391FBBCA2200928389 /* RatingControl.swift */,
 				35B5A47D1FFFDCE5000A3C8D /* NavigationViewLayout.swift */,
-				C5FFAC1420D96F5B009E7F98 /* CarPlayNavigationViewController.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
