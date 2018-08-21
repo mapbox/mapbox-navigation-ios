@@ -1,5 +1,7 @@
 import XCTest
 import MapboxNavigation
+
+
 #if canImport(CarPlay)
 import CarPlay
 
@@ -21,20 +23,30 @@ class CarPlayManagerTests: XCTestCase {
         CarPlayManager.resetSharedInstance()
     }
 
+    func simulateCarPlayConnection() {
+        let fakeInterfaceController = FakeCPInterfaceController(#function)
+        let fakeWindow = CPWindow()
+
+        manager?.application(UIApplication.shared, didConnectCarInterfaceController: fakeInterfaceController, to: fakeWindow)
+    }
+
     // MARK: Upon connecting to CarPlay, window and interfaceController should be set up correctly
     // By default we should supply a search template with the Mapbox Geocoder hooked up (?)
     // we should also provide developers the opportunity to supply their own Favorites &/or History list.
     // We may wish to supply example implementations of these once we've rounded out the basic experience.
 
-    @available(iOS 12.0, *)
+//    @available(iOS 12.0, *)
     func testWindowAndIntefaceControllerAreSetUpWithSearchAndExampleFavoritesWhenConnected() {
-        // This line results in a warning, but is necessary as XCTest ignores the enclosing @available directive. Not sure how to suppress the generated warning here, but this is indeed needed for backwards compatibility
+        // This line results in a warning, but is necessary as XCTest ignores the enclosing @available directive.
+        // Not sure how to suppress the generated warning here, but this is currently needed for backwards compatibility
         guard #available(iOS 12, *) else { return }
 
-        let fakeInterfaceController = FakeCPInterfaceController(#function)
-        let fakeWindow = CPWindow()
+        simulateCarPlayConnection()
 
-        manager?.application(UIApplication.shared, didConnectCarInterfaceController: fakeInterfaceController, to: fakeWindow)
+        guard let fakeWindow = manager?.carWindow, let fakeInterfaceController = manager?.interfaceController else {
+            XCTFail("Dependencies not met! Bailing...")
+            return
+        }
 
         let view = fakeWindow.rootViewController?.view
         XCTAssert((view?.isKind(of: NavigationMapView.self))!, "CarPlay window's root view should be a map view")
@@ -57,10 +69,49 @@ class CarPlayManagerTests: XCTestCase {
         XCTAssert(fakeInterfaceController.topTemplate?.isKind(of: CPListTemplate.self) ?? false, "Expecting a list template to be on top")
     }
 
+    func testManagerAsksDelegateForLeadingAndTrailingBarButtonsIfAvailable() {
+        guard #available(iOS 12, *) else { return }
+
+        let exampleDelegate = TestCarPlayManagerDelegate()
+        exampleDelegate.leadingBarButtons = [CPBarButton(type: .text), CPBarButton(type: .text)]
+        exampleDelegate.trailingBarButtons = [CPBarButton(type: .image), CPBarButton(type: .image)]
+
+        manager?.delegate = exampleDelegate
+
+        simulateCarPlayConnection()
+
+        guard let fakeInterfaceController = manager?.interfaceController else {
+            XCTFail("Dependencies not met! Bailing...")
+            return
+        }
+
+        let template: CPMapTemplate = fakeInterfaceController.rootTemplate as! CPMapTemplate
+        XCTAssertEqual(2, template.leadingNavigationBarButtons.count)
+        XCTAssertEqual(2, template.trailingNavigationBarButtons.count)
+    }
+
     //MARK: Upon disconnecting CarPlay, cleanup happens
 
 }
 
+//MARK: Test Objects / Classes.
+//TODO: Extract into separate file at some point.
+
+@available(iOS 12.0, *)
+class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
+
+    var leadingBarButtons: [CPBarButton]?
+    var trailingBarButtons: [CPBarButton]?
+
+    func leadingNavigationBarButtons(satisfying traitCollection: UITraitCollection) -> [CPBarButton]? {
+        return leadingBarButtons
+    }
+
+    func trailingNavigationBarButtons(satisfying traitCollection: UITraitCollection) -> [CPBarButton]? {
+        return trailingBarButtons
+    }
+
+}
 
 @available(iOS 12.0, *)
 class FakeCPInterfaceController: CPInterfaceController {

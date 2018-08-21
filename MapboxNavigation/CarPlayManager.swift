@@ -4,12 +4,27 @@ import Turf
 import MapboxCoreNavigation
 
 @available(iOS 12.0, *)
+@objc(MBCarPlayManagerDelegate)
+public protocol CarPlayManagerDelegate {
+    @objc(leadingNavigationBarButtonsSatisfyingTraitCollection:)
+    func leadingNavigationBarButtons(satisfying traitCollection: UITraitCollection) -> [CPBarButton]?
+
+    @objc(trailingNavigationBarButtonsSatisfyingTraitCollection:)
+    func trailingNavigationBarButtons(satisfying traitCollection: UITraitCollection) -> [CPBarButton]?
+}
+
+@available(iOS 12.0, *)
 @objc(MBCarPlayManager)
 public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTemplateDelegate {
 
     public fileprivate(set) var interfaceController: CPInterfaceController?
     public fileprivate(set) var carWindow: UIWindow?
     public fileprivate(set) var routeController: RouteController?
+
+    /**
+     * Developers should assign their own object as a delegate implementing the CarPlayManagerDelegate protocol for customization
+     */
+    public weak var delegate: CarPlayManagerDelegate?
 
     private static var privateShared: CarPlayManager?
 
@@ -147,14 +162,24 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
         let mapTemplate = CPMapTemplate()
         mapTemplate.mapDelegate = self
 
-        let searchTemplate = CPSearchTemplate()
-        searchTemplate.delegate = self
+        if let leadingButtons = delegate?.leadingNavigationBarButtons(satisfying: traitCollection) {
+            mapTemplate.leadingNavigationBarButtons = leadingButtons
+        } else {
+            let searchTemplate = CPSearchTemplate()
+            searchTemplate.delegate = self
 
-        let searchButton = searchTemplateButton(searchTemplate: searchTemplate, interfaceController: interfaceController, traitCollection: traitCollection)
-        let favoriteButton = favoriteTemplateButton(interfaceController: interfaceController, traitCollection: traitCollection)
+            let searchButton = searchTemplateButton(searchTemplate: searchTemplate, interfaceController: interfaceController, traitCollection: traitCollection)
+            mapTemplate.leadingNavigationBarButtons = [searchButton]
+        }
 
-        mapTemplate.leadingNavigationBarButtons = [searchButton]
-        mapTemplate.trailingNavigationBarButtons = [favoriteButton]
+        if let trailingButtons = delegate?.trailingNavigationBarButtons(satisfying: traitCollection) {
+            mapTemplate.trailingNavigationBarButtons = trailingButtons
+        } else {
+            let favoriteButton = favoriteTemplateButton(interfaceController: interfaceController, traitCollection: traitCollection)
+
+            mapTemplate.trailingNavigationBarButtons = [favoriteButton]
+        }
+
         mapTemplate.mapButtons = [viewController.zoomInButton(), viewController.zoomOutButton(), viewController.panButton(mapTemplate: mapTemplate)]
         
         interfaceController.setRootTemplate(mapTemplate, animated: false)
