@@ -30,15 +30,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private func isRunningTests() -> Bool {
         return NSClassFromString("XCTestCase") != nil
     }
-
-#if canImport(CarPlay)
-    // MARK: Mapbox CarPlay support
-
-    @available(iOS 12.0, *)
-    lazy var carPlayManager = {
-        return CarPlayManager.shared()
-    }()
-#endif
 }
 
 #if canImport(CarPlay)
@@ -48,12 +39,12 @@ extension AppDelegate: CPApplicationDelegate {
 
     @available(iOS 12.0, *)
     func application(_ application: UIApplication, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPWindow) {
-        carPlayManager.application(application, didConnectCarInterfaceController: interfaceController, to: window)
+        CarPlayManager.shared.application(application, didConnectCarInterfaceController: interfaceController, to: window)
     }
 
     @available(iOS 12.0, *)
     func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPWindow) {
-        carPlayManager.application(application, didDisconnectCarInterfaceController: interfaceController, from: window)
+        CarPlayManager.shared.application(application, didDisconnectCarInterfaceController: interfaceController, from: window)
     }
 }
 #endif

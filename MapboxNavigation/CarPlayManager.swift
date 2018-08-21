@@ -27,19 +27,10 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
      */
     public weak var delegate: CarPlayManagerDelegate?
 
-    private static var privateShared: CarPlayManager?
-
-    public static func shared() -> CarPlayManager {
-        if let shared = privateShared {
-            return shared
-        }
-        let shared = CarPlayManager()
-        privateShared = shared
-        return shared
-    }
+    public static var shared = CarPlayManager()
 
     public static func resetSharedInstance() {
-        privateShared = nil
+        shared = CarPlayManager()
     }
     
     var edgePadding: UIEdgeInsets {
@@ -295,7 +286,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
                                                                               session: navigationSession,
                                                                               template: mapTemplate,
                                                                               interfaceController: interfaceController)
-//        carPlayNavigationViewController.carPlayNavigationDelegate = self
+        carPlayNavigationViewController.carPlayNavigationDelegate = self
         carPlayMapViewController.present(carPlayNavigationViewController, animated: true, completion: nil)
         
 //        if let appViewFromCarPlayWindow = appViewFromCarPlayWindow {
@@ -366,6 +357,13 @@ extension CarPlayManager: CPMapTemplateDelegate {
             return
         }
         carPlayMapViewController.mapView.userTrackingMode = .none
+    }
+}
+
+@available(iOS 12.0, *)
+extension CarPlayManager: CarPlayNavigationDelegate {
+    public func carPlaynavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool) {
+        carPlayNavigationViewController.carInterfaceController.popToRootTemplate(animated: true)
     }
 }
 #endif

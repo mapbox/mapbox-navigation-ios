@@ -15,7 +15,7 @@ class CarPlayManagerTests: XCTestCase {
     var manager: CarPlayManager?
 
     override func setUp() {
-        manager = CarPlayManager.shared()
+        manager = CarPlayManager.shared
     }
 
     override func tearDown() {
