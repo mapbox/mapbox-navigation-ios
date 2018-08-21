@@ -27,7 +27,7 @@ class ManeuverViewTests: FBSnapshotTestCase {
     
     func testStraightRoundabout() {
         maneuverView.visualInstruction = maneuverInstruction(.takeRoundabout, .straightAhead, .right)
-        FBSnapshotVerifyLayer(maneuverView.layer)
+        FBSnapshotVerifyLayer(maneuverView.layer, tolerance: 0.02)
     }
     
     func testTurnRight() {
@@ -42,7 +42,7 @@ class ManeuverViewTests: FBSnapshotTestCase {
     
     func testMergeRight() {
         maneuverView.visualInstruction = maneuverInstruction(.merge, .right, .right)
-        FBSnapshotVerifyLayer(maneuverView.layer)
+        FBSnapshotVerifyLayer(maneuverView.layer, tolerance: 0.01)
     }
     
     func testRoundabout() {
@@ -58,7 +58,7 @@ class ManeuverViewTests: FBSnapshotTestCase {
             views.addSubview(view)
         }
         
-        FBSnapshotVerifyLayer(views.layer, suffixes: ["_64"])
+        FBSnapshotVerifyLayer(views.layer, tolerance: 0.02)
     }
     
     // TODO: Figure out why the flip transformation do not render in a snapshot so we can test left turns and left side rule of the road.
