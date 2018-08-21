@@ -7,11 +7,11 @@ import MapboxDirections
 @available(iOS 12.0, *)
 @objc(MBCarPlayManagerDelegate)
 public protocol CarPlayManagerDelegate {
-    @objc(leadingNavigationBarButtonsWithTraitCollection:)
-    func leadingNavigationBarButtons(compatibleWith traitCollection: UITraitCollection) -> [CPBarButton]?
+    @objc(carPlayManager:leadingNavigationBarButtonsWithTraitCollection:)
+    func carPlayManager(_ carPlayManager: CarPlayManager, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection) -> [CPBarButton]?
 
-    @objc(trailingNavigationBarButtonsWithTraitCollection:)
-    func trailingNavigationBarButtons(compatibleWith traitCollection: UITraitCollection) -> [CPBarButton]?
+    @objc(carPlayManager:trailingNavigationBarButtonsWithTraitCollection:)
+    func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection) -> [CPBarButton]?
 }
 
 @available(iOS 12.0, *)
