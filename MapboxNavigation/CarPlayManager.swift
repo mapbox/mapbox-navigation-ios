@@ -346,28 +346,28 @@ extension CarPlayManager: CPMapTemplateDelegate {
     
     public func mapTemplate(_ mapTemplate: CPMapTemplate, panWith direction: CPMapTemplate.PanDirection) {
         
-        // TODO: Move mapview along the direction
-        guard let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController, let userLocation = carPlayMapViewController.mapView.userLocation?.coordinate, let coordinates = self.routeController?.routeProgress.route.coordinates else {
+        guard let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController else {
             return
         }
         
-        var panDirection = Double.infinity
+        let mapView = carPlayMapViewController.mapView
+        var newPannedPoint = CGPoint()
         
         switch direction {
-        case CPMapTemplate.PanDirection.right:
-            panDirection = 90
-        case CPMapTemplate.PanDirection.down:
-            panDirection = 180
         case CPMapTemplate.PanDirection.left:
-            panDirection = 270
+            newPannedPoint = CGPoint(x: mapView.frame.minX, y: mapView.frame.midY)
+        case CPMapTemplate.PanDirection.right:
+            newPannedPoint = CGPoint(x: mapView.frame.maxX, y: mapView.frame.midY)
+        case CPMapTemplate.PanDirection.up:
+            newPannedPoint = CGPoint(x: mapView.frame.midX, y: -mapView.frame.midY/2)
+        case CPMapTemplate.PanDirection.down:
+            newPannedPoint = CGPoint(x: mapView.frame.midX, y: mapView.frame.maxY)
         default:
-            panDirection = 0
+            newPannedPoint = CGPoint(x: 0, y: 0)
         }
         
-        let nearestLocation = userLocation.coordinate(at: 20, facing: panDirection)
-        let newLocation = CLLocationCoordinate2DMake(nearestLocation.latitude, nearestLocation.longitude)
-        
-        carPlayMapViewController.mapView.setOverheadCameraView(from: newLocation, along: coordinates, for: edgePadding)
+        let newCenterCoordinate = mapView.convert(newPannedPoint, toCoordinateFrom: mapView)
+        mapView.setCenter(newCenterCoordinate, animated: true)
     }
     
     public func mapTemplateDidDismissPanningInterface(_ mapTemplate: CPMapTemplate) {
