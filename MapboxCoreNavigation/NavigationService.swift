@@ -99,6 +99,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
 
     
     private func simulate(on potentialProgress: RouteProgress? = nil, intent: SimulationIntent = .manual) {
+        guard simulatedLocationSource == nil else { return }
         let progress = potentialProgress ?? router.routeProgress
         delegate?.navigationService?(self, willBeginSimulating: progress, becauseOf: intent)
         simulatedLocationSource = SimulatedLocationManager(routeProgress: progress)
@@ -109,6 +110,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
     }
     
     private func endSimulation(intent: SimulationIntent = .manual) {
+        guard simulatedLocationSource != nil else { return }
         let progress = simulatedLocationSource?.routeProgress ?? router.routeProgress
         delegate?.navigationService?(self, willEndSimulating: progress, becauseOf: intent)
         simulatedLocationSource?.stopUpdatingLocation()
@@ -192,6 +194,7 @@ extension MapboxNavigationService: CLLocationManagerDelegate {
         //If this is a good organic update, reset the timer.
         if manager == nativeLocationSource, location.isQualified {
             resetGPSCountdown()
+            return //throw this update away, ensuring a smooth transition.
         }
         
         //Finally, pass the update onto the router.
