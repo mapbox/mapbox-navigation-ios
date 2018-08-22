@@ -68,7 +68,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         self.nativeLocationSource = locationSource ?? NavigationLocationManager()
         self.directions = directions ?? Directions.shared
         super.init()
-        router = RouteController(along: route, directions: self.directions, dataSource: self)
+        router = NativeRouteController(along: route, directions: self.directions, dataSource: self)
         self.eventsManager = (eventsManagerType ?? EventsManager.self).init(dataSource: self, accessToken: route.accessToken)
         locationManager.activityType = route.routeOptions.activityType
         

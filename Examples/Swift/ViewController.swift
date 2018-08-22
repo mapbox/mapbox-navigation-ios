@@ -193,10 +193,13 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         guard let route = routes?.first else { return }
 
         let navigationViewController = NavigationViewController(for: route, locationManager: navigationLocationManager())
-        navigationViewController.delegate = self
-        if let response = routeResponse {
-            navigationViewController.routeController.setRouteResponse(response)
+        guard let nativeRouteController = navigationViewController.navigationService.router as? NativeRouteController else {
+            assertionFailure("Native test")
+            return
         }
+        
+        nativeRouteController.routeData = routeResponse
+        navigationViewController.delegate = self
         presentAndRemoveMapview(navigationViewController)
     }
     

@@ -62,7 +62,6 @@
 		3531C2701F9E095400D92F9A /* InstructionsBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3531C26F1F9E095400D92F9A /* InstructionsBannerView.swift */; };
 		353280A11FA72871005175F3 /* InstructionLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353280A01FA72871005175F3 /* InstructionLabel.swift */; };
 		353610CE1FAB6A8F00FB1746 /* BottomBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353610CD1FAB6A8F00FB1746 /* BottomBannerView.swift */; };
-		3538421820DBEF4C00921CAB /* MBFixLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3538421720DBEF4C00921CAB /* MBFixLocation.swift */; };
 		353AA5601FCEF583009F0384 /* StyleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353AA55F1FCEF583009F0384 /* StyleManager.swift */; };
 		353E3C8F20A3501C00FD1789 /* MGLStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353E3C8E20A3501C00FD1789 /* MGLStyle.swift */; };
 		353E68FC1EF0B7F8007B2AE5 /* NavigationLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353E68FB1EF0B7F8007B2AE5 /* NavigationLocationManager.swift */; };
@@ -116,6 +115,8 @@
 		354A9BCB20EA9BDA00F03325 /* EventDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 354A9BCA20EA9BDA00F03325 /* EventDetails.swift */; };
 		354A9BCD20EA9C8100F03325 /* CoreFeedbackEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 354A9BCC20EA9C8100F03325 /* CoreFeedbackEvent.swift */; };
 		354D9F891EF2FE900006FAA8 /* tunnel.json in Resources */ = {isa = PBXBuildFile; fileRef = 354D9F871EF2FE900006FAA8 /* tunnel.json */; };
+		355B3D8A212DBC3D00F6D3B3 /* NativeRouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355B3D89212DBC3D00F6D3B3 /* NativeRouteController.swift */; };
+		355B3D8B212DBD8C00F6D3B3 /* MBFixLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3538421720DBEF4C00921CAB /* MBFixLocation.swift */; };
 		355D20DC1EF30A6D0012B1E0 /* tunnel.route in Resources */ = {isa = PBXBuildFile; fileRef = 355D20DB1EF30A6D0012B1E0 /* tunnel.route */; };
 		355DB5751EFA78070091BFB7 /* GGPark-to-BernalHeights.route in Resources */ = {isa = PBXBuildFile; fileRef = 355DB5741EFA78070091BFB7 /* GGPark-to-BernalHeights.route */; };
 		355DB5771EFA780E0091BFB7 /* UnionSquare-to-GGPark.route in Resources */ = {isa = PBXBuildFile; fileRef = 355DB5761EFA780E0091BFB7 /* UnionSquare-to-GGPark.route */; };
@@ -530,6 +531,7 @@
 		354A9BCA20EA9BDA00F03325 /* EventDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetails.swift; sourceTree = "<group>"; };
 		354A9BCC20EA9C8100F03325 /* CoreFeedbackEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreFeedbackEvent.swift; sourceTree = "<group>"; };
 		354D9F871EF2FE900006FAA8 /* tunnel.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = tunnel.json; sourceTree = "<group>"; };
+		355B3D89212DBC3D00F6D3B3 /* NativeRouteController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NativeRouteController.swift; sourceTree = "<group>"; };
 		355D20DB1EF30A6D0012B1E0 /* tunnel.route */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = tunnel.route; sourceTree = "<group>"; };
 		355DB5741EFA78070091BFB7 /* GGPark-to-BernalHeights.route */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "GGPark-to-BernalHeights.route"; sourceTree = "<group>"; };
 		355DB5761EFA780E0091BFB7 /* UnionSquare-to-GGPark.route */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "UnionSquare-to-GGPark.route"; sourceTree = "<group>"; };
@@ -1312,6 +1314,7 @@
 				35375EC01F31FA86004CE727 /* NavigationSettings.swift */,
 				351174F31EF1C0530065E248 /* ReplayLocationManager.swift */,
 				C5ADFBF91DDCC9580011824B /* RouteController.swift */,
+				355B3D89212DBC3D00F6D3B3 /* NativeRouteController.swift */,
 				8D2AA744211CDD4000EB7F72 /* NavigationService.swift */,
 				8D75F990212B5C7F00F99CF3 /* TunnelAuthority.swift */,
 				3582A25120EFA9680029C5DE /* RouteControllerDelegate.swift */,
@@ -2035,6 +2038,7 @@
 				353E68FC1EF0B7F8007B2AE5 /* NavigationLocationManager.swift in Sources */,
 				353E68FE1EF0B985007B2AE5 /* BundleAdditions.swift in Sources */,
 				354A9BCD20EA9C8100F03325 /* CoreFeedbackEvent.swift in Sources */,
+				355B3D8B212DBD8C00F6D3B3 /* MBFixLocation.swift in Sources */,
 				3582A25020EEC46B0029C5DE /* Router.swift in Sources */,
 				8D75F991212B5C7F00F99CF3 /* TunnelAuthority.swift in Sources */,
 				C5E7A31C1F4F6828001CB015 /* NavigationRouteOptions.swift in Sources */,
@@ -2053,6 +2057,7 @@
 				DAFA92071F01735000A7FB09 /* DistanceFormatter.swift in Sources */,
 				C5C94C1D1DDCD2370097296A /* RouteProgress.swift in Sources */,
 				C5CFE4881EF2FD4C006F48E8 /* MMEEventsManager.swift in Sources */,
+				355B3D8A212DBC3D00F6D3B3 /* NativeRouteController.swift in Sources */,
 				C578DA081EFD0FFF0052079F /* ProcessInfo.swift in Sources */,
 				C5F2DCA0206DBF5E002F99F6 /* Sequence.swift in Sources */,
 				35BF8CA41F28EBD8003F6125 /* String.swift in Sources */,

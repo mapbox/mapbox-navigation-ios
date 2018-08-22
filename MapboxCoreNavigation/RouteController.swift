@@ -54,8 +54,6 @@ open class RouteController: NSObject, Router {
     @objc public var reroutesProactively = false
 
     var didFindFasterRoute = false
-    
-    let navigator = MBNavigator()
 
     /**
      Details about the user’s progress along the current route, leg, and step.
@@ -216,6 +214,29 @@ open class RouteController: NSObject, Router {
             }
         }
         return RouteControllerMaximumDistanceBeforeRecalculating
+    }
+    
+    func getDirections(from location: CLLocation, along progress: RouteProgress, completion: @escaping (_ route: Route?, _ error: Error?)->Void) {
+        routeTask?.cancel()
+        let options = progress.reroutingOptions(with: location)
+        
+        self.lastRerouteLocation = location
+        
+        let complete = { [weak self] (route: Route?, error: NSError?) in
+            self?.isRerouting = false
+            completion(route, error)
+        }
+        
+        routeTask = directions.calculate(options) {(waypoints, potentialRoutes, response, potentialError) in
+            guard let routes = potentialRoutes else {
+                return complete(nil, potentialError)
+            }
+            
+            let mostSimilar = routes.mostSimilar(to: progress.route)
+            
+            return complete(mostSimilar ?? routes.first, potentialError)
+            
+        }
     }
 }
 
@@ -514,36 +535,6 @@ extension RouteController: CLLocationManagerDelegate {
             preconditionFailure("This application’s Info.plist file must include a NSLocationWhenInUseUsageDescription. See https://developer.apple.com/documentation/corelocation for more information.")
         }
     }
-
-    func getDirections(from location: CLLocation, along progress: RouteProgress, completion: @escaping (_ route: Route?, _ error: Error?)->Void) {
-        routeTask?.cancel()
-        let options = progress.reroutingOptions(with: location)
-
-        self.lastRerouteLocation = location
-
-        let complete = { [weak self] (route: Route?, error: NSError?) in
-            self?.isRerouting = false
-            completion(route, error)
-        }
-        
-        routeTask = directions.calculate(options) {[weak self] (waypoints, potentialRoutes, response, potentialError) in
-//
-//            if let response = response {
-//                self?.setRouteResponse(response)
-//            }
-            
-            guard let routes = potentialRoutes else {
-                return complete(nil, potentialError)
-            }
-
-            let mostSimilar = routes.mostSimilar(to: progress.route)
-            
-            return complete(mostSimilar ?? routes.first, potentialError)
-            
-        }
-    }
-
-
 
     func updateDistanceToIntersection(from location: CLLocation) {
         guard var intersections = routeProgress.currentLegProgress.currentStepProgress.step.intersections else { return }
