@@ -2,7 +2,7 @@ import Foundation
 import MapboxCoreNavigation
 import MapboxDirections
 
-class RouteControllerDelegateSpy: RouteControllerDelegate {
+class NavigationServiceDelegateSpy: NavigationServiceDelegate {
     private(set) var recentMessages: [String] = []
 
     public func reset() {
@@ -23,7 +23,7 @@ class RouteControllerDelegateSpy: RouteControllerDelegate {
         return true
     }
 
-    internal func routeController(_ routeController: RouteController, didRerouteAlong route: Route) {
+    internal func routeController(_ routeController: RouteController, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
         recentMessages.append(#function)
     }
 
@@ -31,7 +31,7 @@ class RouteControllerDelegateSpy: RouteControllerDelegate {
         recentMessages.append(#function)
     }
 
-    internal func routeController(_ routeController: RouteController, didUpdate locations: [CLLocation]) {
+    internal func routeController(_ routeController: RouteController, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         recentMessages.append(#function)
     }
 

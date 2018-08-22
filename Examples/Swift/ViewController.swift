@@ -340,11 +340,14 @@ extension ViewController: VoiceControllerDelegate {
 extension ViewController: WaypointConfirmationViewControllerDelegate {
     func confirmationControllerDidConfirm(_ confirmationController: WaypointConfirmationViewController) {
         confirmationController.dismiss(animated: true, completion: {
-            guard let navigationViewController = self.presentedViewController as? NavigationViewController else { return }
+            guard let navigationViewController = self.presentedViewController as? NavigationViewController,
+                  let navService = navigationViewController.navigationService else { return }
 
-            guard navigationViewController.routeController.routeProgress.route.legs.count > navigationViewController.routeController.routeProgress.legIndex + 1 else { return }
-            navigationViewController.routeController.routeProgress.legIndex += 1
-            navigationViewController.routeController.resume()
+            let router = navService.router!
+            guard router.route.legs.count > router.routeProgress.legIndex + 1 else { return }
+            
+            router.routeProgress.legIndex += 1
+            navService.start()
         })
     }
 }
@@ -360,7 +363,7 @@ extension ViewController: NavigationViewControllerDelegate {
         // This type of screen could show information about a destination, pickup/dropoff confirmation, instructions upon arrival, etc.
         
         //If we're not in a "Multiple Stops" demo, show the normal EORVC
-        if navigationViewController.routeController.routeProgress.isFinalLeg {
+        if navigationViewController.navigationService.router.routeProgress.isFinalLeg {
             return true
         }
         

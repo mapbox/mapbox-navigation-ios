@@ -45,7 +45,7 @@ class RouteMapViewController: UIViewController {
         static let recenter: Selector = #selector(RouteMapViewController.recenter(_:))
     }
 
-    var route: Route { return routeController.routeProgress.route }
+    var route: Route { return navigationService.router.route }
     var updateETATimer: Timer?
     var previewInstructionsView: StepInstructionsView?
     var lastTimeUserRerouted: Date?
@@ -72,13 +72,14 @@ class RouteMapViewController: UIViewController {
     }
     
     weak var delegate: RouteMapViewControllerDelegate?
-    var routeController: Router! {
+    var navigationService: NavigationService! {
         didSet {
-            navigationView.statusView.canChangeValue = routeController.locationManager is SimulatedLocationManager
+            navigationView.statusView.canChangeValue = navigationService.locationManager is SimulatedLocationManager
             guard let destination = route.legs.last?.destination else { return }
             populateName(for: destination, populated: { self.destination = $0 })
         }
     }
+    var router: Router { return navigationService.router }
     let distanceFormatter = DistanceFormatter(approximate: true)
     var arrowCurrentStep: RouteStep?
     var isInOverviewMode = false {
@@ -111,9 +112,9 @@ class RouteMapViewController: UIViewController {
     
     var labelRoadNameCompletionHandler: (LabelRoadNameCompletionHandler)?
 
-    convenience init(routeController: RouteController, delegate: RouteMapViewControllerDelegate? = nil) {
+    convenience init(navigationService: NavigationService, delegate: RouteMapViewControllerDelegate? = nil) {
         self.init()
-        self.routeController = routeController
+        self.navigationService = navigationService
         self.delegate = delegate
         automaticallyAdjustsScrollViewInsets = false
     }
@@ -160,12 +161,12 @@ class RouteMapViewController: UIViewController {
         
         if let camera = pendingCamera {
             mapView.camera = camera
-        } else if let location = routeController.location, location.course > 0 {
+        } else if let location = router.location, location.course > 0 {
             mapView.updateCourseTracking(location: location, animated: false)
-        } else if let coordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates, let firstCoordinate = coordinates.first, coordinates.count > 1 {
+        } else if let coordinates = router.routeProgress.currentLegProgress.currentStep.coordinates, let firstCoordinate = coordinates.first, coordinates.count > 1 {
             let secondCoordinate = coordinates[1]
             let course = firstCoordinate.direction(to: secondCoordinate)
-            let newLocation = CLLocation(coordinate: routeController.location?.coordinate ?? firstCoordinate, altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: course, speed: 0, timestamp: Date())
+            let newLocation = CLLocation(coordinate: router.location?.coordinate ?? firstCoordinate, altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: course, speed: 0, timestamp: Date())
             mapView.updateCourseTracking(location: newLocation, animated: false)
         } else {
             mapView.setCamera(tiltedCamera, animated: false)
@@ -176,8 +177,8 @@ class RouteMapViewController: UIViewController {
         super.viewDidAppear(animated)
         annotatesSpokenInstructions = delegate?.mapViewControllerShouldAnnotateSpokenInstructions(self) ?? false
         showRouteIfNeeded()
-        currentLegIndexMapped = routeController.routeProgress.legIndex
-        currentStepIndexMapped = routeController.routeProgress.currentLegProgress.stepIndex
+        currentLegIndexMapped = router.routeProgress.legIndex
+        currentStepIndexMapped = router.routeProgress.currentLegProgress.stepIndex
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -191,7 +192,7 @@ class RouteMapViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(rerouteDidFail(notification:)), name: .routeControllerDidFailToReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground(notification:)), name: .UIApplicationWillEnterForeground, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(removeTimer), name: .UIApplicationDidEnterBackground, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(updateInstructionsBanner(notification:)), name: .routeControllerDidPassVisualInstructionPoint, object: routeController)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateInstructionsBanner(notification:)), name: .routeControllerDidPassVisualInstructionPoint, object: router)
         subscribeToKeyboardNotifications()
     }
     
@@ -209,11 +210,11 @@ class RouteMapViewController: UIViewController {
         mapView.tracksUserCourse = true
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
         isInOverviewMode = false
-        updateCameraAltitude(for: routeController.routeProgress)
+        updateCameraAltitude(for: router.routeProgress)
         
-        mapView.addArrow(route: routeController.routeProgress.route,
-                         legIndex: routeController.routeProgress.legIndex,
-                         stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
+        mapView.addArrow(route: router.route,
+                         legIndex: router.routeProgress.legIndex,
+                         stepIndex: router.routeProgress.currentLegProgress.stepIndex + 1)
         
         removePreviewInstructions()
     }
@@ -234,7 +235,7 @@ class RouteMapViewController: UIViewController {
 
     @objc func toggleOverview(_ sender: Any) {
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
-        if let coordinates = routeController.routeProgress.route.coordinates, let userLocation = routeController.locationManager.location?.coordinate {
+        if let coordinates = router.route.coordinates, let userLocation = router.location?.coordinate {
             mapView.setOverheadCameraView(from: userLocation, along: coordinates, for: overheadInsets)
         }
         isInOverviewMode = true
@@ -277,19 +278,22 @@ class RouteMapViewController: UIViewController {
     func notifyDidReroute(route: Route) {
         updateETA()
         currentStepIndexMapped = 0
+        let route = router.route
+        let stepIndex = router.routeProgress.currentLegProgress.stepIndex
+        let legIndex = router.routeProgress.legIndex
         
-        instructionsBannerView.updateDistance(for: routeController.routeProgress.currentLegProgress.currentStepProgress)
+        instructionsBannerView.updateDistance(for: router.routeProgress.currentLegProgress.currentStepProgress)
         
-        mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
-        mapView.showRoutes([routeController.routeProgress.route], legIndex: routeController.routeProgress.legIndex)
-        mapView.showWaypoints(routeController.routeProgress.route)
+        mapView.addArrow(route: route, legIndex: legIndex, stepIndex: stepIndex + 1)
+        mapView.showRoutes([route], legIndex: legIndex)
+        mapView.showWaypoints(route)
 
         if annotatesSpokenInstructions {
-            mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
+            mapView.showVoiceInstructionsOnMap(route: route)
         }
 
         if isInOverviewMode {
-            if let coordinates = routeController.routeProgress.route.coordinates, let userLocation = routeController.locationManager.location?.coordinate {
+            if let coordinates = route.coordinates, let userLocation = router.location?.coordinate {
                 mapView.setOverheadCameraView(from: userLocation, along: coordinates, for: overheadInsets)
             }
         } else {
@@ -305,7 +309,7 @@ class RouteMapViewController: UIViewController {
     }
     
     @objc func applicationWillEnterForeground(notification: NSNotification) {
-        mapView.updateCourseTracking(location: routeController.location, animated: false)
+        mapView.updateCourseTracking(location: router.location, animated: false)
         resetETATimer()
     }
     
@@ -320,7 +324,7 @@ class RouteMapViewController: UIViewController {
     }
   
     func notifyUserAboutLowVolume() {
-        guard !(routeController.locationManager is SimulatedLocationManager) else { return }
+        guard !(navigationService.locationManager is SimulatedLocationManager) else { return }
         guard !NavigationSettings.shared.voiceMuted else { return }
         guard AVAudioSession.sharedInstance().outputVolume <= NavigationViewMinimumVolumeForWarning else { return }
         
@@ -332,7 +336,7 @@ class RouteMapViewController: UIViewController {
     @objc func didReroute(notification: NSNotification) {
         guard self.isViewLoaded else { return }
         
-        if let locationManager = routeController.locationManager as? SimulatedLocationManager {
+        if let locationManager = navigationService.locationManager as? SimulatedLocationManager {
             let localized = String.Localized.simulationStatus(speed: Int(locationManager.speedMultiplier))
             showStatus(title: localized, for: .infinity, interactive: true)
         } else {
@@ -355,7 +359,7 @@ class RouteMapViewController: UIViewController {
 
     func updateMapOverlays(for routeProgress: RouteProgress) {
         if routeProgress.currentLegProgress.followOnStep != nil {
-            mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
+            mapView.addArrow(route: route, legIndex: router.routeProgress.legIndex, stepIndex: router.routeProgress.currentLegProgress.stepIndex + 1)
         } else {
             mapView.removeArrow()
         }
@@ -422,12 +426,12 @@ class RouteMapViewController: UIViewController {
         }
         
         if annotatesSpokenInstructions {
-            mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
+            mapView.showVoiceInstructionsOnMap(route: route)
         }
     }
     
     func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackViewController.SendFeedbackHandler, dismiss: () -> Void) {
-        let uuid = routeController.eventsManager.recordFeedback()
+        let uuid = navigationService.eventsManager.recordFeedback()
         let send = defaultSendFeedbackHandler(uuid: uuid)
         let dismiss = defaultDismissFeedbackHandler(uuid: uuid)
         
@@ -439,7 +443,7 @@ class RouteMapViewController: UIViewController {
             guard let strongSelf = self, let parent = strongSelf.parent else { return }
         
             strongSelf.delegate?.mapViewController(strongSelf, didSendFeedbackAssigned: uuid, feedbackType: item.feedbackType)
-            strongSelf.routeController.eventsManager.updateFeedback(uuid: uuid, type: item.feedbackType, source: source, description: nil)
+            strongSelf.navigationService.eventsManager.updateFeedback(uuid: uuid, type: item.feedbackType, source: source, description: nil)
             strongSelf.dismiss(animated: true) {
                 DialogViewController().present(on: parent)
             }
@@ -450,7 +454,7 @@ class RouteMapViewController: UIViewController {
         return { [weak self ] in
             guard let strongSelf = self else { return }
             strongSelf.delegate?.mapViewControllerDidCancelFeedback(strongSelf)
-            strongSelf.routeController.eventsManager.cancelFeedback(uuid: uuid)
+            strongSelf.navigationService.eventsManager.cancelFeedback(uuid: uuid)
             strongSelf.dismiss(animated: true, completion: nil)
         }
     }
@@ -473,7 +477,7 @@ class RouteMapViewController: UIViewController {
         endOfRoute.dismissHandler = { [weak self] (stars, comment) in
             guard let rating = self?.rating(for: stars) else { return }
             let feedback = EndOfRouteFeedback(rating: rating, comment: comment)
-            self?.routeController.endNavigation(feedback: feedback)
+            self?.navigationService.endNavigation(feedback: feedback)
             self?.delegate?.mapViewControllerDidDismiss(self!, byCanceling: false)
         }
     }
@@ -513,7 +517,7 @@ class RouteMapViewController: UIViewController {
         guard let height = navigationView.endOfRouteHeightConstraint?.constant else { return }
         let insets = UIEdgeInsets(top: navigationView.instructionsBannerView.bounds.height, left: 20, bottom: height + 20, right: 20)
         
-        if let coordinates = routeController.routeProgress.route.coordinates, let userLocation = routeController?.locationManager.location?.coordinate {
+        if let coordinates = route.coordinates, let userLocation = navigationService.router.location?.coordinate {
             let slicedLine = Polyline(coordinates).sliced(from: userLocation).coordinates
             let line = MGLPolyline(coordinates: slicedLine, count: UInt(slicedLine.count))
             
@@ -642,7 +646,7 @@ extension RouteMapViewController: NavigationViewDelegate {
             stepsViewController = nil
             controller.dismiss()
         } else {
-            let controller = StepsViewController(routeProgress: routeController.routeProgress)
+            let controller = StepsViewController(routeProgress: router.routeProgress)
             controller.delegate = self
             addChildViewController(controller)
             view.insertSubview(controller.view, belowSubview: navigationView.instructionsBannerContentView)
@@ -748,7 +752,7 @@ extension RouteMapViewController: NavigationViewDelegate {
     }
     
     func labelCurrentRoadFeature(at location: CLLocation) {
-        guard let style = mapView.style, let stepCoordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates else {
+        guard let style = mapView.style, let stepCoordinates = router.routeProgress.currentLegProgress.currentStep.coordinates else {
                 return
         }
         
@@ -888,8 +892,8 @@ extension RouteMapViewController: NavigationViewDelegate {
     }
     
     @objc func updateETA() {
-        guard isViewLoaded, routeController != nil else { return }
-        navigationView.bottomBannerView.updateETA(routeProgress: routeController.routeProgress)
+        guard isViewLoaded else { return }
+        navigationView.bottomBannerView.updateETA(routeProgress: router.routeProgress)
     }
     
     func resetETATimer() {
@@ -900,15 +904,18 @@ extension RouteMapViewController: NavigationViewDelegate {
     func showRouteIfNeeded() {
         guard isViewLoaded && view.window != nil else { return }
         guard !mapView.showsRoute else { return }
-        mapView.showRoutes([routeController.routeProgress.route], legIndex: routeController.routeProgress.legIndex)
-        mapView.showWaypoints(routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex)
+        mapView.showRoutes([router.route], legIndex: router.routeProgress.legIndex)
+        mapView.showWaypoints(router.route, legIndex: router.routeProgress.legIndex)
         
-        if routeController.routeProgress.currentLegProgress.stepIndex + 1 <= routeController.routeProgress.currentLegProgress.leg.steps.count {
-            mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
+        let currentLegProgress = router.routeProgress.currentLegProgress
+        let nextStepIndex = currentLegProgress.stepIndex + 1
+        
+        if nextStepIndex <= currentLegProgress.leg.steps.count {
+            mapView.addArrow(route: router.route, legIndex: router.routeProgress.legIndex, stepIndex: nextStepIndex)
         }
         
         if annotatesSpokenInstructions {
-            mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
+            mapView.showVoiceInstructionsOnMap(route: router.route)
         }
     }
 }
@@ -919,7 +926,7 @@ extension RouteMapViewController: StepsViewControllerDelegate {
     
     func stepsViewController(_ viewController: StepsViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell) {
         
-        let legProgress = RouteLegProgress(leg: routeController.routeProgress.route.legs[legIndex], stepIndex: stepIndex)
+        let legProgress = RouteLegProgress(leg: router.route.legs[legIndex], stepIndex: stepIndex)
         let step = legProgress.currentStep
         guard let upcomingStep = legProgress.upComingStep else { return }
         
@@ -933,7 +940,7 @@ extension RouteMapViewController: StepsViewControllerDelegate {
         mapView.setCenter(upcomingStep.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: upcomingStep.initialHeading!, animated: true, completionHandler: nil)
         
         guard isViewLoaded && view.window != nil else { return }
-        mapView.addArrow(route: routeController.routeProgress.route, legIndex: legIndex, stepIndex: stepIndex + 1)
+        mapView.addArrow(route: router.route, legIndex: legIndex, stepIndex: stepIndex + 1)
     }
     
     func addPreviewInstructions(step: RouteStep, maneuverStep: RouteStep, distance: CLLocationDistance?) {
@@ -965,7 +972,7 @@ extension RouteMapViewController: StepsViewControllerDelegate {
         let title = String.Localized.simulationStatus(speed: displayValue)
         showStatus(title: title, for: .infinity, interactive: true)
         
-        if let locationManager = routeController.locationManager as? SimulatedLocationManager {
+        if let locationManager = navigationService.locationManager as? SimulatedLocationManager {
             locationManager.speedMultiplier = Double(displayValue)
         }
     }

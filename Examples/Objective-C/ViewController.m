@@ -13,7 +13,7 @@
 @property (nonatomic, assign) CLLocationCoordinate2D destination;
 @property (nonatomic) MBDirections *directions;
 @property (nonatomic) MBRoute *route;
-@property (nonatomic) MBRouteController *navigation;
+@property (nonatomic) MBNavigationService *navigation;
 @property (nonatomic) NSLengthFormatter *lengthFormatter;
 @property (nonatomic) AVSpeechSynthesizer *speechSynth;
 @end
@@ -37,7 +37,7 @@
     [super viewDidDisappear:animated];
     
     [self suspendNotifications];
-    [self.navigation suspendLocationUpdates];
+    [self.navigation stop];
 }
 
 - (IBAction)didLongPress:(UILongPressGestureRecognizer *)sender {
@@ -121,10 +121,11 @@
     if ([segue.identifier isEqualToString:@"StartNavigation"]) {
         MBNavigationViewController *controller = (MBNavigationViewController *)[segue destinationViewController];
         
+        MBSimulatedLocationManager *locationManager = [[MBSimulatedLocationManager alloc] initWithRoute:self.route];
+        
         controller.directions = [MBDirections sharedDirections];
         controller.route = self.route;
-        
-        controller.routeController.locationManager = [[MBSimulatedLocationManager alloc] initWithRoute:self.route];
+        controller.navigationService = [[MBNavigationService alloc] initWithRoute:self.route directions:controller.directions locationSource:locationManager eventsManagerType:nil simulated: NO];
     }
 }
 

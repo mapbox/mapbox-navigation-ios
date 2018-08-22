@@ -5,6 +5,8 @@ import UIKit.UIDevice
 
 
 struct SessionState {
+
+    
     let identifier = UUID()
     var departureTimestamp: Date?
     var arrivalTimestamp: Date?
@@ -30,6 +32,8 @@ struct SessionState {
     
     private(set) var lastTimeInForeground = Date()
     private(set) var lastTimeInBackground = Date()
+    
+    private var lastReportedWaypoint: Waypoint?
     
     var pastLocations = FixedLengthQueue<CLLocation>(length: 40)
     

@@ -51,8 +51,8 @@ public protocol RouteControllerDelegate: class {
      - parameter routeController: The route controller that has calculated a new route.
      - parameter route: The new route.
      */
-    @objc(routeController:didRerouteAlongRoute:)
-    optional func routeController(_ routeController: RouteController, didRerouteAlong route: Route)
+    @objc(routeController:didRerouteAlongRoute:at:proactive:)
+    optional func routeController(_ routeController: RouteController, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool)
     
     /**
      Called when the route controller fails to receive a new route.
@@ -66,16 +66,16 @@ public protocol RouteControllerDelegate: class {
     optional func routeController(_ routeController: RouteController, didFailToRerouteWith error: Error)
     
     /**
-     Called when the route controller’s location manager receives a location update.
-     
-     These locations may be modified due to replay or simulation and can
-     also derive from regular location updates from a `CLLocationManager`.
+     Called when the route controller updates the route progress model.
      
      - parameter routeController: The route controller that received the new locations.
-     - parameter locations: The locations that were received from the associated location manager.
+     - parameter progress: the RouteProgress model that was updated.
+     - parameter location: the guaranteed location, possibly snapped, associated with the progress update.
+     - parameter rawLocation: the raw location, from the location manager, associated with the progress update.
      */
-    @objc(routeController:didUpdateLocations:)
-    optional func routeController(_ routeController: RouteController, didUpdate locations: [CLLocation])
+    
+    @objc(routeController:didUpdateProgress:withLocation:rawLocation:)
+    optional func routeController(_ routeController: RouteController, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation)
     
     /**
      Called when the route controller arrives at a waypoint.

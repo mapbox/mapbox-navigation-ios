@@ -25,12 +25,11 @@
     MBRoute *route = [[MBRoute alloc] initWithJSON:routeDict waypoints:waypoints routeOptions:options];
     route.accessToken = @"garbage";
     XCTAssertNotNil(route);
-    MBEventsManager *eventsManager = [[MBEventsManager alloc] initWithAccessToken:route.accessToken];
-    eventsManager.manager = [[MBEventsManagerSpy alloc] init];
+
     
     MBDirectionsSpy *directions = [[MBDirectionsSpy alloc] initWithAccessToken:@"garbage" host:nil];
     MBNavigationLocationManager *locationManager = [[MBNavigationLocationManager alloc] init];
-    _routeController = [[MBRouteController alloc] initWithRoute:route directions:directions locationManager:locationManager eventsManager:eventsManager];
+    _routeController = [[MBRouteController alloc] initWithRoute:route directions:directions locationManager:locationManager];
     XCTAssertNotNil(_routeController);
     
     XCTestExpectation *expectation = [self expectationForNotification:MBRouteControllerDidRerouteNotification object:nil handler:^BOOL(NSNotification * _Nonnull notification) {
