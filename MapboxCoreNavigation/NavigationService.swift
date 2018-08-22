@@ -18,11 +18,13 @@ import MapboxDirections
     }
 }
 
-@objc public enum SimulationIntent: Int{
+@objc(MBNavigationSimulationIntent)
+public enum SimulationIntent: Int{
     case manual, poorGPS
 }
 
-@objc public enum SimulationOption: Int {
+@objc(MBNavigationSimulationOptions)
+public enum SimulationOption: Int {
     case onPoorGPS, always, never
 }
 
@@ -63,6 +65,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
     
     private var poorGPSTimer: CountdownTimer!
     private let simulationMode: SimulationOption
+    private var isSimulating: Bool { return simulatedLocationSource != nil }
     
     @objc convenience init(route: Route) {
         self.init(route: route, directions: nil, locationSource: nil, eventsManagerType: nil)
@@ -164,8 +167,10 @@ public class MapboxNavigationService: NSObject, NavigationService {
     }
 
     private func resetGPSCountdown() {
+        guard simulationMode == .onPoorGPS else { return }
+        
         // Immediately end simulation if it is occuring.
-        if simulatedLocationSource != nil, simulationMode == .onPoorGPS{
+        if isSimulating {
             endSimulation(intent: .poorGPS)
         }
         
@@ -194,7 +199,10 @@ extension MapboxNavigationService: CLLocationManagerDelegate {
         //If this is a good organic update, reset the timer.
         if manager == nativeLocationSource, location.isQualified {
             resetGPSCountdown()
-            return //throw this update away, ensuring a smooth transition.
+            if (simulatedLocationSource != nil) {
+                return //If we're simulating, throw this update away,
+                       // which ensures a smooth transition.
+            }
         }
         
         //Finally, pass the update onto the router.

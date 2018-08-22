@@ -125,7 +125,7 @@
         
         controller.directions = [MBDirections sharedDirections];
         controller.route = self.route;
-        controller.navigationService = [[MBNavigationService alloc] initWithRoute:self.route directions:controller.directions locationSource:locationManager eventsManagerType:nil simulated: NO];
+        controller.navigationService = [[MBNavigationService alloc] initWithRoute:self.route directions:controller.directions locationSource:locationManager eventsManagerType:nil simulating:MBNavigationSimulationOptionsOnPoorGPS];
     }
 }
 
