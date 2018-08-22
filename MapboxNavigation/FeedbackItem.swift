@@ -7,13 +7,19 @@ extension UIImage {
     }
 }
 
+/**
+ A single feedback item displayed on an instance of `FeedbackViewController`.
+ */
 @objc(MBFeedbackItem)
 public class FeedbackItem: NSObject {
     var title: String
     var image: UIImage
     var feedbackType: FeedbackType
     
-    init(title: String, image: UIImage, feedbackType: FeedbackType) {
+    /**
+     Creates a new `FeedbackItem`.
+     */
+    public init(title: String, image: UIImage, feedbackType: FeedbackType) {
         self.title = title
         self.image = image
         self.feedbackType = feedbackType

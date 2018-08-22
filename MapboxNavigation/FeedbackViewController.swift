@@ -37,7 +37,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     /**
      The feedback items that are visible and selectable by the user.
      */
-    public var sections: [[FeedbackItem]] = [[.turnNotAllowed, .closure, .reportTraffic, .confusingInstructions, .generalMapError, .badRoute]]
+    public var sections: [FeedbackItem] = [.turnNotAllowed, .closure, .reportTraffic, .confusingInstructions, .generalMapError, .badRoute]
     
     lazy var collectionView: UICollectionView = {
         let view: UICollectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
@@ -75,7 +75,10 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
         return fullHeight
     }
     
-    var eventsManager: EventsManager
+    /**
+     The events manager used to send feedback events.
+     */
+    public var eventsManager: EventsManager
     
     /**
      Initialize a new FeedbackViewController from an `EventsManager`.
@@ -111,9 +114,9 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
         progressBar.barColor = #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1)
         enableDraggableDismiss()
         
-        let defaults = defaultFeedbackHandlers() //this is done every time to refresh the feedback UUID
-        sendFeedbackHandler = defaults.send
-        dismissFeedbackHandler = defaults.dismiss
+        let uuid = eventsManager.recordFeedback()
+        sendFeedbackHandler = defaultSendFeedbackHandler(uuid: uuid)
+        dismissFeedbackHandler = defaultDismissFeedbackHandler(uuid: uuid)
     }
     
     override public func viewWillAppear(_ animated: Bool) {
@@ -203,14 +206,6 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
         progressBar.bottomAnchor.constraint(equalTo: view.safeBottomAnchor).isActive = true
     }
     
-    func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: (FeedbackItem) -> Void, dismiss: () -> Void) {
-        let uuid = eventsManager.recordFeedback()
-        let send = defaultSendFeedbackHandler(uuid: uuid)
-        let dismiss = defaultDismissFeedbackHandler(uuid: uuid)
-        
-        return (send, dismiss)
-    }
-    
     func defaultSendFeedbackHandler(source: FeedbackSource = .user, uuid: UUID) -> (FeedbackItem) -> Void {
         return { [weak self] (item) in
             guard let strongSelf = self else { return }
@@ -245,7 +240,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
 extension FeedbackViewController: UICollectionViewDataSource {
     @objc public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedbackCollectionViewCell.defaultIdentifier, for: indexPath) as! FeedbackCollectionViewCell
-        let item = sections[indexPath.section][indexPath.row]
+        let item = sections[indexPath.row]
         
         cell.titleLabel.text = item.title
         cell.imageView.tintColor = .clear
@@ -255,11 +250,11 @@ extension FeedbackViewController: UICollectionViewDataSource {
     }
     
     @objc public func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return sections.count
+        return 1
     }
     
     @objc public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return sections[section].count
+        return sections.count
     }
     
     @objc public func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -273,7 +268,7 @@ extension FeedbackViewController: UICollectionViewDataSource {
 extension FeedbackViewController: UICollectionViewDelegate {
     @objc public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         abortAutodismiss()
-        let item = sections[indexPath.section][indexPath.row]
+        let item = sections[indexPath.row]
         sendFeedbackHandler?(item)
     }
 }
@@ -283,11 +278,10 @@ extension FeedbackViewController: UICollectionViewDelegateFlowLayout {
         let availableWidth = collectionView.bounds.width
         // 3 columns and 2 rows in portrait mode.
         // 6 columns and 1 row in landscape mode.
-        let items = sections[indexPath.section]
         let width = traitCollection.verticalSizeClass == .compact
-            ? floor(availableWidth / CGFloat(items.count))
-            : floor(availableWidth / CGFloat(items.count / 2))
-        let item = sections[indexPath.section][indexPath.row]
+            ? floor(availableWidth / CGFloat(sections.count))
+            : floor(availableWidth / CGFloat(sections.count / 2))
+        let item = sections[indexPath.row]
         let titleHeight = item.title.height(constrainedTo: width, font: FeedbackCollectionViewCell.Constants.titleFont)
         let cellHeight: CGFloat = FeedbackCollectionViewCell.Constants.imageSize.height
                                   + FeedbackCollectionViewCell.Constants.padding
