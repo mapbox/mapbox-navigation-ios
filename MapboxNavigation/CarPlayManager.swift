@@ -35,18 +35,6 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
     public static func resetSharedInstance() {
         shared = CarPlayManager()
     }
-    
-    var edgePadding: UIEdgeInsets {
-        guard let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController else {
-            return .zero
-        }
-        
-        let padding:CGFloat = 15
-        return UIEdgeInsets(top: carPlayMapViewController.mapView.safeAreaInsets.top + padding,
-                            left: carPlayMapViewController.mapView.safeAreaInsets.left + padding,
-                            bottom: carPlayMapViewController.mapView.safeAreaInsets.bottom + padding,
-                            right: carPlayMapViewController.mapView.safeAreaInsets.right + padding)
-    }
 
     enum CPFavoritesList {
 
@@ -140,11 +128,6 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
     }
 
     // MARK: CPSearchTemplateDelegate
-
-    private func cannedResults() -> Array<(String, CLLocationCoordinate2D)> {
-        let nobHill: (String, CLLocationCoordinate2D) = ("Nob Hill", CLLocationCoordinate2D(latitude: 37.7910, longitude: -122.4131))
-        return [nobHill]
-    }
 
     public func searchTemplate(_ searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void) {
         // TODO: autocomplete immediately based on Favorites; calls to the search/geocoding client might require a minimum number of characters before firing
@@ -240,6 +223,7 @@ extension CarPlayManager: CPListTemplateDelegate {
                                               secondaryAction: nil,
                                               duration: 0)
                 mapTemplate.present(navigationAlert: alert, animated: true)
+                // TODO: do we need to fire the completionHandler? retry mechanism?
                 return
             }
             
