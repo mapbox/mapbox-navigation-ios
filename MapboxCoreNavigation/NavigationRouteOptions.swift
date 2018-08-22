@@ -21,6 +21,7 @@ open class NavigationRouteOptions: RouteOptions {
             return $0
         }, profileIdentifier: profileIdentifier)
         includesAlternativeRoutes = true
+        shapeFormat = .polyline6
         includesSteps = true
         routeShapeResolution = .full
         attributeOptions = [.congestionLevel, .expectedTravelTime]

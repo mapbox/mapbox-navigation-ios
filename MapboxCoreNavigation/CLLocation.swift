@@ -1,5 +1,6 @@
 import CoreLocation
 import MapboxDirections
+import MapboxNavigationNative
 import Turf
 
 extension CLLocation {
@@ -173,5 +174,15 @@ extension CLLocation {
             return false
         }
         return true
+    }
+    
+    func asMBFixLocation() -> MBFixLocation {
+        return MBFixLocation(location: coordinate,
+                             time: timestamp,
+                             speed: NSNumber(value: speed),
+                             bearing: NSNumber(value: course),
+                             altitude: NSNumber(value: altitude),
+                             accuracyHorizontal: NSNumber(value: horizontalAccuracy),
+                             provider: nil)
     }
 }

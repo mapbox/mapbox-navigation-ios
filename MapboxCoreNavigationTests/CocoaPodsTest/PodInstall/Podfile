@@ -5,4 +5,6 @@ target 'PodInstall' do
   # The branch of MapboxNavigation and MapboxNavigation will be replaced by Bitrise to use the current branch.
   pod 'MapboxNavigation', :path => '../../../'
   pod 'MapboxCoreNavigation', :path => '../../../'
+  pod 'MapboxDirections.swift', :git => 'git@github.com:mapbox/MapboxDirections.swift.git', :branch => 'return-response'
+  pod 'MapboxNavigationNative', :podspec => 'https://s3.amazonaws.com/mapbox/mapbox-navigation-native/ios/builds/MapboxNavigationNative.podspec'
 end

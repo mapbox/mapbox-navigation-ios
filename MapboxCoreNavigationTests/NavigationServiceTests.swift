@@ -62,7 +62,9 @@ class NavigationServiceTests: XCTestCase {
     lazy var initialRoute: Route = {
         let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
         let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
-        let route = Route(json: Constants.jsonRoute, waypoints: [waypoint1, waypoint2], options: NavigationRouteOptions(waypoints: [waypoint1, waypoint2]))
+        let options = NavigationRouteOptions(waypoints: [waypoint1, waypoint2])
+        options.shapeFormat = .polyline
+        let route = Route(json: Constants.jsonRoute, waypoints: [waypoint1, waypoint2], options: options)
         route.accessToken = Constants.accessToken
         return route
     }()
@@ -70,7 +72,9 @@ class NavigationServiceTests: XCTestCase {
     lazy var alternateRoute: Route = {
         let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 38.893922, longitude: -77.023900))
         let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 38.880727, longitude: -77.024888))
-        let route = Route(json: Constants.jsonRoute, waypoints: [waypoint1, waypoint2], options: NavigationRouteOptions(waypoints: [waypoint1, waypoint2]))
+        let options = NavigationRouteOptions(waypoints: [waypoint1, waypoint2])
+        options.shapeFormat = .polyline
+        let route = Route(json: Constants.jsonRoute, waypoints: [waypoint1, waypoint2], options: options)
         route.accessToken = Constants.accessToken
         return route
     }()
