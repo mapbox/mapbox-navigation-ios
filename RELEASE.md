@@ -43,4 +43,5 @@
 
 ### Next steps
 
-See [this wiki page](https://github.com/mapbox/navigation/wiki/Releasing-the-iOS-navigation-SDK) for information on updating Mapbox documentation.
+1. Run `pod update` in the [examples repository](https://github.com/mapbox/navigation-ios-examples/) (and edit the Podfile if necessary) to install the latest version.
+1. See [this wiki page](https://github.com/mapbox/navigation/wiki/Releasing-the-iOS-navigation-SDK) for information on updating Mapbox documentation.
