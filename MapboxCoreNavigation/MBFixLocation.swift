@@ -11,6 +11,6 @@ extension MBFixLocation {
                           verticalAccuracy: 0,
                           course: bearing?.doubleValue ?? 0,
                           speed: speed?.doubleValue ?? 0,
-                          timestamp: time ?? Date())
+                          timestamp: time)
     }
 }

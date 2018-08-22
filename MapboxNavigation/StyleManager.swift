@@ -29,16 +29,39 @@ public protocol StyleManagerDelegate: NSObjectProtocol {
 @objc(MBStyleManager)
 open class StyleManager: NSObject {
     
-    weak var delegate: StyleManagerDelegate?
+    /**
+     The receiver of the delegate. See `StyleManagerDelegate` for more information.
+     */
+    @objc public weak var delegate: StyleManagerDelegate?
     
-    internal var date: Date?
-    var currentStyleType: StyleType?
-    var styles = [Style]() { didSet { applyStyle() } }
-    var automaticallyAdjustsStyleForTimeOfDay = true {
+    /**
+     Determines whether the style manager should apply a new style given the time of day.
+     
+     - precondition: Two styles must be provided for this property to have any effect.
+     */
+    @objc public var automaticallyAdjustsStyleForTimeOfDay = true {
         didSet {
-            resumeNotifications()
+            resetTimeOfDayTimer()
         }
     }
+    
+    /**
+     The styles that are in circulation. Active style is set based on
+     the sunrise and sunset at your current location. A change of
+     preferred content size by the user will also trigger an update.
+     
+     - precondition: Two styles must be provided for
+     `StyleManager.automaticallyAdjustsStyleForTimeOfDay` to have any effect.
+     */
+    @objc public var styles = [Style]() {
+        didSet {
+            applyStyle()
+        }
+    }
+    
+    internal var date: Date?
+    
+    var currentStyleType: StyleType?
     
     /**
      Initializes a new `StyleManager`.

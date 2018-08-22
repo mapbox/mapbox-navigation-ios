@@ -4,6 +4,4 @@
 
 - (void)mapViewDidFinishRenderingFrameFullyRendered:(BOOL)fullyRendered;
 
-@property (nonatomic, readonly) CADisplayLink  * _Nullable displayLink;
-
 @end

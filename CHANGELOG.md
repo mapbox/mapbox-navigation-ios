@@ -1,6 +1,22 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## v0.19.0 (July, 24, 2018)
+## master
+
+* Added the `shouldManageApplicationIdleTimer` flag to `NavigationViewController` to allow applications to opt out of automatic `UIApplication.isIdleTimerDisabled` management. ([#1591](https://github.com/mapbox/mapbox-navigation-ios/pull/1591))
+* Fixed an issue where the banner was stuck on rerouting past the reroute threshold, when navigation was set to simulation mode. ([#1583](https://github.com/mapbox/mapbox-navigation-ios/pull/1583))
+* Modified the label at the bottom of the map to display the route shield in addition to the road name. ([#1576](https://github.com/mapbox/mapbox-navigation-ios/pull/1576)) 
+* Fixed an issue where the steps list drag handlebar disappears whenever the user taps the resume button. ([#1588](https://github.com/mapbox/mapbox-navigation-ios/pull/1588))
+* Resolved the partially styled user interface issue that occurs when the style theme is switched between the `NightStyle` and `DayStyle`, after the resume  button was tapped. ([#1589](https://github.com/mapbox/mapbox-navigation-ios/pull/1589))
+* Fixed a rare crash associated with the keyboard when showing the end of route view controller. [#1599](https://github.com/mapbox/mapbox-navigation-ios/pull/1599/)
+* Made functions on `StatusView` public allowing for better interaction. [#1612](https://github.com/mapbox/mapbox-navigation-ios/pull/1612)
+* Added a `MapboxVoiceController.audioPlayer` property. You can use this property to interrupt a spoken instruction or adjust the volume. [#1596](https://github.com/mapbox/mapbox-navigation-ios/pull/1596)
+* Added `StyleManager.automaticallyAdjustsStyleForTimeOfDay`, `StyleManager.delegate`, and `StyleManager.styles` properties so that you can control same time-based style switching just as NavigationViewController does. [#1617](https://github.com/mapbox/mapbox-navigation-ios/pull/1617)
+
+## v0.19.1 (August 15, 2018)
+
+* Fixed build errors when installing this SDK with Mapbox Maps SDK for iOS v4.3.0 or above. ([#1608](https://github.com/mapbox/mapbox-navigation-ios/pull/1608), [#1609](https://github.com/mapbox/mapbox-navigation-ios/pull/1609))
+
+## v0.19.0 (July 24, 2018)
 
 ### Packaging
 

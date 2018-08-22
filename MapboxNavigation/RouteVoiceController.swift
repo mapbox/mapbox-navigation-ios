@@ -55,10 +55,9 @@ extension SpokenInstruction {
  The `RouteVoiceController` class provides voice guidance.
  */
 @objc(MBRouteVoiceController)
-open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioPlayerDelegate {
+open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     
     lazy var speechSynth = AVSpeechSynthesizer()
-    var audioPlayer: AVAudioPlayer?
     
     let audioQueue = DispatchQueue(label: Bundle.mapboxNavigation.bundleIdentifier! + ".audio")
     
@@ -92,7 +91,6 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         verifyBackgroundAudio()
 
         speechSynth.delegate = self
-        rerouteSoundPlayer.delegate = self
         
         resumeNotifications()
     }
@@ -110,7 +108,6 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     deinit {
         suspendNotifications()
         speechSynth.stopSpeaking(at: .immediate)
-        audioPlayer?.delegate = nil
     }
     
     func resumeNotifications() {
@@ -118,13 +115,8 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         NotificationCenter.default.addObserver(self, selector: #selector(pauseSpeechAndPlayReroutingDing(notification:)), name: .routeControllerWillReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: .routeControllerDidReroute, object: nil)
         
-        volumeToken = NavigationSettings.shared.observe(\.voiceVolume) { [weak self] (settings, change) in
-            self?.audioPlayer?.volume = settings.voiceVolume
-        }
-        
         muteToken = NavigationSettings.shared.observe(\.voiceMuted) { [weak self] (settings, change) in
             if settings.voiceMuted {
-                self?.audioPlayer?.stop()
                 self?.speechSynth.stopSpeaking(at: .immediate)
             }
         }
@@ -156,14 +148,6 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
             voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
         }
         rerouteSoundPlayer.play()
-    }
-    
-    @objc public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        do {
-            try unDuckAudio()
-        } catch {
-            voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
-        }
     }
     
     @objc public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
