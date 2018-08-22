@@ -344,6 +344,8 @@ open class NavigationViewController: UIViewController {
         super.init(coder: aDecoder)
     }
     
+    private var traversingTunnel = false
+    
     /**
      Initializes a `NavigationViewController` that provides turn by turn navigation for the given route. A optional `direction` object is needed for  potential rerouting.
 
@@ -584,6 +586,9 @@ extension NavigationViewController: NavigationServiceDelegate {
     
     @objc public func routeController(_ routeController: RouteController, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         
+        //Check to see if we're in a tunnel.
+        checkTunnelState(at: location, along: progress)
+
         // If the user has arrived, don't snap the user puck.
         // In the case the user drives beyond the waypoint,
         // we should accurately depict this.
@@ -609,14 +614,21 @@ extension NavigationViewController: NavigationServiceDelegate {
             self.mapViewController?.showEndOfRoute { _ in }
         }
         return advancesToNextLeg
+
     }
-    public func navigationService(_ service: NavigationService, willBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
-        guard reason == .tunnel else { return }
-        styleManager.applyStyle(type: .night)
-    }
-    public func navigationService(_ service: NavigationService, didEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
-        guard reason == .tunnel else { return }
-        styleManager.timeOfDayChanged()
+    
+    private func checkTunnelState(at location: CLLocation, along progress: RouteProgress) {
+        let inTunnel = MapboxNavigationService.isInTunnel(at: location, along: progress)
+        
+        if !traversingTunnel, inTunnel { // we're entering
+            traversingTunnel = true
+            styleManager.applyStyle(type: .night)
+        }
+        
+        if traversingTunnel, !inTunnel { //we're exiting
+            traversingTunnel = false
+            styleManager.timeOfDayChanged()
+        }
     }
 }
 

@@ -19,7 +19,11 @@ import MapboxDirections
 }
 
 @objc public enum SimulationIntent: Int{
-    case manual, tunnel
+    case manual, poorGPS
+}
+
+@objc public enum SimulationOption: Int {
+    case onPoorGPS, always, never
 }
 
 @objc public protocol NavigationServiceDelegate: RouterDelegate {
@@ -44,6 +48,8 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
 
 @objc(MBNavigationService)
 public class MapboxNavigationService: NSObject, NavigationService {
+    static let poorGPSThreshold: DispatchTimeInterval = .milliseconds(1500) //1.5 seconds
+    
     public var locationManager: NavigationLocationManager {
         return simulatedLocationSource ?? nativeLocationSource
     }
@@ -55,32 +61,42 @@ public class MapboxNavigationService: NSObject, NavigationService {
     private var nativeLocationSource: NavigationLocationManager
     private var simulatedLocationSource: SimulatedLocationManager?
     
+    private var poorGPSTimer: CountdownTimer!
+    private let simulationMode: SimulationOption
+    
     @objc convenience init(route: Route) {
         self.init(route: route, directions: nil, locationSource: nil, eventsManagerType: nil)
     }
     
     @objc required public init(route: Route,
-                  directions: Directions? = nil,
-                  locationSource: NavigationLocationManager? = nil,
-                  eventsManagerType: EventsManager.Type? = nil,
-                  simulated: Bool = false)
+                  directions directionsOverride: Directions? = nil,
+                  locationSource locationOverride: NavigationLocationManager? = nil,
+                  eventsManagerType: EventsManager.Type? = nil, simulating simulationMode: SimulationOption = .onPoorGPS)
     {
-        self.nativeLocationSource = locationSource ?? NavigationLocationManager()
-        self.directions = directions ?? Directions.shared
+        nativeLocationSource = locationOverride ?? NavigationLocationManager()
+        self.directions = directionsOverride ?? Directions.shared
+        self.simulationMode = simulationMode
         super.init()
-        router = RouteController(along: route, directions: self.directions, dataSource: self)
-        self.eventsManager = (eventsManagerType ?? EventsManager.self).init(dataSource: self, accessToken: route.accessToken)
-        locationManager.activityType = route.routeOptions.activityType
         
+        poorGPSTimer = CountdownTimer(countdown: MapboxNavigationService.poorGPSThreshold, payload: timerPayload)
+        router = RouteController(along: route, directions: directions, dataSource: self)
+        let eventType = eventsManagerType ?? EventsManager.self
+        eventsManager = eventType.init(dataSource: self, accessToken: route.accessToken)
+        locationManager.activityType = route.routeOptions.activityType
         bootstrapEvents(with: router)
         
         router.delegate = self
         nativeLocationSource.delegate = self
-    
-        if (simulated) {
-            simulate(on: router.routeProgress)
+        
+        if simulationMode == .always {
+            simulate()
         }
     }
+    
+    public static func isInTunnel(at location: CLLocation, along progress: RouteProgress) -> Bool {
+        return TunnelAuthority.isInTunnel(at: location, along: progress)
+    }
+
     
     private func simulate(on potentialProgress: RouteProgress? = nil, intent: SimulationIntent = .manual) {
         let progress = potentialProgress ?? router.routeProgress
@@ -112,14 +128,26 @@ public class MapboxNavigationService: NSObject, NavigationService {
     }
     
     public func start() {
-        locationManager.startUpdatingHeading()
-        locationManager.startUpdatingLocation()
+        nativeLocationSource.startUpdatingHeading()
+        nativeLocationSource.startUpdatingLocation()
+        
+        simulatedLocationSource?.startUpdatingHeading()
+        simulatedLocationSource?.startUpdatingLocation()
+
+        if simulationMode == .onPoorGPS {
+            poorGPSTimer.arm()
+        }
         
     }
     
     public func stop() {
         nativeLocationSource.stopUpdatingHeading()
         nativeLocationSource.stopUpdatingLocation()
+        
+        simulatedLocationSource?.stopUpdatingHeading()
+        simulatedLocationSource?.stopUpdatingLocation()
+        
+        poorGPSTimer.disarm()
     }
     
     public func endNavigation(feedback: EndOfRouteFeedback? = nil) {
@@ -132,13 +160,20 @@ public class MapboxNavigationService: NSObject, NavigationService {
         eventsManager.resetSession()
         eventsManager.start()
     }
-    
-    private func enterTunnel() {
-        simulate(on: router.routeProgress)
+
+    private func resetGPSCountdown() {
+        // Immediately end simulation if it is occuring.
+        if simulatedLocationSource != nil, simulationMode == .onPoorGPS{
+            endSimulation(intent: .poorGPS)
+        }
+        
+        // Reset the GPS countdown.
+        poorGPSTimer.reset()
     }
     
-    private func exitTunnel() {
-        endSimulation()
+    private func timerPayload() {
+        guard simulationMode == .onPoorGPS else { return }
+        simulate(intent: .poorGPS)
     }
 }
 
@@ -154,19 +189,10 @@ extension MapboxNavigationService: CLLocationManagerDelegate {
         
         guard let location = locations.first else { return }
         
-        let inTunnel = TunnelAuthority.isInTunnel(at: location, along: router.routeProgress)
-        let currentlySimulating = simulatedLocationSource != nil
-        
-        if inTunnel, !currentlySimulating { //we're entering a tunnel
-            simulate(on: router.routeProgress, intent: .tunnel)
+        //If this is a good organic update, reset the timer.
+        if manager == nativeLocationSource, location.isQualified {
+            resetGPSCountdown()
         }
-        
-        if !inTunnel, currentlySimulating { //we're exiting a tunnel
-            endSimulation(intent: .tunnel)
-        }
-
-        //If we're simulating, don't pass organic updates onto the router.
-        guard !(currentlySimulating && manager == nativeLocationSource) else { return }
         
         //Finally, pass the update onto the router.
         router.locationManager?(manager, didUpdateLocations: locations)
