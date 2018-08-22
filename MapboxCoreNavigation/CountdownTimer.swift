@@ -12,17 +12,18 @@ class CountdownTimer {
     private var deadline: DispatchTime { return .now() + countdownInterval }
     let accuracy: DispatchTimeInterval
     let payload: Payload
-    let queue = DispatchQueue(label: "com.mapbox.coreNavigation.timer.countdown", qos: DispatchQoS.background, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil)
-    
+    let timerQueue = DispatchQueue(label: "com.mapbox.coreNavigation.timer.countdown", qos: DispatchQoS.background, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil)
+    let executionQueue: DispatchQueue
     let timer: DispatchSourceTimer
     
     private(set) var state: State = .disarmed
     
-    init(countdown: DispatchTimeInterval, payload: @escaping Payload, accuracy: DispatchTimeInterval = defaultAccuracy) {
+    init(countdown: DispatchTimeInterval, payload: @escaping Payload, accuracy: DispatchTimeInterval = defaultAccuracy, executingOn executionQueue: DispatchQueue = .main) {
         countdownInterval = countdown
+        self.executionQueue = executionQueue
         self.payload = payload
         self.accuracy = accuracy
-        self.timer = DispatchSource.makeTimerSource(flags: [], queue: queue)
+        self.timer = DispatchSource.makeTimerSource(flags: [], queue: timerQueue)
     }
     
     deinit {
@@ -39,10 +40,14 @@ class CountdownTimer {
         timer.schedule(deadline: deadline, repeating: .never, leeway: accuracy)
     }
     
+    private func fire() {
+        executionQueue.async(execute: payload)
+    }
+    
     func arm() {
         guard state == .disarmed else { return }
         scheduleTimer()
-        timer.setEventHandler(handler: payload)
+        timer.setEventHandler(handler: fire)
         timer.resume()
         state = .armed
     }
