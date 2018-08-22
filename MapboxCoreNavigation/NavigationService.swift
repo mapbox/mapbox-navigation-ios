@@ -2,22 +2,6 @@ import Foundation
 import CoreLocation
 import MapboxDirections
 
-
-@objc public enum LocationSource: Int {
-    case device, simulated
-    
-    var isSimulated: Bool { return self == .simulated }
-    
-    var description: String {
-        switch self {
-        case .device:
-            return String(describing: CLLocationManager.self)
-        case .simulated:
-            return String(describing: SimulatedLocationManager.self)
-        }
-    }
-}
-
 @objc(MBNavigationSimulationIntent)
 public enum SimulationIntent: Int{
     case manual, poorGPS
@@ -80,13 +64,13 @@ public class MapboxNavigationService: NSObject, NavigationService {
         self.directions = directionsOverride ?? Directions.shared
         self.simulationMode = simulationMode
         super.init()
-        
+        resumeNotifications()
         poorGPSTimer = CountdownTimer(countdown: MapboxNavigationService.poorGPSThreshold, payload: timerPayload)
         router = RouteController(along: route, directions: directions, dataSource: self)
         let eventType = eventsManagerType ?? EventsManager.self
         eventsManager = eventType.init(dataSource: self, accessToken: route.accessToken)
         locationManager.activityType = route.routeOptions.activityType
-        bootstrapEvents(with: router)
+        bootstrapEvents()
         
         router.delegate = self
         nativeLocationSource.delegate = self
@@ -96,14 +80,19 @@ public class MapboxNavigationService: NSObject, NavigationService {
         }
     }
     
+    deinit {
+        suspendNotifications()
+        endNavigation()
+    }
+    
     public static func isInTunnel(at location: CLLocation, along progress: RouteProgress) -> Bool {
         return TunnelAuthority.isInTunnel(at: location, along: progress)
     }
 
     
-    private func simulate(on potentialProgress: RouteProgress? = nil, intent: SimulationIntent = .manual) {
-        guard simulatedLocationSource == nil else { return }
-        let progress = potentialProgress ?? router.routeProgress
+    private func simulate(intent: SimulationIntent = .manual) {
+        guard !isSimulating else { return }
+        let progress = router.routeProgress
         delegate?.navigationService?(self, willBeginSimulating: progress, becauseOf: intent)
         simulatedLocationSource = SimulatedLocationManager(routeProgress: progress)
         simulatedLocationSource?.delegate = self
@@ -113,7 +102,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
     }
     
     private func endSimulation(intent: SimulationIntent = .manual) {
-        guard simulatedLocationSource != nil else { return }
+        guard !isSimulating else { return }
         let progress = simulatedLocationSource?.routeProgress ?? router.routeProgress
         delegate?.navigationService?(self, willEndSimulating: progress, becauseOf: intent)
         simulatedLocationSource?.stopUpdatingLocation()
@@ -160,7 +149,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         stop()
     }
 
-    private func bootstrapEvents(with router: Router) {
+    private func bootstrapEvents() {
         eventsManager.dataSource = self
         eventsManager.resetSession()
         eventsManager.start()
@@ -182,6 +171,18 @@ public class MapboxNavigationService: NSObject, NavigationService {
         guard simulationMode == .onPoorGPS else { return }
         simulate(intent: .poorGPS)
     }
+    
+    func resumeNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillTerminate(_:)), name: .UIApplicationWillTerminate, object: nil)
+    }
+    
+    func suspendNotifications() {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc private func applicationWillTerminate(_ notification: NSNotification) {
+        endNavigation()
+    }
 }
 
 extension MapboxNavigationService: CLLocationManagerDelegate {
@@ -197,9 +198,13 @@ extension MapboxNavigationService: CLLocationManagerDelegate {
         guard let location = locations.first else { return }
         
         //If this is a good organic update, reset the timer.
-        if manager == nativeLocationSource, location.isQualified {
+        if simulationMode == .onPoorGPS,
+            manager == nativeLocationSource,
+            location.isQualified {
+
             resetGPSCountdown()
-            if (simulatedLocationSource != nil) {
+            
+            if (isSimulating) {
                 return //If we're simulating, throw this update away,
                        // which ensures a smooth transition.
             }

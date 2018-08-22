@@ -220,7 +220,7 @@ open class NavigationViewController: UIViewController {
         set {
             navigationService.route = newValue
             NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
-                        mapViewController?.notifyDidReroute(route: route)
+            mapViewController?.notifyDidReroute(route: route)
         }
     }
     

@@ -300,10 +300,6 @@ extension EventDetails {
             throw EventDetailsError.EncodingError("Failed to encode event details")
         }
     }
-    
-    static func defaultEvents(dataSource source: EventsManagerDataSource, session state: SessionState) -> EventDetails {
-        return EventDetails(dataSource: source, session: state)
-    }
 }
 
 extension UIApplicationState: Encodable {

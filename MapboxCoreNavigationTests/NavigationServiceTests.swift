@@ -308,7 +308,7 @@ class NavigationServiceTests: XCTestCase {
         navigationService.locationManager!(navigationService.locationManager, didUpdateLocations: [currentLocation])
 
         // MARK: It tells the delegate that the user did arrive
-        XCTAssertTrue(delegate.recentMessages.contains("routeController(_:didArriveAt:)"))
+    XCTAssertTrue(delegate.recentMessages.contains("routeController(_:didArriveAt:)"))
 
         // MARK: It enqueues and flushes an arrival event
         let expectedEventName = MMEEventTypeNavigationArrive

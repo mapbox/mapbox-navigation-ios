@@ -164,8 +164,8 @@ class NavigationViewControllerTests: XCTestCase {
         let fultonStreetLocation = dependencies.poi[2]
 
         
-        navigationViewController.mapViewController!.labelRoadNameCompletionHandler = { (defaultRaodNameAssigned) in
-            XCTAssertTrue(defaultRaodNameAssigned, "label road name was not successfully set")
+        navigationViewController.mapViewController!.labelRoadNameCompletionHandler = { (defaultRoadNameAssigned) in
+            XCTAssertTrue(defaultRoadNameAssigned, "label road name was not successfully set")
         }
         
         service.locationManager!(service.locationManager, didUpdateLocations: [fultonStreetLocation])

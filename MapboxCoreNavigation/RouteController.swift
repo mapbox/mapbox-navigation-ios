@@ -91,9 +91,6 @@ open class RouteController: NSObject, Router {
     var routeTask: URLSessionDataTask?
     var lastLocationDate: Date?
 
-    
-//    public var eventsManager: EventsManager
-
     var hasFoundOneQualifiedLocation = false
 
     var movementsAwayFromRoute = 0
@@ -117,43 +114,18 @@ open class RouteController: NSObject, Router {
         UIDevice.current.isBatteryMonitoringEnabled = true
 
         super.init()
-
-
-        resumeNotifications()
-
+        
         checkForUpdates()
         checkForLocationUsageDescription()
     }
 
     deinit {
-        //TODO: endNavigation()
-        
         if delegate?.routeControllerShouldDisableBatteryMonitoring?(self) ?? DefaultBehavior.shouldDisableBatteryMonitoring {
             UIDevice.current.isBatteryMonitoringEnabled = false
         }
   
     }
 
-    func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillTerminate(_:)), name: .UIApplicationWillTerminate, object: nil)
-    }
-
-    func suspendNotifications() {
-        NotificationCenter.default.removeObserver(self)
-    }
-
-    @objc private func applicationWillTerminate(_ notification: NSNotification) {
-        //TODO:        endNavigation()
-    }
-    
-
-//    /**
-//     Ends the current navigation session.
-//     */
-//    @objc public func endNavigation(feedback: EndOfRouteFeedback? = nil) {
-//        eventsManager.sendCancelEvent(rating: feedback?.rating, comment: feedback?.comment)
-//        suspendNotifications()
-//    }
 
     /**
      The idealized user location. Snapped to the route line, if applicable, otherwise raw.
@@ -293,7 +265,6 @@ extension RouteController: CLLocationManagerDelegate {
         let step = stepProgress.step
         
         //Increment the progress model
-        //TODO: Profile this, consider memoizing?
         let polyline = Polyline(step.coordinates!)
         if let closestCoordinate = polyline.closestCoordinate(to: rawLocation.coordinate) {
             let remainingDistance = polyline.distance(from: closestCoordinate.coordinate)

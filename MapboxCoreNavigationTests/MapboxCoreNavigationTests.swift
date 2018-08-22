@@ -144,8 +144,8 @@ class MapboxCoreNavigationTests: XCTestCase {
         expectation(forNotification: .routeControllerDidFailToReroute, object: navigation.router) { (notification) -> Bool in
             return true
         }
-        let routeController = navigation.router as! RouteController
-        routeController.reroute(from: CLLocation(latitude: 0, longitude: 0), along: navigation.router.routeProgress)
+        
+        navigation.router.reroute(from: CLLocation(latitude: 0, longitude: 0), along: navigation.router.routeProgress)
         directionsClientSpy.fireLastCalculateCompletion(with: nil, routes: nil, error: TestError.test as NSError)
         
         waitForExpectations(timeout: 2) { (error) in
