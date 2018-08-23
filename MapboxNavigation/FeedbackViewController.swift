@@ -30,12 +30,13 @@ extension FeedbackViewController: UIViewControllerTransitioningDelegate {
     /**
      Called when the user submits a feedback event.
      */
-    @objc optional func feedbackViewController(_ feedbackViewController: FeedbackViewController, didSend: FeedbackItem, UUID: UUID)
+    @objc(feedbackViewController:didSendFeedbackItem:UUID:)
+    optional func feedbackViewController(_ feedbackViewController: FeedbackViewController, didSend feedbackItem: FeedbackItem, uuid: UUID)
     
     /**
      Called when a `FeedbackViewController` is dismissed for any reason without giving explicit feedback.
      */
-    @objc optional func feedbackViewControllerDidCancelFeedback(_ feedbackViewController: FeedbackViewController)
+    @objc optional func feedbackViewControllerDidCancel(_ feedbackViewController: FeedbackViewController)
 }
 
 /**
@@ -228,7 +229,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     }
     
     func send(_ item: FeedbackItem) {
-        delegate?.feedbackViewController?(self, didSend: item, UUID: uuid)
+        delegate?.feedbackViewController?(self, didSend: item, uuid: uuid)
         eventsManager.updateFeedback(uuid: uuid, type: item.feedbackType, source: .user, description: nil)
         
         guard let parent = presentingViewController else {
@@ -242,7 +243,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     }
     
     func dismissFeedbackItem() {
-        delegate?.feedbackViewControllerDidCancelFeedback?(self)
+        delegate?.feedbackViewControllerDidCancel?(self)
         eventsManager.cancelFeedback(uuid: uuid)
         dismiss(animated: true, completion: nil)
     }
