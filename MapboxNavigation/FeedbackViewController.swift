@@ -57,7 +57,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
      */
     public var sections: [FeedbackItem] = [.turnNotAllowed, .closure, .reportTraffic, .confusingInstructions, .generalMapError, .badRoute]
     
-    public var delegate: FeedbackViewControllerDelegate?
+    @objc public weak var delegate: FeedbackViewControllerDelegate?
     
     lazy var collectionView: UICollectionView = {
         let view: UICollectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
