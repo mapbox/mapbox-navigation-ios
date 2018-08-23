@@ -22,6 +22,10 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
     @IBOutlet var mapView: NavigationMapView!
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var instructionsBannerView: InstructionsBannerView!
+    
+    lazy var feedbackViewController: FeedbackViewController = {
+        return FeedbackViewController(eventsManager: routeController.eventsManager)
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -105,5 +109,9 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
     
     @IBAction func recenterMap(_ sender: Any) {
         mapView.recenterMap()
+    }
+    
+    @IBAction func showFeedback(_ sender: Any) {
+        present(feedbackViewController, animated: true, completion: nil)
     }
 }

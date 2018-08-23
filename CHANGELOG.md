@@ -2,6 +2,7 @@
 
 ## master
 
+* Added an `MGLMapView.showsIncidents` property to toggle the visibility of any Mapbox Incidents data on a map view. ([#1613](https://github.com/mapbox/mapbox-navigation-ios/pull/1613))
 * Added the `shouldManageApplicationIdleTimer` flag to `NavigationViewController` to allow applications to opt out of automatic `UIApplication.isIdleTimerDisabled` management. ([#1591](https://github.com/mapbox/mapbox-navigation-ios/pull/1591))
 * Fixed an issue where the banner was stuck on rerouting past the reroute threshold, when navigation was set to simulation mode. ([#1583](https://github.com/mapbox/mapbox-navigation-ios/pull/1583))
 * Modified the label at the bottom of the map to display the route shield in addition to the road name. ([#1576](https://github.com/mapbox/mapbox-navigation-ios/pull/1576)) 
@@ -11,6 +12,7 @@
 * Made functions on `StatusView` public allowing for better interaction. [#1612](https://github.com/mapbox/mapbox-navigation-ios/pull/1612)
 * Added a `MapboxVoiceController.audioPlayer` property. You can use this property to interrupt a spoken instruction or adjust the volume. [#1596](https://github.com/mapbox/mapbox-navigation-ios/pull/1596)
 * Added `StyleManager.automaticallyAdjustsStyleForTimeOfDay`, `StyleManager.delegate`, and `StyleManager.styles` properties so that you can control same time-based style switching just as NavigationViewController does. [#1617](https://github.com/mapbox/mapbox-navigation-ios/pull/1617)
+* `FeedbackViewController` is now public making it possible to add the feedback view to a custom navigation UI. [#1605](https://github.com/mapbox/mapbox-navigation-ios/pull/1605/). `navigationViewControllerDidOpenFeedback(_:)`, `navigationViewControllerDidCancelFeedback(_:)` and `navigationViewController(_:uuid:feedbackType)` have all been moved to `FeedbackViewControllerDelegate`.
 * Renamed `NavigationMapView.tracksUserCourse` to `NavigationMapView.showsUserCourse`. [#1594](https://github.com/mapbox/mapbox-navigation-ios/pull/1594)
 
 ## v0.19.1 (August 15, 2018)
