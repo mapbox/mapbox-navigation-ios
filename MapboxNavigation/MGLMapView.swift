@@ -83,10 +83,10 @@ extension MGLMapView {
      */
     public var showsIncidents: Bool {
         get {
-            return showsTileSet(withIdentifier: "mapbox.mapbox-incidents-v1", layerIdentifier: "incidents")
+            return showsTileSet(withIdentifier: "mapbox.mapbox-incidents-v1", layerIdentifier: "closures")
         }
         set {
-            setShowsTileSet(newValue, withIdentifier: "mapbox.mapbox-incidents-v1", layerIdentifier: "incidents")
+            setShowsTileSet(newValue, withIdentifier: "mapbox.mapbox-incidents-v1", layerIdentifier: "closures")
         }
     }
 }
