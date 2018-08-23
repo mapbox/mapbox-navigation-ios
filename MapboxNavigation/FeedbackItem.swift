@@ -12,14 +12,25 @@ extension UIImage {
  */
 @objc(MBFeedbackItem)
 public class FeedbackItem: NSObject {
-    var title: String
-    var image: UIImage
-    var feedbackType: FeedbackType
+    /**
+     The title of feedback item. This will be rendered directly below the image.
+     */
+    @objc public var title: String
+    
+    /**
+     An image representation of the feedback.
+     */
+    @objc public var image: UIImage
+    
+    /**
+     The type of feedback that best describes the event.
+     */
+    @objc public var feedbackType: FeedbackType
     
     /**
      Creates a new `FeedbackItem`.
      */
-    public init(title: String, image: UIImage, feedbackType: FeedbackType) {
+    @objc public init(title: String, image: UIImage, feedbackType: FeedbackType) {
         self.title = title
         self.image = image
         self.feedbackType = feedbackType

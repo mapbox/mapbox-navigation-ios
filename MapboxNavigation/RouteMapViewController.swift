@@ -240,7 +240,6 @@ class RouteMapViewController: UIViewController {
     
     @objc func feedback(_ sender: Any) {
         showFeedback()
-        delegate?.mapViewControllerDidOpenFeedback(self)
     }
     
     func showFeedback(source: FeedbackSource = .user) {
@@ -988,11 +987,7 @@ fileprivate extension UIViewAnimationOptions {
     }
 }
 @objc protocol RouteMapViewControllerDelegate: NavigationMapViewDelegate, MGLMapViewDelegate, VisualInstructionDelegate {
-
-    func mapViewControllerDidOpenFeedback(_ mapViewController: RouteMapViewController)
-    func mapViewControllerDidCancelFeedback(_ mapViewController: RouteMapViewController)
     func mapViewControllerDidDismiss(_ mapViewController: RouteMapViewController, byCanceling canceled: Bool)
-    func mapViewController(_ mapViewController: RouteMapViewController, didSendFeedbackAssigned uuid: UUID, feedbackType: FeedbackType)
     func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool
     
     /**
