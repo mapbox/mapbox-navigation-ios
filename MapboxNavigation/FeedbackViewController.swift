@@ -135,7 +135,6 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
         view.layoutIfNeeded()
         transitioningDelegate = self
         view.backgroundColor = .white
-        progressBar.barColor = #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1)
         enableDraggableDismiss()
     }
     
