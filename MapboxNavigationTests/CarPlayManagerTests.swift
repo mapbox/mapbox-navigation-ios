@@ -1,6 +1,7 @@
 import XCTest
 import MapboxNavigation
-
+import MapboxCoreNavigation
+import MapboxDirections
 
 #if canImport(CarPlay)
 import CarPlay
@@ -85,12 +86,52 @@ class CarPlayManagerTests: XCTestCase {
             return
         }
 
-        let template: CPMapTemplate = fakeInterfaceController.rootTemplate as! CPMapTemplate
-        XCTAssertEqual(2, template.leadingNavigationBarButtons.count)
-        XCTAssertEqual(2, template.trailingNavigationBarButtons.count)
+        let mapTemplate: CPMapTemplate = fakeInterfaceController.rootTemplate as! CPMapTemplate
+        XCTAssertEqual(2, mapTemplate.leadingNavigationBarButtons.count)
+        XCTAssertEqual(2, mapTemplate.trailingNavigationBarButtons.count)
+    }
+
+    func testManagerTellsDelegateWhenGuidanceIsInitiated() {
+        guard #available(iOS 12, *) else { return }
+
+        let exampleDelegate = TestCarPlayManagerDelegate()
+        manager?.delegate = exampleDelegate
+
+        simulateCarPlayConnection()
+
+        guard let fakeInterfaceController = manager?.interfaceController else {
+            XCTFail("Dependencies not met! Bailing...")
+            return
+        }
+
+        let mapTemplate: CPMapTemplate = fakeInterfaceController.rootTemplate as! CPMapTemplate
+
+        // given the user is previewing route choices
+        // when a trip is started using one of the route choices
+        let choice = CPRouteChoice(summaryVariants: ["summary1"], additionalInformationVariants: ["addl1"], selectionSummaryVariants: ["selection1"])
+        choice.userInfo = Fixture.routeWithBannerInstructions()
+
+        manager?.mapTemplate(mapTemplate, startedTrip: CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [choice]), using: choice)
+
+        // trip previews are hidden on the mapTemplate
+        // the delegate is given the opportunity to provide a custom route controller
+        // a navigation session is started on the mapTemplate
+        // a CarPlayNavigationViewController is presented (why?)
+
+        // the CarPlayNavigationDelegate is notified
+        XCTAssertTrue(exampleDelegate.navigationInitiated, "The CarPlayManagerDelegate should have been told that navigation was initiated.")
     }
 
     //MARK: Upon disconnecting CarPlay, cleanup happens
+
+    // when a list item that corresponds to a waypoint/location is tapped
+    // route options are constructed from the user's location to the final waypoint
+    // a route is requested
+    // an error is displayed if encountered
+    // route choices / trip previews displayed
+    // await user input
+
+    // CarPlay handles switching between route choices automatically?
 
 }
 
@@ -100,6 +141,7 @@ class CarPlayManagerTests: XCTestCase {
 @available(iOS 12.0, *)
 class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
 
+    var navigationInitiated = false
     var leadingBarButtons: [CPBarButton]?
     var trailingBarButtons: [CPBarButton]?
 
@@ -109,6 +151,10 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
 
     func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate) -> [CPBarButton]? {
         return trailingBarButtons
+    }
+
+    func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWithProgress: RouteProgress) {
+        navigationInitiated = true
     }
 }
 

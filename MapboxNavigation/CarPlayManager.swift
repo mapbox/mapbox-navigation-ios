@@ -15,6 +15,9 @@ public protocol CarPlayManagerDelegate {
     
     @objc(carPlayManager:routeControllerAlongRoute:)
     optional func carPlayManager(_ carPlayManager: CarPlayManager, routeControllerAlong route: Route) -> RouteController
+
+    /***/
+    @objc func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWithProgress: RouteProgress) -> ()
 }
 
 @available(iOS 12.0, *)
@@ -295,6 +298,10 @@ extension CarPlayManager: CPMapTemplateDelegate {
 //            navigationViewController.isUsedInConjunctionWithCarPlayWindow = true
 //            appViewFromCarPlayWindow.present(navigationViewController, animated: true)
 //        }
+
+        if let delegate = delegate {
+            delegate.carPlayManager(self, didBeginNavigationWithProgress: routeController.routeProgress)
+        }
     }
     
     public func mapTemplate(_ mapTemplate: CPMapTemplate, selectedPreviewFor trip: CPTrip, using routeChoice: CPRouteChoice) {

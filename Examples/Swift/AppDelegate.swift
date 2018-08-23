@@ -57,6 +57,10 @@ extension AppDelegate: CPApplicationDelegate {
 
 @available(iOS 12.0, *)
 extension AppDelegate: CarPlayManagerDelegate {
+    func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWithProgress: RouteProgress) {
+        //
+    }
+
     func carPlayManager(_ carPlayManager: CarPlayManager, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate) -> [CPBarButton]? {
         return nil
     }

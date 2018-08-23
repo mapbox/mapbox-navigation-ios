@@ -26,7 +26,7 @@ class InstructionPresenterTests: XCTestCase {
 
     /// NOTE: This test is disabled pending https://github.com/mapbox/mapbox-navigation-ios/issues/1468
     func x_testAbbreviationPerformance() {
-        let route = Fixture.route(from: "route-with-banner-instructions", waypoints: [Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165)), Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))])
+        let route = Fixture.routeWithBannerInstructions()
         
         let steps = route.legs.flatMap { $0.steps }
         let instructions = steps.compactMap { $0.instructionsDisplayedAlongStep?.first?.primaryInstruction }
