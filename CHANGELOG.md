@@ -12,6 +12,7 @@
 * Made functions on `StatusView` public allowing for better interaction. [#1612](https://github.com/mapbox/mapbox-navigation-ios/pull/1612)
 * Added a `MapboxVoiceController.audioPlayer` property. You can use this property to interrupt a spoken instruction or adjust the volume. [#1596](https://github.com/mapbox/mapbox-navigation-ios/pull/1596)
 * Added `StyleManager.automaticallyAdjustsStyleForTimeOfDay`, `StyleManager.delegate`, and `StyleManager.styles` properties so that you can control same time-based style switching just as NavigationViewController does. [#1617](https://github.com/mapbox/mapbox-navigation-ios/pull/1617)
+* `FeedbackViewController` is now public making it possible to add the feedback view to a custom navigation UI. [#1605](https://github.com/mapbox/mapbox-navigation-ios/pull/1605/). `navigationViewControllerDidOpenFeedback(_:)`, `navigationViewControllerDidCancelFeedback(_:)` and `navigationViewController(_:uuid:feedbackType)` have all been moved to `FeedbackViewControllerDelegate`.
 
 ## v0.19.1 (August 15, 2018)
 
