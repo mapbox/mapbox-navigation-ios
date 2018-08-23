@@ -57,8 +57,17 @@ extension AppDelegate: CPApplicationDelegate {
 
 @available(iOS 12.0, *)
 extension AppDelegate: CarPlayManagerDelegate {
-    func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWithProgress: RouteProgress) {
-        //
+
+    // MARK: CarPlayManagerDelegate
+
+    func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith progress: RouteProgress) {
+
+        guard let presentingController = window?.rootViewController else { return }
+
+        let stepsController = StepsViewController(routeProgress: progress)
+        stepsController.view.translatesAutoresizingMaskIntoConstraints = true
+
+        presentingController.present(stepsController, animated: true, completion: nil)
     }
 
     func carPlayManager(_ carPlayManager: CarPlayManager, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate) -> [CPBarButton]? {
@@ -85,6 +94,7 @@ extension AppDelegate: CarPlayManagerDelegate {
     func carPlayManager(_ carPlayManager: CarPlayManager, routeControllerAlong route: Route) -> RouteController {
         if simulatesLocationsInCarPlay {
             let locationManager = SimulatedLocationManager(route: route)
+            locationManager.speedMultiplier = 10
             return RouteController(along: route, locationManager: locationManager)
         } else {
             return RouteController(along: route)

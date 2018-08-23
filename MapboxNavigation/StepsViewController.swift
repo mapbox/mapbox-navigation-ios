@@ -3,24 +3,30 @@ import MapboxDirections
 import MapboxCoreNavigation
 import Turf
 
+/// :nodoc:
 @objc(MBStepsBackgroundView)
 open class StepsBackgroundView: UIView { }
 
-protocol StepsViewControllerDelegate: class {
+/// :nodoc:
+@objc(MBStepsViewControllerDelegate)
+public protocol StepsViewControllerDelegate: class {
+
+    @objc(stepsViewController:didSelectLegIndex:stepIndex:cell:)
     func stepsViewController(_ viewController: StepsViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell)
+
     func didDismissStepsViewController(_ viewController: StepsViewController)
 }
 
 /// :nodoc:
 @objc(MBStepsViewController)
-open class StepsViewController: UIViewController {
+public class StepsViewController: UIViewController {
     
     weak var tableView: UITableView!
     weak var backgroundView: UIView!
     weak var bottomView: UIView!
     weak var separatorBottomView: SeparatorView!
     weak var dismissButton: DismissButton!
-    weak var delegate: StepsViewControllerDelegate?
+    public weak var delegate: StepsViewControllerDelegate?
     
     typealias CompletionHandler = () -> Void
     

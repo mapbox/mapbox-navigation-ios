@@ -36,7 +36,9 @@ public protocol CarPlayManagerDelegate {
 //public protocol CarPlayManagerNavigationDelegate {
 
     /***/
-    @objc func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWithProgress: RouteProgress) -> ()
+    @objc(carPlayManager:didBeginNavigationWithRouteProgress:)
+    func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith progress: RouteProgress) -> ()
+
 }
 
 @available(iOS 12.0, *)
@@ -288,6 +290,7 @@ extension CarPlayManager: CPListTemplateDelegate {
 // MARK: CPMapTemplateDelegate
 @available(iOS 12.0, *)
 extension CarPlayManager: CPMapTemplateDelegate {
+
     public func mapTemplate(_ mapTemplate: CPMapTemplate, startedTrip trip: CPTrip, using routeChoice: CPRouteChoice) {
         guard let interfaceController = interfaceController,
             let carPlayMapViewController = carWindow?.rootViewController as? CarPlayMapViewController else {
@@ -319,7 +322,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
 //        }
 
         if let delegate = delegate {
-            delegate.carPlayManager(self, didBeginNavigationWithProgress: routeController.routeProgress)
+            delegate.carPlayManager(self, didBeginNavigationWith: routeController.routeProgress)
         }
     }
     

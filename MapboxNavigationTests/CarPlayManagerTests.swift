@@ -153,7 +153,7 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
         return trailingBarButtons
     }
 
-    func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWithProgress: RouteProgress) {
+    func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith progress: RouteProgress) {
         navigationInitiated = true
     }
 }
