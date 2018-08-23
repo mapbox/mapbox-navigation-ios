@@ -7,14 +7,33 @@ import MapboxDirections
 @available(iOS 12.0, *)
 @objc(MBCarPlayManagerDelegate)
 public protocol CarPlayManagerDelegate {
+
+    /**
+     * Offers the delegate an opportunity to provide a customized list of leading bar buttons.
+     *
+     * These buttons' tap handlers encapsulate the action to be taken, so it is up to the developer to ensure the hierarchy of templates is adequately navigable.
+     */
     @objc(carPlayManager:leadingNavigationBarButtonsWithTraitCollection:inTemplate:)
     func carPlayManager(_ carPlayManager: CarPlayManager, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate) -> [CPBarButton]?
 
+    /**
+     * Offers the delegate an opportunity to provide a customized list of trailing bar buttons.
+     *
+     * These buttons' tap handlers encapsulate the action to be taken, so it is up to the developer to ensure the hierarchy of templates is adequately navigable.
+     */
     @objc(carPlayManager:trailingNavigationBarButtonsWithTraitCollection:inTemplate:)
     func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate) -> [CPBarButton]?
-    
+
+    /**
+     * Offers the delegate an opportunity to provide an alternate navigator, otherwise a default built-in RouteController will be created and used.
+     */
     @objc(carPlayManager:routeControllerAlongRoute:)
     optional func carPlayManager(_ carPlayManager: CarPlayManager, routeControllerAlong route: Route) -> RouteController
+//}
+//
+//@available(iOS 12.0, *)
+//@objc(MBCarPlayManagerNavigationDelegate)
+//public protocol CarPlayManagerNavigationDelegate {
 
     /***/
     @objc func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWithProgress: RouteProgress) -> ()
