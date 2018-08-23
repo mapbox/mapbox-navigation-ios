@@ -364,23 +364,54 @@ extension CarPlayManager: CPMapTemplateDelegate {
         }
         
         let mapView = carPlayMapViewController.mapView
-        var newPannedPoint = CGPoint()
+        let camera = mapView.camera
         
-        switch direction {
-        case CPMapTemplate.PanDirection.left:
-            newPannedPoint = CGPoint(x: mapView.frame.minX, y: mapView.frame.midY)
-        case CPMapTemplate.PanDirection.right:
-            newPannedPoint = CGPoint(x: mapView.frame.maxX, y: mapView.frame.midY)
-        case CPMapTemplate.PanDirection.up:
-            newPannedPoint = CGPoint(x: mapView.frame.midX, y: -mapView.frame.midY/2)
-        case CPMapTemplate.PanDirection.down:
-            newPannedPoint = CGPoint(x: mapView.frame.midX, y: mapView.frame.maxY)
-        default:
-            newPannedPoint = CGPoint(x: 0, y: 0)
+        mapView.userTrackingMode = .none
+
+        var facing: CLLocationDirection = 0.0
+        
+        if direction.contains(.right) {
+            facing = 90
+        } else if direction.contains(.down) {
+            facing = 180
+        } else if direction.contains(.left) {
+            facing = 270
         }
         
-        let newCenterCoordinate = mapView.convert(newPannedPoint, toCoordinateFrom: mapView)
-        mapView.setCenter(newCenterCoordinate, animated: true)
+        /// Distance in points that a single press of the panning button pans the map by.
+        let cpPanningIncrement: CLLocationDistance = 50
+        
+        let newCenter = camera.centerCoordinate.coordinate(at: cpPanningIncrement, facing: facing)
+        camera.centerCoordinate = newCenter
+        mapView.setCamera(camera, animated: true)
+    }
+    
+    public func mapTemplate(_ mapTemplate: CPMapTemplate, didEndPanGestureWithVelocity velocity: CGPoint) {
+        // Not enough velocity to overcome friction
+        guard sqrtf(Float(velocity.x * velocity.x + velocity.y * velocity.y)) > 100 else {
+            return
+        }
+        
+        guard let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController else {
+            return
+        }
+        
+        let decelerationRate: CGFloat = 0.9
+        let mapView = carPlayMapViewController.mapView
+        
+        let offset = CGPoint(x: velocity.x * decelerationRate / 4, y: velocity.y * decelerationRate / 4)
+        let toCamera = camera(for: mapView, whenPanningTo: offset)
+        
+        mapView.setCamera(toCamera, animated: true)
+    }
+    
+    private func camera(for mapView: NavigationMapView, whenPanningTo endPoint: CGPoint) -> MGLMapCamera {
+        let camera = mapView.camera
+        let centerPoint = CGPoint(x: mapView.bounds.midX, y: mapView.bounds.midY)
+        let endCameraPoint = CGPoint(x: centerPoint.x - endPoint.x, y: centerPoint.y - endPoint.y)
+        camera.centerCoordinate = mapView.convert(endCameraPoint, toCoordinateFrom: mapView)
+        
+        return camera
     }
     
     public func mapTemplateDidDismissPanningInterface(_ mapTemplate: CPMapTemplate) {
