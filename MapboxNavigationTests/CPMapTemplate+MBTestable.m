@@ -16,7 +16,7 @@
 #pragma clang diagnostic ignored "-Wobjc-protocol-method-implementation"
 
 - (CPNavigationSession *)startNavigationSessionForTrip:(CPTrip *)trip {
-    return (CPNavigationSession *)[NSNull null];
+    return nil;
 }
 
 #pragma clang diagnostic pop
