@@ -25,12 +25,12 @@ extension FeedbackViewController: UIViewControllerTransitioningDelegate {
     /**
      Called when the user opens the feedback form.
      */
-    @objc optional func  feedbackViewControllerDidOpenFeedback(_ feedbackViewController: FeedbackViewController)
+    @objc optional func  feedbackViewControllerDidOpen(_ feedbackViewController: FeedbackViewController)
     
     /**
      Called when the user submits a feedback event.
      */
-    @objc optional func feedbackViewController(_ feedbackViewController: FeedbackViewController, didSendFeedbackAssigned: UUID, feedback: FeedbackItem)
+    @objc optional func feedbackViewController(_ feedbackViewController: FeedbackViewController, didSend: FeedbackItem, UUID: UUID)
     
     /**
      Called when a `FeedbackViewController` is dismissed for any reason without giving explicit feedback.
@@ -147,7 +147,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        delegate?.feedbackViewControllerDidOpenFeedback?(self)
+        delegate?.feedbackViewControllerDidOpen?(self)
         
         UIView.animate(withDuration: FeedbackViewController.autoDismissInterval) {
             self.progressBar.progress = 0
@@ -190,7 +190,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
      */
     @objc public func dismissFeedback() {
         abortAutodismiss()
-        defaultDismissFeedback()
+        dismissFeedbackItem()
     }
     
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
@@ -228,8 +228,8 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
         progressBar.bottomAnchor.constraint(equalTo: view.safeBottomAnchor).isActive = true
     }
     
-    func sendFeedback(_ item: FeedbackItem) {
-        delegate?.feedbackViewController?(self, didSendFeedbackAssigned: uuid, feedback: item)
+    func send(_ item: FeedbackItem) {
+        delegate?.feedbackViewController?(self, didSend: item, UUID: uuid)
         eventsManager.updateFeedback(uuid: uuid, type: item.feedbackType, source: .user, description: nil)
         
         guard let parent = presentingViewController else {
@@ -242,7 +242,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
         }
     }
     
-    func defaultDismissFeedback() {
+    func dismissFeedbackItem() {
         delegate?.feedbackViewControllerDidCancelFeedback?(self)
         eventsManager.cancelFeedback(uuid: uuid)
         dismiss(animated: true, completion: nil)
@@ -281,7 +281,7 @@ extension FeedbackViewController: UICollectionViewDelegate {
     @objc public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         abortAutodismiss()
         let item = sections[indexPath.row]
-        sendFeedback(item)
+        send(item)
     }
 }
 
