@@ -463,7 +463,6 @@ open class NavigationViewController: UIViewController {
         if snapsUserLocationAnnotationToRoute,
             userHasArrivedAndShouldPreventRerouting {
             mapViewController?.mapView.updateCourseTracking(location: location, animated: true)
-            mapViewController?.labelCurrentRoad(at: location)
         }
     }
     
@@ -607,6 +606,24 @@ extension NavigationViewController: RouteControllerDelegate {
     
     @objc public func routeController(_ routeController: RouteController, shouldDiscard location: CLLocation)  -> Bool {
         return delegate?.navigationViewController?(self, shouldDiscard: location) ?? true
+    }
+    
+    @objc public func routeController(_ routeController: RouteController, didUpdate locations: [CLLocation]) {
+        
+        // If the user has arrived, don't snap the user puck.
+        // In the case the user drives beyond the waypoint,
+        // we should accurately depict this.
+        let shouldPreventReroutesWhenArrivingAtWaypoint = routeController.delegate?.routeController?(routeController, shouldPreventReroutesWhenArrivingAt: routeController.routeProgress.currentLeg.destination) ?? true
+        let userHasArrivedAndShouldPreventRerouting = shouldPreventReroutesWhenArrivingAtWaypoint && !routeController.routeProgress.currentLegProgress.userHasArrivedAtWaypoint
+        
+        if snapsUserLocationAnnotationToRoute,
+            let snappedLocation = routeController.location ?? locations.last,
+            let rawLocation = locations.last,
+            userHasArrivedAndShouldPreventRerouting {
+            mapViewController?.labelCurrentRoad(at: rawLocation, for: snappedLocation)
+        } else if let rawlocation = locations.last {
+            mapViewController?.labelCurrentRoad(at: rawlocation)
+        }
     }
     
     @objc public func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) -> Bool {
