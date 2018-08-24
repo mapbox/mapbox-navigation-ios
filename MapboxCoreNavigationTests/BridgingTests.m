@@ -6,6 +6,7 @@
 
 @interface BridgingTests : XCTestCase
 @property (nonatomic) MBRouteController *routeController;
+@property (nonatomic) CLLocationManager *locationManager;
 @end
 
 @implementation BridgingTests
@@ -28,6 +29,7 @@
     
     MBDirectionsSpy *directions = [[MBDirectionsSpy alloc] initWithAccessToken:@"garbage" host:nil];
     MBNavigationLocationManager *locationManager = [[MBNavigationLocationManager alloc] init];
+    _locationManager = locationManager;
     _routeController = [[MBRouteController alloc] initWithRoute:route directions:directions locationManager:locationManager];
     XCTAssertNotNil(_routeController);
     

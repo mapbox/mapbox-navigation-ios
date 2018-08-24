@@ -18,7 +18,7 @@ extension MGLStyle {
             if(MGLAccountManager.hasChinaBaseURL){
                 return mapboxChinaDayStyleURL
             }
-            return URL(string:"mapbox://styles/mapbox/navigation-guidance-day-v2")!
+            return URL(string:"mapbox://styles/mapbox/navigation-guidance-day-v4")!
         }
     }
     
@@ -30,12 +30,12 @@ extension MGLStyle {
             if(MGLAccountManager.hasChinaBaseURL){
                 return mapboxChinaDayStyleURL
             }
-            return URL(string:"mapbox://styles/mapbox/navigation-guidance-night-v2")!
+            return URL(string:"mapbox://styles/mapbox/navigation-guidance-night-v4")!
         }
     }
     
     /**
-     Returns the URL to the given version of the navigation guidance style. Available version are 1, 2, and 3.
+     Returns the URL to the given version of the navigation guidance style. Available version are 1, 2, 3, and 4.
      
      We only have one version of navigation guidance style in China, so if you switch your endpoint to .cn, it will return the default day style.
      */
@@ -48,7 +48,7 @@ extension MGLStyle {
     
     
     /**
-     Returns the URL to the given version of the navigation guidance style. Available version are 2, and 3.
+     Returns the URL to the given version of the navigation guidance style. Available version are 2, 3, and 4.
      
      We only have one version of navigation guidance style in China, so if you switch your endpoint to .cn, it will return the default night style.
      */

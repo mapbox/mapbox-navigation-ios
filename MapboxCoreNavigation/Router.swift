@@ -4,7 +4,8 @@ import MapboxDirections
 
 public typealias RouterDelegate = RouteControllerDelegate
 
-@objc public protocol RouterDataSource {
+@objc (MBRouterDataSource)
+public protocol RouterDataSource {
     var location: CLLocation? { get }
     var locationProvider: NavigationLocationManager.Type { get }
 }

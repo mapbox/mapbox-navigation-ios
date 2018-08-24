@@ -104,7 +104,7 @@ open class RouteController: NSObject, Router {
 
      - parameter route: The route to follow.
      - parameter directions: The Directions object that created `route`.
-     - parameter locationManager: The associated location manager.
+     - parameter source: The data source for the RouteController.
      */
     @objc(initWithRoute:directions:locationManager:)
     public init(along route: Route, directions: Directions = Directions.shared, dataSource source: RouterDataSource) {
