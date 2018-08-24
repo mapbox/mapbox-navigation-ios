@@ -184,6 +184,7 @@ open class RouteController: NSObject, Router {
         locationManager.stopUpdatingLocation()
         locationManager.stopUpdatingHeading()
         locationManager.delegate = nil
+        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(interpolateLocation), object: nil)
     }
     
     /**
@@ -340,7 +341,6 @@ extension RouteController: CLLocationManagerDelegate {
         let currentStep = currentStepProgress.step
 
         updateIntersectionIndex(for: currentStepProgress)
-
         // Notify observers if the step’s remaining distance has changed.
         let polyline = Polyline(routeProgress.currentLegProgress.currentStep.coordinates!)
         if let closestCoordinate = polyline.closestCoordinate(to: location.coordinate) {
