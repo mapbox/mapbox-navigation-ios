@@ -2,7 +2,6 @@
 
 ## master
 
-* Added an `MGLMapView.showsIncidents` property to toggle the visibility of any Mapbox Incidents data on a map view. ([#1613](https://github.com/mapbox/mapbox-navigation-ios/pull/1613))
 * Added the `shouldManageApplicationIdleTimer` flag to `NavigationViewController` to allow applications to opt out of automatic `UIApplication.isIdleTimerDisabled` management. ([#1591](https://github.com/mapbox/mapbox-navigation-ios/pull/1591))
 * Fixed an issue where the banner was stuck on rerouting past the reroute threshold, when navigation was set to simulation mode. ([#1583](https://github.com/mapbox/mapbox-navigation-ios/pull/1583))
 * Modified the label at the bottom of the map to display the route shield in addition to the road name. ([#1576](https://github.com/mapbox/mapbox-navigation-ios/pull/1576)) 
@@ -17,6 +16,7 @@
 ## v0.19.2 (August 23, 2018)
 
 * The `MGLStyle.navigationGuidanceDayStyleURL` and `MGLStyle.navigationGuidanceNightStyleURL` properties now return [version 4 of the Mapbox Navigation Guidance Day and Night styles](https://blog.mapbox.com/incidents-are-live-on-the-map-beeff6b84bf9), respectively. These styles indicate incidents such as road closures and detours. ([#1619](https://github.com/mapbox/mapbox-navigation-ios/pull/1619])
+* Added an `MGLMapView.showsIncidents` property to toggle the visibility of any Mapbox Incidents data on a map view. ([#1613](https://github.com/mapbox/mapbox-navigation-ios/pull/1613))
 
 ## v0.19.1 (August 15, 2018)
 
