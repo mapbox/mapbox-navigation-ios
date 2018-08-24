@@ -14,6 +14,10 @@
 * Added `StyleManager.automaticallyAdjustsStyleForTimeOfDay`, `StyleManager.delegate`, and `StyleManager.styles` properties so that you can control same time-based style switching just as NavigationViewController does. [#1617](https://github.com/mapbox/mapbox-navigation-ios/pull/1617)
 * `FeedbackViewController` is now public making it possible to add the feedback view to a custom navigation UI. [#1605](https://github.com/mapbox/mapbox-navigation-ios/pull/1605/). `navigationViewControllerDidOpenFeedback(_:)`, `navigationViewControllerDidCancelFeedback(_:)` and `navigationViewController(_:uuid:feedbackType)` have all been moved to `FeedbackViewControllerDelegate`.
 
+## v0.19.2 (August 23, 2018)
+
+* The `MGLStyle.navigationGuidanceDayStyleURL` and `MGLStyle.navigationGuidanceNightStyleURL` properties now return [version 4 of the Mapbox Navigation Guidance Day and Night styles](https://blog.mapbox.com/incidents-are-live-on-the-map-beeff6b84bf9), respectively. These styles indicate incidents such as road closures and detours. ([#1619](https://github.com/mapbox/mapbox-navigation-ios/pull/1619])
+
 ## v0.19.1 (August 15, 2018)
 
 * Fixed build errors when installing this SDK with Mapbox Maps SDK for iOS v4.3.0 or above. ([#1608](https://github.com/mapbox/mapbox-navigation-ios/pull/1608), [#1609](https://github.com/mapbox/mapbox-navigation-ios/pull/1609))
