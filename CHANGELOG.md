@@ -9,7 +9,7 @@
 * Added various methods, properties, and initializers to `StatusView`, allowing you to use it in a custom user interface. ([#1612](https://github.com/mapbox/mapbox-navigation-ios/pull/1612))
 * Added `StyleManager.automaticallyAdjustsStyleForTimeOfDay`, `StyleManager.delegate`, and `StyleManager.styles` properties so that you can control same time-based style switching just as `NavigationViewController` does. [#1617](https://github.com/mapbox/mapbox-navigation-ios/pull/1617)
 * Fixed an issue where the banner was stuck on rerouting past the reroute threshold when simulating navigation. ([#1583](https://github.com/mapbox/mapbox-navigation-ios/pull/1583))
-* Fixed an issue where the banner appears in the wrong colors after you tap the Resume button. ([#1588](https://github.com/mapbox/mapbox-navigation-ios/pull/1588).[#1589](https://github.com/mapbox/mapbox-navigation-ios/pull/1589))
+* Fixed an issue where the banner appears in the wrong colors after you tap the Resume button. ([#1588](https://github.com/mapbox/mapbox-navigation-ios/pull/1588), [#1589](https://github.com/mapbox/mapbox-navigation-ios/pull/1589))
 
 ### Feedback
 
