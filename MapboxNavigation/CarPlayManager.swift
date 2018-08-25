@@ -110,13 +110,17 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
     // MARK: CPApplicationDelegate
 
     public func application(_ application: UIApplication, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPWindow) {
-        //TODO: event
+        
         interfaceController.delegate = self
         self.interfaceController = interfaceController
 
         let viewController = CarPlayMapViewController()
         window.rootViewController = viewController
         self.carWindow = window
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleScreenTap))
+//        carWindow?.gestureRecognizers?.removeAll()
+        carWindow?.addGestureRecognizer(tap)
         
         let traitCollection = viewController.traitCollection
 
@@ -167,6 +171,12 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
 
     }
 
+    private func resetPanButtons(_ mapTemplate: CPMapTemplate) {
+        if mapTemplate.isPanningInterfaceVisible {
+            mapTemplate.dismissPanningInterface(animated: false)
+        }
+    }
+    
     private func searchTemplateButton(searchTemplate: CPSearchTemplate, interfaceController: CPInterfaceController, traitCollection: UITraitCollection) -> CPBarButton {
         
         let searchTemplateButton = CPBarButton(type: .image) { button in
@@ -181,22 +191,27 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
     
     public func favoriteTemplateButton(interfaceController: CPInterfaceController, traitCollection: UITraitCollection) -> CPBarButton {
         
-        let favoriteTemplateButton = CPBarButton(type: .image) { button in
-            // TODO: Show List Template
+        let favoriteTemplateButton = CPBarButton(type: .image) { [weak self] button in
+            guard let strongSelf = self else {
+                return
+            }
+            if let mapTemplate = interfaceController.topTemplate as? CPMapTemplate {
+                strongSelf.resetPanButtons(mapTemplate)
+            }
             let mapboxSFItem = CPListItem(text: CPFavoritesList.POI.mapboxSF.rawValue,
                                     detailText: CPFavoritesList.POI.mapboxSF.subTitle)
             let timesSquareItem = CPListItem(text: CPFavoritesList.POI.timesSquare.rawValue,
                                        detailText: CPFavoritesList.POI.timesSquare.subTitle)
             let listSection = CPListSection(items: [mapboxSFItem, timesSquareItem])
             let listTemplate = CPListTemplate(title: "Favorites List", sections: [listSection])
-            if let leadingButtons = self.delegate?.carPlayManager(self, leadingNavigationBarButtonsCompatibleWith: traitCollection, in: listTemplate) {
+            if let leadingButtons = strongSelf.delegate?.carPlayManager(strongSelf, leadingNavigationBarButtonsCompatibleWith: traitCollection, in: listTemplate) {
                 listTemplate.leadingNavigationBarButtons = leadingButtons
             }
-            if let trailingButtons = self.delegate?.carPlayManager(self, trailingNavigationBarButtonsCompatibleWith: traitCollection, in: listTemplate) {
+            if let trailingButtons = strongSelf.delegate?.carPlayManager(strongSelf, trailingNavigationBarButtonsCompatibleWith: traitCollection, in: listTemplate) {
                 listTemplate.trailingNavigationBarButtons = trailingButtons
             }
             
-            listTemplate.delegate = self
+            listTemplate.delegate = strongSelf
             
             interfaceController.pushTemplate(listTemplate, animated: true)
         }
@@ -350,11 +365,11 @@ extension CarPlayManager: CPMapTemplateDelegate {
     }
     
     public func mapTemplateDidShowPanningInterface(_ mapTemplate: CPMapTemplate) {
-        // TODO: Shows panning interface
         guard let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController else {
             return
         }
-        carPlayMapViewController.mapView.userTrackingMode = .follow
+        carPlayMapViewController.mapView.userTrackingMode = .none
+        mapTemplate.mapButtons.forEach { $0.isHidden = true }
     }
     
     public func mapTemplate(_ mapTemplate: CPMapTemplate, panWith direction: CPMapTemplate.PanDirection) {
@@ -386,39 +401,25 @@ extension CarPlayManager: CPMapTemplateDelegate {
         mapView.setCamera(camera, animated: true)
     }
     
-    public func mapTemplate(_ mapTemplate: CPMapTemplate, didEndPanGestureWithVelocity velocity: CGPoint) {
-        // Not enough velocity to overcome friction
-        guard sqrtf(Float(velocity.x * velocity.x + velocity.y * velocity.y)) > 100 else {
-            return
+    @objc func handleScreenTap(_ sender: UITapGestureRecognizer?) {
+        if let mapTemplate = interfaceController?.topTemplate as? CPMapTemplate {
+            resetPanButtons(mapTemplate)
         }
-        
-        guard let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController else {
-            return
-        }
-        
-        let decelerationRate: CGFloat = 0.9
-        let mapView = carPlayMapViewController.mapView
-        
-        let offset = CGPoint(x: velocity.x * decelerationRate / 4, y: velocity.y * decelerationRate / 4)
-        let toCamera = camera(for: mapView, whenPanningTo: offset)
-        
-        mapView.setCamera(toCamera, animated: true)
-    }
-    
-    private func camera(for mapView: NavigationMapView, whenPanningTo endPoint: CGPoint) -> MGLMapCamera {
-        let camera = mapView.camera
-        let centerPoint = CGPoint(x: mapView.bounds.midX, y: mapView.bounds.midY)
-        let endCameraPoint = CGPoint(x: centerPoint.x - endPoint.x, y: centerPoint.y - endPoint.y)
-        camera.centerCoordinate = mapView.convert(endCameraPoint, toCoordinateFrom: mapView)
-        
-        return camera
     }
     
     public func mapTemplateDidDismissPanningInterface(_ mapTemplate: CPMapTemplate) {
         guard let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController else {
             return
         }
-        carPlayMapViewController.mapView.userTrackingMode = .none
+        mapTemplate.mapButtons.forEach { $0.isHidden = false }
+        carPlayMapViewController.mapView.userTrackingMode = .follow
+    }
+    
+    /**
+     WIP - Called when a pan gesture begins. May not be called when connected to some CarPlay systems.
+     */
+    public func mapTemplateDidBeginPanGesture(_ mapTemplate: CPMapTemplate) {
+        resetPanButtons(mapTemplate)
     }
 }
 
