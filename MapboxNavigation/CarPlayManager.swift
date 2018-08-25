@@ -119,7 +119,6 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
         self.carWindow = window
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleScreenTap))
-//        carWindow?.gestureRecognizers?.removeAll()
         carWindow?.addGestureRecognizer(tap)
         
         let traitCollection = viewController.traitCollection
