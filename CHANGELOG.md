@@ -20,6 +20,7 @@
 ### Other changes
 
 * Added a `MapboxVoiceController.audioPlayer` property. You can use this property to interrupt a spoken instruction or adjust the volume. ([#1596](https://github.com/mapbox/mapbox-navigation-ios/pull/1596))
+* Fixed a memory leak when `RouteController.isDeadReckoningEnabled` is enabled. ([#1624](https://github.com/mapbox/mapbox-navigation-ios/pull/1624))
 
 ## v0.19.2 (August 23, 2018)
 
