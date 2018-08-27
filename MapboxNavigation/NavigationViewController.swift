@@ -331,21 +331,20 @@ open class NavigationViewController: UIViewController {
 
      See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
      */
-    @objc(initWithRoute:directions:styles:locationManager:)
+    @objc(initWithRoute:directions:styles:navigationService:)
     required public init(for route: Route,
                          directions: Directions = Directions.shared,
                          styles: [Style]? = [DayStyle(), NightStyle()],
-                         locationManager: NavigationLocationManager? = NavigationLocationManager()) {
+                         navigationService: NavigationService? = nil) {
         
         super.init(nibName: nil, bundle: nil)
         
-        self.navigationService = MapboxNavigationService(route: route, directions: directions, locationSource: locationManager)
-        navigationService.usesDefaultUserInterface = true
-        navigationService.delegate = self
+        self.navigationService = navigationService ?? MapboxNavigationService(route: route, directions: directions)
+        self.navigationService.usesDefaultUserInterface = true
+        self.navigationService.delegate = self
+        self.navigationService.start()
         
-        navigationService.start()
-        
-        let mapViewController = RouteMapViewController(navigationService: navigationService, delegate: self)
+        let mapViewController = RouteMapViewController(navigationService: self.navigationService, delegate: self)
         self.mapViewController = mapViewController
         mapViewController.destination = route.legs.last?.destination
         mapViewController.willMove(toParentViewController: self)

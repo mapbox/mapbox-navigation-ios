@@ -132,7 +132,8 @@ class ViewController: UIViewController, MGLMapViewDelegate {
 
         let locationManager = ReplayLocationManager(locations: Array<CLLocation>.locations(from: filePath))
 
-        let navigationViewController = NavigationViewController(for: route, locationManager: locationManager)
+        let navigationService = MapboxNavigationService(route: route, locationSource: locationManager)
+        let navigationViewController = NavigationViewController(for: route, navigationService: navigationService)
 
         present(navigationViewController, animated: true, completion: nil)
     }
@@ -183,7 +184,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     func startBasicNavigation() {
         guard let route = routes?.first else { return }
 
-        let navigationViewController = NavigationViewController(for: route, locationManager: navigationLocationManager())
+        let navigationViewController = NavigationViewController(for: route, navigationService: navigationService())
         navigationViewController.delegate = self
 
         presentAndRemoveMapview(navigationViewController)
@@ -192,7 +193,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     func startNavigation(styles: [Style]) {
         guard let route = routes?.first else { return }
         
-        let navigationViewController = NavigationViewController(for: route, styles: styles, locationManager: navigationLocationManager())
+        let navigationViewController = NavigationViewController(for: route, styles: styles, navigationService: navigationService())
         navigationViewController.delegate = self
         
         presentAndRemoveMapview(navigationViewController)
@@ -221,15 +222,17 @@ class ViewController: UIViewController, MGLMapViewDelegate {
 
         let styles = [CustomDayStyle(), CustomNightStyle()]
 
-        let navigationViewController = NavigationViewController(for: route, styles: styles, locationManager: navigationLocationManager())
+        let navigationViewController = NavigationViewController(for: route, styles: styles, navigationService: navigationService())
         navigationViewController.delegate = self
 
         presentAndRemoveMapview(navigationViewController)
     }
 
-    func navigationLocationManager() -> NavigationLocationManager {
-        guard let route = routes?.first else { return NavigationLocationManager() }
-        return simulationButton.isSelected ? SimulatedLocationManager(route: route) : NavigationLocationManager()
+    func navigationService() -> NavigationService? {
+        guard let route = routes?.first else { return nil }
+        let simulate = simulationButton.isSelected
+        let option: SimulationOption = simulate ? .always : .onPoorGPS
+        return MapboxNavigationService(route: route, simulating: option)
     }
 
     func presentAndRemoveMapview(_ navigationViewController: NavigationViewController) {
