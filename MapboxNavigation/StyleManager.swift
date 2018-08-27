@@ -56,6 +56,7 @@ open class StyleManager: NSObject {
     @objc public var styles = [Style]() {
         didSet {
             applyStyle()
+            resetTimeOfDayTimer()
         }
     }
     
