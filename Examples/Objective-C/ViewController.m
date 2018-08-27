@@ -27,6 +27,7 @@
     
     self.lengthFormatter = [[NSLengthFormatter alloc] init];
     self.lengthFormatter.unitStyle = NSFormattingUnitStyleShort;
+    self.directions = [MBDirections sharedDirections];
     
     self.speechSynth = [[AVSpeechSynthesizer alloc] init];
     self.speechSynth.delegate = self;
@@ -73,7 +74,7 @@
     // If you are using MapboxCoreNavigation,
     // this would be a good time to update UI elements.
     // You can grab the current routeProgress like:
-    // let routeProgress = notification.userInfo![RouteControllerRouteProgressKey] as! RouteProgress
+    // MBRouteProgress *progress = notification.userInfo[MBRouteControllerRouteProgressKey];
 }
 
 - (void)willReroute:(NSNotification *)notification {
@@ -121,16 +122,15 @@
     if ([segue.identifier isEqualToString:@"StartNavigation"]) {
         MBNavigationViewController *controller = (MBNavigationViewController *)[segue destinationViewController];
         
-        MBSimulatedLocationManager *locationManager = [[MBSimulatedLocationManager alloc] initWithRoute:self.route];
-        
-        controller.directions = [MBDirections sharedDirections];
+        controller.directions = self.directions;
         controller.route = self.route;
-        controller.navigationService = [[MBNavigationService alloc] initWithRoute:self.route directions:controller.directions locationSource:locationManager eventsManagerType:nil simulating:MBNavigationSimulationOptionsOnPoorGPS];
     }
 }
 
 - (void)startNavigation:(MBRoute *)route {
     MBNavigationService *service = [[MBNavigationService alloc ] initWithRoute:route directions:self.directions locationSource:nil eventsManagerType:nil simulating:MBNavigationSimulationOptionsAlways];
+    
+    self.navigation = service;
     MBNavigationViewController *controller = [[MBNavigationViewController alloc] initWithRoute:route
                                                                                     directions:[MBDirections sharedDirections]
                                                                                         styles:nil
