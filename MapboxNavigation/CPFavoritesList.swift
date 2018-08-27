@@ -1,8 +1,13 @@
+#if canImport(CarPlay)
+import CarPlay
+#endif
+
 public enum CPFavoritesList {
     
     enum POI: RawRepresentable {
         typealias RawValue = String
         case mapboxSF, timesSquare
+        static let all: [POI] = [.mapboxSF, .timesSquare]
         
         var subTitle: String {
             switch self {
@@ -42,5 +47,12 @@ public enum CPFavoritesList {
                 return nil
             }
         }
+        
+        #if canImport(CarPlay)
+        @available(iOS 12.0, *)
+        func listItem() -> CPListItem {
+            return CPListItem(text: rawValue, detailText: subTitle, image: nil, showsDisclosureIndicator: true)
+        }
+        #endif
     }
 }

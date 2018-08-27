@@ -112,8 +112,7 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
     // MARK: CPSearchTemplateDelegate
 
     public func searchTemplate(_ searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void) {
-        // TODO: autocomplete immediately based on Favorites; calls to the search/geocoding client might require a minimum number of characters before firing
-        // Results passed into this completionHandler will be displayed directly on the search template. Might want to limit the results set based on available screen real estate after testing.
+        return CarPlayGeocoder.searchTemplate(searchTemplate, updatedSearchText:searchText, completionHandler:completionHandler)
     }
 
     public func searchTemplateSearchButtonPressed(_ searchTemplate: CPSearchTemplate) {
