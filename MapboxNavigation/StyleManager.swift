@@ -213,7 +213,8 @@ extension Date {
             guard let sunriseDate = calendar.date(from: sunriseComponents) else {
                 return nil
             }
-            return sunriseDate.timeIntervalSince(date)
+            let interval = sunriseDate.timeIntervalSince(date)
+            return interval >= 0 ? interval : (interval + 24 * 3600)
         } else {
             let sunsetComponents = calendar.dateComponents([.hour, .minute, .second], from: sunset)
             guard let sunsetDate = calendar.date(from: sunsetComponents) else {
