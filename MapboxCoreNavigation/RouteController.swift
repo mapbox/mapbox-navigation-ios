@@ -234,7 +234,6 @@ extension RouteController: CLLocationManagerDelegate {
 
 
         updateIntersectionIndex(for: currentStepProgress)
-
         // Notify observers if the step’s remaining distance has changed.
 
         update(progress: routeProgress, with: self.location!, rawLocation: location)

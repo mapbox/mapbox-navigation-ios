@@ -2,7 +2,7 @@ import Foundation
 import CoreLocation
 import MapboxDirections
 
-@objc public protocol NavigationServiceDelegate: RouterDelegate {
+@objc public protocol NavigationServiceDelegate {
     /**
      Returns whether the navigation service should be allowed to calculate a new route.
      
