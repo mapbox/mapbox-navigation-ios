@@ -20,7 +20,6 @@ protocol RouteControllerDataSource: class {
  */
 @objc(MBRouteController)
 open class RouteController: NSObject, Router {
-
     
 
     enum DefaultBehavior {
@@ -31,10 +30,11 @@ open class RouteController: NSObject, Router {
         static let shouldDisableBatteryMonitoring: Bool = true
         
     }
+    
     /**
      The route controller’s delegate.
      */
-    @objc public weak var delegate: RouteControllerDelegate?
+    @objc public weak var delegate: RouterDelegate?
 
     /**
      The route controller’s associated location manager.
@@ -63,7 +63,7 @@ open class RouteController: NSObject, Router {
         }
         set {
             if let location = self.location {
-                delegate?.routeController?(self, willRerouteFrom: location)
+                delegate?.router?(self, willRerouteFrom: location)
             }
             _routeProgress = newValue
             announce(reroute: routeProgress.route, at: dataSource.location, proactive: didFindFasterRoute)
@@ -120,7 +120,7 @@ open class RouteController: NSObject, Router {
     }
 
     deinit {
-        if delegate?.routeControllerShouldDisableBatteryMonitoring?(self) ?? DefaultBehavior.shouldDisableBatteryMonitoring {
+        if delegate?.routerShouldDisableBatteryMonitoring?(self) ?? DefaultBehavior.shouldDisableBatteryMonitoring {
             UIDevice.current.isBatteryMonitoringEnabled = false
         }
   
@@ -213,7 +213,7 @@ extension RouteController: CLLocationManagerDelegate {
             potentialLocation = lastFiltered
         // `filteredLocations` does not contain good locations and we have found at least one good location previously.
         } else if hasFoundOneQualifiedLocation {
-            if let lastLocation = locations.last, delegate?.routeController?(self, shouldDiscard: lastLocation) ?? DefaultBehavior.shouldDiscardLocation {
+            if let lastLocation = locations.last, delegate?.router?(self, shouldDiscard: lastLocation) ?? DefaultBehavior.shouldDiscardLocation {
                 
                 // Allow the user puck to advance. A stationary puck is not great.
                 self.rawLocation = lastLocation
@@ -243,7 +243,7 @@ extension RouteController: CLLocationManagerDelegate {
         updateRouteLegProgress(for: location)
         updateVisualInstructionProgress()
 
-        guard userIsOnRoute(location) || !(delegate?.routeController?(self, shouldRerouteFrom: location) ?? DefaultBehavior.shouldRerouteFromLocation) else {
+        guard userIsOnRoute(location) || !(delegate?.router?(self, shouldRerouteFrom: location) ?? DefaultBehavior.shouldRerouteFromLocation) else {
             reroute(from: location, along: routeProgress)
             return
         }
@@ -272,7 +272,7 @@ extension RouteController: CLLocationManagerDelegate {
             stepProgress.distanceTraveled = distanceTraveled
             
             //Fire the delegate method
-            delegate?.routeController?(self, didUpdate: progress, with: location, rawLocation: rawLocation)
+            delegate?.router?(self, didUpdate: progress, with: location, rawLocation: rawLocation)
             
             //Fire the notification (for now)
             NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: [
@@ -290,7 +290,7 @@ extension RouteController: CLLocationManagerDelegate {
             }
             userInfo[.isProactiveKey] = didFindFasterRoute
             NotificationCenter.default.post(name: .routeControllerDidReroute, object: self, userInfo: userInfo)
-        delegate?.routeController?(self, didRerouteAlong: routeProgress.route, at: dataSource.location, proactive: didFindFasterRoute)
+        delegate?.router?(self, didRerouteAlong: routeProgress.route, at: dataSource.location, proactive: didFindFasterRoute)
     }
         
     func updateIntersectionIndex(for currentStepProgress: RouteStepProgress) {
@@ -308,7 +308,7 @@ extension RouteController: CLLocationManagerDelegate {
 
             routeProgress.currentLegProgress.userHasArrivedAtWaypoint = true
 
-            let advancesToNextLeg = delegate?.routeController?(self, didArriveAt: currentDestination) ?? DefaultBehavior.didArriveAtWaypoint
+            let advancesToNextLeg = delegate?.router?(self, didArriveAt: currentDestination) ?? DefaultBehavior.didArriveAtWaypoint
 
             if !routeProgress.isFinalLeg && advancesToNextLeg {
                 routeProgress.legIndex += 1
@@ -345,7 +345,7 @@ extension RouteController: CLLocationManagerDelegate {
     @objc public func userIsOnRoute(_ location: CLLocation) -> Bool {
         
         // If the user has arrived, do not continue monitor reroutes, step progress, etc
-        guard !routeProgress.currentLegProgress.userHasArrivedAtWaypoint && (delegate?.routeController?(self, shouldPreventReroutesWhenArrivingAt: routeProgress.currentLeg.destination) ?? DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint) else {
+        guard !routeProgress.currentLegProgress.userHasArrivedAtWaypoint && (delegate?.router?(self, shouldPreventReroutesWhenArrivingAt: routeProgress.currentLeg.destination) ?? DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint) else {
             return true
         }
 
@@ -428,7 +428,7 @@ extension RouteController: CLLocationManagerDelegate {
 
         isRerouting = true
 
-        delegate?.routeController?(self, willRerouteFrom: location)
+        delegate?.router?(self, willRerouteFrom: location)
         NotificationCenter.default.post(name: .routeControllerWillReroute, object: self, userInfo: [
             RouteControllerNotificationUserInfoKey.locationKey: location
         ])
@@ -441,7 +441,7 @@ extension RouteController: CLLocationManagerDelegate {
             }
 
             if let error = error {
-                strongSelf.delegate?.routeController?(strongSelf, didFailToRerouteWith: error)
+                strongSelf.delegate?.router?(strongSelf, didFailToRerouteWith: error)
                 NotificationCenter.default.post(name: .routeControllerDidFailToReroute, object: self, userInfo: [
                     RouteControllerNotificationUserInfoKey.routingErrorKey: error
                 ])

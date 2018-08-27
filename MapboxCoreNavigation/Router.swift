@@ -2,8 +2,6 @@ import Foundation
 import CoreLocation
 import MapboxDirections
 
-public typealias RouterDelegate = RouteControllerDelegate
-
 @objc (MBRouterDataSource)
 public protocol RouterDataSource {
     var location: CLLocation? { get }
@@ -13,12 +11,8 @@ public protocol RouterDataSource {
 @objc public protocol Router: class, CLLocationManagerDelegate {
     @objc unowned var dataSource: RouterDataSource { get }
     @objc var delegate: RouterDelegate? { get set }
-    
-//    var usesDefaultUserInterface: Bool { get set }
-    var routeProgress: RouteProgress { get }
-    var route: Route { get set }
-//    func endNavigation(feedback: EndOfRouteFeedback?)
-
+    @objc var routeProgress: RouteProgress { get }
+    @objc var route: Route { get set }
     @objc func userIsOnRoute(_ location: CLLocation) -> Bool
     @objc func reroute(from: CLLocation, along: RouteProgress)
     @objc var location: CLLocation? { get }

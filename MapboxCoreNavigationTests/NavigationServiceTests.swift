@@ -257,21 +257,21 @@ class NavigationServiceTests: XCTestCase {
         router.reroute(from: testLocation, along: router.routeProgress)
 
         // MARK: it tells the delegate & posts a willReroute notification
-        XCTAssertTrue(delegate.recentMessages.contains("routeController(_:willRerouteFrom:)"))
+        XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:willRerouteFrom:)"))
         wait(for: [willRerouteNotificationExpectation], timeout: 0.1)
 
         // MARK: Upon rerouting successfully...
         directionsClientSpy.fireLastCalculateCompletion(with: nil, routes: [alternateRoute], error: nil)
 
         // MARK: It tells the delegate & posts a didReroute notification
-        XCTAssertTrue(delegate.recentMessages.contains("routeController(_:didRerouteAlong:at:proactive:)"))
+        XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didRerouteAlong:at:proactive:)"))
         wait(for: [didRerouteNotificationExpectation], timeout: 0.1)
 
         // MARK: On the next call to `locationManager(_, didUpdateLocations:)`
         navigationService.locationManager!(navigationService.locationManager, didUpdateLocations: [testLocation])
 
         // MARK: It tells the delegate & posts a routeProgressDidChange notification
-        XCTAssertTrue(delegate.recentMessages.contains("routeController(_:didUpdate:with:rawLocation:)"))
+        XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didUpdate:with:rawLocation:)"))
         wait(for: [routeProgressDidChangeNotificationExpectation], timeout: 0.1)
 
         // MARK: It enqueues and flushes a NavigationRerouteEvent
@@ -308,7 +308,7 @@ class NavigationServiceTests: XCTestCase {
         navigationService.locationManager!(navigationService.locationManager, didUpdateLocations: [currentLocation])
 
         // MARK: It tells the delegate that the user did arrive
-    XCTAssertTrue(delegate.recentMessages.contains("routeController(_:didArriveAt:)"))
+    XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didArriveAt:)"))
 
         // MARK: It enqueues and flushes an arrival event
         let expectedEventName = MMEEventTypeNavigationArrive
@@ -341,17 +341,17 @@ class NavigationServiceTests: XCTestCase {
         navigationService.locationManager!(navigationService.locationManager, didUpdateLocations: [currentLocation])
         
         // MARK: It tells the delegate that the user did arrive
-        XCTAssertTrue(delegate.recentMessages.contains("routeController(_:didArriveAt:)"))
+        XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didArriveAt:)"))
         
         // Find a location that is very far off route
         let locationBeyondRoute = navigationService.router.location!.coordinate.coordinate(at: 2000, facing: 0)
         navigationService.locationManager!(navigationService.locationManager, didUpdateLocations: [CLLocation(latitude: locationBeyondRoute.latitude, longitude: locationBeyondRoute.latitude)])
         
         // Make sure configurable delegate is called
-        XCTAssertTrue(delegate.recentMessages.contains("routeController(_:shouldPreventReroutesWhenArrivingAt:)"))
+        XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:shouldPreventReroutesWhenArrivingAt:)"))
         
         // We should not reroute here because the user has arrived.
-        XCTAssertFalse(delegate.recentMessages.contains("routeController(_:didRerouteAlong:)"))
+        XCTAssertFalse(delegate.recentMessages.contains("navigationService(_:didRerouteAlong:)"))
         
         // MARK: It enqueues and flushes an arrival event
         let expectedEventName = MMEEventTypeNavigationArrive

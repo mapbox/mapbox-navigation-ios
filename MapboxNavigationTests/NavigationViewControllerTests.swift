@@ -147,7 +147,10 @@ class NavigationViewControllerTests: XCTestCase {
         service.locationManager!(service.locationManager, didUpdateLocations: [turkStreetLocation])
         
         let wayNameView = (navigationViewController.mapViewController?.navigationView.wayNameView)!
-        let currentRoadName = wayNameView.text!
+        guard let currentRoadName = wayNameView.text else {
+            XCTFail("UI Failed to consume progress update. The chain from location update -> progress update generation -> progress update consumption is broken somewhere.")
+            return
+        }
         XCTAssertEqual(currentRoadName, roadName, "Expected: \(roadName); Actual: \(currentRoadName)")
         XCTAssertTrue(wayNameView.isHidden, "WayNameView should be hidden.")
     }

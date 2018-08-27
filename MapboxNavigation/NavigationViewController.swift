@@ -531,28 +531,29 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
 
 //MARK: - RouteControllerDelegate
 extension NavigationViewController: NavigationServiceDelegate {
-    @objc public func routeController(_ routeController: RouteController, shouldRerouteFrom location: CLLocation) -> Bool {
+    
+    @objc public func navigationService(_ service: NavigationService, shouldRerouteFrom location: CLLocation) -> Bool {
         return delegate?.navigationViewController?(self, shouldRerouteFrom: location) ?? true
     }
     
-    @objc public func routeController(_ routeController: RouteController, willRerouteFrom location: CLLocation) {
+    @objc public func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {
         delegate?.navigationViewController?(self, willRerouteFrom: location)
     }
     
-    @objc public func routeController(_ routeController: RouteController, didRerouteAlong route: Route) {
+    @objc public func navigationService(_ service: NavigationService, didRerouteAlong route: Route) {
         mapViewController?.notifyDidReroute(route: route)
         delegate?.navigationViewController?(self, didRerouteAlong: route)
     }
     
-    @objc public func routeController(_ routeController: RouteController, didFailToRerouteWith error: Error) {
+    @objc public func navigationService(_ service: NavigationService, didFailToRerouteWith error: Error) {
         delegate?.navigationViewController?(self, didFailToRerouteWith: error)
     }
     
-    @objc public func routeController(_ routeController: RouteController, shouldDiscard location: CLLocation)  -> Bool {
+    @objc public func navigationService(_ service: NavigationService, shouldDiscard location: CLLocation) -> Bool {
         return delegate?.navigationViewController?(self, shouldDiscard: location) ?? true
     }
     
-    @objc public func routeController(_ routeController: RouteController, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
+    @objc public func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         
         //Check to see if we're in a tunnel.
         checkTunnelState(at: location, along: progress)
@@ -562,8 +563,8 @@ extension NavigationViewController: NavigationServiceDelegate {
         // we should accurately depict this.
         
         // Delegate method is trying to figure
-        let shouldPreventReroutesWhenArrivingAtWaypoint = routeController.delegate?.routeController?(routeController, shouldPreventReroutesWhenArrivingAt: routeController.routeProgress.currentLeg.destination) ?? true
-        let userHasArrivedAndShouldPreventRerouting = shouldPreventReroutesWhenArrivingAtWaypoint && !routeController.routeProgress.currentLegProgress.userHasArrivedAtWaypoint
+        let shouldPreventReroutesWhenArrivingAtWaypoint = service.delegate?.navigationService?(service, shouldPreventReroutesWhenArrivingAt: service.routeProgress.currentLeg.destination) ?? true
+        let userHasArrivedAndShouldPreventRerouting = shouldPreventReroutesWhenArrivingAtWaypoint && !service.routeProgress.currentLegProgress.userHasArrivedAtWaypoint
         
         if snapsUserLocationAnnotationToRoute,
             userHasArrivedAndShouldPreventRerouting {
@@ -575,10 +576,10 @@ extension NavigationViewController: NavigationServiceDelegate {
         }
     }
     
-    @objc public func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) -> Bool {
+    @objc public func navigationService(_ service: NavigationService, didArriveAt waypoint: Waypoint) -> Bool {
         let advancesToNextLeg = delegate?.navigationViewController?(self, didArriveAt: waypoint) ?? true
         
-        if routeController.routeProgress.isFinalLeg && advancesToNextLeg && showsEndOfRouteFeedback {
+        if service.routeProgress.isFinalLeg && advancesToNextLeg && showsEndOfRouteFeedback {
             self.mapViewController?.showEndOfRoute { _ in }
         }
         return advancesToNextLeg

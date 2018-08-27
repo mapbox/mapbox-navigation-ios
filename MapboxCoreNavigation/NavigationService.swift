@@ -12,12 +12,6 @@ public enum SimulationOption: Int {
     case onPoorGPS, always, never
 }
 
-@objc public protocol NavigationServiceDelegate: RouterDelegate {
-    @objc optional func navigationService(_ service: NavigationService, willBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent)
-    @objc optional func navigationService(_ service: NavigationService, didBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent)
-    @objc optional func navigationService(_ service: NavigationService, willEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent)
-    @objc optional func navigationService(_ service: NavigationService, didEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent)
-}
 
 @objc(MBNavigationService)
 public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, EventsManagerDataSource {
@@ -34,7 +28,7 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
 
 @objc(MBNavigationService)
 public class MapboxNavigationService: NSObject, NavigationService {
-    static let poorGPSThreshold: DispatchTimeInterval = .milliseconds(1500) //1.5 seconds
+    static let poorGPSPatience: DispatchTimeInterval = .milliseconds(1500) //1.5 seconds
     
     public var locationManager: NavigationLocationManager {
         return simulatedLocationSource ?? nativeLocationSource
@@ -65,7 +59,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         self.simulationMode = simulationMode
         super.init()
         resumeNotifications()
-        poorGPSTimer = CountdownTimer(countdown: MapboxNavigationService.poorGPSThreshold, payload: timerPayload)
+        poorGPSTimer = CountdownTimer(countdown: MapboxNavigationService.poorGPSPatience, payload: timerPayload)
         router = RouteController(along: route, directions: directions, dataSource: self)
         let eventType = eventsManagerType ?? EventsManager.self
         eventsManager = eventType.init(dataSource: self, accessToken: route.accessToken)
@@ -216,64 +210,64 @@ extension MapboxNavigationService: CLLocationManagerDelegate {
 }
 
 //MARK: - RouteControllerDelegate
-extension MapboxNavigationService: RouteControllerDelegate {
+extension MapboxNavigationService: RouterDelegate {
     typealias Default = RouteController.DefaultBehavior
     
-    public func routeController(_ routeController: RouteController, willRerouteFrom location: CLLocation) {
-        
+    public func router(_ router: Router, willRerouteFrom location: CLLocation) {
+    
         //save any progress made by the router until now
         eventsManager.enqueueRerouteEvent()
-        eventsManager.incrementDistanceTraveled(by: routeController.routeProgress.distanceTraveled)
+        eventsManager.incrementDistanceTraveled(by: router.routeProgress.distanceTraveled)
         
         //notify our consumer
-        delegate?.routeController?(routeController, willRerouteFrom: location)
+        delegate?.navigationService?(self, willRerouteFrom: location)
     }
     
-    public func routeController(_ routeController: RouteController, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
+    public func router(_ router: Router, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
         
         //notify the events manager that the route has changed
-        eventsManager.reportReroute(progress: routeController.routeProgress, proactive: proactive)
+        eventsManager.reportReroute(progress: router.routeProgress, proactive: proactive)
         
         //notify our consumer
-        delegate?.routeController?(routeController, didRerouteAlong: route, at: location, proactive: proactive)
+        delegate?.navigationService?(self, didRerouteAlong: route, at: location, proactive: proactive)
     }
     
-    public func routeController(_ routeController: RouteController, didFailToRerouteWith error: Error) {
-        delegate?.routeController?(routeController, didFailToRerouteWith: error)
+    public func router(_ router: Router, didFailToRerouteWith error: Error) {
+        delegate?.navigationService?(self, didFailToRerouteWith: error)
     }
     
-    public func routeController(_ routeController: RouteController, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
+    public func router(_ router: Router, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         
         //notify the events manager of the progress update
         eventsManager.update(progress: progress)
         
         //pass the update on to consumers
-        delegate?.routeController?(routeController, didUpdate: progress, with: location, rawLocation: rawLocation)
+        delegate?.navigationService?(self, didUpdate: progress, with: location, rawLocation: rawLocation)
     }
     
     //MARK: Questions
-    public func routeController(_ routeController: RouteController, shouldRerouteFrom location: CLLocation) -> Bool {
-        return delegate?.routeController?(routeController, shouldRerouteFrom: location) ?? Default.shouldRerouteFromLocation
+    public func router(_ router: Router, shouldRerouteFrom location: CLLocation) -> Bool {
+        return delegate?.navigationService?(self, shouldRerouteFrom: location) ?? Default.shouldRerouteFromLocation
     }
     
-    public func routeController(_ routeController: RouteController, shouldDiscard location: CLLocation) -> Bool {
-        return delegate?.routeController?(routeController,shouldDiscard: location) ?? Default.shouldDiscardLocation
+    public func router(_ router: Router, shouldDiscard location: CLLocation) -> Bool {
+        return delegate?.navigationService?(self, shouldDiscard: location) ?? Default.shouldDiscardLocation
     }
     
-    public func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) -> Bool {
+    public func router(_ router: Router, didArriveAt waypoint: Waypoint) -> Bool {
         
         //Notify the events manager that we've arrived at a waypoint
         eventsManager.arriveAtWaypoint()
         
-        return delegate?.routeController?(routeController, didArriveAt: waypoint) ?? Default.didArriveAtWaypoint
+        return delegate?.navigationService?(self, didArriveAt: waypoint) ?? Default.didArriveAtWaypoint
     }
     
-    public func routeController(_ routeController: RouteController, shouldPreventReroutesWhenArrivingAt waypoint: Waypoint) -> Bool {
-        return delegate?.routeController?(routeController, shouldPreventReroutesWhenArrivingAt: waypoint) ?? Default.shouldPreventReroutesWhenArrivingAtWaypoint
+    public func router(_ router: Router, shouldPreventReroutesWhenArrivingAt waypoint: Waypoint) -> Bool {
+        return delegate?.navigationService?(self, shouldPreventReroutesWhenArrivingAt: waypoint) ?? Default.shouldPreventReroutesWhenArrivingAtWaypoint
     }
     
-    public func routeControllerShouldDisableBatteryMonitoring(_ routeController: RouteController) -> Bool {
-        return delegate?.routeControllerShouldDisableBatteryMonitoring?(routeController) ?? Default.shouldDisableBatteryMonitoring
+    public func routerShouldDisableBatteryMonitoring(_ router: Router) -> Bool {
+        return delegate?.navigationServiceShouldDisableBatteryMonitoring?(self) ?? Default.shouldDisableBatteryMonitoring
     }
 }
 
