@@ -51,26 +51,6 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
         return zoomInOut
     }
     
-    public func panButton(mapTemplate: CPMapTemplate) -> CPMapButton {
-        let panButton = CPMapButton { [weak self] (button) in
-            guard let strongSelf = self else {
-                return
-            }
-            if mapTemplate.isPanningInterfaceVisible {
-                // TODO: Possible retain cycle. Do we need this?
-                mapTemplate.dismissPanningInterface(animated: true)
-                strongSelf.mapView.userTrackingMode = .follow
-            } else {
-                mapTemplate.showPanningInterface(animated: true)
-            }
-        }
-
-        let bundle = Bundle.mapboxNavigation
-        panButton.image = UIImage(named: "pan-map", in: bundle, compatibleWith: traitCollection)
-
-        return panButton
-    }
-    
     // MARK: - MGLMapViewDelegate
 
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {

@@ -91,6 +91,10 @@ extension AppDelegate: CarPlayManagerDelegate {
         return [simulationButton]
     }
     
+    func carPlayManager(_ carplayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate) -> [CPMapButton]? {
+        return nil
+    }
+    
     func carPlayManager(_ carPlayManager: CarPlayManager, routeControllerAlong route: Route) -> RouteController {
         if simulatesLocationsInCarPlay {
             let locationManager = SimulatedLocationManager(route: route)
