@@ -3,6 +3,7 @@ import CarPlay
 import Turf
 import MapboxCoreNavigation
 import MapboxDirections
+import MapboxMobileEvents
 
 @available(iOS 12.0, *)
 @objc(MBCarPlayManagerDelegate)
@@ -70,6 +71,8 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
     public weak var delegate: CarPlayManagerDelegate?
 
     public static var shared = CarPlayManager()
+    
+    private var eventsManager = MMEEventsManager.shared()
 
     public static func resetSharedInstance() {
         shared = CarPlayManager()
@@ -81,6 +84,10 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
 
     public func application(_ application: UIApplication, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPWindow) {
         
+        // WIP - For telemetry testing purposes
+        eventsManager.isDebugLoggingEnabled = true
+        eventsManager.isMetricsEnabledInSimulator = true
+        
         interfaceController.delegate = self
         self.interfaceController = interfaceController
 
@@ -91,6 +98,8 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
         let mapTemplate = createMapTemplate(for: interfaceController, viewController: viewController)
         
         interfaceController.setRootTemplate(mapTemplate, animated: false)
+        
+        sendCarPlayConnectEvent()
     }
 
     func createMapTemplate(for interfaceController: CPInterfaceController, viewController: UIViewController) -> CPMapTemplate {
@@ -161,10 +170,21 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
         
         return closeButton
     }
+    
+    func sendCarPlayConnectEvent() {
+        eventsManager.enqueueEvent(withName: MMEventTypeCarplayConnect)
+        eventsManager.flush()
+    }
+    
+    func sendCarPlayDisconnectEvent() {
+        eventsManager.enqueueEvent(withName: MMEventTypeCarplayDisconnect)
+        eventsManager.flush()
+    }
 
     public func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPWindow) {
         self.interfaceController = nil
         carWindow?.isHidden = true
+        sendCarPlayDisconnectEvent()
     }
 
     // MARK: CPSearchTemplateDelegate
