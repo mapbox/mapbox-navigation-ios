@@ -7,15 +7,26 @@ import MapboxGeocoder
 
 class CarPlayGeocoder: Geocoder {
     
+    static let CarPlayGeocoderPlacemarkKey: String = "CPGecoderPlacemark"
+    static var recentItems = RecentItem.loadDefaults()
+    
     @available(iOS 12.0, *)
     static func searchTemplate(_ searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void) {
         
-        var items = favorites(searchText)
-        let shouldSearch = searchText.count > 2
+        // Append recent searches
+        var items = recentSearches(searchText)
         
+        // Search for placemarks using MapboxGeocoder.swift
+        let shouldSearch = searchText.count > 2
         if shouldSearch {
             
             let options = ForwardGeocodeOptions(query: searchText)
+            options.locale = .autoupdatingCurrent
+            var allScopes: PlacemarkScope = .all
+            allScopes.remove(.postalCode)
+            options.allowedScopes = allScopes
+            options.maximumResultCount = 10
+            options.includesRoutableLocations = true
             Geocoder.shared.geocode(options, completionHandler: { (placemarks, attribution, error) in
                 
                 guard let placemarks = placemarks else {
@@ -34,13 +45,23 @@ class CarPlayGeocoder: Geocoder {
     }
     
     @available(iOS 12.0, *)
-    static func favorites(_ searchText: String) -> [CPListItem] {
-        let allFavorites = CPFavoritesList.POI.all
-        let filteredFavorites = searchText.isEmpty
-            ? allFavorites.map { $0.listItem() }
-            : allFavorites.filter { $0.rawValue.contains(searchText) || $0.subTitle.contains(searchText) }.map { $0.listItem() }
+    static func carPlayManager(_ searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void) {
         
-        return filteredFavorites
+        if let userInfo = item.userInfo as? [String: Any],
+            let placemark = userInfo[CarPlayGeocoderPlacemarkKey] as? GeocodedPlacemark {
+            
+        } else {
+            assertionFailure("Missing placemark")
+        }
+    }
+    
+    @available(iOS 12.0, *)
+    static func recentSearches(_ searchText: String) -> [CPListItem] {
+        if searchText.isEmpty {
+            return recentItems.map { $0.listItem() }
+        }
+        
+        return recentItems.filter { $0.matches(searchText) }.map { $0.listItem() }
     }
     
     @available(iOS 12.0, *)
@@ -58,4 +79,16 @@ class CarPlayGeocoder: Geocoder {
         // TODO: Sort by relevance https://github.com/mapbox/MapboxGeocoder.swift/issues/156
         return []
     }
+}
+
+extension GeocodedPlacemark {
+    
+    #if canImport(CarPlay)
+    @available(iOS 12.0, *)
+    func listItem() -> CPListItem {
+        let item = CPListItem(text: formattedName, detailText: address, image: nil, showsDisclosureIndicator: true)
+        item.userInfo = [CarPlayGeocoder.CarPlayGeocoderPlacemarkKey: self]
+        return item
+    }
+    #endif
 }

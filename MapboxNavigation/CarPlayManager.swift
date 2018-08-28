@@ -29,6 +29,13 @@ public protocol CarPlayManagerDelegate {
      */
     @objc(carPlayManager:routeControllerAlongRoute:)
     optional func carPlayManager(_ carPlayManager: CarPlayManager, routeControllerAlong route: Route) -> RouteController
+    
+    
+    @objc(carPlayManager:searchTemplate:updatedSearchText:completionHandler:)
+    optional func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void)
+    
+    @objc(carPlayManager:searchTemplate:selectedResult:completionHandler:)
+    optional func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void)
 //}
 //
 //@available(iOS 12.0, *)
@@ -112,7 +119,9 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
     // MARK: CPSearchTemplateDelegate
 
     public func searchTemplate(_ searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void) {
-        return CarPlayGeocoder.searchTemplate(searchTemplate, updatedSearchText:searchText, completionHandler:completionHandler)
+        let notImplementedItem = CPListItem(text: "Search not implemented", detailText: nil)
+        return delegate?.carPlayManager?(self, searchTemplate: searchTemplate, updatedSearchText: searchText, completionHandler: completionHandler)
+            ?? completionHandler([notImplementedItem])
     }
 
     public func searchTemplateSearchButtonPressed(_ searchTemplate: CPSearchTemplate) {

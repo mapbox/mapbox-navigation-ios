@@ -100,5 +100,13 @@ extension AppDelegate: CarPlayManagerDelegate {
             return RouteController(along: route)
         }
     }
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void) {
+        return CarPlayGeocoder.searchTemplate(searchTemplate, updatedSearchText: searchText, completionHandler: completionHandler)
+    }
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void) {
+        return CarPlayGeocoder.carPlayManager(searchTemplate, selectedResult: item, completionHandler: completionHandler)
+    }
 }
 #endif

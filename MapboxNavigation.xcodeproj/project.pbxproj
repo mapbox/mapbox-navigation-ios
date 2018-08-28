@@ -37,8 +37,6 @@
 		35025F3F1F051DD2002BA3EA /* DialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35025F3E1F051DD2002BA3EA /* DialogViewController.swift */; };
 		3507F9FB2134309E0086B39E /* MapboxGeocoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3507F9F92134305C0086B39E /* MapboxGeocoder.framework */; };
 		3507F9FC2134309E0086B39E /* MapboxGeocoder.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3507F9F92134305C0086B39E /* MapboxGeocoder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		3507F9FF213435E60086B39E /* CarPlayPlacemark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3507F9FE213435E60086B39E /* CarPlayPlacemark.swift */; };
-		3507FA012134382C0086B39E /* CarPlayGeocoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3507FA002134382C0086B39E /* CarPlayGeocoder.swift */; };
 		3510300F1F54B67000E3B7E7 /* LaneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3510300E1F54B67000E3B7E7 /* LaneTests.swift */; };
 		351030111F54B72000E3B7E7 /* route-for-lane-testing.json in Resources */ = {isa = PBXBuildFile; fileRef = 351030101F54B72000E3B7E7 /* route-for-lane-testing.json */; };
 		351174F41EF1C0530065E248 /* ReplayLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351174F31EF1C0530065E248 /* ReplayLocationManager.swift */; };
@@ -64,6 +62,10 @@
 		352BBC401E5E6C9F00703DF1 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C6A3471E5E418D0004CA57 /* AppDelegate.m */; };
 		352BBC4A1E5E78D700703DF1 /* Example_SwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352BBC491E5E78D700703DF1 /* Example_SwiftTests.swift */; };
 		352BBC581E5E78EA00703DF1 /* Example_Objective_CTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 352BBC571E5E78EA00703DF1 /* Example_Objective_CTests.m */; };
+		352C35BB213492B300D77796 /* CarPlayGeocoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3507FA002134382C0086B39E /* CarPlayGeocoder.swift */; };
+		352C35BC213492B300D77796 /* CarPlayGeocoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3507FA002134382C0086B39E /* CarPlayGeocoder.swift */; };
+		352C35C12134974200D77796 /* RecentItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352C35BF2134958F00D77796 /* RecentItem.swift */; };
+		352C35C22134974C00D77796 /* RecentItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352C35BF2134958F00D77796 /* RecentItem.swift */; };
 		352F464D20EB74C200147886 /* EventsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352F464C20EB74C200147886 /* EventsManager.swift */; };
 		3531C2701F9E095400D92F9A /* InstructionsBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3531C26F1F9E095400D92F9A /* InstructionsBannerView.swift */; };
 		353280A11FA72871005175F3 /* InstructionLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353280A01FA72871005175F3 /* InstructionLabel.swift */; };
@@ -538,7 +540,6 @@
 		35022319205BC94E00E1449A /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		35025F3E1F051DD2002BA3EA /* DialogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogViewController.swift; sourceTree = "<group>"; };
 		3507F9F92134305C0086B39E /* MapboxGeocoder.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxGeocoder.framework; path = Carthage/Build/iOS/MapboxGeocoder.framework; sourceTree = "<group>"; };
-		3507F9FE213435E60086B39E /* CarPlayPlacemark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayPlacemark.swift; sourceTree = "<group>"; };
 		3507FA002134382C0086B39E /* CarPlayGeocoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayGeocoder.swift; sourceTree = "<group>"; };
 		3510300E1F54B67000E3B7E7 /* LaneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaneTests.swift; sourceTree = "<group>"; };
 		351030101F54B72000E3B7E7 /* route-for-lane-testing.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "route-for-lane-testing.json"; sourceTree = "<group>"; };
@@ -572,6 +573,7 @@
 		352BBC551E5E78EA00703DF1 /* Example-Objective-CTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Example-Objective-CTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		352BBC571E5E78EA00703DF1 /* Example_Objective_CTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Example_Objective_CTests.m; sourceTree = "<group>"; };
 		352BBC591E5E78EA00703DF1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		352C35BF2134958F00D77796 /* RecentItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentItem.swift; sourceTree = "<group>"; };
 		352F464C20EB74C200147886 /* EventsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsManager.swift; sourceTree = "<group>"; };
 		3531C2671F9DDC6E00D92F9A /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Main.strings"; sourceTree = "<group>"; };
 		3531C2681F9DDC6E00D92F9A /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Main.strings"; sourceTree = "<group>"; };
@@ -1056,12 +1058,10 @@
 		3507F9FD213430CB0086B39E /* CarPlay */ = {
 			isa = PBXGroup;
 			children = (
-				3507F9FE213435E60086B39E /* CarPlayPlacemark.swift */,
 				16C2A420211526EE00FE6E68 /* CarPlayManager.swift */,
 				AEA5B13321312CE1003B2961 /* CPFavoritesList.swift */,
 				16EF6C21211BA4B300AA580B /* CarPlayMapViewController.swift */,
 				C5FFAC1420D96F5B009E7F98 /* CarPlayNavigationViewController.swift */,
-				3507FA002134382C0086B39E /* CarPlayGeocoder.swift */,
 			);
 			name = CarPlay;
 			sourceTree = "<group>";
@@ -1151,6 +1151,15 @@
 			path = "Examples/Objective-CTests";
 			sourceTree = "<group>";
 		};
+		352C35BE2134958100D77796 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				3507FA002134382C0086B39E /* CarPlayGeocoder.swift */,
+				352C35BF2134958F00D77796 /* RecentItem.swift */,
+			);
+			name = Search;
+			sourceTree = "<group>";
+		};
 		3546BF75207BA4A8007FF453 /* RouteTest */ = {
 			isa = PBXGroup;
 			children = (
@@ -1205,6 +1214,7 @@
 		358D14641E5E3B7700ADE590 /* Swift */ = {
 			isa = PBXGroup;
 			children = (
+				352C35BE2134958100D77796 /* Search */,
 				35002D721E5F6C830090E733 /* Supporting files */,
 				358D14651E5E3B7700ADE590 /* AppDelegate.swift */,
 				358D14671E5E3B7700ADE590 /* ViewController.swift */,
@@ -2099,14 +2109,12 @@
 				35B5A47E1FFFDCE5000A3C8D /* NavigationViewLayout.swift in Sources */,
 				3531C2701F9E095400D92F9A /* InstructionsBannerView.swift in Sources */,
 				C5F2DCA1206DBF5E002F99F6 /* Sequence.swift in Sources */,
-				3507FA012134382C0086B39E /* CarPlayGeocoder.swift in Sources */,
 				35DA85791FC45787004092EC /* StatusView.swift in Sources */,
 				AE46F95520EA735B00537AC2 /* VisualInstruction.swift in Sources */,
 				35025F3F1F051DD2002BA3EA /* DialogViewController.swift in Sources */,
 				359A8AEF1FA7B25B00BDB486 /* LanesStyleKit.swift in Sources */,
 				355ED3701FAB724F00BCE1B8 /* BottomBannerViewLayout.swift in Sources */,
 				351BEC0E1E5BCC72006FE110 /* DashedLineView.swift in Sources */,
-				3507F9FF213435E60086B39E /* CarPlayPlacemark.swift in Sources */,
 				35ECAF2D2092275100DC3BC3 /* UIImage.swift in Sources */,
 				351BEC051E5BCC6C006FE110 /* LaneView.swift in Sources */,
 				C5A7EC5C1FD610A80008B9BA /* VisualInstructionComponent.swift in Sources */,
@@ -2171,6 +2179,8 @@
 				C5D9800D1EFA8BA9006DBF2E /* CustomViewController.swift in Sources */,
 				C51FC31720F689F800400CE7 /* CustomStyles.swift in Sources */,
 				6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */,
+				352C35BB213492B300D77796 /* CarPlayGeocoder.swift in Sources */,
+				352C35C22134974C00D77796 /* RecentItem.swift in Sources */,
 				358D14661E5E3B7700ADE590 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2226,6 +2236,8 @@
 				C53F2EE520EBC95600D9798F /* CustomViewController.swift in Sources */,
 				C53F2EE720EBC95600D9798F /* WaypointConfirmationViewController.swift in Sources */,
 				C5DE4B6220F6B6B3007AFBE6 /* CustomStyles.swift in Sources */,
+				352C35BC213492B300D77796 /* CarPlayGeocoder.swift in Sources */,
+				352C35C12134974200D77796 /* RecentItem.swift in Sources */,
 				C53F2EE820EBC95600D9798F /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
