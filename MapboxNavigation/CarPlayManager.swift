@@ -76,7 +76,7 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
         shared = CarPlayManager()
     }
     
-    var defaultMapButtons: [CPMapButton]?
+    private var defaultMapButtons: [CPMapButton]?
     
     lazy var eventsManager: MMEEventsManager = {
         return MMEEventsManager.shared()
