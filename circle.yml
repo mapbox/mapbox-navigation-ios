@@ -4,21 +4,35 @@ workflows:
   version: 2
   default:
     jobs:
-      - ios
+      - xcode-10
+      - xcode-10-cocoapods-integration
 
 step-library:
   - &restore-cache
       restore_cache:
         keys:
-          - source-v1-{{ .Branch }}-{{ .Revision }}
-          - source-v1-{{ .Branch }}-
-          - source-v1-
+          - carthage-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "Cartfile.resolved" }}
+          - carthage-cache-v1-{{ arch }}-{{ .Branch }}
+          - carthage-cache-v1
+  
+  - &restore-cache-cocoapods
+      restore_cache:
+        keys:
+          - cp-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "MapboxCoreNavigationTests/CocoaPodsTest/PodInstall/Podfile.lock" }}
+          - cp-cache-v1-{{ arch }}-{{ .Branch }}
+          - cp-cache-v1
 
   - &save-cache
       save_cache:
-        key: source-v1-{{ .Branch }}-{{ .Revision }}
+        key: carthage-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "Cartfile.resolved" }}
         paths:
           - Carthage
+  
+  - &save-cache-cocoapods
+      save_cache:
+        key: cp-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "MapboxCoreNavigationTests/CocoaPodsTest/PodInstall/Podfile.lock" }}
+        paths:
+          - MapboxCoreNavigationTests/CocoaPodsTest/PodInstall/Pods
 
   - &prepare
       run:
@@ -40,22 +54,35 @@ step-library:
         command: |
           xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,id=9F32C487-FAEC-4ABE-B00D-159EC007E50D' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build | xcpretty
 
+  - &cocoapods-integration-test
+      run:
+        name: CocoaPods integration test
+        command: |
+          cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall
+          pod install
+          xcodebuild -workspace PodInstall.xcworkspace/ -scheme PodInstall -destination 'platform=iOS Simulator,id=9F32C487-FAEC-4ABE-B00D-159EC007E50D' clean build | xcpretty
+
 jobs:
-  ios:
+  xcode-10:
     macos:
       xcode: "10.0.0"
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
-    # Need to invoke bash as a login shell so that chruby is called to upgrade Ruby
-    shell: /bin/bash --login -eo pipefail
     steps:
       - checkout
-      # Set Ruby version to workaround https://github.com/CocoaPods/CocoaPods/issues/7447
-      - run:
-          name: Set Ruby Version
-          command: echo "ruby-2.4" > ~/.ruby-version
       - *prepare
       - *restore-cache
       - *build-test-MapboxCoreNavigation
       - *build-MapboxNavigation
       - *save-cache
+
+  xcode-10-cocoapods-integration:
+    macos:
+      xcode: "10.0.0"
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+    steps:
+      - checkout
+      - *restore-cache-cocoapods
+      - *cocoapods-integration-test
+      - *save-cache-cocoapods

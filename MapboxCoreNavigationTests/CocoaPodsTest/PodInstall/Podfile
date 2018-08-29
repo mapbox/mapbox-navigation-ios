@@ -3,6 +3,6 @@ use_frameworks!
 
 target 'PodInstall' do
   # The branch of MapboxNavigation and MapboxNavigation will be replaced by Bitrise to use the current branch.
-  pod 'MapboxNavigation', :git => 'GIT_REPO_URL', :branch => 'BRANCH_NAME'
-  pod 'MapboxCoreNavigation', :git => 'GIT_REPO_URL', :branch => 'BRANCH_NAME'
+  pod 'MapboxNavigation', :path => '../../../'
+  pod 'MapboxCoreNavigation', :path => '../../../'
 end
