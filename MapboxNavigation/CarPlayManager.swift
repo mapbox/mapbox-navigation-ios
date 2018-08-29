@@ -71,14 +71,30 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
     public weak var delegate: CarPlayManagerDelegate?
 
     public static var shared = CarPlayManager()
-    
-    private var eventsManager = MMEEventsManager.shared()
 
     public static func resetSharedInstance() {
         shared = CarPlayManager()
     }
     
     var defaultMapButtons: [CPMapButton]?
+    
+    lazy var eventsManager: MMEEventsManager = {
+        return MMEEventsManager.shared()
+    }()
+
+    lazy var briefDateComponentsFormatter: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .brief
+        formatter.allowedUnits = [.day, .hour, .minute]
+        return formatter
+    }()
+    
+    lazy var abbreviatedDateComponentsFormatter: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .abbreviated
+        formatter.allowedUnits = [.day, .hour, .minute]
+        return formatter
+    }()
 
     // MARK: CPApplicationDelegate
 
@@ -191,7 +207,7 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
 
     public func searchTemplate(_ searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void) {
         let notImplementedItem = CPListItem(text: "Search not implemented", detailText: nil)
-        return delegate?.carPlayManager?(self, searchTemplate: searchTemplate, updatedSearchText: searchText, completionHandler: completionHandler)
+        delegate?.carPlayManager?(self, searchTemplate: searchTemplate, updatedSearchText: searchText, completionHandler: completionHandler)
             ?? completionHandler([notImplementedItem])
     }
 
@@ -201,7 +217,7 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
     }
 
     public func searchTemplate(_ searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void) {
-
+        delegate?.carPlayManager?(self, searchTemplate: searchTemplate, selectedResult: item, completionHandler: completionHandler)
     }
     
     private func searchTemplateButton(searchTemplate: CPSearchTemplate, interfaceController: CPInterfaceController, traitCollection: UITraitCollection) -> CPBarButton {
@@ -271,27 +287,41 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
 @available(iOS 12.0, *)
 extension CarPlayManager: CPListTemplateDelegate {
     public func listTemplate(_ listTemplate: CPListTemplate, didSelect item: CPListItem, completionHandler: @escaping () -> Void) {
-        guard let rootViewController = self.carWindow?.rootViewController as? CarPlayMapViewController,
-            let mapTemplate = self.interfaceController?.rootTemplate as? CPMapTemplate else {
-            return
-        }
-        let mapView = rootViewController.mapView
+//        guard let rootViewController = self.carWindow?.rootViewController as? CarPlayMapViewController else {
+//            completionHandler()
+//            return
+//        }
+        //let mapView = rootViewController.mapView
         
         guard let rawValue = item.text,
-            let userLocation = mapView.userLocation?.location,
-            let favoritePOI = CPFavoritesList.POI(rawValue: rawValue),
-            let interfaceController = interfaceController else {
-            return
+            let favoritePOI = CPFavoritesList.POI(rawValue: rawValue) else {
+                completionHandler()
+                return
         }
+        
+        let destinationWaypoint = Waypoint(location: favoritePOI.location, heading: nil, name: favoritePOI.rawValue)
+        calculateRouteAndStart(to: destinationWaypoint, completionHandler: completionHandler)
+    }
+    
+    public func calculateRouteAndStart(from fromWaypoint: Waypoint? = nil, to toWaypoint: Waypoint, completionHandler: @escaping () -> Void) {
+        
+        guard let rootViewController = self.carWindow?.rootViewController as? CarPlayMapViewController,
+            let mapTemplate = self.interfaceController?.rootTemplate as? CPMapTemplate,
+            let userLocation = rootViewController.mapView.userLocation,
+            let location = userLocation.location,
+            let interfaceController = interfaceController else {
+                completionHandler()
+                return
+        }
+        
+        let originWaypoint = fromWaypoint ?? Waypoint(location: location, heading: userLocation.heading, name: "Current Location")
+        
         interfaceController.popToRootTemplate(animated: false)
         
-        let waypoints = [
-            Waypoint(location: userLocation, heading: mapView.userLocation?.heading, name: "Current Location"),
-            Waypoint(location: favoritePOI.location, heading: nil, name: favoritePOI.rawValue),
-        ]
-        let routeOptions = NavigationRouteOptions(waypoints: waypoints)
-        Directions.shared.calculate(routeOptions) { [weak mapTemplate] (waypoints, routes, error) in
-            guard let mapTemplate = mapTemplate, let waypoints = waypoints, let routes = routes else {
+        let routeOptions = NavigationRouteOptions(waypoints: [originWaypoint, toWaypoint])
+        Directions.shared.calculate(routeOptions) { [weak self, weak mapTemplate] (waypoints, routes, error) in
+            guard let `self` = self, let mapTemplate = mapTemplate, let waypoints = waypoints, let routes = routes else {
+                completionHandler()
                 return
             }
             
@@ -310,13 +340,6 @@ extension CarPlayManager: CPListTemplateDelegate {
                 return
             }
             
-            let briefDateComponentsFormatter = DateComponentsFormatter()
-            briefDateComponentsFormatter.unitsStyle = .brief
-            briefDateComponentsFormatter.allowedUnits = [.day, .hour, .minute]
-            let abbreviatedDateComponentsFormatter = DateComponentsFormatter()
-            abbreviatedDateComponentsFormatter.unitsStyle = .abbreviated
-            abbreviatedDateComponentsFormatter.allowedUnits = [.day, .hour, .minute]
-            
             var routeChoices: [CPRouteChoice] = []
             for (i, route) in routes.enumerated() {
                 let additionalInformationVariants: [String]
@@ -324,8 +347,8 @@ extension CarPlayManager: CPListTemplateDelegate {
                     additionalInformationVariants = ["Fastest Route"]
                 } else {
                     let delay = route.expectedTravelTime - routes.first!.expectedTravelTime
-                    let briefDelay = briefDateComponentsFormatter.string(from: delay)!
-                    let abbreviatedDelay = abbreviatedDateComponentsFormatter.string(from: delay)!
+                    let briefDelay = self.briefDateComponentsFormatter.string(from: delay)!
+                    let abbreviatedDelay = self.abbreviatedDateComponentsFormatter.string(from: delay)!
                     additionalInformationVariants = ["\(briefDelay) Slower", "+\(abbreviatedDelay)"]
                 }
                 let routeChoice = CPRouteChoice(summaryVariants: [route.description], additionalInformationVariants: additionalInformationVariants, selectionSummaryVariants: [])
@@ -333,8 +356,9 @@ extension CarPlayManager: CPListTemplateDelegate {
                 routeChoices.append(routeChoice)
             }
             
+            //let placemarks = waypoints.map { MKPlacemark(coordinate: $0.coordinate, addressDictionary: ["street": $0.name]) }
             let originPlacemark = MKPlacemark(coordinate: waypoints.first!.coordinate)
-            let destinationPlacemark = MKPlacemark(coordinate: waypoints.last!.coordinate, addressDictionary: ["street": favoritePOI.subTitle])
+            let destinationPlacemark = MKPlacemark(coordinate: waypoints.last!.coordinate, addressDictionary: ["street": waypoints.last!.name ?? ""])
             let trip = CPTrip(origin: MKMapItem(placemark: originPlacemark), destination: MKMapItem(placemark: destinationPlacemark), routeChoices: routeChoices)
             trip.userInfo = routeOptions
             

@@ -3,7 +3,8 @@ import Foundation
 import CarPlay
 #endif
 import MapboxGeocoder
-
+import MapboxNavigation
+import MapboxDirections
 
 class CarPlayGeocoder: Geocoder {
     
@@ -40,19 +41,25 @@ class CarPlayGeocoder: Geocoder {
             })
             
         } else {
-            completionHandler(CarPlayGeocoder.resultsOrNoResults(items))
+             completionHandler(CarPlayGeocoder.resultsOrNoResults(items))
         }
     }
     
     @available(iOS 12.0, *)
     static func carPlayManager(_ searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void) {
         
-        if let userInfo = item.userInfo as? [String: Any],
-            let placemark = userInfo[CarPlayGeocoderPlacemarkKey] as? GeocodedPlacemark {
-            
-        } else {
-            assertionFailure("Missing placemark")
+        guard let userInfo = item.userInfo as? [String: Any],
+            let placemark = userInfo[CarPlayGeocoderPlacemarkKey] as? GeocodedPlacemark,
+            let location = placemark.location else {
+                completionHandler()
+                return
         }
+        
+        recentItems.append(RecentItem(placemark))
+        recentItems.save()
+        
+        let destinationWaypoint = Waypoint(location: location, heading: nil, name: placemark.formattedName)
+        CarPlayManager.shared.calculateRouteAndStart(to: destinationWaypoint, completionHandler: completionHandler)
     }
     
     @available(iOS 12.0, *)
