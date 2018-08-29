@@ -106,6 +106,18 @@ class RouteControllerTests: XCTestCase {
         XCTAssertEqual(navigation.location!.coordinate, firstLocation.coordinate, "Check snapped location is working")
     }
     
+    func testFilterOutCloseLocation() {
+        let navigation = dependencies.routeController
+        let firstLocation = dependencies.routeLocations.firstLocation
+        navigation.locationManager(navigation.locationManager, didUpdateLocations: [firstLocation])
+        
+        let veryCloseCoordinate = firstLocation.coordinate.coordinate(at: 0.5, facing: 0)
+        let veryCLoseLocation = CLLocation(coordinate: veryCloseCoordinate, altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: firstLocation.course, speed: 0, timestamp: Date())
+        navigation.locationManager(navigation.locationManager, didUpdateLocations: [veryCLoseLocation])
+        
+        XCTAssertEqual(navigation.location!.coordinate, firstLocation.coordinate, "Check close location filtering is working")
+    }
+    
     func testSnappedAtEndOfStepLocationWhenMovingSlowly() {
         let navigation = dependencies.routeController
         let firstLocation = dependencies.routeLocations.firstLocation
@@ -119,7 +131,7 @@ class RouteControllerTests: XCTestCase {
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [firstLocationOnNextStepWithNoSpeed])
         XCTAssertEqual(navigation.location!.coordinate, navigation.routeProgress.currentLegProgress.currentStep.coordinates!.last!, "When user is not moving, snap to current leg only")
         
-        let firstLocationOnNextStepWithSpeed = CLLocation(coordinate: firstCoordinateOnUpcomingStep, altitude: 0, horizontalAccuracy: 10, verticalAccuracy: 10, course: 10, speed: 5, timestamp: Date())
+        let firstLocationOnNextStepWithSpeed = CLLocation(coordinate: firstCoordinateOnUpcomingStep, altitude: 0, horizontalAccuracy: 10, verticalAccuracy: 10, course: 10, speed: 5, timestamp: Date().addingTimeInterval(200))
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [firstLocationOnNextStepWithSpeed])
         XCTAssertEqual(navigation.location!.coordinate, firstCoordinateOnUpcomingStep, "User is snapped to upcoming step when moving")
     }
@@ -139,7 +151,7 @@ class RouteControllerTests: XCTestCase {
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [firstLocationOnNextStepWithDifferentCourse])
         XCTAssertEqual(navigation.location!.coordinate, navigation.routeProgress.currentLegProgress.currentStep.coordinates!.last!, "When user's course is dissimilar from the finalHeading, they should not snap to upcoming step")
         
-        let firstLocationOnNextStepWithCorrectCourse = CLLocation(coordinate: firstCoordinateOnUpcomingStep, altitude: 0, horizontalAccuracy: 30, verticalAccuracy: 10, course: finalHeading, speed: 0, timestamp: Date())
+        let firstLocationOnNextStepWithCorrectCourse = CLLocation(coordinate: firstCoordinateOnUpcomingStep, altitude: 0, horizontalAccuracy: 30, verticalAccuracy: 10, course: finalHeading, speed: 0, timestamp: Date().addingTimeInterval(200))
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [firstLocationOnNextStepWithCorrectCourse])
         XCTAssertEqual(navigation.location!.coordinate, firstCoordinateOnUpcomingStep, "User is snapped to upcoming step when their course is similar to the final heading")
     }
@@ -284,7 +296,7 @@ class RouteControllerTests: XCTestCase {
         routeController.locationManager(routeController.locationManager, didUpdateLocations: [lastLocation])
 
         // MARK: And then navigation continues with another location update at the last location
-        let currentLocation = routeController.location!
+        let currentLocation = CLLocation(coordinate: routeController.location!.coordinate, altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date().addingTimeInterval(200))
         routeController.locationManager(routeController.locationManager, didUpdateLocations: [currentLocation])
 
         // MARK: It tells the delegate that the user did arrive
