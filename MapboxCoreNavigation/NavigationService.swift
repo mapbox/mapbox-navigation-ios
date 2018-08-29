@@ -16,6 +16,7 @@ public enum SimulationOption: Int {
 @objc(MBNavigationService)
 public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, EventsManagerDataSource {
     var locationManager: NavigationLocationManager { get }
+    var directions: Directions { get }
     var router: Router! { get }
     var eventsManager: EventsManager! { get }
     var route: Route { get set }
@@ -33,7 +34,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
     public var locationManager: NavigationLocationManager {
         return simulatedLocationSource ?? nativeLocationSource
     }
-    var directions: Directions
+    public var directions: Directions
     public var router: Router!
     public var eventsManager: EventsManager!
     public weak var delegate: NavigationServiceDelegate?
@@ -50,17 +51,18 @@ public class MapboxNavigationService: NSObject, NavigationService {
     }
     
     @objc required public init(route: Route,
-                  directions directionsOverride: Directions? = nil,
-                  locationSource locationOverride: NavigationLocationManager? = nil,
-                  eventsManagerType: EventsManager.Type? = nil, simulating simulationMode: SimulationOption = .onPoorGPS)
+                  directions: Directions? = nil,
+                  locationSource: NavigationLocationManager? = nil,
+                  eventsManagerType: EventsManager.Type? = nil,
+                  simulating simulationMode: SimulationOption = .onPoorGPS)
     {
-        nativeLocationSource = locationOverride ?? NavigationLocationManager()
-        self.directions = directionsOverride ?? Directions.shared
+        nativeLocationSource = locationSource ?? NavigationLocationManager()
+        self.directions = directions ?? Directions.shared
         self.simulationMode = simulationMode
         super.init()
         resumeNotifications()
         poorGPSTimer = CountdownTimer(countdown: MapboxNavigationService.poorGPSPatience, payload: timerPayload)
-        router = RouteController(along: route, directions: directions, dataSource: self)
+        router = RouteController(along: route, directions: self.directions, dataSource: self)
         let eventType = eventsManagerType ?? EventsManager.self
         eventsManager = eventType.init(dataSource: self, accessToken: route.accessToken)
         locationManager.activityType = route.routeOptions.activityType

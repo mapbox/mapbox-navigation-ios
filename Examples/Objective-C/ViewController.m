@@ -118,23 +118,12 @@
     [task resume];
 }
 
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"StartNavigation"]) {
-        MBNavigationViewController *controller = (MBNavigationViewController *)[segue destinationViewController];
-        
-        controller.directions = self.directions;
-        controller.route = self.route;
-    }
-}
-
 - (void)startNavigation:(MBRoute *)route {
     MBNavigationService *service = [[MBNavigationService alloc ] initWithRoute:route directions:self.directions locationSource:nil eventsManagerType:nil simulating:MBNavigationSimulationOptionsAlways];
     
     self.navigation = service;
-    MBNavigationViewController *controller = [[MBNavigationViewController alloc] initWithRoute:route
-                                                                                    directions:[MBDirections sharedDirections]
-                                                                                        styles:nil
-                                                                             navigationService: service];
+    MBNavigationViewController *controller = [[MBNavigationViewController alloc] initWithRoute:route styles:nil navigationService:service];
+    
     [self presentViewController:controller animated:YES completion:nil];
     
     // Suspend notifications and let `MBNavigationViewController` handle all progress and voice updates.

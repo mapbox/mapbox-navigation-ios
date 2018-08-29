@@ -16,8 +16,7 @@ class NavigationViewControllerTests: XCTestCase {
        
         let fakeDirections = Directions(accessToken: "garbage", host: nil)
         let fakeService = MapboxNavigationService(route: initialRoute, directions: fakeDirections, locationSource: NavigationLocationManagerFake(), simulating: .never)
-        let navigationViewController = NavigationViewController(for: initialRoute,
-                                                                directions: fakeDirections, navigationService: fakeService)
+        let navigationViewController = NavigationViewController(for: initialRoute, navigationService: fakeService)
         
         navigationViewController.delegate = self
         
@@ -257,10 +256,10 @@ class NavigationViewControllerTestable: NavigationViewController {
                   navigationService: NavigationService? = nil,
                   styleLoaded: XCTestExpectation) {
         styleLoadedExpectation = styleLoaded
-        super.init(for: route, directions: directions, styles: styles, navigationService: navigationService)
+        super.init(for: route, styles: styles, navigationService: navigationService)
     }
     
-    required init(for route: Route, directions: Directions, styles: [Style]?, navigationService: NavigationService?) {
+    required init(for route: Route, styles: [Style]?, navigationService: NavigationService?) {
         fatalError("This initalizer is not supported in this testing subclass.")
     }
     

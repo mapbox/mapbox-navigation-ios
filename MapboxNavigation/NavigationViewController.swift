@@ -207,7 +207,9 @@ open class NavigationViewController: UIViewController {
     /**
      An instance of `Directions` need for rerouting. See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
      */
-    @objc public var directions: Directions!
+    @objc public var directions: Directions {
+        return navigationService!.directions
+    }
     
     /**
      An optional `MGLMapCamera` you can use to improve the initial transition from a previous viewport and prevent a trigger from an excessive significant location update.
@@ -331,15 +333,14 @@ open class NavigationViewController: UIViewController {
 
      See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
      */
-    @objc(initWithRoute:directions:styles:navigationService:)
+    @objc(initWithRoute:styles:navigationService:)
     required public init(for route: Route,
-                         directions: Directions = Directions.shared,
                          styles: [Style]? = [DayStyle(), NightStyle()],
                          navigationService: NavigationService? = nil) {
         
         super.init(nibName: nil, bundle: nil)
         
-        self.navigationService = navigationService ?? MapboxNavigationService(route: route, directions: directions)
+        self.navigationService = navigationService ?? MapboxNavigationService(route: route)
         self.navigationService.usesDefaultUserInterface = true
         self.navigationService.delegate = self
         self.navigationService.start()
