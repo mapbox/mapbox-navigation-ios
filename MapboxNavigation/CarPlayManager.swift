@@ -115,7 +115,8 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
         
         interfaceController.setRootTemplate(mapTemplate, animated: false)
         
-        sendCarPlayConnectEvent()
+        let timestamp = Date().ISO8601
+        sendCarPlayConnectEvent(timestamp)
     }
 
     func createMapTemplate(for interfaceController: CPInterfaceController, viewController: UIViewController) -> CPMapTemplate {
@@ -187,20 +188,23 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
         return closeButton
     }
     
-    func sendCarPlayConnectEvent() {
-        eventsManager.enqueueEvent(withName: MMEventTypeCarplayConnect)
+    func sendCarPlayConnectEvent(_ timestamp: String) {
+        let dateCreatedAttribute = [MMEEventKeyCreated: timestamp]
+        eventsManager.enqueueEvent(withName: MMEventTypeCarplayConnect, attributes: dateCreatedAttribute)
         eventsManager.flush()
     }
     
-    func sendCarPlayDisconnectEvent() {
-        eventsManager.enqueueEvent(withName: MMEventTypeCarplayDisconnect)
+    func sendCarPlayDisconnectEvent(_ timestamp: String) {
+        let dateCreatedAttribute = [MMEEventKeyCreated: timestamp]
+        eventsManager.enqueueEvent(withName: MMEventTypeCarplayDisconnect, attributes: dateCreatedAttribute)
         eventsManager.flush()
     }
 
     public func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPWindow) {
         self.interfaceController = nil
         carWindow?.isHidden = true
-        sendCarPlayDisconnectEvent()
+        let timestamp = Date().ISO8601
+        sendCarPlayDisconnectEvent(timestamp)
     }
 
     // MARK: CPSearchTemplateDelegate
