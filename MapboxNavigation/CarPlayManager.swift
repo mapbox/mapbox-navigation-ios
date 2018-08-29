@@ -432,6 +432,45 @@ extension CarPlayManager: CPMapTemplateDelegate {
         //        appViewFromCarPlayWindow?.routes = routes
     }
     
+    public func mapTemplateDidBeginPanGesture(_ mapTemplate: CPMapTemplate) {
+        mapTemplate.mapButtons.forEach { $0.isHidden = true }
+    }
+    
+    public func mapTemplate(_ mapTemplate: CPMapTemplate, didUpdatePanGestureWithTranslation translation: CGPoint, velocity: CGPoint) {
+        // Not enough velocity to overcome friction
+        guard sqrtf(Float(velocity.x * velocity.x + velocity.y * velocity.y)) > 100 else {
+            return
+        }
+        
+        guard let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController else {
+            return
+        }
+        
+        let decelerationRate: CGFloat = 0.9
+        let offset = CGPoint(x: velocity.x * decelerationRate / 4, y: velocity.y * decelerationRate / 4)
+        
+        let mapView = carPlayMapViewController.mapView
+        
+        if let toCamera = cameraShouldPan(to: offset, mapView: mapView) {
+            mapView.setCamera(toCamera, animated: true)
+        }
+    }
+    
+    func cameraShouldPan(to endPoint: CGPoint, mapView: NavigationMapView) -> MGLMapCamera? {
+        let mapView = mapView
+        let camera = mapView.camera
+        let centerPoint = CGPoint(x: mapView.bounds.midX, y: mapView.bounds.midY)
+        let endCameraPoint = CGPoint(x: centerPoint.x - endPoint.x, y: centerPoint.y - endPoint.y)
+        
+        camera.centerCoordinate = mapView.convert(endCameraPoint, toCoordinateFrom: mapView)
+        
+        return camera
+    }
+    
+    public func mapTemplate(_ mapTemplate: CPMapTemplate, didEndPanGestureWithVelocity velocity: CGPoint) {
+        mapTemplate.mapButtons.forEach { $0.isHidden = false }
+    }
+    
     public func mapTemplateDidShowPanningInterface(_ mapTemplate: CPMapTemplate) {
         guard let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController else {
             return
