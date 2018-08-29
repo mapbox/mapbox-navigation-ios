@@ -327,6 +327,10 @@ extension RouteController: CLLocationManagerDelegate {
         guard let location = potentialLocation else {
             return
         }
+        
+        if rawLocation?.coordinate == location.coordinate && rawLocation?.course == location.course {
+            return
+        }
 
         self.rawLocation = location
 
