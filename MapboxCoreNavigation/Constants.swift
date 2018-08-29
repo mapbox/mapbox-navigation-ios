@@ -170,3 +170,13 @@ extension Notification.Name {
      */
     public static let routeControllerDidPassVisualInstructionPoint = MBRouteControllerDidPassVisualInstructionPoint
 }
+
+/**
+ The minimum distance between location updates before a location update is filtered out.
+ */
+public var RouteControllerMinimumDistanceForProgressNotification: CLLocationDistance = 1
+
+/**
+ The minimum difference between the user's course before a location update is filtered out.
+ */
+public var RouteControllerMinimumDifferenceBetweenCourse: CLLocationDirection = 1

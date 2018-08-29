@@ -328,7 +328,8 @@ extension RouteController: CLLocationManagerDelegate {
             return
         }
         
-        if rawLocation?.coordinate == location.coordinate && rawLocation?.course == location.course {
+        if let raw = rawLocation, raw.coordinate.distance(to: location.coordinate) < RouteControllerMinimumDistanceForProgressNotification &&
+            raw.course - location.course < RouteControllerMinimumDifferenceBetweenCourse {
             return
         }
 
