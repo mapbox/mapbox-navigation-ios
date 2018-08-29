@@ -180,3 +180,8 @@ public var RouteControllerMinimumDistanceForProgressNotification: CLLocationDist
  The minimum difference between the user's course before a location update is filtered out.
  */
 public var RouteControllerMinimumDifferenceBetweenCourse: CLLocationDirection = 1
+
+/**
+ The minimum elapsed time between location updates before a location update is filtered out.
+ */
+public var RouteControllerMinimumElapsedTimeBetweenLocations: TimeInterval = 60

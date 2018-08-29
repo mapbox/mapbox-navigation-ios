@@ -329,7 +329,8 @@ extension RouteController: CLLocationManagerDelegate {
         }
         
         if let raw = rawLocation, raw.coordinate.distance(to: location.coordinate) < RouteControllerMinimumDistanceForProgressNotification &&
-            raw.course - location.course < RouteControllerMinimumDifferenceBetweenCourse {
+            raw.course - location.course < RouteControllerMinimumDifferenceBetweenCourse &&
+            location.timestamp.timeIntervalSince(raw.timestamp) < RouteControllerMinimumElapsedTimeBetweenLocations {
             return
         }
 
