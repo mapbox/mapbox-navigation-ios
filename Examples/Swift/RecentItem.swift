@@ -12,7 +12,9 @@ struct RecentItem: Codable, Equatable {
     
     @available(iOS 12.0, *)
     func listItem() -> CPListItem {
-        return CPListItem(text: geocodedPlacemark.formattedName, detailText: geocodedPlacemark.address, image: nil, showsDisclosureIndicator: true)
+        let item = CPListItem(text: geocodedPlacemark.formattedName, detailText: geocodedPlacemark.address, image: nil, showsDisclosureIndicator: true)
+        item.userInfo = [CarPlayGeocoder.CarPlayGeocodedPlacemarkKey: geocodedPlacemark]
+        return item
     }
     
     var timestamp: Date

@@ -8,7 +8,7 @@ import MapboxDirections
 
 class CarPlayGeocoder: Geocoder {
     
-    static let CarPlayGeocoderPlacemarkKey: String = "CPGecoderPlacemark"
+    public static let CarPlayGeocodedPlacemarkKey: String = "CPGecodedPlacemark"
     static var recentItems = RecentItem.loadDefaults()
     
     @available(iOS 12.0, *)
@@ -49,7 +49,7 @@ class CarPlayGeocoder: Geocoder {
     static func carPlayManager(_ searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void) {
         
         guard let userInfo = item.userInfo as? [String: Any],
-            let placemark = userInfo[CarPlayGeocoderPlacemarkKey] as? GeocodedPlacemark,
+            let placemark = userInfo[CarPlayGeocodedPlacemarkKey] as? GeocodedPlacemark,
             let location = placemark.location else {
                 completionHandler()
                 return
@@ -67,7 +67,6 @@ class CarPlayGeocoder: Geocoder {
         if searchText.isEmpty {
             return recentItems.map { $0.listItem() }
         }
-        
         return recentItems.filter { $0.matches(searchText) }.map { $0.listItem() }
     }
     
@@ -94,7 +93,7 @@ extension GeocodedPlacemark {
     @available(iOS 12.0, *)
     func listItem() -> CPListItem {
         let item = CPListItem(text: formattedName, detailText: address, image: nil, showsDisclosureIndicator: true)
-        item.userInfo = [CarPlayGeocoder.CarPlayGeocoderPlacemarkKey: self]
+        item.userInfo = [CarPlayGeocoder.CarPlayGeocodedPlacemarkKey: self]
         return item
     }
     #endif
