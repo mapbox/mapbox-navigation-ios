@@ -14,8 +14,10 @@ class NavigationViewControllerTests: XCTestCase {
     var updatedStyleNumberOfTimes = 0
     lazy var dependencies: (navigationViewController: NavigationViewController, navigationService: NavigationService, startLocation: CLLocation, poi: [CLLocation], endLocation: CLLocation) = {
        
+        let fakeDirections = Directions(accessToken: "garbage", host: nil)
+        let fakeService = MapboxNavigationService(route: initialRoute, directions: fakeDirections, locationSource: NavigationLocationManagerFake(), simulating: .never)
         let navigationViewController = NavigationViewController(for: initialRoute,
-                                                                directions: Directions(accessToken: "garbage", host: nil), locationManager: NavigationLocationManagerFake())
+                                                                directions: fakeDirections, navigationService: fakeService)
         
         navigationViewController.delegate = self
         
@@ -252,13 +254,13 @@ class NavigationViewControllerTestable: NavigationViewController {
     required init(for route: Route,
                   directions: Directions = Directions.shared,
                   styles: [Style]? = [DayStyle(), NightStyle()],
-                  locationManager: NavigationLocationManager? = NavigationLocationManager(),
+                  navigationService: NavigationService? = nil,
                   styleLoaded: XCTestExpectation) {
         styleLoadedExpectation = styleLoaded
-        super.init(for: route, directions: directions,styles: styles, locationManager: locationManager)
+        super.init(for: route, directions: directions, styles: styles, navigationService: navigationService)
     }
     
-    required init(for route: Route, directions: Directions, styles: [Style]?, locationManager: NavigationLocationManager?) {
+    required init(for route: Route, directions: Directions, styles: [Style]?, navigationService: NavigationService?) {
         fatalError("This initalizer is not supported in this testing subclass.")
     }
     

@@ -2,7 +2,7 @@ import XCTest
 import Turf
 import Polyline
 import MapKit
-@testable import MapboxDirections
+import MapboxDirections
 @testable import MapboxCoreNavigation
 
 struct TunnelDetectorTestData {
