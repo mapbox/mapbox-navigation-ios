@@ -21,6 +21,11 @@ step-library:
           - cp-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "MapboxCoreNavigationTests/CocoaPodsTest/PodInstall/Podfile.lock" }}
           - cp-cache-v1-{{ arch }}-{{ .Branch }}
           - cp-cache-v1
+  
+  - &restore-cache-podmaster
+      restore_cache:
+        keys:
+          - podmaster-cache
 
   - &save-cache
       save_cache:
@@ -33,6 +38,12 @@ step-library:
         key: cp-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "MapboxCoreNavigationTests/CocoaPodsTest/PodInstall/Podfile.lock" }}
         paths:
           - MapboxCoreNavigationTests/CocoaPodsTest/PodInstall/Pods
+
+  - &save-cache-podmaster
+      save_cache:
+        key: podmaster-cache
+        paths:
+          - "~/.cocoapods/repos/master"
 
   - &prepare
       run:
@@ -83,6 +94,8 @@ jobs:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
       - checkout
+      - *restore-cache-podmaster
       - *restore-cache-cocoapods
       - *cocoapods-integration-test
       - *save-cache-cocoapods
+      - *save-cache-podmaster
