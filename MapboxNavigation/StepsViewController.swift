@@ -6,9 +6,9 @@ import Turf
 @objc(MBStepsBackgroundView)
 open class StepsBackgroundView: UIView { }
 
-protocol StepsViewControllerDelegate: class {
-    func stepsViewController(_ viewController: StepsViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell)
-    func didDismissStepsViewController(_ viewController: StepsViewController)
+@objc public protocol StepsViewControllerDelegate: class {
+    @objc optional func stepsViewController(_ viewController: StepsViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell)
+    @objc func didDismissStepsViewController(_ viewController: StepsViewController)
 }
 
 /// :nodoc:
@@ -20,9 +20,7 @@ open class StepsViewController: UIViewController {
     weak var bottomView: UIView!
     weak var separatorBottomView: SeparatorView!
     weak var dismissButton: DismissButton!
-    weak var delegate: StepsViewControllerDelegate?
-    
-    typealias CompletionHandler = () -> Void
+    public weak var delegate: StepsViewControllerDelegate?
     
     let cellId = "StepTableViewCellId"
     var routeProgress: RouteProgress!
@@ -170,7 +168,7 @@ open class StepsViewController: UIViewController {
         tableView.register(StepTableViewCell.self, forCellReuseIdentifier: cellId)
     }
     
-    func dropDownAnimation() {
+    public func dropDownAnimation() {
         var frame = view.frame
         frame.origin.y -= frame.height
         view.frame = frame
@@ -182,7 +180,7 @@ open class StepsViewController: UIViewController {
         }, completion: nil)
     }
     
-    func slideUpAnimation(completion: CompletionHandler? = nil) {
+    public func slideUpAnimation(completion: CompletionHandler? = nil) {
         UIView.animate(withDuration: 0.35, delay: 0, options: [.beginFromCurrentState, .curveEaseIn], animations: {
             var frame = self.view.frame
             frame.origin.y -= frame.height
@@ -196,7 +194,7 @@ open class StepsViewController: UIViewController {
         delegate?.didDismissStepsViewController(self)
     }
     
-    func dismiss(completion: CompletionHandler? = nil) {
+    public func dismiss(completion: CompletionHandler? = nil) {
         slideUpAnimation {
             self.willMove(toParentViewController: nil)
             self.view.removeFromSuperview()
@@ -220,7 +218,7 @@ extension StepsViewController: UITableViewDelegate {
             // For the current leg, we need to know the upcoming step.
             stepIndex += indexPath.row + 1 > sections[indexPath.section].count ? 0 : 1
         }
-        delegate?.stepsViewController(self, didSelect: indexPath.section, stepIndex: stepIndex, cell: cell)
+        delegate?.stepsViewController?(self, didSelect: indexPath.section, stepIndex: stepIndex, cell: cell)
     }
 }
 

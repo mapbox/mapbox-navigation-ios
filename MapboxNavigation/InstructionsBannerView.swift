@@ -3,7 +3,7 @@ import MapboxCoreNavigation
 import MapboxDirections
 
 @objc(MBInstructionsBannerViewDelegate)
-protocol InstructionsBannerViewDelegate: class {
+public protocol InstructionsBannerViewDelegate: class {
     
     @objc(didTapInstructionsBanner:)
     optional func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView)
@@ -28,7 +28,7 @@ open class BaseInstructionsBannerView: UIControl {
     weak var _separatorView: UIView!
     weak var separatorView: SeparatorView!
     weak var stepListIndicatorView: StepListIndicatorView!
-    weak var delegate: InstructionsBannerViewDelegate? {
+    public weak var delegate: InstructionsBannerViewDelegate? {
         didSet {
             stepListIndicatorView.isHidden = false
         }
