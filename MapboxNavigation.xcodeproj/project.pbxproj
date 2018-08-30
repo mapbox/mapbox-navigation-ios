@@ -62,10 +62,8 @@
 		352BBC401E5E6C9F00703DF1 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C6A3471E5E418D0004CA57 /* AppDelegate.m */; };
 		352BBC4A1E5E78D700703DF1 /* Example_SwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352BBC491E5E78D700703DF1 /* Example_SwiftTests.swift */; };
 		352BBC581E5E78EA00703DF1 /* Example_Objective_CTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 352BBC571E5E78EA00703DF1 /* Example_Objective_CTests.m */; };
-		352C35BB213492B300D77796 /* CarPlayGeocoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3507FA002134382C0086B39E /* CarPlayGeocoder.swift */; };
 		352C35BC213492B300D77796 /* CarPlayGeocoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3507FA002134382C0086B39E /* CarPlayGeocoder.swift */; };
 		352C35C12134974200D77796 /* RecentItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352C35BF2134958F00D77796 /* RecentItem.swift */; };
-		352C35C22134974C00D77796 /* RecentItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352C35BF2134958F00D77796 /* RecentItem.swift */; };
 		352F464D20EB74C200147886 /* EventsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352F464C20EB74C200147886 /* EventsManager.swift */; };
 		3531C2701F9E095400D92F9A /* InstructionsBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3531C26F1F9E095400D92F9A /* InstructionsBannerView.swift */; };
 		353280A11FA72871005175F3 /* InstructionLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353280A01FA72871005175F3 /* InstructionLabel.swift */; };
@@ -2183,8 +2181,6 @@
 				C5D9800D1EFA8BA9006DBF2E /* CustomViewController.swift in Sources */,
 				C51FC31720F689F800400CE7 /* CustomStyles.swift in Sources */,
 				6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */,
-				352C35BB213492B300D77796 /* CarPlayGeocoder.swift in Sources */,
-				352C35C22134974C00D77796 /* RecentItem.swift in Sources */,
 				358D14661E5E3B7700ADE590 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
