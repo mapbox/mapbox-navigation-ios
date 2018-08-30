@@ -90,6 +90,25 @@ class CarPlayManagerTests: XCTestCase {
         XCTAssertEqual(2, mapTemplate.leadingNavigationBarButtons.count)
         XCTAssertEqual(2, mapTemplate.trailingNavigationBarButtons.count)
     }
+    
+    func testManagerAsksDelegateForMapButtonsIfAvailable() {
+        guard #available(iOS 12, *) else { return }
+        
+        let exampleDelegate = TestCarPlayManagerDelegate()
+        exampleDelegate.mapButtons = [CPMapButton()]
+        
+        manager?.delegate = exampleDelegate
+        
+        simulateCarPlayConnection()
+        
+        guard let fakeInterfaceController = manager?.interfaceController else {
+            XCTFail("Dependencies not met! Bailing...")
+            return
+        }
+        
+        let mapTemplate: CPMapTemplate = fakeInterfaceController.rootTemplate as! CPMapTemplate
+        XCTAssertEqual(1, mapTemplate.mapButtons.count)
+    }
 
     func testManagerTellsDelegateWhenGuidanceIsInitiated() {
         guard #available(iOS 12, *) else { return }
@@ -144,6 +163,7 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
     var navigationInitiated = false
     var leadingBarButtons: [CPBarButton]?
     var trailingBarButtons: [CPBarButton]?
+    var mapButtons: [CPMapButton]?
 
     func carPlayManager(_ carPlayManager: CarPlayManager, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate) -> [CPBarButton]? {
         return leadingBarButtons
@@ -151,6 +171,10 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
 
     func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate) -> [CPBarButton]? {
         return trailingBarButtons
+    }
+    
+    func carPlayManager(_ carplayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate) -> [CPMapButton]? {
+        return mapButtons
     }
 
     func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith progress: RouteProgress) {
