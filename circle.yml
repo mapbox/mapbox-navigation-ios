@@ -57,17 +57,29 @@ step-library:
         name: Install Dependencies
         command: carthage bootstrap --platform ios --cache-builds --configuration Release --no-use-binaries
 
-  - &build-test-MapboxCoreNavigation
+  - &build-test-MapboxCoreNavigation-ios-11
       run:
         name: Build and Test MapboxCoreNavigation
         command: |
           xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6s Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test | xcpretty
 
-  - &build-test-MapboxNavigation
+  - &build-test-MapboxCoreNavigation-ios-12
+      run:
+        name: Build and Test MapboxCoreNavigation
+        command: |
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6s Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test | xcpretty
+
+  - &build-test-MapboxNavigation-ios-11
       run:
         name: Build MapboxNavigation
         command: |
           xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6s Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build test | xcpretty
+
+  - &build-test-MapboxNavigation-ios-12
+      run:
+        name: Build MapboxNavigation
+        command: |
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6s Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build test | xcpretty
 
   - &build-Example-Obj-C
       run:
@@ -100,8 +112,8 @@ jobs:
       - *prepare
       - *restore-cache
       - *install-dependencies
-      - *build-test-MapboxCoreNavigation
-      - *build-test-MapboxNavigation
+      - *build-test-MapboxCoreNavigation-ios-12
+      - *build-test-MapboxNavigation-ios-12
       - *save-cache
   
   xcode-9:
@@ -114,8 +126,8 @@ jobs:
       - *prepare
       - *restore-cache
       - *install-dependencies
-      - *build-test-MapboxCoreNavigation
-      - *build-test-MapboxNavigation
+      - *build-test-MapboxCoreNavigation-ios-11
+      - *build-test-MapboxNavigation-ios-11
       - *save-cache
 
   xcode-10-cocoapods-integration:
