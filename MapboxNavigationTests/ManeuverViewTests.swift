@@ -47,7 +47,7 @@ class ManeuverViewTests: FBSnapshotTestCase {
     
     func testRoundaboutTurnLeft() {
         maneuverView.visualInstruction = maneuverInstruction(.takeRoundabout, .right, .right, CLLocationDegrees(270))
-        FBSnapshotVerifyLayer(maneuverView.layer)
+        FBSnapshotVerifyLayer(maneuverView.layer, tolerance: 0.02)
     }
     
     func testRoundabout() {
