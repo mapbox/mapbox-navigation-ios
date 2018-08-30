@@ -52,6 +52,23 @@ step-library:
           git submodule sync
           brew install carthage
 
+  - &prepare-iphone6s-plus-ios-11
+      run:
+        name: Prepare iPhone 6s Plus iOS 11
+        command: xcrun instruments -w "iPhone 6s Plus (11.4) [" || true
+
+  - &prepare-iphone6s-plus-ios-12
+      run:
+        name: Prepare iPhone 6s Plus iOS 12
+        command: xcrun instruments -w "iPhone 6s Plus (12.0) [" || true
+
+  - &reset-simulators
+      run:
+        name: Reset simulators
+        command: |
+          bundle install
+          SNAPSHOT_FORCE_DELETE=1 bundle exec fastlane snapshot reset_simulators
+
   - &install-dependencies
       run:
         name: Install Dependencies
@@ -61,37 +78,37 @@ step-library:
       run:
         name: Build and Test MapboxCoreNavigation
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6s Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test | xcpretty
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test | xcpretty
 
   - &build-test-MapboxCoreNavigation-ios-12
       run:
         name: Build and Test MapboxCoreNavigation
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6s Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test | xcpretty
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test | xcpretty
 
   - &build-test-MapboxNavigation-ios-11
       run:
         name: Build MapboxNavigation
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6s Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build test | xcpretty
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build test | xcpretty
 
   - &build-test-MapboxNavigation-ios-12
       run:
         name: Build MapboxNavigation
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6s Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build test | xcpretty
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build | xcpretty
 
   - &build-Example-Obj-C
       run:
         name: Build and Test Example-Objective-C
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone X' -project MapboxNavigation.xcodeproj -scheme Example-Objective-C clean build | xcpretty
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme Example-Objective-C clean build | xcpretty
 
   - &build-Example-Swift
       run:
         name: Build and Test Example-Swift
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone X' -project MapboxNavigation.xcodeproj -scheme Example-Swift clean build | xcpretty
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme Example-Swift clean build | xcpretty
 
   - &cocoapods-integration-test
       run:
@@ -110,6 +127,8 @@ jobs:
     steps:
       - checkout
       - *prepare
+      - *reset-simulators
+      - *prepare-iphone6s-plus-ios-12
       - *restore-cache
       - *install-dependencies
       - *build-test-MapboxCoreNavigation-ios-12
@@ -124,6 +143,7 @@ jobs:
     steps:
       - checkout
       - *prepare
+      - *prepare-iphone6s-plus-ios-11
       - *restore-cache
       - *install-dependencies
       - *build-test-MapboxCoreNavigation-ios-11
@@ -151,6 +171,7 @@ jobs:
     steps:
       - checkout
       - *prepare
+      - *prepare-iphone6s-plus-ios-11
       - *restore-cache
       - *install-dependencies
       - *build-Example-Obj-C
