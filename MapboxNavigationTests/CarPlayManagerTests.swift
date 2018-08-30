@@ -5,6 +5,7 @@ import MapboxDirections
 
 #if canImport(CarPlay)
 import CarPlay
+@testable import MapboxMobileEvents
 
 // For some reason XCTest bundles ignore @available annotations, and this gets run on iOS < 12 :(
 // This is a bug in XCTest which will hopefully get fixed in an upcoming release.
@@ -14,9 +15,17 @@ import CarPlay
 class CarPlayManagerTests: XCTestCase {
 
     var manager: CarPlayManager?
+    
+    let eventsManagerSpy = MMEEventsManagerSpy()
+    
+    lazy var eventsManager: EventsManager = {
+        return EventsManager(accessToken: "nonsense")
+    }()
 
     override func setUp() {
         manager = CarPlayManager.shared
+        manager?.eventsManager = EventsManager(accessToken: "nonsense")
+        eventsManagerSpy.reset()
     }
 
     override func tearDown() {
@@ -27,8 +36,36 @@ class CarPlayManagerTests: XCTestCase {
     func simulateCarPlayConnection() {
         let fakeInterfaceController = FakeCPInterfaceController(#function)
         let fakeWindow = CPWindow()
-
+        
+        manager?.eventsManager.manager = eventsManagerSpy
+        
         manager?.application(UIApplication.shared, didConnectCarInterfaceController: fakeInterfaceController, to: fakeWindow)
+        
+        let expectedEventName = MMEventTypeCarplayConnect
+        XCTAssertTrue(eventsManagerSpy.hasEnqueuedEvent(with: expectedEventName))
+        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
+        XCTAssertEqual(eventsManagerSpy.enqueuedEventCount(with: expectedEventName), 1)
+        XCTAssertEqual(eventsManagerSpy.enqueuedEventCount(with: expectedEventName), 1)
+    }
+    
+    func simulateCarPlayDisconnection() {
+        let fakeInterfaceController = FakeCPInterfaceController(#function)
+        let fakeWindow = CPWindow()
+
+        manager?.eventsManager.manager = eventsManagerSpy
+        
+        manager?.application(UIApplication.shared, didDisconnectCarInterfaceController: fakeInterfaceController, from: fakeWindow)
+        
+        let expectedEventName = MMEventTypeCarplayDisconnect
+        XCTAssertTrue(eventsManagerSpy.hasEnqueuedEvent(with: expectedEventName))
+        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
+    }
+    
+    // MARK: WIP - inquire a well defined business case where a disconnected event is a relevant data metric.
+    func testCarPlayDidDisconnect() {
+        guard #available(iOS 12, *) else { return }
+        
+        simulateCarPlayDisconnection()
     }
 
     // MARK: Upon connecting to CarPlay, window and interfaceController should be set up correctly

@@ -81,9 +81,10 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
     
     private var defaultMapButtons: [CPMapButton]?
     
-    lazy var eventsManager: MMEEventsManager = {
-        return MMEEventsManager.shared()
-    }()
+    /**
+     * This property manages the relevant events recorded for telemetry analysis.
+     */
+    public var eventsManager = EventsManager()
 
     lazy var briefDateComponentsFormatter: DateComponentsFormatter = {
         let formatter = DateComponentsFormatter()
@@ -104,8 +105,7 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
     public func application(_ application: UIApplication, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPWindow) {
         
         // WIP - For telemetry testing purposes
-        eventsManager.isDebugLoggingEnabled = true
-        eventsManager.isMetricsEnabledInSimulator = true
+        // eventsManager.start()
         
         interfaceController.delegate = self
         self.interfaceController = interfaceController
@@ -193,14 +193,14 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
     
     func sendCarPlayConnectEvent(_ timestamp: String) {
         let dateCreatedAttribute = [MMEEventKeyCreated: timestamp]
-        eventsManager.enqueueEvent(withName: MMEventTypeCarplayConnect, attributes: dateCreatedAttribute)
-        eventsManager.flush()
+        eventsManager.manager.enqueueEvent(withName: MMEventTypeCarplayConnect, attributes: dateCreatedAttribute)
+        eventsManager.manager.flush()
     }
     
     func sendCarPlayDisconnectEvent(_ timestamp: String) {
         let dateCreatedAttribute = [MMEEventKeyCreated: timestamp]
-        eventsManager.enqueueEvent(withName: MMEventTypeCarplayDisconnect, attributes: dateCreatedAttribute)
-        eventsManager.flush()
+        eventsManager.manager.enqueueEvent(withName: MMEventTypeCarplayDisconnect, attributes: dateCreatedAttribute)
+        eventsManager.manager.flush()
     }
 
     public func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPWindow) {
