@@ -50,6 +50,7 @@ step-library:
         name: Prepare
         command: |
           git submodule sync
+          brew install carthage
 
   - &install-dependencies
       run:
@@ -72,13 +73,13 @@ step-library:
       run:
         name: Build and Test Example-Objective-C
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,id=9F32C487-FAEC-4ABE-B00D-159EC007E50D' -project MapboxNavigation.xcodeproj -scheme Example-Objective-C clean build test | xcpretty
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,id=D6C93B5F-E504-4250-AAEE-13B6FFDDF744' -project MapboxNavigation.xcodeproj -scheme Example-Objective-C clean build test | xcpretty
 
   - &build-Example-Swift
       run:
         name: Build and Test Example-Swift
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,id=9F32C487-FAEC-4ABE-B00D-159EC007E50D' -project MapboxNavigation.xcodeproj -scheme Example-Swift clean build test | xcpretty
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,id=D6C93B5F-E504-4250-AAEE-13B6FFDDF744' -project MapboxNavigation.xcodeproj -scheme Example-Swift clean build test | xcpretty
 
   - &cocoapods-integration-test
       run:
