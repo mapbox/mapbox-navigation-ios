@@ -454,6 +454,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let offset = CGPoint(x: velocity.x * decelerationRate / 4, y: velocity.y * decelerationRate / 4)
         
         let mapView = carPlayMapViewController.mapView
+        mapView.userTrackingMode = .none
         
         if let toCamera = cameraShouldPan(to: offset, mapView: mapView) {
             mapView.setCamera(toCamera, animated: true)
