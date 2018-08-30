@@ -5,6 +5,7 @@ workflows:
   default:
     jobs:
       - xcode-10
+      - xcode-9
       - xcode-10-cocoapods-integration
       - xcode-9-examples
 
