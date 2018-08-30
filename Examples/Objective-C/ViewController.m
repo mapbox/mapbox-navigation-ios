@@ -31,6 +31,7 @@
 }
 - (void)viewDidAppear:(BOOL)animated {
     [self.navigation resume];
+    [super viewDidAppear:animated];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
