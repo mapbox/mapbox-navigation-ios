@@ -220,6 +220,7 @@
 		AE8B1B97207D2B2B003050F6 /* TunnelIntersectionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8B1B96207D2B2B003050F6 /* TunnelIntersectionManagerTests.swift */; };
 		AE997D2221137B8B00EB0AAB /* String+LocalizedConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE997D2121137B8B00EB0AAB /* String+LocalizedConstants.swift */; };
 		AEA5B13421312CE1003B2961 /* CPFavoritesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA5B13321312CE1003B2961 /* CPFavoritesList.swift */; };
+		AEA5B13B21386967003B2961 /* MMEEventsManagerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16120A4C20645D6E007EA21D /* MMEEventsManagerSpy.swift */; };
 		AEC3AC9A2106703100A26F34 /* HighwayShield.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC3AC992106703100A26F34 /* HighwayShield.swift */; };
 		AEF2C8F22072B603007B061F /* routeWithTunnels_9thStreetDC.json in Resources */ = {isa = PBXBuildFile; fileRef = AEF2C8F12072B603007B061F /* routeWithTunnels_9thStreetDC.json */; };
 		C51245F21F19471C00E33B52 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
@@ -2225,6 +2226,7 @@
 				1662244B2029059C00EA4824 /* ImageCacheTests.swift in Sources */,
 				3510300F1F54B67000E3B7E7 /* LaneTests.swift in Sources */,
 				352690491ECC843700E387BD /* Fixture.swift in Sources */,
+				AEA5B13B21386967003B2961 /* MMEEventsManagerSpy.swift in Sources */,
 				160A4A712127A46C0028B070 /* CPBarButton+MBTestable.m in Sources */,
 				3EA932D8F44915EFF3B8A088 /* SpeechAPISpy.swift in Sources */,
 			);
