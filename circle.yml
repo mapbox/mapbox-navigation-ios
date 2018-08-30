@@ -103,7 +103,6 @@ jobs:
       - *build-test-MapboxNavigation
       - *save-cache
   
-  jobs:
   xcode-9:
     macos:
       xcode: "9.4.1"
