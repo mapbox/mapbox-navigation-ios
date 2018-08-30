@@ -15,7 +15,6 @@
 @property (nonatomic) MBRoute *route;
 @property (nonatomic) MBRouteController *navigation;
 @property (nonatomic) NSLengthFormatter *lengthFormatter;
-@property (nonatomic) AVSpeechSynthesizer *speechSynth;
 @end
 
 @implementation ViewController
@@ -28,9 +27,10 @@
     self.lengthFormatter = [[NSLengthFormatter alloc] init];
     self.lengthFormatter.unitStyle = NSFormattingUnitStyleShort;
     
-    self.speechSynth = [[AVSpeechSynthesizer alloc] init];
-    self.speechSynth.delegate = self;
     [self resumeNotifications];
+}
+- (void)viewDidAppear:(BOOL)animated {
+    [self.navigation resume];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -51,22 +51,13 @@
 }
 
 - (void)resumeNotifications {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPassSpokenInstructionPoint:) name:MBRouteControllerDidPassSpokenInstructionPointNotification object:_navigation];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(progressDidChange:) name:MBRouteControllerProgressDidChangeNotification object:_navigation];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willReroute:) name:MBRouteControllerWillRerouteNotification object:_navigation];
 }
 
 - (void)suspendNotifications {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:MBRouteControllerDidPassSpokenInstructionPointNotification object:_navigation];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:MBRouteControllerProgressDidChangeNotification object:_navigation];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:MBRouteControllerWillRerouteNotification object:_navigation];
-}
-
-- (void)didPassSpokenInstructionPoint:(NSNotification *)notification {
-    MBRouteProgress *routeProgress = (MBRouteProgress *)notification.userInfo[MBRouteControllerRouteProgressKey];
-    NSString *text = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction.text;
-    
-    [self.speechSynth speakUtterance:[AVSpeechUtterance speechUtteranceWithString:text]];
 }
 
 - (void)progressDidChange:(NSNotification *)notification {
