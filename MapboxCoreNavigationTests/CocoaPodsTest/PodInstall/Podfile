@@ -5,4 +5,5 @@ target 'PodInstall' do
   # The branch of MapboxNavigation and MapboxNavigation will be replaced by Bitrise to use the current branch.
   pod 'MapboxNavigation', :path => '../../../'
   pod 'MapboxCoreNavigation', :path => '../../../'
+  pod 'MapboxMobileEvents', :git => 'https://github.com/mapbox/mapbox-events-ios.git', :branch => 'master'
 end
