@@ -217,6 +217,10 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
     func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith progress: RouteProgress) {
         navigationInitiated = true
     }
+    
+    func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
+        
+    }
 }
 
 @available(iOS 12.0, *)
