@@ -55,6 +55,9 @@ public protocol CarPlayManagerDelegate {
     @objc(carPlayManager:didBeginNavigationWithRouteProgress:)
     func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith progress: RouteProgress) -> ()
 
+    /***/
+    @objc func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) -> ()
+
 }
 
 @available(iOS 12.0, *)
@@ -518,6 +521,10 @@ extension CarPlayManager: CPMapTemplateDelegate {
 
 @available(iOS 12.0, *)
 extension CarPlayManager: CarPlayNavigationDelegate {
+    public func carPlayNavigationViewControllerDidArrive(_: CarPlayNavigationViewController) {
+        delegate?.carPlayManagerDidEndNavigation(self)
+    }
+
     public func carPlaynavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool) {
         carPlayNavigationViewController.carInterfaceController.popToRootTemplate(animated: true)
     }

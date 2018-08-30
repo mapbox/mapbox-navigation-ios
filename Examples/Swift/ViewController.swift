@@ -401,11 +401,3 @@ extension ViewController: VisualInstructionDelegate {
         return presented
     }
 }
-
-#if canImport(CarPlay)
-@available(iOS 12.0, *)
-extension ViewController: CarPlayNavigationDelegate {
-    func carPlaynavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool) {
-    }
-}
-#endif

@@ -333,10 +333,10 @@ extension CarPlayNavigationViewController: RouteControllerDelegate {
     public func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) -> Bool {
         if routeController.routeProgress.isFinalLeg {
             presentArrivalUI()
+            carPlayNavigationDelegate?.carPlayNavigationViewControllerDidArrive(self)
         } else {
             presentWayointArrivalUI(for: waypoint)
         }
-        
         return false
     }
 }
@@ -351,6 +351,13 @@ public protocol CarPlayNavigationDelegate {
      - parameter canceled: True if the user dismissed the CarPlay navigation view controller by tapping the Cancel button; false if the navigation view controller dismissed by some other means.
      */
     @objc func carPlaynavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool)
+
+    /**
+     Called when the CarPlay navigation view controller detects an arrival.
+
+     - parameter carPlayNavigationViewController: The CarPlay navigation view controller that was dismissed.
+     */
+    @objc func carPlayNavigationViewControllerDidArrive(_ carPlayNavigationViewController: CarPlayNavigationViewController)
 }
 
 @available(iOS 12.0, *)

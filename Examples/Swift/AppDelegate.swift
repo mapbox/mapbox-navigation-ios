@@ -70,6 +70,12 @@ extension AppDelegate: CarPlayManagerDelegate {
         presentingController.present(stepsController, animated: true, completion: nil)
     }
 
+    func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
+        if window?.rootViewController?.presentedViewController is StepsViewController {
+            window?.rootViewController?.dismiss(animated: true, completion: nil)
+        }
+    }
+    
     func carPlayManager(_ carPlayManager: CarPlayManager, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate) -> [CPBarButton]? {
         return nil
     }
