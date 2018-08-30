@@ -1,12 +1,11 @@
 import Foundation
 #if canImport(CarPlay)
 import CarPlay
-#endif
 import MapboxGeocoder
 import MapboxNavigation
 import MapboxDirections
 
-class CarPlayGeocoder: Geocoder {
+public class CarPlayGeocoder: Geocoder {
     
     public static let CarPlayGeocodedPlacemarkKey: String = "CPGecodedPlacemark"
     static var recentItems = RecentItem.loadDefaults()
@@ -89,14 +88,12 @@ class CarPlayGeocoder: Geocoder {
 
 extension GeocodedPlacemark {
     
-    #if canImport(CarPlay)
     @available(iOS 12.0, *)
     func listItem() -> CPListItem {
         let item = CPListItem(text: formattedName, detailText: subtitle, image: nil, showsDisclosureIndicator: true)
         item.userInfo = [CarPlayGeocoder.CarPlayGeocodedPlacemarkKey: self]
         return item
     }
-    #endif
     
     var subtitle: String? {
         if let addressDictionary = addressDictionary, var lines = addressDictionary["formattedAddressLines"] as? [String] {
@@ -133,3 +130,4 @@ extension GeocodedPlacemark {
         return description
     }
 }
+#endif

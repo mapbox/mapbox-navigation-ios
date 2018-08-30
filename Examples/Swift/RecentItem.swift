@@ -2,7 +2,6 @@ import Foundation
 import MapboxGeocoder
 #if canImport(CarPlay)
 import CarPlay
-#endif
 
 struct RecentItem: Codable, Equatable {
     
@@ -86,3 +85,4 @@ extension Array where Element == RecentItem {
         return (exists != nil)
     }
 }
+#endif
