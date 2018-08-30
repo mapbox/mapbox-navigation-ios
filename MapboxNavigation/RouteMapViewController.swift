@@ -26,18 +26,6 @@ class RouteMapViewController: UIViewController {
         return viewController
     }()
 
-    lazy var feedbackViewController: FeedbackViewController = {
-        let controller = FeedbackViewController()
-
-        controller.sections = [
-            [.turnNotAllowed, .closure, .reportTraffic, .confusingInstructions, .generalMapError, .badRoute]
-        ]
-
-        controller.modalPresentationStyle = .custom
-        controller.transitioningDelegate = controller
-        return controller
-    }()
-
     private struct Actions {
         static let overview: Selector = #selector(RouteMapViewController.toggleOverview(_:))
         static let mute: Selector = #selector(RouteMapViewController.toggleMute(_:))
@@ -254,18 +242,12 @@ class RouteMapViewController: UIViewController {
 
     @objc func feedback(_ sender: Any) {
         showFeedback()
-        delegate?.mapViewControllerDidOpenFeedback(self)
     }
 
     func showFeedback(source: FeedbackSource = .user) {
         guard let parent = parent else { return }
-
-        let controller = feedbackViewController
-        let defaults = defaultFeedbackHandlers() //this is done every time to refresh the feedback UUID
-        controller.sendFeedbackHandler = defaults.send
-        controller.dismissFeedbackHandler = defaults.dismiss
-
-        parent.present(controller, animated: true, completion: nil)
+        let feedbackViewController = FeedbackViewController(eventsManager: routeController.eventsManager)
+        parent.present(feedbackViewController, animated: true, completion: nil)
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -428,35 +410,6 @@ class RouteMapViewController: UIViewController {
 
         if annotatesSpokenInstructions {
             mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
-        }
-    }
-
-    func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackViewController.SendFeedbackHandler, dismiss: () -> Void) {
-        let uuid = routeController.eventsManager.recordFeedback()
-        let send = defaultSendFeedbackHandler(uuid: uuid)
-        let dismiss = defaultDismissFeedbackHandler(uuid: uuid)
-
-        return (send, dismiss)
-    }
-
-    func defaultSendFeedbackHandler(source: FeedbackSource = .user, uuid: UUID) -> FeedbackViewController.SendFeedbackHandler {
-        return { [weak self] (item) in
-            guard let strongSelf = self, let parent = strongSelf.parent else { return }
-
-            strongSelf.delegate?.mapViewController(strongSelf, didSendFeedbackAssigned: uuid, feedbackType: item.feedbackType)
-            strongSelf.routeController.eventsManager.updateFeedback(uuid: uuid, type: item.feedbackType, source: source, description: nil)
-            strongSelf.dismiss(animated: true) {
-                DialogViewController().present(on: parent)
-            }
-        }
-    }
-
-    func defaultDismissFeedbackHandler(uuid: UUID) -> (() -> Void) {
-        return { [weak self ] in
-            guard let strongSelf = self else { return }
-            strongSelf.delegate?.mapViewControllerDidCancelFeedback(strongSelf)
-            strongSelf.routeController.eventsManager.cancelFeedback(uuid: uuid)
-            strongSelf.dismiss(animated: true, completion: nil)
         }
     }
 
@@ -1037,11 +990,7 @@ fileprivate extension UIViewAnimationOptions {
     }
 }
 @objc protocol RouteMapViewControllerDelegate: NavigationMapViewDelegate, MGLMapViewDelegate, VisualInstructionDelegate {
-
-    func mapViewControllerDidOpenFeedback(_ mapViewController: RouteMapViewController)
-    func mapViewControllerDidCancelFeedback(_ mapViewController: RouteMapViewController)
     func mapViewControllerDidDismiss(_ mapViewController: RouteMapViewController, byCanceling canceled: Bool)
-    func mapViewController(_ mapViewController: RouteMapViewController, didSendFeedbackAssigned uuid: UUID, feedbackType: FeedbackType)
     func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool
 
     /**

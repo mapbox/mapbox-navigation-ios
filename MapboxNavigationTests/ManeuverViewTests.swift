@@ -45,6 +45,11 @@ class ManeuverViewTests: FBSnapshotTestCase {
         FBSnapshotVerifyLayer(maneuverView.layer, tolerance: 0.01)
     }
     
+    func testRoundaboutTurnLeft() {
+        maneuverView.visualInstruction = maneuverInstruction(.takeRoundabout, .right, .right, CLLocationDegrees(270))
+        FBSnapshotVerifyLayer(maneuverView.layer)
+    }
+    
     func testRoundabout() {
         let incrementer: CGFloat = 45
         let size = CGSize(width: maneuverView.bounds.width * (360 / incrementer), height: maneuverView.bounds.height)

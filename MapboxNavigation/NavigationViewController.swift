@@ -151,26 +151,6 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     optional func navigationViewController(_ navigationViewController: NavigationViewController, viewFor annotation: MGLAnnotation) -> MGLAnnotationView?
     
     /**
-     Called when the user opens the feedback form.
-     */
-    @objc optional func navigationViewControllerDidOpenFeedback(_ viewController: NavigationViewController)
-    
-    /**
-     Called when the user dismisses the feedback form.
-     */
-    @objc optional func navigationViewControllerDidCancelFeedback(_ viewController: NavigationViewController)
-    
-    /**
-     Called when the user sends feedback.
-     
-     - parameter viewController: The navigation view controller that reported the feedback.
-     - parameter uuid: The feedback event’s unique identifier.
-     - parameter feedbackType: The type of feedback event that was sent.
-     */
-    @objc(navigationViewController:didSendFeedbackAssignedUUID:feedbackType:)
-    optional func navigationViewController(_ viewController: NavigationViewController, didSendFeedbackAssigned uuid: UUID, feedbackType: FeedbackType)
-    
-    /**
      Returns the center point of the user course view in screen coordinates relative to the map view.
      */
     @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint
@@ -545,24 +525,12 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
         return delegate?.navigationViewController?(self, viewFor: annotation)
     }
     
-    func mapViewControllerDidOpenFeedback(_ mapViewController: RouteMapViewController) {
-        delegate?.navigationViewControllerDidOpenFeedback?(self)
-    }
-    
-    func mapViewControllerDidCancelFeedback(_ mapViewController: RouteMapViewController) {
-        delegate?.navigationViewControllerDidCancelFeedback?(self)
-    }
-    
     func mapViewControllerDidDismiss(_ mapViewController: RouteMapViewController, byCanceling canceled: Bool) {
         if delegate?.navigationViewControllerDidDismiss?(self, byCanceling: canceled) != nil {
             // The receiver should handle dismissal of the NavigationViewController
         } else {
             dismiss(animated: true, completion: nil)
         }
-    }
-    
-    func mapViewController(_ mapViewController: RouteMapViewController, didSendFeedbackAssigned uuid: UUID, feedbackType: FeedbackType) {
-        delegate?.navigationViewController?(self, didSendFeedbackAssigned: uuid, feedbackType: feedbackType)
     }
     
     public func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint {

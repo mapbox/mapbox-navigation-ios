@@ -2,14 +2,30 @@
 
 ## master
 
+### User interface
+
+* While traveling on a numbered road, the route number is displayed in a shield beside the current road name at the bottom of the map. ([#1576](https://github.com/mapbox/mapbox-navigation-ios/pull/1576)) 
 * Added the `shouldManageApplicationIdleTimer` flag to `NavigationViewController` to allow applications to opt out of automatic `UIApplication.isIdleTimerDisabled` management. ([#1591](https://github.com/mapbox/mapbox-navigation-ios/pull/1591))
-* Fixed an issue where the banner was stuck on rerouting past the reroute threshold, when navigation was set to simulation mode. ([#1583](https://github.com/mapbox/mapbox-navigation-ios/pull/1583))
-* Modified the label at the bottom of the map to display the route shield in addition to the road name. ([#1576](https://github.com/mapbox/mapbox-navigation-ios/pull/1576)) 
-* Fixed an issue where the steps list drag handlebar disappears whenever the user taps the resume button. ([#1588](https://github.com/mapbox/mapbox-navigation-ios/pull/1588))
-* Resolved the partially styled user interface issue that occurs when the style theme is switched between the `NightStyle` and `DayStyle`, after the resume  button was tapped. ([#1589](https://github.com/mapbox/mapbox-navigation-ios/pull/1589))
-* Fixed a rare crash associated with the keyboard when showing the end of route view controller. [#1599](https://github.com/mapbox/mapbox-navigation-ios/pull/1599/)
-* Made functions on `StatusView` public allowing for better interaction. [#1612](https://github.com/mapbox/mapbox-navigation-ios/pull/1612)
-* Added a `MapboxVoiceController.audioPlayer` property. You can use this property to interrupt a spoken instruction or adjust the volume. [#1596](https://github.com/mapbox/mapbox-navigation-ios/pull/1596)
+* Added various methods, properties, and initializers to `StatusView`, allowing you to use it in a custom user interface. ([#1612](https://github.com/mapbox/mapbox-navigation-ios/pull/1612))
+* Added `StyleManager.automaticallyAdjustsStyleForTimeOfDay`, `StyleManager.delegate`, and `StyleManager.styles` properties so that you can control same time-based style switching just as `NavigationViewController` does. [#1617](https://github.com/mapbox/mapbox-navigation-ios/pull/1617)
+* Fixed an issue where the banner was stuck on rerouting past the reroute threshold when simulating navigation. ([#1583](https://github.com/mapbox/mapbox-navigation-ios/pull/1583))
+* Fixed an issue where the banner appears in the wrong colors after you tap the Resume button. ([#1588](https://github.com/mapbox/mapbox-navigation-ios/pull/1588), [#1589](https://github.com/mapbox/mapbox-navigation-ios/pull/1589))
+
+### Feedback
+
+* Added a `FeedbackViewController` class for soliciting feedback from the user in a custom user interface. ([#1605](https://github.com/mapbox/mapbox-navigation-ios/pull/1605))
+* Replaced `NavigationViewControllerDelegate.navigationViewControllerDidOpenFeedback(_:)` with `FeedbackViewControllerDelegate.feedbackViewControllerDidOpen(_:)`, `NavigationViewControllerDelegate.navigationViewControllerDidCancelFeedback(_:)` with `FeedbackViewControllerDelegate.feedbackViewController(_:didSend:uuid:)`, and `NavigationViewControllerDelegate.navigationViewController(_:didSendFeedbackAssigned:feedbackType)` with `FeedbackViewControllerDelegate.feedbackViewControllerDidCancel(_:)`. ([#1605](https://github.com/mapbox/mapbox-navigation-ios/pull/1605))
+* Fixed a crash that occurred when the end of route view controller appears, showing the keyboard. ([#1599](https://github.com/mapbox/mapbox-navigation-ios/pull/1599/))
+
+### Other changes
+
+* Added a `MapboxVoiceController.audioPlayer` property. You can use this property to interrupt a spoken instruction or adjust the volume. ([#1596](https://github.com/mapbox/mapbox-navigation-ios/pull/1596))
+* Fixed a memory leak when `RouteController.isDeadReckoningEnabled` is enabled. ([#1624](https://github.com/mapbox/mapbox-navigation-ios/pull/1624))
+
+## v0.19.2 (August 23, 2018)
+
+* The `MGLStyle.navigationGuidanceDayStyleURL` and `MGLStyle.navigationGuidanceNightStyleURL` properties now return [version 4 of the Mapbox Navigation Guidance Day and Night styles](https://blog.mapbox.com/incidents-are-live-on-the-map-beeff6b84bf9), respectively. These styles indicate incidents such as road closures and detours. ([#1619](https://github.com/mapbox/mapbox-navigation-ios/pull/1619])
+* Added an `MGLMapView.showsIncidents` property to toggle the visibility of any Mapbox Incidents data on a map view. ([#1613](https://github.com/mapbox/mapbox-navigation-ios/pull/1613))
 
 ## v0.19.1 (August 15, 2018)
 
