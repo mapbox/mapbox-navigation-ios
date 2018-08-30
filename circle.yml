@@ -60,13 +60,13 @@ step-library:
       run:
         name: Build and Test MapboxCoreNavigation
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,id=9F32C487-FAEC-4ABE-B00D-159EC007E50D' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test | xcpretty
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6s Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test | xcpretty
 
-  - &build-MapboxNavigation
+  - &build-test-MapboxNavigation
       run:
         name: Build MapboxNavigation
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,id=9F32C487-FAEC-4ABE-B00D-159EC007E50D' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build | xcpretty
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6s Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build test | xcpretty
 
   - &build-Example-Obj-C
       run:
@@ -100,7 +100,22 @@ jobs:
       - *restore-cache
       - *install-dependencies
       - *build-test-MapboxCoreNavigation
-      - *build-MapboxNavigation
+      - *build-test-MapboxNavigation
+      - *save-cache
+  
+  jobs:
+  xcode-9:
+    macos:
+      xcode: "9.4.1"
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+    steps:
+      - checkout
+      - *prepare
+      - *restore-cache
+      - *install-dependencies
+      - *build-test-MapboxCoreNavigation
+      - *build-test-MapboxNavigation
       - *save-cache
 
   xcode-10-cocoapods-integration:
