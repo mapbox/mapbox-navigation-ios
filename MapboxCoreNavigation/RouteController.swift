@@ -59,7 +59,7 @@ open class RouteController: NSObject, Router {
     @objc public var routeProgress: RouteProgress {
         willSet {
             // Save any progress completed up until now
-            if let _ = eventsManager.sessionState {
+            if eventsManager.sessionState != nil {
                 eventsManager.sessionState?.totalDistanceCompleted += routeProgress.distanceTraveled
             }
         }

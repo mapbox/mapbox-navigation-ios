@@ -79,17 +79,21 @@ open class EventsManager: NSObject {
             return nil
         }
         
+        guard var event = EventDetails.defaultEvents(router: routeController) else {
+            return nil
+        }
+        
         let rating = potentialRating ?? MMEEventsManager.unrated
-        var event = EventDetails.defaultEvents(router: routeController)
-        event?.event = MMEEventTypeNavigationCancel
-        event?.arrivalTimestamp = sessionState?.arrivalTimestamp
+        
+        event.event = MMEEventTypeNavigationCancel
+        event.arrivalTimestamp = sessionState?.arrivalTimestamp
         
         let validRating: Bool = (rating >= MMEEventsManager.unrated && rating <= 100)
         assert(validRating, "MMEEventsManager: Invalid Rating. Values should be between \(MMEEventsManager.unrated) (none) and 100.")
         guard validRating else { return event }
         
-        event?.rating = rating
-        event?.comment = comment
+        event.rating = rating
+        event.comment = comment
         
         return event
     }
@@ -99,8 +103,11 @@ open class EventsManager: NSObject {
             return nil
         }
         
-        var event = EventDetails.defaultEvents(router: routeController)
-        event?.event = MMEEventTypeNavigationDepart
+        guard var event = EventDetails.defaultEvents(router: routeController) else {
+            return nil
+        }
+        
+        event.event = MMEEventTypeNavigationDepart
         return event
     }
     
@@ -109,8 +116,11 @@ open class EventsManager: NSObject {
             return nil
         }
         
-        var event = EventDetails.defaultEvents(router: routeController)
-        event?.event = MMEEventTypeNavigationArrive
+        guard var event = EventDetails.defaultEvents(router: routeController) else {
+            return nil
+        }
+        
+        event.event = MMEEventTypeNavigationArrive
         return event
     }
     
@@ -127,14 +137,17 @@ open class EventsManager: NSObject {
             return nil
         }
         
-        var event = EventDetails.defaultEvents(router: routeController)
-        event?.event = MMEEventTypeNavigationFeedback
+        guard var event = EventDetails.defaultEvents(router: routeController) else {
+            return nil
+        }
         
-        event?.userId = UIDevice.current.identifierForVendor?.uuidString
-        event?.feedbackType = type.description
-        event?.description = description
+        event.event = MMEEventTypeNavigationFeedback
         
-        event?.screenshot = captureScreen(scaledToFit: 250)?.base64EncodedString()
+        event.userId = UIDevice.current.identifierForVendor?.uuidString
+        event.feedbackType = type.description
+        event.description = description
+        
+        event.screenshot = captureScreen(scaledToFit: 250)?.base64EncodedString()
         
         return event
     }
@@ -144,22 +157,25 @@ open class EventsManager: NSObject {
             return nil
         }
         
+        guard var event = EventDetails.defaultEvents(router: routeController) else {
+            return nil
+        }
+        
         let timestamp = Date()
         
-        var event = EventDetails.defaultEvents(router: routeController)
-        event?.event = eventType
+        event.event = eventType
         if let lastRerouteDate = sessionState?.lastRerouteDate {
-            event?.secondsSinceLastReroute = round(timestamp.timeIntervalSince(lastRerouteDate))
+            event.secondsSinceLastReroute = round(timestamp.timeIntervalSince(lastRerouteDate))
         } else {
-            event?.secondsSinceLastReroute = -1
+            event.secondsSinceLastReroute = -1
         }
         
         
         // These are placeholders until the route controller's RouteProgress is updated after rerouting
-        event?.newDistanceRemaining = -1
-        event?.newDurationRemaining = -1
-        event?.newGeometry = nil
-        event?.screenshot = captureScreen(scaledToFit: 250)?.base64EncodedString()
+        event.newDistanceRemaining = -1
+        event.newDurationRemaining = -1
+        event.newGeometry = nil
+        event.screenshot = captureScreen(scaledToFit: 250)?.base64EncodedString()
         
         return event
     }
@@ -320,7 +336,7 @@ extension EventsManager {
     }
     
     @objc private func applicationWillTerminate(_ notification: NSNotification) {
-        if let session_state = sessionState, !session_state.terminated {
+        if sessionState?.terminated == false {
             sendCancelEvent(rating: nil, comment: nil)
             sessionState?.terminated = true
         }
