@@ -47,7 +47,7 @@ class CarPlayManagerTests: XCTestCase {
         manager?.application(UIApplication.shared, didDisconnectCarInterfaceController: fakeInterfaceController, from: fakeWindow)
     }
     
-    func testCarPlayConnectedToDevice() {
+    func testEventsEnqueuedAndFlushedWhenCarPlayConnected() {
         guard #available(iOS 12, *) else { return }
         
         manager?.eventsManager.manager = eventsManagerSpy
@@ -61,11 +61,11 @@ class CarPlayManagerTests: XCTestCase {
         XCTAssertEqual(eventsManagerSpy.enqueuedEventCount(with: expectedEventName), 1)
     }
     
-    func testCarPlayDisconnectedFromDevice() {
+    func testEventsEnqueuedAndFlushedWhenCarPlayDisconnected() {
         guard #available(iOS 12, *) else { return }
         
         manager?.eventsManager.manager = eventsManagerSpy
-        
+
         simulateCarPlayDisconnection()
         
         let expectedEventName = MMEventTypeCarplayDisconnect
