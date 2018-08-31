@@ -88,25 +88,25 @@ step-library:
 
   - &build-test-MapboxNavigation-ios-11
       run:
-        name: Build MapboxNavigation
+        name: Build and Test MapboxNavigation
         command: |
           xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build test | xcpretty
 
   - &build-test-MapboxNavigation-ios-12
       run:
-        name: Build MapboxNavigation
+        name: Build and Test MapboxNavigation
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build | xcpretty
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build test | xcpretty
 
   - &build-Example-Obj-C
       run:
-        name: Build and Test Example-Objective-C
+        name: Build Example-Objective-C
         command: |
           xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme Example-Objective-C clean build | xcpretty
 
   - &build-Example-Swift
       run:
-        name: Build and Test Example-Swift
+        name: Build Example-Swift
         command: |
           xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme Example-Swift clean build | xcpretty
 
