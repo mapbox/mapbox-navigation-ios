@@ -592,6 +592,10 @@ extension RouteMapViewController: NavigationViewDelegate {
     func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView) {
         displayPreviewInstructions()
     }
+    
+    public func openStepsViewController() {
+        displayPreviewInstructions()
+    }
 
     private func displayPreviewInstructions() {
         removePreviewInstructions()

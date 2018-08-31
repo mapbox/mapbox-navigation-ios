@@ -481,6 +481,10 @@ open class NavigationViewController: UIViewController {
         UIApplication.shared.applicationIconBadgeNumber = 1
         UIApplication.shared.applicationIconBadgeNumber = 0
     }
+    
+    public func openStepsViewController() {
+        mapViewController?.openStepsViewController()
+    }
 }
 
 //MARK: - RouteMapViewControllerDelegate

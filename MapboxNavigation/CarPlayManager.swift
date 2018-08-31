@@ -529,6 +529,7 @@ extension CarPlayManager: CarPlayNavigationDelegate {
 
     public func carPlaynavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool) {
         carPlayNavigationViewController.carInterfaceController.popToRootTemplate(animated: true)
+        delegate?.carPlayManagerDidEndNavigation(self)
     }
 }
 #endif
