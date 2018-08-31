@@ -101,7 +101,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
      */
     public var eventsManager: EventsManager
     
-    var uuid: UUID {
+    var uuid: UUID? {
         return eventsManager.recordFeedback()
     }
     
@@ -229,8 +229,10 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     }
     
     func send(_ item: FeedbackItem) {
-        delegate?.feedbackViewController?(self, didSend: item, uuid: uuid)
-        eventsManager.updateFeedback(uuid: uuid, type: item.feedbackType, source: .user, description: nil)
+        if let uuid = uuid {
+            delegate?.feedbackViewController?(self, didSend: item, uuid: uuid)
+            eventsManager.updateFeedback(uuid: uuid, type: item.feedbackType, source: .user, description: nil)
+        }
         
         guard let parent = presentingViewController else {
             dismiss(animated: true)
@@ -243,8 +245,11 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     }
     
     func dismissFeedbackItem() {
-        delegate?.feedbackViewControllerDidCancel?(self)
-        eventsManager.cancelFeedback(uuid: uuid)
+        if let uuid = uuid {
+            delegate?.feedbackViewControllerDidCancel?(self)
+            eventsManager.cancelFeedback(uuid: uuid)
+        }
+   
         dismiss(animated: true, completion: nil)
     }
 }
