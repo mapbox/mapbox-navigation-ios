@@ -245,8 +245,9 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     }
     
     func dismissFeedbackItem() {
+        delegate?.feedbackViewControllerDidCancel?(self)
+
         if let uuid = uuid {
-            delegate?.feedbackViewControllerDidCancel?(self)
             eventsManager.cancelFeedback(uuid: uuid)
         }
    
