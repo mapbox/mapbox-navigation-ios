@@ -69,6 +69,13 @@ step-library:
           bundle install
           SNAPSHOT_FORCE_DELETE=1 bundle exec fastlane snapshot reset_simulators
 
+  - &verify-missing-localizable-strings
+      run:
+        name: Verify missing localizable strings
+        command: |
+          ./scripts/convert_string_files.sh
+          git diff --exit-code -- */*/*.lproj
+
   - &install-dependencies
       run:
         name: Install Dependencies
@@ -146,6 +153,7 @@ jobs:
       - *prepare-iphone6s-plus-ios-11
       - *restore-cache
       - *install-dependencies
+      - *verify-missing-localizable-strings
       - *build-test-MapboxCoreNavigation-ios-11
       - *build-test-MapboxNavigation-ios-11
       - *save-cache
