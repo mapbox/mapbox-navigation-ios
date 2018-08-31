@@ -59,14 +59,16 @@ open class RouteController: NSObject, Router {
     @objc public var routeProgress: RouteProgress {
         willSet {
             // Save any progress completed up until now
-            eventsManager.sessionState.totalDistanceCompleted += routeProgress.distanceTraveled
+            if eventsManager.sessionState != nil {
+                eventsManager.sessionState?.totalDistanceCompleted += routeProgress.distanceTraveled
+            }
         }
         didSet {
             // if the user has already arrived and a new route has been set, restart the navigation session
-            if eventsManager.sessionState.arrivalTimestamp != nil {
+            if eventsManager.sessionState?.arrivalTimestamp != nil {
                 eventsManager.resetSession()
             } else {
-                eventsManager.sessionState.currentRoute = routeProgress.route
+                eventsManager.sessionState?.currentRoute = routeProgress.route
             }
 
             var userInfo = [RouteControllerNotificationUserInfoKey: Any]()
@@ -102,8 +104,8 @@ open class RouteController: NSObject, Router {
     var previousArrivalWaypoint: Waypoint? {
         didSet {
             if oldValue != previousArrivalWaypoint {
-                eventsManager.sessionState.arrivalTimestamp = nil
-                eventsManager.sessionState.departureTimestamp = nil
+                eventsManager.sessionState?.arrivalTimestamp = nil
+                eventsManager.sessionState?.departureTimestamp = nil
             }
         }
     }
@@ -291,7 +293,7 @@ extension RouteController: CLLocationManagerDelegate {
 
     @objc public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let filteredLocations = locations.filter {
-            eventsManager.sessionState.pastLocations.push($0)
+            eventsManager.sessionState?.pastLocations.push($0)
             return $0.isQualified
         }
 

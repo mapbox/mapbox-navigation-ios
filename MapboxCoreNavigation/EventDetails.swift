@@ -306,8 +306,11 @@ extension EventDetails {
         }
     }
     
-    static func defaultEvents(router: Router) -> EventDetails {
-        return EventDetails(router: router, session: router.eventsManager.sessionState)
+    static func defaultEvents(router: Router) -> EventDetails? {
+        guard let sessionState = router.eventsManager.sessionState else  {
+            return nil
+        }
+        return EventDetails(router: router, session: sessionState)
     }
 }
 
