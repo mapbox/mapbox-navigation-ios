@@ -37,9 +37,20 @@ class CarPlayManagerTests: XCTestCase {
         let fakeInterfaceController = FakeCPInterfaceController(#function)
         let fakeWindow = CPWindow()
         
-        manager?.eventsManager.manager = eventsManagerSpy
-        
         manager?.application(UIApplication.shared, didConnectCarInterfaceController: fakeInterfaceController, to: fakeWindow)
+    }
+    
+    func simulateCarPlayDisconnection() {
+        let fakeInterfaceController = FakeCPInterfaceController(#function)
+        let fakeWindow = CPWindow()
+        
+        manager?.application(UIApplication.shared, didDisconnectCarInterfaceController: fakeInterfaceController, from: fakeWindow)
+    }
+    
+    func testCarPlayConnectedToDevice() {
+        guard #available(iOS 12, *) else { return }
+        
+        manager?.eventsManager.manager = eventsManagerSpy
         
         let expectedEventName = MMEventTypeCarplayConnect
         XCTAssertTrue(eventsManagerSpy.hasEnqueuedEvent(with: expectedEventName))
@@ -48,24 +59,16 @@ class CarPlayManagerTests: XCTestCase {
         XCTAssertEqual(eventsManagerSpy.enqueuedEventCount(with: expectedEventName), 1)
     }
     
-    func simulateCarPlayDisconnection() {
-        let fakeInterfaceController = FakeCPInterfaceController(#function)
-        let fakeWindow = CPWindow()
-
+    func testCarPlayDisconnectedFromDevice() {
+        guard #available(iOS 12, *) else { return }
+        
         manager?.eventsManager.manager = eventsManagerSpy
         
-        manager?.application(UIApplication.shared, didDisconnectCarInterfaceController: fakeInterfaceController, from: fakeWindow)
+        simulateCarPlayDisconnection()
         
         let expectedEventName = MMEventTypeCarplayDisconnect
         XCTAssertTrue(eventsManagerSpy.hasEnqueuedEvent(with: expectedEventName))
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
-    }
-    
-    // MARK: WIP - inquire a well defined business case where a disconnected event is a relevant data metric.
-    func testCarPlayDidDisconnect() {
-        guard #available(iOS 12, *) else { return }
-        
-        simulateCarPlayDisconnection()
     }
 
     // MARK: Upon connecting to CarPlay, window and interfaceController should be set up correctly
