@@ -52,6 +52,8 @@ class CarPlayManagerTests: XCTestCase {
         
         manager?.eventsManager.manager = eventsManagerSpy
         
+        simulateCarPlayConnection()
+        
         let expectedEventName = MMEventTypeCarplayConnect
         XCTAssertTrue(eventsManagerSpy.hasEnqueuedEvent(with: expectedEventName))
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
