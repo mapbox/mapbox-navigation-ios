@@ -400,10 +400,9 @@ extension CarPlayManager: CPMapTemplateDelegate {
             routeController = RouteController(along: route)
         }
         
-        let navigationSession = mapTemplate.startNavigationSession(for: trip)
         let carPlayNavigationViewController = CarPlayNavigationViewController(for: routeController,
-                                                                              session: navigationSession,
-                                                                              template: mapTemplate,
+                                                                              on: trip,
+                                                                              templateController: NavigationMapTemplateController(mapTemplate: mapTemplate),
                                                                               interfaceController: interfaceController)
         carPlayNavigationViewController.carPlayNavigationDelegate = self
         self.currentNavigator = carPlayNavigationViewController
@@ -529,7 +528,7 @@ extension CarPlayManager: CarPlayNavigationDelegate {
         delegate?.carPlayManagerDidEndNavigation(self)
     }
 
-    public func carPlaynavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool) {
+    public func carPlayNavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool) {
         carPlayNavigationViewController.carInterfaceController.popToRootTemplate(animated: true)
         delegate?.carPlayManagerDidEndNavigation(self)
     }
