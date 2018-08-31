@@ -275,11 +275,15 @@ extension EventsManager {
     
     //MARK: - Session State Management
     @objc private func didChangeOrientation(_ notification: NSNotification) {
-        sessionState.reportChange(to: UIDevice.current.orientation)
+        if sessionState != nil {
+            sessionState.reportChange(to: UIDevice.current.orientation)
+        }
     }
     
     @objc private func didChangeApplicationState(_ notification: NSNotification) {
-        sessionState.reportChange(to: UIApplication.shared.applicationState)
+        if sessionState != nil {
+            sessionState.reportChange(to: UIApplication.shared.applicationState)
+        }
     }
     
     @objc private func applicationWillTerminate(_ notification: NSNotification) {
