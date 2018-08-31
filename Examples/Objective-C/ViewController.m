@@ -125,7 +125,8 @@
     MBNavigationViewController *controller = [[MBNavigationViewController alloc] initWithRoute:route
                                                                                     directions:[MBDirections sharedDirections]
                                                                                         styles:nil
-                                                                               locationManager:locationManager];
+                                                                               locationManager:locationManager
+                                                                               voiceController:nil];
     [self presentViewController:controller animated:YES completion:nil];
     
     // Suspend notifications and let `MBNavigationViewController` handle all progress and voice updates.
