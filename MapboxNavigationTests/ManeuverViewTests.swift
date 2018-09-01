@@ -27,7 +27,7 @@ class ManeuverViewTests: FBSnapshotTestCase {
 
     func testStraightRoundabout() {
         maneuverView.visualInstruction = maneuverInstruction(.takeRoundabout, .straightAhead, .right)
-        FBSnapshotVerifyLayer(maneuverView.layer, tolerance: 0.02)
+        FBSnapshotVerifyLayer(maneuverView.layer)
     }
 
     func testTurnRight() {
@@ -42,12 +42,12 @@ class ManeuverViewTests: FBSnapshotTestCase {
 
     func testMergeRight() {
         maneuverView.visualInstruction = maneuverInstruction(.merge, .right, .right)
-        FBSnapshotVerifyLayer(maneuverView.layer, tolerance: 0.01)
+        FBSnapshotVerifyLayer(maneuverView.layer)
     }
 
     func testRoundaboutTurnLeft() {
         maneuverView.visualInstruction = maneuverInstruction(.takeRoundabout, .right, .right, CLLocationDegrees(270))
-        FBSnapshotVerifyLayer(maneuverView.layer, tolerance: 0.02)
+        FBSnapshotVerifyLayer(maneuverView.layer)
     }
     
     func testRoundabout() {
