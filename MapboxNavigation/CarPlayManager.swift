@@ -194,14 +194,12 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
     }
     
     func sendCarPlayConnectEvent(_ timestamp: String) {
-        // TODO: The events manager depends on a RouteController but we can't set it up here since we don't have a route yet
         let dateCreatedAttribute = [MMEEventKeyCreated: timestamp]
         eventsManager.manager.enqueueEvent(withName: MMEventTypeCarplayConnect, attributes: dateCreatedAttribute)
         eventsManager.manager.flush()
     }
     
     func sendCarPlayDisconnectEvent(_ timestamp: String) {
-        // TODO: The events manager depends on a RouteController but we can't set it up here since we don't have a route yet
         let dateCreatedAttribute = [MMEEventKeyCreated: timestamp]
         eventsManager.manager.enqueueEvent(withName: MMEventTypeCarplayDisconnect, attributes: dateCreatedAttribute)
         eventsManager.manager.flush()
