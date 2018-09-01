@@ -13,7 +13,6 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     
     var routeController: RouteController
     var mapView: NavigationMapView?
-    var voiceController: MapboxVoiceController?
     let decelerationRate:CGFloat = 0.9
     let shieldHeight: CGFloat = 16
     
@@ -40,7 +39,6 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
                 interfaceController: CPInterfaceController) {
         self.carSession = session
         self.carMaptemplate = template
-        self.voiceController = MapboxVoiceController()
         self.carInterfaceController = interfaceController
         self.routeController = routeController
         super.init(nibName: nil, bundle: nil)
@@ -81,8 +79,6 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         suspendNotifications()
-        //Todo: For some reason, when deiniting this view controller, the voice controller sticks around.
-        voiceController = nil
     }
     
     func resumeNotifications() {
