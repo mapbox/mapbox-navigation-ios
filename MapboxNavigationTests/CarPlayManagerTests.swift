@@ -152,15 +152,20 @@ class CarPlayManagerTests: XCTestCase {
         XCTAssertEqual(1, mapTemplate.mapButtons.count)
     }
 
-    func testManagerTellsDelegateWhenGuidanceIsInitiated() {
+    func testManagerTellsDelegateWhenNavigationStartsAndEndsDueToArrival() {
         guard #available(iOS 12, *) else { return }
 
+        guard let manager = manager else {
+            XCTFail("Won't continue without a test subject...")
+            return
+        }
+
         let exampleDelegate = TestCarPlayManagerDelegate()
-        manager?.delegate = exampleDelegate
+        manager.delegate = exampleDelegate
 
         simulateCarPlayConnection()
 
-        guard let fakeInterfaceController = manager?.interfaceController else {
+        guard let fakeInterfaceController = manager.interfaceController else {
             XCTFail("Dependencies not met! Bailing...")
             return
         }
@@ -172,7 +177,7 @@ class CarPlayManagerTests: XCTestCase {
         let choice = CPRouteChoice(summaryVariants: ["summary1"], additionalInformationVariants: ["addl1"], selectionSummaryVariants: ["selection1"])
         choice.userInfo = Fixture.routeWithBannerInstructions()
 
-        manager?.mapTemplate(mapTemplate, startedTrip: CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [choice]), using: choice)
+        manager.mapTemplate(mapTemplate, startedTrip: CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [choice]), using: choice)
 
         // trip previews are hidden on the mapTemplate
         // the delegate is given the opportunity to provide a custom route controller
@@ -181,7 +186,13 @@ class CarPlayManagerTests: XCTestCase {
 
         // the CarPlayNavigationDelegate is notified
         XCTAssertTrue(exampleDelegate.navigationInitiated, "The CarPlayManagerDelegate should have been told that navigation was initiated.")
+
+        manager.carPlayNavigationViewControllerDidArrive(manager.currentNavigator!)
+
+        XCTAssertTrue(exampleDelegate.navigationEnded, "The CarPlayManagerDelegate should have been told that navigation ended.")
     }
+
+    //TODO: -mapTemplateDidCancelNavigation:
 
     //MARK: Upon disconnecting CarPlay, cleanup happens
 
@@ -202,10 +213,12 @@ class CarPlayManagerTests: XCTestCase {
 @available(iOS 12.0, *)
 class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
 
-    var navigationInitiated = false
-    var leadingBarButtons: [CPBarButton]?
-    var trailingBarButtons: [CPBarButton]?
-    var mapButtons: [CPMapButton]?
+    public fileprivate(set) var navigationInitiated = false
+    public fileprivate(set) var navigationEnded = false
+
+    public var leadingBarButtons: [CPBarButton]?
+    public var trailingBarButtons: [CPBarButton]?
+    public var mapButtons: [CPMapButton]?
 
     func carPlayManager(_ carPlayManager: CarPlayManager, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate) -> [CPBarButton]? {
         return leadingBarButtons
@@ -224,7 +237,7 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
     }
     
     func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
-        
+        navigationEnded = true
     }
 }
 

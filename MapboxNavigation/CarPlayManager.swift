@@ -75,6 +75,8 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
 
     public static var shared = CarPlayManager()
 
+    public fileprivate(set) weak var currentNavigator: CarPlayNavigationViewController?
+
     public static func resetSharedInstance() {
         shared = CarPlayManager()
     }
@@ -406,6 +408,8 @@ extension CarPlayManager: CPMapTemplateDelegate {
                                                                               template: mapTemplate,
                                                                               interfaceController: interfaceController)
         carPlayNavigationViewController.carPlayNavigationDelegate = self
+        self.currentNavigator = carPlayNavigationViewController
+
         carPlayMapViewController.present(carPlayNavigationViewController, animated: true, completion: nil)
         
 //        if let appViewFromCarPlayWindow = appViewFromCarPlayWindow {
