@@ -28,15 +28,17 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
     
     var audioTask: URLSessionDataTask?
     var cache: BimodalDataCache
+    let audioPlayerType: AVAudioPlayer.Type
     
     var speech: SpeechSynthesizer
     var locale: Locale?
     
     let localizedErrorMessage = NSLocalizedString("FAILED_INSTRUCTION", bundle: .mapboxNavigation, value: "Unable to read instruction aloud.", comment: "Error message when the SDK is unable to read a spoken instruction.")
 
-    @objc public init(speechClient: SpeechSynthesizer = SpeechSynthesizer(accessToken: nil), dataCache: BimodalDataCache = DataCache()) {
+    @objc public init(speechClient: SpeechSynthesizer = SpeechSynthesizer(accessToken: nil), dataCache: BimodalDataCache = DataCache(), audioPlayerType: AVAudioPlayer.Type? = nil) {
         speech = speechClient
         cache = dataCache
+        self.audioPlayerType = audioPlayerType ?? AVAudioPlayer.self
         super.init()
         
         audioPlayer?.delegate = self
@@ -221,7 +223,7 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
         audioQueue.async { [weak self] in
             guard let `self` = self else { return }
             do {
-                self.audioPlayer = try AVAudioPlayer(data: data)
+                self.audioPlayer = try self.audioPlayerType.init(data: data)
                 self.audioPlayer?.prepareToPlay()
                 self.audioPlayer?.delegate = self
                 try self.duckAudio()

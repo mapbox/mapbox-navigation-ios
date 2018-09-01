@@ -231,7 +231,7 @@ open class NavigationViewController: UIViewController {
      
      See `RouteVoiceController` for more information.
      */
-    @objc public lazy var voiceController: RouteVoiceController? = MapboxVoiceController()
+    @objc public var voiceController: RouteVoiceController!
     
     /**
      Provides all routing logic for the user.
@@ -340,11 +340,12 @@ open class NavigationViewController: UIViewController {
 
      See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
      */
-    @objc(initWithRoute:directions:styles:locationManager:)
+    @objc(initWithRoute:directions:styles:locationManager:voiceController:)
     required public init(for route: Route,
                          directions: Directions = Directions.shared,
                          styles: [Style]? = [DayStyle(), NightStyle()],
-                         locationManager: NavigationLocationManager? = NavigationLocationManager()) {
+                         locationManager: NavigationLocationManager? = NavigationLocationManager(),
+                         voiceController: RouteVoiceController? = nil) {
         
         super.init(nibName: nil, bundle: nil)
         
@@ -352,7 +353,7 @@ open class NavigationViewController: UIViewController {
         self.routeController.usesDefaultUserInterface = true
         self.routeController.delegate = self
         self.routeController.tunnelIntersectionManager.delegate = self
-        
+        self.voiceController = voiceController ?? MapboxVoiceController()
         self.directions = directions
         self.route = route
         NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile

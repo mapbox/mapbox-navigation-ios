@@ -13,14 +13,16 @@ class NavigationViewControllerTests: XCTestCase {
     
     var updatedStyleNumberOfTimes = 0
     
-    lazy var dependencies: (navigationViewController: NavigationViewController, startLocation: CLLocation, poi: [CLLocation], endLocation: CLLocation) = {
+    lazy var dependencies: (navigationViewController: NavigationViewController, startLocation: CLLocation, poi: [CLLocation], endLocation: CLLocation, voice: RouteVoiceController) = {
        
-        let navigationViewController = NavigationViewController(for: initialRoute,
-                                                         directions: Directions(accessToken: "garbage", host: nil))
+        let voice = FakeVoiceController()
+        let nav = NavigationViewController(for: initialRoute,
+                                           directions: Directions(accessToken: "garbage", host: nil),
+                                           voiceController: voice)
         
-        navigationViewController.delegate = self
+        nav.delegate = self
         
-        let routeController = navigationViewController.routeController!
+        let routeController = nav.routeController!
         let firstCoord      = routeController.routeProgress.currentLegProgress.nearbyCoordinates.first!
         let firstLocation   = location(at: firstCoord)
         
@@ -36,7 +38,7 @@ class NavigationViewControllerTests: XCTestCase {
         let lastCoord    = routeController.routeProgress.currentLegProgress.remainingSteps.last!.coordinates!.first!
         let lastLocation = location(at: lastCoord)
         
-        return (navigationViewController: navigationViewController, startLocation: firstLocation, poi: poi, endLocation: lastLocation)
+        return (navigationViewController: nav, startLocation: firstLocation, poi: poi, endLocation: lastLocation, voice: voice)
     }()
     
     lazy var initialRoute: Route = {
@@ -87,7 +89,7 @@ class NavigationViewControllerTests: XCTestCase {
     }
     
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceMoreThanOnceWithOneStyle() {
-        let navigationViewController = NavigationViewController(for: initialRoute, styles: [DayStyle()])
+        let navigationViewController = NavigationViewController(for: initialRoute, styles: [DayStyle()], voiceController: FakeVoiceController())
         let routeController = navigationViewController.routeController!
         navigationViewController.styleManager.delegate = self
         
@@ -103,7 +105,7 @@ class NavigationViewControllerTests: XCTestCase {
     
     // If tunnel flags are enabled and we need to switch styles, we should not force refresh the map style because we have only 1 style.
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceWhenOnlyOneStyle() {
-        let navigationViewController = NavigationViewController(for: initialRoute, styles: [NightStyle()])
+        let navigationViewController = NavigationViewController(for: initialRoute, styles: [NightStyle()], voiceController: FakeVoiceController())
         let routeController = navigationViewController.routeController!
         navigationViewController.styleManager.delegate = self
         
@@ -118,7 +120,7 @@ class NavigationViewControllerTests: XCTestCase {
     }
     
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceMoreThanOnceWithTwoStyles() {
-        let navigationViewController = NavigationViewController(for: initialRoute, styles: [DayStyle(), NightStyle()])
+        let navigationViewController = NavigationViewController(for: initialRoute, styles: [DayStyle(), NightStyle()], voiceController: FakeVoiceController())
         let routeController = navigationViewController.routeController!
         navigationViewController.styleManager.delegate = self
         
@@ -253,10 +255,10 @@ class NavigationViewControllerTestable: NavigationViewController {
                   locationManager: NavigationLocationManager? = NavigationLocationManager(),
                   styleLoaded: XCTestExpectation) {
         styleLoadedExpectation = styleLoaded
-        super.init(for: route, directions: directions,styles: styles, locationManager: locationManager)
+        super.init(for: route, directions: directions,styles: styles, locationManager: locationManager, voiceController: FakeVoiceController())
     }
     
-    required init(for route: Route, directions: Directions, styles: [Style]?, locationManager: NavigationLocationManager?) {
+    required init(for route: Route, directions: Directions, styles: [Style]?, locationManager: NavigationLocationManager?, voiceController: RouteVoiceController?) {
         fatalError("This initalizer is not supported in this testing subclass.")
     }
     
@@ -273,5 +275,12 @@ class TestableDayStyle: DayStyle {
     required init() {
         super.init()
         mapStyleURL = Fixture.blankStyle
+    }
+}
+
+
+class FakeVoiceController: RouteVoiceController {
+    override func speak(_ instruction: SpokenInstruction) {
+        //no-op
     }
 }
