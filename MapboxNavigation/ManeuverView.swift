@@ -130,7 +130,7 @@ open class ManeuverView: UIView {
                 flip = true
             case .uTurn:
                 ManeuversStyleKit.drawArrow180right(frame: bounds, resizing: resizing, primaryColor: primaryColor)
-                flip = drivingSide == .left
+                flip = drivingSide == .right // 180 turn is turning clockwise so we flip it if it's right-hand rule of the road
             default:
                 ManeuversStyleKit.drawArrowstraight(frame: bounds, resizing: resizing, primaryColor: primaryColor)
             }
