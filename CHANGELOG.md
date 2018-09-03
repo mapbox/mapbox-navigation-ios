@@ -1,6 +1,8 @@
 # Changes to the Mapbox Navigation SDK for iOS
 ## v0.22.1 (October 2, 2018)
 
+* Fixed a bug which rendered a u-turn icon in the opposite direction. [#1647](https://github.com/mapbox/mapbox-navigation-ios/pull/1647)
+
 ### User Location
 
 * Added ability to adjust `poorGPSPatience` of a `NavigationService`. [#1763](https://github.com/mapbox/mapbox-navigation-ios/pull/1763)
