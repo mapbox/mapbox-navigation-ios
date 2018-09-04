@@ -181,6 +181,7 @@ class NavigationViewControllerTests: XCTestCase {
         let navigationViewController = NavigationViewControllerTestable(for: initialRoute, styles: [TestableDayStyle()], styleLoaded: styleLoaded)
         
         //wait for the style to load -- routes won't show without it.
+        print("!!! \(Date().timeIntervalSince1970) waitFor styleLoaded")
         wait(for: [styleLoaded], timeout: 5)
         navigationViewController.route = initialRoute
         
@@ -199,7 +200,6 @@ class NavigationViewControllerTests: XCTestCase {
         //do we have a destination on the second route?
         let newDestinations = newAnnotations.filter(annotationFilter(matching: secondDestination))
         XCTAssert(!newDestinations.isEmpty, "New destination annotation does not exist on map")
-        
     }
     
     private func annotationFilter(matching coordinate: CLLocationCoordinate2D) -> ((MGLAnnotation) -> Bool) {
@@ -265,7 +265,9 @@ class NavigationViewControllerTestable: NavigationViewController {
     }
     
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
+        print("!!! \(Date().timeIntervalSince1970) didFinishLoadingStyle")
         styleLoadedExpectation.fulfill()
+        print("!!! \(Date().timeIntervalSince1970) didFinishLoadingStyle fulfill")
     }
     
     required init?(coder aDecoder: NSCoder) {
