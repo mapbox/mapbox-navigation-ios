@@ -181,8 +181,10 @@ class NavigationViewControllerTests: XCTestCase {
         let navigationViewController = NavigationViewControllerTestable(for: initialRoute, styles: [TestableDayStyle()], styleLoaded: styleLoaded)
         
         //wait for the style to load -- routes won't show without it.
-        print("!!! \(Date().timeIntervalSince1970) waitFor styleLoaded")
-        wait(for: [styleLoaded], timeout: 5)
+        if !navigationViewController.didFinishLoadingStyle {
+            wait(for: [styleLoaded], timeout: 5)
+        }
+        
         navigationViewController.route = initialRoute
         
         let firstDestination = initialRoute.routeOptions.waypoints.last!.coordinate
@@ -250,6 +252,7 @@ extension NavigationViewControllerTests {
 
 class NavigationViewControllerTestable: NavigationViewController {
     var styleLoadedExpectation: XCTestExpectation
+    var didFinishLoadingStyle: Bool = false
     
     required init(for route: Route,
                   directions: Directions = Directions.shared,
@@ -265,9 +268,8 @@ class NavigationViewControllerTestable: NavigationViewController {
     }
     
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
-        print("!!! \(Date().timeIntervalSince1970) didFinishLoadingStyle")
+        didFinishLoadingStyle = true
         styleLoadedExpectation.fulfill()
-        print("!!! \(Date().timeIntervalSince1970) didFinishLoadingStyle fulfill")
     }
     
     required init?(coder aDecoder: NSCoder) {
