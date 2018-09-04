@@ -274,6 +274,10 @@ class NavigationViewControllerTestable: NavigationViewController {
         styleLoadedExpectation.fulfill()
     }
     
+    func mapViewDidFailLoadingMap(_ mapView: MGLMapView, withError error: Error) {
+        XCTFail("mapViewDidFailLoadingMap \(error.localizedDescription)")
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("This initalizer is not supported in this testing subclass.")
     }
