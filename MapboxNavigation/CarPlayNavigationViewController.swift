@@ -5,6 +5,96 @@ import MapboxCoreNavigation
 import CarPlay
 
 @available(iOS 12.0, *)
+protocol NavigationMapTemplateControllerDelegate: class {
+    func navigationMapTemplateController(_ navigationMapTemplateController: NavigationMapTemplateController, willHandle mapButton: CPMapButton)
+    func navigationMapTemplateController(_ navigationMapTemplateController: NavigationMapTemplateController, willHandle barButton: CPBarButton)
+}
+
+@available(iOS 12.0, *)
+public class NavigationMapTemplateController {
+    var mapTemplate: CPMapTemplate
+    weak var delegate: NavigationMapTemplateControllerDelegate?
+    weak var mapDelegate: CPMapTemplateDelegate? {
+        get {
+            return mapTemplate.mapDelegate
+        }
+        set {
+            mapTemplate.mapDelegate = mapDelegate
+        }
+    }
+    
+    var previousMapButtons: [CPMapButton]
+    var previousLeadingNavigationBarButtons: [CPBarButton]
+    var previousTrailingNavigationBarButtons: [CPBarButton]
+    
+    var showFeedbackButton: CPMapButton!
+    var overviewButton: CPMapButton!
+    var recenterButton: CPMapButton!
+    
+    var exitButton: CPBarButton!
+    var muteButton: CPBarButton!
+    
+    init(mapTemplate: CPMapTemplate) {
+        self.mapTemplate = mapTemplate
+        previousMapButtons = mapTemplate.mapButtons
+        previousLeadingNavigationBarButtons = mapTemplate.leadingNavigationBarButtons
+        previousTrailingNavigationBarButtons = mapTemplate.trailingNavigationBarButtons
+        createNavigationButtons()
+    }
+    
+    func createNavigationButtons() {
+        let mapButtonHandler = { [weak self] (button: CPMapButton) in
+            guard let strongSelf = self else { return }
+            strongSelf.delegate?.navigationMapTemplateController(strongSelf, willHandle: button)
+        }
+        showFeedbackButton = CPMapButton(handler: mapButtonHandler)
+        showFeedbackButton.image = UIImage(named: "feedback", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate).roundedWithBorder(width: 6, color: .white)
+        
+        overviewButton = CPMapButton(handler: mapButtonHandler)
+        overviewButton.image = UIImage(named: "overview", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate).roundedWithBorder(width: 6, color: .white)
+        
+        recenterButton = CPMapButton(handler: mapButtonHandler)
+        recenterButton.image = UIImage(named: "location", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate).roundedWithBorder(width: 6, color: .white)
+        
+        let barButtonHandler = { [weak self] (button: CPBarButton) in
+            guard let strongSelf = self else { return }
+            strongSelf.delegate?.navigationMapTemplateController(strongSelf, willHandle: button)
+        }
+        
+        exitButton = CPBarButton(type: .text, handler: barButtonHandler)
+        exitButton.title = "End"
+        
+        muteButton = CPBarButton(type: .text, handler: barButtonHandler)
+    }
+    
+    func startNavigationSession(for trip: CPTrip) -> CPNavigationSession {
+        mapTemplate.mapButtons = [overviewButton, recenterButton, showFeedbackButton]
+        
+        mapTemplate.leadingNavigationBarButtons = [muteButton]
+        mapTemplate.trailingNavigationBarButtons = [exitButton]
+        
+        recenterButton.isHidden = true
+        muteButton.title = NavigationSettings.shared.voiceMuted ? "Enable Voice" : "Disable Voice"
+        
+        return mapTemplate.startNavigationSession(for: trip)
+    }
+    
+    func update(_ estimates: CPTravelEstimates, for trip: CPTrip, with timeRemainingColor: CPTimeRemainingColor) {
+        mapTemplate.update(estimates, for: trip, with: timeRemainingColor)
+    }
+    
+    func present(navigationAlert: CPNavigationAlert, animated: Bool) {
+        mapTemplate.present(navigationAlert: navigationAlert, animated: animated)
+    }
+    
+    func stopNavigationSession() {
+        mapTemplate.mapButtons = previousMapButtons
+        mapTemplate.leadingNavigationBarButtons = previousLeadingNavigationBarButtons
+        mapTemplate.trailingNavigationBarButtons = previousTrailingNavigationBarButtons
+    }
+}
+
+@available(iOS 12.0, *)
 public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelegate {
     
     public weak var carPlayNavigationDelegate: CarPlayNavigationDelegate?
@@ -17,11 +107,9 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     let shieldHeight: CGFloat = 16
     
     var carSession: CPNavigationSession
-    var carMaptemplate: CPMapTemplate
+    var mapTemplateController: NavigationMapTemplateController
     var carFeedbackTemplate: CPGridTemplate!
     var carInterfaceController: CPInterfaceController
-    var overviewButton: CPMapButton!
-    var recenterButton: CPMapButton!
     
     var styleManager: StyleManager!
     
@@ -34,22 +122,23 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     }
     
     public init(for routeController: RouteController,
-                session: CPNavigationSession,
-                template: CPMapTemplate,
+                on trip: CPTrip,
+                templateController: NavigationMapTemplateController,
                 interfaceController: CPInterfaceController) {
-        self.carSession = session
-        self.carMaptemplate = template
+        mapTemplateController = templateController
+        // TODO: Start navigation session outside of an initializer.
+        carSession = mapTemplateController.startNavigationSession(for: trip)
         self.carInterfaceController = interfaceController
         self.routeController = routeController
+        
         super.init(nibName: nil, bundle: nil)
         self.carFeedbackTemplate = createFeedbackUI()
         self.routeController.delegate = self
-        self.carMaptemplate.mapDelegate = self
+        mapTemplateController.delegate = self
+        mapTemplateController.mapDelegate = self
         
         self.styleManager = StyleManager(self)
         self.styleManager.styles =  [CarPlayDayStyle(), CarPlayNightStyle()]
-        
-        createMapTemplateUI()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -95,8 +184,11 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     
     func exitNavigation() {
         carSession.finishTrip()
+        mapTemplateController.stopNavigationSession()
+        mapView?.removeRoutes()
+        mapView?.removeWaypoints()
         dismiss(animated: true, completion: nil)
-        carPlayNavigationDelegate?.carPlaynavigationViewControllerDidDismiss(self, byCanceling: true)
+        carPlayNavigationDelegate?.carPlayNavigationViewControllerDidDismiss(self, byCanceling: true)
     }
     
     public func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
@@ -123,7 +215,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         let congestionLevel = routeProgress.averageCongestionLevelRemainingOnLeg ?? .unknown
         guard let maneuver = carSession.upcomingManeuvers.first else { return }
         carSession.updateEstimates(routeProgress.currentLegProgress.currentStepProgress.travelEstimates, for: maneuver)
-        carMaptemplate.update(routeProgress.currentLegProgress.travelEstimates, for: carSession.trip, with: congestionLevel.asCPTimeRemainingColor)
+        mapTemplateController.update(routeProgress.currentLegProgress.travelEstimates, for: carSession.trip, with: congestionLevel.asCPTimeRemainingColor)
     }
     
     @objc func rerouted(_ notification: NSNotification) {
@@ -187,48 +279,6 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         carSession.upcomingManeuvers = maneuvers
     }
     
-    func createMapTemplateUI() {
-        let showFeedbackButton = CPMapButton { [weak self] (button) in
-            guard let strongSelf = self else { return }
-            strongSelf.carInterfaceController.pushTemplate(strongSelf.carFeedbackTemplate, animated: true)
-        }
-        showFeedbackButton.image = UIImage(named: "feedback", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate).roundedWithBorder(width: 6, color: .white)
-        
-        overviewButton = CPMapButton {  [weak self] (button) in
-            guard let strongSelf = self else { return }
-            guard let userLocation = self?.routeController.location?.coordinate else { return }
-            strongSelf.mapView?.enableFrameByFrameCourseViewTracking(for: 3)
-            strongSelf.mapView?.setOverheadCameraView(from: userLocation, along: strongSelf.routeController.routeProgress.route.coordinates!, for: strongSelf.edgePadding)
-            button.isHidden = true
-            strongSelf.recenterButton.isHidden = false
-        }
-        overviewButton.image = UIImage(named: "overview", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate).roundedWithBorder(width: 6, color: .white)
-        
-        recenterButton = CPMapButton { [weak self] (button) in
-            button.isHidden = true
-            self?.overviewButton.isHidden = false
-            self?.mapView?.recenterMap()
-        }
-        recenterButton.isHidden = true
-        recenterButton.image = UIImage(named: "location", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate).roundedWithBorder(width: 6, color: .white)
-        
-        let exitButton = CPBarButton(type: .text) { [weak self] (button) in
-            guard let strongSelf = self else { return }
-            strongSelf.exitNavigation()
-        }
-        exitButton.title = "End"
-        
-        let muteButton = CPBarButton(type: .text) { (button) in
-            NavigationSettings.shared.voiceMuted = !NavigationSettings.shared.voiceMuted
-            button.title = NavigationSettings.shared.voiceMuted ? "Enable Voice" : "Disable Voice"
-        }
-        muteButton.title = NavigationSettings.shared.voiceMuted ? "Enable Voice" : "Disable Voice"
-        
-        carMaptemplate.mapButtons = [overviewButton, recenterButton, showFeedbackButton]
-        carMaptemplate.trailingNavigationBarButtons = [exitButton]
-        carMaptemplate.leadingNavigationBarButtons = [muteButton]
-    }
-    
     func createFeedbackUI() -> CPGridTemplate {
         let feedbackItems: [FeedbackItem] = [
             .turnNotAllowed,
@@ -250,7 +300,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
             
             let action = CPAlertAction(title: "Dismiss", style: .default, handler: {_ in })
             let alert = CPNavigationAlert(titleVariants: ["Submitted"], subtitleVariants: nil, imageSet: nil, primaryAction: action, secondaryAction: nil, duration: 2.5)
-            self?.carMaptemplate.present(navigationAlert: alert, animated: true)
+            self?.mapTemplateController.present(navigationAlert: alert, animated: true)
         }
         
         let buttons: [CPGridButton] = feedbackItems.map {
@@ -346,7 +396,7 @@ public protocol CarPlayNavigationDelegate {
      - parameter carPlayNavigationViewController: The CarPlay navigation view controller that was dismissed.
      - parameter canceled: True if the user dismissed the CarPlay navigation view controller by tapping the Cancel button; false if the navigation view controller dismissed by some other means.
      */
-    @objc func carPlaynavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool)
+    @objc func carPlayNavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool)
 
     /**
      Called when the CarPlay navigation view controller detects an arrival.
@@ -358,14 +408,14 @@ public protocol CarPlayNavigationDelegate {
 
 @available(iOS 12.0, *)
 extension CarPlayNavigationViewController: CPMapTemplateDelegate {
-    public func mapTemplateDidBeginPanGesture(_ mapTemplate: CPMapTemplate) {
-        overviewButton.isHidden = true
-        recenterButton.isHidden = false
+    public func mapTemplateDidBeginPanGesture(_ mapTemplateController: CPMapTemplate) {
+        self.mapTemplateController.overviewButton.isHidden = true
+        self.mapTemplateController.recenterButton.isHidden = false
         mapView?.tracksUserCourse = false
         mapView?.enableFrameByFrameCourseViewTracking(for: 1)
     }
     
-    public func mapTemplate(_ mapTemplate: CPMapTemplate, didEndPanGestureWithVelocity velocity: CGPoint) {
+    public func mapTemplate(_ mapTemplateController: CPMapTemplate, didEndPanGestureWithVelocity velocity: CGPoint) {
         // Not enough velocity to overcome friction
         guard sqrtf(Float(velocity.x * velocity.x + velocity.y * velocity.y)) > 100 else { return }
         
@@ -383,6 +433,38 @@ extension CarPlayNavigationViewController: CPMapTemplateDelegate {
         camera.centerCoordinate = mapView.convert(endCameraPoint, toCoordinateFrom: mapView)
         
         return camera
+    }
+}
+
+@available(iOS 12.0, *)
+extension CarPlayNavigationViewController: NavigationMapTemplateControllerDelegate {
+    func navigationMapTemplateController(_ navigationMapTemplateController: NavigationMapTemplateController, willHandle mapButton: CPMapButton) {
+        if mapButton == navigationMapTemplateController.showFeedbackButton {
+            carInterfaceController.pushTemplate(carFeedbackTemplate, animated: true)
+        } else if mapButton == navigationMapTemplateController.overviewButton {
+            guard let userLocation = routeController.location?.coordinate else { return }
+            mapView?.enableFrameByFrameCourseViewTracking(for: 3)
+            mapView?.setOverheadCameraView(from: userLocation, along: routeController.routeProgress.route.coordinates!, for: edgePadding)
+            mapButton.isHidden = true
+            navigationMapTemplateController.recenterButton.isHidden = false
+        } else if mapButton == navigationMapTemplateController.recenterButton {
+            mapButton.isHidden = true
+            navigationMapTemplateController.overviewButton.isHidden = false
+            mapView?.recenterMap()
+        } else {
+            assert(false, "Unrecognized map button \(mapButton)")
+        }
+    }
+    
+    func navigationMapTemplateController(_ navigationMapTemplateController: NavigationMapTemplateController, willHandle barButton: CPBarButton) {
+        if barButton == navigationMapTemplateController.exitButton {
+            exitNavigation()
+        } else if barButton == navigationMapTemplateController.muteButton {
+            NavigationSettings.shared.voiceMuted = !NavigationSettings.shared.voiceMuted
+            barButton.title = NavigationSettings.shared.voiceMuted ? "Enable Voice" : "Disable Voice"
+        } else {
+            assert(false, "Unrecognized bar button \(barButton)")
+        }
     }
 }
 #endif

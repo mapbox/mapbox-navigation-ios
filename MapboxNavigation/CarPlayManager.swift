@@ -400,15 +400,18 @@ extension CarPlayManager: CPMapTemplateDelegate {
             routeController = RouteController(along: route)
         }
         
-        let navigationSession = mapTemplate.startNavigationSession(for: trip)
         let carPlayNavigationViewController = CarPlayNavigationViewController(for: routeController,
-                                                                              session: navigationSession,
-                                                                              template: mapTemplate,
+                                                                              on: trip,
+                                                                              templateController: NavigationMapTemplateController(mapTemplate: mapTemplate),
                                                                               interfaceController: interfaceController)
         carPlayNavigationViewController.carPlayNavigationDelegate = self
         self.currentNavigator = carPlayNavigationViewController
 
         carPlayMapViewController.present(carPlayNavigationViewController, animated: true, completion: nil)
+        
+        let mapView = carPlayMapViewController.mapView
+        mapView.removeRoutes()
+        mapView.removeWaypoints()
         
 //        if let appViewFromCarPlayWindow = appViewFromCarPlayWindow {
 //            navigationViewController.isUsedInConjunctionWithCarPlayWindow = true
@@ -427,14 +430,17 @@ extension CarPlayManager: CPMapTemplateDelegate {
         
         let mapView = carPlayMapViewController.mapView
         let route = routeChoice.userInfo as! Route
-        let line = MGLPolyline(coordinates: route.coordinates!, count: UInt(route.coordinates!.count))
-        mapView.removeAnnotations(mapView.annotations ?? [])
-        mapView.addAnnotation(line)
+        mapView.removeRoutes()
+        mapView.removeWaypoints()
+        mapView.showRoutes([route])
+        mapView.showWaypoints(route)
         let padding = UIEdgeInsets(top: carPlayMapViewController.view.safeAreaInsets.top + 10,
                                    left: carPlayMapViewController.view.safeAreaInsets.left + 10,
                                    bottom: carPlayMapViewController.view.safeAreaInsets.bottom + 10,
                                    right: carPlayMapViewController.view.safeAreaInsets.right + 10)
-        mapView.showAnnotations([line], edgePadding: padding, animated: true)
+        let line = MGLPolyline(coordinates: route.coordinates!, count: UInt(route.coordinates!.count))
+        let camera = mapView.cameraThatFitsShape(line, direction: 0, edgePadding: padding)
+        mapView.setCamera(camera, animated: true)
         //        guard let routeIndex = trip.routeChoices.lastIndex(where: {$0 == routeChoice}), var routes = appViewFromCarPlayWindow?.routes else { return }
         //        let route = routes[routeIndex]
         //        guard let foundRoute = routes.firstIndex(where: {$0 == route}) else { return }
@@ -529,7 +535,7 @@ extension CarPlayManager: CarPlayNavigationDelegate {
         delegate?.carPlayManagerDidEndNavigation(self)
     }
 
-    public func carPlaynavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool) {
+    public func carPlayNavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool) {
         carPlayNavigationViewController.carInterfaceController.popToRootTemplate(animated: true)
         delegate?.carPlayManagerDidEndNavigation(self)
     }
