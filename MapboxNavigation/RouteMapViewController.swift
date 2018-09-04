@@ -26,8 +26,6 @@ class RouteMapViewController: UIViewController {
         return viewController
     }()
     
-    var feedbackViewController: FeedbackViewController!
-    
     private struct Actions {
         static let overview: Selector = #selector(RouteMapViewController.toggleOverview(_:))
         static let mute: Selector = #selector(RouteMapViewController.toggleMute(_:))
@@ -105,7 +103,6 @@ class RouteMapViewController: UIViewController {
         self.init()
         self.routeController = routeController
         self.delegate = delegate
-        feedbackViewController = FeedbackViewController(eventsManager: routeController.eventsManager)
         automaticallyAdjustsScrollViewInsets = false
     }
     
@@ -244,6 +241,7 @@ class RouteMapViewController: UIViewController {
     
     func showFeedback(source: FeedbackSource = .user) {
         guard let parent = parent else { return }
+        let feedbackViewController = FeedbackViewController(eventsManager: routeController.eventsManager)
         parent.present(feedbackViewController, animated: true, completion: nil)
     }
     
