@@ -434,8 +434,11 @@ extension CarPlayManager: CPMapTemplateDelegate {
         mapView.removeWaypoints()
         mapView.showRoutes([route])
         mapView.showWaypoints(route)
-        let padding = UIEdgeInsets(top: carPlayMapViewController.view.safeAreaInsets.top + 10,
-                                   left: carPlayMapViewController.view.safeAreaInsets.left + 10,
+        
+        mapView.userTrackingMode = .none
+        
+        let padding = UIEdgeInsets(top: 10,
+                                   left: carPlayMapViewController.view.safeAreaInsets.left + 20,
                                    bottom: carPlayMapViewController.view.safeAreaInsets.bottom + 10,
                                    right: carPlayMapViewController.view.safeAreaInsets.right + 10)
         let line = MGLPolyline(coordinates: route.coordinates!, count: UInt(route.coordinates!.count))
