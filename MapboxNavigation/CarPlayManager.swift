@@ -409,6 +409,10 @@ extension CarPlayManager: CPMapTemplateDelegate {
 
         carPlayMapViewController.present(carPlayNavigationViewController, animated: true, completion: nil)
         
+        let mapView = carPlayMapViewController.mapView
+        mapView.removeRoutes()
+        mapView.removeWaypoints()
+        
 //        if let appViewFromCarPlayWindow = appViewFromCarPlayWindow {
 //            navigationViewController.isUsedInConjunctionWithCarPlayWindow = true
 //            appViewFromCarPlayWindow.present(navigationViewController, animated: true)
@@ -426,14 +430,17 @@ extension CarPlayManager: CPMapTemplateDelegate {
         
         let mapView = carPlayMapViewController.mapView
         let route = routeChoice.userInfo as! Route
-        let line = MGLPolyline(coordinates: route.coordinates!, count: UInt(route.coordinates!.count))
-        mapView.removeAnnotations(mapView.annotations ?? [])
-        mapView.addAnnotation(line)
+        mapView.removeRoutes()
+        mapView.removeWaypoints()
+        mapView.showRoutes([route])
+        mapView.showWaypoints(route)
         let padding = UIEdgeInsets(top: carPlayMapViewController.view.safeAreaInsets.top + 10,
                                    left: carPlayMapViewController.view.safeAreaInsets.left + 10,
                                    bottom: carPlayMapViewController.view.safeAreaInsets.bottom + 10,
                                    right: carPlayMapViewController.view.safeAreaInsets.right + 10)
-        mapView.showAnnotations([line], edgePadding: padding, animated: true)
+        let line = MGLPolyline(coordinates: route.coordinates!, count: UInt(route.coordinates!.count))
+        let camera = mapView.cameraThatFitsShape(line, direction: 0, edgePadding: padding)
+        mapView.setCamera(camera, animated: true)
         //        guard let routeIndex = trip.routeChoices.lastIndex(where: {$0 == routeChoice}), var routes = appViewFromCarPlayWindow?.routes else { return }
         //        let route = routes[routeIndex]
         //        guard let foundRoute = routes.firstIndex(where: {$0 == route}) else { return }

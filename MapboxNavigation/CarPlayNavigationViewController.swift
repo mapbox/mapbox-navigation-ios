@@ -185,6 +185,8 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     func exitNavigation() {
         carSession.finishTrip()
         mapTemplateController.stopNavigationSession()
+        mapView?.removeRoutes()
+        mapView?.removeWaypoints()
         dismiss(animated: true, completion: nil)
         carPlayNavigationDelegate?.carPlayNavigationViewControllerDidDismiss(self, byCanceling: true)
     }
