@@ -180,6 +180,8 @@ class NavigationViewControllerTests: XCTestCase {
         let styleLoaded = XCTestExpectation(description: "Style Loaded")
         let navigationViewController = NavigationViewControllerTestable(for: initialRoute, styles: [TestableDayStyle()], styleLoaded: styleLoaded)
         
+        TestableDayStyle().apply()
+
         //wait for the style to load -- routes won't show without it.
         if !navigationViewController.didFinishLoadingStyle {
             wait(for: [styleLoaded], timeout: 5)
