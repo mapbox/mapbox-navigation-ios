@@ -179,8 +179,6 @@ class NavigationViewControllerTests: XCTestCase {
     func testDestinationAnnotationUpdatesUponReroute() {
         let styleLoaded = XCTestExpectation(description: "Style Loaded")
         let navigationViewController = NavigationViewControllerTestable(for: initialRoute, styles: [TestableDayStyle()], styleLoaded: styleLoaded)
-        
-        TestableDayStyle().apply()
 
         //wait for the style to load -- routes won't show without it.
         if !navigationViewController.didFinishLoadingStyle {
@@ -282,7 +280,21 @@ class NavigationViewControllerTestable: NavigationViewController {
 class TestableDayStyle: DayStyle {
     required init() {
         super.init()
-        mapStyleURL = Fixture.blankStyle
+        mapStyleURL = Fixture.blankStyle.cacheBustingStyleURL
+    }
+}
+
+extension URL {
+    var cacheBustingStyleURL: URL {
+        var components = URLComponents(url: self, resolvingAgainstBaseURL: false)!
+        
+        // Bypass caching with ?fresh=true&timestamp=<now>
+        var items = components.queryItems ?? [URLQueryItem]()
+        items.append(URLQueryItem(name: "fresh", value: "true"))
+        items.append(URLQueryItem(name: "_", value: "\(Date().timeIntervalSince1970)"))
+        components.queryItems = items
+        
+        return components.url!
     }
 }
 
