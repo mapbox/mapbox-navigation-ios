@@ -136,9 +136,6 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         self.routeController.delegate = self
         mapTemplateController.delegate = self
         mapTemplateController.mapDelegate = self
-        
-        self.styleManager = StyleManager(self)
-        self.styleManager.styles =  [CarPlayDayStyle(), CarPlayNightStyle()]
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -159,6 +156,9 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         mapView?.longManeuverDistance = 500
         
         view.addSubview(mapView!)
+        
+        styleManager = StyleManager(self)
+        styleManager.styles = [CarPlayDayStyle(), CarPlayNightStyle()]
         
         resumeNotifications()
         routeController.resume()
