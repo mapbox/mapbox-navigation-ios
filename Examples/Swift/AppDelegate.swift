@@ -59,9 +59,7 @@ extension AppDelegate: CPApplicationDelegate {
 extension AppDelegate: CarPlayManagerDelegate {
 
     // MARK: CarPlayManagerDelegate
-
-    func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith progress: RouteProgress) {
-
+    func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith routeController: RouteController) {
         guard let presentingController = window?.rootViewController else { return }
         
         // Open StepsViewController on iPhone if NavigationViewController is being presented
@@ -70,10 +68,15 @@ extension AppDelegate: CarPlayManagerDelegate {
         } else {
             
             // Start NavigationViewController and open StepsViewController if navigation has not started on iPhone yet.
-            let navigationViewControllerExistInStack = UIViewController.viewControllerInStack(of: NavigationViewController.self) != nil
+            let navigationViewControllerExistsInStack = UIViewController.viewControllerInStack(of: NavigationViewController.self) != nil
             
-            if !navigationViewControllerExistInStack {
-                let navigationViewController = NavigationViewController(for: progress.route, directions: Directions.shared)
+            if !navigationViewControllerExistsInStack {
+                
+                let locationManager = routeController.locationManager
+                let directions = routeController.directions
+                let route = routeController.routeProgress.route
+                let navigationViewController = NavigationViewController(for: route, directions: directions, locationManager: locationManager)
+                
                 presentingController.present(navigationViewController, animated: true, completion: {
                     navigationViewController.openStepsViewController()
                 })
@@ -82,8 +85,12 @@ extension AppDelegate: CarPlayManagerDelegate {
     }
 
     func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
-        if let viewController = window?.rootViewController?.presentedViewController as? NavigationViewController {
-            viewController.dismiss(animated: true, completion: nil)
+        let navigationViewControllerExistsInStack = UIViewController.viewControllerInStack(of: NavigationViewController.self) != nil
+        
+        if navigationViewControllerExistsInStack {
+            if let navigationViewController = UIViewController.viewControllerInStack(of: NavigationViewController.self) {
+                navigationViewController.dismiss(animated: true, completion: nil)
+            }
         }
     }
     
@@ -115,7 +122,7 @@ extension AppDelegate: CarPlayManagerDelegate {
     func carPlayManager(_ carPlayManager: CarPlayManager, routeControllerAlong route: Route) -> RouteController {
         if simulatesLocationsInCarPlay {
             let locationManager = SimulatedLocationManager(route: route)
-            locationManager.speedMultiplier = 10
+            locationManager.speedMultiplier = 5
             return RouteController(along: route, locationManager: locationManager)
         } else {
             return RouteController(along: route)
