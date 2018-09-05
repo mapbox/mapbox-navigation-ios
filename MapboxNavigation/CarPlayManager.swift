@@ -29,9 +29,10 @@ public protocol CarPlayManagerDelegate {
      * Offers the delegate an opportunity to provide a customized list of buttons displayed on the map.
      *
      * These buttons handle the gestures on the map view, so it is up to the developer to ensure the map template is interactive.
+     * If this method is not implemented, or if nil is returned, a default set of zoom and pan buttons will be provided.
      */
     @objc(carPlayManager:mapButtonsCompatibleWithTraitCollection:inTemplate:)
-    func carPlayManager(_ carplayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate) -> [CPMapButton]?
+    optional func carPlayManager(_ carplayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate) -> [CPMapButton]?
 
     /**
      * Offers the delegate an opportunity to provide an alternate navigator, otherwise a default built-in RouteController will be created and used.
@@ -148,7 +149,7 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
             mapTemplate.trailingNavigationBarButtons = [favoriteButton]
         }
         
-        if let mapButtons = delegate?.carPlayManager(self, mapButtonsCompatibleWith: traitCollection, in: mapTemplate) {
+        if let mapButtons = delegate?.carPlayManager?(self, mapButtonsCompatibleWith: traitCollection, in: mapTemplate) {
             mapTemplate.mapButtons = mapButtons
         } else if let vc = viewController as? CarPlayMapViewController {
             mapTemplate.mapButtons = [vc.zoomInButton(), vc.zoomOutButton(), panMapButton(for: mapTemplate, traitCollection: traitCollection)]
