@@ -87,10 +87,6 @@ extension AppDelegate: CarPlayManagerDelegate {
         }
     }
     
-    func carPlayManager(_ carPlayManager: CarPlayManager, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate) -> [CPBarButton]? {
-        return nil
-    }
-    
     func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate) -> [CPBarButton]? {
         guard let template = template as? CPListTemplate, template.title == "Favorites List" else {
             return nil
