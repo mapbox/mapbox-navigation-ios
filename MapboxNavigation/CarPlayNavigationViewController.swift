@@ -148,21 +148,22 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     override public func viewDidLoad() {
         super.viewDidLoad()
         
-        mapView = NavigationMapView(frame: view.bounds)
-        mapView?.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        mapView?.compassView.isHidden = true
-        mapView?.logoView.isHidden = true
-        mapView?.delegate = self
-        
-        mapView?.defaultAltitude = 500
-        mapView?.zoomedOutMotorwayAltitude = 1000
-        mapView?.longManeuverDistance = 500
-        
-        view.addSubview(mapView!)
+        let mapView = NavigationMapView(frame: view.bounds)
+        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        mapView.compassView.isHidden = true
+        mapView.logoView.isHidden = true
+        mapView.delegate = self
+
+        mapView.defaultAltitude = 500
+        mapView.zoomedOutMotorwayAltitude = 1000
+        mapView.longManeuverDistance = 500
+
+        self.mapView = mapView
+        view.addSubview(mapView)
         
         resumeNotifications()
         routeController.resume()
-        mapView?.recenterMap()
+        mapView.recenterMap()
     }
     
     override public func viewWillDisappear(_ animated: Bool) {

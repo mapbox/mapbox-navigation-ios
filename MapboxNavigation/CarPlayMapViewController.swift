@@ -15,7 +15,6 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
         let mapView = NavigationMapView()
         mapView.delegate = self
 //        mapView.navigationMapDelegate = self
-        mapView.userTrackingMode = .follow
         mapView.logoView.isHidden = true
         mapView.attributionButton.isHidden = true
         
@@ -25,6 +24,12 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        let camera = self.mapView.camera
+        camera.altitude = 16000
+        camera.pitch = 60
+
+        self.mapView.camera = camera
+        self.mapView.userTrackingMode = .followWithHeading
     }
     
     public func zoomInButton() -> CPMapButton {
