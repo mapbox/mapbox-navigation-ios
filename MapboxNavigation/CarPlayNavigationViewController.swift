@@ -182,13 +182,13 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         NotificationCenter.default.removeObserver(self, name: .routeControllerDidPassVisualInstructionPoint, object: nil)
     }
     
-    func exitNavigation() {
+    func exitNavigation(canceled: Bool = false) {
         carSession.finishTrip()
         mapTemplateController.stopNavigationSession()
         mapView?.removeRoutes()
         mapView?.removeWaypoints()
         dismiss(animated: true, completion: nil)
-        carPlayNavigationDelegate?.carPlayNavigationViewControllerDidDismiss(self, byCanceling: true)
+        carPlayNavigationDelegate?.carPlayNavigationViewControllerDidDismiss(self, byCanceling: canceled)
     }
     
     public func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
@@ -310,7 +310,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         return CPGridTemplate(title: "Feedback", gridButtons: buttons)
     }
     
-    func createEndOfRouteFeedbackUI() -> CPGridTemplate {
+    func endOfRouteFeedbackTemplate() -> CPGridTemplate {
         let buttonHandler: (_: CPGridButton) -> Void = { [weak self] (button) in
             //TODO: no such method exists, and the replacement candidate ignores the feedback sent, so ... ?
 //            self?.routeController.setEndOfRoute(rating: Int(button.titleVariants.first!.components(separatedBy: CharacterSet.decimalDigits.inverted).joined())!, comment: nil)
@@ -330,10 +330,11 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     
     func presentArrivalUI() {
         let exitAction = CPAlertAction(title: "Exit navigation", style: .cancel) { (action) in
+            self.exitNavigation()
             self.dismiss(animated: true, completion: nil)
         }
         let rateAction = CPAlertAction(title: "Rate your trip", style: .default) { (action) in
-            self.carInterfaceController.pushTemplate(self.createEndOfRouteFeedbackUI(), animated: true)
+            self.carInterfaceController.pushTemplate(self.endOfRouteFeedbackTemplate(), animated: true)
         }
         let alert = CPActionSheetTemplate(title: "You have arrived", message: "What would you like to do?", actions: [rateAction, exitAction])
         carInterfaceController.presentTemplate(alert, animated: true)
@@ -458,7 +459,7 @@ extension CarPlayNavigationViewController: NavigationMapTemplateControllerDelega
     
     func navigationMapTemplateController(_ navigationMapTemplateController: NavigationMapTemplateController, willHandle barButton: CPBarButton) {
         if barButton == navigationMapTemplateController.exitButton {
-            exitNavigation()
+            exitNavigation(canceled: true)
         } else if barButton == navigationMapTemplateController.muteButton {
             NavigationSettings.shared.voiceMuted = !NavigationSettings.shared.voiceMuted
             barButton.title = NavigationSettings.shared.voiceMuted ? "Enable Voice" : "Disable Voice"
