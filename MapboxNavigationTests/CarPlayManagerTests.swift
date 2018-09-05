@@ -231,8 +231,8 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
     func carPlayManager(_ carplayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate) -> [CPMapButton]? {
         return mapButtons
     }
-
-    func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith progress: RouteProgress) {
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith routeController: RouteController) {
         navigationInitiated = true
     }
     
