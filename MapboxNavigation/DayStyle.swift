@@ -233,8 +233,16 @@ open class NightStyle: DayStyle {
     }
 }
 
+#if canImport(CarPlay)
+@available(iOS 12.0, *)
+public protocol CarPlayStyle {
+    var previewStyleURL: URL { get }
+}
 
-open class CarPlayDayStyle: DayStyle {
+@available(iOS 12.0, *)
+open class CarPlayDayStyle: DayStyle, CarPlayStyle {
+    public var previewStyleURL = URL(string: "mapbox://styles/mapbox/navigation-preview-day-v4")!
+    
     open override func apply() {
         super.apply()
         ExitView.appearance().foregroundColor = .white
@@ -242,9 +250,14 @@ open class CarPlayDayStyle: DayStyle {
     }
 }
 
-open class CarPlayNightStyle: NightStyle {open override func apply() {
-    super.apply()
+@available(iOS 12.0, *)
+open class CarPlayNightStyle: NightStyle, CarPlayStyle {
+    public var previewStyleURL = URL(string: "mapbox://styles/mapbox/navigation-preview-night-v4")!
+    
+    open override func apply() {
+        super.apply()
         ExitView.appearance().foregroundColor = .white
         GenericRouteShield.appearance().foregroundColor = .white
     }
 }
+#endif
