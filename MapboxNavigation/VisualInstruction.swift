@@ -25,7 +25,6 @@ extension VisualInstruction {
         guard blackAndWhiteManeuverIcons.count == 2 else { return nil }
         return CPImageSet(lightContentImage: blackAndWhiteManeuverIcons[1], darkContentImage: blackAndWhiteManeuverIcons[0])
     }
-#endif
 
     @available(iOS 12.0, *)
     func maneuverLabelAttributedText(bounds: @escaping () -> (CGRect), shieldHeight: CGFloat) -> NSAttributedString? {
@@ -35,4 +34,5 @@ extension VisualInstruction {
         instructionLabelPrimary.instruction = self
         return instructionLabelPrimary.attributedText
     }
+#endif
 }
