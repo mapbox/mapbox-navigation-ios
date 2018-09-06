@@ -94,10 +94,6 @@ extension AppDelegate: CarPlayManagerDelegate {
         }
     }
     
-    func carPlayManager(_ carPlayManager: CarPlayManager, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate) -> [CPBarButton]? {
-        return nil
-    }
-    
     func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate) -> [CPBarButton]? {
         guard let template = template as? CPListTemplate, template.title == "Favorites List" else {
             return nil
@@ -113,10 +109,6 @@ extension AppDelegate: CarPlayManagerDelegate {
         }
         simulationButton.title = self.simulatesLocationsInCarPlay ? "Don’t Simulate" : "Simulate"
         return [simulationButton]
-    }
-    
-    func carPlayManager(_ carplayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate) -> [CPMapButton]? {
-        return nil
     }
     
     func carPlayManager(_ carPlayManager: CarPlayManager, routeControllerAlong route: Route) -> RouteController {

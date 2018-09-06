@@ -13,9 +13,10 @@ public protocol CarPlayManagerDelegate {
      * Offers the delegate an opportunity to provide a customized list of leading bar buttons.
      *
      * These buttons' tap handlers encapsulate the action to be taken, so it is up to the developer to ensure the hierarchy of templates is adequately navigable.
+     * If this method is not implemented, or if nil is returned, an implementation of CPSearchTemplate will be provided which uses the Mapbox Geocoder.
      */
     @objc(carPlayManager:leadingNavigationBarButtonsWithTraitCollection:inTemplate:)
-    func carPlayManager(_ carPlayManager: CarPlayManager, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate) -> [CPBarButton]?
+    optional func carPlayManager(_ carPlayManager: CarPlayManager, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate) -> [CPBarButton]?
 
     /**
      * Offers the delegate an opportunity to provide a customized list of trailing bar buttons.
@@ -29,9 +30,10 @@ public protocol CarPlayManagerDelegate {
      * Offers the delegate an opportunity to provide a customized list of buttons displayed on the map.
      *
      * These buttons handle the gestures on the map view, so it is up to the developer to ensure the map template is interactive.
+     * If this method is not implemented, or if nil is returned, a default set of zoom and pan buttons will be provided.
      */
     @objc(carPlayManager:mapButtonsCompatibleWithTraitCollection:inTemplate:)
-    func carPlayManager(_ carplayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate) -> [CPMapButton]?
+    optional func carPlayManager(_ carplayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate) -> [CPMapButton]?
 
     /**
      * Offers the delegate an opportunity to provide an alternate navigator, otherwise a default built-in RouteController will be created and used.
@@ -131,7 +133,7 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
         let mapTemplate = CPMapTemplate()
         mapTemplate.mapDelegate = self
 
-        if let leadingButtons = delegate?.carPlayManager(self, leadingNavigationBarButtonsCompatibleWith: traitCollection, in: mapTemplate) {
+        if let leadingButtons = delegate?.carPlayManager?(self, leadingNavigationBarButtonsCompatibleWith: traitCollection, in: mapTemplate) {
             mapTemplate.leadingNavigationBarButtons = leadingButtons
         } else {
             let searchTemplate = CPSearchTemplate()
@@ -148,7 +150,7 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
             mapTemplate.trailingNavigationBarButtons = [favoriteButton]
         }
         
-        if let mapButtons = delegate?.carPlayManager(self, mapButtonsCompatibleWith: traitCollection, in: mapTemplate) {
+        if let mapButtons = delegate?.carPlayManager?(self, mapButtonsCompatibleWith: traitCollection, in: mapTemplate) {
             mapTemplate.mapButtons = mapButtons
         } else if let vc = viewController as? CarPlayMapViewController {
             mapTemplate.mapButtons = [vc.zoomInButton(), vc.zoomOutButton(), panMapButton(for: mapTemplate, traitCollection: traitCollection)]
@@ -273,7 +275,7 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
                                        detailText: CPFavoritesList.POI.timesSquare.subTitle)
             let listSection = CPListSection(items: [mapboxSFItem, timesSquareItem])
             let listTemplate = CPListTemplate(title: "Favorites List", sections: [listSection])
-            if let leadingButtons = strongSelf.delegate?.carPlayManager(strongSelf, leadingNavigationBarButtonsCompatibleWith: traitCollection, in: listTemplate) {
+            if let leadingButtons = strongSelf.delegate?.carPlayManager?(strongSelf, leadingNavigationBarButtonsCompatibleWith: traitCollection, in: listTemplate) {
                 listTemplate.leadingNavigationBarButtons = leadingButtons
             }
             if let trailingButtons = strongSelf.delegate?.carPlayManager(strongSelf, trailingNavigationBarButtonsCompatibleWith: traitCollection, in: listTemplate) {
