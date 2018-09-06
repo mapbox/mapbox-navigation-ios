@@ -38,7 +38,7 @@ class LeaksSpec: QuickSpec {
             let route = initialRoute
             
             let navigationViewController = LeakTest {
-                return NavigationViewController(for: route, directions: Directions.shared, styles: nil, locationManager: nil)
+                return NavigationViewController(for: route, directions: Directions.shared, styles: nil, locationManager: nil, voiceController: FakeVoiceController())
             }
             
             it("must not leak") {
