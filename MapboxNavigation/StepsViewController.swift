@@ -6,8 +6,20 @@ import Turf
 @objc(MBStepsBackgroundView)
 open class StepsBackgroundView: UIView { }
 
+
+/**
+ `StepsViewControllerDelegate` provides methods for user interactions in a `StepsViewController`.
+ */
 @objc public protocol StepsViewControllerDelegate: class {
+    
+    /**
+     Called when the user selects a step in a `StepsViewController`.
+     */
     @objc optional func stepsViewController(_ viewController: StepsViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell)
+    
+    /**
+     Called when the user dismisses the `StepsViewController`.
+     */
     @objc func didDismissStepsViewController(_ viewController: StepsViewController)
 }
 
@@ -168,6 +180,10 @@ open class StepsViewController: UIViewController {
         tableView.register(StepTableViewCell.self, forCellReuseIdentifier: cellId)
     }
     
+    
+    /**
+     Shows and animates the `StepsViewController` down.
+     */
     public func dropDownAnimation() {
         var frame = view.frame
         frame.origin.y -= frame.height
@@ -180,6 +196,10 @@ open class StepsViewController: UIViewController {
         }, completion: nil)
     }
     
+    
+    /**
+     Dismisses and animates the `StepsViewController` up.
+     */
     public func slideUpAnimation(completion: CompletionHandler? = nil) {
         UIView.animate(withDuration: 0.35, delay: 0, options: [.beginFromCurrentState, .curveEaseIn], animations: {
             var frame = self.view.frame
@@ -194,6 +214,9 @@ open class StepsViewController: UIViewController {
         delegate?.didDismissStepsViewController(self)
     }
     
+    /**
+     Dismisses the `StepsViewController`.
+     */
     public func dismiss(completion: CompletionHandler? = nil) {
         slideUpAnimation {
             self.willMove(toParentViewController: nil)
