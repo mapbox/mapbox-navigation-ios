@@ -39,4 +39,4 @@ public let NavigationViewMinimumVolumeForWarning: Float = 0.3
 /**
  The distance in points that a single press of the panning button pans the car play map by.
  */
-public let CarPlayMapViewPanningIncrement: CLLocationDistance = 50
+public let CarPlayMapViewPanningIncrement: CLLocationDistance = 500
