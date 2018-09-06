@@ -245,8 +245,8 @@ open class CarPlayDayStyle: DayStyle, CarPlayStyle {
     
     open override func apply() {
         super.apply()
-        ExitView.appearance().foregroundColor = .white
-        GenericRouteShield.appearance().foregroundColor = .white
+        ExitView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).foregroundColor = .white
+        GenericRouteShield.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).foregroundColor = .white
     }
 }
 
@@ -256,8 +256,8 @@ open class CarPlayNightStyle: NightStyle, CarPlayStyle {
     
     open override func apply() {
         super.apply()
-        ExitView.appearance().foregroundColor = .white
-        GenericRouteShield.appearance().foregroundColor = .white
+        ExitView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).foregroundColor = .white
+        GenericRouteShield.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).foregroundColor = .white
     }
 }
 #endif
