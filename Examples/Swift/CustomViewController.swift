@@ -18,6 +18,8 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
 
     // Start voice instructions
     let voiceController = MapboxVoiceController()
+    
+    var stepsViewController: StepsViewController?
 
     @IBOutlet var mapView: NavigationMapView!
     @IBOutlet weak var cancelButton: UIButton!
@@ -35,6 +37,8 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
         
         mapView.delegate = self
         mapView.compassView.isHidden = true
+        
+        instructionsBannerView.delegate = self
 
         // Add listeners for progress updates
         resumeNotifications()
@@ -113,5 +117,54 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
     
     @IBAction func showFeedback(_ sender: Any) {
         present(feedbackViewController, animated: true, completion: nil)
+    }
+    
+    func toggleStepsList() {
+        if let controller = stepsViewController {
+            controller.dismiss()
+            stepsViewController = nil
+        } else {
+            guard let routeController = routeController else { return }
+            
+            let controller = StepsViewController(routeProgress: routeController.routeProgress)
+            controller.delegate = self
+            addChildViewController(controller)
+            view.addSubview(controller.view)
+            
+            controller.view.topAnchor.constraint(equalTo: instructionsBannerView.bottomAnchor).isActive = true
+            controller.view.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+            controller.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+            controller.view.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+            
+            controller.didMove(toParentViewController: self)
+            controller.dropDownAnimation()
+            
+            stepsViewController = controller
+            return
+        }
+    }
+}
+
+extension CustomViewController: InstructionsBannerViewDelegate {
+    func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView) {
+        toggleStepsList()
+    }
+    
+    func didDragInstructionsBanner(_ sender: BaseInstructionsBannerView) {
+        toggleStepsList()
+    }
+}
+
+extension CustomViewController: StepsViewControllerDelegate {
+    func didDismissStepsViewController(_ viewController: StepsViewController) {
+        viewController.dismiss { [weak self] in
+            self?.stepsViewController = nil
+        }
+    }
+    
+    func stepsViewController(_ viewController: StepsViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell) {
+        viewController.dismiss { [weak self] in
+            self?.stepsViewController = nil
+        }
     }
 }
