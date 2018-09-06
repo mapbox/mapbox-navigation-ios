@@ -523,13 +523,6 @@ extension CarPlayManager: CPMapTemplateDelegate {
         camera.centerCoordinate = newCenter
         mapView.setCamera(camera, animated: true)
     }
-    
-    public func mapTemplateDidDismissPanningInterface(_ mapTemplate: CPMapTemplate) {
-        guard let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController else {
-            return
-        }
-        carPlayMapViewController.mapView.userTrackingMode = .follow
-    }
 }
 
 @available(iOS 12.0, *)
