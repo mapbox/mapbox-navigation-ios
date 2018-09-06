@@ -9,13 +9,6 @@ struct RecentItem: Codable, Equatable {
         return lhs.timestamp == rhs.timestamp && lhs.geocodedPlacemark == rhs.geocodedPlacemark
     }
     
-    @available(iOS 12.0, *)
-    func listItem() -> CPListItem {
-        let item = CPListItem(text: geocodedPlacemark.formattedName, detailText: geocodedPlacemark.address, image: nil, showsDisclosureIndicator: true)
-        item.userInfo = [CarPlayGeocoder.CarPlayGeocodedPlacemarkKey: geocodedPlacemark]
-        return item
-    }
-    
     var timestamp: Date
     var geocodedPlacemark: GeocodedPlacemark
     

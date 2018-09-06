@@ -64,9 +64,9 @@ public class CarPlayGeocoder: Geocoder {
     @available(iOS 12.0, *)
     static func recentSearches(_ searchText: String) -> [CPListItem] {
         if searchText.isEmpty {
-            return recentItems.map { $0.listItem() }
+            return recentItems.map { $0.geocodedPlacemark.listItem() }
         }
-        return recentItems.filter { $0.matches(searchText) }.map { $0.listItem() }
+        return recentItems.filter { $0.matches(searchText) }.map { $0.geocodedPlacemark.listItem() }
     }
     
     @available(iOS 12.0, *)
