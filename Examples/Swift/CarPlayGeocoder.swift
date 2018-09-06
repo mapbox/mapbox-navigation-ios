@@ -55,6 +55,7 @@ public class CarPlayGeocoder: Geocoder {
         }
         
         recentItems.add(RecentItem(placemark))
+        recentItems.save()
         
         let destinationWaypoint = Waypoint(location: location, heading: nil, name: placemark.formattedName)
         CarPlayManager.shared.calculateRouteAndStart(to: destinationWaypoint, completionHandler: completionHandler)
