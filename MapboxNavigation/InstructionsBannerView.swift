@@ -2,12 +2,22 @@ import UIKit
 import MapboxCoreNavigation
 import MapboxDirections
 
+/**
+ `InstructionsBannerViewDelegate` provides methods for reacting to user interactions in `InstructionsBannerView`.
+ */
 @objc(MBInstructionsBannerViewDelegate)
-protocol InstructionsBannerViewDelegate: class {
+public protocol InstructionsBannerViewDelegate: class {
     
+    /**
+     Called when the user taps the `InstructionsBannerView`.
+     */
     @objc(didTapInstructionsBanner:)
     optional func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView)
     
+    
+    /**
+     Called when the user drags either up or down on the `InstructionsBannerView`.
+     */
     @objc(didDragInstructionsBanner:)
     optional func didDragInstructionsBanner(_ sender: BaseInstructionsBannerView)
 }
@@ -28,7 +38,7 @@ open class BaseInstructionsBannerView: UIControl {
     weak var _separatorView: UIView!
     weak var separatorView: SeparatorView!
     weak var stepListIndicatorView: StepListIndicatorView!
-    weak var delegate: InstructionsBannerViewDelegate? {
+    public weak var delegate: InstructionsBannerViewDelegate? {
         didSet {
             stepListIndicatorView.isHidden = false
         }
