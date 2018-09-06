@@ -70,6 +70,7 @@ extension Array where Element == RecentItem {
         updated.timestamp = Date()
         remove(alreadyExisting)
         add(updated)
+        save()
     }
     
     mutating func remove(_ recentItem: RecentItem) {

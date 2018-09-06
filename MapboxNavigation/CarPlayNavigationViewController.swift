@@ -145,24 +145,25 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     override public func viewDidLoad() {
         super.viewDidLoad()
         
-        mapView = NavigationMapView(frame: view.bounds)
-        mapView?.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        mapView?.compassView.isHidden = true
-        mapView?.logoView.isHidden = true
-        mapView?.delegate = self
-        
-        mapView?.defaultAltitude = 500
-        mapView?.zoomedOutMotorwayAltitude = 1000
-        mapView?.longManeuverDistance = 500
-        
-        view.addSubview(mapView!)
+        let mapView = NavigationMapView(frame: view.bounds)
+        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        mapView.compassView.isHidden = true
+        mapView.logoView.isHidden = true
+        mapView.delegate = self
+
+        mapView.defaultAltitude = 500
+        mapView.zoomedOutMotorwayAltitude = 1000
+        mapView.longManeuverDistance = 500
+
+        self.mapView = mapView
+        view.addSubview(mapView)
         
         styleManager = StyleManager(self)
         styleManager.styles = [CarPlayDayStyle(), CarPlayNightStyle()]
         
         resumeNotifications()
         routeController.resume()
-        mapView?.recenterMap()
+        mapView.recenterMap()
     }
     
     override public func viewWillDisappear(_ animated: Bool) {
@@ -210,7 +211,8 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         let location = notification.userInfo![RouteControllerNotificationUserInfoKey.locationKey] as! CLLocation
         
         // Update the user puck
-        mapView?.updateCourseTracking(location: location, animated: true)
+        let camera = MGLMapCamera(lookingAtCenter: location.coordinate, fromDistance: 120, pitch: 60, heading: location.course)
+        mapView?.updateCourseTracking(location: location, camera: camera, animated: true)
         
         let congestionLevel = routeProgress.averageCongestionLevelRemainingOnLeg ?? .unknown
         guard let maneuver = carSession.upcomingManeuvers.first else { return }
