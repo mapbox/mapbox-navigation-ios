@@ -5,6 +5,8 @@ import CarPlay
 @available(iOS 12.0, *)
 class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
     
+    var styleManager: StyleManager!
+    
     var mapView: NavigationMapView {
         get {
             return self.view as! NavigationMapView
@@ -24,10 +26,13 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        styleManager = StyleManager(self)
+        styleManager.styles = [CarPlayDayStyle(), CarPlayNightStyle()]
+        
         let camera = self.mapView.camera
         camera.altitude = 16000
         camera.pitch = 60
-
+        
         self.mapView.camera = camera
         self.mapView.userTrackingMode = .followWithHeading
     }
@@ -62,6 +67,30 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
         if let mapView = mapView as? NavigationMapView {
             mapView.localizeLabels()
         }
+    }
+}
+
+@available(iOS 12.0, *)
+extension CarPlayMapViewController: StyleManagerDelegate {
+    func locationFor(styleManager: StyleManager) -> CLLocation? {
+        return mapView.userLocationForCourseTracking ?? mapView.userLocation?.location
+    }
+    
+    func styleManager(_ styleManager: StyleManager, didApply style: Style) {
+        let styleURL: URL
+        if let style = style as? CarPlayStyle {
+            styleURL = style.previewStyleURL
+        } else {
+            styleURL = style.mapStyleURL
+        }
+        if mapView.styleURL != styleURL {
+            mapView.style?.transition = MGLTransition(duration: 0.5, delay: 0)
+            mapView.styleURL = styleURL
+        }
+    }
+    
+    func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
+        mapView.reloadStyle(self)
     }
 }
 #endif
