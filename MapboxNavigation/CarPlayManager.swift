@@ -98,17 +98,24 @@ public class CarPlayManager: NSObject, CPSearchTemplateDelegate {
      * This property manages the relevant events recorded for telemetry analysis.
      */
     public var eventsManager = EventsManager()
-
-    lazy var briefDateComponentsFormatter: DateComponentsFormatter = {
+    
+    lazy var fullDateComponentsFormatter: DateComponentsFormatter = {
         let formatter = DateComponentsFormatter()
-        formatter.unitsStyle = .brief
+        formatter.unitsStyle = .full
+        formatter.allowedUnits = [.day, .hour, .minute]
+        return formatter
+    }()
+
+    lazy var shortDateComponentsFormatter: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .short
         formatter.allowedUnits = [.day, .hour, .minute]
         return formatter
     }()
     
-    lazy var abbreviatedDateComponentsFormatter: DateComponentsFormatter = {
+    lazy var briefDateComponentsFormatter: DateComponentsFormatter = {
         let formatter = DateComponentsFormatter()
-        formatter.unitsStyle = .abbreviated
+        formatter.unitsStyle = .brief
         formatter.allowedUnits = [.day, .hour, .minute]
         return formatter
     }()
@@ -372,20 +379,15 @@ extension CarPlayManager: CPListTemplateDelegate {
                 return
             }
             
-            var routeChoices: [CPRouteChoice] = []
-            for (i, route) in routes.enumerated() {
-                let additionalInformationVariants: [String]
-                if i == 0 {
-                    additionalInformationVariants = ["Fastest Route"]
-                } else {
-                    let delay = route.expectedTravelTime - routes.first!.expectedTravelTime
-                    let briefDelay = self.briefDateComponentsFormatter.string(from: delay)!
-                    let abbreviatedDelay = self.abbreviatedDateComponentsFormatter.string(from: delay)!
-                    additionalInformationVariants = ["\(briefDelay) Slower", "+\(abbreviatedDelay)"]
-                }
-                let routeChoice = CPRouteChoice(summaryVariants: [route.description], additionalInformationVariants: additionalInformationVariants, selectionSummaryVariants: [])
+            let routeChoices = routes.map { (route) -> CPRouteChoice in
+                let summaryVariants = [
+                    self.fullDateComponentsFormatter.string(from: route.expectedTravelTime)!,
+                    self.shortDateComponentsFormatter.string(from: route.expectedTravelTime)!,
+                    self.briefDateComponentsFormatter.string(from: route.expectedTravelTime)!
+                ]
+                let routeChoice = CPRouteChoice(summaryVariants: summaryVariants, additionalInformationVariants: [route.description], selectionSummaryVariants: [route.description])
                 routeChoice.userInfo = route
-                routeChoices.append(routeChoice)
+                return routeChoice
             }
             
             //let placemarks = waypoints.map { MKPlacemark(coordinate: $0.coordinate, addressDictionary: ["street": $0.name]) }
@@ -394,7 +396,7 @@ extension CarPlayManager: CPListTemplateDelegate {
             let trip = CPTrip(origin: MKMapItem(placemark: originPlacemark), destination: MKMapItem(placemark: destinationPlacemark), routeChoices: routeChoices)
             trip.userInfo = routeOptions
             
-            let defaultPreviewText = CPTripPreviewTextConfiguration(startButtonTitle: "Go", additionalRoutesButtonTitle: "Routes", overviewButtonTitle: "Overview")
+            let defaultPreviewText = CPTripPreviewTextConfiguration(startButtonTitle: "Go", additionalRoutesButtonTitle: "More Routes", overviewButtonTitle: "Overview")
             
             previewTemplate.showTripPreviews([trip], textConfiguration: defaultPreviewText)
         }
