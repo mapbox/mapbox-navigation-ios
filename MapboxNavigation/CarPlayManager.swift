@@ -73,7 +73,7 @@ public protocol CarPlayManagerDelegate {
 
 @available(iOS 12.0, *)
 @objc(MBCarPlayManager)
-public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTemplateDelegate {
+public class CarPlayManager: NSObject, CPSearchTemplateDelegate {
 
     public fileprivate(set) var interfaceController: CPInterfaceController?
     public fileprivate(set) var carWindow: UIWindow?
@@ -302,6 +302,20 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
     }
 }
 
+// MARK: CPInterfaceControllerDelegate
+@available(iOS 12.0, *)
+extension CarPlayManager: CPInterfaceControllerDelegate {
+    public func templateDidAppear(_ aTemplate: CPTemplate, animated: Bool) {
+        guard aTemplate == interfaceController?.rootTemplate, let carPlayMapViewController = carWindow?.rootViewController as? CarPlayMapViewController else {
+            return
+        }
+        let mapView = carPlayMapViewController.mapView
+        mapView.removeRoutes()
+        mapView.removeWaypoints()
+        mapView.userTrackingMode = .followWithHeading
+    }
+}
+
 // MARK: CPListTemplateDelegate
 @available(iOS 12.0, *)
 extension CarPlayManager: CPListTemplateDelegate {
@@ -329,7 +343,9 @@ extension CarPlayManager: CPListTemplateDelegate {
         
         let originWaypoint = fromWaypoint ?? Waypoint(location: location, heading: userLocation.heading, name: "Current Location")
         
-        interfaceController.popToRootTemplate(animated: false)
+        let previewTemplate = CPMapTemplate()
+        previewTemplate.mapDelegate = self
+        interfaceController.pushTemplate(previewTemplate, animated: true)
         
         let routeOptions = NavigationRouteOptions(waypoints: [originWaypoint, toWaypoint])
         Directions.shared.calculate(routeOptions) { [weak self, weak mapTemplate] (waypoints, routes, error) in
@@ -380,7 +396,7 @@ extension CarPlayManager: CPListTemplateDelegate {
             
             let defaultPreviewText = CPTripPreviewTextConfiguration(startButtonTitle: "Go", additionalRoutesButtonTitle: "Routes", overviewButtonTitle: "Overview")
             
-            mapTemplate.showTripPreviews([trip], textConfiguration: defaultPreviewText)
+            previewTemplate.showTripPreviews([trip], textConfiguration: defaultPreviewText)
         }
     }
 }
@@ -443,6 +459,15 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let line = MGLPolyline(coordinates: route.coordinates!, count: UInt(route.coordinates!.count))
         let camera = mapView.cameraThatFitsShape(line, direction: 0, edgePadding: padding)
         mapView.setCamera(camera, animated: true)
+    }
+    
+    public func mapTemplateDidCancelNavigation(_ mapTemplate: CPMapTemplate) {
+        guard let carPlayMapViewController = carWindow?.rootViewController as? CarPlayMapViewController else {
+            return
+        }
+        let mapView = carPlayMapViewController.mapView
+        mapView.removeRoutes()
+        mapView.removeWaypoints()
     }
     
     public func mapTemplateDidBeginPanGesture(_ mapTemplate: CPMapTemplate) {
