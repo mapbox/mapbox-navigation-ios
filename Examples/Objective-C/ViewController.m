@@ -31,7 +31,7 @@
     [self resumeNotifications];
 }
 - (void)viewDidAppear:(BOOL)animated {
-    [self.navigation resume];
+    [self.navigation start];
     [super viewDidAppear:animated];
 }
 
