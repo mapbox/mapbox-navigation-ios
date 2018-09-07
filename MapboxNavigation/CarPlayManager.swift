@@ -41,10 +41,15 @@ public protocol CarPlayManagerDelegate {
     @objc(carPlayManager:routeControllerAlongRoute:)
     optional func carPlayManager(_ carPlayManager: CarPlayManager, routeControllerAlong route: Route) -> RouteController
     
-    
+    /**
+     * Offers the delegate an opportunity to react to updates in the search text.
+     */
     @objc(carPlayManager:searchTemplate:updatedSearchText:completionHandler:)
     optional func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void)
-    
+
+    /**
+     * Offers the delegate an opportunity to react to selection of a search result.
+     */
     @objc(carPlayManager:searchTemplate:selectedResult:completionHandler:)
     optional func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void)
 //}
@@ -53,11 +58,15 @@ public protocol CarPlayManagerDelegate {
 //@objc(MBCarPlayManagerNavigationDelegate)
 //public protocol CarPlayManagerNavigationDelegate {
 
-    /***/
+    /**
+     * Called when navigation begins so that the containing app can update accordingly.
+     */
     @objc(carPlayManager:didBeginNavigationWithRouteController:)
     func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith routeController: RouteController) -> ()
 
-    /***/
+    /**
+     * Called when navigation ends so that the containing app can update accordingly.
+     */
     @objc func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) -> ()
 
 }
@@ -224,7 +233,6 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
 
     public func searchTemplateSearchButtonPressed(_ searchTemplate: CPSearchTemplate) {
         // TODO: based on this callback we should push a CPListTemplate with a longer list of results.
-        // Need to coordinate delegation of list item selection from this template vs items displayed directly in the search template
     }
 
     public func searchTemplate(_ searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void) {
@@ -297,13 +305,8 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
 // MARK: CPListTemplateDelegate
 @available(iOS 12.0, *)
 extension CarPlayManager: CPListTemplateDelegate {
+
     public func listTemplate(_ listTemplate: CPListTemplate, didSelect item: CPListItem, completionHandler: @escaping () -> Void) {
-//        guard let rootViewController = self.carWindow?.rootViewController as? CarPlayMapViewController else {
-//            completionHandler()
-//            return
-//        }
-        //let mapView = rootViewController.mapView
-        
         guard let rawValue = item.text,
             let favoritePOI = CPFavoritesList.POI(rawValue: rawValue) else {
                 completionHandler()
@@ -315,7 +318,6 @@ extension CarPlayManager: CPListTemplateDelegate {
     }
     
     public func calculateRouteAndStart(from fromWaypoint: Waypoint? = nil, to toWaypoint: Waypoint, completionHandler: @escaping () -> Void) {
-        
         guard let rootViewController = self.carWindow?.rootViewController as? CarPlayMapViewController,
             let mapTemplate = self.interfaceController?.rootTemplate as? CPMapTemplate,
             let userLocation = rootViewController.mapView.userLocation,
@@ -414,11 +416,6 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let mapView = carPlayMapViewController.mapView
         mapView.removeRoutes()
         mapView.removeWaypoints()
-        
-//        if let appViewFromCarPlayWindow = appViewFromCarPlayWindow {
-//            navigationViewController.isUsedInConjunctionWithCarPlayWindow = true
-//            appViewFromCarPlayWindow.present(navigationViewController, animated: true)
-//        }
 
         delegate?.carPlayManager(self, didBeginNavigationWith: routeController)
     }
@@ -444,12 +441,6 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let line = MGLPolyline(coordinates: route.coordinates!, count: UInt(route.coordinates!.count))
         let camera = mapView.cameraThatFitsShape(line, direction: 0, edgePadding: padding)
         mapView.setCamera(camera, animated: true)
-        //        guard let routeIndex = trip.routeChoices.lastIndex(where: {$0 == routeChoice}), var routes = appViewFromCarPlayWindow?.routes else { return }
-        //        let route = routes[routeIndex]
-        //        guard let foundRoute = routes.firstIndex(where: {$0 == route}) else { return }
-        //        routes.remove(at: foundRoute)
-        //        routes.insert(route, at: 0)
-        //        appViewFromCarPlayWindow?.routes = routes
     }
     
     public func mapTemplateDidBeginPanGesture(_ mapTemplate: CPMapTemplate) {
