@@ -333,11 +333,13 @@ extension CarPlayManager: CPListTemplateDelegate {
         
         let routeOptions = NavigationRouteOptions(waypoints: [originWaypoint, toWaypoint])
         Directions.shared.calculate(routeOptions) { [weak self, weak mapTemplate] (waypoints, routes, error) in
-            guard let `self` = self, let mapTemplate = mapTemplate, let waypoints = waypoints, let routes = routes else {
+            defer {
                 completionHandler()
-                return
             }
             
+            guard let `self` = self, let mapTemplate = mapTemplate else {
+                return
+            }
             if let error = error {
                 let okAction = CPAlertAction(title: "OK", style: .default) { _ in
                     interfaceController.popToRootTemplate(animated: true)
@@ -349,7 +351,8 @@ extension CarPlayManager: CPListTemplateDelegate {
                                               secondaryAction: nil,
                                               duration: 0)
                 mapTemplate.present(navigationAlert: alert, animated: true)
-                // TODO: do we need to fire the completionHandler? retry mechanism?
+            }
+            guard let waypoints = waypoints, let routes = routes else {
                 return
             }
             
@@ -378,7 +381,6 @@ extension CarPlayManager: CPListTemplateDelegate {
             let defaultPreviewText = CPTripPreviewTextConfiguration(startButtonTitle: "Go", additionalRoutesButtonTitle: "Routes", overviewButtonTitle: "Overview")
             
             mapTemplate.showTripPreviews([trip], textConfiguration: defaultPreviewText)
-            completionHandler()
         }
     }
 }
