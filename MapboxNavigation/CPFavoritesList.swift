@@ -21,7 +21,7 @@ public enum CPFavoritesList {
         var location: CLLocation {
             switch self {
             case .mapboxSF:
-                return CLLocation(latitude: 37.7820776, longitude: -122.4155262)
+                return CLLocation(latitude: 37.788443, longitude: -122.4020258)
             case .timesSquare:
                 return CLLocation(latitude: 40.758899, longitude: -73.9873197)
             }
