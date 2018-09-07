@@ -112,8 +112,6 @@ public class StepsViewController: UIViewController {
     }
     
     func setupViews() {
-        view.translatesAutoresizingMaskIntoConstraints = false
-        
         let backgroundView = StepsBackgroundView()
         backgroundView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(backgroundView)
@@ -199,7 +197,12 @@ public class StepsViewController: UIViewController {
     }
     
     @IBAction func tappedDismiss(_ sender: Any) {
-        delegate?.didDismissStepsViewController(self)
+        let delegateRespondsToDismiss = delegate?.didDismissStepsViewController != nil
+        if delegateRespondsToDismiss {
+            delegate?.didDismissStepsViewController(self)
+        } else {
+            dismiss(animated: true, completion: nil)
+        }
     }
     
     func dismiss(completion: CompletionHandler? = nil) {
