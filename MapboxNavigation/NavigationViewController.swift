@@ -231,7 +231,7 @@ open class NavigationViewController: UIViewController {
      
      See `RouteVoiceController` for more information.
      */
-    @objc public lazy var voiceController: RouteVoiceController? = MapboxVoiceController()
+    @objc public var voiceController: RouteVoiceController!
     
     /**
      Provides all routing logic for the user.
@@ -333,10 +333,11 @@ open class NavigationViewController: UIViewController {
 
      See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
      */
-    @objc(initWithRoute:styles:navigationService:)
+    @objc(initWithRoute:styles:navigationService:voiceController:)
     required public init(for route: Route,
                          styles: [Style]? = [DayStyle(), NightStyle()],
-                         navigationService: NavigationService? = nil) {
+                         navigationService: NavigationService? = nil,
+                         voiceController: RouteVoiceController? = nil) {
         
         super.init(nibName: nil, bundle: nil)
         
@@ -344,6 +345,7 @@ open class NavigationViewController: UIViewController {
         self.navigationService.usesDefaultUserInterface = true
         self.navigationService.delegate = self
         self.navigationService.start()
+        self.voiceController = voiceController ?? MapboxVoiceController()
         
         let mapViewController = RouteMapViewController(navigationService: self.navigationService, delegate: self)
         self.mapViewController = mapViewController
