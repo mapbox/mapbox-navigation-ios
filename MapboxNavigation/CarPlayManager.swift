@@ -134,20 +134,19 @@ public class CarPlayManager: NSObject, CPSearchTemplateDelegate {
         window.rootViewController = viewController
         self.carWindow = window
         
-        let mapTemplate = createMapTemplate(for: interfaceController, viewController: viewController)
-        
-        interfaceController.setRootTemplate(mapTemplate, animated: false)
+        createMapTemplate(for: interfaceController, viewController: viewController)
         
         let timestamp = Date().ISO8601
         sendCarPlayConnectEvent(timestamp)
     }
 
-    func createMapTemplate(for interfaceController: CPInterfaceController, viewController: UIViewController) -> CPMapTemplate {
+    func createMapTemplate(for interfaceController: CPInterfaceController, viewController: UIViewController) {
         
         let traitCollection = viewController.traitCollection
         
         let mapTemplate = CPMapTemplate()
         mapTemplate.mapDelegate = self
+        interfaceController.setRootTemplate(mapTemplate, animated: false)
 
         if let leadingButtons = delegate?.carPlayManager?(self, leadingNavigationBarButtonsCompatibleWith: traitCollection, in: mapTemplate) {
             mapTemplate.leadingNavigationBarButtons = leadingButtons
@@ -171,8 +170,6 @@ public class CarPlayManager: NSObject, CPSearchTemplateDelegate {
         } else if let vc = viewController as? CarPlayMapViewController {
             mapTemplate.mapButtons = [vc.zoomInButton(), vc.zoomOutButton(), panMapButton(for: mapTemplate, traitCollection: traitCollection)]
         }
-        
-        return mapTemplate
     }
     
     func panMapButton(for mapTemplate: CPMapTemplate, traitCollection: UITraitCollection) -> CPMapButton {
@@ -352,6 +349,12 @@ extension CarPlayManager: CPListTemplateDelegate {
         
         let previewTemplate = CPMapTemplate()
         previewTemplate.mapDelegate = self
+        if let leadingButtons = delegate?.carPlayManager?(self, leadingNavigationBarButtonsCompatibleWith: rootViewController.traitCollection, in: previewTemplate) {
+            previewTemplate.leadingNavigationBarButtons = leadingButtons
+        }
+        if let trailingButtons = delegate?.carPlayManager(self, trailingNavigationBarButtonsCompatibleWith: rootViewController.traitCollection, in: previewTemplate) {
+            previewTemplate.trailingNavigationBarButtons = trailingButtons
+        }
         interfaceController.pushTemplate(previewTemplate, animated: true)
         
         let routeOptions = NavigationRouteOptions(waypoints: [originWaypoint, toWaypoint])
