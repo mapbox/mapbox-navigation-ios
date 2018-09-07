@@ -60,38 +60,16 @@ extension AppDelegate: CarPlayManagerDelegate {
 
     // MARK: CarPlayManagerDelegate
     func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith routeController: RouteController) {
+        // Present the steps view controller on iPhone when we start navigation on the CarPlay device
         guard let presentingController = window?.rootViewController else { return }
-        
-        // Open StepsViewController on iPhone if NavigationViewController is being presented
-        if let navigationViewController = presentingController as? NavigationViewController {
-            navigationViewController.openStepsViewController()
-        } else {
-            
-            // Start NavigationViewController and open StepsViewController if navigation has not started on iPhone yet.
-            let navigationViewControllerExistsInStack = UIViewController.viewControllerInStack(of: NavigationViewController.self) != nil
-            
-            if !navigationViewControllerExistsInStack {
-                
-                let locationManager = routeController.locationManager
-                let directions = routeController.directions
-                let route = routeController.routeProgress.route
-                let navigationViewController = NavigationViewController(for: route, directions: directions, locationManager: locationManager)
-                
-                presentingController.present(navigationViewController, animated: true, completion: {
-                    navigationViewController.openStepsViewController()
-                })
-            }
-        }
+        let controller = StepsViewController(routeProgress: routeController.routeProgress)
+        presentingController.present(controller, animated: true, completion: nil)
     }
 
     func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
-        let navigationViewControllerExistsInStack = UIViewController.viewControllerInStack(of: NavigationViewController.self) != nil
-        
-        if navigationViewControllerExistsInStack {
-            if let navigationViewController = UIViewController.viewControllerInStack(of: NavigationViewController.self) {
-                navigationViewController.dismiss(animated: true, completion: nil)
-            }
-        }
+        // Dismiss the steps view controller on iPhone if we didn't dismiss prematurely
+        let stepsViewController = UIViewController.viewControllerInStack(of: StepsViewController.self)
+        stepsViewController?.dismiss(animated: true, completion: nil)
     }
     
     func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate) -> [CPBarButton]? {
