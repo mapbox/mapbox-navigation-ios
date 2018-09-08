@@ -49,8 +49,9 @@ class StepsViewControllerTests: XCTestCase {
         XCTAssertTrue(containsStepsTableView, "StepsViewController does not have a table subview")
         XCTAssertNotNil(stepsViewController.tableView, "TableView not initiated")
     }
-    
-    func testUpdateCellPerformance() {
+
+    /// NOTE: This test is disabled pending https://github.com/mapbox/mapbox-navigation-ios/issues/1468
+    func x_testUpdateCellPerformance() {
         
         let stepsViewController = dependencies.stepsViewController
         
