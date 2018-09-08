@@ -386,15 +386,6 @@ open class RouteLegProgress: NSObject {
 
         return currentClosest
     }
-
-#if canImport(CarPlay)
-
-    @available(iOS 12.0, *)
-    @objc public var travelEstimates: CPTravelEstimates {
-        let distRemaining = Measurement(value: distanceRemaining, unit: UnitLength.meters)
-        return CPTravelEstimates(distanceRemaining: distRemaining, timeRemaining: durationRemaining)
-    }
-#endif
 }
 
 /**
@@ -439,19 +430,7 @@ open class RouteStepProgress: NSObject {
     @objc public var durationRemaining: TimeInterval {
         return (1 - fractionTraveled) * step.expectedTravelTime
     }
-
-#if canImport(CarPlay)
-    /**
-     Specific to CarPlay.
-
-     Returns the `CPTravelEstimates` for the current step progress.
-    */
-    @available(iOS 12.0, *)
-    @objc public var travelEstimates: CPTravelEstimates {
-        let distRemaining = Measurement(value: distanceRemaining, unit: UnitLength.meters)
-        return CPTravelEstimates(distanceRemaining: distRemaining, timeRemaining: durationRemaining)
-    }
-#endif
+    
     /**
      Intializes a new `RouteStepProgress`.
 
