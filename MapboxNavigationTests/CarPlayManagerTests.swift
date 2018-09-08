@@ -32,37 +32,30 @@ class CarPlayManagerTests: XCTestCase {
         CarPlayManager.resetSharedInstance()
     }
 
-    func simulateCarPlayConnection() {
-        let fakeInterfaceController = FakeCPInterfaceController(#function)
-        let fakeWindow = CPWindow()
-        
-        manager!.application(UIApplication.shared, didConnectCarInterfaceController: fakeInterfaceController, to: fakeWindow)
-    }
-    
     func simulateCarPlayDisconnection() {
         let fakeInterfaceController = FakeCPInterfaceController(#function)
         let fakeWindow = CPWindow()
-        
+
         manager!.application(UIApplication.shared, didDisconnectCarInterfaceController: fakeInterfaceController, from: fakeWindow)
     }
-    
+
     func testEventsEnqueuedAndFlushedWhenCarPlayConnected() {
         guard #available(iOS 12, *) else { return }
-        
-        simulateCarPlayConnection()
-        
+
+        simulateCarPlayConnection(manager!)
+
         let expectedEventName = MMEventTypeCarplayConnect
         XCTAssertTrue(eventsManagerSpy.hasEnqueuedEvent(with: expectedEventName))
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
         XCTAssertEqual(eventsManagerSpy.enqueuedEventCount(with: expectedEventName), 1)
         XCTAssertEqual(eventsManagerSpy.enqueuedEventCount(with: expectedEventName), 1)
     }
-    
+
     func testEventsEnqueuedAndFlushedWhenCarPlayDisconnected() {
         guard #available(iOS 12, *) else { return }
 
         simulateCarPlayDisconnection()
-        
+
         let expectedEventName = MMEventTypeCarplayDisconnect
         XCTAssertTrue(eventsManagerSpy.hasEnqueuedEvent(with: expectedEventName))
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
@@ -79,7 +72,7 @@ class CarPlayManagerTests: XCTestCase {
         // Not sure how to suppress the generated warning here, but this is currently needed for backwards compatibility
         guard #available(iOS 12, *) else { return }
 
-        simulateCarPlayConnection()
+        simulateCarPlayConnection(manager!)
 
         guard let fakeWindow = manager?.carWindow, let fakeInterfaceController = manager?.interfaceController else {
             XCTFail("Dependencies not met! Bailing...")
@@ -116,7 +109,7 @@ class CarPlayManagerTests: XCTestCase {
 
         manager?.delegate = exampleDelegate
 
-        simulateCarPlayConnection()
+        simulateCarPlayConnection(manager!)
 
         guard let fakeInterfaceController = manager?.interfaceController else {
             XCTFail("Dependencies not met! Bailing...")
@@ -127,22 +120,22 @@ class CarPlayManagerTests: XCTestCase {
         XCTAssertEqual(2, mapTemplate.leadingNavigationBarButtons.count)
         XCTAssertEqual(2, mapTemplate.trailingNavigationBarButtons.count)
     }
-    
+
     func testManagerAsksDelegateForMapButtonsIfAvailable() {
         guard #available(iOS 12, *) else { return }
-        
+
         let exampleDelegate = TestCarPlayManagerDelegate()
         exampleDelegate.mapButtons = [CPMapButton()]
-        
+
         manager?.delegate = exampleDelegate
-        
-        simulateCarPlayConnection()
-        
+
+        simulateCarPlayConnection(manager!)
+
         guard let fakeInterfaceController = manager?.interfaceController else {
             XCTFail("Dependencies not met! Bailing...")
             return
         }
-        
+
         let mapTemplate: CPMapTemplate = fakeInterfaceController.rootTemplate as! CPMapTemplate
         XCTAssertEqual(1, mapTemplate.mapButtons.count)
     }
@@ -158,7 +151,7 @@ class CarPlayManagerTests: XCTestCase {
         let exampleDelegate = TestCarPlayManagerDelegate()
         manager.delegate = exampleDelegate
 
-        simulateCarPlayConnection()
+        simulateCarPlayConnection(manager)
 
         guard let fakeInterfaceController = manager.interfaceController else {
             XCTFail("Dependencies not met! Bailing...")
@@ -202,6 +195,75 @@ class CarPlayManagerTests: XCTestCase {
 
 }
 
+@available(iOS 12.0, *)
+func simulateCarPlayConnection(_ manager: CarPlayManager) {
+    let fakeInterfaceController = FakeCPInterfaceController(#function)
+    let fakeWindow = CPWindow()
+
+    manager.application(UIApplication.shared, didConnectCarInterfaceController: fakeInterfaceController, to: fakeWindow)
+}
+
+import Quick
+import Nimble
+
+@available(iOS 12.0, *)
+class CarPlayManagerSpec: QuickSpec {
+    override func spec() {
+        var manager: CarPlayManager?
+        var delegate: TestCarPlayManagerDelegate?
+
+        beforeEach {
+            manager = CarPlayManager()
+            delegate = TestCarPlayManagerDelegate()
+            manager!.delegate = delegate
+
+            simulateCarPlayConnection(manager!)
+        }
+
+        describe("Starting a trip", {
+
+            let action = {
+                let fakeTemplate = CPMapTemplate()
+                let fakeRouteChoice = CPRouteChoice(summaryVariants: ["summary1"], additionalInformationVariants: ["addl1"], selectionSummaryVariants: ["selection1"])
+                fakeRouteChoice.userInfo = Fixture.routeWithBannerInstructions()
+                let fakeTrip = CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [fakeRouteChoice])
+
+                manager!.mapTemplate(fakeTemplate, startedTrip: fakeTrip, using: fakeRouteChoice)
+            }
+
+            context("When configured to simulate", {
+                beforeEach {
+                    manager!.simulatesLocations = true
+                    manager!.simulatedSpeedMultipler = 5.0
+                }
+
+                it("starts navigation with a route controller with a simulated location manager") {
+                    action()
+
+                    expect(delegate!.navigationInitiated).to(beTrue())
+                    expect(delegate!.currentRouteController?.locationManager).to(beAnInstanceOf(SimulatedLocationManager.self))
+                    expect((delegate!.currentRouteController?.locationManager as! SimulatedLocationManager).speedMultiplier).to(equal(5.0))
+                }
+            })
+
+            xcontext("When configured not to simulate", {
+                beforeEach {
+                    manager!.simulatesLocations = false
+                }
+
+                it("starts navigation with a route controller with a normal location manager") {
+                    action()
+
+                    expect(delegate!.navigationInitiated).to(beTrue())
+                    expect(delegate!.currentRouteController?.locationManager).to(beAnInstanceOf(NavigationLocationManager.self))
+                }
+            })
+        })
+    }
+}
+
+
+
 //MARK: Test Objects / Classes.
 //TODO: Extract into separate file at some point.
 
@@ -209,6 +271,7 @@ class CarPlayManagerTests: XCTestCase {
 class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
 
     public fileprivate(set) var navigationInitiated = false
+    public fileprivate(set) var currentRouteController: RouteController?
     public fileprivate(set) var navigationEnded = false
 
     public var leadingBarButtons: [CPBarButton]?
@@ -222,17 +285,21 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
     func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]? {
         return trailingBarButtons
     }
-    
+
     func carPlayManager(_ carplayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]? {
         return mapButtons
     }
-    
+
     func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith routeController: RouteController) {
+        XCTAssertFalse(navigationInitiated)
         navigationInitiated = true
+        currentRouteController = routeController
     }
-    
+
     func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
+        XCTAssertTrue(navigationInitiated)
         navigationEnded = true
+        currentRouteController = nil
     }
 }
 

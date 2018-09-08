@@ -20,10 +20,6 @@ import MapboxDirections
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    
-    #if canImport(CarPlay)
-    var simulatesLocationsInCarPlay = false
-    #endif
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 
@@ -61,22 +57,22 @@ extension AppDelegate: CarPlayManagerDelegate {
     // MARK: CarPlayManagerDelegate
     func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith routeController: RouteController) {
         guard let presentingController = window?.rootViewController else { return }
-        
+
         // Open StepsViewController on iPhone if NavigationViewController is being presented
         if let navigationViewController = presentingController as? NavigationViewController {
             navigationViewController.openStepsViewController()
         } else {
-            
+
             // Start NavigationViewController and open StepsViewController if navigation has not started on iPhone yet.
             let navigationViewControllerExistsInStack = UIViewController.viewControllerInStack(of: NavigationViewController.self) != nil
-            
+
             if !navigationViewControllerExistsInStack {
-                
+
                 let locationManager = routeController.locationManager
                 let directions = routeController.directions
                 let route = routeController.routeProgress.route
                 let navigationViewController = NavigationViewController(for: route, directions: directions, locationManager: locationManager)
-                
+
                 presentingController.present(navigationViewController, animated: true, completion: {
                     navigationViewController.openStepsViewController()
                 })
@@ -86,45 +82,35 @@ extension AppDelegate: CarPlayManagerDelegate {
 
     func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
         let navigationViewControllerExistsInStack = UIViewController.viewControllerInStack(of: NavigationViewController.self) != nil
-        
+
         if navigationViewControllerExistsInStack {
             if let navigationViewController = UIViewController.viewControllerInStack(of: NavigationViewController.self) {
                 navigationViewController.dismiss(animated: true, completion: nil)
             }
         }
     }
-    
+
     func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]? {
         guard activity == .previewing else {
             return nil
         }
-        
+
         let simulationButton = CPBarButton(type: .text) { [weak self] (barButton) in
             guard let self = self else {
                 return
             }
-            
-            self.simulatesLocationsInCarPlay = !self.simulatesLocationsInCarPlay
-            barButton.title = self.simulatesLocationsInCarPlay ? "Don’t Simulate" : "Simulate"
+
+            carPlayManager.simulatesLocations = !carPlayManager.simulatesLocations
+            barButton.title = carPlayManager.simulatesLocations ? "Don’t Simulate" : "Simulate"
         }
-        simulationButton.title = self.simulatesLocationsInCarPlay ? "Don’t Simulate" : "Simulate"
+        simulationButton.title = carPlayManager.simulatesLocations ? "Don’t Simulate" : "Simulate"
         return [simulationButton]
     }
-    
-    func carPlayManager(_ carPlayManager: CarPlayManager, routeControllerAlong route: Route) -> RouteController {
-        if simulatesLocationsInCarPlay {
-            let locationManager = SimulatedLocationManager(route: route)
-            locationManager.speedMultiplier = 5
-            return RouteController(along: route, locationManager: locationManager, eventsManager: carPlayManager.eventsManager)
-        } else {
-            return RouteController(along: route, eventsManager: carPlayManager.eventsManager)
-        }
-    }
-    
+
     func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void) {
         return CarPlayGeocoder.searchTemplate(searchTemplate, updatedSearchText: searchText, completionHandler: completionHandler)
     }
-    
+
     func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void) {
         return CarPlayGeocoder.carPlayManager(searchTemplate, selectedResult: item, completionHandler: completionHandler)
     }
