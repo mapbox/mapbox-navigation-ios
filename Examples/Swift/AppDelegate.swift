@@ -94,8 +94,8 @@ extension AppDelegate: CarPlayManagerDelegate {
         }
     }
     
-    func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate) -> [CPBarButton]? {
-        guard let template = template as? CPMapTemplate, template != carPlayManager.interfaceController?.rootTemplate else {
+    func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]? {
+        guard activity == .previewing else {
             return nil
         }
         
