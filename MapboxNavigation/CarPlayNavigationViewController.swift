@@ -13,7 +13,6 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     
     var routeController: RouteController
     var mapView: NavigationMapView?
-    let decelerationRate:CGFloat = 0.9
     let shieldHeight: CGFloat = 16
     
     var carSession: CPNavigationSession!
@@ -22,13 +21,6 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     var carInterfaceController: CPInterfaceController
     
     var styleManager: StyleManager!
-    
-    var showFeedbackButton: CPMapButton!
-    var overviewButton: CPMapButton!
-    var recenterButton: CPMapButton!
-    
-    var exitButton: CPBarButton!
-    var muteButton: CPBarButton!
     
     var edgePadding: UIEdgeInsets {
         let padding:CGFloat = 15
@@ -128,6 +120,10 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
                 mapView?.setOverheadCameraView(from: userLocation, along: routeController.routeProgress.route.coordinates!, for: self.edgePadding)
             }
         }
+    }
+    public func beginPanGesture() {
+        mapView?.tracksUserCourse = false
+        mapView?.enableFrameByFrameCourseViewTracking(for: 1)
     }
     
     public func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
@@ -346,35 +342,4 @@ public protocol CarPlayNavigationDelegate {
      */
     @objc func carPlayNavigationViewControllerDidArrive(_ carPlayNavigationViewController: CarPlayNavigationViewController)
 }
-
-@available(iOS 12.0, *)
-extension CarPlayNavigationViewController {
-    public func beginPanGesture() {
-        overviewButton.isHidden = true
-        recenterButton.isHidden = false
-        mapView?.tracksUserCourse = false
-        mapView?.enableFrameByFrameCourseViewTracking(for: 1)
-    }
-    
-    public func endPanGesture(velocity: CGPoint) {
-        // Not enough velocity to overcome friction
-        guard sqrtf(Float(velocity.x * velocity.x + velocity.y * velocity.y)) > 100 else { return }
-        
-        let offset = CGPoint(x: velocity.x * decelerationRate / 4, y: velocity.y * decelerationRate / 4)
-        guard let toCamera = camera(whenPanningTo: offset) else { return }
-        mapView?.tracksUserCourse = false
-        mapView?.setCamera(toCamera, animated: true)
-    }
-    
-    func camera(whenPanningTo endPoint: CGPoint) -> MGLMapCamera? {
-        guard let mapView = mapView else { return nil }
-        let camera = mapView.camera
-        let centerPoint = CGPoint(x: mapView.bounds.midX, y: mapView.bounds.midY)
-        let endCameraPoint = CGPoint(x: centerPoint.x - endPoint.x, y: centerPoint.y - endPoint.y)
-        camera.centerCoordinate = mapView.convert(endCameraPoint, toCoordinateFrom: mapView)
-        
-        return camera
-    }
-}
 #endif
-

@@ -561,15 +561,18 @@ extension CarPlayManager: CPMapTemplateDelegate {
             return
         }
         
-        guard let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController else {
+        let mapView: NavigationMapView
+        if let navigationViewController = currentNavigator, mapTemplate == navigationViewController.mapTemplate {
+            mapView = navigationViewController.mapView!
+        } else if let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController {
+            mapView = carPlayMapViewController.mapView
+            mapView.userTrackingMode = .none
+        } else {
             return
         }
         
         let decelerationRate: CGFloat = 0.9
         let offset = CGPoint(x: velocity.x * decelerationRate / 4, y: velocity.y * decelerationRate / 4)
-        
-        let mapView = carPlayMapViewController.mapView
-        mapView.userTrackingMode = .none
         
         if let toCamera = cameraShouldPan(to: offset, mapView: mapView) {
             mapView.setCamera(toCamera, animated: true)
@@ -589,10 +592,9 @@ extension CarPlayManager: CPMapTemplateDelegate {
     
     public func mapTemplate(_ mapTemplate: CPMapTemplate, didEndPanGestureWithVelocity velocity: CGPoint) {
         if let navigationViewController = currentNavigator, mapTemplate == navigationViewController.mapTemplate {
-            navigationViewController.endPanGesture(velocity: velocity)
-        } else {
-            mapTemplate.mapButtons.forEach { $0.isHidden = false }
+            return
         }
+        mapTemplate.mapButtons.forEach { $0.isHidden = false }
     }
     
     public func mapTemplateDidShowPanningInterface(_ mapTemplate: CPMapTemplate) {
