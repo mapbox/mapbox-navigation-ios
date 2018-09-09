@@ -187,8 +187,11 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         primaryManeuver.initialTravelEstimates = CPTravelEstimates(distanceRemaining: distance, timeRemaining: step.expectedTravelTime)
         
         // Just incase, set some default text
-        let backupText = visualInstruction.primaryInstruction.text ?? step.instructions
-        primaryManeuver.instructionVariants = [backupText]
+        var text = visualInstruction.primaryInstruction.text ?? step.instructions
+        if let secondaryText = visualInstruction.secondaryInstruction?.text {
+            text += "\n\(secondaryText)"
+        }
+        primaryManeuver.instructionVariants = [text]
         
         // Add maneuver arrow
         primaryManeuver.symbolSet = visualInstruction.primaryInstruction.maneuverImageSet
@@ -213,10 +216,16 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         var maneuvers: [CPManeuver] = [primaryManeuver]
         
         // Add tertiary text if available. TODO: handle lanes.
-        if let tertiaryInstruction = visualInstruction.tertiaryInstruction, !tertiaryInstruction.containsLaneIndications, let tertiaryText = tertiaryInstruction.maneuverLabelAttributedText(bounds: bounds, shieldHeight: shieldHeight) {
+        if let tertiaryInstruction = visualInstruction.tertiaryInstruction, !tertiaryInstruction.containsLaneIndications {
             let tertiaryManeuver = CPManeuver()
-            tertiaryManeuver.attributedInstructionVariants = [ tertiaryText ]
             tertiaryManeuver.symbolSet = tertiaryInstruction.maneuverImageSet
+            
+            if let text = tertiaryInstruction.text {
+                tertiaryManeuver.instructionVariants = [text]
+            }
+            if let attributedTertiary = tertiaryInstruction.maneuverLabelAttributedText(bounds: bounds, shieldHeight: shieldHeight) {
+                tertiaryManeuver.attributedInstructionVariants = [attributedTertiary]
+            }
             
             if let upcomingStep = routeController.routeProgress.currentLegProgress.upComingStep {
                 let distance = distanceFormatter.measurement(of: upcomingStep.distance)
