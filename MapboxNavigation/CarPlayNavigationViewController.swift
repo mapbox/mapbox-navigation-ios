@@ -210,6 +210,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
                 instruction.append(attributedSecondary)
             }
             
+            instruction.canonicalizeAttachments()
             primaryManeuver.attributedInstructionVariants = [instruction]
         }
         
@@ -224,6 +225,8 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
                 tertiaryManeuver.instructionVariants = [text]
             }
             if let attributedTertiary = tertiaryInstruction.maneuverLabelAttributedText(bounds: bounds, shieldHeight: shieldHeight) {
+                let attributedTertiary = NSMutableAttributedString(attributedString: attributedTertiary)
+                attributedTertiary.canonicalizeAttachments()
                 tertiaryManeuver.attributedInstructionVariants = [attributedTertiary]
             }
             
