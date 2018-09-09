@@ -6,6 +6,12 @@ import CarPlay
 class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
     
     var styleManager: StyleManager!
+    /// A very coarse location manager used for distinguishing between daytime and nighttime.
+    fileprivate let coarseLocationManager: CLLocationManager = {
+        let coarseLocationManager = CLLocationManager()
+        coarseLocationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
+        return coarseLocationManager
+    }()
     
     var mapView: NavigationMapView {
         get {
@@ -92,7 +98,7 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
 @available(iOS 12.0, *)
 extension CarPlayMapViewController: StyleManagerDelegate {
     func locationFor(styleManager: StyleManager) -> CLLocation? {
-        return mapView.userLocationForCourseTracking ?? mapView.userLocation?.location
+        return mapView.userLocationForCourseTracking ?? mapView.userLocation?.location ?? coarseLocationManager.location
     }
     
     func styleManager(_ styleManager: StyleManager, didApply style: Style) {
