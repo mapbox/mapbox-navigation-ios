@@ -12,7 +12,7 @@ class ImageDownloaderTests: XCTestCase {
 
     var downloader: ReentrantImageDownloader?
 
-    let imageURL = URL(string: "https://zombo.com/lulz/selfie.png")!
+    let imageURL = URL(fileURLWithPath: Bundle(for: ImageDownloaderTests.self).path(forResource: "image", ofType: "png")!)
 
     override func setUp() {
         super.setUp()
