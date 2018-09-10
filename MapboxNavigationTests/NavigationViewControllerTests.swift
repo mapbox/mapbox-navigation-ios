@@ -11,6 +11,8 @@ class NavigationViewControllerTests: XCTestCase {
     
     var customRoadName = [CLLocationCoordinate2D: String?]()
     
+    var updatedStyleNumberOfTimes = 0
+    
     lazy var dependencies: (navigationViewController: NavigationViewController, startLocation: CLLocation, poi: [CLLocation], endLocation: CLLocation, voice: RouteVoiceController) = {
        
         let voice = FakeVoiceController()
@@ -87,8 +89,7 @@ class NavigationViewControllerTests: XCTestCase {
     }
     
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceMoreThanOnceWithOneStyle() {
-        let navigationViewController = NavigationViewControllerTestable(for: initialRoute, styles: [DayStyle()])
-        
+        let navigationViewController = NavigationViewController(for: initialRoute, styles: [DayStyle()], voiceController: FakeVoiceController())
         let routeController = navigationViewController.routeController!
         navigationViewController.styleManager.delegate = self
         
@@ -98,13 +99,13 @@ class NavigationViewControllerTests: XCTestCase {
         routeController.locationManager(routeController.locationManager, didUpdateLocations: [someLocation])
         routeController.locationManager(routeController.locationManager, didUpdateLocations: [someLocation])
         
-        XCTAssertEqual(navigationViewController.updatedStyleNumberOfTimes, 1, "The style should update once.")
+        XCTAssertEqual(updatedStyleNumberOfTimes, 0, "The style should not be updated.")
+        updatedStyleNumberOfTimes = 0
     }
     
     // If tunnel flags are enabled and we need to switch styles, we should not force refresh the map style because we have only 1 style.
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceWhenOnlyOneStyle() {
-        let navigationViewController = NavigationViewControllerTestable(for: initialRoute, styles: [NightStyle()])
-        
+        let navigationViewController = NavigationViewController(for: initialRoute, styles: [NightStyle()], voiceController: FakeVoiceController())
         let routeController = navigationViewController.routeController!
         navigationViewController.styleManager.delegate = self
         
@@ -114,13 +115,14 @@ class NavigationViewControllerTests: XCTestCase {
         routeController.locationManager(routeController.locationManager, didUpdateLocations: [someLocation])
         routeController.locationManager(routeController.locationManager, didUpdateLocations: [someLocation])
         
-        XCTAssertEqual(navigationViewController.updatedStyleNumberOfTimes, 1, "The style should update once.")
+        XCTAssertEqual(updatedStyleNumberOfTimes, 0, "The style should not be updated.")
+        updatedStyleNumberOfTimes = 0
     }
     
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceMoreThanOnceWithTwoStyles() {
-        let navigationViewController = NavigationViewControllerTestable(for: initialRoute, styles: [DayStyle(), NightStyle()])
-        
+        let navigationViewController = NavigationViewController(for: initialRoute, styles: [DayStyle(), NightStyle()], voiceController: FakeVoiceController())
         let routeController = navigationViewController.routeController!
+        navigationViewController.styleManager.delegate = self
         
         let someLocation = dependencies.poi.first!
         
@@ -128,7 +130,8 @@ class NavigationViewControllerTests: XCTestCase {
         routeController.locationManager(routeController.locationManager, didUpdateLocations: [someLocation])
         routeController.locationManager(routeController.locationManager, didUpdateLocations: [someLocation])
         
-        XCTAssertEqual(navigationViewController.updatedStyleNumberOfTimes, 1, "The style should only update once.")
+        XCTAssertEqual(updatedStyleNumberOfTimes, 0, "The style should not be updated.")
+        updatedStyleNumberOfTimes = 0
     }
     
     // Brief: navigationViewController(_:roadNameAt:) delegate method is implemented,
@@ -174,20 +177,11 @@ class NavigationViewControllerTests: XCTestCase {
     }
     
     func testDestinationAnnotationUpdatesUponReroute() {
-        let navigationViewController = NavigationViewControllerTestable(for: initialRoute, styles: [TestableDayStyle()])
+        let styleLoaded = XCTestExpectation(description: "Style Loaded")
+        let navigationViewController = NavigationViewControllerTestable(for: initialRoute, styles: [TestableDayStyle()], styleLoaded: styleLoaded)
         
-        if !navigationViewController.didFinishLoadingStyle {
-            let loadedStyleExpectation = expectation(description: "Loaded Style")
-            let observer = navigationViewController.observe(\.didFinishLoadingStyle) { (controller, value) in
-                if controller.didFinishLoadingStyle {
-                    loadedStyleExpectation.fulfill()
-                }
-            }
-            
-            wait(for: [loadedStyleExpectation], timeout: 10)
-            observer.invalidate()
-        }
-        
+        //wait for the style to load -- routes won't show without it.
+        wait(for: [styleLoaded], timeout: 5)
         navigationViewController.route = initialRoute
         
         let firstDestination = initialRoute.routeOptions.waypoints.last!.coordinate
@@ -205,6 +199,7 @@ class NavigationViewControllerTests: XCTestCase {
         //do we have a destination on the second route?
         let newDestinations = newAnnotations.filter(annotationFilter(matching: secondDestination))
         XCTAssert(!newDestinations.isEmpty, "New destination annotation does not exist on map")
+        
     }
     
     private func annotationFilter(matching coordinate: CLLocationCoordinate2D) -> ((MGLAnnotation) -> Bool) {
@@ -219,6 +214,10 @@ class NavigationViewControllerTests: XCTestCase {
 extension NavigationViewControllerTests: NavigationViewControllerDelegate, StyleManagerDelegate {
     func locationFor(styleManager: StyleManager) -> CLLocation? {
         return dependencies.poi.first!
+    }
+    
+    func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
+        updatedStyleNumberOfTimes += 1
     }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, roadNameAt location: CLLocation) -> String? {
@@ -238,25 +237,26 @@ extension CLLocationCoordinate2D: Hashable {
 }
 
 extension NavigationViewControllerTests {
-    fileprivate func location(at coordinate: CLLocationCoordinate2D) -> CLLocation {
-        return CLLocation(coordinate: coordinate,
-                          altitude: 5,
+        fileprivate func location(at coordinate: CLLocationCoordinate2D) -> CLLocation {
+                return CLLocation(coordinate: coordinate,
+                                    altitude: 5,
                           horizontalAccuracy: 10,
-                          verticalAccuracy: 5,
-                          course: 20,
-                          speed: 15,
-                          timestamp: Date())
-    }
+                            verticalAccuracy: 5,
+                                      course: 20,
+                                       speed: 15,
+                                   timestamp: Date())
+            }
 }
 
 class NavigationViewControllerTestable: NavigationViewController {
-    @objc dynamic var didFinishLoadingStyle: Bool = false
-    var updatedStyleNumberOfTimes: Int = 0
+    var styleLoadedExpectation: XCTestExpectation
     
     required init(for route: Route,
                   directions: Directions = Directions.shared,
                   styles: [Style]? = [DayStyle(), NightStyle()],
-                  locationManager: NavigationLocationManager? = NavigationLocationManager()) {
+                  locationManager: NavigationLocationManager? = NavigationLocationManager(),
+                  styleLoaded: XCTestExpectation) {
+        styleLoadedExpectation = styleLoaded
         super.init(for: route, directions: directions,styles: styles, locationManager: locationManager, voiceController: FakeVoiceController())
     }
     
@@ -265,40 +265,18 @@ class NavigationViewControllerTestable: NavigationViewController {
     }
     
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
-        didFinishLoadingStyle = true
-    }
-    
-    func mapViewDidFailLoadingMap(_ mapView: MGLMapView, withError error: Error) {
-        XCTFail("mapViewDidFailLoadingMap \(error.localizedDescription)")
+        styleLoadedExpectation.fulfill()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("This initalizer is not supported in this testing subclass.")
-    }
-    
-    override func styleManager(_ styleManager: StyleManager, didApply style: Style) {
-        updatedStyleNumberOfTimes += 1
     }
 }
 
 class TestableDayStyle: DayStyle {
     required init() {
         super.init()
-        mapStyleURL = Fixture.blankStyle.cacheBustingStyleURL
-    }
-}
-
-extension URL {
-    var cacheBustingStyleURL: URL {
-        var components = URLComponents(url: self, resolvingAgainstBaseURL: false)!
-        
-        // Bypass caching with ?fresh=true&timestamp=<now>
-        var items = components.queryItems ?? [URLQueryItem]()
-        items.append(URLQueryItem(name: "fresh", value: "true"))
-        items.append(URLQueryItem(name: "_", value: "\(Date().timeIntervalSince1970)"))
-        components.queryItems = items
-        
-        return components.url!
+        mapStyleURL = Fixture.blankStyle
     }
 }
 
