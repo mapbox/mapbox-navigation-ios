@@ -69,10 +69,8 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
             
             if strongSelf.mapView.userTrackingMode == .none {
                 strongSelf.mapView.userTrackingMode = .followWithHeading
-                button.isHidden = true
             } else {
                 strongSelf.mapView.userTrackingMode = .none
-                button.isHidden = false
             }
         }
         
