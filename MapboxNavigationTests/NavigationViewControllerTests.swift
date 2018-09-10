@@ -283,4 +283,8 @@ class FakeVoiceController: RouteVoiceController {
     override func speak(_ instruction: SpokenInstruction) {
         //no-op
     }
+    
+    override func pauseSpeechAndPlayReroutingDing(notification: NSNotification) {
+        //no-op
+    }
 }

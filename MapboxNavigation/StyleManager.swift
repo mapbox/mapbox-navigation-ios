@@ -56,6 +56,7 @@ open class StyleManager: NSObject {
     @objc public var styles = [Style]() {
         didSet {
             applyStyle()
+            resetTimeOfDayTimer()
         }
     }
     
@@ -212,7 +213,8 @@ extension Date {
             guard let sunriseDate = calendar.date(from: sunriseComponents) else {
                 return nil
             }
-            return sunriseDate.timeIntervalSince(date)
+            let interval = sunriseDate.timeIntervalSince(date)
+            return interval >= 0 ? interval : (interval + 24 * 3600)
         } else {
             let sunsetComponents = calendar.dateComponents([.hour, .minute, .second], from: sunset)
             guard let sunsetDate = calendar.date(from: sunsetComponents) else {
@@ -224,10 +226,10 @@ extension Date {
     
     fileprivate func isNighttime(sunrise: Date, sunset: Date) -> Bool {
         let calendar = Calendar.current
-        let currentMinutesFromMidnight = calendar.component(.hour, from: self) * 60 + calendar.component(.minute, from: self)
-        let sunriseMinutesFromMidnight = calendar.component(.hour, from: sunrise) * 60 + calendar.component(.minute, from: sunrise)
-        let sunsetMinutesFromMidnight = calendar.component(.hour, from: sunset) * 60 + calendar.component(.minute, from: sunset)
-        return currentMinutesFromMidnight < sunriseMinutesFromMidnight || currentMinutesFromMidnight > sunsetMinutesFromMidnight
+        let currentSecondsFromMidnight = calendar.component(.hour, from: self) * 3600 + calendar.component(.minute, from: self) * 60 + calendar.component(.second, from: self)
+        let sunriseSecondsFromMidnight = calendar.component(.hour, from: sunrise) * 3600 + calendar.component(.minute, from: sunrise) * 60 + calendar.component(.second, from: sunrise)
+        let sunsetSecondsFromMidnight = calendar.component(.hour, from: sunset) * 3600 + calendar.component(.minute, from: sunset) * 60 + calendar.component(.second, from: sunset)
+        return currentSecondsFromMidnight < sunriseSecondsFromMidnight || currentSecondsFromMidnight > sunsetSecondsFromMidnight
     }
 }
 

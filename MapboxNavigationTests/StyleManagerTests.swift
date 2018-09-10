@@ -5,6 +5,7 @@ import Solar
 struct Location {
     static let sf = CLLocation(latitude: 37.78, longitude: -122.40)
     static let london = CLLocation(latitude: 51.50, longitude: -0.12)
+    static let paris = CLLocation(latitude: 48.85, longitude: 2.35)
 }
 
 class StyleManagerTests: XCTestCase {
@@ -44,6 +45,35 @@ class StyleManagerTests: XCTestCase {
         styleManager.date = midnight
         XCTAssert(styleManager.styleType(for: location) == .night)
     }
+
+    func testStyleManagerParisWithSeconds() {
+        location = Location.paris
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:mm:ss"
+        dateFormatter.timeZone = TimeZone(identifier: "CET")
+
+        NSTimeZone.default = NSTimeZone.init(abbreviation: "CET")! as TimeZone
+
+        let justBeforeSunrise = dateFormatter.date(from: "08:44:05")!
+        let justAfterSunrise = dateFormatter.date(from: "08:44:30")!
+        let noonDate = dateFormatter.date(from: "12:00:00")!
+        let juetBeforeSunset = dateFormatter.date(from: "17:04:05")!
+        let justAfterSunset = dateFormatter.date(from: "17:04:30")!
+        let midnight = dateFormatter.date(from: "00:00:00")!
+
+        styleManager.date = justBeforeSunrise
+        XCTAssert(styleManager.styleType(for: location) == .night)
+        styleManager.date = justAfterSunrise
+        XCTAssert(styleManager.styleType(for: location) == .day)
+        styleManager.date = noonDate
+        XCTAssert(styleManager.styleType(for: location) == .day)
+        styleManager.date = juetBeforeSunset
+        XCTAssert(styleManager.styleType(for: location) == .day)
+        styleManager.date = justAfterSunset
+        XCTAssert(styleManager.styleType(for: location) == .night)
+        styleManager.date = midnight
+        XCTAssert(styleManager.styleType(for: location) == .night)
+    }
     
     func testStyleManagerSanFrancisco() {
         location = Location.sf
@@ -72,6 +102,26 @@ class StyleManagerTests: XCTestCase {
 //        XCTAssert(styleManager.styleType(for: location) == .night)
 //        styleManager.date = midnight
 //        XCTAssert(styleManager.styleType(for: location) == .night)
+    }
+
+    func testTimeIntervalsUntilTimeOfDayChanges() {
+        location = Location.paris
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:mm"
+        dateFormatter.timeZone = TimeZone(identifier: "CET")
+
+        NSTimeZone.default = NSTimeZone.init(abbreviation: "CET")! as TimeZone
+
+        let sunrise = dateFormatter.date(from: "08:00")!
+        let sunset = dateFormatter.date(from: "18:00")!
+
+        let beforeSunriseAfterMidnight = dateFormatter.date(from: "02:00")!
+        let afterSunriseBeforeSunset = dateFormatter.date(from: "11:00")!
+        let afterSunsetBeforeMidnight = dateFormatter.date(from: "22:00")!
+
+        XCTAssert(beforeSunriseAfterMidnight.intervalUntilTimeOfDayChanges(sunrise: sunrise, sunset: sunset) == (6 * 3600))
+        XCTAssert(afterSunriseBeforeSunset.intervalUntilTimeOfDayChanges(sunrise: sunrise, sunset: sunset) == (7 * 3600))
+        XCTAssert(afterSunsetBeforeMidnight.intervalUntilTimeOfDayChanges(sunrise: sunrise, sunset: sunset) == (10 * 3600))
     }
 }
 
