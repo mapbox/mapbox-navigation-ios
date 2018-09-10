@@ -262,7 +262,7 @@ class NavigationViewControllerTestable: NavigationViewController {
     }
     
     required init(for route: Route, directions: Directions, styles: [Style]?, locationManager: NavigationLocationManager?, voiceController: RouteVoiceController?, eventsManager: EventsManager?) {
-        fatalError("init(for:directions:styles:locationManager:voiceController:eventsManager:) has not been implemented")
+        fatalError("init(for:directions:styles:locationManager:voiceController:eventsManager:) is not supported in this testing subclass.")
     }
 
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
