@@ -167,7 +167,7 @@ class RouteControllerTests: XCTestCase {
         let route = Route(json: jsonRoute, waypoints: [waypoint1, waypoint2], options: NavigationRouteOptions(waypoints: [waypoint1, waypoint2]))
 
         route.accessToken = "foo"
-        let navigation = RouteController(along: route, directions: directions)
+        let navigation = RouteController(along: route, directions: directions, eventsManager: TestNavigationEventsManager())
         let firstCoord = navigation.routeProgress.currentLegProgress.nearbyCoordinates.first!
         let firstLocation = CLLocation(latitude: firstCoord.latitude, longitude: firstCoord.longitude)
         let coordNearStart = Polyline(navigation.routeProgress.currentLegProgress.nearbyCoordinates).coordinateFromStart(distance: 10)!

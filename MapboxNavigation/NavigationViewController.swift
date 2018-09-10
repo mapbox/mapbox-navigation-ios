@@ -196,7 +196,7 @@ open class NavigationViewController: UIViewController {
     @objc public var route: Route! {
         didSet {
             if routeController == nil {
-                routeController = RouteController(along: route, directions: directions, locationManager: NavigationLocationManager())
+                routeController = RouteController(along: route, directions: directions, locationManager: locationManager, eventsManager: eventsManager)
                 routeController.delegate = self
             } else {
                 routeController.routeProgress = RouteProgress(route: route)
@@ -308,6 +308,9 @@ open class NavigationViewController: UIViewController {
     @objc public var annotatesSpokenInstructions = false
     
     var styleManager: StyleManager!
+
+    private var eventsManager: EventsManager!
+    private var locationManager: NavigationLocationManager!
     
     var currentStatusBarStyle: UIStatusBarStyle = .default {
         didSet {
@@ -331,20 +334,26 @@ open class NavigationViewController: UIViewController {
 
      See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
      */
-    @objc(initWithRoute:directions:styles:locationManager:voiceController:)
+    @objc(initWithRoute:directions:styles:locationManager:voiceController:eventsManager:)
     required public init(for route: Route,
                          directions: Directions = Directions.shared,
                          styles: [Style]? = [DayStyle(), NightStyle()],
-                         locationManager: NavigationLocationManager? = NavigationLocationManager(),
-                         voiceController: RouteVoiceController? = nil) {
+                         locationManager: NavigationLocationManager? = nil,
+                         voiceController: RouteVoiceController? = nil,
+                         eventsManager: EventsManager? = nil) {
         
         super.init(nibName: nil, bundle: nil)
         
-        self.routeController = RouteController(along: route, directions: directions, locationManager: locationManager ?? NavigationLocationManager())
+        self.eventsManager = eventsManager ?? EventsManager()
+        self.locationManager = locationManager ?? NavigationLocationManager()
+
+        self.routeController = RouteController(along: route, directions: directions, locationManager: self.locationManager, eventsManager: self.eventsManager)
         self.routeController.usesDefaultUserInterface = true
         self.routeController.delegate = self
         self.routeController.tunnelIntersectionManager.delegate = self
+
         self.voiceController = voiceController ?? MapboxVoiceController()
+
         self.directions = directions
         self.route = route
         NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile

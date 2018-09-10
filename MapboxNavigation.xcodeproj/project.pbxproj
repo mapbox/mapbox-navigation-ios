@@ -19,6 +19,7 @@
 		16A509D5202A87B20011D788 /* ImageDownloaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A509D4202A87B20011D788 /* ImageDownloaderTests.swift */; };
 		16A509D7202BC0CA0011D788 /* ImageDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A509D6202BC0CA0011D788 /* ImageDownload.swift */; };
 		16B63DCD205C8EEF002D56D4 /* route-with-instructions.json in Resources */ = {isa = PBXBuildFile; fileRef = 16B63DCC205C8EEF002D56D4 /* route-with-instructions.json */; };
+		16C6E6012147194A0057098D /* MMEEventsManagerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16120A4C20645D6E007EA21D /* MMEEventsManagerSpy.swift */; };
 		16E3625C201265D600DF0592 /* ImageDownloadOperationSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E3625B201265D600DF0592 /* ImageDownloadOperationSpy.swift */; };
 		16E4F97F205B05FE00531791 /* MapboxVoiceControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E4F97E205B05FE00531791 /* MapboxVoiceControllerTests.swift */; };
 		35002D611E5F6ADB0090E733 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35002D5F1E5F6ADB0090E733 /* Assets.xcassets */; };
@@ -280,13 +281,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = C5ADFBC81DDCC7840011824B;
 			remoteInfo = MapboxCoreNavigation;
-		};
-		352BBC3E1E5E6ADC00703DF1 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 358D14621E5E3B7700ADE590;
-			remoteInfo = "Example-Swift";
 		};
 		352BBC4C1E5E78D700703DF1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1527,7 +1521,6 @@
 			);
 			dependencies = (
 				C5ADFBD51DDCC7840011824B /* PBXTargetDependency */,
-				352BBC3F1E5E6ADC00703DF1 /* PBXTargetDependency */,
 			);
 			name = MapboxCoreNavigationTests;
 			productName = MapboxNavigationTests;
@@ -1996,6 +1989,7 @@
 				35B1AEBC20AD9B3C00C8544E /* LeaksSpec.swift in Sources */,
 				16A509D5202A87B20011D788 /* ImageDownloaderTests.swift in Sources */,
 				8D54F14A206ECF720038736D /* InstructionPresenterTests.swift in Sources */,
+				16C6E6012147194A0057098D /* MMEEventsManagerSpy.swift in Sources */,
 				166224452025699600EA4824 /* ImageRepositoryTests.swift in Sources */,
 				160D827B2059973C00D278D6 /* DataCacheTests.swift in Sources */,
 				35B1AEBE20AD9C7800C8544E /* LeakTest.swift in Sources */,
@@ -2077,11 +2071,6 @@
 			isa = PBXTargetDependency;
 			target = C5ADFBC81DDCC7840011824B /* MapboxCoreNavigation */;
 			targetProxy = 3525449B1E663D2C004C8F1C /* PBXContainerItemProxy */;
-		};
-		352BBC3F1E5E6ADC00703DF1 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 358D14621E5E3B7700ADE590 /* Example-Swift */;
-			targetProxy = 352BBC3E1E5E6ADC00703DF1 /* PBXContainerItemProxy */;
 		};
 		352BBC4D1E5E78D700703DF1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

@@ -118,12 +118,12 @@ open class RouteController: NSObject, Router {
      - parameter locationManager: The associated location manager.
      */
     @objc(initWithRoute:directions:locationManager:eventsManager:)
-    public init(along route: Route, directions: Directions = Directions.shared, locationManager: NavigationLocationManager = NavigationLocationManager(), eventsManager eventsOverride: EventsManager? = nil) {
+    public init(along route: Route, directions: Directions = Directions.shared, locationManager: NavigationLocationManager = NavigationLocationManager(), eventsManager: EventsManager) {
         self.directions = directions
         self.routeProgress = RouteProgress(route: route)
         self.locationManager = locationManager
         self.locationManager.activityType = route.routeOptions.activityType
-        self.eventsManager = eventsOverride ?? EventsManager(accessToken: route.accessToken)
+        self.eventsManager = eventsManager
         UIDevice.current.isBatteryMonitoringEnabled = true
 
         super.init()

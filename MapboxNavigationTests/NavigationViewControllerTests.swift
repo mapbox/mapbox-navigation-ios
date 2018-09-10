@@ -255,15 +255,16 @@ class NavigationViewControllerTestable: NavigationViewController {
                   directions: Directions = Directions.shared,
                   styles: [Style]? = [DayStyle(), NightStyle()],
                   locationManager: NavigationLocationManager? = NavigationLocationManager(),
+                  eventsManager: EventsManager = TestNavigationEventsManager(),
                   styleLoaded: XCTestExpectation) {
         styleLoadedExpectation = styleLoaded
         super.init(for: route, directions: directions,styles: styles, locationManager: locationManager, voiceController: FakeVoiceController())
     }
     
-    required init(for route: Route, directions: Directions, styles: [Style]?, locationManager: NavigationLocationManager?, voiceController: RouteVoiceController?) {
-        fatalError("This initalizer is not supported in this testing subclass.")
+    required init(for route: Route, directions: Directions, styles: [Style]?, locationManager: NavigationLocationManager?, voiceController: RouteVoiceController?, eventsManager: EventsManager?) {
+        fatalError("init(for:directions:styles:locationManager:voiceController:eventsManager:) has not been implemented")
     }
-    
+
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
         styleLoadedExpectation.fulfill()
     }
