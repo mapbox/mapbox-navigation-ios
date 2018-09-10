@@ -269,7 +269,6 @@
 		C53F2F0020EBC95600D9798F /* MapboxSpeech.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C5A9DDBD202E12EE007D52DA /* MapboxSpeech.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C53F2F0120EBC95600D9798F /* Polyline.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01BC1E66259600D765C2 /* Polyline.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C53F2F0220EBC95600D9798F /* Mapbox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 35A1D3651E6624EF00A48FE8 /* Mapbox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C53F2F0A20EBE66E00D9798F /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53F2F0920EBE66E00D9798F /* Route.swift */; };
 		C549F8321F17F2C5001A0A2D /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
 		C549F8331F17F2C5001A0A2D /* MapboxMobileEvents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C54C655220336F2600D338E0 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54C655120336F2600D338E0 /* Constants.swift */; };
@@ -740,7 +739,6 @@
 		C53C19771F38EAE4008DB406 /* ca */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ca; path = ca.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C53C197A1F38EAEA008DB406 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C53F2F0720EBC95600D9798F /* Example-CarPlay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Example-CarPlay.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		C53F2F0920EBE66E00D9798F /* Route.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
 		C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxMobileEvents.framework; path = Carthage/Build/iOS/MapboxMobileEvents.framework; sourceTree = "<group>"; };
 		C54C655120336F2600D338E0 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		C551B0E520D42222009A986F /* NavigationLocationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationLocationManagerTests.swift; sourceTree = "<group>"; };
@@ -1415,7 +1413,6 @@
 				C582FD5E203626E900A9086E /* CLLocationDirection.swift */,
 				C5381F01204E03B600A5493E /* UIDevice.swift */,
 				C5F2DC9F206DBF5E002F99F6 /* Sequence.swift */,
-				C53F2F0920EBE66E00D9798F /* Route.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -2274,7 +2271,6 @@
 				35BF8CA21F28EB60003F6125 /* Array.swift in Sources */,
 				3582A25220EFA9680029C5DE /* RouteControllerDelegate.swift in Sources */,
 				353E68FC1EF0B7F8007B2AE5 /* NavigationLocationManager.swift in Sources */,
-				C53F2F0A20EBE66E00D9798F /* Route.swift in Sources */,
 				353E68FE1EF0B985007B2AE5 /* BundleAdditions.swift in Sources */,
 				354A9BCD20EA9C8100F03325 /* CoreFeedbackEvent.swift in Sources */,
 				3582A25020EEC46B0029C5DE /* Router.swift in Sources */,

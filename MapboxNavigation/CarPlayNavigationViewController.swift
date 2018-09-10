@@ -22,6 +22,8 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     
     var styleManager: StyleManager!
     
+    let distanceFormatter = DistanceFormatter(approximate: true)
+    
     var edgePadding: UIEdgeInsets {
         let padding:CGFloat = 15
         return UIEdgeInsets(top: view.safeAreaInsets.top + padding,
@@ -153,8 +155,16 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         
         let congestionLevel = routeProgress.averageCongestionLevelRemainingOnLeg ?? .unknown
         guard let maneuver = carSession.upcomingManeuvers.first else { return }
-        carSession.updateEstimates(routeProgress.currentLegProgress.currentStepProgress.travelEstimates, for: maneuver)
-        mapTemplate.update(routeProgress.currentLegProgress.travelEstimates, for: carSession.trip, with: congestionLevel.asCPTimeRemainingColor)
+        
+        let legProgress = routeProgress.currentLegProgress
+        let legDistance = distanceFormatter.measurement(of: legProgress.distanceRemaining)
+        let legEstimates = CPTravelEstimates(distanceRemaining: legDistance, timeRemaining: legProgress.durationRemaining)
+        mapTemplate.update(legEstimates, for: carSession.trip, with: congestionLevel.asCPTimeRemainingColor)
+        
+        let stepProgress = legProgress.currentStepProgress
+        let stepDistance = distanceFormatter.measurement(of: stepProgress.distanceRemaining)
+        let stepEstimates = CPTravelEstimates(distanceRemaining: stepDistance, timeRemaining: stepProgress.durationRemaining)
+        carSession.updateEstimates(stepEstimates, for: maneuver)
     }
     
     @objc func rerouted(_ notification: NSNotification) {
@@ -173,8 +183,8 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         let step = routeController.routeProgress.currentLegProgress.currentStep
         
         let primaryManeuver = CPManeuver()
-        
-        primaryManeuver.initialTravelEstimates = CPTravelEstimates(distanceRemaining: Measurement(value: step.distance, unit: UnitLength.meters), timeRemaining: step.expectedTravelTime)
+        let distance = distanceFormatter.measurement(of: step.distance)
+        primaryManeuver.initialTravelEstimates = CPTravelEstimates(distanceRemaining: distance, timeRemaining: step.expectedTravelTime)
         
         // Just incase, set some default text
         let backupText = visualInstruction.primaryInstruction.text ?? step.instructions
@@ -209,7 +219,8 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
             tertiaryManeuver.symbolSet = tertiaryInstruction.maneuverImageSet
             
             if let upcomingStep = routeController.routeProgress.currentLegProgress.upComingStep {
-                tertiaryManeuver.initialTravelEstimates = CPTravelEstimates(distanceRemaining: Measurement(value: upcomingStep.distance, unit: UnitLength.meters), timeRemaining: upcomingStep.expectedTravelTime)
+                let distance = distanceFormatter.measurement(of: upcomingStep.distance)
+                tertiaryManeuver.initialTravelEstimates = CPTravelEstimates(distanceRemaining: distance, timeRemaining: upcomingStep.expectedTravelTime)
             }
             
             maneuvers.append(tertiaryManeuver)
