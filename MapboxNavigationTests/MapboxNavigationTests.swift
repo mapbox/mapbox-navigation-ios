@@ -17,7 +17,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
     override func setUp() {
         super.setUp()
         recordMode = false
-        isDeviceAgnostic = true
+        agnosticOptions = [.OS, .device]
     }
 
     func storyboard() -> UIStoryboard {
