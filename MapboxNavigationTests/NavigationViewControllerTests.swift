@@ -18,7 +18,8 @@ class NavigationViewControllerTests: XCTestCase {
         let voice = FakeVoiceController()
         let nav = NavigationViewController(for: initialRoute,
                                            directions: Directions(accessToken: "garbage", host: nil),
-                                           voiceController: voice)
+                                           voiceController: voice,
+                                           eventsManager: TestNavigationEventsManager())
         
         nav.delegate = self
         
@@ -89,7 +90,7 @@ class NavigationViewControllerTests: XCTestCase {
     }
     
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceMoreThanOnceWithOneStyle() {
-        let navigationViewController = NavigationViewController(for: initialRoute, styles: [DayStyle()], voiceController: FakeVoiceController())
+        let navigationViewController = NavigationViewController(for: initialRoute, styles: [DayStyle()], voiceController: FakeVoiceController(), eventsManager: TestNavigationEventsManager())
         let routeController = navigationViewController.routeController!
         navigationViewController.styleManager.delegate = self
         
@@ -105,7 +106,7 @@ class NavigationViewControllerTests: XCTestCase {
     
     // If tunnel flags are enabled and we need to switch styles, we should not force refresh the map style because we have only 1 style.
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceWhenOnlyOneStyle() {
-        let navigationViewController = NavigationViewController(for: initialRoute, styles: [NightStyle()], voiceController: FakeVoiceController())
+        let navigationViewController = NavigationViewController(for: initialRoute, styles: [NightStyle()], voiceController: FakeVoiceController(), eventsManager: TestNavigationEventsManager())
         let routeController = navigationViewController.routeController!
         navigationViewController.styleManager.delegate = self
         
@@ -120,7 +121,7 @@ class NavigationViewControllerTests: XCTestCase {
     }
     
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceMoreThanOnceWithTwoStyles() {
-        let navigationViewController = NavigationViewController(for: initialRoute, styles: [DayStyle(), NightStyle()], voiceController: FakeVoiceController())
+        let navigationViewController = NavigationViewController(for: initialRoute, styles: [DayStyle(), NightStyle()], voiceController: FakeVoiceController(), eventsManager: TestNavigationEventsManager())
         let routeController = navigationViewController.routeController!
         navigationViewController.styleManager.delegate = self
         
@@ -255,10 +256,9 @@ class NavigationViewControllerTestable: NavigationViewController {
                   directions: Directions = Directions.shared,
                   styles: [Style]? = [DayStyle(), NightStyle()],
                   locationManager: NavigationLocationManager? = NavigationLocationManager(),
-                  eventsManager: EventsManager = TestNavigationEventsManager(),
                   styleLoaded: XCTestExpectation) {
         styleLoadedExpectation = styleLoaded
-        super.init(for: route, directions: directions,styles: styles, locationManager: locationManager, voiceController: FakeVoiceController())
+        super.init(for: route, directions: directions,styles: styles, locationManager: locationManager, voiceController: FakeVoiceController(), eventsManager: TestNavigationEventsManager())
     }
     
     required init(for route: Route, directions: Directions, styles: [Style]?, locationManager: NavigationLocationManager?, voiceController: RouteVoiceController?, eventsManager: EventsManager?) {
