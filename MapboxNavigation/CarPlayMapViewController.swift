@@ -61,6 +61,27 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
         return zoomInOut
     }
     
+    public func recenterButton() -> CPMapButton {
+        let recenterButton = CPMapButton { [weak self] button in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            if strongSelf.mapView.userTrackingMode == .none {
+                strongSelf.mapView.userTrackingMode = .followWithHeading
+                button.isHidden = true
+            } else {
+                strongSelf.mapView.userTrackingMode = .none
+                button.isHidden = false
+            }
+        }
+        
+        let bundle = Bundle.mapboxNavigation
+        recenterButton.image = UIImage(named: "location", in: bundle, compatibleWith: traitCollection)
+        
+        return recenterButton
+    }
+    
     // MARK: - MGLMapViewDelegate
 
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
