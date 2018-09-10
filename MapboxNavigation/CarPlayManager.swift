@@ -162,7 +162,7 @@ public class CarPlayManager: NSObject, CPInterfaceControllerDelegate, CPSearchTe
         if let mapButtons = delegate?.carPlayManager?(self, mapButtonsCompatibleWith: traitCollection, in: mapTemplate) {
             mapTemplate.mapButtons = mapButtons
         } else if let vc = viewController as? CarPlayMapViewController {
-            mapTemplate.mapButtons = [vc.zoomInButton(), vc.zoomOutButton(), panMapButton(for: mapTemplate, traitCollection: traitCollection), vc.recenterButton()]
+            mapTemplate.mapButtons = [vc.recenterButton(), panMapButton(for: mapTemplate, traitCollection: traitCollection), vc.zoomInButton(), vc.zoomOutButton()]
         }
         
         return mapTemplate
