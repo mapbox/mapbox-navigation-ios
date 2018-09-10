@@ -122,7 +122,7 @@ step-library:
         name: CocoaPods integration test
         command: |
           cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall
-          pod install
+          pod install --repo-update
           xcodebuild -workspace PodInstall.xcworkspace/ -scheme PodInstall -destination 'platform=iOS Simulator,id=9F32C487-FAEC-4ABE-B00D-159EC007E50D' clean build | xcpretty
 
 jobs:

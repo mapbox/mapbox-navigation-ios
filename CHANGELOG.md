@@ -1,6 +1,6 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## master
+## v0.20.1 (September 10, 2018)
 
 * Fixed a bug which prevented automatic day and night style switching. ([#1629](https://github.com/mapbox/mapbox-navigation-ios/pull/1629))
 
