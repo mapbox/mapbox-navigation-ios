@@ -20,7 +20,7 @@ class TunnelIntersectionManagerTests: XCTestCase {
     
     lazy var tunnelSetup: (tunnelIntersectionManager: TunnelIntersectionManager, routeController: RouteController, firstLocation: CLLocation) = {
         tunnelRoute.accessToken = "foo"
-        let navigation = RouteController(along: tunnelRoute, directions: directions)
+        let navigation = RouteController(along: tunnelRoute, directions: directions, eventsManager: TestNavigationEventsManager())
         let firstCoord = navigation.routeProgress.currentLegProgress.nearbyCoordinates.first!
         let tunnelIntersectionManager = TunnelIntersectionManager()
         

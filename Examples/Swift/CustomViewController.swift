@@ -33,7 +33,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
         super.viewDidLoad()
         
         let locationManager = simulateLocation ? SimulatedLocationManager(route: userRoute!) : NavigationLocationManager()
-        routeController = RouteController(along: userRoute!, locationManager: locationManager)
+        routeController = RouteController(along: userRoute!, locationManager: locationManager, eventsManager: EventsManager())
         
         mapView.delegate = self
         mapView.compassView.isHidden = true

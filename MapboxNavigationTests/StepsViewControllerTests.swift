@@ -15,7 +15,7 @@ class StepsViewControllerTests: XCTestCase {
         let bogusToken = "pk.feedCafeDeadBeefBadeBede"
         let directions = Directions(accessToken: bogusToken)
 
-        let routeController = RouteController(along: initialRoute, directions: directions)
+        let routeController = RouteController(along: initialRoute, directions: directions, eventsManager: TestNavigationEventsManager())
         
         let stepsViewController = StepsViewController(routeProgress: routeController.routeProgress)
         

@@ -23,6 +23,7 @@
 		16A509D7202BC0CA0011D788 /* ImageDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A509D6202BC0CA0011D788 /* ImageDownload.swift */; };
 		16AC9D11212E356200CECE44 /* CPMapTemplate+MBTestable.m in Sources */ = {isa = PBXBuildFile; fileRef = 16AC9D10212E356200CECE44 /* CPMapTemplate+MBTestable.m */; };
 		16B63DCD205C8EEF002D56D4 /* route-with-instructions.json in Resources */ = {isa = PBXBuildFile; fileRef = 16B63DCC205C8EEF002D56D4 /* route-with-instructions.json */; };
+		16C6E6012147194A0057098D /* MMEEventsManagerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16120A4C20645D6E007EA21D /* MMEEventsManagerSpy.swift */; };
 		16C2A421211526EE00FE6E68 /* CarPlayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C2A420211526EE00FE6E68 /* CarPlayManager.swift */; };
 		16E3625C201265D600DF0592 /* ImageDownloadOperationSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E3625B201265D600DF0592 /* ImageDownloadOperationSpy.swift */; };
 		16E4F97F205B05FE00531791 /* MapboxVoiceControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E4F97E205B05FE00531791 /* MapboxVoiceControllerTests.swift */; };
@@ -2231,6 +2232,7 @@
 				35B1AEBC20AD9B3C00C8544E /* LeaksSpec.swift in Sources */,
 				16A509D5202A87B20011D788 /* ImageDownloaderTests.swift in Sources */,
 				8D54F14A206ECF720038736D /* InstructionPresenterTests.swift in Sources */,
+				16C6E6012147194A0057098D /* MMEEventsManagerSpy.swift in Sources */,
 				166224452025699600EA4824 /* ImageRepositoryTests.swift in Sources */,
 				160D827B2059973C00D278D6 /* DataCacheTests.swift in Sources */,
 				35B1AEBE20AD9C7800C8544E /* LeakTest.swift in Sources */,
@@ -2579,7 +2581,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 32;
+				DYLIB_CURRENT_VERSION = 33;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2603,7 +2605,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 32;
+				DYLIB_CURRENT_VERSION = 33;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2953,7 +2955,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 32;
+				CURRENT_PROJECT_VERSION = 33;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -3017,7 +3019,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 32;
+				CURRENT_PROJECT_VERSION = 33;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -3050,7 +3052,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 32;
+				DYLIB_CURRENT_VERSION = 33;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3076,7 +3078,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 32;
+				DYLIB_CURRENT_VERSION = 33;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
