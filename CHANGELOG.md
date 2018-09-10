@@ -2,6 +2,7 @@
 
 ## v0.20.1 (September 10, 2018)
 
+* Upgraded mapbox-events-ios to v0.5.0 to avoid a potential incompatibility when using Carthage to install the SDK.
 * Fixed a bug which prevented automatic day and night style switching. ([#1629](https://github.com/mapbox/mapbox-navigation-ios/pull/1629))
 
 ## v0.20.0 (September 6, 2018)
