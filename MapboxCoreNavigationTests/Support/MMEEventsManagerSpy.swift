@@ -77,3 +77,12 @@ class MMEEventsManagerSpy: MMEEventsManager {
         }.count
     }
 }
+
+import MapboxCoreNavigation
+
+class TestNavigationEventsManager: EventsManager {
+    init() {
+        super.init(accessToken: "not a real token")
+        self.manager = MMEEventsManagerSpy()
+    }
+}

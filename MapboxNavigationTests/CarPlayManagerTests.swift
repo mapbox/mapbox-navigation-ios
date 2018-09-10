@@ -15,17 +15,16 @@ import CarPlay
 class CarPlayManagerTests: XCTestCase {
 
     var manager: CarPlayManager?
-    
-    let eventsManagerSpy = MMEEventsManagerSpy()
-    
-    lazy var eventsManager: EventsManager = {
-        return EventsManager(accessToken: "nonsense")
-    }()
+
+    var eventsManagerSpy: MMEEventsManagerSpy {
+        get {
+            return manager!.eventsManager.manager as! MMEEventsManagerSpy
+        }
+    }
 
     override func setUp() {
         manager = CarPlayManager.shared
-        manager?.eventsManager = EventsManager(accessToken: "nonsense")
-        eventsManagerSpy.reset()
+        manager!.eventsManager = TestNavigationEventsManager()
     }
 
     override func tearDown() {
@@ -37,20 +36,18 @@ class CarPlayManagerTests: XCTestCase {
         let fakeInterfaceController = FakeCPInterfaceController(#function)
         let fakeWindow = CPWindow()
         
-        manager?.application(UIApplication.shared, didConnectCarInterfaceController: fakeInterfaceController, to: fakeWindow)
+        manager!.application(UIApplication.shared, didConnectCarInterfaceController: fakeInterfaceController, to: fakeWindow)
     }
     
     func simulateCarPlayDisconnection() {
         let fakeInterfaceController = FakeCPInterfaceController(#function)
         let fakeWindow = CPWindow()
         
-        manager?.application(UIApplication.shared, didDisconnectCarInterfaceController: fakeInterfaceController, from: fakeWindow)
+        manager!.application(UIApplication.shared, didDisconnectCarInterfaceController: fakeInterfaceController, from: fakeWindow)
     }
     
     func testEventsEnqueuedAndFlushedWhenCarPlayConnected() {
         guard #available(iOS 12, *) else { return }
-        
-        manager?.eventsManager.manager = eventsManagerSpy
         
         simulateCarPlayConnection()
         
@@ -63,8 +60,6 @@ class CarPlayManagerTests: XCTestCase {
     
     func testEventsEnqueuedAndFlushedWhenCarPlayDisconnected() {
         guard #available(iOS 12, *) else { return }
-        
-        manager?.eventsManager.manager = eventsManagerSpy
 
         simulateCarPlayDisconnection()
         
