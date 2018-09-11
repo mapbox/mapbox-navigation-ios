@@ -1,5 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## master
+
+* Introduced a breaking change the to `RouteController` initializer: Passing an EventsManager is now required. `NavigationViewController` can optionally take an `eventsManager` argument to its initializer, and the value will be passed to future instances of `RouteController`.   ([#1671](https://github.com/mapbox/mapbox-navigation-ios/pull/1671))
+
 ## v0.20.1 (September 10, 2018)
 
 * Upgraded mapbox-events-ios to v0.5.0 to avoid a potential incompatibility when using Carthage to install the SDK.
@@ -9,7 +13,7 @@
 
 ### User interface
 
-* While traveling on a numbered road, the route number is displayed in a shield beside the current road name at the bottom of the map. ([#1576](https://github.com/mapbox/mapbox-navigation-ios/pull/1576)) 
+* While traveling on a numbered road, the route number is displayed in a shield beside the current road name at the bottom of the map. ([#1576](https://github.com/mapbox/mapbox-navigation-ios/pull/1576))
 * Added the `shouldManageApplicationIdleTimer` flag to `NavigationViewController` to allow applications to opt out of automatic `UIApplication.isIdleTimerDisabled` management. ([#1591](https://github.com/mapbox/mapbox-navigation-ios/pull/1591))
 * Added various methods, properties, and initializers to `StatusView`, allowing you to use it in a custom user interface. ([#1612](https://github.com/mapbox/mapbox-navigation-ios/pull/1612))
 * Added `StyleManager.automaticallyAdjustsStyleForTimeOfDay`, `StyleManager.delegate`, and `StyleManager.styles` properties so that you can control same time-based style switching just as `NavigationViewController` does. [#1617](https://github.com/mapbox/mapbox-navigation-ios/pull/1617)
