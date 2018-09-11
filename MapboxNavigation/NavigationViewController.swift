@@ -655,7 +655,8 @@ extension NavigationViewController: RouteControllerDelegate {
     @objc public func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) -> Bool {
         let advancesToNextLeg = delegate?.navigationViewController?(self, didArriveAt: waypoint) ?? true
         
-        if routeController.routeProgress.isFinalLeg && advancesToNextLeg && showsEndOfRouteFeedback {
+        if !CarPlayManagerHelper.isConnectedToCarPlay, // Shows rating on CarPlay if connected
+            routeController.routeProgress.isFinalLeg && advancesToNextLeg && showsEndOfRouteFeedback {
             self.mapViewController?.showEndOfRoute { _ in }
         }
         return advancesToNextLeg

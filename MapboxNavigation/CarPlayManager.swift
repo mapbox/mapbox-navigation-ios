@@ -110,6 +110,11 @@ public class CarPlayManager: NSObject {
     private var defaultMapButtons: [CPMapButton]?
     
     /**
+     A boolean value indicating whether the phone is connected to a CarPlay device or not.
+     */
+    public var isConnectedToCarPlay: Bool = false
+    
+    /**
      * This property manages the relevant events recorded for telemetry analysis.
      */
     public var eventsManager = EventsManager()
@@ -141,7 +146,7 @@ public class CarPlayManager: NSObject {
         
         // WIP - For telemetry testing purposes
         // eventsManager.start()
-        
+        isConnectedToCarPlay = true
         interfaceController.delegate = self
         self.interfaceController = interfaceController
 
@@ -238,6 +243,7 @@ public class CarPlayManager: NSObject {
         let dateCreatedAttribute = [MMEEventKeyCreated: timestamp]
         eventsManager.manager.enqueueEvent(withName: MMEventTypeCarplayDisconnect, attributes: dateCreatedAttribute)
         eventsManager.manager.flush()
+        isConnectedToCarPlay = false
     }
 
     public func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPWindow) {
@@ -611,3 +617,16 @@ extension CarPlayManager: CarPlayNavigationDelegate {
     }
 }
 #endif
+
+struct CarPlayManagerHelper {
+    
+    static var isConnectedToCarPlay: Bool {
+        #if canImport(CarPlay)
+        if #available(iOS 12.0, *) {
+            return CarPlayManager.shared.isConnectedToCarPlay
+        }
+        #endif
+        return false
+    }
+    
+}
