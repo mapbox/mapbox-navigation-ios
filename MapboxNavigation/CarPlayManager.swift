@@ -446,7 +446,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         if let routeControllerFromDelegate = delegate?.carPlayManager?(self, routeControllerAlong: route) {
             routeController = routeControllerFromDelegate
         } else {
-            routeController = RouteController(along: route)
+            routeController = RouteController(along: route, eventsManager: eventsManager)
         }
         
         interfaceController.popToRootTemplate(animated: false)

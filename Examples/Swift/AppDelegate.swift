@@ -115,9 +115,9 @@ extension AppDelegate: CarPlayManagerDelegate {
         if simulatesLocationsInCarPlay {
             let locationManager = SimulatedLocationManager(route: route)
             locationManager.speedMultiplier = 5
-            return RouteController(along: route, locationManager: locationManager)
+            return RouteController(along: route, locationManager: locationManager, eventsManager: carPlayManager.eventsManager)
         } else {
-            return RouteController(along: route)
+            return RouteController(along: route, eventsManager: carPlayManager.eventsManager)
         }
     }
     
