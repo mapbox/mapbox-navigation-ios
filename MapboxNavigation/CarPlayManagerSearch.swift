@@ -1,17 +1,17 @@
+#if canImport(CarPlay) && canImport(MapboxGeocoder)
 import Foundation
-#if canImport(CarPlay)
 import CarPlay
 import MapboxGeocoder
-import MapboxNavigation
 import MapboxDirections
 
-public class CarPlayGeocoder: Geocoder {
+@available(iOS 12.0, *)
+extension CarPlayManager {
     
     public static let CarPlayGeocodedPlacemarkKey: String = "CPGecodedPlacemark"
     static var recentItems = RecentItem.loadDefaults()
     
     @available(iOS 12.0, *)
-    static func searchTemplate(_ searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void) {
+    public static func searchTemplate(_ searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void) {
         
         // Append recent searches
         var items = recentSearches(searchText)
@@ -30,22 +30,22 @@ public class CarPlayGeocoder: Geocoder {
             Geocoder.shared.geocode(options, completionHandler: { (placemarks, attribution, error) in
                 
                 guard let placemarks = placemarks else {
-                    completionHandler(CarPlayGeocoder.resultsOrNoResults(items))
+                    completionHandler(CarPlayManager.resultsOrNoResults(items))
                     return
                 }
                 
                 let results = placemarks.map { $0.listItem() }
                 items.append(contentsOf: results)
-                completionHandler(CarPlayGeocoder.resultsOrNoResults(results))
+                completionHandler(CarPlayManager.resultsOrNoResults(results))
             })
             
         } else {
-             completionHandler(CarPlayGeocoder.resultsOrNoResults(items))
+            completionHandler(CarPlayManager.resultsOrNoResults(items))
         }
     }
     
     @available(iOS 12.0, *)
-    static func carPlayManager(_ searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void) {
+    public static func carPlayManager(_ searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void) {
         
         guard let userInfo = item.userInfo as? [String: Any],
             let placemark = userInfo[CarPlayGeocodedPlacemarkKey] as? GeocodedPlacemark,
@@ -91,7 +91,7 @@ extension GeocodedPlacemark {
     @available(iOS 12.0, *)
     func listItem() -> CPListItem {
         let item = CPListItem(text: formattedName, detailText: subtitle, image: nil, showsDisclosureIndicator: true)
-        item.userInfo = [CarPlayGeocoder.CarPlayGeocodedPlacemarkKey: self]
+        item.userInfo = [CarPlayManager.CarPlayGeocodedPlacemarkKey: self]
         return item
     }
     
