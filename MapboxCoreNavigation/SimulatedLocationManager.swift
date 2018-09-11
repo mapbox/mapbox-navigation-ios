@@ -53,6 +53,17 @@ open class SimulatedLocationManager: NavigationLocationManager {
         }
     }
     
+    public override func copy(with zone: NSZone? = nil) -> Any {
+        let copy = SimulatedLocationManager(route: route!)
+        copy.currentDistance = currentDistance
+        copy.currentLocation = currentLocation
+        copy.currentSpeed = currentSpeed
+        copy.locations = locations
+        copy.routeLine = routeLine
+        copy.speedMultiplier = speedMultiplier
+        return copy
+    }
+    
     var routeProgress: RouteProgress?
     
     /**
