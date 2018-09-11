@@ -23,10 +23,9 @@ DEPENDENCIES:
   - MapboxNavigation (from `../../../`)
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  https://github.com/cocoapods/specs.git:
     - Mapbox-iOS-SDK
     - MapboxDirections.swift
-    - MapboxMobileEvents
     - MapboxSpeech
     - Polyline
     - Solar
@@ -34,7 +33,7 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   MapboxCoreNavigation:
-    :path: ../../../
+    :path: "../../../"
   MapboxMobileEvents:
     :branch: master
     :git: https://github.com/mapbox/mapbox-events-ios.git
@@ -43,7 +42,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   MapboxMobileEvents:
-    :commit: 1078af35c9ce3b73f21470420bc3294eada5538f
+    :commit: ff9aec6e5516ee4cad5f634a4b1d8371d96f2c67
     :git: https://github.com/mapbox/mapbox-events-ios.git
 
 SPEC CHECKSUMS:
@@ -59,4 +58,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 5f10c5b41bbe71dd3b95306d2641d7ec9f47f7fa
 
-COCOAPODS: 1.5.0
+COCOAPODS: 1.5.3
