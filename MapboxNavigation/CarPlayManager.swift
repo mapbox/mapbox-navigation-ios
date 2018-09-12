@@ -243,10 +243,10 @@ public class CarPlayManager: NSObject {
         let dateCreatedAttribute = [MMEEventKeyCreated: timestamp]
         eventsManager.manager.enqueueEvent(withName: MMEventTypeCarplayDisconnect, attributes: dateCreatedAttribute)
         eventsManager.manager.flush()
-        isConnectedToCarPlay = false
     }
 
     public func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPWindow) {
+        isConnectedToCarPlay = false
         self.interfaceController = nil
         carWindow?.isHidden = true
         let timestamp = Date().ISO8601
@@ -616,17 +616,11 @@ extension CarPlayManager: CarPlayNavigationDelegate {
         delegate?.carPlayManagerDidEndNavigation(self)
     }
 }
+#else
+@objc(MBCarPlayManager)
+class CarPlayManager: NSObject {
+    public static var shared = CarPlayManager()
+    var isConnectedToCarPlay: Bool = false
+}
 #endif
 
-struct CarPlayManagerHelper {
-    
-    static var isConnectedToCarPlay: Bool {
-        #if canImport(CarPlay)
-        if #available(iOS 12.0, *) {
-            return CarPlayManager.shared.isConnectedToCarPlay
-        }
-        #endif
-        return false
-    }
-    
-}
