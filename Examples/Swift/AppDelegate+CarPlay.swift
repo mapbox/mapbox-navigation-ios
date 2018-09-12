@@ -37,35 +37,14 @@ extension AppDelegate: CarPlayManagerDelegate {
     
     // MARK: CarPlayManagerDelegate
     func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith routeController: RouteController) {
-        guard let presentingController = window?.rootViewController else { return }
-        
-        // Open StepsViewController on iPhone if NavigationViewController is being presented
-        if let navigationViewController = presentingController as? NavigationViewController {
-            navigationViewController.openStepsViewController()
-        } else {
-            
-            // Start NavigationViewController and open StepsViewController if navigation has not started on iPhone yet.
-            let navigationViewControllerExistsInStack = UIViewController.viewControllerInStack(of: NavigationViewController.self) != nil
-            
-            if !navigationViewControllerExistsInStack {
-                
-                let locationManager = routeController.locationManager
-                let directions = routeController.directions
-                let route = routeController.routeProgress.route
-                let navigationViewController = NavigationViewController(for: route, directions: directions, locationManager: locationManager)
-                
-                presentingController.present(navigationViewController, animated: true, completion: {
-                    navigationViewController.openStepsViewController()
-                })
-            }
-        }
+        guard let window = window else { return }
+        NavigationViewController.carPlayManager(carPlayManager, didBeginNavigationWith:routeController, window: window)
     }
     
     func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
         // Dismiss NavigationViewController if it's present in the navigation stack
-        if let navigationViewController = UIViewController.viewControllerInStack(of: NavigationViewController.self) {
-            navigationViewController.dismiss(animated: true, completion: nil)
-        }
+        guard let window = window else { return }
+        NavigationViewController.carPlayManagerDidEndNavigation(carPlayManager, window: window)
     }
     
     func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]? {
