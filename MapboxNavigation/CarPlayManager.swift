@@ -13,9 +13,9 @@ import MapboxMobileEvents
 public enum CarPlayActivity: Int {
     /// The user is browsing the map or searching for a destination.
     case browsing
-    // The user is previewing a route or selecting among multiple routes.
+    /// The user is previewing a route or selecting among multiple routes.
     case previewing
-    // The user is actively navigating along a route.
+    /// The user is actively navigating along a route.
     case navigating
 }
 
@@ -98,13 +98,20 @@ public class CarPlayManager: NSObject, CPSearchTemplateDelegate {
      */
     public weak var delegate: CarPlayManagerDelegate?
 
+    /**
+     * If set to `true`, turn-by-turn directions will simulate the user traveling along the selected route when initiated from CarPlay
+     */
+    public var simulatesLocations = false
+
+    /**
+     * This property specifies a multiplier to be applied to the user's speed in simulation mode.
+     */
+    public var simulatedSpeedMultiplier = 1.0
+
     public static var shared = CarPlayManager()
 
     public fileprivate(set) var mainMapTemplate: CPMapTemplate?
     public fileprivate(set) weak var currentNavigator: CarPlayNavigationViewController?
-
-    public var simulatesLocations = false
-    public var simulatedSpeedMultipler = 1.0
 
     public static func resetSharedInstance() {
         shared = CarPlayManager()
@@ -141,10 +148,6 @@ public class CarPlayManager: NSObject, CPSearchTemplateDelegate {
     // MARK: CPApplicationDelegate
 
     public func application(_ application: UIApplication, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPWindow) {
-
-        // WIP - For telemetry testing purposes
-        // eventsManager.start()
-
         interfaceController.delegate = self
         self.interfaceController = interfaceController
 
@@ -635,7 +638,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
     private func createRouteController(with route: Route) -> RouteController {
         if self.simulatesLocations {
             let locationManager = SimulatedLocationManager(route: route)
-            locationManager.speedMultiplier = self.simulatedSpeedMultipler
+            locationManager.speedMultiplier = self.simulatedSpeedMultiplier
             return RouteController(along: route, locationManager: locationManager, eventsManager: eventsManager)
         } else {
             return RouteController(along: route, eventsManager: eventsManager)

@@ -234,7 +234,7 @@ class CarPlayManagerSpec: QuickSpec {
             context("When configured to simulate", {
                 beforeEach {
                     manager!.simulatesLocations = true
-                    manager!.simulatedSpeedMultipler = 5.0
+                    manager!.simulatedSpeedMultiplier = 5.0
                 }
 
                 it("starts navigation with a route controller with a simulated location manager") {
@@ -246,7 +246,7 @@ class CarPlayManagerSpec: QuickSpec {
                 }
             })
 
-            xcontext("When configured not to simulate", {
+            context("When configured not to simulate", {
                 beforeEach {
                     manager!.simulatesLocations = false
                 }
