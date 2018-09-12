@@ -2,6 +2,9 @@ import UIKit
 import MapboxCoreNavigation
 import MapboxDirections
 import Mapbox
+#if canImport(CarPlay)
+import CarPlay
+#endif
 
 /**
  The `NavigationViewControllerDelegate` provides methods for configuring the map view shown by a `NavigationViewController` and responding to the cancellation of a navigation session.
@@ -495,6 +498,47 @@ open class NavigationViewController: UIViewController {
     public func openStepsViewController() {
         mapViewController?.openStepsViewController()
     }
+    
+    #if canImport(CarPlay)
+    /**
+     Presents a `NavigationViewController` on the top most view controller in the window and opens up the `StepsViewController`.
+     If the `NavigationViewController` is already in the stack, it will open the `StepsViewController` unless it is already open.
+     */
+    @available(iOS 12.0, *)
+    public class func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith routeController: RouteController, window: UIWindow) {
+        
+        if let navigationViewController = window.viewControllerInStack(of: NavigationViewController.self) {
+            // Open StepsViewController on iPhone if NavigationViewController is being presented
+            navigationViewController.openStepsViewController()
+        } else {
+            
+            // Start NavigationViewController and open StepsViewController if navigation has not started on iPhone yet.
+            let navigationViewControllerExistsInStack = window.viewControllerInStack(of: NavigationViewController.self) != nil
+            
+            if !navigationViewControllerExistsInStack {
+                
+                let locationManager = routeController.locationManager
+                let directions = routeController.directions
+                let route = routeController.routeProgress.route
+                let navigationViewController = NavigationViewController(for: route, directions: directions, locationManager: locationManager)
+                
+                window.rootViewController?.topMostViewController()?.present(navigationViewController, animated: true, completion: {
+                    navigationViewController.openStepsViewController()
+                })
+            }
+        }
+    }
+    
+    /**
+     Dismisses a `NavigationViewController` if there is any in the navigation stack.
+     */
+    @available(iOS 12.0, *)
+    public class func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager, window: UIWindow) {
+        if let navigationViewController = window.viewControllerInStack(of: NavigationViewController.self) {
+            navigationViewController.dismiss(animated: true, completion: nil)
+        }
+    }
+    #endif
 }
 
 //MARK: - RouteMapViewControllerDelegate
