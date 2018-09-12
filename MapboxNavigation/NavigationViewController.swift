@@ -312,6 +312,14 @@ open class NavigationViewController: UIViewController {
         }
     }
     
+    var isConnectedToCarPlay: Bool {
+        if #available(iOS 12.0, *) {
+            return CarPlayManager.shared.isConnectedToCarPlay
+        } else {
+            return false
+        }
+    }
+    
     var mapViewController: RouteMapViewController?
     
     /**
@@ -517,7 +525,7 @@ open class NavigationViewController: UIViewController {
             
             if !navigationViewControllerExistsInStack {
                 
-                let locationManager = routeController.locationManager
+                let locationManager = routeController.locationManager.copy() as! NavigationLocationManager
                 let directions = routeController.directions
                 let route = routeController.routeProgress.route
                 let navigationViewController = NavigationViewController(for: route, directions: directions, locationManager: locationManager)
@@ -655,7 +663,7 @@ extension NavigationViewController: RouteControllerDelegate {
     @objc public func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) -> Bool {
         let advancesToNextLeg = delegate?.navigationViewController?(self, didArriveAt: waypoint) ?? true
         
-        if !CarPlayManagerHelper.isConnectedToCarPlay, // Shows rating on CarPlay if connected
+        if !isConnectedToCarPlay, // CarPlayManager shows rating on CarPlay if it's connected
             routeController.routeProgress.isFinalLeg && advancesToNextLeg && showsEndOfRouteFeedback {
             self.mapViewController?.showEndOfRoute { _ in }
         }
