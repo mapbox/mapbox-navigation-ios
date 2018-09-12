@@ -51,6 +51,7 @@ step-library:
         command: |
           git submodule sync
           brew install carthage
+          echo "foo" > ~/.mapbox
 
   - &prepare-iphone6s-plus-ios-11
       run:
@@ -137,9 +138,11 @@ step-library:
         when: on_fail
         command: cat MapboxCoreNavigation-xcodebuild.log
   
-  - &store-test-artifacts
+  - &store-MapboxNavigationResults-artifacts
       store_artifacts:
           path: MapboxNavigationResults
+
+  - &store-MapboxCoreNavigationResults-artifacts
       store_artifacts:
           path: MapboxCoreNavigationResults
 
@@ -160,7 +163,8 @@ jobs:
       - *build-test-MapboxNavigation-ios-12
       - *print-MapboxNavigation-xcodebuild-log
       - *print-MapboxCoreNavigation-xcodebuild-log
-      - *store-test-artifacts
+      - *store-MapboxNavigationResults-artifacts
+      - *store-MapboxCoreNavigationResults-artifacts
       - *save-cache
   
   xcode-9:
@@ -179,7 +183,8 @@ jobs:
       - *build-test-MapboxNavigation-ios-11
       - *print-MapboxNavigation-xcodebuild-log
       - *print-MapboxCoreNavigation-xcodebuild-log
-      - *store-test-artifacts
+      - *store-MapboxNavigationResults-artifacts
+      - *store-MapboxCoreNavigationResults-artifacts
       - *save-cache
 
   xcode-10-cocoapods-integration:
