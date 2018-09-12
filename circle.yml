@@ -85,25 +85,25 @@ step-library:
       run:
         name: Build and Test MapboxCoreNavigation
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test | tee MapboxCoreNavigation-xcodebuild.log | xcpretty
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation  -resultBundlePath MapboxCoreNavigationResults clean build test | tee MapboxCoreNavigation-xcodebuild.log | xcpretty
 
   - &build-test-MapboxCoreNavigation-ios-12
       run:
         name: Build and Test MapboxCoreNavigation
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test | tee MapboxCoreNavigation-xcodebuild.log | xcpretty
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation -resultBundlePath MapboxCoreNavigationResults clean build test | tee MapboxCoreNavigation-xcodebuild.log | xcpretty
 
   - &build-test-MapboxNavigation-ios-11
       run:
         name: Build and Test MapboxNavigation
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build test | tee MapboxNavigation-xcodebuild.log | xcpretty
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation -resultBundlePath MapboxNavigationResults clean build test | tee MapboxNavigation-xcodebuild.log | xcpretty
 
   - &build-test-MapboxNavigation-ios-12
       run:
-        name: Build MapboxNavigation
+        name: Build and Test MapboxNavigation
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build test | tee MapboxNavigation-xcodebuild.log | xcpretty
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation -resultBundlePath MapboxNavigationResults clean build test | tee MapboxNavigation-xcodebuild.log | xcpretty
 
   - &build-Example-Obj-C
       run:
@@ -136,6 +136,12 @@ step-library:
         name: Print MapboxCoreNavigation-xcodebuild.log
         when: on_fail
         command: cat MapboxCoreNavigation-xcodebuild.log
+  
+  - &store-test-artifacts
+      store_artifacts:
+          path: MapboxNavigationResults
+      store_artifacts:
+          path: MapboxCoreNavigationResults
 
 jobs:
   xcode-10:
@@ -154,6 +160,7 @@ jobs:
       - *build-test-MapboxNavigation-ios-12
       - *print-MapboxNavigation-xcodebuild-log
       - *print-MapboxCoreNavigation-xcodebuild-log
+      - *store-test-artifacts
       - *save-cache
   
   xcode-9:
@@ -172,6 +179,7 @@ jobs:
       - *build-test-MapboxNavigation-ios-11
       - *print-MapboxNavigation-xcodebuild-log
       - *print-MapboxCoreNavigation-xcodebuild-log
+      - *store-test-artifacts
       - *save-cache
 
   xcode-10-cocoapods-integration:
