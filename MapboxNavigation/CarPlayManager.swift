@@ -87,7 +87,7 @@ public protocol CarPlayManagerDelegate {
 
 @available(iOS 12.0, *)
 @objc(MBCarPlayManager)
-public class CarPlayManager: NSObject, CPSearchTemplateDelegate {
+public class CarPlayManager: NSObject {
 
     public fileprivate(set) var interfaceController: CPInterfaceController?
     public fileprivate(set) var carWindow: UIWindow?
@@ -108,6 +108,11 @@ public class CarPlayManager: NSObject, CPSearchTemplateDelegate {
     }
     
     private var defaultMapButtons: [CPMapButton]?
+    
+    /**
+     A boolean value indicating whether the phone is connected to a CarPlay device or not.
+     */
+    public var isConnectedToCarPlay: Bool = false
     
     /**
      * This property manages the relevant events recorded for telemetry analysis.
@@ -139,9 +144,7 @@ public class CarPlayManager: NSObject, CPSearchTemplateDelegate {
 
     public func application(_ application: UIApplication, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPWindow) {
         
-        // WIP - For telemetry testing purposes
-        // eventsManager.start()
-        
+        isConnectedToCarPlay = true
         interfaceController.delegate = self
         self.interfaceController = interfaceController
 
@@ -167,11 +170,13 @@ public class CarPlayManager: NSObject, CPSearchTemplateDelegate {
         if let leadingButtons = delegate?.carPlayManager?(self, leadingNavigationBarButtonsCompatibleWith: traitCollection, in: mapTemplate, for: .browsing) {
             mapTemplate.leadingNavigationBarButtons = leadingButtons
         } else {
+            #if canImport(CarPlay) && canImport(MapboxGeocoder)
             let searchTemplate = CPSearchTemplate()
             searchTemplate.delegate = self
 
             let searchButton = searchTemplateButton(searchTemplate: searchTemplate, interfaceController: interfaceController, traitCollection: traitCollection)
             mapTemplate.leadingNavigationBarButtons = [searchButton]
+            #endif
         }
 
         if let trailingButtons = delegate?.carPlayManager?(self, trailingNavigationBarButtonsCompatibleWith: traitCollection, in: mapTemplate, for: .browsing) {
@@ -239,49 +244,14 @@ public class CarPlayManager: NSObject, CPSearchTemplateDelegate {
     }
 
     public func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPWindow) {
+        isConnectedToCarPlay = false
         self.interfaceController = nil
         carWindow?.isHidden = true
         let timestamp = Date().ISO8601
         sendCarPlayDisconnectEvent(timestamp)
     }
-
-    // MARK: CPSearchTemplateDelegate
-
-    public func searchTemplate(_ searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void) {
-        let notImplementedItem = CPListItem(text: "Search not implemented", detailText: nil)
-        delegate?.carPlayManager?(self, searchTemplate: searchTemplate, updatedSearchText: searchText, completionHandler: completionHandler)
-            ?? completionHandler([notImplementedItem])
-    }
-
-    public func searchTemplateSearchButtonPressed(_ searchTemplate: CPSearchTemplate) {
-        // TODO: based on this callback we should push a CPListTemplate with a longer list of results.
-    }
-
-    public func searchTemplate(_ searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void) {
-        delegate?.carPlayManager?(self, searchTemplate: searchTemplate, selectedResult: item, completionHandler: completionHandler)
-    }
     
-    private func searchTemplateButton(searchTemplate: CPSearchTemplate, interfaceController: CPInterfaceController, traitCollection: UITraitCollection) -> CPBarButton {
-        
-        let searchTemplateButton = CPBarButton(type: .image) { [weak self] button in
-            guard let strongSelf = self else {
-                return
-            }
- 
-            if let mapTemplate = interfaceController.topTemplate as? CPMapTemplate {
-                strongSelf.resetPanButtons(mapTemplate)
-            }
-            
-            interfaceController.pushTemplate(searchTemplate, animated: true)
-        }
-
-        let bundle = Bundle.mapboxNavigation
-        searchTemplateButton.image = UIImage(named: "search-monocle", in: bundle, compatibleWith: traitCollection)
-        
-        return searchTemplateButton
-    }
-    
-    private func resetPanButtons(_ mapTemplate: CPMapTemplate) {
+    func resetPanButtons(_ mapTemplate: CPMapTemplate) {
         if mapTemplate.isPanningInterfaceVisible, let mapButtons = defaultMapButtons {
             mapTemplate.mapButtons = mapButtons
             mapTemplate.dismissPanningInterface(animated: false)
@@ -656,4 +626,11 @@ extension CarPlayManager: CarPlayNavigationDelegate {
         delegate?.carPlayManagerDidEndNavigation(self)
     }
 }
+#else
+@objc(MBCarPlayManager)
+class CarPlayManager: NSObject {
+    public static var shared = CarPlayManager()
+    var isConnectedToCarPlay: Bool = false
+}
 #endif
+

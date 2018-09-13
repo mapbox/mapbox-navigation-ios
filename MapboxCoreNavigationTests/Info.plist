@@ -16,6 +16,10 @@
 	<string>BNDL</string>
 	<key>CFBundleShortVersionString</key>
 	<string>0.20.1</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Location Usage Description</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Location Usage Description</string>
 	<key>CFBundleVersion</key>
 	<string>33</string>
 </dict>

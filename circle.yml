@@ -51,6 +51,7 @@ step-library:
         command: |
           git submodule sync
           brew install carthage
+          echo "foo" > ~/.mapbox
 
   - &prepare-iphone6s-plus-ios-11
       run:
@@ -85,25 +86,25 @@ step-library:
       run:
         name: Build and Test MapboxCoreNavigation
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test | xcpretty
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation  -resultBundlePath MapboxCoreNavigationResults clean build test | tee MapboxCoreNavigation-xcodebuild.log | xcpretty
 
   - &build-test-MapboxCoreNavigation-ios-12
       run:
         name: Build and Test MapboxCoreNavigation
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test | xcpretty
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation -resultBundlePath MapboxCoreNavigationResults clean build test | tee MapboxCoreNavigation-xcodebuild.log | xcpretty
 
   - &build-test-MapboxNavigation-ios-11
       run:
         name: Build and Test MapboxNavigation
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build test | xcpretty
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation -resultBundlePath MapboxNavigationResults clean build test | tee MapboxNavigation-xcodebuild.log | xcpretty
 
   - &build-test-MapboxNavigation-ios-12
       run:
         name: Build and Test MapboxNavigation
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build test | xcpretty
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation -resultBundlePath MapboxNavigationResults clean build test | tee MapboxNavigation-xcodebuild.log | xcpretty
 
   - &build-Example-Obj-C
       run:
@@ -125,6 +126,26 @@ step-library:
           pod install --repo-update
           xcodebuild -workspace PodInstall.xcworkspace/ -scheme PodInstall -destination 'platform=iOS Simulator,id=9F32C487-FAEC-4ABE-B00D-159EC007E50D' clean build | xcpretty
 
+  - &print-MapboxNavigation-xcodebuild-log
+      run:
+        name: Print MapboxNavigation-xcodebuild.log
+        when: on_fail
+        command: cat MapboxNavigation-xcodebuild.log
+  
+  - &print-MapboxCoreNavigation-xcodebuild-log
+      run:
+        name: Print MapboxCoreNavigation-xcodebuild.log
+        when: on_fail
+        command: cat MapboxCoreNavigation-xcodebuild.log
+  
+  - &store-MapboxNavigationResults-artifacts
+      store_artifacts:
+          path: MapboxNavigationResults
+
+  - &store-MapboxCoreNavigationResults-artifacts
+      store_artifacts:
+          path: MapboxCoreNavigationResults
+
 jobs:
   xcode-10:
     macos:
@@ -140,6 +161,10 @@ jobs:
       - *install-dependencies
       - *build-test-MapboxCoreNavigation-ios-12
       - *build-test-MapboxNavigation-ios-12
+      - *print-MapboxNavigation-xcodebuild-log
+      - *print-MapboxCoreNavigation-xcodebuild-log
+      - *store-MapboxNavigationResults-artifacts
+      - *store-MapboxCoreNavigationResults-artifacts
       - *save-cache
 
   xcode-9:
@@ -156,6 +181,10 @@ jobs:
       - *verify-missing-localizable-strings
       - *build-test-MapboxCoreNavigation-ios-11
       - *build-test-MapboxNavigation-ios-11
+      - *print-MapboxNavigation-xcodebuild-log
+      - *print-MapboxCoreNavigation-xcodebuild-log
+      - *store-MapboxNavigationResults-artifacts
+      - *store-MapboxCoreNavigationResults-artifacts
       - *save-cache
 
   xcode-10-cocoapods-integration:
