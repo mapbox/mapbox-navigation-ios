@@ -500,6 +500,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         mapView.showWaypoints(route)
         
         mapView.userTrackingMode = .none
+        mapView.resetNorth()
         
         let padding = UIEdgeInsets(top: 10,
                                    left: carPlayMapViewController.view.safeAreaInsets.left + 20,
@@ -539,6 +540,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         } else if let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController {
             mapView = carPlayMapViewController.mapView
             mapView.userTrackingMode = .none
+            mapView.resetNorth()
         } else {
             return
         }
@@ -574,6 +576,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
             return
         }
         carPlayMapViewController.mapView.userTrackingMode = .none
+        carPlayMapViewController.mapView.resetNorth()
     }
     
     public func mapTemplate(_ mapTemplate: CPMapTemplate, panWith direction: CPMapTemplate.PanDirection) {
@@ -585,6 +588,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let camera = mapView.camera
         
         mapView.userTrackingMode = .none
+        mapView.resetNorth()
 
         var facing: CLLocationDirection = 0.0
         
