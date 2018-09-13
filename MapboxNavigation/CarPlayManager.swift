@@ -302,7 +302,7 @@ extension CarPlayManager: CPInterfaceControllerDelegate {
             let mapView = carPlayMapViewController.mapView
             mapView.removeRoutes()
             mapView.removeWaypoints()
-            mapView.userTrackingMode = .followWithHeading
+            mapView.userTrackingMode = .followWithCourse
         }
     }
 }
