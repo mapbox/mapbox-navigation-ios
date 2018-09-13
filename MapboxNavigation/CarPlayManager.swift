@@ -328,12 +328,27 @@ public class CarPlayManager: NSObject, CPSearchTemplateDelegate {
 @available(iOS 12.0, *)
 extension CarPlayManager: CPInterfaceControllerDelegate {
     public func templateDidAppear(_ template: CPTemplate, animated: Bool) {
+        guard interfaceController?.topTemplate == mainMapTemplate else { return }
         if template == interfaceController?.rootTemplate, let carPlayMapViewController = carWindow?.rootViewController as? CarPlayMapViewController {
             let mapView = carPlayMapViewController.mapView
             mapView.removeRoutes()
             mapView.removeWaypoints()
-            carPlayMapViewController.resetCamera()
+            mapView.setUserTrackingMode(.followWithHeading, animated: true)
         }
+    }
+    public func templateWillDisappear(_ template: CPTemplate, animated: Bool) {
+
+        let isCorrectType = type(of: template) == CPSearchTemplate.self || type(of: template) == CPMapTemplate.self
+
+        guard let interface = interfaceController, let top = interface.topTemplate,
+            type(of: top) == CPSearchTemplate.self || interface.templates.count == 1,
+            isCorrectType,
+            let carPlayMapViewController = carWindow?.rootViewController as? CarPlayMapViewController else { return }
+            if type(of: template) == CPSearchTemplate.self {
+                carPlayMapViewController.isOverviewingRoutes = false
+            }
+            carPlayMapViewController.resetCamera(animated: false, defaultAltitude: false)
+
     }
 }
 
@@ -460,6 +475,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         navigationViewController.carPlayNavigationDelegate = self
         currentNavigator = navigationViewController
         
+        carPlayMapViewController.isOverviewingRoutes = false
         carPlayMapViewController.present(navigationViewController, animated: true, completion: nil)
         
         let mapView = carPlayMapViewController.mapView
@@ -519,7 +535,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         guard let carPlayMapViewController = carWindow?.rootViewController as? CarPlayMapViewController else {
             return
         }
-        
+        carPlayMapViewController.isOverviewingRoutes = true
         let mapView = carPlayMapViewController.mapView
         let route = routeChoice.userInfo as! Route
         

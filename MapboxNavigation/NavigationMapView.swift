@@ -428,7 +428,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         center(on: active, facing: 0, padding: padding, animated: animated)
     }
     
-    private func center(on route: Route, facing direction:CLLocationDirection = 0, padding: UIEdgeInsets = NavigationMapView.defaultPadding, animated: Bool = false) {
+    func center(on route: Route, facing direction:CLLocationDirection = 0, padding: UIEdgeInsets = NavigationMapView.defaultPadding, animated: Bool = false) {
         guard let coords = route.coordinates, !coords.isEmpty else { return }
       
         setUserTrackingMode(.none, animated: false)
@@ -1051,14 +1051,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
     
-    
-    @available(iOS 11.0, *)
-    override open func safeAreaInsetsDidChange() {
-        contentInset = safeAreaInsets
-        guard let routes = self.routes,
-              let active = routes.first else { return }
-        center(on: active, animated: false)
-    }
     
     /**
      Sets the camera directly over a series of coordinates.

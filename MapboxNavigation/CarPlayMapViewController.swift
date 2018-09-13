@@ -13,6 +13,8 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
         return coarseLocationManager
     }()
     
+    var isOverviewingRoutes: Bool = false
+    
     var mapView: NavigationMapView {
         get {
             return self.view as! NavigationMapView
@@ -35,7 +37,7 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
         styleManager = StyleManager(self)
         styleManager.styles = [CarPlayDayStyle(), CarPlayNightStyle()]
         
-        resetCamera(animated: true)
+        resetCamera(animated: false, defaultAltitude: true)
     }
     
     public func zoomInButton() -> CPMapButton {
@@ -89,14 +91,22 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
         }
     }
     
-    func resetCamera(animated: Bool = false) {
+    func resetCamera(animated: Bool = false, defaultAltitude: Bool = false) {
         let camera = mapView.camera
-        
-        camera.altitude = 16000
+        if defaultAltitude {
+            camera.altitude = 16000
+        }
         camera.pitch = 60
         mapView.setCamera(camera, animated: false)
-        mapView.setUserTrackingMode(.followWithHeading, animated: animated)
 
+    }
+    
+    override func viewSafeAreaInsetsDidChange() {
+        guard isOverviewingRoutes else { return }
+        mapView.contentInset = mapView.safeAreaInsets
+        guard let routes = mapView.routes,
+            let active = routes.first else { return }
+        mapView.center(on: active, animated: false)
     }
 }
 
