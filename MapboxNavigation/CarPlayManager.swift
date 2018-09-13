@@ -144,8 +144,6 @@ public class CarPlayManager: NSObject {
 
     public func application(_ application: UIApplication, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPWindow) {
         
-        // WIP - For telemetry testing purposes
-        // eventsManager.start()
         isConnectedToCarPlay = true
         interfaceController.delegate = self
         self.interfaceController = interfaceController
