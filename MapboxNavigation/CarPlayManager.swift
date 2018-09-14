@@ -1,5 +1,8 @@
 #if canImport(CarPlay)
 import CarPlay
+#if canImport(MapboxGeocoder)
+import MapboxGeocoder
+#endif
 import Turf
 import MapboxCoreNavigation
 import MapboxDirections
@@ -378,14 +381,27 @@ extension CarPlayManager: CPInterfaceControllerDelegate {
 extension CarPlayManager: CPListTemplateDelegate {
 
     public func listTemplate(_ listTemplate: CPListTemplate, didSelect item: CPListItem, completionHandler: @escaping () -> Void) {
-        guard let rawValue = item.text,
-            let favoritePOI = CPFavoritesList.POI(rawValue: rawValue) else {
-                completionHandler()
-                return
+        
+        // Selected a search item from the extended list?
+        #if canImport(CarPlay) && canImport(MapboxGeocoder)
+        if let userInfo = item.userInfo as? [String: Any],
+            let placemark = userInfo[CarPlayManager.CarPlayGeocodedPlacemarkKey] as? GeocodedPlacemark,
+            let location = placemark.location {
+            let destinationWaypoint = Waypoint(location: location)
+            interfaceController?.popTemplate(animated: false)
+            calculateRouteAndStart(to: destinationWaypoint, completionHandler: completionHandler)
+            return
         }
-
-        let destinationWaypoint = Waypoint(location: favoritePOI.location, heading: nil, name: favoritePOI.rawValue)
-        calculateRouteAndStart(to: destinationWaypoint, completionHandler: completionHandler)
+        #endif
+        
+        // Selected a favorite?
+        if let rawValue = item.text,
+            let favoritePOI = CPFavoritesList.POI(rawValue: rawValue) {
+            let destinationWaypoint = Waypoint(location: favoritePOI.location, heading: nil, name: favoritePOI.rawValue)
+            calculateRouteAndStart(to: destinationWaypoint, completionHandler: completionHandler)
+        } else {
+            completionHandler()
+        }
     }
 
     public func calculateRouteAndStart(from fromWaypoint: Waypoint? = nil, to toWaypoint: Waypoint, completionHandler: @escaping () -> Void) {
