@@ -126,6 +126,16 @@ public class CarPlayManager: NSObject {
     public static func resetSharedInstance() {
         shared = CarPlayManager()
     }
+    
+    /**
+     Holds the most recent search results
+     */
+    var recentSearchItems: [CPListItem]?
+    
+    /**
+     Hold the most recent search text
+     */
+    var recentSearchText: String?
 
     private var defaultMapButtons: [CPMapButton]?
 
