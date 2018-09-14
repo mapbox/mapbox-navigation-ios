@@ -5,6 +5,8 @@ import CarPlay
 @available(iOS 12.0, *)
 class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
     
+    static let defaultAltitude: CLLocationDistance = 16000
+    
     var styleManager: StyleManager!
     /// A very coarse location manager used for distinguishing between daytime and nighttime.
     fileprivate let coarseLocationManager: CLLocationManager = {
@@ -13,12 +15,29 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
         return coarseLocationManager
     }()
     
+    var isOverviewingRoutes: Bool = false
+    
     var mapView: NavigationMapView {
         get {
             return self.view as! NavigationMapView
         }
     }
 
+    lazy var recenterButton: CPMapButton = {
+        let recenterButton = CPMapButton { [weak self] button in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            strongSelf.mapView.setUserTrackingMode(.followWithCourse, animated: true)
+            button.isHidden = true
+        }
+        
+        let bundle = Bundle.mapboxNavigation
+        recenterButton.image = UIImage(named: "location", in: bundle, compatibleWith: traitCollection)
+        return recenterButton
+    }()
+    
     override func loadView() {
         let mapView = NavigationMapView()
         mapView.delegate = self
@@ -35,12 +54,8 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
         styleManager = StyleManager(self)
         styleManager.styles = [CarPlayDayStyle(), CarPlayNightStyle()]
         
-        let camera = self.mapView.camera
-        camera.altitude = 16000
-        camera.pitch = 60
-        
-        self.mapView.camera = camera
-        self.mapView.userTrackingMode = .followWithCourse
+        resetCamera(animated: false, altitude: CarPlayMapViewController.defaultAltitude)
+        mapView.setUserTrackingMode(.followWithCourse, animated: true)
     }
     
     public func zoomInButton() -> CPMapButton {
@@ -66,25 +81,7 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
         zoomInOut.image = UIImage(named: "minus", in: bundle, compatibleWith: traitCollection)
         return zoomInOut
     }
-    
-    public func recenterButton() -> CPMapButton {
-        let recenterButton = CPMapButton { [weak self] button in
-            guard let strongSelf = self else {
-                return
-            }
-            
-            if strongSelf.mapView.userTrackingMode == .none {
-                strongSelf.mapView.userTrackingMode = .followWithCourse
-            } else {
-                strongSelf.mapView.userTrackingMode = .none
-            }
-        }
-        
-        let bundle = Bundle.mapboxNavigation
-        recenterButton.image = UIImage(named: "location", in: bundle, compatibleWith: traitCollection)
-        
-        return recenterButton
-    }
+
     
     // MARK: - MGLMapViewDelegate
 
@@ -92,6 +89,34 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
         if let mapView = mapView as? NavigationMapView {
             mapView.localizeLabels()
         }
+    }
+    
+    func resetCamera(animated: Bool = false, altitude: CLLocationDistance? = nil) {
+        let camera = mapView.camera
+        if let altitude = altitude {
+            camera.altitude = altitude
+        }
+        camera.pitch = 60
+        mapView.setCamera(camera, animated: animated)
+
+    }
+    
+    override func viewSafeAreaInsetsDidChange() {
+        
+        guard isOverviewingRoutes else {
+            super.viewSafeAreaInsetsDidChange()
+            return
+        }
+        
+        mapView.contentInset = mapView.safeAreaInsets
+        
+        guard let routes = mapView.routes,
+            let active = routes.first else {
+                super.viewSafeAreaInsetsDidChange()
+                return
+        }
+        
+        mapView.fit(to: active, animated: false)
     }
 }
 

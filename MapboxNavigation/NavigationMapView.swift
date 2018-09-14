@@ -408,6 +408,36 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     // MARK: Feature Addition/Removal
+    /**
+     Showcases route array. Adds routes and waypoints to map, and sets camera to point encompassing the route.
+    */
+    public static let defaultPadding: UIEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
+    
+    @objc public func showcase(_ routes: [Route], padding: UIEdgeInsets = NavigationMapView.defaultPadding, animated: Bool = false) {
+        guard let active = routes.first,
+              let coords = active.coordinates,
+              !coords.isEmpty else { return } //empty array
+        
+        removeArrow()
+        removeRoutes()
+        removeWaypoints()
+        
+        showRoutes(routes)
+        showWaypoints(active)
+        
+        fit(to: active, facing: 0, padding: padding, animated: animated)
+    }
+    
+    func fit(to route: Route, facing direction:CLLocationDirection = 0, padding: UIEdgeInsets = NavigationMapView.defaultPadding, animated: Bool = false) {
+        guard let coords = route.coordinates, !coords.isEmpty else { return }
+      
+        setUserTrackingMode(.none, animated: false)
+        let line = MGLPolyline(coordinates: coords, count: UInt(coords.count))
+        let camera = cameraThatFitsShape(line, direction: direction, edgePadding: padding)
+        
+        setCamera(camera, animated: false)
+    }
+    
     
     /**
      Adds or updates both the route line and the route line casing
@@ -1020,6 +1050,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             style.addLayer(symbol)
         }
     }
+    
     
     /**
      Sets the camera directly over a series of coordinates.
