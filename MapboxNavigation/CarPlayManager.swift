@@ -539,6 +539,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let mapView = carPlayMapViewController.mapView
         mapView.removeRoutes()
         mapView.removeWaypoints()
+        delegate?.carPlayManagerDidEndNavigation(self)
     }
     
     public func mapTemplateDidBeginPanGesture(_ mapTemplate: CPMapTemplate) {
