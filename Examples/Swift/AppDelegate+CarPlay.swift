@@ -65,16 +65,6 @@ extension AppDelegate: CarPlayManagerDelegate {
         return [simulationButton]
     }
     
-    func carPlayManager(_ carPlayManager: CarPlayManager, routeControllerAlong route: Route) -> RouteController {
-        if carPlayManager.simulatesLocations {
-            let locationManager = SimulatedLocationManager(route: route)
-            locationManager.speedMultiplier = 5
-            return RouteController(along: route, locationManager: locationManager, eventsManager: carPlayManager.eventsManager)
-        } else {
-            return RouteController(along: route, eventsManager: carPlayManager.eventsManager)
-        }
-    }
-    
     #if canImport(MapboxGeocoder)
     func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void) {
         return CarPlayManager.searchTemplate(searchTemplate, updatedSearchText: searchText, completionHandler: completionHandler)
