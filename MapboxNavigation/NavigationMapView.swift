@@ -103,23 +103,18 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     open override var showsUserLocation: Bool {
-        get {
-            if tracksUserCourse || userLocationForCourseTracking != nil {
-                return !(userCourseView?.isHidden ?? true)
+        didSet {
+            if showsUserLocation {
+                // showsUserLocation and tracksUserCourse cannot both be true at the same time.
+                showsUserCourse = false
             }
-            return super.showsUserLocation
-        }
-        set {
-            if tracksUserCourse || userLocationForCourseTracking != nil {
-                super.showsUserLocation = false
-                
+            if showsUserCourse {
                 if userCourseView == nil {
                     userCourseView = UserPuckCourseView(frame: CGRect(origin: .zero, size: CGSize(width: 75, height: 75)))
                 }
-                userCourseView?.isHidden = !newValue
+                userCourseView?.isHidden = false
             } else {
                 userCourseView?.isHidden = true
-                super.showsUserLocation = newValue
             }
         }
     }
@@ -154,12 +149,13 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      Determines whether the map should follow the user location and rotate when the course changes.
      - seealso: NavigationMapViewCourseTrackingDelegate
      */
-    open var tracksUserCourse: Bool = false {
+    open var showsUserCourse: Bool = false {
         didSet {
-            if tracksUserCourse {
+            if showsUserCourse {
+                // MGLUserLocation and UserCourseView can’t both appear at the same time.
+                showsUserLocation = false
                 enableFrameByFrameCourseViewTracking(for: 3)
                 altitude = NavigationMapView.defaultAltitude
-                showsUserLocation = true
                 courseTrackingDelegate?.navigationMapViewDidStartTrackingCourse?(self)
             } else {
                 courseTrackingDelegate?.navigationMapViewDidStopTrackingCourse?(self)
@@ -236,13 +232,13 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         super.layoutSubviews()
         
         //If the map is in tracking mode, make sure we update the camera after the layout pass.
-        if (tracksUserCourse) {
+        if (showsUserCourse) {
             updateCourseTracking(location: userLocationForCourseTracking, animated: false)
         }
     }
     
     open override func anchorPoint(forGesture gesture: UIGestureRecognizer) -> CGPoint {
-        if tracksUserCourse {
+        if showsUserCourse {
             return userAnchorPoint
         } else {
             return super.anchorPoint(forGesture: gesture)
@@ -274,7 +270,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     @objc func progressDidChange(_ notification: Notification) {
-        guard tracksUserCourse else { return }
+        guard showsUserCourse else { return }
         
         let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
         
@@ -315,8 +311,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     @objc private func disableUserCourseTracking() {
-        guard tracksUserCourse else { return }
-        tracksUserCourse = false
+        guard showsUserCourse else { return }
+        showsUserCourse = false
     }
     
     @objc public func updateCourseTracking(location: CLLocation?, animated: Bool) {
@@ -328,27 +324,27 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return
         }
         
-        if tracksUserCourse {
+        if showsUserCourse {
             let point = userAnchorPoint
             let padding = UIEdgeInsets(top: point.y, left: point.x, bottom: bounds.height - point.y, right: bounds.width - point.x)
             let newCamera = MGLMapCamera(lookingAtCenter: location.coordinate, fromDistance: altitude, pitch: 45, heading: location.course)
             let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear) : nil
             setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: padding, completionHandler: nil)
         }
-        if !tracksUserCourse || userAnchorPoint != userCourseView?.center ?? userAnchorPoint {
+        if !showsUserCourse || userAnchorPoint != userCourseView?.center ?? userAnchorPoint {
             UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
                 self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
             })
         }
         
         if let userCourseView = userCourseView as? UserCourseView {
-            if let customTransformation = userCourseView.update?(location: location, pitch: camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse) {
+            if let customTransformation = userCourseView.update?(location: location, pitch: camera.pitch, direction: direction, animated: animated, tracksUserCourse: showsUserCourse) {
                 customTransformation
             } else {
-                self.userCourseView?.applyDefaultUserPuckTransformation(location: location, pitch: camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse)
+                self.userCourseView?.applyDefaultUserPuckTransformation(location: location, pitch: camera.pitch, direction: direction, animated: animated, tracksUserCourse: showsUserCourse)
             }
         } else {
-            userCourseView?.applyDefaultUserPuckTransformation(location: location, pitch: camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse)
+            userCourseView?.applyDefaultUserPuckTransformation(location: location, pitch: camera.pitch, direction: direction, animated: animated, tracksUserCourse: showsUserCourse)
         }
     }
     
@@ -1025,7 +1021,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         let slicedLine = Polyline(coordinates).sliced(from: userLocation).coordinates
         let line = MGLPolyline(coordinates: slicedLine, count: UInt(slicedLine.count))
         
-        tracksUserCourse = false
+        showsUserCourse = false
         
         // If the user has a short distance left on the route, prevent the camera from zooming all the way.
         // `MGLMapView.setVisibleCoordinateBounds(:edgePadding:animated:)` will go beyond what is convenient for the driver.
@@ -1055,7 +1051,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      Recenters the camera and begins tracking the user's location.
      */
     @objc public func recenterMap() {
-        tracksUserCourse = true
+        showsUserCourse = true
         enableFrameByFrameCourseViewTracking(for: 3)
     }
 }

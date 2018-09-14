@@ -21,6 +21,7 @@
 * Fixed an issue where the banner appears in the wrong colors after you tap the Resume button. ([#1588](https://github.com/mapbox/mapbox-navigation-ios/pull/1588), [#1589](https://github.com/mapbox/mapbox-navigation-ios/pull/1589))
 * `NavigationMapView`’s user puck now responds to changes to the safe area insets while tracking the user’s location, matching the behavior of the map camera. ([#1653](https://github.com/mapbox/mapbox-navigation-ios/pull/1653))
 * Added `StepsViewControllerDelegate` and `InstructionsBannerViewDelegate` which makes it possible to listen in on tap events that occur in `StepsViewController` and `InstructionsBannerView`. [#1633](https://github.com/mapbox/mapbox-navigation-ios/pull/1633)
+* Renamed `NavigationMapView.tracksUserCourse` to `NavigationMapView.showsUserCourse`. [#1594](https://github.com/mapbox/mapbox-navigation-ios/pull/1594)
 
 ### Feedback
 
