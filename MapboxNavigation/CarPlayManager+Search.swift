@@ -10,6 +10,8 @@ extension CarPlayManager: CPSearchTemplateDelegate {
     public static let CarPlayGeocodedPlacemarkKey: String = "CPGecodedPlacemark"
     static var recentItems = RecentItem.loadDefaults()
     
+    static var MaximumInitialSearchResults: UInt = 5
+    static var MaximumExtendedSearchResults: UInt = 10
     /// A very coarse location manager used for focal location when searching
     fileprivate static let coarseLocationManager: CLLocationManager = {
         let coarseLocationManager = CLLocationManager()
@@ -26,7 +28,13 @@ extension CarPlayManager: CPSearchTemplateDelegate {
     }
     
     public func searchTemplateSearchButtonPressed(_ searchTemplate: CPSearchTemplate) {
-        // TODO: based on this callback we should push a CPListTemplate with a longer list of results.
+        guard let items = recentSearchItems else { return }
+        let extendedItems = CarPlayManager.resultsOrNoResults(items, limit: CarPlayManager.MaximumExtendedSearchResults)
+        
+        let section = CPListSection(items: extendedItems)
+        let template = CPListTemplate(title: CarPlayManager.shared.recentSearchText, sections: [section])
+        
+        interfaceController?.pushTemplate(template, animated: true)
     }
     
     public func searchTemplate(_ searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void) {
@@ -55,6 +63,7 @@ extension CarPlayManager: CPSearchTemplateDelegate {
     
     @available(iOS 12.0, *)
     public static func searchTemplate(_ searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void) {
+        CarPlayManager.shared.recentSearchText = searchText
         
         // Append recent searches
         var items = recentSearches(searchText)
@@ -63,29 +72,33 @@ extension CarPlayManager: CPSearchTemplateDelegate {
         let shouldSearch = searchText.count > 2
         if shouldSearch {
             
-            let options = ForwardGeocodeOptions(query: searchText)
-            options.focalLocation = CarPlayManager.coarseLocationManager.location
-            options.locale = .autoupdatingNonEnglish
-            var allScopes: PlacemarkScope = .all
-            allScopes.remove(.postalCode)
-            options.allowedScopes = allScopes
-            options.maximumResultCount = 10
-            options.includesRoutableLocations = true
+            let options = CarPlayManager.forwardGeocodeOptions(searchText)
             Geocoder.shared.geocode(options, completionHandler: { (placemarks, attribution, error) in
-                
                 guard let placemarks = placemarks else {
-                    completionHandler(CarPlayManager.resultsOrNoResults(items))
+                    completionHandler(CarPlayManager.resultsOrNoResults(items, limit: MaximumInitialSearchResults))
                     return
                 }
                 
                 let results = placemarks.map { $0.listItem() }
                 items.append(contentsOf: results)
-                completionHandler(CarPlayManager.resultsOrNoResults(results))
+                completionHandler(CarPlayManager.resultsOrNoResults(results, limit: MaximumInitialSearchResults))
             })
             
         } else {
-            completionHandler(CarPlayManager.resultsOrNoResults(items))
+            completionHandler(CarPlayManager.resultsOrNoResults(items, limit: MaximumInitialSearchResults))
         }
+    }
+    
+    @available(iOS 12.0, *)
+    static func forwardGeocodeOptions(_ searchText: String) -> ForwardGeocodeOptions {
+        let options = ForwardGeocodeOptions(query: searchText)
+        options.locale = .autoupdatingCurrent
+        var allScopes: PlacemarkScope = .all
+        allScopes.remove(.postalCode)
+        options.allowedScopes = allScopes
+        options.maximumResultCount = CarPlayManager.MaximumExtendedSearchResults
+        options.includesRoutableLocations = true
+        return options
     }
     
     @available(iOS 12.0, *)
@@ -114,8 +127,14 @@ extension CarPlayManager: CPSearchTemplateDelegate {
     }
     
     @available(iOS 12.0, *)
-    static func resultsOrNoResults(_ items: [CPListItem]) -> [CPListItem] {
+    static func resultsOrNoResults(_ items: [CPListItem], limit: UInt? = nil) -> [CPListItem] {
+        CarPlayManager.shared.recentSearchItems = items
+        
         if items.count > 0 {
+            if let limit = limit {
+                return Array<CPListItem>(items.prefix(Int(limit)))
+            }
+            
             return items
         } else {
             let noResult = CPListItem(text: "No results", detailText: nil, image: nil, showsDisclosureIndicator: false)
