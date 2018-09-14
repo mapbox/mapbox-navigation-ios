@@ -182,10 +182,14 @@ class NavigationViewControllerTests: XCTestCase {
         //wait for the style to load -- routes won't show without it.
         wait(for: [styleLoaded], timeout: 5)
         navigationViewController.route = initialRoute
+
+        runUntil({
+            return !navigationViewController.mapView!.annotations!.isEmpty
+        })
         
-        let firstDestination = initialRoute.routeOptions.waypoints.last!.coordinate
         guard let annotations = navigationViewController.mapView?.annotations else { return XCTFail("Annotations not found.")}
 
+        let firstDestination = initialRoute.routeOptions.waypoints.last!.coordinate
         let destinations = annotations.filter(annotationFilter(matching: firstDestination))
         XCTAssert(!destinations.isEmpty, "Destination annotation does not exist on map")
     

@@ -10,6 +10,13 @@ extension CarPlayManager: CPSearchTemplateDelegate {
     public static let CarPlayGeocodedPlacemarkKey: String = "CPGecodedPlacemark"
     static var recentItems = RecentItem.loadDefaults()
     
+    /// A very coarse location manager used for focal location when searching
+    fileprivate static let coarseLocationManager: CLLocationManager = {
+        let coarseLocationManager = CLLocationManager()
+        coarseLocationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
+        return coarseLocationManager
+    }()
+    
     // MARK: CPSearchTemplateDelegate
     
     public func searchTemplate(_ searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void) {
@@ -57,7 +64,8 @@ extension CarPlayManager: CPSearchTemplateDelegate {
         if shouldSearch {
             
             let options = ForwardGeocodeOptions(query: searchText)
-            options.locale = .autoupdatingCurrent
+            options.focalLocation = CarPlayManager.coarseLocationManager.location
+            options.locale = .autoupdatingNonEnglish
             var allScopes: PlacemarkScope = .all
             allScopes.remove(.postalCode)
             options.allowedScopes = allScopes

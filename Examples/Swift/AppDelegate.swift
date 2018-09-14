@@ -6,10 +6,6 @@ import MapboxNavigation
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    
-    #if canImport(CarPlay)
-    var simulatesLocationsInCarPlay = false
-    #endif
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 
@@ -23,4 +19,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return NSClassFromString("XCTestCase") != nil
     }
 }
-

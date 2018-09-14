@@ -57,22 +57,12 @@ extension AppDelegate: CarPlayManagerDelegate {
                 return
             }
             
-            self.simulatesLocationsInCarPlay = !self.simulatesLocationsInCarPlay
-            barButton.title = self.simulatesLocationsInCarPlay ? "Don’t Simulate" : "Simulate"
+            carPlayManager.simulatesLocations = !carPlayManager.simulatesLocations
+            barButton.title = carPlayManager.simulatesLocations ? "Don’t Simulate" : "Simulate"
             
         }
-        simulationButton.title = self.simulatesLocationsInCarPlay ? "Don’t Simulate" : "Simulate"
+        simulationButton.title = carPlayManager.simulatesLocations ? "Don’t Simulate" : "Simulate"
         return [simulationButton]
-    }
-    
-    func carPlayManager(_ carPlayManager: CarPlayManager, routeControllerAlong route: Route) -> RouteController {
-        if simulatesLocationsInCarPlay {
-            let locationManager = SimulatedLocationManager(route: route)
-            locationManager.speedMultiplier = 5
-            return RouteController(along: route, locationManager: locationManager, eventsManager: carPlayManager.eventsManager)
-        } else {
-            return RouteController(along: route, eventsManager: carPlayManager.eventsManager)
-        }
     }
     
     #if canImport(MapboxGeocoder)
