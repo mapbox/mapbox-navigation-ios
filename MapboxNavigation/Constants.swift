@@ -35,8 +35,3 @@ public let MBCongestionAttribute = "congestion"
  The minimum volume for the device before a gentle warning is emitted when beginning navigation.
  */
 public let NavigationViewMinimumVolumeForWarning: Float = 0.3
-
-/**
- The distance in points that a single press of the panning button pans the car play map by.
- */
-public let CarPlayMapViewPanningIncrement: CLLocationDistance = 500

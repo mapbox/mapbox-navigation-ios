@@ -590,7 +590,6 @@ extension CarPlayManager: CPMapTemplateDelegate {
             mapView = navigationViewController.mapView!
         } else if let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController {
             mapView = carPlayMapViewController.mapView
-            mapView.setUserTrackingMode(.none, animated: false)
         } else {
             return
         }
@@ -613,38 +612,6 @@ extension CarPlayManager: CPMapTemplateDelegate {
 
         return camera
     }
-    
-    public func mapTemplateDidShowPanningInterface(_ mapTemplate: CPMapTemplate) {
-        guard let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController else {
-            return
-        }
-        
-        let mapView = carPlayMapViewController.mapView
-        mapView.setUserTrackingMode(.follow, animated: true)
-        mapView.resetNorth()
-    }
-    
-    public func mapTemplateWillDismissPanningInterface(_ mapTemplate: CPMapTemplate) {
-        guard let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController else {
-            return
-        }
-        let mapView = carPlayMapViewController.mapView
-        guard mapView.userTrackingMode == .follow else { return }
-        mapView.setUserTrackingMode(.followWithCourse, animated: true)
-        carPlayMapViewController.recenterButton.isHidden = true
-    }
-
-    public func mapTemplate(_ mapTemplate: CPMapTemplate, didEndPanGestureWithVelocity velocity: CGPoint) {
-        if let navigationViewController = currentNavigator, mapTemplate == navigationViewController.mapTemplate {
-            return
-        }
-        
-        if let vc = self.carWindow?.rootViewController as? CarPlayMapViewController {
-            let everythingButRecenter = mapTemplate.mapButtons.filter { $0 != vc.recenterButton }
-            everythingButRecenter.forEach { $0.isHidden = false }
-            vc.recenterButton.isHidden = vc.mapView.userTrackingMode != .none
-        }
-    }
 
     public func mapTemplate(_ mapTemplate: CPMapTemplate, panWith direction: CPMapTemplate.PanDirection) {
         guard let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController else {
@@ -652,24 +619,22 @@ extension CarPlayManager: CPMapTemplateDelegate {
         }
 
         let mapView = carPlayMapViewController.mapView
-        let camera = mapView.camera
         
-        mapView.setUserTrackingMode(.none, animated: false)
-        mapView.resetNorth()
-
-        var facing: CLLocationDirection = 0.0
-
-        if direction.contains(.right) {
-            facing = 90
+        let contentFrame = UIEdgeInsetsInsetRect(mapView.bounds, mapView.safeArea)
+        var center = CGPoint(x: contentFrame.midX, y: contentFrame.midY)
+        let increment = min(mapView.bounds.width, mapView.bounds.height) / 2.0
+        if direction.contains(.up) {
+            center.y -= increment
         } else if direction.contains(.down) {
-            facing = 180
+            center.y += increment
         } else if direction.contains(.left) {
-            facing = 270
+            center.x -= increment
+        } else if direction.contains(.right) {
+            center.x += increment
         }
-
-        let newCenter = camera.centerCoordinate.coordinate(at: CarPlayMapViewPanningIncrement, facing: facing)
-        camera.centerCoordinate = newCenter
-        mapView.setCamera(camera, animated: true)
+        
+        let centerCoordinate = mapView.convert(center, toCoordinateFrom: mapView)
+        mapView.setCenter(centerCoordinate, animated: true)
     }
 
     private func createRouteController(with route: Route) -> RouteController {
