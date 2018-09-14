@@ -270,7 +270,7 @@ public class CarPlayManager: NSObject {
         if let shouldDisableIdleTimer = delegate?.carplayManagerShouldDisableIdleTimer?(self) {
             UIApplication.shared.isIdleTimerDisabled = !shouldDisableIdleTimer
         } else {
-            UIApplication.shared.isIdleTimerDisabled = true
+            UIApplication.shared.isIdleTimerDisabled = false
         }
     }
     
