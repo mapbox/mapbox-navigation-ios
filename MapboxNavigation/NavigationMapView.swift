@@ -413,7 +413,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     */
     public static let defaultPadding: UIEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
     
-    @objc public func showcase(routes: [Route], padding: UIEdgeInsets = NavigationMapView.defaultPadding, animated: Bool = false) {
+    @objc public func showcase(_ routes: [Route], padding: UIEdgeInsets = NavigationMapView.defaultPadding, animated: Bool = false) {
         guard let active = routes.first,
               let coords = active.coordinates,
               !coords.isEmpty else { return } //empty array
@@ -425,10 +425,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         showRoutes(routes)
         showWaypoints(active)
         
-        center(on: active, facing: 0, padding: padding, animated: animated)
+        fit(to: active, facing: 0, padding: padding, animated: animated)
     }
     
-    func center(on route: Route, facing direction:CLLocationDirection = 0, padding: UIEdgeInsets = NavigationMapView.defaultPadding, animated: Bool = false) {
+    func fit(to route: Route, facing direction:CLLocationDirection = 0, padding: UIEdgeInsets = NavigationMapView.defaultPadding, animated: Bool = false) {
         guard let coords = route.coordinates, !coords.isEmpty else { return }
       
         setUserTrackingMode(.none, animated: false)

@@ -5,6 +5,8 @@ import CarPlay
 @available(iOS 12.0, *)
 class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
     
+    static let defaultAltitude: CLLocationDistance = 16000
+    
     var styleManager: StyleManager!
     /// A very coarse location manager used for distinguishing between daytime and nighttime.
     fileprivate let coarseLocationManager: CLLocationManager = {
@@ -52,7 +54,7 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
         styleManager = StyleManager(self)
         styleManager.styles = [CarPlayDayStyle(), CarPlayNightStyle()]
         
-        resetCamera(animated: false, defaultAltitude: true)
+        resetCamera(animated: false, altitude: CarPlayMapViewController.defaultAltitude)
         mapView.setUserTrackingMode(.followWithCourse, animated: true)
     }
     
@@ -89,10 +91,10 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
         }
     }
     
-    func resetCamera(animated: Bool = false, defaultAltitude: Bool = false) {
+    func resetCamera(animated: Bool = false, altitude: CLLocationDistance? = nil) {
         let camera = mapView.camera
-        if defaultAltitude {
-            camera.altitude = 16000
+        if let altitude = altitude {
+            camera.altitude = altitude
         }
         camera.pitch = 60
         mapView.setCamera(camera, animated: animated)
@@ -114,7 +116,7 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
                 return
         }
         
-        mapView.center(on: active, animated: false)
+        mapView.fit(to: active, animated: false)
     }
 }
 

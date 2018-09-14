@@ -358,7 +358,7 @@ extension CarPlayManager: CPInterfaceControllerDelegate {
             if type(of: template) == CPSearchTemplate.self {
                 carPlayMapViewController.isOverviewingRoutes = false
             }
-            carPlayMapViewController.resetCamera(animated: false, defaultAltitude: false)
+            carPlayMapViewController.resetCamera(animated: false)
 
     }
 }
@@ -558,7 +558,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         mapView.setCamera(topDownCamera, animated: false)
 
         let padding = NavigationMapView.defaultPadding + mapView.safeArea
-        mapView.showcase(routes: [route], padding: padding)
+        mapView.showcase([route], padding: padding)
     }
 
     public func mapTemplateDidCancelNavigation(_ mapTemplate: CPMapTemplate) {
