@@ -82,6 +82,17 @@ public protocol CarPlayManagerDelegate {
      * Called when navigation ends so that the containing app can update accordingly.
      */
     @objc func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) -> ()
+    
+    /**
+     Called when the carplay manager will disable the idle timer.
+     
+     Implementing this method will allow developers to change whether idle timer is disabled when `CarPlayManager` is initialized.
+     
+     - parameter carPlayManager: The carplay manager that will change the state of idle timer.
+     - returns: A bool indicating whether to disable idle timer when the CarPlayManager is initialized.
+     */
+    @objc(carplayManagerShouldDisableIdleTimer:)
+    optional func carplayManagerShouldDisableIdleTimer(_ carPlayManager: CarPlayManager) -> Bool
 
 }
 
@@ -147,6 +158,12 @@ public class CarPlayManager: NSObject {
         isConnectedToCarPlay = true
         interfaceController.delegate = self
         self.interfaceController = interfaceController
+
+        if let shouldDisableIdleTimer = delegate?.carplayManagerShouldDisableIdleTimer?(self) {
+            UIApplication.shared.isIdleTimerDisabled = shouldDisableIdleTimer
+        } else {
+            UIApplication.shared.isIdleTimerDisabled = true
+        }
 
         let viewController = CarPlayMapViewController()
         window.rootViewController = viewController
@@ -249,6 +266,13 @@ public class CarPlayManager: NSObject {
         carWindow?.isHidden = true
         let timestamp = Date().ISO8601
         sendCarPlayDisconnectEvent(timestamp)
+        
+        // Upon disconnecting the device from carplay, the idle timer ideally should be reset to its initial state.
+        if let shouldDisableIdleTimer = delegate?.carplayManagerShouldDisableIdleTimer?(self) {
+            UIApplication.shared.isIdleTimerDisabled = !shouldDisableIdleTimer
+        } else {
+            UIApplication.shared.isIdleTimerDisabled = true
+        }
     }
     
     func resetPanButtons(_ mapTemplate: CPMapTemplate) {
