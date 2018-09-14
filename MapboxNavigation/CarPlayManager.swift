@@ -91,8 +91,7 @@ public protocol CarPlayManagerDelegate {
      - parameter carPlayManager: The carplay manager that will change the state of idle timer.
      - returns: A bool indicating whether to disable idle timer when carplay is connected and enable when disconnected.
      */
-    @objc(carplayManagerShouldDisableIdleTimer:)
-    optional func carplayManagerShouldDisableIdleTimer(_ carPlayManager: CarPlayManager) -> Bool
+    @objc optional func carplayManagerShouldDisableIdleTimer(_ carPlayManager: CarPlayManager) -> Bool
 
 }
 
