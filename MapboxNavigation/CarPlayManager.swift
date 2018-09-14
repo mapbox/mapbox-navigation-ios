@@ -189,7 +189,7 @@ public class CarPlayManager: NSObject {
         if let mapButtons = delegate?.carPlayManager?(self, mapButtonsCompatibleWith: traitCollection, in: mapTemplate, for: .browsing) {
             mapTemplate.mapButtons = mapButtons
         } else if let vc = viewController as? CarPlayMapViewController {
-            mapTemplate.mapButtons = [vc.recenterButton(), panMapButton(for: mapTemplate, traitCollection: traitCollection), vc.zoomInButton(), vc.zoomOutButton()]
+            mapTemplate.mapButtons = [vc.recenterButton, panMapButton(for: mapTemplate, traitCollection: traitCollection), vc.zoomInButton(), vc.zoomOutButton()]
         }
         
         return mapTemplate
@@ -297,9 +297,17 @@ public class CarPlayManager: NSObject {
 // MARK: CPInterfaceControllerDelegate
 @available(iOS 12.0, *)
 extension CarPlayManager: CPInterfaceControllerDelegate {
+    public func templateWillAppear(_ template: CPTemplate, animated: Bool) {
+        if template == interfaceController?.rootTemplate, let carPlayMapViewController = carWindow?.rootViewController as? CarPlayMapViewController {
+            carPlayMapViewController.recenterButton.isHidden = true
+        }
+    }
+    
     public func templateDidAppear(_ template: CPTemplate, animated: Bool) {
         guard interfaceController?.topTemplate == mainMapTemplate else { return }
         if template == interfaceController?.rootTemplate, let carPlayMapViewController = carWindow?.rootViewController as? CarPlayMapViewController {
+            
+            
             let mapView = carPlayMapViewController.mapView
             mapView.removeRoutes()
             mapView.removeWaypoints()
@@ -543,6 +551,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
             return
         }
         
+        
         let mapView: NavigationMapView
         if let navigationViewController = currentNavigator, mapTemplate == navigationViewController.mapTemplate {
             mapView = navigationViewController.mapView!
@@ -576,16 +585,13 @@ extension CarPlayManager: CPMapTemplateDelegate {
         if let navigationViewController = currentNavigator, mapTemplate == navigationViewController.mapTemplate {
             return
         }
+        
         mapTemplate.mapButtons.forEach { $0.isHidden = false }
-    }
-    
-    public func mapTemplateDidShowPanningInterface(_ mapTemplate: CPMapTemplate) {
-        guard let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController else {
-            return
+        if let vc = self.carWindow?.rootViewController as? CarPlayMapViewController {
+            vc.recenterButton.isHidden = vc.mapView.userTrackingMode != .none
         }
-        carPlayMapViewController.mapView.setUserTrackingMode(.none, animated: false)
     }
-    
+        
     public func mapTemplate(_ mapTemplate: CPMapTemplate, panWith direction: CPMapTemplate.PanDirection) {
         guard let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController else {
             return

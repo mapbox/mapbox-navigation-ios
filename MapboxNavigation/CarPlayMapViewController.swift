@@ -21,6 +21,21 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
         }
     }
 
+    lazy var recenterButton: CPMapButton = {
+        let recenterButton = CPMapButton { [weak self] button in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            strongSelf.mapView.setUserTrackingMode(.followWithCourse, animated: true)
+            button.isHidden = true
+        }
+        
+        let bundle = Bundle.mapboxNavigation
+        recenterButton.image = UIImage(named: "location", in: bundle, compatibleWith: traitCollection)
+        return recenterButton
+    }()
+    
     override func loadView() {
         let mapView = NavigationMapView()
         mapView.delegate = self
@@ -64,22 +79,7 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
         zoomInOut.image = UIImage(named: "minus", in: bundle, compatibleWith: traitCollection)
         return zoomInOut
     }
-    
-    public func recenterButton() -> CPMapButton {
-        let recenterButton = CPMapButton { [weak self] button in
-            guard let strongSelf = self else {
-                return
-            }
-            
-            let mode = strongSelf.mapView.userTrackingMode
-            strongSelf.mapView.setUserTrackingMode(mode == .none ? .followWithCourse : .none, animated: true)
-        }
-        
-        let bundle = Bundle.mapboxNavigation
-        recenterButton.image = UIImage(named: "location", in: bundle, compatibleWith: traitCollection)
-        
-        return recenterButton
-    }
+
     
     // MARK: - MGLMapViewDelegate
 
