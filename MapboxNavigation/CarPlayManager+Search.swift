@@ -33,6 +33,7 @@ extension CarPlayManager: CPSearchTemplateDelegate {
         
         let section = CPListSection(items: extendedItems)
         let template = CPListTemplate(title: CarPlayManager.shared.recentSearchText, sections: [section])
+        template.delegate = self
         
         interfaceController?.pushTemplate(template, animated: true)
     }
@@ -92,7 +93,8 @@ extension CarPlayManager: CPSearchTemplateDelegate {
     @available(iOS 12.0, *)
     static func forwardGeocodeOptions(_ searchText: String) -> ForwardGeocodeOptions {
         let options = ForwardGeocodeOptions(query: searchText)
-        options.locale = .autoupdatingCurrent
+        options.focalLocation = CarPlayManager.coarseLocationManager.location
+        options.locale = .autoupdatingNonEnglish
         var allScopes: PlacemarkScope = .all
         allScopes.remove(.postalCode)
         options.allowedScopes = allScopes
