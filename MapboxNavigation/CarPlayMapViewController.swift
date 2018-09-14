@@ -40,7 +40,7 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
         camera.pitch = 60
         
         self.mapView.camera = camera
-        self.mapView.userTrackingMode = .followWithHeading
+        self.mapView.userTrackingMode = .followWithCourse
     }
     
     public func zoomInButton() -> CPMapButton {
@@ -74,7 +74,7 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
             }
             
             if strongSelf.mapView.userTrackingMode == .none {
-                strongSelf.mapView.userTrackingMode = .followWithHeading
+                strongSelf.mapView.userTrackingMode = .followWithCourse
             } else {
                 strongSelf.mapView.userTrackingMode = .none
             }

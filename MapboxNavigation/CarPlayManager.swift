@@ -83,11 +83,21 @@ public protocol CarPlayManagerDelegate {
      */
     @objc func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) -> ()
 
+    /**
+     Called when the carplay manager will disable the idle timer.
+
+     Implementing this method will allow developers to change whether idle timer is disabled when carplay is connected and the vice-versa when disconnected.
+
+     - parameter carPlayManager: The carplay manager that will change the state of idle timer.
+     - returns: A bool indicating whether to disable idle timer when carplay is connected and enable when disconnected.
+     */
+    @objc optional func carplayManagerShouldDisableIdleTimer(_ carPlayManager: CarPlayManager) -> Bool
+
 }
 
 @available(iOS 12.0, *)
 @objc(MBCarPlayManager)
-public class CarPlayManager: NSObject, CPSearchTemplateDelegate {
+public class CarPlayManager: NSObject {
 
     public fileprivate(set) var interfaceController: CPInterfaceController?
     public fileprivate(set) var carWindow: UIWindow?
@@ -120,6 +130,11 @@ public class CarPlayManager: NSObject, CPSearchTemplateDelegate {
     private var defaultMapButtons: [CPMapButton]?
 
     /**
+     A boolean value indicating whether the phone is connected to a CarPlay device or not.
+     */
+    public var isConnectedToCarPlay: Bool = false
+
+    /**
      * This property manages the relevant events recorded for telemetry analysis.
      */
     public var eventsManager = EventsManager()
@@ -148,8 +163,16 @@ public class CarPlayManager: NSObject, CPSearchTemplateDelegate {
     // MARK: CPApplicationDelegate
 
     public func application(_ application: UIApplication, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPWindow) {
+
+        isConnectedToCarPlay = true
         interfaceController.delegate = self
         self.interfaceController = interfaceController
+
+        if let shouldDisableIdleTimer = delegate?.carplayManagerShouldDisableIdleTimer?(self) {
+            UIApplication.shared.isIdleTimerDisabled = shouldDisableIdleTimer
+        } else {
+            UIApplication.shared.isIdleTimerDisabled = true
+        }
 
         let viewController = CarPlayMapViewController()
         window.rootViewController = viewController
@@ -173,11 +196,13 @@ public class CarPlayManager: NSObject, CPSearchTemplateDelegate {
         if let leadingButtons = delegate?.carPlayManager?(self, leadingNavigationBarButtonsCompatibleWith: traitCollection, in: mapTemplate, for: .browsing) {
             mapTemplate.leadingNavigationBarButtons = leadingButtons
         } else {
+            #if canImport(CarPlay) && canImport(MapboxGeocoder)
             let searchTemplate = CPSearchTemplate()
             searchTemplate.delegate = self
 
             let searchButton = searchTemplateButton(searchTemplate: searchTemplate, interfaceController: interfaceController, traitCollection: traitCollection)
             mapTemplate.leadingNavigationBarButtons = [searchButton]
+            #endif
         }
 
         if let trailingButtons = delegate?.carPlayManager?(self, trailingNavigationBarButtonsCompatibleWith: traitCollection, in: mapTemplate, for: .browsing) {
@@ -245,49 +270,21 @@ public class CarPlayManager: NSObject, CPSearchTemplateDelegate {
     }
 
     public func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPWindow) {
+        isConnectedToCarPlay = false
         self.interfaceController = nil
         carWindow?.isHidden = true
         let timestamp = Date().ISO8601
         sendCarPlayDisconnectEvent(timestamp)
-    }
 
-    // MARK: CPSearchTemplateDelegate
-
-    public func searchTemplate(_ searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void) {
-        let notImplementedItem = CPListItem(text: "Search not implemented", detailText: nil)
-        delegate?.carPlayManager?(self, searchTemplate: searchTemplate, updatedSearchText: searchText, completionHandler: completionHandler)
-            ?? completionHandler([notImplementedItem])
-    }
-
-    public func searchTemplateSearchButtonPressed(_ searchTemplate: CPSearchTemplate) {
-        // TODO: based on this callback we should push a CPListTemplate with a longer list of results.
-    }
-
-    public func searchTemplate(_ searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void) {
-        delegate?.carPlayManager?(self, searchTemplate: searchTemplate, selectedResult: item, completionHandler: completionHandler)
-    }
-
-    private func searchTemplateButton(searchTemplate: CPSearchTemplate, interfaceController: CPInterfaceController, traitCollection: UITraitCollection) -> CPBarButton {
-
-        let searchTemplateButton = CPBarButton(type: .image) { [weak self] button in
-            guard let strongSelf = self else {
-                return
-            }
-
-            if let mapTemplate = interfaceController.topTemplate as? CPMapTemplate {
-                strongSelf.resetPanButtons(mapTemplate)
-            }
-
-            interfaceController.pushTemplate(searchTemplate, animated: true)
+        // Upon disconnecting the device from carplay, the idle timer ideally should be reset to its initial state.
+        if let shouldDisableIdleTimer = delegate?.carplayManagerShouldDisableIdleTimer?(self) {
+            UIApplication.shared.isIdleTimerDisabled = !shouldDisableIdleTimer
+        } else {
+            UIApplication.shared.isIdleTimerDisabled = false
         }
-
-        let bundle = Bundle.mapboxNavigation
-        searchTemplateButton.image = UIImage(named: "search-monocle", in: bundle, compatibleWith: traitCollection)
-
-        return searchTemplateButton
     }
 
-    private func resetPanButtons(_ mapTemplate: CPMapTemplate) {
+    func resetPanButtons(_ mapTemplate: CPMapTemplate) {
         if mapTemplate.isPanningInterfaceVisible, let mapButtons = defaultMapButtons {
             mapTemplate.mapButtons = mapButtons
             mapTemplate.dismissPanningInterface(animated: false)
@@ -338,7 +335,7 @@ extension CarPlayManager: CPInterfaceControllerDelegate {
             let mapView = carPlayMapViewController.mapView
             mapView.removeRoutes()
             mapView.removeWaypoints()
-            mapView.userTrackingMode = .followWithHeading
+            mapView.userTrackingMode = .followWithCourse
         }
     }
 }
@@ -534,6 +531,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         mapView.showWaypoints(route)
 
         mapView.userTrackingMode = .none
+        mapView.resetNorth()
 
         let padding = UIEdgeInsets(top: 10,
                                    left: carPlayMapViewController.view.safeAreaInsets.left + 20,
@@ -551,6 +549,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let mapView = carPlayMapViewController.mapView
         mapView.removeRoutes()
         mapView.removeWaypoints()
+        delegate?.carPlayManagerDidEndNavigation(self)
     }
 
     public func mapTemplateDidBeginPanGesture(_ mapTemplate: CPMapTemplate) {
@@ -573,6 +572,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         } else if let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController {
             mapView = carPlayMapViewController.mapView
             mapView.userTrackingMode = .none
+            mapView.resetNorth()
         } else {
             return
         }
@@ -608,6 +608,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
             return
         }
         carPlayMapViewController.mapView.userTrackingMode = .none
+        carPlayMapViewController.mapView.resetNorth()
     }
 
     public func mapTemplate(_ mapTemplate: CPMapTemplate, panWith direction: CPMapTemplate.PanDirection) {
@@ -619,6 +620,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let camera = mapView.camera
 
         mapView.userTrackingMode = .none
+        mapView.resetNorth()
 
         var facing: CLLocationDirection = 0.0
 
@@ -659,5 +661,11 @@ extension CarPlayManager: CarPlayNavigationDelegate {
         interfaceController?.popToRootTemplate(animated: true)
         delegate?.carPlayManagerDidEndNavigation(self)
     }
+}
+#else
+@objc(MBCarPlayManager)
+class CarPlayManager: NSObject {
+    public static var shared = CarPlayManager()
+    var isConnectedToCarPlay: Bool = false
 }
 #endif

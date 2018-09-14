@@ -1,6 +1,6 @@
+#if canImport(CarPlay) && canImport(MapboxGeocoder)
 import Foundation
 import MapboxGeocoder
-#if canImport(CarPlay)
 import CarPlay
 
 struct RecentItem: Codable, Equatable {
