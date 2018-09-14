@@ -303,7 +303,7 @@ extension CarPlayManager: CPInterfaceControllerDelegate {
             let mapView = carPlayMapViewController.mapView
             mapView.removeRoutes()
             mapView.removeWaypoints()
-            mapView.setUserTrackingMode(.followWithHeading, animated: true)
+            mapView.setUserTrackingMode(.followWithCourse, animated: true)
         }
     }
     public func templateWillDisappear(_ template: CPTemplate, animated: Bool) {

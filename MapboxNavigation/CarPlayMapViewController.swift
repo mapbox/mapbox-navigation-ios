@@ -38,6 +38,7 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
         styleManager.styles = [CarPlayDayStyle(), CarPlayNightStyle()]
         
         resetCamera(animated: false, defaultAltitude: true)
+        mapView.setUserTrackingMode(.followWithCourse, animated: true)
     }
     
     public func zoomInButton() -> CPMapButton {
@@ -70,11 +71,8 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
                 return
             }
             
-            if strongSelf.mapView.userTrackingMode == .none {
-                strongSelf.mapView.userTrackingMode = .followWithHeading
-            } else {
-                strongSelf.mapView.userTrackingMode = .none
-            }
+            let mode = strongSelf.mapView.userTrackingMode
+            strongSelf.mapView.setUserTrackingMode(mode == .none ? .followWithCourse : .none, animated: true)
         }
         
         let bundle = Bundle.mapboxNavigation
@@ -97,7 +95,7 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
             camera.altitude = 16000
         }
         camera.pitch = 60
-        mapView.setCamera(camera, animated: false)
+        mapView.setCamera(camera, animated: animated)
 
     }
     
