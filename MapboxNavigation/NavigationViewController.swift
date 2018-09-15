@@ -518,6 +518,7 @@ open class NavigationViewController: UIViewController {
         if let navigationViewController = window.viewControllerInStack(of: NavigationViewController.self) {
             // Open StepsViewController on iPhone if NavigationViewController is being presented
             navigationViewController.openStepsViewController()
+            navigationViewController.shouldManageApplicationIdleTimer = false
         } else {
             
             // Start NavigationViewController and open StepsViewController if navigation has not started on iPhone yet.
@@ -529,7 +530,7 @@ open class NavigationViewController: UIViewController {
                 let directions = routeController.directions
                 let route = routeController.routeProgress.route
                 let navigationViewController = NavigationViewController(for: route, directions: directions, locationManager: locationManager)
-                
+                navigationViewController.shouldManageApplicationIdleTimer = false
                 window.rootViewController?.topMostViewController()?.present(navigationViewController, animated: true, completion: {
                     navigationViewController.openStepsViewController()
                 })
