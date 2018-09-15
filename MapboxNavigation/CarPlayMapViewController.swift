@@ -66,7 +66,7 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
             strongSelf.mapView.setZoomLevel(strongSelf.mapView.zoomLevel + 1, animated: true)
         }
         let bundle = Bundle.mapboxNavigation
-        zoomInButton.image = UIImage(named: "plus", in: bundle, compatibleWith: traitCollection)
+        zoomInButton.image = UIImage(named: "carplay_plus", in: bundle, compatibleWith: traitCollection)
         return zoomInButton
     }
     
@@ -78,7 +78,7 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
             strongSelf.mapView.setZoomLevel(strongSelf.mapView.zoomLevel - 1, animated: true)
         }
         let bundle = Bundle.mapboxNavigation
-        zoomInOut.image = UIImage(named: "minus", in: bundle, compatibleWith: traitCollection)
+        zoomInOut.image = UIImage(named: "carplay_minus", in: bundle, compatibleWith: traitCollection)
         return zoomInOut
     }
 
