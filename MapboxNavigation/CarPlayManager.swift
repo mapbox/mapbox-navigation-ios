@@ -590,7 +590,6 @@ extension CarPlayManager: CPMapTemplateDelegate {
             mapView = navigationViewController.mapView!
         } else if let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController {
             mapView = carPlayMapViewController.mapView
-            mapView.setUserTrackingMode(.none, animated: false)
         } else {
             return
         }
@@ -613,63 +612,29 @@ extension CarPlayManager: CPMapTemplateDelegate {
 
         return camera
     }
-    
-    public func mapTemplateDidShowPanningInterface(_ mapTemplate: CPMapTemplate) {
-        guard let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController else {
-            return
-        }
-        
-        let mapView = carPlayMapViewController.mapView
-        mapView.setUserTrackingMode(.follow, animated: true)
-        mapView.resetNorth()
-    }
-    
-    public func mapTemplateWillDismissPanningInterface(_ mapTemplate: CPMapTemplate) {
-        guard let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController else {
-            return
-        }
-        let mapView = carPlayMapViewController.mapView
-        guard mapView.userTrackingMode == .follow else { return }
-        mapView.setUserTrackingMode(.followWithCourse, animated: true)
-        carPlayMapViewController.recenterButton.isHidden = true
-    }
-
-    public func mapTemplate(_ mapTemplate: CPMapTemplate, didEndPanGestureWithVelocity velocity: CGPoint) {
-        if let navigationViewController = currentNavigator, mapTemplate == navigationViewController.mapTemplate {
-            return
-        }
-        
-        if let vc = self.carWindow?.rootViewController as? CarPlayMapViewController {
-            let everythingButRecenter = mapTemplate.mapButtons.filter { $0 != vc.recenterButton }
-            everythingButRecenter.forEach { $0.isHidden = false }
-            vc.recenterButton.isHidden = vc.mapView.userTrackingMode != .none
-        }
-    }
 
     public func mapTemplate(_ mapTemplate: CPMapTemplate, panWith direction: CPMapTemplate.PanDirection) {
         guard let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController else {
             return
         }
 
+        // Determine the screen distance to pan by based on the distance from the visual center to the closest side.
         let mapView = carPlayMapViewController.mapView
-        let camera = mapView.camera
+        let contentFrame = UIEdgeInsetsInsetRect(mapView.bounds, mapView.safeArea)
+        let increment = min(mapView.bounds.width, mapView.bounds.height) / 2.0
         
-        mapView.setUserTrackingMode(.none, animated: false)
-        mapView.resetNorth()
-
-        var facing: CLLocationDirection = 0.0
-
-        if direction.contains(.right) {
-            facing = 90
-        } else if direction.contains(.down) {
-            facing = 180
-        } else if direction.contains(.left) {
-            facing = 270
+        // Calculate the distance in physical units from the visual center to where it would be after panning downwards.
+        let downshiftedCenter = CGPoint(x: contentFrame.midX, y: contentFrame.midY + increment)
+        let downshiftedCenterCoordinate = mapView.convert(downshiftedCenter, toCoordinateFrom: mapView)
+        let distance = mapView.centerCoordinate.distance(to: downshiftedCenterCoordinate)
+        
+        // Shift the center coordinate by that distance in the specified direction.
+        guard let relativeDirection = CLLocationDirection(panDirection: direction) else {
+            return
         }
-
-        let newCenter = camera.centerCoordinate.coordinate(at: CarPlayMapViewPanningIncrement, facing: facing)
-        camera.centerCoordinate = newCenter
-        mapView.setCamera(camera, animated: true)
+        let shiftedDirection = (mapView.direction + relativeDirection).wrap(min: 0, max: 360)
+        let shiftedCenterCoordinate = mapView.centerCoordinate.coordinate(at: distance, facing: shiftedDirection)
+        mapView.setCenter(shiftedCenterCoordinate, animated: true)
     }
 
     private func createRouteController(with route: Route) -> RouteController {
