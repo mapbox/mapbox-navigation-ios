@@ -647,9 +647,9 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let distance = currentCenter.distance(to: downCoord)
         let distanceInRadians = distance / 6372797.6 //earth radius
         
-        let unitLat = (currentCenter.latitude * Double.pi / 180)
+        let latRadians = (currentCenter.latitude * Double.pi / 180)
         
-        let newLatRadians = asin(sin(unitLat) * cos(distanceInRadians) + cos(unitLat) * sin(distanceInRadians))
+        let newLatRadians = asin(sin(latRadians) * cos(distanceInRadians) + cos(latRadians) * sin(distanceInRadians))
         let newLatitude = newLatRadians * 180 / Double.pi
         
         let newPoint = CLLocationCoordinate2D(latitude: newLatitude , longitude: currentCenter.longitude)
