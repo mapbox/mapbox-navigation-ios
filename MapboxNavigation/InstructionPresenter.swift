@@ -244,9 +244,14 @@ class InstructionPresenter {
     }
     
     private func takeSnapshot(on view: UIView) -> UIImage? {
-        let window = UIApplication.shared.delegate!.window!!
+        let window: UIWindow
+        if let hostView = dataSource as? UIView, let hostWindow = hostView.window {
+            window = hostWindow
+        } else {
+            window = UIApplication.shared.delegate!.window!!
+        }
         
-        //We have to temporarily add the view to the view heirarchy in order for UIAppearance to work it's magic.
+        // Temporarily add the view to the view hierarchy for UIAppearance to work its magic.
         window.addSubview(view)
         let image = view.imageRepresentation
         view.removeFromSuperview()
