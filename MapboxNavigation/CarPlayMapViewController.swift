@@ -52,7 +52,7 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
         super.viewDidLoad()
 
         styleManager = StyleManager(self)
-        styleManager.styles = [CarPlayDayStyle(), CarPlayNightStyle()]
+        styleManager.styles = [DayStyle(), NightStyle()]
         
         resetCamera(animated: false, altitude: CarPlayMapViewController.defaultAltitude)
         mapView.setUserTrackingMode(.followWithCourse, animated: true)
@@ -127,12 +127,7 @@ extension CarPlayMapViewController: StyleManagerDelegate {
     }
     
     func styleManager(_ styleManager: StyleManager, didApply style: Style) {
-        let styleURL: URL
-        if let style = style as? CarPlayStyle {
-            styleURL = style.previewStyleURL
-        } else {
-            styleURL = style.mapStyleURL
-        }
+        let styleURL = style.previewMapStyleURL
         if mapView.styleURL != styleURL {
             mapView.style?.transition = MGLTransition(duration: 0.5, delay: 0)
             mapView.styleURL = styleURL
