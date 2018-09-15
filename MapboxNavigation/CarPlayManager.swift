@@ -618,36 +618,23 @@ extension CarPlayManager: CPMapTemplateDelegate {
             return
         }
 
+        // Determine the screen distance to pan by based on the distance from the visual center to the closest side.
         let mapView = carPlayMapViewController.mapView
-        
         let contentFrame = UIEdgeInsetsInsetRect(mapView.bounds, mapView.safeArea)
-        var center = CGPoint(x: contentFrame.midX, y: contentFrame.midY)
         let increment = min(mapView.bounds.width, mapView.bounds.height) / 2.0
-        if direction.contains(.up) {
-            moveUp(from: center, by: increment, in: mapView)
+        
+        // Calculate the distance in physical units from the visual center to where it would be after panning downwards.
+        let downshiftedCenter = CGPoint(x: contentFrame.midX, y: contentFrame.midY + increment)
+        let downshiftedCenterCoordinate = mapView.convert(downshiftedCenter, toCoordinateFrom: mapView)
+        let distance = mapView.centerCoordinate.distance(to: downshiftedCenterCoordinate)
+        
+        // Shift the center coordinate by that distance in the specified direction.
+        guard let relativeDirection = CLLocationDirection(panDirection: direction) else {
             return
-
-        } else if direction.contains(.down) {
-            center.y += increment
-        } else if direction.contains(.left) {
-            center.x -= increment
-        } else if direction.contains(.right) {
-            center.x += increment
         }
-        
-        let centerCoordinate = mapView.convert(center, toCoordinateFrom: mapView)
-        mapView.setCenter(centerCoordinate, animated: true)
-    }
-    
-    private func moveUp(from center:CGPoint, by increment: CGFloat, in mapView: MGLMapView) {
-        let currentCenter = mapView.centerCoordinate
-        let downPoint = CGPoint(x: center.x, y: center.y + increment)
-        let downCoord = mapView.convert(downPoint, toCoordinateFrom: mapView)
-        
-        let distance = currentCenter.distance(to: downCoord)
-        let newCoord = currentCenter.coordinate(at: distance, facing: 0)
-        
-        mapView.setCenter(newCoord, animated: true)
+        let shiftedDirection = (mapView.direction + relativeDirection).wrap(min: 0, max: 360)
+        let shiftedCenterCoordinate = mapView.centerCoordinate.coordinate(at: distance, facing: shiftedDirection)
+        mapView.setCenter(shiftedCenterCoordinate, animated: true)
     }
 
     private func createRouteController(with route: Route) -> RouteController {
