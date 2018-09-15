@@ -124,7 +124,7 @@ step-library:
         command: |
           cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall
           pod install --repo-update
-          xcodebuild -workspace PodInstall.xcworkspace/ -scheme PodInstall -destination 'platform=iOS Simulator,id=9F32C487-FAEC-4ABE-B00D-159EC007E50D' clean build | xcpretty
+          xcodebuild -workspace PodInstall.xcworkspace/ -scheme PodInstall -destination 'platform=iOS Simulator,name=iPhone 6 Plus' clean build | xcpretty
 
   - &print-MapboxNavigation-xcodebuild-log
       run:
@@ -137,7 +137,7 @@ step-library:
         name: Print MapboxCoreNavigation-xcodebuild.log
         when: on_fail
         command: cat MapboxCoreNavigation-xcodebuild.log
-  
+
   - &store-MapboxNavigationResults-artifacts
       store_artifacts:
           path: MapboxNavigationResults
