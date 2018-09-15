@@ -9,6 +9,11 @@ public extension UIEdgeInsets {
                             bottom: left.bottom + right.bottom,
                             right: left.right + right.right )
     }
+    
+    static func >(lhs: UIEdgeInsets, rhs: UIEdgeInsets) -> Bool {
+        return (lhs.top + lhs.left + lhs.bottom + lhs.right)
+            > (rhs.top + rhs.left + rhs.bottom + rhs.right)
+    }
 }
 
 extension UIEdgeInsets: ExpressibleByFloatLiteral {

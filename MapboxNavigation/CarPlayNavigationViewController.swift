@@ -19,7 +19,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     var mapTemplate: CPMapTemplate
     var carFeedbackTemplate: CPGridTemplate!
     var carInterfaceController: CPInterfaceController
-    
+    var previousSafeAreaInsets: UIEdgeInsets?
     var styleManager: StyleManager!
     
     let distanceFormatter = DistanceFormatter(approximate: true)
@@ -91,6 +91,17 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         NotificationCenter.default.removeObserver(self, name: .routeControllerProgressDidChange, object: nil)
         NotificationCenter.default.removeObserver(self, name: .routeControllerDidReroute, object: nil)
         NotificationCenter.default.removeObserver(self, name: .routeControllerDidPassVisualInstructionPoint, object: nil)
+    }
+    
+    public override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        
+        if let previousSafeAreaInsets = previousSafeAreaInsets {
+            let navigationBarIsOpen = view.safeAreaInsets > previousSafeAreaInsets
+            mapView?.compassView.isHidden = navigationBarIsOpen
+        }
+        
+        previousSafeAreaInsets = view.safeAreaInsets
     }
     
     public func startNavigationSession(for trip: CPTrip) {
