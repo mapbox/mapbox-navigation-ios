@@ -11,7 +11,7 @@ extension VisualInstruction {
 
 #if canImport(CarPlay)
     @available(iOS 12.0, *)
-    var maneuverImageSet: CPImageSet? {
+    func maneuverImageSet(side: DrivingSide = .right) -> CPImageSet? {
         let colors: [UIColor] = [.black, .white]
         let blackAndWhiteManeuverIcons: [UIImage] = colors.compactMap { (color) in
             let mv = ManeuverView()
@@ -20,10 +20,22 @@ extension VisualInstruction {
             mv.backgroundColor = .clear
             mv.scale = UIScreen.main.scale
             mv.visualInstruction = self
-            return mv.imageRepresentation
+            let image = mv.imageRepresentation
+            return shouldFlipImage(side: side) ? image?.withHorizontallyFlippedOrientation() : image
         }
         guard blackAndWhiteManeuverIcons.count == 2 else { return nil }
         return CPImageSet(lightContentImage: blackAndWhiteManeuverIcons[1], darkContentImage: blackAndWhiteManeuverIcons[0])
+    }
+    
+    func shouldFlipImage(side: DrivingSide) -> Bool {
+        let leftDirection = [.left, .slightLeft, .sharpLeft].contains(maneuverDirection)
+        
+        switch maneuverType {
+        case _ where maneuverDirection == .uTurn, .takeRoundabout, .turnAtRoundabout, .takeRotary:
+            return side == .left
+        default:
+            return leftDirection
+        }
     }
 
     @available(iOS 12.0, *)
