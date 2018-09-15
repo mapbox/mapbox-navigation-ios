@@ -528,7 +528,7 @@ open class NavigationViewController: UIViewController {
                 let locationManager = routeController.locationManager.copy() as! NavigationLocationManager
                 let directions = routeController.directions
                 let route = routeController.routeProgress.route
-                let navigationViewController = NavigationViewController(for: route, directions: directions, locationManager: locationManager)
+                let navigationViewController = NavigationViewController(for: route, directions: directions, styles: [CarPlayDayStyle(), CarPlayNightStyle()], locationManager: locationManager)
                 
                 window.rootViewController?.topMostViewController()?.present(navigationViewController, animated: true, completion: {
                     navigationViewController.openStepsViewController()
