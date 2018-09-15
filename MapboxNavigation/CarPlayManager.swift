@@ -624,7 +624,9 @@ extension CarPlayManager: CPMapTemplateDelegate {
         var center = CGPoint(x: contentFrame.midX, y: contentFrame.midY)
         let increment = min(mapView.bounds.width, mapView.bounds.height) / 2.0
         if direction.contains(.up) {
-            center.y -= increment
+            moveUp(from: center, by: increment, in: mapView)
+            return
+
         } else if direction.contains(.down) {
             center.y += increment
         } else if direction.contains(.left) {
@@ -635,6 +637,23 @@ extension CarPlayManager: CPMapTemplateDelegate {
         
         let centerCoordinate = mapView.convert(center, toCoordinateFrom: mapView)
         mapView.setCenter(centerCoordinate, animated: true)
+    }
+    
+    private func moveUp(from center:CGPoint, by increment: CGFloat, in mapView: MGLMapView) {
+        let currentCenter = mapView.centerCoordinate
+        let downPoint = CGPoint(x: center.x, y: center.y + increment)
+        let downCoord = mapView.convert(downPoint, toCoordinateFrom: mapView)
+        
+        let distance = currentCenter.distance(to: downCoord)
+        let distanceInRadians = distance / 6372797.6 //earth radius
+        
+        let unitLat = (currentCenter.latitude * Double.pi / 180)
+        
+        let newLatRadians = asin(sin(unitLat) * cos(distanceInRadians) + cos(unitLat) * sin(distanceInRadians))
+        let newLatitude = newLatRadians * 180 / Double.pi
+        
+        let newPoint = CLLocationCoordinate2D(latitude: newLatitude , longitude: currentCenter.longitude)
+        mapView.setCenter(newPoint, animated: true)
     }
 
     private func createRouteController(with route: Route) -> RouteController {
