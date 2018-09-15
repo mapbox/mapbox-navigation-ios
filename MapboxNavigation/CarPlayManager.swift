@@ -645,15 +645,9 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let downCoord = mapView.convert(downPoint, toCoordinateFrom: mapView)
         
         let distance = currentCenter.distance(to: downCoord)
-        let distanceInRadians = distance / 6372797.6 //earth radius
+        let newCoord = currentCenter.coordinate(at: distance, facing: 0)
         
-        let latRadians = (currentCenter.latitude * Double.pi / 180)
-        
-        let newLatRadians = asin(sin(latRadians) * cos(distanceInRadians) + cos(latRadians) * sin(distanceInRadians))
-        let newLatitude = newLatRadians * 180 / Double.pi
-        
-        let newPoint = CLLocationCoordinate2D(latitude: newLatitude , longitude: currentCenter.longitude)
-        mapView.setCenter(newPoint, animated: true)
+        mapView.setCenter(newCoord, animated: true)
     }
 
     private func createRouteController(with route: Route) -> RouteController {
