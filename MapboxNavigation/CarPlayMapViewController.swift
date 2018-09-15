@@ -34,7 +34,7 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
         }
         
         let bundle = Bundle.mapboxNavigation
-        recenterButton.image = UIImage(named: "location", in: bundle, compatibleWith: traitCollection)
+        recenterButton.image = UIImage(named: "carplay_locate", in: bundle, compatibleWith: traitCollection)
         return recenterButton
     }()
     
