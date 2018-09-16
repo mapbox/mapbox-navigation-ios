@@ -46,7 +46,7 @@ extension CLLocationDistance {
         case .kilometer:
             return kilometers
         case .inch:
-            return feet / 12
+            return feet * 12
         case .foot:
             return feet
         case .yard:
