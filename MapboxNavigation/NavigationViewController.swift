@@ -354,10 +354,11 @@ open class NavigationViewController: UIViewController {
 
      See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
      */
-    @objc(initWithRoute:directions:styles:locationManager:voiceController:eventsManager:)
+    @objc(initWithRoute:directions:styles:routeController:locationManager:voiceController:eventsManager:)
     required public init(for route: Route,
                          directions: Directions = Directions.shared,
                          styles: [Style]? = [DayStyle(), NightStyle()],
+                         routeController: RouteController? = nil,
                          locationManager: NavigationLocationManager? = nil,
                          voiceController: RouteVoiceController? = nil,
                          eventsManager: EventsManager? = nil) {
@@ -366,8 +367,8 @@ open class NavigationViewController: UIViewController {
         
         self.eventsManager = eventsManager ?? EventsManager()
         self.locationManager = locationManager ?? NavigationLocationManager()
-
-        self.routeController = RouteController(along: route, directions: directions, locationManager: self.locationManager, eventsManager: self.eventsManager)
+        let routeController = routeController ?? RouteController(along: route, directions: directions, locationManager: self.locationManager, eventsManager: self.eventsManager)
+        self.routeController = routeController
         self.routeController.usesDefaultUserInterface = true
         self.routeController.delegate = self
         self.routeController.tunnelIntersectionManager.delegate = self
@@ -528,7 +529,7 @@ open class NavigationViewController: UIViewController {
                 let locationManager = routeController.locationManager.copy() as! NavigationLocationManager
                 let directions = routeController.directions
                 let route = routeController.routeProgress.route
-                let navigationViewController = NavigationViewController(for: route, directions: directions, locationManager: locationManager)
+                let navigationViewController = NavigationViewController(for: route, directions: directions, routeController: routeController, locationManager: locationManager)
                 
                 window.rootViewController?.topMostViewController()?.present(navigationViewController, animated: true, completion: {
                     navigationViewController.openStepsViewController()
