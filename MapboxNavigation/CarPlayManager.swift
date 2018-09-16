@@ -249,7 +249,7 @@ public class CarPlayManager: NSObject {
         }
 
         let bundle = Bundle.mapboxNavigation
-        panButton.image = UIImage(named: "pan-map", in: bundle, compatibleWith: traitCollection)
+        panButton.image = UIImage(named: "carplay_pan", in: bundle, compatibleWith: traitCollection)
 
         return panButton
     }
@@ -265,7 +265,7 @@ public class CarPlayManager: NSObject {
         }
 
         let bundle = Bundle.mapboxNavigation
-        closeButton.image = UIImage(named: "close", in: bundle, compatibleWith: traitCollection)
+        closeButton.image = UIImage(named: "carplay_close", in: bundle, compatibleWith: traitCollection)
 
         return closeButton
     }
@@ -334,7 +334,7 @@ public class CarPlayManager: NSObject {
         }
 
         let bundle = Bundle.mapboxNavigation
-        favoriteTemplateButton.image = UIImage(named: "star", in: bundle, compatibleWith: traitCollection)
+        favoriteTemplateButton.image = UIImage(named: "carplay_star", in: bundle, compatibleWith: traitCollection)
 
         return favoriteTemplateButton
     }
@@ -529,7 +529,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let showFeedbackButton = CPMapButton { [weak self] (button) in
             self?.currentNavigator?.showFeedback()
         }
-        showFeedbackButton.image = UIImage(named: "feedback", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate).roundedWithBorder(width: 6, color: .white)
+        showFeedbackButton.image = UIImage(named: "carplay_feedback", in: .mapboxNavigation, compatibleWith: nil)
 
         let overviewButton = CPMapButton { [weak self] (button) in
             guard let navigationViewController = self?.currentNavigator else {
@@ -537,10 +537,10 @@ extension CarPlayManager: CPMapTemplateDelegate {
             }
             navigationViewController.tracksUserCourse = !navigationViewController.tracksUserCourse
 
-            let imageName = navigationViewController.tracksUserCourse ? "overview" : "location"
-            button.image = UIImage(named: imageName, in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate).roundedWithBorder(width: 6, color: .white)
+            let imageName = navigationViewController.tracksUserCourse ? "carplay_overview" : "carplay_locate"
+            button.image = UIImage(named: imageName, in: .mapboxNavigation, compatibleWith: nil)
         }
-        overviewButton.image = UIImage(named: "overview", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate).roundedWithBorder(width: 6, color: .white)
+        overviewButton.image = UIImage(named: "carplay_overview", in: .mapboxNavigation, compatibleWith: nil)
 
         mapTemplate.mapButtons = [overviewButton, showFeedbackButton]
 
@@ -550,9 +550,9 @@ extension CarPlayManager: CPMapTemplateDelegate {
         }
         let muteButton = CPBarButton(type: .text) { (button: CPBarButton) in
             NavigationSettings.shared.voiceMuted = !NavigationSettings.shared.voiceMuted
-            button.title = NavigationSettings.shared.voiceMuted ? "Enable Voice" : "Disable Voice"
+            button.title = NavigationSettings.shared.voiceMuted ? "Unmute" : "Mute    "
         }
-        muteButton.title = NavigationSettings.shared.voiceMuted ? "Enable Voice" : "Disable Voice"
+        muteButton.title = NavigationSettings.shared.voiceMuted ? "Unmute" : "Mute    "
         mapTemplate.leadingNavigationBarButtons.insert(muteButton, at: 0)
 
         if let rootViewController = self.carWindow?.rootViewController as? CarPlayMapViewController,
