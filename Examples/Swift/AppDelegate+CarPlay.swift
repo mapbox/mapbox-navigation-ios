@@ -52,8 +52,8 @@ extension AppDelegate: CarPlayManagerDelegate {
             return nil
         }
         
-        let disableSimulateText = "Don’t Simulate"
-        let enableSimulateText =  "        Simulate"
+        let disableSimulateText = "Disable Simulation"
+        let enableSimulateText =  "Enable Simulation"
         let simulationButton = CPBarButton(type: .text) { (barButton) in
             carPlayManager.simulatesLocations = !carPlayManager.simulatesLocations
             barButton.title = carPlayManager.simulatesLocations ? disableSimulateText : enableSimulateText
