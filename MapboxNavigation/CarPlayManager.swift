@@ -600,8 +600,6 @@ extension CarPlayManager: CPMapTemplateDelegate {
     public func mapTemplateDidBeginPanGesture(_ mapTemplate: CPMapTemplate) {
         if let navigationViewController = currentNavigator, mapTemplate == navigationViewController.mapTemplate {
             navigationViewController.beginPanGesture()
-        } else {
-            mapTemplate.mapButtons.forEach { $0.isHidden = true }
         }
     }
 
