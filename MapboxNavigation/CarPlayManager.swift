@@ -259,6 +259,11 @@ public class CarPlayManager: NSObject {
             guard let strongSelf = self, let mapButtons = strongSelf.defaultMapButtons else {
                 return
             }
+            
+            if let carPlayMapViewController = strongSelf.carWindow?.rootViewController as? CarPlayMapViewController {
+                let mapView = carPlayMapViewController.mapView
+                mapView.setUserTrackingMode(.followWithCourse, animated: true)
+            }
 
             mapTemplate.mapButtons = mapButtons
             mapTemplate.dismissPanningInterface(animated: true)
