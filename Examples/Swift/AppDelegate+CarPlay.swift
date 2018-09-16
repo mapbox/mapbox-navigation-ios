@@ -52,16 +52,13 @@ extension AppDelegate: CarPlayManagerDelegate {
             return nil
         }
         
-        let simulationButton = CPBarButton(type: .text) { [weak self] (barButton) in
-            guard let self = self else {
-                return
-            }
-            
+        let disableSimulateText = "Disable Simulation"
+        let enableSimulateText =  "Enable Simulation"
+        let simulationButton = CPBarButton(type: .text) { (barButton) in
             carPlayManager.simulatesLocations = !carPlayManager.simulatesLocations
-            barButton.title = carPlayManager.simulatesLocations ? "Don’t Simulate" : "Simulate"
-            
+            barButton.title = carPlayManager.simulatesLocations ? disableSimulateText : enableSimulateText
         }
-        simulationButton.title = carPlayManager.simulatesLocations ? "Don’t Simulate" : "Simulate"
+        simulationButton.title = carPlayManager.simulatesLocations ? disableSimulateText : enableSimulateText
         return [simulationButton]
     }
     

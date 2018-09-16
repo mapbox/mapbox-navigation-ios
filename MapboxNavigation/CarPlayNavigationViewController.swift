@@ -19,7 +19,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     var mapTemplate: CPMapTemplate
     var carFeedbackTemplate: CPGridTemplate!
     var carInterfaceController: CPInterfaceController
-    
+    var previousSafeAreaInsets: UIEdgeInsets?
     var styleManager: StyleManager!
     
     let distanceFormatter = DistanceFormatter(approximate: true)
@@ -69,7 +69,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         view.addSubview(mapView)
         
         styleManager = StyleManager(self)
-        styleManager.styles = [CarPlayDayStyle(), CarPlayNightStyle()]
+        styleManager.styles = [DayStyle(), NightStyle()]
         
         resumeNotifications()
         routeController.resume()
@@ -91,6 +91,17 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         NotificationCenter.default.removeObserver(self, name: .routeControllerProgressDidChange, object: nil)
         NotificationCenter.default.removeObserver(self, name: .routeControllerDidReroute, object: nil)
         NotificationCenter.default.removeObserver(self, name: .routeControllerDidPassVisualInstructionPoint, object: nil)
+    }
+    
+    public override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        
+        if let previousSafeAreaInsets = previousSafeAreaInsets {
+            let navigationBarIsOpen = view.safeAreaInsets > previousSafeAreaInsets
+            mapView?.compassView.isHidden = navigationBarIsOpen
+        }
+        
+        previousSafeAreaInsets = view.safeAreaInsets
     }
     
     public func startNavigationSession(for trip: CPTrip) {
@@ -194,7 +205,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         primaryManeuver.instructionVariants = [text]
         
         // Add maneuver arrow
-        primaryManeuver.symbolSet = visualInstruction.primaryInstruction.maneuverImageSet
+        primaryManeuver.symbolSet = visualInstruction.primaryInstruction.maneuverImageSet(side: visualInstruction.drivingSide)
         
         // Estimating the width of Apple's maneuver view
         let bounds: () -> (CGRect) = {
@@ -219,7 +230,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         // Add tertiary text if available. TODO: handle lanes.
         if let tertiaryInstruction = visualInstruction.tertiaryInstruction, !tertiaryInstruction.containsLaneIndications {
             let tertiaryManeuver = CPManeuver()
-            tertiaryManeuver.symbolSet = tertiaryInstruction.maneuverImageSet
+            tertiaryManeuver.symbolSet = tertiaryInstruction.maneuverImageSet(side: visualInstruction.drivingSide)
             
             if let text = tertiaryInstruction.text {
                 tertiaryManeuver.instructionVariants = [text]

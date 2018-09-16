@@ -240,7 +240,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         //If the map is in tracking mode, make sure we update the camera after the layout pass.
         if (tracksUserCourse) {
-            updateCourseTracking(location: userLocationForCourseTracking, animated: false)
+            updateCourseTracking(location: userLocationForCourseTracking, camera:self.camera, animated: false)
         }
     }
     

@@ -263,8 +263,9 @@ class NavigationViewControllerTestable: NavigationViewController {
         super.init(for: route, directions: directions,styles: styles, locationManager: locationManager, voiceController: FakeVoiceController(), eventsManager: TestNavigationEventsManager())
     }
     
-    required init(for route: Route, directions: Directions, styles: [Style]?, locationManager: NavigationLocationManager?, voiceController: RouteVoiceController?, eventsManager: EventsManager?) {
-        fatalError("init(for:directions:styles:locationManager:voiceController:eventsManager:) is not supported in this testing subclass.")
+@objc(initWithRoute:directions:styles:routeController:locationManager:voiceController:eventsManager:)
+    required init(for route: Route, directions: Directions, styles: [Style]?, routeController: RouteController?, locationManager: NavigationLocationManager?, voiceController: RouteVoiceController?, eventsManager: EventsManager?) {
+    fatalError("init(for:directions:styles:routeController:locationManager:voiceController:eventsManager:) is not supported in this testing subclass.")
     }
 
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
@@ -274,6 +275,7 @@ class NavigationViewControllerTestable: NavigationViewController {
     required init?(coder aDecoder: NSCoder) {
         fatalError("This initalizer is not supported in this testing subclass.")
     }
+
 }
 
 class TestableDayStyle: DayStyle {

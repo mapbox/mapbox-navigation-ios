@@ -34,7 +34,7 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
         }
         
         let bundle = Bundle.mapboxNavigation
-        recenterButton.image = UIImage(named: "location", in: bundle, compatibleWith: traitCollection)
+        recenterButton.image = UIImage(named: "carplay_locate", in: bundle, compatibleWith: traitCollection)
         return recenterButton
     }()
     
@@ -52,7 +52,7 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
         super.viewDidLoad()
 
         styleManager = StyleManager(self)
-        styleManager.styles = [CarPlayDayStyle(), CarPlayNightStyle()]
+        styleManager.styles = [DayStyle(), NightStyle()]
         
         resetCamera(animated: false, altitude: CarPlayMapViewController.defaultAltitude)
         mapView.setUserTrackingMode(.followWithCourse, animated: true)
@@ -66,7 +66,7 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
             strongSelf.mapView.setZoomLevel(strongSelf.mapView.zoomLevel + 1, animated: true)
         }
         let bundle = Bundle.mapboxNavigation
-        zoomInButton.image = UIImage(named: "plus", in: bundle, compatibleWith: traitCollection)
+        zoomInButton.image = UIImage(named: "carplay_plus", in: bundle, compatibleWith: traitCollection)
         return zoomInButton
     }
     
@@ -78,7 +78,7 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
             strongSelf.mapView.setZoomLevel(strongSelf.mapView.zoomLevel - 1, animated: true)
         }
         let bundle = Bundle.mapboxNavigation
-        zoomInOut.image = UIImage(named: "minus", in: bundle, compatibleWith: traitCollection)
+        zoomInOut.image = UIImage(named: "carplay_minus", in: bundle, compatibleWith: traitCollection)
         return zoomInOut
     }
 
@@ -127,12 +127,7 @@ extension CarPlayMapViewController: StyleManagerDelegate {
     }
     
     func styleManager(_ styleManager: StyleManager, didApply style: Style) {
-        let styleURL: URL
-        if let style = style as? CarPlayStyle {
-            styleURL = style.previewStyleURL
-        } else {
-            styleURL = style.mapStyleURL
-        }
+        let styleURL = style.previewMapStyleURL
         if mapView.styleURL != styleURL {
             mapView.style?.transition = MGLTransition(duration: 0.5, delay: 0)
             mapView.styleURL = styleURL

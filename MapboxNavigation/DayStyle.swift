@@ -89,12 +89,14 @@ open class DayStyle: Style {
         ExitView.appearance().borderWidth = 1.0
         ExitView.appearance().cornerRadius = 5.0
         ExitView.appearance().foregroundColor = .black
+        ExitView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).foregroundColor = .white
         FloatingButton.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         FloatingButton.appearance().tintColor = tintColor
         GenericRouteShield.appearance().backgroundColor = .clear
         GenericRouteShield.appearance().borderWidth = 1.0
         GenericRouteShield.appearance().cornerRadius = 5.0
         GenericRouteShield.appearance().foregroundColor = .black
+        GenericRouteShield.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).foregroundColor = .white
         InstructionsBannerContentView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         InstructionsBannerView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         LaneView.appearance().primaryColor = .defaultLaneArrowPrimary
@@ -165,6 +167,7 @@ open class NightStyle: DayStyle {
     public required init() {
         super.init()
         mapStyleURL = MGLStyle.navigationGuidanceNightStyleURL
+        previewMapStyleURL = MGLStyle.navigationPreviewNightStyleURL
         styleType = .night
         statusBarStyle = .lightContent
     }
@@ -232,32 +235,3 @@ open class NightStyle: DayStyle {
         WayNameView.appearance().borderColor = #colorLiteral(red: 0.2802129388, green: 0.3988235593, blue: 0.5260632038, alpha: 1)
     }
 }
-
-#if canImport(CarPlay)
-@available(iOS 12.0, *)
-public protocol CarPlayStyle {
-    var previewStyleURL: URL { get }
-}
-
-@available(iOS 12.0, *)
-open class CarPlayDayStyle: DayStyle, CarPlayStyle {
-    public var previewStyleURL = URL(string: "mapbox://styles/mapbox/navigation-preview-day-v4")!
-    
-    open override func apply() {
-        super.apply()
-        ExitView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).foregroundColor = .white
-        GenericRouteShield.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).foregroundColor = .white
-    }
-}
-
-@available(iOS 12.0, *)
-open class CarPlayNightStyle: NightStyle, CarPlayStyle {
-    public var previewStyleURL = URL(string: "mapbox://styles/mapbox/navigation-preview-night-v4")!
-    
-    open override func apply() {
-        super.apply()
-        ExitView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).foregroundColor = .white
-        GenericRouteShield.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).foregroundColor = .white
-    }
-}
-#endif
