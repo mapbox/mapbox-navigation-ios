@@ -209,6 +209,8 @@ import Nimble
 @available(iOS 12.0, *)
 class CarPlayManagerSpec: QuickSpec {
     override func spec() {
+        guard #available(iOS 12, *) else { return }
+
         var manager: CarPlayManager?
         var delegate: TestCarPlayManagerDelegate?
 
