@@ -1,6 +1,5 @@
 import XCTest
 import CoreLocation
-import Turf
 @testable import MapboxCoreNavigation
 
 class LocationTests: XCTestCase {
@@ -41,20 +40,19 @@ class LocationTests: XCTestCase {
         XCTAssert(lhs == rhs)
     }
     
-    func testSnappedLocationShouldBeInFrontOfUser() {
+    func testSnappedLocation100MetersAlongRoute() {
         let progress = setup.progress
+        let firstLocation = setup.firstLocation
         
         let initialHeadingOnFirstStep = progress.currentLegProgress.currentStep.finalHeading!
-        let coordinateAlongFirstStep = Polyline(progress.currentLegProgress.nearbyCoordinates).coordinateFromStart(distance: 100)!
-        let locationAlongFirstStep = CLLocation(coordinate: coordinateAlongFirstStep, altitude: 0, horizontalAccuracy: 1, verticalAccuracy: 0, course: initialHeadingOnFirstStep, speed: 10, timestamp: Date())
+        let coordinateAlongFirstStep = firstLocation.coordinate.coordinate(at: 100, facing: initialHeadingOnFirstStep)
+        let locationAlongFirstStep = CLLocation(latitude: coordinateAlongFirstStep.latitude, longitude: coordinateAlongFirstStep.longitude)
         guard let snapped = locationAlongFirstStep.snapped(to: progress.currentLegProgress) else {
             return XCTFail("Location should have snapped to route")
         }
         
-        let distanceBetweenRealAndSnappedLocation = locationAlongFirstStep.distance(from: snapped)
-    
-
-        XCTAssertEqual(round(distanceBetweenRealAndSnappedLocation), 10, "The snapped location is 10 meters ahead of the user because they are moving.")
+        
+        XCTAssertTrue(locationAlongFirstStep.distance(from: snapped) < 1, "The location is less than 1 meter away from the calculated snapped location")
  
     }
     
