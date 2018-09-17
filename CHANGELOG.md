@@ -11,6 +11,8 @@
 
 * Breaking change: The `eventsManager` argument of `RouteController(along:directions:locationManager:eventsManager:)` is now required. `NavigationViewController(for:directions:styles:locationManager:voiceController:eventsManager:)` now has an optional `eventsManager` argument, which is passed to any instance of `RouteController` created as a result of rerouting. ([#1671](https://github.com/mapbox/mapbox-navigation-ios/pull/1671))
 * Fixed issues where the user puck would overshoot a turn or drift away from a curved road. ([#1710](https://github.com/mapbox/mapbox-navigation-ios/pull/1710))
+* Fixed incorrect conversions to inches in `DistanceFormatter`. ([#1699](https://github.com/mapbox/mapbox-navigation-ios/pull/1699))
+* Fixed several crashes related to telemetry collection. ([#1668](https://github.com/mapbox/mapbox-navigation-ios/pull/1668))
 
 ## v0.20.1 (September 10, 2018)
 
