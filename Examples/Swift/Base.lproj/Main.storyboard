@@ -13,7 +13,7 @@
         <!--Mapbox Navigation-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Example_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="mainMap" id="BYZ-38-t0r" customClass="ViewController" customModule="Example_CarPlay" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -101,6 +101,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="bottomBar" destination="tgD-cs-dAn" id="bIA-KH-Xa9"/>
+                        <outlet property="bottomBarBackground" destination="52U-cY-V4s" id="wSk-Ee-ww2"/>
                         <outlet property="clearMap" destination="6ux-mK-LQF" id="9M7-CK-q1M"/>
                         <outlet property="longPressHintView" destination="Tfo-Ic-OqD" id="gYu-YW-6FX"/>
                         <outlet property="simulationButton" destination="iiq-Gf-SKY" id="DHR-zB-Mwv"/>
@@ -131,7 +132,7 @@
         <!--Custom View Controller-->
         <scene sceneID="uy4-fi-XVj">
             <objects>
-                <viewController storyboardIdentifier="custom" id="j9p-fX-jo4" customClass="CustomViewController" customModule="Example_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="custom" id="j9p-fX-jo4" customClass="CustomViewController" customModule="Example_CarPlay" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="gqy-oH-EyZ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -233,7 +234,7 @@
         <!--Waypoint Confirmation View Controller-->
         <scene sceneID="VHA-oq-pTR">
             <objects>
-                <viewController storyboardIdentifier="waypointConfirmation" id="JoY-h8-mcz" customClass="WaypointConfirmationViewController" customModule="Example_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="waypointConfirmation" id="JoY-h8-mcz" customClass="WaypointConfirmationViewController" customModule="Example_CarPlay" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="wgq-AG-cad">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

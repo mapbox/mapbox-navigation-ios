@@ -131,7 +131,7 @@ step-library:
         name: Print MapboxNavigation-xcodebuild.log
         when: on_fail
         command: cat MapboxNavigation-xcodebuild.log
-  
+
   - &print-MapboxCoreNavigation-xcodebuild-log
       run:
         name: Print MapboxCoreNavigation-xcodebuild.log
@@ -166,7 +166,7 @@ jobs:
       - *store-MapboxNavigationResults-artifacts
       - *store-MapboxCoreNavigationResults-artifacts
       - *save-cache
-  
+
   xcode-9:
     macos:
       xcode: "9.4.1"

@@ -2,10 +2,12 @@ import UIKit
 import MapboxCoreNavigation
 import MapboxNavigation
 import MapboxDirections
-import Mapbox
+import UserNotifications
+
 
 private typealias RouteRequestSuccess = (([Route]) -> Void)
 private typealias RouteRequestFailure = ((NSError) -> Void)
+
 
 class ViewController: UIViewController, MGLMapViewDelegate {
     
@@ -15,9 +17,18 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var bottomBar: UIView!
     @IBOutlet weak var clearMap: UIButton!
-
+    @IBOutlet weak var bottomBarBackground: UIView!
+    
     // MARK: Properties
-    var mapView: NavigationMapView?
+    var mapView: NavigationMapView? {
+        didSet {
+            oldValue?.removeFromSuperview()
+            if let mapView = mapView {
+                configureMapView(mapView)
+                view.insertSubview(mapView, belowSubview: longPressHintView)
+            }
+        }
+    }
     var waypoints: [Waypoint] = [] {
         didSet {
             waypoints.forEach {
@@ -54,13 +65,11 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     }
 
     var alertController: UIAlertController!
-
+    
     // MARK: - Lifecycle Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        CLLocationManager().requestWhenInUseAuthorization()
         
         alertController = UIAlertController(title: "Start Navigation", message: "Select the navigation type", preferredStyle: .actionSheet)
         
@@ -88,17 +97,29 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         if let popoverController = alertController.popoverPresentationController {
             popoverController.sourceView = self.startButton
         }
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        //Reload the mapView.
-        setupMapView()
+        self.mapView = NavigationMapView(frame: view.bounds)
 
         // Reset the navigation styling to the defaults if we are returning from a presentation.
         if (presentedViewController != nil) {
             DayStyle().apply()
+        }
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        if #available(iOS 10.0, *) {
+            UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .alert, .sound]) { _,_ in
+                DispatchQueue.main.async {
+                    CLLocationManager().requestWhenInUseAuthorization()
+                }
+            }
         }
     }
 
@@ -122,6 +143,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
 
         requestRoute()
     }
+
 
     // MARK: - IBActions
     @IBAction func replay(_ sender: Any) {
@@ -185,7 +207,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
 
         let navigationViewController = NavigationViewController(for: route, locationManager: navigationLocationManager())
         navigationViewController.delegate = self
-
+        
         presentAndRemoveMapview(navigationViewController)
     }
     
@@ -238,24 +260,19 @@ class ViewController: UIViewController, MGLMapViewDelegate {
             self.mapView = nil
         }
     }
-    
-    func setupMapView() {
-        guard self.mapView == nil else { return }
-        let mapView = NavigationMapView(frame: view.bounds)
-        self.mapView = mapView
-        
+
+    func configureMapView(_ mapView: NavigationMapView) {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.delegate = self
         mapView.navigationMapDelegate = self
         mapView.userTrackingMode = .follow
-        
-        view.insertSubview(mapView, belowSubview: longPressHintView)
-        
+        mapView.logoView.isHidden = true
+
         let singleTap = UILongPressGestureRecognizer(target: self, action: #selector(didLongPress(tap:)))
         mapView.gestureRecognizers?.filter({ $0 is UILongPressGestureRecognizer }).forEach(singleTap.require(toFail:))
         mapView.addGestureRecognizer(singleTap)
     }
-    
+
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
         self.mapView?.localizeLabels()
         
@@ -369,6 +386,7 @@ extension ViewController: NavigationViewControllerDelegate {
         navigationViewController.dismiss(animated: true, completion: nil)
     }
 }
+
 
 // Mark: VisualInstructionDelegate
 extension ViewController: VisualInstructionDelegate {

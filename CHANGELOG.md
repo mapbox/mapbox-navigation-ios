@@ -3,6 +3,7 @@
 ## master
 
 * Introduced a breaking change the to `RouteController` initializer: Passing an EventsManager is now required. `NavigationViewController` can optionally take an `eventsManager` argument to its initializer, and the value will be passed to future instances of `RouteController`.   ([#1671](https://github.com/mapbox/mapbox-navigation-ios/pull/1671))
+* Added the `Style.previewMapStyleURL` property for customizing the style displayed by a preview map. ([#1695](https://github.com/mapbox/mapbox-navigation-ios/pull/1695))
 
 ## v0.20.1 (September 10, 2018)
 
