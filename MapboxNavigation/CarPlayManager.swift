@@ -417,7 +417,8 @@ extension CarPlayManager: CPListTemplateDelegate {
                 return
         }
 
-        let originWaypoint = fromWaypoint ?? Waypoint(location: location, heading: userLocation.heading, name: "Current Location")
+        let name = NSLocalizedString("CARPLAY_CURRENT_LOCATION", bundle: .mapboxNavigation, value: "Current Location", comment: "Name of the waypoint associated with the current location")
+        let originWaypoint = fromWaypoint ?? Waypoint(location: location, heading: userLocation.heading, name: name)
 
         let routeOptions = NavigationRouteOptions(waypoints: [originWaypoint, toWaypoint])
         Directions.shared.calculate(routeOptions) { [weak self, weak mapTemplate] (waypoints, routes, error) in
@@ -429,7 +430,8 @@ extension CarPlayManager: CPListTemplateDelegate {
                 return
             }
             if let error = error {
-                let okAction = CPAlertAction(title: "OK", style: .default) { _ in
+                let okTitle = NSLocalizedString("CARPLAY_OK", bundle: .mapboxNavigation, value: "OK", comment: "CPNavigationAlert OK button title")
+                let okAction = CPAlertAction(title: okTitle, style: .default) { _ in
                     interfaceController.popToRootTemplate(animated: true)
                 }
                 let alert = CPNavigationAlert(titleVariants: [error.localizedDescription],
@@ -460,7 +462,10 @@ extension CarPlayManager: CPListTemplateDelegate {
             let trip = CPTrip(origin: MKMapItem(placemark: originPlacemark), destination: MKMapItem(placemark: destinationPlacemark), routeChoices: routeChoices)
             trip.userInfo = routeOptions
 
-            let defaultPreviewText = CPTripPreviewTextConfiguration(startButtonTitle: "Go", additionalRoutesButtonTitle: "More Routes", overviewButtonTitle: "Overview")
+            let goTitle = NSLocalizedString("CARPLAY_GO", bundle: .mapboxNavigation, value: "Go", comment: "Title for start button in CPTripPreviewTextConfiguration")
+            let alternativeRoutesTitle = NSLocalizedString("CARPLAY_MORE_ROUTES", bundle: .mapboxNavigation, value: "More Routes", comment: "Title for alternative routes in CPTripPreviewTextConfiguration")
+            let overviewTitle = NSLocalizedString("CARPLAY_OVERVIEW", bundle: .mapboxNavigation, value: "Overview", comment: "Title for overview button in CPTripPreviewTextConfiguration")
+            let defaultPreviewText = CPTripPreviewTextConfiguration(startButtonTitle: goTitle, additionalRoutesButtonTitle: alternativeRoutesTitle, overviewButtonTitle: overviewTitle)
 
             let previewMapTemplate = self.mapTemplate(forPreviewing: trip)
             interfaceController.pushTemplate(previewMapTemplate, animated: true)
@@ -550,11 +555,15 @@ extension CarPlayManager: CPMapTemplateDelegate {
             let leadingButtons = delegate?.carPlayManager?(self, leadingNavigationBarButtonsCompatibleWith: rootViewController.traitCollection, in: mapTemplate, for: .navigating) {
             mapTemplate.leadingNavigationBarButtons = leadingButtons
         }
+        
+        let muteTitle = NSLocalizedString("CARPLAY_MUTE", bundle: .mapboxNavigation, value: "Mute", comment: "Title for mute button")
+        let unmuteTitle = NSLocalizedString("CARPLAY_UNMUTE", bundle: .mapboxNavigation, value: "Unmute", comment: "Title for unmute button")
+        
         let muteButton = CPBarButton(type: .text) { (button: CPBarButton) in
             NavigationSettings.shared.voiceMuted = !NavigationSettings.shared.voiceMuted
-            button.title = NavigationSettings.shared.voiceMuted ? "Unmute" : "Mute    "
+            button.title = NavigationSettings.shared.voiceMuted ? unmuteTitle : muteTitle
         }
-        muteButton.title = NavigationSettings.shared.voiceMuted ? "Unmute" : "Mute    "
+        muteButton.title = NavigationSettings.shared.voiceMuted ? unmuteTitle : muteTitle
         mapTemplate.leadingNavigationBarButtons.insert(muteButton, at: 0)
 
         if let rootViewController = self.carWindow?.rootViewController as? CarPlayMapViewController,
@@ -564,7 +573,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let exitButton = CPBarButton(type: .text) { [weak self] (button: CPBarButton) in
             self?.currentNavigator?.exitNavigation(canceled: true)
         }
-        exitButton.title = "End"
+        exitButton.title = NSLocalizedString("CARPLAY_END", bundle: .mapboxNavigation, value: "End", comment: "Title for end navigation button")
         mapTemplate.trailingNavigationBarButtons.append(exitButton)
 
         return mapTemplate

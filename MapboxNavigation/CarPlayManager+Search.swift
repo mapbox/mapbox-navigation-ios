@@ -22,7 +22,8 @@ extension CarPlayManager: CPSearchTemplateDelegate {
     // MARK: CPSearchTemplateDelegate
     
     public func searchTemplate(_ searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void) {
-        let notImplementedItem = CPListItem(text: "Search not implemented", detailText: nil)
+        let title = NSLocalizedString("CARPLAY_SEARCH_NOT_IMPLEMENTED", bundle: .mapboxNavigation, value: "Search not implemented", comment: "Title in search template when search is unimplemented")
+        let notImplementedItem = CPListItem(text: title, detailText: nil)
         delegate?.carPlayManager?(self, searchTemplate: searchTemplate, updatedSearchText: searchText, completionHandler: completionHandler)
             ?? completionHandler([notImplementedItem])
     }
@@ -139,7 +140,8 @@ extension CarPlayManager: CPSearchTemplateDelegate {
             
             return items
         } else {
-            let noResult = CPListItem(text: "No results", detailText: nil, image: nil, showsDisclosureIndicator: false)
+            let title = NSLocalizedString("CARPLAY_SEARCH_NO_RESULTS", bundle: .mapboxNavigation, value: "No results", comment: "Message when search returned zero results in CarPlay")
+            let noResult = CPListItem(text: title, detailText: nil, image: nil, showsDisclosureIndicator: false)
             return [noResult]
         }
     }
