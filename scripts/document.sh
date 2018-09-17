@@ -50,7 +50,7 @@ sed -n -e '/^## /{' -e ':a' -e 'n' -e '/^## /q' -e 'p' -e 'ba' -e '}' CHANGELOG.
 find Mapbox{Core,}Navigation/ -name *.swift -exec \
     perl -pi -e 's/\@available\s*\(\s*iOS \d+.\d,.*?\)//' {} \;
 
-../jazzy/bin/jazzy \
+jazzy \
     --podspec MapboxNavigation-Documentation.podspec \
     --config docs/jazzy.yml \
     --sdk iphonesimulator \
