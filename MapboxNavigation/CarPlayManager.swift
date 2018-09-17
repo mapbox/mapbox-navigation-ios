@@ -602,13 +602,48 @@ extension CarPlayManager: CPMapTemplateDelegate {
             navigationViewController.beginPanGesture()
         }
     }
+    
+    public func mapTemplate(_ mapTemplate: CPMapTemplate, didEndPanGestureWithVelocity velocity: CGPoint) {
+        if mapTemplate == interfaceController?.rootTemplate, let carPlayMapViewController = carWindow?.rootViewController as? CarPlayMapViewController {
+            carPlayMapViewController.recenterButton.isHidden = carPlayMapViewController.mapView.userTrackingMode != .none
+        }
 
-    public func mapTemplate(_ mapTemplate: CPMapTemplate, didUpdatePanGestureWithTranslation translation: CGPoint, velocity: CGPoint) {
-        // Not enough velocity to overcome friction
+        //We want the panning surface to have "friction". If the user did not "flick" fast/hard enough, do not update the map with a final animation.
         guard sqrtf(Float(velocity.x * velocity.x + velocity.y * velocity.y)) > 100 else {
             return
         }
+        
+        let decelerationRate: CGFloat = 0.9
+        let offset = CGPoint(x: velocity.x * decelerationRate / 4, y: velocity.y * decelerationRate / 4)
+        updatePan(by: offset, mapTemplate: mapTemplate, animated: true)
+    }
+    
+    public func mapTemplateWillDismissPanningInterface(_ mapTemplate: CPMapTemplate) {
+        guard let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController else {
+            return
+        }
+        
+        let mode = carPlayMapViewController.mapView.userTrackingMode
+        carPlayMapViewController.recenterButton.isHidden = mode != .none
+    }
 
+    public func mapTemplate(_ mapTemplate: CPMapTemplate, didUpdatePanGestureWithTranslation translation: CGPoint, velocity: CGPoint) {
+        let mapView: NavigationMapView
+        if let navigationViewController = currentNavigator, mapTemplate == navigationViewController.mapTemplate {
+            mapView = navigationViewController.mapView!
+        } else if let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController {
+            mapView = carPlayMapViewController.mapView
+        } else {
+            return
+        }
+        
+        mapView.setContentInset(mapView.safeArea, animated: false) //make sure this is always up to date in-case safe area changes during gesture
+        updatePan(by: translation, mapTemplate: mapTemplate, animated: false)
+
+        
+    }
+    
+    private func updatePan(by offset: CGPoint, mapTemplate: CPMapTemplate, animated: Bool) {
         let mapView: NavigationMapView
         if let navigationViewController = currentNavigator, mapTemplate == navigationViewController.mapTemplate {
             mapView = navigationViewController.mapView!
@@ -618,23 +653,17 @@ extension CarPlayManager: CPMapTemplateDelegate {
             return
         }
 
-        let decelerationRate: CGFloat = 0.9
-        let offset = CGPoint(x: velocity.x * decelerationRate / 4, y: velocity.y * decelerationRate / 4)
-
-        if let toCamera = cameraShouldPan(to: offset, mapView: mapView) {
-            mapView.setCamera(toCamera, animated: true)
-        }
+        let coordinate = self.coordinate(of: offset, in: mapView)
+        mapView.setCenter(coordinate, animated: animated)
     }
 
-    func cameraShouldPan(to endPoint: CGPoint, mapView: NavigationMapView) -> MGLMapCamera? {
-        let mapView = mapView
-        let camera = mapView.camera
-        let centerPoint = CGPoint(x: mapView.bounds.midX, y: mapView.bounds.midY)
-        let endCameraPoint = CGPoint(x: centerPoint.x - endPoint.x, y: centerPoint.y - endPoint.y)
+    func coordinate(of offset: CGPoint, in mapView: NavigationMapView) -> CLLocationCoordinate2D {
+        
+        let contentFrame = UIEdgeInsetsInsetRect(mapView.bounds, mapView.safeArea)
+        let centerPoint = CGPoint(x: contentFrame.midX, y: contentFrame.midY)
+        let endCameraPoint = CGPoint(x: centerPoint.x - offset.x, y: centerPoint.y - offset.y)
 
-        camera.centerCoordinate = mapView.convert(endCameraPoint, toCoordinateFrom: mapView)
-
-        return camera
+        return mapView.convert(endCameraPoint, toCoordinateFrom: mapView)
     }
 
     public func mapTemplate(_ mapTemplate: CPMapTemplate, panWith direction: CPMapTemplate.PanDirection) {
