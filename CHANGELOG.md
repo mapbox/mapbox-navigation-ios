@@ -2,9 +2,15 @@
 
 ## master
 
-* Introduced a breaking change the to `RouteController` initializer: Passing an EventsManager is now required. `NavigationViewController` can optionally take an `eventsManager` argument to its initializer, and the value will be passed to future instances of `RouteController`.   ([#1671](https://github.com/mapbox/mapbox-navigation-ios/pull/1671))
-* Fixed issues where the user puck would overshoot a turn or drift away from a curved road. ([#1710](https://github.com/mapbox/mapbox-navigation-ios/pull/1710))
+### User interface
+
+* In CarPlay-enabled applications on iOS 12, this SDK now displays a map, search interface, and turn-by-turn navigation experience on the connected CarPlay device. The CarPlay screen is managed by the shared `CarPlayManager` object, which you can configure by implementing the `CarPlayManagerDelegate` protocol. ([#1714](https://github.com/mapbox/mapbox-navigation-ios/pull/1714))
 * Added the `Style.previewMapStyleURL` property for customizing the style displayed by a preview map. ([#1695](https://github.com/mapbox/mapbox-navigation-ios/pull/1695))
+
+### User location
+
+* Breaking change: The `eventsManager` argument of `RouteController(along:directions:locationManager:eventsManager:)` is now required. `NavigationViewController(for:directions:styles:locationManager:voiceController:eventsManager:)` now has an optional `eventsManager` argument, which is passed to any instance of `RouteController` created as a result of rerouting. ([#1671](https://github.com/mapbox/mapbox-navigation-ios/pull/1671))
+* Fixed issues where the user puck would overshoot a turn or drift away from a curved road. ([#1710](https://github.com/mapbox/mapbox-navigation-ios/pull/1710))
 
 ## v0.20.1 (September 10, 2018)
 
