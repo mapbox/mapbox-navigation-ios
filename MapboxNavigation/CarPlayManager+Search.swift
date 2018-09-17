@@ -58,7 +58,7 @@ extension CarPlayManager: CPSearchTemplateDelegate {
         }
         
         let bundle = Bundle.mapboxNavigation
-        searchTemplateButton.image = UIImage(named: "search-monocle", in: bundle, compatibleWith: traitCollection)
+        searchTemplateButton.image = UIImage(named: "carplay_search", in: bundle, compatibleWith: traitCollection)
         
         return searchTemplateButton
     }
