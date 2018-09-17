@@ -13,8 +13,6 @@ using namespace Cedar::Doubles;
 @end
 
 
-//static char *CurrentTripKey;
-
 @implementation CPMapTemplate (MBTestable)
 
 #pragma clang diagnostic push
