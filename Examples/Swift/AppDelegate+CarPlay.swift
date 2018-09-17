@@ -15,7 +15,7 @@ import MapboxDirections
  - Create a provisioning profile which includes the entitlement
  - Download and select the provisioning profile for the "Example-CarPlay" example app
  - Be sure to select an iOS simulator or device running iOS 12 or greater
- **/
+ */
 @available(iOS 12.0, *)
 extension AppDelegate: CPApplicationDelegate {
     
