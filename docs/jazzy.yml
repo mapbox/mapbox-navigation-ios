@@ -60,6 +60,13 @@ custom_categories:
       - TitleLabel
       - TurnArrowView
       - WayNameLabel
+  - name: CarPlay
+    children:
+      - CarPlayManager
+      - CarPlayManagerDelegate
+      - CarPlayNavigationViewController
+      - CarPlayNavigationDelegate
+      - CarPlayActivity
   - name: Configuration
     children:
       - MaxSecondsSpentTravelingAwayFromStartOfRoute
