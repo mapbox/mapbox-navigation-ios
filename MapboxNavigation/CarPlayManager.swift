@@ -717,8 +717,14 @@ extension CarPlayManager: CarPlayNavigationDelegate {
     }
 }
 #else
+/**
+ CarPlay support requires iOS 12.0 or above and the CarPlay framework.
+ */
 @objc(MBCarPlayManager)
 class CarPlayManager: NSObject {
+    /**
+     The shared CarPlay manager.
+     */
     public static var shared = CarPlayManager()
     var isConnectedToCarPlay: Bool = false
 }
