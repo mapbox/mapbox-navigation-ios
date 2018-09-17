@@ -7,9 +7,8 @@ import MapboxDirections
 import CarPlay
 @testable import MapboxMobileEvents
 
-// For some reason XCTest bundles ignore @available annotations, and this gets run on iOS < 12 :(
+// For some reason XCTest bundles ignore @available annotations and these tests are run on iOS < 12 :(
 // This is a bug in XCTest which will hopefully get fixed in an upcoming release.
-// My radar/bug report was marked as a duplicate of another issue with a very low issue ID :(
 
 @available(iOS 12.0, *)
 class CarPlayManagerTests: XCTestCase {
@@ -62,9 +61,7 @@ class CarPlayManagerTests: XCTestCase {
     }
 
     // MARK: Upon connecting to CarPlay, window and interfaceController should be set up correctly
-    // By default we should supply a search template with the Mapbox Geocoder hooked up (?)
 
-//    @available(iOS 12.0, *)
     func testWindowAndIntefaceControllerAreSetUpWithSearchWhenConnected() {
         // This line results in a warning, but is necessary as XCTest ignores the enclosing @available directive.
         // Not sure how to suppress the generated warning here, but this is currently needed for backwards compatibility
@@ -170,20 +167,6 @@ class CarPlayManagerTests: XCTestCase {
 
         XCTAssertTrue(exampleDelegate.navigationEnded, "The CarPlayManagerDelegate should have been told that navigation ended.")
     }
-
-    //TODO: -mapTemplateDidCancelNavigation:
-
-    //MARK: Upon disconnecting CarPlay, cleanup happens
-
-    // when a list item that corresponds to a waypoint/location is tapped
-    // route options are constructed from the user's location to the final waypoint
-    // a route is requested
-    // an error is displayed if encountered
-    // route choices / trip previews displayed
-    // await user input
-
-    // CarPlay handles switching between route choices automatically?
-
 }
 
 @available(iOS 12.0, *)
@@ -255,10 +238,7 @@ class CarPlayManagerSpec: QuickSpec {
     }
 }
 
-
-
 //MARK: Test Objects / Classes.
-//TODO: Extract into separate file at some point.
 
 @available(iOS 12.0, *)
 class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
@@ -300,8 +280,9 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
 class FakeCPInterfaceController: CPInterfaceController {
 
     /**
-     * A simple stub which allows for instantiation of a CPInterfaceController for testing.
-     * CPInterfaceController cannot be instantiated directly.
+     A simple stub which allows for instantiation of a CPInterfaceController for testing.
+
+     CPInterfaceController cannot be instantiated directly. Properties which don't work in headless testing will need to be overridden with test-specific mock functionality provided.
      */
     init(_ context: String) {
         self.context = context
@@ -316,13 +297,6 @@ class FakeCPInterfaceController: CPInterfaceController {
 
     // MARK - CPInterfaceController declarations and overrides
 
-    //Uncomment and override as needed, if needed. At first inspection, some of these result in semaphore_wait_trap when invoked on an instance of CPInterfaceControllerSpy, but `rootTemplate` works as expected once set
-
-    //TODO: solve for this duplication with introspection, à la Cedar::Doubles
-
-//    weak open var delegate: CPInterfaceControllerDelegate?
-//    open func setRootTemplate(_ rootTemplate: CPTemplate, animated: Bool)
-
     override open func pushTemplate(_ templateToPush: CPTemplate, animated: Bool) {
         templateStack.append(templateToPush)
     }
@@ -330,13 +304,6 @@ class FakeCPInterfaceController: CPInterfaceController {
     override open func popTemplate(animated: Bool) {
         templateStack.removeLast()
     }
-
-//    open func popToRootTemplate(animated: Bool)
-//    open func pop(to targetTemplate: CPTemplate, animated: Bool)
-//    open func presentTemplate(_ templateToPresent: CPTemplate, animated: Bool)
-//    open func dismissTemplate(animated: Bool)
-//    open var presentedTemplate: CPTemplate? { get }
-//    open var rootTemplate: CPTemplate { get }
 
     override open var topTemplate: CPTemplate? {
         get {
