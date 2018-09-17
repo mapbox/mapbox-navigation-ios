@@ -9,7 +9,7 @@ import MapboxDirections
 import MapboxMobileEvents
 
 /**
- The activity during which a `CPTemplate` is displayed. This enumeration is used to distinguish between different templates during different phases of user interaction.
+ * The activity during which a `CPTemplate` is displayed. This enumeration is used to distinguish between different templates during different phases of user interaction.
  */
 @available(iOS 12.0, *)
 @objc(MBCarPlayActivity)
@@ -22,6 +22,11 @@ public enum CarPlayActivity: Int {
     case navigating
 }
 
+/**
+ * `CarPlayManagerDelegate` is the main integration point for Mapbox CarPlay support.
+ *
+ * Implement this protocol and assign an instance to the `delegate` property of the shared instance of `CarPlayManager`.
+ */
 @available(iOS 12.0, *)
 @objc(MBCarPlayManagerDelegate)
 public protocol CarPlayManagerDelegate {
@@ -69,11 +74,6 @@ public protocol CarPlayManagerDelegate {
      */
     @objc(carPlayManager:searchTemplate:selectedResult:completionHandler:)
     optional func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void)
-//}
-//
-//@available(iOS 12.0, *)
-//@objc(MBCarPlayManagerNavigationDelegate)
-//public protocol CarPlayManagerNavigationDelegate {
 
     /**
      * Called when navigation begins so that the containing app can update accordingly.
@@ -97,7 +97,11 @@ public protocol CarPlayManagerDelegate {
     @objc optional func carplayManagerShouldDisableIdleTimer(_ carPlayManager: CarPlayManager) -> Bool
 
 }
-
+/**
+ * The main object responsible for orchestrating interactions with a Mapbox map on CarPlay.
+ *
+ * Messages declared in the `CPApplicationDelegate` protocol should be sent to this object in the containing application's application delegate. Implement `CarPlayManagerDelegate` in the containing application and assign an instance to the `delegate` property of the `CarPlayManager` shared instance.
+ */
 @available(iOS 12.0, *)
 @objc(MBCarPlayManager)
 public class CarPlayManager: NSObject {
@@ -131,25 +135,22 @@ public class CarPlayManager: NSObject {
     }
     
     /**
-     Holds the most recent search results
+     * The most recent search results
      */
     var recentSearchItems: [CPListItem]?
     
     /**
-     Hold the most recent search text
+     * The most recent search text
      */
     var recentSearchText: String?
 
     private var defaultMapButtons: [CPMapButton]?
 
     /**
-     A boolean value indicating whether the phone is connected to a CarPlay device or not.
+     A boolean value indicating whether or not the phone is connected to CarPlay
      */
     public var isConnectedToCarPlay: Bool = false
 
-    /**
-     * This property manages the relevant events recorded for telemetry analysis.
-     */
     public var eventsManager = EventsManager()
 
     lazy var fullDateComponentsFormatter: DateComponentsFormatter = {
@@ -172,8 +173,11 @@ public class CarPlayManager: NSObject {
         formatter.allowedUnits = [.day, .hour, .minute]
         return formatter
     }()
+}
 
-    // MARK: CPApplicationDelegate
+// MARK: CPApplicationDelegate
+@available(iOS 12.0, *)
+extension CarPlayManager: CPApplicationDelegate {
 
     public func application(_ application: UIApplication, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPWindow) {
 
@@ -197,6 +201,20 @@ public class CarPlayManager: NSObject {
 
         let timestamp = Date().ISO8601
         sendCarPlayConnectEvent(timestamp)
+    }
+
+    public func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPWindow) {
+        isConnectedToCarPlay = false
+        self.interfaceController = nil
+        carWindow?.isHidden = true
+        let timestamp = Date().ISO8601
+        sendCarPlayDisconnectEvent(timestamp)
+
+        if let shouldDisableIdleTimer = delegate?.carplayManagerShouldDisableIdleTimer?(self) {
+            UIApplication.shared.isIdleTimerDisabled = !shouldDisableIdleTimer
+        } else {
+            UIApplication.shared.isIdleTimerDisabled = false
+        }
     }
 
     func mapTemplate(for interfaceController: CPInterfaceController, viewController: UIViewController) -> CPMapTemplate {
@@ -280,21 +298,6 @@ public class CarPlayManager: NSObject {
         let dateCreatedAttribute = [MMEEventKeyCreated: timestamp]
         eventsManager.manager.enqueueEvent(withName: MMEventTypeCarplayDisconnect, attributes: dateCreatedAttribute)
         eventsManager.manager.flush()
-    }
-
-    public func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPWindow) {
-        isConnectedToCarPlay = false
-        self.interfaceController = nil
-        carWindow?.isHidden = true
-        let timestamp = Date().ISO8601
-        sendCarPlayDisconnectEvent(timestamp)
-
-        // Upon disconnecting the device from carplay, the idle timer ideally should be reset to its initial state.
-        if let shouldDisableIdleTimer = delegate?.carplayManagerShouldDisableIdleTimer?(self) {
-            UIApplication.shared.isIdleTimerDisabled = !shouldDisableIdleTimer
-        } else {
-            UIApplication.shared.isIdleTimerDisabled = false
-        }
     }
 
     func resetPanButtons(_ mapTemplate: CPMapTemplate) {
@@ -452,7 +455,6 @@ extension CarPlayManager: CPListTemplateDelegate {
                 return routeChoice
             }
 
-            //let placemarks = waypoints.map { MKPlacemark(coordinate: $0.coordinate, addressDictionary: ["street": $0.name]) }
             let originPlacemark = MKPlacemark(coordinate: waypoints.first!.coordinate)
             let destinationPlacemark = MKPlacemark(coordinate: waypoints.last!.coordinate, addressDictionary: ["street": waypoints.last!.name ?? ""])
             let trip = CPTrip(origin: MKMapItem(placemark: originPlacemark), destination: MKMapItem(placemark: destinationPlacemark), routeChoices: routeChoices)
@@ -575,9 +577,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         carPlayMapViewController.isOverviewingRoutes = true
         let mapView = carPlayMapViewController.mapView
         let route = routeChoice.userInfo as! Route
-        
-        
-        
+
         //FIXME: Unable to tilt map during route selection -- https://github.com/mapbox/mapbox-gl-native/issues/2259
         let topDownCamera = mapView.camera
         topDownCamera.pitch = 0
@@ -602,13 +602,48 @@ extension CarPlayManager: CPMapTemplateDelegate {
             navigationViewController.beginPanGesture()
         }
     }
+    
+    public func mapTemplate(_ mapTemplate: CPMapTemplate, didEndPanGestureWithVelocity velocity: CGPoint) {
+        if mapTemplate == interfaceController?.rootTemplate, let carPlayMapViewController = carWindow?.rootViewController as? CarPlayMapViewController {
+            carPlayMapViewController.recenterButton.isHidden = carPlayMapViewController.mapView.userTrackingMode != .none
+        }
 
-    public func mapTemplate(_ mapTemplate: CPMapTemplate, didUpdatePanGestureWithTranslation translation: CGPoint, velocity: CGPoint) {
-        // Not enough velocity to overcome friction
+        //We want the panning surface to have "friction". If the user did not "flick" fast/hard enough, do not update the map with a final animation.
         guard sqrtf(Float(velocity.x * velocity.x + velocity.y * velocity.y)) > 100 else {
             return
         }
+        
+        let decelerationRate: CGFloat = 0.9
+        let offset = CGPoint(x: velocity.x * decelerationRate / 4, y: velocity.y * decelerationRate / 4)
+        updatePan(by: offset, mapTemplate: mapTemplate, animated: true)
+    }
+    
+    public func mapTemplateWillDismissPanningInterface(_ mapTemplate: CPMapTemplate) {
+        guard let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController else {
+            return
+        }
+        
+        let mode = carPlayMapViewController.mapView.userTrackingMode
+        carPlayMapViewController.recenterButton.isHidden = mode != .none
+    }
 
+    public func mapTemplate(_ mapTemplate: CPMapTemplate, didUpdatePanGestureWithTranslation translation: CGPoint, velocity: CGPoint) {
+        let mapView: NavigationMapView
+        if let navigationViewController = currentNavigator, mapTemplate == navigationViewController.mapTemplate {
+            mapView = navigationViewController.mapView!
+        } else if let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController {
+            mapView = carPlayMapViewController.mapView
+        } else {
+            return
+        }
+        
+        mapView.setContentInset(mapView.safeArea, animated: false) //make sure this is always up to date in-case safe area changes during gesture
+        updatePan(by: translation, mapTemplate: mapTemplate, animated: false)
+
+        
+    }
+    
+    private func updatePan(by offset: CGPoint, mapTemplate: CPMapTemplate, animated: Bool) {
         let mapView: NavigationMapView
         if let navigationViewController = currentNavigator, mapTemplate == navigationViewController.mapTemplate {
             mapView = navigationViewController.mapView!
@@ -618,23 +653,17 @@ extension CarPlayManager: CPMapTemplateDelegate {
             return
         }
 
-        let decelerationRate: CGFloat = 0.9
-        let offset = CGPoint(x: velocity.x * decelerationRate / 4, y: velocity.y * decelerationRate / 4)
-
-        if let toCamera = cameraShouldPan(to: offset, mapView: mapView) {
-            mapView.setCamera(toCamera, animated: true)
-        }
+        let coordinate = self.coordinate(of: offset, in: mapView)
+        mapView.setCenter(coordinate, animated: animated)
     }
 
-    func cameraShouldPan(to endPoint: CGPoint, mapView: NavigationMapView) -> MGLMapCamera? {
-        let mapView = mapView
-        let camera = mapView.camera
-        let centerPoint = CGPoint(x: mapView.bounds.midX, y: mapView.bounds.midY)
-        let endCameraPoint = CGPoint(x: centerPoint.x - endPoint.x, y: centerPoint.y - endPoint.y)
+    func coordinate(of offset: CGPoint, in mapView: NavigationMapView) -> CLLocationCoordinate2D {
+        
+        let contentFrame = UIEdgeInsetsInsetRect(mapView.bounds, mapView.safeArea)
+        let centerPoint = CGPoint(x: contentFrame.midX, y: contentFrame.midY)
+        let endCameraPoint = CGPoint(x: centerPoint.x - offset.x, y: centerPoint.y - offset.y)
 
-        camera.centerCoordinate = mapView.convert(endCameraPoint, toCoordinateFrom: mapView)
-
-        return camera
+        return mapView.convert(endCameraPoint, toCoordinateFrom: mapView)
     }
 
     public func mapTemplate(_ mapTemplate: CPMapTemplate, panWith direction: CPMapTemplate.PanDirection) {
@@ -672,6 +701,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
     }
 }
 
+// MARK: CarPlayNavigationDelegate
 @available(iOS 12.0, *)
 extension CarPlayManager: CarPlayNavigationDelegate {
     public func carPlayNavigationViewControllerDidArrive(_: CarPlayNavigationViewController) {

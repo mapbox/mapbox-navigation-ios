@@ -102,13 +102,13 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
     }
     
     override func viewSafeAreaInsetsDidChange() {
+        mapView.setContentInset(mapView.safeArea, animated: false)
         
         guard isOverviewingRoutes else {
             super.viewSafeAreaInsetsDidChange()
             return
         }
         
-        mapView.contentInset = mapView.safeAreaInsets
         
         guard let routes = mapView.routes,
             let active = routes.first else {
