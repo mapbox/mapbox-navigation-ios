@@ -47,19 +47,42 @@ extension AppDelegate: CarPlayManagerDelegate {
         NavigationViewController.carPlayManagerDidEndNavigation(carPlayManager, window: window)
     }
     
+    func favoritesListTemplate() -> CPListTemplate {
+        let mapboxSFItem = CPListItem(text: FavoritesList.POI.mapboxSF.rawValue,
+                                      detailText: FavoritesList.POI.mapboxSF.subTitle)
+        let timesSquareItem = CPListItem(text: FavoritesList.POI.timesSquare.rawValue,
+                                         detailText: FavoritesList.POI.timesSquare.subTitle)
+        mapboxSFItem.userInfo = [CarPlayManager.CarPlayWaypointKey: Waypoint(location: FavoritesList.POI.mapboxSF.location)]
+        timesSquareItem.userInfo = [CarPlayManager.CarPlayWaypointKey: Waypoint(location: FavoritesList.POI.timesSquare.location)]
+        let listSection = CPListSection(items: [mapboxSFItem, timesSquareItem])
+        return CPListTemplate(title: "Favorites List", sections: [listSection])
+    }
+    
     func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]? {
-        guard activity == .previewing else {
+        
+        switch activity {
+        case .previewing:
+            let disableSimulateText = "Disable Simulation"
+            let enableSimulateText =  "Enable Simulation"
+            let simulationButton = CPBarButton(type: .text) { (barButton) in
+                carPlayManager.simulatesLocations = !carPlayManager.simulatesLocations
+                barButton.title = carPlayManager.simulatesLocations ? disableSimulateText : enableSimulateText
+            }
+            simulationButton.title = carPlayManager.simulatesLocations ? disableSimulateText : enableSimulateText
+            return [simulationButton]
+        case .browsing:
+            let favoriteTemplateButton = CPBarButton(type: .image) { [weak self] button in
+                guard let `self` = self else { return }
+                let listTemplate = self.favoritesListTemplate()
+                listTemplate.delegate = self
+                carPlayManager.interfaceController?.pushTemplate(listTemplate, animated: true)
+            }
+            favoriteTemplateButton.image = UIImage(named: "carplay_star", in: nil, compatibleWith: traitCollection)
+            return [favoriteTemplateButton]
+        case .navigating:
             return nil
         }
         
-        let disableSimulateText = "Disable Simulation"
-        let enableSimulateText =  "Enable Simulation"
-        let simulationButton = CPBarButton(type: .text) { (barButton) in
-            carPlayManager.simulatesLocations = !carPlayManager.simulatesLocations
-            barButton.title = carPlayManager.simulatesLocations ? disableSimulateText : enableSimulateText
-        }
-        simulationButton.title = carPlayManager.simulatesLocations ? disableSimulateText : enableSimulateText
-        return [simulationButton]
     }
     
     #if canImport(MapboxGeocoder)
@@ -71,5 +94,20 @@ extension AppDelegate: CarPlayManagerDelegate {
         return CarPlayManager.carPlayManager(searchTemplate, selectedResult: item, completionHandler: completionHandler)
     }
     #endif
+}
+
+@available(iOS 12.0, *)
+extension AppDelegate: CPListTemplateDelegate {
+    
+    func listTemplate(_ listTemplate: CPListTemplate, didSelect item: CPListItem, completionHandler: @escaping () -> Void) {
+        // Selected a favorite
+        if let userInfo = item.userInfo as? [String: Any],
+            let waypoint = userInfo[CarPlayManager.CarPlayWaypointKey] as? Waypoint {
+            CarPlayManager.shared.calculateRouteAndStart(to: waypoint, completionHandler: completionHandler)
+            return
+        }
+        
+        completionHandler()
+    }
 }
 #endif

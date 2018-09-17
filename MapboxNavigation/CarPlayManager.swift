@@ -136,7 +136,6 @@ public protocol CarPlayManagerDelegate {
      - returns: A Boolean value indicating whether to disable idle timer when carplay is connected and enable when disconnected.
      */
     @objc optional func carplayManagerShouldDisableIdleTimer(_ carPlayManager: CarPlayManager) -> Bool
-
 }
 /**
  `CarPlayManager` is the main object responsible for orchestrating interactions with a Mapbox map on CarPlay.
@@ -176,6 +175,7 @@ public class CarPlayManager: NSObject {
 
     public fileprivate(set) var mainMapTemplate: CPMapTemplate?
     public fileprivate(set) weak var currentNavigator: CarPlayNavigationViewController?
+    public static let CarPlayWaypointKey: String = "MBCarPlayWaypoint"
 
     public static func resetSharedInstance() {
         shared = CarPlayManager()
@@ -285,9 +285,6 @@ extension CarPlayManager: CPApplicationDelegate {
 
         if let trailingButtons = delegate?.carPlayManager?(self, trailingNavigationBarButtonsCompatibleWith: traitCollection, in: mapTemplate, for: .browsing) {
             mapTemplate.trailingNavigationBarButtons = trailingButtons
-        } else {
-            let favoriteButton = favoriteTemplateButton(interfaceController: interfaceController, traitCollection: traitCollection)
-            mapTemplate.trailingNavigationBarButtons = [favoriteButton]
         }
 
         if let mapButtons = delegate?.carPlayManager?(self, mapButtonsCompatibleWith: traitCollection, in: mapTemplate, for: .browsing) {
@@ -353,41 +350,6 @@ extension CarPlayManager: CPApplicationDelegate {
             mapTemplate.dismissPanningInterface(animated: false)
         }
     }
-
-    public func favoriteTemplateButton(interfaceController: CPInterfaceController, traitCollection: UITraitCollection) -> CPBarButton {
-
-        let favoriteTemplateButton = CPBarButton(type: .image) { [weak self] button in
-            guard let strongSelf = self else {
-                return
-            }
-
-            if let mapTemplate = interfaceController.topTemplate as? CPMapTemplate {
-                strongSelf.resetPanButtons(mapTemplate)
-            }
-
-            let mapboxSFItem = CPListItem(text: CPFavoritesList.POI.mapboxSF.rawValue,
-                                    detailText: CPFavoritesList.POI.mapboxSF.subTitle)
-            let timesSquareItem = CPListItem(text: CPFavoritesList.POI.timesSquare.rawValue,
-                                       detailText: CPFavoritesList.POI.timesSquare.subTitle)
-            let listSection = CPListSection(items: [mapboxSFItem, timesSquareItem])
-            let listTemplate = CPListTemplate(title: "Favorites List", sections: [listSection])
-            if let leadingButtons = strongSelf.delegate?.carPlayManager?(strongSelf, leadingNavigationBarButtonsCompatibleWith: traitCollection, in: listTemplate, for: .browsing) {
-                listTemplate.leadingNavigationBarButtons = leadingButtons
-            }
-            if let trailingButtons = strongSelf.delegate?.carPlayManager?(strongSelf, trailingNavigationBarButtonsCompatibleWith: traitCollection, in: listTemplate, for: .browsing) {
-                listTemplate.trailingNavigationBarButtons = trailingButtons
-            }
-
-            listTemplate.delegate = strongSelf
-
-            interfaceController.pushTemplate(listTemplate, animated: true)
-        }
-
-        let bundle = Bundle.mapboxNavigation
-        favoriteTemplateButton.image = UIImage(named: "carplay_star", in: bundle, compatibleWith: traitCollection)
-
-        return favoriteTemplateButton
-    }
 }
 
 // MARK: CPInterfaceControllerDelegate
@@ -444,14 +406,14 @@ extension CarPlayManager: CPListTemplateDelegate {
         }
         #endif
         
-        // Selected a favorite?
-        if let rawValue = item.text,
-            let favoritePOI = CPFavoritesList.POI(rawValue: rawValue) {
-            let destinationWaypoint = Waypoint(location: favoritePOI.location, heading: nil, name: favoritePOI.rawValue)
-            calculateRouteAndStart(to: destinationWaypoint, completionHandler: completionHandler)
-        } else {
-            completionHandler()
+        // Selected a favorite? or any item with a waypoint.
+        if let userInfo = item.userInfo as? [String: Any],
+            let waypoint = userInfo[CarPlayManager.CarPlayWaypointKey] as? Waypoint {
+            calculateRouteAndStart(to: waypoint, completionHandler: completionHandler)
+            return
         }
+        
+        completionHandler()
     }
 
     public func calculateRouteAndStart(from fromWaypoint: Waypoint? = nil, to toWaypoint: Waypoint, completionHandler: @escaping () -> Void) {

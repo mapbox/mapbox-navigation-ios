@@ -63,11 +63,9 @@ class CarPlayManagerTests: XCTestCase {
 
     // MARK: Upon connecting to CarPlay, window and interfaceController should be set up correctly
     // By default we should supply a search template with the Mapbox Geocoder hooked up (?)
-    // we should also provide developers the opportunity to supply their own Favorites &/or History list.
-    // We may wish to supply example implementations of these once we've rounded out the basic experience.
 
 //    @available(iOS 12.0, *)
-    func testWindowAndIntefaceControllerAreSetUpWithSearchAndExampleFavoritesWhenConnected() {
+    func testWindowAndIntefaceControllerAreSetUpWithSearchWhenConnected() {
         // This line results in a warning, but is necessary as XCTest ignores the enclosing @available directive.
         // Not sure how to suppress the generated warning here, but this is currently needed for backwards compatibility
         guard #available(iOS 12, *) else { return }
@@ -84,20 +82,13 @@ class CarPlayManagerTests: XCTestCase {
 
         let template: CPMapTemplate = fakeInterfaceController.rootTemplate as! CPMapTemplate
         XCTAssertEqual(1, template.leadingNavigationBarButtons.count)
-        XCTAssertEqual(1, template.trailingNavigationBarButtons.count)
+        XCTAssertEqual(0, template.trailingNavigationBarButtons.count)
 
         // simulate tap by invoking stored copy of handler
         let searchButton = template.leadingNavigationBarButtons.first!
         searchButton.handler!(searchButton)
 
         XCTAssert(fakeInterfaceController.topTemplate?.isKind(of: CPSearchTemplate.self) ?? false, "Expecting a search template to be on top")
-
-        fakeInterfaceController.popTemplate(animated: false)
-
-        let favoritesListButton = template.trailingNavigationBarButtons.last!
-        favoritesListButton.handler!(favoritesListButton)
-
-        XCTAssert(fakeInterfaceController.topTemplate?.isKind(of: CPListTemplate.self) ?? false, "Expecting a list template to be on top")
     }
 
     func testManagerAsksDelegateForLeadingAndTrailingBarButtonsIfAvailable() {
