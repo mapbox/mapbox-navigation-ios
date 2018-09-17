@@ -47,6 +47,17 @@ extension AppDelegate: CarPlayManagerDelegate {
         NavigationViewController.carPlayManagerDidEndNavigation(carPlayManager, window: window)
     }
     
+    func carPlayManagerFavoritesList(_ carPlayManager: CarPlayManager) -> CPListTemplate {
+        let mapboxSFItem = CPListItem(text: FavoritesList.POI.mapboxSF.rawValue,
+                                      detailText: FavoritesList.POI.mapboxSF.subTitle)
+        let timesSquareItem = CPListItem(text: FavoritesList.POI.timesSquare.rawValue,
+                                         detailText: FavoritesList.POI.timesSquare.subTitle)
+        mapboxSFItem.userInfo = [CarPlayManager.CarPlayWaypointKey: Waypoint(location: FavoritesList.POI.mapboxSF.location)]
+        timesSquareItem.userInfo = [CarPlayManager.CarPlayWaypointKey: Waypoint(location: FavoritesList.POI.timesSquare.location)]
+        let listSection = CPListSection(items: [mapboxSFItem, timesSquareItem])
+        return CPListTemplate(title: "Favorites List", sections: [listSection])
+    }
+    
     func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]? {
         guard activity == .previewing else {
             return nil
