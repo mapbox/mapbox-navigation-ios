@@ -143,12 +143,6 @@ extension CarPlayManager: CPSearchTemplateDelegate {
             return [noResult]
         }
     }
-    
-    @available(iOS 12.0, *)
-    static func sortedByRelevance(_ items: [CPListItem]) -> [CPListItem] {
-        // TODO: Sort by relevance https://github.com/mapbox/MapboxGeocoder.swift/issues/156
-        return []
-    }
 }
 
 extension GeocodedPlacemark {
