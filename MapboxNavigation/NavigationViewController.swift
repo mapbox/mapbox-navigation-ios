@@ -504,10 +504,6 @@ open class NavigationViewController: UIViewController {
         UIApplication.shared.applicationIconBadgeNumber = 0
     }
     
-    public func openStepsViewController() {
-        mapViewController?.openStepsViewController()
-    }
-    
     #if canImport(CarPlay)
     /**
      Presents a `NavigationViewController` on the top most view controller in the window and opens up the `StepsViewController`.
@@ -518,8 +514,8 @@ open class NavigationViewController: UIViewController {
         
         if let navigationViewController = window.viewControllerInStack(of: NavigationViewController.self) {
             // Open StepsViewController on iPhone if NavigationViewController is being presented
-            navigationViewController.openStepsViewController()
             navigationViewController.shouldManageApplicationIdleTimer = false
+            navigationViewController.isUsedInConjunctionWithCarPlayWindow = true
         } else {
             
             // Start NavigationViewController and open StepsViewController if navigation has not started on iPhone yet.
@@ -533,7 +529,7 @@ open class NavigationViewController: UIViewController {
                 let navigationViewController = NavigationViewController(for: route, directions: directions, routeController: routeController, locationManager: locationManager)
                 navigationViewController.shouldManageApplicationIdleTimer = false
                 window.rootViewController?.topMostViewController()?.present(navigationViewController, animated: true, completion: {
-                    navigationViewController.openStepsViewController()
+                    navigationViewController.isUsedInConjunctionWithCarPlayWindow = true
                 })
             }
         }
