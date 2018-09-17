@@ -95,16 +95,6 @@ public protocol CarPlayManagerDelegate {
      - returns: A bool indicating whether to disable idle timer when carplay is connected and enable when disconnected.
      */
     @objc optional func carplayManagerShouldDisableIdleTimer(_ carPlayManager: CarPlayManager) -> Bool
-    
-    /**
-     Called when the carplay manager will present the favorites list.
-     
-     Implementing this method will allow developers to present a custom list of favorites triggered by the default trailing bar button.
-     
-     - parameter carPlayManager: The carplay manager that will present the list.
-     - returns: A `CPListTemplate` containing a list of favorites.
-     */
-    @objc optional func carPlayManagerFavoritesList(_ carPlayManager: CarPlayManager) -> CPListTemplate
 }
 /**
  * The main object responsible for orchestrating interactions with a Mapbox map on CarPlay.
@@ -248,9 +238,6 @@ extension CarPlayManager: CPApplicationDelegate {
 
         if let trailingButtons = delegate?.carPlayManager?(self, trailingNavigationBarButtonsCompatibleWith: traitCollection, in: mapTemplate, for: .browsing) {
             mapTemplate.trailingNavigationBarButtons = trailingButtons
-        } else {
-            let favoriteButton = favoriteTemplateButton(interfaceController: interfaceController, traitCollection: traitCollection)
-            mapTemplate.trailingNavigationBarButtons = [favoriteButton]
         }
 
         if let mapButtons = delegate?.carPlayManager?(self, mapButtonsCompatibleWith: traitCollection, in: mapTemplate, for: .browsing) {
@@ -315,35 +302,6 @@ extension CarPlayManager: CPApplicationDelegate {
             mapTemplate.mapButtons = mapButtons
             mapTemplate.dismissPanningInterface(animated: false)
         }
-    }
-
-    public func favoriteTemplateButton(interfaceController: CPInterfaceController, traitCollection: UITraitCollection) -> CPBarButton {
-
-        let favoriteTemplateButton = CPBarButton(type: .image) { [weak self] button in
-            guard let `self` = self else { return }
-
-            if let mapTemplate = interfaceController.topTemplate as? CPMapTemplate {
-                self.resetPanButtons(mapTemplate)
-            }
-            
-            let listTemplate = self.delegate?.carPlayManagerFavoritesList?(self) ?? CPListTemplate(title: "Favorites list", sections: [CPListSection(items: [CPListItem(text: "No favorites", detailText: nil)])])
-            
-            if let leadingButtons = self.delegate?.carPlayManager?(self, leadingNavigationBarButtonsCompatibleWith: traitCollection, in: listTemplate, for: .browsing) {
-                listTemplate.leadingNavigationBarButtons = leadingButtons
-            }
-            if let trailingButtons = self.delegate?.carPlayManager?(self, trailingNavigationBarButtonsCompatibleWith: traitCollection, in: listTemplate, for: .browsing) {
-                listTemplate.trailingNavigationBarButtons = trailingButtons
-            }
-
-            listTemplate.delegate = self
-
-            interfaceController.pushTemplate(listTemplate, animated: true)
-        }
-
-        let bundle = Bundle.mapboxNavigation
-        favoriteTemplateButton.image = UIImage(named: "carplay_star", in: bundle, compatibleWith: traitCollection)
-
-        return favoriteTemplateButton
     }
 }
 
