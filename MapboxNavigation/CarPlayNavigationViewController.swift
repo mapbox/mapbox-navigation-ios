@@ -4,12 +4,20 @@ import MapboxCoreNavigation
 #if canImport(CarPlay)
 import CarPlay
 
+/**
+ `CarPlayNavigationViewController` is a fully-featured turn-by-turn navigation UI for CarPlay.
+ 
+ - seealso: NavigationViewController
+ */
 @available(iOS 12.0, *)
+@objc(MBCarPlayNavigationViewController)
 public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelegate {
+    /**
+     The view controller’s delegate.
+     */
+    @objc public weak var carPlayNavigationDelegate: CarPlayNavigationDelegate?
     
-    public weak var carPlayNavigationDelegate: CarPlayNavigationDelegate?
-    
-    public var drivingSide: DrivingSide = .right
+    @objc public var drivingSide: DrivingSide = .right
     
     var routeController: RouteController
     var mapView: NavigationMapView?
@@ -33,8 +41,15 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     }
     
     /**
+     Creates a new CarPlay navigation view controller for the given route controller and user interface.
+     
+     - parameter routeController: The route controller managing location updates for the navigation session.
+     - parameter mapTemplate: The map template visible during the navigation session.
+     - parameter interfaceController: The interface controller for CarPlay.
+     
      - postcondition: Call `startNavigationSession(for:)` after initializing this object to begin navigation.
      */
+    @objc(initForRouteController:mapTemplate:interfaceController:)
     public init(for routeController: RouteController,
                 mapTemplate: CPMapTemplate,
                 interfaceController: CPInterfaceController) {
@@ -104,21 +119,41 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         previousSafeAreaInsets = view.safeAreaInsets
     }
     
+    /**
+     Begins a navigation session along the given trip.
+     
+     - parameter trip: The trip to begin navigating along.
+     */
+    @objc(startNavigationSessionForTrip:)
     public func startNavigationSession(for trip: CPTrip) {
         carSession = mapTemplate.startNavigationSession(for: trip)
     }
     
-    public func exitNavigation(canceled: Bool = false) {
+    /**
+     Ends the current navigation session.
+     
+     - parameter canceled: A Boolean value indicating whether this method is being called because the user intends to cancel the trip, as opposed to letting it run to completion.
+     */
+    @objc(exitNavigationByCanceling:)
+    public func exitNavigation(byCanceling canceled: Bool = false) {
         carSession.finishTrip()
         dismiss(animated: true, completion: nil)
         carPlayNavigationDelegate?.carPlayNavigationViewControllerDidDismiss(self, byCanceling: canceled)
     }
     
-    public func showFeedback() {
+    /**
+     Shows the interface for providing feedback about the route.
+     */
+    @objc public func showFeedback() {
         carInterfaceController.pushTemplate(self.carFeedbackTemplate, animated: true)
     }
     
-    public var tracksUserCourse: Bool {
+    /**
+     A Boolean value indicating whether the map should follow the user’s location and rotate when the course changes.
+     
+     When this property is true, the map follows the user’s location and rotates when their course changes. Otherwise, the map shows an overview of the route.
+     */
+    @objc public var tracksUserCourse: Bool {
         get {
             return mapView?.tracksUserCourse ?? false
         }
@@ -137,6 +172,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
             }
         }
     }
+    
     public func beginPanGesture() {
         mapView?.tracksUserCourse = false
         mapView?.enableFrameByFrameCourseViewTracking(for: 1)
@@ -369,6 +405,9 @@ extension CarPlayNavigationViewController: RouteControllerDelegate {
     }
 }
 
+/**
+ The `CarPlayNavigationDelegate` protocol provides methods for reacting to significant events during turn-by-turn navigation with `CarPlayNavigationViewController`.
+ */
 @available(iOS 12.0, *)
 @objc(MBNavigationCarPlayDelegate)
 public protocol CarPlayNavigationDelegate {
@@ -378,7 +417,8 @@ public protocol CarPlayNavigationDelegate {
      - parameter carPlayNavigationViewController: The CarPlay navigation view controller that was dismissed.
      - parameter canceled: True if the user dismissed the CarPlay navigation view controller by tapping the Cancel button; false if the navigation view controller dismissed by some other means.
      */
-    @objc func carPlayNavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool)
+    @objc(carPlayNavigationViewControllerDidDismiss:byCanceling:)
+    func carPlayNavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool)
 
     /**
      Called when the CarPlay navigation view controller detects an arrival.
