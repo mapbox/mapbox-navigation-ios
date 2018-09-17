@@ -38,6 +38,73 @@ class CarPlayManagerTests: XCTestCase {
 
         manager!.application(UIApplication.shared, didDisconnectCarInterfaceController: fakeInterfaceController, from: fakeWindow)
     }
+    
+    func testIdleTimerDisabledWithoutCarPlayNavigationInterrupted() {
+        guard #available(iOS 12, *) else { return }
+        
+        guard let manager = manager else {
+            XCTFail("Won't continue without a test subject...")
+            return
+        }
+        
+        let exampleDelegate = TestCarPlayManagerDelegate()
+        manager.delegate = exampleDelegate
+        
+        simulateCarPlayConnection(manager)
+        
+        let disabledIdleTimer = UIApplication.shared.isIdleTimerDisabled
+        XCTAssertTrue(disabledIdleTimer, "Current idle timer disabled should be set to `true`.")
+        
+        guard let fakeInterfaceController = manager.interfaceController else {
+            XCTFail("Dependencies not met! Bailing...")
+            return
+        }
+        
+        let mapTemplate: CPMapTemplate = fakeInterfaceController.rootTemplate as! CPMapTemplate
+        
+        // given the user is previewing route choices
+        // when a trip is started using one of the route choices
+        let choice = CPRouteChoice(summaryVariants: ["summary1"], additionalInformationVariants: ["addl1"], selectionSummaryVariants: ["selection1"])
+        choice.userInfo = Fixture.routeWithBannerInstructions()
+        
+        manager.mapTemplate(mapTemplate, startedTrip: CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [choice]), using: choice)
+        
+        manager.carPlayNavigationViewControllerDidArrive(manager.currentNavigator!)
+        
+        simulateCarPlayDisconnection()
+        
+        let enabledIdleTimer = UIApplication.shared.isIdleTimerDisabled
+        XCTAssertFalse(enabledIdleTimer, "Current idle timer disabled should be set to `false`.")
+    }
+    
+    func testIdleTimerEnabledWithCarPlayNavigationInterrupted() {
+        guard #available(iOS 12, *) else { return }
+        
+        guard let manager = manager else {
+            XCTFail("Won't continue without a test subject...")
+            return
+        }
+        
+        let initalIdleTimerState = UIApplication.shared.isIdleTimerDisabled
+        
+        let exampleDelegate = TestCarPlayManagerDelegate()
+        manager.delegate = exampleDelegate
+        
+        simulateCarPlayConnection(manager)
+        
+        let disabledIdleTimer = UIApplication.shared.isIdleTimerDisabled
+        XCTAssertTrue(disabledIdleTimer, "Current idle timer disabled should be set to `true`.")
+        
+        // given the user is previewing route choices
+        // when a trip is started using one of the route choices
+        let choice = CPRouteChoice(summaryVariants: ["summary1"], additionalInformationVariants: ["addl1"], selectionSummaryVariants: ["selection1"])
+        choice.userInfo = Fixture.routeWithBannerInstructions()
+        
+        simulateCarPlayDisconnection()
+        
+        let currentIdleTimer = UIApplication.shared.isIdleTimerDisabled
+        XCTAssertEqual(currentIdleTimer, initalIdleTimerState, "The idle timer should be reset to initial state after carplay is disconnected.")
+    }
 
     func testEventsEnqueuedAndFlushedWhenCarPlayConnected() {
         guard #available(iOS 12, *) else { return }
