@@ -9,7 +9,7 @@ import MapboxDirections
 import MapboxMobileEvents
 
 /**
- * The activity during which a `CPTemplate` is displayed. This enumeration is used to distinguish between different templates during different phases of user interaction.
+ The activity during which a `CPTemplate` is displayed. This enumeration is used to distinguish between different templates during different phases of user interaction.
  */
 @available(iOS 12.0, *)
 @objc(MBCarPlayActivity)
@@ -23,66 +23,66 @@ public enum CarPlayActivity: Int {
 }
 
 /**
- * `CarPlayManagerDelegate` is the main integration point for Mapbox CarPlay support.
- *
- * Implement this protocol and assign an instance to the `delegate` property of the shared instance of `CarPlayManager`.
+ `CarPlayManagerDelegate` is the main integration point for Mapbox CarPlay support.
+ 
+ Implement this protocol and assign an instance to the `delegate` property of the shared instance of `CarPlayManager`.
  */
 @available(iOS 12.0, *)
 @objc(MBCarPlayManagerDelegate)
 public protocol CarPlayManagerDelegate {
 
     /**
-     * Offers the delegate an opportunity to provide a customized list of leading bar buttons.
-     *
-     * These buttons' tap handlers encapsulate the action to be taken, so it is up to the developer to ensure the hierarchy of templates is adequately navigable.
-     * If this method is not implemented, or if nil is returned, an implementation of CPSearchTemplate will be provided which uses the Mapbox Geocoder.
+     Offers the delegate an opportunity to provide a customized list of leading bar buttons.
+     
+     These buttons' tap handlers encapsulate the action to be taken, so it is up to the developer to ensure the hierarchy of templates is adequately navigable.
+     If this method is not implemented, or if nil is returned, an implementation of CPSearchTemplate will be provided which uses the Mapbox Geocoder.
      */
     @objc(carPlayManager:leadingNavigationBarButtonsWithTraitCollection:inTemplate:forActivity:)
     optional func carPlayManager(_ carPlayManager: CarPlayManager, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]?
 
     /**
-     * Offers the delegate an opportunity to provide a customized list of trailing bar buttons.
-     *
-     * These buttons' tap handlers encapsulate the action to be taken, so it is up to the developer to ensure the hierarchy of templates is adequately navigable.
+     Offers the delegate an opportunity to provide a customized list of trailing bar buttons.
+     
+     These buttons' tap handlers encapsulate the action to be taken, so it is up to the developer to ensure the hierarchy of templates is adequately navigable.
      */
     @objc(carPlayManager:trailingNavigationBarButtonsWithTraitCollection:inTemplate:forActivity:)
     optional func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]?
 
     /**
-     * Offers the delegate an opportunity to provide a customized list of buttons displayed on the map.
-     *
-     * These buttons handle the gestures on the map view, so it is up to the developer to ensure the map template is interactive.
-     * If this method is not implemented, or if nil is returned, a default set of zoom and pan buttons will be provided.
+     Offers the delegate an opportunity to provide a customized list of buttons displayed on the map.
+     
+     These buttons handle the gestures on the map view, so it is up to the developer to ensure the map template is interactive.
+     If this method is not implemented, or if nil is returned, a default set of zoom and pan buttons will be provided.
      */
     @objc(carPlayManager:mapButtonsCompatibleWithTraitCollection:inTemplate:forActivity:)
     optional func carPlayManager(_ carplayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]?
 
     /**
-     * Offers the delegate an opportunity to provide an alternate navigator, otherwise a default built-in RouteController will be created and used.
+     Offers the delegate an opportunity to provide an alternate navigator, otherwise a default built-in RouteController will be created and used.
      */
     @objc(carPlayManager:routeControllerAlongRoute:)
     optional func carPlayManager(_ carPlayManager: CarPlayManager, routeControllerAlong route: Route) -> RouteController
 
     /**
-     * Offers the delegate an opportunity to react to updates in the search text.
+     Offers the delegate an opportunity to react to updates in the search text.
      */
     @objc(carPlayManager:searchTemplate:updatedSearchText:completionHandler:)
     optional func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void)
 
     /**
-     * Offers the delegate an opportunity to react to selection of a search result.
+     Offers the delegate an opportunity to react to selection of a search result.
      */
     @objc(carPlayManager:searchTemplate:selectedResult:completionHandler:)
     optional func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void)
 
     /**
-     * Called when navigation begins so that the containing app can update accordingly.
+     Called when navigation begins so that the containing app can update accordingly.
      */
     @objc(carPlayManager:didBeginNavigationWithRouteController:)
     func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith routeController: RouteController) -> ()
 
     /**
-     * Called when navigation ends so that the containing app can update accordingly.
+     Called when navigation ends so that the containing app can update accordingly.
      */
     @objc func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) -> ()
 
@@ -98,9 +98,9 @@ public protocol CarPlayManagerDelegate {
 
 }
 /**
- * The main object responsible for orchestrating interactions with a Mapbox map on CarPlay.
- *
- * Messages declared in the `CPApplicationDelegate` protocol should be sent to this object in the containing application's application delegate. Implement `CarPlayManagerDelegate` in the containing application and assign an instance to the `delegate` property of the `CarPlayManager` shared instance.
+ The main object responsible for orchestrating interactions with a Mapbox map on CarPlay.
+ 
+ Messages declared in the `CPApplicationDelegate` protocol should be sent to this object in the containing application's application delegate. Implement `CarPlayManagerDelegate` in the containing application and assign an instance to the `delegate` property of the `CarPlayManager` shared instance.
  */
 @available(iOS 12.0, *)
 @objc(MBCarPlayManager)
@@ -111,17 +111,17 @@ public class CarPlayManager: NSObject {
     public fileprivate(set) var routeController: RouteController?
 
     /**
-     * Developers should assign their own object as a delegate implementing the CarPlayManagerDelegate protocol for customization
+     Developers should assign their own object as a delegate implementing the CarPlayManagerDelegate protocol for customization
      */
     public weak var delegate: CarPlayManagerDelegate?
 
     /**
-     * If set to `true`, turn-by-turn directions will simulate the user traveling along the selected route when initiated from CarPlay
+     If set to `true`, turn-by-turn directions will simulate the user traveling along the selected route when initiated from CarPlay
      */
     public var simulatesLocations = false
 
     /**
-     * This property specifies a multiplier to be applied to the user's speed in simulation mode.
+     This property specifies a multiplier to be applied to the user's speed in simulation mode.
      */
     public var simulatedSpeedMultiplier = 1.0
 
@@ -135,12 +135,12 @@ public class CarPlayManager: NSObject {
     }
     
     /**
-     * The most recent search results
+     The most recent search results
      */
     var recentSearchItems: [CPListItem]?
     
     /**
-     * The most recent search text
+     The most recent search text
      */
     var recentSearchText: String?
 
