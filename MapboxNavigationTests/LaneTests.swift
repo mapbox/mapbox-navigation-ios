@@ -37,7 +37,7 @@ class LaneTests: FBSnapshotTestCase {
         navigationView.lanesView.update(for: routeController.routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
         navigationView.lanesView.show(animated: false)
 
-        FBSnapshotVerifyView(navigationView.lanesView)
+        verify(navigationView.lanesView)
     }
 
     func testStraightRight() {
@@ -54,6 +54,6 @@ class LaneTests: FBSnapshotTestCase {
         view.lane = Lane(indications: [.slightRight])
         view.maneuverDirection = .slightRight
         view.isValid = true
-        FBSnapshotVerifyView(view)
+        verify(view)
     }
 }
