@@ -76,7 +76,7 @@ struct RoundingTable {
             case .kilometer:
                 return Measurement(value: distance.kilometers, unit: .kilometers)
             case .inch:
-                return Measurement(value: distance.feet / 12, unit: .inches)
+                return Measurement(value: distance.feet * 12, unit: .inches)
             case .foot:
                 return Measurement(value: distance.feet, unit: .feet)
             case .yard:
