@@ -128,7 +128,7 @@ public class CarPlayManager: NSObject {
 
     public fileprivate(set) var mainMapTemplate: CPMapTemplate?
     public fileprivate(set) weak var currentNavigator: CarPlayNavigationViewController?
-    public static let CarPlayWaypointKey: String = "CPCarPlayWaypoint"
+    public static let CarPlayWaypointKey: String = "MBCarPlayWaypoint"
 
     public static func resetSharedInstance() {
         shared = CarPlayManager()

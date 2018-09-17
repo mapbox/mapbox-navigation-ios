@@ -7,7 +7,7 @@ import MapboxDirections
 @available(iOS 12.0, *)
 extension CarPlayManager: CPSearchTemplateDelegate {
     
-    public static let CarPlayGeocodedPlacemarkKey: String = "CPGecodedPlacemark"
+    public static let CarPlayGeocodedPlacemarkKey: String = "MBGecodedPlacemark"
     static var recentItems = RecentItem.loadDefaults()
     
     static var MaximumInitialSearchResults: UInt = 5
