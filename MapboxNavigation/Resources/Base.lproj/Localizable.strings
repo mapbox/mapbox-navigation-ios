@@ -1,3 +1,63 @@
+/* Delimiter between lines in an address when displayed inline */
+"ADDRESS_LINE_SEPARATOR" = ", ";
+
+/* Title on arrival action sheet */
+"CARPLAY_ARRIVED" = "You have arrived";
+
+/* Message on arrival action sheet */
+"CARPLAY_ARRIVED_MESSAGE" = "What would you like to do?";
+
+/* Title on continue button in CarPlay */
+"CARPLAY_CONTINUE" = "Continue";
+
+/* Name of the waypoint associated with the current location */
+"CARPLAY_CURRENT_LOCATION" = "Current Location";
+
+/* Title for dismiss button */
+"CARPLAY_DISMISS" = "Dismiss";
+
+/* Title for end navigation button */
+"CARPLAY_END" = "End";
+
+/* Title on the exit button in the arrival form */
+"CARPLAY_EXIT_NAVIGATION" = "Exit navigation";
+
+/* Title for feedback template in CarPlay */
+"CARPLAY_FEEDBACK" = "Feedback";
+
+/* Title for start button in CPTripPreviewTextConfiguration */
+"CARPLAY_GO" = "Go";
+
+/* Title for alternative routes in CPTripPreviewTextConfiguration */
+"CARPLAY_MORE_ROUTES" = "More Routes";
+
+/* Title for mute button */
+"CARPLAY_MUTE" = "Mute";
+
+/* CPNavigationAlert OK button title */
+"CARPLAY_OK" = "OK";
+
+/* Title for overview button in CPTripPreviewTextConfiguration */
+"CARPLAY_OVERVIEW" = "Overview";
+
+/* Title for rating template in CarPlay */
+"CARPLAY_RATE_RIDE" = "Rate your ride";
+
+/* Title on rate button in CarPlay */
+"CARPLAY_RATE_TRIP" = "Rate your trip";
+
+/* Message when search returned zero results in CarPlay */
+"CARPLAY_SEARCH_NO_RESULTS" = "No results";
+
+/* Title in search template when search is unimplemented */
+"CARPLAY_SEARCH_NOT_IMPLEMENTED" = "Search not implemented";
+
+/* Alert title that shows when feedback has been submitted */
+"CARPLAY_SUBMITTED_FEEDBACK" = "Submitted";
+
+/* Title for unmute button */
+"CARPLAY_UNMUTE" = "Unmute";
+
 /* Format string for indicating the device volume is low; 1 = device model */
 "DEVICE_VOLUME_LOW" = "%@ Volume Low";
 
