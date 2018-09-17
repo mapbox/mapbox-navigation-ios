@@ -42,7 +42,11 @@ class RouteMapViewController: UIViewController {
     var destination: Waypoint?
     var isUsedInConjunctionWithCarPlayWindow = false {
         didSet {
-            displayPreviewInstructions()
+            if isUsedInConjunctionWithCarPlayWindow {
+                displayPreviewInstructions()
+            } else {
+                stepsViewController?.dismiss()
+            }
         }
     }
 
@@ -593,10 +597,6 @@ extension RouteMapViewController: NavigationViewDelegate {
         displayPreviewInstructions()
     }
     
-    public func openStepsViewController() {
-        displayPreviewInstructions()
-    }
-
     private func displayPreviewInstructions() {
         removePreviewInstructions()
 
