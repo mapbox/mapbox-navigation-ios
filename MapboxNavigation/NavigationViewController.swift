@@ -7,7 +7,7 @@ import CarPlay
 #endif
 
 /**
- The `NavigationViewControllerDelegate` provides methods for configuring the map view shown by a `NavigationViewController` and responding to the cancellation of a navigation session.
+ The `NavigationViewControllerDelegate` protocol provides methods for configuring the map view shown by a `NavigationViewController` and responding to the cancellation of a navigation session.
  */
 @objc(MBNavigationViewControllerDelegate)
 public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
@@ -184,9 +184,11 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
 }
 
 /**
- `NavigationViewController` is fully featured, turn by turn navigation UI.
+ `NavigationViewController` is a fully-featured turn-by-turn navigation UI.
  
  It provides step by step instructions, an overview of all steps for the given route and support for basic styling.
+ 
+ - seealso: CarPlayNavigationViewController
  */
 @objc(MBNavigationViewController)
 open class NavigationViewController: UIViewController {

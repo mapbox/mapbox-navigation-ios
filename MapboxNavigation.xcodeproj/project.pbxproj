@@ -130,6 +130,7 @@
 		35718BE71EF3194200AFA3D1 /* tunnel.json in Resources */ = {isa = PBXBuildFile; fileRef = 35718BE41EF316BA00AFA3D1 /* tunnel.json */; };
 		35718BE81EF3194500AFA3D1 /* tunnel.route in Resources */ = {isa = PBXBuildFile; fileRef = 35718BE31EF316BA00AFA3D1 /* tunnel.route */; };
 		35726EE81F0856E900AFA1B6 /* DayStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35726EE71F0856E900AFA1B6 /* DayStyle.swift */; };
+		3577B878214FF35800094294 /* FavoritesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3577B877214FF35800094294 /* FavoritesList.swift */; };
 		3582A25020EEC46B0029C5DE /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3582A24F20EEC46B0029C5DE /* Router.swift */; };
 		3582A25220EFA9680029C5DE /* RouteControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3582A25120EFA9680029C5DE /* RouteControllerDelegate.swift */; };
 		358D14661E5E3B7700ADE590 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358D14651E5E3B7700ADE590 /* AppDelegate.swift */; };
@@ -223,7 +224,6 @@
 		AE8B1B95207BFAEF003050F6 /* TunnelIntersectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE09EC13207BD88200782A33 /* TunnelIntersectionManager.swift */; };
 		AE8B1B97207D2B2B003050F6 /* TunnelIntersectionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8B1B96207D2B2B003050F6 /* TunnelIntersectionManagerTests.swift */; };
 		AE997D2221137B8B00EB0AAB /* String+LocalizedConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE997D2121137B8B00EB0AAB /* String+LocalizedConstants.swift */; };
-		AEA5B13421312CE1003B2961 /* CPFavoritesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA5B13321312CE1003B2961 /* CPFavoritesList.swift */; };
 		AEC3AC9A2106703100A26F34 /* HighwayShield.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC3AC992106703100A26F34 /* HighwayShield.swift */; };
 		AEF2C8F22072B603007B061F /* routeWithTunnels_9thStreetDC.json in Resources */ = {isa = PBXBuildFile; fileRef = AEF2C8F12072B603007B061F /* routeWithTunnels_9thStreetDC.json */; };
 		C51245F21F19471C00E33B52 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
@@ -621,6 +621,7 @@
 		35718BE31EF316BA00AFA3D1 /* tunnel.route */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = tunnel.route; sourceTree = "<group>"; };
 		35718BE41EF316BA00AFA3D1 /* tunnel.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = tunnel.json; sourceTree = "<group>"; };
 		35726EE71F0856E900AFA1B6 /* DayStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayStyle.swift; sourceTree = "<group>"; };
+		3577B877214FF35800094294 /* FavoritesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesList.swift; sourceTree = "<group>"; };
 		357F0DF01EB9D99F00A0B53C /* sv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
 		357F0DF11EB9DAB400A0B53C /* vi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3582A24F20EEC46B0029C5DE /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
@@ -719,7 +720,6 @@
 		AE5F8770209A082500F58FDB /* route-with-banner-instructions.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-with-banner-instructions.json"; sourceTree = "<group>"; };
 		AE8B1B96207D2B2B003050F6 /* TunnelIntersectionManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelIntersectionManagerTests.swift; sourceTree = "<group>"; };
 		AE997D2121137B8B00EB0AAB /* String+LocalizedConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+LocalizedConstants.swift"; sourceTree = "<group>"; };
-		AEA5B13321312CE1003B2961 /* CPFavoritesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPFavoritesList.swift; sourceTree = "<group>"; };
 		AEC3AC992106703100A26F34 /* HighwayShield.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighwayShield.swift; sourceTree = "<group>"; };
 		AED2156E208F7FEA009AA673 /* NavigationViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewControllerTests.swift; sourceTree = "<group>"; };
 		AEF2C8F12072B603007B061F /* routeWithTunnels_9thStreetDC.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = routeWithTunnels_9thStreetDC.json; sourceTree = "<group>"; };
@@ -1072,7 +1072,6 @@
 			isa = PBXGroup;
 			children = (
 				16C2A420211526EE00FE6E68 /* CarPlayManager.swift */,
-				AEA5B13321312CE1003B2961 /* CPFavoritesList.swift */,
 				16EF6C21211BA4B300AA580B /* CarPlayMapViewController.swift */,
 				C5FFAC1420D96F5B009E7F98 /* CarPlayNavigationViewController.swift */,
 				35379D0121480E1300FD402E /* CarPlayManager+Search.swift */,
@@ -1235,6 +1234,7 @@
 				C5D9800C1EFA8BA9006DBF2E /* CustomViewController.swift */,
 				6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */,
 				C51FC31620F689F800400CE7 /* CustomStyles.swift */,
+				3577B877214FF35800094294 /* FavoritesList.swift */,
 			);
 			name = Swift;
 			path = Examples/Swift;
@@ -2080,7 +2080,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				351BEBF11E5BCC63006FE110 /* MGLMapView.swift in Sources */,
-				AEA5B13421312CE1003B2961 /* CPFavoritesList.swift in Sources */,
 				351BEC061E5BCC6C006FE110 /* ManeuverDirection.swift in Sources */,
 				35D825FC1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m in Sources */,
 				C51511D120EAC89D00372A91 /* CPMapTemplate.swift in Sources */,
@@ -2258,6 +2257,7 @@
 				C5DE4B6220F6B6B3007AFBE6 /* CustomStyles.swift in Sources */,
 				35379CFD21480C0500FD402E /* AppDelegate+CarPlay.swift in Sources */,
 				C53F2EE820EBC95600D9798F /* AppDelegate.swift in Sources */,
+				3577B878214FF35800094294 /* FavoritesList.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

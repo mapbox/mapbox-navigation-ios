@@ -4,12 +4,20 @@ import MapboxCoreNavigation
 #if canImport(CarPlay)
 import CarPlay
 
+/**
+ `CarPlayNavigationViewController` is a fully-featured turn-by-turn navigation UI for CarPlay.
+ 
+ - seealso: NavigationViewController
+ */
 @available(iOS 12.0, *)
+@objc(MBCarPlayNavigationViewController)
 public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelegate {
+    /**
+     The view controller’s delegate.
+     */
+    @objc public weak var carPlayNavigationDelegate: CarPlayNavigationDelegate?
     
-    public weak var carPlayNavigationDelegate: CarPlayNavigationDelegate?
-    
-    public var drivingSide: DrivingSide = .right
+    @objc public var drivingSide: DrivingSide = .right
     
     var routeController: RouteController
     var mapView: NavigationMapView?
@@ -33,8 +41,15 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     }
     
     /**
+     Creates a new CarPlay navigation view controller for the given route controller and user interface.
+     
+     - parameter routeController: The route controller managing location updates for the navigation session.
+     - parameter mapTemplate: The map template visible during the navigation session.
+     - parameter interfaceController: The interface controller for CarPlay.
+     
      - postcondition: Call `startNavigationSession(for:)` after initializing this object to begin navigation.
      */
+    @objc(initForRouteController:mapTemplate:interfaceController:)
     public init(for routeController: RouteController,
                 mapTemplate: CPMapTemplate,
                 interfaceController: CPInterfaceController) {
@@ -104,21 +119,41 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         previousSafeAreaInsets = view.safeAreaInsets
     }
     
+    /**
+     Begins a navigation session along the given trip.
+     
+     - parameter trip: The trip to begin navigating along.
+     */
+    @objc(startNavigationSessionForTrip:)
     public func startNavigationSession(for trip: CPTrip) {
         carSession = mapTemplate.startNavigationSession(for: trip)
     }
     
-    public func exitNavigation(canceled: Bool = false) {
+    /**
+     Ends the current navigation session.
+     
+     - parameter canceled: A Boolean value indicating whether this method is being called because the user intends to cancel the trip, as opposed to letting it run to completion.
+     */
+    @objc(exitNavigationByCanceling:)
+    public func exitNavigation(byCanceling canceled: Bool = false) {
         carSession.finishTrip()
         dismiss(animated: true, completion: nil)
         carPlayNavigationDelegate?.carPlayNavigationViewControllerDidDismiss(self, byCanceling: canceled)
     }
     
-    public func showFeedback() {
+    /**
+     Shows the interface for providing feedback about the route.
+     */
+    @objc public func showFeedback() {
         carInterfaceController.pushTemplate(self.carFeedbackTemplate, animated: true)
     }
     
-    public var tracksUserCourse: Bool {
+    /**
+     A Boolean value indicating whether the map should follow the user’s location and rotate when the course changes.
+     
+     When this property is true, the map follows the user’s location and rotates when their course changes. Otherwise, the map shows an overview of the route.
+     */
+    @objc public var tracksUserCourse: Bool {
         get {
             return mapView?.tracksUserCourse ?? false
         }
@@ -137,6 +172,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
             }
         }
     }
+    
     public func beginPanGesture() {
         mapView?.tracksUserCourse = false
         mapView?.enableFrameByFrameCourseViewTracking(for: 1)
@@ -271,16 +307,18 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
             guard let feedbackItem = foundItem.first else { return }
             self?.routeController.eventsManager.updateFeedback(uuid: uuid, type: feedbackItem.feedbackType, source: .user, description: nil)
             
-            let action = CPAlertAction(title: "Dismiss", style: .default, handler: {_ in })
-            let alert = CPNavigationAlert(titleVariants: ["Submitted"], subtitleVariants: nil, imageSet: nil, primaryAction: action, secondaryAction: nil, duration: 2.5)
+            let dismissTitle = NSLocalizedString("CARPLAY_DISMISS", bundle: .mapboxNavigation, value: "Dismiss", comment: "Title for dismiss button")
+            let submittedTitle = NSLocalizedString("CARPLAY_SUBMITTED_FEEDBACK", bundle: .mapboxNavigation, value: "Submitted", comment: "Alert title that shows when feedback has been submitted")
+            let action = CPAlertAction(title: dismissTitle, style: .default, handler: {_ in })
+            let alert = CPNavigationAlert(titleVariants: [submittedTitle], subtitleVariants: nil, imageSet: nil, primaryAction: action, secondaryAction: nil, duration: 2.5)
             self?.mapTemplate.present(navigationAlert: alert, animated: true)
         }
         
         let buttons: [CPGridButton] = feedbackItems.map {
             return CPGridButton(titleVariants: [$0.title.components(separatedBy: "\n").joined(separator: " ")], image: $0.image, handler: feedbackButtonHandler)
         }
-        
-        return CPGridTemplate(title: "Feedback", gridButtons: buttons)
+        let gridTitle = NSLocalizedString("CARPLAY_FEEDBACK", bundle: .mapboxNavigation, value: "Feedback", comment: "Title for feedback template in CarPlay")
+        return CPGridTemplate(title: gridTitle, gridButtons: buttons)
     }
     
     func endOfRouteFeedbackTemplate() -> CPGridTemplate {
@@ -298,28 +336,34 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
             buttons.append(button)
         }
         
-        return CPGridTemplate(title: "Rate your ride", gridButtons: buttons)
+        let gridTitle = NSLocalizedString("CARPLAY_RATE_RIDE", bundle: .mapboxNavigation, value: "Rate your ride", comment: "Title for rating template in CarPlay")
+        return CPGridTemplate(title: gridTitle, gridButtons: buttons)
     }
     
     func presentArrivalUI() {
-        let exitAction = CPAlertAction(title: "Exit navigation", style: .cancel) { (action) in
+        let exitTitle = NSLocalizedString("CARPLAY_EXIT_NAVIGATION", bundle: .mapboxNavigation, value: "Exit navigation", comment: "Title on the exit button in the arrival form")
+        let exitAction = CPAlertAction(title: exitTitle, style: .cancel) { (action) in
             self.exitNavigation()
             self.dismiss(animated: true, completion: nil)
         }
-        let rateAction = CPAlertAction(title: "Rate your trip", style: .default) { (action) in
+        let rateTitle = NSLocalizedString("CARPLAY_RATE_TRIP", bundle: .mapboxNavigation, value: "Rate your trip", comment: "Title on rate button in CarPlay")
+        let rateAction = CPAlertAction(title: rateTitle, style: .default) { (action) in
             self.carInterfaceController.pushTemplate(self.endOfRouteFeedbackTemplate(), animated: true)
         }
-        let alert = CPActionSheetTemplate(title: "You have arrived", message: "What would you like to do?", actions: [rateAction, exitAction])
+        let arrivalTitle = NSLocalizedString("CARPLAY_ARRIVED", bundle: .mapboxNavigation, value: "You have arrived", comment: "Title on arrival action sheet")
+        let arrivalMessage = NSLocalizedString("CARPLAY_ARRIVED_MESSAGE", bundle: .mapboxNavigation, value: "What would you like to do?", comment: "Message on arrival action sheet")
+        let alert = CPActionSheetTemplate(title: arrivalTitle, message: arrivalMessage, actions: [rateAction, exitAction])
         carInterfaceController.presentTemplate(alert, animated: true)
     }
     
     func presentWayointArrivalUI(for waypoint: Waypoint) {
-        var title = "You have arrived"
+        var title = NSLocalizedString("CARPLAY_ARRIVED", bundle: .mapboxNavigation, value: "You have arrived", comment: "Title on arrival action sheet")
         if let name = waypoint.name {
             title = name
         }
         
-        let continueAlert = CPAlertAction(title: "Continue", style: .default) { (action) in
+        let continueTitle = NSLocalizedString("CARPLAY_CONTINUE", bundle: .mapboxNavigation, value: "Continue", comment: "Title on continue button in CarPlay")
+        let continueAlert = CPAlertAction(title: continueTitle, style: .default) { (action) in
             self.routeController.routeProgress.legIndex += 1
             self.carInterfaceController.dismissTemplate(animated: true)
             self.updateRouteOnMap()
@@ -361,6 +405,9 @@ extension CarPlayNavigationViewController: RouteControllerDelegate {
     }
 }
 
+/**
+ The `CarPlayNavigationDelegate` protocol provides methods for reacting to significant events during turn-by-turn navigation with `CarPlayNavigationViewController`.
+ */
 @available(iOS 12.0, *)
 @objc(MBNavigationCarPlayDelegate)
 public protocol CarPlayNavigationDelegate {
@@ -370,7 +417,8 @@ public protocol CarPlayNavigationDelegate {
      - parameter carPlayNavigationViewController: The CarPlay navigation view controller that was dismissed.
      - parameter canceled: True if the user dismissed the CarPlay navigation view controller by tapping the Cancel button; false if the navigation view controller dismissed by some other means.
      */
-    @objc func carPlayNavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool)
+    @objc(carPlayNavigationViewControllerDidDismiss:byCanceling:)
+    func carPlayNavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool)
 
     /**
      Called when the CarPlay navigation view controller detects an arrival.

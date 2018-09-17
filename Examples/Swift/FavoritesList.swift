@@ -2,7 +2,7 @@
 import CarPlay
 #endif
 
-public enum CPFavoritesList {
+public enum FavoritesList {
     
     enum POI: RawRepresentable {
         typealias RawValue = String
