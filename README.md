@@ -7,13 +7,13 @@
 
 <img alt="Mapbox Navigation SDK" src="./docs/img/navigation.png" width="272" align="right" />
 
-Mapbox Navigation gives you all the tools you need to add turn-by-turn navigation to your application.
+Mapbox Navigation gives you all the tools you need to add turn-by-turn navigation to your iOS application.
 
 Get up and running in a few minutes with our drop-in turn-by-turn navigation `NavigationViewController`, or build a completely custom turn-by-turn navigation app with our core components for routing and navigation.
 
 ## Features
 
-* A full-fledged turn-by-turn navigation UI ready to drop into your application
+* A full-fledged turn-by-turn navigation UI for iPhone, iPad, and CarPlay that’s ready to drop into your application
 * [Professionally designed map styles](https://www.mapbox.com/maps/) for daytime and nighttime driving
 * Worldwide driving, cycling, and walking directions powered by [open data](https://www.mapbox.com/about/open/) and user feedback
 * Traffic avoidance and proactive rerouting based on current conditions in [over 30 countries](https://www.mapbox.com/api-documentation/pages/traffic-countries.html)
