@@ -50,7 +50,7 @@ step-library:
         name: Prepare
         command: |
           git submodule sync
-          brew install carthage
+          if (brew outdated | grep carthage > /dev/null); then brew upgrade carthage; fi
           echo "foo" > ~/.mapbox
 
   - &prepare-iphone6s-plus-ios-11
