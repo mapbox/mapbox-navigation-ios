@@ -51,7 +51,7 @@ class Fixture {
         }
         
         let options = NavigationRouteOptions(waypoints: waypoints, profileIdentifier: .automobileAvoidingTraffic)
-        let route = Route(json: jsonRoute, waypoints: waypoints, routeOptions: options)
+        let route = Route(json: jsonRoute, waypoints: waypoints, options: options)
         
         return route
     }
