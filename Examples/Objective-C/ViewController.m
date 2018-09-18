@@ -125,6 +125,7 @@
     MBNavigationViewController *controller = [[MBNavigationViewController alloc] initWithRoute:route
                                                                                     directions:[MBDirections sharedDirections]
                                                                                         styles:nil
+                                                                               routeController:nil
                                                                                locationManager:locationManager
                                                                                voiceController:nil
                                                                                  eventsManager:nil];

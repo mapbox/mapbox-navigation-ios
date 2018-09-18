@@ -4,15 +4,18 @@ import CoreLocation
 import UIKit
 #endif
 
-#if os(iOS)
-import UIKit
-#endif
-
 /**
  `NavigationLocationManager` is the base location manager which handles permissions and background modes.
  */
 @objc(MBNavigationLocationManager)
-open class NavigationLocationManager: CLLocationManager {
+open class NavigationLocationManager: CLLocationManager, NSCopying {
+    
+    public func copy(with zone: NSZone? = nil) -> Any {
+        let copy = NavigationLocationManager()
+        copy.lastKnownLocation = lastKnownLocation
+        return copy
+    }
+    
     
     var lastKnownLocation: CLLocation?
     

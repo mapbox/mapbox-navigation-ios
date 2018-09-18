@@ -1,3 +1,5 @@
 github "uber/ios-snapshot-test-case" ~> 4.0.0
+github "mapbox/MapboxGeocoder.swift" ~> 0.10
 github "Quick/Quick" ~> 1.3
 github "Quick/Nimble" ~> 7.1
+github "CedarBDD/Cedar" ~> 1.0

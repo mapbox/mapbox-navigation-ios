@@ -21,12 +21,12 @@ class InstructionPresenterTests: XCTestCase {
 
         let attachment = attributed.attribute(.attachment, at: 0, effectiveRange: nil)
 
-        XCTAssert(attachment is ExitAttachment, "Attachment for exit shield should be of type ExitAttachment")
+        XCTAssert(attachment is ExitAttachment, "Attachment for exit shield should be of type ExitAttachment; got \(String(describing: attachment.self))")
     }
 
     /// NOTE: This test is disabled pending https://github.com/mapbox/mapbox-navigation-ios/issues/1468
     func x_testAbbreviationPerformance() {
-        let route = Fixture.route(from: "route-with-banner-instructions", waypoints: [Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165)), Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))])
+        let route = Fixture.routeWithBannerInstructions()
         
         let steps = route.legs.flatMap { $0.steps }
         let instructions = steps.compactMap { $0.instructionsDisplayedAlongStep?.first?.primaryInstruction }

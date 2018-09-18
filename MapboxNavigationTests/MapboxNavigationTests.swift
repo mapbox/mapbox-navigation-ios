@@ -34,6 +34,6 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         controller.lanesView.update(for: routeController.routeProgress.currentLegProgress)
         controller.lanesView.show()
 
-        FBSnapshotVerifyView(controller.lanesView)
+        verify(controller.lanesView)
     }
 }

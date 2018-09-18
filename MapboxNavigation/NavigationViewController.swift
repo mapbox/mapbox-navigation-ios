@@ -2,9 +2,12 @@ import UIKit
 import MapboxCoreNavigation
 import MapboxDirections
 import Mapbox
+#if canImport(CarPlay)
+import CarPlay
+#endif
 
 /**
- The `NavigationViewControllerDelegate` provides methods for configuring the map view shown by a `NavigationViewController` and responding to the cancellation of a navigation session.
+ The `NavigationViewControllerDelegate` protocol provides methods for configuring the map view shown by a `NavigationViewController` and responding to the cancellation of a navigation session.
  */
 @objc(MBNavigationViewControllerDelegate)
 public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
@@ -181,9 +184,11 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
 }
 
 /**
- `NavigationViewController` is fully featured, turn by turn navigation UI.
+ `NavigationViewController` is a fully-featured turn-by-turn navigation UI.
  
  It provides step by step instructions, an overview of all steps for the given route and support for basic styling.
+ 
+ - seealso: CarPlayNavigationViewController
  */
 @objc(MBNavigationViewController)
 open class NavigationViewController: UIViewController {
@@ -300,6 +305,23 @@ open class NavigationViewController: UIViewController {
      */
     @objc public var shouldManageApplicationIdleTimer = true
     
+    /**
+     Bool which should be set to true if a CarPlayNavigationView is also being used.
+     */
+    @objc public var isUsedInConjunctionWithCarPlayWindow = false {
+        didSet {
+            mapViewController?.isUsedInConjunctionWithCarPlayWindow = isUsedInConjunctionWithCarPlayWindow
+        }
+    }
+    
+    var isConnectedToCarPlay: Bool {
+        if #available(iOS 12.0, *) {
+            return CarPlayManager.shared.isConnectedToCarPlay
+        } else {
+            return false
+        }
+    }
+    
     var mapViewController: RouteMapViewController?
     
     /**
@@ -334,10 +356,11 @@ open class NavigationViewController: UIViewController {
 
      See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
      */
-    @objc(initWithRoute:directions:styles:locationManager:voiceController:eventsManager:)
+    @objc(initWithRoute:directions:styles:routeController:locationManager:voiceController:eventsManager:)
     required public init(for route: Route,
                          directions: Directions = Directions.shared,
                          styles: [Style]? = [DayStyle(), NightStyle()],
+                         routeController: RouteController? = nil,
                          locationManager: NavigationLocationManager? = nil,
                          voiceController: RouteVoiceController? = nil,
                          eventsManager: EventsManager? = nil) {
@@ -346,8 +369,8 @@ open class NavigationViewController: UIViewController {
         
         self.eventsManager = eventsManager ?? EventsManager()
         self.locationManager = locationManager ?? NavigationLocationManager()
-
-        self.routeController = RouteController(along: route, directions: directions, locationManager: self.locationManager, eventsManager: self.eventsManager)
+        let routeController = routeController ?? RouteController(along: route, directions: directions, locationManager: self.locationManager, eventsManager: self.eventsManager)
+        self.routeController = routeController
         self.routeController.usesDefaultUserInterface = true
         self.routeController.delegate = self
         self.routeController.tunnelIntersectionManager.delegate = self
@@ -434,6 +457,17 @@ open class NavigationViewController: UIViewController {
         let secondsRemaining = routeProgress.currentLegProgress.currentStepProgress.durationRemaining
 
         mapViewController?.notifyDidChange(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
+        
+        // If the user has arrived, don't snap the user puck.
+        // In the case the user drives beyond the waypoint,
+        // we should accurately depict this.
+        let shouldPreventReroutesWhenArrivingAtWaypoint = routeController.delegate?.routeController?(routeController, shouldPreventReroutesWhenArrivingAt: routeController.routeProgress.currentLeg.destination) ?? true
+        let userHasArrivedAndShouldPreventRerouting = shouldPreventReroutesWhenArrivingAtWaypoint && !routeController.routeProgress.currentLegProgress.userHasArrivedAtWaypoint
+        
+        if snapsUserLocationAnnotationToRoute,
+            userHasArrivedAndShouldPreventRerouting {
+            mapViewController?.mapView.updateCourseTracking(location: location, animated: true)
+        }
     }
     
     @objc func didPassInstructionPoint(notification: NSNotification) {
@@ -471,6 +505,47 @@ open class NavigationViewController: UIViewController {
         UIApplication.shared.applicationIconBadgeNumber = 1
         UIApplication.shared.applicationIconBadgeNumber = 0
     }
+    
+    #if canImport(CarPlay)
+    /**
+     Presents a `NavigationViewController` on the top most view controller in the window and opens up the `StepsViewController`.
+     If the `NavigationViewController` is already in the stack, it will open the `StepsViewController` unless it is already open.
+     */
+    @available(iOS 12.0, *)
+    public class func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith routeController: RouteController, window: UIWindow) {
+        
+        if let navigationViewController = window.viewControllerInStack(of: NavigationViewController.self) {
+            // Open StepsViewController on iPhone if NavigationViewController is being presented
+            navigationViewController.isUsedInConjunctionWithCarPlayWindow = true
+        } else {
+            
+            // Start NavigationViewController and open StepsViewController if navigation has not started on iPhone yet.
+            let navigationViewControllerExistsInStack = window.viewControllerInStack(of: NavigationViewController.self) != nil
+            
+            if !navigationViewControllerExistsInStack {
+                
+                let locationManager = routeController.locationManager.copy() as! NavigationLocationManager
+                let directions = routeController.directions
+                let route = routeController.routeProgress.route
+                let navigationViewController = NavigationViewController(for: route, directions: directions, routeController: routeController, locationManager: locationManager)
+                
+                window.rootViewController?.topMostViewController()?.present(navigationViewController, animated: true, completion: {
+                    navigationViewController.isUsedInConjunctionWithCarPlayWindow = true
+                })
+            }
+        }
+    }
+    
+    /**
+     Dismisses a `NavigationViewController` if there is any in the navigation stack.
+     */
+    @available(iOS 12.0, *)
+    public class func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager, window: UIWindow) {
+        if let navigationViewController = window.viewControllerInStack(of: NavigationViewController.self) {
+            navigationViewController.dismiss(animated: true, completion: nil)
+        }
+    }
+    #endif
 }
 
 //MARK: - RouteMapViewControllerDelegate
@@ -578,10 +653,8 @@ extension NavigationViewController: RouteControllerDelegate {
             let snappedLocation = routeController.location ?? locations.last,
             let rawLocation = locations.last,
             userHasArrivedAndShouldPreventRerouting {
-            mapViewController?.mapView.updateCourseTracking(location: snappedLocation, animated: true)
             mapViewController?.labelCurrentRoad(at: rawLocation, for: snappedLocation)
         } else if let rawlocation = locations.last {
-            mapViewController?.mapView.updateCourseTracking(location: rawlocation, animated: true)
             mapViewController?.labelCurrentRoad(at: rawlocation)
         }
     }
@@ -589,7 +662,8 @@ extension NavigationViewController: RouteControllerDelegate {
     @objc public func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) -> Bool {
         let advancesToNextLeg = delegate?.navigationViewController?(self, didArriveAt: waypoint) ?? true
         
-        if routeController.routeProgress.isFinalLeg && advancesToNextLeg && showsEndOfRouteFeedback {
+        if !isConnectedToCarPlay, // CarPlayManager shows rating on CarPlay if it's connected
+            routeController.routeProgress.isFinalLeg && advancesToNextLeg && showsEndOfRouteFeedback {
             self.mapViewController?.showEndOfRoute { _ in }
         }
         return advancesToNextLeg
