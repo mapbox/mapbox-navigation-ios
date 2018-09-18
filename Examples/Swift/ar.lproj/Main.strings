@@ -1,9 +1,9 @@
 
 /* Class = "UIButton"; normalTitle = "Continue to next destination"; ObjectID = "1vl-kS-fBt"; */
-"1vl-kS-fBt.normalTitle" = "تابع نحو المقصد التالي";
+"1vl-kS-fBt.normalTitle" = "تابع نحو المكان التالي";
 
 /* Class = "UILabel"; text = "Long press to select a destination"; ObjectID = "dEY-t6-Ect"; */
-"dEY-t6-Ect.text" = "انقر مطولا لاختيار مقصد";
+"dEY-t6-Ect.text" = "انقر مطولا لاختيار مكان";
 
 /* Class = "UIButton"; normalTitle = "Simulate Locations"; ObjectID = "iiq-Gf-SKY"; */
 "iiq-Gf-SKY.normalTitle" = "حاكِ الأماكن";
