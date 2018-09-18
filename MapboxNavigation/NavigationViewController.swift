@@ -516,6 +516,7 @@ open class NavigationViewController: UIViewController {
         
         if let navigationViewController = window.viewControllerInStack(of: NavigationViewController.self) {
             // Open StepsViewController on iPhone if NavigationViewController is being presented
+            navigationViewController.shouldManageApplicationIdleTimer = false
             navigationViewController.isUsedInConjunctionWithCarPlayWindow = true
         } else {
             
@@ -528,7 +529,7 @@ open class NavigationViewController: UIViewController {
                 let directions = routeController.directions
                 let route = routeController.routeProgress.route
                 let navigationViewController = NavigationViewController(for: route, directions: directions, routeController: routeController, locationManager: locationManager)
-                
+                navigationViewController.shouldManageApplicationIdleTimer = false
                 window.rootViewController?.topMostViewController()?.present(navigationViewController, animated: true, completion: {
                     navigationViewController.isUsedInConjunctionWithCarPlayWindow = true
                 })
