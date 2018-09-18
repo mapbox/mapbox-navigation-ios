@@ -533,19 +533,24 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
         
         if let lastLeg =  route.legs.last {
-            removeAnnotations(annotations ?? [])
-            let destination = MGLPointAnnotation()
+            removeAnnotations(annotationsToRemove() ?? [])
+            let destination = NavigationAnnotation()
             destination.coordinate = lastLeg.destination.coordinate
             addAnnotation(destination)
         }
     }
+    
+    func annotationsToRemove() -> [MGLAnnotation]? {
+        return annotations?.filter { $0 is NavigationAnnotation }
+    }
+    
     /**
      Removes all waypoints from the map.
      */
     @objc public func removeWaypoints() {
         guard let style = style else { return }
         
-        removeAnnotations(annotations ?? [])
+        removeAnnotations(annotationsToRemove() ?? [])
         
         if let circleLayer = style.layer(withIdentifier: waypointCircleIdentifier) {
             style.removeLayer(circleLayer)

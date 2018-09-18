@@ -608,6 +608,9 @@ open class InstructionsBannerContentView: UIView { }
 open class BottomBannerContentView: UIView { }
 
 /// :nodoc:
+class NavigationAnnotation: MGLPointAnnotation { }
+
+/// :nodoc:
 @objc(MBMarkerView)
 public class MarkerView: UIView {
     
