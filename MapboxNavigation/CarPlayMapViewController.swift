@@ -122,7 +122,7 @@ class CarPlayMapViewController: UIViewController, MGLMapViewDelegate {
 
 @available(iOS 12.0, *)
 extension CarPlayMapViewController: StyleManagerDelegate {
-    func locationFor(styleManager: StyleManager) -> CLLocation? {
+    func location(for styleManager: StyleManager) -> CLLocation? {
         return mapView.userLocationForCourseTracking ?? mapView.userLocation?.location ?? coarseLocationManager.location
     }
     
