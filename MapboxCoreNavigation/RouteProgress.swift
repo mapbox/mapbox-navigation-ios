@@ -366,6 +366,11 @@ open class RouteStepProgress: NSObject {
     @objc public var durationRemaining: TimeInterval {
         return (1 - fractionTraveled) * step.expectedTravelTime
     }
+    
+    /**
+     Coordinates from current location to end of current step
+     */
+    @objc public var coordinatesRemaining: [CLLocationCoordinate2D] = []
 
     /**
      Intializes a new `RouteStepProgress`.
