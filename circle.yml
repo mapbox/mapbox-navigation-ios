@@ -63,13 +63,6 @@ step-library:
         name: Prepare iPhone 6s Plus iOS 12
         command: xcrun instruments -w "iPhone 6s Plus (12.0) [" || true
 
-  - &reset-simulators
-      run:
-        name: Reset simulators
-        command: |
-          bundle install
-          SNAPSHOT_FORCE_DELETE=1 bundle exec fastlane snapshot reset_simulators
-
   - &verify-missing-localizable-strings
       run:
         name: Verify missing localizable strings
@@ -135,7 +128,6 @@ jobs:
     steps:
       - checkout
       - *prepare
-      - *reset-simulators
       - *prepare-iphone6s-plus-ios-12
       - *restore-cache
       - *install-dependencies
