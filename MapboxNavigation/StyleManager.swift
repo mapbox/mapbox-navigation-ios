@@ -9,7 +9,8 @@ public protocol StyleManagerDelegate: NSObjectProtocol {
     /**
      Asks the delegate for a location to use when calculating sunset and sunrise.
      */
-    @objc func locationFor(styleManager: StyleManager) -> CLLocation?
+    @objc(locationForStyleManager:)
+    func location(for styleManager: StyleManager) -> CLLocation?
     
     /**
      Informs the delegate that a style was applied.
@@ -95,7 +96,7 @@ open class StyleManager: NSObject {
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(timeOfDayChanged), object: nil)
         
         guard automaticallyAdjustsStyleForTimeOfDay && styles.count > 1 else { return }
-        guard let location = delegate?.locationFor(styleManager: self) else { return }
+        guard let location = delegate?.location(for:self) else { return }
         
         guard let solar = Solar(date: date, coordinate: location.coordinate),
             let sunrise = solar.sunrise,
@@ -137,7 +138,7 @@ open class StyleManager: NSObject {
     }
     
     func applyStyle() {
-        guard let location = delegate?.locationFor(styleManager: self) else {
+        guard let location = delegate?.location(for: self) else {
             // We can't calculate sunset or sunrise w/o a location so just apply the first style
             if let style = styles.first, currentStyleType != style.styleType {
                 currentStyleType = style.styleType
@@ -172,7 +173,7 @@ open class StyleManager: NSObject {
     }
     
     func forceRefreshAppearanceIfNeeded() {
-        guard let location = delegate?.locationFor(styleManager: self) else { return }
+        guard let location = delegate?.location(for: self) else { return }
         
         let styleTypeForLocation = styleType(for: location)
         
