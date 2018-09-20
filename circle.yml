@@ -56,12 +56,12 @@ step-library:
   - &prepare-iphone6s-plus-ios-11
       run:
         name: Prepare iPhone 6s Plus iOS 11
-        command: xcrun instruments -w "iPhone 6s Plus (11.4) [" || true
+        command: xcrun instruments -w "iPhone 6 Plus (11.4) [" || true
 
   - &prepare-iphone6s-plus-ios-12
       run:
         name: Prepare iPhone 6s Plus iOS 12
-        command: xcrun instruments -w "iPhone 6s Plus (12.0) [" || true
+        command: xcrun instruments -w "iPhone 6 Plus (12.0) [" || true
 
   - &verify-missing-localizable-strings
       run:
