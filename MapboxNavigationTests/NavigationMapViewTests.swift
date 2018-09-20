@@ -25,7 +25,7 @@ class NavigationMapViewTests: XCTestCase, MGLMapViewDelegate {
         mapView!.delegate = self
         if mapView!.style == nil {
             styleLoadingExpectation = expectation(description: "Style Loaded Expectation")
-            waitForExpectations(timeout: 1, handler: nil)
+            waitForExpectations(timeout: 2, handler: nil)
         }
     }
     
