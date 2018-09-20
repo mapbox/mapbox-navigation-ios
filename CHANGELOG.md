@@ -3,6 +3,7 @@
 ## master
 
 `StyleManagerDelegate.locationFor(styleManager:)` has been renamed to `StyleManagerDelegate.location(for:)`  ([#1724](https://github.com/mapbox/mapbox-navigation-ios/pull/1724))
+Added a `RouteProgress.coordinatesRemaining` property. This property is updates on every location update. It contains a slice of the current route step's polyline from the current location to the end of the step. ([#1728](https://github.com/mapbox/mapbox-navigation-ios/pull/1728))
 
 ## v0.21.0 (September 17, 2018)
 

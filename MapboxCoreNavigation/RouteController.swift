@@ -242,6 +242,14 @@ open class RouteController: NSObject, Router {
         }
         userSnapToStepDistanceFromManeuver = Polyline(coordinates).distance(from: coordinate)
     }
+    
+    func updateCoordinatesRemaining() {
+        guard let coordinates = routeProgress.currentLegProgress.currentStep.coordinates, let coordinate = rawLocation?.coordinate, let closestCoordinate = Polyline(coordinates).closestCoordinate(to: coordinate) else {
+            routeProgress.currentLegProgress.currentStepProgress.coordinatesRemaining = nil
+            return
+        }
+        routeProgress.currentLegProgress.currentStepProgress.coordinatesRemaining = Polyline(coordinates).sliced(from: closestCoordinate.coordinate).coordinates
+    }
 
     @objc public var reroutingTolerance: CLLocationDistance {
         guard let intersections = routeProgress.currentLegProgress.currentStepProgress.intersectionsIncludingUpcomingManeuverIntersection else { return RouteControllerMaximumDistanceBeforeRecalculating }
@@ -364,6 +372,7 @@ extension RouteController: CLLocationManagerDelegate {
         updateRouteStepProgress(for: location)
         updateRouteLegProgress(for: location)
         updateVisualInstructionProgress()
+        updateCoordinatesRemaining()
 
         guard userIsOnRoute(location) || !(delegate?.routeController?(self, shouldRerouteFrom: location) ?? true) else {
             reroute(from: location, along: routeProgress)

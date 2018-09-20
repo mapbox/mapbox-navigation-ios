@@ -432,6 +432,11 @@ open class RouteStepProgress: NSObject {
     }
     
     /**
+     Coordinates from current location to end of current step
+     */
+    @objc public var coordinatesRemaining: [CLLocationCoordinate2D]?
+
+    /**
      Intializes a new `RouteStepProgress`.
 
      - parameter step: Step on a `RouteLeg`.
