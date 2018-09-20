@@ -51,9 +51,7 @@ class NavigationMapViewTests: XCTestCase, MGLMapViewDelegate {
         ]
     
     func testNavigationMapViewCombineWithSimilarCongestions() {
-        let navigationMapView = NavigationMapView(frame: CGRect(origin: .zero, size: .iPhone6Plus))
-        
-        let congestionSegments = navigationMapView.combine(coordinates, with: [
+        let congestionSegments = mapView!.combine(coordinates, with: [
             .low,
             .low,
             .low,
@@ -67,9 +65,8 @@ class NavigationMapViewTests: XCTestCase, MGLMapViewDelegate {
     }
     
     func testNavigationMapViewCombineWithDissimilarCongestions() {
-        let navigationMapView = NavigationMapView(frame: CGRect(origin: .zero, size: .iPhone6Plus))
         
-        let congestionSegmentsSevere = navigationMapView.combine(coordinates, with: [
+        let congestionSegmentsSevere = mapView!.combine(coordinates, with: [
             .low,
             .low,
             .severe,
@@ -109,3 +106,4 @@ class NavigationMapViewTests: XCTestCase, MGLMapViewDelegate {
 }
 
 class PersistentAnnotation: MGLPointAnnotation { }
+
