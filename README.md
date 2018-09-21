@@ -7,13 +7,13 @@
 
 <img alt="Mapbox Navigation SDK" src="./docs/img/navigation.png" width="272" align="right" />
 
-Mapbox Navigation gives you all the tools you need to add turn-by-turn navigation to your application.
+Mapbox Navigation gives you all the tools you need to add turn-by-turn navigation to your iOS application.
 
 Get up and running in a few minutes with our drop-in turn-by-turn navigation `NavigationViewController`, or build a completely custom turn-by-turn navigation app with our core components for routing and navigation.
 
 ## Features
 
-* A full-fledged turn-by-turn navigation UI ready to drop into your application
+* A full-fledged turn-by-turn navigation UI for iPhone, iPad, and CarPlay that’s ready to drop into your application
 * [Professionally designed map styles](https://www.mapbox.com/maps/) for daytime and nighttime driving
 * Worldwide driving, cycling, and walking directions powered by [open data](https://www.mapbox.com/about/open/) and user feedback
 * Traffic avoidance and proactive rerouting based on current conditions in [over 30 countries](https://www.mapbox.com/api-documentation/pages/traffic-countries.html)
@@ -38,7 +38,7 @@ To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
 
 1. Create a [Podfile](https://guides.cocoapods.org/syntax/podfile.html) with the following specification:
    ```ruby
-   pod 'MapboxNavigation', '~> 0.20'
+   pod 'MapboxNavigation', '~> 0.21'
    ```
 
 1. Run `pod repo update && pod install` and open the resulting Xcode workspace.
@@ -49,7 +49,7 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
 
 1. Create a [Cartfile](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#github-repositories) with the following dependency:
    ```cartfile
-   github "mapbox/mapbox-navigation-ios" ~> 0.20
+   github "mapbox/mapbox-navigation-ios" ~> 0.21
    ```
 
 1. Run `carthage update --platform iOS` to build just the iOS dependencies.

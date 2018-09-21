@@ -1,11 +1,3 @@
-//
-//  NavigationLocationManagerTests.swift
-//  MapboxCoreNavigationTests
-//
-//  Created by Bobby Sudekum on 6/15/18.
-//  Copyright © 2018 Mapbox. All rights reserved.
-//
-
 import XCTest
 import MapboxCoreNavigation
 

@@ -1,3 +1,63 @@
+/* Delimiter between lines in an address when displayed inline */
+"ADDRESS_LINE_SEPARATOR" = ", ";
+
+/* Title on arrival action sheet */
+"CARPLAY_ARRIVED" = "Đã đến nơi rồi";
+
+/* Message on arrival action sheet */
+"CARPLAY_ARRIVED_MESSAGE" = "Bạn muốn làm gì?";
+
+/* Title on continue button in CarPlay */
+"CARPLAY_CONTINUE" = "Đi tiếp";
+
+/* Name of the waypoint associated with the current location */
+"CARPLAY_CURRENT_LOCATION" = "Vị trí Hiện tại";
+
+/* Title for dismiss button */
+"CARPLAY_DISMISS" = "Bỏ qua";
+
+/* Title for end navigation button */
+"CARPLAY_END" = "Kết thúc";
+
+/* Title on the exit button in the arrival form */
+"CARPLAY_EXIT_NAVIGATION" = "Thoát Điều hướng";
+
+/* Title for feedback template in CarPlay */
+"CARPLAY_FEEDBACK" = "Phản hồi";
+
+/* Title for start button in CPTripPreviewTextConfiguration */
+"CARPLAY_GO" = "Đi";
+
+/* Title for alternative routes in CPTripPreviewTextConfiguration */
+"CARPLAY_MORE_ROUTES" = "Thêm Đường đi";
+
+/* Title for mute button */
+"CARPLAY_MUTE" = "Tắt Tiếng";
+
+/* CPNavigationAlert OK button title */
+"CARPLAY_OK" = "OK";
+
+/* Title for overview button in CPTripPreviewTextConfiguration */
+"CARPLAY_OVERVIEW" = "Tóm tắt";
+
+/* Title for rating template in CarPlay */
+"CARPLAY_RATE_RIDE" = "Đánh giá chuyến đi của bạn";
+
+/* Title on rate button in CarPlay */
+"CARPLAY_RATE_TRIP" = "Đánh giá chuyến đi của bạn";
+
+/* Message when search returned zero results in CarPlay */
+"CARPLAY_SEARCH_NO_RESULTS" = "Không tìm thấy kết quả";
+
+/* Title in search template when search is unimplemented */
+"CARPLAY_SEARCH_NOT_IMPLEMENTED" = "Không có chức năng tìm kiếm";
+
+/* Alert title that shows when feedback has been submitted */
+"CARPLAY_SUBMITTED_FEEDBACK" = "Đã gửi";
+
+/* Title for unmute button */
+"CARPLAY_UNMUTE" = "Bật Tiếng";
+
 /* Format string for indicating the device volume is low; 1 = device model */
 "DEVICE_VOLUME_LOW" = "Âm lượng %@ Đang Thấp";
 

@@ -85,10 +85,11 @@ open class EventsManager: NSObject {
     }
     
     func navigationCancelEvent(rating potentialRating: Int? = nil, comment: String? = nil) -> EventDetails {
+        
         let rating = potentialRating ?? MMEEventsManager.unrated
         var event = EventDetails(dataSource: dataSource, session: sessionState)
         event.event = MMEEventTypeNavigationCancel
-        event.arrivalTimestamp = sessionState.arrivalTimestamp
+        event.arrivalTimestamp = sessionState?.arrivalTimestamp
         
         let validRating: Bool = (rating >= MMEEventsManager.unrated && rating <= 100)
         assert(validRating, "MMEEventsManager: Invalid Rating. Values should be between \(MMEEventsManager.unrated) (none) and 100.")
@@ -115,8 +116,8 @@ open class EventsManager: NSObject {
     func navigationFeedbackEventWithLocationsAdded(event: CoreFeedbackEvent) -> [String: Any] {
         var eventDictionary = event.eventDictionary
         eventDictionary["feedbackId"] = event.id.uuidString
-        eventDictionary["locationsBefore"] = sessionState.pastLocations.allObjects.filter { $0.timestamp <= event.timestamp}.map {$0.dictionaryRepresentation}
-        eventDictionary["locationsAfter"] = sessionState.pastLocations.allObjects.filter {$0.timestamp > event.timestamp}.map {$0.dictionaryRepresentation}
+        eventDictionary["locationsBefore"] = sessionState?.pastLocations.allObjects.filter { $0.timestamp <= event.timestamp}.map {$0.dictionaryRepresentation}
+        eventDictionary["locationsAfter"] = sessionState?.pastLocations.allObjects.filter {$0.timestamp > event.timestamp}.map {$0.dictionaryRepresentation}
         return eventDictionary
     }
     
@@ -138,7 +139,11 @@ open class EventsManager: NSObject {
         
         var event = EventDetails(dataSource: dataSource, session: sessionState)
         event.event = eventType
-        event.secondsSinceLastReroute = sessionState.lastRerouteDate != nil ? round(timestamp.timeIntervalSince(sessionState.lastRerouteDate!)) : -1
+        if let lastRerouteDate = sessionState?.lastRerouteDate {
+            event.secondsSinceLastReroute = round(timestamp.timeIntervalSince(lastRerouteDate))
+        } else {
+            event.secondsSinceLastReroute = -1
+        }
         
         
         // These are placeholders until the route controller's RouteProgress is updated after rerouting
@@ -217,9 +222,9 @@ extension EventsManager {
     @discardableResult
     func enqueueFoundFasterRouteEvent() -> String {
         let timestamp = Date()
-        let eventDictionary = try! navigationRerouteEvent(eventType: FasterRouteFoundEvent).asDictionary()
+        let eventDictionary = try! navigationRerouteEvent().asDictionary()
         
-        sessionState.lastRerouteDate = timestamp
+        sessionState?.lastRerouteDate = timestamp
         
         let event = RerouteEvent(timestamp: Date(), eventDictionary: eventDictionary)
         
@@ -260,7 +265,7 @@ extension EventsManager {
      
      You can then call `updateFeedback(uuid:type:source:description:)` with the returned feedback UUID to attach any additional metadata to the feedback.
      */
-    @objc public func recordFeedback(type: FeedbackType = .general, description: String? = nil) -> UUID {
+    @objc public func recordFeedback(type: FeedbackType = .general, description: String? = nil) -> UUID? {
         return enqueueFeedbackEvent(type: type, description: description)
     }
     
@@ -286,17 +291,17 @@ extension EventsManager {
     
     //MARK: - Session State Management
     @objc private func didChangeOrientation(_ notification: NSNotification) {
-        sessionState.reportChange(to: UIDevice.current.orientation)
+        sessionState?.reportChange(to: UIDevice.current.orientation)
     }
     
     @objc private func didChangeApplicationState(_ notification: NSNotification) {
-        sessionState.reportChange(to: UIApplication.shared.applicationState)
+        sessionState?.reportChange(to: UIApplication.shared.applicationState)
     }
     
     @objc private func applicationWillTerminate(_ notification: NSNotification) {
-        if !sessionState.terminated {
+        if sessionState?.terminated == false {
             sendCancelEvent(rating: nil, comment: nil)
-            sessionState.terminated = true
+            sessionState?.terminated = true
         }
         
         sendOutstandingFeedbackEvents(forceAll: true)
@@ -320,14 +325,14 @@ extension EventsManager {
     }
     
     @objc func update(progress: RouteProgress) {
-        if sessionState.departureTimestamp == nil {
-            sessionState.departureTimestamp = Date()
+        if sessionState?.departureTimestamp == nil {
+            sessionState?.departureTimestamp = Date()
             sendDepartEvent()
         }
         
-        if sessionState.arrivalTimestamp == nil,
+        if sessionState?.arrivalTimestamp == nil,
             progress.currentLegProgress.userHasArrivedAtWaypoint {
-            sessionState.arrivalTimestamp = Date()
+            sessionState?.arrivalTimestamp = Date()
             sendArriveEvent()
         }
         

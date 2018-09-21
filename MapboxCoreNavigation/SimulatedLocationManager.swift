@@ -55,6 +55,17 @@ open class SimulatedLocationManager: NavigationLocationManager {
         }
     }
     
+    open override func copy() -> Any {
+        let copy = SimulatedLocationManager(route: route!)
+        copy.currentDistance = currentDistance
+        copy.simulatedLocation = simulatedLocation
+        copy.currentSpeed = currentSpeed
+        copy.locations = locations
+        copy.routeLine = routeLine
+        copy.speedMultiplier = speedMultiplier
+        return copy
+    }
+    
     var routeProgress: RouteProgress?
     
     /**

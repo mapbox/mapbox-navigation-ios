@@ -38,7 +38,8 @@ class LeaksSpec: QuickSpec {
             let route = initialRoute
             
             let navigationViewController = LeakTest {
-                return NavigationViewController(for: route, voiceController: FakeVoiceController())
+                let service = NavigationService(route: Route, eventsManagerType: TestNavigationEventsManager.self)
+                return NavigationViewController(for: route, navigationService: service, voiceController: FakeVoiceController())
             }
             
             it("must not leak") {

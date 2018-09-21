@@ -4,15 +4,11 @@ import CoreLocation
 import UIKit
 #endif
 
-#if os(iOS)
-import UIKit
-#endif
-
 /**
  `NavigationLocationManager` is the base location manager which handles permissions and background modes.
  */
 @objc(MBNavigationLocationManager)
-open class NavigationLocationManager: CLLocationManager {
+open class NavigationLocationManager: CLLocationManager{
     
     override public init() {
         super.init()

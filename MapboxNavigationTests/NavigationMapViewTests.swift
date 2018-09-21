@@ -1,16 +1,45 @@
-//
-//  NavigationMapViewTests.swift
-//  MapboxNavigationTests
-//
-//  Created by Bobby Sudekum on 6/14/18.
-//  Copyright © 2018 Mapbox. All rights reserved.
-//
-
 import XCTest
 @testable import MapboxNavigation
+@testable import MapboxCoreNavigation
 import MapboxDirections
 
-class NavigationMapViewTests: XCTestCase {
+class NavigationMapViewTests: XCTestCase, MGLMapViewDelegate {
+    
+    let response = Fixture.JSONFromFileNamed(name: "route-with-instructions")
+    var styleLoadingExpectation: XCTestExpectation?
+    var mapView: NavigationMapView?
+    
+    lazy var route: Route = {
+        let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String: Any]
+        let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
+        let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
+        let route     = Route(json: jsonRoute, waypoints: [waypoint1, waypoint2], options: NavigationRouteOptions(waypoints: [waypoint1, waypoint2]))
+        route.accessToken = "foo"
+        return route
+    }()
+    
+    override func setUp() {
+        super.setUp()
+        
+        mapView = NavigationMapView(frame: CGRect(origin: .zero, size: .iPhone6Plus), styleURL: Fixture.blankStyle)
+        mapView!.delegate = self
+        if mapView!.style == nil {
+            styleLoadingExpectation = expectation(description: "Style Loaded Expectation")
+            waitForExpectations(timeout: 1, handler: nil)
+        }
+    }
+    
+    override func tearDown() {
+        styleLoadingExpectation = nil
+        mapView = nil
+        super.tearDown()
+    }
+    
+    func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
+        XCTAssertNotNil(mapView.style)
+        XCTAssertEqual(mapView.style, style)
+        styleLoadingExpectation!.fulfill()
+    }
     
     let coordinates: [CLLocationCoordinate2D] = [
         CLLocationCoordinate2D(latitude: 0, longitude: 0),
@@ -60,4 +89,23 @@ class NavigationMapViewTests: XCTestCase {
         XCTAssertEqual(congestionSegmentsSevere[1].1, .severe)
         XCTAssertEqual(congestionSegmentsSevere[2].1, .low)
     }
+    
+    func testRemoveWaypointsDoesNotRemoveUserAnnotations() {
+        XCTAssertNil(mapView!.annotations)
+        mapView!.addAnnotation(MGLPointAnnotation())
+        mapView!.addAnnotation(PersistentAnnotation())
+        XCTAssertEqual(mapView!.annotations!.count, 2)
+        
+        mapView!.showWaypoints(route)
+        XCTAssertEqual(mapView!.annotations!.count, 3)
+        
+        mapView!.removeWaypoints()
+        XCTAssertEqual(mapView!.annotations!.count, 2)
+        
+        // Clean up
+        mapView!.removeAnnotations(mapView!.annotations ?? [])
+        XCTAssertNil(mapView!.annotations)
+    }
 }
+
+class PersistentAnnotation: MGLPointAnnotation { }

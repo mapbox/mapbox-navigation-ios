@@ -22,12 +22,12 @@ protocol RouteControllerDataSource: class {
 open class RouteController: NSObject, Router {
     
 
-    enum DefaultBehavior {
-        static let shouldRerouteFromLocation: Bool = true
-        static let shouldDiscardLocation: Bool = true
-        static let didArriveAtWaypoint: Bool = true
-        static let shouldPreventReroutesWhenArrivingAtWaypoint: Bool = true
-        static let shouldDisableBatteryMonitoring: Bool = true
+    public enum DefaultBehavior {
+        public static let shouldRerouteFromLocation: Bool = true
+        public static let shouldDiscardLocation: Bool = true
+        public static let didArriveAtWaypoint: Bool = true
+        public static let shouldPreventReroutesWhenArrivingAtWaypoint: Bool = true
+        public static let shouldDisableBatteryMonitoring: Bool = true
         
     }
     

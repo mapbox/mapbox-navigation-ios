@@ -1,10 +1,33 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## master
+
+`StyleManagerDelegate.locationFor(styleManager:)` has been renamed to `StyleManagerDelegate.location(for:)`  ([#1724](https://github.com/mapbox/mapbox-navigation-ios/pull/1724))
+
+## v0.21.0 (September 17, 2018)
+
+### User interface
+
+* In CarPlay-enabled applications on iOS 12, this SDK now displays a map, search interface, and turn-by-turn navigation experience on the connected CarPlay device. The CarPlay screen is managed by the shared `CarPlayManager` object, which you can configure by implementing the `CarPlayManagerDelegate` protocol. ([#1714](https://github.com/mapbox/mapbox-navigation-ios/pull/1714))
+* Added the `Style.previewMapStyleURL` property for customizing the style displayed by a preview map. ([#1695](https://github.com/mapbox/mapbox-navigation-ios/pull/1695))
+
+### User location
+
+* Breaking change: The `eventsManager` argument of `RouteController(along:directions:locationManager:eventsManager:)` is now required. `NavigationViewController(for:directions:styles:locationManager:voiceController:eventsManager:)` now has an optional `eventsManager` argument, which is passed to any instance of `RouteController` created as a result of rerouting. ([#1671](https://github.com/mapbox/mapbox-navigation-ios/pull/1671))
+* Fixed issues where the user puck would overshoot a turn or drift away from a curved road. ([#1710](https://github.com/mapbox/mapbox-navigation-ios/pull/1710))
+* Fixed incorrect conversions to inches in `DistanceFormatter`. ([#1699](https://github.com/mapbox/mapbox-navigation-ios/pull/1699))
+* Fixed several crashes related to telemetry collection. ([#1668](https://github.com/mapbox/mapbox-navigation-ios/pull/1668))
+
+## v0.20.1 (September 10, 2018)
+
+* Upgraded mapbox-events-ios to v0.5.0 to avoid a potential incompatibility when using Carthage to install the SDK.
+* Fixed a bug which prevented automatic day and night style switching. ([#1629](https://github.com/mapbox/mapbox-navigation-ios/pull/1629))
+
 ## v0.20.0 (September 6, 2018)
 
 ### User interface
 
-* While traveling on a numbered road, the route number is displayed in a shield beside the current road name at the bottom of the map. ([#1576](https://github.com/mapbox/mapbox-navigation-ios/pull/1576)) 
+* While traveling on a numbered road, the route number is displayed in a shield beside the current road name at the bottom of the map. ([#1576](https://github.com/mapbox/mapbox-navigation-ios/pull/1576))
 * Added the `shouldManageApplicationIdleTimer` flag to `NavigationViewController` to allow applications to opt out of automatic `UIApplication.isIdleTimerDisabled` management. ([#1591](https://github.com/mapbox/mapbox-navigation-ios/pull/1591))
 * Added various methods, properties, and initializers to `StatusView`, allowing you to use it in a custom user interface. ([#1612](https://github.com/mapbox/mapbox-navigation-ios/pull/1612))
 * Added `StyleManager.automaticallyAdjustsStyleForTimeOfDay`, `StyleManager.delegate`, and `StyleManager.styles` properties so that you can control same time-based style switching just as `NavigationViewController` does. [#1617](https://github.com/mapbox/mapbox-navigation-ios/pull/1617)

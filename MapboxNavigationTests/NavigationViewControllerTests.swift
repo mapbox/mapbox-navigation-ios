@@ -16,7 +16,7 @@ class NavigationViewControllerTests: XCTestCase {
 
         let fakeVoice: RouteVoiceController = FakeVoiceController()
         let fakeDirections = Directions(accessToken: "garbage", host: nil)
-        let fakeService = MapboxNavigationService(route: initialRoute, directions: fakeDirections, locationSource: NavigationLocationManagerFake(), simulating: .never)
+        let fakeService = MapboxNavigationService(route: initialRoute, directions: fakeDirections, locationSource: NavigationLocationManagerFake(), eventsManagerType: TestNavigationEventsManager.self, simulating: .never)
         let navigationViewController = NavigationViewController(for: initialRoute, navigationService: fakeService, voiceController: fakeVoice)
         
         navigationViewController.delegate = self
@@ -83,8 +83,8 @@ class NavigationViewControllerTests: XCTestCase {
         service.locationManager!(service.locationManager, didUpdateLocations: [taylorStreetLocation])
         
         let wayNameView = (navigationViewController.mapViewController?.navigationView.wayNameView)!
-        let currentRoadName = wayNameView.text!
-        XCTAssertEqual(currentRoadName, roadName, "Expected: \(roadName); Actual: \(currentRoadName)")
+        let currentRoadName = wayNameView.text
+        XCTAssertEqual(currentRoadName, roadName, "Expected: \(roadName); Actual: \(String(describing: currentRoadName))")
         XCTAssertFalse(wayNameView.isHidden, "WayNameView should be visible.")
     }
     
@@ -153,7 +153,7 @@ class NavigationViewControllerTests: XCTestCase {
             XCTFail("UI Failed to consume progress update. The chain from location update -> progress update generation -> progress update consumption is broken somewhere.")
             return
         }
-        XCTAssertEqual(currentRoadName, roadName, "Expected: \(roadName); Actual: \(currentRoadName)")
+        XCTAssertEqual(currentRoadName, roadName, "Expected: \(roadName); Actual: \(String(describing:currentRoadName))")
         XCTAssertTrue(wayNameView.isHidden, "WayNameView should be hidden.")
     }
     
@@ -182,10 +182,14 @@ class NavigationViewControllerTests: XCTestCase {
         //wait for the style to load -- routes won't show without it.
         wait(for: [styleLoaded], timeout: 5)
         navigationViewController.route = initialRoute
+
+        runUntil({
+            return !navigationViewController.mapView!.annotations!.isEmpty
+        })
         
-        let firstDestination = initialRoute.routeOptions.waypoints.last!.coordinate
         guard let annotations = navigationViewController.mapView?.annotations else { return XCTFail("Annotations not found.")}
 
+        let firstDestination = initialRoute.routeOptions.waypoints.last!.coordinate
         let destinations = annotations.filter(annotationFilter(matching: firstDestination))
         XCTAssert(!destinations.isEmpty, "Destination annotation does not exist on map")
     
@@ -211,7 +215,7 @@ class NavigationViewControllerTests: XCTestCase {
 }
 
 extension NavigationViewControllerTests: NavigationViewControllerDelegate, StyleManagerDelegate {
-    func locationFor(styleManager: StyleManager) -> CLLocation? {
+    func location(for styleManager: StyleManager) -> CLLocation? {
         return dependencies.poi.first!
     }
     
@@ -270,6 +274,7 @@ class NavigationViewControllerTestable: NavigationViewController {
     required init?(coder aDecoder: NSCoder) {
         fatalError("This initalizer is not supported in this testing subclass.")
     }
+
 }
 
 class TestableDayStyle: DayStyle {
@@ -282,6 +287,10 @@ class TestableDayStyle: DayStyle {
 
 class FakeVoiceController: RouteVoiceController {
     override func speak(_ instruction: SpokenInstruction) {
+        //no-op
+    }
+    
+    override func pauseSpeechAndPlayReroutingDing(notification: NSNotification) {
         //no-op
     }
 }

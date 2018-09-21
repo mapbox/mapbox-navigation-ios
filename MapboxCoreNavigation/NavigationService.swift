@@ -20,6 +20,7 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
     var router: Router! { get }
     var eventsManager: EventsManager! { get }
     var route: Route { get set }
+    var simulationMode: SimulationOption { get }
     weak var delegate: NavigationServiceDelegate? { get set }
     
     func start()
@@ -43,7 +44,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
     private var simulatedLocationSource: SimulatedLocationManager?
     
     private var poorGPSTimer: CountdownTimer!
-    private let simulationMode: SimulationOption
+    public let simulationMode: SimulationOption
     private var isSimulating: Bool { return simulatedLocationSource != nil }
     
     @objc convenience init(route: Route) {
@@ -307,15 +308,16 @@ extension MapboxNavigationService {
 
 fileprivate extension EventsManager {
     func incrementDistanceTraveled(by distance: CLLocationDistance) {
-       sessionState.totalDistanceCompleted += distance
+       sessionState?.totalDistanceCompleted += distance
     }
     
     func arriveAtWaypoint() {
-        sessionState.departureTimestamp = nil
-        sessionState.arrivalTimestamp = nil
+        sessionState?.departureTimestamp = nil
+        sessionState?.arrivalTimestamp = nil
     }
     
     func record(locations: [CLLocation]) {
-        locations.forEach(sessionState.pastLocations.push(_:))
+        guard let state = sessionState else { return }
+        locations.forEach(state.pastLocations.push(_:))
     }
 }

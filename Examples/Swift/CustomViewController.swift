@@ -33,7 +33,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
         super.viewDidLoad()
         
         let locationManager = simulateLocation ? SimulatedLocationManager(route: userRoute!) : NavigationLocationManager()
-        navigationService = MapboxNavigationService(route: userRoute!, locationSource: locationManager)
+        navigationService = MapboxNavigationService(route: userRoute!, locationSource: locationManager, simulating: simulateLocation ? .always : .onPoorGPS)
 
         
         mapView.delegate = self
