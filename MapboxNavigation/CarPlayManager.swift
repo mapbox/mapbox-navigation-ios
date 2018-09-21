@@ -435,7 +435,7 @@ extension CarPlayManager: CPListTemplateDelegate {
                 completionHandler()
             }
 
-            guard let `self` = self, let mapTemplate = mapTemplate else {
+            guard let strongSelf = self, let mapTemplate = mapTemplate else {
                 return
             }
             if let error = error {
@@ -457,9 +457,9 @@ extension CarPlayManager: CPListTemplateDelegate {
 
             let routeChoices = routes.map { (route) -> CPRouteChoice in
                 let summaryVariants = [
-                    self.fullDateComponentsFormatter.string(from: route.expectedTravelTime)!,
-                    self.shortDateComponentsFormatter.string(from: route.expectedTravelTime)!,
-                    self.briefDateComponentsFormatter.string(from: route.expectedTravelTime)!
+                    strongSelf.fullDateComponentsFormatter.string(from: route.expectedTravelTime)!,
+                    strongSelf.shortDateComponentsFormatter.string(from: route.expectedTravelTime)!,
+                    strongSelf.briefDateComponentsFormatter.string(from: route.expectedTravelTime)!
                 ]
                 let routeChoice = CPRouteChoice(summaryVariants: summaryVariants, additionalInformationVariants: [route.description], selectionSummaryVariants: [route.description])
                 routeChoice.userInfo = route
@@ -476,7 +476,7 @@ extension CarPlayManager: CPListTemplateDelegate {
             let overviewTitle = NSLocalizedString("CARPLAY_OVERVIEW", bundle: .mapboxNavigation, value: "Overview", comment: "Title for overview button in CPTripPreviewTextConfiguration")
             let defaultPreviewText = CPTripPreviewTextConfiguration(startButtonTitle: goTitle, additionalRoutesButtonTitle: alternativeRoutesTitle, overviewButtonTitle: overviewTitle)
 
-            let previewMapTemplate = self.mapTemplate(forPreviewing: trip)
+            let previewMapTemplate = strongSelf.mapTemplate(forPreviewing: trip)
             interfaceController.pushTemplate(previewMapTemplate, animated: true)
 
             previewMapTemplate.showTripPreviews([trip], textConfiguration: defaultPreviewText)
