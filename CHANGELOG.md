@@ -2,7 +2,8 @@
 
 ## master
 
-`StyleManagerDelegate.locationFor(styleManager:)` has been renamed to `StyleManagerDelegate.location(for:)`  ([#1724](https://github.com/mapbox/mapbox-navigation-ios/pull/1724))
+* `StyleManagerDelegate.locationFor(styleManager:)` has been renamed to `StyleManagerDelegate.location(for:)`  ([#1724](https://github.com/mapbox/mapbox-navigation-ios/pull/1724))
+* Fixed inaccurate maneuver arrows along the route line when the route doubles back on itself. ([#1735](https://github.com/mapbox/mapbox-navigation-ios/pull/1735))
 
 ## v0.21.0 (September 17, 2018)
 
