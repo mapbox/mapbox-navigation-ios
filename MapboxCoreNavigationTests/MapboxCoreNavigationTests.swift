@@ -134,7 +134,7 @@ class MapboxCoreNavigationTests: XCTestCase {
         }
         route.accessToken = "foo"
         let directionsClientSpy = DirectionsSpy(accessToken: "garbage", host: nil)
-        navigation = MapboxNavigationService(route: route, directions: directions, eventsManagerType: TestNavigationEventsManager.self, simulating: .never)
+        navigation = MapboxNavigationService(route: route, directions: directionsClientSpy, eventsManagerType: TestNavigationEventsManager.self, simulating: .never)
 
         expectation(forNotification: .routeControllerWillReroute, object: navigation.router) { (notification) -> Bool in
             return true
