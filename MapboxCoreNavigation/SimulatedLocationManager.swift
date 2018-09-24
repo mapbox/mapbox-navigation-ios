@@ -29,7 +29,7 @@ fileprivate class SimulatedLocation: CLLocation {
  */
 @objc(MBSimulatedLocationManager)
 open class SimulatedLocationManager: NavigationLocationManager {
-    fileprivate var currentDistance: CLLocationDistance = 0
+    internal var currentDistance: CLLocationDistance = 0
     fileprivate var currentLocation = CLLocation()
     fileprivate var currentSpeed: CLLocationSpeed = 30
     
@@ -137,7 +137,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
         }
     }
     
-    @objc fileprivate func tick() {
+    @objc internal func tick() {
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(tick), object: nil)
         
         let polyline = Polyline(routeLine)

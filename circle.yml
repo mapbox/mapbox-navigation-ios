@@ -73,7 +73,7 @@ step-library:
   - &install-dependencies
       run:
         name: Install Dependencies
-        command: carthage bootstrap --platform ios --cache-builds --configuration Release --no-use-binaries
+        command: carthage bootstrap --platform ios --cache-builds --configuration Debug --no-use-binaries
 
   - &build-test-MapboxCoreNavigation-ios-11
       run:
