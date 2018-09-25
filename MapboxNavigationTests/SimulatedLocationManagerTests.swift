@@ -13,17 +13,7 @@ class SimulatedLocationManagerTests: FBSnapshotTestCase {
     }
 
     func testSimulateRouteDoublesBack() {
-        let filePath = Bundle(for: SimulatedLocationManagerTests.self).path(forResource: "sthlm-double-back", ofType: "json")
-        let url = URL(fileURLWithPath: filePath!)
-        let data = try! Data(contentsOf: url)
-        let json = try! JSONSerialization.jsonObject(with: data, options: []) as! JSONDictionary
-        
-        let coordinates = (0...16).map { _ in CLLocationCoordinate2D(latitude: 0, longitude: 0) }
-        let options = MatchOptions(coordinates: coordinates, profileIdentifier: .automobile)
-        let response = options.response(containingRoutesFrom: json)
-        
-        let route = response.1![0]
-        
+        let route = Fixture.routesFromMatches(at: "sthlm-double-back")![0]
         let locationManager = SimulatedLocationManager(route: route)
         let locationManagerSpy = SimulatedLocationManagerSpy()
         locationManager.delegate = locationManagerSpy

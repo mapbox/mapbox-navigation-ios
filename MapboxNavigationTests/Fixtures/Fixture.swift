@@ -1,7 +1,7 @@
 import XCTest
 import Foundation
-import MapboxDirections
 import CoreLocation
+@testable import MapboxDirections
 
 internal class Fixture {
     internal class func stringFromFileNamed(name: String) -> String {
@@ -61,6 +61,19 @@ internal class Fixture {
         let response = JSONFromFileNamed(name: jsonFile)
         let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String : Any]
         return Route(json: jsonRoute, waypoints: waypoints, options: RouteOptions(waypoints: waypoints))
+    }
+    
+    // Returns `Route` objects from a match response
+    class func routesFromMatches(at filePath: String) -> [Route]? {
+        let path = Bundle(for: Fixture.self).path(forResource: filePath, ofType: "json")
+        let url = URL(fileURLWithPath: path!)
+        let data = try! Data(contentsOf: url)
+        let json = try! JSONSerialization.jsonObject(with: data, options: []) as! JSONDictionary
+        let tracepoints = json["tracepoints"] as! [Any]
+        let coordinates = (0...tracepoints.count-1).map { _ in CLLocationCoordinate2D(latitude: 0, longitude: 0) }
+        let options = MatchOptions(coordinates: coordinates, profileIdentifier: .automobile)
+        let response = options.response(containingRoutesFrom: json)
+        return response.1
     }
 
     class func routeWithBannerInstructions() -> Route {
