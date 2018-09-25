@@ -129,7 +129,7 @@ class RouteMapViewController: UIViewController {
         mapView.contentInset = contentInsets
         view.layoutIfNeeded()
 
-        mapView.tracksUserCourse = true
+        mapView.showsUserCourse = true
         instructionsBannerView.swipeable = true
 
         distanceFormatter.numberFormatter.locale = .nationalizedCurrent
@@ -156,7 +156,7 @@ class RouteMapViewController: UIViewController {
         navigationView.muteButton.isSelected = NavigationSettings.shared.voiceMuted
         mapView.compassView.isHidden = true
 
-        mapView.tracksUserCourse = true
+        mapView.showsUserCourse = true
 
         if let camera = pendingCamera {
             mapView.camera = camera
@@ -206,7 +206,7 @@ class RouteMapViewController: UIViewController {
     }
 
     @objc func recenter(_ sender: AnyObject) {
-        mapView.tracksUserCourse = true
+        mapView.showsUserCourse = true
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
         isInOverviewMode = false
 
@@ -295,7 +295,7 @@ class RouteMapViewController: UIViewController {
                 mapView.setOverheadCameraView(from: userLocation, along: coordinates, for: overheadInsets)
             }
         } else {
-            mapView.tracksUserCourse = true
+            mapView.showsUserCourse = true
             navigationView.wayNameView.isHidden = true
         }
 
@@ -367,7 +367,7 @@ class RouteMapViewController: UIViewController {
     }
 
     func updateCameraAltitude(for routeProgress: RouteProgress) {
-        guard mapView.tracksUserCourse else { return } //only adjust when we are actively tracking user course
+        guard mapView.showsUserCourse else { return } //only adjust when we are actively tracking user course
 
         let zoomOutAltitude = mapView.zoomedOutMotorwayAltitude
         let defaultAltitude = mapView.defaultAltitude
@@ -495,7 +495,7 @@ class RouteMapViewController: UIViewController {
 
         guard duration > 0.0 else { return noAnimation() }
 
-        navigationView.mapView.tracksUserCourse = false
+        navigationView.mapView.showsUserCourse = false
         UIView.animate(withDuration: duration, delay: 0.0, options: [.curveLinear], animations: animate, completion: completion)
 
         guard let height = navigationView.endOfRouteHeightConstraint?.constant else { return }
@@ -582,7 +582,7 @@ extension RouteMapViewController: NavigationViewDelegate {
     // MARK: MGLMapViewDelegate
     func mapView(_ mapView: MGLMapView, regionDidChangeAnimated animated: Bool) {
         var userTrackingMode = mapView.userTrackingMode
-        if let mapView = mapView as? NavigationMapView, mapView.tracksUserCourse {
+        if let mapView = mapView as? NavigationMapView, mapView.showsUserCourse {
             userTrackingMode = .followWithCourse
         }
         if userTrackingMode == .none && !isInOverviewMode {
@@ -1000,7 +1000,7 @@ extension RouteMapViewController: StepsViewControllerDelegate {
         }
 
         mapView.enableFrameByFrameCourseViewTracking(for: 1)
-        mapView.tracksUserCourse = false
+        mapView.showsUserCourse = false
         mapView.setCenter(upcomingStep.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: upcomingStep.initialHeading!, animated: true, completionHandler: nil)
 
         guard isViewLoaded && view.window != nil else { return }
