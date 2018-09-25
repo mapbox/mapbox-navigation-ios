@@ -122,7 +122,14 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
     
-    
+    open override var userTrackingMode: MGLUserTrackingMode {
+        didSet {
+            if userTrackingMode == .followWithCourse && showsUserCourse {
+                startUserCourseTracking()
+            }
+        }
+    }
+
     /**
      Center point of the user course view in screen coordinates relative to the map view.
      - seealso: NavigationMapViewDelegate.navigationMapViewUserAnchorPoint(_:)
@@ -153,12 +160,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     open var showsUserCourse: Bool = false {
         didSet {
             if showsUserCourse {
-                if userTrackingMode == .followWithCourse {
-                    showsUserLocation = false
-                }
-                enableFrameByFrameCourseViewTracking(for: 3)
-                altitude = defaultAltitude
-                courseTrackingDelegate?.navigationMapViewDidStartTrackingCourse?(self)
+                startUserCourseTracking()
             } else {
                 courseTrackingDelegate?.navigationMapViewDidStopTrackingCourse?(self)
             }
@@ -168,6 +170,16 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
 
+    func startUserCourseTracking() {
+        if userTrackingMode != .followWithCourse {
+            return
+        }
+        showsUserLocation = false
+        enableFrameByFrameCourseViewTracking(for: 3)
+        altitude = defaultAltitude
+        courseTrackingDelegate?.navigationMapViewDidStartTrackingCourse?(self)
+    }
+    
     /**
      A `UIView` used to indicate the user’s location and course on the map.
      

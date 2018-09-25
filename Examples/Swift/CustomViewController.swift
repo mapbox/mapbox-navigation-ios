@@ -52,22 +52,26 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
         resumeNotifications()
 
         // Start navigation
-        navigationService.start()
-        
-        // Center map on user
-        mapView.recenterMap()
+        startNavigation()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         // This applies a default style to the top banner.
         DayStyle().apply()
+        startNavigation()
     }
 
     deinit {
         suspendNotifications()
     }
 
+    func startNavigation() {
+        navigationService.start()
+        mapView.showsUserCourse = true
+        mapView.userTrackingMode = .followWithCourse
+    }
+    
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_ :)), name: .routeControllerProgressDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(rerouted(_:)), name: .routeControllerDidReroute, object: nil)

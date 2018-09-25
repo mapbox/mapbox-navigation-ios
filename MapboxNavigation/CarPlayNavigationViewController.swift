@@ -56,6 +56,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         self.navService = navigationService
         self.mapTemplate = mapTemplate
         self.carInterfaceController = interfaceController
+        self.showsUserCourse = false
         
         super.init(nibName: nil, bundle: nil)
         carFeedbackTemplate = createFeedbackUI()
@@ -88,8 +89,10 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         
         makeGestureRecognizersResetFrameRate()
         resumeNotifications()
+
         navService.start()
-        mapView.recenterMap()
+        mapView.showsUserCourse = true
+        mapView.userTrackingMode = .followWithCourse
     }
     
     override public func viewWillDisappear(_ animated: Bool) {
@@ -155,20 +158,14 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
      When this property is true, the map follows the user’s location and rotates when their course changes. Otherwise, the map shows an overview of the route.
      */
     @objc public var showsUserCourse: Bool {
-        get {
-            return mapView?.showsUserCourse ?? false
-        }
-        set {
-            let progress = navService.routeProgress
-            if !showsUserCourse && newValue {
-                mapView?.recenterMap()
-                mapView?.addArrow(route: progress.route,
-                                 legIndex: progress.legIndex,
-                                 stepIndex: progress.currentLegProgress.stepIndex + 1)
-            } else if showsUserCourse && !newValue {
-                guard let userLocation = self.navService.location?.coordinate else {
-                    return
-                }
+        didSet {
+            guard let progress = navService.router else { return }
+            mapView?.showsUserCourse = showsUserCourse
+            
+            if showsUserCourse {
+                mapView?.userTrackingMode = .followWithCourse
+            } else {
+                guard let userLocation = progress.location?.coordinate else { return }
                 mapView?.enableFrameByFrameCourseViewTracking(for: 3)
                 mapView?.setOverheadCameraView(from: userLocation, along: progress.route.coordinates!, for: self.edgePadding)
             }
