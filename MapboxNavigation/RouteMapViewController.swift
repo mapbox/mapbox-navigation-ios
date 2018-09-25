@@ -129,6 +129,7 @@ class RouteMapViewController: UIViewController {
         mapView.contentInset = contentInsets
         view.layoutIfNeeded()
 
+        mapView.userTrackingMode = .followWithCourse
         mapView.showsUserCourse = true
         instructionsBannerView.swipeable = true
 
@@ -156,6 +157,7 @@ class RouteMapViewController: UIViewController {
         navigationView.muteButton.isSelected = NavigationSettings.shared.voiceMuted
         mapView.compassView.isHidden = true
 
+        mapView.userTrackingMode = .followWithCourse
         mapView.showsUserCourse = true
 
         if let camera = pendingCamera {
@@ -206,6 +208,7 @@ class RouteMapViewController: UIViewController {
     }
 
     @objc func recenter(_ sender: AnyObject) {
+        mapView.userTrackingMode = .followWithCourse
         mapView.showsUserCourse = true
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
         isInOverviewMode = false
@@ -295,6 +298,7 @@ class RouteMapViewController: UIViewController {
                 mapView.setOverheadCameraView(from: userLocation, along: coordinates, for: overheadInsets)
             }
         } else {
+            mapView.userTrackingMode = .followWithCourse
             mapView.showsUserCourse = true
             navigationView.wayNameView.isHidden = true
         }
