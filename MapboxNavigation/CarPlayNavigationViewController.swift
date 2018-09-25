@@ -154,18 +154,18 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
      
      When this property is true, the map follows the user’s location and rotates when their course changes. Otherwise, the map shows an overview of the route.
      */
-    @objc public var tracksUserCourse: Bool {
+    @objc public var showsUserCourse: Bool {
         get {
-            return mapView?.tracksUserCourse ?? false
+            return mapView?.showsUserCourse ?? false
         }
         set {
             let progress = navService.routeProgress
-            if !tracksUserCourse && newValue {
+            if !showsUserCourse && newValue {
                 mapView?.recenterMap()
                 mapView?.addArrow(route: progress.route,
                                  legIndex: progress.legIndex,
                                  stepIndex: progress.currentLegProgress.stepIndex + 1)
-            } else if tracksUserCourse && !newValue {
+            } else if showsUserCourse && !newValue {
                 guard let userLocation = self.navService.location?.coordinate else {
                     return
                 }
@@ -176,7 +176,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     }
     
     public func beginPanGesture() {
-        mapView?.tracksUserCourse = false
+        mapView?.showsUserCourse = false
         mapView?.enableFrameByFrameCourseViewTracking(for: 1)
     }
     
