@@ -188,7 +188,8 @@ import Nimble
 @available(iOS 12.0, *)
 class CarPlayManagerSpec: QuickSpec {
     override func spec() {
-
+        // NOTE: Xcode is going to complain here - ignore. This is a known XCTest bug.
+        guard #available(iOS 12, *) else { return }
         var manager: CarPlayManager?
         var delegate: TestCarPlayManagerDelegate?
 
