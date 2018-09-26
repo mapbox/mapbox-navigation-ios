@@ -154,7 +154,8 @@ class ViewController: UIViewController, MGLMapViewDelegate {
 
         let locationManager = ReplayLocationManager(locations: Array<CLLocation>.locations(from: filePath))
 
-        let navigationViewController = NavigationViewController(for: route, locationManager: locationManager)
+        let navigationService = MapboxNavigationService(route: route, locationSource: locationManager)
+        let navigationViewController = NavigationViewController(for: route, navigationService: navigationService)
 
         present(navigationViewController, animated: true, completion: nil)
     }
@@ -205,7 +206,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     func startBasicNavigation() {
         guard let route = routes?.first else { return }
 
-        let navigationViewController = NavigationViewController(for: route, locationManager: navigationLocationManager())
+        let navigationViewController = NavigationViewController(for: route, navigationService: navigationService())
         navigationViewController.delegate = self
         
         presentAndRemoveMapview(navigationViewController)
@@ -214,7 +215,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     func startNavigation(styles: [Style]) {
         guard let route = routes?.first else { return }
         
-        let navigationViewController = NavigationViewController(for: route, styles: styles, locationManager: navigationLocationManager())
+        let navigationViewController = NavigationViewController(for: route, styles: styles, navigationService: navigationService())
         navigationViewController.delegate = self
         
         presentAndRemoveMapview(navigationViewController)
@@ -243,15 +244,17 @@ class ViewController: UIViewController, MGLMapViewDelegate {
 
         let styles = [CustomDayStyle(), CustomNightStyle()]
 
-        let navigationViewController = NavigationViewController(for: route, styles: styles, locationManager: navigationLocationManager())
+        let navigationViewController = NavigationViewController(for: route, styles: styles, navigationService: navigationService())
         navigationViewController.delegate = self
 
         presentAndRemoveMapview(navigationViewController)
     }
 
-    func navigationLocationManager() -> NavigationLocationManager {
-        guard let route = routes?.first else { return NavigationLocationManager() }
-        return simulationButton.isSelected ? SimulatedLocationManager(route: route) : NavigationLocationManager()
+    func navigationService() -> NavigationService? {
+        guard let route = routes?.first else { return nil }
+        let simulate = simulationButton.isSelected
+        let option: SimulationOption = simulate ? .always : .onPoorGPS
+        return MapboxNavigationService(route: route, simulating: option)
     }
 
     func presentAndRemoveMapview(_ navigationViewController: NavigationViewController) {
@@ -346,11 +349,14 @@ extension ViewController: VoiceControllerDelegate {
 extension ViewController: WaypointConfirmationViewControllerDelegate {
     func confirmationControllerDidConfirm(_ confirmationController: WaypointConfirmationViewController) {
         confirmationController.dismiss(animated: true, completion: {
-            guard let navigationViewController = self.presentedViewController as? NavigationViewController else { return }
+            guard let navigationViewController = self.presentedViewController as? NavigationViewController,
+                  let navService = navigationViewController.navigationService else { return }
 
-            guard navigationViewController.routeController.routeProgress.route.legs.count > navigationViewController.routeController.routeProgress.legIndex + 1 else { return }
-            navigationViewController.routeController.routeProgress.legIndex += 1
-            navigationViewController.routeController.resume()
+            let router = navService.router!
+            guard router.route.legs.count > router.routeProgress.legIndex + 1 else { return }
+            
+            router.routeProgress.legIndex += 1
+            navService.start()
         })
     }
 }
@@ -366,7 +372,7 @@ extension ViewController: NavigationViewControllerDelegate {
         // This type of screen could show information about a destination, pickup/dropoff confirmation, instructions upon arrival, etc.
         
         //If we're not in a "Multiple Stops" demo, show the normal EORVC
-        if navigationViewController.routeController.routeProgress.isFinalLeg {
+        if navigationViewController.navigationService.router.routeProgress.isFinalLeg {
             return true
         }
         

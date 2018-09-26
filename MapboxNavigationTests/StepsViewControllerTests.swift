@@ -3,6 +3,22 @@ import MapboxDirections
 @testable import MapboxCoreNavigation
 @testable import MapboxNavigation
 
+
+class RouteControllerDataSourceFake: RouterDataSource {
+    
+    let manager = NavigationLocationManager()
+    
+    var location: CLLocation? {
+        return manager.location
+    }
+    
+    var locationProvider: NavigationLocationManager.Type {
+        return type(of: manager)
+    }
+    
+    
+}
+
 class StepsViewControllerTests: XCTestCase {
     
     struct Constants {
@@ -14,8 +30,9 @@ class StepsViewControllerTests: XCTestCase {
         
         let bogusToken = "pk.feedCafeDeadBeefBadeBede"
         let directions = Directions(accessToken: bogusToken)
-
-        let routeController = RouteController(along: initialRoute, directions: directions, eventsManager: TestNavigationEventsManager())
+        let dataSource = RouteControllerDataSourceFake()
+        
+        let routeController = RouteController(along: initialRoute, directions: directions, dataSource: dataSource)
         
         let stepsViewController = StepsViewController(routeProgress: routeController.routeProgress)
         
@@ -40,10 +57,10 @@ class StepsViewControllerTests: XCTestCase {
         
         let stepsViewController = dependencies.stepsViewController
 
-        measure {
-            // Measure Performance - stepsViewController.rebuildDataSourceIfNecessary()
-            XCTAssertNotNil(stepsViewController.view, "StepsViewController not initiated properly")
-        }
+        XCTAssertNotNil(stepsViewController.view, "StepsViewController not initiated properly")
+//        measure {
+//            // Measure Performance - stepsViewController.rebuildDataSourceIfNecessary()
+//        }
         
         let containsStepsTableView = stepsViewController.view.subviews.contains(stepsViewController.tableView)
         XCTAssertTrue(containsStepsTableView, "StepsViewController does not have a table subview")

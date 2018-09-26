@@ -2,45 +2,45 @@ import Foundation
 import MapboxCoreNavigation
 import MapboxDirections
 
-class RouteControllerDelegateSpy: RouteControllerDelegate {
+class NavigationServiceDelegateSpy: NavigationServiceDelegate {
     private(set) var recentMessages: [String] = []
 
     public func reset() {
         recentMessages.removeAll()
     }
 
-    internal func routeController(_ routeController: RouteController, shouldRerouteFrom location: CLLocation) -> Bool {
+    internal func navigationService(_ service: NavigationService, shouldRerouteFrom location: CLLocation) -> Bool {
         recentMessages.append(#function)
         return true
     }
 
-    internal func routeController(_ routeController: RouteController, willRerouteFrom location: CLLocation) {
+    internal func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {
         recentMessages.append(#function)
     }
 
-    internal func routeController(_ routeController: RouteController, shouldDiscard location: CLLocation) -> Bool {
+    internal func navigationService(_ service: NavigationService, shouldDiscard location: CLLocation) -> Bool {
         recentMessages.append(#function)
         return true
     }
 
-    internal func routeController(_ routeController: RouteController, didRerouteAlong route: Route) {
+    internal func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
         recentMessages.append(#function)
     }
 
-    internal func routeController(_ routeController: RouteController, didFailToRerouteWith error: Error) {
+    internal func navigationService(_ service: NavigationService, didFailToRerouteWith error: Error) {
         recentMessages.append(#function)
     }
 
-    internal func routeController(_ routeController: RouteController, didUpdate locations: [CLLocation]) {
+    internal func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         recentMessages.append(#function)
     }
 
-    internal func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) -> Bool {
+    internal func navigationService(_ service: NavigationService, didArriveAt waypoint: Waypoint) -> Bool {
         recentMessages.append(#function)
         return true
     }
     
-    internal func routeController(_ routeController: RouteController, shouldPreventReroutesWhenArrivingAt waypoint: Waypoint) -> Bool {
+    internal func navigationService(_ service: NavigationService, shouldPreventReroutesWhenArrivingAt waypoint: Waypoint) -> Bool {
         recentMessages.append(#function)
         return true
     }

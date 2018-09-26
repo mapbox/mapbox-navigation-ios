@@ -7,16 +7,25 @@ import MapboxDirections
  
  `SessionState` is a struct that stores all memoized statistics that we later send to the telemetry engine.
  */
+
+@objc public protocol EventsManagerDataSource: class {
+    var routeProgress: RouteProgress { get }
+    var usesDefaultUserInterface: Bool { get set }
+    var location: CLLocation? { get }
+    var desiredAccuracy: CLLocationAccuracy { get }
+    var locationProvider: NavigationLocationManager.Type { get }
+}
+
 @objc(MBEventsManager)
 open class EventsManager: NSObject {
     
-    @objc public var manager = MMEEventsManager.shared()
+    @objc public var manager: MMEEventsManager = .shared()
     
-    var sessionState: SessionState?
+    var sessionState: SessionState!
     
     var outstandingFeedbackEvents = [CoreFeedbackEvent]()
     
-    weak var routeController: Router?
+    unowned var dataSource: EventsManagerDataSource
     
     /// :nodoc: This is used internally when the navigation UI is being used
     var usesDefaultUserInterface = false
@@ -33,7 +42,8 @@ open class EventsManager: NSObject {
         return token
     }()
     
-    @objc public init(accessToken possibleToken: String? = nil) {
+    @objc public required init(dataSource source: EventsManagerDataSource, accessToken possibleToken: String? = nil) {
+        dataSource = source
         super.init()
         if let tokenOverride = possibleToken {
             accessToken = tokenOverride
@@ -74,17 +84,10 @@ open class EventsManager: NSObject {
         manager.sendTurnstileEvent()
     }
     
-    func navigationCancelEvent(rating potentialRating: Int? = nil, comment: String? = nil) -> EventDetails? {
-        guard let routeController = routeController else {
-            return nil
-        }
-        
-        guard var event = EventDetails.defaultEvents(router: routeController) else {
-            return nil
-        }
+    func navigationCancelEvent(rating potentialRating: Int? = nil, comment: String? = nil) -> EventDetails {
         
         let rating = potentialRating ?? MMEEventsManager.unrated
-        
+        var event = EventDetails(dataSource: dataSource, session: sessionState)
         event.event = MMEEventTypeNavigationCancel
         event.arrivalTimestamp = sessionState?.arrivalTimestamp
         
@@ -98,28 +101,14 @@ open class EventsManager: NSObject {
         return event
     }
     
-    func navigationDepartEvent() -> EventDetails? {
-        guard let routeController = routeController else {
-            return nil
-        }
-        
-        guard var event = EventDetails.defaultEvents(router: routeController) else {
-            return nil
-        }
-        
+    func navigationDepartEvent() -> EventDetails {
+        var event = EventDetails(dataSource: dataSource, session: sessionState)
         event.event = MMEEventTypeNavigationDepart
         return event
     }
     
-    func navigationArriveEvent() -> EventDetails? {
-        guard let routeController = routeController else {
-            return nil
-        }
-        
-        guard var event = EventDetails.defaultEvents(router: routeController) else {
-            return nil
-        }
-        
+    func navigationArriveEvent() -> EventDetails {
+        var event = EventDetails(dataSource: dataSource, session: sessionState)
         event.event = MMEEventTypeNavigationArrive
         return event
     }
@@ -132,15 +121,8 @@ open class EventsManager: NSObject {
         return eventDictionary
     }
     
-    func navigationFeedbackEvent(type: FeedbackType, description: String?) -> EventDetails? {
-        guard let routeController = routeController else {
-            return nil
-        }
-        
-        guard var event = EventDetails.defaultEvents(router: routeController) else {
-            return nil
-        }
-        
+    func navigationFeedbackEvent(type: FeedbackType, description: String?) -> EventDetails {
+        var event = EventDetails(dataSource: dataSource, session: sessionState)
         event.event = MMEEventTypeNavigationFeedback
         
         event.userId = UIDevice.current.identifierForVendor?.uuidString
@@ -152,17 +134,10 @@ open class EventsManager: NSObject {
         return event
     }
     
-    func navigationRerouteEvent(eventType: String = MMEEventTypeNavigationReroute) -> EventDetails? {
-        guard let routeController = routeController else {
-            return nil
-        }
-        
-        guard var event = EventDetails.defaultEvents(router: routeController) else {
-            return nil
-        }
-        
+    func navigationRerouteEvent(eventType: String = MMEEventTypeNavigationReroute) -> EventDetails {
         let timestamp = Date()
         
+        var event = EventDetails(dataSource: dataSource, session: sessionState)
         event.event = eventType
         if let lastRerouteDate = sessionState?.lastRerouteDate {
             event.secondsSinceLastReroute = round(timestamp.timeIntervalSince(lastRerouteDate))
@@ -184,22 +159,20 @@ open class EventsManager: NSObject {
 extension EventsManager {
     
     func sendDepartEvent() {
-        guard let departEvent = navigationDepartEvent(),
-              let attributes = try? departEvent.asDictionary() else { return }
+        guard let attributes = try? navigationDepartEvent().asDictionary() else { return }
         manager.enqueueEvent(withName: MMEEventTypeNavigationDepart, attributes: attributes)
         manager.flush()
     }
     
     
     func sendArriveEvent() {
-        guard let arriveEvent = navigationArriveEvent(), let attributes = try? arriveEvent.asDictionary() else { return }
+        guard let attributes = try? navigationArriveEvent().asDictionary() else { return }
         manager.enqueueEvent(withName: MMEEventTypeNavigationArrive, attributes: attributes)
         manager.flush()
     }
     
     func sendCancelEvent(rating: Int? = nil, comment: String? = nil) {
-        guard routeController != nil else { return }
-        guard let cancelEvent = navigationCancelEvent(rating: rating, comment: comment), let attributes = try? cancelEvent.asDictionary() else { return }
+        guard let attributes = try? navigationCancelEvent(rating: rating, comment: comment).asDictionary() else { return }
         manager.enqueueEvent(withName: MMEEventTypeNavigationCancel, attributes: attributes)
         manager.flush()
     }
@@ -219,26 +192,20 @@ extension EventsManager {
         manager.flush()
     }
     
-    func enqueueFeedbackEvent(type: FeedbackType, description: String?) -> UUID? {
-        guard let feedbackEvent = navigationFeedbackEvent(type: type, description: description) else {
-            return nil
-        }
-        let eventDictionary = try! feedbackEvent.asDictionary()
+    func enqueueFeedbackEvent(type: FeedbackType, description: String?) -> UUID {
+        let eventDictionary = try! navigationFeedbackEvent(type: type, description: description).asDictionary()
         let event = FeedbackEvent(timestamp: Date(), eventDictionary: eventDictionary)
         outstandingFeedbackEvents.append(event)
         return event.id
     }
     
-    func enqueueRerouteEvent() -> String? {
-        guard let rerouteEvent = navigationRerouteEvent() else {
-            return nil
-        }
-        
+    @discardableResult
+    func enqueueRerouteEvent() -> String {
         let timestamp = Date()
-        let eventDictionary = try! rerouteEvent.asDictionary()
+        let eventDictionary = try! navigationRerouteEvent().asDictionary()
         
-        sessionState?.lastRerouteDate = timestamp
-        sessionState?.numberOfReroutes += 1
+        sessionState.lastRerouteDate = timestamp
+        sessionState.numberOfReroutes += 1
         
         let event = RerouteEvent(timestamp: Date(), eventDictionary: eventDictionary)
         
@@ -248,18 +215,14 @@ extension EventsManager {
     }
     
     func resetSession() {
-        guard let route = routeController?.routeProgress.route else {
-            return
-        }
+        let route = dataSource.routeProgress.route
         sessionState = SessionState(currentRoute: route, originalRoute: route)
     }
     
-    func enqueueFoundFasterRouteEvent() -> String? {
-        guard let rerouteEvent = navigationRerouteEvent(eventType: FasterRouteFoundEvent) else {
-            return nil
-        }
+    @discardableResult
+    func enqueueFoundFasterRouteEvent() -> String {
         let timestamp = Date()
-        let eventDictionary = try! rerouteEvent.asDictionary()
+        let eventDictionary = try! navigationRerouteEvent().asDictionary()
         
         sessionState?.lastRerouteDate = timestamp
         
@@ -344,12 +307,21 @@ extension EventsManager {
         sendOutstandingFeedbackEvents(forceAll: true)
     }
     
-    func reportReroute(newRoute: Route, proactive: Bool) {
+    func reportReroute(progress: RouteProgress, proactive: Bool) {
+        let route = progress.route
+        
+        // if the user has already arrived and a new route has been set, restart the navigation session
+        if sessionState.arrivalTimestamp != nil {
+            resetSession()
+        } else {
+            sessionState.currentRoute = route
+        }
+        
         if (proactive) {
-            _ = enqueueFoundFasterRouteEvent()
+            enqueueFoundFasterRouteEvent()
         }
         let latestReroute = outstandingFeedbackEvents.compactMap({ $0 as? RerouteEvent }).last
-        latestReroute?.update(newRoute: newRoute)
+        latestReroute?.update(newRoute: route)
     }
     
     @objc func update(progress: RouteProgress) {

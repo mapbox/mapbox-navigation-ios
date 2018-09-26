@@ -79,7 +79,6 @@
                         <outlet property="howToBeginLabel" destination="Hk0-SM-2Wl" id="iU7-G1-DBc"/>
                         <outlet property="mapView" destination="A3N-JT-loC" id="iZS-hq-X5f"/>
                         <outlet property="toggleNavigationButton" destination="8Sl-bV-xyU" id="LwJ-MX-oWU"/>
-                        <segue destination="dYn-UD-FHX" kind="presentation" identifier="StartNavigation" id="CX3-Eh-kHD"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -91,14 +90,6 @@
                 </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="24.800000000000001" y="35.532233883058474"/>
-        </scene>
-        <!--Navigation-->
-        <scene sceneID="Cg8-0l-4UG">
-            <objects>
-                <viewControllerPlaceholder storyboardName="Navigation" bundleIdentifier="com.mapbox.MapboxNavigation" id="dYn-UD-FHX" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="RhK-y2-JnK" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="646" y="35"/>
         </scene>
     </scenes>
 </document>

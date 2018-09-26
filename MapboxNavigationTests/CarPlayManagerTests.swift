@@ -17,13 +17,13 @@ class CarPlayManagerTests: XCTestCase {
 
     var eventsManagerSpy: MMEEventsManagerSpy {
         get {
-            return manager!.eventsManager.manager as! MMEEventsManagerSpy
+            return manager!.eventsManager as! MMEEventsManagerSpy
         }
     }
 
     override func setUp() {
         manager = CarPlayManager.shared
-        manager!.eventsManager = TestNavigationEventsManager()
+        manager!.eventsManager = MMEEventsManagerSpy()
     }
 
     override func tearDown() {
@@ -39,7 +39,9 @@ class CarPlayManagerTests: XCTestCase {
     }
 
     func testEventsEnqueuedAndFlushedWhenCarPlayConnected() {
+        // NOTE: Xcode is going to complain here - ignore. This is a known XCTest bug.
         guard #available(iOS 12, *) else { return }
+
 
         simulateCarPlayConnection(manager!)
 
@@ -51,6 +53,7 @@ class CarPlayManagerTests: XCTestCase {
     }
 
     func testEventsEnqueuedAndFlushedWhenCarPlayDisconnected() {
+        // NOTE: Xcode is going to complain here - ignore. This is a known XCTest bug.
         guard #available(iOS 12, *) else { return }
 
         simulateCarPlayDisconnection()
@@ -63,8 +66,7 @@ class CarPlayManagerTests: XCTestCase {
     // MARK: Upon connecting to CarPlay, window and interfaceController should be set up correctly
 
     func testWindowAndIntefaceControllerAreSetUpWithSearchWhenConnected() {
-        // This line results in a warning, but is necessary as XCTest ignores the enclosing @available directive.
-        // Not sure how to suppress the generated warning here, but this is currently needed for backwards compatibility
+        // NOTE: Xcode is going to complain here - ignore. This is a known XCTest bug.
         guard #available(iOS 12, *) else { return }
 
         simulateCarPlayConnection(manager!)
@@ -89,6 +91,7 @@ class CarPlayManagerTests: XCTestCase {
     }
 
     func testManagerAsksDelegateForLeadingAndTrailingBarButtonsIfAvailable() {
+        // NOTE: Xcode is going to complain here - ignore. This is a known XCTest bug.
         guard #available(iOS 12, *) else { return }
 
         let exampleDelegate = TestCarPlayManagerDelegate()
@@ -110,6 +113,7 @@ class CarPlayManagerTests: XCTestCase {
     }
 
     func testManagerAsksDelegateForMapButtonsIfAvailable() {
+        // NOTE: Xcode is going to complain here - ignore. This is a known XCTest bug.
         guard #available(iOS 12, *) else { return }
 
         let exampleDelegate = TestCarPlayManagerDelegate()
@@ -129,6 +133,7 @@ class CarPlayManagerTests: XCTestCase {
     }
 
     func testManagerTellsDelegateWhenNavigationStartsAndEndsDueToArrival() {
+        // NOTE: Xcode is going to complain here - ignore. This is a known XCTest bug.
         guard #available(iOS 12, *) else { return }
 
         guard let manager = manager else {
@@ -183,8 +188,8 @@ import Nimble
 @available(iOS 12.0, *)
 class CarPlayManagerSpec: QuickSpec {
     override func spec() {
+        // NOTE: Xcode is going to complain here - ignore. This is a known XCTest bug.
         guard #available(iOS 12, *) else { return }
-
         var manager: CarPlayManager?
         var delegate: TestCarPlayManagerDelegate?
 
@@ -217,8 +222,9 @@ class CarPlayManagerSpec: QuickSpec {
                     action()
 
                     expect(delegate!.navigationInitiated).to(beTrue())
-                    expect(delegate!.currentRouteController?.locationManager).to(beAnInstanceOf(SimulatedLocationManager.self))
-                    expect((delegate!.currentRouteController?.locationManager as! SimulatedLocationManager).speedMultiplier).to(equal(5.0))
+                    let locator: NavigationLocationManager = delegate!.currentService!.locationManager
+                    expect(locator).to(beAnInstanceOf(SimulatedLocationManager.self))
+                    expect((locator as! SimulatedLocationManager).speedMultiplier).to(equal(5.0))
                 }
             })
 
@@ -231,7 +237,8 @@ class CarPlayManagerSpec: QuickSpec {
                     action()
 
                     expect(delegate!.navigationInitiated).to(beTrue())
-                    expect(delegate!.currentRouteController?.locationManager).to(beAnInstanceOf(NavigationLocationManager.self))
+                    let locator: NavigationLocationManager = delegate!.currentService!.locationManager
+                    expect(locator).to(beAnInstanceOf(NavigationLocationManager.self))
                 }
             })
         })
@@ -244,7 +251,7 @@ class CarPlayManagerSpec: QuickSpec {
 class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
 
     public fileprivate(set) var navigationInitiated = false
-    public fileprivate(set) var currentRouteController: RouteController?
+    public fileprivate(set) var currentService: NavigationService?
     public fileprivate(set) var navigationEnded = false
 
     public var leadingBarButtons: [CPBarButton]?
@@ -263,16 +270,16 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
         return mapButtons
     }
 
-    func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith routeController: RouteController) {
+    func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith service: NavigationService) {
         XCTAssertFalse(navigationInitiated)
         navigationInitiated = true
-        currentRouteController = routeController
+        currentService = service
     }
 
     func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
         XCTAssertTrue(navigationInitiated)
         navigationEnded = true
-        currentRouteController = nil
+        currentService = nil
     }
 }
 

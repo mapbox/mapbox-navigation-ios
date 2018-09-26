@@ -36,10 +36,11 @@ extension AppDelegate: CPApplicationDelegate {
 extension AppDelegate: CarPlayManagerDelegate {
     
     // MARK: CarPlayManagerDelegate
-    func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith routeController: RouteController) {
-        guard let window = window else { return }
-        NavigationViewController.carPlayManager(carPlayManager, didBeginNavigationWith:routeController, window: window)
+    func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith service: NavigationService) {
+        guard let window = self.window else { return }
+        NavigationViewController.carPlayManager(carPlayManager, didBeginNavigationWith: service, window: window)
     }
+
     
     func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
         // Dismiss NavigationViewController if it's present in the navigation stack
