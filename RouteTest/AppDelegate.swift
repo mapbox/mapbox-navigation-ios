@@ -27,8 +27,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, NavigationViewControllerD
         // Bundled Route
         let route = Fixture.route(from: "downtown-sf")
         
-        let locationManager = SimulatedLocationManager(route: route)
-        let controller = NavigationViewController(for: route, directions: Directions.shared, styles: nil, locationManager: locationManager)
+        let directions = Directions(accessToken: "deadbeef", host: nil)
+        let navigationService = MapboxNavigationService(route: route, directions: directions, simulating: .always)
+        let controller = NavigationViewController(for: route, navigationService: navigationService)
         controller.delegate = self
         window?.rootViewController = controller
     }
