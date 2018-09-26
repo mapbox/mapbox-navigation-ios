@@ -57,10 +57,10 @@ class StepsViewControllerTests: XCTestCase {
         
         let stepsViewController = dependencies.stepsViewController
 
-        measure {
-            // Measure Performance - stepsViewController.rebuildDataSourceIfNecessary()
-            XCTAssertNotNil(stepsViewController.view, "StepsViewController not initiated properly")
-        }
+        XCTAssertNotNil(stepsViewController.view, "StepsViewController not initiated properly")
+//        measure {
+//            // Measure Performance - stepsViewController.rebuildDataSourceIfNecessary()
+//        }
         
         let containsStepsTableView = stepsViewController.view.subviews.contains(stepsViewController.tableView)
         XCTAssertTrue(containsStepsTableView, "StepsViewController does not have a table subview")
