@@ -99,10 +99,10 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     /**
      The events manager used to send feedback events.
      */
-    public var eventsManager: EventsManager
+    public weak var eventsManager: EventsManager?
     
     var uuid: UUID? {
-        return eventsManager.recordFeedback()
+        return eventsManager?.recordFeedback()
     }
     
     /**
@@ -119,7 +119,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     }
     
     required public init?(coder aDecoder: NSCoder) {
-        eventsManager = aDecoder.decodeObject(of: [EventsManager.self], forKey: "EventsManager") as? EventsManager ?? EventsManager(accessToken: nil)
+        eventsManager = aDecoder.decodeObject(of: [EventsManager.self], forKey: "EventsManager") as? EventsManager
         super.init(coder: aDecoder)
         commonInit()
     }
@@ -229,9 +229,9 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     }
     
     func send(_ item: FeedbackItem) {
-        if let uuid = uuid {
+        if let uuid = self.uuid {
             delegate?.feedbackViewController?(self, didSend: item, uuid: uuid)
-            eventsManager.updateFeedback(uuid: uuid, type: item.feedbackType, source: .user, description: nil)
+            eventsManager?.updateFeedback(uuid: uuid, type: item.feedbackType, source: .user, description: nil)
         }
         
         guard let parent = presentingViewController else {
@@ -246,11 +246,9 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     
     func dismissFeedbackItem() {
         delegate?.feedbackViewControllerDidCancel?(self)
-
-        if let uuid = uuid {
-            eventsManager.cancelFeedback(uuid: uuid)
+        if let uuid = self.uuid {
+            eventsManager?.cancelFeedback(uuid: uuid)
         }
-   
         dismiss(animated: true, completion: nil)
     }
 }

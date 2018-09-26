@@ -13,7 +13,7 @@
 @property (nonatomic, assign) CLLocationCoordinate2D destination;
 @property (nonatomic) MBDirections *directions;
 @property (nonatomic) MBRoute *route;
-@property (nonatomic) MBRouteController *navigation;
+@property (nonatomic) MBNavigationService *navigation;
 @property (nonatomic) NSLengthFormatter *lengthFormatter;
 @end
 
@@ -26,11 +26,12 @@
     
     self.lengthFormatter = [[NSLengthFormatter alloc] init];
     self.lengthFormatter.unitStyle = NSFormattingUnitStyleShort;
+    self.directions = [MBDirections sharedDirections];
     
     [self resumeNotifications];
 }
 - (void)viewDidAppear:(BOOL)animated {
-    [self.navigation resume];
+    [self.navigation start];
     [super viewDidAppear:animated];
 }
 
@@ -38,7 +39,7 @@
     [super viewDidDisappear:animated];
     
     [self suspendNotifications];
-    [self.navigation suspendLocationUpdates];
+    [self.navigation stop];
 }
 
 - (IBAction)didLongPress:(UILongPressGestureRecognizer *)sender {
@@ -65,7 +66,7 @@
     // If you are using MapboxCoreNavigation,
     // this would be a good time to update UI elements.
     // You can grab the current routeProgress like:
-    // let routeProgress = notification.userInfo![RouteControllerRouteProgressKey] as! RouteProgress
+    // MBRouteProgress *progress = notification.userInfo[MBRouteControllerRouteProgressKey];
 }
 
 - (void)willReroute:(NSNotification *)notification {
@@ -109,26 +110,12 @@
     [task resume];
 }
 
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"StartNavigation"]) {
-        MBNavigationViewController *controller = (MBNavigationViewController *)[segue destinationViewController];
-        
-        controller.directions = [MBDirections sharedDirections];
-        controller.route = self.route;
-        
-        controller.routeController.locationManager = [[MBSimulatedLocationManager alloc] initWithRoute:self.route];
-    }
-}
-
 - (void)startNavigation:(MBRoute *)route {
-    MBSimulatedLocationManager *locationManager = [[MBSimulatedLocationManager alloc] initWithRoute:route];
-    MBNavigationViewController *controller = [[MBNavigationViewController alloc] initWithRoute:route
-                                                                                    directions:[MBDirections sharedDirections]
-                                                                                        styles:nil
-                                                                               routeController:nil
-                                                                               locationManager:locationManager
-                                                                               voiceController:nil
-                                                                                 eventsManager:nil];
+    MBNavigationService *service = [[MBNavigationService alloc ] initWithRoute:route directions:self.directions locationSource:nil eventsManagerType:nil simulating:MBNavigationSimulationOptionsAlways];
+    
+    self.navigation = service;
+    MBNavigationViewController *controller = [[MBNavigationViewController alloc] initWithRoute:route styles:nil navigationService:service voiceController: nil];
+    
     [self presentViewController:controller animated:YES completion:nil];
     
     // Suspend notifications and let `MBNavigationViewController` handle all progress and voice updates.

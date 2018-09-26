@@ -15,14 +15,15 @@ class LaneTests: FBSnapshotTestCase {
     var steps: [RouteStep]!
     var routeProgress: RouteProgress!
     var routeController: RouteController!
-
+    let routerDataSource = RouteControllerDataSourceFake()
+    
     override func setUp() {
         super.setUp()
         recordMode = false
         agnosticOptions = [.OS, .device]
 
         route.accessToken = bogusToken
-        routeController = RouteController(along: route, directions: directions, eventsManager: TestNavigationEventsManager())
+        routeController = RouteController(along: route, directions: directions, dataSource: routerDataSource)
 
         steps = routeController.routeProgress.currentLeg.steps
         routeProgress = routeController.routeProgress

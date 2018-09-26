@@ -39,7 +39,7 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
 }
 
 /**
- The `VoiceControllerDelegate` protocol defines a method that allows an object to customize presented visual instructions.
+ The `VisualInstructionDelegate` protocol defines a method that allows an object to customize presented visual instructions.
  */
 @objc(MBVisualInstructionDelegate)
 public protocol VisualInstructionDelegate: class {

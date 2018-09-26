@@ -75,15 +75,17 @@ public protocol CarPlayManagerDelegate {
     @objc(carPlayManager:mapButtonsCompatibleWithTraitCollection:inTemplate:forActivity:)
     optional func carPlayManager(_ carplayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]?
 
+    
     /**
-     Offers the delegate an opportunity to provide an alternate navigator, otherwise a default built-in RouteController will be created and used.
+     Offers the delegate an opportunity to provide an alternate navigation service, otherwise a default built-in MapboxNavigationService will be created and used.
      
      - parameter carPlayManager: The shared CarPlay manager.
      - parameter route: The route for which the returned route controller will manage location updates.
-     - returns: A route controller that manages location updates along `route`.
+     - returns: A navigation service that manages location updates along `route`.
      */
-    @objc(carPlayManager:routeControllerAlongRoute:)
-    optional func carPlayManager(_ carPlayManager: CarPlayManager, routeControllerAlong route: Route) -> RouteController
+    
+    @objc(carPlayManager:navigationServiceAlongRoute:)
+    optional func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route) -> NavigationService
 
     /**
      Offers the delegate an opportunity to react to updates in the search text.
@@ -115,10 +117,10 @@ public protocol CarPlayManagerDelegate {
      Called when navigation begins so that the containing app can update accordingly.
      
      - parameter carPlayManager: The shared CarPlay manager.
-     - parameter routeController: The route controller that has begun managing location updates for a navigation session.
+     - parameter navigationService: The navigation service that has begun managing location updates for a navigation session.
      */
-    @objc(carPlayManager:didBeginNavigationWithRouteController:)
-    func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith routeController: RouteController) -> ()
+    @objc(carPlayManager:didBeginNavigationWithNavigationService:)
+    func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith service: NavigationService) -> ()
 
     /**
      Called when navigation ends so that the containing app can update accordingly.
@@ -150,7 +152,6 @@ public class CarPlayManager: NSObject {
 
     public fileprivate(set) var interfaceController: CPInterfaceController?
     public fileprivate(set) var carWindow: UIWindow?
-    public fileprivate(set) var routeController: RouteController?
 
     /**
      Developers should assign their own object as a delegate implementing the CarPlayManagerDelegate protocol for customization.
@@ -162,10 +163,15 @@ public class CarPlayManager: NSObject {
      */
     @objc public var simulatesLocations = false
 
+    private weak var navigationService: NavigationService?
     /**
      This property specifies a multiplier to be applied to the user's speed in simulation mode.
      */
-    @objc public var simulatedSpeedMultiplier = 1.0
+    @objc public var simulatedSpeedMultiplier = 1.0 {
+        didSet {
+            navigationService?.simulationSpeedMultiplier = simulatedSpeedMultiplier
+        }
+    }
 
     /**
      The shared CarPlay manager.
@@ -198,7 +204,7 @@ public class CarPlayManager: NSObject {
      */
     @objc public var isConnectedToCarPlay = false
 
-    public var eventsManager = EventsManager()
+    public lazy var eventsManager: MMEEventsManager = .shared()
 
     lazy var fullDateComponentsFormatter: DateComponentsFormatter = {
         let formatter = DateComponentsFormatter()
@@ -221,6 +227,7 @@ public class CarPlayManager: NSObject {
         return formatter
     }()
 }
+
 
 // MARK: CPApplicationDelegate
 @available(iOS 12.0, *)
@@ -334,14 +341,14 @@ extension CarPlayManager: CPApplicationDelegate {
 
     func sendCarPlayConnectEvent(_ timestamp: String) {
         let dateCreatedAttribute = [MMEEventKeyCreated: timestamp]
-        eventsManager.manager.enqueueEvent(withName: MMEventTypeCarplayConnect, attributes: dateCreatedAttribute)
-        eventsManager.manager.flush()
+        eventsManager.enqueueEvent(withName: MMEventTypeCarplayConnect, attributes: dateCreatedAttribute)
+        eventsManager.flush()
     }
 
     func sendCarPlayDisconnectEvent(_ timestamp: String) {
         let dateCreatedAttribute = [MMEEventKeyCreated: timestamp]
-        eventsManager.manager.enqueueEvent(withName: MMEventTypeCarplayDisconnect, attributes: dateCreatedAttribute)
-        eventsManager.manager.flush()
+        eventsManager.enqueueEvent(withName: MMEventTypeCarplayDisconnect, attributes: dateCreatedAttribute)
+        eventsManager.flush()
     }
 
     func resetPanButtons(_ mapTemplate: CPMapTemplate) {
@@ -510,18 +517,17 @@ extension CarPlayManager: CPMapTemplateDelegate {
         mapTemplate.hideTripPreviews()
 
         let route = routeChoice.userInfo as! Route
-        let routeController: RouteController
-        if let routeControllerFromDelegate = delegate?.carPlayManager?(self, routeControllerAlong: route) {
-            routeController = routeControllerFromDelegate
-        } else {
-            routeController = createRouteController(with: route)
-        }
+        let override = delegate?.carPlayManager?(self, navigationServiceAlong: route)
+        let service = override ?? MapboxNavigationService(route: route, simulating: simulatesLocations ? .always : .onPoorGPS)
+        navigationService = service
+        service.simulationSpeedMultiplier = simulatedSpeedMultiplier
+
 
         interfaceController.popToRootTemplate(animated: false)
         let navigationMapTemplate = self.mapTemplate(forNavigating: trip)
         interfaceController.setRootTemplate(navigationMapTemplate, animated: true)
 
-        let navigationViewController = CarPlayNavigationViewController(for: routeController,
+        let navigationViewController = CarPlayNavigationViewController(with: service,
                                                                        mapTemplate: navigationMapTemplate,
                                                                        interfaceController: interfaceController)
         navigationViewController.startNavigationSession(for: trip)
@@ -535,7 +541,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         mapView.removeRoutes()
         mapView.removeWaypoints()
 
-        delegate?.carPlayManager(self, didBeginNavigationWith: routeController)
+        delegate?.carPlayManager(self, didBeginNavigationWith: service)
     }
 
     func mapTemplate(forNavigating trip: CPTrip) -> CPMapTemplate {
@@ -708,15 +714,6 @@ extension CarPlayManager: CPMapTemplateDelegate {
         mapView.setCenter(shiftedCenterCoordinate, animated: true)
     }
 
-    private func createRouteController(with route: Route) -> RouteController {
-        if self.simulatesLocations {
-            let locationManager = SimulatedLocationManager(route: route)
-            locationManager.speedMultiplier = self.simulatedSpeedMultiplier
-            return RouteController(along: route, locationManager: locationManager, eventsManager: eventsManager)
-        } else {
-            return RouteController(along: route, eventsManager: eventsManager)
-        }
-    }
 }
 
 // MARK: CarPlayNavigationDelegate

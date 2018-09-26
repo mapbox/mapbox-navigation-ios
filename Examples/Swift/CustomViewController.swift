@@ -11,7 +11,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
 
     var destination: MGLPointAnnotation!
     let directions = Directions.shared
-    var routeController: RouteController!
+    var navigationService: NavigationService!
     var simulateLocation = false
 
     var userRoute: Route?
@@ -26,14 +26,15 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
     @IBOutlet weak var instructionsBannerView: InstructionsBannerView!
     
     lazy var feedbackViewController: FeedbackViewController = {
-        return FeedbackViewController(eventsManager: routeController.eventsManager)
+        return FeedbackViewController(eventsManager: navigationService.eventsManager)
     }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         let locationManager = simulateLocation ? SimulatedLocationManager(route: userRoute!) : NavigationLocationManager()
-        routeController = RouteController(along: userRoute!, locationManager: locationManager, eventsManager: EventsManager())
+        navigationService = MapboxNavigationService(route: userRoute!, locationSource: locationManager, simulating: simulateLocation ? .always : .onPoorGPS)
+
         
         mapView.delegate = self
         mapView.compassView.isHidden = true
@@ -44,7 +45,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
         resumeNotifications()
 
         // Start navigation
-        routeController.resume()
+        navigationService.start()
         
         // Center map on user
         mapView.recenterMap()
@@ -63,7 +64,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_ :)), name: .routeControllerProgressDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(rerouted(_:)), name: .routeControllerDidReroute, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(updateInstructionsBanner(notification:)), name: .routeControllerDidPassVisualInstructionPoint, object: routeController)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateInstructionsBanner(notification:)), name: .routeControllerDidPassVisualInstructionPoint, object: navigationService.router)
     }
 
     func suspendNotifications() {
@@ -73,7 +74,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
     }
 
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
-        self.mapView.showRoutes([routeController.routeProgress.route])
+        self.mapView.showRoutes([navigationService.route])
     }
 
     // Notifications sent on all location updates
@@ -104,7 +105,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
     // Fired when the user is no longer on the route.
     // Update the route on the map.
     @objc func rerouted(_ notification: NSNotification) {
-        self.mapView.showRoutes([routeController.routeProgress.route])
+        self.mapView.showRoutes([navigationService.route])
     }
 
     @IBAction func cancelButtonPressed(_ sender: Any) {
@@ -124,9 +125,9 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
             controller.dismiss()
             stepsViewController = nil
         } else {
-            guard let routeController = routeController else { return }
+            guard let service = navigationService else { return }
             
-            let controller = StepsViewController(routeProgress: routeController.routeProgress)
+            let controller = StepsViewController(routeProgress: service.routeProgress)
             controller.delegate = self
             addChildViewController(controller)
             view.addSubview(controller.view)

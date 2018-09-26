@@ -8,6 +8,8 @@ import Turf
 
 class RouteControllerSnapshotTests: FBSnapshotTestCase {
 
+    var replayManager: ReplayLocationManager?
+
     override func setUp() {
         super.setUp()
         recordMode = false
@@ -24,8 +26,10 @@ class RouteControllerSnapshotTests: FBSnapshotTestCase {
         let jsonLocations = try! JSONSerialization.jsonObject(with: jsonData, options: []) as! [JSONDictionary]
         let locations = jsonLocations.map { CLLocation(dictionary: $0) }
         let locationManager = ReplayLocationManager(locations: locations)
+        replayManager = locationManager
         locationManager.startDate = Date()
-        let routeController = RouteController(along: route, locationManager: locationManager, eventsManager: EventsManager())
+        let routeController = RouteController(along: route, dataSource: self)
+        locationManager.delegate = routeController
         
         var snappedLocations = [CLLocation]()
         
@@ -41,4 +45,16 @@ class RouteControllerSnapshotTests: FBSnapshotTestCase {
         
         FBSnapshotVerifyView(view)
     }
+}
+
+extension RouteControllerSnapshotTests: RouterDataSource {
+    var location: CLLocation? {
+        return replayManager?.location
+    }
+    
+    var locationProvider: NavigationLocationManager.Type {
+        return NavigationLocationManager.self
+    }
+    
+    
 }
