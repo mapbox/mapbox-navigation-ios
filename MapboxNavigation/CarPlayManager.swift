@@ -152,7 +152,6 @@ public class CarPlayManager: NSObject {
 
     public fileprivate(set) var interfaceController: CPInterfaceController?
     public fileprivate(set) var carWindow: UIWindow?
-    public fileprivate(set) var navService: NavigationService!
 
     /**
      Developers should assign their own object as a delegate implementing the CarPlayManagerDelegate protocol for customization.
@@ -544,6 +543,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let route = routeChoice.userInfo as! Route
         let override = delegate?.carPlayManager?(self, navigationServiceAlong: route)
         let service = override ?? MapboxNavigationService(route: route, simulating: simulatesLocations ? .always : .onPoorGPS)
+        service.simulationSpeedMultiplier = simulatedSpeedMultiplier
 
 
         interfaceController.popToRootTemplate(animated: false)

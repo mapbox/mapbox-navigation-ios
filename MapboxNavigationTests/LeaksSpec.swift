@@ -38,7 +38,7 @@ class LeaksSpec: QuickSpec {
             let route = initialRoute
             
             let navigationViewController = LeakTest {
-                let service = NavigationService(route: Route, eventsManagerType: TestNavigationEventsManager.self)
+                let service = MapboxNavigationService(route: route)
                 return NavigationViewController(for: route, navigationService: service, voiceController: FakeVoiceController())
             }
             

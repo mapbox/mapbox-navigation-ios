@@ -80,37 +80,3 @@ class MMEEventsManagerSpy: MMEEventsManager {
     }
 }
 
-class TestNavigationEventsManager: EventsManager {
-    var fakeSource = EventsDataSourceFake()
-    
-    required init(dataSource source: EventsManagerDataSource, accessToken possibleToken: String?) {
-        //fails with either fake or real source
-       super.init(dataSource: source, accessToken: "deadbeef")
-        self.manager = MMEEventsManagerSpy()
-    }
-}
-
-class EventsDataSourceFake: EventsManagerDataSource {
-    static let jsonRoute = (Fixture.JSONFromFileNamed(name: "routeWithInstructions")["routes"] as! [AnyObject]).first as! [String: Any]
-    
-    let testRoute: Route = {
-        let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
-        let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
-        let route = Route(json: EventsDataSourceFake.jsonRoute, waypoints: [waypoint1, waypoint2], options: NavigationRouteOptions(waypoints: [waypoint1, waypoint2]))
-        route.accessToken = "deadbeef"
-        return route
-    }()
-
-    
-    lazy var routeProgress: RouteProgress = RouteProgress(route: testRoute)
-    
-    var usesDefaultUserInterface: Bool = true
-    
-    var location: CLLocation? = CLLocation(latitude: 0.0, longitude: 0.0)
-    
-    var desiredAccuracy: CLLocationAccuracy = kCLLocationAccuracyBest
-    
-    var locationProvider: NavigationLocationManager.Type = NavigationLocationManager.self
-    
-    
-}

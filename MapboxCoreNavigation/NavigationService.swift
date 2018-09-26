@@ -21,6 +21,7 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
     var eventsManager: EventsManager! { get }
     var route: Route { get set }
     var simulationMode: SimulationOption { get }
+    var simulationSpeedMultiplier: Double { get set }
     weak var delegate: NavigationServiceDelegate? { get set }
     
     func start()
@@ -30,6 +31,7 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
 
 @objc(MBNavigationService)
 public class MapboxNavigationService: NSObject, NavigationService {
+    
     static let poorGPSPatience: DispatchTimeInterval = .milliseconds(1500) //1.5 seconds
     
     public var locationManager: NavigationLocationManager {
@@ -46,6 +48,20 @@ public class MapboxNavigationService: NSObject, NavigationService {
     private var poorGPSTimer: CountdownTimer!
     public let simulationMode: SimulationOption
     private var isSimulating: Bool { return simulatedLocationSource != nil }
+    
+    public var simulationSpeedMultiplier: Double {
+        get {
+            guard simulationMode == .always else { return 1.0 }
+            return simulatedLocationSource?.speedMultiplier ?? 1.0
+        }
+        set {
+            guard simulationMode == .always else { return }
+            _simulationSpeedMultiplier = newValue
+            simulatedLocationSource?.speedMultiplier = newValue
+        }
+    }
+    
+    private var _simulationSpeedMultiplier: Double = 1.0
     
     @objc convenience init(route: Route) {
         self.init(route: route, directions: nil, locationSource: nil, eventsManagerType: nil)
@@ -93,6 +109,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         delegate?.navigationService?(self, willBeginSimulating: progress, becauseOf: intent)
         simulatedLocationSource = SimulatedLocationManager(routeProgress: progress)
         simulatedLocationSource?.delegate = self
+        simulatedLocationSource?.speedMultiplier = _simulationSpeedMultiplier
         simulatedLocationSource?.startUpdatingLocation()
         simulatedLocationSource?.startUpdatingHeading()
         delegate?.navigationService?(self, didBeginSimulating: progress, becauseOf: intent)

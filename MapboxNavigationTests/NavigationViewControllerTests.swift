@@ -16,7 +16,7 @@ class NavigationViewControllerTests: XCTestCase {
 
         let fakeVoice: RouteVoiceController = FakeVoiceController()
         let fakeDirections = Directions(accessToken: "garbage", host: nil)
-        let fakeService = MapboxNavigationService(route: initialRoute, directions: fakeDirections, locationSource: NavigationLocationManagerFake(), eventsManagerType: TestNavigationEventsManager.self, simulating: .never)
+        let fakeService = MapboxNavigationService(route: initialRoute, directions: fakeDirections, locationSource: NavigationLocationManagerFake(), simulating: .never)
         let navigationViewController = NavigationViewController(for: initialRoute, navigationService: fakeService, voiceController: fakeVoice)
         
         navigationViewController.delegate = self
