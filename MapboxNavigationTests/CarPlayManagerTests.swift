@@ -39,6 +39,9 @@ class CarPlayManagerTests: XCTestCase {
     }
 
     func testEventsEnqueuedAndFlushedWhenCarPlayConnected() {
+        // NOTE: Xcode is going to complain here - ignore. This is a known XCTest bug.
+        guard #available(iOS 12, *) else { return }
+
 
         simulateCarPlayConnection(manager!)
 
@@ -50,6 +53,8 @@ class CarPlayManagerTests: XCTestCase {
     }
 
     func testEventsEnqueuedAndFlushedWhenCarPlayDisconnected() {
+        // NOTE: Xcode is going to complain here - ignore. This is a known XCTest bug.
+        guard #available(iOS 12, *) else { return }
 
         simulateCarPlayDisconnection()
 
@@ -61,8 +66,8 @@ class CarPlayManagerTests: XCTestCase {
     // MARK: Upon connecting to CarPlay, window and interfaceController should be set up correctly
 
     func testWindowAndIntefaceControllerAreSetUpWithSearchWhenConnected() {
-        // This line results in a warning, but is necessary as XCTest ignores the enclosing @available directive.
-        // Not sure how to suppress the generated warning here, but this is currently needed for backwards compatibility
+        // NOTE: Xcode is going to complain here - ignore. This is a known XCTest bug.
+        guard #available(iOS 12, *) else { return }
 
         simulateCarPlayConnection(manager!)
 
@@ -86,6 +91,8 @@ class CarPlayManagerTests: XCTestCase {
     }
 
     func testManagerAsksDelegateForLeadingAndTrailingBarButtonsIfAvailable() {
+        // NOTE: Xcode is going to complain here - ignore. This is a known XCTest bug.
+        guard #available(iOS 12, *) else { return }
 
         let exampleDelegate = TestCarPlayManagerDelegate()
         exampleDelegate.leadingBarButtons = [CPBarButton(type: .text), CPBarButton(type: .text)]
@@ -106,6 +113,8 @@ class CarPlayManagerTests: XCTestCase {
     }
 
     func testManagerAsksDelegateForMapButtonsIfAvailable() {
+        // NOTE: Xcode is going to complain here - ignore. This is a known XCTest bug.
+        guard #available(iOS 12, *) else { return }
 
         let exampleDelegate = TestCarPlayManagerDelegate()
         exampleDelegate.mapButtons = [CPMapButton()]
@@ -124,6 +133,9 @@ class CarPlayManagerTests: XCTestCase {
     }
 
     func testManagerTellsDelegateWhenNavigationStartsAndEndsDueToArrival() {
+        // NOTE: Xcode is going to complain here - ignore. This is a known XCTest bug.
+        guard #available(iOS 12, *) else { return }
+
         guard let manager = manager else {
             XCTFail("Won't continue without a test subject...")
             return
