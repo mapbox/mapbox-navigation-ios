@@ -1,0 +1,44 @@
+import XCTest
+import FBSnapshotTestCase
+import Turf
+@testable import MapboxCoreNavigation
+@testable import MapboxNavigation
+@testable import MapboxDirections
+
+
+class RouteControllerSnapshotTests: FBSnapshotTestCase {
+
+    override func setUp() {
+        super.setUp()
+        recordMode = false
+        agnosticOptions = [.OS, .device]
+    }
+    
+    func testRouteSnappingOvershooting() {
+        let route = Fixture.routesFromMatches(at: "sthlm-double-back")![0]
+        
+        let bundle = Bundle(for: RouteControllerSnapshotTests.self)
+        let filePath = bundle.path(forResource: "sthlm-double-back-replay", ofType: "json")
+        let jsonData = try! Data(contentsOf: URL(fileURLWithPath: filePath!))
+        
+        let jsonLocations = try! JSONSerialization.jsonObject(with: jsonData, options: []) as! [JSONDictionary]
+        let locations = jsonLocations.map { CLLocation(dictionary: $0) }
+        let locationManager = ReplayLocationManager(locations: locations)
+        locationManager.startDate = Date()
+        let routeController = RouteController(along: route, locationManager: locationManager, eventsManager: EventsManager())
+        
+        var snappedLocations = [CLLocation]()
+        
+        while snappedLocations.count < locationManager.locations.count {
+            locationManager.tick()
+            snappedLocations.append(routeController.location!)
+        }
+        
+        let view = RoutePlotter(frame: CGRect(origin: .zero, size: CGSize(width: 1000, height: 1000)))
+        view.route = route
+        view.locationPlotters = [LocationPlotter(locations: locations, color: #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 0.5043463908), drawIndexesAsText: true),
+                                 LocationPlotter(locations: snappedLocations, color: #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 0.3969795335), drawIndexesAsText: true)]
+        
+        FBSnapshotVerifyView(view)
+    }
+}

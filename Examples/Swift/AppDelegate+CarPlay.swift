@@ -73,9 +73,9 @@ extension AppDelegate: CarPlayManagerDelegate {
             return [simulationButton]
         case .browsing:
             let favoriteTemplateButton = CPBarButton(type: .image) { [weak self] button in
-                guard let `self` = self else { return }
-                let listTemplate = self.favoritesListTemplate()
-                listTemplate.delegate = self
+                guard let strongSelf = self else { return }
+                let listTemplate = strongSelf.favoritesListTemplate()
+                listTemplate.delegate = strongSelf
                 carPlayManager.interfaceController?.pushTemplate(listTemplate, animated: true)
             }
             favoriteTemplateButton.image = UIImage(named: "carplay_star", in: nil, compatibleWith: traitCollection)

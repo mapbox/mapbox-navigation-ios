@@ -221,22 +221,22 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
         super.speechSynth.stopSpeaking(at: .immediate)
         
         audioQueue.async { [weak self] in
-            guard let `self` = self else { return }
+            guard let strongSelf = self else { return }
             do {
-                self.audioPlayer = try self.audioPlayerType.init(data: data)
-                self.audioPlayer?.prepareToPlay()
-                self.audioPlayer?.delegate = self
-                try self.duckAudio()
-                let played = self.audioPlayer?.play() ?? false
+                strongSelf.audioPlayer = try strongSelf.audioPlayerType.init(data: data)
+                strongSelf.audioPlayer?.prepareToPlay()
+                strongSelf.audioPlayer?.delegate = strongSelf
+                try strongSelf.duckAudio()
+                let played = strongSelf.audioPlayer?.play() ?? false
                 
                 guard played else {
-                    try self.unDuckAudio()
-                    self.speakWithDefaultSpeechSynthesizer(self.lastSpokenInstruction!, error: NSError(code: .spokenInstructionFailed, localizedFailureReason: self.localizedErrorMessage, spokenInstructionCode: .audioPlayerFailedToPlay))
+                    try strongSelf.unDuckAudio()
+                    strongSelf.speakWithDefaultSpeechSynthesizer(strongSelf.lastSpokenInstruction!, error: NSError(code: .spokenInstructionFailed, localizedFailureReason: strongSelf.localizedErrorMessage, spokenInstructionCode: .audioPlayerFailedToPlay))
                     return
                 }
                 
             } catch  let error as NSError {
-                self.speakWithDefaultSpeechSynthesizer(self.lastSpokenInstruction!, error: error)
+                strongSelf.speakWithDefaultSpeechSynthesizer(strongSelf.lastSpokenInstruction!, error: error)
             }
         }
     }

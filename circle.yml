@@ -50,25 +50,18 @@ step-library:
         name: Prepare
         command: |
           git submodule sync
-          brew install carthage
+          if (brew outdated | grep carthage > /dev/null); then brew upgrade carthage; fi
           echo "foo" > ~/.mapbox
 
   - &prepare-iphone6s-plus-ios-11
       run:
         name: Prepare iPhone 6s Plus iOS 11
-        command: xcrun instruments -w "iPhone 6s Plus (11.4) [" || true
+        command: xcrun instruments -w "iPhone 6 Plus (11.4) [" || true
 
   - &prepare-iphone6s-plus-ios-12
       run:
         name: Prepare iPhone 6s Plus iOS 12
-        command: xcrun instruments -w "iPhone 6s Plus (12.0) [" || true
-
-  - &reset-simulators
-      run:
-        name: Reset simulators
-        command: |
-          bundle install
-          SNAPSHOT_FORCE_DELETE=1 bundle exec fastlane snapshot reset_simulators
+        command: xcrun instruments -w "iPhone 6 Plus (12.0) [" || true
 
   - &verify-missing-localizable-strings
       run:
@@ -80,31 +73,31 @@ step-library:
   - &install-dependencies
       run:
         name: Install Dependencies
-        command: carthage bootstrap --platform ios --cache-builds --configuration Release --no-use-binaries
+        command: carthage bootstrap --platform ios --cache-builds --configuration Debug --no-use-binaries
 
   - &build-test-MapboxCoreNavigation-ios-11
       run:
         name: Build and Test MapboxCoreNavigation
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation  -resultBundlePath MapboxCoreNavigationResults clean build test | tee MapboxCoreNavigation-xcodebuild.log | xcpretty
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test
 
   - &build-test-MapboxCoreNavigation-ios-12
       run:
         name: Build and Test MapboxCoreNavigation
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation -resultBundlePath MapboxCoreNavigationResults clean build test | tee MapboxCoreNavigation-xcodebuild.log | xcpretty
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test
 
   - &build-test-MapboxNavigation-ios-11
       run:
         name: Build and Test MapboxNavigation
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation -resultBundlePath MapboxNavigationResults clean build test | tee MapboxNavigation-xcodebuild.log | xcpretty
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build test
 
   - &build-test-MapboxNavigation-ios-12
       run:
         name: Build and Test MapboxNavigation
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation -resultBundlePath MapboxNavigationResults clean build test | tee MapboxNavigation-xcodebuild.log | xcpretty
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build test
 
   - &build-Example-Obj-C
       run:
@@ -126,26 +119,6 @@ step-library:
           pod install --repo-update
           xcodebuild -workspace PodInstall.xcworkspace/ -scheme PodInstall -destination 'platform=iOS Simulator,name=iPhone 6 Plus' clean build | xcpretty
 
-  - &print-MapboxNavigation-xcodebuild-log
-      run:
-        name: Print MapboxNavigation-xcodebuild.log
-        when: on_fail
-        command: cat MapboxNavigation-xcodebuild.log
-
-  - &print-MapboxCoreNavigation-xcodebuild-log
-      run:
-        name: Print MapboxCoreNavigation-xcodebuild.log
-        when: on_fail
-        command: cat MapboxCoreNavigation-xcodebuild.log
-
-  - &store-MapboxNavigationResults-artifacts
-      store_artifacts:
-          path: MapboxNavigationResults
-
-  - &store-MapboxCoreNavigationResults-artifacts
-      store_artifacts:
-          path: MapboxCoreNavigationResults
-
 jobs:
   xcode-10:
     macos:
@@ -155,16 +128,11 @@ jobs:
     steps:
       - checkout
       - *prepare
-      - *reset-simulators
       - *prepare-iphone6s-plus-ios-12
       - *restore-cache
       - *install-dependencies
       - *build-test-MapboxCoreNavigation-ios-12
       - *build-test-MapboxNavigation-ios-12
-      - *print-MapboxNavigation-xcodebuild-log
-      - *print-MapboxCoreNavigation-xcodebuild-log
-      - *store-MapboxNavigationResults-artifacts
-      - *store-MapboxCoreNavigationResults-artifacts
       - *save-cache
 
   xcode-9:
@@ -181,10 +149,6 @@ jobs:
       - *verify-missing-localizable-strings
       - *build-test-MapboxCoreNavigation-ios-11
       - *build-test-MapboxNavigation-ios-11
-      - *print-MapboxNavigation-xcodebuild-log
-      - *print-MapboxCoreNavigation-xcodebuild-log
-      - *store-MapboxNavigationResults-artifacts
-      - *store-MapboxCoreNavigationResults-artifacts
       - *save-cache
 
   xcode-10-cocoapods-integration:
