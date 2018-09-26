@@ -67,7 +67,6 @@
 		353280A11FA72871005175F3 /* InstructionLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353280A01FA72871005175F3 /* InstructionLabel.swift */; };
 		353610CE1FAB6A8F00FB1746 /* BottomBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353610CD1FAB6A8F00FB1746 /* BottomBannerView.swift */; };
 		35379CFD21480C0500FD402E /* AppDelegate+CarPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35379CFB21480BFB00FD402E /* AppDelegate+CarPlay.swift */; };
-		35379D0021480DEC00FD402E /* MapboxGeocoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3507F9F92134305C0086B39E /* MapboxGeocoder.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		35379D0221480E1300FD402E /* CarPlayManager+Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35379D0121480E1300FD402E /* CarPlayManager+Search.swift */; };
 		35379D0321480E5700FD402E /* RecentItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352C35BF2134958F00D77796 /* RecentItem.swift */; };
 		353AA5601FCEF583009F0384 /* StyleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353AA55F1FCEF583009F0384 /* StyleManager.swift */; };
@@ -901,7 +900,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35379D0021480DEC00FD402E /* MapboxGeocoder.framework in Frameworks */,
 				354A01BF1E6625D100D765C2 /* Mapbox.framework in Frameworks */,
 				35CC14161F7994B1009E872A /* Turf.framework in Frameworks */,
 			);
