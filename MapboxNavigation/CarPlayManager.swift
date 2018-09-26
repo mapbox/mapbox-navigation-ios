@@ -163,10 +163,15 @@ public class CarPlayManager: NSObject {
      */
     @objc public var simulatesLocations = false
 
+    private weak var navigationService: NavigationService?
     /**
      This property specifies a multiplier to be applied to the user's speed in simulation mode.
      */
-    @objc public var simulatedSpeedMultiplier = 1.0
+    @objc public var simulatedSpeedMultiplier = 1.0 {
+        didSet {
+            navigationService?.simulationSpeedMultiplier = simulatedSpeedMultiplier
+        }
+    }
 
     /**
      The shared CarPlay manager.
@@ -223,35 +228,6 @@ public class CarPlayManager: NSObject {
     }()
 }
 
-//@available (iOS 12.0, *)
-//extension CarPlayManager: EventsManagerDataSource {
-//    public var routeProgress: RouteProgress {
-//        return routeController.routeProgress
-//    }
-//
-//    public var usesDefaultUserInterface: Bool {
-//        get {
-//            <#code#>
-//        }
-//        set(newValue) {
-//            <#code#>
-//        }
-//    }
-//
-//    public var location: CLLocation? {
-//        <#code#>
-//    }
-//
-//    public var desiredAccuracy: CLLocationAccuracy {
-//        <#code#>
-//    }
-//
-//    public var locationProvider: NavigationLocationManager.Type {
-//        <#code#>
-//    }
-//
-//
-//}
 
 // MARK: CPApplicationDelegate
 @available(iOS 12.0, *)
@@ -543,6 +519,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let route = routeChoice.userInfo as! Route
         let override = delegate?.carPlayManager?(self, navigationServiceAlong: route)
         let service = override ?? MapboxNavigationService(route: route, simulating: simulatesLocations ? .always : .onPoorGPS)
+        navigationService = service
         service.simulationSpeedMultiplier = simulatedSpeedMultiplier
 
 
@@ -737,17 +714,6 @@ extension CarPlayManager: CPMapTemplateDelegate {
         mapView.setCenter(shiftedCenterCoordinate, animated: true)
     }
 
-    
-    
-//    private func createRouteController(with route: Route) -> RouteController {
-//        if self.simulatesLocations {
-//            let locationManager = SimulatedLocationManager(route: route)
-//            locationManager.speedMultiplier = self.simulatedSpeedMultiplier
-//            return RouteController(along: route, locationManager: locationManager, eventsManager: eventsManager)
-//        } else {
-//            return RouteController(along: route, eventsManager: eventsManager)
-//        }
-//    }
 }
 
 // MARK: CarPlayNavigationDelegate
