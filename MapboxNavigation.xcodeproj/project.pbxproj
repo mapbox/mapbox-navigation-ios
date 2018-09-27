@@ -126,6 +126,7 @@
 		355DB5751EFA78070091BFB7 /* GGPark-to-BernalHeights.route in Resources */ = {isa = PBXBuildFile; fileRef = 355DB5741EFA78070091BFB7 /* GGPark-to-BernalHeights.route */; };
 		355DB5771EFA780E0091BFB7 /* UnionSquare-to-GGPark.route in Resources */ = {isa = PBXBuildFile; fileRef = 355DB5761EFA780E0091BFB7 /* UnionSquare-to-GGPark.route */; };
 		355ED3701FAB724F00BCE1B8 /* BottomBannerViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355ED36F1FAB724F00BCE1B8 /* BottomBannerViewLayout.swift */; };
+		35636E04215D621E00463343 /* MapboxNavigationNative.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 35C98734212E042C00808B82 /* MapboxNavigationNative.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		35718BE71EF3194200AFA3D1 /* tunnel.json in Resources */ = {isa = PBXBuildFile; fileRef = 35718BE41EF316BA00AFA3D1 /* tunnel.json */; };
 		35718BE81EF3194500AFA3D1 /* tunnel.route in Resources */ = {isa = PBXBuildFile; fileRef = 35718BE31EF316BA00AFA3D1 /* tunnel.route */; };
 		35726EE81F0856E900AFA1B6 /* DayStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35726EE71F0856E900AFA1B6 /* DayStyle.swift */; };
@@ -479,6 +480,7 @@
 				492B6F85213703EE0076D2C6 /* MapboxGeocoder.framework in Embed Frameworks */,
 				354A01D51E6626AC00D765C2 /* MapboxCoreNavigation.framework in Embed Frameworks */,
 				C57607B21F4CC9E800C27423 /* Solar.framework in Embed Frameworks */,
+				35636E04215D621E00463343 /* MapboxNavigationNative.framework in Embed Frameworks */,
 				354A01D01E66266100D765C2 /* MapboxDirections.framework in Embed Frameworks */,
 				35D4282B1FA0DF1D00176028 /* MapboxNavigation.framework in Embed Frameworks */,
 				35C714B1203B251F00F0C2AE /* MapboxSpeech.framework in Embed Frameworks */,
@@ -1535,22 +1537,19 @@
 				C52D09CF1DEF5E5F00BE3C5C /* Fixtures */,
 				16120A4B20645D2C007EA21D /* Support */,
 				35C57D69208DD4A200BDD2A6 /* BridgingTests.m */,
-				C5BF7371206AB0DF00CDBB6D /* CLHeadingPrivate.h */,
 				359A8AEC1FA78D3000BDB486 /* DistanceFormatterTests.swift */,
 				C52D09D21DEF636C00BE3C5C /* Fixture.swift */,
 				C5ADFBD91DDCC7840011824B /* Info.plist */,
 				359574A91F28CCBB00838209 /* LocationTests.swift */,
-				C5ABB50D20408D2C00AFA92C /* NavigationServiceTests.swift */,
-				AE8B1B96207D2B2B003050F6 /* TunnelAuthorityTests.swift */,
 				C5BF7371206AB0DF00CDBB6D /* CLHeadingPrivate.h */,
 				C5BF7370206AB0DE00CDBB6D /* MapboxCoreNavigationTests-Bridging-Header.h */,
 				C5ADFBD71DDCC7840011824B /* MapboxCoreNavigationTests.swift */,
 				C5A60EC820A2417200C21178 /* MD5Tests.swift */,
 				C551B0E520D42222009A986F /* NavigationLocationManagerTests.swift */,
-				C5ABB50D20408D2C00AFA92C /* RouteControllerTests.swift */,
+				C5ABB50D20408D2C00AFA92C /* NavigationServiceTests.swift */,
 				C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */,
 				C582BA2B2073E77E00647DAA /* StringTests.swift */,
-				AE8B1B96207D2B2B003050F6 /* TunnelIntersectionManagerTests.swift */,
+				AE8B1B96207D2B2B003050F6 /* TunnelAuthorityTests.swift */,
 			);
 			path = MapboxCoreNavigationTests;
 			sourceTree = "<group>";
