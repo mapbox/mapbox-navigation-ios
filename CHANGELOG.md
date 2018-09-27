@@ -4,6 +4,7 @@
 
 * `StyleManagerDelegate.locationFor(styleManager:)` has been renamed to `StyleManagerDelegate.location(for:)`  ([#1724](https://github.com/mapbox/mapbox-navigation-ios/pull/1724))
 * Fixed inaccurate maneuver arrows along the route line when the route doubles back on itself. ([#1735](https://github.com/mapbox/mapbox-navigation-ios/pull/1735))
+* `NavigationMapView` no longer mutates its own frame rate implicitly. A new `NavigationMapView.updatePreferredFrameRate(for:)` method allows you to update the frame rate in response to route progress change notifications. The `NavigationMapView.minimumFramesPerSecond` property determines the frame rate while the application runs on battery power. By default, the map views in `NavigationViewController` and CarPlay’s navigation activity animate at a higher frame rate on battery power than before. ([#https://github.com/mapbox/mapbox-navigation-ios/pull/1749](https://github.com/mapbox/mapbox-navigation-ios/pull/1749))
 
 ## v0.21.0 (September 17, 2018)
 
