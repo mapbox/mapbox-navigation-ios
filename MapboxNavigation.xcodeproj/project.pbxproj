@@ -12,6 +12,8 @@
 		160D8279205996DA00D278D6 /* DataCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160D8278205996DA00D278D6 /* DataCache.swift */; };
 		160D827B2059973C00D278D6 /* DataCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160D827A2059973C00D278D6 /* DataCacheTests.swift */; };
 		16120A4D20645D6E007EA21D /* MMEEventsManagerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16120A4C20645D6E007EA21D /* MMEEventsManagerSpy.swift */; };
+		1622E882215D776C006A2E5F /* MapboxNavigationNative.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35C98734212E042C00808B82 /* MapboxNavigationNative.framework */; };
+		1622E883215D7824006A2E5F /* MapboxNavigationNative.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 35C98734212E042C00808B82 /* MapboxNavigationNative.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		16435E03206EE32F00AF48B6 /* DirectionsSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16435E02206EE32F00AF48B6 /* DirectionsSpy.swift */; };
 		16435E05206EE37800AF48B6 /* DummyURLSessionDataTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16435E04206EE37800AF48B6 /* DummyURLSessionDataTask.swift */; };
 		16435E06206EE37800AF48B6 /* DummyURLSessionDataTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16435E04206EE37800AF48B6 /* DummyURLSessionDataTask.swift */; };
@@ -522,6 +524,7 @@
 				C53F2EFE20EBC95600D9798F /* MapboxDirections.framework in Embed Frameworks */,
 				3507F9FC2134309E0086B39E /* MapboxGeocoder.framework in Embed Frameworks */,
 				C53F2EFF20EBC95600D9798F /* MapboxNavigation.framework in Embed Frameworks */,
+				1622E883215D7824006A2E5F /* MapboxNavigationNative.framework in Embed Frameworks */,
 				C53F2F0020EBC95600D9798F /* MapboxSpeech.framework in Embed Frameworks */,
 				C53F2F0120EBC95600D9798F /* Polyline.framework in Embed Frameworks */,
 				C53F2F0220EBC95600D9798F /* Mapbox.framework in Embed Frameworks */,
@@ -1017,6 +1020,7 @@
 			files = (
 				C53F2EEA20EBC95600D9798F /* MapboxNavigation.framework in Frameworks */,
 				C53F2EEB20EBC95600D9798F /* MapboxDirections.framework in Frameworks */,
+				1622E882215D776C006A2E5F /* MapboxNavigationNative.framework in Frameworks */,
 				C53F2EEC20EBC95600D9798F /* Solar.framework in Frameworks */,
 				C53F2EED20EBC95600D9798F /* MapboxMobileEvents.framework in Frameworks */,
 				C53F2EEE20EBC95600D9798F /* Turf.framework in Frameworks */,
