@@ -13,12 +13,18 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     // MARK: Class Constants
     
     struct FrameIntervalOptions {
-        fileprivate static let durationUntilNextManeuver: TimeInterval = 7
-        fileprivate static let durationSincePreviousManeuver: TimeInterval = 3
-        fileprivate static let defaultFramesPerSecond = MGLMapViewPreferredFramesPerSecond.maximum
-        fileprivate static let pluggedInFramesPerSecond = MGLMapViewPreferredFramesPerSecond.lowPower
-        fileprivate static let decreasedFramesPerSecond = MGLMapViewPreferredFramesPerSecond(rawValue: 5)
+        static let durationUntilNextManeuver: TimeInterval = 7
+        static let durationSincePreviousManeuver: TimeInterval = 3
+        static let defaultFramesPerSecond = MGLMapViewPreferredFramesPerSecond.maximum
+        static let pluggedInFramesPerSecond = MGLMapViewPreferredFramesPerSecond.lowPower
     }
+    
+    /**
+     The minimum preferred frames per second at which to render map animations.
+     
+     This property takes effect when the application has limited resources for animation, such as when the device is running on battery power. By default, this property is set to 5 frames per second.
+     */
+    @objc public var minimumFramesPerSecond = MGLMapViewPreferredFramesPerSecond(rawValue: 5)
     
     /**
      Returns the altitude that the map camera initally defaults to.
@@ -91,7 +97,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     var shouldPositionCourseViewFrameByFrame = false {
         didSet {
             if shouldPositionCourseViewFrameByFrame {
-                preferredFramesPerSecond = FrameIntervalOptions.defaultFramesPerSecond
+                preferredFramesPerSecond = .maximum
             }
         }
     }
@@ -215,11 +221,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         makeGestureRecognizersRespectCourseTracking()
         makeGestureRecognizersUpdateCourseView()
         
-        resumeNotifications()
-    }
-    
-    deinit {
-        suspendNotifications()
+        let gestures = gestureRecognizers ?? []
+        let mapTapGesture = self.mapTapGesture
+        mapTapGesture.requireFailure(of: gestures)
+        addGestureRecognizer(mapTapGesture)
     }
     
     //MARK: - Overrides
@@ -261,48 +266,32 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         userCourseView?.center = convert(location.coordinate, toPointTo: self)
     }
     
-    // MARK: - Notifications
-    
-    func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_:)), name: .routeControllerProgressDidChange, object: nil)
-        
-        let gestures = gestureRecognizers ?? []
-        let mapTapGesture = self.mapTapGesture
-        mapTapGesture.requireFailure(of: gestures)
-        addGestureRecognizer(mapTapGesture)
-    }
-    
-    func suspendNotifications() {
-        NotificationCenter.default.removeObserver(self, name: .routeControllerProgressDidChange, object: nil)
-    }
-    
-    @objc func progressDidChange(_ notification: Notification) {
+    /**
+     Updates the map view’s preferred frames per second to the appropriate value for the current route progress.
+     
+     This method accounts for the proximity to a maneuver and the current power source. It has no effect if `tracksUserCourse` is set to `true`.
+     */
+    @objc(updatePreferredFrameRateForRouteProgress:)
+    open func updatePreferredFrameRate(for routeProgress: RouteProgress) {
         guard tracksUserCourse else { return }
-        
-        let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
         
         let stepProgress = routeProgress.currentLegProgress.currentStepProgress
         let expectedTravelTime = stepProgress.step.expectedTravelTime
         let durationUntilNextManeuver = stepProgress.durationRemaining
         let durationSincePreviousManeuver = expectedTravelTime - durationUntilNextManeuver
-        guard !UIDevice.current.isPluggedIn else {
+        
+        if UIDevice.current.isPluggedIn {
             preferredFramesPerSecond = FrameIntervalOptions.pluggedInFramesPerSecond
-            return
-        }
-    
-        if let upcomingStep = routeProgress.currentLegProgress.upComingStep,
+        } else if let upcomingStep = routeProgress.currentLegProgress.upComingStep,
             upcomingStep.maneuverDirection == .straightAhead || upcomingStep.maneuverDirection == .slightLeft || upcomingStep.maneuverDirection == .slightRight {
-            preferredFramesPerSecond = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFramesPerSecond : FrameIntervalOptions.decreasedFramesPerSecond
+            preferredFramesPerSecond = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFramesPerSecond : minimumFramesPerSecond
         } else if durationUntilNextManeuver > FrameIntervalOptions.durationUntilNextManeuver &&
             durationSincePreviousManeuver > FrameIntervalOptions.durationSincePreviousManeuver {
-            preferredFramesPerSecond = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFramesPerSecond : FrameIntervalOptions.decreasedFramesPerSecond
+            preferredFramesPerSecond = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFramesPerSecond : minimumFramesPerSecond
         } else {
             preferredFramesPerSecond = FrameIntervalOptions.pluggedInFramesPerSecond
         }
     }
-    
-    
-
     
     // Track position on a frame by frame basis. Used for first location update and when resuming tracking mode
     func enableFrameByFrameCourseViewTracking(for duration: TimeInterval) {
@@ -311,11 +300,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         shouldPositionCourseViewFrameByFrame = true
     }
     
-    //MARK: - User Tracking
-    
     @objc fileprivate func disableFrameByFramePositioning() {
         shouldPositionCourseViewFrameByFrame = false
     }
+    
+    //MARK: - User Tracking
     
     @objc private func disableUserCourseTracking() {
         guard tracksUserCourse else { return }
@@ -376,8 +365,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     @objc func updateCourseView(_ sender: UIGestureRecognizer) {
-        preferredFramesPerSecond = FrameIntervalOptions.defaultFramesPerSecond
-        
         if sender.state == .ended {
             altitude = self.camera.altitude
             enableFrameByFrameCourseViewTracking(for: 2)

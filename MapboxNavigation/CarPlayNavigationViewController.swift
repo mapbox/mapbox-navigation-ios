@@ -86,6 +86,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         styleManager = StyleManager(self)
         styleManager.styles = [DayStyle(), NightStyle()]
         
+        makeGestureRecognizersResetFrameRate()
         resumeNotifications()
         navService.start()
         mapView.recenterMap()
@@ -196,6 +197,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         let location = notification.userInfo![RouteControllerNotificationUserInfoKey.locationKey] as! CLLocation
         
         // Update the user puck
+        mapView?.updatePreferredFrameRate(for: routeProgress)
         let camera = MGLMapCamera(lookingAtCenter: location.coordinate, fromDistance: 120, pitch: 60, heading: location.course)
         mapView?.updateCourseTracking(location: location, camera: camera, animated: true)
         
@@ -211,6 +213,17 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         let stepDistance = distanceFormatter.measurement(of: stepProgress.distanceRemaining)
         let stepEstimates = CPTravelEstimates(distanceRemaining: stepDistance, timeRemaining: stepProgress.durationRemaining)
         carSession.updateEstimates(stepEstimates, for: maneuver)
+    }
+    
+    /** Modifies the gesture recognizers to also update the map’s frame rate. */
+    func makeGestureRecognizersResetFrameRate() {
+        for gestureRecognizer in mapView?.gestureRecognizers ?? [] {
+            gestureRecognizer.addTarget(self, action: #selector(resetFrameRate(_:)))
+        }
+    }
+    
+    @objc func resetFrameRate(_ sender: UIGestureRecognizer) {
+        mapView?.preferredFramesPerSecond = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
     }
     
     @objc func rerouted(_ notification: NSNotification) {
