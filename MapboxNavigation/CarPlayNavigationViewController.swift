@@ -327,8 +327,12 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     
     func endOfRouteFeedbackTemplate() -> CPGridTemplate {
         let buttonHandler: (_: CPGridButton) -> Void = { [weak self] (button) in
-            //TODO: no such method exists, and the replacement candidate ignores the feedback sent, so ... ?
-//            self?.routeController.setEndOfRoute(rating: Int(button.titleVariants.first!.components(separatedBy: CharacterSet.decimalDigits.inverted).joined())!, comment: nil)
+    
+            let title: String? = button.titleVariants.first ?? nil
+            let rating: Int? = title != nil ? Int(title!.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()) : nil
+            let feedback: EndOfRouteFeedback? = rating != nil ? EndOfRouteFeedback(rating: rating, comment: nil) : nil
+            self?.navService.endNavigation(feedback: feedback)
+            
             self?.carInterfaceController.popTemplate(animated: true)
             self?.exitNavigation()
         }
