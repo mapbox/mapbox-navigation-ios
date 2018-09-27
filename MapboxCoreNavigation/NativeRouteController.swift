@@ -26,7 +26,8 @@ public class NativeRouteController: RouteController {
         let data = try! JSONSerialization.data(withJSONObject: json, options: [])
         let jsonString = String(data: data, encoding: .utf8)!
         
-        navigator.setDirectionsForDirections(jsonString)
+        // TODO: Add support for alternative route
+        navigator.setRouteForRouteResponse(jsonString, route: 0, leg: 0)
     }
     
     public required init(along route: Route, directions: Directions, dataSource source: RouterDataSource) {
