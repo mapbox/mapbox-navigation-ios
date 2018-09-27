@@ -3,7 +3,7 @@ import MapboxMobileEvents
 import MapboxDirections
 
 /**
- The `EventsManager` is responsible for being the liaison between the RouteController and the telemetry framework.
+ The `EventsManager` is responsible for being the liaison between MapboxCoreNavigation and the telemetry framework.
  
  `SessionState` is a struct that stores all memoized statistics that we later send to the telemetry engine.
  */
@@ -36,7 +36,7 @@ open class EventsManager: NSObject {
         let token = dict["MGLMapboxAccessToken"] as? String else {
             //we can assert here because if the token was passed in, it would of overriden this closure.
             //we return an empty string so we don't crash in production (in keeping with behavior of `assert`)
-            assertionFailure("`accessToken` must be set in the Info.plist as `MGLMapboxAccessToken` or the `Route` passed into the `RouteController` must have the `accessToken` property set.")
+            assertionFailure("`accessToken` must be set in the Info.plist as `MGLMapboxAccessToken` or the `Route` passed into the `NavigationService` must have the `accessToken` property set.")
             return ""
         }
         return token
@@ -79,7 +79,7 @@ open class EventsManager: NSObject {
         manager.isMetricsEnabledInSimulator = true
         manager.isMetricsEnabledForInUsePermissions = true
         let userAgent = usesDefaultUserInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
-        manager.initialize(withAccessToken: accessToken, userAgentBase: userAgent, hostSDKVersion: String(describing: Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString")!))
+        manager.initialize(withAccessToken: accessToken, userAgentBase: userAgent, hostSDKVersion: String(describing: Bundle.mapboxCoreNavigation.object(forInfoDictionaryKey: "CFBundleShortVersionString")!))
         manager.disableLocationMetrics()
         manager.sendTurnstileEvent()
     }

@@ -12,43 +12,123 @@ public enum SimulationOption: Int {
     case onPoorGPS, always, never
 }
 
-
+/**
+ A `NavigationService` is the entry-point protocol for MapboxCoreNavigation. It contains all the dependancies needed by the `MapboxNavigation` UI SDK, as well as dependancies for it's child objects. If you would like to implement your own core-navigation stack, be sure to conform to this protocol.
+ 
+ */
 @objc(MBNavigationService)
 public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, EventsManagerDataSource {
+    /**
+     The services' location manager. This will be the object responsible for notifying the service of GPS updates.
+     */
     var locationManager: NavigationLocationManager { get }
+    
+    /**
+     A reference to a MapboxDirections service. Used for rerouting.
+     */
     var directions: Directions { get }
+    
+    /**
+     The active router, responsible for all route-following.
+     */
     var router: Router! { get }
+    
+    /**
+     The EventsManager, responsible for all telemetry.
+     */
     var eventsManager: EventsManager! { get }
+    
+    /**
+     The route being progressed.
+     */
     var route: Route { get set }
+    
+    /**
+     The simulation mode of the service.
+     */
     var simulationMode: SimulationOption { get }
+    
+    /**
+     The simulation speed-multiplier. Modify this if you desire faster-than-real-time simulation.
+     */
     var simulationSpeedMultiplier: Double { get set }
+    
+    /**
+     The `NavigationService` delegate. Wraps `RouterDelegate` messages.
+     */
     weak var delegate: NavigationServiceDelegate? { get set }
 
+    /**
+     Starts the navigation service.
+     */
     func start()
+    
+    /**
+     Stops the navigation service. You may call `start()` after calling `stop()`.
+     */
     func stop()
+    
+    /**
+     Ends the navigation session. Used when arriving at destination.
+     */
     func endNavigation(feedback: EndOfRouteFeedback?)
 }
 
+/**
+ A `NavigationService` is the entry-point interface into MapboxCoreNavigation. This service manages a `locationManager` (which feeds it location updates), a `Directions` service (for rerouting), a `Router` (for route-following), an `eventsManager` (for telemetry), and a simulation engine for poor GPS conditions.
+ */
 @objc(MBNavigationService)
 public class MapboxNavigationService: NSObject, NavigationService {
     
+    /**
+     How long will the service wait before beginning simulation when the `.onPoorGPS` simulation option is enabled?
+     */
     static let poorGPSPatience: DispatchTimeInterval = .milliseconds(1500) //1.5 seconds
     
+    /**
+     The active location manager. Returns the location simulator if we're actively simulating, otherwise it returns the native location manager.
+    */
     public var locationManager: NavigationLocationManager {
         return simulatedLocationSource ?? nativeLocationSource
     }
+    
     public var directions: Directions
+    
+    /**
+     The active router. By default, a `NativeRouteController`.
+    */
     public var router: Router!
+    
+    /**
+     The events manager. Sends telemetry back to the Mapbox Platform.
+    */
     public var eventsManager: EventsManager!
+    
     public weak var delegate: NavigationServiceDelegate?
     
+    /**
+     The native location source. This is a `NavigationLocationManager` by default, but can be overridden with a custom location manager at initalization.
+    */
     private var nativeLocationSource: NavigationLocationManager
+    
+    /**
+     The active location simulator. Only used during `SimulationOption.always` and `SimluatedLocationManager.onPoorGPS`. If there is no simulation active, this property is `nil`.
+    */
     private var simulatedLocationSource: SimulatedLocationManager?
-    
-    private var poorGPSTimer: CountdownTimer!
+
+    /**
+     The simulation mode of the service.
+     
+     A setting of `.always` will simulate route progress at all times.
+     A setting of `.onPoorGPS` will enable simulation when we do not recieve a location update after the `poorGPSPatience` threshold has elapsed.
+     A setting of `.never` will never enable the location simulator, regardless of circumstances.
+     */
     public let simulationMode: SimulationOption
-    private var isSimulating: Bool { return simulatedLocationSource != nil }
-    
+
+
+    /**
+     The simulation speed multiplier. If you desire the simulation to go faster than real-time, increase this value.
+     */
     public var simulationSpeedMultiplier: Double {
         get {
             guard simulationMode == .always else { return 1.0 }
@@ -61,12 +141,28 @@ public class MapboxNavigationService: NSObject, NavigationService {
         }
     }
     
+    private var poorGPSTimer: CountdownTimer!
+    private var isSimulating: Bool { return simulatedLocationSource != nil }
     private var _simulationSpeedMultiplier: Double = 1.0
     
+    /**
+     Intializes a new `NavigationService`. Useful convienence initalizer for OBJ-C users, for when you just want to set up a service without customizing anything.
+     
+     - parameter route: The route to follow.
+     */
     @objc convenience init(route: Route) {
         self.init(route: route, directions: nil, locationSource: nil, eventsManagerType: nil)
     }
-    
+    /**
+     Intializes a new `NavigationService`.
+     
+     - parameter route: The route to follow.
+     - parameter directions: The Directions object that created `route`.
+     - parameter locationSource: An optional override for the default `NaviationLocationManager`.
+     - parameter eventsManagerType: A type argument used for overriding the events manager.
+     - parameter simulationMode: The simulation mode desired.
+     - parameter routerType: A type-argument used for overriding the Router, which is `RouteController` by default..
+     */
     @objc required public init(route: Route,
                                directions: Directions? = nil,
                                locationSource: NavigationLocationManager? = nil,
@@ -101,6 +197,13 @@ public class MapboxNavigationService: NSObject, NavigationService {
         endNavigation()
     }
     
+    /**
+     Determines if a location is within a tunnel.
+     
+     - parameter location: The location to test.
+     - parameter progress: the RouteProgress model that contains the route geometry.
+
+     */
     public static func isInTunnel(at location: CLLocation, along progress: RouteProgress) -> Bool {
         return TunnelAuthority.isInTunnel(at: location, along: progress)
     }
