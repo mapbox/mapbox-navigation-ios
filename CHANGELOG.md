@@ -2,7 +2,7 @@
 
 ## master
 
-## User location
+### User location
 
 * Added a `NavigationService` protocol implemented by classes that provide location awareness functionality. `RouteController` and a new `MapboxNavigationService` class both conform to this protocol. ([#1602](https://github.com/mapbox/mapbox-navigation-ios/pull/1602))
   * `NavigationViewController.init(for:styles:directions:styles:routeController:locationManager:voiceController:eventsManager)` has been renamed `NavigationViewController.init(for:styles:navigationService:voiceController:)`.
@@ -10,7 +10,7 @@
   * If you currently use `RouteController` directly, you should migrate to `NavigationService`.
   * If you currently use `SimulatedLocationManager` directly, you should instead pass `SimulationOption.always` into `MapboxNavigationService(route:directions:locationSource:eventsManagerType:simulating:)`.
 
-## User interface
+### User interface
 
 * `StyleManagerDelegate.locationFor(styleManager:)` has been renamed to `StyleManagerDelegate.location(for:)`  ([#1724](https://github.com/mapbox/mapbox-navigation-ios/pull/1724))
 * Fixed inaccurate maneuver arrows along the route line when the route doubles back on itself. ([#1735](https://github.com/mapbox/mapbox-navigation-ios/pull/1735))
