@@ -222,9 +222,10 @@ class CarPlayManagerSpec: QuickSpec {
                     action()
 
                     expect(delegate!.navigationInitiated).to(beTrue())
-                    let locator: NavigationLocationManager = delegate!.currentService!.locationManager
-                    expect(locator).to(beAnInstanceOf(SimulatedLocationManager.self))
-                    expect((locator as! SimulatedLocationManager).speedMultiplier).to(equal(5.0))
+                    let service: MapboxNavigationService = delegate!.currentService! as! MapboxNavigationService
+                    expect(service.simulationMode).to(equal(.always))
+                    //TODO: expose this public/readonly for testing?
+//                    expect(service.speedMultiplier).to(equal(5.0))
                 }
             })
 

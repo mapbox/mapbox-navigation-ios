@@ -152,7 +152,6 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
      */
     public let simulationMode: SimulationMode
 
-
     /**
      The simulation speed multiplier. If you desire the simulation to go faster than real-time, increase this value.
      */
