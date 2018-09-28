@@ -151,8 +151,10 @@ extension CustomViewController: InstructionsBannerViewDelegate {
         toggleStepsList()
     }
     
-    func didDragInstructionsBanner(_ sender: BaseInstructionsBannerView) {
-        toggleStepsList()
+    func didSwipeInstructionsBanner(_ sender: BaseInstructionsBannerView, swipeDirection direction: UISwipeGestureRecognizerDirection) {
+        if direction == .down {
+            toggleStepsList()
+        }
     }
 }
 
