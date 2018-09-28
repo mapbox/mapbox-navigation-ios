@@ -258,6 +258,22 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
     public var trailingBarButtons: [CPBarButton]?
     public var mapButtons: [CPMapButton]?
 
+    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route) -> NavigationService {
+        let response = Fixture.JSONFromFileNamed(name: "routeWithInstructions")
+        let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String: Any]
+        let initialRoute: Route = {
+            let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
+            let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
+            let options = NavigationRouteOptions(waypoints: [waypoint1, waypoint2])
+            options.shapeFormat = .polyline
+            let route = Route(json: jsonRoute, waypoints: [waypoint1, waypoint2], options: options)
+            route.accessToken = "deadbeef"
+            return route
+        }()
+        let directionsClientSpy = DirectionsSpy(accessToken: "garbage", host: nil)
+        let service = MapboxNavigationService(route: initialRoute, directions: directionsClientSpy, locationSource: NavigationLocationManager(), eventsManagerType: EventsManagerSpy.self)
+        return service
+    }
     func carPlayManager(_ carPlayManager: CarPlayManager, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]? {
         return leadingBarButtons
     }

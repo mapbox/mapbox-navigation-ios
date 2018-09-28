@@ -15,7 +15,7 @@ class NavigationViewControllerTests: XCTestCase {
     lazy var dependencies: (navigationViewController: NavigationViewController, navigationService: NavigationService, startLocation: CLLocation, poi: [CLLocation], endLocation: CLLocation, voice: RouteVoiceController) = {
 
         let fakeVoice: RouteVoiceController = FakeVoiceController()
-        let fakeDirections = Directions(accessToken: "garbage", host: nil)
+        let fakeDirections = DirectionsSpy(accessToken: "garbage", host: nil)
         let fakeService = MapboxNavigationService(route: initialRoute, directions: fakeDirections, locationSource: NavigationLocationManagerFake(), simulating: .never)
         let navigationViewController = NavigationViewController(for: initialRoute, navigationService: fakeService, voiceController: fakeVoice)
         
@@ -89,7 +89,7 @@ class NavigationViewControllerTests: XCTestCase {
     }
     
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceMoreThanOnceWithOneStyle() {
-        let navigationViewController = NavigationViewController(for: initialRoute, styles: [DayStyle()], voiceController: FakeVoiceController())
+        let navigationViewController = NavigationViewController(for: initialRoute, styles: [DayStyle()], navigationService: dependencies.navigationService, voiceController: FakeVoiceController())
         let service = dependencies.navigationService
         navigationViewController.styleManager.delegate = self
         
@@ -105,7 +105,7 @@ class NavigationViewControllerTests: XCTestCase {
     
     // If tunnel flags are enabled and we need to switch styles, we should not force refresh the map style because we have only 1 style.
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceWhenOnlyOneStyle() {
-        let navigationViewController = NavigationViewController(for: initialRoute, styles: [NightStyle()], voiceController: FakeVoiceController())
+        let navigationViewController = NavigationViewController(for: initialRoute, styles: [NightStyle()], navigationService: dependencies.navigationService, voiceController: FakeVoiceController())
         let service = dependencies.navigationService
         navigationViewController.styleManager.delegate = self
         
@@ -120,7 +120,7 @@ class NavigationViewControllerTests: XCTestCase {
     }
     
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceMoreThanOnceWithTwoStyles() {
-        let navigationViewController = NavigationViewController(for: initialRoute, styles: [DayStyle(), NightStyle()], voiceController: FakeVoiceController())
+        let navigationViewController = NavigationViewController(for: initialRoute, styles: [DayStyle(), NightStyle()], navigationService: dependencies.navigationService, voiceController: FakeVoiceController())
         let service = dependencies.navigationService
         navigationViewController.styleManager.delegate = self
         
@@ -177,7 +177,8 @@ class NavigationViewControllerTests: XCTestCase {
     
     func testDestinationAnnotationUpdatesUponReroute() {
         let styleLoaded = XCTestExpectation(description: "Style Loaded")
-        let navigationViewController = NavigationViewControllerTestable(for: initialRoute, styles: [TestableDayStyle()], styleLoaded: styleLoaded)
+        let service = MapboxNavigationService(route: initialRoute, directions: DirectionsSpy(accessToken: "beef"), simulating: .never)
+        let navigationViewController = NavigationViewControllerTestable(for: initialRoute,  styles: [TestableDayStyle()], navigationService: service, styleLoaded: styleLoaded)
         
         //wait for the style to load -- routes won't show without it.
         wait(for: [styleLoaded], timeout: 5)
@@ -255,7 +256,6 @@ class NavigationViewControllerTestable: NavigationViewController {
     var styleLoadedExpectation: XCTestExpectation
     
     required init(for route: Route,
-                  directions: Directions = Directions.shared,
                   styles: [Style]? = [DayStyle(), NightStyle()],
                   navigationService: NavigationService? = nil,
                   styleLoaded: XCTestExpectation) {

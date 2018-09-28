@@ -253,8 +253,8 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     func navigationService() -> NavigationService? {
         guard let route = routes?.first else { return nil }
         let simulate = simulationButton.isSelected
-        let option: SimulationOption = simulate ? .always : .onPoorGPS
-        return MapboxNavigationService(route: route, simulating: option)
+        let mode: SimulationMode = simulate ? .always : .onPoorGPS
+        return MapboxNavigationService(route: route, simulating: mode)
     }
 
     func presentAndRemoveMapview(_ navigationViewController: NavigationViewController) {

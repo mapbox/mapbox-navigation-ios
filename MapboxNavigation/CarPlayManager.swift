@@ -117,7 +117,7 @@ public protocol CarPlayManagerDelegate {
      Called when navigation begins so that the containing app can update accordingly.
      
      - parameter carPlayManager: The shared CarPlay manager.
-     - parameter navigationService: The navigation service that has begun managing location updates for a navigation session.
+     - parameter service: The navigation service that has begun managing location updates for a navigation session.
      */
     @objc(carPlayManager:didBeginNavigationWithNavigationService:)
     func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith service: NavigationService) -> ()

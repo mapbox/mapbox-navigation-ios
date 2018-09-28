@@ -4,21 +4,6 @@ import MapboxDirections
 @testable import MapboxNavigation
 
 
-class RouteControllerDataSourceFake: RouterDataSource {
-    
-    let manager = NavigationLocationManager()
-    
-    var location: CLLocation? {
-        return manager.location
-    }
-    
-    var locationProvider: NavigationLocationManager.Type {
-        return type(of: manager)
-    }
-    
-    
-}
-
 class StepsViewControllerTests: XCTestCase {
     
     struct Constants {

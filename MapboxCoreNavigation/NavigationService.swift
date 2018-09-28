@@ -7,9 +7,34 @@ public enum SimulationIntent: Int{
     case manual, poorGPS
 }
 
+
+/**
+ The simulation mode type. Used for setting the simulation mode of the navigation service.
+ */
 @objc(MBNavigationSimulationOptions)
-public enum SimulationOption: Int {
-    case onPoorGPS, always, never
+public enum SimulationMode: Int {
+   
+    /**
+     A setting of `.onPoorGPS` will enable simulation when we do not recieve a location update after the `poorGPSPatience` threshold has elapsed.
+     */
+    case onPoorGPS
+
+    /**
+     A setting of `.always` will simulate route progress at all times.
+     */
+    case always
+
+    /**
+     A setting of `.never` will never enable the location simulator, regardless of circumstances.
+     */
+    case never
+}
+
+/// :nodoc: Internal "using default interaface" flag. Used for telemetry.
+@objc(MBDefaultInterfaceFlag)
+public protocol DefaultInterfaceFlag {
+    /// :nodoc: Internal "using default interaface" flag. Used for telemetry.
+    var usesDefaultUserInterface: Bool { get set }
 }
 
 /**
@@ -17,9 +42,9 @@ public enum SimulationOption: Int {
  
  */
 @objc(MBNavigationService)
-public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, EventsManagerDataSource {
+public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, EventsManagerDataSource, DefaultInterfaceFlag {
     /**
-     The services' location manager. This will be the object responsible for notifying the service of GPS updates.
+     The location manager for the service. This will be the object responsible for notifying the service of GPS updates.
      */
     var locationManager: NavigationLocationManager { get }
     
@@ -34,7 +59,7 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
     var router: Router! { get }
     
     /**
-     The EventsManager, responsible for all telemetry.
+     The events manager, responsible for all telemetry.
      */
     var eventsManager: EventsManager! { get }
     
@@ -46,10 +71,10 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
     /**
      The simulation mode of the service.
      */
-    var simulationMode: SimulationOption { get }
+    var simulationMode: SimulationMode { get }
     
     /**
-     The simulation speed-multiplier. Modify this if you desire faster-than-real-time simulation.
+     The simulation speed-multiplier. Modify this if you desire accelerated simulation.
      */
     var simulationSpeedMultiplier: Double { get set }
     
@@ -78,7 +103,7 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
  A `NavigationService` is the entry-point interface into MapboxCoreNavigation. This service manages a `locationManager` (which feeds it location updates), a `Directions` service (for rerouting), a `Router` (for route-following), an `eventsManager` (for telemetry), and a simulation engine for poor GPS conditions.
  */
 @objc(MBNavigationService)
-public class MapboxNavigationService: NSObject, NavigationService {
+public class MapboxNavigationService: NSObject, NavigationService, DefaultInterfaceFlag {
     
     /**
      How long will the service wait before beginning simulation when the `.onPoorGPS` simulation option is enabled?
@@ -92,6 +117,9 @@ public class MapboxNavigationService: NSObject, NavigationService {
         return simulatedLocationSource ?? nativeLocationSource
     }
     
+    /**
+     A reference to a MapboxDirections service. Used for rerouting.
+     */
     public var directions: Directions
     
     /**
@@ -104,6 +132,9 @@ public class MapboxNavigationService: NSObject, NavigationService {
     */
     public var eventsManager: EventsManager!
     
+    /**
+     The `NavigationService` delegate. Wraps `RouterDelegate` messages.
+     */
     public weak var delegate: NavigationServiceDelegate?
     
     /**
@@ -118,12 +149,8 @@ public class MapboxNavigationService: NSObject, NavigationService {
 
     /**
      The simulation mode of the service.
-     
-     A setting of `.always` will simulate route progress at all times.
-     A setting of `.onPoorGPS` will enable simulation when we do not recieve a location update after the `poorGPSPatience` threshold has elapsed.
-     A setting of `.never` will never enable the location simulator, regardless of circumstances.
      */
-    public let simulationMode: SimulationOption
+    public let simulationMode: SimulationMode
 
 
     /**
@@ -145,6 +172,16 @@ public class MapboxNavigationService: NSObject, NavigationService {
     private var isSimulating: Bool { return simulatedLocationSource != nil }
     private var _simulationSpeedMultiplier: Double = 1.0
     
+    /// :nodoc: Internal Telemetry flag.
+    public var usesDefaultUserInterface: Bool {
+        get {
+            return eventsManager.usesDefaultUserInterface
+        }
+        set {
+            eventsManager.usesDefaultUserInterface = newValue
+        }
+    }
+    
     /**
      Intializes a new `NavigationService`. Useful convienence initalizer for OBJ-C users, for when you just want to set up a service without customizing anything.
      
@@ -159,15 +196,15 @@ public class MapboxNavigationService: NSObject, NavigationService {
      - parameter route: The route to follow.
      - parameter directions: The Directions object that created `route`.
      - parameter locationSource: An optional override for the default `NaviationLocationManager`.
-     - parameter eventsManagerType: A type argument used for overriding the events manager.
+     - parameter eventsManagerType: An optional events manager type to use while tracking the route.
      - parameter simulationMode: The simulation mode desired.
-     - parameter routerType: A type-argument used for overriding the Router, which is `RouteController` by default..
+     - parameter routerType: An optional router type to use for traversing the route.
      */
     @objc required public init(route: Route,
                                directions: Directions? = nil,
                                locationSource: NavigationLocationManager? = nil,
                                eventsManagerType: EventsManager.Type? = nil,
-                               simulating simulationMode: SimulationOption = .onPoorGPS,
+                               simulating simulationMode: SimulationMode = .onPoorGPS,
                                routerType: Router.Type? = RouteController.self)
     {
         nativeLocationSource = locationSource ?? NavigationLocationManager()
@@ -413,15 +450,6 @@ extension MapboxNavigationService {
         return self.locationManager.desiredAccuracy
     }
     
-    /// :nodoc: This is used internally when the navigation UI is being used
-    public var usesDefaultUserInterface: Bool {
-        get {
-            return eventsManager.usesDefaultUserInterface
-        }
-        set {
-            eventsManager.usesDefaultUserInterface = newValue
-        }
-    }
 }
 
 //MARK: RouterDataSource

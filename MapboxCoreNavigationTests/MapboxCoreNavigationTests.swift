@@ -7,7 +7,7 @@ let response = Fixture.JSONFromFileNamed(name: "routeWithInstructions")
 let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String : Any]
 let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
 let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
-let directions = Directions(accessToken: "pk.feedCafeDeadBeefBadeBede")
+let directions = DirectionsSpy(accessToken: "pk.feedCafeDeadBeefBadeBede")
 let route: Route = {
     let options = NavigationRouteOptions(waypoints: [waypoint1, waypoint2])
     options.shapeFormat = .polyline // NavigationRouteOptions defaults to `polyline6` but our fixtures are encoded using polyline5
@@ -86,7 +86,7 @@ class MapboxCoreNavigationTests: XCTestCase {
     
     func testShouldReroute() {
         route.accessToken = "foo"
-        let firstLocation = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 38, longitude: -123),
+        let firstLocation = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165),
                                        altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: 0, speed: 0,
                                        timestamp: Date())
         

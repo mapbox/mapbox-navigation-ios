@@ -265,7 +265,8 @@ extension RouteController: CLLocationManagerDelegate {
         updateRouteLegProgress(for: location)
         updateVisualInstructionProgress()
 
-        guard userIsOnRoute(location) || !(delegate?.router?(self, shouldRerouteFrom: location) ?? DefaultBehavior.shouldRerouteFromLocation) else {
+        if !userIsOnRoute(location) && delegate?.router?(self, shouldRerouteFrom: location) ?? DefaultBehavior.shouldRerouteFromLocation {
+
             reroute(from: location, along: routeProgress)
             return
         }
@@ -367,7 +368,7 @@ extension RouteController: CLLocationManagerDelegate {
     @objc public func userIsOnRoute(_ location: CLLocation) -> Bool {
         
         // If the user has arrived, do not continue monitor reroutes, step progress, etc
-        guard !routeProgress.currentLegProgress.userHasArrivedAtWaypoint && (delegate?.router?(self, shouldPreventReroutesWhenArrivingAt: routeProgress.currentLeg.destination) ?? DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint) else {
+        guard !routeProgress.currentLegProgress.userHasArrivedAtWaypoint || (delegate?.router?(self, shouldPreventReroutesWhenArrivingAt: routeProgress.currentLeg.destination) ?? DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint) else {
             return true
         }
 
@@ -480,6 +481,7 @@ extension RouteController: CLLocationManagerDelegate {
 
     private func checkForUpdates() {
         #if TARGET_IPHONE_SIMULATOR
+        guard (NSClassFromString("XCTestCase") == nil) else { return } // Short-circuit when running unit tests
             guard let version = Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString") else { return }
             let latestVersion = String(describing: version)
             _ = URLSession.shared.dataTask(with: URL(string: "https://www.mapbox.com/mapbox-navigation-ios/latest_version")!, completionHandler: { (data, response, error) in

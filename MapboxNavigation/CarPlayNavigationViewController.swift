@@ -43,17 +43,17 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     /**
      Creates a new CarPlay navigation view controller for the given route controller and user interface.
      
-     - parameter routeController: The route controller managing location updates for the navigation session.
+     - parameter navigationService: The navigation service managing location updates for the navigation session.
      - parameter mapTemplate: The map template visible during the navigation session.
      - parameter interfaceController: The interface controller for CarPlay.
      
      - postcondition: Call `startNavigationSession(for:)` after initializing this object to begin navigation.
      */
     @objc(initWithNavigationService:mapTemplate:interfaceController:)
-    public init(with navService: NavigationService,
+    public init(with navigationService: NavigationService,
                 mapTemplate: CPMapTemplate,
                 interfaceController: CPInterfaceController) {
-        self.navService = navService
+        self.navService = navigationService
         self.mapTemplate = mapTemplate
         self.carInterfaceController = interfaceController
         

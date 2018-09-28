@@ -10,7 +10,6 @@ import MapboxDirections
 
 @objc public protocol EventsManagerDataSource: class {
     var routeProgress: RouteProgress { get }
-    var usesDefaultUserInterface: Bool { get set }
     var location: CLLocation? { get }
     var desiredAccuracy: CLLocationAccuracy { get }
     var locationProvider: NavigationLocationManager.Type { get }
@@ -87,7 +86,7 @@ open class EventsManager: NSObject {
     func navigationCancelEvent(rating potentialRating: Int? = nil, comment: String? = nil) -> EventDetails {
         
         let rating = potentialRating ?? MMEEventsManager.unrated
-        var event = EventDetails(dataSource: dataSource, session: sessionState)
+        var event = EventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationCancel
         event.arrivalTimestamp = sessionState?.arrivalTimestamp
         
@@ -102,13 +101,13 @@ open class EventsManager: NSObject {
     }
     
     func navigationDepartEvent() -> EventDetails {
-        var event = EventDetails(dataSource: dataSource, session: sessionState)
+        var event = EventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationDepart
         return event
     }
     
     func navigationArriveEvent() -> EventDetails {
-        var event = EventDetails(dataSource: dataSource, session: sessionState)
+        var event = EventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationArrive
         return event
     }
@@ -122,7 +121,7 @@ open class EventsManager: NSObject {
     }
     
     func navigationFeedbackEvent(type: FeedbackType, description: String?) -> EventDetails {
-        var event = EventDetails(dataSource: dataSource, session: sessionState)
+        var event = EventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationFeedback
         
         event.userId = UIDevice.current.identifierForVendor?.uuidString
@@ -137,7 +136,7 @@ open class EventsManager: NSObject {
     func navigationRerouteEvent(eventType: String = MMEEventTypeNavigationReroute) -> EventDetails {
         let timestamp = Date()
         
-        var event = EventDetails(dataSource: dataSource, session: sessionState)
+        var event = EventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = eventType
         if let lastRerouteDate = sessionState?.lastRerouteDate {
             event.secondsSinceLastReroute = round(timestamp.timeIntervalSince(lastRerouteDate))

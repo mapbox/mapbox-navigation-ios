@@ -4,8 +4,6 @@ import MapboxDirections
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
-let bogusToken = "pk.feedCafeDeadBeefBadeBede"
-let directions = Directions(accessToken: bogusToken)
 
 
 class LaneTests: FBSnapshotTestCase {
@@ -16,11 +14,15 @@ class LaneTests: FBSnapshotTestCase {
     var routeProgress: RouteProgress!
     var routeController: RouteController!
     let routerDataSource = RouteControllerDataSourceFake()
+    var directions: DirectionsSpy!
     
     override func setUp() {
         super.setUp()
         recordMode = false
         agnosticOptions = [.OS, .device]
+
+        let bogusToken = "pk.feedCafeDeadBeefBadeBede"
+        directions = DirectionsSpy(accessToken: bogusToken)
 
         route.accessToken = bogusToken
         routeController = RouteController(along: route, directions: directions, dataSource: routerDataSource)
