@@ -206,7 +206,7 @@ extension MapboxNavigationService: CLLocationManagerDelegate {
     
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         //If we're always simulating, make sure this is a simulated update.
-        if simulationMode == .always, manager != simulatedLocationSource { return }
+        guard simulationMode != .always || manager == simulatedLocationSource else { return }
         
         //update the events manager with the received locations
         eventsManager.record(locations: locations)
