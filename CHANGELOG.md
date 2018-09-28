@@ -1,6 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
 ## master
+* Added `swipeable` property to `InstructionsBannerView`
+* Added `didSwipeInstructionsBanner` to `InstructionsBannerViewDelegate`
+* Deprecated `didDragInstructionsBanner` for `InstructionsBannerViewDelegate`
 
 ### User location
 
