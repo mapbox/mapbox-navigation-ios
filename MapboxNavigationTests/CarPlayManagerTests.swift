@@ -218,14 +218,14 @@ class CarPlayManagerSpec: QuickSpec {
                     manager!.simulatedSpeedMultiplier = 5.0
                 }
 
-                it("starts navigation with a route controller with a simulated location manager") {
+                it("starts navigation with a navigation service with simulation enabled") {
                     action()
 
                     expect(delegate!.navigationInitiated).to(beTrue())
                     let service: MapboxNavigationService = delegate!.currentService! as! MapboxNavigationService
+
                     expect(service.simulationMode).to(equal(.always))
-                    //TODO: expose this public/readonly for testing?
-//                    expect(service.speedMultiplier).to(equal(5.0))
+                    expect(service.simulationSpeedMultiplier).to(equal(5.0))
                 }
             })
 
@@ -234,12 +234,13 @@ class CarPlayManagerSpec: QuickSpec {
                     manager!.simulatesLocations = false
                 }
 
-                it("starts navigation with a route controller with a normal location manager") {
+                it("starts navigation with a navigation service with simulation set to onPoorGPS by default") {
                     action()
 
                     expect(delegate!.navigationInitiated).to(beTrue())
-                    let locator: NavigationLocationManager = delegate!.currentService!.locationManager
-                    expect(locator).to(beAnInstanceOf(NavigationLocationManager.self))
+                    let service: MapboxNavigationService = delegate!.currentService! as! MapboxNavigationService
+
+                    expect(service.simulationMode).to(equal(.onPoorGPS))
                 }
             })
         })
@@ -275,6 +276,7 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
         let service = MapboxNavigationService(route: initialRoute, directions: directionsClientSpy, locationSource: NavigationLocationManager(), eventsManagerType: EventsManagerSpy.self)
         return service
     }
+
     func carPlayManager(_ carPlayManager: CarPlayManager, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]? {
         return leadingBarButtons
     }

@@ -71,7 +71,7 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
     /**
      The simulation mode of the service.
      */
-    var simulationMode: SimulationMode { get }
+    var simulationMode: SimulationMode { get set }
     
     /**
      The simulation speed-multiplier. Modify this if you desire accelerated simulation.
@@ -150,7 +150,19 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
     /**
      The simulation mode of the service.
      */
-    public let simulationMode: SimulationMode
+    public var simulationMode: SimulationMode {
+        didSet {
+            switch simulationMode {
+            case .always:
+                simulate()
+            case .onPoorGPS:
+                poorGPSTimer.arm()
+            case .never:
+                poorGPSTimer.disarm()
+                endSimulation(intent: .manual)
+            }
+        }
+    }
 
     /**
      The simulation speed multiplier. If you desire the simulation to go faster than real-time, increase this value.
