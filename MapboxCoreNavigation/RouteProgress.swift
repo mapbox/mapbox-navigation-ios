@@ -37,6 +37,35 @@ open class RouteProgress: NSObject {
     }
 
     /**
+     Returns the remaining steps left on the current route
+     */
+    @objc public var remainingSteps: [RouteStep] {
+        var steps = [RouteStep]()
+        
+        // get all remaining steps on currentLeg
+        let curStepIndex = currentLegProgress.stepIndex
+        var curLegSteps = currentLeg.steps.suffix(from: curStepIndex)
+        _ = curLegSteps.popLast()
+        
+        for step in curLegSteps {
+            steps.append(step)
+        }
+        
+        // get all remaining steps after currentLeg
+        let remainingLegs = route.legs.suffix(from: legIndex + 1)
+        for leg in remainingLegs {
+            var curLegSteps = leg.steps
+            _ = curLegSteps.popLast()
+            
+            for step in curLegSteps {
+                steps.append(step)
+            }
+        }
+        
+        return steps
+    }
+    
+    /**
     Returns true if `currentLeg` is the last leg.
     */
     public var isFinalLeg: Bool {
