@@ -59,7 +59,7 @@ public class NativeRouteController: RouteController {
     }
     
     override public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        locations.forEach { navigator.updateLocation(for: $0.asMBFixLocation()) }
+        locations.forEach { navigator.updateLocation(for: MBFixLocation($0)) }
         super.locationManager(manager, didUpdateLocations: locations)
     }
     

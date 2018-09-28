@@ -60,6 +60,16 @@ extension CLLocation {
                   timestamp: date!)
     }
     
+    convenience init(_ location: MBFixLocation) {
+        self.init(coordinate: location.location,
+                  altitude: location.altitude?.doubleValue ?? 0,
+                  horizontalAccuracy: location.accuracyHorizontal?.doubleValue ?? 0,
+                  verticalAccuracy: 0,
+                  course: location.bearing?.doubleValue ?? 0,
+                  speed: location.speed?.doubleValue ?? 0,
+                  timestamp: location.time)
+    }
+    
     /**
      Returns a Boolean value indicating whether the receiver is within a given distance of a route step.
      */
@@ -174,15 +184,5 @@ extension CLLocation {
             return false
         }
         return true
-    }
-    
-    func asMBFixLocation() -> MBFixLocation {
-        return MBFixLocation(location: coordinate,
-                             time: timestamp,
-                             speed: NSNumber(value: speed),
-                             bearing: NSNumber(value: course),
-                             altitude: NSNumber(value: altitude),
-                             accuracyHorizontal: NSNumber(value: horizontalAccuracy),
-                             provider: nil)
     }
 }
