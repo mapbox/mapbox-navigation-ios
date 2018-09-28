@@ -19,12 +19,9 @@ open class PortableRouteController: RouteController {
     }
     
     func updateNavigator() {
-        guard let json = route.json else {
-            assertionFailure("Missing json route")
-            return
-        }
+        assert(route.json != nil, "route.json missing, please verify the version of MapboxDirections.swift")
         
-        let data = try! JSONSerialization.data(withJSONObject: json, options: [])
+        let data = try! JSONSerialization.data(withJSONObject: route.json!, options: [])
         let jsonString = String(data: data, encoding: .utf8)!
         
         // TODO: Add support for alternative route
