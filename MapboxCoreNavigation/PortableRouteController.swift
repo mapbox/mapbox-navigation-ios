@@ -3,7 +3,8 @@ import MapboxNavigationNative
 import MapboxDirections
 
 
-public class NativeRouteController: RouteController {
+@objc(MBPortableRouteController)
+open class PortableRouteController: RouteController {
     
     let navigator = MBNavigator()
     
