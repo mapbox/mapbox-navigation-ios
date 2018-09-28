@@ -647,7 +647,7 @@ extension RouteMapViewController: NavigationViewDelegate {
             }
             
             guard let currentStepIndex = currentPreviewInstructionBannerStepIndex else { return }
-            let remainingSteps = routeController.routeProgress.remainingSteps
+            let remainingSteps = router.routeProgress.remainingSteps
             let prevStepIndex = currentStepIndex - 1
             guard prevStepIndex >= 0 else { return }
             
@@ -660,7 +660,7 @@ extension RouteMapViewController: NavigationViewDelegate {
                 return
             }
             
-            let remainingSteps = routeController.routeProgress.remainingSteps
+            let remainingSteps = router.routeProgress.remainingSteps
             let currentStepIndex = currentPreviewInstructionBannerStepIndex ?? 0
             let nextStepIndex = currentStepIndex + 1
             guard nextStepIndex < remainingSteps.count else { return }
@@ -966,7 +966,7 @@ extension RouteMapViewController: NavigationViewDelegate {
         mapView.setCenter(upcomingStep.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: upcomingStep.initialHeading!, animated: true, completionHandler: nil)
         
         guard isViewLoaded && view.window != nil else { return }
-        mapView.addArrow(route: routeController.routeProgress.route, legIndex: legIndex, stepIndex: stepIndex + 1)
+        mapView.addArrow(route: router.routeProgress.route, legIndex: legIndex, stepIndex: stepIndex + 1)
     }
     
     func addPreviewInstructions(step: RouteStep, maneuverStep: RouteStep, distance: CLLocationDistance?) {
@@ -998,7 +998,7 @@ extension RouteMapViewController: StepsViewControllerDelegate {
         let step = legProgress.currentStep
         guard let upcomingStep = legProgress.upComingStep else { return }
 
-        currentPreviewInstructionBannerStepIndex = routeController.routeProgress.remainingSteps.index(of: step)
+        currentPreviewInstructionBannerStepIndex = router.routeProgress.remainingSteps.index(of: step)
         
         viewController.dismiss {
             self.addPreviewInstructions(step: step, maneuverStep: upcomingStep, distance: cell.instructionsView.distance)
