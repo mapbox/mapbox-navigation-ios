@@ -133,6 +133,7 @@ class RouteMapViewController: UIViewController {
 
         distanceFormatter.numberFormatter.locale = .nationalizedCurrent
 
+        makeGestureRecognizersResetFrameRate()
         navigationView.overviewButton.addTarget(self, action: Actions.overview, for: .touchUpInside)
         navigationView.muteButton.addTarget(self, action: Actions.mute, for: .touchUpInside)
         navigationView.reportButton.addTarget(self, action: Actions.feedback, for: .touchUpInside)
@@ -404,6 +405,7 @@ class RouteMapViewController: UIViewController {
 
         instructionsBannerView.updateDistance(for: routeProgress.currentLegProgress.currentStepProgress)
 
+        mapView.updatePreferredFrameRate(for: routeProgress)
         if currentLegIndexMapped != routeProgress.legIndex {
             mapView.showWaypoints(routeProgress.route, legIndex: routeProgress.legIndex)
             mapView.showRoutes([routeProgress.route], legIndex: routeProgress.legIndex)
@@ -419,6 +421,17 @@ class RouteMapViewController: UIViewController {
         if annotatesSpokenInstructions {
             mapView.showVoiceInstructionsOnMap(route: route)
         }
+    }
+    
+    /** Modifies the gesture recognizers to also update the map’s frame rate. */
+    func makeGestureRecognizersResetFrameRate() {
+        for gestureRecognizer in mapView.gestureRecognizers ?? [] {
+            gestureRecognizer.addTarget(self, action: #selector(resetFrameRate(_:)))
+        }
+    }
+    
+    @objc func resetFrameRate(_ sender: UIGestureRecognizer) {
+        mapView.preferredFramesPerSecond = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
     }
 
     var contentInsets: UIEdgeInsets {
