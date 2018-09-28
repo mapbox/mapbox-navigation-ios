@@ -63,15 +63,17 @@ open class PortableRouteController: RouteController {
     
     override public func userIsOnRoute(_ location: CLLocation) -> Bool {
         let status = navigator.getStatusForTimestamp(location.timestamp)
-        return status.routeState.isOnRoute()
+        return status.routeState.isOnRoute
     }
 }
 
 extension MBRouteState {
     
-    func isOnRoute() -> Bool {
-        let validStates: [MBRouteState] = [MBRouteState.initialized, MBRouteState.tracking, MBRouteState.complete]
-        return validStates.contains(self)
+    var isOnRoute: Bool {
+        get {
+            let validStates: [MBRouteState] = [MBRouteState.initialized, MBRouteState.tracking, MBRouteState.complete]
+            return validStates.contains(self)
+        }
     }
 }
 
