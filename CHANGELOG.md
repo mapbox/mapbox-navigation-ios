@@ -1,6 +1,7 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
 ## master
+* Added an InstructionsBannerView.swipeable property that allows the user to swipe the banner to the side to preview future steps. The InstructionsBannerViewDelegate.didDragInstructionsBanner(_:) method has been deprecated in favor of InstructionsBannerViewDelegate.didSwipeInstructionsBanner(_:swipeDirection:). (#1750)
 
 ### User location
 

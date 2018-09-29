@@ -37,6 +37,20 @@ open class RouteProgress: NSObject {
     }
 
     /**
+     Returns the remaining legs left on the current route
+     */
+    @objc public var remainingLegs: [RouteLeg] {
+        return Array(route.legs.suffix(from: legIndex + 1))
+    }
+
+    /**
+     Returns the remaining steps left on the current route
+     */
+    @objc public var remainingSteps: [RouteStep] {
+        return currentLegProgress.remainingSteps + remainingLegs.flatMap { $0.steps }
+    }
+    
+    /**
     Returns true if `currentLeg` is the last leg.
     */
     public var isFinalLeg: Bool {
