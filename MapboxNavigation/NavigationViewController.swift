@@ -621,7 +621,7 @@ extension NavigationViewController: NavigationServiceDelegate {
         delegate?.navigationViewController?(self, willRerouteFrom: location)
     }
     
-    @objc public func navigationService(_ service: NavigationService, didRerouteAlong route: Route) {
+    @objc public func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at: CLLocation?, proactive: Bool) {
         mapViewController?.notifyDidReroute(route: route)
         delegate?.navigationViewController?(self, didRerouteAlong: route)
     }
