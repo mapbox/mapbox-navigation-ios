@@ -216,7 +216,7 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
                                locationSource: NavigationLocationManager? = nil,
                                eventsManagerType: EventsManager.Type? = nil,
                                simulating simulationMode: SimulationMode = .onPoorGPS,
-                               routerType: Router.Type? = RouteController.self)
+                               routerType: Router.Type? = PortableRouteController.self)
     {
         nativeLocationSource = locationSource ?? NavigationLocationManager()
         self.directions = directions ?? Directions.shared
@@ -224,7 +224,7 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
         super.init()
         resumeNotifications()
         poorGPSTimer = CountdownTimer(countdown: MapboxNavigationService.poorGPSPatience, payload: timerPayload)
-        let routerType = routerType ?? RouteController.self
+        let routerType = routerType ?? PortableRouteController.self
         router = routerType.init(along: route, directions: self.directions, dataSource: self)
         
         let eventType = eventsManagerType ?? EventsManager.self
