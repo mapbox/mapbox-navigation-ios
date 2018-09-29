@@ -64,7 +64,7 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
     var eventsManager: EventsManager! { get }
     
     /**
-     The route being progressed.
+     The route along which the user is expected to travel.
      */
     var route: Route { get set }
     
@@ -100,13 +100,13 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
 }
 
 /**
- A `NavigationService` is the entry-point interface into MapboxCoreNavigation. This service manages a `locationManager` (which feeds it location updates), a `Directions` service (for rerouting), a `Router` (for route-following), an `eventsManager` (for telemetry), and a simulation engine for poor GPS conditions.
+ A `NavigationService` is the entry-point interface into MapboxCoreNavigation. This service manages a `locationManager` (which feeds it location updates), a `Directions` service (for rerouting), a `Router` (for route-following), an `eventsManager` (for telemetry), and a simulation engine for use during poor GPS conditions.
  */
 @objc(MBNavigationService)
 public class MapboxNavigationService: NSObject, NavigationService, DefaultInterfaceFlag {
     
     /**
-     How long will the service wait before beginning simulation when the `.onPoorGPS` simulation option is enabled?
+     How long the service will wait before beginning simulation when the `.onPoorGPS` simulation option is enabled.
      */
     static let poorGPSPatience: DispatchTimeInterval = .milliseconds(1500) //1.5 seconds
     
@@ -128,7 +128,7 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
     public var router: Router!
     
     /**
-     The events manager. Sends telemetry back to the Mapbox Platform.
+     The events manager. Sends telemetry back to the Mapbox platform.
     */
     public var eventsManager: EventsManager!
     
