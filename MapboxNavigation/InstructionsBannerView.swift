@@ -126,6 +126,7 @@ open class BaseInstructionsBannerView: UIControl {
             
             if let delegate = delegate {
                 delegate.didSwipeInstructionsBanner?(self, swipeDirection: .down)
+                delegate.didDragInstructionsBanner?(self)
             }
         }
     }
