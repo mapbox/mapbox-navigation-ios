@@ -215,10 +215,9 @@ class RouteMapViewController: UIViewController {
         mapView.addArrow(route: router.route,
                          legIndex: router.routeProgress.legIndex,
                          stepIndex: router.routeProgress.currentLegProgress.stepIndex + 1)
-
-        if currentPreviewInstructionBannerStepIndex != nil {
-            currentPreviewInstructionBannerStepIndex = nil
-        }
+        
+        // always remove preview index when we recenter
+        currentPreviewInstructionBannerStepIndex = nil
         
         removePreviewInstructions()
     }
@@ -557,13 +556,8 @@ class RouteMapViewController: UIViewController {
         }
     }
     
-    fileprivate func leg(with step: RouteStep) -> RouteLeg? {
-        for leg in route.legs {
-            if leg.steps.contains(step) {
-                return leg
-            }
-        }
-        return nil
+    fileprivate func leg(containing step: RouteStep) -> RouteLeg? {
+        return route.legs.first { $0.steps.contains(step) }
     }
 }
 
@@ -953,7 +947,7 @@ extension RouteMapViewController: NavigationViewDelegate {
     }
     
     func addPreviewInstructions(for step: RouteStep) {
-        guard let leg = leg(with: step) else { return }
+        guard let leg = leg(containing: step) else { return }
         guard let legIndex = route.legs.index(of: leg) else { return }
         guard let stepIndex = leg.steps.index(of: step) else { return }
         
