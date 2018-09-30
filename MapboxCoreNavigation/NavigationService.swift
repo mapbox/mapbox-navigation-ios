@@ -99,7 +99,7 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
     func endNavigation(feedback: EndOfRouteFeedback?)
     
     /**
-     Interrogates the navigationServcie as to whether or not the passed-in location is in a tunnel.
+     Interrogates the navigationService as to whether or not the passed-in location is in a tunnel.
      */
     func isInTunnel(at location: CLLocation, along progress: RouteProgress) -> Bool 
 
