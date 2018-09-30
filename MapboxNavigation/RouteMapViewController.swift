@@ -109,6 +109,12 @@ class RouteMapViewController: UIViewController {
 
     var labelRoadNameCompletionHandler: (LabelRoadNameCompletionHandler)?
 
+    @available(*, obsoleted: 0.1, renamed: "init(navigationService:delegate:)", message: "Intializing a RouteMapViewController with a RouteController is no longer supported. Use a NavigationService instead." )
+    /// :nodoc: Obsoleted method.
+    convenience init(routeController: RouteController, delegate: RouteMapViewControllerDelegate? = nil) {
+        fatalError()
+    }
+    
     convenience init(navigationService: NavigationService, delegate: RouteMapViewControllerDelegate? = nil) {
         self.init()
         self.navService = navigationService

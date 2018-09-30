@@ -99,6 +99,13 @@ open class RouteController: NSObject, Router {
 
     var userSnapToStepDistanceFromManeuver: CLLocationDistance?
     
+    @available(*, obsoleted: 0.1, message: "MapboxNavigationService is now the point-of-entry to MapboxCoreNavigation. Direct use of RouteController is no longer reccomended. See MapboxNavigationService for more information.")
+    /// :nodoc: Obsoleted method.
+    @objc(initWithRoute:directions:locationManager:eventsManager:)
+    public init(along route: Route, directions: Directions = Directions.shared, locationManager: NavigationLocationManager = NavigationLocationManager(), eventsManager: EventsManager) {
+        fatalError()
+    }
+    
     /**
      Intializes a new `RouteController`.
 

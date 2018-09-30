@@ -349,6 +349,18 @@ open class NavigationViewController: UIViewController {
     }
     
     private var traversingTunnel = false
+    @available(*, obsoleted: 0.1, renamed: "init(for:styles:navigationService:voiceController:)", message: "Intializing a NavigationViewController directly with a RouteController is no longer supported. Use a NavigationService instead.")
+    /// :nodoc: Obsoleted method.
+    @objc(initWithRoute:directions:styles:routeController:locationManager:voiceController:eventsManager:)
+    required public init(for route: Route,
+                         directions: Directions = Directions.shared,
+                         styles: [Style]? = [DayStyle(), NightStyle()],
+                         routeController: RouteController? = nil,
+                         locationManager: NavigationLocationManager? = nil,
+                         voiceController: RouteVoiceController? = nil,
+                         eventsManager: EventsManager? = nil) {
+        fatalError()
+    }
     
     /**
      Initializes a `NavigationViewController` that provides turn by turn navigation for the given route. A optional `direction` object is needed for  potential rerouting.
