@@ -22,6 +22,7 @@ class CarPlayManagerTests: XCTestCase {
     }
 
     override func setUp() {
+        super.setUp()
         manager = CarPlayManager.shared
         manager!.eventsManager = MMEEventsManagerSpy()
     }
@@ -29,6 +30,7 @@ class CarPlayManagerTests: XCTestCase {
     override func tearDown() {
         manager = nil
         CarPlayManager.resetSharedInstance()
+        super.tearDown()
     }
 
     func simulateCarPlayDisconnection() {

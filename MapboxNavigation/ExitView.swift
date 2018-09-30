@@ -77,12 +77,12 @@ public class ExitView: StylableView {
         commonInit()
     }
     
-    override init(frame: CGRect) {
+    override public init(frame: CGRect) {
         pointSize = 0.0
         super.init(frame: frame)
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         pointSize = 0.0        
         super.init(coder: aDecoder)
         commonInit()
