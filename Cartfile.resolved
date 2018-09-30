@@ -1,4 +1,4 @@
-binary "https://s3.amazonaws.com/mapbox/mapbox-navigation-native/ios/builds/Mapbox-iOS-Navigation-Native.json" "3.1.0"
+binary "https://s3.amazonaws.com/mapbox/mapbox-navigation-native/ios/builds/Mapbox-iOS-Navigation-Native.json" "3.1.2"
 binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" "4.4.1"
 github "CedarBDD/Cedar" "v1.0"
 github "Quick/Nimble" "v7.3.1"
