@@ -160,7 +160,7 @@ class MapboxCoreNavigationTests: XCTestCase {
 }
 
 
-func futureEcho(location: CLLocation, times: Int = 4) -> [CLLocation] {
+fileprivate func futureEcho(location: CLLocation, times: Int = 4) -> [CLLocation] {
     let loop = 0...times
     let intervals = loop.map(TimeInterval.init(_:))
     let locations = intervals.map { shift(location: location, by: $0) }
