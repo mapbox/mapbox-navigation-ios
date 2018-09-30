@@ -97,6 +97,12 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
      Ends the navigation session. Used when arriving at destination.
      */
     func endNavigation(feedback: EndOfRouteFeedback?)
+    
+    /**
+     Interrogates the navigationServcie as to whether or not the passed-in location is in a tunnel.
+     */
+    func isInTunnel(at location: CLLocation, along progress: RouteProgress) -> Bool 
+
 }
 
 /**
@@ -254,7 +260,7 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
      - parameter progress: the RouteProgress model that contains the route geometry.
 
      */
-    public static func isInTunnel(at location: CLLocation, along progress: RouteProgress) -> Bool {
+    public func isInTunnel(at location: CLLocation, along progress: RouteProgress) -> Bool {
         return TunnelAuthority.isInTunnel(at: location, along: progress)
     }
 

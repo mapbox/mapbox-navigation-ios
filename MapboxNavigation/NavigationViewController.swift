@@ -679,7 +679,7 @@ extension NavigationViewController: NavigationServiceDelegate {
     }
     
     private func checkTunnelState(at location: CLLocation, along progress: RouteProgress) {
-        let inTunnel = MapboxNavigationService.isInTunnel(at: location, along: progress)
+        let inTunnel = navigationService.isInTunnel(at: location, along: progress)
         
         if !traversingTunnel, inTunnel { // we're entering
             traversingTunnel = true
