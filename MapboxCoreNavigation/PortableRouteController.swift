@@ -61,19 +61,10 @@ open class PortableRouteController: RouteController {
         super.locationManager(manager, didUpdateLocations: locations)
     }
     
-    override public func userIsOnRoute(_ location: CLLocation) -> Bool {
+    override internal func userIsWithinRadiusOfRoute(location: CLLocation) -> Bool {
         let status = navigator.getStatusForTimestamp(location.timestamp)
-        return status.routeState.isOnRoute
-    }
-}
-
-extension MBRouteState {
-    
-    var isOnRoute: Bool {
-        get {
-            let validStates: [MBRouteState] = [MBRouteState.initialized, MBRouteState.tracking, MBRouteState.complete]
-            return validStates.contains(self)
-        }
+        let offRoute = status.routeState == .offRoute
+        return !offRoute
     }
 }
 

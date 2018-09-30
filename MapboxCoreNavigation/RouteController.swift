@@ -209,6 +209,64 @@ open class RouteController: NSObject, Router {
             
         }
     }
+    
+    /**
+     Monitors the user's course to see if it is consistantly moving away from what we expect the course to be at a given point.
+     */
+    func userCourseIsOnRoute(_ location: CLLocation) -> Bool {
+        let nearByCoordinates = routeProgress.currentLegProgress.nearbyCoordinates
+        guard let calculatedCourseForLocationOnStep = location.interpolatedCourse(along: nearByCoordinates) else { return true }
+        
+        let maxUpdatesAwayFromRouteGivenAccuracy = Int(location.horizontalAccuracy / Double(RouteControllerIncorrectCourseMultiplier))
+        
+        if movementsAwayFromRoute >= max(RouteControllerMinNumberOfInCorrectCourses, maxUpdatesAwayFromRouteGivenAccuracy)  {
+            return false
+        } else if location.shouldSnap(toRouteWith: calculatedCourseForLocationOnStep) {
+            movementsAwayFromRoute = 0
+        } else {
+            movementsAwayFromRoute += 1
+        }
+        
+        return true
+    }
+    
+    /**
+     Given a users current location, returns a Boolean whether they are currently on the route.
+     
+     If the user is not on the route, they should be rerouted.
+     */
+    @objc public func userIsOnRoute(_ location: CLLocation) -> Bool {
+        
+        // If the user has arrived, do not continue monitor reroutes, step progress, etc
+        guard !routeProgress.currentLegProgress.userHasArrivedAtWaypoint || (delegate?.router?(self, shouldPreventReroutesWhenArrivingAt: routeProgress.currentLeg.destination) ?? DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint) else {
+            return true
+        }
+        
+        let isCloseToCurrentStep = userIsWithinRadiusOfRoute(location: location)
+        
+        guard !isCloseToCurrentStep || !userCourseIsOnRoute(location) else { return true }
+        
+        // Check and see if the user is near a future step.
+        guard let nearestStep = routeProgress.currentLegProgress.closestStep(to: location.coordinate) else {
+            return false
+        }
+        
+        if nearestStep.distance < RouteControllerUserLocationSnappingDistance {
+            // Only advance the stepIndex to a future step if the step is new. Otherwise, the user is still on the current step.
+            if nearestStep.index != routeProgress.currentLegProgress.stepIndex {
+                advanceStepIndex(to: nearestStep.index)
+            }
+            return true
+        }
+        
+        return false
+    }
+    
+    internal func userIsWithinRadiusOfRoute(location: CLLocation) -> Bool {
+        let radius = max(reroutingTolerance, RouteControllerManeuverZoneRadius)
+        let isCloseToCurrentStep = location.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
+        return isCloseToCurrentStep
+    }
 }
 
 extension RouteController: CLLocationManagerDelegate {
@@ -340,59 +398,7 @@ extension RouteController: CLLocationManagerDelegate {
         }
     }
 
-    /**
-     Monitors the user's course to see if it is consistantly moving away from what we expect the course to be at a given point.
-     */
-    func userCourseIsOnRoute(_ location: CLLocation) -> Bool {
-        let nearByCoordinates = routeProgress.currentLegProgress.nearbyCoordinates
-        guard let calculatedCourseForLocationOnStep = location.interpolatedCourse(along: nearByCoordinates) else { return true }
-
-        let maxUpdatesAwayFromRouteGivenAccuracy = Int(location.horizontalAccuracy / Double(RouteControllerIncorrectCourseMultiplier))
-
-        if movementsAwayFromRoute >= max(RouteControllerMinNumberOfInCorrectCourses, maxUpdatesAwayFromRouteGivenAccuracy)  {
-            return false
-        } else if location.shouldSnap(toRouteWith: calculatedCourseForLocationOnStep) {
-            movementsAwayFromRoute = 0
-        } else {
-            movementsAwayFromRoute += 1
-        }
-
-        return true
-    }
-
-    /**
-     Given a users current location, returns a Boolean whether they are currently on the route.
-
-     If the user is not on the route, they should be rerouted.
-     */
-    @objc public func userIsOnRoute(_ location: CLLocation) -> Bool {
-        
-        // If the user has arrived, do not continue monitor reroutes, step progress, etc
-        guard !routeProgress.currentLegProgress.userHasArrivedAtWaypoint || (delegate?.router?(self, shouldPreventReroutesWhenArrivingAt: routeProgress.currentLeg.destination) ?? DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint) else {
-            return true
-        }
-
-        let radius = max(reroutingTolerance, RouteControllerManeuverZoneRadius)
-        let isCloseToCurrentStep = location.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
-
-        guard !isCloseToCurrentStep || !userCourseIsOnRoute(location) else { return true }
-
-        // Check and see if the user is near a future step.
-        guard let nearestStep = routeProgress.currentLegProgress.closestStep(to: location.coordinate) else {
-            return false
-        }
-
-        if nearestStep.distance < RouteControllerUserLocationSnappingDistance {
-            // Only advance the stepIndex to a future step if the step is new. Otherwise, the user is still on the current step.
-            if nearestStep.index != routeProgress.currentLegProgress.stepIndex {
-                advanceStepIndex(to: nearestStep.index)
-            }
-            return true
-        }
-
-        return false
-    }
-
+ 
     func checkForFasterRoute(from location: CLLocation) {
         guard let currentUpcomingManeuver = routeProgress.currentLegProgress.upComingStep else {
             return
@@ -472,7 +478,7 @@ extension RouteController: CLLocationManagerDelegate {
             }
 
             guard let route = route else { return }
-
+            strongSelf.isRerouting = false
             strongSelf._routeProgress = RouteProgress(route: route, legIndex: 0)
             strongSelf._routeProgress.currentLegProgress.stepIndex = 0
             strongSelf.announce(reroute: route, at: location, proactive: false)
