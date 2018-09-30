@@ -97,7 +97,10 @@ class NavigationServiceTests: XCTestCase {
     func testUserIsOffRoute() {
         let navigation = dependencies.navigationService
         let firstLocation = dependencies.routeLocations.firstLocation
-
+        
+        let echos = futureEcho(location: firstLocation)
+        navigation.locationManager!(navigation.locationManager, didUpdateLocations: echos)
+        
         let coordinateOffRoute = firstLocation.coordinate.coordinate(at: 100, facing: 90)
         let locationOffRoute = CLLocation(latitude: coordinateOffRoute.latitude, longitude: coordinateOffRoute.longitude)
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [locationOffRoute])
@@ -108,6 +111,10 @@ class NavigationServiceTests: XCTestCase {
         let navigation = dependencies.navigationService
         let firstLocation = dependencies.routeLocations.firstLocation
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocation])
+        
+        let echos = futureEcho(location: firstLocation)
+        navigation.locationManager!(navigation.locationManager, didUpdateLocations: echos)
+        
         XCTAssertTrue(navigation.router.userIsOnRoute(firstLocation), "User should be on route")
         XCTAssertEqual(navigation.router.routeProgress.currentLegProgress.stepIndex, 0, "User is on first step")
 
@@ -302,7 +309,8 @@ class NavigationServiceTests: XCTestCase {
         let lastLocation = dependencies.routeLocations.lastLocation
 
         // MARK: When navigation begins with a location update
-        navigationService.locationManager!(navigationService.locationManager, didUpdateLocations: [firstLocation])
+        let echos = futureEcho(location: firstLocation)
+        navigationService.locationManager!(navigationService.locationManager, didUpdateLocations: echos)
 
         // MARK: It queues and flushes a Depart event
         let spyManager = navigationService.eventsManager as! EventsManagerSpy
@@ -335,7 +343,8 @@ class NavigationServiceTests: XCTestCase {
         let lastLocation = dependencies.routeLocations.lastLocation
 
         // MARK: When navigation begins with a location update
-        navigationService.locationManager!(navigationService.locationManager, didUpdateLocations: [firstLocation])
+        let echos = futureEcho(location: firstLocation)
+        navigationService.locationManager!(navigationService.locationManager, didUpdateLocations: echos)
         
         // MARK: It queues and flushes a Depart event
         let spyManager = navigationService.eventsManager as! EventsManagerSpy

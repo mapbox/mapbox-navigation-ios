@@ -45,7 +45,8 @@ class MapboxCoreNavigationTests: XCTestCase {
     func testNewStep() {
         route.accessToken = "foo"
         let location = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.78895, longitude: -122.42543), altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 171, speed: 10, timestamp: Date())
-        let locationManager = ReplayLocationManager(locations: [location, location])
+        let echos = futureEcho(location: location)
+        let locationManager = ReplayLocationManager(locations: echos)
         navigation = MapboxNavigationService(route: route, directions: directions, locationSource: locationManager, simulating: .never)
         expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: navigation.router) { (notification) -> Bool in
             XCTAssertEqual(notification.userInfo?.count, 1)
@@ -66,7 +67,8 @@ class MapboxCoreNavigationTests: XCTestCase {
         route.accessToken = "foo"
         let location = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.77386, longitude: -122.43085), altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 171, speed: 10, timestamp: Date())
         
-        let locationManager = ReplayLocationManager(locations: [location, location])
+        let echos = futureEcho(location: location)
+        let locationManager = ReplayLocationManager(locations: echos)
         navigation = MapboxNavigationService(route: route, directions: directions, locationSource: locationManager, simulating: .never)
 
         expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: navigation.router) { (notification) -> Bool in
@@ -92,9 +94,10 @@ class MapboxCoreNavigationTests: XCTestCase {
         
         let secondLocation = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 38, longitude: -124),
                                         altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: 0, speed: 0,
-                                        timestamp: Date(timeIntervalSinceNow: 1))
-        
-        let locationManager = ReplayLocationManager(locations: [firstLocation, secondLocation])
+                                        timestamp: Date(timeIntervalSinceNow: 5))
+        let echos = futureEcho(location: firstLocation)
+        let locations = echos + [secondLocation]
+        let locationManager = ReplayLocationManager(locations: locations)
         navigation = MapboxNavigationService(route: route, directions: directions, locationSource: locationManager, simulating: .never)
         expectation(forNotification: .routeControllerWillReroute, object: navigation.router) { (notification) -> Bool in
             XCTAssertEqual(notification.userInfo?.count, 1)
@@ -154,4 +157,18 @@ class MapboxCoreNavigationTests: XCTestCase {
             XCTAssertNil(error)
         }
     }
+}
+
+
+func futureEcho(location: CLLocation, times: Int = 4) -> [CLLocation] {
+    let loop = 0...times
+    let intervals = loop.map(TimeInterval.init(_:))
+    let locations = intervals.map { shift(location: location, by: $0) }
+    return locations
+}
+
+fileprivate func shift(location: CLLocation, by interval: TimeInterval) -> CLLocation {
+    
+    let newTime = location.timestamp.addingTimeInterval(interval)
+    return CLLocation(coordinate: location.coordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: location.course, speed: location.speed, timestamp: newTime)
 }

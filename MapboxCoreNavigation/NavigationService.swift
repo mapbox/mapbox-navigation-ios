@@ -105,6 +105,8 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
 @objc(MBNavigationService)
 public class MapboxNavigationService: NSObject, NavigationService, DefaultInterfaceFlag {
     
+    typealias DefaultRouter = PortableRouteController
+    
     /**
      How long the service will wait before beginning simulation when the `.onPoorGPS` simulation option is enabled.
      */
@@ -216,7 +218,7 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
                                locationSource: NavigationLocationManager? = nil,
                                eventsManagerType: EventsManager.Type? = nil,
                                simulating simulationMode: SimulationMode = .onPoorGPS,
-                               routerType: Router.Type? = PortableRouteController.self)
+                               routerType: Router.Type? = DefaultRouter.self)
     {
         nativeLocationSource = locationSource ?? NavigationLocationManager()
         self.directions = directions ?? Directions.shared
@@ -224,7 +226,7 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
         super.init()
         resumeNotifications()
         poorGPSTimer = CountdownTimer(countdown: MapboxNavigationService.poorGPSPatience, payload: timerPayload)
-        let routerType = routerType ?? PortableRouteController.self
+        let routerType = routerType ?? DefaultRouter.self
         router = routerType.init(along: route, directions: self.directions, dataSource: self)
         
         let eventType = eventsManagerType ?? EventsManager.self
