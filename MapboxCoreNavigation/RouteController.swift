@@ -99,13 +99,6 @@ open class RouteController: NSObject, Router {
 
     var userSnapToStepDistanceFromManeuver: CLLocationDistance?
     
-    @available(*, obsoleted: 0.1, message: "MapboxNavigationService is now the point-of-entry to MapboxCoreNavigation. Direct use of RouteController is no longer reccomended. See MapboxNavigationService for more information.")
-    /// :nodoc: Obsoleted method.
-    @objc(initWithRoute:directions:locationManager:eventsManager:)
-    public init(along route: Route, directions: Directions = Directions.shared, locationManager: NavigationLocationManager = NavigationLocationManager(), eventsManager: EventsManager) {
-        fatalError()
-    }
-    
     /**
      Intializes a new `RouteController`.
 
@@ -640,3 +633,44 @@ extension RouteController: CLLocationManagerDelegate {
     }
 }
 
+//MARK: - Obsolete Interfaces
+
+public extension RouteController {
+    @available(*, obsoleted: 0.1, message: "MapboxNavigationService is now the point-of-entry to MapboxCoreNavigation. Direct use of RouteController is no longer reccomended. See MapboxNavigationService for more information.")
+    /// :nodoc: Obsoleted method.
+    @objc(initWithRoute:directions:locationManager:eventsManager:)
+    public convenience init(along route: Route, directions: Directions = Directions.shared, locationManager: NavigationLocationManager = NavigationLocationManager(), eventsManager: EventsManager) {
+        fatalError()
+    }
+    
+    @available(*, obsoleted: 0.1, message: "RouteController no longer manages a location manager directly. Instead, the Router protocol conforms to CLLocationManagerDelegate, and RouteControllerDataSource provides access to synchronous location requests.")
+    /// :nodoc: obsoleted
+    @objc public final var locationManager: NavigationLocationManager! {
+        get {
+            fatalError()
+        }
+        set {
+            fatalError()
+        }
+    }
+    @available(*, obsoleted: 0.1, renamed: "NavigationService.locationManager", message: "NavigationViewController no-longer directly manages an NavigationLocationManager. See MapboxNavigationService, which contains a reference to the locationManager, for more information.")
+    /// :nodoc: obsoleted
+    @objc public final var tunnelIntersectionManager: Any! {
+        get {
+            fatalError()
+        }
+        set {
+            fatalError()
+        }
+    }
+    @available(*, obsoleted: 0.1, renamed: "navigationService.eventsManager", message: "NavigationViewController no-longer directly manages an EventsManager. See MapboxNavigationService, which contains a reference to the eventsManager, for more information.")
+    /// :nodoc: obsoleted
+    @objc public final var eventsManager: EventsManager! {
+        get {
+            fatalError()
+        }
+        set {
+            fatalError()
+        }
+    }
+}
