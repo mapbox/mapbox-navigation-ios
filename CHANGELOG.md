@@ -9,7 +9,7 @@
   * `NavigationViewController.routeController` has been replaced by `NavigationViewController.navigationService`.
   * If you currently use `RouteController` directly, you should migrate to `NavigationService`.
   * If you currently use `SimulatedLocationManager` directly, you should instead pass `SimulationOption.always` into `MapboxNavigationService(route:directions:locationSource:eventsManagerType:simulating:)`.
-  * Improved the reliability of off-route detection.
+  * Added a new, improved off-route detection heuristic provided by Mapbox's cross-platform native-navigation library.
   * Added a dependency on the `MapboxNavigationNative` framework. If you use Carthage to install this framework, you need to update your target to link against the new framework.
 
 ### User interface
