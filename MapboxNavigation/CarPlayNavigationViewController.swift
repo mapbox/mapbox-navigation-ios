@@ -43,17 +43,17 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     /**
      Creates a new CarPlay navigation view controller for the given route controller and user interface.
      
-     - parameter routeController: The route controller managing location updates for the navigation session.
+     - parameter navigationService: The navigation service managing location updates for the navigation session.
      - parameter mapTemplate: The map template visible during the navigation session.
      - parameter interfaceController: The interface controller for CarPlay.
      
      - postcondition: Call `startNavigationSession(for:)` after initializing this object to begin navigation.
      */
     @objc(initWithNavigationService:mapTemplate:interfaceController:)
-    public init(with navService: NavigationService,
+    public init(with navigationService: NavigationService,
                 mapTemplate: CPMapTemplate,
                 interfaceController: CPInterfaceController) {
-        self.navService = navService
+        self.navService = navigationService
         self.mapTemplate = mapTemplate
         self.carInterfaceController = interfaceController
         
@@ -340,8 +340,12 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     
     func endOfRouteFeedbackTemplate() -> CPGridTemplate {
         let buttonHandler: (_: CPGridButton) -> Void = { [weak self] (button) in
-            //TODO: no such method exists, and the replacement candidate ignores the feedback sent, so ... ?
-//            self?.routeController.setEndOfRoute(rating: Int(button.titleVariants.first!.components(separatedBy: CharacterSet.decimalDigits.inverted).joined())!, comment: nil)
+    
+            let title: String? = button.titleVariants.first ?? nil
+            let rating: Int? = title != nil ? Int(title!.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()) : nil
+            let feedback: EndOfRouteFeedback? = rating != nil ? EndOfRouteFeedback(rating: rating, comment: nil) : nil
+            self?.navService.endNavigation(feedback: feedback)
+            
             self?.carInterfaceController.popTemplate(animated: true)
             self?.exitNavigation()
         }

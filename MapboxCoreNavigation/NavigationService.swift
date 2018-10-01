@@ -7,48 +7,176 @@ public enum SimulationIntent: Int{
     case manual, poorGPS
 }
 
+
+/**
+ The simulation mode type. Used for setting the simulation mode of the navigation service.
+ */
 @objc(MBNavigationSimulationOptions)
-public enum SimulationOption: Int {
-    case onPoorGPS, always, never
+public enum SimulationMode: Int {
+   
+    /**
+     A setting of `.onPoorGPS` will enable simulation when we do not recieve a location update after the `poorGPSPatience` threshold has elapsed.
+     */
+    case onPoorGPS
+
+    /**
+     A setting of `.always` will simulate route progress at all times.
+     */
+    case always
+
+    /**
+     A setting of `.never` will never enable the location simulator, regardless of circumstances.
+     */
+    case never
 }
 
+/// :nodoc: Internal "using default interaface" flag. Used for telemetry.
+@objc(MBDefaultInterfaceFlag)
+public protocol DefaultInterfaceFlag {
+    /// :nodoc: Internal "using default interaface" flag. Used for telemetry.
+    var usesDefaultUserInterface: Bool { get set }
+}
 
+/**
+ A `NavigationService` is the entry-point protocol for MapboxCoreNavigation.
+    It contains all the dependancies needed by the `MapboxNavigation` UI SDK, as well as dependancies for it's child objects.
+    `MapboxNavigationService` is the default implementation.
+    If you would like to implement your own core-navigation stack, be sure to conform to this protocol.
+ */
 @objc(MBNavigationService)
-public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, EventsManagerDataSource {
+public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, EventsManagerDataSource, DefaultInterfaceFlag {
+    /**
+     The location manager for the service. This will be the object responsible for notifying the service of GPS updates.
+     */
     var locationManager: NavigationLocationManager { get }
-    var directions: Directions { get }
-    var router: Router! { get }
-    var eventsManager: EventsManager! { get }
-    var route: Route { get set }
-    var simulationMode: SimulationOption { get }
-    var simulationSpeedMultiplier: Double { get set }
-    weak var delegate: NavigationServiceDelegate? { get set }
     
+    /**
+     A reference to a MapboxDirections service. Used for rerouting.
+     */
+    var directions: Directions { get }
+    
+    /**
+     The active router, responsible for all route-following.
+     */
+    var router: Router! { get }
+    
+    /**
+     The events manager, responsible for all telemetry.
+     */
+    var eventsManager: EventsManager! { get }
+    
+    /**
+     The route along which the user is expected to travel.
+     */
+    var route: Route { get set }
+    
+    /**
+     The simulation mode of the service.
+     */
+    var simulationMode: SimulationMode { get set }
+    
+    /**
+     The simulation speed-multiplier. Modify this if you desire accelerated simulation.
+     */
+    var simulationSpeedMultiplier: Double { get set }
+    
+    /**
+     The `NavigationService` delegate. Wraps `RouterDelegate` messages.
+     */
+    weak var delegate: NavigationServiceDelegate? { get set }
+
+    /**
+     Starts the navigation service.
+     */
     func start()
+    
+    /**
+     Stops the navigation service. You may call `start()` after calling `stop()`.
+     */
     func stop()
+    
+    /**
+     Ends the navigation session. Used when arriving at destination.
+     */
     func endNavigation(feedback: EndOfRouteFeedback?)
+    
+    /**
+     Interrogates the navigationService as to whether or not the passed-in location is in a tunnel.
+     */
+    func isInTunnel(at location: CLLocation, along progress: RouteProgress) -> Bool 
+
 }
 
+/**
+ A `NavigationService` is the entry-point interface into MapboxCoreNavigation. This service manages a `locationManager` (which feeds it location updates), a `Directions` service (for rerouting), a `Router` (for route-following), an `eventsManager` (for telemetry), and a simulation engine for use during poor GPS conditions.
+ */
 @objc(MBNavigationService)
-public class MapboxNavigationService: NSObject, NavigationService {
+public class MapboxNavigationService: NSObject, NavigationService, DefaultInterfaceFlag {
     
+    typealias DefaultRouter = PortableRouteController
+    
+    /**
+     How long the service will wait before beginning simulation when the `.onPoorGPS` simulation option is enabled.
+     */
     static let poorGPSPatience: DispatchTimeInterval = .milliseconds(1500) //1.5 seconds
     
+    /**
+     The active location manager. Returns the location simulator if we're actively simulating, otherwise it returns the native location manager.
+    */
     public var locationManager: NavigationLocationManager {
         return simulatedLocationSource ?? nativeLocationSource
     }
+    
+    /**
+     A reference to a MapboxDirections service. Used for rerouting.
+     */
     public var directions: Directions
+    
+    /**
+     The active router. By default, a `NativeRouteController`.
+    */
     public var router: Router!
+    
+    /**
+     The events manager. Sends telemetry back to the Mapbox platform.
+    */
     public var eventsManager: EventsManager!
+    
+    /**
+     The `NavigationService` delegate. Wraps `RouterDelegate` messages.
+     */
     public weak var delegate: NavigationServiceDelegate?
     
+    /**
+     The native location source. This is a `NavigationLocationManager` by default, but can be overridden with a custom location manager at initalization.
+    */
     private var nativeLocationSource: NavigationLocationManager
+    
+    /**
+     The active location simulator. Only used during `SimulationOption.always` and `SimluatedLocationManager.onPoorGPS`. If there is no simulation active, this property is `nil`.
+    */
     private var simulatedLocationSource: SimulatedLocationManager?
-    
-    private var poorGPSTimer: CountdownTimer!
-    public let simulationMode: SimulationOption
-    private var isSimulating: Bool { return simulatedLocationSource != nil }
-    
+
+    /**
+     The simulation mode of the service.
+     */
+    public var simulationMode: SimulationMode {
+        didSet {
+            switch simulationMode {
+            case .always:
+                simulate()
+            case .onPoorGPS:
+                poorGPSTimer.arm()
+            case .never:
+                poorGPSTimer.disarm()
+                endSimulation(intent: .manual)
+            }
+        }
+    }
+
+    /**
+     The simulation speed multiplier. If you desire the simulation to go faster than real-time, increase this value.
+     */
     public var simulationSpeedMultiplier: Double {
         get {
             guard simulationMode == .always else { return 1.0 }
@@ -61,17 +189,44 @@ public class MapboxNavigationService: NSObject, NavigationService {
         }
     }
     
+    private var poorGPSTimer: CountdownTimer!
+    private var isSimulating: Bool { return simulatedLocationSource != nil }
     private var _simulationSpeedMultiplier: Double = 1.0
     
+    /// :nodoc: Internal Telemetry flag.
+    public var usesDefaultUserInterface: Bool {
+        get {
+            return eventsManager.usesDefaultUserInterface
+        }
+        set {
+            eventsManager.usesDefaultUserInterface = newValue
+        }
+    }
+    
+    /**
+     Intializes a new `NavigationService`. Useful convienence initalizer for OBJ-C users, for when you just want to set up a service without customizing anything.
+     
+     - parameter route: The route to follow.
+     */
     @objc convenience init(route: Route) {
         self.init(route: route, directions: nil, locationSource: nil, eventsManagerType: nil)
     }
-    
+    /**
+     Intializes a new `NavigationService`.
+     
+     - parameter route: The route to follow.
+     - parameter directions: The Directions object that created `route`.
+     - parameter locationSource: An optional override for the default `NaviationLocationManager`.
+     - parameter eventsManagerType: An optional events manager type to use while tracking the route.
+     - parameter simulationMode: The simulation mode desired.
+     - parameter routerType: An optional router type to use for traversing the route.
+     */
     @objc required public init(route: Route,
-                  directions: Directions? = nil,
-                  locationSource: NavigationLocationManager? = nil,
-                  eventsManagerType: EventsManager.Type? = nil,
-                  simulating simulationMode: SimulationOption = .onPoorGPS)
+                               directions: Directions? = nil,
+                               locationSource: NavigationLocationManager? = nil,
+                               eventsManagerType: EventsManager.Type? = nil,
+                               simulating simulationMode: SimulationMode = .onPoorGPS,
+                               routerType: Router.Type? = DefaultRouter.self)
     {
         nativeLocationSource = locationSource ?? NavigationLocationManager()
         self.directions = directions ?? Directions.shared
@@ -79,7 +234,9 @@ public class MapboxNavigationService: NSObject, NavigationService {
         super.init()
         resumeNotifications()
         poorGPSTimer = CountdownTimer(countdown: MapboxNavigationService.poorGPSPatience, payload: timerPayload)
-        router = RouteController(along: route, directions: self.directions, dataSource: self)
+        let routerType = routerType ?? DefaultRouter.self
+        router = routerType.init(along: route, directions: self.directions, dataSource: self)
+        
         let eventType = eventsManagerType ?? EventsManager.self
         eventsManager = eventType.init(dataSource: self, accessToken: route.accessToken)
         locationManager.activityType = route.routeOptions.activityType
@@ -87,10 +244,6 @@ public class MapboxNavigationService: NSObject, NavigationService {
         
         router.delegate = self
         nativeLocationSource.delegate = self
-        
-        if simulationMode == .always {
-            simulate()
-        }
     }
     
     deinit {
@@ -98,7 +251,14 @@ public class MapboxNavigationService: NSObject, NavigationService {
         endNavigation()
     }
     
-    public static func isInTunnel(at location: CLLocation, along progress: RouteProgress) -> Bool {
+    /**
+     Determines if a location is within a tunnel.
+     
+     - parameter location: The location to test.
+     - parameter progress: the RouteProgress model that contains the route geometry.
+
+     */
+    public func isInTunnel(at location: CLLocation, along progress: RouteProgress) -> Bool {
         return TunnelAuthority.isInTunnel(at: location, along: progress)
     }
 
@@ -116,7 +276,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
     }
     
     private func endSimulation(intent: SimulationIntent = .manual) {
-        guard !isSimulating else { return }
+        guard isSimulating else { return }
         let progress = simulatedLocationSource?.routeProgress ?? router.routeProgress
         delegate?.navigationService?(self, willEndSimulating: progress, becauseOf: intent)
         simulatedLocationSource?.stopUpdatingLocation()
@@ -139,21 +299,18 @@ public class MapboxNavigationService: NSObject, NavigationService {
         nativeLocationSource.startUpdatingHeading()
         nativeLocationSource.startUpdatingLocation()
         
-        simulatedLocationSource?.startUpdatingHeading()
-        simulatedLocationSource?.startUpdatingLocation()
-
-        if simulationMode == .onPoorGPS {
-            poorGPSTimer.arm()
+        if simulationMode == .always {
+            simulate()
         }
-        
     }
     
     public func stop() {
         nativeLocationSource.stopUpdatingHeading()
         nativeLocationSource.stopUpdatingLocation()
         
-        simulatedLocationSource?.stopUpdatingHeading()
-        simulatedLocationSource?.stopUpdatingLocation()
+        if simulationMode == .always {
+            endSimulation()
+        }
         
         poorGPSTimer.disarm()
     }
@@ -170,6 +327,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
     }
 
     private func resetGPSCountdown() {
+        //Sanity check: if we're not on this mode, we have no business here.
         guard simulationMode == .onPoorGPS else { return }
         
         // Immediately end simulation if it is occuring.
@@ -205,25 +363,29 @@ extension MapboxNavigationService: CLLocationManagerDelegate {
     }
     
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+
         //If we're always simulating, make sure this is a simulated update.
-        guard simulationMode != .always || manager == simulatedLocationSource else { return }
+        if simulationMode == .always, manager != simulatedLocationSource { return }
         
         //update the events manager with the received locations
         eventsManager.record(locations: locations)
         
-        guard let location = locations.first else { return }
+        //sanity check: make sure the update actually contains a location
+        guard let location = locations.last else { return }
         
         //If this is a good organic update, reset the timer.
         if simulationMode == .onPoorGPS,
             manager == nativeLocationSource,
             location.isQualified {
-
+            
+            //If the timer is disarmed, arm it. This is a good update.
+            if poorGPSTimer.state == .disarmed, location.isQualifiedForStartingRoute {
+                poorGPSTimer.arm()
+            }
+            
+            //pass this good update onto the poor GPS timer mechanism.
             resetGPSCountdown()
             
-            if (isSimulating) {
-                return //If we're simulating, throw this update away,
-                       // which ensures a smooth transition.
-            }
         }
         
         //Finally, pass the update onto the router.
@@ -307,15 +469,6 @@ extension MapboxNavigationService {
         return self.locationManager.desiredAccuracy
     }
     
-    /// :nodoc: This is used internally when the navigation UI is being used
-    public var usesDefaultUserInterface: Bool {
-        get {
-            return eventsManager.usesDefaultUserInterface
-        }
-        set {
-            eventsManager.usesDefaultUserInterface = newValue
-        }
-    }
 }
 
 //MARK: RouterDataSource

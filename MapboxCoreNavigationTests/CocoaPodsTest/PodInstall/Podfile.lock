@@ -1,21 +1,23 @@
 PODS:
-  - Mapbox-iOS-SDK (4.3.0)
-  - MapboxCoreNavigation (0.20.1):
-    - MapboxDirections.swift (~> 0.23.0)
+  - Mapbox-iOS-SDK (4.4.1)
+  - MapboxCoreNavigation (0.21.0):
+    - MapboxDirections.swift (~> 0.24.0)
     - MapboxMobileEvents (~> 0.5)
+    - MapboxNavigationNative (~> 3.1)
     - Turf (~> 0.2)
-  - MapboxDirections.swift (0.23.0):
+  - MapboxDirections.swift (0.24.0):
     - Polyline (~> 4.2)
-  - MapboxMobileEvents (0.5.0)
-  - MapboxNavigation (0.20.1):
+  - MapboxMobileEvents (0.5.1)
+  - MapboxNavigation (0.21.0):
     - Mapbox-iOS-SDK (~> 4.3)
-    - MapboxCoreNavigation (= 0.20.1)
+    - MapboxCoreNavigation (= 0.21.0)
     - MapboxSpeech (~> 0.0.1)
     - Solar (~> 2.1)
-  - MapboxSpeech (0.0.1)
+  - MapboxNavigationNative (3.1.4)
+  - MapboxSpeech (0.0.2)
   - Polyline (4.2.0)
   - Solar (2.1.0)
-  - Turf (0.2.0)
+  - Turf (0.2.1)
 
 DEPENDENCIES:
   - MapboxCoreNavigation (from `../../../`)
@@ -26,6 +28,7 @@ SPEC REPOS:
     - Mapbox-iOS-SDK
     - MapboxDirections.swift
     - MapboxMobileEvents
+    - MapboxNavigationNative
     - MapboxSpeech
     - Polyline
     - Solar
@@ -38,15 +41,16 @@ EXTERNAL SOURCES:
     :path: "../../../"
 
 SPEC CHECKSUMS:
-  Mapbox-iOS-SDK: 7d8d510088ba7900d11aa3ceb98f563b040efca1
-  MapboxCoreNavigation: 67ea54fd4919bc1d5de9eaf104c020f0f63ee08a
-  MapboxDirections.swift: 1c8eb3fd29b7548d9ce53edc99e2e2aabfa767fa
-  MapboxMobileEvents: e4aa629e4e2e3c250b5dadc15b63d67b91469a79
-  MapboxNavigation: c69ce7e9b7487bee4b8e5260f86426d036961c51
-  MapboxSpeech: 6cc9b3d53adc2988af3ebc704dd17907b84a3f9f
+  Mapbox-iOS-SDK: e6a4f236c77f914ca2e19b929c6cc6b077ba1c4c
+  MapboxCoreNavigation: 70bd96370c0fc58d0fd2d1760761f3b2d6ea5e01
+  MapboxDirections.swift: 8f1dd1aedc13aeb226b9038eb73f08dcccbac0cd
+  MapboxMobileEvents: bacf6e176d65b4f3cc5280677183856a81216117
+  MapboxNavigation: 475542f02854451f99f04adf504df5541ddc3b48
+  MapboxNavigationNative: 2e4314439ecc07268d76d9d1319225335b96834b
+  MapboxSpeech: 9d46bca4d7e96318ec8d6ce93a1153ebaef319ba
   Polyline: 3d69f75bb136357e27291d439d0436c6ebda57a4
   Solar: 2dc6e7cc39186cb0c8228fa08df76fb50c7d8f24
-  Turf: 65817136031583da7ea2b43e6611dd10ddbdab2f
+  Turf: 9763a5a2d7da05dfdd5ed56aeb0414b291b0fee1
 
 PODFILE CHECKSUM: 55ae5a7edbc3dedda5149ba3d58b992ab7327f95
 

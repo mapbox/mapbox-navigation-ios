@@ -123,6 +123,11 @@
                BlueprintName = "MapboxNavigationTests"
                ReferencedContainer = "container:MapboxNavigation.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "LeaksSpec">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
       <MacroExpansion>

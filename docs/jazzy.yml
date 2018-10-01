@@ -23,6 +23,8 @@ custom_categories:
       - RouteVoiceController
   - name: Core Navigation Logic
     children:
+      - NavigationService
+      - MapboxNavigationService
       - RouteController
       - RouteControllerDelegate
       - RouteProgress

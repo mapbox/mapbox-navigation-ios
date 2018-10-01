@@ -24,7 +24,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      
      This method is called when the navigation view controller arrives at the waypoint. You can implement this method to prevent the navigation view controller from automatically advancing to the next leg. For example, you can and show an interstitial sheet upon arrival and pause navigation by returning `false`, then continue the route when the user dismisses the sheet. If this method is unimplemented, the navigation view controller automatically advances to the next leg when arriving at a waypoint.
      
-     - postcondition: If you return `false` within this method, you must manually advance to the next leg: obtain the value of the `routeController` and its `RouteController.routeProgress` property, then increment the `RouteProgress.legIndex` property.
+     - postcondition: If you return `false` within this method, you must manually advance to the next leg: obtain the value of the `navigationService` and its `NavigationService.routeProgress` property, then increment the `RouteProgress.legIndex` property.
      - parameter navigationViewController: The navigation view controller that has arrived at a waypoint.
      - parameter waypoint: The waypoint that the user has arrived at.
      - returns: True to automatically advance to the next leg, or false to remain on the now completed leg.
@@ -241,7 +241,7 @@ open class NavigationViewController: UIViewController {
     /**
      Provides all routing logic for the user.
 
-     See `RouteController` for more information.
+     See `NavigationService` for more information.
      */
     @objc public var navigationService: NavigationService! {
         didSet {
@@ -366,7 +366,6 @@ open class NavigationViewController: UIViewController {
         self.navigationService = navigationService ?? MapboxNavigationService(route: route)
         self.navigationService.usesDefaultUserInterface = true
         self.navigationService.delegate = self
-        self.navigationService.start()
         self.voiceController = voiceController ?? MapboxVoiceController()
 
         NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
@@ -380,6 +379,10 @@ open class NavigationViewController: UIViewController {
         let mapSubview: UIView = mapViewController.view
         mapSubview.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(mapSubview)
+        
+        
+        //Do not start the navigation session until after you create the MapViewController, otherwise you'll miss important messages.
+        self.navigationService.start()
         
         mapSubview.pinInSuperview()
         mapViewController.reportButton.isHidden = !showsReportFeedback
@@ -412,10 +415,6 @@ open class NavigationViewController: UIViewController {
             UIApplication.shared.isIdleTimerDisabled = true
         }
         
-        if navigationService.locationManager is SimulatedLocationManager {
-            let localized = String.Localized.simulationStatus(speed: 1)
-            mapViewController?.statusView.show(localized, showSpinner: false, interactive: true)
-        }
     }
     
     open override func viewWillDisappear(_ animated: Bool) {
@@ -610,7 +609,7 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
     }
 }
 
-//MARK: - RouteControllerDelegate
+//MARK: - NavigationServiceDelegate
 extension NavigationViewController: NavigationServiceDelegate {
     
     @objc public func navigationService(_ service: NavigationService, shouldRerouteFrom location: CLLocation) -> Bool {
@@ -621,7 +620,7 @@ extension NavigationViewController: NavigationServiceDelegate {
         delegate?.navigationViewController?(self, willRerouteFrom: location)
     }
     
-    @objc public func navigationService(_ service: NavigationService, didRerouteAlong route: Route) {
+    @objc public func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at: CLLocation?, proactive: Bool) {
         mapViewController?.notifyDidReroute(route: route)
         delegate?.navigationViewController?(self, didRerouteAlong: route)
     }
@@ -666,8 +665,27 @@ extension NavigationViewController: NavigationServiceDelegate {
 
     }
     
+    @objc public func navigationService(_ service: NavigationService, willBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
+        switch service.simulationMode {
+        case .always:
+            let localized = String.Localized.simulationStatus(speed: 1)
+            mapViewController?.statusView.show(localized, showSpinner: false, interactive: true)
+        default:
+            return
+        }
+    }
+    
+    @objc public func navigationService(_ service: NavigationService, willEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
+        switch service.simulationMode {
+        case .always:
+            mapViewController?.statusView.hide(delay: 0, animated: true)
+        default:
+            return
+        }
+    }
+    
     private func checkTunnelState(at location: CLLocation, along progress: RouteProgress) {
-        let inTunnel = MapboxNavigationService.isInTunnel(at: location, along: progress)
+        let inTunnel = navigationService.isInTunnel(at: location, along: progress)
         
         if !traversingTunnel, inTunnel { // we're entering
             traversingTunnel = true
@@ -706,5 +724,56 @@ extension NavigationViewController: StyleManagerDelegate {
     
     public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
         mapView?.reloadStyle(self)
+    }
+}
+
+
+//MARK: - Obsoleted Interfaces
+
+public extension NavigationViewController {
+    @available(*, obsoleted: 0.1, renamed: "navigationService", message: "NavigationViewController no-longer directly manages a RouteController. See MapboxNavigationService, which contains a protocol-bound reference to the RouteController, for more information.")
+    /// :nodoc: obsoleted
+    @objc public final var routeController: RouteController! {
+        get {
+            fatalError()
+        }
+        set {
+            fatalError()
+        }
+    }
+    
+    @available(*, obsoleted: 0.1, renamed: "navigationService.eventsManager", message: "NavigationViewController no-longer directly manages an EventsManager. See MapboxNavigationService, which contains a reference to the eventsManager, for more information.")
+    /// :nodoc: obsoleted
+    @objc public final var eventsManager: EventsManager! {
+        get {
+            fatalError()
+        }
+        set {
+            fatalError()
+        }
+    }
+    
+    @available(*, obsoleted: 0.1, renamed: "navigationService.locationManager", message: "NavigationViewController no-longer directly manages an NavigationLocationManager. See MapboxNavigationService, which contains a reference to the locationManager, for more information.")
+    /// :nodoc: obsoleted
+    @objc public final var locationManager: NavigationLocationManager! {
+        get {
+            fatalError()
+        }
+        set {
+            fatalError()
+        }
+    }
+    
+    @available(*, obsoleted: 0.1, renamed: "init(for:styles:navigationService:voiceController:)", message: "Intializing a NavigationViewController directly with a RouteController is no longer supported. Use a NavigationService instead.")
+    /// :nodoc: Obsoleted method.
+    @objc(initWithRoute:directions:styles:routeController:locationManager:voiceController:eventsManager:)
+    public convenience init(for route: Route,
+                         directions: Directions = Directions.shared,
+                         styles: [Style]? = [DayStyle(), NightStyle()],
+                         routeController: RouteController? = nil,
+                         locationManager: NavigationLocationManager? = nil,
+                         voiceController: RouteVoiceController? = nil,
+                         eventsManager: EventsManager? = nil) {
+        fatalError()
     }
 }

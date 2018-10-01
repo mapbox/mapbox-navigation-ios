@@ -3,14 +3,13 @@ import MapboxMobileEvents
 import MapboxDirections
 
 /**
- The `EventsManager` is responsible for being the liaison between the RouteController and the telemetry framework.
+ The `EventsManager` is responsible for being the liaison between MapboxCoreNavigation and the telemetry framework.
  
  `SessionState` is a struct that stores all memoized statistics that we later send to the telemetry engine.
  */
 
 @objc public protocol EventsManagerDataSource: class {
     var routeProgress: RouteProgress { get }
-    var usesDefaultUserInterface: Bool { get set }
     var location: CLLocation? { get }
     var desiredAccuracy: CLLocationAccuracy { get }
     var locationProvider: NavigationLocationManager.Type { get }
@@ -36,7 +35,7 @@ open class EventsManager: NSObject {
         let token = dict["MGLMapboxAccessToken"] as? String else {
             //we can assert here because if the token was passed in, it would of overriden this closure.
             //we return an empty string so we don't crash in production (in keeping with behavior of `assert`)
-            assertionFailure("`accessToken` must be set in the Info.plist as `MGLMapboxAccessToken` or the `Route` passed into the `RouteController` must have the `accessToken` property set.")
+            assertionFailure("`accessToken` must be set in the Info.plist as `MGLMapboxAccessToken` or the `Route` passed into the `NavigationService` must have the `accessToken` property set.")
             return ""
         }
         return token
@@ -79,7 +78,7 @@ open class EventsManager: NSObject {
         manager.isMetricsEnabledInSimulator = true
         manager.isMetricsEnabledForInUsePermissions = true
         let userAgent = usesDefaultUserInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
-        manager.initialize(withAccessToken: accessToken, userAgentBase: userAgent, hostSDKVersion: String(describing: Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString")!))
+        manager.initialize(withAccessToken: accessToken, userAgentBase: userAgent, hostSDKVersion: String(describing: Bundle.mapboxCoreNavigation.object(forInfoDictionaryKey: "CFBundleShortVersionString")!))
         manager.disableLocationMetrics()
         manager.sendTurnstileEvent()
     }
@@ -87,7 +86,7 @@ open class EventsManager: NSObject {
     func navigationCancelEvent(rating potentialRating: Int? = nil, comment: String? = nil) -> EventDetails {
         
         let rating = potentialRating ?? MMEEventsManager.unrated
-        var event = EventDetails(dataSource: dataSource, session: sessionState)
+        var event = EventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationCancel
         event.arrivalTimestamp = sessionState?.arrivalTimestamp
         
@@ -102,13 +101,13 @@ open class EventsManager: NSObject {
     }
     
     func navigationDepartEvent() -> EventDetails {
-        var event = EventDetails(dataSource: dataSource, session: sessionState)
+        var event = EventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationDepart
         return event
     }
     
     func navigationArriveEvent() -> EventDetails {
-        var event = EventDetails(dataSource: dataSource, session: sessionState)
+        var event = EventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationArrive
         return event
     }
@@ -122,7 +121,7 @@ open class EventsManager: NSObject {
     }
     
     func navigationFeedbackEvent(type: FeedbackType, description: String?) -> EventDetails {
-        var event = EventDetails(dataSource: dataSource, session: sessionState)
+        var event = EventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationFeedback
         
         event.userId = UIDevice.current.identifierForVendor?.uuidString
@@ -137,7 +136,7 @@ open class EventsManager: NSObject {
     func navigationRerouteEvent(eventType: String = MMEEventTypeNavigationReroute) -> EventDetails {
         let timestamp = Date()
         
-        var event = EventDetails(dataSource: dataSource, session: sessionState)
+        var event = EventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = eventType
         if let lastRerouteDate = sessionState?.lastRerouteDate {
             event.secondsSinceLastReroute = round(timestamp.timeIntervalSince(lastRerouteDate))

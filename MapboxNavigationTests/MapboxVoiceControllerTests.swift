@@ -32,6 +32,7 @@ class MapboxVoiceControllerTests: XCTestCase {
         speechAPISpy.reset()
         controller = nil
         speechAPISpy = nil
+        super.tearDown()
     }
 
     func testControllerDownloadsAndCachesInstructionDataWhenNotified() {

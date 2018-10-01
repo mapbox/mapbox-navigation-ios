@@ -252,8 +252,8 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     func navigationService() -> NavigationService? {
         guard let route = routes?.first else { return nil }
         let simulate = simulationButton.isSelected
-        let option: SimulationOption = simulate ? .always : .onPoorGPS
-        return MapboxNavigationService(route: route, simulating: option)
+        let mode: SimulationMode = simulate ? .always : .onPoorGPS
+        return MapboxNavigationService(route: route, simulating: mode)
     }
 
     func presentAndRemoveMapview(_ navigationViewController: NavigationViewController) {
@@ -335,7 +335,7 @@ extension ViewController: VoiceControllerDelegate {
         return SpokenInstruction(distanceAlongStep: instruction.distanceAlongStep, text: "New Instruction!", ssmlText: "<speak>New Instruction!</speak>")
     }
     
-    // By default, the routeController will attempt to filter out bad locations.
+    // By default, the navigation service will attempt to filter out unqualified locations.
     // If however you would like to filter these locations in,
     // you can conditionally return a Bool here according to your own heuristics.
     // See CLLocation.swift `isQualified` for what makes a location update unqualified.

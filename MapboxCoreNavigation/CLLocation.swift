@@ -1,5 +1,6 @@
 import CoreLocation
 import MapboxDirections
+import MapboxNavigationNative
 import Turf
 
 extension CLLocation {
@@ -7,6 +8,10 @@ extension CLLocation {
     var isQualified: Bool {
         return
             0...100 ~= horizontalAccuracy
+    }
+    
+    var isQualifiedForStartingRoute: Bool {
+        return 0...20 ~= horizontalAccuracy
     }
     
     /// Returns a dictionary representation of the location.
@@ -57,6 +62,16 @@ extension CLLocation {
                   course: course,
                   speed: speed,
                   timestamp: date!)
+    }
+    
+    convenience init(_ location: MBFixLocation) {
+        self.init(coordinate: location.location,
+                  altitude: location.altitude?.doubleValue ?? 0,
+                  horizontalAccuracy: location.accuracyHorizontal?.doubleValue ?? 0,
+                  verticalAccuracy: 0,
+                  course: location.bearing?.doubleValue ?? 0,
+                  speed: location.speed?.doubleValue ?? 0,
+                  timestamp: location.time)
     }
     
     /**

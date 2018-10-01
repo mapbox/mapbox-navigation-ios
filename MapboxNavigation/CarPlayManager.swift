@@ -117,7 +117,7 @@ public protocol CarPlayManagerDelegate {
      Called when navigation begins so that the containing app can update accordingly.
      
      - parameter carPlayManager: The shared CarPlay manager.
-     - parameter navigationService: The navigation service that has begun managing location updates for a navigation session.
+     - parameter service: The navigation service that has begun managing location updates for a navigation session.
      */
     @objc(carPlayManager:didBeginNavigationWithNavigationService:)
     func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith service: NavigationService) -> ()
@@ -517,11 +517,18 @@ extension CarPlayManager: CPMapTemplateDelegate {
         mapTemplate.hideTripPreviews()
 
         let route = routeChoice.userInfo as! Route
-        let override = delegate?.carPlayManager?(self, navigationServiceAlong: route)
-        let service = override ?? MapboxNavigationService(route: route, simulating: simulatesLocations ? .always : .onPoorGPS)
-        navigationService = service
-        service.simulationSpeedMultiplier = simulatedSpeedMultiplier
+        var service: NavigationService
+        
+        if let override = delegate?.carPlayManager?(self, navigationServiceAlong: route) {
+            service = override
+        } else {
+            service = MapboxNavigationService(route: route, simulating: simulatesLocations ? .always : .onPoorGPS)
+        }
 
+        if simulatesLocations == true {
+            service.simulationMode = .always
+            service.simulationSpeedMultiplier = simulatedSpeedMultiplier
+        }
 
         interfaceController.popToRootTemplate(animated: false)
         let navigationMapTemplate = self.mapTemplate(forNavigating: trip)
@@ -533,7 +540,8 @@ extension CarPlayManager: CPMapTemplateDelegate {
         navigationViewController.startNavigationSession(for: trip)
         navigationViewController.carPlayNavigationDelegate = self
         currentNavigator = navigationViewController
-        
+        navigationService = service
+
         carPlayMapViewController.isOverviewingRoutes = false
         carPlayMapViewController.present(navigationViewController, animated: true, completion: nil)
 

@@ -63,10 +63,10 @@ struct EventDetails: Encodable {
     var newDurationRemaining: TimeInterval?
     var newGeometry: String?
     
-    init(dataSource: EventsManagerDataSource, session: SessionState) {
+    init(dataSource: EventsManagerDataSource, session: SessionState, defaultInterface: Bool) {
         coordinate = dataSource.location?.coordinate
         startTimestamp = session.departureTimestamp ?? nil
-        sdkIdentifier = dataSource.usesDefaultUserInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
+        sdkIdentifier = defaultInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
         profile = dataSource.routeProgress.route.routeOptions.profileIdentifier.rawValue
         simulation = dataSource.locationProvider is SimulatedLocationManager.Type
         

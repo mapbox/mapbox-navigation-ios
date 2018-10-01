@@ -106,8 +106,7 @@ open class RouteController: NSObject, Router {
      - parameter directions: The Directions object that created `route`.
      - parameter source: The data source for the RouteController.
      */
-    @objc(initWithRoute:directions:locationManager:)
-    public init(along route: Route, directions: Directions = Directions.shared, dataSource source: RouterDataSource) {
+    required public init(along route: Route, directions: Directions = Directions.shared, dataSource source: RouterDataSource) {
         self.directions = directions
         self._routeProgress = RouteProgress(route: route)
         self.dataSource = source
@@ -186,6 +185,88 @@ open class RouteController: NSObject, Router {
         }
         return RouteControllerMaximumDistanceBeforeRecalculating
     }
+    
+    func getDirections(from location: CLLocation, along progress: RouteProgress, completion: @escaping (_ route: Route?, _ error: Error?)->Void) {
+        routeTask?.cancel()
+        let options = progress.reroutingOptions(with: location)
+        
+        self.lastRerouteLocation = location
+        
+        let complete = { [weak self] (route: Route?, error: NSError?) in
+            self?.isRerouting = false
+            completion(route, error)
+        }
+        
+        routeTask = directions.calculate(options) {(waypoints, potentialRoutes, potentialError) in
+            
+            guard let routes = potentialRoutes else {
+                return complete(nil, potentialError)
+            }
+            
+            let mostSimilar = routes.mostSimilar(to: progress.route)
+            
+            return complete(mostSimilar ?? routes.first, potentialError)
+            
+        }
+    }
+    
+    /**
+     Monitors the user's course to see if it is consistantly moving away from what we expect the course to be at a given point.
+     */
+    func userCourseIsOnRoute(_ location: CLLocation) -> Bool {
+        let nearByCoordinates = routeProgress.currentLegProgress.nearbyCoordinates
+        guard let calculatedCourseForLocationOnStep = location.interpolatedCourse(along: nearByCoordinates) else { return true }
+        
+        let maxUpdatesAwayFromRouteGivenAccuracy = Int(location.horizontalAccuracy / Double(RouteControllerIncorrectCourseMultiplier))
+        
+        if movementsAwayFromRoute >= max(RouteControllerMinNumberOfInCorrectCourses, maxUpdatesAwayFromRouteGivenAccuracy)  {
+            return false
+        } else if location.shouldSnap(toRouteWith: calculatedCourseForLocationOnStep) {
+            movementsAwayFromRoute = 0
+        } else {
+            movementsAwayFromRoute += 1
+        }
+        
+        return true
+    }
+    
+    /**
+     Given a users current location, returns a Boolean whether they are currently on the route.
+     
+     If the user is not on the route, they should be rerouted.
+     */
+    @objc public func userIsOnRoute(_ location: CLLocation) -> Bool {
+        
+        // If the user has arrived, do not continue monitor reroutes, step progress, etc
+        guard !routeProgress.currentLegProgress.userHasArrivedAtWaypoint || (delegate?.router?(self, shouldPreventReroutesWhenArrivingAt: routeProgress.currentLeg.destination) ?? DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint) else {
+            return true
+        }
+        
+        let isCloseToCurrentStep = userIsWithinRadiusOfRoute(location: location)
+        
+        guard !isCloseToCurrentStep || !userCourseIsOnRoute(location) else { return true }
+        
+        // Check and see if the user is near a future step.
+        guard let nearestStep = routeProgress.currentLegProgress.closestStep(to: location.coordinate) else {
+            return false
+        }
+        
+        if nearestStep.distance < RouteControllerUserLocationSnappingDistance {
+            // Only advance the stepIndex to a future step if the step is new. Otherwise, the user is still on the current step.
+            if nearestStep.index != routeProgress.currentLegProgress.stepIndex {
+                advanceStepIndex(to: nearestStep.index)
+            }
+            return true
+        }
+        
+        return false
+    }
+    
+    internal func userIsWithinRadiusOfRoute(location: CLLocation) -> Bool {
+        let radius = max(reroutingTolerance, RouteControllerManeuverZoneRadius)
+        let isCloseToCurrentStep = location.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
+        return isCloseToCurrentStep
+    }
 }
 
 extension RouteController: CLLocationManagerDelegate {
@@ -242,7 +323,8 @@ extension RouteController: CLLocationManagerDelegate {
         updateRouteLegProgress(for: location)
         updateVisualInstructionProgress()
 
-        guard userIsOnRoute(location) || !(delegate?.router?(self, shouldRerouteFrom: location) ?? DefaultBehavior.shouldRerouteFromLocation) else {
+        if !userIsOnRoute(location) && delegate?.router?(self, shouldRerouteFrom: location) ?? DefaultBehavior.shouldRerouteFromLocation {
+
             reroute(from: location, along: routeProgress)
             return
         }
@@ -316,59 +398,7 @@ extension RouteController: CLLocationManagerDelegate {
         }
     }
 
-    /**
-     Monitors the user's course to see if it is consistantly moving away from what we expect the course to be at a given point.
-     */
-    func userCourseIsOnRoute(_ location: CLLocation) -> Bool {
-        let nearByCoordinates = routeProgress.currentLegProgress.nearbyCoordinates
-        guard let calculatedCourseForLocationOnStep = location.interpolatedCourse(along: nearByCoordinates) else { return true }
-
-        let maxUpdatesAwayFromRouteGivenAccuracy = Int(location.horizontalAccuracy / Double(RouteControllerIncorrectCourseMultiplier))
-
-        if movementsAwayFromRoute >= max(RouteControllerMinNumberOfInCorrectCourses, maxUpdatesAwayFromRouteGivenAccuracy)  {
-            return false
-        } else if location.shouldSnap(toRouteWith: calculatedCourseForLocationOnStep) {
-            movementsAwayFromRoute = 0
-        } else {
-            movementsAwayFromRoute += 1
-        }
-
-        return true
-    }
-
-    /**
-     Given a users current location, returns a Boolean whether they are currently on the route.
-
-     If the user is not on the route, they should be rerouted.
-     */
-    @objc public func userIsOnRoute(_ location: CLLocation) -> Bool {
-        
-        // If the user has arrived, do not continue monitor reroutes, step progress, etc
-        guard !routeProgress.currentLegProgress.userHasArrivedAtWaypoint && (delegate?.router?(self, shouldPreventReroutesWhenArrivingAt: routeProgress.currentLeg.destination) ?? DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint) else {
-            return true
-        }
-
-        let radius = max(reroutingTolerance, RouteControllerManeuverZoneRadius)
-        let isCloseToCurrentStep = location.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
-
-        guard !isCloseToCurrentStep || !userCourseIsOnRoute(location) else { return true }
-
-        // Check and see if the user is near a future step.
-        guard let nearestStep = routeProgress.currentLegProgress.closestStep(to: location.coordinate) else {
-            return false
-        }
-
-        if nearestStep.distance < RouteControllerUserLocationSnappingDistance {
-            // Only advance the stepIndex to a future step if the step is new. Otherwise, the user is still on the current step.
-            if nearestStep.index != routeProgress.currentLegProgress.stepIndex {
-                advanceStepIndex(to: nearestStep.index)
-            }
-            return true
-        }
-
-        return false
-    }
-
+ 
     func checkForFasterRoute(from location: CLLocation) {
         guard let currentUpcomingManeuver = routeProgress.currentLegProgress.upComingStep else {
             return
@@ -448,7 +478,7 @@ extension RouteController: CLLocationManagerDelegate {
             }
 
             guard let route = route else { return }
-
+            strongSelf.isRerouting = false
             strongSelf._routeProgress = RouteProgress(route: route, legIndex: 0)
             strongSelf._routeProgress.currentLegProgress.stepIndex = 0
             strongSelf.announce(reroute: route, at: location, proactive: false)
@@ -457,6 +487,7 @@ extension RouteController: CLLocationManagerDelegate {
 
     private func checkForUpdates() {
         #if TARGET_IPHONE_SIMULATOR
+        guard (NSClassFromString("XCTestCase") == nil) else { return } // Short-circuit when running unit tests
             guard let version = Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString") else { return }
             let latestVersion = String(describing: version)
             _ = URLSession.shared.dataTask(with: URL(string: "https://www.mapbox.com/mapbox-navigation-ios/latest_version")!, completionHandler: { (data, response, error) in
@@ -481,32 +512,6 @@ extension RouteController: CLLocationManagerDelegate {
             preconditionFailure("This application’s Info.plist file must include a NSLocationWhenInUseUsageDescription. See https://developer.apple.com/documentation/corelocation for more information.")
         }
     }
-
-    func getDirections(from location: CLLocation, along progress: RouteProgress, completion: @escaping (_ route: Route?, _ error: Error?)->Void) {
-        routeTask?.cancel()
-        let options = progress.reroutingOptions(with: location)
-
-        self.lastRerouteLocation = location
-
-        let complete = { [weak self] (route: Route?, error: NSError?) in
-            self?.isRerouting = false
-            completion(route, error)
-        }
-        
-        routeTask = directions.calculate(options) {(waypoints, potentialRoutes, potentialError) in
-
-            guard let routes = potentialRoutes else {
-                return complete(nil, potentialError)
-            }
-            
-            let mostSimilar = routes.mostSimilar(to: progress.route)
-            
-            return complete(mostSimilar ?? routes.first, potentialError)
-            
-        }
-    }
-
-
 
     func updateDistanceToIntersection(from location: CLLocation) {
         guard var intersections = routeProgress.currentLegProgress.currentStepProgress.step.intersections else { return }
@@ -628,3 +633,44 @@ extension RouteController: CLLocationManagerDelegate {
     }
 }
 
+//MARK: - Obsolete Interfaces
+
+public extension RouteController {
+    @available(*, obsoleted: 0.1, message: "MapboxNavigationService is now the point-of-entry to MapboxCoreNavigation. Direct use of RouteController is no longer reccomended. See MapboxNavigationService for more information.")
+    /// :nodoc: Obsoleted method.
+    @objc(initWithRoute:directions:locationManager:eventsManager:)
+    public convenience init(along route: Route, directions: Directions = Directions.shared, locationManager: NavigationLocationManager = NavigationLocationManager(), eventsManager: EventsManager) {
+        fatalError()
+    }
+    
+    @available(*, obsoleted: 0.1, message: "RouteController no longer manages a location manager directly. Instead, the Router protocol conforms to CLLocationManagerDelegate, and RouteControllerDataSource provides access to synchronous location requests.")
+    /// :nodoc: obsoleted
+    @objc public final var locationManager: NavigationLocationManager! {
+        get {
+            fatalError()
+        }
+        set {
+            fatalError()
+        }
+    }
+    @available(*, obsoleted: 0.1, renamed: "NavigationService.locationManager", message: "NavigationViewController no-longer directly manages an NavigationLocationManager. See MapboxNavigationService, which contains a reference to the locationManager, for more information.")
+    /// :nodoc: obsoleted
+    @objc public final var tunnelIntersectionManager: Any! {
+        get {
+            fatalError()
+        }
+        set {
+            fatalError()
+        }
+    }
+    @available(*, obsoleted: 0.1, renamed: "navigationService.eventsManager", message: "NavigationViewController no-longer directly manages an EventsManager. See MapboxNavigationService, which contains a reference to the eventsManager, for more information.")
+    /// :nodoc: obsoleted
+    @objc public final var eventsManager: EventsManager! {
+        get {
+            fatalError()
+        }
+        set {
+            fatalError()
+        }
+    }
+}
