@@ -348,6 +348,7 @@
 		DADAD829203504C6002E25CA /* MBNavigationSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = DADAD827203504C6002E25CA /* MBNavigationSettings.m */; };
 		DADAD82E20350849002E25CA /* MBRouteVoiceController.h in Headers */ = {isa = PBXBuildFile; fileRef = DADAD82C20350849002E25CA /* MBRouteVoiceController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DADAD82F20350849002E25CA /* MBRouteVoiceController.m in Sources */ = {isa = PBXBuildFile; fileRef = DADAD82D20350849002E25CA /* MBRouteVoiceController.m */; };
+		DADD82802161EC0300B8B47D /* UIViewAnimationOptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DADD827F2161EC0300B8B47D /* UIViewAnimationOptionsTests.swift */; };
 		DAFA92071F01735000A7FB09 /* DistanceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */; };
 /* End PBXBuildFile section */
 
@@ -905,6 +906,7 @@
 		DADAD827203504C6002E25CA /* MBNavigationSettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MBNavigationSettings.m; sourceTree = "<group>"; };
 		DADAD82C20350849002E25CA /* MBRouteVoiceController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MBRouteVoiceController.h; sourceTree = "<group>"; };
 		DADAD82D20350849002E25CA /* MBRouteVoiceController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MBRouteVoiceController.m; sourceTree = "<group>"; };
+		DADD827F2161EC0300B8B47D /* UIViewAnimationOptionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewAnimationOptionsTests.swift; sourceTree = "<group>"; };
 		DAE26B1A20644047001D6E1F /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Main.strings; sourceTree = "<group>"; };
 		DAE26B1B20644047001D6E1F /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Main.strings; sourceTree = "<group>"; };
 		DAE26B1C20644047001D6E1F /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Navigation.strings; sourceTree = "<group>"; };
@@ -1081,6 +1083,7 @@
 				16AC9D10212E356200CECE44 /* CPMapTemplate+MBTestable.mm */,
 				DAD17201214DB12B009C8161 /* CPMapTemplateTests.swift */,
 				DA0557242155040700A1F2AA /* RouteTests.swift */,
+				DADD827F2161EC0300B8B47D /* UIViewAnimationOptionsTests.swift */,
 			);
 			name = "Extensions and Categories";
 			sourceTree = "<group>";
@@ -2299,6 +2302,7 @@
 				1662244720256C0700EA4824 /* ImageLoadingURLProtocolSpy.swift in Sources */,
 				AE291FFF20975A7E00F23DFC /* NavigationViewControllerTests.swift in Sources */,
 				16EF6C1E21193A9600AA580B /* CarPlayManagerTests.swift in Sources */,
+				DADD82802161EC0300B8B47D /* UIViewAnimationOptionsTests.swift in Sources */,
 				DAD17202214DB12B009C8161 /* CPMapTemplateTests.swift in Sources */,
 				35EFD009207CA5E800BF3873 /* ManeuverViewTests.swift in Sources */,
 				16E4F97F205B05FE00531791 /* MapboxVoiceControllerTests.swift in Sources */,

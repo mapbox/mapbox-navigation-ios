@@ -97,7 +97,6 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         if let popoverController = alertController.popoverPresentationController {
             popoverController.sourceView = self.startButton
         }
-
     }
 
     override func viewWillAppear(_ animated: Bool) {
