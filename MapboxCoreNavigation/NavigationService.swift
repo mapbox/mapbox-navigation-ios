@@ -280,7 +280,7 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
     }
     
     private func endSimulation(intent: SimulationIntent = .manual) {
-        guard !isSimulating else { return }
+        guard isSimulating else { return }
         let progress = simulatedLocationSource?.routeProgress ?? router.routeProgress
         delegate?.navigationService?(self, willEndSimulating: progress, becauseOf: intent)
         simulatedLocationSource?.stopUpdatingLocation()
