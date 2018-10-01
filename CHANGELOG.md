@@ -2,6 +2,10 @@
 
 ## master
 
+### Packaging
+
+* Added a dependency on the Mapbox Navigation Native framework. If you use Carthage to install this framework, your target should also link against `MapboxNavigationNative.framework`. ([#1618](https://github.com/mapbox/mapbox-navigation-ios/pull/1618))
+
 ### User location
 
 * Added a `NavigationService` protocol implemented by classes that provide location awareness functionality. `RouteController` and a new `MapboxNavigationService` class both conform to this protocol. ([#1602](https://github.com/mapbox/mapbox-navigation-ios/pull/1602))
@@ -9,8 +13,7 @@
   * `NavigationViewController.routeController` has been replaced by `NavigationViewController.navigationService`.
   * If you currently use `RouteController` directly, you should migrate to `NavigationService`.
   * If you currently use `SimulatedLocationManager` directly, you should instead pass `SimulationOption.always` into `MapboxNavigationService(route:directions:locationSource:eventsManagerType:simulating:)`.
-  * Added a new, improved off-route detection heuristic provided by Mapbox's cross-platform native-navigation library.
-  * Added a dependency on the `MapboxNavigationNative` framework. If you use Carthage to install this framework, you need to update your target to link against the new framework.
+* Improved the reliability of off-route detection. ([#1618](https://github.com/mapbox/mapbox-navigation-ios/pull/1618))
 
 ### User interface
 
