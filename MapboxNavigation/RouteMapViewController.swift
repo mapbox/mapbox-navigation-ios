@@ -1044,8 +1044,6 @@ extension RouteMapViewController {
         guard let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? Double else { return }
         guard let keyBoardRect = userInfo[UIKeyboardFrameEndUserInfoKey] as? CGRect else { return }
 
-        let curve = UIViewAnimationCurve(rawValue: curveValue) ?? UIViewAnimationCurve.easeIn
-        let options = (duration: duration, curve: curve)
         let keyboardHeight = keyBoardRect.size.height
 
         if #available(iOS 11.0, *) {
@@ -1054,25 +1052,27 @@ extension RouteMapViewController {
             navigationView.endOfRouteShowConstraint?.constant = -1 * keyboardHeight
         }
 
-        let opts = UIViewAnimationOptions(curve: options.curve)
-        UIView.animate(withDuration: options.duration, delay: 0, options: opts, animations: view.layoutIfNeeded, completion: nil)
+        let curve = UIViewAnimationCurve(rawValue: curveValue) ?? .easeIn
+        let options = UIViewAnimationOptions(curve: curve) ?? .curveEaseIn
+        UIView.animate(withDuration: duration, delay: 0, options: options, animations: view.layoutIfNeeded, completion: nil)
     }
 
     @objc fileprivate func keyboardWillHide(notification: NSNotification) {
         guard navigationView.endOfRouteView != nil else { return }
         guard let userInfo = notification.userInfo else { return }
-        let curve = UIViewAnimationCurve(rawValue: userInfo[UIKeyboardAnimationCurveUserInfoKey] as! Int)
-        let options = (duration: userInfo[UIKeyboardAnimationDurationUserInfoKey] as! Double,
-                       curve: UIViewAnimationOptions(curve: curve!))
-
+        guard let curveValue = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? Int else { return }
+        guard let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? Double else { return }
+        
         navigationView.endOfRouteShowConstraint?.constant = 0
 
-        UIView.animate(withDuration: options.duration, delay: 0, options: options.curve, animations: view.layoutIfNeeded, completion: nil)
+        let curve = UIViewAnimationCurve(rawValue: curveValue) ?? .easeOut
+        let options = UIViewAnimationOptions(curve: curve) ?? .curveEaseOut
+        UIView.animate(withDuration: duration, delay: 0, options: options, animations: view.layoutIfNeeded, completion: nil)
     }
 }
 
-fileprivate extension UIViewAnimationOptions {
-    init(curve: UIViewAnimationCurve) {
+internal extension UIViewAnimationOptions {
+    init?(curve: UIViewAnimationCurve) {
         switch curve {
         case .easeIn:
             self = .curveEaseIn
@@ -1082,6 +1082,9 @@ fileprivate extension UIViewAnimationOptions {
             self = .curveEaseInOut
         case .linear:
             self = .curveLinear
+        default:
+            // Some private UIViewAnimationCurve values unknown to the compiler can leak through notifications.
+            return nil
         }
     }
 }
