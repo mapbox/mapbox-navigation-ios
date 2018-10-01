@@ -15,6 +15,11 @@ class RouteControllerSnapshotTests: FBSnapshotTestCase {
         recordMode = false
         agnosticOptions = [.OS, .device]
     }
+
+    override func tearDown() {
+        replayManager = nil
+        super.tearDown()
+    }
     
     func testRouteSnappingOvershooting() {
         let route = Fixture.routesFromMatches(at: "sthlm-double-back")![0]
