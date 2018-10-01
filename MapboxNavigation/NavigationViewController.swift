@@ -677,7 +677,7 @@ extension NavigationViewController: NavigationServiceDelegate {
     
     @objc public func navigationService(_ service: NavigationService, willEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
         switch service.simulationMode {
-        case .always,
+        case .always:
             mapViewController?.statusView.hide(delay: 0, animated: true)
         default:
             return
