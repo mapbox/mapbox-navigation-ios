@@ -305,11 +305,6 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
         
         simulatedLocationSource?.startUpdatingHeading()
         simulatedLocationSource?.startUpdatingLocation()
-
-        if simulationMode == .onPoorGPS {
-            poorGPSTimer.arm()
-        }
-        
     }
     
     public func stop() {
@@ -334,7 +329,13 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
     }
 
     private func resetGPSCountdown() {
+        //Sanity check: if we're not on this mode, we have no business here.
         guard simulationMode == .onPoorGPS else { return }
+        
+        //If the timer is disarmed, arm it. This is a good update.
+        if poorGPSTimer.state == .disarmed {
+            poorGPSTimer.arm()
+        }
         
         // Immediately end simulation if it is occuring.
         if isSimulating {
@@ -369,12 +370,14 @@ extension MapboxNavigationService: CLLocationManagerDelegate {
     }
     
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+
         //If we're always simulating, make sure this is a simulated update.
-        guard simulationMode != .always || manager == simulatedLocationSource else { return }
+        if simulationMode == .always, manager != simulatedLocationSource { return }
         
         //update the events manager with the received locations
         eventsManager.record(locations: locations)
         
+        //sanity check: make sure the update actually contains a location
         guard let location = locations.first else { return }
         
         //If this is a good organic update, reset the timer.
@@ -382,6 +385,7 @@ extension MapboxNavigationService: CLLocationManagerDelegate {
             manager == nativeLocationSource,
             location.isQualified {
 
+            //pass this good update onto the poor GPS timer mechanism.
             resetGPSCountdown()
             
             if (isSimulating) {
