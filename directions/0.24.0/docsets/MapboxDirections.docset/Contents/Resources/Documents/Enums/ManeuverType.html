@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>ManeuverType Enumeration Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    <link rel='shortcut icon' href='https://www.mapbox.com/img/favicon.ico' type='image/x-icon' />
+
+    <style type="text/css">
+      .nav-group-name[data-name="ManeuverType"] > .small-heading,
+      .nav-group-task[data-name="ManeuverType"] {
+        background-color: #f5f8fc;
+        font-family: "Open Sans Bold";
+        border-left: 3px solid #3a68d8;
+        padding-left: 5px
+      }
+    </style>
+    <script type="text/javascript">
+      !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="4.0.0";
+          analytics.load("fl0c8p240n");
+          var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function() {
+            if(this.readyState == 4 && this.status == 200) {
+              var resp = JSON.parse(xhttp.responseText);
+              analytics.identify(resp.id, {email: resp.email}, {}, function() {
+                analytics.page();
+              });
+            } else {
+              analytics.page();
+            }
+          }
+          xhttp.open("GET", "https://www.mapbox.com/api/session", true);
+          xhttp.send();
+        }}();
+    </script>
+  </head>
+  <body>
+
+    <a name="//apple_ref/swift/Enum/ManeuverType" class="dashAnchor"></a>
+
+    <a title="ManeuverType Enumeration Reference"></a>
+
+    <header class="header-container">
+      <div class="limiter">
+        <div class="header">
+        <p class="header-col header-col--primary">
+          <a class="header-link" href="../index.html">
+            <img style="height: 25px;"  class="header-icon" src="../img/mapbox.svg" alt="MapboxDirections Docs"/>
+            <span class='header-tag'>Directions.swift  Reference</span>
+          </a>
+          
+        </p>
+    
+          <p class="header-col header-col--secondary">
+            <a class="header-link space-right2" href="https://github.com/mapbox/MapboxDirections.swift">
+              <svg style="margin-bottom: 1px;" class="header-icon" viewBox="0 0 33 33" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      		      <path stroke="none" stroke-width="1" fill="white" fill-rule="evenodd" d="M16.6,0.4 C7.6,0.4 0.3,7.7 0.3,16.7 C0.3,23.9 5,30 11.4,32.2 C12.2,32.3 12.5,31.8 12.5,31.4 L12.5,28.6 C8,29.6 7,26.4 7,26.4 C6.3,24.5 5.2,24 5.2,24 C3.7,23 5.3,23 5.3,23 C6.9,23.1 7.8,24.7 7.8,24.7 C9.3,27.2 11.6,26.5 12.5,26.1 C12.6,25 13.1,24.3 13.5,23.9 C9.9,23.5 6.1,22.1 6.1,15.8 C6.1,14 6.7,12.6 7.8,11.4 C7.6,11 7.1,9.3 8,7.1 C8,7.1 9.4,6.7 12.5,8.8 C13.8,8.4 15.2,8.3 16.6,8.3 C18,8.3 19.4,8.5 20.7,8.8 C23.8,6.7 25.2,7.1 25.2,7.1 C26.1,9.3 25.5,11 25.4,11.4 C26.4,12.5 27.1,14 27.1,15.8 C27.1,22.1 23.3,23.4 19.7,23.8 C20.3,24.3 20.8,25.3 20.8,26.8 L20.8,31.3 C20.8,31.7 21.1,32.2 21.9,32.1 C28.4,29.9 33,23.8 33,16.6 C32.9,7.7 25.6,0.4 16.6,0.4 L16.6,0.4 Z"></path>
+              </svg>
+              View on GitHub
+            </a>
+          </p>
+    
+          <p class="header-col header-col--secondary">
+            <a class="header-link bold" href="dash-feed://https%3A%2F%2Fwww%2Emapbox%2Ecom%2Fmapbox%2Dnavigation%2Dios%2Fdirections%2Fdocsets%2FMapboxDirections%2Exml">
+              <img style="margin-bottom: 1px;" class="header-icon" src="../img/dash.png"/>
+              Install in Dash
+            </a>
+          </p>
+      </div>
+      </div>
+    </header>
+
+    <div class="breadcrumbs">
+      <div class="limiter">
+        <a class="breadcrumb" href="../index.html">MapboxDirections Reference</a>
+        <img class="carat" src="../img/carat.png" />
+        ManeuverType Enumeration Reference
+      </div>
+    </div>
+
+    <div class="content-wrapper limiter">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name" data-name="Guides">
+            <a class="small-heading" href="../Guides.html">Guides<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="Navigation SDK" data-url="navigation-sdk.html">
+                <a title="Navigation SDK" class="nav-group-task-link" href="../navigation-sdk.html">Navigation SDK</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Getting Directions">
+            <a class="small-heading" href="../Getting Directions.html">Getting Directions<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="Directions" data-url="Classes/Directions.html">
+                <a title="Directions" class="nav-group-task-link" href="../Classes/Directions.html">Directions</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteOptions" data-url="Classes/RouteOptions.html">
+                <a title="RouteOptions" class="nav-group-task-link" href="../Classes/RouteOptions.html">RouteOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="Waypoint" data-url="Classes/Waypoint.html">
+                <a title="Waypoint" class="nav-group-task-link" href="../Classes/Waypoint.html">Waypoint</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Map Matching">
+            <a class="small-heading" href="../Map Matching.html">Map Matching<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MatchOptions" data-url="Classes/MatchOptions.html">
+                <a title="MatchOptions" class="nav-group-task-link" href="../Classes/MatchOptions.html">MatchOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="Tracepoint" data-url="Classes/Tracepoint.html">
+                <a title="Tracepoint" class="nav-group-task-link" href="../Classes/Tracepoint.html">Tracepoint</a>
+              </li>
+              <li class="nav-group-task" data-name="Match" data-url="Classes/Match.html">
+                <a title="Match" class="nav-group-task-link" href="../Classes/Match.html">Match</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Results">
+            <a class="small-heading" href="../Results.html">Results<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="Route" data-url="Classes/Route.html">
+                <a title="Route" class="nav-group-task-link" href="../Classes/Route.html">Route</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteLeg" data-url="Classes/RouteLeg.html">
+                <a title="RouteLeg" class="nav-group-task-link" href="../Classes/RouteLeg.html">RouteLeg</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteStep" data-url="Classes/RouteStep.html">
+                <a title="RouteStep" class="nav-group-task-link" href="../Classes/RouteStep.html">RouteStep</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Other Classes">
+            <a class="small-heading" href="../Other Classes.html">Other Classes<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="DirectionsOptions" data-url="Classes/DirectionsOptions.html">
+                <a title="DirectionsOptions" class="nav-group-task-link" href="../Classes/DirectionsOptions.html">DirectionsOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="DirectionsResult" data-url="Classes/DirectionsResult.html">
+                <a title="DirectionsResult" class="nav-group-task-link" href="../Classes/DirectionsResult.html">DirectionsResult</a>
+              </li>
+              <li class="nav-group-task" data-name="Intersection" data-url="Classes/Intersection.html">
+                <a title="Intersection" class="nav-group-task-link" href="../Classes/Intersection.html">Intersection</a>
+              </li>
+              <li class="nav-group-task" data-name="Lane" data-url="Classes/Lane.html">
+                <a title="Lane" class="nav-group-task-link" href="../Classes/Lane.html">Lane</a>
+              </li>
+              <li class="nav-group-task" data-name="LaneIndicationComponent" data-url="Classes/LaneIndicationComponent.html">
+                <a title="LaneIndicationComponent" class="nav-group-task-link" href="../Classes/LaneIndicationComponent.html">LaneIndicationComponent</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteOptionsV4" data-url="Classes/RouteOptionsV4.html">
+                <a title="RouteOptionsV4" class="nav-group-task-link" href="../Classes/RouteOptionsV4.html">RouteOptionsV4</a>
+              </li>
+              <li class="nav-group-task" data-name="SpokenInstruction" data-url="Classes/SpokenInstruction.html">
+                <a title="SpokenInstruction" class="nav-group-task-link" href="../Classes/SpokenInstruction.html">SpokenInstruction</a>
+              </li>
+              <li class="nav-group-task" data-name="VisualInstruction" data-url="Classes/VisualInstruction.html">
+                <a title="VisualInstruction" class="nav-group-task-link" href="../Classes/VisualInstruction.html">VisualInstruction</a>
+              </li>
+              <li class="nav-group-task" data-name="VisualInstructionBanner" data-url="Classes/VisualInstructionBanner.html">
+                <a title="VisualInstructionBanner" class="nav-group-task-link" href="../Classes/VisualInstructionBanner.html">VisualInstructionBanner</a>
+              </li>
+              <li class="nav-group-task" data-name="VisualInstructionComponent" data-url="Classes/VisualInstructionComponent.html">
+                <a title="VisualInstructionComponent" class="nav-group-task-link" href="../Classes/VisualInstructionComponent.html">VisualInstructionComponent</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Other Global Variables">
+            <a class="small-heading" href="../Other Global Variables.html">Other Global Variables<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MBDirectionsErrorDomain" data-url="Other Global Variables.html#/s:16MapboxDirections23MBDirectionsErrorDomainSSvp">
+                <a title="MBDirectionsErrorDomain" class="nav-group-task-link" href="../Other Global Variables.html#/s:16MapboxDirections23MBDirectionsErrorDomainSSvp">MBDirectionsErrorDomain</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Other Enumerations">
+            <a class="small-heading" href="../Other Enumerations.html">Other Enumerations<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="CongestionLevel" data-url="Enums/CongestionLevel.html">
+                <a title="CongestionLevel" class="nav-group-task-link" href="../Enums/CongestionLevel.html">CongestionLevel</a>
+              </li>
+              <li class="nav-group-task" data-name="DrivingSide" data-url="Enums/DrivingSide.html">
+                <a title="DrivingSide" class="nav-group-task-link" href="../Enums/DrivingSide.html">DrivingSide</a>
+              </li>
+              <li class="nav-group-task" data-name="InstructionFormat" data-url="Enums/InstructionFormat.html">
+                <a title="InstructionFormat" class="nav-group-task-link" href="../Enums/InstructionFormat.html">InstructionFormat</a>
+              </li>
+              <li class="nav-group-task" data-name="ManeuverDirection" data-url="Enums/ManeuverDirection.html">
+                <a title="ManeuverDirection" class="nav-group-task-link" href="../Enums/ManeuverDirection.html">ManeuverDirection</a>
+              </li>
+              <li class="nav-group-task" data-name="ManeuverType" data-url="Enums/ManeuverType.html">
+                <a title="ManeuverType" class="nav-group-task-link" href="../Enums/ManeuverType.html">ManeuverType</a>
+              </li>
+              <li class="nav-group-task" data-name="MeasurementSystem" data-url="Enums/MeasurementSystem.html">
+                <a title="MeasurementSystem" class="nav-group-task-link" href="../Enums/MeasurementSystem.html">MeasurementSystem</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteShapeFormat" data-url="Enums/RouteShapeFormat.html">
+                <a title="RouteShapeFormat" class="nav-group-task-link" href="../Enums/RouteShapeFormat.html">RouteShapeFormat</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteShapeResolution" data-url="Enums/RouteShapeResolution.html">
+                <a title="RouteShapeResolution" class="nav-group-task-link" href="../Enums/RouteShapeResolution.html">RouteShapeResolution</a>
+              </li>
+              <li class="nav-group-task" data-name="TransportType" data-url="Enums/TransportType.html">
+                <a title="TransportType" class="nav-group-task-link" href="../Enums/TransportType.html">TransportType</a>
+              </li>
+              <li class="nav-group-task" data-name="VisualInstructionComponentType" data-url="Enums/VisualInstructionComponentType.html">
+                <a title="VisualInstructionComponentType" class="nav-group-task-link" href="../Enums/VisualInstructionComponentType.html">VisualInstructionComponentType</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Other Protocols">
+            <a class="small-heading" href="../Other Protocols.html">Other Protocols<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="ComponentRepresentable" data-url="Other Protocols.html#/c:@M@MapboxDirections@objc(pl)MBComponentRepresentable">
+                <a title="ComponentRepresentable" class="nav-group-task-link" href="../Other Protocols.html#/c:@M@MapboxDirections@objc(pl)MBComponentRepresentable">ComponentRepresentable</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content">
+            <a href="#/ManeuverType"><h1 id="ManeuverType">ManeuverType<span class="anchor-icon" /></h1></a>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight swift"><code><span class="kd">@objc(MBManeuverType)</span>
+<span class="kd">public</span> <span class="kd">enum</span> <span class="kt">ManeuverType</span> <span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="kt">CustomStringConvertible</span></code></pre>
+
+                </div>
+              </div>
+            <p>A <code>ManeuverType</code> specifies the type of maneuver required to complete the route step. You can pair a maneuver type with a <code><a href="../Enums/ManeuverDirection.html">ManeuverDirection</a></code> to choose an appropriate visual or voice prompt to present the user.</p>
+
+<p>In Swift, you can use pattern matching with a single switch statement on a tuple containing the maneuver type and maneuver direction to avoid a complex series of if-else-if statements or switch statements.</p>
+
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeNone"></a>
+                    <a name="//apple_ref/swift/Element/none" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeNone"><span class="token-name">none</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>The step does not have a particular maneuver type associated with it.</p>
+
+<p>This maneuver type is used as a workaround for bridging to Objective-C which does not support nullable enumeration-typed values.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="k">none</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/MapboxDirections.swift/tree/v0.24.0/MapboxDirections/MBRouteStep.swift#L129">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeDepart"></a>
+                    <a name="//apple_ref/swift/Element/depart" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeDepart"><span class="token-name">depart</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>The step requires the user to depart from a waypoint.</p>
+
+<p>If the waypoint is some distance away from the nearest road, the maneuver direction indicates the direction the user must turn upon reaching the road.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">depart</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/MapboxDirections.swift/tree/v0.24.0/MapboxDirections/MBRouteStep.swift#L136">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeTurn"></a>
+                    <a name="//apple_ref/swift/Element/turn" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeTurn"><span class="token-name">turn</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>The step requires the user to turn.</p>
+
+<p>The maneuver direction indicates the direction in which the user must turn relative to the current direction of travel. The exit index indicates the number of intersections, large or small, from the previous maneuver up to and including the intersection at which the user must turn.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">turn</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/MapboxDirections.swift/tree/v0.24.0/MapboxDirections/MBRouteStep.swift#L143">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeContinue"></a>
+                    <a name="//apple_ref/swift/Element/continue" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeContinue"><span class="token-name">continue</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>The step requires the user to continue after a turn.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="err">`</span><span class="k">continue</span><span class="err">`</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/MapboxDirections.swift/tree/v0.24.0/MapboxDirections/MBRouteStep.swift#L148">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypePassNameChange"></a>
+                    <a name="//apple_ref/swift/Element/passNameChange" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypePassNameChange"><span class="token-name">passNameChange</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>The step requires the user to continue on the current road as it changes names.</p>
+
+<p>The step’s name contains the road’s new name. To get the road’s old name, use the previous step’s name.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">passNameChange</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/MapboxDirections.swift/tree/v0.24.0/MapboxDirections/MBRouteStep.swift#L155">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeMerge"></a>
+                    <a name="//apple_ref/swift/Element/merge" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeMerge"><span class="token-name">merge</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>The step requires the user to merge onto another road.</p>
+
+<p>The maneuver direction indicates the side from which the other road approaches the intersection relative to the user.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">merge</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/MapboxDirections.swift/tree/v0.24.0/MapboxDirections/MBRouteStep.swift#L162">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeTakeOnRamp"></a>
+                    <a name="//apple_ref/swift/Element/takeOnRamp" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeTakeOnRamp"><span class="token-name">takeOnRamp</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>The step requires the user to take a entrance ramp (slip road) onto a highway.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">takeOnRamp</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/MapboxDirections.swift/tree/v0.24.0/MapboxDirections/MBRouteStep.swift#L167">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeTakeOffRamp"></a>
+                    <a name="//apple_ref/swift/Element/takeOffRamp" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeTakeOffRamp"><span class="token-name">takeOffRamp</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>The step requires the user to take an exit ramp (slip road) off a highway.</p>
+
+<p>The maneuver direction indicates the side of the highway from which the user must exit. The exit index indicates the number of highway exits from the previous maneuver up to and including the exit that the user must take.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">takeOffRamp</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/MapboxDirections.swift/tree/v0.24.0/MapboxDirections/MBRouteStep.swift#L174">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeReachFork"></a>
+                    <a name="//apple_ref/swift/Element/reachFork" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeReachFork"><span class="token-name">reachFork</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>The step requires the user to choose a fork at a Y-shaped fork in the road.</p>
+
+<p>The maneuver direction indicates which fork to take.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">reachFork</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/MapboxDirections.swift/tree/v0.24.0/MapboxDirections/MBRouteStep.swift#L181">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeReachEnd"></a>
+                    <a name="//apple_ref/swift/Element/reachEnd" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeReachEnd"><span class="token-name">reachEnd</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>The step requires the user to turn at either a T-shaped three-way intersection or a sharp bend in the road where the road also changes names.</p>
+
+<p>This maneuver type is called out separately so that the user may be able to proceed more confidently, without fear of having overshot the turn. If this distinction is unimportant to you, you may treat the maneuver as an ordinary <code><a href="../Enums/ManeuverType.html#/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeTurn">turn</a></code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">reachEnd</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/MapboxDirections.swift/tree/v0.24.0/MapboxDirections/MBRouteStep.swift#L188">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeUseLane"></a>
+                    <a name="//apple_ref/swift/Element/useLane" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeUseLane"><span class="token-name">useLane</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>The step requires the user to get into a specific lane in order to continue along the current road.</p>
+
+<p>The maneuver direction is set to <code>straightAhead</code>. Each of the first intersection’s usable approach lanes also has an indication of <code>straightAhead</code>. A maneuver in a different direction would instead have a maneuver type of <code><a href="../Enums/ManeuverType.html#/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeTurn">turn</a></code>.</p>
+
+<p>This maneuver type is called out separately so that the application can present the user with lane guidance based on the first element in the <code>intersections</code> property. If lane guidance is unimportant to you, you may treat the maneuver as an ordinary <code><a href="../Enums/ManeuverType.html#/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeContinue">continue</a></code> or ignore it.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">useLane</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/MapboxDirections.swift/tree/v0.24.0/MapboxDirections/MBRouteStep.swift#L197">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeTakeRoundabout"></a>
+                    <a name="//apple_ref/swift/Element/takeRoundabout" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeTakeRoundabout"><span class="token-name">takeRoundabout</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>The step requires the user to enter and traverse a roundabout (traffic circle or rotary).</p>
+
+<p>The step has no name, but the exit name is the name of the road to take to exit the roundabout. The exit index indicates the number of roundabout exits up to and including the exit to take.</p>
+
+<p>If <code><a href="../Classes/RouteOptions.html#/c:@M@MapboxDirections@objc(cs)MBRouteOptions(py)includesExitRoundaboutManeuver">RouteOptions.includesExitRoundaboutManeuver</a></code> is set to <code>true</code>, this step is followed by an <code><a href="../Enums/ManeuverType.html#/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeExitRoundabout">.exitRoundabout</a></code> maneuver. Otherwise, this step represents the entire roundabout maneuver, from the entrance to the exit.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">takeRoundabout</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/MapboxDirections.swift/tree/v0.24.0/MapboxDirections/MBRouteStep.swift#L206">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeTakeRotary"></a>
+                    <a name="//apple_ref/swift/Element/takeRotary" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeTakeRotary"><span class="token-name">takeRotary</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>The step requires the user to enter and traverse a large, named roundabout (traffic circle or rotary).</p>
+
+<p>The step’s name is the name of the roundabout. The exit name is the name of the road to take to exit the roundabout. The exit index indicates the number of rotary exits up to and including the exit that the user must take.</p>
+
+<p>If <code><a href="../Classes/RouteOptions.html#/c:@M@MapboxDirections@objc(cs)MBRouteOptions(py)includesExitRoundaboutManeuver">RouteOptions.includesExitRoundaboutManeuver</a></code> is set to <code>true</code>, this step is followed by an <code><a href="../Enums/ManeuverType.html#/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeExitRotary">.exitRotary</a></code> maneuver. Otherwise, this step represents the entire roundabout maneuver, from the entrance to the exit.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">takeRotary</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/MapboxDirections.swift/tree/v0.24.0/MapboxDirections/MBRouteStep.swift#L215">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeTurnAtRoundabout"></a>
+                    <a name="//apple_ref/swift/Element/turnAtRoundabout" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeTurnAtRoundabout"><span class="token-name">turnAtRoundabout</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>The step requires the user to enter and exit a roundabout (traffic circle or rotary) that is compact enough to constitute a single intersection.</p>
+
+<p>The step’s name is the name of the road to take after exiting the roundabout. This maneuver type is called out separately because the user may perceive the roundabout as an ordinary intersection with an island in the middle. If this distinction is unimportant to you, you may treat the maneuver as either an ordinary <code><a href="../Enums/ManeuverType.html#/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeTurn">turn</a></code> or as a <code><a href="../Enums/ManeuverType.html#/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeTakeRoundabout">takeRoundabout</a></code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">turnAtRoundabout</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/MapboxDirections.swift/tree/v0.24.0/MapboxDirections/MBRouteStep.swift#L222">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeExitRoundabout"></a>
+                    <a name="//apple_ref/swift/Element/exitRoundabout" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeExitRoundabout"><span class="token-name">exitRoundabout</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>The step requires the user to exit a roundabout (traffic circle or rotary).</p>
+
+<p>This maneuver type follows a <code><a href="../Enums/ManeuverType.html#/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeTakeRoundabout">.takeRoundabout</a></code> maneuver. It is only used when <code><a href="../Classes/RouteOptions.html#/c:@M@MapboxDirections@objc(cs)MBRouteOptions(py)includesExitRoundaboutManeuver">RouteOptions.includesExitRoundaboutManeuver</a></code> is set to true.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">exitRoundabout</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/MapboxDirections.swift/tree/v0.24.0/MapboxDirections/MBRouteStep.swift#L229">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeExitRotary"></a>
+                    <a name="//apple_ref/swift/Element/exitRotary" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeExitRotary"><span class="token-name">exitRotary</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>The step requires the user to exit a large, named roundabout (traffic circle or rotary).</p>
+
+<p>This maneuver type follows a <code><a href="../Enums/ManeuverType.html#/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeTakeRotary">.takeRotary</a></code> maneuver. It is only used when <code><a href="../Classes/RouteOptions.html#/c:@M@MapboxDirections@objc(cs)MBRouteOptions(py)includesExitRoundaboutManeuver">RouteOptions.includesExitRoundaboutManeuver</a></code> is set to true.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">exitRotary</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/MapboxDirections.swift/tree/v0.24.0/MapboxDirections/MBRouteStep.swift#L236">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeHeedWarning"></a>
+                    <a name="//apple_ref/swift/Element/heedWarning" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeHeedWarning"><span class="token-name">heedWarning</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>The step requires the user to respond to a change in travel conditions.</p>
+
+<p>This maneuver type may occur for example when driving directions require the user to board a ferry, or when cycling directions require the user to dismount. The step’s transport type and instructions contains important contextual details that should be presented to the user at the maneuver location.</p>
+
+<p>Similar changes can occur simultaneously with other maneuvers, such as when the road changes its name at the site of a movable bridge. In such cases, <code>heedWarning</code> is suppressed in favor of another maneuver type.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">heedWarning</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/MapboxDirections.swift/tree/v0.24.0/MapboxDirections/MBRouteStep.swift#L245">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeArrive"></a>
+                    <a name="//apple_ref/swift/Element/arrive" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypeArrive"><span class="token-name">arrive</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>The step requires the user to arrive at a waypoint.</p>
+
+<p>The distance and expected travel time for this step are set to zero, indicating that the route or route leg is complete. The maneuver direction indicates the side of the road on which the waypoint can be found (or whether it is straight ahead).</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">arrive</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/MapboxDirections.swift/tree/v0.24.0/MapboxDirections/MBRouteStep.swift#L252">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypePassWaypoint"></a>
+                    <a name="//apple_ref/swift/Element/passWaypoint" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@MapboxDirections@E@MBManeuverType@MBManeuverTypePassWaypoint"><span class="token-name">passWaypoint</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>The step requires the user to arrive at an intermediate waypoint.</p>
+
+<p>This maneuver type is only used by version 4 of the Mapbox Directions API.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">passWaypoint</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/MapboxDirections.swift/tree/v0.24.0/MapboxDirections/MBRouteStep.swift#L259">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:s23CustomStringConvertibleP11descriptionSSvp"></a>
+                    <a name="//apple_ref/swift/Property/description" class="dashAnchor"></a>
+                    <a class="token" href="#/s:s23CustomStringConvertibleP11descriptionSSvp"><span class="token-name">description</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">description</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/MapboxDirections.swift/tree/v0.24.0/MapboxDirections/MBRouteStep.swift#L306-L347">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer limiter">
+      <p>© 2014–2017 <a class="link" href="https://www.mapbox.com/" target="_blank" rel="external">Mapbox</a>. See <a class="link" href="https://github.com/mapbox/MapboxDirections.swift/blob/master/LICENSE.md" target="_blank" rel="external">license</a> for more details.</p> Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.
+    </section>
+  </body>
+</div>
+</html>

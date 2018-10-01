@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>MapboxDirections  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    <link rel='shortcut icon' href='https://www.mapbox.com/img/favicon.ico' type='image/x-icon' />
+
+    <style type="text/css">
+      .nav-group-name[data-name="MapboxDirections"] > .small-heading,
+      .nav-group-task[data-name="MapboxDirections"] {
+        background-color: #f5f8fc;
+        font-family: "Open Sans Bold";
+        border-left: 3px solid #3a68d8;
+        padding-left: 5px
+      }
+    </style>
+    <script type="text/javascript">
+      !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="4.0.0";
+          analytics.load("fl0c8p240n");
+          var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function() {
+            if(this.readyState == 4 && this.status == 200) {
+              var resp = JSON.parse(xhttp.responseText);
+              analytics.identify(resp.id, {email: resp.email}, {}, function() {
+                analytics.page();
+              });
+            } else {
+              analytics.page();
+            }
+          }
+          xhttp.open("GET", "https://www.mapbox.com/api/session", true);
+          xhttp.send();
+        }}();
+    </script>
+  </head>
+  <body>
+
+
+    <a title="MapboxDirections  Reference"></a>
+
+    <header class="header-container">
+      <div class="limiter">
+        <div class="header">
+        <p class="header-col header-col--primary">
+          <a class="header-link" href="index.html">
+            <img style="height: 25px;"  class="header-icon" src="img/mapbox.svg" alt="MapboxDirections Docs"/>
+            <span class='header-tag'>Directions.swift  Reference</span>
+          </a>
+          
+        </p>
+    
+          <p class="header-col header-col--secondary">
+            <a class="header-link space-right2" href="https://github.com/mapbox/MapboxDirections.swift">
+              <svg style="margin-bottom: 1px;" class="header-icon" viewBox="0 0 33 33" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      		      <path stroke="none" stroke-width="1" fill="white" fill-rule="evenodd" d="M16.6,0.4 C7.6,0.4 0.3,7.7 0.3,16.7 C0.3,23.9 5,30 11.4,32.2 C12.2,32.3 12.5,31.8 12.5,31.4 L12.5,28.6 C8,29.6 7,26.4 7,26.4 C6.3,24.5 5.2,24 5.2,24 C3.7,23 5.3,23 5.3,23 C6.9,23.1 7.8,24.7 7.8,24.7 C9.3,27.2 11.6,26.5 12.5,26.1 C12.6,25 13.1,24.3 13.5,23.9 C9.9,23.5 6.1,22.1 6.1,15.8 C6.1,14 6.7,12.6 7.8,11.4 C7.6,11 7.1,9.3 8,7.1 C8,7.1 9.4,6.7 12.5,8.8 C13.8,8.4 15.2,8.3 16.6,8.3 C18,8.3 19.4,8.5 20.7,8.8 C23.8,6.7 25.2,7.1 25.2,7.1 C26.1,9.3 25.5,11 25.4,11.4 C26.4,12.5 27.1,14 27.1,15.8 C27.1,22.1 23.3,23.4 19.7,23.8 C20.3,24.3 20.8,25.3 20.8,26.8 L20.8,31.3 C20.8,31.7 21.1,32.2 21.9,32.1 C28.4,29.9 33,23.8 33,16.6 C32.9,7.7 25.6,0.4 16.6,0.4 L16.6,0.4 Z"></path>
+              </svg>
+              View on GitHub
+            </a>
+          </p>
+    
+          <p class="header-col header-col--secondary">
+            <a class="header-link bold" href="dash-feed://https%3A%2F%2Fwww%2Emapbox%2Ecom%2Fmapbox%2Dnavigation%2Dios%2Fdirections%2Fdocsets%2FMapboxDirections%2Exml">
+              <img style="margin-bottom: 1px;" class="header-icon" src="img/dash.png"/>
+              Install in Dash
+            </a>
+          </p>
+      </div>
+      </div>
+    </header>
+
+    <div class="breadcrumbs">
+      <div class="limiter">
+        <a class="breadcrumb" href="index.html">MapboxDirections Reference</a>
+        <img class="carat" src="img/carat.png" />
+        MapboxDirections  Reference
+      </div>
+    </div>
+
+    <div class="content-wrapper limiter">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name" data-name="Guides">
+            <a class="small-heading" href="Guides.html">Guides<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="Navigation SDK" data-url="navigation-sdk.html">
+                <a title="Navigation SDK" class="nav-group-task-link" href="navigation-sdk.html">Navigation SDK</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Getting Directions">
+            <a class="small-heading" href="Getting Directions.html">Getting Directions<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="Directions" data-url="Classes/Directions.html">
+                <a title="Directions" class="nav-group-task-link" href="Classes/Directions.html">Directions</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteOptions" data-url="Classes/RouteOptions.html">
+                <a title="RouteOptions" class="nav-group-task-link" href="Classes/RouteOptions.html">RouteOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="Waypoint" data-url="Classes/Waypoint.html">
+                <a title="Waypoint" class="nav-group-task-link" href="Classes/Waypoint.html">Waypoint</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Map Matching">
+            <a class="small-heading" href="Map Matching.html">Map Matching<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MatchOptions" data-url="Classes/MatchOptions.html">
+                <a title="MatchOptions" class="nav-group-task-link" href="Classes/MatchOptions.html">MatchOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="Tracepoint" data-url="Classes/Tracepoint.html">
+                <a title="Tracepoint" class="nav-group-task-link" href="Classes/Tracepoint.html">Tracepoint</a>
+              </li>
+              <li class="nav-group-task" data-name="Match" data-url="Classes/Match.html">
+                <a title="Match" class="nav-group-task-link" href="Classes/Match.html">Match</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Results">
+            <a class="small-heading" href="Results.html">Results<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="Route" data-url="Classes/Route.html">
+                <a title="Route" class="nav-group-task-link" href="Classes/Route.html">Route</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteLeg" data-url="Classes/RouteLeg.html">
+                <a title="RouteLeg" class="nav-group-task-link" href="Classes/RouteLeg.html">RouteLeg</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteStep" data-url="Classes/RouteStep.html">
+                <a title="RouteStep" class="nav-group-task-link" href="Classes/RouteStep.html">RouteStep</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Other Classes">
+            <a class="small-heading" href="Other Classes.html">Other Classes<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="DirectionsOptions" data-url="Classes/DirectionsOptions.html">
+                <a title="DirectionsOptions" class="nav-group-task-link" href="Classes/DirectionsOptions.html">DirectionsOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="DirectionsResult" data-url="Classes/DirectionsResult.html">
+                <a title="DirectionsResult" class="nav-group-task-link" href="Classes/DirectionsResult.html">DirectionsResult</a>
+              </li>
+              <li class="nav-group-task" data-name="Intersection" data-url="Classes/Intersection.html">
+                <a title="Intersection" class="nav-group-task-link" href="Classes/Intersection.html">Intersection</a>
+              </li>
+              <li class="nav-group-task" data-name="Lane" data-url="Classes/Lane.html">
+                <a title="Lane" class="nav-group-task-link" href="Classes/Lane.html">Lane</a>
+              </li>
+              <li class="nav-group-task" data-name="LaneIndicationComponent" data-url="Classes/LaneIndicationComponent.html">
+                <a title="LaneIndicationComponent" class="nav-group-task-link" href="Classes/LaneIndicationComponent.html">LaneIndicationComponent</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteOptionsV4" data-url="Classes/RouteOptionsV4.html">
+                <a title="RouteOptionsV4" class="nav-group-task-link" href="Classes/RouteOptionsV4.html">RouteOptionsV4</a>
+              </li>
+              <li class="nav-group-task" data-name="SpokenInstruction" data-url="Classes/SpokenInstruction.html">
+                <a title="SpokenInstruction" class="nav-group-task-link" href="Classes/SpokenInstruction.html">SpokenInstruction</a>
+              </li>
+              <li class="nav-group-task" data-name="VisualInstruction" data-url="Classes/VisualInstruction.html">
+                <a title="VisualInstruction" class="nav-group-task-link" href="Classes/VisualInstruction.html">VisualInstruction</a>
+              </li>
+              <li class="nav-group-task" data-name="VisualInstructionBanner" data-url="Classes/VisualInstructionBanner.html">
+                <a title="VisualInstructionBanner" class="nav-group-task-link" href="Classes/VisualInstructionBanner.html">VisualInstructionBanner</a>
+              </li>
+              <li class="nav-group-task" data-name="VisualInstructionComponent" data-url="Classes/VisualInstructionComponent.html">
+                <a title="VisualInstructionComponent" class="nav-group-task-link" href="Classes/VisualInstructionComponent.html">VisualInstructionComponent</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Other Global Variables">
+            <a class="small-heading" href="Other Global Variables.html">Other Global Variables<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MBDirectionsErrorDomain" data-url="Other Global Variables.html#/s:16MapboxDirections23MBDirectionsErrorDomainSSvp">
+                <a title="MBDirectionsErrorDomain" class="nav-group-task-link" href="Other Global Variables.html#/s:16MapboxDirections23MBDirectionsErrorDomainSSvp">MBDirectionsErrorDomain</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Other Enumerations">
+            <a class="small-heading" href="Other Enumerations.html">Other Enumerations<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="CongestionLevel" data-url="Enums/CongestionLevel.html">
+                <a title="CongestionLevel" class="nav-group-task-link" href="Enums/CongestionLevel.html">CongestionLevel</a>
+              </li>
+              <li class="nav-group-task" data-name="DrivingSide" data-url="Enums/DrivingSide.html">
+                <a title="DrivingSide" class="nav-group-task-link" href="Enums/DrivingSide.html">DrivingSide</a>
+              </li>
+              <li class="nav-group-task" data-name="InstructionFormat" data-url="Enums/InstructionFormat.html">
+                <a title="InstructionFormat" class="nav-group-task-link" href="Enums/InstructionFormat.html">InstructionFormat</a>
+              </li>
+              <li class="nav-group-task" data-name="ManeuverDirection" data-url="Enums/ManeuverDirection.html">
+                <a title="ManeuverDirection" class="nav-group-task-link" href="Enums/ManeuverDirection.html">ManeuverDirection</a>
+              </li>
+              <li class="nav-group-task" data-name="ManeuverType" data-url="Enums/ManeuverType.html">
+                <a title="ManeuverType" class="nav-group-task-link" href="Enums/ManeuverType.html">ManeuverType</a>
+              </li>
+              <li class="nav-group-task" data-name="MeasurementSystem" data-url="Enums/MeasurementSystem.html">
+                <a title="MeasurementSystem" class="nav-group-task-link" href="Enums/MeasurementSystem.html">MeasurementSystem</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteShapeFormat" data-url="Enums/RouteShapeFormat.html">
+                <a title="RouteShapeFormat" class="nav-group-task-link" href="Enums/RouteShapeFormat.html">RouteShapeFormat</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteShapeResolution" data-url="Enums/RouteShapeResolution.html">
+                <a title="RouteShapeResolution" class="nav-group-task-link" href="Enums/RouteShapeResolution.html">RouteShapeResolution</a>
+              </li>
+              <li class="nav-group-task" data-name="TransportType" data-url="Enums/TransportType.html">
+                <a title="TransportType" class="nav-group-task-link" href="Enums/TransportType.html">TransportType</a>
+              </li>
+              <li class="nav-group-task" data-name="VisualInstructionComponentType" data-url="Enums/VisualInstructionComponentType.html">
+                <a title="VisualInstructionComponentType" class="nav-group-task-link" href="Enums/VisualInstructionComponentType.html">VisualInstructionComponentType</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Other Protocols">
+            <a class="small-heading" href="Other Protocols.html">Other Protocols<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="ComponentRepresentable" data-url="Other Protocols.html#/c:@M@MapboxDirections@objc(pl)MBComponentRepresentable">
+                <a title="ComponentRepresentable" class="nav-group-task-link" href="Other Protocols.html#/c:@M@MapboxDirections@objc(pl)MBComponentRepresentable">ComponentRepresentable</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content">
+            
+            <h1 id='mapboxdirections' class='heading'>MapboxDirections</h1>
+
+<p><a href="https://www.bitrise.io/app/2f82077d3f083479">📱&nbsp;<img src="https://app.bitrise.io/app/2f82077d3f083479/status.svg?token=mC783nGMKA3XrvcMCJAOLg&branch=master" alt="iOS Build Status"></a> &nbsp;&nbsp;&nbsp;
+<a href="https://www.bitrise.io/app/3e18d5c284ee7fe4">🖥💻&nbsp;<img src="https://app.bitrise.io/app/3e18d5c284ee7fe4/status.svg?token=YCPg5FTvNCSoRBvECdFWtg&branch=master" alt="macOS Build Status"></a> &nbsp;&nbsp;&nbsp;
+<a href="https://www.bitrise.io/app/0dd69f13a42252d6">📺&nbsp;<img src="https://app.bitrise.io/app/0dd69f13a42252d6/status.svg?token=jin7-oeLn35GfZqWaqumtA&branch=master" alt="tvOS Build Status"></a> &nbsp;&nbsp;&nbsp;
+<a href="https://www.bitrise.io/app/6db52b89a8fbfb40">⌚️&nbsp;<img src="https://app.bitrise.io/app/6db52b89a8fbfb40/status.svg?token=v645xdLSJWX0uYxLU7CA3g&branch=master" alt="watchOS Build Status"></a> &nbsp;&nbsp;&nbsp;
+<a href="https://github.com/Carthage/Carthage"><img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat" alt="Carthage compatible"></a> &nbsp;&nbsp;&nbsp;
+<a href="http://cocoadocs.org/docsets/MapboxDirections.swift/"><img src="https://img.shields.io/cocoapods/v/MapboxDirections.swift.svg" alt="CocoaPods"></a></p>
+
+<p>MapboxDirections.swift makes it easy to connect your iOS, macOS, tvOS, or watchOS application to the <a href="https://www.mapbox.com/directions/">Mapbox Directions API</a> and <a href="https://www.mapbox.com/directions/">Mapbox Map Matching API</a>. Quickly get driving, cycling, or walking directions, whether the trip is nonstop or it has multiple stopping points, all using a simple interface reminiscent of MapKit’s <code>MKDirections</code> API. Fit a GPX trace to the <a href="https://www.openstreetmap.org/">OpenStreetMap</a> road network. The Mapbox Directions and Map Matching APIs are powered by the <a href="http://project-osrm.org/">OSRM</a> routing engine.</p>
+
+<p>Despite its name, MapboxDirections.swift works in Objective-C and Cocoa-AppleScript code in addition to Swift 4.</p>
+
+<p>MapboxDirections.swift pairs well with <a href="https://github.com/mapbox/MapboxGeocoder.swift">MapboxGeocoder.swift</a>, <a href="https://github.com/mapbox/MapboxStatic.swift">MapboxStatic.swift</a>, the <a href="https://github.com/mapbox/mapbox-navigation-ios/">Mapbox Navigation SDK for iOS</a>, and the <a href="https://www.mapbox.com/ios-sdk/">Mapbox Maps SDK for iOS</a> or <a href="https://mapbox.github.io/mapbox-gl-native/macos/">macOS SDK</a>.</p>
+<h2 id='getting-started' class='heading'>Getting started</h2>
+
+<p>Specify the following dependency in your <a href="https://github.com/Carthage/Carthage">Carthage</a> Cartfile:</p>
+<pre class="highlight plaintext"><code>github "mapbox/MapboxDirections.swift" ~&gt; 0.24
+</code></pre>
+
+<p>Or in your <a href="http://cocoapods.org/">CocoaPods</a> Podfile:</p>
+<pre class="highlight plaintext"><code>pod 'MapboxDirections.swift', '~&gt; 0.24'
+</code></pre>
+
+<p>Then <code>import MapboxDirections</code> or <code>@import MapboxDirections;</code>.</p>
+
+<p>v0.12.1 is the last release of MapboxDirections.swift written in Swift 3. All subsequent releases will be based on the <code>master</code> branch, which is written in Swift 4. The Swift examples below are written in Swift 4.</p>
+
+<p>This repository contains example applications written in Swift and Objective-C that demonstrate how to use the framework. To run them, you need to use <a href="https://github.com/Carthage/Carthage">Carthage</a> 0.19 or above to install the dependencies. More examples and detailed documentation are available in the <a href="https://www.mapbox.com/api-documentation/?language=Swift#directions">Mapbox API Documentation</a>.</p>
+<h2 id='usage' class='heading'>Usage</h2>
+
+<p><strong><a href="https://www.mapbox.com/mapbox-navigation-ios/directions/">API reference</a></strong></p>
+
+<p>You’ll need a <a href="https://www.mapbox.com/developers/api/#access-tokens">Mapbox access token</a> in order to use the API. If you’re already using the <a href="https://www.mapbox.com/ios-sdk/">Mapbox Maps SDK for iOS</a> or <a href="https://mapbox.github.io/mapbox-gl-native/macos/">macOS SDK</a>, MapboxDirections.swift automatically recognizes your access token, as long as you’ve placed it in the <code>MGLMapboxAccessToken</code> key of your application’s Info.plist file.</p>
+
+<p>The examples below are each provided in Swift (denoted with <code>main.swift</code>), Objective-C (<code>main.m</code>), and AppleScript (<code>AppDelegate.applescript</code>). For further details, see the <a href="https://www.mapbox.com/mapbox-navigation-ios/directions/">MapboxDirections.swift API reference</a>.</p>
+<h3 id='calculating-directions-between-locations' class='heading'>Calculating directions between locations</h3>
+
+<p>The main directions class is Directions (in Swift) or MBDirections (in Objective-C or AppleScript). Create a directions object using your access token:</p>
+<pre class="highlight swift"><code><span class="c1">// main.swift</span>
+<span class="kd">import</span> <span class="kt">MapboxDirections</span>
+
+<span class="k">let</span> <span class="nv">directions</span> <span class="o">=</span> <span class="kt">Directions</span><span class="p">(</span><span class="nv">accessToken</span><span class="p">:</span> <span class="s">"&lt;#your access token#&gt;"</span><span class="p">)</span>
+</code></pre>
+<pre class="highlight objective_c"><code><span class="c1">// main.m
+</span><span class="k">@import</span> <span class="n">MapboxDirections</span><span class="p">;</span>
+
+<span class="n">MBDirections</span> <span class="o">*</span><span class="n">directions</span> <span class="o">=</span> <span class="p">[[</span><span class="n">MBDirections</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithAccessToken</span><span class="p">:</span><span class="s">@"&lt;#your access token#&gt;"</span><span class="p">];</span>
+</code></pre>
+<pre class="highlight applescript"><code><span class="c1">-- AppDelegate.applescript</span><span class="w">
+</span><span class="k">set</span><span class="w"> </span><span class="nv">theDirections</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nv">alloc</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nv">MBDirections</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nb">the</span><span class="w"> </span><span class="nv">current</span><span class="w"> </span><span class="nb">application</span><span class="w">
+</span><span class="k">tell</span><span class="w"> </span><span class="nv">theDirections</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nv">initWithAccessToken</span><span class="p">:</span><span class="s2">"&lt;#your access token#&gt;"</span><span class="w">
+</span></code></pre>
+
+<p>Alternatively, you can place your access token in the <code>MGLMapboxAccessToken</code> key of your application’s Info.plist file, then use the shared directions object:</p>
+<pre class="highlight swift"><code><span class="c1">// main.swift</span>
+<span class="k">let</span> <span class="nv">directions</span> <span class="o">=</span> <span class="kt">Directions</span><span class="o">.</span><span class="n">shared</span>
+</code></pre>
+<pre class="highlight objective_c"><code><span class="c1">// main.m
+</span><span class="n">MBDirections</span> <span class="o">*</span><span class="n">directions</span> <span class="o">=</span> <span class="p">[</span><span class="n">MBDirections</span> <span class="nf">sharedDirections</span><span class="p">];</span>
+</code></pre>
+<pre class="highlight applescript"><code><span class="c1">-- AppDelegate.applescript</span><span class="w">
+</span><span class="k">set</span><span class="w"> </span><span class="nv">theDirections</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nv">sharedDirections</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nv">MBDirections</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nb">the</span><span class="w"> </span><span class="nv">current</span><span class="w"> </span><span class="nb">application</span><span class="w">
+</span></code></pre>
+
+<p>With the directions object in hand, construct a RouteOptions or MBRouteOptions object and pass it into the <code><a href="Classes/Directions.html#/c:@M@MapboxDirections@objc(cs)MBDirections(im)calculateDirectionsWithOptions:completionHandler:">Directions.calculate(_:completionHandler:)</a></code> method.</p>
+<pre class="highlight swift"><code><span class="c1">// main.swift</span>
+
+<span class="k">let</span> <span class="nv">waypoints</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="kt">Waypoint</span><span class="p">(</span><span class="nv">coordinate</span><span class="p">:</span> <span class="kt">CLLocationCoordinate2D</span><span class="p">(</span><span class="nv">latitude</span><span class="p">:</span> <span class="mf">38.9131752</span><span class="p">,</span> <span class="nv">longitude</span><span class="p">:</span> <span class="o">-</span><span class="mf">77.0324047</span><span class="p">),</span> <span class="nv">name</span><span class="p">:</span> <span class="s">"Mapbox"</span><span class="p">),</span>
+    <span class="kt">Waypoint</span><span class="p">(</span><span class="nv">coordinate</span><span class="p">:</span> <span class="kt">CLLocationCoordinate2D</span><span class="p">(</span><span class="nv">latitude</span><span class="p">:</span> <span class="mf">38.8977</span><span class="p">,</span> <span class="nv">longitude</span><span class="p">:</span> <span class="o">-</span><span class="mf">77.0365</span><span class="p">),</span> <span class="nv">name</span><span class="p">:</span> <span class="s">"White House"</span><span class="p">),</span>
+<span class="p">]</span>
+<span class="k">let</span> <span class="nv">options</span> <span class="o">=</span> <span class="kt">RouteOptions</span><span class="p">(</span><span class="nv">waypoints</span><span class="p">:</span> <span class="n">waypoints</span><span class="p">,</span> <span class="nv">profileIdentifier</span><span class="p">:</span> <span class="o">.</span><span class="n">automobileAvoidingTraffic</span><span class="p">)</span>
+<span class="n">options</span><span class="o">.</span><span class="n">includesSteps</span> <span class="o">=</span> <span class="kc">true</span>
+
+<span class="k">let</span> <span class="nv">task</span> <span class="o">=</span> <span class="n">directions</span><span class="o">.</span><span class="nf">calculate</span><span class="p">(</span><span class="n">options</span><span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="n">waypoints</span><span class="p">,</span> <span class="n">routes</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span> <span class="k">in</span>
+    <span class="k">guard</span> <span class="n">error</span> <span class="o">==</span> <span class="kc">nil</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"Error calculating directions: </span><span class="se">\(</span><span class="n">error</span><span class="o">!</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="k">let</span> <span class="nv">route</span> <span class="o">=</span> <span class="n">routes</span><span class="p">?</span><span class="o">.</span><span class="n">first</span><span class="p">,</span> <span class="k">let</span> <span class="nv">leg</span> <span class="o">=</span> <span class="n">route</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">first</span> <span class="p">{</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"Route via </span><span class="se">\(</span><span class="n">leg</span><span class="se">)</span><span class="s">:"</span><span class="p">)</span>
+
+        <span class="k">let</span> <span class="nv">distanceFormatter</span> <span class="o">=</span> <span class="kt">LengthFormatter</span><span class="p">()</span>
+        <span class="k">let</span> <span class="nv">formattedDistance</span> <span class="o">=</span> <span class="n">distanceFormatter</span><span class="o">.</span><span class="nf">string</span><span class="p">(</span><span class="nv">fromMeters</span><span class="p">:</span> <span class="n">route</span><span class="o">.</span><span class="n">distance</span><span class="p">)</span>
+
+        <span class="k">let</span> <span class="nv">travelTimeFormatter</span> <span class="o">=</span> <span class="kt">DateComponentsFormatter</span><span class="p">()</span>
+        <span class="n">travelTimeFormatter</span><span class="o">.</span><span class="n">unitsStyle</span> <span class="o">=</span> <span class="o">.</span><span class="n">short</span>
+        <span class="k">let</span> <span class="nv">formattedTravelTime</span> <span class="o">=</span> <span class="n">travelTimeFormatter</span><span class="o">.</span><span class="nf">string</span><span class="p">(</span><span class="nv">from</span><span class="p">:</span> <span class="n">route</span><span class="o">.</span><span class="n">expectedTravelTime</span><span class="p">)</span>
+
+        <span class="nf">print</span><span class="p">(</span><span class="s">"Distance: </span><span class="se">\(</span><span class="n">formattedDistance</span><span class="se">)</span><span class="s">; ETA: </span><span class="se">\(</span><span class="n">formattedTravelTime</span><span class="o">!</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">step</span> <span class="k">in</span> <span class="n">leg</span><span class="o">.</span><span class="n">steps</span> <span class="p">{</span>
+            <span class="nf">print</span><span class="p">(</span><span class="s">"</span><span class="se">\(</span><span class="n">step</span><span class="o">.</span><span class="n">instructions</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+            <span class="k">let</span> <span class="nv">formattedDistance</span> <span class="o">=</span> <span class="n">distanceFormatter</span><span class="o">.</span><span class="nf">string</span><span class="p">(</span><span class="nv">fromMeters</span><span class="p">:</span> <span class="n">step</span><span class="o">.</span><span class="n">distance</span><span class="p">)</span>
+            <span class="nf">print</span><span class="p">(</span><span class="s">"— </span><span class="se">\(</span><span class="n">formattedDistance</span><span class="se">)</span><span class="s"> —"</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+<pre class="highlight objective_c"><code><span class="c1">// main.m
+</span>
+<span class="n">NSArray</span><span class="o">&lt;</span><span class="n">MBWaypoint</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="n">waypoints</span> <span class="o">=</span> <span class="p">@[</span>
+    <span class="p">[[</span><span class="n">MBWaypoint</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithCoordinate</span><span class="p">:</span><span class="n">CLLocationCoordinate2DMake</span><span class="p">(</span><span class="mi">38</span><span class="p">.</span><span class="mi">9131752</span><span class="p">,</span> <span class="o">-</span><span class="mi">77</span><span class="p">.</span><span class="mo">0324047</span><span class="p">)</span> <span class="nf">coordinateAccuracy</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span> <span class="n">name</span><span class="o">:</span><span class="s">@"Mapbox"</span><span class="p">],</span>
+    <span class="p">[[</span><span class="n">MBWaypoint</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithCoordinate</span><span class="p">:</span><span class="n">CLLocationCoordinate2DMake</span><span class="p">(</span><span class="mi">38</span><span class="p">.</span><span class="mi">8977</span><span class="p">,</span> <span class="o">-</span><span class="mi">77</span><span class="p">.</span><span class="mo">0365</span><span class="p">)</span> <span class="nf">coordinateAccuracy</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span> <span class="n">name</span><span class="o">:</span><span class="s">@"White House"</span><span class="p">],</span>
+<span class="p">];</span>
+<span class="n">MBRouteOptions</span> <span class="o">*</span><span class="n">options</span> <span class="o">=</span> <span class="p">[[</span><span class="n">MBRouteOptions</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithWaypoints</span><span class="p">:</span><span class="n">waypoints</span>
+                                                  <span class="nf">profileIdentifier</span><span class="p">:</span><span class="n">MBDirectionsProfileIdentifierAutomobileAvoidingTraffic</span><span class="p">];</span>
+<span class="n">options</span><span class="p">.</span><span class="n">includesSteps</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
+
+<span class="n">NSURLSessionDataTask</span> <span class="o">*</span><span class="n">task</span> <span class="o">=</span> <span class="p">[</span><span class="n">directions</span> <span class="nf">calculateDirectionsWithOptions</span><span class="p">:</span><span class="n">options</span>
+                                                      <span class="nf">completionHandler</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">NSArray</span><span class="o">&lt;</span><span class="n">MBWaypoint</span> <span class="o">*&gt;</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="n">waypoints</span><span class="p">,</span>
+                                                                          <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">MBRoute</span> <span class="o">*&gt;</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="n">routes</span><span class="p">,</span>
+                                                                          <span class="n">NSError</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Error calculating directions: %@"</span><span class="p">,</span> <span class="n">error</span><span class="p">);</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">MBRoute</span> <span class="o">*</span><span class="n">route</span> <span class="o">=</span> <span class="n">routes</span><span class="p">.</span><span class="n">firstObject</span><span class="p">;</span>
+    <span class="n">MBRouteLeg</span> <span class="o">*</span><span class="n">leg</span> <span class="o">=</span> <span class="n">route</span><span class="p">.</span><span class="n">legs</span><span class="p">.</span><span class="n">firstObject</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">leg</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Route via %@:"</span><span class="p">,</span> <span class="n">leg</span><span class="p">);</span>
+
+        <span class="n">NSLengthFormatter</span> <span class="o">*</span><span class="n">distanceFormatter</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSLengthFormatter</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+        <span class="n">NSString</span> <span class="o">*</span><span class="n">formattedDistance</span> <span class="o">=</span> <span class="p">[</span><span class="n">distanceFormatter</span> <span class="nf">stringFromMeters</span><span class="p">:</span><span class="n">leg</span><span class="p">.</span><span class="n">distance</span><span class="p">];</span>
+
+        <span class="n">NSDateComponentsFormatter</span> <span class="o">*</span><span class="n">travelTimeFormatter</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSDateComponentsFormatter</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+        <span class="n">travelTimeFormatter</span><span class="p">.</span><span class="n">unitsStyle</span> <span class="o">=</span> <span class="n">NSDateComponentsFormatterUnitsStyleShort</span><span class="p">;</span>
+        <span class="n">NSString</span> <span class="o">*</span><span class="n">formattedTravelTime</span> <span class="o">=</span> <span class="p">[</span><span class="n">travelTimeFormatter</span> <span class="nf">stringFromTimeInterval</span><span class="p">:</span><span class="n">route</span><span class="p">.</span><span class="n">expectedTravelTime</span><span class="p">];</span>
+
+        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Distance: %@; ETA: %@"</span><span class="p">,</span> <span class="n">formattedDistance</span><span class="p">,</span> <span class="n">formattedTravelTime</span><span class="p">);</span>
+
+        <span class="k">for</span> <span class="p">(</span><span class="n">MBRouteStep</span> <span class="o">*</span><span class="n">step</span> <span class="k">in</span> <span class="n">leg</span><span class="p">.</span><span class="n">steps</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">NSLog</span><span class="p">(</span><span class="s">@"%@"</span><span class="p">,</span> <span class="n">step</span><span class="p">.</span><span class="n">instructions</span><span class="p">);</span>
+            <span class="n">NSString</span> <span class="o">*</span><span class="n">formattedDistance</span> <span class="o">=</span> <span class="p">[</span><span class="n">distanceFormatter</span> <span class="nf">stringFromMeters</span><span class="p">:</span><span class="n">step</span><span class="p">.</span><span class="n">distance</span><span class="p">];</span>
+            <span class="n">NSLog</span><span class="p">(</span><span class="s">@"— %@ —"</span><span class="p">,</span> <span class="n">formattedDistance</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}];</span>
+</code></pre>
+<pre class="highlight applescript"><code><span class="c1">-- AppDelegate.applescript</span><span class="w">
+
+</span><span class="k">set</span><span class="w"> </span><span class="nv">mapbox</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nv">alloc</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nv">MBWaypoint</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nb">the</span><span class="w"> </span><span class="nv">current</span><span class="w"> </span><span class="nb">application</span><span class="w">
+</span><span class="k">tell</span><span class="w"> </span><span class="nv">mapbox</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nv">initWithCoordinate</span><span class="p">:{</span><span class="mf">38.9131752</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">77.0324047</span><span class="p">}</span><span class="w"> </span><span class="nv">coordinateAccuracy</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="err">|</span><span class="na">name</span><span class="err">|</span><span class="p">:</span><span class="s2">"Mapbox"</span><span class="w">
+</span><span class="k">set</span><span class="w"> </span><span class="nv">theWhiteHouse</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nv">alloc</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nv">MBWaypoint</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nb">the</span><span class="w"> </span><span class="nv">current</span><span class="w"> </span><span class="nb">application</span><span class="w">
+</span><span class="k">tell</span><span class="w"> </span><span class="nv">theWhiteHouse</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nv">initWithCoordinate</span><span class="p">:{</span><span class="mf">38.8977</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">77.0365</span><span class="p">}</span><span class="w"> </span><span class="nv">coordinateAccuracy</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="err">|</span><span class="na">name</span><span class="err">|</span><span class="p">:</span><span class="s2">"White House"</span><span class="w">
+</span><span class="k">set</span><span class="w"> </span><span class="nv">theWaypoints</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="p">{</span><span class="nv">mapbox</span><span class="p">,</span><span class="w"> </span><span class="nv">theWhiteHouse</span><span class="p">}</span><span class="w">
+
+</span><span class="k">set</span><span class="w"> </span><span class="nv">theOptions</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nv">alloc</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nv">MBRouteOptions</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nb">the</span><span class="w"> </span><span class="nv">current</span><span class="w"> </span><span class="nb">application</span><span class="w">
+</span><span class="k">tell</span><span class="w"> </span><span class="nv">theOptions</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nv">initWithWaypoints</span><span class="p">:</span><span class="nv">theWaypoints</span><span class="w"> </span><span class="nv">profileIdentifier</span><span class="p">:</span><span class="s2">"mapbox/driving-traffic"</span><span class="w">
+</span><span class="k">set</span><span class="w"> </span><span class="nv">theOptions</span>'s <span class="nv">includesSteps</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nv">true</span><span class="w">
+
+</span><span class="k">set</span><span class="w"> </span><span class="nv">theURL</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nv">theDirections</span>'s <span class="nv">URLForCalculatingDirectionsWithOptions</span><span class="p">:</span><span class="nv">theOptions</span><span class="w">
+</span><span class="k">set</span><span class="w"> </span><span class="nv">theData</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nb">the</span><span class="w"> </span><span class="nv">current</span><span class="w"> </span><span class="nb">application</span>'s <span class="nv">NSData</span>'s <span class="nv">dataWithContentsOfURL</span><span class="p">:</span><span class="nv">theURL</span><span class="w">
+</span><span class="k">set</span><span class="w"> </span><span class="nv">theJSON</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nb">the</span><span class="w"> </span><span class="nv">current</span><span class="w"> </span><span class="nb">application</span>'s <span class="nv">NSJSONSerialization</span>'s <span class="nv">JSONObjectWithData</span><span class="p">:</span><span class="nv">theData</span><span class="w"> </span><span class="nv">options</span><span class="p">:</span><span class="mi">0</span><span class="w"> </span><span class="err">|</span><span class="k">error</span><span class="err">|</span><span class="p">:(</span><span class="nv">missing</span><span class="w"> </span><span class="nv">value</span><span class="p">)</span><span class="w">
+
+</span><span class="k">set</span><span class="w"> </span><span class="nv">theRoute</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nv">alloc</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nv">MBRoute</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nb">the</span><span class="w"> </span><span class="nv">current</span><span class="w"> </span><span class="nb">application</span><span class="w">
+</span><span class="k">tell</span><span class="w"> </span><span class="nv">theRoute</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nv">initWithJson</span><span class="p">:(</span><span class="nb">the</span><span class="w"> </span><span class="nb">first</span><span class="w"> </span><span class="nb">item</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nv">theJSON</span>'s <span class="nv">routes</span><span class="p">)</span><span class="w"> </span><span class="nv">waypoints</span><span class="p">:</span><span class="nv">theWaypoints</span><span class="w"> </span><span class="nv">profileIdentifier</span><span class="p">:</span><span class="s2">"mapbox/driving"</span><span class="w">
+</span><span class="k">set</span><span class="w"> </span><span class="nv">theLeg</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nb">the</span><span class="w"> </span><span class="nb">first</span><span class="w"> </span><span class="nb">item</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nv">theRoute</span>'s <span class="nv">legs</span><span class="w">
+
+</span><span class="nb">log</span><span class="w"> </span><span class="s2">"Route via "</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="nv">theLeg</span>'s <span class="err">|</span><span class="na">name</span><span class="err">|</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="s2">":"</span><span class="w">
+
+</span><span class="k">set</span><span class="w"> </span><span class="nv">theDistanceFormatter</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nv">alloc</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nv">NSLengthFormatter</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nb">the</span><span class="w"> </span><span class="nv">current</span><span class="w"> </span><span class="nb">application</span><span class="w">
+</span><span class="k">tell</span><span class="w"> </span><span class="nv">theDistanceFormatter</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nv">init</span><span class="p">()</span><span class="w">
+</span><span class="k">set</span><span class="w"> </span><span class="nv">theDistance</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nv">theDistanceFormatter</span>'s <span class="nv">stringFromMeters</span><span class="p">:(</span><span class="nv">theLeg</span>'s <span class="nv">distance</span><span class="p">)</span><span class="w">
+
+</span><span class="nb">log</span><span class="w"> </span><span class="s2">"Distance: "</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="nv">theDistance</span><span class="w">
+
+</span><span class="k">repeat</span><span class="w"> </span><span class="nv">with</span><span class="w"> </span><span class="nv">theStep</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="nv">theLeg</span>'s <span class="nv">steps</span><span class="w">
+    </span><span class="nb">log</span><span class="w"> </span><span class="nv">theStep</span>'s <span class="nv">instructions</span><span class="w">
+    </span><span class="k">set</span><span class="w"> </span><span class="nv">theDistance</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nv">theDistanceFormatter</span>'s <span class="nv">stringFromMeters</span><span class="p">:(</span><span class="nv">theStep</span>'s <span class="nv">distance</span><span class="p">)</span><span class="w">
+    </span><span class="nb">log</span><span class="w"> </span><span class="s2">"— "</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="nv">theDistance</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="s2">" —"</span><span class="w">
+</span><span class="k">end</span><span class="w"> </span><span class="k">repeat</span><span class="w">
+</span></code></pre>
+
+<p>This library uses version 5 of the Mapbox Directions API by default. To use version 4 instead, replace RouteOptions with RouteOptionsV4 (or MBRouteOptions with MBRouteOptionsV4).</p>
+<h3 id='matching-a-trace-to-the-road-network' class='heading'>Matching a trace to the road network</h3>
+
+<p>If you have a GPX trace or other GPS-derived location data, you can clean up the data and fit it to the road network using the Map Matching API:</p>
+<pre class="highlight swift"><code><span class="c1">// main.swift</span>
+
+<span class="k">let</span> <span class="nv">coordinates</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="kt">CLLocationCoordinate2D</span><span class="p">(</span><span class="nv">latitude</span><span class="p">:</span> <span class="mf">32.712041</span><span class="p">,</span> <span class="nv">longitude</span><span class="p">:</span> <span class="o">-</span><span class="mf">117.172836</span><span class="p">),</span>
+    <span class="kt">CLLocationCoordinate2D</span><span class="p">(</span><span class="nv">latitude</span><span class="p">:</span> <span class="mf">32.712256</span><span class="p">,</span> <span class="nv">longitude</span><span class="p">:</span> <span class="o">-</span><span class="mf">117.17291</span><span class="p">),</span>
+    <span class="kt">CLLocationCoordinate2D</span><span class="p">(</span><span class="nv">latitude</span><span class="p">:</span> <span class="mf">32.712444</span><span class="p">,</span> <span class="nv">longitude</span><span class="p">:</span> <span class="o">-</span><span class="mf">117.17292</span><span class="p">),</span>
+    <span class="kt">CLLocationCoordinate2D</span><span class="p">(</span><span class="nv">latitude</span><span class="p">:</span> <span class="mf">32.71257</span><span class="p">,</span>  <span class="nv">longitude</span><span class="p">:</span> <span class="o">-</span><span class="mf">117.172922</span><span class="p">),</span>
+    <span class="kt">CLLocationCoordinate2D</span><span class="p">(</span><span class="nv">latitude</span><span class="p">:</span> <span class="mf">32.7126</span><span class="p">,</span>   <span class="nv">longitude</span><span class="p">:</span> <span class="o">-</span><span class="mf">117.172985</span><span class="p">),</span>
+    <span class="kt">CLLocationCoordinate2D</span><span class="p">(</span><span class="nv">latitude</span><span class="p">:</span> <span class="mf">32.712597</span><span class="p">,</span> <span class="nv">longitude</span><span class="p">:</span> <span class="o">-</span><span class="mf">117.173143</span><span class="p">),</span>
+    <span class="kt">CLLocationCoordinate2D</span><span class="p">(</span><span class="nv">latitude</span><span class="p">:</span> <span class="mf">32.712546</span><span class="p">,</span> <span class="nv">longitude</span><span class="p">:</span> <span class="o">-</span><span class="mf">117.173345</span><span class="p">)</span>
+<span class="p">]</span>
+
+<span class="k">let</span> <span class="nv">options</span> <span class="o">=</span> <span class="kt">MatchOptions</span><span class="p">(</span><span class="nv">coordinates</span><span class="p">:</span> <span class="n">coordinates</span><span class="p">)</span>
+<span class="n">options</span><span class="o">.</span><span class="n">includesSteps</span> <span class="o">=</span> <span class="kc">true</span>
+
+<span class="k">let</span> <span class="nv">task</span> <span class="o">=</span> <span class="n">directions</span><span class="o">.</span><span class="nf">calculate</span><span class="p">(</span><span class="n">options</span><span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="n">matches</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span> <span class="k">in</span>
+    <span class="k">guard</span> <span class="n">error</span> <span class="o">==</span> <span class="kc">nil</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"Error matching coordinates: </span><span class="se">\(</span><span class="n">error</span><span class="o">!</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="k">let</span> <span class="nv">match</span> <span class="o">=</span> <span class="n">matches</span><span class="p">?</span><span class="o">.</span><span class="n">first</span><span class="p">,</span> <span class="k">let</span> <span class="nv">leg</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">first</span> <span class="p">{</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"Match via </span><span class="se">\(</span><span class="n">leg</span><span class="se">)</span><span class="s">:"</span><span class="p">)</span>
+
+        <span class="k">let</span> <span class="nv">distanceFormatter</span> <span class="o">=</span> <span class="kt">LengthFormatter</span><span class="p">()</span>
+        <span class="k">let</span> <span class="nv">formattedDistance</span> <span class="o">=</span> <span class="n">distanceFormatter</span><span class="o">.</span><span class="nf">string</span><span class="p">(</span><span class="nv">fromMeters</span><span class="p">:</span> <span class="n">match</span><span class="o">.</span><span class="n">distance</span><span class="p">)</span>
+
+        <span class="k">let</span> <span class="nv">travelTimeFormatter</span> <span class="o">=</span> <span class="kt">DateComponentsFormatter</span><span class="p">()</span>
+        <span class="n">travelTimeFormatter</span><span class="o">.</span><span class="n">unitsStyle</span> <span class="o">=</span> <span class="o">.</span><span class="n">short</span>
+        <span class="k">let</span> <span class="nv">formattedTravelTime</span> <span class="o">=</span> <span class="n">travelTimeFormatter</span><span class="o">.</span><span class="nf">string</span><span class="p">(</span><span class="nv">from</span><span class="p">:</span> <span class="n">match</span><span class="o">.</span><span class="n">expectedTravelTime</span><span class="p">)</span>
+
+        <span class="nf">print</span><span class="p">(</span><span class="s">"Distance: </span><span class="se">\(</span><span class="n">formattedDistance</span><span class="se">)</span><span class="s">; ETA: </span><span class="se">\(</span><span class="n">formattedTravelTime</span><span class="o">!</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">step</span> <span class="k">in</span> <span class="n">leg</span><span class="o">.</span><span class="n">steps</span> <span class="p">{</span>
+            <span class="nf">print</span><span class="p">(</span><span class="s">"</span><span class="se">\(</span><span class="n">step</span><span class="o">.</span><span class="n">instructions</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+            <span class="k">let</span> <span class="nv">formattedDistance</span> <span class="o">=</span> <span class="n">distanceFormatter</span><span class="o">.</span><span class="nf">string</span><span class="p">(</span><span class="nv">fromMeters</span><span class="p">:</span> <span class="n">step</span><span class="o">.</span><span class="n">distance</span><span class="p">)</span>
+            <span class="nf">print</span><span class="p">(</span><span class="s">"— </span><span class="se">\(</span><span class="n">formattedDistance</span><span class="se">)</span><span class="s"> —"</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+<pre class="highlight objective_c"><code><span class="c1">// main.m
+</span><span class="n">NSArray</span><span class="o">&lt;</span><span class="n">MBWaypoint</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="n">waypoints</span> <span class="o">=</span> <span class="p">@[</span>
+    <span class="p">[[</span><span class="n">MBWaypoint</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithCoordinate</span><span class="p">:</span><span class="n">CLLocationCoordinate2DMake</span><span class="p">(</span><span class="mi">32</span><span class="p">.</span><span class="mi">712041</span><span class="p">,</span> <span class="o">-</span><span class="mi">117</span><span class="p">.</span><span class="mi">172836</span><span class="p">)</span> <span class="nf">coordinateAccuracy</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span> <span class="n">name</span><span class="o">:</span><span class="nb">nil</span><span class="p">],</span>
+    <span class="p">[[</span><span class="n">MBWaypoint</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithCoordinate</span><span class="p">:</span><span class="n">CLLocationCoordinate2DMake</span><span class="p">(</span><span class="mi">32</span><span class="p">.</span><span class="mi">712256</span><span class="p">,</span> <span class="o">-</span><span class="mi">117</span><span class="p">.</span><span class="mi">17291</span><span class="p">)</span> <span class="nf">coordinateAccuracy</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span> <span class="n">name</span><span class="o">:</span><span class="nb">nil</span><span class="p">],</span>
+    <span class="p">[[</span><span class="n">MBWaypoint</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithCoordinate</span><span class="p">:</span><span class="n">CLLocationCoordinate2DMake</span><span class="p">(</span><span class="mi">32</span><span class="p">.</span><span class="mi">712444</span><span class="p">,</span> <span class="o">-</span><span class="mi">117</span><span class="p">.</span><span class="mi">17292</span><span class="p">)</span> <span class="nf">coordinateAccuracy</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span> <span class="n">name</span><span class="o">:</span><span class="nb">nil</span><span class="p">],</span>
+    <span class="p">[[</span><span class="n">MBWaypoint</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithCoordinate</span><span class="p">:</span><span class="n">CLLocationCoordinate2DMake</span><span class="p">(</span><span class="mi">32</span><span class="p">.</span><span class="mi">71257</span><span class="p">,</span> <span class="o">-</span><span class="mi">117</span><span class="p">.</span><span class="mi">172922</span><span class="p">)</span> <span class="nf">coordinateAccuracy</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span> <span class="n">name</span><span class="o">:</span><span class="nb">nil</span><span class="p">],</span>
+    <span class="p">[[</span><span class="n">MBWaypoint</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithCoordinate</span><span class="p">:</span><span class="n">CLLocationCoordinate2DMake</span><span class="p">(</span><span class="mi">32</span><span class="p">.</span><span class="mi">7126</span><span class="p">,</span> <span class="o">-</span><span class="mi">117</span><span class="p">.</span><span class="mi">172985</span><span class="p">)</span> <span class="nf">coordinateAccuracy</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span> <span class="n">name</span><span class="o">:</span><span class="nb">nil</span><span class="p">],</span>
+    <span class="p">[[</span><span class="n">MBWaypoint</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithCoordinate</span><span class="p">:</span><span class="n">CLLocationCoordinate2DMake</span><span class="p">(</span><span class="mi">32</span><span class="p">.</span><span class="mi">712597</span><span class="p">,</span> <span class="o">-</span><span class="mi">117</span><span class="p">.</span><span class="mi">173143</span><span class="p">)</span> <span class="nf">coordinateAccuracy</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span> <span class="n">name</span><span class="o">:</span><span class="nb">nil</span><span class="p">],</span>
+    <span class="p">[[</span><span class="n">MBWaypoint</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithCoordinate</span><span class="p">:</span><span class="n">CLLocationCoordinate2DMake</span><span class="p">(</span><span class="mi">32</span><span class="p">.</span><span class="mi">712546</span><span class="p">,</span> <span class="o">-</span><span class="mi">117</span><span class="p">.</span><span class="mi">173345</span><span class="p">)</span> <span class="nf">coordinateAccuracy</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span> <span class="n">name</span><span class="o">:</span><span class="nb">nil</span><span class="p">],</span>
+<span class="p">];</span>
+
+<span class="n">MBMatchOptions</span> <span class="o">*</span><span class="n">matchOptions</span> <span class="o">=</span> <span class="p">[[</span><span class="n">MBMatchOptions</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithWaypoints</span><span class="p">:</span><span class="n">waypoints</span> <span class="nf">profileIdentifier</span><span class="p">:</span><span class="n">MBDirectionsProfileIdentifierAutomobile</span><span class="p">];</span>
+<span class="n">NSURLSessionDataTask</span> <span class="o">*</span><span class="n">task</span> <span class="o">=</span> <span class="p">[[[</span><span class="n">MBDirections</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithAccessToken</span><span class="p">:</span><span class="n">MapboxAccessToken</span><span class="p">]</span> <span class="nf">calculateMatchesWithOptions</span><span class="p">:</span><span class="n">matchOptions</span> <span class="nf">completionHandler</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">NSArray</span><span class="o">&lt;</span><span class="n">MBMatch</span> <span class="o">*&gt;</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="n">matches</span><span class="p">,</span> <span class="n">NSError</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Error matching waypoints: %@"</span><span class="p">,</span> <span class="n">error</span><span class="p">);</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">MBMatch</span> <span class="o">*</span><span class="n">match</span> <span class="o">=</span> <span class="n">matches</span><span class="p">.</span><span class="n">firstObject</span><span class="p">;</span>
+    <span class="n">MBRouteLeg</span> <span class="o">*</span><span class="n">leg</span> <span class="o">=</span> <span class="n">match</span><span class="p">.</span><span class="n">legs</span><span class="p">.</span><span class="n">firstObject</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">leg</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Match via %@:"</span><span class="p">,</span> <span class="n">leg</span><span class="p">);</span>
+
+        <span class="n">NSLengthFormatter</span> <span class="o">*</span><span class="n">distanceFormatter</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSLengthFormatter</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+        <span class="n">NSString</span> <span class="o">*</span><span class="n">formattedDistance</span> <span class="o">=</span> <span class="p">[</span><span class="n">distanceFormatter</span> <span class="nf">stringFromMeters</span><span class="p">:</span><span class="n">leg</span><span class="p">.</span><span class="n">distance</span><span class="p">];</span>
+
+        <span class="n">NSDateComponentsFormatter</span> <span class="o">*</span><span class="n">travelTimeFormatter</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSDateComponentsFormatter</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+        <span class="n">travelTimeFormatter</span><span class="p">.</span><span class="n">unitsStyle</span> <span class="o">=</span> <span class="n">NSDateComponentsFormatterUnitsStyleShort</span><span class="p">;</span>
+        <span class="n">NSString</span> <span class="o">*</span><span class="n">formattedTravelTime</span> <span class="o">=</span> <span class="p">[</span><span class="n">travelTimeFormatter</span> <span class="nf">stringFromTimeInterval</span><span class="p">:</span><span class="n">match</span><span class="p">.</span><span class="n">expectedTravelTime</span><span class="p">];</span>
+
+        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Distance: %@; ETA: %@"</span><span class="p">,</span> <span class="n">formattedDistance</span><span class="p">,</span> <span class="n">formattedTravelTime</span><span class="p">);</span>
+
+        <span class="k">for</span> <span class="p">(</span><span class="n">MBRouteStep</span> <span class="o">*</span><span class="n">step</span> <span class="k">in</span> <span class="n">leg</span><span class="p">.</span><span class="n">steps</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">NSLog</span><span class="p">(</span><span class="s">@"%@"</span><span class="p">,</span> <span class="n">step</span><span class="p">.</span><span class="n">instructions</span><span class="p">);</span>
+            <span class="n">NSString</span> <span class="o">*</span><span class="n">formattedDistance</span> <span class="o">=</span> <span class="p">[</span><span class="n">distanceFormatter</span> <span class="nf">stringFromMeters</span><span class="p">:</span><span class="n">step</span><span class="p">.</span><span class="n">distance</span><span class="p">];</span>
+            <span class="n">NSLog</span><span class="p">(</span><span class="s">@"— %@ —"</span><span class="p">,</span> <span class="n">formattedDistance</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}];</span>
+</code></pre>
+
+<p>You can also use the <code>Directions.calculateRoutes(matching:completionHandler:)</code> method in Swift or the <code>-[MBDirections calculateRoutesMatchingOptions:completionHandler:]</code> method in Objective-C to get Route objects suitable for use anywhere a standard Directions API response would be used.</p>
+<h2 id='usage-with-other-mapbox-libraries' class='heading'>Usage with other Mapbox libraries</h2>
+<h3 id='drawing-the-route-on-a-map' class='heading'>Drawing the route on a map</h3>
+
+<p>With the <a href="https://www.mapbox.com/ios-sdk/">Mapbox Maps SDK for iOS</a> or <a href="https://mapbox.github.io/mapbox-gl-native/macos/">macOS SDK</a>, you can easily draw the route on a map in Swift or Objective-C:</p>
+<pre class="highlight swift"><code><span class="c1">// main.swift</span>
+
+<span class="k">if</span> <span class="n">route</span><span class="o">.</span><span class="n">coordinateCount</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">{</span>
+    <span class="c1">// Convert the route’s coordinates into a polyline.</span>
+    <span class="k">var</span> <span class="nv">routeCoordinates</span> <span class="o">=</span> <span class="n">route</span><span class="o">.</span><span class="n">coordinates</span><span class="o">!</span>
+    <span class="k">let</span> <span class="nv">routeLine</span> <span class="o">=</span> <span class="kt">MGLPolyline</span><span class="p">(</span><span class="nv">coordinates</span><span class="p">:</span> <span class="o">&amp;</span><span class="n">routeCoordinates</span><span class="p">,</span> <span class="nv">count</span><span class="p">:</span> <span class="n">route</span><span class="o">.</span><span class="n">coordinateCount</span><span class="p">)</span>
+
+    <span class="c1">// Add the polyline to the map and fit the viewport to the polyline.</span>
+    <span class="n">mapView</span><span class="o">.</span><span class="nf">addAnnotation</span><span class="p">(</span><span class="n">routeLine</span><span class="p">)</span>
+    <span class="n">mapView</span><span class="o">.</span><span class="nf">setVisibleCoordinates</span><span class="p">(</span><span class="o">&amp;</span><span class="n">routeCoordinates</span><span class="p">,</span> <span class="nv">count</span><span class="p">:</span> <span class="n">route</span><span class="o">.</span><span class="n">coordinateCount</span><span class="p">,</span> <span class="nv">edgePadding</span><span class="p">:</span> <span class="o">.</span><span class="n">zero</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kc">true</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre>
+<pre class="highlight objective_c"><code><span class="c1">// main.m
+</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">route</span><span class="p">.</span><span class="n">coordinateCount</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Convert the route’s coordinates into a polyline.
+</span>    <span class="n">CLLocationCoordinate2D</span> <span class="o">*</span><span class="n">routeCoordinates</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">route</span><span class="p">.</span><span class="n">coordinateCount</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">CLLocationCoordinate2D</span><span class="p">));</span>
+    <span class="p">[</span><span class="n">route</span> <span class="nf">getCoordinates</span><span class="p">:</span><span class="n">routeCoordinates</span><span class="p">];</span>
+    <span class="n">MGLPolyline</span> <span class="o">*</span><span class="n">routeLine</span> <span class="o">=</span> <span class="p">[</span><span class="n">MGLPolyline</span> <span class="nf">polylineWithCoordinates</span><span class="p">:</span><span class="n">routeCoordinates</span> <span class="nf">count</span><span class="p">:</span><span class="n">route</span><span class="p">.</span><span class="n">coordinateCount</span><span class="p">];</span>
+
+    <span class="c1">// Add the polyline to the map and fit the viewport to the polyline.
+</span>    <span class="p">[</span><span class="n">mapView</span> <span class="nf">addAnnotation</span><span class="p">:</span><span class="n">routeLine</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">mapView</span> <span class="nf">setVisibleCoordinates</span><span class="p">:</span><span class="n">routeCoordinates</span> <span class="nf">count</span><span class="p">:</span><span class="n">route</span><span class="p">.</span><span class="n">coordinateCount</span> <span class="n">edgePadding</span><span class="o">:</span><span class="n">UIEdgeInsetsZero</span> <span class="n">animated</span><span class="o">:</span><span class="nb">YES</span><span class="p">];</span>
+
+    <span class="c1">// Make sure to free this array to avoid leaking memory.
+</span>    <span class="n">free</span><span class="p">(</span><span class="n">routeCoordinates</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre>
+<h3 id='displaying-a-turn-by-turn-navigation-interface' class='heading'>Displaying a turn-by-turn navigation interface</h3>
+
+<p>See the <a href="https://github.com/mapbox/mapbox-navigation-ios/#usage">Mapbox Navigation SDK for iOS</a> documentation for usage examples.</p>
+<h2 id='tests' class='heading'>Tests</h2>
+
+<p>To run the included unit tests, you need to use <a href="https://github.com/Carthage/Carthage">Carthage</a> 0.19 or above to install the dependencies.</p>
+
+<ol>
+<li><code>carthage build --platform iOS</code></li>
+<li><code>open MapboxDirections.xcodeproj</code></li>
+<li>Go to Product ‣ Test.</li>
+</ol>
+
+          </div>
+        </section>
+
+
+      </article>
+    </div>
+    <section class="footer limiter">
+      <p>© 2014–2017 <a class="link" href="https://www.mapbox.com/" target="_blank" rel="external">Mapbox</a>. See <a class="link" href="https://github.com/mapbox/MapboxDirections.swift/blob/master/LICENSE.md" target="_blank" rel="external">license</a> for more details.</p> Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.
+    </section>
+  </body>
+</div>
+</html>
