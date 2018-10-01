@@ -10,6 +10,10 @@ extension CLLocation {
             0...100 ~= horizontalAccuracy
     }
     
+    var isQualifiedForStartingRoute: Bool {
+        return 0...20 ~= horizontalAccuracy
+    }
+    
     /// Returns a dictionary representation of the location.
     public var dictionaryRepresentation: [String: Any] {
         var locationDictionary: [String: Any] = [:]

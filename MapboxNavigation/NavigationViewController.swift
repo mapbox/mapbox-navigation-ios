@@ -366,7 +366,6 @@ open class NavigationViewController: UIViewController {
         self.navigationService = navigationService ?? MapboxNavigationService(route: route)
         self.navigationService.usesDefaultUserInterface = true
         self.navigationService.delegate = self
-        self.navigationService.start()
         self.voiceController = voiceController ?? MapboxVoiceController()
 
         NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
@@ -380,6 +379,10 @@ open class NavigationViewController: UIViewController {
         let mapSubview: UIView = mapViewController.view
         mapSubview.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(mapSubview)
+        
+        
+        //Do not start the navigation session until after you create the MapViewController, otherwise you'll miss important messages.
+        self.navigationService.start()
         
         mapSubview.pinInSuperview()
         mapViewController.reportButton.isHidden = !showsReportFeedback
@@ -412,10 +415,6 @@ open class NavigationViewController: UIViewController {
             UIApplication.shared.isIdleTimerDisabled = true
         }
         
-        if navigationService.locationManager is SimulatedLocationManager {
-            let localized = String.Localized.simulationStatus(speed: 1)
-            mapViewController?.statusView.show(localized, showSpinner: false, interactive: true)
-        }
     }
     
     open override func viewWillDisappear(_ animated: Bool) {
@@ -664,6 +663,25 @@ extension NavigationViewController: NavigationServiceDelegate {
         }
         return advancesToNextLeg
 
+    }
+    
+    @objc public func navigationService(_ service: NavigationService, willBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
+        switch service.simulationMode {
+        case .always:
+            let localized = String.Localized.simulationStatus(speed: 1)
+            mapViewController?.statusView.show(localized, showSpinner: false, interactive: true)
+        default:
+            return
+        }
+    }
+    
+    @objc public func navigationService(_ service: NavigationService, willEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
+        switch service.simulationMode {
+        case .always,
+            mapViewController?.statusView.hide(delay: 0, animated: true)
+        default:
+            return
+        }
     }
     
     private func checkTunnelState(at location: CLLocation, along progress: RouteProgress) {

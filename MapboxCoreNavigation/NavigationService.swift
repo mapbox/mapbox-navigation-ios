@@ -244,10 +244,6 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
         
         router.delegate = self
         nativeLocationSource.delegate = self
-        
-        if simulationMode == .always {
-            simulate()
-        }
     }
     
     deinit {
@@ -303,16 +299,18 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
         nativeLocationSource.startUpdatingHeading()
         nativeLocationSource.startUpdatingLocation()
         
-        simulatedLocationSource?.startUpdatingHeading()
-        simulatedLocationSource?.startUpdatingLocation()
+        if simulationMode == .always {
+            simulate()
+        }
     }
     
     public func stop() {
         nativeLocationSource.stopUpdatingHeading()
         nativeLocationSource.stopUpdatingLocation()
         
-        simulatedLocationSource?.stopUpdatingHeading()
-        simulatedLocationSource?.stopUpdatingLocation()
+        if simulationMode == .always {
+            endSimulation()
+        }
         
         poorGPSTimer.disarm()
     }
@@ -331,11 +329,6 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
     private func resetGPSCountdown() {
         //Sanity check: if we're not on this mode, we have no business here.
         guard simulationMode == .onPoorGPS else { return }
-        
-        //If the timer is disarmed, arm it. This is a good update.
-        if poorGPSTimer.state == .disarmed {
-            poorGPSTimer.arm()
-        }
         
         // Immediately end simulation if it is occuring.
         if isSimulating {
@@ -378,20 +371,21 @@ extension MapboxNavigationService: CLLocationManagerDelegate {
         eventsManager.record(locations: locations)
         
         //sanity check: make sure the update actually contains a location
-        guard let location = locations.first else { return }
+        guard let location = locations.last else { return }
         
         //If this is a good organic update, reset the timer.
         if simulationMode == .onPoorGPS,
             manager == nativeLocationSource,
             location.isQualified {
-
+            
+            //If the timer is disarmed, arm it. This is a good update.
+            if poorGPSTimer.state == .disarmed, location.isQualifiedForStartingRoute {
+                poorGPSTimer.arm()
+            }
+            
             //pass this good update onto the poor GPS timer mechanism.
             resetGPSCountdown()
             
-            if (isSimulating) {
-                return //If we're simulating, throw this update away,
-                       // which ensures a smooth transition.
-            }
         }
         
         //Finally, pass the update onto the router.
