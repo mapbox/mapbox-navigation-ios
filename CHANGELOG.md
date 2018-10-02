@@ -15,7 +15,7 @@
 ### User location
 
 * Added a `NavigationService` protocol implemented by classes that provide location awareness functionality. Our default implementation, `MapboxNavigationService` conforms to this protocol. ([#1602](https://github.com/mapbox/mapbox-navigation-ios/pull/1602))
-  * Added a new `Router` protocol, which allows for custom route-following logic. Our default implementation, `RouteController` conforms to this protocol.
+  * Added a new `Router` protocol, which allows for custom route-following logic. Our default implementation, `RouteController`, conforms to this protocol.
   * `NavigationViewController.init(for:styles:directions:styles:routeController:locationManager:voiceController:eventsManager)` has been renamed `NavigationViewController.init(for:styles:navigationService:voiceController:)`.
   * `NavigationViewController.routeController` has been replaced by `NavigationViewController.navigationService`.
   * If you currently use `RouteController` directly, you should migrate to `MapboxNavigationService`.
