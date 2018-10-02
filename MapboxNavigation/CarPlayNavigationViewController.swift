@@ -398,7 +398,13 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
 @available(iOS 12.0, *)
 extension CarPlayNavigationViewController: StyleManagerDelegate {
     public func location(for styleManager: StyleManager) -> CLLocation? {
-        return navService.location
+        if let location = navService.router.location {
+            return location
+        } else if let origin = navService.route.coordinates?.first {
+            return CLLocation(latitude: origin.latitude, longitude: origin.longitude)
+        } else {
+            return nil
+        }
     }
     
     public func styleManager(_ styleManager: StyleManager, didApply style: Style) {

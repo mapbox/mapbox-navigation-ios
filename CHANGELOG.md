@@ -1,5 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## master
+
+* Fixed an issue where the map view while navigating in CarPlay displayed the day style even at night. ([#1762](https://github.com/mapbox/mapbox-navigation-ios/pull/1762))
+
 ## v0.22.0 (October 1, 2018)
 
 ### Packaging
