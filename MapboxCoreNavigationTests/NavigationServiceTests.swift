@@ -407,6 +407,18 @@ class NavigationServiceTests: XCTestCase {
         
         XCTAssertNil(subject, "Expected LocationManager's Delegate to be nil after RouteController Deinit")
     }
+    
+    func testCountdownTimerDefaultAndUpdate() {
+        let directions = DirectionsSpy(accessToken: "pk.feedCafeDeadBeefBadeBede")
+        let subject = MapboxNavigationService(route: initialRoute, directions: directions)
+        
+        XCTAssert(subject.poorGPSTimer.countdownInterval == .milliseconds(2500), "Default countdown interval should be 2500 milliseconds.")
+        
+        
+        subject.poorGPSPatience = 5.0
+        XCTAssert(subject.poorGPSTimer.countdownInterval == .milliseconds(5000), "Timer should now have a countdown interval of 5000 millseconds.")
+    }
+    
 }
 
 class RouteControllerDataSourceFake: RouterDataSource {
