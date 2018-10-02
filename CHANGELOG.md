@@ -1,5 +1,5 @@
 # Changes to the Mapbox Navigation SDK for iOS
-## master
+## v0.22.1 (October 2, 2018)
 
 ### User Location
 
