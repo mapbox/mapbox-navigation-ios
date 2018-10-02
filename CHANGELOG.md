@@ -3,8 +3,8 @@
 
 ### User Location
 
-* Added ability to adjust `poorGPSPatience` of a `NavigationService`.
-* Increased default Poor-GPS patience of `MapboxNavigationService` to 2.5 seconds.
+* Added ability to adjust `poorGPSPatience` of a `NavigationService`. [#1763](https://github.com/mapbox/mapbox-navigation-ios/pull/1763)
+* Increased default Poor-GPS patience of `MapboxNavigationService` to 2.5 seconds. [#1763](https://github.com/mapbox/mapbox-navigation-ios/pull/1763)
 
 ## v0.22.0 (October 1, 2018)
 
@@ -20,7 +20,7 @@
   * `NavigationViewController.routeController` has been replaced by `NavigationViewController.navigationService`.
   * If you currently use `RouteController` directly, you should migrate to `MapboxNavigationService`.
   * If you currently use `SimulatedLocationManager` directly, you should instead pass `SimulationOption.always` into `MapboxNavigationService(route:directions:locationSource:eventsManagerType:simulating:)`.
-  * Note: the `MapboxNavigationService`, by default, will start simulating progress if more than 2.5 seconds elapses without any update from the GPS. This can happen when simulating locations in XCode, or selecting the "Custom Location" simulation option in the iOS Simulator. This is normal behavior, .
+  * Note: the `MapboxNavigationService`, by default, will start simulating progress if more than 1.5 seconds elapses without any update from the GPS. This can happen when simulating locations in Xcode, or selecting the "Custom Location" simulation option in the iOS Simulator. This is normal behavior.
 * Improved the reliability of off-route detection. ([#1618](https://github.com/mapbox/mapbox-navigation-ios/pull/1618))
 
 ### User interface
