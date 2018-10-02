@@ -2,7 +2,7 @@ import XCTest
 import FBSnapshotTestCase
 @testable import MapboxCoreNavigation
 @testable import MapboxNavigation
-@testable import MapboxDirections
+import MapboxDirections
 
 class SimulatedLocationManagerTests: FBSnapshotTestCase {
 

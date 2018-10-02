@@ -3,7 +3,7 @@ import FBSnapshotTestCase
 import Turf
 @testable import MapboxCoreNavigation
 @testable import MapboxNavigation
-@testable import MapboxDirections
+import MapboxDirections
 
 
 class RouteControllerSnapshotTests: FBSnapshotTestCase {
@@ -28,7 +28,7 @@ class RouteControllerSnapshotTests: FBSnapshotTestCase {
         let filePath = bundle.path(forResource: "sthlm-double-back-replay", ofType: "json")
         let jsonData = try! Data(contentsOf: URL(fileURLWithPath: filePath!))
         
-        let jsonLocations = try! JSONSerialization.jsonObject(with: jsonData, options: []) as! [JSONDictionary]
+        let jsonLocations = try! JSONSerialization.jsonObject(with: jsonData, options: []) as! [[String: Any]]
         let locations = jsonLocations.map { CLLocation(dictionary: $0) }
         let locationManager = ReplayLocationManager(locations: locations)
         replayManager = locationManager

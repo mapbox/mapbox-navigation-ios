@@ -1,7 +1,7 @@
 import XCTest
 import Foundation
 import CoreLocation
-@testable import MapboxDirections
+import MapboxDirections
 
 internal class Fixture {
     internal class func stringFromFileNamed(name: String) -> String {
@@ -68,12 +68,24 @@ internal class Fixture {
         let path = Bundle(for: Fixture.self).path(forResource: filePath, ofType: "json")
         let url = URL(fileURLWithPath: path!)
         let data = try! Data(contentsOf: url)
-        let json = try! JSONSerialization.jsonObject(with: data, options: []) as! JSONDictionary
+        let json = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
         let tracepoints = json["tracepoints"] as! [Any]
-        let coordinates = (0...tracepoints.count-1).map { _ in CLLocationCoordinate2D(latitude: 0, longitude: 0) }
-        let options = MatchOptions(coordinates: coordinates, profileIdentifier: .automobile)
-        let response = options.response(containingRoutesFrom: json)
-        return response.1
+        let coordinates = Array(repeating: CLLocationCoordinate2D(latitude: 0, longitude: 0), count: tracepoints.count)
+        
+        // Adapted from MatchOptions.response(containingRoutesFrom:) in MapboxDirections.
+        let jsonWaypoints = json["tracepoints"] as! [Any]
+        // Assume MatchOptions.waypointIndices contains the first and last indices only.
+        let waypoints = [jsonWaypoints.first!, jsonWaypoints.last!].map { jsonWaypoint -> Waypoint in
+            let jsonWaypoint = jsonWaypoint as! [String: Any]
+            let location = jsonWaypoint["location"] as! [Double]
+            let coordinate = CLLocationCoordinate2D(latitude: location[1], longitude: location[0])
+            return Waypoint(coordinate: coordinate, name: jsonWaypoint["name"] as? String)
+        }
+        let opts = RouteOptions(coordinates: coordinates, profileIdentifier: .automobile)
+        
+        return (json["matchings"] as? [[String: Any]])?.map {
+            Route(json: $0, waypoints: waypoints, options: opts)
+        }
     }
 
     class func routeWithBannerInstructions() -> Route {
