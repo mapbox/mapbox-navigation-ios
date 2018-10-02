@@ -8,7 +8,11 @@ class CountdownTimer {
     
     typealias Payload = DispatchSource.DispatchSourceHandler
     static let defaultAccuracy: DispatchTimeInterval = .milliseconds(500)
-    let countdownInterval: DispatchTimeInterval
+    var countdownInterval: DispatchTimeInterval {
+        didSet {
+            reset()
+        }
+    }
     private var deadline: DispatchTime { return .now() + countdownInterval }
     let accuracy: DispatchTimeInterval
     let payload: Payload

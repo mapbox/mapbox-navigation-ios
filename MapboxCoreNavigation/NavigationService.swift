@@ -81,6 +81,11 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
     var simulationSpeedMultiplier: Double { get set }
     
     /**
+    The Amount of time the service will wait until it begins simulation in a poor GPS scenerio. Defaults to 2.5 seconds.
+     */
+    var poorGPSPatience: Double { get set }
+    
+    /**
      The `NavigationService` delegate. Wraps `RouterDelegate` messages.
      */
     weak var delegate: NavigationServiceDelegate? { get set }
@@ -116,9 +121,18 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
     typealias DefaultRouter = PortableRouteController
     
     /**
-     How long the service will wait before beginning simulation when the `.onPoorGPS` simulation option is enabled.
+     The default time interval before beginning simulation when the `.onPoorGPS` simulation option is enabled.
      */
-    static let poorGPSPatience: DispatchTimeInterval = .milliseconds(1500) //1.5 seconds
+    static let defaultPoorGPSPatience: Double = 2.5 //seconds
+    
+    /**
+     The Amount of time the service will wait until it begins simulation in a poor GPS scenerio. Defaults to 2.5 seconds.
+     */
+    public var poorGPSPatience: Double = defaultPoorGPSPatience {
+        didSet {
+            poorGPSTimer.countdownInterval = poorGPSPatience.dispatchInterval
+        }
+    }
     
     /**
      The active location manager. Returns the location simulator if we're actively simulating, otherwise it returns the native location manager.
@@ -189,7 +203,7 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
         }
     }
     
-    private var poorGPSTimer: CountdownTimer!
+    var poorGPSTimer: CountdownTimer!
     private var isSimulating: Bool { return simulatedLocationSource != nil }
     private var _simulationSpeedMultiplier: Double = 1.0
     
@@ -233,7 +247,7 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
         self.simulationMode = simulationMode
         super.init()
         resumeNotifications()
-        poorGPSTimer = CountdownTimer(countdown: MapboxNavigationService.poorGPSPatience, payload: timerPayload)
+        poorGPSTimer = CountdownTimer(countdown: poorGPSPatience.dispatchInterval, payload: timerPayload)
         let routerType = routerType ?? DefaultRouter.self
         router = routerType.init(along: route, directions: self.directions, dataSource: self)
         
@@ -491,5 +505,13 @@ fileprivate extension EventsManager {
     func record(locations: [CLLocation]) {
         guard let state = sessionState else { return }
         locations.forEach(state.pastLocations.push(_:))
+    }
+}
+
+private extension Double {
+    var dispatchInterval: DispatchTimeInterval {
+        let milliseconds = self * 1000.0 //milliseconds per second
+        let intMilliseconds = Int(milliseconds)
+        return .milliseconds(intMilliseconds)
     }
 }

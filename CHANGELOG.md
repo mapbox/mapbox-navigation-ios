@@ -1,4 +1,10 @@
 # Changes to the Mapbox Navigation SDK for iOS
+## master
+
+### User Location
+
+* Added ability to adjust `poorGPSPatience` of a `NavigationService`. [#1763](https://github.com/mapbox/mapbox-navigation-ios/pull/1763)
+* Increased default Poor-GPS patience of `MapboxNavigationService` to 2.5 seconds. [#1763](https://github.com/mapbox/mapbox-navigation-ios/pull/1763)
 
 ## v0.22.0 (October 1, 2018)
 
@@ -8,11 +14,13 @@
 
 ### User location
 
-* Added a `NavigationService` protocol implemented by classes that provide location awareness functionality. `RouteController` and a new `MapboxNavigationService` class both conform to this protocol. ([#1602](https://github.com/mapbox/mapbox-navigation-ios/pull/1602))
+* Added a `NavigationService` protocol implemented by classes that provide location awareness functionality. Our default implementation, `MapboxNavigationService` conforms to this protocol. ([#1602](https://github.com/mapbox/mapbox-navigation-ios/pull/1602))
+  * Added a new `Router` protocol, which allows for custom route-following logic. Our default implementation, `RouteController`, conforms to this protocol.
   * `NavigationViewController.init(for:styles:directions:styles:routeController:locationManager:voiceController:eventsManager)` has been renamed `NavigationViewController.init(for:styles:navigationService:voiceController:)`.
   * `NavigationViewController.routeController` has been replaced by `NavigationViewController.navigationService`.
-  * If you currently use `RouteController` directly, you should migrate to `NavigationService`.
+  * If you currently use `RouteController` directly, you should migrate to `MapboxNavigationService`.
   * If you currently use `SimulatedLocationManager` directly, you should instead pass `SimulationOption.always` into `MapboxNavigationService(route:directions:locationSource:eventsManagerType:simulating:)`.
+  * Note: the `MapboxNavigationService`, by default, will start simulating progress if more than 1.5 seconds elapses without any update from the GPS. This can happen when simulating locations in Xcode, or selecting the "Custom Location" simulation option in the iOS Simulator. This is normal behavior.
 * Improved the reliability of off-route detection. ([#1618](https://github.com/mapbox/mapbox-navigation-ios/pull/1618))
 
 ### User interface
