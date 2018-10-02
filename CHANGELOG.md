@@ -1,13 +1,10 @@
 # Changes to the Mapbox Navigation SDK for iOS
-## master
+## v0.22.1 (October 2, 2018)
 
 ### User Location
 
 * Added ability to adjust `poorGPSPatience` of a `NavigationService`. [#1763](https://github.com/mapbox/mapbox-navigation-ios/pull/1763)
 * Increased default Poor-GPS patience of `MapboxNavigationService` to 2.5 seconds. [#1763](https://github.com/mapbox/mapbox-navigation-ios/pull/1763)
-
-## master
-
 * Fixed an issue where the map view while navigating in CarPlay displayed the day style even at night. ([#1762](https://github.com/mapbox/mapbox-navigation-ios/pull/1762))
 
 ## v0.22.0 (October 1, 2018)
