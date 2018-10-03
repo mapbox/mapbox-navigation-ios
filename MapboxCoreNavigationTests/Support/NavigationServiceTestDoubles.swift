@@ -2,6 +2,19 @@ import Foundation
 import MapboxCoreNavigation
 import MapboxDirections
 
+class RouteControllerDataSourceFake: RouterDataSource {
+
+    let manager = NavigationLocationManager()
+
+    var location: CLLocation? {
+        return manager.location
+    }
+
+    var locationProvider: NavigationLocationManager.Type {
+        return type(of: manager)
+    }
+}
+
 class NavigationServiceDelegateSpy: NavigationServiceDelegate {
     private(set) var recentMessages: [String] = []
 

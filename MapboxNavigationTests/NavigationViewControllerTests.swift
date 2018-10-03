@@ -14,9 +14,9 @@ class NavigationViewControllerTests: XCTestCase {
     var updatedStyleNumberOfTimes = 0
     lazy var dependencies: (navigationViewController: NavigationViewController, navigationService: NavigationService, startLocation: CLLocation, poi: [CLLocation], endLocation: CLLocation, voice: RouteVoiceController) = {
 
-        let fakeVoice: RouteVoiceController = FakeVoiceController()
+        let fakeVoice: RouteVoiceController = RouteVoiceControllerStub()
         let fakeDirections = DirectionsSpy(accessToken: "garbage", host: nil)
-        let fakeService = MapboxNavigationService(route: initialRoute, directions: fakeDirections, locationSource: NavigationLocationManagerFake(), simulating: .never)
+        let fakeService = MapboxNavigationService(route: initialRoute, directions: fakeDirections, locationSource: NavigationLocationManagerStub(), simulating: .never)
         let navigationViewController = NavigationViewController(for: initialRoute, navigationService: fakeService, voiceController: fakeVoice)
         
         navigationViewController.delegate = self
@@ -89,7 +89,7 @@ class NavigationViewControllerTests: XCTestCase {
     }
     
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceMoreThanOnceWithOneStyle() {
-        let navigationViewController = NavigationViewController(for: initialRoute, styles: [DayStyle()], navigationService: dependencies.navigationService, voiceController: FakeVoiceController())
+        let navigationViewController = NavigationViewController(for: initialRoute, styles: [DayStyle()], navigationService: dependencies.navigationService, voiceController: RouteVoiceControllerStub())
         let service = dependencies.navigationService
         navigationViewController.styleManager.delegate = self
         
@@ -105,7 +105,7 @@ class NavigationViewControllerTests: XCTestCase {
     
     // If tunnel flags are enabled and we need to switch styles, we should not force refresh the map style because we have only 1 style.
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceWhenOnlyOneStyle() {
-        let navigationViewController = NavigationViewController(for: initialRoute, styles: [NightStyle()], navigationService: dependencies.navigationService, voiceController: FakeVoiceController())
+        let navigationViewController = NavigationViewController(for: initialRoute, styles: [NightStyle()], navigationService: dependencies.navigationService, voiceController: RouteVoiceControllerStub())
         let service = dependencies.navigationService
         navigationViewController.styleManager.delegate = self
         
@@ -120,7 +120,7 @@ class NavigationViewControllerTests: XCTestCase {
     }
     
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceMoreThanOnceWithTwoStyles() {
-        let navigationViewController = NavigationViewController(for: initialRoute, styles: [DayStyle(), NightStyle()], navigationService: dependencies.navigationService, voiceController: FakeVoiceController())
+        let navigationViewController = NavigationViewController(for: initialRoute, styles: [DayStyle(), NightStyle()], navigationService: dependencies.navigationService, voiceController: RouteVoiceControllerStub())
         let service = dependencies.navigationService
         navigationViewController.styleManager.delegate = self
         
@@ -260,7 +260,7 @@ class NavigationViewControllerTestable: NavigationViewController {
                   navigationService: NavigationService? = nil,
                   styleLoaded: XCTestExpectation) {
         styleLoadedExpectation = styleLoaded
-        super.init(for: route, styles: styles, navigationService: navigationService, voiceController: FakeVoiceController())
+        super.init(for: route, styles: styles, navigationService: navigationService, voiceController: RouteVoiceControllerStub())
     }
     
     required init(for route: Route, styles: [Style]?, navigationService: NavigationService?, voiceController: RouteVoiceController?) {
@@ -273,34 +273,5 @@ class NavigationViewControllerTestable: NavigationViewController {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("This initalizer is not supported in this testing subclass.")
-    }
-
-}
-
-class TestableDayStyle: DayStyle {
-    required init() {
-        super.init()
-        mapStyleURL = Fixture.blankStyle
-    }
-}
-
-
-class FakeVoiceController: RouteVoiceController {
-    override func speak(_ instruction: SpokenInstruction) {
-        //no-op
-    }
-    
-    override func pauseSpeechAndPlayReroutingDing(notification: NSNotification) {
-        //no-op
-    }
-}
-
-class NavigationLocationManagerFake: NavigationLocationManager {
-    //Short-circut message that turns-on location updates.
-    override func startUpdatingLocation() {
-        return
-    }
-    override func startUpdatingHeading() {
-        return
     }
 }

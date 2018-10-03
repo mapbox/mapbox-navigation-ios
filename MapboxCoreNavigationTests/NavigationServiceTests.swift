@@ -3,25 +3,8 @@ import MapboxDirections
 import Turf
 import MapboxMobileEvents
 @testable import MapboxCoreNavigation
-import CoreLocation
 
 fileprivate let mbTestHeading: CLLocationDirection = 50
-
-class EventsManagerSpy: EventsManager {
-    override var manager: MMEEventsManager {
-        get {
-            return spy
-        }
-        set {
-            fatalError("Don't do this")
-        }
-    }
-    
-    var spy: MMEEventsManagerSpy = MMEEventsManagerSpy()
-    func reset() {
-        spy.reset()
-    }
-}
 
 class NavigationServiceTests: XCTestCase {
 
@@ -399,6 +382,7 @@ class NavigationServiceTests: XCTestCase {
     func testRouteControllerDoesNotRetainDataSource() {
         
         weak var subject: RouterDataSource? = nil
+        
         autoreleasepool {
             let fakeDataSource = RouteControllerDataSourceFake()
             _ = RouteController(along: initialRoute, directions: directionsClientSpy, dataSource: fakeDataSource)
@@ -420,22 +404,6 @@ class NavigationServiceTests: XCTestCase {
     }
     
 }
-
-class RouteControllerDataSourceFake: RouterDataSource {
-    
-    let manager = NavigationLocationManager()
-    
-    var location: CLLocation? {
-        return manager.location
-    }
-    
-    var locationProvider: NavigationLocationManager.Type {
-        return type(of: manager)
-    }
-    
-    
-}
-
 
 fileprivate func futureEcho(location: CLLocation, times: Int = 4) -> [CLLocation] {
     let loop = 0...times

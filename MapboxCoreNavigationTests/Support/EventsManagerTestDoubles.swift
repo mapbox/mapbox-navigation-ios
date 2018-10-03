@@ -1,7 +1,24 @@
 import Foundation
 import MapboxMobileEvents
-import MapboxCoreNavigation
+@testable import MapboxCoreNavigation
 import MapboxDirections
+
+class EventsManagerSpy: EventsManager {
+    override var manager: MMEEventsManager {
+        get {
+            return spy
+        }
+        set {
+            fatalError("Don't do this")
+        }
+    }
+
+    var spy: MMEEventsManagerSpy = MMEEventsManagerSpy()
+
+    func reset() {
+        spy.reset()
+    }
+}
 
 typealias MockTelemetryEvent = (name: String, attributes: [String: Any])
 
