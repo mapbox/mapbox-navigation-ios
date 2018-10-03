@@ -960,7 +960,7 @@ extension RouteMapViewController: NavigationViewDelegate {
         addPreviewInstructions(step: legProgress.currentStep, maneuverStep: upcomingStep, distance: instructionsBannerView.distance)
         
         mapView.enableFrameByFrameCourseViewTracking(for: 1)
-        mapView.tracksUserCourse = false
+        mapView.showsUserCourse = false
         mapView.setCenter(upcomingStep.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: upcomingStep.initialHeading!, animated: true, completionHandler: nil)
         
         guard isViewLoaded && view.window != nil else { return }
