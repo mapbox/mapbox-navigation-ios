@@ -140,20 +140,18 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return anchorPoint
         }
         
-        let contentFrame = UIEdgeInsetsInsetRect(bounds, safeArea)
-        let courseViewWidth = userCourseView?.frame.width ?? 0
-        let courseViewHeight = userCourseView?.frame.height ?? 0
-        let edgePadding = UIEdgeInsets(top: (50 + courseViewHeight / 2),
-                                       left: (50 + courseViewWidth / 2),
-                                       bottom: (50 + courseViewHeight / 2),
-                                       right: (50 + courseViewWidth / 2))
-        return CGPoint(x: max(min(contentFrame.midX,
-                                  contentFrame.maxX - edgePadding.right),
-                              contentFrame.minX + edgePadding.left),
-                       y: max(max(min(contentFrame.minY + contentFrame.height * 0.8,
-                                      contentFrame.maxY - edgePadding.bottom),
-                                  contentFrame.minY + edgePadding.top),
-                              contentFrame.minY + contentFrame.height * 0.5))
+        // Inset by the safe area to avoid notches or CarPlay template content.
+        // Inset by the content inset to avoid application-defined content.
+        var contentFrame = UIEdgeInsetsInsetRect(UIEdgeInsetsInsetRect(bounds, safeArea), contentInset)
+        
+        // Avoid letting the puck go partially off-screen, and add a comfortable padding beyond that.
+        let courseViewBounds = userCourseView?.bounds ?? .zero
+        contentFrame = contentFrame.insetBy(dx: min(50 + courseViewBounds.width / 2.0, contentFrame.width / 2.0),
+                                            dy: min(50 + courseViewBounds.height / 2.0, contentFrame.height / 2.0))
+        
+        // Get the bottom-center of the remaining frame.
+        assert(!contentFrame.isInfinite)
+        return CGPoint(x: contentFrame.midX, y: contentFrame.maxY)
     }
     
     /**
