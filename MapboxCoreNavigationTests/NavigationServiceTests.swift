@@ -13,16 +13,15 @@ class NavigationServiceTests: XCTestCase {
         static let accessToken = "nonsense"
     }
 
-    var eventsManagerSpy: EventsManagerSpy!
+    var eventsManagerSpy: NavigationEventsManagerSpy!
     let directionsClientSpy = DirectionsSpy(accessToken: "garbage", host: nil)
     let delegate = NavigationServiceDelegateSpy()
 
     typealias RouteLocations = (firstLocation: CLLocation, penultimateLocation: CLLocation, lastLocation: CLLocation)
 
-    lazy var dependencies: (navigationService: NavigationService, routeLocations: RouteLocations, eventSpy: EventsManagerSpy) = {
-        let navigationService = MapboxNavigationService(route: initialRoute, directions: directionsClientSpy, eventsManagerType: EventsManagerSpy.self, simulating: .never)
+    lazy var dependencies: (navigationService: NavigationService, routeLocations: RouteLocations) = {
+        let navigationService = MapboxNavigationService(route: initialRoute, directions: directionsClientSpy, eventsManagerType: NavigationEventsManagerSpy.self, simulating: .never)
         navigationService.delegate = delegate
-
 
         let legProgress: RouteLegProgress = navigationService.router.routeProgress.currentLegProgress
 
@@ -38,7 +37,7 @@ class NavigationServiceTests: XCTestCase {
 
         let routeLocations = RouteLocations(firstLocation, penultimateLocation, lastLocation)
 
-        return (navigationService: navigationService, routeLocations: routeLocations, eventSpy: navigationService.eventsManager as! EventsManagerSpy)
+        return (navigationService: navigationService, routeLocations: routeLocations)
     }()
 
     lazy var initialRoute: Route = {
@@ -64,7 +63,6 @@ class NavigationServiceTests: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        dependencies.eventSpy.reset()
         directionsClientSpy.reset()
         delegate.reset()
     }
@@ -228,9 +226,9 @@ class NavigationServiceTests: XCTestCase {
     func testTurnstileEventSentUponInitialization() {
         // MARK: it sends a turnstile event upon initialization
 
-        let service = MapboxNavigationService(route: initialRoute, directions: directionsClientSpy, locationSource: NavigationLocationManager(), eventsManagerType: EventsManagerSpy.self)
-        let spyManager = service.eventsManager as! EventsManagerSpy
-        XCTAssertTrue(spyManager.spy.hasFlushedEvent(with: MMEEventTypeAppUserTurnstile))
+        let service = MapboxNavigationService(route: initialRoute, directions: directionsClientSpy, locationSource: NavigationLocationManager(), eventsManagerType: NavigationEventsManagerSpy.self)
+        let eventsManagerSpy = service.eventsManager as! NavigationEventsManagerSpy
+        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeAppUserTurnstile))
     }
 
     func testReroutingFromALocationSendsEvents() {
@@ -278,11 +276,11 @@ class NavigationServiceTests: XCTestCase {
 
         // MARK: It enqueues and flushes a NavigationRerouteEvent
         let expectedEventName = MMEEventTypeNavigationReroute
-        let spyManager = navigationService.eventsManager as! EventsManagerSpy
-        XCTAssertTrue(spyManager.spy.hasEnqueuedEvent(with: expectedEventName))
-        XCTAssertTrue(spyManager.spy.hasFlushedEvent(with: expectedEventName))
-        XCTAssertEqual(spyManager.spy.enqueuedEventCount(with: expectedEventName), 1)
-        XCTAssertEqual(spyManager.spy.flushedEventCount(with: expectedEventName), 1)
+        let eventsManagerSpy = navigationService.eventsManager as! NavigationEventsManagerSpy
+        XCTAssertTrue(eventsManagerSpy.hasEnqueuedEvent(with: expectedEventName))
+        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
+        XCTAssertEqual(eventsManagerSpy.enqueuedEventCount(with: expectedEventName), 1)
+        XCTAssertEqual(eventsManagerSpy.flushedEventCount(with: expectedEventName), 1)
     }
 
     func testGeneratingAnArrivalEvent() {
@@ -296,8 +294,8 @@ class NavigationServiceTests: XCTestCase {
         navigationService.locationManager!(navigationService.locationManager, didUpdateLocations: echos)
 
         // MARK: It queues and flushes a Depart event
-        let spyManager = navigationService.eventsManager as! EventsManagerSpy
-        XCTAssertTrue(spyManager.spy.hasFlushedEvent(with: MMEEventTypeNavigationDepart))
+        let eventsManagerSpy = navigationService.eventsManager as! NavigationEventsManagerSpy
+        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeNavigationDepart))
         // TODO: should there be a delegate message here as well?
 
         // MARK: When at a valid location just before the last location (should this really be necessary?)
@@ -315,8 +313,8 @@ class NavigationServiceTests: XCTestCase {
 
         // MARK: It enqueues and flushes an arrival event
         let expectedEventName = MMEEventTypeNavigationArrive
-        XCTAssertTrue(spyManager.spy.hasEnqueuedEvent(with: expectedEventName))
-        XCTAssertTrue(spyManager.spy.hasFlushedEvent(with: expectedEventName))
+        XCTAssertTrue(eventsManagerSpy.hasEnqueuedEvent(with: expectedEventName))
+        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
     }
     
     func testNoReroutesAfterArriving() {
@@ -330,8 +328,8 @@ class NavigationServiceTests: XCTestCase {
         navigationService.locationManager!(navigationService.locationManager, didUpdateLocations: echos)
         
         // MARK: It queues and flushes a Depart event
-        let spyManager = navigationService.eventsManager as! EventsManagerSpy
-        XCTAssertTrue(spyManager.spy.hasFlushedEvent(with: MMEEventTypeNavigationDepart))
+        let eventsManagerSpy = navigationService.eventsManager as! NavigationEventsManagerSpy
+        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeNavigationDepart))
         // TODO: should there be a delegate message here as well?
         
         // MARK: When at a valid location just before the last location (should this really be necessary?)
@@ -359,8 +357,8 @@ class NavigationServiceTests: XCTestCase {
         
         // MARK: It enqueues and flushes an arrival event
         let expectedEventName = MMEEventTypeNavigationArrive
-        XCTAssertTrue(spyManager.spy.hasEnqueuedEvent(with: expectedEventName))
-        XCTAssertTrue(spyManager.spy.hasFlushedEvent(with: expectedEventName))
+        XCTAssertTrue(eventsManagerSpy.hasEnqueuedEvent(with: expectedEventName))
+        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
     }
 
 

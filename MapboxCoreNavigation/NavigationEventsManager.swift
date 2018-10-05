@@ -3,7 +3,7 @@ import MapboxMobileEvents
 import MapboxDirections
 
 /**
- The `EventsManager` is responsible for being the liaison between MapboxCoreNavigation and the telemetry framework.
+ The `NavigationEventsManager` is responsible for being the liaison between MapboxCoreNavigation and the Mapbox telemetry framework.
  
  `SessionState` is a struct that stores all memoized statistics that we later send to the telemetry engine.
  */
@@ -15,11 +15,11 @@ import MapboxDirections
     var locationProvider: NavigationLocationManager.Type { get }
 }
 
+public typealias EventsManager = NavigationEventsManager
+
 @objc(MBEventsManager)
-open class EventsManager: NSObject {
-    
-    @objc public var manager: MMEEventsManager = .shared()
-    
+open class NavigationEventsManager: NSObject {
+
     var sessionState: SessionState!
     
     var outstandingFeedbackEvents = [CoreFeedbackEvent]()
@@ -28,7 +28,10 @@ open class EventsManager: NSObject {
     
     /// :nodoc: This is used internally when the navigation UI is being used
     var usesDefaultUserInterface = false
-    
+
+    /// :nodoc: the internal lower-level mobile events manager is an implementation detail which should not be manipulated directly
+    private var mobileEventsManager: MMEEventsManager!
+
     lazy var accessToken: String = {
         guard let path = Bundle.main.path(forResource: "Info", ofType: "plist"),
         let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject],
@@ -41,12 +44,13 @@ open class EventsManager: NSObject {
         return token
     }()
     
-    @objc public required init(dataSource source: EventsManagerDataSource, accessToken possibleToken: String? = nil) {
+    @objc public required init(dataSource source: EventsManagerDataSource, accessToken possibleToken: String? = nil, mobileEventsManager: MMEEventsManager = .shared()) {
         dataSource = source
         super.init()
         if let tokenOverride = possibleToken {
             accessToken = tokenOverride
         }
+        self.mobileEventsManager = mobileEventsManager
         
         resumeNotifications()
     }
@@ -74,13 +78,13 @@ open class EventsManager: NSObject {
     func start() {
         let eventLoggingEnabled = UserDefaults.standard.bool(forKey: NavigationMetricsDebugLoggingEnabled)
         
-        manager.isDebugLoggingEnabled = eventLoggingEnabled
-        manager.isMetricsEnabledInSimulator = true
-        manager.isMetricsEnabledForInUsePermissions = true
+        mobileEventsManager.isDebugLoggingEnabled = eventLoggingEnabled
+        mobileEventsManager.isMetricsEnabledInSimulator = true
+        mobileEventsManager.isMetricsEnabledForInUsePermissions = true
         let userAgent = usesDefaultUserInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
-        manager.initialize(withAccessToken: accessToken, userAgentBase: userAgent, hostSDKVersion: String(describing: Bundle.mapboxCoreNavigation.object(forInfoDictionaryKey: "CFBundleShortVersionString")!))
-        manager.disableLocationMetrics()
-        manager.sendTurnstileEvent()
+        mobileEventsManager.initialize(withAccessToken: accessToken, userAgentBase: userAgent, hostSDKVersion: String(describing: Bundle.mapboxCoreNavigation.object(forInfoDictionaryKey: "CFBundleShortVersionString")!))
+        mobileEventsManager.disableLocationMetrics()
+        mobileEventsManager.sendTurnstileEvent()
     }
     
     func navigationCancelEvent(rating potentialRating: Int? = nil, comment: String? = nil) -> EventDetails {
@@ -159,21 +163,21 @@ extension EventsManager {
     
     func sendDepartEvent() {
         guard let attributes = try? navigationDepartEvent().asDictionary() else { return }
-        manager.enqueueEvent(withName: MMEEventTypeNavigationDepart, attributes: attributes)
-        manager.flush()
+        mobileEventsManager.enqueueEvent(withName: MMEEventTypeNavigationDepart, attributes: attributes)
+        mobileEventsManager.flush()
     }
     
     
     func sendArriveEvent() {
         guard let attributes = try? navigationArriveEvent().asDictionary() else { return }
-        manager.enqueueEvent(withName: MMEEventTypeNavigationArrive, attributes: attributes)
-        manager.flush()
+        mobileEventsManager.enqueueEvent(withName: MMEEventTypeNavigationArrive, attributes: attributes)
+        mobileEventsManager.flush()
     }
     
     func sendCancelEvent(rating: Int? = nil, comment: String? = nil) {
         guard let attributes = try? navigationCancelEvent(rating: rating, comment: comment).asDictionary() else { return }
-        manager.enqueueEvent(withName: MMEEventTypeNavigationCancel, attributes: attributes)
-        manager.flush()
+        mobileEventsManager.enqueueEvent(withName: MMEEventTypeNavigationCancel, attributes: attributes)
+        mobileEventsManager.flush()
     }
     
     func sendFeedbackEvents(_ events: [CoreFeedbackEvent]) {
@@ -186,9 +190,9 @@ extension EventsManager {
             let eventName = event.eventDictionary["event"] as! String
             let eventDictionary = navigationFeedbackEventWithLocationsAdded(event: event)
             
-            manager.enqueueEvent(withName: eventName, attributes: eventDictionary)
+            mobileEventsManager.enqueueEvent(withName: eventName, attributes: eventDictionary)
         }
-        manager.flush()
+        mobileEventsManager.flush()
     }
     
     func enqueueFeedbackEvent(type: FeedbackType, description: String?) -> UUID {

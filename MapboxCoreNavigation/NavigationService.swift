@@ -154,7 +154,7 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
     /**
      The events manager. Sends telemetry back to the Mapbox platform.
     */
-    public var eventsManager: EventsManager!
+    public var eventsManager: NavigationEventsManager!
     
     /**
      The `NavigationService` delegate. Wraps `RouterDelegate` messages.
@@ -238,7 +238,7 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
     @objc required public init(route: Route,
                                directions: Directions? = nil,
                                locationSource: NavigationLocationManager? = nil,
-                               eventsManagerType: EventsManager.Type? = nil,
+                               eventsManagerType: NavigationEventsManager.Type? = nil,
                                simulating simulationMode: SimulationMode = .onPoorGPS,
                                routerType: Router.Type? = DefaultRouter.self)
     {
@@ -251,7 +251,7 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
         let routerType = routerType ?? DefaultRouter.self
         router = routerType.init(along: route, directions: self.directions, dataSource: self)
         
-        let eventType = eventsManagerType ?? EventsManager.self
+        let eventType = eventsManagerType ?? NavigationEventsManager.self
         eventsManager = eventType.init(dataSource: self, accessToken: route.accessToken)
         locationManager.activityType = route.routeOptions.activityType
         bootstrapEvents()

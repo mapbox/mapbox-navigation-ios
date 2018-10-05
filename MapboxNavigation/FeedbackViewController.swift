@@ -99,7 +99,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     /**
      The events manager used to send feedback events.
      */
-    public weak var eventsManager: EventsManager?
+    public weak var eventsManager: NavigationEventsManager?
     
     var uuid: UUID? {
         return eventsManager?.recordFeedback()
@@ -119,7 +119,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     }
     
     required public init?(coder aDecoder: NSCoder) {
-        eventsManager = aDecoder.decodeObject(of: [EventsManager.self], forKey: "EventsManager") as? EventsManager
+        eventsManager = aDecoder.decodeObject(of: [NavigationEventsManager.self], forKey: "EventsManager") as? EventsManager
         super.init(coder: aDecoder)
         commonInit()
     }
