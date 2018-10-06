@@ -14,17 +14,13 @@ import CarPlay
 class CarPlayManagerTests: XCTestCase {
 
     var manager: CarPlayManager?
-
-    var eventsManagerSpy: MMEEventsManagerSpy {
-        get {
-            return manager!.eventsManager as! MMEEventsManagerSpy
-        }
-    }
+    var eventsManagerSpy: NavigationEventsManagerSpy?
 
     override func setUp() {
         super.setUp()
         manager = CarPlayManager.shared
-        manager!.eventsManager = MMEEventsManagerSpy()
+        eventsManagerSpy = NavigationEventsManagerSpy()
+        manager!.eventsManager = eventsManagerSpy!
     }
 
     override func tearDown() {
@@ -48,10 +44,10 @@ class CarPlayManagerTests: XCTestCase {
         simulateCarPlayConnection(manager!)
 
         let expectedEventName = MMEventTypeCarplayConnect
-        XCTAssertTrue(eventsManagerSpy.hasEnqueuedEvent(with: expectedEventName))
-        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
-        XCTAssertEqual(eventsManagerSpy.enqueuedEventCount(with: expectedEventName), 1)
-        XCTAssertEqual(eventsManagerSpy.enqueuedEventCount(with: expectedEventName), 1)
+        XCTAssertTrue(eventsManagerSpy!.hasEnqueuedEvent(with: expectedEventName))
+        XCTAssertTrue(eventsManagerSpy!.hasFlushedEvent(with: expectedEventName))
+        XCTAssertEqual(eventsManagerSpy!.enqueuedEventCount(with: expectedEventName), 1)
+        XCTAssertEqual(eventsManagerSpy!.enqueuedEventCount(with: expectedEventName), 1)
     }
 
     func testEventsEnqueuedAndFlushedWhenCarPlayDisconnected() {
@@ -61,8 +57,8 @@ class CarPlayManagerTests: XCTestCase {
         simulateCarPlayDisconnection()
 
         let expectedEventName = MMEventTypeCarplayDisconnect
-        XCTAssertTrue(eventsManagerSpy.hasEnqueuedEvent(with: expectedEventName))
-        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
+        XCTAssertTrue(eventsManagerSpy!.hasEnqueuedEvent(with: expectedEventName))
+        XCTAssertTrue(eventsManagerSpy!.hasFlushedEvent(with: expectedEventName))
     }
 
     // MARK: Upon connecting to CarPlay, window and interfaceController should be set up correctly

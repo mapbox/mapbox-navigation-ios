@@ -7,9 +7,13 @@ class NavigationEventsManagerSpy: NavigationEventsManager {
 
     private var mobileEventsManagerSpy: MMEEventsManagerSpy!
 
-    required init(dataSource source: EventsManagerDataSource, accessToken possibleToken: String?, mobileEventsManager: MMEEventsManager) {
+    required init() {
         mobileEventsManagerSpy = MMEEventsManagerSpy()
-        super.init(dataSource: source, accessToken: possibleToken, mobileEventsManager: mobileEventsManagerSpy)
+        super.init(dataSource: nil, accessToken: "fake token", mobileEventsManager: mobileEventsManagerSpy)
+    }
+
+    @objc required convenience init(dataSource source: EventsManagerDataSource?, accessToken possibleToken: String?, mobileEventsManager: MMEEventsManager) {
+        self.init()
     }
 
     func reset() {
@@ -36,7 +40,7 @@ class NavigationEventsManagerSpy: NavigationEventsManager {
 typealias FakeTelemetryEvent = (name: String, attributes: [String: Any])
 
 @objc(MBEventsManagerSpy)
-class MMEEventsManagerSpy: MMEEventsManager {
+private class MMEEventsManagerSpy: MMEEventsManager {
 
     private var enqueuedEvents = [FakeTelemetryEvent]()
     private var flushedEvents = [FakeTelemetryEvent]()

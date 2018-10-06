@@ -204,7 +204,7 @@ public class CarPlayManager: NSObject {
      */
     @objc public var isConnectedToCarPlay = false
 
-    public lazy var eventsManager: MMEEventsManager = .shared()
+    public lazy var eventsManager: NavigationEventsManager = NavigationEventsManager(dataSource: nil)
 
     lazy var fullDateComponentsFormatter: DateComponentsFormatter = {
         let formatter = DateComponentsFormatter()
@@ -341,14 +341,14 @@ extension CarPlayManager: CPApplicationDelegate {
 
     func sendCarPlayConnectEvent(_ timestamp: String) {
         let dateCreatedAttribute = [MMEEventKeyCreated: timestamp]
-        eventsManager.enqueueEvent(withName: MMEventTypeCarplayConnect, attributes: dateCreatedAttribute)
-        eventsManager.flush()
+//        eventsManager.enqueueEvent(withName: MMEventTypeCarplayConnect, attributes: dateCreatedAttribute)
+//        eventsManager.flush()
     }
 
     func sendCarPlayDisconnectEvent(_ timestamp: String) {
         let dateCreatedAttribute = [MMEEventKeyCreated: timestamp]
-        eventsManager.enqueueEvent(withName: MMEventTypeCarplayDisconnect, attributes: dateCreatedAttribute)
-        eventsManager.flush()
+//        eventsManager.enqueueEvent(withName: MMEventTypeCarplayDisconnect, attributes: dateCreatedAttribute)
+//        eventsManager.flush()
     }
 
     func resetPanButtons(_ mapTemplate: CPMapTemplate) {
