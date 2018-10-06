@@ -6,7 +6,6 @@ import MapboxGeocoder
 import Turf
 import MapboxCoreNavigation
 import MapboxDirections
-import MapboxMobileEvents
 
 /**
  The activity during which a `CPTemplate` is displayed. This enumeration is used to distinguish between different templates during different phases of user interaction.
@@ -204,7 +203,13 @@ public class CarPlayManager: NSObject {
      */
     @objc public var isConnectedToCarPlay = false
 
-    public lazy var eventsManager: NavigationEventsManager = NavigationEventsManager(dataSource: nil)
+    public var eventsManager: NavigationEventsManager!
+
+    public init(_ eventsManager: NavigationEventsManager = NavigationEventsManager(dataSource: nil)) {
+        super.init()
+        self.eventsManager = eventsManager
+        eventsManager.start()
+    }
 
     lazy var fullDateComponentsFormatter: DateComponentsFormatter = {
         let formatter = DateComponentsFormatter()
@@ -253,16 +258,15 @@ extension CarPlayManager: CPApplicationDelegate {
         mainMapTemplate = mapTemplate
         interfaceController.setRootTemplate(mapTemplate, animated: false)
 
-        let timestamp = Date().ISO8601
-        sendCarPlayConnectEvent(timestamp)
+        eventsManager.sendCarPlayConnectEvent()
     }
 
     public func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPWindow) {
         isConnectedToCarPlay = false
         self.interfaceController = nil
         carWindow?.isHidden = true
-        let timestamp = Date().ISO8601
-        sendCarPlayDisconnectEvent(timestamp)
+
+        eventsManager.sendCarPlayDisconnectEvent()
 
         if let shouldDisableIdleTimer = delegate?.carplayManagerShouldDisableIdleTimer?(self) {
             UIApplication.shared.isIdleTimerDisabled = !shouldDisableIdleTimer
@@ -339,18 +343,6 @@ extension CarPlayManager: CPApplicationDelegate {
         return closeButton
     }
 
-    func sendCarPlayConnectEvent(_ timestamp: String) {
-        let dateCreatedAttribute = [MMEEventKeyCreated: timestamp]
-//        eventsManager.enqueueEvent(withName: MMEventTypeCarplayConnect, attributes: dateCreatedAttribute)
-//        eventsManager.flush()
-    }
-
-    func sendCarPlayDisconnectEvent(_ timestamp: String) {
-        let dateCreatedAttribute = [MMEEventKeyCreated: timestamp]
-//        eventsManager.enqueueEvent(withName: MMEventTypeCarplayDisconnect, attributes: dateCreatedAttribute)
-//        eventsManager.flush()
-    }
-
     func resetPanButtons(_ mapTemplate: CPMapTemplate) {
         if mapTemplate.isPanningInterfaceVisible, let mapButtons = defaultMapButtons {
             mapTemplate.mapButtons = mapButtons
@@ -371,7 +363,6 @@ extension CarPlayManager: CPInterfaceControllerDelegate {
     public func templateDidAppear(_ template: CPTemplate, animated: Bool) {
         guard interfaceController?.topTemplate == mainMapTemplate else { return }
         if template == interfaceController?.rootTemplate, let carPlayMapViewController = carWindow?.rootViewController as? CarPlayMapViewController {
-            
             
             let mapView = carPlayMapViewController.mapView
             mapView.removeRoutes()

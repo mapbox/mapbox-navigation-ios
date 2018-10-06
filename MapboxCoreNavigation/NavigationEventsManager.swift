@@ -74,8 +74,8 @@ open class NavigationEventsManager: NSObject {
      When set to `false`, flushing of telemetry events is not delayed. Is set to `true` by default.
      */
     @objc public var delaysEventFlushing = true
-    
-    func start() {
+
+    public func start() {
         let eventLoggingEnabled = UserDefaults.standard.bool(forKey: NavigationMetricsDebugLoggingEnabled)
         
         mobileEventsManager.isDebugLoggingEnabled = eventLoggingEnabled
@@ -164,10 +164,21 @@ open class NavigationEventsManager: NSObject {
         
         return event
     }
-}
 
-extension EventsManager {
-    
+    public func sendCarPlayConnectEvent() {
+        let date = Date()
+        let dateCreatedAttribute = [MMEEventKeyCreated: date.ISO8601]
+        mobileEventsManager.enqueueEvent(withName: MMEventTypeCarplayConnect, attributes: dateCreatedAttribute)
+        mobileEventsManager.flush()
+    }
+
+    public func sendCarPlayDisconnectEvent() {
+        let date = Date()
+        let dateCreatedAttribute = [MMEEventKeyCreated: date.ISO8601]
+        mobileEventsManager.enqueueEvent(withName: MMEventTypeCarplayDisconnect, attributes: dateCreatedAttribute)
+        mobileEventsManager.flush()
+    }
+
     func sendDepartEvent() {
         guard let attributes = try? navigationDepartEvent()?.asDictionary() else { return }
         mobileEventsManager.enqueueEvent(withName: MMEEventTypeNavigationDepart, attributes: attributes ?? [:])
