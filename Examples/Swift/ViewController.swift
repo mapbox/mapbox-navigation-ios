@@ -197,7 +197,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
             return success(routes)
         }
 
-        _ = Directions.shared.calculate(options, completionHandler: handler)
+        _ = ExtendedDirections.shared.calculate(options, completionHandler: handler)
     }
 
     // MARK: Basic Navigation
