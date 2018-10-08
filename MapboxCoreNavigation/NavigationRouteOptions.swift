@@ -1,5 +1,6 @@
 import Foundation
 import MapboxDirections
+import MapboxNavigationNative
 
 /**
  A `NavigationRouteOptions` object specifies turn-by-turn-optimized criteria for results returned by the Mapbox Directions API.
@@ -8,6 +9,8 @@ import MapboxDirections
  */
 @objc(MBNavigationRouteOptions)
 open class NavigationRouteOptions: RouteOptions {
+    
+    var preferredRequestOption: RequestOption = .clientSideOnly
 
     /**
      Initializes a navigation route options object for routes between the given waypoints and an optional profile identifier optimized for navigation.
@@ -111,3 +114,5 @@ open class NavigationMatchOptions: MatchOptions {
         super.init(coder: decoder)
     }
 }
+
+
