@@ -546,9 +546,9 @@ extension CarPlayManager: CPMapTemplateDelegate {
             guard let navigationViewController = self?.currentNavigator else {
                 return
             }
-            navigationViewController.showsUserCourse = !navigationViewController.showsUserCourse
+            navigationViewController.tracksUserCourse = !navigationViewController.tracksUserCourse
 
-            let imageName = navigationViewController.showsUserCourse ? "carplay_overview" : "carplay_locate"
+            let imageName = navigationViewController.tracksUserCourse ? "carplay_overview" : "carplay_locate"
             button.image = UIImage(named: imageName, in: .mapboxNavigation, compatibleWith: nil)
         }
         overviewButton.image = UIImage(named: "carplay_overview", in: .mapboxNavigation, compatibleWith: nil)

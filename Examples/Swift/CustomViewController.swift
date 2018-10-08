@@ -68,8 +68,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
 
     func startNavigation() {
         navigationService.start()
-        mapView.showsUserCourse = true
-        mapView.userTrackingMode = .followWithCourse
+        mapView.tracksUserCourse = true
     }
     
     func resumeNotifications() {
