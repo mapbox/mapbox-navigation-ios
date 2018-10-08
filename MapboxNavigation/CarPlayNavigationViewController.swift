@@ -56,7 +56,6 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         self.navService = navigationService
         self.mapTemplate = mapTemplate
         self.carInterfaceController = interfaceController
-        self.showsUserCourse = false
         
         super.init(nibName: nil, bundle: nil)
         carFeedbackTemplate = createFeedbackUI()
@@ -91,8 +90,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         resumeNotifications()
 
         navService.start()
-        mapView.showsUserCourse = true
-        mapView.userTrackingMode = .followWithCourse
+        mapView.recenterMap()
     }
     
     override public func viewWillDisappear(_ animated: Bool) {
@@ -157,15 +155,13 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
      
      When this property is true, the map follows the user’s location and rotates when their course changes. Otherwise, the map shows an overview of the route.
      */
-    @objc public var showsUserCourse: Bool {
+    @objc public var tracksUserCourse: Bool = false {
         didSet {
-            guard let progress = navService.router else { return }
-            mapView?.showsUserCourse = showsUserCourse
+            mapView?.tracksUserCourse = tracksUserCourse
             
-            if showsUserCourse {
-                mapView?.userTrackingMode = .followWithCourse
-            } else {
-                guard let userLocation = progress.location?.coordinate else { return }
+            if !tracksUserCourse,
+               let progress = navService.router,
+               let userLocation = progress.location?.coordinate {
                 mapView?.enableFrameByFrameCourseViewTracking(for: 3)
                 mapView?.setOverheadCameraView(from: userLocation, along: progress.route.coordinates!, for: self.edgePadding)
             }
@@ -173,7 +169,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     }
     
     public func beginPanGesture() {
-        mapView?.showsUserCourse = false
+        mapView?.tracksUserCourse = false
         mapView?.enableFrameByFrameCourseViewTracking(for: 1)
     }
     

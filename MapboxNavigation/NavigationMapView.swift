@@ -154,7 +154,26 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     /**
-     Determines whether the map should follow the user location and rotate when the course changes.
+     Determines whether the map should follow the user location, rotate when the course changes, and show the user navigation annotation.
+     - seealso: NavigationMapViewCourseTrackingDelegate
+     */
+    open var tracksUserCourse: Bool = false {
+        didSet {
+            if tracksUserCourse {
+                showsUserCourse = true
+                userTrackingMode = .followWithCourse
+            } else {
+                showsUserCourse = false
+                
+                if userTrackingMode == .followWithCourse {
+                    userTrackingMode = .none
+                }
+            }
+        }
+    }
+    
+    /**
+     Determines whether the map show the users navigation annotation.
      - seealso: NavigationMapViewCourseTrackingDelegate
      */
     open var showsUserCourse: Bool = false {
@@ -1085,7 +1104,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      Recenters the camera and begins tracking the user's location.
      */
     @objc public func recenterMap() {
-        showsUserCourse = true
+        tracksUserCourse = true
         enableFrameByFrameCourseViewTracking(for: 3)
     }
 }
