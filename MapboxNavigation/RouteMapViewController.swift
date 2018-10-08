@@ -128,7 +128,7 @@ class RouteMapViewController: UIViewController {
 
         mapView.contentInset = contentInsets
         view.layoutIfNeeded()
-
+        
         mapView.userTrackingMode = .followWithCourse
         mapView.showsUserCourse = true
         instructionsBannerView.swipeable = true
@@ -753,7 +753,7 @@ extension RouteMapViewController: NavigationViewDelegate {
      */
     func labelCurrentRoad(at rawLocation: CLLocation, for snappedLoction: CLLocation? = nil) {
 
-        guard navigationView.resumeButton.isHidden else {
+        guard mapView.showsUserCourse else {
                 return
         }
 
