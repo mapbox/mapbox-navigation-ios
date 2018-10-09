@@ -39,8 +39,7 @@ class NavigationEventsManagerSpy: NavigationEventsManager {
 
 typealias FakeTelemetryEvent = (name: String, attributes: [String: Any])
 
-@objc(MBEventsManagerSpy)
-private class MMEEventsManagerSpy: MMEEventsManager {
+class MMEEventsManagerSpy: MMEEventsManager {
 
     private var enqueuedEvents = [FakeTelemetryEvent]()
     private var flushedEvents = [FakeTelemetryEvent]()

@@ -208,7 +208,6 @@ public class CarPlayManager: NSObject {
     public init(_ eventsManager: NavigationEventsManager = NavigationEventsManager(dataSource: nil)) {
         super.init()
         self.eventsManager = eventsManager
-        eventsManager.start()
     }
 
     lazy var fullDateComponentsFormatter: DateComponentsFormatter = {

@@ -17,7 +17,7 @@ public typealias EventsManager = NavigationEventsManager
 /**
  The `NavigationEventsManager` is responsible for being the liaison between MapboxCoreNavigation and the Mapbox telemetry framework.
  */
-@objc(MBEventsManager)
+@objc(MBNavigationEventsManager)
 open class NavigationEventsManager: NSObject {
 
     var sessionState: SessionState!
@@ -51,7 +51,7 @@ open class NavigationEventsManager: NSObject {
             accessToken = tokenOverride
         }
         self.mobileEventsManager = mobileEventsManager
-        
+        start()
         resumeNotifications()
     }
     
@@ -75,7 +75,7 @@ open class NavigationEventsManager: NSObject {
      */
     @objc public var delaysEventFlushing = true
 
-    public func start() {
+    func start() {
         let eventLoggingEnabled = UserDefaults.standard.bool(forKey: NavigationMetricsDebugLoggingEnabled)
         
         mobileEventsManager.isDebugLoggingEnabled = eventLoggingEnabled

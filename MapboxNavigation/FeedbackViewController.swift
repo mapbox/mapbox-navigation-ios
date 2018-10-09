@@ -119,7 +119,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     }
     
     required public init?(coder aDecoder: NSCoder) {
-        eventsManager = aDecoder.decodeObject(of: [NavigationEventsManager.self], forKey: "EventsManager") as? EventsManager
+        eventsManager = aDecoder.decodeObject(of: [NavigationEventsManager.self], forKey: "NavigationEventsManager") as? NavigationEventsManager
         super.init(coder: aDecoder)
         commonInit()
     }
