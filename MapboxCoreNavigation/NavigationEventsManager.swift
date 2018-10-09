@@ -167,15 +167,13 @@ open class NavigationEventsManager: NSObject {
 
     public func sendCarPlayConnectEvent() {
         let date = Date()
-        let dateCreatedAttribute = [MMEEventKeyCreated: date.ISO8601]
-        mobileEventsManager.enqueueEvent(withName: MMEventTypeCarplayConnect, attributes: dateCreatedAttribute)
+        mobileEventsManager.enqueueEvent(withName: MMEventTypeNavigationCarplayConnect, attributes: [MMEEventKeyEvent: MMEventTypeNavigationCarplayConnect, MMEEventKeyCreated: date.ISO8601])
         mobileEventsManager.flush()
     }
 
     public func sendCarPlayDisconnectEvent() {
         let date = Date()
-        let dateCreatedAttribute = [MMEEventKeyCreated: date.ISO8601]
-        mobileEventsManager.enqueueEvent(withName: MMEventTypeCarplayDisconnect, attributes: dateCreatedAttribute)
+        mobileEventsManager.enqueueEvent(withName: MMEventTypeNavigationCarplayDisconnect, attributes: [MMEEventKeyEvent: MMEventTypeNavigationCarplayDisconnect, MMEEventKeyCreated: date.ISO8601])
         mobileEventsManager.flush()
     }
 
