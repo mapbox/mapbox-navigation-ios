@@ -337,7 +337,6 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
     private func bootstrapEvents() {
         eventsManager.dataSource = self
         eventsManager.resetSession()
-        eventsManager.start()
     }
 
     private func resetGPSCountdown() {
