@@ -39,7 +39,7 @@ public protocol DefaultInterfaceFlag {
 
 /**
  A `NavigationService` is the entry-point protocol for MapboxCoreNavigation.
-    It contains all the dependancies needed by the `MapboxNavigation` UI SDK, as well as dependancies for it's child objects.
+    It contains all the dependencies needed by the `MapboxNavigation` UI SDK, as well as dependencies for its child objects.
     `MapboxNavigationService` is the default implementation.
     If you would like to implement your own core-navigation stack, be sure to conform to this protocol.
  */
