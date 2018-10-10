@@ -20,7 +20,7 @@ public typealias EventsManager = NavigationEventsManager
 @objc(MBNavigationEventsManager)
 open class NavigationEventsManager: NSObject {
 
-    var sessionState: SessionState!
+    var sessionState: SessionState?
     
     var outstandingFeedbackEvents = [CoreFeedbackEvent]()
     
@@ -57,6 +57,7 @@ open class NavigationEventsManager: NSObject {
     
     deinit {
         suspendNotifications()
+        sessionState = nil
     }
     
     private func resumeNotifications() {
@@ -88,12 +89,12 @@ open class NavigationEventsManager: NSObject {
     }
     
     func navigationCancelEvent(rating potentialRating: Int? = nil, comment: String? = nil) -> EventDetails? {
-        guard let dataSource = dataSource else { return nil }
-
+        guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
+        
         let rating = potentialRating ?? MMEEventsManager.unrated
         var event = EventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationCancel
-        event.arrivalTimestamp = sessionState?.arrivalTimestamp
+        event.arrivalTimestamp = sessionState.arrivalTimestamp
         
         let validRating: Bool = (rating >= MMEEventsManager.unrated && rating <= 100)
         assert(validRating, "MMEEventsManager: Invalid Rating. Values should be between \(MMEEventsManager.unrated) (none) and 100.")
@@ -106,7 +107,7 @@ open class NavigationEventsManager: NSObject {
     }
     
     func navigationDepartEvent() -> EventDetails? {
-        guard let dataSource = dataSource else { return nil }
+        guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
 
         var event = EventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationDepart
@@ -114,7 +115,7 @@ open class NavigationEventsManager: NSObject {
     }
     
     func navigationArriveEvent() -> EventDetails? {
-        guard let dataSource = dataSource else { return nil }
+        guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
 
         var event = EventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationArrive
@@ -130,7 +131,7 @@ open class NavigationEventsManager: NSObject {
     }
     
     func navigationFeedbackEvent(type: FeedbackType, description: String?) -> EventDetails? {
-        guard let dataSource = dataSource else { return nil }
+        guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
 
         var event = EventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationFeedback
@@ -145,12 +146,12 @@ open class NavigationEventsManager: NSObject {
     }
     
     func navigationRerouteEvent(eventType: String = MMEEventTypeNavigationReroute) -> EventDetails? {
-        guard let dataSource = dataSource else { return nil }
+        guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
 
         let timestamp = Date()
         var event = EventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = eventType
-        if let lastRerouteDate = sessionState?.lastRerouteDate {
+        if let lastRerouteDate = sessionState.lastRerouteDate {
             event.secondsSinceLastReroute = round(timestamp.timeIntervalSince(lastRerouteDate))
         } else {
             event.secondsSinceLastReroute = -1
@@ -221,8 +222,8 @@ open class NavigationEventsManager: NSObject {
         guard let eventDictionary = try? navigationRerouteEvent()?.asDictionary() else { return }
         let timestamp = Date()
         
-        sessionState.lastRerouteDate = timestamp
-        sessionState.numberOfReroutes += 1
+        sessionState?.lastRerouteDate = timestamp
+        sessionState?.numberOfReroutes += 1
         
         let event = RerouteEvent(timestamp: Date(), eventDictionary: eventDictionary ?? [:])
         
@@ -325,10 +326,10 @@ open class NavigationEventsManager: NSObject {
         let route = progress.route
         
         // if the user has already arrived and a new route has been set, restart the navigation session
-        if sessionState.arrivalTimestamp != nil {
+        if sessionState?.arrivalTimestamp != nil {
             resetSession()
         } else {
-            sessionState.currentRoute = route
+            sessionState?.currentRoute = route
         }
         
         if (proactive) {
