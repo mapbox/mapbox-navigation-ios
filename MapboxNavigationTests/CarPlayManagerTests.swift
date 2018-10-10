@@ -42,7 +42,7 @@ class CarPlayManagerTests: XCTestCase {
 
         simulateCarPlayConnection(manager!)
 
-        let expectedEventName = MMEventTypeCarplayConnect
+        let expectedEventName = MMEventTypeNavigationCarplayConnect
         XCTAssertTrue(eventsManagerSpy!.hasEnqueuedEvent(with: expectedEventName))
         XCTAssertTrue(eventsManagerSpy!.hasFlushedEvent(with: expectedEventName))
         XCTAssertEqual(eventsManagerSpy!.enqueuedEventCount(with: expectedEventName), 1)
@@ -55,7 +55,7 @@ class CarPlayManagerTests: XCTestCase {
 
         simulateCarPlayDisconnection()
 
-        let expectedEventName = MMEventTypeCarplayDisconnect
+        let expectedEventName = MMEventTypeNavigationCarplayDisconnect
         XCTAssertTrue(eventsManagerSpy!.hasEnqueuedEvent(with: expectedEventName))
         XCTAssertTrue(eventsManagerSpy!.hasFlushedEvent(with: expectedEventName))
     }
