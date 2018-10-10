@@ -48,9 +48,18 @@ open class BaseInstructionsBannerView: UIControl {
     @IBInspectable
     public var swipeable: Bool = false
     
+    @IBInspectable
+    public var showStepIndicator: Bool = true {
+        didSet {
+            stepListIndicatorView.isHidden = !showStepIndicator
+        }
+    }
+    
     public weak var delegate: InstructionsBannerViewDelegate? {
         didSet {
-            stepListIndicatorView.isHidden = false
+            if showStepIndicator {
+               stepListIndicatorView.isHidden = false
+            }
         }
     }
     
@@ -78,7 +87,7 @@ open class BaseInstructionsBannerView: UIControl {
         }
     }
     
-    override init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
     }
@@ -93,7 +102,7 @@ open class BaseInstructionsBannerView: UIControl {
         setupLayout()
         centerYAlignInstructions()
         setupAvailableBounds()
-        stepListIndicatorView.isHidden = true
+        stepListIndicatorView.isHidden = !showStepIndicator
     }
     
     @objc func swipedInstructionBannerLeft(_ sender: Any) {
@@ -122,7 +131,9 @@ open class BaseInstructionsBannerView: UIControl {
     
     @objc func swipedInstructionBannerDown(_ sender: Any) {
         if let gestureRecognizer = sender as? UISwipeGestureRecognizer, gestureRecognizer.state == .ended {
-            stepListIndicatorView.isHidden = !stepListIndicatorView.isHidden
+            if showStepIndicator {
+               stepListIndicatorView.isHidden = !stepListIndicatorView.isHidden
+            }
             
             if let delegate = delegate {
                 delegate.didSwipeInstructionsBanner?(self, swipeDirection: .down)
@@ -133,7 +144,9 @@ open class BaseInstructionsBannerView: UIControl {
         
     @objc func tappedInstructionsBanner(_ sender: Any) {
         if let delegate = delegate {
-            stepListIndicatorView.isHidden = !stepListIndicatorView.isHidden
+            if showStepIndicator {
+                stepListIndicatorView.isHidden = !stepListIndicatorView.isHidden
+            }
             delegate.didTapInstructionsBanner?(self)
         }
     }
