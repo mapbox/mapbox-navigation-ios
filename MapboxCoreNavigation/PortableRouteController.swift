@@ -68,3 +68,16 @@ open class PortableRouteController: RouteController {
     }
 }
 
+extension PortableRouteController: LocationRecordingProtocol {
+    public func enableLocationRecording() {
+        navigator.toggleHistoryFor(onOff: true)
+    }
+    
+    public func disableLocationRecording() {
+        navigator.toggleHistoryFor(onOff: false)
+    }
+    
+    public func locationHistory() -> String {
+        return navigator.getHistory()
+    }
+}
