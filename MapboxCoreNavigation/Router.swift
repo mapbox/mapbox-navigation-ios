@@ -20,4 +20,8 @@ public protocol RouterDataSource {
     @objc func userIsOnRoute(_ location: CLLocation) -> Bool
     @objc func reroute(from: CLLocation, along: RouteProgress)
     @objc var location: CLLocation? { get }
+    
+    @objc optional func enableLocationRecording()
+    @objc optional func disableLocationRecording()
+    @objc optional func locationHistory() -> String
 }
