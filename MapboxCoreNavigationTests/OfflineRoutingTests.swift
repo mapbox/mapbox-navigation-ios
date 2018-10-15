@@ -15,7 +15,7 @@ class OfflineRoutingTests: XCTestCase {
         
         let setupExpectation = expectation(description: "Set up offline routing")
         
-        let directions = OfflineDirections(accessToken: "foo", host: nil, tilesPath: tilesPath, translationsPath: translationsPath) {
+        let directions = OfflineDirections(accessToken: "foo", host: nil, tilesPath: tilesPath, translationsPath: translationsPath) { (numberOfTiles) in
             setupExpectation.fulfill()
         }
         
@@ -50,7 +50,7 @@ class OfflineRoutingTests: XCTestCase {
         
         let setupExpectation = expectation(description: "Set up offline routing")
         
-        let directions = OfflineDirections(accessToken: "foo", host: nil, tilesPath: tilesPath, translationsPath: translationsPath) {
+        let directions = OfflineDirections(accessToken: "foo", host: nil, tilesPath: tilesPath, translationsPath: translationsPath) { (numberOfTiles) in
             setupExpectation.fulfill()
         }
         

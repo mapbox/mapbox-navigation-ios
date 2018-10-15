@@ -16,6 +16,10 @@ const MBRouteControllerNotificationUserInfoKey MBRouteControllerIsProactiveKey  
 
 NSString *const MBErrorDomain = @"ErrorDomain";
 
+typedef NS_ENUM(NSInteger, MBNavigationError) {
+    MBErrorCodeUnknown = -1,
+};
+
 @implementation NSString (MD5)
 - (NSString * _Nonnull)md5 {
     const char *cStr = [self UTF8String];
@@ -29,4 +33,20 @@ NSString *const MBErrorDomain = @"ErrorDomain";
     
     return  output;
 }
+@end
+
+@implementation MBNavigator (additions)
+
+- (NSUInteger)setupRouter:(NSString *)tilesPath translationsPath:(NSString *)translationsPath {
+    
+    @try {
+        [self configureRouterForTilesPath:tilesPath translationsPath:translationsPath];
+    } @catch (NSException *exception) {
+        return -1;
+    } @finally {
+        // TODO: Return rVal from configureRouterForTilesPath:translationsPath:
+        return 1;
+    }
+}
+
 @end
