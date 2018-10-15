@@ -29,7 +29,7 @@ class SimulatedLocationManagerTests: FBSnapshotTestCase {
         view.route = route
         view.locationPlotters = [LocationPlotter(locations: locationManagerSpy.locations, color: #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 0.5043463908), drawIndexesAsText: true)]
         
-        FBSnapshotVerifyView(view)
+        verify(view)
     }
     
 
