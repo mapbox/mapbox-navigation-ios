@@ -20,7 +20,7 @@ public class OfflineDirections: Directions {
     let tilesPath: String
     let translationsPath: String
     
-    public typealias OfflineCompletionHandler = (_ error: NSError?) -> Void
+    public typealias OfflineCompletionHandler = () -> Void
     
     public init(accessToken: String?, host: String?, tilesPath: String, translationsPath: String, completionHandler: @escaping OfflineCompletionHandler) {
         self.tilesPath = tilesPath
@@ -34,7 +34,7 @@ public class OfflineDirections: Directions {
             self.navigator.configureRouter(forTilesPath: tilesPath, translationsPath: translationsPath)
             
             DispatchQueue.main.async {
-                completionHandler(nil)
+                completionHandler()
             }
         }
     }
