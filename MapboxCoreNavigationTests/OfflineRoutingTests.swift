@@ -13,10 +13,9 @@ class OfflineRoutingTests: XCTestCase {
         let tilesPath = bundle.bundlePath.appending("/routing/liechtenstein")
         let translationsPath = bundle.bundlePath.appending("/routing/translations")
         
-        let setupExpectation = self.expectation(description: "Set up offline expectation")
+        let setupExpectation = expectation(description: "Set up offline routing")
         
-        let directions = OfflineDirections(accessToken: "foo", host: nil, tilesPath: tilesPath, translationsPath: translationsPath) { (error) in
-            XCTAssertNil(error)
+        let directions = OfflineDirections(accessToken: "foo", host: nil, tilesPath: tilesPath, translationsPath: translationsPath) {
             setupExpectation.fulfill()
         }
         
@@ -27,7 +26,7 @@ class OfflineRoutingTests: XCTestCase {
                            CLLocationCoordinate2D(latitude: 47.1153, longitude: 9.5531)]
 
         let options = NavigationRouteOptions(coordinates: coordinates, profileIdentifier: .automobile)
-        let calculateRouteExpectation = expectation(description: "Calculate route expectation")
+        let calculateRouteExpectation = expectation(description: "Calculate route offline")
         var route: Route?
         
         directions.calculateOffline(options) { (waypoints, routes, error) in
@@ -49,10 +48,9 @@ class OfflineRoutingTests: XCTestCase {
         let tilesPath = bundle.bundlePath.appending("/routing/liechtenstein")
         let translationsPath = bundle.bundlePath.appending("/routing/translations")
         
-        let setupExpectation = expectation(description: "Set up offline expectation")
+        let setupExpectation = expectation(description: "Set up offline routing")
         
-        let directions = OfflineDirections(accessToken: "foo", host: nil, tilesPath: tilesPath, translationsPath: translationsPath) { (error) in
-            XCTAssertNil(error)
+        let directions = OfflineDirections(accessToken: "foo", host: nil, tilesPath: tilesPath, translationsPath: translationsPath) {
             setupExpectation.fulfill()
         }
         
@@ -63,7 +61,7 @@ class OfflineRoutingTests: XCTestCase {
                            CLLocationCoordinate2D(latitude: 37.7805, longitude: -122.4073)]
         
         let options = NavigationRouteOptions(coordinates: coordinates, profileIdentifier: .automobile)
-        let calculateRouteExpectation = self.expectation(description: "Calculate route expectation")
+        let calculateRouteExpectation = expectation(description: "Calculate route offline")
         
         directions.calculateOffline(options) { (waypoints, routes, error) in
             XCTAssertNotNil(error)
