@@ -12,6 +12,7 @@ import MapboxDirections
     var locationProvider: NavigationLocationManager.Type { get }
 }
 
+@available(*, deprecated, renamed: "NavigationEventsManager")
 public typealias EventsManager = NavigationEventsManager
 
 /**
