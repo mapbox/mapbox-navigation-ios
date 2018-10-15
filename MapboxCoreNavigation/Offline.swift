@@ -2,121 +2,95 @@ import Foundation
 import MapboxDirections
 import MapboxNavigationNative
 
-public enum RequestOption {
-    case preferServerSide // TODO: Not yet implemented
-    case preferClientSide // TODO: Not yet implemented
-    case serverSideOnly
-    case clientSideOnly
-}
 
 public enum OfflineRoutingError: Error {
     case unexpectedRouteResult
     case corruptRouteData
+    case responseError(String)
 }
 
-class OfflineStorage: NSObject {
+
+public class OfflineDirections: Directions {
     
-    static var tilesPath: URL {
-        let path = coreNavigationCacheDirectory.appendingPathComponent("tiles")
-        ensureDirectoryExist(at: path)
-        return path
+    struct Constants {
+        static let offlineSerialQueueLabel = Bundle.mapboxCoreNavigation.bundleIdentifier!.appending(".offline")
+        static let serialQueue = DispatchQueue(label: Constants.offlineSerialQueueLabel)
     }
     
-    static var translationsPath: URL {
-        let path = coreNavigationCacheDirectory.appendingPathComponent("translations")
-        ensureDirectoryExist(at: path)
-        return path
-    }
+    let tilesPath: String
+    let translationsPath: String
     
-    static var coreNavigationCacheDirectory: URL {
-        let cacheDirectory = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
-        return URL(fileURLWithPath: cacheDirectory).appendingPathComponent(Bundle.mapboxCoreNavigation.bundleIdentifier!).appendingPathComponent("offline")
-    }
+    public typealias OfflineCompletionHandler = (_ error: NSError?) -> Void
     
-    // Ensures that a directory exist at the given path.
-    // Returns false if no directory was created.
-    @discardableResult
-    static func ensureDirectoryExist(at path: URL) -> Bool {
-        do {
-            try FileManager.default.createDirectory(at: path, withIntermediateDirectories: true, attributes: nil)
-            return true
-        } catch {
-            return false
+    public init(accessToken: String?, host: String?, tilesPath: String, translationsPath: String, completionHandler: @escaping OfflineCompletionHandler) {
+        self.tilesPath = tilesPath
+        self.translationsPath = translationsPath
+        
+        super.init(accessToken: accessToken, host: host)
+        
+        Constants.serialQueue.sync {
+            let tilesPath = self.tilesPath.replacingOccurrences(of: "file://", with: "")
+            let translationsPath = self.translationsPath.replacingOccurrences(of: "file://", with: "")
+            self.navigator.configureRouter(forTilesPath: tilesPath, translationsPath: translationsPath)
+            
+            DispatchQueue.main.async {
+                completionHandler(nil)
+            }
         }
     }
-}
-
-public typealias RouteCompletionHandler = (_ waypoints: [Waypoint]?, _ routes: [Route]?, _ error: NSError?) -> Void
-
-public class ExtendedDirections: NSObject {
-    
-    public static let shared = ExtendedDirections()
-    
-    static let offlineSerialQueueLabel = Bundle.mapboxCoreNavigation.bundleIdentifier!.appending(".offline")
-    
-    static let serialQueue = DispatchQueue(label: ExtendedDirections.offlineSerialQueueLabel)
     
     var _navigator: MBNavigator!
     var navigator: MBNavigator {
-        //assert(OperationQueue.current?.underlyingQueue?.label == ExtendedDirections.offlineSerialQueueLabel,
-        //       "The offline navigator must be accessed from the dedicated serial queue")
+        
+        assert(currentQueueName() == Constants.offlineSerialQueueLabel,
+               "The offline navigator must be accessed from the dedicated serial queue")
+        
         if _navigator == nil {
             self._navigator = MBNavigator()
-            
-            let tilePath = OfflineStorage.tilesPath.absoluteString.replacingOccurrences(of: "file://", with: "")
-            let localizationPath = OfflineStorage.translationsPath.absoluteString.replacingOccurrences(of: "file://", with: "")
-            
-            // navigator raises an exception after each try:
-            // 1: uncompressed tiles packed in a tar archive,
-            // 2: uncompressed tiles in directories
-            // 3: compressed tiles in directories
-            // We are using the 3rd option
-            self._navigator.configureRouter(forTilesPath: tilePath, translationsPath: localizationPath)
         }
         
         return _navigator
     }
     
-    open func calculate(_ options: RouteOptions, completionHandler: @escaping RouteCompletionHandler) {
+    open func calculateOffline(_ options: RouteOptions, completionHandler: @escaping RouteCompletionHandler) {
         
-        guard let navigationOptions = options as? NavigationRouteOptions else {
-            Directions.shared.calculate(options, completionHandler: completionHandler)
-            return
-        }
+        let url = self.url(forCalculating: options)
         
-        switch navigationOptions.preferredRequestOption {
-        case .preferClientSide:
-            fatalError("Not yet implemented")
-        case .preferServerSide:
-            fatalError("Not yet implemented")
-        case .serverSideOnly:
-            Directions.shared.calculate(options, completionHandler: completionHandler)
-        case .clientSideOnly:
-            let url = Directions.shared.url(forCalculating: options)
+        Constants.serialQueue.sync { [weak self] in
             
-            ExtendedDirections.serialQueue.async { [weak self] in
-                guard let result = self?.navigator.getRouteForDirectionsUri(url.absoluteString) else {
-                    return completionHandler(nil, nil, OfflineRoutingError.unexpectedRouteResult as NSError)
-                }
-                
-                guard let data = result.json.data(using: .utf8) else {
-                    return completionHandler(nil, nil, OfflineRoutingError.corruptRouteData as NSError)
-                }
-                
-                do {
-                    let json = try JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
+            guard let result = self?.navigator.getRouteForDirectionsUri(url.absoluteString) else {
+                return completionHandler(nil, nil, OfflineRoutingError.unexpectedRouteResult as NSError)
+            }
+            
+            guard let data = result.json.data(using: .utf8) else {
+                return completionHandler(nil, nil, OfflineRoutingError.corruptRouteData as NSError)
+            }
+            
+            do {
+                let json = try JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
+                if let errorValue = json["error"] as? String {
+                    DispatchQueue.main.async {
+                        let error = NSError(domain: "..", code: 102, userInfo: [NSLocalizedDescriptionKey: errorValue])
+                        return completionHandler(nil, nil, error)
+                    }
+                } else {
                     let response = options.response(from: json)
                     
                     DispatchQueue.main.async {
-                        completionHandler(response.0, response.1, nil)
+                        return completionHandler(response.0, response.1, nil)
                     }
-                    
-                } catch {
-                    DispatchQueue.main.async {
-                        completionHandler(nil, nil, error as NSError)
-                    }
+                }
+                
+            } catch {
+                DispatchQueue.main.async {
+                    return completionHandler(nil, nil, error as NSError)
                 }
             }
         }
     }
+}
+
+fileprivate func currentQueueName() -> String? {
+    let name = __dispatch_queue_get_label(nil)
+    return String(cString: name, encoding: .utf8)
 }
