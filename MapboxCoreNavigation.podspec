@@ -42,7 +42,7 @@ Pod::Spec.new do |s|
 
   s.dependency "MapboxNavigationNative", "~> 3.1"
   s.dependency "MapboxDirections.swift", "~> 0.24.0"
-  s.dependency "MapboxMobileEvents", "~> 0.6"
+  s.dependency "MapboxMobileEvents", "~> 0.6.0"
   s.dependency "Turf", "~> 0.2"
 
   # `swift_version` was introduced in CocoaPods 1.4.0. Without this check, if a user were to
