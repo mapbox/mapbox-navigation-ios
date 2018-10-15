@@ -147,7 +147,7 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
     public var directions: Directions
     
     /**
-     The active router. By default, a `NativeRouteController`.
+     The active router. By default, a `PortableRouteController`.
     */
     public var router: Router!
     

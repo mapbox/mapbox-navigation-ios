@@ -66,5 +66,16 @@ open class PortableRouteController: RouteController {
         let offRoute = status.routeState == .offRoute
         return !offRoute
     }
+    
+    public func enableLocationRecording() {
+        navigator.toggleHistoryFor(onOff: true)
+    }
+    
+    public func disableLocationRecording() {
+        navigator.toggleHistoryFor(onOff: false)
+    }
+    
+    public func locationHistory() -> String {
+        return navigator.getHistory()
+    }
 }
-
