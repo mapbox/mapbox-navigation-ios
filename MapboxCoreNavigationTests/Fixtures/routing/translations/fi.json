@@ -1,0 +1,493 @@
+{
+    "meta": {
+        "capitalizeFirstLetter": true
+    },
+    "v5": {
+        "constants": {
+            "ordinalize": {
+                "1": "1.",
+                "2": "2.",
+                "3": "3.",
+                "4": "4.",
+                "5": "5.",
+                "6": "6.",
+                "7": "7.",
+                "8": "8.",
+                "9": "9.",
+                "10": "10."
+            },
+            "direction": {
+                "north": "pohjoiseen",
+                "northeast": "koilliseen",
+                "east": "itään",
+                "southeast": "kaakkoon",
+                "south": "etelään",
+                "southwest": "lounaaseen",
+                "west": "länteen",
+                "northwest": "luoteeseen"
+            },
+            "modifier": {
+                "left": "vasemmall(e/a)",
+                "right": "oikeall(e/a)",
+                "sharp left": "jyrkästi vasempaan",
+                "sharp right": "jyrkästi oikeaan",
+                "slight left": "loivasti vasempaan",
+                "slight right": "loivasti oikeaan",
+                "straight": "suoraan eteenpäin",
+                "uturn": "U-käännös"
+            },
+            "lanes": {
+                "xo": "Pysy oikealla",
+                "ox": "Pysy vasemmalla",
+                "xox": "Pysy keskellä",
+                "oxo": "Pysy vasemmalla tai oikealla"
+            }
+        },
+        "modes": {
+            "ferry": {
+                "default": "Aja lautalle",
+                "name": "Aja lautalle {way_name}",
+                "destination": "Aja lautalle, jonka määränpää on {destination}"
+            }
+        },
+        "phrase": {
+            "two linked by distance": "{instruction_one}, sitten {distance} päästä, {instruction_two}",
+            "two linked": "{instruction_one}, sitten {instruction_two}",
+            "one in distance": "{distance} päästä, {instruction_one}",
+            "name and ref": "{name} ({ref})",
+            "exit with number": "{exit}"
+        },
+        "arrive": {
+            "default": {
+                "default": "Olet saapunut {nth} määränpäähäsi",
+                "upcoming": "Saavut {nth} määränpäähäsi",
+                "short": "Olet saapunut",
+                "short-upcoming": "Saavut",
+                "named": "Olet saapunut määränpäähän {waypoint_name}"
+            },
+            "left": {
+                "default": "Olet saapunut {nth} määränpäähäsi, joka on vasemmalla puolellasi",
+                "upcoming": "Saavut {nth} määränpäähäsi, joka on vasemmalla puolellasi",
+                "short": "Olet saapunut",
+                "short-upcoming": "Saavut",
+                "named": "Olet saapunut määränpäähän {waypoint_name}, joka on vasemmalla puolellasi"
+            },
+            "right": {
+                "default": "Olet saapunut {nth} määränpäähäsi, joka on oikealla puolellasi",
+                "upcoming": "Saavut {nth} määränpäähäsi, joka on oikealla puolellasi",
+                "short": "Olet saapunut",
+                "short-upcoming": "Saavut",
+                "named": "Olet saapunut määränpäähän {waypoint_name}, joka on oikealla puolellasi"
+            },
+            "sharp left": {
+                "default": "Olet saapunut {nth} määränpäähäsi, joka on vasemmalla puolellasi",
+                "upcoming": "Saavut {nth} määränpäähäsi, joka on vasemmalla puolellasi",
+                "short": "Olet saapunut",
+                "short-upcoming": "Saavut",
+                "named": "Olet saapunut määränpäähän {waypoint_name}, joka on vasemmalla puolellasi"
+            },
+            "sharp right": {
+                "default": "Olet saapunut {nth} määränpäähäsi, joka on oikealla puolellasi",
+                "upcoming": "Saavut {nth} määränpäähäsi, joka on oikealla puolellasi",
+                "short": "Olet saapunut",
+                "short-upcoming": "Saavut",
+                "named": "Olet saapunut määränpäähän {waypoint_name}, joka on oikealla puolellasi"
+            },
+            "slight right": {
+                "default": "Olet saapunut {nth} määränpäähäsi, joka on oikealla puolellasi",
+                "upcoming": "Saavut {nth} määränpäähäsi, joka on oikealla puolellasi",
+                "short": "Olet saapunut",
+                "short-upcoming": "Saavut",
+                "named": "Olet saapunut määränpäähän {waypoint_name}, joka on oikealla puolellasi"
+            },
+            "slight left": {
+                "default": "Olet saapunut {nth} määränpäähäsi, joka on vasemmalla puolellasi",
+                "upcoming": "Saavut {nth} määränpäähäsi, joka on vasemmalla puolellasi",
+                "short": "Olet saapunut",
+                "short-upcoming": "Saavut",
+                "named": "Olet saapunut määränpäähän {waypoint_name}, joka on vasemmalla puolellasi"
+            },
+            "straight": {
+                "default": "Olet saapunut {nth} määränpäähäsi, joka on suoraan edessäsi",
+                "upcoming": "Saavut {nth} määränpäähäsi, suoraan edessä",
+                "short": "Olet saapunut",
+                "short-upcoming": "Saavut",
+                "named": "Olet saapunut määränpäähän {waypoint_name}, joka on suoraan edessäsi"
+            }
+        },
+        "continue": {
+            "default": {
+                "default": "Käänny {modifier}",
+                "name": "Käänny {modifier} pysyäksesi tiellä {way_name}",
+                "destination": "Käänny {modifier} suuntana {destination}",
+                "exit": "Käänny {modifier} tielle {way_name}"
+            },
+            "straight": {
+                "default": "Jatka suoraan eteenpäin",
+                "name": "Jatka suoraan pysyäksesi tiellä {way_name}",
+                "destination": "Jatka suuntana {destination}",
+                "distance": "Jatka suoraan {distance}",
+                "namedistance": "Jatka tiellä {way_name} {distance}"
+            },
+            "sharp left": {
+                "default": "Jatka jyrkästi vasempaan",
+                "name": "Jatka jyrkästi vasempaan pysyäksesi tiellä {way_name}",
+                "destination": "Jatka jyrkästi vasempaan suuntana {destination}"
+            },
+            "sharp right": {
+                "default": "Jatka jyrkästi oikeaan",
+                "name": "Jatka jyrkästi oikeaan pysyäksesi tiellä {way_name}",
+                "destination": "Jatka jyrkästi oikeaan suuntana {destination}"
+            },
+            "slight left": {
+                "default": "Jatka loivasti vasempaan",
+                "name": "Jatka loivasti vasempaan pysyäksesi tiellä {way_name}",
+                "destination": "Jatka loivasti vasempaan suuntana {destination}"
+            },
+            "slight right": {
+                "default": "Jatka loivasti oikeaan",
+                "name": "Jatka loivasti oikeaan pysyäksesi tiellä {way_name}",
+                "destination": "Jatka loivasti oikeaan suuntana {destination}"
+            },
+            "uturn": {
+                "default": "Tee U-käännös",
+                "name": "Tee U-käännös ja jatka tietä {way_name}",
+                "destination": "Tee U-käännös suuntana {destination}"
+            }
+        },
+        "depart": {
+            "default": {
+                "default": "Aja {direction}",
+                "name": "Aja tietä {way_name} {direction}",
+                "namedistance": "Aja {distance} {direction} tietä {way_name} "
+            }
+        },
+        "end of road": {
+            "default": {
+                "default": "Käänny {modifier}",
+                "name": "Käänny {modifier} tielle {way_name}",
+                "destination": "Käänny {modifier} suuntana {destination}"
+            },
+            "straight": {
+                "default": "Jatka suoraan eteenpäin",
+                "name": "Jatka suoraan eteenpäin tielle {way_name}",
+                "destination": "Jatka suoraan eteenpäin suuntana {destination}"
+            },
+            "uturn": {
+                "default": "Tien päässä tee U-käännös",
+                "name": "Tien päässä tee U-käännös tielle {way_name}",
+                "destination": "Tien päässä tee U-käännös suuntana {destination}"
+            }
+        },
+        "fork": {
+            "default": {
+                "default": "Jatka tienhaarassa {modifier}",
+                "name": "Jatka {modifier} tielle {way_name}",
+                "destination": "Jatka {modifier} suuntana {destination}"
+            },
+            "slight left": {
+                "default": "Pysy vasemmalla tienhaarassa",
+                "name": "Pysy vasemmalla tielle {way_name}",
+                "destination": "Pysy vasemmalla suuntana {destination}"
+            },
+            "slight right": {
+                "default": "Pysy oikealla tienhaarassa",
+                "name": "Pysy oikealla tielle {way_name}",
+                "destination": "Pysy oikealla suuntana {destination}"
+            },
+            "sharp left": {
+                "default": "Käänny tienhaarassa jyrkästi vasempaan",
+                "name": "Käänny tienhaarassa jyrkästi vasempaan tielle {way_name}",
+                "destination": "Käänny tienhaarassa jyrkästi vasempaan suuntana {destination}"
+            },
+            "sharp right": {
+                "default": "Käänny tienhaarassa jyrkästi oikeaan",
+                "name": "Käänny tienhaarassa jyrkästi oikeaan tielle {way_name}",
+                "destination": "Käänny tienhaarassa jyrkästi oikeaan suuntana {destination}"
+            },
+            "uturn": {
+                "default": "Tee U-käännös",
+                "name": "Tee U-käännös tielle {way_name}",
+                "destination": "Tee U-käännös suuntana {destination}"
+            }
+        },
+        "merge": {
+            "default": {
+                "default": "Liity {modifier}",
+                "name": "Liity {modifier}, tielle {way_name}",
+                "destination": "Liity {modifier}, suuntana {destination}"
+            },
+            "straight": {
+                "default": "Liity",
+                "name": "Liity tielle {way_name}",
+                "destination": "Liity suuntana {destination}"
+            },
+            "slight left": {
+                "default": "Liity vasemmalle",
+                "name": "Liity vasemmalle, tielle {way_name}",
+                "destination": "Liity vasemmalle, suuntana {destination}"
+            },
+            "slight right": {
+                "default": "Liity oikealle",
+                "name": "Liity oikealle, tielle {way_name}",
+                "destination": "Liity oikealle, suuntana {destination}"
+            },
+            "sharp left": {
+                "default": "Liity vasemmalle",
+                "name": "Liity vasemmalle, tielle {way_name}",
+                "destination": "Liity vasemmalle, suuntana {destination}"
+            },
+            "sharp right": {
+                "default": "Liity oikealle",
+                "name": "Liity oikealle, tielle {way_name}",
+                "destination": "Liity oikealle, suuntana {destination}"
+            },
+            "uturn": {
+                "default": "Tee U-käännös",
+                "name": "Tee U-käännös tielle {way_name}",
+                "destination": "Tee U-käännös suuntana {destination}"
+            }
+        },
+        "new name": {
+            "default": {
+                "default": "Jatka {modifier}",
+                "name": "Jatka {modifier} tielle {way_name}",
+                "destination": "Jatka {modifier} suuntana {destination}"
+            },
+            "straight": {
+                "default": "Jatka suoraan eteenpäin",
+                "name": "Jatka tielle {way_name}",
+                "destination": "Jatka suuntana {destination}"
+            },
+            "sharp left": {
+                "default": "Käänny jyrkästi vasempaan",
+                "name": "Käänny jyrkästi vasempaan tielle {way_name}",
+                "destination": "Käänny jyrkästi vasempaan suuntana {destination}"
+            },
+            "sharp right": {
+                "default": "Käänny jyrkästi oikeaan",
+                "name": "Käänny jyrkästi oikeaan tielle {way_name}",
+                "destination": "Käänny jyrkästi oikeaan suuntana {destination}"
+            },
+            "slight left": {
+                "default": "Jatka loivasti vasempaan",
+                "name": "Jatka loivasti vasempaan tielle {way_name}",
+                "destination": "Jatka loivasti vasempaan suuntana {destination}"
+            },
+            "slight right": {
+                "default": "Jatka loivasti oikeaan",
+                "name": "Jatka loivasti oikeaan tielle {way_name}",
+                "destination": "Jatka loivasti oikeaan suuntana {destination}"
+            },
+            "uturn": {
+                "default": "Tee U-käännös",
+                "name": "Tee U-käännös tielle {way_name}",
+                "destination": "Tee U-käännös suuntana {destination}"
+            }
+        },
+        "notification": {
+            "default": {
+                "default": "Jatka {modifier}",
+                "name": "Jatka {modifier} tielle {way_name}",
+                "destination": "Jatka {modifier} suuntana {destination}"
+            },
+            "uturn": {
+                "default": "Tee U-käännös",
+                "name": "Tee U-käännös tielle {way_name}",
+                "destination": "Tee U-käännös suuntana {destination}"
+            }
+        },
+        "off ramp": {
+            "default": {
+                "default": "Aja erkanemiskaistalle",
+                "name": "Aja erkanemiskaistaa tielle {way_name}",
+                "destination": "Aja erkanemiskaistalle suuntana {destination}",
+                "exit": "Ota poistuminen {exit}",
+                "exit_destination": "Ota poistuminen {exit}, suuntana {destination}"
+            },
+            "left": {
+                "default": "Aja vasemmalla olevalle erkanemiskaistalle",
+                "name": "Aja vasemmalla olevaa erkanemiskaistaa tielle {way_name}",
+                "destination": "Aja vasemmalla olevalle erkanemiskaistalle suuntana {destination}",
+                "exit": "Ota poistuminen {exit} vasemmalla",
+                "exit_destination": "Ota poistuminen {exit} vasemmalla, suuntana {destination}"
+            },
+            "right": {
+                "default": "Aja oikealla olevalle erkanemiskaistalle",
+                "name": "Aja oikealla olevaa erkanemiskaistaa tielle {way_name}",
+                "destination": "Aja oikealla olevalle erkanemiskaistalle suuntana {destination}",
+                "exit": "Ota poistuminen {exit} oikealla",
+                "exit_destination": "Ota poistuminen {exit} oikealla, suuntana {destination}"
+            },
+            "sharp left": {
+                "default": "Aja vasemmalla olevalle erkanemiskaistalle",
+                "name": "Aja vasemmalla olevaa erkanemiskaistaa tielle {way_name}",
+                "destination": "Aja vasemmalla olevalle erkanemiskaistalle suuntana {destination}",
+                "exit": "Ota poistuminen {exit} vasemmalla",
+                "exit_destination": "Ota poistuminen {exit} vasemmalla, suuntana {destination}"
+            },
+            "sharp right": {
+                "default": "Aja oikealla olevalle erkanemiskaistalle",
+                "name": "Aja oikealla olevaa erkanemiskaistaa tielle {way_name}",
+                "destination": "Aja oikealla olevalle erkanemiskaistalle suuntana {destination}",
+                "exit": "Ota poistuminen {exit} oikealla",
+                "exit_destination": "Ota poistuminen {exit} oikealla, suuntana {destination}"
+            },
+            "slight left": {
+                "default": "Aja vasemmalla olevalle erkanemiskaistalle",
+                "name": "Aja vasemmalla olevaa erkanemiskaistaa tielle {way_name}",
+                "destination": "Aja vasemmalla olevalle erkanemiskaistalle suuntana {destination}",
+                "exit": "Ota poistuminen {exit} vasemmalla",
+                "exit_destination": "Ota poistuminen {exit} vasemmalla, suuntana {destination}"
+            },
+            "slight right": {
+                "default": "Aja oikealla olevalle erkanemiskaistalle",
+                "name": "Aja oikealla olevaa erkanemiskaistaa tielle {way_name}",
+                "destination": "Aja oikealla olevalle erkanemiskaistalle suuntana {destination}",
+                "exit": "Ota poistuminen {exit} oikealla",
+                "exit_destination": "Ota poistuminen {exit} oikealla, suuntana {destination}"
+            }
+        },
+        "on ramp": {
+            "default": {
+                "default": "Aja erkanemiskaistalle",
+                "name": "Aja erkanemiskaistaa tielle {way_name}",
+                "destination": "Aja erkanemiskaistalle suuntana {destination}"
+            },
+            "left": {
+                "default": "Aja vasemmalla olevalle erkanemiskaistalle",
+                "name": "Aja vasemmalla olevaa erkanemiskaistaa tielle {way_name}",
+                "destination": "Aja vasemmalla olevalle erkanemiskaistalle suuntana {destination}"
+            },
+            "right": {
+                "default": "Aja oikealla olevalle erkanemiskaistalle",
+                "name": "Aja oikealla olevaa erkanemiskaistaa tielle {way_name}",
+                "destination": "Aja oikealla olevalle erkanemiskaistalle suuntana {destination}"
+            },
+            "sharp left": {
+                "default": "Aja vasemmalla olevalle erkanemiskaistalle",
+                "name": "Aja vasemmalla olevaa erkanemiskaistaa tielle {way_name}",
+                "destination": "Aja vasemmalla olevalle erkanemiskaistalle suuntana {destination}"
+            },
+            "sharp right": {
+                "default": "Aja oikealla olevalle erkanemiskaistalle",
+                "name": "Aja oikealla olevaa erkanemiskaistaa tielle {way_name}",
+                "destination": "Aja oikealla olevalle erkanemiskaistalle suuntana {destination}"
+            },
+            "slight left": {
+                "default": "Aja vasemmalla olevalle erkanemiskaistalle",
+                "name": "Aja vasemmalla olevaa erkanemiskaistaa tielle {way_name}",
+                "destination": "Aja vasemmalla olevalle erkanemiskaistalle suuntana {destination}"
+            },
+            "slight right": {
+                "default": "Aja oikealla olevalle erkanemiskaistalle",
+                "name": "Aja oikealla olevaa erkanemiskaistaa tielle {way_name}",
+                "destination": "Aja oikealla olevalle erkanemiskaistalle suuntana {destination}"
+            }
+        },
+        "rotary": {
+            "default": {
+                "default": {
+                    "default": "Aja liikenneympyrään",
+                    "name": "Aja liikenneympyrään ja valitse erkanemiskaista tielle {way_name}",
+                    "destination": "Aja liikenneympyrään ja valitse erkanemiskaista suuntana {destination}"
+                },
+                "name": {
+                    "default": "Aja liikenneympyrään {rotary_name}",
+                    "name": "Aja liikenneympyrään {rotary_name} ja valitse erkanemiskaista tielle {way_name}",
+                    "destination": "Aja liikenneympyrään {rotary_name} ja valitse erkanemiskaista suuntana {destination}"
+                },
+                "exit": {
+                    "default": "Aja liikenneympyrään ja valitse {exit_number} erkanemiskaista",
+                    "name": "Aja liikenneympyrään ja valitse {exit_number} erkanemiskaista tielle {way_name}",
+                    "destination": "Aja liikenneympyrään ja valitse {exit_number} erkanemiskaista suuntana {destination}"
+                },
+                "name_exit": {
+                    "default": "Aja liikenneympyrään {rotary_name} ja valitse {exit_number} erkanemiskaista",
+                    "name": "Aja liikenneympyrään {rotary_name} ja valitse {exit_number} erkanemiskaista tielle {way_name}",
+                    "destination": "Aja liikenneympyrään {rotary_name} ja valitse {exit_number} erkanemiskaista suuntana {destination}"
+                }
+            }
+        },
+        "roundabout": {
+            "default": {
+                "exit": {
+                    "default": "Aja liikenneympyrään ja valitse {exit_number} erkanemiskaista",
+                    "name": "Aja liikenneympyrään ja valitse {exit_number} erkanemiskaista tielle {way_name}",
+                    "destination": "Aja liikenneympyrään ja valitse {exit_number} erkanemiskaista suuntana {destination}"
+                },
+                "default": {
+                    "default": "Aja liikenneympyrään",
+                    "name": "Aja liikenneympyrään ja valitse erkanemiskaista tielle {way_name}",
+                    "destination": "Aja liikenneympyrään ja valitse erkanemiskaista suuntana {destination}"
+                }
+            }
+        },
+        "roundabout turn": {
+            "default": {
+                "default": "Käänny {modifier}",
+                "name": "Käänny {modifier} tielle {way_name}",
+                "destination": "Käänny {modifier} suuntana {destination}"
+            },
+            "left": {
+                "default": "Käänny vasempaan",
+                "name": "Käänny vasempaan tielle {way_name}",
+                "destination": "Käänny vasempaan suuntana {destination}"
+            },
+            "right": {
+                "default": "Käänny oikeaan",
+                "name": "Käänny oikeaan tielle {way_name}",
+                "destination": "Käänny oikeaan suuntana {destination}"
+            },
+            "straight": {
+                "default": "Jatka suoraan eteenpäin",
+                "name": "Jatka suoraan eteenpäin tielle {way_name}",
+                "destination": "Jatka suoraan eteenpäin suuntana {destination}"
+            }
+        },
+        "exit roundabout": {
+            "default": {
+                "default": "Poistu liikenneympyrästä",
+                "name": "Poistu liikenneympyrästä tielle {way_name}",
+                "destination": "Poistu liikenneympyrästä suuntana {destination}"
+            }
+        },
+        "exit rotary": {
+            "default": {
+                "default": "Poistu liikenneympyrästä",
+                "name": "Poistu liikenneympyrästä tielle {way_name}",
+                "destination": "Poistu liikenneympyrästä suuntana {destination}"
+            }
+        },
+        "turn": {
+            "default": {
+                "default": "Käänny {modifier}",
+                "name": "Käänny {modifier} tielle {way_name}",
+                "destination": "Käänny {modifier} suuntana {destination}"
+            },
+            "left": {
+                "default": "Käänny vasempaan",
+                "name": "Käänny vasempaan tielle {way_name}",
+                "destination": "Käänny vasempaan suuntana {destination}"
+            },
+            "right": {
+                "default": "Käänny oikeaan",
+                "name": "Käänny oikeaan tielle {way_name}",
+                "destination": "Käänny oikeaan suuntana {destination}"
+            },
+            "straight": {
+                "default": "Aja suoraan eteenpäin",
+                "name": "Aja suoraan eteenpäin tielle {way_name}",
+                "destination": "Aja suoraan eteenpäin suuntana {destination}"
+            }
+        },
+        "use lane": {
+            "no_lanes": {
+                "default": "Jatka suoraan eteenpäin"
+            },
+            "default": {
+                "default": "{lane_instruction}"
+            }
+        }
+    }
+}

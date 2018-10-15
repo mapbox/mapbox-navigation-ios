@@ -1,0 +1,493 @@
+{
+    "meta": {
+        "capitalizeFirstLetter": false
+    },
+    "v5": {
+        "constants": {
+            "ordinalize": {
+                "1": "첫번쩨",
+                "2": "두번째",
+                "3": "세번째",
+                "4": "네번쩨",
+                "5": "다섯번째",
+                "6": "여섯번째",
+                "7": "일곱번째",
+                "8": "여덟번째",
+                "9": "아홉번째",
+                "10": "열번째"
+            },
+            "direction": {
+                "north": "북쪽",
+                "northeast": "북동쪽",
+                "east": "동쪽",
+                "southeast": "남동쪽",
+                "south": "남쪽",
+                "southwest": "남서쪽",
+                "west": "서쪽",
+                "northwest": "북서쪽"
+            },
+            "modifier": {
+                "left": "좌회전",
+                "right": "우회전",
+                "sharp left": "바로좌회전",
+                "sharp right": "바로우회전",
+                "slight left": "조금왼쪽",
+                "slight right": "조금오른쪽",
+                "straight": "직진",
+                "uturn": "유턴"
+            },
+            "lanes": {
+                "xo": "우측차선 유지",
+                "ox": "좌측차선 유지",
+                "xox": "중앙유지",
+                "oxo": "계속 좌측 또는 우측 차선"
+            }
+        },
+        "modes": {
+            "ferry": {
+                "default": "페리를 타시오",
+                "name": "페리를 타시오 {way_name}",
+                "destination": "페리를 타고 {destination}까지 가세요."
+            }
+        },
+        "phrase": {
+            "two linked by distance": "{instruction_one}, 그리고, {distance} 안에, {instruction_two}",
+            "two linked": "{instruction_one}, 그리고 {instruction_two}",
+            "one in distance": "{distance} 내에, {instruction_one}",
+            "name and ref": "{name} ({ref})",
+            "exit with number": "{exit}번으로 나가세요."
+        },
+        "arrive": {
+            "default": {
+                "default": " {nth}목적지에 도착하였습니다.",
+                "upcoming": "{nth}목적지에 곧 도착할 예정입니다.",
+                "short": "도착하였습니다",
+                "short-upcoming": "도착할 예정입니다.",
+                "named": "경유지 {waypoint_name}에 도착하였습니다."
+            },
+            "left": {
+                "default": "좌측에 {nth} 목적지가 있습니다.",
+                "upcoming": "좌측에 {nth} 목적지에 도착할 예정입니다.",
+                "short": "도착하였습니다",
+                "short-upcoming": "목적지에 곧 도착할 예정입니다.",
+                "named": "좌측에 경유지 {waypoint_name}에 도착하였습니다."
+            },
+            "right": {
+                "default": "우측에 {nth} 목적지가 있습니다.",
+                "upcoming": "우측에 {nth} 목적지에 도착할 예정입니다.",
+                "short": "도착하였습니다",
+                "short-upcoming": "목적지에 곧 도착할 예정입니다.",
+                "named": "우측에 경유지 {waypoint_name}에 도착하였습니다."
+            },
+            "sharp left": {
+                "default": "좌측에 {nth} 목적지가 있습니다.",
+                "upcoming": "좌측에 {nth} 목적지에 도착할 예정입니다.",
+                "short": "도착하였습니다",
+                "short-upcoming": "목적지에 곧 도착할 예정입니다.",
+                "named": "좌측에 경유지 {waypoint_name}에 도착하였습니다."
+            },
+            "sharp right": {
+                "default": "우측에 {nth} 목적지가 있습니다.",
+                "upcoming": "우측에 {nth} 목적지에 도착할 예정입니다.",
+                "short": "도착하였습니다",
+                "short-upcoming": "목적지에 곧 도착할 예정입니다.",
+                "named": "우측에 경유지 {waypoint_name}에 도착하였습니다."
+            },
+            "slight right": {
+                "default": "우측에 {nth} 목적지가 있습니다.",
+                "upcoming": "우측에 {nth} 목적지에 도착할 예정입니다.",
+                "short": "도착하였습니다",
+                "short-upcoming": "목적지에 곧 도착할 예정입니다.",
+                "named": "우측에 경유지 {waypoint_name}에 도착하였습니다."
+            },
+            "slight left": {
+                "default": "좌측에 {nth} 목적지가 있습니다.",
+                "upcoming": "좌측에 {nth} 목적지에 도착할 예정입니다.",
+                "short": "도착하였습니다",
+                "short-upcoming": "목적지에 곧 도착할 예정입니다.",
+                "named": "좌측에 경유지 {waypoint_name}에 도착하였습니다."
+            },
+            "straight": {
+                "default": "바로 앞에 {nth} 목적지가 있습니다.",
+                "upcoming": "직진하시면 {nth} 목적지에 도착할 예정입니다.",
+                "short": "도착하였습니다",
+                "short-upcoming": "목적지에 곧 도착할 예정입니다.",
+                "named": "정면에 경유지 {waypoint_name}에 도착하였습니다."
+            }
+        },
+        "continue": {
+            "default": {
+                "default": "{modifier} 회전",
+                "name": "{modifier} 회전하고 {way_name}로 직진해 주세요.",
+                "destination": "{modifier} 회전하고 {destination}까지 가세요.",
+                "exit": "{way_name} 쪽으로 {modifier} 회전 하세요."
+            },
+            "straight": {
+                "default": "계속 직진해 주세요.",
+                "name": "{way_name} 로 계속 직진해 주세요.",
+                "destination": "{destination}까지 직진해 주세요.",
+                "distance": "{distance}까지 직진해 주세요.",
+                "namedistance": "{distance}까지 {way_name}로 가주세요."
+            },
+            "sharp left": {
+                "default": "급좌회전 하세요.",
+                "name": "급좌회전 하신 후 {way_name}로 가세요.",
+                "destination": "급좌회전 하신 후 {destination}로 가세요."
+            },
+            "sharp right": {
+                "default": "급우회전 하세요.",
+                "name": "급우회전 하고 {way_name}로 가세요.",
+                "destination": "급우회전 하신 후 {destination}로 가세요."
+            },
+            "slight left": {
+                "default": "약간 좌회전하세요.",
+                "name": "약간 좌회전 하고 {way_name}로 가세요.",
+                "destination": "약간 좌회전 하신 후 {destination}로 가세요."
+            },
+            "slight right": {
+                "default": "약간 우회전하세요.",
+                "name": "약간 우회전 하고 {way_name}로 가세요.",
+                "destination": "약간 우회전 하신 후 {destination}로 가세요."
+            },
+            "uturn": {
+                "default": "유턴 하세요",
+                "name": "유턴해서 {way_name}로 가세요.",
+                "destination": "유턴하신 후 {destination}로 가세요."
+            }
+        },
+        "depart": {
+            "default": {
+                "default": "{direction}로 가세요",
+                "name": "{direction} 로 가서 {way_name} 를 이용하세요. ",
+                "namedistance": "{direction}로 가서{way_name} 를 {distance}까지 가세요."
+            }
+        },
+        "end of road": {
+            "default": {
+                "default": "{modifier} 회전하세요.",
+                "name": "{modifier}회전하고 {way_name}로 가세요.",
+                "destination": "{modifier}회전 하신 후 {destination}로 가세요."
+            },
+            "straight": {
+                "default": "계속 직진해 주세요.",
+                "name": "{way_name}로 계속 직진해 주세요.",
+                "destination": "{destination}까지 직진해 주세요."
+            },
+            "uturn": {
+                "default": "도로 끝까지 가서 유턴해 주세요.",
+                "name": "도로 끝까지 가서 유턴해서 {way_name}로 가세요.",
+                "destination": "도로 끝까지 가서 유턴해서 {destination} 까지 가세요."
+            }
+        },
+        "fork": {
+            "default": {
+                "default": "갈림길에서 {modifier} 으로 가세요.",
+                "name": "{modifier}하고 {way_name}로 가세요.",
+                "destination": "{modifier}하고 {destination}까지 가세요."
+            },
+            "slight left": {
+                "default": "갈림길에서 좌회전 하세요.",
+                "name": "좌회전 해서 {way_name}로 가세요.",
+                "destination": "좌회전 해서 {destination}까지 가세요."
+            },
+            "slight right": {
+                "default": "갈림길에서 우회전 하세요.",
+                "name": "우회전 해서 {way_name}로 가세요.",
+                "destination": "우회전 해서 {destination}까지 가세요."
+            },
+            "sharp left": {
+                "default": "갈림길에서 급좌회전 하세요.",
+                "name": "급좌회전 해서 {way_name}로 가세요.",
+                "destination": "급좌회전 해서 {destination}까지 가세요."
+            },
+            "sharp right": {
+                "default": "갈림길에서 급우회전 하세요.",
+                "name": "급우회전 해서 {way_name}로 가세요.",
+                "destination": "급우회전 해서 {destination}까지 가세요."
+            },
+            "uturn": {
+                "default": "유턴하세요.",
+                "name": "유턴해서 {way_name}로 가세요.",
+                "destination": "유턴해서 {destination}까지 가세요."
+            }
+        },
+        "merge": {
+            "default": {
+                "default": "{modifier} 합류",
+                "name": "{modifier} 합류하여 {way_name}로 가세요.",
+                "destination": "{modifier} 합류하여 {destination}로 가세요."
+            },
+            "straight": {
+                "default": "합류",
+                "name": "{way_name}로 합류하세요.",
+                "destination": "{destination}로 합류하세요."
+            },
+            "slight left": {
+                "default": "좌측으로 합류하세요.",
+                "name": "좌측{way_name}로 합류하세요.",
+                "destination": "좌측으로 합류하여 {destination}까지 가세요."
+            },
+            "slight right": {
+                "default": "우측으로 합류하세요.",
+                "name": "우측{way_name}로 합류하세요.",
+                "destination": "우측으로 합류하여 {destination}까지 가세요."
+            },
+            "sharp left": {
+                "default": "좌측으로 합류하세요.",
+                "name": "좌측{way_name}로 합류하세요.",
+                "destination": "좌측으로 합류하여 {destination}까지 가세요."
+            },
+            "sharp right": {
+                "default": "우측으로 합류하세요.",
+                "name": "우측{way_name}로 합류하세요.",
+                "destination": "우측으로 합류하여 {destination}까지 가세요."
+            },
+            "uturn": {
+                "default": "유턴하세요.",
+                "name": "유턴해서 {way_name}로 가세요.",
+                "destination": "유턴해서 {destination}까지 가세요."
+            }
+        },
+        "new name": {
+            "default": {
+                "default": "{modifier} 유지하세요.",
+                "name": "{modifier} 유지해서 {way_name}로 가세요.",
+                "destination": "{modifier} 유지해서 {destination}까지 가세요."
+            },
+            "straight": {
+                "default": "직진해주세요.",
+                "name": "{way_name}로 계속 가세요.",
+                "destination": "{destination}까지 계속 가세요."
+            },
+            "sharp left": {
+                "default": "급좌회전 하세요.",
+                "name": "급좌회전 해서 {way_name}로 가세요.",
+                "destination": "급좌회전 해서 {destination}까지 가세요."
+            },
+            "sharp right": {
+                "default": "급우회전 하세요.",
+                "name": "급우회전 해서 {way_name}로 가세요.",
+                "destination": "급우회전 해서 {destination}까지 가세요."
+            },
+            "slight left": {
+                "default": "약간 좌회전 해세요.",
+                "name": "약간 좌회전해서 {way_name}로 가세요.",
+                "destination": "약간 좌회전 해서 {destination}까지 가세요."
+            },
+            "slight right": {
+                "default": "약간 우회전 해세요.",
+                "name": "약간 우회전해서 {way_name}로 가세요.",
+                "destination": "약간 우회전 해서 {destination}까지 가세요."
+            },
+            "uturn": {
+                "default": "유턴해주세요.",
+                "name": "유턴해서 {way_name}로 가세요.",
+                "destination": "유턴해서 {destination}까지 가세요."
+            }
+        },
+        "notification": {
+            "default": {
+                "default": "{modifier} 하세요.",
+                "name": "{modifier}해서 {way_name}로 가세요.",
+                "destination": "{modifier}해서 {destination}까지 가세요."
+            },
+            "uturn": {
+                "default": "유턴하세요.",
+                "name": "유턴해서 {way_name}로 가세요.",
+                "destination": "유턴해서 {destination}까지 가세요."
+            }
+        },
+        "off ramp": {
+            "default": {
+                "default": "램프로 진출해 주세요..",
+                "name": "램프로 진출해서 {way_name}로 가세요.",
+                "destination": "램프로 진출해서 {destination}까지 가세요.",
+                "exit": "{exit} 출구로 나가세요.",
+                "exit_destination": "{exit} 출구로 나가서 {destination}까지 가세요."
+            },
+            "left": {
+                "default": "왼쪽의 램프로 진출해 주세요.",
+                "name": "왼쪽의 램프로 진출해서 {way_name}로 가세요.",
+                "destination": "왼쪽의 램프로 진출해서 {destination}까지 가세요.",
+                "exit": "{exit} 왼쪽의 출구로 나가세요.",
+                "exit_destination": "{exit} 왼쪽의 출구로 가나서 {destination}까지 가세요."
+            },
+            "right": {
+                "default": "오른쪽의 램프로 진출해 주세요.",
+                "name": "오른쪽의 램프로 진출해서 {way_name}로 가세요.",
+                "destination": "오른쪽의 램프로 진출해서 {destination}까지 가세요.",
+                "exit": "{exit} 오른쪽의 출구로 나가세요.",
+                "exit_destination": "{exit} 오른쪽의 출구로 가나서 {destination}까지 가세요."
+            },
+            "sharp left": {
+                "default": "왼쪽의 램프로 진출해 주세요.",
+                "name": "왼쪽의 램프로 진출해서 {way_name}로 가세요.",
+                "destination": "왼쪽의 램프로 진출해서 {destination}까지 가세요.",
+                "exit": "{exit} 왼쪽의 출구로 나가세요.",
+                "exit_destination": "{exit} 왼쪽의 출구로 가나서 {destination}까지 가세요."
+            },
+            "sharp right": {
+                "default": "오른쪽의 램프로 진출해 주세요.",
+                "name": "오른쪽의 램프로 진출해서 {way_name}로 가세요.",
+                "destination": "오른쪽의 램프로 진출해서 {destination}까지 가세요.",
+                "exit": "{exit} 오른쪽의 출구로 나가세요.",
+                "exit_destination": "{exit} 오른쪽의 출구로 가나서 {destination}까지 가세요."
+            },
+            "slight left": {
+                "default": "왼쪽의 램프로 진출해 주세요.",
+                "name": "왼쪽의 램프로 진출해서 {way_name}로 가세요.",
+                "destination": "왼쪽의 램프로 진출해서 {destination}까지 가세요.",
+                "exit": "{exit} 왼쪽의 출구로 나가세요.",
+                "exit_destination": "{exit} 왼쪽의 출구로 가나서 {destination}까지 가세요."
+            },
+            "slight right": {
+                "default": "오른쪽의 램프로 진출해 주세요.",
+                "name": "오른쪽의 램프로 진출해서 {way_name}로 가세요.",
+                "destination": "오른쪽의 램프로 진출해서 {destination}까지 가세요.",
+                "exit": "{exit} 오른쪽의 출구로 나가세요.",
+                "exit_destination": "{exit} 오른쪽의 출구로 가나서 {destination}까지 가세요."
+            }
+        },
+        "on ramp": {
+            "default": {
+                "default": "램프로 진입해 주세요..",
+                "name": "램프로 진입해서 {way_name}로 가세요.",
+                "destination": "램프로 진입해서 {destination}까지 가세요."
+            },
+            "left": {
+                "default": "왼쪽의 램프로 진입해 주세요.",
+                "name": "왼쪽의 램프로 진입해서 {way_name}로 가세요.",
+                "destination": "왼쪽의 램프로 진입해서 {destination}까지 가세요."
+            },
+            "right": {
+                "default": "오른쪽의 램프로 진입해 주세요.",
+                "name": "오른쪽의 램프로 진입해서 {way_name}로 가세요.",
+                "destination": "오른쪽의 램프로 진입해서 {destination}까지 가세요."
+            },
+            "sharp left": {
+                "default": "왼쪽의 램프로 진입해 주세요.",
+                "name": "왼쪽의 램프로 진입해서 {way_name}로 가세요.",
+                "destination": "왼쪽의 램프로 진입해서 {destination}까지 가세요."
+            },
+            "sharp right": {
+                "default": "오른쪽의 램프로 진입해 주세요.",
+                "name": "오른쪽의 램프로 진입해서 {way_name}로 가세요.",
+                "destination": "오른쪽의 램프로 진입해서 {destination}까지 가세요."
+            },
+            "slight left": {
+                "default": "왼쪽의 램프로 진입해 주세요.",
+                "name": "왼쪽의 램프로 진입해서 {way_name}로 가세요.",
+                "destination": "왼쪽의 램프로 진입해서 {destination}까지 가세요."
+            },
+            "slight right": {
+                "default": "오른쪽의 램프로 진입해 주세요.",
+                "name": "오른쪽의 램프로 진입해서 {way_name}로 가세요.",
+                "destination": "오른쪽의 램프로 진입해서 {destination}까지 가세요."
+            }
+        },
+        "rotary": {
+            "default": {
+                "default": {
+                    "default": "로터리로 진입하세요.",
+                    "name": "로터리로 진입해서 {way_name} 나가세요.",
+                    "destination": "로터리로 진입해서 {destination}로 나가세요."
+                },
+                "name": {
+                    "default": "{rotary_name}로 진입하세요.",
+                    "name": "{rotary_name}로 진입해서 {way_name}로 나가세요.",
+                    "destination": "{rotary_name}로 진입해서 {destination}로 나가세요."
+                },
+                "exit": {
+                    "default": "로터리로 진입해서 {exit_number} 출구로 나가세요.",
+                    "name": "로터리로 진입해서 {exit_number} 출구로 나가 {way_name}로 가세요.",
+                    "destination": "로터리로 진입해서 {exit_number} 출구로 나가 {destination}로 가세요."
+                },
+                "name_exit": {
+                    "default": "{rotary_name}로 진입해서 {exit_number}번 출구로 나가세요.",
+                    "name": "{rotary_name}로 진입해서 {exit_number}번 출구로 나가 {way_name}로 가세요.",
+                    "destination": "{rotary_name}로 진입해서 {exit_number}번 출구로 나가 {destination}로 가세요."
+                }
+            }
+        },
+        "roundabout": {
+            "default": {
+                "exit": {
+                    "default": "로터리로 진입해서 {exit_number}로 나가세요.",
+                    "name": "로터리로 진입해서 {exit_number}로 나가서 {way_name}로 가세요.",
+                    "destination": "로터리로 진입해서 {exit_number}로 나가서 {destination}로 가세요."
+                },
+                "default": {
+                    "default": "로터리로 진입하세요.",
+                    "name": "로터리로 진입해서 {way_name} 나가세요.",
+                    "destination": "로터리로 진입해서 {destination}로 나가세요."
+                }
+            }
+        },
+        "roundabout turn": {
+            "default": {
+                "default": "{modifier} 하세요.",
+                "name": "{modifier} 하시고 {way_name}로 가세요.",
+                "destination": "{modifier} 하시고 {destination}까지 가세요."
+            },
+            "left": {
+                "default": "좌회전 하세요.",
+                "name": "좌회전 하시고 {way_name}로 가세요.",
+                "destination": "좌회전 하시고 {destination}까지 가세요."
+            },
+            "right": {
+                "default": "우회전 하세요.",
+                "name": "우회전 하시고 {way_name}로 가세요.",
+                "destination": "우회전 하시고 {destination}까지 가세요."
+            },
+            "straight": {
+                "default": "직진 하세요.",
+                "name": "직진하시고 {way_name}로 가세요.",
+                "destination": "직진하시고 {destination}까지 가세요."
+            }
+        },
+        "exit roundabout": {
+            "default": {
+                "default": "로타리에서 진출하세요.",
+                "name": "로타리에서 진출해서 {way_name}로 가세요.",
+                "destination": "로타리에서 진출해서 {destination}까지 가세요."
+            }
+        },
+        "exit rotary": {
+            "default": {
+                "default": "로타리에서 진출하세요.",
+                "name": "로타리에서 진출해서 {way_name}로 가세요.",
+                "destination": "로타리에서 진출해서 {destination}까지 가세요."
+            }
+        },
+        "turn": {
+            "default": {
+                "default": "{modifier} 하세요.",
+                "name": "{modifier} 하시고 {way_name}로 가세요.",
+                "destination": "{modifier} 하시고 {destination}까지 가세요."
+            },
+            "left": {
+                "default": "좌회전 하세요.",
+                "name": "좌회전 하시고 {way_name}로 가세요.",
+                "destination": "좌회전 하시고 {destination}까지 가세요."
+            },
+            "right": {
+                "default": "우회전 하세요.",
+                "name": "우회전 하시고 {way_name}로 가세요.",
+                "destination": "우회전 하시고 {destination}까지 가세요."
+            },
+            "straight": {
+                "default": "직진 하세요.",
+                "name": "직진하시고 {way_name}로 가세요.",
+                "destination": "직진하시고 {destination}까지 가세요."
+            }
+        },
+        "use lane": {
+            "no_lanes": {
+                "default": "직진하세요."
+            },
+            "default": {
+                "default": "{lane_instruction}"
+            }
+        }
+    }
+}

@@ -1,0 +1,493 @@
+{
+    "meta": {
+        "capitalizeFirstLetter": true
+    },
+    "v5": {
+        "constants": {
+            "ordinalize": {
+                "1": "đầu tiên",
+                "2": "thứ 2",
+                "3": "thứ 3",
+                "4": "thứ 4",
+                "5": "thứ 5",
+                "6": "thú 6",
+                "7": "thứ 7",
+                "8": "thứ 8",
+                "9": "thứ 9",
+                "10": "thứ 10"
+            },
+            "direction": {
+                "north": "bắc",
+                "northeast": "đông bắc",
+                "east": "đông",
+                "southeast": "đông nam",
+                "south": "nam",
+                "southwest": "tây nam",
+                "west": "tây",
+                "northwest": "tây bắc"
+            },
+            "modifier": {
+                "left": "trái",
+                "right": "phải",
+                "sharp left": "trái gắt",
+                "sharp right": "phải gắt",
+                "slight left": "trái nghiêng",
+                "slight right": "phải nghiêng",
+                "straight": "thẳng",
+                "uturn": "ngược"
+            },
+            "lanes": {
+                "xo": "Đi bên phải",
+                "ox": "Đi bên trái",
+                "xox": "Đi vào giữa",
+                "oxo": "Đi bên trái hay bên phải"
+            }
+        },
+        "modes": {
+            "ferry": {
+                "default": "Lên phà",
+                "name": "Lên phà {way_name}",
+                "destination": "Lên phà đi {destination}"
+            }
+        },
+        "phrase": {
+            "two linked by distance": "{instruction_one}, rồi {distance} nữa thì {instruction_two}",
+            "two linked": "{instruction_one}, rồi {instruction_two}",
+            "one in distance": "{distance} nữa thì {instruction_one}",
+            "name and ref": "{name} ({ref})",
+            "exit with number": "lối ra {exit}"
+        },
+        "arrive": {
+            "default": {
+                "default": "Đến nơi {nth}",
+                "upcoming": "Đến nơi {nth}",
+                "short": "Đến nơi",
+                "short-upcoming": "Đến nơi",
+                "named": "Đến {waypoint_name}"
+            },
+            "left": {
+                "default": "Đến nơi {nth} ở bên trái",
+                "upcoming": "Đến nơi {nth} ở bên trái",
+                "short": "Đến nơi",
+                "short-upcoming": "Đến nơi",
+                "named": "Đến {waypoint_name} ở bên trái"
+            },
+            "right": {
+                "default": "Đến nơi {nth} ở bên phải",
+                "upcoming": "Đến nơi {nth} ở bên phải",
+                "short": "Đến nơi",
+                "short-upcoming": "Đến nơi",
+                "named": "Đến {waypoint_name} ở bên phải"
+            },
+            "sharp left": {
+                "default": "Đến nơi {nth} ở bên trái",
+                "upcoming": "Đến nơi {nth} ở bên trái",
+                "short": "Đến nơi",
+                "short-upcoming": "Đến nơi",
+                "named": "Đến {waypoint_name} ở bên trái"
+            },
+            "sharp right": {
+                "default": "Đến nơi {nth} ở bên phải",
+                "upcoming": "Đến nơi {nth} ở bên phải",
+                "short": "Đến nơi",
+                "short-upcoming": "Đến nơi",
+                "named": "Đến {waypoint_name} ở bên phải"
+            },
+            "slight right": {
+                "default": "Đến nơi {nth} ở bên phải",
+                "upcoming": "Đến nơi {nth} ở bên phải",
+                "short": "Đến nơi",
+                "short-upcoming": "Đến nơi",
+                "named": "Đến {waypoint_name} ở bên phải"
+            },
+            "slight left": {
+                "default": "Đến nơi {nth} ở bên trái",
+                "upcoming": "Đến nơi {nth} ở bên trái",
+                "short": "Đến nơi",
+                "short-upcoming": "Đến nơi",
+                "named": "Đến {waypoint_name} ở bên trái"
+            },
+            "straight": {
+                "default": "Đến nơi {nth} ở trước mặt",
+                "upcoming": "Đến nơi {nth} ở trước mặt",
+                "short": "Đến nơi",
+                "short-upcoming": "Đến nơi",
+                "named": "Đến {waypoint_name} ở trước mặt"
+            }
+        },
+        "continue": {
+            "default": {
+                "default": "Quẹo {modifier}",
+                "name": "Quẹo {modifier} để chạy tiếp trên {way_name}",
+                "destination": "Quẹo {modifier} về {destination}",
+                "exit": "Quẹo {modifier} vào {way_name}"
+            },
+            "straight": {
+                "default": "Chạy thẳng",
+                "name": "Chạy tiếp trên {way_name}",
+                "destination": "Chạy tiếp về {destination}",
+                "distance": "Chạy thẳng cho {distance}",
+                "namedistance": "Chạy tiếp trên {way_name} cho {distance}"
+            },
+            "sharp left": {
+                "default": "Quẹo gắt bên trái",
+                "name": "Quẹo gắt bên trái để chạy tiếp trên {way_name}",
+                "destination": "Quẹo gắt bên trái về {destination}"
+            },
+            "sharp right": {
+                "default": "Quẹo gắt bên phải",
+                "name": "Quẹo gắt bên phải để chạy tiếp trên {way_name}",
+                "destination": "Quẹo gắt bên phải về {destination}"
+            },
+            "slight left": {
+                "default": "Nghiêng về bên trái",
+                "name": "Nghiêng về bên trái để chạy tiếp trên {way_name}",
+                "destination": "Nghiêng về bên trái về {destination}"
+            },
+            "slight right": {
+                "default": "Nghiêng về bên phải",
+                "name": "Nghiêng về bên phải để chạy tiếp trên {way_name}",
+                "destination": "Nghiêng về bên phải về {destination}"
+            },
+            "uturn": {
+                "default": "Quẹo ngược lại",
+                "name": "Quẹo ngược lại trên {way_name}",
+                "destination": "Quẹo ngược về {destination}"
+            }
+        },
+        "depart": {
+            "default": {
+                "default": "Đi về hướng {direction}",
+                "name": "Đi về hướng {direction} trên {way_name}",
+                "namedistance": "Đi về hướng {direction} trên {way_name} cho {distance}"
+            }
+        },
+        "end of road": {
+            "default": {
+                "default": "Quẹo {modifier}",
+                "name": "Quẹo {modifier} vào {way_name}",
+                "destination": "Quẹo {modifier} về {destination}"
+            },
+            "straight": {
+                "default": "Chạy thẳng",
+                "name": "Chạy tiếp trên {way_name}",
+                "destination": "Chạy tiếp về {destination}"
+            },
+            "uturn": {
+                "default": "Quẹo ngược lại tại cuối đường",
+                "name": "Quẹo ngược vào {way_name} tại cuối đường",
+                "destination": "Quẹo ngược về {destination} tại cuối đường"
+            }
+        },
+        "fork": {
+            "default": {
+                "default": "Đi bên {modifier} ở ngã ba",
+                "name": "Giữ bên {modifier} vào {way_name}",
+                "destination": "Giữ bên {modifier} về {destination}"
+            },
+            "slight left": {
+                "default": "Nghiêng về bên trái ở ngã ba",
+                "name": "Giữ bên trái vào {way_name}",
+                "destination": "Giữ bên trái về {destination}"
+            },
+            "slight right": {
+                "default": "Nghiêng về bên phải ở ngã ba",
+                "name": "Giữ bên phải vào {way_name}",
+                "destination": "Giữ bên phải về {destination}"
+            },
+            "sharp left": {
+                "default": "Quẹo gắt bên trái ở ngã ba",
+                "name": "Quẹo gắt bên trái vào {way_name}",
+                "destination": "Quẹo gắt bên trái về {destination}"
+            },
+            "sharp right": {
+                "default": "Quẹo gắt bên phải ở ngã ba",
+                "name": "Quẹo gắt bên phải vào {way_name}",
+                "destination": "Quẹo gắt bên phải về {destination}"
+            },
+            "uturn": {
+                "default": "Quẹo ngược lại",
+                "name": "Quẹo ngược lại {way_name}",
+                "destination": "Quẹo ngược lại về {destination}"
+            }
+        },
+        "merge": {
+            "default": {
+                "default": "Nhập sang {modifier}",
+                "name": "Nhập sang {modifier} vào {way_name}",
+                "destination": "Nhập sang {modifier} về {destination}"
+            },
+            "straight": {
+                "default": "Nhập đường",
+                "name": "Nhập vào {way_name}",
+                "destination": "Nhập đường về {destination}"
+            },
+            "slight left": {
+                "default": "Nhập sang trái",
+                "name": "Nhập sang trái vào {way_name}",
+                "destination": "Nhập sang trái về {destination}"
+            },
+            "slight right": {
+                "default": "Nhập sang phải",
+                "name": "Nhập sang phải vào {way_name}",
+                "destination": "Nhập sang phải về {destination}"
+            },
+            "sharp left": {
+                "default": "Nhập sang trái",
+                "name": "Nhập sang trái vào {way_name}",
+                "destination": "Nhập sang trái về {destination}"
+            },
+            "sharp right": {
+                "default": "Nhập sang phải",
+                "name": "Nhập sang phải vào {way_name}",
+                "destination": "Nhập sang phải về {destination}"
+            },
+            "uturn": {
+                "default": "Quẹo ngược lại",
+                "name": "Quẹo ngược lại {way_name}",
+                "destination": "Quẹo ngược lại về {destination}"
+            }
+        },
+        "new name": {
+            "default": {
+                "default": "Chạy tiếp bên {modifier}",
+                "name": "Chạy tiếp bên {modifier} trên {way_name}",
+                "destination": "Chạy tiếp bên {modifier} về {destination}"
+            },
+            "straight": {
+                "default": "Chạy thẳng",
+                "name": "Chạy tiếp trên {way_name}",
+                "destination": "Chạy tiếp về {destination}"
+            },
+            "sharp left": {
+                "default": "Quẹo gắt bên trái",
+                "name": "Quẹo gắt bên trái vào {way_name}",
+                "destination": "Quẹo gắt bên trái về {destination}"
+            },
+            "sharp right": {
+                "default": "Quẹo gắt bên phải",
+                "name": "Quẹo gắt bên phải vào {way_name}",
+                "destination": "Quẹo gắt bên phải về {destination}"
+            },
+            "slight left": {
+                "default": "Nghiêng về bên trái",
+                "name": "Nghiêng về bên trái vào {way_name}",
+                "destination": "Nghiêng về bên trái về {destination}"
+            },
+            "slight right": {
+                "default": "Nghiêng về bên phải",
+                "name": "Nghiêng về bên phải vào {way_name}",
+                "destination": "Nghiêng về bên phải về {destination}"
+            },
+            "uturn": {
+                "default": "Quẹo ngược lại",
+                "name": "Quẹo ngược lại {way_name}",
+                "destination": "Quẹo ngược lại về {destination}"
+            }
+        },
+        "notification": {
+            "default": {
+                "default": "Chạy tiếp bên {modifier}",
+                "name": "Chạy tiếp bên {modifier} trên {way_name}",
+                "destination": "Chạy tiếp bên {modifier} về {destination}"
+            },
+            "uturn": {
+                "default": "Quẹo ngược lại",
+                "name": "Quẹo ngược lại {way_name}",
+                "destination": "Quẹo ngược lại về {destination}"
+            }
+        },
+        "off ramp": {
+            "default": {
+                "default": "Đi đường nhánh",
+                "name": "Đi đường nhánh {way_name}",
+                "destination": "Đi đường nhánh về {destination}",
+                "exit": "Đi theo lối ra {exit}",
+                "exit_destination": "Đi theo lối ra {exit} về {destination}"
+            },
+            "left": {
+                "default": "Đi đường nhánh bên trái",
+                "name": "Đi đường nhánh {way_name} bên trái",
+                "destination": "Đi đường nhánh bên trái về {destination}",
+                "exit": "Đi theo lối ra {exit} bên trái",
+                "exit_destination": "Đi theo lối ra {exit} bên trái về {destination}"
+            },
+            "right": {
+                "default": "Đi đường nhánh bên phải",
+                "name": "Đi đường nhánh {way_name} bên phải",
+                "destination": "Đi đường nhánh bên phải về {destination}",
+                "exit": "Đi theo lối ra {exit} bên phải",
+                "exit_destination": "Đi theo lối ra {exit} bên phải về {destination}"
+            },
+            "sharp left": {
+                "default": "Đi đường nhánh bên trái",
+                "name": "Đi đường nhánh {way_name} bên trái",
+                "destination": "Đi đường nhánh bên trái về {destination}",
+                "exit": "Đi theo lối ra {exit} bên trái",
+                "exit_destination": "Đi theo lối ra {exit} bên trái về {destination}"
+            },
+            "sharp right": {
+                "default": "Đi đường nhánh bên phải",
+                "name": "Đi đường nhánh {way_name} bên phải",
+                "destination": "Đi đường nhánh bên phải về {destination}",
+                "exit": "Đi theo lối ra {exit} bên phải",
+                "exit_destination": "Đi theo lối ra {exit} bên phải về {destination}"
+            },
+            "slight left": {
+                "default": "Đi đường nhánh bên trái",
+                "name": "Đi đường nhánh {way_name} bên trái",
+                "destination": "Đi đường nhánh bên trái về {destination}",
+                "exit": "Đi theo lối ra {exit} bên trái",
+                "exit_destination": "Đi theo lối ra {exit} bên trái về {destination}"
+            },
+            "slight right": {
+                "default": "Đi đường nhánh bên phải",
+                "name": "Đi đường nhánh {way_name} bên phải",
+                "destination": "Đi đường nhánh bên phải về {destination}",
+                "exit": "Đi theo lối ra {exit} bên phải",
+                "exit_destination": "Đi theo lối ra {exit} bên phải về {destination}"
+            }
+        },
+        "on ramp": {
+            "default": {
+                "default": "Đi đường nhánh",
+                "name": "Đi đường nhánh {way_name}",
+                "destination": "Đi đường nhánh về {destination}"
+            },
+            "left": {
+                "default": "Đi đường nhánh bên trái",
+                "name": "Đi đường nhánh {way_name} bên trái",
+                "destination": "Đi đường nhánh bên trái về {destination}"
+            },
+            "right": {
+                "default": "Đi đường nhánh bên phải",
+                "name": "Đi đường nhánh {way_name} bên phải",
+                "destination": "Đi đường nhánh bên phải về {destination}"
+            },
+            "sharp left": {
+                "default": "Đi đường nhánh bên trái",
+                "name": "Đi đường nhánh {way_name} bên trái",
+                "destination": "Đi đường nhánh bên trái về {destination}"
+            },
+            "sharp right": {
+                "default": "Đi đường nhánh bên phải",
+                "name": "Đi đường nhánh {way_name} bên phải",
+                "destination": "Đi đường nhánh bên phải về {destination}"
+            },
+            "slight left": {
+                "default": "Đi đường nhánh bên trái",
+                "name": "Đi đường nhánh {way_name} bên trái",
+                "destination": "Đi đường nhánh bên trái về {destination}"
+            },
+            "slight right": {
+                "default": "Đi đường nhánh bên phải",
+                "name": "Đi đường nhánh {way_name} bên phải",
+                "destination": "Đi đường nhánh bên phải về {destination}"
+            }
+        },
+        "rotary": {
+            "default": {
+                "default": {
+                    "default": "Đi vào bùng binh",
+                    "name": "Đi vào bùng binh và ra tại {way_name}",
+                    "destination": "Đi vào bùng binh và ra về {destination}"
+                },
+                "name": {
+                    "default": "Đi vào {rotary_name}",
+                    "name": "Đi vào {rotary_name} và ra tại {way_name}",
+                    "destination": "Đi và {rotary_name} và ra về {destination}"
+                },
+                "exit": {
+                    "default": "Đi vào bùng binh và ra tại đường {exit_number}",
+                    "name": "Đi vào bùng binh và ra tại đường {exit_number} tức {way_name}",
+                    "destination": "Đi vào bùng binh và ra tại đường {exit_number} về {destination}"
+                },
+                "name_exit": {
+                    "default": "Đi vào {rotary_name} và ra tại đường {exit_number}",
+                    "name": "Đi vào {rotary_name} và ra tại đường {exit_number} tức {way_name}",
+                    "destination": "Đi vào {rotary_name} và ra tại đường {exit_number} về {destination}"
+                }
+            }
+        },
+        "roundabout": {
+            "default": {
+                "exit": {
+                    "default": "Đi vào bùng binh và ra tại đường {exit_number}",
+                    "name": "Đi vào bùng binh và ra tại đường {exit_number} tức {way_name}",
+                    "destination": "Đi vào bùng binh và ra tại đường {exit_number} về {destination}"
+                },
+                "default": {
+                    "default": "Đi vào bùng binh",
+                    "name": "Đi vào bùng binh và ra tại {way_name}",
+                    "destination": "Đi vào bùng binh và ra về {destination}"
+                }
+            }
+        },
+        "roundabout turn": {
+            "default": {
+                "default": "Quẹo {modifier}",
+                "name": "Quẹo {modifier} vào {way_name}",
+                "destination": "Quẹo {modifier} về {destination}"
+            },
+            "left": {
+                "default": "Quẹo trái",
+                "name": "Quẹo trái vào {way_name}",
+                "destination": "Quẹo trái về {destination}"
+            },
+            "right": {
+                "default": "Quẹo phải",
+                "name": "Quẹo phải vào {way_name}",
+                "destination": "Quẹo phải về {destination}"
+            },
+            "straight": {
+                "default": "Chạy thẳng",
+                "name": "Chạy tiếp trên {way_name}",
+                "destination": "Chạy tiếp về {destination}"
+            }
+        },
+        "exit roundabout": {
+            "default": {
+                "default": "Ra bùng binh",
+                "name": "Ra bùng binh vào {way_name}",
+                "destination": "Ra bùng binh về {destination}"
+            }
+        },
+        "exit rotary": {
+            "default": {
+                "default": "Ra bùng binh",
+                "name": "Ra bùng binh vào {way_name}",
+                "destination": "Ra bùng binh về {destination}"
+            }
+        },
+        "turn": {
+            "default": {
+                "default": "Quẹo {modifier}",
+                "name": "Quẹo {modifier} vào {way_name}",
+                "destination": "Quẹo {modifier} về {destination}"
+            },
+            "left": {
+                "default": "Quẹo trái",
+                "name": "Quẹo trái vào {way_name}",
+                "destination": "Quẹo trái về {destination}"
+            },
+            "right": {
+                "default": "Quẹo phải",
+                "name": "Quẹo phải vào {way_name}",
+                "destination": "Quẹo phải về {destination}"
+            },
+            "straight": {
+                "default": "Chạy thẳng",
+                "name": "Chạy thẳng vào {way_name}",
+                "destination": "Chạy thẳng về {destination}"
+            }
+        },
+        "use lane": {
+            "no_lanes": {
+                "default": "Chạy thẳng"
+            },
+            "default": {
+                "default": "{lane_instruction}"
+            }
+        }
+    }
+}

@@ -1,0 +1,523 @@
+{
+    "meta": {
+        "capitalizeFirstLetter": true
+    },
+    "v5": {
+        "constants": {
+            "ordinalize": {
+                "1": "1",
+                "2": "2",
+                "3": "3",
+                "4": "4",
+                "5": "5",
+                "6": "6",
+                "7": "7",
+                "8": "8",
+                "9": "9",
+                "10": "10"
+            },
+            "direction": {
+                "north": "utara",
+                "northeast": "timur laut",
+                "east": "timur",
+                "southeast": "tenggara",
+                "south": "selatan",
+                "southwest": "barat daya",
+                "west": "barat",
+                "northwest": "barat laut"
+            },
+            "modifier": {
+                "left": "kiri",
+                "right": "kanan",
+                "sharp left": "tajam kiri",
+                "sharp right": "tajam kanan",
+                "slight left": "agak ke kiri",
+                "slight right": "agak ke kanan",
+                "straight": "lurus",
+                "uturn": "putar balik"
+            },
+            "lanes": {
+                "xo": "Tetap di kanan",
+                "ox": "Tetap di kiri",
+                "xox": "Tetap di tengah",
+                "oxo": "Tetap di kiri atau kanan"
+            }
+        },
+        "modes": {
+            "ferry": {
+                "default": "Naik ferry",
+                "name": "Naik ferry di {way_name}",
+                "destination": "Naik ferry menuju {destination}"
+            }
+        },
+        "phrase": {
+            "two linked by distance": "{instruction_one}, then, in {distance}, {instruction_two}",
+            "two linked": "{instruction_one}, then {instruction_two}",
+            "one in distance": "In {distance}, {instruction_one}",
+            "name and ref": "{name} ({ref})",
+            "exit with number": "exit {exit}"
+        },
+        "arrive": {
+            "default": {
+                "default": "Anda telah tiba di tujuan ke-{nth}",
+                "upcoming": "Anda telah tiba di tujuan ke-{nth}",
+                "short": "Anda telah tiba di tujuan ke-{nth}",
+                "short-upcoming": "Anda telah tiba di tujuan ke-{nth}",
+                "named": "Anda telah tiba di {waypoint_name}"
+            },
+            "left": {
+                "default": "Anda telah tiba di tujuan ke-{nth}, di sebelah kiri",
+                "upcoming": "Anda telah tiba di tujuan ke-{nth}, di sebelah kiri",
+                "short": "Anda telah tiba di tujuan ke-{nth}",
+                "short-upcoming": "Anda telah tiba di tujuan ke-{nth}",
+                "named": "Anda telah tiba di {waypoint_name}, di sebelah kiri"
+            },
+            "right": {
+                "default": "Anda telah tiba di tujuan ke-{nth}, di sebelah kanan",
+                "upcoming": "Anda telah tiba di tujuan ke-{nth}, di sebelah kanan",
+                "short": "Anda telah tiba di tujuan ke-{nth}",
+                "short-upcoming": "Anda telah tiba di tujuan ke-{nth}",
+                "named": "Anda telah tiba di {waypoint_name}, di sebelah kanan"
+            },
+            "sharp left": {
+                "default": "Anda telah tiba di tujuan ke-{nth}, di sebelah kiri",
+                "upcoming": "Anda telah tiba di tujuan ke-{nth}, di sebelah kiri",
+                "short": "Anda telah tiba di tujuan ke-{nth}",
+                "short-upcoming": "Anda telah tiba di tujuan ke-{nth}",
+                "named": "Anda telah tiba di {waypoint_name}, di sebelah kiri"
+            },
+            "sharp right": {
+                "default": "Anda telah tiba di tujuan ke-{nth}, di sebelah kanan",
+                "upcoming": "Anda telah tiba di tujuan ke-{nth}, di sebelah kanan",
+                "short": "Anda telah tiba di tujuan ke-{nth}",
+                "short-upcoming": "Anda telah tiba di tujuan ke-{nth}",
+                "named": "Anda telah tiba di {waypoint_name}, di sebelah kanan"
+            },
+            "slight right": {
+                "default": "Anda telah tiba di tujuan ke-{nth}, di sebelah kanan",
+                "upcoming": "Anda telah tiba di tujuan ke-{nth}, di sebelah kanan",
+                "short": "Anda telah tiba di tujuan ke-{nth}",
+                "short-upcoming": "Anda telah tiba di tujuan ke-{nth}",
+                "named": "Anda telah tiba di {waypoint_name}, di sebelah kanan"
+            },
+            "slight left": {
+                "default": "Anda telah tiba di tujuan ke-{nth}, di sebelah kiri",
+                "upcoming": "Anda telah tiba di tujuan ke-{nth}, di sebelah kiri",
+                "short": "Anda telah tiba di tujuan ke-{nth}",
+                "short-upcoming": "Anda telah tiba di tujuan ke-{nth}",
+                "named": "Anda telah tiba di {waypoint_name}, di sebelah kiri"
+            },
+            "straight": {
+                "default": "Anda telah tiba di tujuan ke-{nth}, lurus saja",
+                "upcoming": "Anda telah tiba di tujuan ke-{nth}, lurus saja",
+                "short": "Anda telah tiba di tujuan ke-{nth}",
+                "short-upcoming": "Anda telah tiba di tujuan ke-{nth}",
+                "named": "Anda telah tiba di {waypoint_name}, lurus saja"
+            }
+        },
+        "continue": {
+            "default": {
+                "default": "Belok {modifier}",
+                "name": "Terus {modifier} ke {way_name}",
+                "destination": "Belok {modifier} menuju {destination}",
+                "exit": "Belok {modifier} ke {way_name}"
+            },
+            "straight": {
+                "default": "Lurus terus",
+                "name": "Terus ke {way_name}",
+                "destination": "Terus menuju {destination}",
+                "distance": "Continue straight for {distance}",
+                "namedistance": "Continue on {way_name} for {distance}"
+            },
+            "sharp left": {
+                "default": "Belok kiri tajam",
+                "name": "Make a sharp left to stay on {way_name}",
+                "destination": "Belok kiri tajam menuju {destination}"
+            },
+            "sharp right": {
+                "default": "Belok kanan tajam",
+                "name": "Make a sharp right to stay on {way_name}",
+                "destination": "Belok kanan tajam menuju {destination}"
+            },
+            "slight left": {
+                "default": "Tetap agak di kiri",
+                "name": "Tetap agak di kiri ke {way_name}",
+                "destination": "Tetap agak di kiri menuju {destination}"
+            },
+            "slight right": {
+                "default": "Tetap agak di kanan",
+                "name": "Tetap agak di kanan ke {way_name}",
+                "destination": "Tetap agak di kanan menuju {destination}"
+            },
+            "uturn": {
+                "default": "Putar balik",
+                "name": "Putar balik ke arah {way_name}",
+                "destination": "Putar balik menuju {destination}"
+            }
+        },
+        "depart": {
+            "default": {
+                "default": "Arah {direction}",
+                "name": "Arah {direction} di {way_name}",
+                "namedistance": "Head {direction} on {way_name} for {distance}"
+            }
+        },
+        "end of road": {
+            "default": {
+                "default": "Belok {modifier}",
+                "name": "Belok {modifier} ke {way_name}",
+                "destination": "Belok {modifier} menuju {destination}"
+            },
+            "straight": {
+                "default": "Lurus terus",
+                "name": "Tetap lurus ke {way_name} ",
+                "destination": "Tetap lurus menuju {destination}"
+            },
+            "uturn": {
+                "default": "Putar balik di akhir jalan",
+                "name": "Putar balik di {way_name} di akhir jalan",
+                "destination": "Putar balik menuju {destination} di akhir jalan"
+            }
+        },
+        "fork": {
+            "default": {
+                "default": "Tetap {modifier} di pertigaan",
+                "name": "Tetap {modifier} di pertigaan ke {way_name}",
+                "destination": "Tetap {modifier} di pertigaan menuju {destination}"
+            },
+            "slight left": {
+                "default": "Tetap di kiri pada pertigaan",
+                "name": "Tetap di kiri pada pertigaan ke arah {way_name}",
+                "destination": "Tetap di kiri pada pertigaan menuju {destination}"
+            },
+            "slight right": {
+                "default": "Tetap di kanan pada pertigaan",
+                "name": "Tetap di kanan pada pertigaan ke arah {way_name}",
+                "destination": "Tetap di kanan pada pertigaan menuju {destination}"
+            },
+            "sharp left": {
+                "default": "Belok kiri pada pertigaan",
+                "name": "Belok kiri tajam ke arah {way_name}",
+                "destination": "Belok kiri tajam menuju {destination}"
+            },
+            "sharp right": {
+                "default": "Belok kanan pada pertigaan",
+                "name": "Belok kanan tajam ke arah {way_name}",
+                "destination": "Belok kanan tajam menuju {destination}"
+            },
+            "uturn": {
+                "default": "Putar balik",
+                "name": "Putar balik ke arah {way_name}",
+                "destination": "Putar balik menuju {destination}"
+            }
+        },
+        "merge": {
+            "default": {
+                "default": "Bergabung {modifier}",
+                "name": "Bergabung {modifier} ke arah {way_name}",
+                "destination": "Bergabung {modifier} menuju {destination}"
+            },
+            "straight": {
+                "default": "Bergabung lurus",
+                "name": "Bergabung lurus ke arah {way_name}",
+                "destination": "Bergabung lurus menuju {destination}"
+            },
+            "slight left": {
+                "default": "Bergabung di kiri",
+                "name": "Bergabung di kiri ke arah {way_name}",
+                "destination": "Bergabung di kiri menuju {destination}"
+            },
+            "slight right": {
+                "default": "Bergabung di kanan",
+                "name": "Bergabung di kanan ke arah {way_name}",
+                "destination": "Bergabung di kanan menuju {destination}"
+            },
+            "sharp left": {
+                "default": "Bergabung di kiri",
+                "name": "Bergabung di kiri ke arah {way_name}",
+                "destination": "Bergabung di kiri menuju {destination}"
+            },
+            "sharp right": {
+                "default": "Bergabung di kanan",
+                "name": "Bergabung di kanan ke arah {way_name}",
+                "destination": "Bergabung di kanan menuju {destination}"
+            },
+            "uturn": {
+                "default": "Putar balik",
+                "name": "Putar balik ke arah {way_name}",
+                "destination": "Putar balik menuju {destination}"
+            }
+        },
+        "new name": {
+            "default": {
+                "default": "Lanjutkan {modifier}",
+                "name": "Lanjutkan {modifier} menuju {way_name}",
+                "destination": "Lanjutkan {modifier} menuju {destination}"
+            },
+            "straight": {
+                "default": "Lurus terus",
+                "name": "Terus ke {way_name}",
+                "destination": "Terus menuju {destination}"
+            },
+            "sharp left": {
+                "default": "Belok kiri tajam",
+                "name": "Belok kiri tajam ke arah {way_name}",
+                "destination": "Belok kiri tajam menuju {destination}"
+            },
+            "sharp right": {
+                "default": "Belok kanan tajam",
+                "name": "Belok kanan tajam ke arah {way_name}",
+                "destination": "Belok kanan tajam menuju {destination}"
+            },
+            "slight left": {
+                "default": "Lanjut dengan agak ke kiri",
+                "name": "Lanjut dengan agak di kiri ke {way_name}",
+                "destination": "Tetap agak di kiri menuju {destination}"
+            },
+            "slight right": {
+                "default": "Tetap agak di kanan",
+                "name": "Tetap agak di kanan ke {way_name}",
+                "destination": "Tetap agak di kanan menuju {destination}"
+            },
+            "uturn": {
+                "default": "Putar balik",
+                "name": "Putar balik ke arah {way_name}",
+                "destination": "Putar balik menuju {destination}"
+            }
+        },
+        "notification": {
+            "default": {
+                "default": "Lanjutkan {modifier}",
+                "name": "Lanjutkan {modifier} menuju {way_name}",
+                "destination": "Lanjutkan {modifier} menuju {destination}"
+            },
+            "uturn": {
+                "default": "Putar balik",
+                "name": "Putar balik ke arah {way_name}",
+                "destination": "Putar balik menuju {destination}"
+            }
+        },
+        "off ramp": {
+            "default": {
+                "default": "Ambil jalan melandai",
+                "name": "Ambil jalan melandai ke {way_name}",
+                "destination": "Ambil jalan melandai menuju {destination}",
+                "exit": "Take exit {exit}",
+                "exit_destination": "Take exit {exit} towards {destination}"
+            },
+            "left": {
+                "default": "Ambil jalan yang melandai di sebelah kiri",
+                "name": "Ambil jalan melandai di sebelah kiri ke arah {way_name}",
+                "destination": "Ambil jalan melandai di sebelah kiri menuju {destination}",
+                "exit": "Take exit {exit} on the left",
+                "exit_destination": "Take exit {exit} on the left towards {destination}"
+            },
+            "right": {
+                "default": "Ambil jalan melandai di sebelah kanan",
+                "name": "Ambil jalan melandai di sebelah kanan ke {way_name}",
+                "destination": "Ambil jalan melandai di sebelah kanan menuju {destination}",
+                "exit": "Take exit {exit} on the right",
+                "exit_destination": "Take exit {exit} on the right towards {destination}"
+            },
+            "sharp left": {
+                "default": "Ambil jalan yang melandai di sebelah kiri",
+                "name": "Ambil jalan melandai di sebelah kiri ke arah {way_name}",
+                "destination": "Ambil jalan melandai di sebelah kiri menuju {destination}",
+                "exit": "Take exit {exit} on the left",
+                "exit_destination": "Take exit {exit} on the left towards {destination}"
+            },
+            "sharp right": {
+                "default": "Ambil jalan melandai di sebelah kanan",
+                "name": "Ambil jalan melandai di sebelah kanan ke {way_name}",
+                "destination": "Ambil jalan melandai di sebelah kanan menuju {destination}",
+                "exit": "Take exit {exit} on the right",
+                "exit_destination": "Take exit {exit} on the right towards {destination}"
+            },
+            "slight left": {
+                "default": "Ambil jalan yang melandai di sebelah kiri",
+                "name": "Ambil jalan melandai di sebelah kiri ke arah {way_name}",
+                "destination": "Ambil jalan melandai di sebelah kiri menuju {destination}",
+                "exit": "Take exit {exit} on the left",
+                "exit_destination": "Take exit {exit} on the left towards {destination}"
+            },
+            "slight right": {
+                "default": "Ambil jalan melandai di sebelah kanan",
+                "name": "Ambil jalan melandai di sebelah kanan ke {way_name}",
+                "destination": "Ambil jalan melandai di sebelah kanan  menuju {destination}",
+                "exit": "Take exit {exit} on the right",
+                "exit_destination": "Take exit {exit} on the right towards {destination}"
+            }
+        },
+        "on ramp": {
+            "default": {
+                "default": "Ambil jalan melandai",
+                "name": "Ambil jalan melandai ke {way_name}",
+                "destination": "Ambil jalan melandai menuju {destination}"
+            },
+            "left": {
+                "default": "Ambil jalan yang melandai di sebelah kiri",
+                "name": "Ambil jalan melandai di sebelah kiri ke arah {way_name}",
+                "destination": "Ambil jalan melandai di sebelah kiri menuju {destination}"
+            },
+            "right": {
+                "default": "Ambil jalan melandai di sebelah kanan",
+                "name": "Ambil jalan melandai di sebelah kanan ke {way_name}",
+                "destination": "Ambil jalan melandai di sebelah kanan  menuju {destination}"
+            },
+            "sharp left": {
+                "default": "Ambil jalan yang melandai di sebelah kiri",
+                "name": "Ambil jalan melandai di sebelah kiri ke arah {way_name}",
+                "destination": "Ambil jalan melandai di sebelah kiri menuju {destination}"
+            },
+            "sharp right": {
+                "default": "Ambil jalan melandai di sebelah kanan",
+                "name": "Ambil jalan melandai di sebelah kanan ke {way_name}",
+                "destination": "Ambil jalan melandai di sebelah kanan  menuju {destination}"
+            },
+            "slight left": {
+                "default": "Ambil jalan yang melandai di sebelah kiri",
+                "name": "Ambil jalan melandai di sebelah kiri ke arah {way_name}",
+                "destination": "Ambil jalan melandai di sebelah kiri menuju {destination}"
+            },
+            "slight right": {
+                "default": "Ambil jalan melandai di sebelah kanan",
+                "name": "Ambil jalan melandai di sebelah kanan ke {way_name}",
+                "destination": "Ambil jalan melandai di sebelah kanan  menuju {destination}"
+            }
+        },
+        "rotary": {
+            "default": {
+                "default": {
+                    "default": "Masuk bundaran",
+                    "name": "Masuk bundaran dan keluar arah {way_name}",
+                    "destination": "Masuk bundaran dan keluar menuju {destination}"
+                },
+                "name": {
+                    "default": "Masuk {rotary_name}",
+                    "name": "Masuk {rotary_name} dan keluar arah {way_name}",
+                    "destination": "Masuk {rotary_name} dan keluar menuju {destination}"
+                },
+                "exit": {
+                    "default": "Masuk bundaran dan ambil jalan keluar {exit_number}",
+                    "name": "Masuk bundaran dan ambil jalan keluar {exit_number} arah {way_name}",
+                    "destination": "Masuk bundaran dan ambil jalan keluar {exit_number} menuju {destination}"
+                },
+                "name_exit": {
+                    "default": "Masuk {rotary_name} dan ambil jalan keluar {exit_number}",
+                    "name": "Masuk {rotary_name} dan ambil jalan keluar {exit_number} arah {way_name}",
+                    "destination": "Masuk {rotary_name} dan ambil jalan keluar {exit_number} menuju {destination}"
+                }
+            }
+        },
+        "roundabout": {
+            "default": {
+                "exit": {
+                    "default": "Masuk bundaran dan ambil jalan keluar {exit_number}",
+                    "name": "Masuk bundaran dan ambil jalan keluar {exit_number} arah {way_name}",
+                    "destination": "Masuk bundaran dan ambil jalan keluar {exit_number} menuju {destination}"
+                },
+                "default": {
+                    "default": "Masuk bundaran",
+                    "name": "Masuk bundaran dan keluar arah {way_name}",
+                    "destination": "Masuk bundaran dan keluar menuju {destination}"
+                }
+            }
+        },
+        "roundabout turn": {
+            "default": {
+                "default": "Lakukan {modifier}",
+                "name": "Lakukan {modifier} ke arah {way_name}",
+                "destination": "Lakukan {modifier} menuju {destination}"
+            },
+            "left": {
+                "default": "Belok kiri",
+                "name": "Belok kiri ke {way_name}",
+                "destination": "Belok kiri menuju {destination}"
+            },
+            "right": {
+                "default": "Belok kanan",
+                "name": "Belok kanan ke {way_name}",
+                "destination": "Belok kanan menuju {destination}"
+            },
+            "straight": {
+                "default": "Lurus terus",
+                "name": "Tetap lurus ke {way_name} ",
+                "destination": "Tetap lurus menuju {destination}"
+            }
+        },
+        "exit roundabout": {
+            "default": {
+                "default": "Lakukan {modifier}",
+                "name": "Lakukan {modifier} ke arah {way_name}",
+                "destination": "Lakukan {modifier} menuju {destination}"
+            },
+            "left": {
+                "default": "Belok kiri",
+                "name": "Belok kiri ke {way_name}",
+                "destination": "Belok kiri menuju {destination}"
+            },
+            "right": {
+                "default": "Belok kanan",
+                "name": "Belok kanan ke {way_name}",
+                "destination": "Belok kanan menuju {destination}"
+            },
+            "straight": {
+                "default": "Lurus terus",
+                "name": "Tetap lurus ke {way_name} ",
+                "destination": "Tetap lurus menuju {destination}"
+            }
+        },
+        "exit rotary": {
+            "default": {
+                "default": "Lakukan {modifier}",
+                "name": "Lakukan {modifier} ke arah {way_name}",
+                "destination": "Lakukan {modifier} menuju {destination}"
+            },
+            "left": {
+                "default": "Belok kiri",
+                "name": "Belok kiri ke {way_name}",
+                "destination": "Belok kiri menuju {destination}"
+            },
+            "right": {
+                "default": "Belok kanan",
+                "name": "Belok kanan ke {way_name}",
+                "destination": "Belok kanan menuju {destination}"
+            },
+            "straight": {
+                "default": "Lurus",
+                "name": "Lurus arah {way_name}",
+                "destination": "Lurus menuju {destination}"
+            }
+        },
+        "turn": {
+            "default": {
+                "default": "Lakukan {modifier}",
+                "name": "Lakukan {modifier} ke arah {way_name}",
+                "destination": "Lakukan {modifier} menuju {destination}"
+            },
+            "left": {
+                "default": "Belok kiri",
+                "name": "Belok kiri ke {way_name}",
+                "destination": "Belok kiri menuju {destination}"
+            },
+            "right": {
+                "default": "Belok kanan",
+                "name": "Belok kanan ke {way_name}",
+                "destination": "Belok kanan menuju {destination}"
+            },
+            "straight": {
+                "default": "Lurus",
+                "name": "Lurus arah {way_name}",
+                "destination": "Lurus menuju {destination}"
+            }
+        },
+        "use lane": {
+            "no_lanes": {
+                "default": "Lurus terus"
+            },
+            "default": {
+                "default": "{lane_instruction}"
+            }
+        }
+    }
+}

@@ -1,0 +1,493 @@
+{
+    "meta": {
+        "capitalizeFirstLetter": false
+    },
+    "v5": {
+        "constants": {
+            "ordinalize": {
+                "1": "ပထမ",
+                "2": "ဒုတိယ",
+                "3": "တတိယ",
+                "4": "စတုတၳ",
+                "5": "ပဥၥမ",
+                "6": "ဆဌမ",
+                "7": "သတၱမ",
+                "8": "အဌမ",
+                "9": "နဝမ",
+                "10": "ဒသမ"
+            },
+            "direction": {
+                "north": "ေျမာက္အရပ္",
+                "northeast": "အေရွ႕ေျမာက္အရပ္",
+                "east": "အေရွ႕အရပ္",
+                "southeast": "အေရွ႕ေတာင္အရပ္",
+                "south": "ေတာင္အရပ္",
+                "southwest": "အေနာက္ေတာင္အရပ္",
+                "west": "အေနာက္အရပ္",
+                "northwest": "အေနာက္ေျမာက္အရပ္"
+            },
+            "modifier": {
+                "left": "ဘယ္ဘက္",
+                "right": "ညာဘက္",
+                "sharp left": "ဘယ္ဘက္ ေထာင့္ခ်ိဳး",
+                "sharp right": "ညာဘက္ ေထာင္႔ခ်ိဳး",
+                "slight left": "ဘယ္ဘက္ အနည္းငယ္",
+                "slight right": "ညာဘက္ အနည္းငယ္",
+                "straight": "ေျဖာင္႔ေျဖာင္႔တန္းတန္း",
+                "uturn": "ဂ-ေကြ႔"
+            },
+            "lanes": {
+                "xo": "ညာဘက္သို႕ဆက္သြားပါ",
+                "ox": "ဘယ္ဘက္သို႕ဆက္သြားပါ",
+                "xox": "အလယ္တြင္ဆက္ေနပါ",
+                "oxo": "ဘယ္ သို႕မဟုတ္ ညာဘက္သို႕ ဆက္သြားပါ"
+            }
+        },
+        "modes": {
+            "ferry": {
+                "default": "ဖယ္ရီ စီးသြားပါ",
+                "name": "{way_name}ကို ဖယ္ရီစီးသြားပါ",
+                "destination": "{destination}ဆီသို႕ ဖယ္ရီစီးသြားပါ"
+            }
+        },
+        "phrase": {
+            "two linked by distance": "{instruction_one}ျပီးေနာက္ {distance}အတြင္း {instruction_two}",
+            "two linked": "{instruction_one}ျပီးေနာက္ {instruction_two}",
+            "one in distance": "{distance}အတြင္း {instruction_one}",
+            "name and ref": "{name}( {ref})",
+            "exit with number": "{exit}မွထြက္ပါ"
+        },
+        "arrive": {
+            "default": {
+                "default": "{nth}သင္ သြားလိုေသာ ခရီးပန္းတိုင္သို႕ေရာက္ရွိျပီ",
+                "upcoming": "သင္ သြားလိုေသာ {nth}ခရီးပန္းတိုင္သို႕ေရာက္လိမ့္မည္",
+                "short": "သင္သြားလိုေသာ ေနရာသို႔ ေရာက္ရိွၿပီ",
+                "short-upcoming": "သင္သြားလိုေသာ ေနရာသို႔ ေရာက္လိမ့္မည္",
+                "named": "သင္ သည္ {waypoint_name} မွာ ေရာက္ရွိျပီ"
+            },
+            "left": {
+                "default": "သင္ သြားလိုေသာ {nth}ခရီးပန္းတိုင္သို႕ဘယ္ဘက္တြင္ေရာက္ရွိျပီ",
+                "upcoming": "သင္ သြားလိုေသာ {nth}ခရီးပန္းတိုင္သို႕ဘယ္ဘက္တြင္ေရာက္လိမ့္မည္",
+                "short": "သင္သြားလိုေသာ ေနရာသို႔ ေရာက္ရိွၿပီ",
+                "short-upcoming": "သင္သြားလိုေသာ ေနရာသို႔ ေရာက္လိမ့္မည္",
+                "named": "သင္ သည္ {waypoint_name}မွာဘယ္ဘက္ေကြ႕ကာ ေရာက္ရွိျပီ"
+            },
+            "right": {
+                "default": "သင္ သြားလိုေသာ {nth}ခရီးပန္းတိုင္သို႕ ညာဘက္ေကြ႕ကာ ေရာက္ရွိျပီ",
+                "upcoming": "သင္ သြားလိုေသာ{nth} ခရီးပန္းတိုင္သို႕ ညာဘက္ေကြ႕ကာ ေရာက္လိမ့္မည္",
+                "short": "သင္သြားလိုေသာ ေနရာသို႔ ေရာက္ရိွၿပီ",
+                "short-upcoming": "သင္သြားလိုေသာ ေနရာသို႔ ေရာက္လိမ့္မည္",
+                "named": "သင္ သည္ {waypoint_name} မွာညာဘက္ေကြ႕ကာ ေရာက္ရွိျပီ"
+            },
+            "sharp left": {
+                "default": "သင္ သြားလိုေသာ {nth}ခရီးပန္းတိုင္သို႕ဘယ္ဘက္တြင္ေရာက္ရွိျပီ",
+                "upcoming": "သင္ သြားလိုေသာ {nth}ခရီးပန္းတိုင္သို႕ဘယ္ဘက္တြင္ေရာက္ရွိျပီ",
+                "short": "သင္သြားလိုေသာ ေနရာသို႔ ေရာက္ရိွၿပီ",
+                "short-upcoming": "သင္သြားလိုေသာ ေနရာသို႔ ေရာက္လိမ့္မည္",
+                "named": "သင္ သည္ {waypoint_name}မွာဘယ္ဘက္ေကြ႕ကာ ေရာက္ရွိျပီ"
+            },
+            "sharp right": {
+                "default": "သင္ သြားလိုေသာ {nth}ခရီးပန္းတိုင္သို႕ ညာဘက္ေကြ႕ကာ ေရာက္ရွိျပီ",
+                "upcoming": "သင္ သြားလိုေသာ{nth} ခရီးပန္းတိုင္သို႕ ညာဘက္ေကြ႕ကာ ေရာက္လိမ့္မည္",
+                "short": "သင္သြားလိုေသာ ေနရာသို႔ ေရာက္ရိွၿပီ",
+                "short-upcoming": "သင္သြားလိုေသာ ေနရာသို႔ ေရာက္လိမ့္မည္",
+                "named": "သင္ သည္ {waypoint_name} မွာညာဘက္ေကြ႕ကာ ေရာက္ရွိျပီ"
+            },
+            "slight right": {
+                "default": "သင္ သြားလိုေသာ {nth}ခရီးပန္းတိုင္သို႕ ညာဘက္ေကြ႕ကာ ေရာက္ရွိျပီ",
+                "upcoming": "သင္ သြားလိုေသာ{nth} ခရီးပန္းတိုင္သို႕ ညာဘက္ေကြ႕ကာ ေရာက္လိမ့္မည္",
+                "short": "သင္သြားလိုေသာ ေနရာသို႔ ေရာက္ရိွၿပီ",
+                "short-upcoming": "သင္သြားလိုေသာ ေနရာသို႔ ေရာက္လိမ့္မည္",
+                "named": "သင္ သည္ {waypoint_name} မွာညာဘက္ေကြ႕ကာ ေရာက္ရွိျပီ"
+            },
+            "slight left": {
+                "default": "သင္ သြားလိုေသာ {nth}ခရီးပန္းတိုင္သို႕ဘယ္ဘက္တြင္ေရာက္ရွိျပီ",
+                "upcoming": "သင္ သြားလိုေသာ {nth}ခရီးပန္းတိုင္သို႕ဘယ္ဘက္တြင္ေရာက္ရွိျပီ",
+                "short": "သင္သြားလိုေသာ ေနရာသို႔ ေရာက္ရွိျပီ",
+                "short-upcoming": "သင္သြားလိုေသာ ေနရာသို႔ ေရာက္လိမ့္မည္",
+                "named": "သင္ သည္ {waypoint_name}မွာဘယ္ဘက္ေကြ႕ကာ ေရာက္ရွိျပီ"
+            },
+            "straight": {
+                "default": "သင္ သြားလိုေသာ {nth}ခရီးပန္းတိုင္သို႕တည့္တည့္သြားကာရာက္ရွိျပီ",
+                "upcoming": "သင္ သြားလိုေသာ {nth}ခရီးပန္းတိုင္သို႕တည့္တည့္သြားကာရာက္ရွိမည္",
+                "short": "သင္သြားလိုေသာ ေနရာသို႔ ေရာက္ရွိျပီ",
+                "short-upcoming": "သင္သြားလိုေသာ ေနရာသို႔ ေရာက္လိမ့္မည္",
+                "named": "သင္ သည္ {waypoint_name}မွာတည့္တည့္သြားကာ ေရာက္ရွိျပီ"
+            }
+        },
+        "continue": {
+            "default": {
+                "default": "{modifier}ကိုလွည့္ပါ",
+                "name": "{way_name}​​ေပၚတြင္ေနရန္ {modifier}ကိုလွည့္ပါ",
+                "destination": "{destination}ဆီသို႕ {modifier}ကို လွည္႕ပါ",
+                "exit": "{way_name}​​ေပၚသို႕ {modifier}ကိုလွည့္ပါ"
+            },
+            "straight": {
+                "default": "ေျဖာင္႔ေျဖာင္႔တန္းတန္း ဆက္သြားပါ",
+                "name": "{way_name}​​ေပၚတြင္ေနရန္တည္တည့္ဆက္သြာပါ",
+                "destination": "{destination}ဆီသို႕ဆက္သြားပါ",
+                "distance": "{distance}ေလာက္ တည့္တည့္ ဆက္သြားပါ",
+                "namedistance": "{way_name}​​ေပၚတြင္{distance}ေလာက္ဆက္သြားပါ"
+            },
+            "sharp left": {
+                "default": "ဘယ္ဘက္ေထာင့္ခ်ိဳးေကြ႕ပါ",
+                "name": "{way_name}​ေပၚတြင္ေနရန္ ဘယ္ဘက္ေထာင့္ခ်ိဳးေကြ႕ပါ",
+                "destination": "{destination}ဆီသို႕ ဘယ္ဘက္ေထာင့္ခ်ိဳးေကြ႕ပါ"
+            },
+            "sharp right": {
+                "default": "ညာဘက္ ေထာင္႔ခ်ိဳးေကြ႕ပါ",
+                "name": "{way_name}​ေပၚတြင္ေနရန္ ညာဘက္ေထာင့္ခ်ိဳးေကြ႕ပါ",
+                "destination": "{destination}ဆီသို႕ ညာဘက္ေထာင့္ခ်ိဳးေကြ႕ပါ"
+            },
+            "slight left": {
+                "default": "ဘယ္ဘက္ အနည္းငယ္ေကြ႕ပါ",
+                "name": "{way_name}​ေပၚတြင္ေနရန္ ဘယ္ဘက္အနည္းငယ္ေကြ႕ပါ",
+                "destination": "{destination}ဆီသို႕ ဘယ္ဘက္အနည္းငယ္ခ်ိဳးေကြ႕ပါ"
+            },
+            "slight right": {
+                "default": "ညာဘက္ အနည္းငယ္ခ်ိဳးေကြ႕ပါ",
+                "name": "{way_name}​ေပၚတြင္ေနရန္ ညာဘက္အနည္းငယ္ေကြ႕ပါ",
+                "destination": "{destination}ဆီသို႕ ညာဘက္အနည္းငယ္ခ်ိဳးေကြ႕ပါ"
+            },
+            "uturn": {
+                "default": "ဂ-ေကြ႔ ေကြ႔ပါ",
+                "name": "{way_name}လမ္းဘက္သို႕ ဂ-ေကြ႕ေကြ႕ျပီးဆက္သြားပါ",
+                "destination": "{destination}ဆီသို႕ ဂေကြ႕ခ်ိဳးေကြ႕ပါ"
+            }
+        },
+        "depart": {
+            "default": {
+                "default": "{direction}သို႕ ဦးတည္ပါ",
+                "name": "{direction}ကို {way_name}အေပၚတြင္ ဦးတည္ပါ",
+                "namedistance": "{direction}ကို {way_name}အေပၚတြင္{distance}ေလာက္ ဦးတည္ဆက္သြားပါ"
+            }
+        },
+        "end of road": {
+            "default": {
+                "default": "{modifier}သို႕လွည့္ပါ",
+                "name": "{way_name}​​ေပၚသို႕ {modifier}ကိုလွည့္ပါ",
+                "destination": "{destination}ဆီသို႕ {modifier}ကို လွည္႕ပါ"
+            },
+            "straight": {
+                "default": "ေျဖာင္႔ေျဖာင္႔တန္းတန္း ဆက္သြားပါ",
+                "name": "{way_name}​​ေပၚသို႕တည့္တည့္ဆက္သြားပါ",
+                "destination": "{destination}ဆီသို႕တည့္တည့္ဆက္သြားပါ"
+            },
+            "uturn": {
+                "default": "လမ္းအဆံုးတြင္ ဂ-ေကြ႕ေကြ႕ပါ",
+                "name": "လမ္းအဆံုးတြင္ {way_name}​​ေပၚသို႕ဂ-ေကြ႕ေကြ႕ပါ",
+                "destination": "လမ္းအဆံုးတြင္{destination}ဆီသို႕ ဂေကြ႕ခ်ိဳးေကြ႕ပါ"
+            }
+        },
+        "fork": {
+            "default": {
+                "default": "လမ္းဆံုလမ္းခြတြင္ {modifier}ကိုဆက္သြားပါ",
+                "name": "{way_name}​​ေပၚသို႕ {modifier}ကိုဆက္သြားပါ",
+                "destination": "{destination}ဆီသို႕ {modifier}ကို ဆက္သြားပါ"
+            },
+            "slight left": {
+                "default": "လမ္းဆံုလမ္းခြတြင္ဘယ္ဘက္ကိုဆက္သြားပါ",
+                "name": "{way_name}​​ေပၚသို႕ဘယ္ဘက္ကိုဆက္သြားပါ",
+                "destination": "{destination}ဆီသို႕ဘယ္ဘက္ကို ဆက္သြားပါ"
+            },
+            "slight right": {
+                "default": "လမ္းဆံုလမ္းခြတြင္ညာဘက္ကိုဆက္သြားပါ",
+                "name": "{way_name}​​ေပၚသို႕ညာဘက္ကိုဆက္သြားပါ",
+                "destination": "{destination}ဆီသို႕ညာဘက္ကို ဆက္သြားပါ"
+            },
+            "sharp left": {
+                "default": "လမ္းဆံုလမ္းခြတြင္ဘယ္ဘက္ေထာင့္ခ်ိဳးကိုသြားပါ",
+                "name": "{way_name}​ေပၚတြင္ေနရန္ ဘယ္ဘက္ေထာင့္ခ်ိဳးယူပါ",
+                "destination": "{destination}ဆီသို႕ဘယ္ဘက္ေထာင့္ခ်ိဳး သြားပါ"
+            },
+            "sharp right": {
+                "default": "လမ္းဆံုလမ္းခြတြင္ညာဘက္ေထာင့္ခ်ိဳးကိုသြားပါ",
+                "name": "{way_name}​ေပၚသို႕ ညာဘက္ေထာင့္ခ်ိဳးယူပါ",
+                "destination": "{destination}ဆီသို႕ညာဘက္ေထာင့္ခ်ိဳး သြားပါ"
+            },
+            "uturn": {
+                "default": "ဂ-ေကြ႔ ေကြ႔ပါ",
+                "name": "{way_name}သို႕ဂ-ေကြ႕ေကြ႕ပါ",
+                "destination": "{destination}ဆီသို႕ ဂေကြ႕ခ်ိဳးေကြ႕ပါ"
+            }
+        },
+        "merge": {
+            "default": {
+                "default": "{modifier}ကိုလာေရာက္ေပါင္းဆံုပါ",
+                "name": "{way_name}​​ေပၚသို႕ {modifier}ကိုလာေရာက္ေပါင္းဆံုပါ",
+                "destination": "{destination}ဆီသို႕ {modifier}ကို လာေရာက္ေပါင္းဆံုပါ"
+            },
+            "straight": {
+                "default": "လာေရာက္ေပါင္းဆံုပါ",
+                "name": "{way_name}​​ေပၚသို႕လာေရာက္ေပါင္းဆံုပါ",
+                "destination": "{destination}ဆီသို႕ လာေရာက္ေပါင္းဆံုပါ"
+            },
+            "slight left": {
+                "default": "ဘယ္ဘက္သို႕လာေရာက္ေပါင္းဆံုပါ",
+                "name": "{way_name}​​ေပၚသို႕ဘယ္ဘက္ကိုလာေရာက္ေပါင္းဆံုပါ",
+                "destination": "{destination}ဆီသို႕ဘယ္ဘက္ကို လာေရာက္ေပါင္းဆံုပါ"
+            },
+            "slight right": {
+                "default": "ညာဘက္သို႕လာေရာက္ေပါင္းဆံုပါ",
+                "name": "{way_name}​​ေပၚသို႕ညာဘက္ကိုလာေရာက္ေပါင္းဆံုပါ",
+                "destination": "{destination}ဆီသို႕ညာဘက္ကို လာေရာက္ေပါင္းဆံုပါ"
+            },
+            "sharp left": {
+                "default": "ဘယ္ဘက္သို႕လာေရာက္ေပါင္းဆံုပါ",
+                "name": "{way_name}​​ေပၚသို႕ဘယ္ဘက္ကိုလာေရာက္ေပါင္းဆံုပါ",
+                "destination": "{destination}ဆီသို႕ဘယ္ဘက္ကို လာေရာက္ေပါင္းဆံုပါ"
+            },
+            "sharp right": {
+                "default": "ညာဘက္သို႕လာေရာက္ေပါင္းဆံုပါ",
+                "name": "{way_name}​​ေပၚသို႕ညာဘက္ကိုလာေရာက္ေပါင္းဆံုပါ",
+                "destination": "{destination}ဆီသို႕ညာဘက္ကို လာေရာက္ေပါင္းဆံုပါ"
+            },
+            "uturn": {
+                "default": "ဂ-ေကြ႔ ေကြ႕ပါ",
+                "name": "{way_name}လမ္းဘက္သို႔ ဂ-ေကြ႔ ေကြ႔ပါ ",
+                "destination": "{destination}ဆီသို႕ ဂေကြ႕ခ်ိဳးေကြ႕ပါ"
+            }
+        },
+        "new name": {
+            "default": {
+                "default": "{modifier}ကိုဆက္သြားပါ",
+                "name": "{way_name}​​ေပၚသို႕ {modifier}ကိုဆက္သြားပါ",
+                "destination": "{destination}ဆီသို႕ {modifier}ကို ဆက္သြားပါ"
+            },
+            "straight": {
+                "default": "ေျဖာင္႔ေျဖာင္႔တန္းတန္း ဆက္သြားပါ",
+                "name": "{way_name}​​ေပၚသို႕ဆက္သြားပါ",
+                "destination": "{destination}ဆီသို႕ဆက္သြားပါ"
+            },
+            "sharp left": {
+                "default": "ဘယ္ဘက္ေထာင့္ခ်ိဳးယူပါ",
+                "name": "{way_name}​ေပၚတြင္ေနရန္ ဘယ္ဘက္ေထာင့္ခ်ိဳးယူပါ",
+                "destination": "{destination}ဆီသို႕ဘယ္ဘက္ေထာင့္ခ်ိဳး သြားပါ"
+            },
+            "sharp right": {
+                "default": "ညာဘက္ ေထာင္႔ခ်ိဳးယူပါ",
+                "name": "{way_name}​ေပၚသို႕ ညာဘက္ေထာင့္ခ်ိဳးယူပါ",
+                "destination": "{destination}ဆီသို႕ညာဘက္ေထာင့္ခ်ိဳး သြားပါ"
+            },
+            "slight left": {
+                "default": "ဘယ္ဘက္ အနည္းငယ္ဆက္သြားပါ",
+                "name": "{way_name}​​ေပၚသို႕ဘယ္ဘက္ အနည္းငယ္ဆက္သြားပါ",
+                "destination": "{destination}ဆီသို႕ဘယ္ဘက္အနည္းငယ္ဆက္သြားပါ"
+            },
+            "slight right": {
+                "default": "ညာဘက္ အနည္းငယ္ဆက္သြားပါ",
+                "name": "{way_name}​​ေပၚသို႕ညာဘက္ အနည္းငယ္ဆက္သြားပါ",
+                "destination": "{destination}ဆီသို႕ညာဘက္အနည္းငယ္ဆက္သြားပါ"
+            },
+            "uturn": {
+                "default": "ဂ-ေကြ႔ ေကြ႔ပါ",
+                "name": "{way_name}လမ္းဘက္သို႔ ဂ-ေကြ႔ ေကြ႔ပါ",
+                "destination": "{destination}ဆီသို႕ ဂေကြ႕ခ်ိဳးေကြ႕ပါ"
+            }
+        },
+        "notification": {
+            "default": {
+                "default": "{modifier}ကိုဆက္သြားပါ",
+                "name": "{way_name}​​ေပၚသို႕ {modifier}ကိုဆက္သြားပါ",
+                "destination": "{destination}ဆီသို႕ {modifier}ကို ဆက္သြားပါ"
+            },
+            "uturn": {
+                "default": "ဂ-ေကြ႔ ေကြ႔ပါ",
+                "name": "{way_name}လမ္းဘက္သို႔ ဂ-ေကြ႔ ေကြ႔ပါ",
+                "destination": "{destination}ဆီသို႕ ဂေကြ႕ခ်ိဳးေကြ႕ပါ"
+            }
+        },
+        "off ramp": {
+            "default": {
+                "default": "ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "name": "{way_name}​ေပၚသို႕ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "destination": "{destination}ဆီသို႕ ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "exit": "{exit}ကို ယူပါ",
+                "exit_destination": "{destination}ဆီသို႕ {exit} ကိုယူပါ"
+            },
+            "left": {
+                "default": "ဘယ္ဘက္သို႕ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "name": "{way_name}​ေပၚသို႕ဘယ္ဘက္ ​ေပၚတြင္ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "destination": "{destination}ဆီသို႕ ဘယ္ဘက္​ေပၚတြင္ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "exit": "ဘယ္ဘက္တြင္{exit}ကို ယူပါ",
+                "exit_destination": "{destination}ဆီသို႕ဘယ္ဘက္မွ {exit} ကိုယူပါ"
+            },
+            "right": {
+                "default": "ညာဘက္သို႕ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "name": "{way_name}​ေပၚသို႕ညာဘက္ ​ေပၚတြင္ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "destination": "{destination}ဆီသို႕ ညာဘက္​ေပၚတြင္ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "exit": "ညာဘက္တြင္{exit}ကို ယူပါ",
+                "exit_destination": "{destination}ဆီသို႕ညာဘက္မွ {exit} ကိုယူပါ"
+            },
+            "sharp left": {
+                "default": "ဘယ္ဘက္သို႕ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "name": "{way_name}​ေပၚသို႕ဘယ္ဘက္ ​ေပၚတြင္ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "destination": "{destination}ဆီသို႕ ဘယ္ဘက္​ေပၚတြင္ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "exit": "ဘယ္ဘက္တြင္{exit}ကို ယူပါ",
+                "exit_destination": "{destination}ဆီသို႕ဘယ္ဘက္မွ {exit} ကိုယူပါ"
+            },
+            "sharp right": {
+                "default": "ညာဘက္သို႕ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "name": "{way_name}​ေပၚသို႕ညာဘက္ ​ေပၚတြင္ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "destination": "{destination}ဆီသို႕ ညာဘက္​ေပၚတြင္ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "exit": "ညာဘက္တြင္{exit}ကို ယူပါ",
+                "exit_destination": "{destination}ဆီသို႕ညာဘက္မွ {exit} ကိုယူပါ"
+            },
+            "slight left": {
+                "default": "ဘယ္ဘက္သို႕ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "name": "{way_name}​ေပၚသို႕ဘယ္ဘက္ ​ေပၚတြင္ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "destination": "{destination}ဆီသို႕ ဘယ္ဘက္​ေပၚတြင္ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "exit": "ဘယ္ဘက္တြင္{exit}ကို ယူပါ",
+                "exit_destination": "{destination}ဆီသို႕ဘယ္ဘက္မွ {exit} ကိုယူပါ"
+            },
+            "slight right": {
+                "default": "ညာဘက္သို႕ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "name": "{way_name}​ေပၚသို႕ညာဘက္ ​ေပၚတြင္ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "destination": "{destination}ဆီသို႕ ညာဘက္​ေပၚတြင္ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "exit": "ညာဘက္တြင္{exit}ကို ယူပါ",
+                "exit_destination": "{destination}ဆီသို႕ညာဘက္မွ {exit} ကိုယူပါ"
+            }
+        },
+        "on ramp": {
+            "default": {
+                "default": "ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "name": "{way_name}​ေပၚသို႕ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "destination": "{destination}ဆီသို႕ ခ်ဥ္းကပ္လမ္းကိုယူပါ"
+            },
+            "left": {
+                "default": "ဘယ္ဘက္သို႕ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "name": "{way_name}​ေပၚသို႕ဘယ္ဘက္ ​ေပၚတြင္ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "destination": "{destination}ဆီသို႕ ဘယ္ဘက္​ေပၚတြင္ခ်ဥ္းကပ္လမ္းကိုယူပါ"
+            },
+            "right": {
+                "default": "ညာဘက္သို႕ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "name": "{way_name}​ေပၚသို႕ညာဘက္ ​ေပၚတြင္ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "destination": "{destination}ဆီသို႕ ညာဘက္​ေပၚတြင္ခ်ဥ္းကပ္လမ္းကိုယူပါ"
+            },
+            "sharp left": {
+                "default": "ဘယ္ဘက္သို႕ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "name": "{way_name}​ေပၚသို႕ဘယ္ဘက္ ​ေပၚတြင္ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "destination": "{destination}ဆီသို႕ ဘယ္ဘက္​ေပၚတြင္ခ်ဥ္းကပ္လမ္းကိုယူပါ"
+            },
+            "sharp right": {
+                "default": "ညာဘက္သို႕ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "name": "{way_name}​ေပၚသို႕ညာဘက္ ​ေပၚတြင္ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "destination": "{destination}ဆီသို႕ ညာဘက္​ေပၚတြင္ခ်ဥ္းကပ္လမ္းကိုယူပါ"
+            },
+            "slight left": {
+                "default": "ဘယ္ဘက္သို႕ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "name": "{way_name}​ေပၚသို႕ဘယ္ဘက္ ​ေပၚတြင္ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "destination": "{destination}ဆီသို႕ ဘယ္ဘက္​ေပၚတြင္ခ်ဥ္းကပ္လမ္းကိုယူပါ"
+            },
+            "slight right": {
+                "default": "ညာဘက္သို႕ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "name": "{way_name}​ေပၚသို႕ညာဘက္ ​ေပၚတြင္ခ်ဥ္းကပ္လမ္းကိုယူပါ",
+                "destination": "{destination}ဆီသို႕ ညာဘက္​ေပၚတြင္ခ်ဥ္းကပ္လမ္းကိုယူပါ"
+            }
+        },
+        "rotary": {
+            "default": {
+                "default": {
+                    "default": "အဝိုင္းပတ္သို႕ဝင္ပါ",
+                    "name": "{way_name}ေပၚသို႔အဝိုင္းပတ္လမ္းမွထြက္ပါ ",
+                    "destination": "{destination}ေပၚသို႔အဝိုင္းပတ္လမ္းမွထြက္ပါ"
+                },
+                "name": {
+                    "default": "{rotary_name}သို႕ဝင္ပါ",
+                    "name": "{rotary_name}အဝိုင္းပတ္ဝင္ျပီး{way_name}ေပၚသို႕ထြက္ပါ",
+                    "destination": "{rotary_name}အဝိုင္းပတ္ဝင္ျပီး{destination}ဆီသို႕ထြက္ပါ"
+                },
+                "exit": {
+                    "default": "အဝိုင္းပတ္ဝင္ျပီး{exit_number}ကိုယူကာျပန္ထြက္ပါ",
+                    "name": "အဝိုင္းပတ္သို႕ဝင္ျပီး{exit_number}ကိုယူကာ{way_name}ေပၚသို႕ထြက္ပါ",
+                    "destination": "အဝိုင္းပတ္ဝင္ျပီး{exit_number}ကိုယူကာ{destination}ဆီသို႕ထြက္ပါ"
+                },
+                "name_exit": {
+                    "default": "{rotary_name}ကိုဝင္ျပီး {exit_number}ကိုယူကာထြက္ပါ",
+                    "name": "{rotary_name}ကိုဝင္ျပီး{exit_number}ကိုယူကာ{way_name}ေပၚသို႕ထြက္ပါ",
+                    "destination": "{rotary_name}ဝင္ျပီး{exit_number}ကိုယူကာ{destination}ဆီသို႕ထြက္ပါ"
+                }
+            }
+        },
+        "roundabout": {
+            "default": {
+                "exit": {
+                    "default": "{exit_number}ေပၚသို႔အဝိုင္းပတ္လမ္းမွထြက္ပါ",
+                    "name": "အဝိုင္းပတ္ဝင္ျပီး{exit_number}ကိုယူကာ{way_name}ေပၚသို႕ထြက္ပါ",
+                    "destination": "အဝိုင္းပတ္ဝင္ျပီး{exit_number}ကိုယူကာ{destination}ဆီသို႕ထြက္ပါ"
+                },
+                "default": {
+                    "default": "အဝိုင္းပတ္ဝင္ပါ",
+                    "name": "{way_name}ေပၚသို႔အဝိုင္းပတ္လမ္းမွထြက္ပါ",
+                    "destination": "{destination}ေပၚသို႔အဝိုင္းပတ္လမ္းမွထြက္ပါ"
+                }
+            }
+        },
+        "roundabout turn": {
+            "default": {
+                "default": "{modifier}ကိုလွည့္ပါ ",
+                "name": "{modifier}​ေပၚသို{way_name}ကိုဆက္သြားပါ ",
+                "destination": "{modifier}ဆီသို႕{destination}ကို ဆက္သြားပါ "
+            },
+            "left": {
+                "default": "ဘယ္ဘက္သို႕ျပန္လွည္႔ပါ",
+                "name": "{way_name}​ေပၚသို႕ဘယ္ဘက္ကိုဆက္သြားပါ ",
+                "destination": "{destination}ဆီသို႕ဘယ္ဘက္မွ ေကြ႔ပါ"
+            },
+            "right": {
+                "default": "ညာဘက္သို႔ျပန္လွည္႔ပါ",
+                "name": "{way_name}​ေပၚသို႕ညာဘက္ကိုလာေရာက္ေပါင္းဆံုပါ ",
+                "destination": "{destination}ညာဘက္သို႔ ေကြ႔ပါ"
+            },
+            "straight": {
+                "default": "ေျဖာင္႔ေျဖာင္႔တန္းတန္း ဆက္သြားပါ",
+                "name": "{way_name}​​ေပၚသို႕တည့္တည့္ဆက္သြားပါ",
+                "destination": "{destination}ဆီသို႕တည့္တည့္ဆက္သြားပါ"
+            }
+        },
+        "exit roundabout": {
+            "default": {
+                "default": "အဝိုင္းပတ္လမ္းမွထြက္ပါ",
+                "name": "{way_name}ေပၚသို႔အဝိုင္းပတ္လမ္းမွထြက္ပါ",
+                "destination": "ဦးတည္အဝိုင္းပတ္လမ္းမွထြက္ပါ{destination}"
+            }
+        },
+        "exit rotary": {
+            "default": {
+                "default": "အဝိုင္းပတ္လမ္းမွထြက္ပါဦးတည္အဝိုင္းပတ္လမ္းမွထြက္ပါ",
+                "name": "{way_name}ေပၚသို႔အဝိုင္းပတ္လမ္းမွထြက္ပါ",
+                "destination": "ဦးတည္အဝိုင္းပတ္လမ္းမွထြက္ပါ{destination}"
+            }
+        },
+        "turn": {
+            "default": {
+                "default": "{modifier}ကိုလွည့္ပါ ",
+                "name": "{modifier}​ေပၚသို{way_name}ကိုဆက္သြားပါ ",
+                "destination": "{modifier}ဆီသို႕{destination}ကို ဆက္သြားပါ "
+            },
+            "left": {
+                "default": "ဘယ္ဘက္သို႕ျပန္လွည္႔ပါ",
+                "name": "{way_name}​ေပၚသို႕ဘယ္ဘက္ကိုဆက္သြားပါ ",
+                "destination": "{destination}ဘယ္ဘက္သို႔ ေကြ႔ပါ"
+            },
+            "right": {
+                "default": "ညာဘက္သို႔ျပန္လွည္႔ပါ",
+                "name": "{way_name}​ေပၚသို႕ညာဘက္ကိုလာေရာက္ေပါင္းဆံုပါ ",
+                "destination": "{destination}ညာဘက္သို႔ ေကြ႔ပါ"
+            },
+            "straight": {
+                "default": "တည္႔တည္႔သြားပါ",
+                "name": "{way_name}",
+                "destination": "{destination}ဆီသို႕တည့္တည့္သြားပါ"
+            }
+        },
+        "use lane": {
+            "no_lanes": {
+                "default": "ေျဖာင္႔ေျဖာင္႔တန္းတန္း ဆက္သြားပါ"
+            },
+            "default": {
+                "default": "{lane_instruction}"
+            }
+        }
+    }
+}
