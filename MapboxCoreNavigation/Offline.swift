@@ -20,7 +20,7 @@ public class OfflineDirections: Directions {
     let tilesPath: String
     let translationsPath: String
     
-    public typealias OfflineCompletionHandler = () -> Void
+    public typealias OfflineCompletionHandler = (_ numberOfTiles: UInt) -> Void
     
     public init(accessToken: String?, host: String?, tilesPath: String, translationsPath: String, completionHandler: @escaping OfflineCompletionHandler) {
         self.tilesPath = tilesPath
@@ -31,10 +31,10 @@ public class OfflineDirections: Directions {
         Constants.serialQueue.sync {
             let tilesPath = self.tilesPath.replacingOccurrences(of: "file://", with: "")
             let translationsPath = self.translationsPath.replacingOccurrences(of: "file://", with: "")
-            self.navigator.configureRouter(forTilesPath: tilesPath, translationsPath: translationsPath)
+            let tileCount = self.navigator.setupRouter(tilesPath, translationsPath: translationsPath)
             
             DispatchQueue.main.async {
-                completionHandler()
+                completionHandler(tileCount)
             }
         }
     }
