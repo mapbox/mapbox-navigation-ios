@@ -41,6 +41,7 @@
 		35002D761E5F6CD30090E733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35002D741E5F6CD30090E733 /* Main.storyboard */; };
 		3502231A205BC94E00E1449A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35022319205BC94E00E1449A /* Constants.swift */; };
 		35025F3F1F051DD2002BA3EA /* DialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35025F3E1F051DD2002BA3EA /* DialogViewController.swift */; };
+		3506DE3A216E2ADE007DA352 /* OfflineRoutingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3506DE39216E2ADE007DA352 /* OfflineRoutingTests.swift */; };
 		3507F9FB2134309E0086B39E /* MapboxGeocoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3507F9F92134305C0086B39E /* MapboxGeocoder.framework */; };
 		3507F9FC2134309E0086B39E /* MapboxGeocoder.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3507F9F92134305C0086B39E /* MapboxGeocoder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3510300F1F54B67000E3B7E7 /* LaneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3510300E1F54B67000E3B7E7 /* LaneTests.swift */; };
@@ -587,6 +588,7 @@
 		35002D751E5F6CD30090E733 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		35022319205BC94E00E1449A /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		35025F3E1F051DD2002BA3EA /* DialogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogViewController.swift; sourceTree = "<group>"; };
+		3506DE39216E2ADE007DA352 /* OfflineRoutingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineRoutingTests.swift; sourceTree = "<group>"; };
 		3507F9F92134305C0086B39E /* MapboxGeocoder.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxGeocoder.framework; path = Carthage/Build/iOS/MapboxGeocoder.framework; sourceTree = "<group>"; };
 		3510300E1F54B67000E3B7E7 /* LaneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaneTests.swift; sourceTree = "<group>"; };
 		351030101F54B72000E3B7E7 /* route-for-lane-testing.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "route-for-lane-testing.json"; sourceTree = "<group>"; };
@@ -1587,6 +1589,7 @@
 				C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */,
 				C582BA2B2073E77E00647DAA /* StringTests.swift */,
 				AE8B1B96207D2B2B003050F6 /* TunnelAuthorityTests.swift */,
+				3506DE39216E2ADE007DA352 /* OfflineRoutingTests.swift */,
 			);
 			path = MapboxCoreNavigationTests;
 			sourceTree = "<group>";
@@ -2423,6 +2426,7 @@
 				16435E05206EE37800AF48B6 /* DummyURLSessionDataTask.swift in Sources */,
 				8DB7EF6C2176688D00DA83A3 /* LeakTest.swift in Sources */,
 				C5ADFBD81DDCC7840011824B /* MapboxCoreNavigationTests.swift in Sources */,
+				3506DE3A216E2ADE007DA352 /* OfflineRoutingTests.swift in Sources */,
 				16120A4D20645D6E007EA21D /* NavigationEventsManagerTestDoubles.swift in Sources */,
 				C551B0E620D42222009A986F /* NavigationLocationManagerTests.swift in Sources */,
 				359A8AED1FA78D3000BDB486 /* DistanceFormatterTests.swift in Sources */,

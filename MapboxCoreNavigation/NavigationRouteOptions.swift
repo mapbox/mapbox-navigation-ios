@@ -9,8 +9,6 @@ import MapboxNavigationNative
  */
 @objc(MBNavigationRouteOptions)
 open class NavigationRouteOptions: RouteOptions {
-    
-    var preferredRequestOption: RequestOption = .clientSideOnly
 
     /**
      Initializes a navigation route options object for routes between the given waypoints and an optional profile identifier optimized for navigation.
