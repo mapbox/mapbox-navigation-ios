@@ -1,0 +1,493 @@
+{
+    "meta": {
+        "capitalizeFirstLetter": true
+    },
+    "v5": {
+        "constants": {
+            "ordinalize": {
+                "1": "ראשונה",
+                "2": "שניה",
+                "3": "שלישית",
+                "4": "רביעית",
+                "5": "חמישית",
+                "6": "שישית",
+                "7": "שביעית",
+                "8": "שמינית",
+                "9": "תשיעית",
+                "10": "עשירית"
+            },
+            "direction": {
+                "north": "צפון",
+                "northeast": "צפון מזרח",
+                "east": "מזרח",
+                "southeast": "דרום מזרח",
+                "south": "דרום",
+                "southwest": "דרום מערב",
+                "west": "מערב",
+                "northwest": "צפון מערב"
+            },
+            "modifier": {
+                "left": "שמאלה",
+                "right": "ימינה",
+                "sharp left": "חדה שמאלה",
+                "sharp right": "חדה ימינה",
+                "slight left": "קלה שמאלה",
+                "slight right": "קלה ימינה",
+                "straight": "ישר",
+                "uturn": "פניית פרסה"
+            },
+            "lanes": {
+                "xo": "היצמד לימין",
+                "ox": "היצמד לשמאל",
+                "xox": "המשך בנתיב האמצעי",
+                "oxo": "היצמד לימין או לשמאל"
+            }
+        },
+        "modes": {
+            "ferry": {
+                "default": "עלה על המעבורת",
+                "name": "עלה על המעבורת {way_name}",
+                "destination": "עלה על המעבורת לכיוון {destination}"
+            }
+        },
+        "phrase": {
+            "two linked by distance": "{instruction_one}, ואז, בעוד{distance}, {instruction_two}",
+            "two linked": "{instruction_one}, ואז {instruction_two}",
+            "one in distance": "בעוד {distance}, {instruction_one}",
+            "name and ref": "{name} ({ref})",
+            "exit with number": "יציאה {exit}"
+        },
+        "arrive": {
+            "default": {
+                "default": "הגעת אל היעד ה{nth} שלך",
+                "upcoming": "אתה תגיע אל היעד ה{nth} שלך",
+                "short": "הגעת",
+                "short-upcoming": "תגיע",
+                "named": "הגעת אל {waypoint_name}"
+            },
+            "left": {
+                "default": "הגעת אל היעד ה{nth} שלך משמאלך",
+                "upcoming": "אתה תגיע אל היעד ה{nth} שלך משמאלך",
+                "short": "הגעת",
+                "short-upcoming": "תגיע",
+                "named": "הגעת אל {waypoint_name} שלך משמאלך"
+            },
+            "right": {
+                "default": "הגעת אל היעד ה{nth} שלך מימינך",
+                "upcoming": "אתה תגיע אל היעד ה{nth} שלך מימינך",
+                "short": "הגעת",
+                "short-upcoming": "תגיע",
+                "named": "הגעת אל {waypoint_name} שלך מימינך"
+            },
+            "sharp left": {
+                "default": "הגעת אל היעד ה{nth} שלך משמאלך",
+                "upcoming": "אתה תגיע אל היעד ה{nth} שלך משמאלך",
+                "short": "הגעת",
+                "short-upcoming": "תגיע",
+                "named": "הגעת אל {waypoint_name} שלך משמאלך"
+            },
+            "sharp right": {
+                "default": "הגעת אל היעד ה{nth} שלך מימינך",
+                "upcoming": "אתה תגיע אל היעד ה{nth} שלך מימינך",
+                "short": "הגעת",
+                "short-upcoming": "תגיע",
+                "named": "הגעת אל {waypoint_name} שלך מימינך"
+            },
+            "slight right": {
+                "default": "הגעת אל היעד ה{nth} שלך מימינך",
+                "upcoming": "אתה תגיע אל היעד ה{nth} שלך מימינך",
+                "short": "הגעת",
+                "short-upcoming": "תגיע",
+                "named": "הגעת אל {waypoint_name} שלך מימינך"
+            },
+            "slight left": {
+                "default": "הגעת אל היעד ה{nth} שלך משמאלך",
+                "upcoming": "אתה תגיע אל היעד ה{nth} שלך משמאלך",
+                "short": "הגעת",
+                "short-upcoming": "תגיע",
+                "named": "הגעת אל {waypoint_name} שלך משמאלך"
+            },
+            "straight": {
+                "default": "הגעת אל היעד ה{nth} שלך, בהמשך",
+                "upcoming": "אתה תגיע אל היעד ה{nth} שלך, בהמשך",
+                "short": "הגעת",
+                "short-upcoming": "תגיע",
+                "named": "הגעת אל {waypoint_name}, בהמשך"
+            }
+        },
+        "continue": {
+            "default": {
+                "default": "פנה {modifier}",
+                "name": "פנה {modifier} כדי להישאר ב{way_name}",
+                "destination": "פנה {modifier} לכיוון {destination}",
+                "exit": "פנה {modifier} על {way_name}"
+            },
+            "straight": {
+                "default": "המשך ישר",
+                "name": "המשך ישר כדי להישאר על {way_name}",
+                "destination": "המשך לכיוון {destination}",
+                "distance": "המשך ישר לאורך {distance}",
+                "namedistance": "המשך על {way_name} לאורך {distance}"
+            },
+            "sharp left": {
+                "default": "פנה בחדות שמאלה",
+                "name": "פנה בחדות שמאלה כדי להישאר על {way_name}",
+                "destination": "פנה בחדות שמאלה לכיוון {destination}"
+            },
+            "sharp right": {
+                "default": "פנה בחדות ימינה",
+                "name": "פנה בחדות ימינה כדי להישאר על {way_name}",
+                "destination": "פנה בחדות ימינה לכיוון {destination}"
+            },
+            "slight left": {
+                "default": "פנה קלות שמאלה",
+                "name": "פנה קלות שמאלה כדי להישאר על {way_name}",
+                "destination": "פנה קלות שמאלה לכיוון {destination}"
+            },
+            "slight right": {
+                "default": "פנה קלות ימינה",
+                "name": "פנה קלות ימינה כדי להישאר על {way_name}",
+                "destination": "פנה קלות ימינה לכיוון {destination}"
+            },
+            "uturn": {
+                "default": "פנה פניית פרסה",
+                "name": "פנה פניית פרסה והמשך על {way_name}",
+                "destination": "פנה פניית פרסה לכיוון {destination}"
+            }
+        },
+        "depart": {
+            "default": {
+                "default": "התכוונן {direction}",
+                "name": "התכוונן {direction} על {way_name}",
+                "namedistance": "התכוונן {direction} על {way_name} לאורך {distance}"
+            }
+        },
+        "end of road": {
+            "default": {
+                "default": "פנה {modifier}",
+                "name": "פנה {modifier} על {way_name}",
+                "destination": "פנה {modifier} לכיוון {destination}"
+            },
+            "straight": {
+                "default": "המשך ישר",
+                "name": "המשך ישר על {way_name}",
+                "destination": "המשך ישר לכיוון {destination}"
+            },
+            "uturn": {
+                "default": "פנה פניית פרסה בסוף הדרך",
+                "name": "פנה פניית פרסה על {way_name} בסוף הדרך",
+                "destination": "פנה פניית פרסה לכיוון {destination} בסוף הדרך"
+            }
+        },
+        "fork": {
+            "default": {
+                "default": "היצמד {modifier} בהתפצלות",
+                "name": "היצמד {modifier} על {way_name}",
+                "destination": "היצמד {modifier} לכיוון {destination}"
+            },
+            "slight left": {
+                "default": "היצמד לשמאל בהתפצלות",
+                "name": "היצמד לשמאל על {way_name}",
+                "destination": "היצמד לשמאל לכיוון {destination}"
+            },
+            "slight right": {
+                "default": "היצמד ימינה בהתפצלות",
+                "name": "היצמד לימין על {way_name}",
+                "destination": "היצמד לימין לכיוון {destination}"
+            },
+            "sharp left": {
+                "default": "פנה בחדות שמאלה בהתפצלות",
+                "name": "פנה בחדות שמאלה על {way_name}",
+                "destination": "פנה בחדות שמאלה לכיוון {destination}"
+            },
+            "sharp right": {
+                "default": "פנה בחדות ימינה בהתפצלות",
+                "name": "פנה בחדות ימינה על {way_name}",
+                "destination": "פנה בחדות ימינה לכיוון {destination}"
+            },
+            "uturn": {
+                "default": "פנה פניית פרסה",
+                "name": "פנה פניית פרסה על {way_name}",
+                "destination": "פנה פניית פרסה לכיוון {destination}"
+            }
+        },
+        "merge": {
+            "default": {
+                "default": "השתלב {modifier}",
+                "name": "השתלב {modifier} על {way_name}",
+                "destination": "השתלב {modifier} לכיוון {destination}"
+            },
+            "straight": {
+                "default": "השתלב",
+                "name": "השתלב על {way_name}",
+                "destination": "השתלב לכיוון {destination}"
+            },
+            "slight left": {
+                "default": "השתלב שמאלה",
+                "name": "השתלב שמאלה על {way_name}",
+                "destination": "השתלב שמאלה לכיוון {destination}"
+            },
+            "slight right": {
+                "default": "השתלב ימינה",
+                "name": "השתלב ימינה על {way_name}",
+                "destination": "השתלב ימינה לכיוון {destination}"
+            },
+            "sharp left": {
+                "default": "השתלב שמאלה",
+                "name": "השתלב שמאלה על {way_name}",
+                "destination": "השתלב שמאלה לכיוון {destination}"
+            },
+            "sharp right": {
+                "default": "השתלב ימינה",
+                "name": "השתלב ימינה על {way_name}",
+                "destination": "השתלב ימינה לכיוון {destination}"
+            },
+            "uturn": {
+                "default": "פנה פניית פרסה",
+                "name": "פנה פניית פרסה על {way_name}",
+                "destination": "פנה פניית פרסה לכיוון {destination}"
+            }
+        },
+        "new name": {
+            "default": {
+                "default": "המשך {modifier}",
+                "name": "המשך {modifier} על {way_name}",
+                "destination": "המשך {modifier} לכיוון {destination}"
+            },
+            "straight": {
+                "default": "המשך ישר",
+                "name": "המשך על {way_name}",
+                "destination": "המשך לכיוון {destination}"
+            },
+            "sharp left": {
+                "default": "פנה בחדות שמאלה",
+                "name": "פנה בחדות שמאלה על {way_name}",
+                "destination": "פנה בחדות שמאלה לכיוון {destination}"
+            },
+            "sharp right": {
+                "default": "פנה בחדות ימינה",
+                "name": "פנה בחדות ימינה על {way_name}",
+                "destination": "פנה בחדות ימינה לכיוון {destination}"
+            },
+            "slight left": {
+                "default": "המשך בנטייה קלה שמאלה",
+                "name": "המשך בנטייה קלה שמאלה על {way_name}",
+                "destination": "המשך בנטייה קלה שמאלה לכיוון {destination}"
+            },
+            "slight right": {
+                "default": "המשך בנטייה קלה ימינה",
+                "name": "המשך בנטייה קלה ימינה על {way_name}",
+                "destination": "המשך בנטייה קלה ימינה לכיוון {destination}"
+            },
+            "uturn": {
+                "default": "פנה פניית פרסה",
+                "name": "פנה פניית פרסה על {way_name}",
+                "destination": "פנה פניית פרסה לכיוון {destination}"
+            }
+        },
+        "notification": {
+            "default": {
+                "default": "המשך {modifier}",
+                "name": "המשך {modifier} על {way_name}",
+                "destination": "המשך {modifier} לכיוון {destination}"
+            },
+            "uturn": {
+                "default": "פנה פניית פרסה",
+                "name": "פנה פניית פרסה על {way_name}",
+                "destination": "פנה פניית פרסה לכיוון {destination}"
+            }
+        },
+        "off ramp": {
+            "default": {
+                "default": "צא ביציאה",
+                "name": "צא ביציאה על {way_name}",
+                "destination": "צא ביציאה לכיוון {destination}",
+                "exit": "צא ביציאה {exit}",
+                "exit_destination": "צא ביציאה {exit} לכיוון {destination}"
+            },
+            "left": {
+                "default": "צא ביציאה שמשמאלך",
+                "name": "צא ביציאה שמשמאלך על {way_name}",
+                "destination": "צא ביציאה שמשמאלך לכיוון {destination}",
+                "exit": "צא ביציאה {exit} משמאלך",
+                "exit_destination": "צא ביציאה {exit} משמאלך לכיוון {destination}"
+            },
+            "right": {
+                "default": "צא ביציאה שמימינך",
+                "name": "צא ביציאה שמימינך על {way_name}",
+                "destination": "צא ביציאה שמימינך לכיוון {destination}",
+                "exit": "צא ביציאה {exit} מימינך",
+                "exit_destination": "צא ביציאה {exit} מימינך לכיוון {destination}"
+            },
+            "sharp left": {
+                "default": "צא ביציאה שבשמאלך",
+                "name": "צא ביציאה שמשמאלך על {way_name}",
+                "destination": "צא ביציאה שמשמאלך לכיוון {destination}",
+                "exit": "צא ביציאה {exit} משמאלך",
+                "exit_destination": "צא ביציאה {exit} משמאלך לכיוון {destination}"
+            },
+            "sharp right": {
+                "default": "צא ביציאה שמימינך",
+                "name": "צא ביציאה שמימינך על {way_name}",
+                "destination": "צא ביציאה שמימינך לכיוון {destination}",
+                "exit": "צא ביציאה {exit} מימינך",
+                "exit_destination": "צא ביציאה {exit} מימינך לכיוון {destination}"
+            },
+            "slight left": {
+                "default": "צא ביציאה שבשמאלך",
+                "name": "צא ביציאה שמשמאלך על {way_name}",
+                "destination": "צא ביציאה שמשמאלך לכיוון {destination}",
+                "exit": "צא ביציאה {exit} משמאלך",
+                "exit_destination": "צא ביציאה {exit} משמאלך לכיוון {destination}"
+            },
+            "slight right": {
+                "default": "צא ביציאה שמימינך",
+                "name": "צא ביציאה שמימינך על {way_name}",
+                "destination": "צא ביציאה שמימינך לכיוון {destination}",
+                "exit": "צא ביציאה {exit} מימינך",
+                "exit_destination": "צא ביציאה {exit} מימינך לכיוון {destination}"
+            }
+        },
+        "on ramp": {
+            "default": {
+                "default": "צא ביציאה",
+                "name": "צא ביציאה על {way_name}",
+                "destination": "צא ביציאה לכיוון {destination}"
+            },
+            "left": {
+                "default": "צא ביציאה שבשמאלך",
+                "name": "צא ביציאה שמשמאלך על {way_name}",
+                "destination": "צא ביציאה שמשמאלך לכיוון {destination}"
+            },
+            "right": {
+                "default": "צא ביציאה שמימינך",
+                "name": "צא ביציאה שמימינך על {way_name}",
+                "destination": "צא ביציאה שמימינך לכיוון {destination}"
+            },
+            "sharp left": {
+                "default": "צא ביציאה שבשמאלך",
+                "name": "צא ביציאה שמשמאלך על {way_name}",
+                "destination": "צא ביציאה שמשמאלך לכיוון {destination}"
+            },
+            "sharp right": {
+                "default": "צא ביציאה שמימינך",
+                "name": "צא ביציאה שמימינך על {way_name}",
+                "destination": "צא ביציאה שמימינך לכיוון {destination}"
+            },
+            "slight left": {
+                "default": "צא ביציאה שבשמאלך",
+                "name": "צא ביציאה שמשמאלך על {way_name}",
+                "destination": "צא ביציאה שמשמאלך לכיוון {destination}"
+            },
+            "slight right": {
+                "default": "צא ביציאה שמימינך",
+                "name": "צא ביציאה שמימינך על {way_name}",
+                "destination": "צא ביציאה שמימינך לכיוון {destination}"
+            }
+        },
+        "rotary": {
+            "default": {
+                "default": {
+                    "default": "השתלב במעגל התנועה",
+                    "name": "השתלב במעגל התנועה וצא על {way_name}",
+                    "destination": "השתלב במעגל התנועה וצא לכיוון {destination}"
+                },
+                "name": {
+                    "default": "היכנס ל{rotary_name}",
+                    "name": "היכנס ל{rotary_name} וצא על {way_name}",
+                    "destination": "היכנס ל{rotary_name} וצא לכיוון {destination}"
+                },
+                "exit": {
+                    "default": "השתלב במעגל התנועה וצא ביציאה {exit_number}",
+                    "name": "השתלב במעגל התנועה וצא ביציאה {exit_number} ל{way_name}",
+                    "destination": "השתלב במעגל התנועה וצא ביציאה {exit_number} לכיוון {destination}"
+                },
+                "name_exit": {
+                    "default": "היכנס ל{rotary_name} וצא ביציאה ה{exit_number}",
+                    "name": "היכנס ל{rotary_name} וצא ביציאה ה{exit_number} ל{way_name}",
+                    "destination": "היכנס ל{rotary_name} וצא ביציאה ה{exit_number} לכיוון {destination}"
+                }
+            }
+        },
+        "roundabout": {
+            "default": {
+                "exit": {
+                    "default": "השתלב במעגל התנועה וצא ביציאה {exit_number}",
+                    "name": "השתלב במעגל התנועה וצא ביציאה {exit_number} ל{way_name}",
+                    "destination": "השתלב במעגל התנועה וצא ביציאה {exit_number} לכיוון {destination}"
+                },
+                "default": {
+                    "default": "השתלב במעגל התנועה",
+                    "name": "השתלב במעגל התנועה וצא על {way_name}",
+                    "destination": "השתלב במעגל התנועה וצא לכיוון {destination}"
+                }
+            }
+        },
+        "roundabout turn": {
+            "default": {
+                "default": "פנה {modifier}",
+                "name": "פנה {modifier} על {way_name}",
+                "destination": "פנה {modifier} לכיוון {destination}"
+            },
+            "left": {
+                "default": "פנה שמאלה",
+                "name": "פנה שמאלה ל{way_name}",
+                "destination": "פנה שמאלה לכיוון {destination}"
+            },
+            "right": {
+                "default": "פנה ימינה",
+                "name": "פנה ימינה ל{way_name}",
+                "destination": "פנה ימינה לכיוון {destination}"
+            },
+            "straight": {
+                "default": "המשך ישר",
+                "name": "המשך ישר על {way_name}",
+                "destination": "המשך ישר לכיוון {destination}"
+            }
+        },
+        "exit roundabout": {
+            "default": {
+                "default": "צא ממעגל התנועה",
+                "name": "צא ממעגל התנועה ל{way_name}",
+                "destination": "צא ממעגל התנועה לכיוון {destination}"
+            }
+        },
+        "exit rotary": {
+            "default": {
+                "default": "צא ממעגל התנועה",
+                "name": "צא ממעגל התנועה ל{way_name}",
+                "destination": "צא ממעגל התנועה לכיוון {destination}"
+            }
+        },
+        "turn": {
+            "default": {
+                "default": "פנה {modifier}",
+                "name": "פנה {modifier} על {way_name}",
+                "destination": "פנה {modifier} לכיוון {destination}"
+            },
+            "left": {
+                "default": "פנה שמאלה",
+                "name": "פנה שמאלה ל{way_name}",
+                "destination": "פנה שמאלה לכיוון {destination}"
+            },
+            "right": {
+                "default": "פנה ימינה",
+                "name": "פנה ימינה ל{way_name}",
+                "destination": "פנה ימינה לכיוון {destination}"
+            },
+            "straight": {
+                "default": "המשך ישר",
+                "name": "המשך ישר ל{way_name}",
+                "destination": "המשך ישר לכיוון {destination}"
+            }
+        },
+        "use lane": {
+            "no_lanes": {
+                "default": "המשך ישר"
+            },
+            "default": {
+                "default": "{lane_instruction}"
+            }
+        }
+    }
+}
