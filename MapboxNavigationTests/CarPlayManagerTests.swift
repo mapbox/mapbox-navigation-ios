@@ -2,10 +2,10 @@ import XCTest
 import MapboxNavigation
 import MapboxCoreNavigation
 import MapboxDirections
+import MapboxMobileEvents
 
 #if canImport(CarPlay)
 import CarPlay
-@testable import MapboxMobileEvents
 
 // For some reason XCTest bundles ignore @available annotations and these tests are run on iOS < 12 :(
 // This is a bug in XCTest which will hopefully get fixed in an upcoming release.
@@ -14,17 +14,13 @@ import CarPlay
 class CarPlayManagerTests: XCTestCase {
 
     var manager: CarPlayManager?
-
-    var eventsManagerSpy: MMEEventsManagerSpy {
-        get {
-            return manager!.eventsManager as! MMEEventsManagerSpy
-        }
-    }
+    var eventsManagerSpy: NavigationEventsManagerSpy?
 
     override func setUp() {
         super.setUp()
         manager = CarPlayManager.shared
-        manager!.eventsManager = MMEEventsManagerSpy()
+        eventsManagerSpy = NavigationEventsManagerSpy()
+        manager!.eventsManager = eventsManagerSpy!
     }
 
     override func tearDown() {
@@ -44,14 +40,13 @@ class CarPlayManagerTests: XCTestCase {
         // NOTE: Xcode is going to complain here - ignore. This is a known XCTest bug.
         guard #available(iOS 12, *) else { return }
 
-
         simulateCarPlayConnection(manager!)
 
-        let expectedEventName = MMEventTypeCarplayConnect
-        XCTAssertTrue(eventsManagerSpy.hasEnqueuedEvent(with: expectedEventName))
-        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
-        XCTAssertEqual(eventsManagerSpy.enqueuedEventCount(with: expectedEventName), 1)
-        XCTAssertEqual(eventsManagerSpy.enqueuedEventCount(with: expectedEventName), 1)
+        let expectedEventName = MMEventTypeNavigationCarplayConnect
+        XCTAssertTrue(eventsManagerSpy!.hasEnqueuedEvent(with: expectedEventName))
+        XCTAssertTrue(eventsManagerSpy!.hasFlushedEvent(with: expectedEventName))
+        XCTAssertEqual(eventsManagerSpy!.enqueuedEventCount(with: expectedEventName), 1)
+        XCTAssertEqual(eventsManagerSpy!.enqueuedEventCount(with: expectedEventName), 1)
     }
 
     func testEventsEnqueuedAndFlushedWhenCarPlayDisconnected() {
@@ -60,9 +55,9 @@ class CarPlayManagerTests: XCTestCase {
 
         simulateCarPlayDisconnection()
 
-        let expectedEventName = MMEventTypeCarplayDisconnect
-        XCTAssertTrue(eventsManagerSpy.hasEnqueuedEvent(with: expectedEventName))
-        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
+        let expectedEventName = MMEventTypeNavigationCarplayDisconnect
+        XCTAssertTrue(eventsManagerSpy!.hasEnqueuedEvent(with: expectedEventName))
+        XCTAssertTrue(eventsManagerSpy!.hasFlushedEvent(with: expectedEventName))
     }
 
     // MARK: Upon connecting to CarPlay, window and interfaceController should be set up correctly
@@ -211,6 +206,7 @@ class CarPlayManagerSpec: QuickSpec {
                 fakeRouteChoice.userInfo = Fixture.routeWithBannerInstructions()
                 let fakeTrip = CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [fakeRouteChoice])
 
+                //simulate starting a fake trip
                 manager!.mapTemplate(fakeTemplate, startedTrip: fakeTrip, using: fakeRouteChoice)
             }
 
@@ -275,7 +271,7 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
             return route
         }()
         let directionsClientSpy = DirectionsSpy(accessToken: "garbage", host: nil)
-        let service = MapboxNavigationService(route: initialRoute, directions: directionsClientSpy, locationSource: NavigationLocationManager(), eventsManagerType: EventsManagerSpy.self)
+        let service = MapboxNavigationService(route: initialRoute, directions: directionsClientSpy, locationSource: NavigationLocationManager(), eventsManagerType: NavigationEventsManagerSpy.self)
         return service
     }
 
