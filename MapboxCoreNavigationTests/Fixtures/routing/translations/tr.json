@@ -1,0 +1,523 @@
+{
+    "meta": {
+        "capitalizeFirstLetter": true
+    },
+    "v5": {
+        "constants": {
+            "ordinalize": {
+                "1": "birinci",
+                "2": "ikinci",
+                "3": "üçüncü",
+                "4": "dördüncü",
+                "5": "beşinci",
+                "6": "altıncı",
+                "7": "yedinci",
+                "8": "sekizinci",
+                "9": "dokuzuncu",
+                "10": "onuncu"
+            },
+            "direction": {
+                "north": "kuzey",
+                "northeast": "kuzeydoğu",
+                "east": "doğu",
+                "southeast": "güneydoğu",
+                "south": "güney",
+                "southwest": "güneybatı",
+                "west": "batı",
+                "northwest": "kuzeybatı"
+            },
+            "modifier": {
+                "left": "sol",
+                "right": "sağ",
+                "sharp left": "keskin sol",
+                "sharp right": "keskin sağ",
+                "slight left": "hafif sol",
+                "slight right": "hafif sağ",
+                "straight": "düz",
+                "uturn": "U dönüşü"
+            },
+            "lanes": {
+                "xo": "Sağda kalın",
+                "ox": "Solda kalın",
+                "xox": "Ortada kalın",
+                "oxo": "Solda veya sağda kalın"
+            }
+        },
+        "modes": {
+            "ferry": {
+                "default": "Vapur kullan",
+                "name": "{way_name} vapurunu kullan",
+                "destination": "{destination} istikametine giden vapuru kullan"
+            }
+        },
+        "phrase": {
+            "two linked by distance": "{instruction_one} ve {distance} sonra {instruction_two}",
+            "two linked": "{instruction_one} ve sonra {instruction_two}",
+            "one in distance": "{distance} sonra, {instruction_one}",
+            "name and ref": "{name} ({ref})",
+            "exit with number": "exit {exit}"
+        },
+        "arrive": {
+            "default": {
+                "default": "{nth} hedefinize ulaştınız",
+                "upcoming": "{nth} hedefinize ulaştınız",
+                "short": "{nth} hedefinize ulaştınız",
+                "short-upcoming": "{nth} hedefinize ulaştınız",
+                "named": "{waypoint_name} ulaştınız"
+            },
+            "left": {
+                "default": "{nth} hedefinize ulaştınız, hedefiniz solunuzdadır",
+                "upcoming": "{nth} hedefinize ulaştınız, hedefiniz solunuzdadır",
+                "short": "{nth} hedefinize ulaştınız",
+                "short-upcoming": "{nth} hedefinize ulaştınız",
+                "named": "{waypoint_name} ulaştınız, hedefiniz solunuzdadır"
+            },
+            "right": {
+                "default": "{nth} hedefinize ulaştınız, hedefiniz sağınızdadır",
+                "upcoming": "{nth} hedefinize ulaştınız, hedefiniz sağınızdadır",
+                "short": "{nth} hedefinize ulaştınız",
+                "short-upcoming": "{nth} hedefinize ulaştınız",
+                "named": "{waypoint_name} ulaştınız, hedefiniz sağınızdadır"
+            },
+            "sharp left": {
+                "default": "{nth} hedefinize ulaştınız, hedefiniz solunuzdadır",
+                "upcoming": "{nth} hedefinize ulaştınız, hedefiniz solunuzdadır",
+                "short": "{nth} hedefinize ulaştınız",
+                "short-upcoming": "{nth} hedefinize ulaştınız",
+                "named": "{waypoint_name} ulaştınız, hedefiniz solunuzdadır"
+            },
+            "sharp right": {
+                "default": "{nth} hedefinize ulaştınız, hedefiniz sağınızdadır",
+                "upcoming": "{nth} hedefinize ulaştınız, hedefiniz sağınızdadır",
+                "short": "{nth} hedefinize ulaştınız",
+                "short-upcoming": "{nth} hedefinize ulaştınız",
+                "named": "{waypoint_name} ulaştınız, hedefiniz sağınızdadır"
+            },
+            "slight right": {
+                "default": "{nth} hedefinize ulaştınız, hedefiniz sağınızdadır",
+                "upcoming": "{nth} hedefinize ulaştınız, hedefiniz sağınızdadır",
+                "short": "{nth} hedefinize ulaştınız",
+                "short-upcoming": "{nth} hedefinize ulaştınız",
+                "named": "{waypoint_name} ulaştınız, hedefiniz sağınızdadır"
+            },
+            "slight left": {
+                "default": "{nth} hedefinize ulaştınız, hedefiniz solunuzdadır",
+                "upcoming": "{nth} hedefinize ulaştınız, hedefiniz solunuzdadır",
+                "short": "{nth} hedefinize ulaştınız",
+                "short-upcoming": "{nth} hedefinize ulaştınız",
+                "named": "{waypoint_name} ulaştınız, hedefiniz solunuzdadır"
+            },
+            "straight": {
+                "default": "{nth} hedefinize ulaştınız, hedefiniz karşınızdadır",
+                "upcoming": "{nth} hedefinize ulaştınız, hedefiniz karşınızdadır",
+                "short": "{nth} hedefinize ulaştınız",
+                "short-upcoming": "{nth} hedefinize ulaştınız",
+                "named": "{waypoint_name} ulaştınız, hedefiniz karşınızdadır"
+            }
+        },
+        "continue": {
+            "default": {
+                "default": "{modifier} yöne dön",
+                "name": "{way_name} üzerinde kalmak için {modifier} yöne dön",
+                "destination": "{destination} istikametinde {modifier} yöne dön",
+                "exit": "{way_name} üzerinde {modifier} yöne dön"
+            },
+            "straight": {
+                "default": "Düz devam edin",
+                "name": "{way_name} üzerinde kalmak için düz devam et",
+                "destination": "{destination} istikametinde devam et",
+                "distance": "{distance} boyunca düz devam et",
+                "namedistance": "{distance} boyunca {way_name} üzerinde devam et"
+            },
+            "sharp left": {
+                "default": "Sola keskin dönüş yap",
+                "name": "{way_name} üzerinde kalmak için sola keskin dönüş yap",
+                "destination": "{destination} istikametinde sola keskin dönüş yap"
+            },
+            "sharp right": {
+                "default": "Sağa keskin dönüş yap",
+                "name": "{way_name} üzerinde kalmak için sağa keskin dönüş yap",
+                "destination": "{destination} istikametinde sağa keskin dönüş yap"
+            },
+            "slight left": {
+                "default": "Sola hafif dönüş yap",
+                "name": "{way_name} üzerinde kalmak için sola hafif dönüş yap",
+                "destination": "{destination} istikametinde sola hafif dönüş yap"
+            },
+            "slight right": {
+                "default": "Sağa hafif dönüş yap",
+                "name": "{way_name} üzerinde kalmak için sağa hafif dönüş yap",
+                "destination": "{destination} istikametinde sağa hafif dönüş yap"
+            },
+            "uturn": {
+                "default": "U dönüşü yapın",
+                "name": "Bir U-dönüşü yap ve {way_name} devam et",
+                "destination": "{destination} istikametinde bir U-dönüşü yap"
+            }
+        },
+        "depart": {
+            "default": {
+                "default": "{direction} tarafına yönelin",
+                "name": "{way_name} üzerinde {direction} yöne git",
+                "namedistance": "Head {direction} on {way_name} for {distance}"
+            }
+        },
+        "end of road": {
+            "default": {
+                "default": "{modifier} tarafa dönün",
+                "name": "{way_name} üzerinde {modifier} yöne dön",
+                "destination": "{destination} istikametinde {modifier} yöne dön"
+            },
+            "straight": {
+                "default": "Düz devam edin",
+                "name": "{way_name} üzerinde düz devam et",
+                "destination": "{destination} istikametinde düz devam et"
+            },
+            "uturn": {
+                "default": "Yolun sonunda U dönüşü yapın",
+                "name": "Yolun sonunda {way_name} üzerinde bir U-dönüşü yap",
+                "destination": "Yolun sonunda {destination} istikametinde bir U-dönüşü yap"
+            }
+        },
+        "fork": {
+            "default": {
+                "default": "Yol ayrımında {modifier} yönde kal",
+                "name": "{way_name} üzerindeki yol ayrımında {modifier} yönde kal",
+                "destination": "{destination} istikametindeki yol ayrımında {modifier} yönde kal"
+            },
+            "slight left": {
+                "default": "Çatalın solundan devam edin",
+                "name": "Çatalın solundan {way_name} yoluna doğru ",
+                "destination": "{destination} istikametindeki yol ayrımında solda kal"
+            },
+            "slight right": {
+                "default": "Çatalın sağından devam edin",
+                "name": "{way_name} üzerindeki yol ayrımında sağda kal",
+                "destination": "{destination} istikametindeki yol ayrımında sağda kal"
+            },
+            "sharp left": {
+                "default": "Çatalda keskin sola dönün",
+                "name": "{way_name} yoluna doğru sola keskin dönüş yapın",
+                "destination": "{destination} istikametinde sola keskin dönüş yap"
+            },
+            "sharp right": {
+                "default": "Çatalda keskin sağa dönün",
+                "name": "{way_name} yoluna doğru sağa keskin dönüş yapın",
+                "destination": "{destination} istikametinde sağa keskin dönüş yap"
+            },
+            "uturn": {
+                "default": "U dönüşü yapın",
+                "name": "{way_name} yoluna U dönüşü yapın",
+                "destination": "{destination} istikametinde bir U-dönüşü yap"
+            }
+        },
+        "merge": {
+            "default": {
+                "default": "{modifier} yöne gir",
+                "name": "{way_name} üzerinde {modifier} yöne gir",
+                "destination": "{destination} istikametinde {modifier} yöne gir"
+            },
+            "straight": {
+                "default": "düz yöne gir",
+                "name": "{way_name} üzerinde düz yöne gir",
+                "destination": "{destination} istikametinde düz yöne gir"
+            },
+            "slight left": {
+                "default": "Sola gir",
+                "name": "{way_name} üzerinde sola gir",
+                "destination": "{destination} istikametinde sola gir"
+            },
+            "slight right": {
+                "default": "Sağa gir",
+                "name": "{way_name} üzerinde sağa gir",
+                "destination": "{destination} istikametinde sağa gir"
+            },
+            "sharp left": {
+                "default": "Sola gir",
+                "name": "{way_name} üzerinde sola gir",
+                "destination": "{destination} istikametinde sola gir"
+            },
+            "sharp right": {
+                "default": "Sağa gir",
+                "name": "{way_name} üzerinde sağa gir",
+                "destination": "{destination} istikametinde sağa gir"
+            },
+            "uturn": {
+                "default": "U dönüşü yapın",
+                "name": "{way_name} yoluna U dönüşü yapın",
+                "destination": "{destination} istikametinde bir U-dönüşü yap"
+            }
+        },
+        "new name": {
+            "default": {
+                "default": "{modifier} yönde devam et",
+                "name": "{way_name} üzerinde {modifier} yönde devam et",
+                "destination": "{destination} istikametinde {modifier} yönde devam et"
+            },
+            "straight": {
+                "default": "Düz devam et",
+                "name": "{way_name} üzerinde devam et",
+                "destination": "{destination} istikametinde devam et"
+            },
+            "sharp left": {
+                "default": "Sola keskin dönüş yapın",
+                "name": "{way_name} yoluna doğru sola keskin dönüş yapın",
+                "destination": "{destination} istikametinde sola keskin dönüş yap"
+            },
+            "sharp right": {
+                "default": "Sağa keskin dönüş yapın",
+                "name": "{way_name} yoluna doğru sağa keskin dönüş yapın",
+                "destination": "{destination} istikametinde sağa keskin dönüş yap"
+            },
+            "slight left": {
+                "default": "Hafif soldan devam edin",
+                "name": "{way_name} üzerinde hafif solda devam et",
+                "destination": "{destination} istikametinde hafif solda devam et"
+            },
+            "slight right": {
+                "default": "Hafif sağdan devam edin",
+                "name": "{way_name} üzerinde hafif sağda devam et",
+                "destination": "{destination} istikametinde hafif sağda devam et"
+            },
+            "uturn": {
+                "default": "U dönüşü yapın",
+                "name": "{way_name} yoluna U dönüşü yapın",
+                "destination": "{destination} istikametinde bir U-dönüşü yap"
+            }
+        },
+        "notification": {
+            "default": {
+                "default": "{modifier} yönde devam et",
+                "name": "{way_name} üzerinde {modifier} yönde devam et",
+                "destination": "{destination} istikametinde {modifier} yönde devam et"
+            },
+            "uturn": {
+                "default": "U dönüşü yapın",
+                "name": "{way_name} yoluna U dönüşü yapın",
+                "destination": "{destination} istikametinde bir U-dönüşü yap"
+            }
+        },
+        "off ramp": {
+            "default": {
+                "default": "Bağlantı yoluna geç",
+                "name": "{way_name} üzerindeki bağlantı yoluna geç",
+                "destination": "{destination} istikametine giden bağlantı yoluna geç",
+                "exit": "{exit} çıkış yoluna geç",
+                "exit_destination": "{destination} istikametindeki {exit} çıkış yoluna geç"
+            },
+            "left": {
+                "default": "Soldaki bağlantı yoluna geç",
+                "name": "{way_name} üzerindeki sol bağlantı yoluna geç",
+                "destination": "{destination} istikametine giden sol bağlantı yoluna geç",
+                "exit": "Soldaki {exit} çıkış yoluna geç",
+                "exit_destination": "{destination} istikametindeki {exit} sol çıkış yoluna geç"
+            },
+            "right": {
+                "default": "Sağdaki bağlantı yoluna geç",
+                "name": "{way_name} üzerindeki sağ bağlantı yoluna geç",
+                "destination": "{destination} istikametine giden sağ bağlantı yoluna geç",
+                "exit": "Sağdaki {exit} çıkış yoluna geç",
+                "exit_destination": "{destination} istikametindeki {exit} sağ çıkış yoluna geç"
+            },
+            "sharp left": {
+                "default": "Soldaki bağlantı yoluna geç",
+                "name": "{way_name} üzerindeki sol bağlantı yoluna geç",
+                "destination": "{destination} istikametine giden sol bağlantı yoluna geç",
+                "exit": "Soldaki {exit} çıkış yoluna geç",
+                "exit_destination": "{destination} istikametindeki {exit} sol çıkış yoluna geç"
+            },
+            "sharp right": {
+                "default": "Sağdaki bağlantı yoluna geç",
+                "name": "{way_name} üzerindeki sağ bağlantı yoluna geç",
+                "destination": "{destination} istikametine giden sağ bağlantı yoluna geç",
+                "exit": "Sağdaki {exit} çıkış yoluna geç",
+                "exit_destination": "{destination} istikametindeki {exit} sağ çıkış yoluna geç"
+            },
+            "slight left": {
+                "default": "Soldaki bağlantı yoluna geç",
+                "name": "{way_name} üzerindeki sol bağlantı yoluna geç",
+                "destination": "{destination} istikametine giden sol bağlantı yoluna geç",
+                "exit": "Soldaki {exit} çıkış yoluna geç",
+                "exit_destination": "{destination} istikametindeki {exit} sol çıkış yoluna geç"
+            },
+            "slight right": {
+                "default": "Sağdaki bağlantı yoluna geç",
+                "name": "{way_name} üzerindeki sağ bağlantı yoluna geç",
+                "destination": "{destination} istikametine giden sağ bağlantı yoluna geç",
+                "exit": "Sağdaki {exit} çıkış yoluna geç",
+                "exit_destination": "{destination} istikametindeki {exit} sağ çıkış yoluna geç"
+            }
+        },
+        "on ramp": {
+            "default": {
+                "default": "Bağlantı yoluna geç",
+                "name": "{way_name} üzerindeki bağlantı yoluna geç",
+                "destination": "{destination} istikametine giden bağlantı yoluna geç"
+            },
+            "left": {
+                "default": "Soldaki bağlantı yoluna geç",
+                "name": "{way_name} üzerindeki sol bağlantı yoluna geç",
+                "destination": "{destination} istikametine giden sol bağlantı yoluna geç"
+            },
+            "right": {
+                "default": "Sağdaki bağlantı yoluna geç",
+                "name": "{way_name} üzerindeki sağ bağlantı yoluna geç",
+                "destination": "{destination} istikametine giden sağ bağlantı yoluna geç"
+            },
+            "sharp left": {
+                "default": "Soldaki bağlantı yoluna geç",
+                "name": "{way_name} üzerindeki sol bağlantı yoluna geç",
+                "destination": "{destination} istikametine giden sol bağlantı yoluna geç"
+            },
+            "sharp right": {
+                "default": "Sağdaki bağlantı yoluna geç",
+                "name": "{way_name} üzerindeki sağ bağlantı yoluna geç",
+                "destination": "{destination} istikametine giden sağ bağlantı yoluna geç"
+            },
+            "slight left": {
+                "default": "Soldaki bağlantı yoluna geç",
+                "name": "{way_name} üzerindeki sol bağlantı yoluna geç",
+                "destination": "{destination} istikametine giden sol bağlantı yoluna geç"
+            },
+            "slight right": {
+                "default": "Sağdaki bağlantı yoluna geç",
+                "name": "{way_name} üzerindeki sağ bağlantı yoluna geç",
+                "destination": "{destination} istikametine giden sağ bağlantı yoluna geç"
+            }
+        },
+        "rotary": {
+            "default": {
+                "default": {
+                    "default": "Dönel kavşağa gir",
+                    "name": "Dönel kavşağa gir ve {way_name} üzerinde çık",
+                    "destination": "Dönel kavşağa gir ve {destination} istikametinde çık"
+                },
+                "name": {
+                    "default": "{rotary_name} dönel kavşağa gir",
+                    "name": "{rotary_name} dönel kavşağa gir ve {way_name} üzerinde çık",
+                    "destination": "{rotary_name} dönel kavşağa gir ve {destination} istikametinde çık"
+                },
+                "exit": {
+                    "default": "Dönel kavşağa gir ve {exit_number} numaralı çıkışa gir",
+                    "name": "Dönel kavşağa gir ve {way_name} üzerindeki {exit_number} numaralı çıkışa gir",
+                    "destination": "Dönel kavşağa gir ve {destination} istikametindeki {exit_number} numaralı çıkışa gir"
+                },
+                "name_exit": {
+                    "default": "{rotary_name} dönel kavşağa gir ve {exit_number} numaralı çıkışa gir",
+                    "name": "{rotary_name} dönel kavşağa gir ve {way_name} üzerindeki {exit_number} numaralı çıkışa gir",
+                    "destination": "{rotary_name} dönel kavşağa gir ve {destination} istikametindeki {exit_number} numaralı çıkışa gir"
+                }
+            }
+        },
+        "roundabout": {
+            "default": {
+                "exit": {
+                    "default": "Göbekli kavşağa gir ve {exit_number} numaralı çıkışa gir",
+                    "name": "Göbekli kavşağa gir ve {way_name} üzerindeki {exit_number} numaralı çıkışa gir",
+                    "destination": "Göbekli kavşağa gir ve {destination} istikametindeki {exit_number} numaralı çıkışa gir"
+                },
+                "default": {
+                    "default": "Göbekli kavşağa gir",
+                    "name": "Göbekli kavşağa gir ve {way_name} üzerinde çık",
+                    "destination": "Göbekli kavşağa gir ve {destination} istikametinde çık"
+                }
+            }
+        },
+        "roundabout turn": {
+            "default": {
+                "default": "{modifier} yöne dön",
+                "name": "{way_name} üzerinde {modifier} yöne dön",
+                "destination": "{destination} istikametinde {modifier} yöne dön"
+            },
+            "left": {
+                "default": "Sola dön",
+                "name": "{way_name} üzerinde sola dön",
+                "destination": "{destination} istikametinde sola dön"
+            },
+            "right": {
+                "default": "Sağa dön",
+                "name": "{way_name} üzerinde sağa dön",
+                "destination": "{destination} istikametinde sağa dön"
+            },
+            "straight": {
+                "default": "Düz devam et",
+                "name": "{way_name} üzerinde düz devam et",
+                "destination": "{destination} istikametinde düz devam et"
+            }
+        },
+        "exit roundabout": {
+            "default": {
+                "default": "{modifier} yöne dön",
+                "name": "{way_name} üzerinde {modifier} yöne dön",
+                "destination": "{destination} istikametinde {modifier} yöne dön"
+            },
+            "left": {
+                "default": "Sola dön",
+                "name": "{way_name} üzerinde sola dön",
+                "destination": "{destination} istikametinde sola dön"
+            },
+            "right": {
+                "default": "Sağa dön",
+                "name": "{way_name} üzerinde sağa dön",
+                "destination": "{destination} istikametinde sağa dön"
+            },
+            "straight": {
+                "default": "Düz devam et",
+                "name": "{way_name} üzerinde düz devam et",
+                "destination": "{destination} istikametinde düz devam et"
+            }
+        },
+        "exit rotary": {
+            "default": {
+                "default": "{modifier} yöne dön",
+                "name": "{way_name} üzerinde {modifier} yöne dön",
+                "destination": "{destination} istikametinde {modifier} yöne dön"
+            },
+            "left": {
+                "default": "Sola dön",
+                "name": "{way_name} üzerinde sola dön",
+                "destination": "{destination} istikametinde sola dön"
+            },
+            "right": {
+                "default": "Sağa dön",
+                "name": "{way_name} üzerinde sağa dön",
+                "destination": "{destination} istikametinde sağa dön"
+            },
+            "straight": {
+                "default": "Düz devam et",
+                "name": "{way_name} üzerinde düz devam et",
+                "destination": "{destination} istikametinde düz devam et"
+            }
+        },
+        "turn": {
+            "default": {
+                "default": "{modifier} yöne dön",
+                "name": "{way_name} üzerinde {modifier} yöne dön",
+                "destination": "{destination} istikametinde {modifier} yöne dön"
+            },
+            "left": {
+                "default": "Sola dönün",
+                "name": "{way_name} üzerinde sola dön",
+                "destination": "{destination} istikametinde sola dön"
+            },
+            "right": {
+                "default": "Sağa dönün",
+                "name": "{way_name} üzerinde sağa dön",
+                "destination": "{destination} istikametinde sağa dön"
+            },
+            "straight": {
+                "default": "Düz git",
+                "name": "{way_name} üzerinde düz git",
+                "destination": "{destination} istikametinde düz git"
+            }
+        },
+        "use lane": {
+            "no_lanes": {
+                "default": "Düz devam edin"
+            },
+            "default": {
+                "default": "{lane_instruction}"
+            }
+        }
+    }
+}
