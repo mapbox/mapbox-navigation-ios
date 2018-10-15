@@ -6,7 +6,8 @@ workflows:
     jobs:
       - xcode-10
       - xcode-9
-      - xcode-10-cocoapods-integration
+      - xcode-10-cocoapods-install
+      - xcode-10-cocoapods-update
       - xcode-9-examples
 
 step-library:
@@ -111,12 +112,20 @@ step-library:
         command: |
           xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme Example-Swift clean build | xcpretty
 
-  - &cocoapods-integration-test
+  - &cocoapods-integration-install
       run:
         name: CocoaPods integration test
         command: |
           cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall
           pod install --repo-update
+          xcodebuild -workspace PodInstall.xcworkspace/ -scheme PodInstall -destination 'platform=iOS Simulator,name=iPhone 6 Plus' clean build | xcpretty
+
+  - &cocoapods-integration-update
+      run:
+        name: CocoaPods integration test
+        command: |
+          cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall
+          pod update --repo-update
           xcodebuild -workspace PodInstall.xcworkspace/ -scheme PodInstall -destination 'platform=iOS Simulator,name=iPhone 6 Plus' clean build | xcpretty
 
 jobs:
@@ -151,7 +160,7 @@ jobs:
       - *build-test-MapboxNavigation-ios-11
       - *save-cache
 
-  xcode-10-cocoapods-integration:
+  xcode-10-cocoapods-install:
     macos:
       xcode: "10.0.0"
     environment:
@@ -160,7 +169,20 @@ jobs:
       - checkout
       - *restore-cache-podmaster
       - *restore-cache-cocoapods
-      - *cocoapods-integration-test
+      - *cocoapods-integration-install
+      - *save-cache-cocoapods
+      - *save-cache-podmaster
+
+  xcode-10-cocoapods-update:
+    macos:
+      xcode: "10.0.0"
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+    steps:
+      - checkout
+      - *restore-cache-podmaster
+      - *restore-cache-cocoapods
+      - *cocoapods-integration-update
       - *save-cache-cocoapods
       - *save-cache-podmaster
 
