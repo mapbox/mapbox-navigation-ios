@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+#import <MapboxNavigationNative/MapboxNavigationNative.h>
 
 /**
  Posted when `MBRouteController` receives a user location update representing movement along the expected route.
@@ -81,4 +82,10 @@ extern const MBRouteControllerNotificationUserInfoKey MBRouteControllerIsProacti
 
 @interface NSString (MD5)
 - (NSString * _Nonnull)md5;
+@end
+
+@interface MBNavigator (additions)
+
+- (NSUInteger)setupRouter:(NSString *)tilesPath translationsPath:(NSString *)translationsPath;
+
 @end
