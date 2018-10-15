@@ -51,6 +51,9 @@
                <Test
                   Identifier = "MapboxNavigationTests/testLowAlert()">
                </Test>
+               <Test
+                  Identifier = "OfflineRoutingTests">
+               </Test>
             </SkippedTests>
          </TestableReference>
       </Testables>
