@@ -115,7 +115,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     }
 
     public override func encode(with aCoder: NSCoder) {
-        aCoder.encode(eventsManager, forKey: "EventsManager")
+        aCoder.encode(eventsManager, forKey: "NavigationEventsManager")
     }
     
     required public init?(coder aDecoder: NSCoder) {
