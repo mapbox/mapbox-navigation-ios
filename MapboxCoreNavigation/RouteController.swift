@@ -663,7 +663,7 @@ public extension RouteController {
             fatalError()
         }
     }
-    @available(*, obsoleted: 0.1, renamed: "navigationService.eventsManager", message: "NavigationViewController no-longer directly manages an EventsManager. See MapboxNavigationService, which contains a reference to the eventsManager, for more information.")
+    @available(*, obsoleted: 0.1, renamed: "navigationService.eventsManager", message: "NavigationViewController no-longer directly manages an NavigationEventsManager. See MapboxNavigationService, which contains a reference to the eventsManager, for more information.")
     /// :nodoc: obsoleted
     @objc public final var eventsManager: NavigationEventsManager! {
         get {

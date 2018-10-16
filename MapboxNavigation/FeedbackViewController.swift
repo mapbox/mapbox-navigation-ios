@@ -106,7 +106,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     }
     
     /**
-     Initialize a new FeedbackViewController from an `EventsManager`.
+     Initialize a new FeedbackViewController from an `NavigationEventsManager`.
      */
     @objc public init(eventsManager: NavigationEventsManager) {
         self.eventsManager = eventsManager

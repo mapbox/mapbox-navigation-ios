@@ -1,12 +1,12 @@
 import Foundation
 
 /**
- Feedback type is used to specify the type of feedback being recorded with `EventsManager.recordFeedback(type:description:)`.
+ Feedback type is used to specify the type of feedback being recorded with `NavigationEventsManager.recordFeedback(type:description:)`.
  */
 @objc(MBFeedbackType)
 public enum FeedbackType: Int, CustomStringConvertible {
     /**
-     Indicates general feedback. You should provide a `description` string to `EventsManager.recordFeedback(type:description:)` to elaborate on the feedback if possible.
+     Indicates general feedback. You should provide a `description` string to `NavigationEventsManager.recordFeedback(type:description:)` to elaborate on the feedback if possible.
      */
     case general
     
