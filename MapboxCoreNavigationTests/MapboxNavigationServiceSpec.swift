@@ -3,7 +3,6 @@ import Quick
 import Nimble
 import MapboxDirections
 @testable import MapboxCoreNavigation
-@testable import MapboxNavigation
 
 class MapboxNavigationServiceSpec: QuickSpec {
     
