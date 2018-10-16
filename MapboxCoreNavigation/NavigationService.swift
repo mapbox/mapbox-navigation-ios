@@ -63,7 +63,7 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
     /**
      The events manager, responsible for all telemetry.
      */
-    var eventsManager: EventsManager! { get }
+    var eventsManager: NavigationEventsManager! { get }
     
     /**
      The route along which the user is expected to travel.
@@ -113,7 +113,7 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
 }
 
 /**
- A `NavigationService` is the entry-point interface into MapboxCoreNavigation. This service manages a `locationManager` (which feeds it location updates), a `Directions` service (for rerouting), a `Router` (for route-following), an `eventsManager` (for telemetry), and a simulation engine for use during poor GPS conditions.
+ A `NavigationService` is the entry-point interface into MapboxCoreNavigation. This service manages a `locationManager` (which feeds it location updates), a `Directions` service (for rerouting), a `Router` (for route-following), a `NavigationEventsManager` (for telemetry), and a simulation engine for use during poor GPS conditions.
  */
 @objc(MBNavigationService)
 public class MapboxNavigationService: NSObject, NavigationService, DefaultInterfaceFlag {
@@ -491,7 +491,7 @@ extension MapboxNavigationService {
     }
 }
 
-fileprivate extension EventsManager {
+fileprivate extension NavigationEventsManager {
     func incrementDistanceTraveled(by distance: CLLocationDistance) {
        sessionState?.totalDistanceCompleted += distance
     }
