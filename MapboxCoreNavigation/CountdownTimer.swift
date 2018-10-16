@@ -22,7 +22,7 @@ class CountdownTimer {
     
     private(set) var state: State = .disarmed
     
-    init(countdown: DispatchTimeInterval, payload: @escaping Payload, accuracy: DispatchTimeInterval = defaultAccuracy, executingOn executionQueue: DispatchQueue = .main) {
+    init(countdown: DispatchTimeInterval, accuracy: DispatchTimeInterval = defaultAccuracy, executingOn executionQueue: DispatchQueue = .main, payload: @escaping Payload) {
         countdownInterval = countdown
         self.executionQueue = executionQueue
         self.payload = payload
