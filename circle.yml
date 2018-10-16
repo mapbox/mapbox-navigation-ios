@@ -1,0 +1,202 @@
+version: 2
+
+workflows:
+  version: 2
+  default:
+    jobs:
+      - xcode-10
+      - xcode-9
+      - xcode-10-cocoapods-install
+      - xcode-10-cocoapods-update
+      - xcode-9-examples
+
+step-library:
+  - &restore-cache
+      restore_cache:
+        keys:
+          - carthage-cache-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cartfile.resolved" }}
+          - carthage-cache-v1- # used if checksum fails
+
+  - &restore-cache-cocoapods
+      restore_cache:
+        keys:
+          - cp-cache-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "MapboxCoreNavigationTests/CocoaPodsTest/PodInstall/Podfile.lock" }}
+          - cp-cache-v1
+
+  - &restore-cache-podmaster
+      restore_cache:
+        keys:
+          - podmaster-cache
+
+  - &save-cache
+      save_cache:
+        key: carthage-cache-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cartfile.resolved" }}
+        paths:
+          - Carthage
+
+  - &save-cache-cocoapods
+      save_cache:
+        key: cp-cache-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "MapboxCoreNavigationTests/CocoaPodsTest/PodInstall/Podfile.lock" }}
+        paths:
+          - MapboxCoreNavigationTests/CocoaPodsTest/PodInstall/Pods
+
+  - &save-cache-podmaster
+      save_cache:
+        key: podmaster-cache
+        paths:
+          - "~/.cocoapods/repos/master"
+
+  - &prepare
+      run:
+        name: Prepare
+        command: |
+          git submodule sync
+          if (brew outdated | grep carthage > /dev/null); then brew upgrade carthage; fi
+          echo "foo" > ~/.mapbox
+
+  - &prepare-iphone6s-plus-ios-11
+      run:
+        name: Prepare iPhone 6s Plus iOS 11
+        command: xcrun instruments -w "iPhone 6 Plus (11.4) [" || true
+
+  - &prepare-iphone6s-plus-ios-12
+      run:
+        name: Prepare iPhone 6s Plus iOS 12
+        command: xcrun instruments -w "iPhone 6 Plus (12.0) [" || true
+
+  - &verify-missing-localizable-strings
+      run:
+        name: Verify missing localizable strings
+        command: |
+          ./scripts/convert_string_files.sh
+          git diff --exit-code -- */*/*.lproj
+
+  - &install-dependencies
+      run:
+        name: Install Dependencies
+        command: carthage bootstrap --platform ios --cache-builds --configuration Debug --no-use-binaries
+
+  - &build-test-MapboxCoreNavigation-ios-11
+      run:
+        name: Build and Test MapboxCoreNavigation
+        command: |
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test
+
+  - &build-test-MapboxCoreNavigation-ios-12
+      run:
+        name: Build and Test MapboxCoreNavigation
+        command: |
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test
+
+  - &build-test-MapboxNavigation-ios-11
+      run:
+        name: Build and Test MapboxNavigation
+        command: |
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build test
+
+  - &build-test-MapboxNavigation-ios-12
+      run:
+        name: Build and Test MapboxNavigation
+        command: |
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build test
+
+  - &build-Example-Obj-C
+      run:
+        name: Build Example-Objective-C
+        command: |
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme Example-Objective-C clean build | xcpretty
+
+  - &build-Example-Swift
+      run:
+        name: Build Example-Swift
+        command: |
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme Example-Swift clean build | xcpretty
+
+  - &cocoapods-integration-install
+      run:
+        name: CocoaPods integration test
+        command: |
+          cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall
+          pod install --repo-update
+          xcodebuild -workspace PodInstall.xcworkspace/ -scheme PodInstall -destination 'platform=iOS Simulator,name=iPhone 6 Plus' clean build | xcpretty
+
+  - &cocoapods-integration-update
+      run:
+        name: CocoaPods integration test
+        command: |
+          cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall
+          pod update --repo-update
+          xcodebuild -workspace PodInstall.xcworkspace/ -scheme PodInstall -destination 'platform=iOS Simulator,name=iPhone 6 Plus' clean build | xcpretty
+
+jobs:
+  xcode-10:
+    macos:
+      xcode: "10.0.0"
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+    steps:
+      - checkout
+      - *prepare
+      - *prepare-iphone6s-plus-ios-12
+      - *restore-cache
+      - *install-dependencies
+      - *build-test-MapboxCoreNavigation-ios-12
+      - *build-test-MapboxNavigation-ios-12
+      - *save-cache
+
+  xcode-9:
+    macos:
+      xcode: "9.4.1"
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+    steps:
+      - checkout
+      - *prepare
+      - *prepare-iphone6s-plus-ios-11
+      - *restore-cache
+      - *install-dependencies
+      - *verify-missing-localizable-strings
+      - *build-test-MapboxCoreNavigation-ios-11
+      - *build-test-MapboxNavigation-ios-11
+      - *save-cache
+
+  xcode-10-cocoapods-install:
+    macos:
+      xcode: "10.0.0"
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+    steps:
+      - checkout
+      - *restore-cache-podmaster
+      - *restore-cache-cocoapods
+      - *cocoapods-integration-install
+      - *save-cache-cocoapods
+      - *save-cache-podmaster
+
+  xcode-10-cocoapods-update:
+    macos:
+      xcode: "10.0.0"
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+    steps:
+      - checkout
+      - *restore-cache-podmaster
+      - *restore-cache-cocoapods
+      - *cocoapods-integration-update
+      - *save-cache-cocoapods
+      - *save-cache-podmaster
+
+  xcode-9-examples:
+    macos:
+      xcode: "9.4.1"
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+    steps:
+      - checkout
+      - *prepare
+      - *prepare-iphone6s-plus-ios-11
+      - *restore-cache
+      - *install-dependencies
+      - *build-Example-Obj-C
+      - *build-Example-Swift
+      - *save-cache
