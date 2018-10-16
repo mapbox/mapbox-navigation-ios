@@ -639,7 +639,7 @@ public extension RouteController {
     @available(*, obsoleted: 0.1, message: "MapboxNavigationService is now the point-of-entry to MapboxCoreNavigation. Direct use of RouteController is no longer reccomended. See MapboxNavigationService for more information.")
     /// :nodoc: Obsoleted method.
     @objc(initWithRoute:directions:locationManager:eventsManager:)
-    public convenience init(along route: Route, directions: Directions = Directions.shared, locationManager: NavigationLocationManager = NavigationLocationManager(), eventsManager: EventsManager) {
+    public convenience init(along route: Route, directions: Directions = Directions.shared, locationManager: NavigationLocationManager = NavigationLocationManager(), eventsManager: NavigationEventsManager) {
         fatalError()
     }
     
@@ -665,7 +665,7 @@ public extension RouteController {
     }
     @available(*, obsoleted: 0.1, renamed: "navigationService.eventsManager", message: "NavigationViewController no-longer directly manages an EventsManager. See MapboxNavigationService, which contains a reference to the eventsManager, for more information.")
     /// :nodoc: obsoleted
-    @objc public final var eventsManager: EventsManager! {
+    @objc public final var eventsManager: NavigationEventsManager! {
         get {
             fatalError()
         }

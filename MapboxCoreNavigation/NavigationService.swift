@@ -63,7 +63,7 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
     /**
      The events manager, responsible for all telemetry.
      */
-    var eventsManager: EventsManager! { get }
+    var eventsManager: NavigationEventsManager! { get }
     
     /**
      The route along which the user is expected to travel.
@@ -491,7 +491,7 @@ extension MapboxNavigationService {
     }
 }
 
-fileprivate extension EventsManager {
+fileprivate extension NavigationEventsManager {
     func incrementDistanceTraveled(by distance: CLLocationDistance) {
        sessionState?.totalDistanceCompleted += distance
     }
