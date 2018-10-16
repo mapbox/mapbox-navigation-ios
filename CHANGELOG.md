@@ -1,6 +1,6 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## master
+## v0.22.2 (October 15, 2018)
 
 * Fixed an issue where the U-turn icon in the turn banner pointed in the wrong direction. ([#1647](https://github.com/mapbox/mapbox-navigation-ios/pull/1647))
 * Fixed an issue where the user puck was positioned too close to the bottom of the map view, underlapping the current road name label. ([#1766](https://github.com/mapbox/mapbox-navigation-ios/pull/1766])
