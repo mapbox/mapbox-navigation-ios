@@ -248,9 +248,10 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
         super.init()
         resumeNotifications()
         
-        poorGPSTimer = CountdownTimer(countdown: poorGPSPatience.dispatchInterval)  { [weak self] in
-            guard let mode = self?.simulationMode, mode == .onPoorGPS else { return }
-            self?.simulate(intent: .poorGPS)
+        poorGPSTimer = CountdownTimer(countdown: poorGPSPatience.dispatchInterval)  {
+            let mode = self.simulationMode
+            guard mode == .onPoorGPS else { return }
+            self.simulate(intent: .poorGPS)
         }
         
         let routerType = routerType ?? DefaultRouter.self
