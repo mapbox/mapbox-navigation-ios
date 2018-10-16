@@ -1,6 +1,5 @@
 import Foundation
 import MapboxDirections
-import MapboxNavigationNative
 
 /**
  A `NavigationRouteOptions` object specifies turn-by-turn-optimized criteria for results returned by the Mapbox Directions API.
@@ -112,5 +111,3 @@ open class NavigationMatchOptions: MatchOptions {
         super.init(coder: decoder)
     }
 }
-
-
