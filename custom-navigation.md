@@ -20,7 +20,7 @@ To install Mapbox Core Navigation using [CocoaPods](https://cocoapods.org/):
 
 1. Specify the following dependency in your Podfile:
    ```ruby
-   pod 'MapboxCoreNavigation', '~> 0.22'
+   pod 'MapboxCoreNavigation', '~> 0.22.0'
    ```
 
 1. Run `pod install` and open the resulting Xcode workspace.

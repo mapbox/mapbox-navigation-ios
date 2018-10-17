@@ -1,5 +1,10 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v0.22.3 (October 17, 2018)
+
+* Fixed over-retain issue that resulted in the `MapboxNavigationService` persisting beyond its expected lifecycle. This could cause unexpected behavior with components that observe progress noitifications.
+* Fixed warnings caused by internal usage of deprecated types.
+
 ## v0.22.2 (October 15, 2018)
 
 * Fixed an issue where the U-turn icon in the turn banner pointed in the wrong direction. ([#1647](https://github.com/mapbox/mapbox-navigation-ios/pull/1647))
