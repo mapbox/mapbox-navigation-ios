@@ -13,6 +13,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
     override func setUp() {
         super.setUp()
         recordMode = false
+        agnosticOptions = [.OS, .device]
         
         let i280Instruction = VisualInstructionComponent(type: .image, text: nil, imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
         let us101Instruction = VisualInstructionComponent(type: .image, text: nil, imageURL: ShieldImage.us101.url, abbreviation: nil, abbreviationPriority: 0)
@@ -49,7 +50,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         
         view.update(for: makeVisualInstruction(.turn, .right, primaryInstruction: instructions, secondaryInstruction: nil))
         
-        verifyView(view, size: view.bounds.size)
+        verify(view)
     }
     
     func testMultilinePrimary() {
@@ -66,7 +67,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         
         view.update(for: makeVisualInstruction(.turn, .right, primaryInstruction: instructions, secondaryInstruction: nil))
         
-        verifyView(view, size: view.bounds.size)
+        verify(view)
     }
     
     func testSinglelinePrimaryAndSecondary() {
@@ -84,7 +85,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         
         view.update(for: makeVisualInstruction(.turn, .right, primaryInstruction: primary, secondaryInstruction: secondary))
         
-        verifyView(view, size: view.bounds.size)
+        verify(view)
     }
     
     func testPrimaryShieldAndSecondary() {
@@ -101,7 +102,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         
         view.update(for: makeVisualInstruction(.turn, .right, primaryInstruction: primary, secondaryInstruction: secondary))
         
-        verifyView(view, size: view.bounds.size)
+        verify(view)
     }
     
     func testAbbreviateInstructions() {
@@ -121,7 +122,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         
         view.update(for: makeVisualInstruction(.continue, .straightAhead, primaryInstruction: primary, secondaryInstruction: nil))
         
-        verifyView(view, size: view.bounds.size)
+        verify(view)
     }
     
     func testAbbreviateInstructionsIncludingDelimiter() {
@@ -142,7 +143,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         imageRepository.storeImage(ShieldImage.i280.image, forKey: primary.first!.cacheKey!)
         view.update(for: makeVisualInstruction(.continue, .straightAhead, primaryInstruction: primary, secondaryInstruction: nil))
         
-        verifyView(view, size: view.bounds.size)
+        verify(view)
     }
     
     func testAbbreviateWestFremontAvenue() {
@@ -159,7 +160,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         
         view.update(for: makeVisualInstruction(.continue, .straightAhead, primaryInstruction: primary, secondaryInstruction: nil))
         
-        verifyView(view, size: view.bounds.size)
+        verify(view)
     }
     
     func testAdjacentShields() {
@@ -176,7 +177,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         
         view.update(for: makeVisualInstruction(.continue, .straightAhead, primaryInstruction: primary, secondaryInstruction: nil))
         
-        verifyView(view, size: view.bounds.size)
+        verify(view)
     }
     
     func testInstructionsAndNextInstructions() {
@@ -209,7 +210,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         nextBannerView.maneuverView.backgroundColor = .clear
         nextBannerView.maneuverView.isEnd = true
         
-        verifyView(view, size: view.bounds.size)
+        verify(view)
     }
     
     func testLongDistance() {
@@ -224,7 +225,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         let primary = [VisualInstructionComponent(type: .text, text: "中国 安徽省 宣城市 郎溪县", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)]
         view.update(for: makeVisualInstruction(.continue, .straightAhead, primaryInstruction: primary, secondaryInstruction: nil))
         
-        verifyView(view, size: view.bounds.size)
+        verify(view)
     }
     
     func testSweEngLongDistance() {
@@ -238,7 +239,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         let primary = [VisualInstructionComponent(type: .text, text: "Lorem Ipsum / Dolor Sit Amet", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)]
         view.update(for: makeVisualInstruction(primaryInstruction: primary, secondaryInstruction: nil))
         
-        verifyView(view, size: view.bounds.size)
+        verify(view)
     }
     
     func testUkrainianLongDistance() {
@@ -252,7 +253,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         let primary = [VisualInstructionComponent(type: .text, text: "Lorem Ipsum / Dolor Sit Amet", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)]
         view.update(for: makeVisualInstruction(primaryInstruction: primary, secondaryInstruction: nil))
         
-        verifyView(view, size: view.bounds.size)
+        verify(view)
     }
     
     func testExitShields() {
@@ -274,7 +275,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         DayStyle().apply()
         
         view.update(for: makeVisualInstruction(.takeOffRamp, .right, primaryInstruction: primary, secondaryInstruction: [secondary]))
-        verifyView(view, size: view.bounds.size)
+        verify(view)
     }
     
     func testGenericShields() {
@@ -295,16 +296,11 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         DayStyle().apply()
         
         view.update(for: makeVisualInstruction(.reachFork, .right, primaryInstruction: primary, secondaryInstruction: secondary))
-        verifyView(view, size: view.bounds.size)
+        verify(view)
     }
 }
 
 extension InstructionsBannerViewSnapshotTests {
-    
-    func verifyView(_ view: UIView, size: CGSize, tolerance: CGFloat = 0.01) {
-        view.frame.size = size
-        FBSnapshotVerifyView(view, suffixes: ["_64"], tolerance: tolerance)
-    }
     
     // UIAppearance proxy do not work in unit test environment so we have to style manually
     func styleInstructionsView(_ view: InstructionsBannerView) {

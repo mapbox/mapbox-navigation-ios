@@ -17,7 +17,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
     override func setUp() {
         super.setUp()
         recordMode = false
-        isDeviceAgnostic = true
+        agnosticOptions = [.OS, .device]
     }
 
     func storyboard() -> UIStoryboard {
@@ -34,6 +34,6 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         controller.lanesView.update(for: routeController.routeProgress.currentLegProgress)
         controller.lanesView.show()
 
-        FBSnapshotVerifyView(controller.lanesView)
+        verify(controller.lanesView)
     }
 }
