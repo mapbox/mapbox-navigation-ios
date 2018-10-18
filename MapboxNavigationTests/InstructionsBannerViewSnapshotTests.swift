@@ -257,7 +257,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
     }
     
     func testExitShields() {
-        let window = UIApplication.shared.delegate!.window!!
+        let window = UIWindow(frame: CGRect(origin: .zero, size: .iPhone6Plus))
         let view = instructionsView()
         styleInstructionsView(view)
         view.maneuverView.isStart = true
@@ -279,7 +279,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
     }
     
     func testGenericShields() {
-        let window = UIApplication.shared.delegate!.window!!
+        let window = UIWindow(frame: CGRect(origin: .zero, size: .iPhone6Plus))
         let view = instructionsView()
         styleInstructionsView(view)
         view.maneuverView.isStart = true
