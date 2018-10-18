@@ -250,6 +250,7 @@
 		8DE879661FBB9980002F06C0 /* EndOfRouteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DE879651FBB9980002F06C0 /* EndOfRouteViewController.swift */; };
 		8DF399B21FB257B30034904C /* UIGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DF399B11FB257B30034904C /* UIGestureRecognizer.swift */; };
 		AE00A73A209A2C38006A3DC7 /* StepsViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE00A739209A2C38006A3DC7 /* StepsViewControllerTests.swift */; };
+		AE185906217791F80056B93D /* RoutelessEventDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE185905217791F80056B93D /* RoutelessEventDetails.swift */; };
 		AE291FFF20975A7E00F23DFC /* NavigationViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED2156E208F7FEA009AA673 /* NavigationViewControllerTests.swift */; };
 		AE46F95520EA735B00537AC2 /* VisualInstruction.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE46F95420EA735B00537AC2 /* VisualInstruction.swift */; };
 		AE5F8771209A082500F58FDB /* route-with-banner-instructions.json in Resources */ = {isa = PBXBuildFile; fileRef = AE5F8770209A082500F58FDB /* route-with-banner-instructions.json */; };
@@ -769,6 +770,7 @@
 		8DE879651FBB9980002F06C0 /* EndOfRouteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndOfRouteViewController.swift; sourceTree = "<group>"; };
 		8DF399B11FB257B30034904C /* UIGestureRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIGestureRecognizer.swift; sourceTree = "<group>"; };
 		AE00A739209A2C38006A3DC7 /* StepsViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepsViewControllerTests.swift; sourceTree = "<group>"; };
+		AE185905217791F80056B93D /* RoutelessEventDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutelessEventDetails.swift; sourceTree = "<group>"; };
 		AE46F95420EA735B00537AC2 /* VisualInstruction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualInstruction.swift; sourceTree = "<group>"; };
 		AE5F8770209A082500F58FDB /* route-with-banner-instructions.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-with-banner-instructions.json"; sourceTree = "<group>"; };
 		AE8B1B96207D2B2B003050F6 /* TunnelAuthorityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelAuthorityTests.swift; sourceTree = "<group>"; };
@@ -1266,6 +1268,7 @@
 			children = (
 				354A9BCC20EA9C8100F03325 /* CoreFeedbackEvent.swift */,
 				354A9BCA20EA9BDA00F03325 /* EventDetails.swift */,
+				AE185905217791F80056B93D /* RoutelessEventDetails.swift */,
 				C5CFE4871EF2FD4C006F48E8 /* MMEEventsManager.swift */,
 				352F464C20EB74C200147886 /* NavigationEventsManager.swift */,
 				354A9BC520EA991900F03325 /* SessionState.swift */,
@@ -2377,6 +2380,7 @@
 				353E68FC1EF0B7F8007B2AE5 /* NavigationLocationManager.swift in Sources */,
 				353E68FE1EF0B985007B2AE5 /* BundleAdditions.swift in Sources */,
 				354A9BCD20EA9C8100F03325 /* CoreFeedbackEvent.swift in Sources */,
+				AE185906217791F80056B93D /* RoutelessEventDetails.swift in Sources */,
 				3582A25020EEC46B0029C5DE /* Router.swift in Sources */,
 				8D75F991212B5C7F00F99CF3 /* TunnelAuthority.swift in Sources */,
 				C5E7A31C1F4F6828001CB015 /* NavigationRouteOptions.swift in Sources */,

@@ -12,7 +12,7 @@ class NavigationEventsManagerSpy: NavigationEventsManager {
         super.init(dataSource: nil, accessToken: "fake token", mobileEventsManager: mobileEventsManagerSpy)
     }
 
-    @objc required convenience init(dataSource source: EventsManagerDataSource?, accessToken possibleToken: String?, mobileEventsManager: MMEEventsManager) {
+    @objc required convenience init(dataSource source: EventsRouteDataSource?, accessToken possibleToken: String?, mobileEventsManager: MMEEventsManager) {
         self.init()
     }
 

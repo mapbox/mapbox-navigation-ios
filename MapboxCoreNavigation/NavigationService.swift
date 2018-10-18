@@ -44,7 +44,7 @@ public protocol DefaultInterfaceFlag {
     If you would like to implement your own core-navigation stack, be sure to conform to this protocol.
  */
 @objc(MBNavigationService)
-public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, EventsManagerDataSource, DefaultInterfaceFlag {
+public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, EventsRouteDataSource, DefaultInterfaceFlag {
     /**
      The location manager for the service. This will be the object responsible for notifying the service of GPS updates.
      */
@@ -340,7 +340,7 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
     }
 
     private func bootstrapEvents() {
-        eventsManager.dataSource = self
+        eventsManager.routeDataSource = self
         eventsManager.resetSession()
     }
 
@@ -468,7 +468,7 @@ extension MapboxNavigationService: RouterDelegate {
     }
 }
 
-//MARK: EventsManagerDataSource Logic
+//MARK: EventsRouteDataSource Logic
 extension MapboxNavigationService {
     public var routeProgress: RouteProgress {
         return self.router.routeProgress

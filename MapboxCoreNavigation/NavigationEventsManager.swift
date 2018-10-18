@@ -2,10 +2,10 @@ import Foundation
 import MapboxMobileEvents
 import MapboxDirections
 
- /**
- The `EventsManagerDataSource` protocol declares values required for recording route following events.
+/**
+ The `EventsRouteDataSource` protocol declares values required for recording route following events.
  */
-@objc public protocol EventsManagerDataSource: class {
+@objc public protocol EventsRouteDataSource: class {
     var routeProgress: RouteProgress { get }
     var location: CLLocation? { get }
     var desiredAccuracy: CLLocationAccuracy { get }
@@ -25,7 +25,7 @@ open class NavigationEventsManager: NSObject {
     
     var outstandingFeedbackEvents = [CoreFeedbackEvent]()
     
-    weak var dataSource: EventsManagerDataSource?
+    weak var routeDataSource: EventsRouteDataSource?
     
     /// :nodoc: This is used internally when the navigation UI is being used
     var usesDefaultUserInterface = false
@@ -45,8 +45,8 @@ open class NavigationEventsManager: NSObject {
         return token
     }()
     
-    @objc public required init(dataSource source: EventsManagerDataSource?, accessToken possibleToken: String? = nil, mobileEventsManager: MMEEventsManager = .shared()) {
-        dataSource = source
+    @objc public required init(dataSource source: EventsRouteDataSource?, accessToken possibleToken: String? = nil, mobileEventsManager: MMEEventsManager = .shared()) {
+        routeDataSource = source
         super.init()
         if let tokenOverride = possibleToken {
             accessToken = tokenOverride
@@ -90,7 +90,7 @@ open class NavigationEventsManager: NSObject {
     }
     
     func navigationCancelEvent(rating potentialRating: Int? = nil, comment: String? = nil) -> EventDetails? {
-        guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
+        guard let dataSource = routeDataSource, let sessionState = sessionState else { return nil }
         
         let rating = potentialRating ?? MMEEventsManager.unrated
         var event = EventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
@@ -108,7 +108,7 @@ open class NavigationEventsManager: NSObject {
     }
     
     func navigationDepartEvent() -> EventDetails? {
-        guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
+        guard let dataSource = routeDataSource, let sessionState = sessionState else { return nil }
 
         var event = EventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationDepart
@@ -116,7 +116,7 @@ open class NavigationEventsManager: NSObject {
     }
     
     func navigationArriveEvent() -> EventDetails? {
-        guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
+        guard let dataSource = routeDataSource, let sessionState = sessionState else { return nil }
 
         var event = EventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationArrive
@@ -132,7 +132,7 @@ open class NavigationEventsManager: NSObject {
     }
     
     func navigationFeedbackEvent(type: FeedbackType, description: String?) -> EventDetails? {
-        guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
+        guard let dataSource = routeDataSource, let sessionState = sessionState else { return nil }
 
         var event = EventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationFeedback
@@ -147,7 +147,7 @@ open class NavigationEventsManager: NSObject {
     }
     
     func navigationRerouteEvent(eventType: String = MMEEventTypeNavigationReroute) -> EventDetails? {
-        guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
+        guard let dataSource = routeDataSource, let sessionState = sessionState else { return nil }
 
         let timestamp = Date()
         var event = EventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
@@ -232,7 +232,7 @@ open class NavigationEventsManager: NSObject {
     }
     
     func resetSession() {
-        guard let dataSource = dataSource else { return }
+        guard let dataSource = routeDataSource else { return }
 
         let route = dataSource.routeProgress.route
         sessionState = SessionState(currentRoute: route, originalRoute: route)

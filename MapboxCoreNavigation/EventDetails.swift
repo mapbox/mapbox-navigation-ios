@@ -5,51 +5,40 @@ import UIKit
 import AVFoundation
 import MapboxDirections
 
+protocol EventRepresentable {
+    // Properties shared between routeless and non-routeless event details.
+    var event: String? { get set }
+    var arrivalTimestamp: Date? { get set }
+    var rating: Int? { get set }
+    var comment: String? { get set }
+    var userId: String? { get set }
+    var feedbackType: String? { get set }
+    var description: String? { get set }
+    var screenshot: String? { get set }
+    
+    var audioType: String { get set }
+    var applicationState: UIApplicationState { get set }
+    var batteryLevel: Int { get set }
+    var batteryPluggedIn: Bool { get set }
+    var created: Date { get set }
+    var device: String { get set }
+    
+    var operatingSystem: String { get set }
+    var originalRequestIdentifier: String? { get set }
+    var profile: String { get set }
+    var platform: String { get set }
+    var percentTimeInPortrait: Int { get set }
+    var percentTimeInForeground: Int { get set }
+    var requestIdentifier: String? { get set }
+    var screenBrightness: Int { get set }
+    var sessionIdentifier: String { get set }
+    var simulation: Bool { get set }
+    var sdkIdentifier: String { get set }
+    var sdkVersion: String { get set }
+    var volumeLevel: Int { get set }
+}
 
-struct EventDetails: Encodable {
-    
-    let audioType: String = AVAudioSession.sharedInstance().audioType
-    let applicationState: UIApplicationState = UIApplication.shared.applicationState
-    let batteryLevel: Int = UIDevice.current.batteryLevel >= 0 ? Int(UIDevice.current.batteryLevel * 100) : -1
-    let batteryPluggedIn: Bool = [.charging, .full].contains(UIDevice.current.batteryState)
-    let coordinate: CLLocationCoordinate2D?
-    let created: Date = Date()
-    let device: String = UIDevice.current.machine
-    let distance: CLLocationDistance?
-    let distanceCompleted: CLLocationDistance
-    let distanceRemaining: TimeInterval
-    let durationRemaining: TimeInterval
-    let estimatedDuration: TimeInterval?
-    let geometry: Polyline?
-    let locationEngine: String?
-    let locationManagerDesiredAccuracy: CLLocationAccuracy?
-    let operatingSystem: String = "\(ProcessInfo.systemName) \(ProcessInfo.systemVersion)"
-    let originalDistance: CLLocationDistance?
-    let originalEstimatedDuration: TimeInterval?
-    let originalGeometry: Polyline?
-    let originalRequestIdentifier: String?
-    let originalStepCount: Int?
-    let profile: String
-    let platform: String = ProcessInfo.systemName
-    let percentTimeInPortrait: Int
-    let percentTimeInForeground: Int
-    let requestIdentifier: String?
-    let rerouteCount: Int
-    let screenBrightness: Int = Int(UIScreen.main.brightness * 100)
-    let sessionIdentifier: String
-    let simulation: Bool
-    let startTimestamp: Date?
-    let sdkIdentifier: String
-    let sdkVersion: String = String(describing: Bundle.mapboxCoreNavigation.object(forInfoDictionaryKey: "CFBundleShortVersionString")!)
-    let userAbsoluteDistanceToDestination: CLLocationDistance?
-    let volumeLevel: Int = Int(AVAudioSession.sharedInstance().outputVolume * 100)
-    
-    let stepIndex: Int
-    let stepCount: Int
-    let legIndex: Int
-    let legCount: Int
-    let totalStepCount: Int
-    
+struct EventDetails: Encodable, EventRepresentable, CarPlayEventRepresentable {
     var event: String?
     var arrivalTimestamp: Date?
     var rating: Int?
@@ -58,12 +47,65 @@ struct EventDetails: Encodable {
     var feedbackType: String?
     var description: String?
     var screenshot: String?
+    
+    var audioType: String = AVAudioSession.sharedInstance().audioType
+    var applicationState: UIApplicationState = UIApplication.shared.applicationState
+    var batteryLevel: Int = UIDevice.current.batteryLevel >= 0 ? Int(UIDevice.current.batteryLevel * 100) : -1
+    var batteryPluggedIn: Bool = [.charging, .full].contains(UIDevice.current.batteryState)
+    var created: Date = Date()
+    var device: String = UIDevice.current.machine
+    var operatingSystem: String = "\(ProcessInfo.systemName) \(ProcessInfo.systemVersion)"
+    var originalRequestIdentifier: String?
+    var profile: String
+    var platform: String = ProcessInfo.systemName
+    var percentTimeInPortrait: Int
+    var percentTimeInForeground: Int
+    var requestIdentifier: String?
+    var screenBrightness: Int = Int(UIScreen.main.brightness * 100)
+    var sessionIdentifier: String
+    var simulation: Bool
+    var sdkIdentifier: String
+    var sdkVersion: String = String(describing: Bundle.mapboxCoreNavigation.object(forInfoDictionaryKey: "CFBundleShortVersionString")!)
+    var volumeLevel: Int = Int(AVAudioSession.sharedInstance().outputVolume * 100)
+    
+    let coordinate: CLLocationCoordinate2D?
+    let distance: CLLocationDistance?
+    let distanceCompleted: CLLocationDistance
+    let distanceRemaining: TimeInterval
+    let durationRemaining: TimeInterval
+    let estimatedDuration: TimeInterval?
+    let geometry: Polyline?
+    let locationEngine: String?
+    let locationManagerDesiredAccuracy: CLLocationAccuracy?
+    let originalDistance: CLLocationDistance?
+    let originalEstimatedDuration: TimeInterval?
+    let originalGeometry: Polyline?
+    let originalStepCount: Int?
+    let rerouteCount: Int
+    let startTimestamp: Date?
+    let userAbsoluteDistanceToDestination: CLLocationDistance?
+    
+    let stepIndex: Int
+    let stepCount: Int
+    let legIndex: Int
+    let legCount: Int
+    let totalStepCount: Int
+    
     var secondsSinceLastReroute: TimeInterval?
     var newDistanceRemaining: CLLocationDistance?
     var newDurationRemaining: TimeInterval?
     var newGeometry: String?
     
-    init(dataSource: EventsManagerDataSource, session: SessionState, defaultInterface: Bool) {
+    var connectedTimeStamp: Date?
+    var disconnectedTimeStamp: Date?
+    var durationConnectedToCarPlay: TimeInterval? {
+        guard let startTime = connectedTimeStamp, let endTime = disconnectedTimeStamp else {
+            return nil
+        }
+        return endTime.timeIntervalSince(startTime)
+    }
+    
+    init(dataSource: EventsRouteDataSource, session: SessionState, defaultInterface: Bool) {
         coordinate = dataSource.location?.coordinate
         startTimestamp = session.departureTimestamp ?? nil
         sdkIdentifier = defaultInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
