@@ -604,8 +604,8 @@ open class ManeuverContainerView: UIView {
 open class InstructionsBannerContentView: UIView { }
 
 /// :nodoc:
-@objc(MBBottomBannerContentView)
-open class BottomBannerContentView: UIView { }
+@objc(MBBottomBannerStackView)
+open class BottomBannerStackView: UIStackView { }
 
 /// :nodoc:
 class NavigationAnnotation: MGLPointAnnotation { }

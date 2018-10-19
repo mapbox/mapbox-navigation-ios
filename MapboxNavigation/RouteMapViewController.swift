@@ -103,7 +103,7 @@ class RouteMapViewController: UIViewController {
     var annotatesSpokenInstructions = false
 
     var overheadInsets: UIEdgeInsets {
-        return UIEdgeInsets(top: navigationView.instructionsBannerView.bounds.height, left: 20, bottom: navigationView.bottomBannerView.bounds.height, right: 20)
+        return UIEdgeInsets(top: navigationView.instructionsBannerView.bounds.height, left: 20, bottom: navigationView.bottomBannerStackView.bounds.height, right: 20)
     }
 
     typealias LabelRoadNameCompletionHandler = (_ defaultRaodNameAssigned: Bool) -> Void
@@ -445,7 +445,7 @@ class RouteMapViewController: UIViewController {
 
     var contentInsets: UIEdgeInsets {
         let top = navigationView.instructionsBannerContentView.bounds.height
-        let bottom = navigationView.bottomBannerView.bounds.height
+        let bottom = navigationView.bottomBannerStackView.bounds.height
         return UIEdgeInsets(top: top, left: 0, bottom: bottom, right: 0)
     }
 

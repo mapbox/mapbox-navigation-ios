@@ -8,7 +8,7 @@ import MapboxDirections
  
  1. InstructionsBannerView
  2. InformationStackView
- 3. BottomBannerView
+ 3. BottomBannerStackView
  4. ResumeButton
  5. WayNameLabel
  6. FloatingStackView
@@ -119,12 +119,13 @@ open class NavigationView: UIView {
         return view
     }()
     
-    lazy var bottomBannerContentView: BottomBannerContentView = .forAutoLayout()
+    lazy var bottomBannerStackView: BottomBannerStackView = .forAutoLayout()
+    
     lazy var bottomBannerView: BottomBannerView = {
         let view: BottomBannerView = .forAutoLayout()
         view.cancelButton.addTarget(self, action: Actions.cancelButton, for: .touchUpInside)
         return view
-        }()
+    }()
     
 
     weak var delegate: NavigationViewDelegate? {
@@ -185,11 +186,10 @@ open class NavigationView: UIView {
     }
     
     func setupContainers() {
-        let containers: [(UIView, UIView)] = [
-            (instructionsBannerContentView, instructionsBannerView),
-            (bottomBannerContentView, bottomBannerView)
-        ]
-        containers.forEach { $0.addSubview($1) }
+        instructionsBannerContentView.addSubview(instructionsBannerView)
+        
+        bottomBannerStackView.axis = .vertical
+        bottomBannerStackView.addArrangedSubview(bottomBannerView)
     }
     
     func setupViews() {
@@ -202,7 +202,7 @@ open class NavigationView: UIView {
             floatingStackView,
             resumeButton,
             wayNameView,
-            bottomBannerContentView,
+            bottomBannerStackView,
             instructionsBannerContentView
         ]
         

@@ -25,19 +25,19 @@ extension NavigationView {
         floatingStackView.trailingAnchor.constraint(equalTo: safeTrailingAnchor, constant: -10).isActive = true
         
         resumeButton.leadingAnchor.constraint(equalTo: safeLeadingAnchor, constant: 10).isActive = true
-        resumeButton.bottomAnchor.constraint(equalTo: bottomBannerView.topAnchor, constant: -10).isActive = true
+        resumeButton.bottomAnchor.constraint(equalTo: bottomBannerStackView.topAnchor, constant: -10).isActive = true
         
-        bottomBannerContentView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        bottomBannerContentView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        bottomBannerContentView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        bottomBannerContentView.topAnchor.constraint(equalTo: bottomBannerView.topAnchor).isActive = true
+        bottomBannerStackView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        bottomBannerStackView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        bottomBannerStackView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         
-        bottomBannerView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        bottomBannerView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        bottomBannerView.bottomAnchor.constraint(equalTo: safeBottomAnchor).isActive = true
+        // pin to the top arranged view if we have one
+        if let arrangedSubview = bottomBannerStackView.arrangedSubviews.first {
+            bottomBannerStackView.topAnchor.constraint(equalTo: arrangedSubview.topAnchor).isActive = true
+        }
         
         wayNameView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        wayNameView.bottomAnchor.constraint(equalTo: bottomBannerView.topAnchor, constant: -10).isActive = true
+        wayNameView.bottomAnchor.constraint(equalTo: bottomBannerStackView.topAnchor, constant: -10).isActive = true
     }
 
     func constrainEndOfRoute() {
@@ -47,6 +47,5 @@ extension NavigationView {
         endOfRouteView?.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         
         self.endOfRouteHeightConstraint?.isActive = true
-        
     }
 }
