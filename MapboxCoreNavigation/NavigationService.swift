@@ -315,6 +315,14 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
     }
     
     public func start() {
+        // Jump to the first coordinate on the route if the location source does
+        // not yet have a fixed location.
+        if router.location == nil,
+            let coordinate = route.coordinates?.first {
+            let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+            router.locationManager?(nativeLocationSource, didUpdateLocations: [location])
+        }
+        
         nativeLocationSource.startUpdatingHeading()
         nativeLocationSource.startUpdatingLocation()
         
