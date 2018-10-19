@@ -119,7 +119,10 @@ open class NavigationView: UIView {
         return view
     }()
     
-    lazy var bottomBannerStackView: BottomBannerStackView = .forAutoLayout()
+    /**
+     The `bottomBannerStackView` can be customized to insert additional banners below the map using the `UIStackView` API.
+     */
+    public lazy var bottomBannerStackView: BottomBannerStackView = .forAutoLayout()
     
     lazy var bottomBannerView: BottomBannerView = {
         let view: BottomBannerView = .forAutoLayout()
