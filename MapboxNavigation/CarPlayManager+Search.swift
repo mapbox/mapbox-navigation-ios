@@ -8,7 +8,6 @@ import MapboxDirections
 extension CarPlayManager: CPSearchTemplateDelegate {
     
     public static let CarPlayGeocodedPlacemarkKey: String = "MBGecodedPlacemark"
-    static var recentItems = RecentItem.loadDefaults()
     
     static var MaximumInitialSearchResults: UInt = 5
     static var MaximumExtendedSearchResults: UInt = 10
@@ -64,8 +63,8 @@ extension CarPlayManager: CPSearchTemplateDelegate {
     }
     
     @available(iOS 12.0, *)
-    public static func searchTemplate(_ manager: CarPlayManager, searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void) {
-        manager.recentSearchText = searchText
+    public func update(searchText: String, completionHandler: @escaping ([CPListItem]) -> Void) {
+        recentSearchText = searchText
         
         // Append recent searches
         var items = recentSearches(searchText)
@@ -75,19 +74,20 @@ extension CarPlayManager: CPSearchTemplateDelegate {
         if shouldSearch {
             
             let options = CarPlayManager.forwardGeocodeOptions(searchText)
-            Geocoder.shared.geocode(options, completionHandler: { (placemarks, attribution, error) in
+            Geocoder.shared.geocode(options, completionHandler: { [weak self] (placemarks, attribution, error) in
+                guard let strongSelf = self else { return }
                 guard let placemarks = placemarks else {
-                    completionHandler(manager.resultsOrNoResults(items, limit: MaximumInitialSearchResults))
+                    completionHandler(strongSelf.resultsOrNoResults(items, limit: CarPlayManager.MaximumInitialSearchResults))
                     return
                 }
                 
                 let results = placemarks.map { $0.listItem() }
                 items.append(contentsOf: results)
-                completionHandler(manager.resultsOrNoResults(results, limit: MaximumInitialSearchResults))
+                completionHandler(strongSelf.resultsOrNoResults(results, limit: CarPlayManager.MaximumInitialSearchResults))
             })
             
         } else {
-            completionHandler(manager.resultsOrNoResults(items, limit: MaximumInitialSearchResults))
+            completionHandler(resultsOrNoResults(items, limit: CarPlayManager.MaximumInitialSearchResults))
         }
     }
     
@@ -105,10 +105,10 @@ extension CarPlayManager: CPSearchTemplateDelegate {
     }
     
     @available(iOS 12.0, *)
-    public static func carPlayManager(_ manager: CarPlayManager, searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void) {
+    public func selectResult(item: CPListItem, completionHandler: @escaping () -> Void) {
         
         guard let userInfo = item.userInfo as? [String: Any],
-            let placemark = userInfo[CarPlayGeocodedPlacemarkKey] as? GeocodedPlacemark,
+            let placemark = userInfo[CarPlayManager.CarPlayGeocodedPlacemarkKey] as? GeocodedPlacemark,
             let location = placemark.location else {
                 completionHandler()
                 return
@@ -118,11 +118,11 @@ extension CarPlayManager: CPSearchTemplateDelegate {
         recentItems.save()
         
         let destinationWaypoint = Waypoint(location: location, heading: nil, name: placemark.formattedName)
-        manager.calculateRouteAndStart(to: destinationWaypoint, completionHandler: completionHandler)
+        calculateRouteAndStart(to: destinationWaypoint, completionHandler: completionHandler)
     }
     
     @available(iOS 12.0, *)
-    static func recentSearches(_ searchText: String) -> [CPListItem] {
+    func recentSearches(_ searchText: String) -> [CPListItem] {
         if searchText.isEmpty {
             return recentItems.map { $0.geocodedPlacemark.listItem() }
         }

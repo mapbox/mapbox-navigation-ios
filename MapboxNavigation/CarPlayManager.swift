@@ -185,6 +185,11 @@ public class CarPlayManager: NSObject {
      The most recent search text.
      */
     var recentSearchText: String?
+    
+    /**
+     The most recently selected search results.
+     */
+    var recentItems = RecentItem.loadDefaults()
 
     private var defaultMapButtons: [CPMapButton]?
 
@@ -516,7 +521,8 @@ extension CarPlayManager: CPMapTemplateDelegate {
 
         let navigationViewController = CarPlayNavigationViewController(with: service,
                                                                        mapTemplate: navigationMapTemplate,
-                                                                       interfaceController: interfaceController, manager: self)
+                                                                       interfaceController: interfaceController,
+                                                                       manager: self)
         navigationViewController.startNavigationSession(for: trip)
         navigationViewController.carPlayNavigationDelegate = self
         currentNavigator = navigationViewController

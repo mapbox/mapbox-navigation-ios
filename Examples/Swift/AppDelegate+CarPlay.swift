@@ -88,11 +88,11 @@ extension AppDelegate: CarPlayManagerDelegate {
     
     #if canImport(MapboxGeocoder)
     func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void) {
-        return CarPlayManager.searchTemplate(carPlayManager, searchTemplate: searchTemplate, updatedSearchText: searchText, completionHandler: completionHandler)
+        return carPlayManager.update(searchText: searchText, completionHandler: completionHandler)
     }
     
     func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void) {
-        return CarPlayManager.carPlayManager(carPlayManager, searchTemplate: searchTemplate, selectedResult: item, completionHandler: completionHandler)
+        return carPlayManager.selectResult(item: item, completionHandler: completionHandler)
     }
     #endif
 }
