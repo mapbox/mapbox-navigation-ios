@@ -189,8 +189,7 @@ public class CarPlayManager: NSObject {
     /**
      The most recently selected search results.
      */
-    var recentItems = RecentItem.loadDefaults()
-
+    
     private var defaultMapButtons: [CPMapButton]?
 
     /**

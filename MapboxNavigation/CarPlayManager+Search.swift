@@ -7,6 +7,8 @@ import MapboxDirections
 @available(iOS 12.0, *)
 extension CarPlayManager: CPSearchTemplateDelegate {
     
+    
+    static var recentItems = RecentItem.loadDefaults()
     public static let CarPlayGeocodedPlacemarkKey: String = "MBGecodedPlacemark"
     
     static var MaximumInitialSearchResults: UInt = 5
@@ -114,8 +116,8 @@ extension CarPlayManager: CPSearchTemplateDelegate {
                 return
         }
         
-        recentItems.add(RecentItem(placemark))
-        recentItems.save()
+        CarPlayManager.recentItems.add(RecentItem(placemark))
+        CarPlayManager.recentItems.save()
         
         let destinationWaypoint = Waypoint(location: location, heading: nil, name: placemark.formattedName)
         calculateRouteAndStart(to: destinationWaypoint, completionHandler: completionHandler)
@@ -124,9 +126,9 @@ extension CarPlayManager: CPSearchTemplateDelegate {
     @available(iOS 12.0, *)
     func recentSearches(_ searchText: String) -> [CPListItem] {
         if searchText.isEmpty {
-            return recentItems.map { $0.geocodedPlacemark.listItem() }
+            return CarPlayManager.recentItems.map { $0.geocodedPlacemark.listItem() }
         }
-        return recentItems.filter { $0.matches(searchText) }.map { $0.geocodedPlacemark.listItem() }
+        return CarPlayManager.recentItems.filter { $0.matches(searchText) }.map { $0.geocodedPlacemark.listItem() }
     }
     
     @available(iOS 12.0, *)
