@@ -17,6 +17,8 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
      */
     @objc public weak var carPlayNavigationDelegate: CarPlayNavigationDelegate?
     
+    public var carPlayManager: CarPlayManager
+    
     @objc public var drivingSide: DrivingSide = .right
     
     var navService: NavigationService
@@ -46,16 +48,18 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
      - parameter navigationService: The navigation service managing location updates for the navigation session.
      - parameter mapTemplate: The map template visible during the navigation session.
      - parameter interfaceController: The interface controller for CarPlay.
+     - parameter manager: The manager for CarPlay.
      
      - postcondition: Call `startNavigationSession(for:)` after initializing this object to begin navigation.
      */
-    @objc(initWithNavigationService:mapTemplate:interfaceController:)
+    @objc(initWithNavigationService:mapTemplate:interfaceController:manager:)
     public init(with navigationService: NavigationService,
                 mapTemplate: CPMapTemplate,
-                interfaceController: CPInterfaceController) {
+                interfaceController: CPInterfaceController, manager: CarPlayManager) {
         self.navService = navigationService
         self.mapTemplate = mapTemplate
         self.carInterfaceController = interfaceController
+        self.carPlayManager = manager
         
         super.init(nibName: nil, bundle: nil)
         carFeedbackTemplate = createFeedbackUI()
@@ -266,10 +270,10 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
             return CGRect(x: 0, y: 0, width: widthOfManeuverView, height: 30)
         }
         
-        if let attributedPrimary = visualInstruction.primaryInstruction.maneuverLabelAttributedText(bounds: bounds, shieldHeight: shieldHeight) {
+        if let attributedPrimary = visualInstruction.primaryInstruction.carPlayManeuverLabelAttributedText(bounds: bounds, shieldHeight: shieldHeight, window: carPlayManager.carWindow) {
             let instruction = NSMutableAttributedString(attributedString: attributedPrimary)
             
-            if let attributedSecondary = visualInstruction.secondaryInstruction?.maneuverLabelAttributedText(bounds: bounds, shieldHeight: shieldHeight) {
+            if let attributedSecondary = visualInstruction.secondaryInstruction?.carPlayManeuverLabelAttributedText(bounds: bounds, shieldHeight: shieldHeight, window: carPlayManager.carWindow) {
                 instruction.append(NSAttributedString(string: "\n"))
                 instruction.append(attributedSecondary)
             }
@@ -288,7 +292,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
             if let text = tertiaryInstruction.text {
                 tertiaryManeuver.instructionVariants = [text]
             }
-            if let attributedTertiary = tertiaryInstruction.maneuverLabelAttributedText(bounds: bounds, shieldHeight: shieldHeight) {
+            if let attributedTertiary = tertiaryInstruction.carPlayManeuverLabelAttributedText(bounds: bounds, shieldHeight: shieldHeight, window: carPlayManager.carWindow) {
                 let attributedTertiary = NSMutableAttributedString(attributedString: attributedTertiary)
                 attributedTertiary.canonicalizeAttachments()
                 tertiaryManeuver.attributedInstructionVariants = [attributedTertiary]

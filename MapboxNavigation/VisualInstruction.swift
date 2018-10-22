@@ -42,13 +42,13 @@ extension VisualInstruction {
     }
 
     @available(iOS 12.0, *)
-    func maneuverLabelAttributedText(bounds: @escaping () -> (CGRect), shieldHeight: CGFloat) -> NSAttributedString? {
+    func carPlayManeuverLabelAttributedText(bounds: @escaping () -> (CGRect), shieldHeight: CGFloat, window: UIWindow?) -> NSAttributedString? {
         let instructionLabel = InstructionLabel()
         instructionLabel.availableBounds = bounds
         instructionLabel.shieldHeight = shieldHeight
         
         // Temporarily add the view to the view hierarchy for UIAppearance to work its magic.
-        if let carWindow = CarPlayManager.shared.carWindow {
+        if let carWindow = window {
             carWindow.addSubview(instructionLabel)
             instructionLabel.instruction = self
             instructionLabel.removeFromSuperview()

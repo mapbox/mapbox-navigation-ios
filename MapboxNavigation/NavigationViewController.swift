@@ -316,7 +316,7 @@ open class NavigationViewController: UIViewController {
     
     var isConnectedToCarPlay: Bool {
         if #available(iOS 12.0, *) {
-            return CarPlayManager.shared.isConnectedToCarPlay
+            return CarPlayManager.isConnected
         } else {
             return false
         }

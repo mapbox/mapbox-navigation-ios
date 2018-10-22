@@ -30,10 +30,10 @@ extension CarPlayManager: CPSearchTemplateDelegate {
     
     public func searchTemplateSearchButtonPressed(_ searchTemplate: CPSearchTemplate) {
         guard let items = recentSearchItems else { return }
-        let extendedItems = CarPlayManager.resultsOrNoResults(items, limit: CarPlayManager.MaximumExtendedSearchResults)
+        let extendedItems = resultsOrNoResults(items, limit: CarPlayManager.MaximumExtendedSearchResults)
         
         let section = CPListSection(items: extendedItems)
-        let template = CPListTemplate(title: CarPlayManager.shared.recentSearchText, sections: [section])
+        let template = CPListTemplate(title: recentSearchText, sections: [section])
         template.delegate = self
         
         interfaceController?.pushTemplate(template, animated: true)
@@ -64,8 +64,8 @@ extension CarPlayManager: CPSearchTemplateDelegate {
     }
     
     @available(iOS 12.0, *)
-    public static func searchTemplate(_ searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void) {
-        CarPlayManager.shared.recentSearchText = searchText
+    public static func searchTemplate(_ manager: CarPlayManager, searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void) {
+        manager.recentSearchText = searchText
         
         // Append recent searches
         var items = recentSearches(searchText)
@@ -77,17 +77,17 @@ extension CarPlayManager: CPSearchTemplateDelegate {
             let options = CarPlayManager.forwardGeocodeOptions(searchText)
             Geocoder.shared.geocode(options, completionHandler: { (placemarks, attribution, error) in
                 guard let placemarks = placemarks else {
-                    completionHandler(CarPlayManager.resultsOrNoResults(items, limit: MaximumInitialSearchResults))
+                    completionHandler(manager.resultsOrNoResults(items, limit: MaximumInitialSearchResults))
                     return
                 }
                 
                 let results = placemarks.map { $0.listItem() }
                 items.append(contentsOf: results)
-                completionHandler(CarPlayManager.resultsOrNoResults(results, limit: MaximumInitialSearchResults))
+                completionHandler(manager.resultsOrNoResults(results, limit: MaximumInitialSearchResults))
             })
             
         } else {
-            completionHandler(CarPlayManager.resultsOrNoResults(items, limit: MaximumInitialSearchResults))
+            completionHandler(manager.resultsOrNoResults(items, limit: MaximumInitialSearchResults))
         }
     }
     
@@ -105,7 +105,7 @@ extension CarPlayManager: CPSearchTemplateDelegate {
     }
     
     @available(iOS 12.0, *)
-    public static func carPlayManager(_ searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void) {
+    public static func carPlayManager(_ manager: CarPlayManager, searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void) {
         
         guard let userInfo = item.userInfo as? [String: Any],
             let placemark = userInfo[CarPlayGeocodedPlacemarkKey] as? GeocodedPlacemark,
@@ -118,7 +118,7 @@ extension CarPlayManager: CPSearchTemplateDelegate {
         recentItems.save()
         
         let destinationWaypoint = Waypoint(location: location, heading: nil, name: placemark.formattedName)
-        CarPlayManager.shared.calculateRouteAndStart(to: destinationWaypoint, completionHandler: completionHandler)
+        manager.calculateRouteAndStart(to: destinationWaypoint, completionHandler: completionHandler)
     }
     
     @available(iOS 12.0, *)
@@ -130,8 +130,8 @@ extension CarPlayManager: CPSearchTemplateDelegate {
     }
     
     @available(iOS 12.0, *)
-    static func resultsOrNoResults(_ items: [CPListItem], limit: UInt? = nil) -> [CPListItem] {
-        CarPlayManager.shared.recentSearchItems = items
+    func resultsOrNoResults(_ items: [CPListItem], limit: UInt? = nil) -> [CPListItem] {
+        recentSearchItems = items
         
         if items.count > 0 {
             if let limit = limit {

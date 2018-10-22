@@ -143,7 +143,7 @@ public protocol CarPlayManagerDelegate {
  
  You do not create instances of this object yourself; instead, use the `CarPlayManager.shared` class property.
  
- Messages declared in the `CPApplicationDelegate` protocol should be sent to this object in the containing application's application delegate. Implement `CarPlayManagerDelegate` in the containing application and assign an instance to the `delegate` property of the `CarPlayManager` shared instance.
+ Messages declared in the `CPApplicationDelegate` protocol should be sent to this object in the containing application's application delegate. Implement `CarPlayManagerDelegate` in the containing application and assign an instance to the `delegate` property of your `CarPlayManager` instance.
  */
 @available(iOS 12.0, *)
 @objc(MBCarPlayManager)
@@ -172,19 +172,9 @@ public class CarPlayManager: NSObject {
         }
     }
 
-    /**
-     The shared CarPlay manager.
-     */
-    @objc(sharedManager)
-    public static var shared = CarPlayManager()
-
     public fileprivate(set) var mainMapTemplate: CPMapTemplate?
     public fileprivate(set) weak var currentNavigator: CarPlayNavigationViewController?
     public static let CarPlayWaypointKey: String = "MBCarPlayWaypoint"
-
-    public static func resetSharedInstance() {
-        shared = CarPlayManager()
-    }
     
     /**
      The most recent search results.
@@ -201,7 +191,7 @@ public class CarPlayManager: NSObject {
     /**
      A Boolean value indicating whether the phone is connected to CarPlay.
      */
-    @objc public var isConnectedToCarPlay = false
+    @objc public static var isConnected = false
 
     public var eventsManager: NavigationEventsManager!
 
@@ -239,7 +229,7 @@ extension CarPlayManager: CPApplicationDelegate {
 
     public func application(_ application: UIApplication, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPWindow) {
 
-        isConnectedToCarPlay = true
+        CarPlayManager.isConnected = true
         interfaceController.delegate = self
         self.interfaceController = interfaceController
 
@@ -261,7 +251,7 @@ extension CarPlayManager: CPApplicationDelegate {
     }
 
     public func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPWindow) {
-        isConnectedToCarPlay = false
+        CarPlayManager.isConnected = false
         self.interfaceController = nil
         carWindow?.isHidden = true
 
@@ -526,7 +516,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
 
         let navigationViewController = CarPlayNavigationViewController(with: service,
                                                                        mapTemplate: navigationMapTemplate,
-                                                                       interfaceController: interfaceController)
+                                                                       interfaceController: interfaceController, manager: self)
         navigationViewController.startNavigationSession(for: trip)
         navigationViewController.carPlayNavigationDelegate = self
         currentNavigator = navigationViewController
@@ -743,6 +733,6 @@ class CarPlayManager: NSObject {
     /**
      A Boolean value indicating whether the phone is connected to CarPlay.
      */
-    @objc public var isConnectedToCarPlay = false
+    @objc public static var isConnected = false
 }
 #endif

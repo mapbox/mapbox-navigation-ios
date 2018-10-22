@@ -22,13 +22,13 @@ extension AppDelegate: CPApplicationDelegate {
     // MARK: CPApplicationDelegate
     
     func application(_ application: UIApplication, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPWindow) {
-        CarPlayManager.shared.delegate = self
-        CarPlayManager.shared.application(application, didConnectCarInterfaceController: interfaceController, to: window)
+        carPlayManager.delegate = self
+        carPlayManager.application(application, didConnectCarInterfaceController: interfaceController, to: window)
     }
     
     func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPWindow) {
-        CarPlayManager.shared.delegate = nil
-        CarPlayManager.shared.application(application, didDisconnectCarInterfaceController: interfaceController, from: window)
+        carPlayManager.delegate = nil
+        carPlayManager.application(application, didDisconnectCarInterfaceController: interfaceController, from: window)
     }
 }
 
@@ -88,11 +88,11 @@ extension AppDelegate: CarPlayManagerDelegate {
     
     #if canImport(MapboxGeocoder)
     func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void) {
-        return CarPlayManager.searchTemplate(searchTemplate, updatedSearchText: searchText, completionHandler: completionHandler)
+        return CarPlayManager.searchTemplate(carPlayManager, searchTemplate: searchTemplate, updatedSearchText: searchText, completionHandler: completionHandler)
     }
     
     func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void) {
-        return CarPlayManager.carPlayManager(searchTemplate, selectedResult: item, completionHandler: completionHandler)
+        return CarPlayManager.carPlayManager(carPlayManager, searchTemplate: searchTemplate, selectedResult: item, completionHandler: completionHandler)
     }
     #endif
 }
@@ -104,7 +104,7 @@ extension AppDelegate: CPListTemplateDelegate {
         // Selected a favorite
         if let userInfo = item.userInfo as? [String: Any],
             let waypoint = userInfo[CarPlayManager.CarPlayWaypointKey] as? Waypoint {
-            CarPlayManager.shared.calculateRouteAndStart(to: waypoint, completionHandler: completionHandler)
+            carPlayManager.calculateRouteAndStart(to: waypoint, completionHandler: completionHandler)
             return
         }
         
