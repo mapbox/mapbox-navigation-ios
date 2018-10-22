@@ -18,14 +18,13 @@ class CarPlayManagerTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        manager = CarPlayManager.shared
+        manager = CarPlayManager()
         eventsManagerSpy = NavigationEventsManagerSpy()
         manager!.eventsManager = eventsManagerSpy!
     }
 
     override func tearDown() {
         manager = nil
-        CarPlayManager.resetSharedInstance()
         super.tearDown()
     }
 
