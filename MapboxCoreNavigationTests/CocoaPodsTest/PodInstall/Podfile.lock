@@ -1,7 +1,7 @@
 PODS:
   - Mapbox-iOS-SDK (4.5.0)
   - MapboxCoreNavigation (0.23.0):
-    - MapboxDirections.swift (~> 0.24.0)
+    - MapboxDirections.swift (~> 0.24.1)
     - MapboxMobileEvents (~> 0.6.0)
     - MapboxNavigationNative (~> 3.2.0)
     - Turf (~> 0.2.0)
