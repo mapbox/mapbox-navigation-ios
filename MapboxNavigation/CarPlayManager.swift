@@ -141,8 +141,6 @@ public protocol CarPlayManagerDelegate {
 /**
  `CarPlayManager` is the main object responsible for orchestrating interactions with a Mapbox map on CarPlay.
  
- You do not create instances of this object yourself; instead, use the `CarPlayManager.shared` class property.
- 
  Messages declared in the `CPApplicationDelegate` protocol should be sent to this object in the containing application's application delegate. Implement `CarPlayManagerDelegate` in the containing application and assign an instance to the `delegate` property of your `CarPlayManager` instance.
  */
 @available(iOS 12.0, *)
@@ -729,12 +727,7 @@ extension CarPlayManager: CarPlayNavigationDelegate {
  CarPlay support requires iOS 12.0 or above and the CarPlay framework.
  */
 @objc(MBCarPlayManager)
-class CarPlayManager: NSObject {
-    /**
-     The shared CarPlay manager.
-     */
-    @objc public static var shared = CarPlayManager()
-    
+public class CarPlayManager: NSObject {
     /**
      A Boolean value indicating whether the phone is connected to CarPlay.
      */
