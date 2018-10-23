@@ -1,5 +1,8 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## Master
+* `CarPlayManager` is no longer a singleton; your application delegate is responsible for creating and owning an instance of this class. This fixes a crash in applications that specify the access token programmatically instead of in the Info.plist file. ([#1792](https://github.com/mapbox/mapbox-navigation-ios/pull/1792])
+
 ## v0.22.3 (October 17, 2018)
 
 * Fixed over-retain issue that resulted in the `MapboxNavigationService` persisting beyond its expected lifecycle. This could cause unexpected behavior with components that observe progress noitifications.
