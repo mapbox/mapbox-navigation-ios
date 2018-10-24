@@ -1,7 +1,8 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## Master
-* `CarPlayManager` is no longer a singleton; your application delegate is responsible for creating and owning an instance of this class. This fixes a crash in applications that specify the access token programmatically instead of in the Info.plist file. ([#1792](https://github.com/mapbox/mapbox-navigation-ios/pull/1792])
+## v0.23.0 (October 24, 2018)
+* `CarPlayManager` is no longer a singleton; your application delegate is responsible for creating and owning an instance of this class. This fixes a crash in applications that specify the access token programmatically instead of in the Info.plist file. ([#1792](https://github.com/mapbox/mapbox-navigation-ios/pull/1792))
+* `NavigationService.start()` now sets the first coordinate on a route, if a fixed location isn't available the first few seconds of a navigation session. ([#1790](https://github.com/mapbox/mapbox-navigation-ios/pull/1790))
 
 ## v0.22.3 (October 17, 2018)
 
@@ -11,7 +12,7 @@
 ## v0.22.2 (October 15, 2018)
 
 * Fixed an issue where the U-turn icon in the turn banner pointed in the wrong direction. ([#1647](https://github.com/mapbox/mapbox-navigation-ios/pull/1647))
-* Fixed an issue where the user puck was positioned too close to the bottom of the map view, underlapping the current road name label. ([#1766](https://github.com/mapbox/mapbox-navigation-ios/pull/1766])
+* Fixed an issue where the user puck was positioned too close to the bottom of the map view, underlapping the current road name label. ([#1766](https://github.com/mapbox/mapbox-navigation-ios/pull/1766))
 * Added `InstructionsBannerView.showStepIndicator` to enable showing/hiding the drag indicator ([#1772](https://github.com/mapbox/mapbox-navigation-ios/pull/1772))
 * Renamed `EventsManager` to `NavigationEventsManager`. ([#1767](https://github.com/mapbox/mapbox-navigation-ios/pull/1767))
 * Added support in `NavigationEventsManager` that allows for routeless events. ([#1767](https://github.com/mapbox/mapbox-navigation-ios/pull/1767))
