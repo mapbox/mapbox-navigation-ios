@@ -15,7 +15,8 @@ class OfflineRoutingTests: XCTestCase {
         
         let setupExpectation = expectation(description: "Set up offline routing")
         
-        let directions = OfflineDirections(accessToken: "foo", host: nil, tilesPath: tilesPath, translationsPath: translationsPath) { (numberOfTiles) in
+        let directions = MapboxOfflineDirections(accessToken: "foo", host: nil, tilesPath: tilesPath, translationsPath: translationsPath) { (numberOfTiles) in
+            XCTAssertEqual(numberOfTiles, 5)
             setupExpectation.fulfill()
         }
         
@@ -50,7 +51,8 @@ class OfflineRoutingTests: XCTestCase {
         
         let setupExpectation = expectation(description: "Set up offline routing")
         
-        let directions = OfflineDirections(accessToken: "foo", host: nil, tilesPath: tilesPath, translationsPath: translationsPath) { (numberOfTiles) in
+        let directions = MapboxOfflineDirections(accessToken: "foo", host: nil, tilesPath: tilesPath, translationsPath: translationsPath) { (numberOfTiles) in
+            XCTAssertEqual(numberOfTiles, 5)
             setupExpectation.fulfill()
         }
         

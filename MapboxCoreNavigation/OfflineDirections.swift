@@ -2,6 +2,7 @@ import Foundation
 import MapboxDirections
 import MapboxNavigationNative
 
+public typealias OfflineDirectionsCompletionHandler = (_ numberOfTiles: UInt) -> Void
 
 public enum OfflineRoutingError: Error {
     case unexpectedRouteResult
@@ -9,23 +10,13 @@ public enum OfflineRoutingError: Error {
     case responseError(String)
 }
 
-/**
- An `OfflineDirections` object provides you with optimal directions between different locations, or waypoints. The directions object passes your request to the [Mapbox Directions API](https://www.mapbox.com/api-documentation/?language=Swift#directions) and returns the requested information to a closure (block) that you provide. A directions object can handle multiple simultaneous requests. A `RouteOptions` object specifies criteria for the results, such as intermediate waypoints, a mode of transportation, or the level of detail to be returned.
- 
- Each result produced by the directions object is stored in a `Route` object. Depending on the `RouteOptions` object you provide, each route may include detailed information suitable for turn-by-turn directions, or it may include only high-level information such as the distance, estimated travel time, and name of each leg of the trip. The waypoints that form the request may be conflated with nearby locations, as appropriate; the resulting waypoints are provided to the closure.
- */
-public class OfflineDirections: Directions {
-    
-    struct Constants {
-        static let offlineSerialQueueLabel = Bundle.mapboxCoreNavigation.bundleIdentifier!.appending(".offline")
-        static let serialQueue = DispatchQueue(label: Constants.offlineSerialQueueLabel)
-    }
-    
-    let tilesPath: String
-    let translationsPath: String
-    
-    public typealias OfflineCompletionHandler = (_ numberOfTiles: UInt) -> Void
-    
+struct OfflineDirectionsConstants {
+    static let offlineSerialQueueLabel = Bundle.mapboxCoreNavigation.bundleIdentifier!.appending(".offline")
+    static let serialQueue = DispatchQueue(label: OfflineDirectionsConstants.offlineSerialQueueLabel)
+}
+
+@objc(MBOfflineDirectionsProtocol)
+public protocol OfflineDirectionsProtocol {
     
     /**
      Initializes a newly created directions object with an optional access token and host.
@@ -35,36 +26,7 @@ public class OfflineDirections: Directions {
      - parameter tilesPath: The location where the tiles has been sideloaded to.
      - parameter translationsPath: The location where the translations has been sideloaded to.
      */
-    public init(accessToken: String?, host: String?, tilesPath: String, translationsPath: String, completionHandler: @escaping OfflineCompletionHandler) {
-        self.tilesPath = tilesPath
-        self.translationsPath = translationsPath
-        
-        super.init(accessToken: accessToken, host: host)
-        
-        Constants.serialQueue.sync {
-            let tilesPath = self.tilesPath.replacingOccurrences(of: "file://", with: "")
-            let translationsPath = self.translationsPath.replacingOccurrences(of: "file://", with: "")
-            let tileCount = self.navigator.setupRouter(tilesPath, translationsPath: translationsPath)
-            
-            DispatchQueue.main.async {
-                completionHandler(tileCount)
-            }
-        }
-    }
-    
-    var _navigator: MBNavigator!
-    var navigator: MBNavigator {
-        
-        assert(currentQueueName() == Constants.offlineSerialQueueLabel,
-               "The offline navigator must be accessed from the dedicated serial queue")
-        
-        if _navigator == nil {
-            self._navigator = MBNavigator()
-        }
-        
-        return _navigator
-    }
-    
+    init(accessToken: String?, host: String?, tilesPath: String, translationsPath: String, completionHandler: @escaping OfflineDirectionsCompletionHandler)
     
     /**
      Begins asynchronously calculating the route or routes using the given options and delivers the results to a closure.
@@ -76,11 +38,32 @@ public class OfflineDirections: Directions {
      - parameter options: A `RouteOptions` object specifying the requirements for the resulting routes.
      - parameter completionHandler: The closure (block) to call with the resulting routes. This closure is executed on the application’s main thread.
      */
-    open func calculateOffline(_ options: RouteOptions, completionHandler: @escaping RouteCompletionHandler) {
+    func calculateOffline(_ options: RouteOptions, completionHandler: @escaping Directions.RouteCompletionHandler)
+}
+
+@objc(MBMapboxOfflineDirections)
+public class MapboxOfflineDirections: Directions, OfflineDirectionsProtocol {
+    
+    required public init(accessToken: String?, host: String?, tilesPath: String, translationsPath: String, completionHandler: @escaping OfflineDirectionsCompletionHandler) {
+        
+        super.init(accessToken: accessToken, host: host)
+        
+        OfflineDirectionsConstants.serialQueue.sync {
+            let tilesPath = tilesPath.replacingOccurrences(of: "file://", with: "")
+            let translationsPath = translationsPath.replacingOccurrences(of: "file://", with: "")
+            let tileCount = self.navigator.setupRouter(tilesPath, translationsPath: translationsPath)
+            
+            DispatchQueue.main.async {
+                completionHandler(tileCount)
+            }
+        }
+    }
+    
+    public func calculateOffline(_ options: RouteOptions, completionHandler: @escaping Directions.RouteCompletionHandler) {
         
         let url = self.url(forCalculating: options)
         
-        Constants.serialQueue.sync { [weak self] in
+        OfflineDirectionsConstants.serialQueue.sync { [weak self] in
             
             guard let result = self?.navigator.getRouteForDirectionsUri(url.absoluteString) else {
                 return completionHandler(nil, nil, OfflineRoutingError.unexpectedRouteResult as NSError)
@@ -111,6 +94,19 @@ public class OfflineDirections: Directions {
                 }
             }
         }
+    }
+    
+    var _navigator: MBNavigator!
+    var navigator: MBNavigator {
+        
+        assert(currentQueueName() == OfflineDirectionsConstants.offlineSerialQueueLabel,
+               "The offline navigator must be accessed from the dedicated serial queue")
+        
+        if _navigator == nil {
+            self._navigator = MBNavigator()
+        }
+        
+        return _navigator
     }
 }
 
