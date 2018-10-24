@@ -1,6 +1,7 @@
 #if canImport(CarPlay)
 import CarPlay
 #endif
+import CoreLocation
 
 public enum FavoritesList {
     
