@@ -15,18 +15,21 @@ struct OfflineDirectionsConstants {
     static let serialQueue = DispatchQueue(label: OfflineDirectionsConstants.offlineSerialQueueLabel)
 }
 
+/**
+ Defines additional functionality similar to `Directions` with support for offline routing.
+ */
 @objc(MBOfflineDirectionsProtocol)
-public protocol OfflineDirectionsProtocol {
+public protocol OfflineRoutingProtocol {
     
     /**
      Initializes a newly created directions object with an optional access token and host.
      
-     - parameter accessToken: A Mapbox [access token](https://www.mapbox.com/help/define-access-token/). If an access token is not specified when initializing the directions object, it should be specified in the `MGLMapboxAccessToken` key in the main application bundle’s Info.plist.
-     - parameter host: An optional hostname to the server API. The [Mapbox Directions API](https://www.mapbox.com/api-documentation/?language=Swift#directions) endpoint is used by default.
      - parameter tilesPath: The location where the tiles has been sideloaded to.
      - parameter translationsPath: The location where the translations has been sideloaded to.
+     - parameter accessToken: A Mapbox [access token](https://www.mapbox.com/help/define-access-token/). If an access token is not specified when initializing the directions object, it should be specified in the `MGLMapboxAccessToken` key in the main application bundle’s Info.plist.
+     - parameter host: An optional hostname to the server API. The [Mapbox Directions API](https://www.mapbox.com/api-documentation/?language=Swift#directions) endpoint is used by default.
      */
-    init(accessToken: String?, host: String?, tilesPath: String, translationsPath: String, completionHandler: @escaping OfflineDirectionsCompletionHandler)
+    init(tilesPath: URL, translationsPath: URL, accessToken: String?, host: String?, completionHandler: @escaping OfflineDirectionsCompletionHandler)
     
     /**
      Begins asynchronously calculating the route or routes using the given options and delivers the results to a closure.
@@ -42,15 +45,15 @@ public protocol OfflineDirectionsProtocol {
 }
 
 @objc(MBMapboxOfflineDirections)
-public class MapboxOfflineDirections: Directions, OfflineDirectionsProtocol {
+public class MapboxOfflineDirections: Directions, OfflineRoutingProtocol {
     
-    required public init(accessToken: String?, host: String?, tilesPath: String, translationsPath: String, completionHandler: @escaping OfflineDirectionsCompletionHandler) {
+    public required init(tilesPath: URL, translationsPath: URL, accessToken: String?, host: String? = nil, completionHandler: @escaping OfflineDirectionsCompletionHandler) {
         
         super.init(accessToken: accessToken, host: host)
         
         OfflineDirectionsConstants.serialQueue.sync {
-            let tilesPath = tilesPath.replacingOccurrences(of: "file://", with: "")
-            let translationsPath = translationsPath.replacingOccurrences(of: "file://", with: "")
+            let tilesPath = tilesPath.absoluteString.replacingOccurrences(of: "file://", with: "")
+            let translationsPath = translationsPath.absoluteString.replacingOccurrences(of: "file://", with: "")
             let tileCount = self.navigator.configureRouter(forTilesPath: tilesPath, translationsPath: translationsPath)
             
             DispatchQueue.main.async {
