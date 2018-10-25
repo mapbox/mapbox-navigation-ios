@@ -3,10 +3,6 @@ import MapboxDirections
 @testable import MapboxCoreNavigation
 
 class OfflineRoutingTests: XCTestCase {
-
-    override func setUp() {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
     
     func testOfflineDirections() {
         let bundle = Bundle(for: OfflineRoutingTests.self)
