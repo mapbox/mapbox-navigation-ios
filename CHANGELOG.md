@@ -1,5 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## master
+
+* `NavigationMapViewDelegate.navigationMapView(_:routeStyleLayerWithIdentifier:source:)`, `NavigationMapViewDelegate.navigationMapView(_:routeCasingStyleLayerWithIdentifier:source:)`, `NavigationViewControllerDelegate.navigationViewController(_:routeStyleLayerWithIdentifier:source:)`, and `NavigationViewControllerDelegate.navigationViewController(_:routeCasingStyleLayerWithIdentifier:source:)` can now set the `MGLLineStyleLayer.lineGradient` property. ([#1799](https://github.com/mapbox/mapbox-navigation-ios/pull/1799))
+
 ## v0.23.0 (October 24, 2018)
 * `CarPlayManager` is no longer a singleton; your application delegate is responsible for creating and owning an instance of this class. This fixes a crash in applications that specify the access token programmatically instead of in the Info.plist file. ([#1792](https://github.com/mapbox/mapbox-navigation-ios/pull/1792))
 * `NavigationService.start()` now sets the first coordinate on a route, if a fixed location isn't available the first few seconds of a navigation session. ([#1790](https://github.com/mapbox/mapbox-navigation-ios/pull/1790))
