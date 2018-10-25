@@ -2,7 +2,7 @@ import Foundation
 import MapboxDirections
 import MapboxNavigationNative
 
-public typealias OfflineDirectionsCompletionHandler = (_ numberOfTiles: UInt) -> Void
+public typealias OfflineDirectionsCompletionHandler = (_ numberOfTiles: UInt64) -> Void
 
 public enum OfflineRoutingError: Error {
     case unexpectedRouteResult
@@ -51,7 +51,7 @@ public class MapboxOfflineDirections: Directions, OfflineDirectionsProtocol {
         OfflineDirectionsConstants.serialQueue.sync {
             let tilesPath = tilesPath.replacingOccurrences(of: "file://", with: "")
             let translationsPath = translationsPath.replacingOccurrences(of: "file://", with: "")
-            let tileCount = self.navigator.setupRouter(tilesPath, translationsPath: translationsPath)
+            let tileCount = self.navigator.configureRouter(forTilesPath: tilesPath, translationsPath: translationsPath)
             
             DispatchQueue.main.async {
                 completionHandler(tileCount)

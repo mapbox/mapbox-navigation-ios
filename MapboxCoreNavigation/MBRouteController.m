@@ -35,15 +35,3 @@ typedef NS_ENUM(NSInteger, MBNavigationError) {
 }
 @end
 
-@implementation MBNavigator (additions)
-
-- (NSUInteger)setupRouter:(NSString *)tilesPath translationsPath:(NSString *)translationsPath {
-    
-    @try {
-        return [self configureRouterForTilesPath:tilesPath translationsPath:translationsPath];
-    } @catch (NSException *exception) {
-        return -1;
-    }
-}
-
-@end
