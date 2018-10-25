@@ -84,8 +84,3 @@ extern const MBRouteControllerNotificationUserInfoKey MBRouteControllerIsProacti
 - (NSString * _Nonnull)md5;
 @end
 
-@interface MBNavigator (additions)
-
-- (NSUInteger)setupRouter:(NSString *)tilesPath translationsPath:(NSString *)translationsPath;
-
-@end
