@@ -51,6 +51,7 @@ step-library:
         name: Prepare
         command: |
           git submodule sync
+          git submodule update --init --recursive
           if (brew outdated | grep carthage > /dev/null); then brew upgrade carthage; fi
           echo "foo" > ~/.mapbox
 
