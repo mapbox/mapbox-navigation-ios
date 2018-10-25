@@ -6,12 +6,12 @@ class OfflineRoutingTests: XCTestCase {
     
     func testOfflineDirections() {
         let bundle = Bundle(for: OfflineRoutingTests.self)
-        let tilesPath = bundle.bundlePath.appending("/routing/liechtenstein")
-        let translationsPath = bundle.bundlePath.appending("/routing/translations")
+        let tilesPath = URL(fileURLWithPath: bundle.bundlePath.appending("/routing/liechtenstein"))
+        let translationsPath = URL(fileURLWithPath: bundle.bundlePath.appending("/routing/translations"))
         
         let setupExpectation = expectation(description: "Set up offline routing")
         
-        let directions = MapboxOfflineDirections(accessToken: "foo", host: nil, tilesPath: tilesPath, translationsPath: translationsPath) { (numberOfTiles) in
+        let directions = MapboxOfflineDirections(tilesPath: tilesPath, translationsPath: translationsPath, accessToken: "foo") { (numberOfTiles) in
             XCTAssertEqual(numberOfTiles, 5)
             setupExpectation.fulfill()
         }
@@ -42,12 +42,12 @@ class OfflineRoutingTests: XCTestCase {
     
     func testOfflineDirectionsError() {
         let bundle = Bundle(for: OfflineRoutingTests.self)
-        let tilesPath = bundle.bundlePath.appending("/routing/liechtenstein")
-        let translationsPath = bundle.bundlePath.appending("/routing/translations")
+        let tilesPath = URL(fileURLWithPath: bundle.bundlePath).appendingPathComponent("/routing/liechtenstein")
+        let translationsPath = URL(fileURLWithPath: bundle.bundlePath).appendingPathComponent("/routing/translations")
         
         let setupExpectation = expectation(description: "Set up offline routing")
         
-        let directions = MapboxOfflineDirections(accessToken: "foo", host: nil, tilesPath: tilesPath, translationsPath: translationsPath) { (numberOfTiles) in
+        let directions = MapboxOfflineDirections(tilesPath: tilesPath, translationsPath: translationsPath, accessToken: "foo") { (numberOfTiles) in
             XCTAssertEqual(numberOfTiles, 5)
             setupExpectation.fulfill()
         }
