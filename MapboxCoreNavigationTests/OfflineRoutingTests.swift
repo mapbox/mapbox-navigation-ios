@@ -7,7 +7,7 @@ class OfflineRoutingTests: XCTestCase {
     func testOfflineDirections() {
         let bundle = Bundle(for: OfflineRoutingTests.self)
         let tilesPath = URL(fileURLWithPath: bundle.bundlePath.appending("/routing/liechtenstein"))
-        let translationsPath = URL(fileURLWithPath: bundle.bundlePath.appending("/routing/translations"))
+        let translationsPath = URL(fileURLWithPath: bundle.bundlePath.appending("/translations"))
         
         let setupExpectation = expectation(description: "Set up offline routing")
         
@@ -43,7 +43,7 @@ class OfflineRoutingTests: XCTestCase {
     func testOfflineDirectionsError() {
         let bundle = Bundle(for: OfflineRoutingTests.self)
         let tilesPath = URL(fileURLWithPath: bundle.bundlePath).appendingPathComponent("/routing/liechtenstein")
-        let translationsPath = URL(fileURLWithPath: bundle.bundlePath).appendingPathComponent("/routing/translations")
+        let translationsPath = URL(fileURLWithPath: bundle.bundlePath).appendingPathComponent("/translations")
         
         let setupExpectation = expectation(description: "Set up offline routing")
         

@@ -1,0 +1,3 @@
+[submodule "thirdparty/osrm-text-instructions"]
+	path = thirdparty/osrm-text-instructions
+	url = https://github.com/Project-OSRM/osrm-text-instructions.git
