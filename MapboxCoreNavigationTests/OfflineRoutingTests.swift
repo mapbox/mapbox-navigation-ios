@@ -2,16 +2,17 @@ import XCTest
 import MapboxDirections
 @testable import MapboxCoreNavigation
 
+
 class OfflineRoutingTests: XCTestCase {
     
     func testOfflineDirections() {
         let bundle = Bundle(for: OfflineRoutingTests.self)
-        let tilesPath = URL(fileURLWithPath: bundle.bundlePath.appending("/routing/liechtenstein"))
-        let translationsPath = URL(fileURLWithPath: bundle.bundlePath.appending("/translations"))
+        let tilesURL = URL(fileURLWithPath: bundle.bundlePath.appending("/routing/liechtenstein"))
+        let translationsURL = URL(fileURLWithPath: bundle.bundlePath.appending("/translations"))
         
         let setupExpectation = expectation(description: "Set up offline routing")
         
-        let directions = MapboxOfflineDirections(tilesPath: tilesPath, translationsPath: translationsPath, accessToken: "foo") { (numberOfTiles) in
+        let directions = NavigationDirections(tilesURL: tilesURL, translationsURL: translationsURL, accessToken: "foo") { (numberOfTiles) in
             XCTAssertEqual(numberOfTiles, 5)
             setupExpectation.fulfill()
         }
@@ -42,12 +43,12 @@ class OfflineRoutingTests: XCTestCase {
     
     func testOfflineDirectionsError() {
         let bundle = Bundle(for: OfflineRoutingTests.self)
-        let tilesPath = URL(fileURLWithPath: bundle.bundlePath).appendingPathComponent("/routing/liechtenstein")
-        let translationsPath = URL(fileURLWithPath: bundle.bundlePath).appendingPathComponent("/translations")
+        let tilesURL = URL(fileURLWithPath: bundle.bundlePath).appendingPathComponent("/routing/liechtenstein")
+        let translationsURL = URL(fileURLWithPath: bundle.bundlePath).appendingPathComponent("/translations")
         
         let setupExpectation = expectation(description: "Set up offline routing")
         
-        let directions = MapboxOfflineDirections(tilesPath: tilesPath, translationsPath: translationsPath, accessToken: "foo") { (numberOfTiles) in
+        let directions = NavigationDirections(tilesURL: tilesURL, translationsURL: translationsURL, accessToken: "foo") { (numberOfTiles) in
             XCTAssertEqual(numberOfTiles, 5)
             setupExpectation.fulfill()
         }
