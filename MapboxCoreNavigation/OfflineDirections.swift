@@ -56,7 +56,7 @@ public protocol OfflineRoutingProtocol {
      - parameter options: A `RouteOptions` object specifying the requirements for the resulting routes.
      - parameter completionHandler: The closure (block) to call with the resulting routes. This closure is executed on the application’s main thread.
      */
-    func calculateOffline(_ options: RouteOptions, completionHandler: @escaping Directions.RouteCompletionHandler)
+    func calculate(_ options: RouteOptions, offline: Bool, completionHandler: @escaping Directions.RouteCompletionHandler)
 }
 
 @objc(MBMapboxOfflineDirections)
@@ -77,7 +77,11 @@ public class MapboxOfflineDirections: Directions, OfflineRoutingProtocol {
         }
     }
     
-    public func calculateOffline(_ options: RouteOptions, completionHandler: @escaping Directions.RouteCompletionHandler) {
+    public func calculate(_ options: RouteOptions, offline: Bool = false, completionHandler: @escaping Directions.RouteCompletionHandler) {
+        
+        guard offline == true else {
+            return calculate(options, completionHandler: completionHandler)
+        }
         
         let url = self.url(forCalculating: options)
         
