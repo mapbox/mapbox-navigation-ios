@@ -6,7 +6,7 @@ extension BaseInstructionsBannerView {
     static let maneuverViewSize = CGSize(width: 38, height: 38)
     static let stepListIndicatorViewSize = CGSize(width: 30, height: 5)
     
-    func setupViews() {
+    @objc public func setupViews() {
         backgroundColor = .clear
         
         let maneuverView = ManeuverView()
@@ -78,7 +78,7 @@ extension BaseInstructionsBannerView {
         addGestureRecognizer(swipeDownGesture)
     }
     
-    func setupLayout() {
+    @objc public func setupLayout() {
         // firstColumnWidth is the width of the left side of the banner containing the maneuver view and distance label
         let firstColumnWidth = BaseInstructionsBannerView.maneuverViewSize.width + BaseInstructionsBannerView.padding * 3
         
@@ -136,14 +136,14 @@ extension BaseInstructionsBannerView {
     }
     
     // Aligns the instruction to the center Y (used for single line primary and/or secondary instructions)
-    func centerYAlignInstructions() {
+    public func centerYAlignInstructions() {
         _separatorView.isHidden = false
         baselineConstraints.forEach { $0.isActive = false }
         centerYConstraints.forEach { $0.isActive = true }
     }
     
     // Aligns primary top to the top of the maneuver view and the secondary baseline to the distance baseline (used for multiline)
-    func baselineAlignInstructions() {
+    public func baselineAlignInstructions() {
         _separatorView.isHidden = true
         centerYConstraints.forEach { $0.isActive = false }
         baselineConstraints.forEach { $0.isActive = true }

@@ -36,14 +36,14 @@ open class InstructionsBannerView: BaseInstructionsBannerView { }
 /// :nodoc:
 open class BaseInstructionsBannerView: UIControl {
     
-    weak var maneuverView: ManeuverView!
-    weak var primaryLabel: PrimaryLabel!
-    weak var secondaryLabel: SecondaryLabel!
-    weak var distanceLabel: DistanceLabel!
-    weak var dividerView: UIView!
-    weak var _separatorView: UIView!
-    weak var separatorView: SeparatorView!
-    weak var stepListIndicatorView: StepListIndicatorView!
+    public weak var maneuverView: ManeuverView!
+    public weak var primaryLabel: PrimaryLabel!
+    public weak var secondaryLabel: SecondaryLabel!
+    public weak var distanceLabel: DistanceLabel!
+    public weak var dividerView: UIView!
+    public weak var _separatorView: UIView!
+    public weak var separatorView: SeparatorView!
+    public weak var stepListIndicatorView: StepListIndicatorView!
     
     @IBInspectable
     public var swipeable: Bool = false
@@ -75,7 +75,7 @@ open class BaseInstructionsBannerView: UIControl {
     
     let distanceFormatter = DistanceFormatter(approximate: true)
     
-    var distance: CLLocationDistance? {
+    public var distance: CLLocationDistance? {
         didSet {
             distanceLabel.attributedDistanceString = nil
             
@@ -86,7 +86,7 @@ open class BaseInstructionsBannerView: UIControl {
             }
         }
     }
-    
+
     public override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()

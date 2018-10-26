@@ -33,7 +33,7 @@ open class ManeuverView: UIView {
     }
 
     @IBInspectable
-    var scale: CGFloat = 1 {
+    public var scale: CGFloat = 1 {
         didSet {
             setNeedsDisplay()
         }

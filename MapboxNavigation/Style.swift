@@ -320,7 +320,7 @@ open class DistanceLabel: StylableLabel {
      - precondition: `NSAttributedStringKey.quantity` should be applied to the
         numeric quantity.
      */
-    var attributedDistanceString: NSAttributedString? {
+    public var attributedDistanceString: NSAttributedString? {
         didSet {
             update()
         }
