@@ -16,9 +16,6 @@ const MBRouteControllerNotificationUserInfoKey MBRouteControllerIsProactiveKey  
 
 NSString *const MBErrorDomain = @"ErrorDomain";
 
-typedef NS_ENUM(NSInteger, MBNavigationError) {
-    MBErrorCodeUnknown = -1,
-};
 
 @implementation NSString (MD5)
 - (NSString * _Nonnull)md5 {
