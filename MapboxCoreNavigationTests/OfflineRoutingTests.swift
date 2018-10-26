@@ -26,7 +26,7 @@ class OfflineRoutingTests: XCTestCase {
         let calculateRouteExpectation = expectation(description: "Calculate route offline")
         var route: Route?
         
-        directions.calculateOffline(options) { (waypoints, routes, error) in
+        directions.calculate(options, offline: true) { (waypoints, routes, error) in
             XCTAssertNil(error)
             XCTAssertNotNil(waypoints)
             XCTAssertNotNil(routes)
@@ -61,7 +61,7 @@ class OfflineRoutingTests: XCTestCase {
         let options = NavigationRouteOptions(coordinates: coordinates, profileIdentifier: .automobile)
         let calculateRouteExpectation = expectation(description: "Calculate route offline")
         
-        directions.calculateOffline(options) { (waypoints, routes, error) in
+        directions.calculate(options, offline: true) { (waypoints, routes, error) in
             XCTAssertNotNil(error)
             XCTAssertEqual(error!.localizedDescription, "No suitable edges near location")
             XCTAssertNil(routes)
