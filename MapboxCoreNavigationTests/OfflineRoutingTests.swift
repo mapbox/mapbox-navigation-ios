@@ -63,6 +63,7 @@ class OfflineRoutingTests: XCTestCase {
         
         directions.calculateOffline(options) { (waypoints, routes, error) in
             XCTAssertNotNil(error)
+            XCTAssertEqual(error!.localizedDescription, "No suitable edges near location")
             XCTAssertNil(routes)
             XCTAssertNil(waypoints)
             calculateRouteExpectation.fulfill()
