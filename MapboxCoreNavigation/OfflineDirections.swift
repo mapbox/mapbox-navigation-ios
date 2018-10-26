@@ -4,10 +4,25 @@ import MapboxNavigationNative
 
 public typealias OfflineDirectionsCompletionHandler = (_ numberOfTiles: UInt64) -> Void
 
-public enum OfflineRoutingError: Error {
-    case unexpectedRouteResult
-    case corruptRouteData
+enum OfflineRoutingError: Error, LocalizedError {
+    case unexpectedRouteResult(String)
+    case corruptRouteData(String)
     case responseError(String)
+    
+    public var localizedDescription: String {
+        switch self {
+        case .corruptRouteData(let value):
+            return value
+        case .unexpectedRouteResult(let value):
+            return value
+        case .responseError(let value):
+            return value
+        }
+    }
+    
+    var errorDescription: String? {
+        return localizedDescription
+    }
 }
 
 struct OfflineDirectionsConstants {
@@ -69,19 +84,21 @@ public class MapboxOfflineDirections: Directions, OfflineRoutingProtocol {
         OfflineDirectionsConstants.serialQueue.sync { [weak self] in
             
             guard let result = self?.navigator.getRouteForDirectionsUri(url.absoluteString) else {
-                return completionHandler(nil, nil, OfflineRoutingError.unexpectedRouteResult as NSError)
+                let error = OfflineRoutingError.unexpectedRouteResult("Unexpected routing result")
+                return completionHandler(nil, nil, error as NSError)
             }
             
             guard let data = result.json.data(using: .utf8) else {
-                return completionHandler(nil, nil, OfflineRoutingError.corruptRouteData as NSError)
+                let error = OfflineRoutingError.corruptRouteData("Corrupt route data")
+                return completionHandler(nil, nil, error as NSError)
             }
             
             do {
                 let json = try JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
                 if let errorValue = json["error"] as? String {
                     DispatchQueue.main.async {
-                        let error = NSError(domain: "..", code: 102, userInfo: [NSLocalizedDescriptionKey: errorValue])
-                        return completionHandler(nil, nil, error)
+                        let error = OfflineRoutingError.responseError(errorValue)
+                        return completionHandler(nil, nil, error as NSError)
                     }
                 } else {
                     let response = options.response(from: json)
