@@ -60,7 +60,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         self.mapTemplate = mapTemplate
         self.carInterfaceController = interfaceController
         self.carPlayManager = manager
-        self.showsUserCourse = false
+        self.tracksUserCourse = true
 
         super.init(nibName: nil, bundle: nil)
         carFeedbackTemplate = createFeedbackUI()
