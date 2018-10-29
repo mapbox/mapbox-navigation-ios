@@ -96,6 +96,8 @@ class ViewController: UIViewController {
         if let popoverController = alertController.popoverPresentationController {
             popoverController.sourceView = self.startButton
         }
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "settings"), style: .plain, target: self, action: #selector(openSettings))
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -119,6 +121,11 @@ class ViewController: UIViewController {
                 }
             }
         }
+    }
+    
+    @IBAction func openSettings() {
+        let controller = UINavigationController(rootViewController: SettingsViewController())
+        present(controller, animated: true, completion: nil)
     }
 
     // MARK: Gesture Recognizer Handlers
