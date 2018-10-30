@@ -78,4 +78,10 @@ open class PortableRouteController: RouteController {
     public func locationHistory() -> String {
         return navigator.getHistory()
     }
+    
+    public func projectedLocation(date: Date, projectedSeconds: TimeInterval) -> (coordinate: CLLocationCoordinate2D, course: CLLocationDirection) {
+        let projectedDate = date.addingTimeInterval(projectedSeconds) // + projectedMilliseconds
+        let status = navigator.getStatusForTimestamp(projectedDate)
+        return (coordinate: status.location, course: CLLocationDirection(status.bearing))
+    }
 }
