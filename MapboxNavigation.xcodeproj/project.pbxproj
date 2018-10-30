@@ -60,6 +60,7 @@
 		351BEC0D1E5BCC72006FE110 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC081E5BCC72006FE110 /* Bundle.swift */; };
 		351BEC0E1E5BCC72006FE110 /* DashedLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC091E5BCC72006FE110 /* DashedLineView.swift */; };
 		351BEC291E5BD530006FE110 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 351BEC281E5BD530006FE110 /* Assets.xcassets */; };
+		351FCEF621887F890098550A /* ResizableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351FCEF521887F890098550A /* ResizableView.swift */; };
 		3525449D1E663D32004C8F1C /* MapboxCoreNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */; };
 		352690491ECC843700E387BD /* Fixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352690481ECC843700E387BD /* Fixture.swift */; };
 		3527D2B91EC4619400C07FC9 /* Fixtures.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3527D2B61EC45FBD00C07FC9 /* Fixtures.xcassets */; };
@@ -617,6 +618,7 @@
 		351BEC091E5BCC72006FE110 /* DashedLineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashedLineView.swift; sourceTree = "<group>"; };
 		351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DistanceFormatter.swift; sourceTree = "<group>"; };
 		351BEC281E5BD530006FE110 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Resources/Assets.xcassets; sourceTree = "<group>"; };
+		351FCEF521887F890098550A /* ResizableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResizableView.swift; sourceTree = "<group>"; };
 		35213DAD1EC456CF00A62B21 /* FBSnapshotTestCase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSnapshotTestCase.framework; path = Carthage/Build/iOS/FBSnapshotTestCase.framework; sourceTree = "<group>"; };
 		352690481ECC843700E387BD /* Fixture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Fixture.swift; sourceTree = "<group>"; };
 		3527D2B61EC45FBD00C07FC9 /* Fixtures.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Fixtures.xcassets; sourceTree = "<group>"; };
@@ -1322,6 +1324,7 @@
 				35E3B48D21873298002803BE /* SettingsViewController.swift */,
 				35E3B48F21873941002803BE /* OfflineViewController.swift */,
 				35E3B49121873C18002803BE /* SettingsItems.swift */,
+				351FCEF521887F890098550A /* ResizableView.swift */,
 			);
 			name = Swift;
 			path = Examples/Swift;
@@ -2309,6 +2312,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				358D14681E5E3B7700ADE590 /* ViewController.swift in Sources */,
+				351FCEF621887F890098550A /* ResizableView.swift in Sources */,
 				35E3B49221873C18002803BE /* SettingsItems.swift in Sources */,
 				35E3B49021873941002803BE /* OfflineViewController.swift in Sources */,
 				C5D9800D1EFA8BA9006DBF2E /* CustomViewController.swift in Sources */,
