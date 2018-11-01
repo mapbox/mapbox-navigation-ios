@@ -29,7 +29,29 @@ extension Bundle {
         }
     }
     
-    class var mapboxCoreNavigation: Bundle {
+    public class var mapboxCoreNavigation: Bundle {
         get { return Bundle(for: RouteController.self) }
+    }
+    
+    public func ensureSuggestedTilePathExists() -> Bool {
+        guard let tilePath = suggestedTilePath else { return false }
+        try? FileManager.default.createDirectory(at: tilePath, withIntermediateDirectories: true, attributes: nil)
+        return true
+    }
+    
+    public var suggestedTilePath: URL? {
+        
+        guard let cachesDirectory = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first else {
+            return nil
+        }
+        
+        guard let bundleIdentifier = self.bundleIdentifier else { return nil }
+        let path = URL(fileURLWithPath: cachesDirectory, isDirectory: true).appendingPathComponent(bundleIdentifier)
+        
+        return path.appendingPathComponent("tiles")
+    }
+    
+    public func suggestedTilePath(for version: String) -> URL? {
+        return suggestedTilePath?.appendingPathComponent(version)
     }
 }

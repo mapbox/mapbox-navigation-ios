@@ -5,11 +5,24 @@ typealias Payload = () -> ()
 
 struct Item {
     let title: String
-    let viewControllerType: UIViewController.Type? // View controller to present on SettingsViewController.tableView(_:didSelectRowAt:)
-    let payload: Payload? // Closure to call on SettingsViewController.tableView(_:didSelectRowAt:)
+    let subtitle: String?
+    // View controller to present on SettingsViewController.tableView(_:didSelectRowAt:)
+    let viewControllerType: UIViewController.Type?
+    // Closure to call on SettingsViewController.tableView(_:didSelectRowAt:)
+    let payload: Payload?
+    
+    init(title: String, subtitle: String? = nil, viewControllerType: UIViewController.Type? = nil, payload: Payload? = nil) {
+        self.title = title
+        self.subtitle = subtitle
+        self.viewControllerType = viewControllerType
+        self.payload = payload
+    }
 }
 
-typealias Section = [Item]
+struct Section {
+    let title: String
+    let items: [Item]
+}
 
 class SettingsViewController: UITableViewController {
     
@@ -19,7 +32,6 @@ class SettingsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         dataSource = sections()
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close", style: .done, target: self, action: #selector(close))
@@ -31,10 +43,15 @@ class SettingsViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
-        let item = dataSource[indexPath.section][indexPath.row]
+        var cell: UITableViewCell! = tableView.dequeueReusableCell(withIdentifier: cellIdentifier)
+        if cell == nil {
+            cell = UITableViewCell(style: .subtitle, reuseIdentifier: cellIdentifier)
+        }
+        
+        let item = dataSource[indexPath.section].items[indexPath.row]
         
         cell.textLabel?.text = item.title
+        cell.detailTextLabel?.text = item.subtitle
         
         return cell
     }
@@ -44,14 +61,18 @@ class SettingsViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return dataSource[section].count
+        return dataSource[section].items.count
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return dataSource[section].title
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let item = dataSource[indexPath.section][indexPath.row]
+        let item = dataSource[indexPath.section].items[indexPath.row]
         
         if let viewController = item.viewControllerType?.init() {
             navigationController?.pushViewController(viewController, animated: true)
