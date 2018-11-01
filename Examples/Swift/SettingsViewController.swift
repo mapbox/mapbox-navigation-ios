@@ -10,12 +10,15 @@ struct Item {
     let viewControllerType: UIViewController.Type?
     // Closure to call on SettingsViewController.tableView(_:didSelectRowAt:)
     let payload: Payload?
+    // SettingsViewController.tableView(_:canEditRowAt:)
+    var canEditRow: Bool = false
     
-    init(title: String, subtitle: String? = nil, viewControllerType: UIViewController.Type? = nil, payload: Payload? = nil) {
+    init(title: String, subtitle: String? = nil, viewControllerType: UIViewController.Type? = nil, payload: Payload? = nil, canEditRow: Bool = false) {
         self.title = title
         self.subtitle = subtitle
         self.viewControllerType = viewControllerType
         self.payload = payload
+        self.canEditRow = canEditRow
     }
 }
 
@@ -66,6 +69,24 @@ class SettingsViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return dataSource[section].title
+    }
+    
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return dataSource[indexPath.section].items[indexPath.row].canEditRow
+    }
+    
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        return .delete
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        let item = dataSource[indexPath.section].items[indexPath.row]
+        
+        guard let url = Bundle.mapboxCoreNavigation.suggestedTilePath(for: item.title) else { return }
+        try? FileManager.default.removeItem(atPath: url.path)
+        
+        dataSource = sections()
+        tableView.reloadData()
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
