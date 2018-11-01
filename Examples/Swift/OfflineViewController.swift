@@ -28,22 +28,25 @@ class OfflineViewController: UIViewController {
     
     @objc func downloadRegion() {
         
+        // Hide the download button so we can't download the same region twice
+        navigationItem.rightBarButtonItem = nil
+        
         let northWest = mapView.convert(resizableView.frame.minXY, toCoordinateFrom: nil)
         let southEast = mapView.convert(resizableView.frame.maxXY, toCoordinateFrom: nil)
         
-        let boundingBox = BoundingBox([northWest, southEast])
+        let coordinateBounds = CoordinateBounds([northWest, southEast])
         
         updateTitle("Fetching versions")
         
-        Directions.shared.availableOfflineVersions { [weak self] (versions, error) in
+        Directions.shared.fetchAvailableOfflineVersions { [weak self] (versions, error) in
             guard let version = versions?.first else { return }
             
             self?.updateTitle("Downloading tiles")
             
-            Directions.shared.downloadTiles(for: boundingBox, version: version, completionHandler: { (url, response, error) in
-                
+            Directions.shared.downloadTiles(in: coordinateBounds, version: version, completionHandler: { (url, response, error) in
                 
                 guard let url = url else { return assert(false, "Unable to locate temporary file") }
+                
                 let outputDirectory = Bundle.mapboxCoreNavigation.suggestedTilePath(for: version)
                 outputDirectory?.ensureDirectoryExists()
                 
@@ -58,8 +61,6 @@ class OfflineViewController: UIViewController {
                 })
             }).resume()
         }.resume()
-        
-        navigationItem.rightBarButtonItem = nil
     }
     
     func updateTitle(_ string: String) {
