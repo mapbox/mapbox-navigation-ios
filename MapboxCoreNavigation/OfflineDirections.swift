@@ -46,7 +46,7 @@ public protocol NavigatorDirectionsProtocol {
      - parameter accessToken: A Mapbox [access token](https://www.mapbox.com/help/define-access-token/). If an access token is not specified when initializing the directions object, it should be specified in the `MGLMapboxAccessToken` key in the main application bundle’s Info.plist.
      - parameter host: An optional hostname to the server API. The [Mapbox Directions API](https://www.mapbox.com/api-documentation/?language=Swift#directions) endpoint is used by default.
      */
-    init(tilesURL: URL, translationsURL: URL, accessToken: String?, host: String?, completionHandler: @escaping OfflineDirectionsCompletionHandler)
+    init(tilesURL: URL, translationsURL: URL?, accessToken: String?, host: String?, completionHandler: @escaping OfflineDirectionsCompletionHandler)
     
     /**
      Begins asynchronously calculating the route or routes using the given options and delivers the results to a closure.
@@ -67,12 +67,14 @@ public class NavigationDirections: Directions, NavigatorDirectionsProtocol {
     public typealias UnpackProgressHandler = (_ totalBytes: UInt64, _ remainingBytes: UInt64) -> ()
     public typealias UnpackCompletionHandler = (_ result: UInt64, _ error: Error?) -> ()
     
-    public required init(tilesURL: URL, translationsURL: URL, accessToken: String?, host: String? = nil, completionHandler: @escaping OfflineDirectionsCompletionHandler) {
+    public required init(tilesURL: URL, translationsURL: URL? = nil, accessToken: String?, host: String? = nil, completionHandler: @escaping OfflineDirectionsCompletionHandler) {
         
         super.init(accessToken: accessToken, host: host)
         
         OfflineDirectionsConstants.offlineSerialQueue.sync {
-            let tileCount = self.navigator.configureRouter(forTilesPath: tilesURL.path, translationsPath: translationsURL.path)
+            // Translations files bundled winthin navigation native
+            // will be used when passing an empty string to `translationsPath`.
+            let tileCount = self.navigator.configureRouter(forTilesPath: tilesURL.path, translationsPath: translationsURL?.path ?? "")
             
             DispatchQueue.main.async {
                 completionHandler(tileCount)
