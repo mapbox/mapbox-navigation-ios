@@ -27,7 +27,9 @@ enum OfflineRoutingError: Error, LocalizedError {
 
 struct OfflineDirectionsConstants {
     static let offlineSerialQueueLabel = Bundle.mapboxCoreNavigation.bundleIdentifier!.appending(".offline")
-    static let serialQueue = DispatchQueue(label: OfflineDirectionsConstants.offlineSerialQueueLabel)
+    static let unpackSerialQueueLabel = Bundle.mapboxCoreNavigation.bundleIdentifier!.appending(".offline.unpack")
+    static let offlineSerialQueue = DispatchQueue(label: OfflineDirectionsConstants.offlineSerialQueueLabel)
+    static let unpackSerialQueue = DispatchQueue(label: OfflineDirectionsConstants.unpackSerialQueueLabel)
 }
 
 /**
@@ -62,11 +64,14 @@ public protocol OfflineRoutingProtocol {
 @objc(MBNavigationDirections)
 public class NavigationDirections: Directions, OfflineRoutingProtocol {
     
+    public typealias UnpackProgressHandler = (_ totalBytes: UInt64, _ remainingBytes: UInt64) -> ()
+    public typealias UnpackCompletionHandler = (_ result: UInt64, _ error: Error?) -> ()
+    
     public required init(tilesURL: URL, translationsURL: URL, accessToken: String?, host: String? = nil, completionHandler: @escaping OfflineDirectionsCompletionHandler) {
         
         super.init(accessToken: accessToken, host: host)
         
-        OfflineDirectionsConstants.serialQueue.sync {
+        OfflineDirectionsConstants.offlineSerialQueue.sync {
             let tilesPath = tilesURL.absoluteString.replacingOccurrences(of: "file://", with: "")
             let translationsPath = translationsURL.absoluteString.replacingOccurrences(of: "file://", with: "")
             let tileCount = self.navigator.configureRouter(forTilesPath: tilesPath, translationsPath: translationsPath)
@@ -74,6 +79,39 @@ public class NavigationDirections: Directions, OfflineRoutingProtocol {
             DispatchQueue.main.async {
                 completionHandler(tileCount)
             }
+        }
+    }
+    
+    public class func unpackTilePack(at filePath: URL, outputDirectory: URL, progressHandler: UnpackProgressHandler?, completionHandler: UnpackCompletionHandler?) {
+        
+        OfflineDirectionsConstants.offlineSerialQueue.sync {
+            
+            let totalPackBytes = filePath.fileSize()!
+            
+            // Report 0% progress
+            progressHandler?(totalPackBytes, totalPackBytes)
+
+            var timer: CountdownTimer? = CountdownTimer(countdown: .seconds(1), accuracy: .seconds(1), executingOn: OfflineDirectionsConstants.unpackSerialQueue, payload: {
+                let remainingBytes = filePath.fileSize()!
+                progressHandler?(totalPackBytes, remainingBytes)
+            })
+
+            timer?.arm()
+            
+            let tilePath = filePath.absoluteString.replacingOccurrences(of: "file://", with: "")
+            let outputPath = outputDirectory.absoluteString.replacingOccurrences(of: "file://", with: "")
+            
+            let result = MBNavigator().unpackTiles(forPacked_tiles_path: tilePath, output_directory: outputPath)
+            
+            // Report 100% progress
+            progressHandler?(totalPackBytes, totalPackBytes)
+            
+            DispatchQueue.main.async {
+                completionHandler?(result, nil)
+            }
+            
+            timer?.disarm()
+            timer = nil
         }
     }
     
@@ -85,7 +123,7 @@ public class NavigationDirections: Directions, OfflineRoutingProtocol {
         
         let url = self.url(forCalculating: options)
         
-        OfflineDirectionsConstants.serialQueue.sync { [weak self] in
+        OfflineDirectionsConstants.offlineSerialQueue.sync { [weak self] in
             
             guard let result = self?.navigator.getRouteForDirectionsUri(url.absoluteString) else {
                 let error = OfflineRoutingError.unexpectedRouteResult("Unexpected routing result")
@@ -137,4 +175,16 @@ public class NavigationDirections: Directions, OfflineRoutingProtocol {
 fileprivate func currentQueueName() -> String? {
     let name = __dispatch_queue_get_label(nil)
     return String(cString: name, encoding: .utf8)
+}
+
+extension URL {
+    
+    func fileSize() -> UInt64? {
+        do {
+            let attributes = try FileManager.default.attributesOfItem(atPath: self.path)
+            return attributes[.size] as? UInt64
+        } catch {
+            return nil
+        }
+    }
 }

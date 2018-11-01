@@ -47,6 +47,7 @@
 		3510300F1F54B67000E3B7E7 /* LaneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3510300E1F54B67000E3B7E7 /* LaneTests.swift */; };
 		351030111F54B72000E3B7E7 /* route-for-lane-testing.json in Resources */ = {isa = PBXBuildFile; fileRef = 351030101F54B72000E3B7E7 /* route-for-lane-testing.json */; };
 		351174F41EF1C0530065E248 /* ReplayLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351174F31EF1C0530065E248 /* ReplayLocationManager.swift */; };
+		35150E782189F97E00D0646F /* li.tar in Resources */ = {isa = PBXBuildFile; fileRef = 35150E772189F97D00D0646F /* li.tar */; };
 		351927361F0FA072003A702D /* ScreenCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351927351F0FA072003A702D /* ScreenCapture.swift */; };
 		351BEBF11E5BCC63006FE110 /* MGLMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBDF1E5BCC63006FE110 /* MGLMapView.swift */; };
 		351BEBF21E5BCC63006FE110 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBE01E5BCC63006FE110 /* Style.swift */; };
@@ -599,6 +600,7 @@
 		351030101F54B72000E3B7E7 /* route-for-lane-testing.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "route-for-lane-testing.json"; sourceTree = "<group>"; };
 		351174F31EF1C0530065E248 /* ReplayLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplayLocationManager.swift; sourceTree = "<group>"; };
 		3512C7C71FB0A0C100CDD2A3 /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
+		35150E772189F97D00D0646F /* li.tar */ = {isa = PBXFileReference; lastKnownFileType = archive.tar; path = li.tar; sourceTree = "<group>"; };
 		35190E911F461A32007C1393 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
 		35190E921F461A32007C1393 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
 		35190E931F461A32007C1393 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Navigation.strings; sourceTree = "<group>"; };
@@ -1476,6 +1478,7 @@
 				35D92FF321825603000C78CB /* translations */,
 				35F70605217496A60065244B /* routing */,
 				35718BE41EF316BA00AFA3D1 /* tunnel.json */,
+				35150E772189F97D00D0646F /* li.tar */,
 				35718BE31EF316BA00AFA3D1 /* tunnel.route */,
 				C52D09CD1DEF5E5100BE3C5C /* route.json */,
 				DAB2CCE61DF7AFDE001B2FE1 /* dc-line.geojson */,
@@ -2068,6 +2071,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				35150E782189F97E00D0646F /* li.tar in Resources */,
 				35F70606217496A60065244B /* routing in Resources */,
 				C5387A9D1F8FDB13000D2E93 /* routeWithInstructions.json in Resources */,
 				C5EF397520599120009A2C50 /* straight-line.json in Resources */,

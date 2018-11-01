@@ -37,9 +37,7 @@ class OfflineViewController: UIViewController {
         Directions.shared.availableOfflineVersions { (versions, error) in
             guard let version = versions?.first else { return }
             
-            Directions.shared.downloadTiles(for: boundingBox, version: version, progressHandler: { (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite) in
-                
-            }, completionHandler: { (url, response, error) in
+            Directions.shared.downloadTiles(for: boundingBox, version: version, completionHandler: { (url, response, error) in
                 print("Downloaded \(url!)")
                 // TODO: Move temporary file to cache folder
             })
