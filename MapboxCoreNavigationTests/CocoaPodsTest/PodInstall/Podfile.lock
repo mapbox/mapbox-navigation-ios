@@ -3,7 +3,7 @@ PODS:
   - MapboxCoreNavigation (0.23.0):
     - MapboxDirections.swift (~> 0.24.1)
     - MapboxMobileEvents (~> 0.6.0)
-    - MapboxNavigationNative (~> 3.2.0)
+    - MapboxNavigationNative (~> 3.3.1)
     - Turf (~> 0.2.0)
   - MapboxDirections.swift (0.24.1):
     - Polyline (~> 4.2)
@@ -13,7 +13,7 @@ PODS:
     - MapboxCoreNavigation (= 0.23.0)
     - MapboxSpeech (~> 0.0.1)
     - Solar (~> 2.1)
-  - MapboxNavigationNative (3.2.0)
+  - MapboxNavigationNative (3.3.1)
   - MapboxSpeech (0.0.2)
   - Polyline (4.2.0)
   - Solar (2.1.0)
@@ -42,11 +42,11 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Mapbox-iOS-SDK: fb9dde66106a8f10d351f9697ac198049c8e5511
-  MapboxCoreNavigation: dffbf82b92a542cf9bc6129a26a471ba2d62c694
+  MapboxCoreNavigation: 9e7ffea8dbff94ea9371ad875e8269a304ac1674
   MapboxDirections.swift: 25ea07ca06a3c64c335dc8852f3c94fcabd443c8
   MapboxMobileEvents: 0218869f556a7fdac9f869e2f9c10e8c6dd7eed5
   MapboxNavigation: a24b15a13957d2dc85e075fc4ec978693bf2b387
-  MapboxNavigationNative: 1173dc73d6643e321065cfaa55d253f67b55ab12
+  MapboxNavigationNative: 93a41a77a0b6b0a3fbbf79c06143720950f69fa3
   MapboxSpeech: 9d46bca4d7e96318ec8d6ce93a1153ebaef319ba
   Polyline: 3d69f75bb136357e27291d439d0436c6ebda57a4
   Solar: 2dc6e7cc39186cb0c8228fa08df76fb50c7d8f24
