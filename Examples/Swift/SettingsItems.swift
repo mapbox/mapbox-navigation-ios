@@ -45,7 +45,7 @@ extension SettingsViewController {
             if let sizeOfDirectory = sizeOfDirectory(at: path) {
                 subtitle = byteCountFormatter.string(fromByteCount: Int64(sizeOfDirectory))
             }
-            versions.append(Item(title: $0, subtitle: subtitle, viewControllerType: nil, payload: nil))
+            versions.append(Item(title: $0, subtitle: subtitle, canEditRow: true))
         }
         
         return versions
