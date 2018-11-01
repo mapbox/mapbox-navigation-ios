@@ -33,10 +33,15 @@ class OfflineViewController: UIViewController {
         
         let boundingBox = BoundingBox([northWest, southEast])
         
-        Directions.shared.availableOfflineVersions { (versions, error) in
+        updateTitle("Fetching versions")
+        
+        Directions.shared.availableOfflineVersions { [weak self] (versions, error) in
             guard let version = versions?.first else { return }
             
+            self?.updateTitle("Downloading tiles")
+            
             Directions.shared.downloadTiles(for: boundingBox, version: version, completionHandler: { (url, response, error) in
+                
                 
                 guard let url = url else { return assert(false, "Unable to locate temporary file") }
                 let outputDirectory = Bundle.mapboxCoreNavigation.suggestedTilePath(for: version)
@@ -44,14 +49,23 @@ class OfflineViewController: UIViewController {
                 
                 NavigationDirections.unpackTilePack(at: url, outputDirectory: outputDirectory!, progressHandler: { (totalBytes, bytesRemaining) in
                     
+                    let progress = (Float(bytesRemaining) / Float(totalBytes)) * 100
+                    self?.updateTitle("Unpacking \(Int(progress))%")
+                    
                 }, completionHandler: { (result, error) in
                     
-                    print("!!! Unpacking complete \(result) \(String(describing: error))")
+                    self?.navigationController?.popViewController(animated: true)
                 })
             }).resume()
         }.resume()
         
         navigationItem.rightBarButtonItem = nil
+    }
+    
+    func updateTitle(_ string: String) {
+        DispatchQueue.main.async { [weak self] in
+            self?.navigationItem.title = string
+        }
     }
 }
 
