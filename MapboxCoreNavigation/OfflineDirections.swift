@@ -35,8 +35,8 @@ struct OfflineDirectionsConstants {
 /**
  Defines additional functionality similar to `Directions` with support for offline routing.
  */
-@objc(MBOfflineDirectionsProtocol)
-public protocol OfflineRoutingProtocol {
+@objc(MBNavigatorDirectionsProtocol)
+public protocol NavigatorDirectionsProtocol {
     
     /**
      Initializes a newly created directions object with an optional access token and host.
@@ -62,7 +62,7 @@ public protocol OfflineRoutingProtocol {
 }
 
 @objc(MBNavigationDirections)
-public class NavigationDirections: Directions, OfflineRoutingProtocol {
+public class NavigationDirections: Directions, NavigatorDirectionsProtocol {
     
     public typealias UnpackProgressHandler = (_ totalBytes: UInt64, _ remainingBytes: UInt64) -> ()
     public typealias UnpackCompletionHandler = (_ result: UInt64, _ error: Error?) -> ()
@@ -86,14 +86,14 @@ public class NavigationDirections: Directions, OfflineRoutingProtocol {
         
         OfflineDirectionsConstants.offlineSerialQueue.sync {
             
-            let totalPackBytes = filePath.fileSize()!
+            let totalPackedBytes = filePath.fileSize()!
             
             // Report 0% progress
-            progressHandler?(totalPackBytes, totalPackBytes)
+            progressHandler?(totalPackedBytes, totalPackedBytes)
 
             var timer: CountdownTimer? = CountdownTimer(countdown: .seconds(1), accuracy: .seconds(1), executingOn: OfflineDirectionsConstants.unpackSerialQueue, payload: {
                 let remainingBytes = filePath.fileSize()!
-                progressHandler?(totalPackBytes, remainingBytes)
+                progressHandler?(totalPackedBytes, remainingBytes)
             })
 
             timer?.arm()
@@ -104,7 +104,7 @@ public class NavigationDirections: Directions, OfflineRoutingProtocol {
             let result = MBNavigator().unpackTiles(forPacked_tiles_path: tilePath, output_directory: outputPath)
             
             // Report 100% progress
-            progressHandler?(totalPackBytes, totalPackBytes)
+            progressHandler?(totalPackedBytes, totalPackedBytes)
             
             DispatchQueue.main.async {
                 completionHandler?(result, nil)

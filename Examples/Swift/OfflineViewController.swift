@@ -1,7 +1,7 @@
 import UIKit
 import Mapbox
 import MapboxDirections
-
+import MapboxCoreNavigation
 
 class OfflineViewController: UIViewController {
     
@@ -16,7 +16,6 @@ class OfflineViewController: UIViewController {
         view.addSubview(mapView)
         
         backgroundLayer.frame = view.bounds
-        backgroundLayer.backgroundColor = #colorLiteral(red: 0.1450980392, green: 0.2588235294, blue: 0.3725490196, alpha: 0.196852993).cgColor
         backgroundLayer.fillColor = #colorLiteral(red: 0.1450980392, green: 0.2588235294, blue: 0.3725490196, alpha: 0.196852993).cgColor
         view.layer.addSublayer(backgroundLayer)
         
@@ -32,16 +31,25 @@ class OfflineViewController: UIViewController {
         let northWest = mapView.convert(resizableView.frame.minXY, toCoordinateFrom: nil)
         let southEast = mapView.convert(resizableView.frame.maxXY, toCoordinateFrom: nil)
         
-        let boundingBox = BoundingBox(northWest: northWest, southEast: southEast)
+        let boundingBox = BoundingBox([northWest, southEast])
         
         Directions.shared.availableOfflineVersions { (versions, error) in
             guard let version = versions?.first else { return }
             
             Directions.shared.downloadTiles(for: boundingBox, version: version, completionHandler: { (url, response, error) in
-                print("Downloaded \(url!)")
-                // TODO: Move temporary file to cache folder
-            })
-        }
+                
+                guard let url = url else { return assert(false, "Unable to locate temporary file") }
+                let outputDirectory = Bundle.mapboxCoreNavigation.suggestedTilePath(for: version)
+                outputDirectory?.ensureDirectoryExists()
+                
+                NavigationDirections.unpackTilePack(at: url, outputDirectory: outputDirectory!, progressHandler: { (totalBytes, bytesRemaining) in
+                    
+                }, completionHandler: { (result, error) in
+                    
+                    print("!!! Unpacking complete \(result) \(String(describing: error))")
+                })
+            }).resume()
+        }.resume()
         
         navigationItem.rightBarButtonItem = nil
     }
@@ -55,5 +63,12 @@ extension CGRect {
     
     var maxXY: CGPoint {
         return CGPoint(x: maxX, y: maxY)
+    }
+}
+
+extension URL {
+    
+    func ensureDirectoryExists() {
+        try? FileManager.default.createDirectory(at: self, withIntermediateDirectories: true, attributes: nil)
     }
 }
