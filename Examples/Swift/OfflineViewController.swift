@@ -19,8 +19,9 @@ class OfflineViewController: UIViewController {
         backgroundLayer.fillColor = #colorLiteral(red: 0.1450980392, green: 0.2588235294, blue: 0.3725490196, alpha: 0.196852993).cgColor
         view.layer.addSublayer(backgroundLayer)
         
-        resizableView = ResizableView(frame: CGRect(origin: view.center,
-                                                    size: CGSize(width: 50, height: 50)), backgroundLayer: backgroundLayer)
+        resizableView = ResizableView(frame: CGRect(origin: view.center, size: CGSize(width: 50, height: 50)),
+                                      backgroundLayer: backgroundLayer)
+        
         view.addSubview(resizableView)
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Download", style: .done, target: self, action: #selector(downloadRegion))

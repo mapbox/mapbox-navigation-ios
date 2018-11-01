@@ -72,9 +72,7 @@ public class NavigationDirections: Directions, NavigatorDirectionsProtocol {
         super.init(accessToken: accessToken, host: host)
         
         OfflineDirectionsConstants.offlineSerialQueue.sync {
-            let tilesPath = tilesURL.absoluteString.replacingOccurrences(of: "file://", with: "")
-            let translationsPath = translationsURL.absoluteString.replacingOccurrences(of: "file://", with: "")
-            let tileCount = self.navigator.configureRouter(forTilesPath: tilesPath, translationsPath: translationsPath)
+            let tileCount = self.navigator.configureRouter(forTilesPath: tilesURL.path, translationsPath: translationsURL.path)
             
             DispatchQueue.main.async {
                 completionHandler(tileCount)
@@ -86,15 +84,16 @@ public class NavigationDirections: Directions, NavigatorDirectionsProtocol {
         
         OfflineDirectionsConstants.offlineSerialQueue.sync {
             
-            let totalPackedBytes = filePath.fileSize()!
+            let totalPackedBytes = filePath.fileSize!
             
             // Report 0% progress
             progressHandler?(totalPackedBytes, totalPackedBytes)
-
-            var timer: CountdownTimer? = CountdownTimer(countdown: .seconds(500), accuracy: .seconds(500), executingOn: OfflineDirectionsConstants.unpackSerialQueue, payload: {
-                let remainingBytes = filePath.fileSize()!
-                progressHandler?(totalPackedBytes, remainingBytes)
-            })
+            
+            var timer: CountdownTimer? = CountdownTimer(countdown: .seconds(500), accuracy: .seconds(500), executingOn: OfflineDirectionsConstants.unpackSerialQueue) {
+                if let remainingBytes = filePath.fileSize {
+                    progressHandler?(totalPackedBytes, remainingBytes)
+                }
+            }
 
             timer?.arm()
             
@@ -106,12 +105,12 @@ public class NavigationDirections: Directions, NavigatorDirectionsProtocol {
             // Report 100% progress
             progressHandler?(totalPackedBytes, totalPackedBytes)
             
+            timer?.disarm()
+            timer = nil
+            
             DispatchQueue.main.async {
                 completionHandler?(result, nil)
             }
-            
-            timer?.disarm()
-            timer = nil
         }
     }
     
@@ -179,7 +178,7 @@ fileprivate func currentQueueName() -> String? {
 
 extension URL {
     
-    func fileSize() -> UInt64? {
+    fileprivate var fileSize: UInt64? {
         do {
             let attributes = try FileManager.default.attributesOfItem(atPath: self.path)
             return attributes[.size] as? UInt64
