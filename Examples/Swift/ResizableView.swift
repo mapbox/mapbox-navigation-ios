@@ -105,7 +105,6 @@ class ResizableView: UIControl {
         }
         
         imageView.center = CGPoint(x: bounds.maxX-5, y: bounds.maxY-5)
-        imageView.layer.zPosition = .greatestFiniteMagnitude
         
         bringSubview(toFront: imageView)
     }
