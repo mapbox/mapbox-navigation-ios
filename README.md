@@ -141,3 +141,6 @@ We welcome feedback and code contributions! Please see [CONTRIBUTING.md](./CONTR
 ## License
 
 Mapbox Navigation SDK for iOS is released under the ISC License. See [LICENSE.md](https://github.com/mapbox/mapbox-navigation-ios/blob/master/LICENSE.md) for details.
+
+Mapbox Navigation SDK uses [Mapbox Navigator](https://github.com/mapbox/mapbox-navigation-ios/blob/master/Cartfile#L2), a private binary, as a dependency. The Mapbox Navigator binary may be used with a Mapbox account and under the [Mapbox TOS](https://www.mapbox.com/tos/). If you do not wish to use this binary, make sure you swap out this dependency in [./Cartfile](https://github.com/mapbox/mapbox-navigation-ios/blob/master/Cartfile#L2). Code in this repo falls under the [MIT license](./LICENSE.md).
+
