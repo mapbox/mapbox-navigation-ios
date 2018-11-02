@@ -170,7 +170,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
         
         // find the upcoming manuever step, and update instructions banner to show preview
         guard stepIndex + 1 < leg.steps.endIndex else { return }
-        guard let maneuverStep: RouteStep = leg.steps[stepIndex + 1] else { return }
+        let maneuverStep = leg.steps[stepIndex + 1]
         updatePreviewBannerWith(step: step, maneuverStep: maneuverStep)
         
         // stop tracking user, and move camera to step location
