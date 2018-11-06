@@ -573,9 +573,9 @@
 		16E4F97E205B05FE00531791 /* MapboxVoiceControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxVoiceControllerTests.swift; sourceTree = "<group>"; };
 		16EF6C1D21193A9600AA580B /* CarPlayManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayManagerTests.swift; sourceTree = "<group>"; };
 		16EF6C21211BA4B300AA580B /* CarPlayMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayMapViewController.swift; sourceTree = "<group>"; };
-		35002D5D1E5F6ABB0090E733 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../Example/Info.plist; sourceTree = "<group>"; };
-		35002D5F1E5F6ADB0090E733 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../../Example/Assets.xcassets; sourceTree = "<group>"; };
-		35002D601E5F6ADB0090E733 /* Base.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Base.lproj; path = ../../Example/Base.lproj; sourceTree = "<group>"; };
+		35002D5D1E5F6ABB0090E733 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		35002D5F1E5F6ADB0090E733 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		35002D601E5F6ADB0090E733 /* Base.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Base.lproj; sourceTree = "<group>"; };
 		35002D671E5F6B1B0090E733 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		35022319205BC94E00E1449A /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		35025F3E1F051DD2002BA3EA /* DialogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogViewController.swift; sourceTree = "<group>"; };
@@ -801,7 +801,7 @@
 		C57491DE1FACC42F006F97BC /* CGPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CGPoint.swift; path = ../MapboxNavigation/CGPoint.swift; sourceTree = "<group>"; };
 		C57607B01F4CC97D00C27423 /* Solar.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Solar.framework; path = Carthage/Build/iOS/Solar.framework; sourceTree = "<group>"; };
 		C578DA071EFD0FFF0052079F /* ProcessInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProcessInfo.swift; sourceTree = "<group>"; };
-		C57AD98920EAA39A0087B24B /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Entitlements.plist; path = ../../Example/Entitlements.plist; sourceTree = "<group>"; };
+		C57AD98920EAA39A0087B24B /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
 		C58159001EA6D02700FC6C3D /* MGLVectorTileSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MGLVectorTileSource.swift; sourceTree = "<group>"; };
 		C582BA2B2073E77E00647DAA /* StringTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringTests.swift; sourceTree = "<group>"; };
 		C582FD5E203626E900A9086E /* CLLocationDirection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationDirection.swift; sourceTree = "<group>"; };
@@ -887,7 +887,7 @@
 		DAC049BF201715EA004C2217 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ru; path = Resources/ru.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		DAC049C020171886004C2217 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Main.strings; sourceTree = "<group>"; };
 		DAC049C1201718AC004C2217 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Localizable.strings; sourceTree = "<group>"; };
-		DACCD9CD1F1FE05C00BB09A1 /* Example-Swift-BridgingHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Example-Swift-BridgingHeader.h"; path = "../../Example/Example-Swift-BridgingHeader.h"; sourceTree = "<group>"; };
+		DACCD9CD1F1FE05C00BB09A1 /* Example-Swift-BridgingHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Example-Swift-BridgingHeader.h"; sourceTree = "<group>"; };
 		DAD17201214DB12B009C8161 /* CPMapTemplateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPMapTemplateTests.swift; sourceTree = "<group>"; };
 		DAD88E00202AC7AA00AAA536 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = uk; path = Resources/uk.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		DAD88E01202AC80100AAA536 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1095,7 +1095,7 @@
 				C57AD98920EAA39A0087B24B /* Entitlements.plist */,
 			);
 			name = "Supporting files";
-			path = Examples/Swift;
+			path = Example;
 			sourceTree = "<group>";
 		};
 		3507F9FD213430CB0086B39E /* CarPlay */ = {
@@ -2556,7 +2556,6 @@
 				DAE26B20206441D8001D6E1F /* pt-PT */,
 			);
 			name = Main.storyboard;
-			path = ../../Example;
 			sourceTree = "<group>";
 		};
 		35CDA81121908F310072B675 /* LaunchScreen.storyboard */ = {
@@ -2866,7 +2865,6 @@
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = Bench/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -2895,7 +2893,6 @@
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = Bench/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.Bench;
