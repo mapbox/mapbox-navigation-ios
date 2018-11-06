@@ -1,6 +1,8 @@
 import Foundation
 import CoreLocation
 import MapboxDirections
+import MapboxCoreNavigation
+
 
 public class Fixture {
     public class func stringFromFileNamed(name: String) -> String {
@@ -58,7 +60,7 @@ public class Fixture {
         let response = JSONFromFileNamed(name: jsonFile)
         let waypoints = Fixture.waypoints(from: jsonFile)
         let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String : Any]
-        return Route(json: jsonRoute, waypoints: waypoints, options: RouteOptions(waypoints: waypoints))
+        return Route(json: jsonRoute, waypoints: waypoints, options: NavigationRouteOptions(waypoints: waypoints))
     }
     
     public class func waypoints(from jsonFile: String) -> [Waypoint] {

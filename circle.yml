@@ -100,11 +100,11 @@ step-library:
         command: |
           xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build test -enableCodeCoverage "YES"
 
-  - &build-Example-Swift
+  - &build-Example
       run:
-        name: Build Example-Swift
+        name: Build Example
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme Example-Swift clean build | xcpretty
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme Example clean build | xcpretty
 
   - &cocoapods-integration-install
       run:
@@ -197,5 +197,5 @@ jobs:
       - *prepare-iphone6s-plus-ios-11
       - *restore-cache
       - *install-dependencies
-      - *build-Example-Swift
+      - *build-Example
       - *save-cache

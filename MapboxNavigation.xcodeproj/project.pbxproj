@@ -614,7 +614,7 @@
 		357F0DF11EB9DAB400A0B53C /* vi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3582A24F20EEC46B0029C5DE /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		3582A25120EFA9680029C5DE /* RouterDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouterDelegate.swift; sourceTree = "<group>"; };
-		358D14631E5E3B7700ADE590 /* Example-Swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Example-Swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		358D14631E5E3B7700ADE590 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		358D14651E5E3B7700ADE590 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		358D14671E5E3B7700ADE590 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		359574A71F28CC3800838209 /* CLLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CLLocation.swift; path = MapboxCoreNavigation/CLLocation.swift; sourceTree = SOURCE_ROOT; };
@@ -1066,6 +1066,7 @@
 				C57AD98920EAA39A0087B24B /* Entitlements.plist */,
 			);
 			name = "Supporting files";
+			path = Examples/Swift;
 			sourceTree = "<group>";
 		};
 		3507F9FD213430CB0086B39E /* CarPlay */ = {
@@ -1145,14 +1146,14 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
-		352BBC481E5E78D700703DF1 /* SwiftTests */ = {
+		352BBC481E5E78D700703DF1 /* ExampleTests */ = {
 			isa = PBXGroup;
 			children = (
 				352BBC491E5E78D700703DF1 /* Example_SwiftTests.swift */,
 				352BBC4B1E5E78D700703DF1 /* Info.plist */,
 			);
-			name = SwiftTests;
-			path = Examples/SwiftTests;
+			name = ExampleTests;
+			path = Examples/ExampleTests;
 			sourceTree = "<group>";
 		};
 		352C35BE2134958100D77796 /* Search */ = {
@@ -1160,6 +1161,7 @@
 			children = (
 			);
 			name = Search;
+			path = Examples/Swift;
 			sourceTree = "<group>";
 		};
 		354A9BC920EA9BC100F03325 /* Events */ = {
@@ -1191,25 +1193,6 @@
 				DAA96D17215A961D00BEF703 /* route-doubling-back.json */,
 			);
 			path = Fixtures;
-			sourceTree = "<group>";
-		};
-		358D14641E5E3B7700ADE590 /* Swift */ = {
-			isa = PBXGroup;
-			children = (
-				352C35BE2134958100D77796 /* Search */,
-				35002D721E5F6C830090E733 /* Supporting files */,
-				358D14651E5E3B7700ADE590 /* AppDelegate.swift */,
-				35379CFB21480BFB00FD402E /* AppDelegate+CarPlay.swift */,
-				358D14671E5E3B7700ADE590 /* ViewController.swift */,
-				C5D9800C1EFA8BA9006DBF2E /* CustomViewController.swift */,
-				6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */,
-				C51FC31620F689F800400CE7 /* CustomStyles.swift */,
-				3577B877214FF35800094294 /* FavoritesList.swift */,
-				3595FE452190F78C0035B765 /* MBViewController.h */,
-				3595FE462190F78C0035B765 /* MBViewController.m */,
-			);
-			name = Swift;
-			path = Examples/Swift;
 			sourceTree = "<group>";
 		};
 		35B711D01E5E7AD2001EDA8D /* MapboxNavigationTests */ = {
@@ -1247,13 +1230,23 @@
 			path = MapboxNavigationTests;
 			sourceTree = "<group>";
 		};
-		35B711DB1E5E7B70001EDA8D /* Examples */ = {
+		35B711DB1E5E7B70001EDA8D /* Example */ = {
 			isa = PBXGroup;
 			children = (
-				358D14641E5E3B7700ADE590 /* Swift */,
-				352BBC481E5E78D700703DF1 /* SwiftTests */,
+				352C35BE2134958100D77796 /* Search */,
+				35002D721E5F6C830090E733 /* Supporting files */,
+				358D14651E5E3B7700ADE590 /* AppDelegate.swift */,
+				35379CFB21480BFB00FD402E /* AppDelegate+CarPlay.swift */,
+				358D14671E5E3B7700ADE590 /* ViewController.swift */,
+				C5D9800C1EFA8BA9006DBF2E /* CustomViewController.swift */,
+				6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */,
+				C51FC31620F689F800400CE7 /* CustomStyles.swift */,
+				3577B877214FF35800094294 /* FavoritesList.swift */,
+				3595FE452190F78C0035B765 /* MBViewController.h */,
+				3595FE462190F78C0035B765 /* MBViewController.m */,
+				352BBC481E5E78D700703DF1 /* ExampleTests */,
 			);
-			name = Examples;
+			name = Example;
 			sourceTree = "<group>";
 		};
 		35CDA80721908F2F0072B675 /* Bench */ = {
@@ -1439,7 +1432,7 @@
 		C5ADFBBF1DDCC7840011824B = {
 			isa = PBXGroup;
 			children = (
-				35B711DB1E5E7B70001EDA8D /* Examples */,
+				35B711DB1E5E7B70001EDA8D /* Example */,
 				C5ADFBCB1DDCC7840011824B /* MapboxCoreNavigation */,
 				351BEBD81E5BCC28006FE110 /* MapboxNavigation */,
 				C5ADFBD61DDCC7840011824B /* MapboxCoreNavigationTests */,
@@ -1459,7 +1452,7 @@
 				C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */,
 				C5ADFBD21DDCC7840011824B /* MapboxCoreNavigationTests.xctest */,
 				351BEBD71E5BCC28006FE110 /* MapboxNavigation.framework */,
-				358D14631E5E3B7700ADE590 /* Example-Swift.app */,
+				358D14631E5E3B7700ADE590 /* Example.app */,
 				352BBC471E5E78D700703DF1 /* Example-SwiftTests.xctest */,
 				35B711CF1E5E7AD2001EDA8D /* MapboxNavigationTests.xctest */,
 				C53F2F0720EBC95600D9798F /* Example-CarPlay.app */,
@@ -1600,9 +1593,9 @@
 			productReference = 352BBC471E5E78D700703DF1 /* Example-SwiftTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		358D14621E5E3B7700ADE590 /* Example-Swift */ = {
+		358D14621E5E3B7700ADE590 /* Example */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 358D14741E5E3B7700ADE590 /* Build configuration list for PBXNativeTarget "Example-Swift" */;
+			buildConfigurationList = 358D14741E5E3B7700ADE590 /* Build configuration list for PBXNativeTarget "Example" */;
 			buildPhases = (
 				358D145F1E5E3B7700ADE590 /* Sources */,
 				358D14601E5E3B7700ADE590 /* Frameworks */,
@@ -1616,9 +1609,9 @@
 				354A01D41E66268800D765C2 /* PBXTargetDependency */,
 				354A01D21E66268400D765C2 /* PBXTargetDependency */,
 			);
-			name = "Example-Swift";
+			name = Example;
 			productName = "Example-Swift";
-			productReference = 358D14631E5E3B7700ADE590 /* Example-Swift.app */;
+			productReference = 358D14631E5E3B7700ADE590 /* Example.app */;
 			productType = "com.apple.product-type.application";
 		};
 		35B711CE1E5E7AD2001EDA8D /* MapboxNavigationTests */ = {
@@ -1786,7 +1779,7 @@
 					New,
 				);
 				LastSwiftUpdateCheck = 1010;
-				LastUpgradeCheck = 0930;
+				LastUpgradeCheck = 1010;
 				ORGANIZATIONNAME = Mapbox;
 				TargetAttributes = {
 					351BEBD61E5BCC28006FE110 = {
@@ -1897,17 +1890,17 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				358D14621E5E3B7700ADE590 /* Example-Swift */,
+				358D14621E5E3B7700ADE590 /* Example */,
 				C53F2EDE20EBC95600D9798F /* Example-CarPlay */,
 				C5ADFBC81DDCC7840011824B /* MapboxCoreNavigation */,
 				351BEBD61E5BCC28006FE110 /* MapboxNavigation */,
-				C5ADFBD11DDCC7840011824B /* MapboxCoreNavigationTests */,
+				35CDA85D2190F2A30072B675 /* TestHelper */,
 				352BBC461E5E78D700703DF1 /* Example-SwiftTests */,
 				35B711CE1E5E7AD2001EDA8D /* MapboxNavigationTests */,
+				C5ADFBD11DDCC7840011824B /* MapboxCoreNavigationTests */,
 				35CDA80521908F2F0072B675 /* Bench */,
 				35CDA81821908F320072B675 /* BenchTests */,
 				35CDA82321908F320072B675 /* BenchUITests */,
-				35CDA85D2190F2A30072B675 /* TestHelper */,
 			);
 		};
 /* End PBXProject section */
@@ -2428,7 +2421,7 @@
 		};
 		352BBC4D1E5E78D700703DF1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 358D14621E5E3B7700ADE590 /* Example-Swift */;
+			target = 358D14621E5E3B7700ADE590 /* Example */;
 			targetProxy = 352BBC4C1E5E78D700703DF1 /* PBXContainerItemProxy */;
 		};
 		354A01D21E66268400D765C2 /* PBXTargetDependency */ = {
@@ -2478,7 +2471,7 @@
 		};
 		8DBCA7782080174600981EB2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 358D14621E5E3B7700ADE590 /* Example-Swift */;
+			target = 358D14621E5E3B7700ADE590 /* Example */;
 			targetProxy = 8DBCA7772080174600981EB2 /* PBXContainerItemProxy */;
 		};
 		C53F2EDF20EBC95600D9798F /* PBXTargetDependency */ = {
@@ -2986,7 +2979,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -3023,7 +3016,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -3339,7 +3332,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		358D14741E5E3B7700ADE590 /* Build configuration list for PBXNativeTarget "Example-Swift" */ = {
+		358D14741E5E3B7700ADE590 /* Build configuration list for PBXNativeTarget "Example" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				358D14721E5E3B7700ADE590 /* Debug */,
