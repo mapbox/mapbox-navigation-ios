@@ -3,7 +3,7 @@ import MapboxDirections
 import MapboxCoreNavigation
 import MapboxSpeech
 import AVKit
-import TestHelper
+@testable import TestHelper
 @testable import MapboxNavigation
 
 
