@@ -2,21 +2,21 @@ import Foundation
 import MapboxDirections
 
 @objc(MBDirectionsSpy)
-class DirectionsSpy: Directions {
+public class DirectionsSpy: Directions {
     
-    var lastCalculateOptionsCompletion: RouteCompletionHandler?
+    public var lastCalculateOptionsCompletion: RouteCompletionHandler?
     
-    override func calculate(_ options: MatchOptions, completionHandler: @escaping Directions.MatchCompletionHandler) -> URLSessionDataTask {
+    override public func calculate(_ options: MatchOptions, completionHandler: @escaping Directions.MatchCompletionHandler) -> URLSessionDataTask {
         assert(false, "Not ready to handle \(#function)")
         return DummyURLSessionDataTask()
     }
     
-    override func calculate(_ options: RouteOptions, completionHandler: @escaping Directions.RouteCompletionHandler) -> URLSessionDataTask {
+    override public func calculate(_ options: RouteOptions, completionHandler: @escaping Directions.RouteCompletionHandler) -> URLSessionDataTask {
         lastCalculateOptionsCompletion = completionHandler
         return DummyURLSessionDataTask()
     }
     
-    override func calculateRoutes(matching options: MatchOptions, completionHandler: @escaping Directions.RouteCompletionHandler) -> URLSessionDataTask {
+    override public func calculateRoutes(matching options: MatchOptions, completionHandler: @escaping Directions.RouteCompletionHandler) -> URLSessionDataTask {
         assert(false, "Not ready to handle \(#function)")
         return DummyURLSessionDataTask()
     }
@@ -26,7 +26,7 @@ class DirectionsSpy: Directions {
             assert(false, "Can't fire a completion handler which doesn't exist!")
             return
         }
-
+        
         lastCalculateOptionsCompletion(waypoints, routes, error)
     }
     

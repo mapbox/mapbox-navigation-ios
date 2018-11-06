@@ -2,6 +2,7 @@ import XCTest
 import Quick
 import Nimble
 import MapboxDirections
+import TestHelper
 @testable import MapboxCoreNavigation
 
 class MapboxNavigationServiceSpec: QuickSpec {

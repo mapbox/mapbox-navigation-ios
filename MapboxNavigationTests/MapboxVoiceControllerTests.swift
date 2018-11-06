@@ -97,24 +97,3 @@ class MockMapboxVoiceController: MapboxVoiceController {
     }
 }
 
-fileprivate extension Notification.Name {
-    enum MapboxVoiceTests {
-        static let prepareToPlay = NSNotification.Name("MapboxVoiceTests.prepareToPlay")
-        static let play = NSNotification.Name("MapboxVoiceTests.play")
-    }
-}
-class AudioPlayerDummy: AVAudioPlayer {
-    public let sound = NSDataAsset(name: "reroute-sound", bundle: .mapboxNavigation)!
-    
-    lazy var notifier: NotificationCenter = .default
-    fileprivate typealias Note = Notification.Name.MapboxVoiceTests
-    
-    override func prepareToPlay() -> Bool {
-        notifier.post(name: Note.prepareToPlay, object: self)
-        return true
-    }
-    override func play() -> Bool {
-        notifier.post(name: Note.play, object: self)
-        return true
-    }
-}

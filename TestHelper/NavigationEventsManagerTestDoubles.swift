@@ -3,7 +3,7 @@ import MapboxMobileEvents
 @testable import MapboxCoreNavigation
 import MapboxDirections
 
-class NavigationEventsManagerSpy: NavigationEventsManager {
+public class NavigationEventsManagerSpy: NavigationEventsManager {
 
     private var mobileEventsManagerSpy: MMEEventsManagerSpy!
 
