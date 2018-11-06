@@ -1,4 +1,5 @@
 import XCTest
+import TestHelper
 @testable import MapboxNavigation
 
 
@@ -27,7 +28,7 @@ class DataCacheTests: XCTestCase {
 
     var exampleData: Data? {
         get {
-            let bundle = Bundle(for: InstructionsBannerViewIntegrationTests.self)
+            let bundle = Bundle(for: Fixture.self)
             do {
                 return try NSData.init(contentsOf: bundle.url(forResource: "route", withExtension: ".json")!) as Data
             } catch {

@@ -1,6 +1,7 @@
 import Foundation
 import MapboxDirections
 import MapboxCoreNavigation
+import TestHelper
 @testable import MapboxNavigation
 
 class TestableDayStyle: DayStyle {

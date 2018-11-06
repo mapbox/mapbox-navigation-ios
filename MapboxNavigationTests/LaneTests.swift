@@ -1,6 +1,7 @@
 import XCTest
 import FBSnapshotTestCase
 import MapboxDirections
+import TestHelper
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
@@ -8,8 +9,8 @@ import MapboxDirections
 
 class LaneTests: FBSnapshotTestCase {
 
-    let route = Fixture.route(from: "route-for-lane-testing", waypoints: [Waypoint(coordinate: CLLocationCoordinate2D(latitude: 39.132063, longitude: -84.531074)), Waypoint(coordinate: CLLocationCoordinate2D(latitude: 39.138953, longitude: -84.532934))])
-
+    let route = Fixture.route(from: "route-for-lane-testing")
+    
     var steps: [RouteStep]!
     var routeProgress: RouteProgress!
     var routeController: RouteController!

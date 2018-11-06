@@ -4,7 +4,8 @@ import MapboxDirections
 import MapboxCoreNavigation
 
 
-public class Fixture {
+@objc(MBFixture)
+public class Fixture: NSObject {
     public class func stringFromFileNamed(name: String) -> String {
         guard let path = Bundle(for: self).path(forResource: name, ofType: "json") else {
             assert(false, "Fixture \(name) not found.")
@@ -18,6 +19,7 @@ public class Fixture {
         }
     }
     
+    @objc
     public class func JSONFromFileNamed(name: String) -> [String: Any] {
         guard let path = Bundle(for: Fixture.self).path(forResource: name, ofType: "json") else {
             assert(false, "Fixture \(name) not found.")
