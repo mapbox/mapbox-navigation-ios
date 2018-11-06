@@ -6,6 +6,7 @@ workflows:
     jobs:
       - xcode-10
       - xcode-9
+      - xcode-10-bench
       - xcode-10-cocoapods-install
       - xcode-10-cocoapods-update
       - xcode-9-examples
@@ -100,6 +101,12 @@ step-library:
         command: |
           xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build test -enableCodeCoverage "YES"
 
+  - &build-test-Bench-ios-12
+      run:
+        name: Build and Test Bench
+        command: |
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone X' -project MapboxNavigation.xcodeproj -scheme Bench clean build test
+
   - &build-Example
       run:
         name: Build Example
@@ -158,6 +165,19 @@ jobs:
       - *verify-missing-localizable-strings
       - *build-test-MapboxCoreNavigation-ios-11
       - *build-test-MapboxNavigation-ios-11
+      - *save-cache
+
+  xcode-10-bench:
+    macos:
+      xcode: "10.0.0"
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+    steps:
+      - checkout
+      - *prepare
+      - *restore-cache
+      - *install-dependencies
+      - *build-test-Bench-ios-12
       - *save-cache
 
   xcode-10-cocoapods-install:
