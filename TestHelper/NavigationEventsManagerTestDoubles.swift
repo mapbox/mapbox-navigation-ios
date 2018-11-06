@@ -7,12 +7,12 @@ public class NavigationEventsManagerSpy: NavigationEventsManager {
 
     private var mobileEventsManagerSpy: MMEEventsManagerSpy!
 
-    required init() {
+    required public init() {
         mobileEventsManagerSpy = MMEEventsManagerSpy()
         super.init(dataSource: nil, accessToken: "fake token", mobileEventsManager: mobileEventsManagerSpy)
     }
 
-    @objc required convenience init(dataSource source: EventsManagerDataSource?, accessToken possibleToken: String?, mobileEventsManager: MMEEventsManager) {
+    @objc required convenience public init(dataSource source: EventsManagerDataSource?, accessToken possibleToken: String?, mobileEventsManager: MMEEventsManager) {
         self.init()
     }
 

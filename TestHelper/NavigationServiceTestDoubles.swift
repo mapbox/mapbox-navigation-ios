@@ -2,15 +2,15 @@ import Foundation
 import MapboxCoreNavigation
 import MapboxDirections
 
-class RouteControllerDataSourceFake: RouterDataSource {
+public class RouteControllerDataSourceFake: RouterDataSource {
 
     let manager = NavigationLocationManager()
 
-    var location: CLLocation? {
+    public var location: CLLocation? {
         return manager.location
     }
 
-    var locationProvider: NavigationLocationManager.Type {
+    public var locationProvider: NavigationLocationManager.Type {
         return type(of: manager)
     }
 }

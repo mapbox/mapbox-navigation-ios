@@ -9,10 +9,10 @@ import AVKit
 
 public class SpeechAPISpy: SpeechSynthesizer {
     public struct AudioDataCall {
-        static let sound = NSDataAsset(name: "reroute-sound", bundle: .mapboxNavigation)!
+        public static let sound = NSDataAsset(name: "reroute-sound", bundle: .mapboxNavigation)!
         
-        let options: MapboxSpeech.SpeechOptions
-        let completion: SpeechSynthesizer.CompletionHandler
+        public let options: MapboxSpeech.SpeechOptions
+        public let completion: SpeechSynthesizer.CompletionHandler
         
         func fulfill() {
             completion(AudioDataCall.sound.data, nil)
@@ -50,8 +50,8 @@ public class AudioPlayerDummy: AVAudioPlayer {
 }
 
 extension Notification.Name {
-    enum MapboxVoiceTests {
-        static let prepareToPlay = NSNotification.Name("MapboxVoiceTests.prepareToPlay")
-        static let play = NSNotification.Name("MapboxVoiceTests.play")
+    public enum MapboxVoiceTests {
+        public static let prepareToPlay = NSNotification.Name("MapboxVoiceTests.prepareToPlay")
+        public static let play = NSNotification.Name("MapboxVoiceTests.play")
     }
 }

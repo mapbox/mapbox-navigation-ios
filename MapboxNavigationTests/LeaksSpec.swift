@@ -2,6 +2,7 @@ import XCTest
 import Quick
 import Nimble
 import MapboxDirections
+@testable import TestHelper
 @testable import MapboxCoreNavigation
 @testable import MapboxNavigation
 

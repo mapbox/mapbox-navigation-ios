@@ -1,10 +1,9 @@
 import XCTest
 import FBSnapshotTestCase
 import MapboxDirections
-import TestHelper
+@testable import TestHelper
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
-
 
 
 class LaneTests: FBSnapshotTestCase {

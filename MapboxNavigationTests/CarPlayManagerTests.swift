@@ -3,7 +3,7 @@ import MapboxNavigation
 import MapboxCoreNavigation
 import MapboxDirections
 import MapboxMobileEvents
-import TestHelper
+@testable import TestHelper
 
 
 #if canImport(CarPlay)
