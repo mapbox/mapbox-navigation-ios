@@ -2,7 +2,9 @@ import XCTest
 import MapboxDirections
 import MapboxCoreNavigation
 import Turf
+import TestHelper
 @testable import MapboxNavigation
+
 
 let response = Fixture.JSONFromFileNamed(name: "route-with-instructions")
 let otherResponse = Fixture.JSONFromFileNamed(name: "route-for-lane-testing")

@@ -1,7 +1,9 @@
 import XCTest
+import MapboxDirections
+import TestHelper
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
-import MapboxDirections
+
 
 class NavigationMapViewTests: XCTestCase, MGLMapViewDelegate {
     
