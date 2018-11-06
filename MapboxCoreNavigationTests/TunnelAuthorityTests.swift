@@ -13,12 +13,6 @@ struct TunnelDetectorTestData {
     static let endLocation = CLLocationCoordinate2D(latitude: 38.88061238536352, longitude: -77.02471810711819)
 }
 
-//let tunnelResponse = Fixture.JSONFromFileNamed(name: TunnelDetectorTestData.ninthStreetFileName)
-//let tunnelJsonRoute = (tunnelResponse[TunnelDetectorTestData.kRouteKey] as! [AnyObject]).first as! [String: Any]
-//let tunnelWayPoint1 = Waypoint(coordinate: TunnelDetectorTestData.startLocation)
-//let tunnelWaypoint2 = Waypoint(coordinate: TunnelDetectorTestData.endLocation)
-//let tunnelRoute = Route(json: tunnelJsonRoute, waypoints: [tunnelWayPoint1, tunnelWaypoint2], options: NavigationRouteOptions(waypoints: [tunnelWayPoint1, tunnelWaypoint2]))
-
 let tunnelRoute = Fixture.route(from: TunnelDetectorTestData.ninthStreetFileName)
 
 class TunnelAuthorityTests: XCTestCase {
