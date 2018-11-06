@@ -6,14 +6,8 @@ import MapboxDirections
 import TestHelper
 @testable import MapboxCoreNavigation
 
-struct TunnelDetectorTestData {
-    static let ninthStreetFileName = "routeWithTunnels_9thStreetDC"
-    static let kRouteKey = "routes"
-    static let startLocation = CLLocationCoordinate2D(latitude: 38.890774, longitude: -77.023970)
-    static let endLocation = CLLocationCoordinate2D(latitude: 38.88061238536352, longitude: -77.02471810711819)
-}
 
-let tunnelRoute = Fixture.route(from: TunnelDetectorTestData.ninthStreetFileName)
+let tunnelRoute = Fixture.route(from: "routeWithTunnels_9thStreetDC")
 
 class TunnelAuthorityTests: XCTestCase {
     lazy var locationManager = NavigationLocationManager()
