@@ -208,7 +208,7 @@ public class CarPlayNavigationViewController: UIViewController {
         
         // Update the user puck
         mapView?.updatePreferredFrameRate(for: routeProgress)
-        let camera = MGLMapCamera(lookingAtCenter: location.coordinate, fromDistance: 120, pitch: 60, heading: location.course)
+        let camera = MGLMapCamera(lookingAtCenter: location.coordinate, altitude: 120, pitch: 60, heading: location.course)
         mapView?.updateCourseTracking(location: location, camera: camera, animated: true)
         
         let congestionLevel = routeProgress.averageCongestionLevelRemainingOnLeg ?? .unknown
