@@ -1,6 +1,7 @@
 import UIKit
 import MapboxDirections
 import MapboxNavigation
+import MapboxCoreNavigation
 import TestHelper
 
 typealias Payload = (_ item: Item) -> ()
@@ -30,8 +31,10 @@ class BenchViewController: UITableViewController {
     let cellIdentifier = "cellId"
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         
+        navigationController?.setNavigationBarHidden(true, animated: false)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         
         let item = Item(name: "Test")
