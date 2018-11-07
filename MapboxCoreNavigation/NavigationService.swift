@@ -203,7 +203,7 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
         }
     }
     
-    var poorGPSTimer: CountdownTimer!
+    var poorGPSTimer: DispatchTimer!
     private var isSimulating: Bool { return simulatedLocationSource != nil }
     private var _simulationSpeedMultiplier: Double = 1.0
     
@@ -248,7 +248,7 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
         super.init()
         resumeNotifications()
         
-        poorGPSTimer = CountdownTimer(countdown: poorGPSPatience.dispatchInterval)  { [weak self] in
+        poorGPSTimer = DispatchTimer(countdown: poorGPSPatience.dispatchInterval)  { [weak self] in
             guard let mode = self?.simulationMode, mode == .onPoorGPS else { return }
             self?.simulate(intent: .poorGPS)
         }
