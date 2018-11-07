@@ -1,7 +1,7 @@
 import Foundation
 import CoreLocation
 import MapboxDirections
-import MapboxCoreNavigation
+@testable import MapboxCoreNavigation
 
 
 @objc(MBFixture)
@@ -116,5 +116,27 @@ public class Fixture: NSObject {
         return (json["matchings"] as? [[String: Any]])?.map {
             Route(json: $0, waypoints: waypoints, options: opts)
         }
+    }
+    
+    public class func generateTrace(for route: Route) -> [CLLocation] {
+        
+        let traceCollector = TraceCollector()
+        let locationManager = SimulatedLocationManager(route: route)
+        locationManager.delegate = traceCollector
+        
+        while locationManager.currentDistance < route.distance {
+            locationManager.tick()
+        }
+        
+        return traceCollector.locations
+    }
+}
+
+class TraceCollector: NSObject, CLLocationManagerDelegate {
+    
+    var locations = [CLLocation]()
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        self.locations.append(contentsOf: locations)
     }
 }
