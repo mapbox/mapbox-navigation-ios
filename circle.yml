@@ -87,7 +87,6 @@ step-library:
         name: Build and Test MapboxCoreNavigation
         command: |
           xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test -enableCodeCoverage "YES"
-          bash <(curl -s https://codecov.io/bash)
 
   - &build-test-MapboxNavigation-ios-11
       run:
@@ -100,7 +99,6 @@ step-library:
         name: Build and Test MapboxNavigation
         command: |
           xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build test -enableCodeCoverage "YES"
-          bash <(curl -s https://codecov.io/bash)
 
   - &build-Example-Obj-C
       run:
@@ -129,6 +127,11 @@ step-library:
           cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall
           pod update --repo-update
           xcodebuild -workspace PodInstall.xcworkspace/ -scheme PodInstall -destination 'platform=iOS Simulator,name=iPhone 6 Plus' clean build | xcpretty
+  
+  - &publish-codecov
+      run:
+        name: Publish Code Coverage data
+        command: bash <(curl -s https://codecov.io/bash)
 
 jobs:
   xcode-10:
@@ -144,6 +147,7 @@ jobs:
       - *install-dependencies
       - *build-test-MapboxCoreNavigation-ios-12
       - *build-test-MapboxNavigation-ios-12
+      - *publish-codecov
       - *save-cache
 
   xcode-9:
