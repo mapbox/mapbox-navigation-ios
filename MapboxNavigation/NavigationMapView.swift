@@ -24,7 +24,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      
      This property takes effect when the application has limited resources for animation, such as when the device is running on battery power. By default, this property is set to `MGLMapViewPreferredFramesPerSecond.lowPower`.
      */
-    @objc public var minimumFramesPerSecond = MGLMapViewPreferredFramesPerSecond.lowPower
+    @objc public var minimumFramesPerSecond = MGLMapViewPreferredFramesPerSecond(20)
     
     /**
      Returns the altitude that the map camera initally defaults to.
