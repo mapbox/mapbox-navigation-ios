@@ -87,6 +87,7 @@ step-library:
         name: Build and Test MapboxCoreNavigation
         command: |
           xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test
+          bash <(curl -s https://codecov.io/bash)
 
   - &build-test-MapboxNavigation-ios-11
       run:
@@ -99,6 +100,7 @@ step-library:
         name: Build and Test MapboxNavigation
         command: |
           xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build test
+          bash <(curl -s https://codecov.io/bash)
 
   - &build-Example-Obj-C
       run:
