@@ -14,7 +14,7 @@ struct Section {
 struct Item {
     let name: String
     let viewControllerType: NavigationViewController.Type?
-    let payload: Payload?
+    var payload: Payload?
     let route: Route?
     
     init(name: String, viewControllerType: NavigationViewController.Type? = nil, payload: Payload? = nil, route: Route? = nil) {
@@ -34,24 +34,23 @@ class BenchViewController: UITableViewController {
         
         super.viewDidLoad()
         
-        navigationController?.setNavigationBarHidden(true, animated: false)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         
-        let item = Item(name: "Test")
+        let controlRoute1 = Item(name: "DCA to Arboretum",
+                                 route: Fixture.route(from: "DCA-Arboretum"))
         
-        let payload: Payload = { [weak self] item in
-            let navigationViewController = NavigationViewController(for: item.route!)
-            self!.navigationController!.pushViewController(navigationViewController, animated: true)
-        }
+        let controlRoute2 = Item(name: "Pipe Fitters Union to Four Seasons Boston",
+                                 route: Fixture.route(from: "PipeFittersUnion-FourSeasonsBoston"))
         
-        let routeItem = Item(name: "DCA-Arboretum-Tunnels-1",
-                             viewControllerType: ControlRouteViewController.self,
-                             payload: payload,
-                             route: Fixture.route(from: "DCA-Arboretum-Tunnels-1"))
-        
-        let section = Section(title: "Control Routes", items: [routeItem, item])
+        let section = Section(title: "Control Routes", items: [controlRoute1, controlRoute2])
         
         dataSource = [section]
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        navigationController?.setNavigationBarHidden(false, animated: true)
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -82,9 +81,17 @@ class BenchViewController: UITableViewController {
         
         let item = dataSource[indexPath.section].items[indexPath.row]
         
-        if let payload = item.payload {
-            payload(item)
-        }
+        guard let route = item.route else { return }
+        
+        let viewController = ControlRouteViewController(for: route)
+        viewController.delegate = self
+        navigationController?.pushViewController(viewController, animated: true)
     }
 }
 
+extension BenchViewController: NavigationViewControllerDelegate {
+    
+    func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool) {
+        navigationController?.popViewController(animated: true)
+    }
+}

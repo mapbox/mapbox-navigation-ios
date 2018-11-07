@@ -7,15 +7,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
         window = UIWindow(frame: UIScreen.main.bounds)
         
-        let viewController = BenchViewController()
-        
-        window?.rootViewController = UINavigationController(rootViewController: viewController)
-        
-        window?.makeKeyAndVisible()
+        if isRunningTests() {
+            window?.rootViewController = UIViewController()
+        } else {
+            let viewController = BenchViewController()
+            window?.rootViewController = UINavigationController(rootViewController: viewController)
+            window?.makeKeyAndVisible()
+        }
         
         return true
+    }
+    
+    private func isRunningTests() -> Bool {
+        return NSClassFromString("XCTestCase") != nil
     }
 }
 
