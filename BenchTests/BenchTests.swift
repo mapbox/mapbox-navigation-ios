@@ -1,5 +1,6 @@
 import XCTest
 import TestHelper
+import MapboxDirections
 @testable import MapboxCoreNavigation
 @testable import MapboxNavigation
 @testable import Bench
@@ -7,23 +8,20 @@ import TestHelper
 
 class BenchTests: XCTestCase, CLLocationManagerDelegate {
     
+    let token = "deadbeef"
+    
+    override func setUp() {
+        super.setUp()
+        MGLAccountManager.accessToken = token
+    }
+    
     func testControlRoute1() {
         
-        let token = "deadbeef"
-        let route = Fixture.route(from: "DCA-Arboretum-Tunnels-1")
-        let trace = Fixture.locations(from: "DCA-Arboretum-Tunnels-1.trace")
+        let route = Fixture.route(from: "PipeFittersUnion-FourSeasonsBoston")
+        let trace = Fixture.locations(from: "PipeFittersUnion-FourSeasonsBoston.trace")
         
-        let speechAPI = SpeechAPISpy(accessToken: token)
-        let voiceController = MapboxVoiceController(speechClient: speechAPI, audioPlayerType: AudioPlayerDummy.self)
         let locationManager = ReplayLocationManager(locations: trace)
-        let directions = DirectionsSpy(accessToken: token)
-        let service = MapboxNavigationService(route: route,
-                                              directions: directions,
-                                              locationSource: locationManager,
-                                              eventsManagerType: NavigationEventsManagerSpy.self,
-                                              simulating: .never,
-                                              routerType: nil)
-        _ = NavigationViewController(for: route, navigationService: service, voiceController: voiceController)
+        _ = navigationViewController(route: route, locationManager: locationManager)
         
         locationManager.tick()
         
@@ -33,5 +31,38 @@ class BenchTests: XCTestCase, CLLocationManagerDelegate {
             }
         }
     }
+    
+    func testControlRoute2() {
+        
+        let route = Fixture.route(from: "DCA-Arboretum")
+        let trace = Fixture.locations(from: "DCA-Arboretum.trace")
+        
+        let locationManager = ReplayLocationManager(locations: trace)
+        _ = navigationViewController(route: route, locationManager: locationManager)
+        
+        locationManager.tick()
+        
+        measure {
+            while locationManager.currentIndex > 0 {
+                locationManager.tick()
+            }
+        }
+    }
+    
+    func navigationViewController(route: Route, locationManager: ReplayLocationManager) -> NavigationViewController {
+        
+        let speechAPI = SpeechAPISpy(accessToken: token)
+        let voiceController = MapboxVoiceController(speechClient: speechAPI, audioPlayerType: AudioPlayerDummy.self)
+        let directions = DirectionsSpy(accessToken: token)
+        let service = MapboxNavigationService(route: route,
+                                              directions: directions,
+                                              locationSource: locationManager,
+                                              eventsManagerType: NavigationEventsManagerSpy.self,
+                                              simulating: .never,
+                                              routerType: PortableRouteController.self)
+        
+        return NavigationViewController(for: route, navigationService: service, voiceController: voiceController)
+    }
 }
+
 
