@@ -79,6 +79,8 @@
 		354A9BC620EA991900F03325 /* SessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 354A9BC520EA991900F03325 /* SessionState.swift */; };
 		354A9BCB20EA9BDA00F03325 /* EventDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 354A9BCA20EA9BDA00F03325 /* EventDetails.swift */; };
 		354A9BCD20EA9C8100F03325 /* CoreFeedbackEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 354A9BCC20EA9C8100F03325 /* CoreFeedbackEvent.swift */; };
+		355832AB2192F60800141922 /* PipeFittersUnion-FourSeasonsBoston.json in Resources */ = {isa = PBXBuildFile; fileRef = 355832AA2192F60800141922 /* PipeFittersUnion-FourSeasonsBoston.json */; };
+		355832AD2192F7E300141922 /* PipeFittersUnion-FourSeasonsBoston.trace.json in Resources */ = {isa = PBXBuildFile; fileRef = 355832AC2192F7E300141922 /* PipeFittersUnion-FourSeasonsBoston.trace.json */; };
 		355DB5751EFA78070091BFB7 /* GGPark-to-BernalHeights.route in Resources */ = {isa = PBXBuildFile; fileRef = 355DB5741EFA78070091BFB7 /* GGPark-to-BernalHeights.route */; };
 		355DB5771EFA780E0091BFB7 /* UnionSquare-to-GGPark.route in Resources */ = {isa = PBXBuildFile; fileRef = 355DB5761EFA780E0091BFB7 /* UnionSquare-to-GGPark.route */; };
 		355ED3701FAB724F00BCE1B8 /* BottomBannerViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355ED36F1FAB724F00BCE1B8 /* BottomBannerViewLayout.swift */; };
@@ -131,7 +133,7 @@
 		35C8DC0B2191DAD20053328C /* MapboxCoreNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */; };
 		35C8DC0C2191DAD20053328C /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigation.framework */; };
 		35C8DC0D2191DAD20053328C /* TestHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CDA85E2190F2A30072B675 /* TestHelper.framework */; };
-		35C8DC0F2191DE940053328C /* DCA-Arboretum-Tunnels-1.trace.json in Resources */ = {isa = PBXBuildFile; fileRef = 35C8DC0E2191DE940053328C /* DCA-Arboretum-Tunnels-1.trace.json */; };
+		35C8DC0F2191DE940053328C /* DCA-Arboretum.trace.json in Resources */ = {isa = PBXBuildFile; fileRef = 35C8DC0E2191DE940053328C /* DCA-Arboretum.trace.json */; };
 		35C8DC112191E1140053328C /* DirectionsSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C8DC102191E1140053328C /* DirectionsSpy.swift */; };
 		35C8DC122191E15A0053328C /* DummyURLSessionDataTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16435E04206EE37800AF48B6 /* DummyURLSessionDataTask.swift */; };
 		35C8DC152191E4420053328C /* SpeechAPISpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA93170CB959F3065ACFFC3 /* SpeechAPISpy.swift */; };
@@ -174,7 +176,7 @@
 		35CDA87B2190F3580072B675 /* MapboxDirections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01B81E66256600D765C2 /* MapboxDirections.framework */; };
 		35CDA87C2190F3990072B675 /* TestHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CDA85E2190F2A30072B675 /* TestHelper.framework */; };
 		35CDA87E2190F3AC0072B675 /* TestHelper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 35CDA85E2190F2A30072B675 /* TestHelper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		35CDA88D2190F5210072B675 /* DCA-Arboretum-Tunnels-1.json in Resources */ = {isa = PBXBuildFile; fileRef = 35CDA8862190F50C0072B675 /* DCA-Arboretum-Tunnels-1.json */; };
+		35CDA88D2190F5210072B675 /* DCA-Arboretum.json in Resources */ = {isa = PBXBuildFile; fileRef = 35CDA8862190F50C0072B675 /* DCA-Arboretum.json */; };
 		35CDA88F2190F6980072B675 /* EmptyStyle.json in Resources */ = {isa = PBXBuildFile; fileRef = 35CDA88A2190F5120072B675 /* EmptyStyle.json */; };
 		35CDA8902190F6980072B675 /* route-doubling-back.json in Resources */ = {isa = PBXBuildFile; fileRef = 35CDA8842190F5090072B675 /* route-doubling-back.json */; };
 		35CDA8912190F6980072B675 /* route-for-lane-testing.json in Resources */ = {isa = PBXBuildFile; fileRef = 35CDA8822190F5080072B675 /* route-for-lane-testing.json */; };
@@ -631,6 +633,8 @@
 		354A9BC520EA991900F03325 /* SessionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionState.swift; sourceTree = "<group>"; };
 		354A9BCA20EA9BDA00F03325 /* EventDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetails.swift; sourceTree = "<group>"; };
 		354A9BCC20EA9C8100F03325 /* CoreFeedbackEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreFeedbackEvent.swift; sourceTree = "<group>"; };
+		355832AA2192F60800141922 /* PipeFittersUnion-FourSeasonsBoston.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "PipeFittersUnion-FourSeasonsBoston.json"; sourceTree = "<group>"; };
+		355832AC2192F7E300141922 /* PipeFittersUnion-FourSeasonsBoston.trace.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "PipeFittersUnion-FourSeasonsBoston.trace.json"; sourceTree = "<group>"; };
 		355DB5741EFA78070091BFB7 /* GGPark-to-BernalHeights.route */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "GGPark-to-BernalHeights.route"; sourceTree = "<group>"; };
 		355DB5761EFA780E0091BFB7 /* UnionSquare-to-GGPark.route */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "UnionSquare-to-GGPark.route"; sourceTree = "<group>"; };
 		355ED36F1FAB724F00BCE1B8 /* BottomBannerViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomBannerViewLayout.swift; sourceTree = "<group>"; };
@@ -682,7 +686,7 @@
 		35C6EDAD1EBB266300A27EF8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
 		35C8DBF7219198310053328C /* route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = route.json; sourceTree = "<group>"; };
 		35C8DBFC2191D0370053328C /* CoreLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreLocation.swift; sourceTree = "<group>"; };
-		35C8DC0E2191DE940053328C /* DCA-Arboretum-Tunnels-1.trace.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "DCA-Arboretum-Tunnels-1.trace.json"; sourceTree = "<group>"; };
+		35C8DC0E2191DE940053328C /* DCA-Arboretum.trace.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "DCA-Arboretum.trace.json"; sourceTree = "<group>"; };
 		35C8DC102191E1140053328C /* DirectionsSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionsSpy.swift; sourceTree = "<group>"; };
 		35C98730212E02B500808B82 /* PortableRouteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortableRouteController.swift; sourceTree = "<group>"; };
 		35C98732212E037900808B82 /* MBFixLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MBFixLocation.swift; sourceTree = "<group>"; };
@@ -712,7 +716,7 @@
 		35CDA8832190F5090072B675 /* route-with-lanes.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "route-with-lanes.json"; sourceTree = "<group>"; };
 		35CDA8842190F5090072B675 /* route-doubling-back.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "route-doubling-back.json"; sourceTree = "<group>"; };
 		35CDA8852190F50A0072B675 /* sthlm-double-back.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "sthlm-double-back.json"; sourceTree = "<group>"; };
-		35CDA8862190F50C0072B675 /* DCA-Arboretum-Tunnels-1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "DCA-Arboretum-Tunnels-1.json"; sourceTree = "<group>"; };
+		35CDA8862190F50C0072B675 /* DCA-Arboretum.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "DCA-Arboretum.json"; sourceTree = "<group>"; };
 		35CDA8872190F50D0072B675 /* route-with-straight-roundabout.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "route-with-straight-roundabout.json"; sourceTree = "<group>"; };
 		35CDA8882190F5100072B675 /* sthlm-double-back-replay.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "sthlm-double-back-replay.json"; sourceTree = "<group>"; };
 		35CDA8892190F5110072B675 /* route-with-instructions.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "route-with-instructions.json"; sourceTree = "<group>"; };
@@ -1296,8 +1300,10 @@
 				AEF2C8F12072B603007B061F /* routeWithTunnels_9thStreetDC.json */,
 				C5EF397420599120009A2C50 /* straight-line.json */,
 				C5387A9C1F8FDB13000D2E93 /* routeWithInstructions.json */,
-				35CDA8862190F50C0072B675 /* DCA-Arboretum-Tunnels-1.json */,
-				35C8DC0E2191DE940053328C /* DCA-Arboretum-Tunnels-1.trace.json */,
+				35CDA8862190F50C0072B675 /* DCA-Arboretum.json */,
+				35C8DC0E2191DE940053328C /* DCA-Arboretum.trace.json */,
+				355832AA2192F60800141922 /* PipeFittersUnion-FourSeasonsBoston.json */,
+				355832AC2192F7E300141922 /* PipeFittersUnion-FourSeasonsBoston.trace.json */,
 				35CDA88A2190F5120072B675 /* EmptyStyle.json */,
 				35CDA8842190F5090072B675 /* route-doubling-back.json */,
 				35CDA8822190F5080072B675 /* route-for-lane-testing.json */,
@@ -1677,6 +1683,7 @@
 				35CDA81521908F320072B675 /* Sources */,
 				35CDA81621908F320072B675 /* Frameworks */,
 				35CDA81721908F320072B675 /* Resources */,
+				355832AE2192FAA300141922 /* Apply Mapbox Access Token */,
 			);
 			buildRules = (
 			);
@@ -2001,7 +2008,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35CDA88D2190F5210072B675 /* DCA-Arboretum-Tunnels-1.json in Resources */,
+				35CDA88D2190F5210072B675 /* DCA-Arboretum.json in Resources */,
 				35CDA8912190F6980072B675 /* route-for-lane-testing.json in Resources */,
 				35CDA8902190F6980072B675 /* route-doubling-back.json in Resources */,
 				35CDA8952190F6980072B675 /* route-with-straight-roundabout.json in Resources */,
@@ -2009,15 +2016,17 @@
 				35CDA8962190F6980072B675 /* sthlm-double-back-replay.json in Resources */,
 				35CDA8922190F6980072B675 /* route-with-banner-instructions.json in Resources */,
 				35C8DBF42191937A0053328C /* routeWithInstructions.json in Resources */,
+				355832AD2192F7E300141922 /* PipeFittersUnion-FourSeasonsBoston.trace.json in Resources */,
 				35CDA8942190F6980072B675 /* route-with-lanes.json in Resources */,
 				35CDA8972190F6980072B675 /* sthlm-double-back.json in Resources */,
 				35CDA88F2190F6980072B675 /* EmptyStyle.json in Resources */,
 				35CDA8992190F6980072B675 /* UnionSquare-to-GGPark.route in Resources */,
 				35C8DBF6219194380053328C /* routeWithTunnels_9thStreetDC.json in Resources */,
 				35C8DBF52191940C0053328C /* straight-line.json in Resources */,
-				35C8DC0F2191DE940053328C /* DCA-Arboretum-Tunnels-1.trace.json in Resources */,
+				35C8DC0F2191DE940053328C /* DCA-Arboretum.trace.json in Resources */,
 				35CDA8932190F6980072B675 /* route-with-instructions.json in Resources */,
 				35C8DBF8219198320053328C /* route.json in Resources */,
+				355832AB2192F60800141922 /* PipeFittersUnion-FourSeasonsBoston.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2070,6 +2079,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
+		};
+		355832AE2192FAA300141922 /* Apply Mapbox Access Token */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Apply Mapbox Access Token";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This Run Script build phase helps to keep the navigation SDK’s developers from exposing their own access tokens during development. See <https://www.mapbox.com/help/ios-private-access-token/> for more information. If you are developing an application privately, you may add the MGLMapboxAccessToken key directly to your Info.plist file and delete this build phase.\n\ntoken_file=~/.mapbox\ntoken_file2=~/mapbox\ntoken=\"$(cat $token_file 2>/dev/null || cat $token_file2 2>/dev/null)\"\nif [ \"$token\" ]; then\nplutil -replace MGLMapboxAccessToken -string $token \"$TARGET_BUILD_DIR/$INFOPLIST_PATH\"\nelse\necho 'warning: Missing Mapbox access token'\nopen 'https://www.mapbox.com/account/access-tokens/'\necho \"warning: Get an access token from <https://www.mapbox.com/account/access-tokens/>, then create a new file at $token_file or $token_file2 that contains the access token.\"\nfi\n";
 		};
 		35B711DA1E5E7AEC001EDA8D /* Carthage copy frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
