@@ -268,6 +268,8 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
     deinit {
         suspendNotifications()
         endNavigation()
+        nativeLocationSource.delegate = nil
+        simulatedLocationSource?.delegate = nil
     }
     
     /**
