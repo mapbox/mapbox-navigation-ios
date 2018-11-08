@@ -2,7 +2,7 @@
 
 ## master
 
-* Fixed issue where a released reference that was kept in `CLLocationManager` as `unowned` could cause crash. ([#1820](https://github.com/mapbox/mapbox-navigation-ios/pull/1820))
+* Fixed a crash during turn-by-turn navigation. ([#1820](https://github.com/mapbox/mapbox-navigation-ios/pull/1820))
 * Replacing `performSelector:afterDelay:` mechanism that was [causing a crash](https://github.com/mapbox/mapbox-navigation-ios/issues/1662) with a DispatchTimerSource-based mechanism. ([#1820](https://github.com/mapbox/mapbox-navigation-ios/pull/1820))
 * It is now safe to set the `NavigationMapView.delegate` property of the `NavigationMapView` in `NavigationViewController.mapView`. Implement `MGLMapViewDelegate` in your own class to customize annotations and other details. ([#1601](https://github.com/mapbox/mapbox-navigation-ios/pull/1601))
 * Fixed an issue where the map view while navigating in CarPlay showed labels in the style’s original language instead of the local language. ([#1601](https://github.com/mapbox/mapbox-navigation-ios/pull/1601))
