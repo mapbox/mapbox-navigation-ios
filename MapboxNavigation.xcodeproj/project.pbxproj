@@ -53,6 +53,9 @@
 		3525449D1E663D32004C8F1C /* MapboxCoreNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */; };
 		3527D2B91EC4619400C07FC9 /* Fixtures.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3527D2B61EC45FBD00C07FC9 /* Fixtures.xcassets */; };
 		352BBC3B1E5E6A0C00703DF1 /* MapboxCoreNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */; };
+		352ECD312194899800F0B334 /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigation.framework */; };
+		352ECD32219489AB00F0B334 /* MapboxNavigation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		352ECD3321948A1100F0B334 /* MapboxCoreNavigation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		352F464D20EB74C200147886 /* NavigationEventsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352F464C20EB74C200147886 /* NavigationEventsManager.swift */; };
 		3531C2701F9E095400D92F9A /* InstructionsBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3531C26F1F9E095400D92F9A /* InstructionsBannerView.swift */; };
 		353280A11FA72871005175F3 /* InstructionLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353280A01FA72871005175F3 /* InstructionLabel.swift */; };
@@ -129,7 +132,6 @@
 		35C8DBF8219198320053328C /* route.json in Resources */ = {isa = PBXBuildFile; fileRef = 35C8DBF7219198310053328C /* route.json */; };
 		35C8DBFD2191D0370053328C /* CoreLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C8DBFC2191D0370053328C /* CoreLocation.swift */; };
 		35C8DBFE2191D0BD0053328C /* Turf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CC14141F799496009E872A /* Turf.framework */; };
-		35C8DC082191DA8C0053328C /* MapboxSpeech.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A9DDBD202E12EE007D52DA /* MapboxSpeech.framework */; };
 		35C8DC0B2191DAD20053328C /* MapboxCoreNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */; };
 		35C8DC0C2191DAD20053328C /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigation.framework */; };
 		35C8DC0D2191DAD20053328C /* TestHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CDA85E2190F2A30072B675 /* TestHelper.framework */; };
@@ -205,6 +207,7 @@
 		35EF782A212C324E001B4BB5 /* TunnelAuthorityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8B1B96207D2B2B003050F6 /* TunnelAuthorityTests.swift */; };
 		35EFD009207CA5E800BF3873 /* ManeuverViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3540514E1F73F3F300ED572D /* ManeuverViewTests.swift */; };
 		35F1F5931FD57EFD00F8E502 /* StyleManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F1F5921FD57EFD00F8E502 /* StyleManagerTests.swift */; };
+		35F24B172194B2C3003522AC /* short-route.json in Resources */ = {isa = PBXBuildFile; fileRef = 35F24B162194B2C3003522AC /* short-route.json */; };
 		35F520C01FB482A200FC9C37 /* NextBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F520BF1FB482A200FC9C37 /* NextBannerView.swift */; };
 		35F611C41F1E1C0500C43249 /* FeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F611C31F1E1C0500C43249 /* FeedbackViewController.swift */; };
 		3EA9301B03F8679BEDD4795F /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA93A10227A7DAF1861D9F5 /* Cache.swift */; };
@@ -350,6 +353,27 @@
 			proxyType = 1;
 			remoteGlobalIDString = 358D14621E5E3B7700ADE590;
 			remoteInfo = "Example-Swift";
+		};
+		352ECD2B2194892E00F0B334 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C5ADFBC81DDCC7840011824B;
+			remoteInfo = MapboxCoreNavigation;
+		};
+		352ECD2D2194892E00F0B334 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 351BEBD61E5BCC28006FE110;
+			remoteInfo = MapboxNavigation;
+		};
+		352ECD2F2194892E00F0B334 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 35CDA85D2190F2A30072B675;
+			remoteInfo = TestHelper;
 		};
 		354A01D11E66268400D765C2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -514,6 +538,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				352ECD3321948A1100F0B334 /* MapboxCoreNavigation.framework in Embed Frameworks */,
+				352ECD32219489AB00F0B334 /* MapboxNavigation.framework in Embed Frameworks */,
 				35CDA84E2190EFDA0072B675 /* Polyline.framework in Embed Frameworks */,
 				35CDA84A2190EFDA0072B675 /* Solar.framework in Embed Frameworks */,
 				35CDA87E2190F3AC0072B675 /* TestHelper.framework in Embed Frameworks */,
@@ -737,6 +763,7 @@
 		35EB9A6920A1A89500CB1225 /* turn_left.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = turn_left.data; sourceTree = "<group>"; };
 		35ECAF2C2092275100DC3BC3 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		35F1F5921FD57EFD00F8E502 /* StyleManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleManagerTests.swift; sourceTree = "<group>"; };
+		35F24B162194B2C3003522AC /* short-route.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "short-route.json"; sourceTree = "<group>"; };
 		35F520BF1FB482A200FC9C37 /* NextBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextBannerView.swift; sourceTree = "<group>"; };
 		35F611C31F1E1C0500C43249 /* FeedbackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackViewController.swift; sourceTree = "<group>"; };
 		3EA93170CB959F3065ACFFC3 /* SpeechAPISpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeechAPISpy.swift; sourceTree = "<group>"; };
@@ -983,6 +1010,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				352ECD312194899800F0B334 /* MapboxNavigation.framework in Frameworks */,
 				35CDA87C2190F3990072B675 /* TestHelper.framework in Frameworks */,
 				35CDA8572190F0670072B675 /* MapboxGeocoder.framework in Frameworks */,
 				35CDA84F2190EFDA0072B675 /* MapboxDirections.framework in Frameworks */,
@@ -1004,7 +1032,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35C8DC082191DA8C0053328C /* MapboxSpeech.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1313,6 +1340,7 @@
 				35CDA8872190F50D0072B675 /* route-with-straight-roundabout.json */,
 				35CDA8882190F5100072B675 /* sthlm-double-back-replay.json */,
 				35CDA8852190F50A0072B675 /* sthlm-double-back.json */,
+				35F24B162194B2C3003522AC /* short-route.json */,
 				16120A4C20645D6E007EA21D /* NavigationEventsManagerTestDoubles.swift */,
 				3EA93EBD6E6BEC966BBE51D6 /* NavigationServiceTestDoubles.swift */,
 				35CDA8812190F5080072B675 /* turn_left.data */,
@@ -1709,6 +1737,9 @@
 			buildRules = (
 			);
 			dependencies = (
+				352ECD2C2194892E00F0B334 /* PBXTargetDependency */,
+				352ECD2E2194892E00F0B334 /* PBXTargetDependency */,
+				352ECD302194892E00F0B334 /* PBXTargetDependency */,
 				35CDA82621908F320072B675 /* PBXTargetDependency */,
 			);
 			name = BenchUITests;
@@ -2026,6 +2057,7 @@
 				35C8DC0F2191DE940053328C /* DCA-Arboretum.trace.json in Resources */,
 				35CDA8932190F6980072B675 /* route-with-instructions.json in Resources */,
 				35C8DBF8219198320053328C /* route.json in Resources */,
+				35F24B172194B2C3003522AC /* short-route.json in Resources */,
 				355832AB2192F60800141922 /* PipeFittersUnion-FourSeasonsBoston.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2455,6 +2487,21 @@
 			isa = PBXTargetDependency;
 			target = 358D14621E5E3B7700ADE590 /* Example */;
 			targetProxy = 352BBC4C1E5E78D700703DF1 /* PBXContainerItemProxy */;
+		};
+		352ECD2C2194892E00F0B334 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C5ADFBC81DDCC7840011824B /* MapboxCoreNavigation */;
+			targetProxy = 352ECD2B2194892E00F0B334 /* PBXContainerItemProxy */;
+		};
+		352ECD2E2194892E00F0B334 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 351BEBD61E5BCC28006FE110 /* MapboxNavigation */;
+			targetProxy = 352ECD2D2194892E00F0B334 /* PBXContainerItemProxy */;
+		};
+		352ECD302194892E00F0B334 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 35CDA85D2190F2A30072B675 /* TestHelper */;
+			targetProxy = 352ECD2F2194892E00F0B334 /* PBXContainerItemProxy */;
 		};
 		354A01D21E66268400D765C2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

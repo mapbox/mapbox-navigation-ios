@@ -7,6 +7,7 @@ workflows:
       - xcode-10
       - xcode-9
       - xcode-10-bench
+      - xcode-10-profile
       - xcode-10-cocoapods-install
       - xcode-10-cocoapods-update
       - xcode-9-examples
@@ -113,6 +114,13 @@ step-library:
         command: |
           xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme Example clean build | xcpretty
 
+  - &profile-Bench
+      run:
+        name: Profile Bench
+        command: |
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.1,name=iPhone 6 Plus' -configuration Debug -project MapboxNavigation.xcodeproj -scheme Bench -derivedDataPath ./Profiling install
+          instruments -t "Time Profiler" -w "iPhone 6 Plus (12.1" "./Profiling/Build/Products/Debug-iphonesimulator/BenchUITests-Runner.app"
+
   - &cocoapods-integration-install
       run:
         name: CocoaPods integration test
@@ -178,6 +186,19 @@ jobs:
       - *restore-cache
       - *install-dependencies
       - *build-test-Bench-ios-12
+      - *save-cache
+
+  xcode-10-profile:
+    macos:
+      xcode: "10.0.0"
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+    steps:
+      - checkout
+      - *prepare
+      - *restore-cache
+      - *install-dependencies
+      - *profile-Bench
       - *save-cache
 
   xcode-10-cocoapods-install:

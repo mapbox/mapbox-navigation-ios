@@ -39,7 +39,7 @@
             </BuildableReference>
          </TestableReference>
          <TestableReference
-            skipped = "YES">
+            skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "35CDA82321908F320072B675"
@@ -47,6 +47,14 @@
                BlueprintName = "BenchUITests"
                ReferencedContainer = "container:MapboxNavigation.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "BenchUITests/testControlRoute1()">
+               </Test>
+               <Test
+                  Identifier = "BenchUITests/testControlRoute2()">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
       <MacroExpansion>

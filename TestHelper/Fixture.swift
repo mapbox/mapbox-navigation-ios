@@ -1,7 +1,7 @@
 import Foundation
 import CoreLocation
 import MapboxDirections
-@testable import MapboxCoreNavigation
+import MapboxCoreNavigation
 
 
 @objc(MBFixture)
@@ -118,18 +118,18 @@ public class Fixture: NSObject {
         }
     }
     
-    public class func generateTrace(for route: Route) -> [CLLocation] {
-        
-        let traceCollector = TraceCollector()
-        let locationManager = SimulatedLocationManager(route: route)
-        locationManager.delegate = traceCollector
-        
-        while locationManager.currentDistance < route.distance {
-            locationManager.tick()
-        }
-        
-        return traceCollector.locations
-    }
+//    public class func generateTrace(for route: Route) -> [CLLocation] {
+//
+//        let traceCollector = TraceCollector()
+//        let locationManager = SimulatedLocationManager(route: route)
+//        locationManager.delegate = traceCollector
+//
+//        while locationManager.currentDistance < route.distance {
+//            locationManager.tick()
+//        }
+//
+//        return traceCollector.locations
+//    }
 }
 
 class TraceCollector: NSObject, CLLocationManagerDelegate {
