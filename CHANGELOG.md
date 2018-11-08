@@ -1,9 +1,12 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## v0.24.0 (November 7, 2018)
+## master
 
 * Fixed a crash during turn-by-turn navigation. ([#1820](https://github.com/mapbox/mapbox-navigation-ios/pull/1820))
 * Replaces the `SimulatedLocationManager` timer mechanism with a `DispatchTimerSource`-based mechanism ([#1820](https://github.com/mapbox/mapbox-navigation-ios/pull/1820)), which fixes a crash that was caused by retaining the `SimulatedLocationManager` while it still had a dangling reference to its delegate (https://github.com/mapbox/mapbox-navigation-ios/issues/1662)
+
+## v0.24.0 (November 7, 2018)
+
 * It is now safe to set the `NavigationMapView.delegate` property of the `NavigationMapView` in `NavigationViewController.mapView`. Implement `MGLMapViewDelegate` in your own class to customize annotations and other details. ([#1601](https://github.com/mapbox/mapbox-navigation-ios/pull/1601))
 * Fixed an issue where the map view while navigating in CarPlay showed labels in the style’s original language instead of the local language. ([#1601](https://github.com/mapbox/mapbox-navigation-ios/pull/1601))
 * `NavigationMapViewDelegate.navigationMapView(_:routeStyleLayerWithIdentifier:source:)`, `NavigationMapViewDelegate.navigationMapView(_:routeCasingStyleLayerWithIdentifier:source:)`, `NavigationViewControllerDelegate.navigationViewController(_:routeStyleLayerWithIdentifier:source:)`, and `NavigationViewControllerDelegate.navigationViewController(_:routeCasingStyleLayerWithIdentifier:source:)` can now set the `MGLLineStyleLayer.lineGradient` property. ([#1799](https://github.com/mapbox/mapbox-navigation-ios/pull/1799))
