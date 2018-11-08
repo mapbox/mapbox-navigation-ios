@@ -101,7 +101,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
         self.route = route
 
         self.timer = DispatchTimer(countdown: .milliseconds(0), repeating: updateInterval, accuracy: accuracy, executingOn: .main) { [weak self] in
-            DispatchQueue.main.async { self?.tick() }
+            self?.tick()
         }
         
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(_:)), name: .routeControllerDidReroute, object: nil)

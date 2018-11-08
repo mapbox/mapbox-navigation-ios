@@ -17,7 +17,7 @@ class DispatchTimer {
     let repititionInterval: DispatchTimeInterval
     let accuracy: DispatchTimeInterval
     let payload: Payload
-    let timerQueue = DispatchQueue(label: "com.mapbox.coreNavigation.timer.countdown", qos: DispatchQoS.userInteractive, attributes: [.concurrent], autoreleaseFrequency: .inherit, target: nil)
+    let timerQueue = DispatchQueue(label: "com.mapbox.coreNavigation.timer")
     let executionQueue: DispatchQueue
     let timer: DispatchSourceTimer
     
