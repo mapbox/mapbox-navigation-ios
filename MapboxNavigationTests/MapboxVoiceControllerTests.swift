@@ -3,7 +3,9 @@ import MapboxDirections
 import MapboxCoreNavigation
 import MapboxSpeech
 import AVKit
+@testable import TestHelper
 @testable import MapboxNavigation
+
 
 class MapboxVoiceControllerTests: XCTestCase {
 
@@ -12,8 +14,7 @@ class MapboxVoiceControllerTests: XCTestCase {
 
     var route: Route {
         get {
-            //TODO: these waypoints have nothing to do with this route. Not sure if it matters.
-            return Fixture.route(from: "route-with-instructions", waypoints: [Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165)), Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))])
+            return Fixture.route(from: "route-with-instructions")
         }
     }
 
@@ -96,24 +97,3 @@ class MockMapboxVoiceController: MapboxVoiceController {
     }
 }
 
-fileprivate extension Notification.Name {
-    enum MapboxVoiceTests {
-        static let prepareToPlay = NSNotification.Name("MapboxVoiceTests.prepareToPlay")
-        static let play = NSNotification.Name("MapboxVoiceTests.play")
-    }
-}
-class AudioPlayerDummy: AVAudioPlayer {
-    public let sound = NSDataAsset(name: "reroute-sound", bundle: .mapboxNavigation)!
-    
-    lazy var notifier: NotificationCenter = .default
-    fileprivate typealias Note = Notification.Name.MapboxVoiceTests
-    
-    override func prepareToPlay() -> Bool {
-        notifier.post(name: Note.prepareToPlay, object: self)
-        return true
-    }
-    override func play() -> Bool {
-        notifier.post(name: Note.play, object: self)
-        return true
-    }
-}

@@ -1,5 +1,7 @@
 import XCTest
+@testable import TestHelper
 @testable import MapboxCoreNavigation
+
 
 class NavigationEventsManagerTests: XCTestCase {
 
