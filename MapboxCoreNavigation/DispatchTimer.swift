@@ -14,7 +14,7 @@ class DispatchTimer {
         }
     }
     private var deadline: DispatchTime { return .now() + countdownInterval }
-    let repititionInterval: DispatchTimeInterval
+    let repetitionInterval: DispatchTimeInterval
     let accuracy: DispatchTimeInterval
     let payload: Payload
     let timerQueue = DispatchQueue(label: "com.mapbox.coreNavigation.timer")
@@ -25,7 +25,7 @@ class DispatchTimer {
     
     init(countdown: DispatchTimeInterval, repeating repetition: DispatchTimeInterval = .never, accuracy: DispatchTimeInterval = defaultAccuracy, executingOn executionQueue: DispatchQueue = .main, payload: @escaping Payload) {
         countdownInterval = countdown
-        repititionInterval = repetition
+        repetitionInterval = repetition
         self.executionQueue = executionQueue
         self.payload = payload
         self.accuracy = accuracy
@@ -45,7 +45,7 @@ class DispatchTimer {
     }
     
     private func scheduleTimer() {
-        timer.schedule(deadline: deadline, repeating: repititionInterval, leeway: accuracy)
+        timer.schedule(deadline: deadline, repeating: repetitionInterval, leeway: accuracy)
     }
     
     private func fire() {
