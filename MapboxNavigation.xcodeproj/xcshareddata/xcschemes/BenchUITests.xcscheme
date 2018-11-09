@@ -8,15 +8,15 @@
       <BuildActionEntries>
          <BuildActionEntry
             buildForTesting = "YES"
-            buildForRunning = "YES"
+            buildForRunning = "NO"
             buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "35CDA80521908F2F0072B675"
-               BuildableName = "Bench.app"
-               BlueprintName = "Bench"
+               BlueprintIdentifier = "35CDA82321908F320072B675"
+               BuildableName = "BenchUITests.xctest"
+               BlueprintName = "BenchUITests"
                ReferencedContainer = "container:MapboxNavigation.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -30,24 +30,6 @@
       <Testables>
          <TestableReference
             skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "35CDA81821908F320072B675"
-               BuildableName = "BenchTests.xctest"
-               BlueprintName = "BenchTests"
-               ReferencedContainer = "container:MapboxNavigation.xcodeproj">
-            </BuildableReference>
-            <SkippedTests>
-               <Test
-                  Identifier = "BenchTests/testControlRoute1()">
-               </Test>
-               <Test
-                  Identifier = "BenchTests/testControlRoute2()">
-               </Test>
-            </SkippedTests>
-         </TestableReference>
-         <TestableReference
-            skipped = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "35CDA82321908F320072B675"
@@ -101,7 +83,7 @@
       </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
-      buildConfiguration = "Release"
+      buildConfiguration = "Debug"
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"

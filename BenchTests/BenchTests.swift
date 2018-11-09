@@ -49,6 +49,10 @@ class BenchTests: XCTestCase, CLLocationManagerDelegate {
         }
     }
     
+    func testDummy() {
+        XCTAssert(true)
+    }
+    
     func navigationViewController(route: Route, locationManager: ReplayLocationManager) -> NavigationViewController {
         
         let speechAPI = SpeechAPISpy(accessToken: token)
