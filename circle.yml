@@ -118,9 +118,11 @@ step-library:
       run:
         name: Profile Bench
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6 Plus' -configuration Debug -project MapboxNavigation.xcodeproj -scheme BenchUITests -derivedDataPath ./Profiling build test
-          # TODO: This trace only records 500 ms, the runner app doesn't launch.
-          #instruments -t "Time Profiler" -w "iPhone 6 Plus (12.1" "./Profiling/Build/Products/Debug-iphonesimulator/BenchUITests-Runner.app"
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6 Plus' -configuration Debug -project MapboxNavigation.xcodeproj -scheme BenchUITests -only-testing:BenchUITests/BenchUITests -derivedDataPath ./Profiling test
+          # TODO: This trace only records ~1s, the runner app starts but the Bench.app doesn't
+          instruments -t "Time Profiler" -w "iPhone 6 Plus (12.0" "Profiling/Build/Products/Debug-iphonesimulator/BenchUITests-Runner.app"
+          # TODO: upload trace.zip
+          zip -r trace.zip instrumentscli0.trace
 
   - &cocoapods-integration-install
       run:
