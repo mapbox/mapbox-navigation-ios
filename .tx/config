@@ -21,8 +21,8 @@ source_file = MapboxCoreNavigation/Resources/Base.lproj/Localizable.strings
 source_lang = en
 
 [mapbox-navigation-ios.ExampleMainStrings]
-file_filter = Examples/<lang>.lproj/Main.strings
-source_file = Examples/en.lproj/Main.strings
+file_filter = Example/<lang>.lproj/Main.strings
+source_file = Example/en.lproj/Main.strings
 source_lang = en
 
 [mapbox-navigation-ios.navigationstrings]
