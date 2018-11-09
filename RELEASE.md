@@ -43,5 +43,6 @@
 
 ### Next steps
 
+1. Move unfinished tickets and open PRs off of the milestone corresponding to this release and onto an upcoming milestone, and close the current milestone.
 1. Run `pod update` in the [examples repository](https://github.com/mapbox/navigation-ios-examples/) (and edit the Podfile if necessary) to install the latest version.
 1. See [this wiki page](https://github.com/mapbox/navigation/wiki/Releasing-the-iOS-navigation-SDK) for information on updating Mapbox documentation.
