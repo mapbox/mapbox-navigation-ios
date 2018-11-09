@@ -48,15 +48,25 @@ class BenchUITests: XCTestCase {
         
         app.tables.staticTexts["Temporary Control Route"].tap()
         
-        // TODO: Grant access to location permissions
+        let locationHandler = addUIInterruptionMonitor(withDescription: "Location Permissions") { (alert) -> Bool in
+            if alert.buttons["Allow"].exists {
+                alert.buttons.element(boundBy: 1).tap()
+                return true
+            }
+            
+            return false
+        }
         
-        let endNavigation = app.staticTexts["You have arrived"]
-        let exists = NSPredicate(format: "endNavigation == 1")
-        _ = self.expectation(for: exists, evaluatedWith: endNavigation, handler: nil)
-        self.waitForExpectations(timeout: 60*2, handler: nil)
+        app.tap() // Triggers the locationHandler
         
-        app.buttons.staticTexts["End Navigation"].tap()
+        waitForElementToAppear(app.staticTexts["You have arrived"], timeout: 60*2)
         
-        print("done")
+        removeUIInterruptionMonitor(locationHandler)
+    }
+    
+    func waitForElementToAppear(_ element: XCUIElement, timeout: TimeInterval) {
+        let existsPredicate = NSPredicate(format: "exists == true")
+        expectation(for: existsPredicate, evaluatedWith: element, handler: nil)
+        waitForExpectations(timeout: timeout, handler: nil)
     }
 }
