@@ -55,7 +55,6 @@
 		352BBC3B1E5E6A0C00703DF1 /* MapboxCoreNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */; };
 		352ECD312194899800F0B334 /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigation.framework */; };
 		352ECD32219489AB00F0B334 /* MapboxNavigation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		352ECD3321948A1100F0B334 /* MapboxCoreNavigation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		352F464D20EB74C200147886 /* NavigationEventsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352F464C20EB74C200147886 /* NavigationEventsManager.swift */; };
 		3531C2701F9E095400D92F9A /* InstructionsBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3531C26F1F9E095400D92F9A /* InstructionsBannerView.swift */; };
 		353280A11FA72871005175F3 /* InstructionLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353280A01FA72871005175F3 /* InstructionLabel.swift */; };
@@ -147,6 +146,21 @@
 		35C98736212E045200808B82 /* MapboxNavigationNative.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35C98734212E042C00808B82 /* MapboxNavigationNative.framework */; };
 		35C98738212E045300808B82 /* MapboxNavigationNative.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35C98734212E042C00808B82 /* MapboxNavigationNative.framework */; };
 		35C9973F1E732C1B00544D1C /* RouteVoiceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C9973E1E732C1B00544D1C /* RouteVoiceController.swift */; };
+		35CB1DBD21958D1E00465286 /* MapboxNavigationNative.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35C98734212E042C00808B82 /* MapboxNavigationNative.framework */; };
+		35CB1DC121958D8500465286 /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigation.framework */; };
+		35CB1DC221958D8800465286 /* TestHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CDA85E2190F2A30072B675 /* TestHelper.framework */; };
+		35CB1DC421958DF100465286 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
+		35CB1DC521958E2200465286 /* Solar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C57607B01F4CC97D00C27423 /* Solar.framework */; };
+		35CB1DC621958E3000465286 /* Turf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CC14141F799496009E872A /* Turf.framework */; };
+		35CB1DC721958E3A00465286 /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01BC1E66259600D765C2 /* Polyline.framework */; };
+		35CB1DC921958E4800465286 /* MapboxCoreNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */; };
+		35CB1DCB21958E9500465286 /* Turf.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 35CC14141F799496009E872A /* Turf.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		35CB1DCC21958F8C00465286 /* MapboxNavigationNative.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 35C98734212E042C00808B82 /* MapboxNavigationNative.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		35CB1DCD21958FBE00465286 /* Solar.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C57607B01F4CC97D00C27423 /* Solar.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		35CB1DCE21958FD700465286 /* MapboxMobileEvents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		35CB1DCF21958FEC00465286 /* Polyline.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01BC1E66259600D765C2 /* Polyline.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		35CB1DD22195934700465286 /* MapboxCoreNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */; };
+		35CB1DD3219593A700465286 /* MapboxCoreNavigation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		35CB1E131F97DD740011CC44 /* FeedbackItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CB1E121F97DD740011CC44 /* FeedbackItem.swift */; };
 		35CC14151F7994B0009E872A /* Turf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CC14141F799496009E872A /* Turf.framework */; };
 		35CC14161F7994B1009E872A /* Turf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CC14141F799496009E872A /* Turf.framework */; };
@@ -159,13 +173,7 @@
 		35CDA81E21908F320072B675 /* BenchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CDA81D21908F320072B675 /* BenchTests.swift */; };
 		35CDA82921908F320072B675 /* BenchUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CDA82821908F320072B675 /* BenchUITests.swift */; };
 		35CDA8362190ADD80072B675 /* ControlRouteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CDA8352190ADD80072B675 /* ControlRouteViewController.swift */; };
-		35CDA8432190EFCC0072B675 /* MapboxNavigationNative.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 35C98734212E042C00808B82 /* MapboxNavigationNative.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		35CDA8462190EFDA0072B675 /* MapboxSpeech.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C5A9DDBD202E12EE007D52DA /* MapboxSpeech.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		35CDA8482190EFDA0072B675 /* Turf.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 35CC14141F799496009E872A /* Turf.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		35CDA84A2190EFDA0072B675 /* Solar.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C57607B01F4CC97D00C27423 /* Solar.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		35CDA84B2190EFDA0072B675 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
-		35CDA84C2190EFDA0072B675 /* MapboxMobileEvents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		35CDA84E2190EFDA0072B675 /* Polyline.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01BC1E66259600D765C2 /* Polyline.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		35CDA84F2190EFDA0072B675 /* MapboxDirections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01B81E66256600D765C2 /* MapboxDirections.framework */; };
 		35CDA8502190EFDA0072B675 /* MapboxDirections.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01B81E66256600D765C2 /* MapboxDirections.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		35CDA8522190EFDA0072B675 /* Mapbox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 35A1D3651E6624EF00A48FE8 /* Mapbox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -538,18 +546,18 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				352ECD3321948A1100F0B334 /* MapboxCoreNavigation.framework in Embed Frameworks */,
+				35CB1DCF21958FEC00465286 /* Polyline.framework in Embed Frameworks */,
+				35CB1DCE21958FD700465286 /* MapboxMobileEvents.framework in Embed Frameworks */,
+				35CB1DCD21958FBE00465286 /* Solar.framework in Embed Frameworks */,
+				35CB1DD3219593A700465286 /* MapboxCoreNavigation.framework in Embed Frameworks */,
+				35CB1DCC21958F8C00465286 /* MapboxNavigationNative.framework in Embed Frameworks */,
 				352ECD32219489AB00F0B334 /* MapboxNavigation.framework in Embed Frameworks */,
-				35CDA84E2190EFDA0072B675 /* Polyline.framework in Embed Frameworks */,
-				35CDA84A2190EFDA0072B675 /* Solar.framework in Embed Frameworks */,
 				35CDA87E2190F3AC0072B675 /* TestHelper.framework in Embed Frameworks */,
 				35CDA8502190EFDA0072B675 /* MapboxDirections.framework in Embed Frameworks */,
 				35CDA8522190EFDA0072B675 /* Mapbox.framework in Embed Frameworks */,
-				35CDA84C2190EFDA0072B675 /* MapboxMobileEvents.framework in Embed Frameworks */,
-				35CDA8482190EFDA0072B675 /* Turf.framework in Embed Frameworks */,
 				35CDA8582190F0670072B675 /* MapboxGeocoder.framework in Embed Frameworks */,
-				35CDA8432190EFCC0072B675 /* MapboxNavigationNative.framework in Embed Frameworks */,
 				35CDA8462190EFDA0072B675 /* MapboxSpeech.framework in Embed Frameworks */,
+				35CB1DCB21958E9500465286 /* Turf.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1011,10 +1019,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				352ECD312194899800F0B334 /* MapboxNavigation.framework in Frameworks */,
-				35CDA87C2190F3990072B675 /* TestHelper.framework in Frameworks */,
-				35CDA8572190F0670072B675 /* MapboxGeocoder.framework in Frameworks */,
+				35CB1DBD21958D1E00465286 /* MapboxNavigationNative.framework in Frameworks */,
 				35CDA84F2190EFDA0072B675 /* MapboxDirections.framework in Frameworks */,
-				35CDA84B2190EFDA0072B675 /* MapboxMobileEvents.framework in Frameworks */,
+				35CB1DC521958E2200465286 /* Solar.framework in Frameworks */,
+				35CB1DC921958E4800465286 /* MapboxCoreNavigation.framework in Frameworks */,
+				35CB1DC421958DF100465286 /* MapboxMobileEvents.framework in Frameworks */,
+				35CB1DC621958E3000465286 /* Turf.framework in Frameworks */,
+				35CB1DC721958E3A00465286 /* Polyline.framework in Frameworks */,
+				35CDA8572190F0670072B675 /* MapboxGeocoder.framework in Frameworks */,
+				35CDA87C2190F3990072B675 /* TestHelper.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1032,6 +1045,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				35CB1DD22195934700465286 /* MapboxCoreNavigation.framework in Frameworks */,
+				35CB1DC221958D8800465286 /* TestHelper.framework in Frameworks */,
+				35CB1DC121958D8500465286 /* MapboxNavigation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1733,6 +1749,7 @@
 				35CDA82021908F320072B675 /* Sources */,
 				35CDA82121908F320072B675 /* Frameworks */,
 				35CDA82221908F320072B675 /* Resources */,
+				35CB1DD02195918C00465286 /* Carthage copy frameworks */,
 			);
 			buildRules = (
 			);
@@ -2149,6 +2166,37 @@
 				"$(SRCROOT)/Carthage/Build/iOS/Cedar.framework",
 			);
 			name = "Carthage copy frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
+		};
+		35CB1DD02195918C00465286 /* Carthage copy frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/Mapbox.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/MapboxDirections.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Polyline.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/FBSnapshotTestCase.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/MapboxMobileEvents.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Solar.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Turf.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/MapboxSpeech.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Quick.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Nimble.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Cedar.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/MapboxNavigationNative.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/MapboxGeocoder.framework",
+			);
+			name = "Carthage copy frameworks";
+			outputFileListPaths = (
+			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
