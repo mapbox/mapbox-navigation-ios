@@ -238,7 +238,7 @@ open class RouteController: NSObject, Router {
     @objc public func userIsOnRoute(_ location: CLLocation) -> Bool {
         
         // If the user has arrived, do not continue monitor reroutes, step progress, etc
-        guard !routeProgress.currentLegProgress.userHasArrivedAtWaypoint || (delegate?.router?(self, shouldPreventReroutesWhenArrivingAt: routeProgress.currentLeg.destination) ?? DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint) else {
+        guard !routeProgress.currentLegProgress.userHasArrivedAtWaypoint || !(delegate?.router?(self, shouldPreventReroutesWhenArrivingAt: routeProgress.currentLeg.destination) ?? DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint) else {
             return true
         }
         
