@@ -57,9 +57,12 @@ class BenchUITests: XCTestCase {
             return false
         }
         
-        app.tap() // Triggers the locationHandler
+        app.tap() // Triggers UIInterruptionMonitor
         
-        waitForElementToAppear(app.staticTexts["You have arrived"], timeout: 60*2)
+        let endNavigationButton = app.buttons["End Navigation"]
+        waitForElementToAppear(endNavigationButton, timeout: 60*2)
+        
+        endNavigationButton.tap()
         
         removeUIInterruptionMonitor(locationHandler)
     }

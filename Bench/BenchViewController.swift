@@ -56,6 +56,13 @@ class BenchViewController: UITableViewController {
         navigationController?.setNavigationBarHidden(false, animated: true)
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        let indexPath = IndexPath(row: 2, section: 0)
+        tableView(tableView, didSelectRowAt: indexPath)
+    }
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
         return dataSource.count
     }
@@ -117,6 +124,6 @@ extension BenchViewController: NavigationViewControllerDelegate {
     }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool {
-        return true
+        exit(0)
     }
 }
