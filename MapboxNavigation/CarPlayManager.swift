@@ -193,11 +193,13 @@ public class CarPlayManager: NSObject {
      */
     @objc public static var isConnected = false
 
-    public var eventsManager: NavigationEventsManager!
+    public let eventsManager: NavigationEventsManager
+    public let directions: Directions
 
-    public init(_ eventsManager: NavigationEventsManager = NavigationEventsManager(dataSource: nil)) {
+    public init(directions: Directions? = nil, eventsManager: NavigationEventsManager? = nil) {
+        self.directions = directions ?? .shared
+        self.eventsManager = eventsManager ?? NavigationEventsManager(dataSource: nil)
         super.init()
-        self.eventsManager = eventsManager
     }
 
     lazy var fullDateComponentsFormatter: DateComponentsFormatter = {
@@ -402,72 +404,82 @@ extension CarPlayManager: CPListTemplateDelegate {
         
         completionHandler()
     }
-
+    
     public func calculateRouteAndStart(from fromWaypoint: Waypoint? = nil, to toWaypoint: Waypoint, completionHandler: @escaping () -> Void) {
+        
         guard let rootViewController = self.carWindow?.rootViewController as? CarPlayMapViewController,
-            let mapTemplate = self.interfaceController?.rootTemplate as? CPMapTemplate,
             let userLocation = rootViewController.mapView.userLocation,
-            let location = userLocation.location,
-            let interfaceController = interfaceController else {
+            let location = userLocation.location else {
                 completionHandler()
                 return
         }
-
+        
         let name = NSLocalizedString("CARPLAY_CURRENT_LOCATION", bundle: .mapboxNavigation, value: "Current Location", comment: "Name of the waypoint associated with the current location")
         let originWaypoint = fromWaypoint ?? Waypoint(location: location, heading: userLocation.heading, name: name)
-
+        
         let routeOptions = NavigationRouteOptions(waypoints: [originWaypoint, toWaypoint])
-        Directions.shared.calculate(routeOptions) { [weak self, weak mapTemplate] (waypoints, routes, error) in
-            defer {
-                completionHandler()
-            }
-
-            guard let strongSelf = self, let mapTemplate = mapTemplate else {
-                return
-            }
-            if let error = error {
-                let okTitle = NSLocalizedString("CARPLAY_OK", bundle: .mapboxNavigation, value: "OK", comment: "CPNavigationAlert OK button title")
-                let okAction = CPAlertAction(title: okTitle, style: .default) { _ in
-                    interfaceController.popToRootTemplate(animated: true)
-                }
-                let alert = CPNavigationAlert(titleVariants: [error.localizedDescription],
-                                              subtitleVariants: [error.localizedFailureReason ?? ""],
-                                              imageSet: nil,
-                                              primaryAction: okAction,
-                                              secondaryAction: nil,
-                                              duration: 0)
-                mapTemplate.present(navigationAlert: alert, animated: true)
-            }
-            guard let waypoints = waypoints, let routes = routes else {
-                return
-            }
-
-            let routeChoices = routes.map { (route) -> CPRouteChoice in
-                let summaryVariants = [
-                    strongSelf.fullDateComponentsFormatter.string(from: route.expectedTravelTime)!,
-                    strongSelf.shortDateComponentsFormatter.string(from: route.expectedTravelTime)!,
-                    strongSelf.briefDateComponentsFormatter.string(from: route.expectedTravelTime)!
-                ]
-                let routeChoice = CPRouteChoice(summaryVariants: summaryVariants, additionalInformationVariants: [route.description], selectionSummaryVariants: [route.description])
-                routeChoice.userInfo = route
-                return routeChoice
-            }
-
-            let originPlacemark = MKPlacemark(coordinate: waypoints.first!.coordinate)
-            let destinationPlacemark = MKPlacemark(coordinate: waypoints.last!.coordinate, addressDictionary: ["street": waypoints.last!.name ?? ""])
-            let trip = CPTrip(origin: MKMapItem(placemark: originPlacemark), destination: MKMapItem(placemark: destinationPlacemark), routeChoices: routeChoices)
-            trip.userInfo = routeOptions
-
-            let goTitle = NSLocalizedString("CARPLAY_GO", bundle: .mapboxNavigation, value: "Go", comment: "Title for start button in CPTripPreviewTextConfiguration")
-            let alternativeRoutesTitle = NSLocalizedString("CARPLAY_MORE_ROUTES", bundle: .mapboxNavigation, value: "More Routes", comment: "Title for alternative routes in CPTripPreviewTextConfiguration")
-            let overviewTitle = NSLocalizedString("CARPLAY_OVERVIEW", bundle: .mapboxNavigation, value: "Overview", comment: "Title for overview button in CPTripPreviewTextConfiguration")
-            let defaultPreviewText = CPTripPreviewTextConfiguration(startButtonTitle: goTitle, additionalRoutesButtonTitle: alternativeRoutesTitle, overviewButtonTitle: overviewTitle)
-
-            let previewMapTemplate = strongSelf.mapTemplate(forPreviewing: trip)
-            interfaceController.pushTemplate(previewMapTemplate, animated: true)
-
-            previewMapTemplate.showTripPreviews([trip], textConfiguration: defaultPreviewText)
+        fetchNewRoute(options: routeOptions, completionHandler: completionHandler)
+    }
+    
+    internal func fetchNewRoute(options: RouteOptions, completionHandler: @escaping () -> Void) {
+        directions.calculate(options) { [weak self] (waypoints, routes, error) in
+            self?.handleDirectionsResponse(options: options, waypoints: waypoints, routes: routes, error: error, completionHandler: completionHandler)
         }
+    }
+    
+    
+    internal func handleDirectionsResponse(options routeOptions: RouteOptions, waypoints: [Waypoint]?, routes: [Route]?, error: NSError?, completionHandler: @escaping () -> Void) {
+        defer {
+            completionHandler()
+        }
+        
+        guard let interfaceController = interfaceController,
+              let mapTemplate = interfaceController.rootTemplate as? CPMapTemplate else {
+            return
+        }
+        
+        if let error = error {
+            let okTitle = NSLocalizedString("CARPLAY_OK", bundle: .mapboxNavigation, value: "OK", comment: "CPNavigationAlert OK button title")
+            let okAction = CPAlertAction(title: okTitle, style: .default) { _ in
+                interfaceController.popToRootTemplate(animated: true)
+            }
+            let alert = CPNavigationAlert(titleVariants: [error.localizedDescription],
+                                          subtitleVariants: [error.localizedFailureReason ?? ""],
+                                          imageSet: nil,
+                                          primaryAction: okAction,
+                                          secondaryAction: nil,
+                                          duration: 0)
+            mapTemplate.present(navigationAlert: alert, animated: true)
+        }
+        guard let waypoints = waypoints, let routes = routes else {
+            return
+        }
+        
+        let routeChoices = routes.map { (route) -> CPRouteChoice in
+            let summaryVariants = [
+               fullDateComponentsFormatter.string(from: route.expectedTravelTime)!,
+               shortDateComponentsFormatter.string(from: route.expectedTravelTime)!,
+               briefDateComponentsFormatter.string(from: route.expectedTravelTime)!
+            ]
+            let routeChoice = CPRouteChoice(summaryVariants: summaryVariants, additionalInformationVariants: [route.description], selectionSummaryVariants: [route.description])
+            routeChoice.userInfo = route
+            return routeChoice
+        }
+        
+        let originPlacemark = MKPlacemark(coordinate: waypoints.first!.coordinate)
+        let destinationPlacemark = MKPlacemark(coordinate: waypoints.last!.coordinate, addressDictionary: ["street": waypoints.last!.name ?? ""])
+        let trip = CPTrip(origin: MKMapItem(placemark: originPlacemark), destination: MKMapItem(placemark: destinationPlacemark), routeChoices: routeChoices)
+        trip.userInfo = routeOptions
+        
+        let goTitle = NSLocalizedString("CARPLAY_GO", bundle: .mapboxNavigation, value: "Go", comment: "Title for start button in CPTripPreviewTextConfiguration")
+        let alternativeRoutesTitle = NSLocalizedString("CARPLAY_MORE_ROUTES", bundle: .mapboxNavigation, value: "More Routes", comment: "Title for alternative routes in CPTripPreviewTextConfiguration")
+        let overviewTitle = NSLocalizedString("CARPLAY_OVERVIEW", bundle: .mapboxNavigation, value: "Overview", comment: "Title for overview button in CPTripPreviewTextConfiguration")
+        let defaultPreviewText = CPTripPreviewTextConfiguration(startButtonTitle: goTitle, additionalRoutesButtonTitle: alternativeRoutesTitle, overviewButtonTitle: overviewTitle)
+        
+        let previewMapTemplate = self.mapTemplate(forPreviewing: trip)
+        interfaceController.pushTemplate(previewMapTemplate, animated: true)
+        
+        previewMapTemplate.showTripPreviews([trip], textConfiguration: defaultPreviewText)
     }
 
     func mapTemplate(forPreviewing trip: CPTrip) -> CPMapTemplate {
