@@ -106,8 +106,14 @@ step-library:
         name: Build and Test Bench
         command: |
           xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6 Plus' -configuration Debug -project MapboxNavigation.xcodeproj -scheme Bench build test
-          instruments -t "Time Profiler" -w "iPhone 6 Plus (12.0" "com.mapbox.Bench"
-          zip -r trace.zip instrumentscli0.trace
+
+  - &profile-bench
+      run:
+        name: "Profile Bench"
+        command: |
+          instruments -t "Time Profiler" -D cpu -w "iPhone 6 Plus (12.0" "com.mapbox.Bench"
+          instruments -t "Time Profiler" -D mem -w "iPhone 6 Plus (12.0" "com.mapbox.Bench"
+          zip -r traces.zip cpu.trace mem.trace
 
   - &build-Example
       run:
@@ -135,6 +141,10 @@ step-library:
       run:
         name: Publish Code Coverage data
         command: bash <(curl -s https://codecov.io/bash)
+
+  - &store-traces
+      store_artifacts:
+         path: traces.zip
 
 jobs:
   xcode-10:
@@ -180,6 +190,8 @@ jobs:
       - *restore-cache
       - *install-dependencies
       - *build-test-Bench-ios-12
+      - *profile-bench
+      - *store-traces
       - *save-cache
 
   xcode-10-cocoapods-install:
