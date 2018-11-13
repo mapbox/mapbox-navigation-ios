@@ -111,8 +111,8 @@ step-library:
       run:
         name: "Profile Bench"
         command: |
-          instruments -t "Time Profiler" -D cpu -w "iPhone 6 Plus (12.0" "com.mapbox.Bench"
-          instruments -t "Time Profiler" -D mem -w "iPhone 6 Plus (12.0" "com.mapbox.Bench"
+          instruments -t "Time Profiler" -D cpu -w "iPhone 6 Plus (12.0" "com.mapbox.Bench" -MBControlRoute=2
+          instruments -t "Allocations" -D mem -w "iPhone 6 Plus (12.0" "com.mapbox.Bench" -MBControlRoute=2
           zip -r traces.zip cpu.trace mem.trace
 
   - &build-Example

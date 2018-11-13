@@ -58,9 +58,20 @@ class BenchViewController: UITableViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        parseCommandLineArguments()
+    }
+    
+    func parseCommandLineArguments() {
+        let arguments = CommandLine.arguments
+        let controlRoute = "MBControlRoute"
         
-        let indexPath = IndexPath(row: 2, section: 0)
-        tableView(tableView, didSelectRowAt: indexPath)
+        for arg in arguments {
+            if arg.contains(controlRoute),
+                let routeIndex = Int(arg.components(separatedBy: "=")[1]) {
+                let indexPath = IndexPath(row: routeIndex, section: 0)
+                tableView(tableView, didSelectRowAt: indexPath)
+            }
+        }
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
