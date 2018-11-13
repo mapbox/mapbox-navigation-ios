@@ -117,19 +117,23 @@ public class Fixture: NSObject {
             Route(json: $0, waypoints: waypoints, options: opts)
         }
     }
-    
-//    public class func generateTrace(for route: Route) -> [CLLocation] {
-//
-//        let traceCollector = TraceCollector()
-//        let locationManager = SimulatedLocationManager(route: route)
-//        locationManager.delegate = traceCollector
-//
-//        while locationManager.currentDistance < route.distance {
-//            locationManager.tick()
-//        }
-//
-//        return traceCollector.locations
-//    }
+
+    /*
+     Generates a trace for a given route. `-configuration Debug` is needed which
+     is why this is commented out by default
+     public class func generateTrace(for route: Route) -> [CLLocation] {
+     
+     let traceCollector = TraceCollector()
+     let locationManager = SimulatedLocationManager(route: route)
+     locationManager.delegate = traceCollector
+     
+     while locationManager.currentDistance < route.distance {
+     locationManager.tick()
+     }
+     
+     return traceCollector.locations
+     }
+     */
 }
 
 class TraceCollector: NSObject, CLLocationManagerDelegate {
