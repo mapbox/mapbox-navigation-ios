@@ -217,7 +217,7 @@
 		6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */; };
 		64847A041F04629D003F3A69 /* Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64847A031F04629D003F3A69 /* Feedback.swift */; };
 		8D07C5A820B612310093D779 /* EmptyStyle.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D07C5A720B612310093D779 /* EmptyStyle.json */; };
-		8D1A5CD2212DDFCD0059BA4A /* CountdownTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D1A5CD1212DDFCD0059BA4A /* CountdownTimer.swift */; };
+		8D1A5CD2212DDFCD0059BA4A /* DispatchTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D1A5CD1212DDFCD0059BA4A /* DispatchTimer.swift */; };
 		8D24A2F62040960C0098CBF8 /* UIEdgeInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D24A2F52040960C0098CBF8 /* UIEdgeInsets.swift */; };
 		8D24A2F820409A890098CBF8 /* CGSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D24A2F720409A890098CBF8 /* CGSize.swift */; };
 		8D24A2FA20449B430098CBF8 /* Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D24A2F920449B430098CBF8 /* Dictionary.swift */; };
@@ -749,7 +749,7 @@
 		6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WaypointConfirmationViewController.swift; path = Example/WaypointConfirmationViewController.swift; sourceTree = "<group>"; };
 		64847A031F04629D003F3A69 /* Feedback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Feedback.swift; sourceTree = "<group>"; };
 		8D07C5A720B612310093D779 /* EmptyStyle.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = EmptyStyle.json; sourceTree = "<group>"; };
-		8D1A5CD1212DDFCD0059BA4A /* CountdownTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownTimer.swift; sourceTree = "<group>"; };
+		8D1A5CD1212DDFCD0059BA4A /* DispatchTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchTimer.swift; sourceTree = "<group>"; };
 		8D24A2F52040960C0098CBF8 /* UIEdgeInsets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIEdgeInsets.swift; sourceTree = "<group>"; };
 		8D24A2F720409A890098CBF8 /* CGSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGSize.swift; sourceTree = "<group>"; };
 		8D24A2F920449B430098CBF8 /* Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dictionary.swift; sourceTree = "<group>"; };
@@ -1505,7 +1505,7 @@
 				C5ADFBF91DDCC9580011824B /* RouteController.swift */,
 				8D2AA744211CDD4000EB7F72 /* NavigationService.swift */,
 				8D4CF9C521349FFB009C3FEE /* NavigationServiceDelegate.swift */,
-				8D1A5CD1212DDFCD0059BA4A /* CountdownTimer.swift */,
+				8D1A5CD1212DDFCD0059BA4A /* DispatchTimer.swift */,
 				8D75F990212B5C7F00F99CF3 /* TunnelAuthority.swift */,
 				3582A25120EFA9680029C5DE /* RouterDelegate.swift */,
 				C5ADFBFB1DDCC9AD0011824B /* RouteProgress.swift */,
@@ -2383,7 +2383,7 @@
 			files = (
 				C5381F02204E03B600A5493E /* UIDevice.swift in Sources */,
 				354A9BCB20EA9BDA00F03325 /* EventDetails.swift in Sources */,
-				8D1A5CD2212DDFCD0059BA4A /* CountdownTimer.swift in Sources */,
+				8D1A5CD2212DDFCD0059BA4A /* DispatchTimer.swift in Sources */,
 				C561735B1F182113005954F6 /* RouteStep.swift in Sources */,
 				354A9BC620EA991900F03325 /* SessionState.swift in Sources */,
 				35C98733212E037900808B82 /* MBFixLocation.swift in Sources */,
