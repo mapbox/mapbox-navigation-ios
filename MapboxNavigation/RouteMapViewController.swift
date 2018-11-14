@@ -10,9 +10,7 @@ class ArrowFillPolyline: MGLPolylineFeature {}
 class ArrowStrokePolyline: ArrowFillPolyline {}
 
 extension RouteMapViewController: NavigationComponent {
-    
-    func navigationService
-    
+        
     func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         resetETATimer()
         updateETA()
