@@ -72,6 +72,12 @@ import MapboxDirections
     @objc(navigationService:didUpdateProgress:withLocation:rawLocation:)
     optional func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation)
     
+    @objc(router:didPassVisualInstructionPoint:alongRouteProgress:)
+    optional func router(_ router: Router, didPassVisualInstructionPoint instruction: VisualInstructionBanner, along routeProgress: RouteProgress)
+    
+    @objc(router:didPassSpokenInstructionPoint:alongRouteProgress:)
+    optional func router(_ router: Router, didPassSpokenInstructionPoint instruction: SpokenInstruction, along routeProgress: RouteProgress)
+    
     /**
      Called when the navigation service arrives at a waypoint.
      

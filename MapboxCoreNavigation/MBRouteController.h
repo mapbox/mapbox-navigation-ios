@@ -55,9 +55,19 @@ extern const NSNotificationName MBRouteControllerDidPassVisualInstructionPointNo
 typedef NSString *MBRouteControllerNotificationUserInfoKey NS_EXTENSIBLE_STRING_ENUM;
 
 /**
- A key in the user info dictionary of a `Notification.Name.MBRouteControllerProgressDidChange` or `Notification.Name.RouteControllerDidPassSpokenInstructionPoint` notification. The corresponding value is a `RouteProgress` object representing the current route progress.
+ A key in the user info dictionary of a `Notification.Name.MBRouteControllerProgressDidChange`, `Notification.Name.RouteControllerDidPassVisualInstructionPoint`, or `Notification.Name.RouteControllerDidPassSpokenInstructionPoint` notification. The corresponding value is a `RouteProgress` object representing the current route progress.
  */
 extern const MBRouteControllerNotificationUserInfoKey MBRouteControllerRouteProgressKey;
+
+/**
+ A key in the user info dictionary of a `Notification.Name.RouteControllerDidPassVisualInstructionPoint` notification. The corresponding value is a `VisualInstruction` object representing the current visual instruction.
+ */
+extern const MBRouteControllerNotificationUserInfoKey MBRouteControllerVisualInstructionKey;
+
+/**
+ A key in the user info dictionary of a `Notification.Name.RouteControllerDidPassSpokenInstructionPoint` notification. The corresponding value is a `VisualInstruction` object representing the current visual instruction.
+ */
+extern const MBRouteControllerNotificationUserInfoKey MBRouteControllerSpokenInstructionKey;
 
 /**
  A key in the user info dictionary of a `Notification.Name.MBRouteControllerProgressDidChange` or `Notification.Name.RouteControllerWillReroute` notification. The corresponding value is a `CLLocation` object representing the current idealized user location.

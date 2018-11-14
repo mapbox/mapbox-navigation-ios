@@ -205,7 +205,7 @@ open class NavigationViewController: UIViewController {
         set {
             navigationService.route = newValue
             NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
-            mapViewController?.notifyDidReroute(route: route)
+            mapViewController?.navigationService(navigationService, didRerouteAlong: newValue, at: nil, proactive: false)
         }
     }
     
@@ -439,26 +439,7 @@ open class NavigationViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: .routeControllerDidPassSpokenInstructionPoint, object: navigationService.router)
     }
     
-    @objc func progressDidChange(notification: NSNotification) {
-        let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
-        let location = notification.userInfo![RouteControllerNotificationUserInfoKey.locationKey] as! CLLocation
-        let secondsRemaining = routeProgress.currentLegProgress.currentStepProgress.durationRemaining
-
-        mapViewController?.notifyDidChange(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
-        
-        // If the user has arrived, don't snap the user puck.
-        // In the case the user drives beyond the waypoint,
-        // we should accurately depict this.
-        let progress = navigationService.routeProgress
-        let destination = progress.currentLeg.destination
-        let shouldPrevent = navigationService.delegate?.navigationService?(navigationService, shouldPreventReroutesWhenArrivingAt: destination) ?? RouteController.DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint
-        let userHasArrivedAndShouldPreventRerouting = shouldPrevent && !progress.currentLegProgress.userHasArrivedAtWaypoint
-        
-        if snapsUserLocationAnnotationToRoute,
-            userHasArrivedAndShouldPreventRerouting {
-            mapViewController?.mapView.updateCourseTracking(location: location, animated: true)
-        }
-    }
+ 
     
     @objc func didPassInstructionPoint(notification: NSNotification) {
         let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
@@ -620,12 +601,13 @@ extension NavigationViewController: NavigationServiceDelegate {
         delegate?.navigationViewController?(self, willRerouteFrom: location)
     }
     
-    @objc public func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at: CLLocation?, proactive: Bool) {
-        mapViewController?.notifyDidReroute(route: route)
+    @objc public func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
+        mapViewController?.navigationService(service, didRerouteAlong: route, at: location, proactive: proactive)
         delegate?.navigationViewController?(self, didRerouteAlong: route)
     }
     
     @objc public func navigationService(_ service: NavigationService, didFailToRerouteWith error: Error) {
+        mapViewController?.navigationService(service, didFailToRerouteWith: error)
         delegate?.navigationViewController?(self, didFailToRerouteWith: error)
     }
     
@@ -637,20 +619,29 @@ extension NavigationViewController: NavigationServiceDelegate {
         
         //Check to see if we're in a tunnel.
         checkTunnelState(at: location, along: progress)
+        
+        
+        //Pass the message onto our map controller.
+        mapViewController?.navigationService(service, didUpdate: progress, with: location, rawLocation: rawLocation)
 
         // If the user has arrived, don't snap the user puck.
         // In the case the user drives beyond the waypoint,
         // we should accurately depict this.
         
-        // Delegate method is trying to figure
-        let shouldPreventReroutesWhenArrivingAtWaypoint = service.delegate?.navigationService?(service, shouldPreventReroutesWhenArrivingAt: service.routeProgress.currentLeg.destination) ?? true
-        let userHasArrivedAndShouldPreventRerouting = shouldPreventReroutesWhenArrivingAtWaypoint && !service.routeProgress.currentLegProgress.userHasArrivedAtWaypoint
+        let destination = progress.currentLeg.destination
+        let shouldPrevent = navigationService.delegate?.navigationService?(navigationService, shouldPreventReroutesWhenArrivingAt: destination) ?? RouteController.DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint
+        let userHasArrivedAndShouldPreventRerouting = shouldPrevent && !progress.currentLegProgress.userHasArrivedAtWaypoint
         
         if snapsUserLocationAnnotationToRoute,
             userHasArrivedAndShouldPreventRerouting {
             mapViewController?.labelCurrentRoad(at: rawLocation, for: location)
         } else  {
             mapViewController?.labelCurrentRoad(at: rawLocation)
+        }
+        
+        if snapsUserLocationAnnotationToRoute,
+            userHasArrivedAndShouldPreventRerouting {
+            mapViewController?.mapView.updateCourseTracking(location: location, animated: true)
         }
     }
     

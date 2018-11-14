@@ -584,12 +584,10 @@ extension RouteController: CLLocationManagerDelegate {
 
         for voiceInstruction in spokenInstructions {
             if userSnapToStepDistanceFromManeuver <= voiceInstruction.distanceAlongStep || firstInstructionOnFirstStep {
-
-                NotificationCenter.default.post(name: .routeControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
-                    RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress
-                ])
-
+                
                 routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex += 1
+                announcePassage(of: voiceInstruction, along: routeProgress)
+                
                 return
             }
         }
@@ -597,21 +595,43 @@ extension RouteController: CLLocationManagerDelegate {
     
     func updateVisualInstructionProgress() {
         guard let userSnapToStepDistanceFromManeuver = userSnapToStepDistanceFromManeuver else { return }
-        guard let visualInstructions = routeProgress.currentLegProgress.currentStepProgress.remainingVisualInstructions else { return }
+        guard let remainingVisualInstructions = routeProgress.currentLegProgress.currentStepProgress.remainingVisualInstructions else { return }
         
         let firstInstructionOnFirstStep = routeProgress.currentLegProgress.stepIndex == 0 && routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex == 0
         
-        for visualInstruction in visualInstructions {
+        for visualInstruction in remainingVisualInstructions {
             if userSnapToStepDistanceFromManeuver <= visualInstruction.distanceAlongStep || firstInstructionOnFirstStep {
                 
-                NotificationCenter.default.post(name: .routeControllerDidPassVisualInstructionPoint, object: self, userInfo: [
-                    RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress
-                    ])
-                
                 routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex += 1
+                announcePassage(of: visualInstruction, along: routeProgress)
+                
                 return
             }
         }
+    }
+    
+    private func announcePassage(of spokenInstructionPoint: SpokenInstruction, along routeProgress: RouteProgress) {
+        
+        delegate?.router?(self, didPassSpokenInstructionPoint: spokenInstructionPoint, along: routeProgress)
+        
+        let info: [RouteControllerNotificationUserInfoKey: Any] = [
+                .routeProgressKey: routeProgress,
+                .spokenInstructionKey: spokenInstructionPoint
+        ]
+        
+        NotificationCenter.default.post(name: .routeControllerDidPassSpokenInstructionPoint, object: self, userInfo: info)
+    }
+    
+    private func announcePassage(of visualInstructionPoint: VisualInstructionBanner, along routeProgress: RouteProgress) {
+        
+        delegate?.router?(self, didPassVisualInstructionPoint: visualInstructionPoint, along: routeProgress)
+        
+        let info: [RouteControllerNotificationUserInfoKey: Any] = [
+            .routeProgressKey: routeProgress,
+            .visualInstructionKey: visualInstructionPoint
+        ]
+        
+        NotificationCenter.default.post(name: .routeControllerDidPassVisualInstructionPoint, object: self, userInfo: info)
     }
 
     func advanceStepIndex(to: Array<RouteStep>.Index? = nil) {

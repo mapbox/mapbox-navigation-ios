@@ -26,6 +26,12 @@ public protocol RouterDelegate: class {
     @objc(router:didUpdateProgress:withLocation:rawLocation:)
     optional func router(_ router: Router, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation)
     
+    @objc(router:didPassVisualInstructionPoint:alongRouteProgress:)
+    optional func router(_ router: Router, didPassVisualInstructionPoint instruction: VisualInstructionBanner, along routeProgress: RouteProgress)
+    
+    @objc(router:didPassSpokenInstructionPoint:alongRouteProgress:)
+    optional func router(_ router: Router, didPassSpokenInstructionPoint instruction: SpokenInstruction, along routeProgress: RouteProgress)
+    
     @objc(router:didArriveAtWaypoint:)
     optional func router(_ router: Router, didArriveAt waypoint: Waypoint) -> Bool
     
