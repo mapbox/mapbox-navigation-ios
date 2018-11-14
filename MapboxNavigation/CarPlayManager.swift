@@ -278,7 +278,7 @@ extension CarPlayManager: CPListTemplateDelegate {
             let location = placemark.location {
             let destinationWaypoint = Waypoint(location: location)
             interfaceController?.popTemplate(animated: false)
-            calculateRouteAndStart(to: destinationWaypoint, completionHandler: completionHandler)
+            preview(waypoints: [destinationWaypoint], completionHandler: completionHandler)
             return
         }
         #endif
@@ -286,33 +286,44 @@ extension CarPlayManager: CPListTemplateDelegate {
         // Selected a favorite? or any item with a waypoint.
         if let userInfo = item.userInfo as? [String: Any],
             let waypoint = userInfo[CarPlayManager.CarPlayWaypointKey] as? Waypoint {
-            calculateRouteAndStart(to: waypoint, completionHandler: completionHandler)
+            preview(waypoints: [waypoint], completionHandler: completionHandler)
             return
         }
         
         completionHandler()
     }
     
-    public func calculateRouteAndStart(from fromWaypoint: Waypoint? = nil, to toWaypoint: Waypoint, completionHandler: @escaping () -> Void) {
+    public func preview(waypoints: [Waypoint], completionHandler: @escaping CompletionHandler) {
+        var waypoints = waypoints
         
-        guard let rootViewController = self.carWindow?.rootViewController as? CarPlayMapViewController,
-            let userLocation = rootViewController.mapView.userLocation,
-            let location = userLocation.location else {
-                completionHandler()
-                return
+        if waypoints.count == 1 {
+            guard let rootViewController = self.carWindow?.rootViewController as? CarPlayMapViewController,
+                let userLocation = rootViewController.mapView.userLocation,
+                let location = userLocation.location else {
+                    completionHandler()
+                    return
+            }
+            let name = NSLocalizedString("CARPLAY_CURRENT_LOCATION", bundle: .mapboxNavigation, value: "Current Location", comment: "Name of the waypoint associated with the current location")
+            let origin = Waypoint(location: location, heading: userLocation.heading, name: name)
+            
+            waypoints.insert(origin, at: waypoints.startIndex)
         }
-        
-        let name = NSLocalizedString("CARPLAY_CURRENT_LOCATION", bundle: .mapboxNavigation, value: "Current Location", comment: "Name of the waypoint associated with the current location")
-        let originWaypoint = fromWaypoint ?? Waypoint(location: location, heading: userLocation.heading, name: name)
-        
-        let routeOptions = NavigationRouteOptions(waypoints: [originWaypoint, toWaypoint])
-        calculate(routeOptions, completionHandler: completionHandler)
+        let options = NavigationRouteOptions(waypoints: waypoints)
+        preview(options: options, completionHandler: completionHandler)
     }
     
-    internal func calculate(_ options: RouteOptions, completionHandler: @escaping () -> Void) {
-        directions.calculate(options) { [weak self] (waypoints, routes, error) in
-            self?.didCalculate(routes, for: options, between: waypoints, error: error, completionHandler: completionHandler)
+    public func preview(options: RouteOptions, completionHandler: @escaping CompletionHandler) {
+        calculate(options) { [weak self] (waypoints, routes, error) in
+            self?.didCalculate(routes,
+                               for: options,
+                               between: waypoints,
+                               error: error,
+                               completionHandler: completionHandler)
         }
+    }
+    
+    internal func calculate(_ options: RouteOptions, completionHandler: @escaping Directions.RouteCompletionHandler) {
+        directions.calculate(options, completionHandler: completionHandler)
     }
     
     
