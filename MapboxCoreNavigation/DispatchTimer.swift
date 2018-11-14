@@ -1,7 +1,7 @@
 import Foundation
 import Dispatch
 
-class CountdownTimer {
+class DispatchTimer {
     enum State {
         case armed, disarmed
     }
@@ -14,16 +14,18 @@ class CountdownTimer {
         }
     }
     private var deadline: DispatchTime { return .now() + countdownInterval }
+    let repetitionInterval: DispatchTimeInterval
     let accuracy: DispatchTimeInterval
     let payload: Payload
-    let timerQueue = DispatchQueue(label: "com.mapbox.coreNavigation.timer.countdown", qos: DispatchQoS.background, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil)
+    let timerQueue = DispatchQueue(label: "com.mapbox.coreNavigation.timer")
     let executionQueue: DispatchQueue
     let timer: DispatchSourceTimer
     
     private(set) var state: State = .disarmed
     
-    init(countdown: DispatchTimeInterval, accuracy: DispatchTimeInterval = defaultAccuracy, executingOn executionQueue: DispatchQueue = .main, payload: @escaping Payload) {
+    init(countdown: DispatchTimeInterval, repeating repetition: DispatchTimeInterval = .never, accuracy: DispatchTimeInterval = defaultAccuracy, executingOn executionQueue: DispatchQueue = .main, payload: @escaping Payload) {
         countdownInterval = countdown
+        repetitionInterval = repetition
         self.executionQueue = executionQueue
         self.payload = payload
         self.accuracy = accuracy
@@ -43,7 +45,7 @@ class CountdownTimer {
     }
     
     private func scheduleTimer() {
-        timer.schedule(deadline: deadline, repeating: .never, leeway: accuracy)
+        timer.schedule(deadline: deadline, repeating: repetitionInterval, leeway: accuracy)
     }
     
     private func fire() {
