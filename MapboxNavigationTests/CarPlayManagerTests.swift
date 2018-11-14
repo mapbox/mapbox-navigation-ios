@@ -179,7 +179,7 @@ class CarPlayManagerTests: XCTestCase {
         let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
         let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
         let options = RouteOptions(waypoints: [waypoint1, waypoint2])
-        subject.fetchNewRoute(options: options, completionHandler: {})
+        subject.calculate(options, completionHandler: {})
         wait(for: [expectation], timeout: 1.0)
         
         XCTAssert(subject.directions == spy, "Directions client is not overridden properly.")

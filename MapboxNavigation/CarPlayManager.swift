@@ -418,10 +418,10 @@ extension CarPlayManager: CPListTemplateDelegate {
         let originWaypoint = fromWaypoint ?? Waypoint(location: location, heading: userLocation.heading, name: name)
         
         let routeOptions = NavigationRouteOptions(waypoints: [originWaypoint, toWaypoint])
-        fetchNewRoute(options: routeOptions, completionHandler: completionHandler)
+        calculate(routeOptions, completionHandler: completionHandler)
     }
     
-    internal func fetchNewRoute(options: RouteOptions, completionHandler: @escaping () -> Void) {
+    internal func calculate(_ options: RouteOptions, completionHandler: @escaping () -> Void) {
         directions.calculate(options) { [weak self] (waypoints, routes, error) in
             self?.handleDirectionsResponse(options: options, waypoints: waypoints, routes: routes, error: error, completionHandler: completionHandler)
         }
