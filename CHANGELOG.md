@@ -3,7 +3,7 @@
 ## master
 
 * Fixed a crash during turn-by-turn navigation. ([#1820](https://github.com/mapbox/mapbox-navigation-ios/pull/1820))
-* Replaces the `SimulatedLocationManager` timer mechanism with a `DispatchTimerSource`-based mechanism ([#1820](https://github.com/mapbox/mapbox-navigation-ios/pull/1820)), which fixes a crash that was caused by retaining the `SimulatedLocationManager` while it still had a dangling reference to its delegate (https://github.com/mapbox/mapbox-navigation-ios/issues/1662)
+* Fixed a crash that could happen during simulation. ([#1820](https://github.com/mapbox/mapbox-navigation-ios/pull/1820))
 
 ## v0.24.0 (November 7, 2018)
 
