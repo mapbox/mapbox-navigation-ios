@@ -170,6 +170,18 @@ class CarPlayManagerTests: XCTestCase {
         XCTAssertTrue(exampleDelegate.navigationEnded, "The CarPlayManagerDelegate should have been told that navigation ended.")
     }
     func testDirectionsOverride() {
+        
+        class DirectionsInvocationSpy: Directions {
+            typealias VoidClosure = () -> Void
+            var payload: VoidClosure?
+            
+            override func calculate(_ options: RouteOptions, completionHandler: @escaping Directions.RouteCompletionHandler) -> URLSessionDataTask {
+                payload?()
+                
+                return URLSessionDataTask()
+            }
+        }
+        
         let expectation = XCTestExpectation(description: "Ensuring Spy is called")
         let spy = DirectionsInvocationSpy(accessToken: "DeadBeefCafe", host: nil)
         spy.payload = expectation.fulfill
@@ -186,16 +198,7 @@ class CarPlayManagerTests: XCTestCase {
     }
 }
 
-private class DirectionsInvocationSpy: Directions {
-    typealias VoidClosure = () -> Void
-    var payload: VoidClosure?
 
-    override func calculate(_ options: RouteOptions, completionHandler: @escaping Directions.RouteCompletionHandler) -> URLSessionDataTask {
-        payload?()
-
-        return URLSessionDataTask()
-    }
-}
 
 
 @available(iOS 12.0, *)
