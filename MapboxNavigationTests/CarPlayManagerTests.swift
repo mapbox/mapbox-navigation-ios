@@ -1,9 +1,9 @@
 import XCTest
-import MapboxNavigation
 import MapboxCoreNavigation
 import MapboxDirections
 import MapboxMobileEvents
 @testable import TestHelper
+@testable import MapboxNavigation
 
 
 #if canImport(CarPlay)
@@ -20,9 +20,8 @@ class CarPlayManagerTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        manager = CarPlayManager()
         eventsManagerSpy = NavigationEventsManagerSpy()
-        manager!.eventsManager = eventsManagerSpy!
+        manager = CarPlayManager(eventsManager: eventsManagerSpy)
     }
 
     override func tearDown() {
@@ -170,7 +169,37 @@ class CarPlayManagerTests: XCTestCase {
 
         XCTAssertTrue(exampleDelegate.navigationEnded, "The CarPlayManagerDelegate should have been told that navigation ended.")
     }
+    func testDirectionsOverride() {
+        
+        class DirectionsInvocationSpy: Directions {
+            typealias VoidClosure = () -> Void
+            var payload: VoidClosure?
+            
+            override func calculate(_ options: RouteOptions, completionHandler: @escaping Directions.RouteCompletionHandler) -> URLSessionDataTask {
+                payload?()
+                
+                return URLSessionDataTask()
+            }
+        }
+        
+        let expectation = XCTestExpectation(description: "Ensuring Spy is called")
+        let spy = DirectionsInvocationSpy(accessToken: "DeadBeefCafe", host: nil)
+        spy.payload = expectation.fulfill
+        
+        let subject = CarPlayManager(directions: spy)
+      
+        let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
+        let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
+        let options = RouteOptions(waypoints: [waypoint1, waypoint2])
+        subject.calculate(options, completionHandler: {})
+        wait(for: [expectation], timeout: 1.0)
+        
+        XCTAssert(subject.directions == spy, "Directions client is not overridden properly.")
+    }
 }
+
+
+
 
 @available(iOS 12.0, *)
 func simulateCarPlayConnection(_ manager: CarPlayManager) {
