@@ -225,6 +225,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         addGestureRecognizer(mapTapGesture)
     }
     
+    open override func layoutMarginsDidChange() {
+        super.layoutMarginsDidChange()
+        enableFrameByFrameCourseViewTracking(for: 3)
+    }
+    
     //MARK: - Overrides
     
     open override func prepareForInterfaceBuilder() {
