@@ -423,12 +423,12 @@ extension CarPlayManager: CPListTemplateDelegate {
     
     internal func calculate(_ options: RouteOptions, completionHandler: @escaping () -> Void) {
         directions.calculate(options) { [weak self] (waypoints, routes, error) in
-            self?.handleDirectionsResponse(options: options, waypoints: waypoints, routes: routes, error: error, completionHandler: completionHandler)
+            self?.didCalculate(routes, for: options, between: waypoints, error: error, completionHandler: completionHandler)
         }
     }
     
     
-    internal func handleDirectionsResponse(options routeOptions: RouteOptions, waypoints: [Waypoint]?, routes: [Route]?, error: NSError?, completionHandler: @escaping () -> Void) {
+    internal func didCalculate(_ routes: [Route]?, for routeOptions: RouteOptions, between waypoints: [Waypoint]?, error: NSError?, completionHandler: @escaping () -> Void) {
         defer {
             completionHandler()
         }
