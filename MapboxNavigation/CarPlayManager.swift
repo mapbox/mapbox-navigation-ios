@@ -147,7 +147,7 @@ public protocol CarPlayManagerDelegate {
  */
 @available(iOS 12.0, *)
 @objc(MBCarPlayManager)
-public class CarPlayManager: NSObject {
+open class CarPlayManager: NSObject {
 
     public fileprivate(set) var interfaceController: CPInterfaceController?
     public fileprivate(set) var carWindow: UIWindow?
@@ -179,12 +179,12 @@ public class CarPlayManager: NSObject {
     /**
      The most recent search results.
      */
-    var recentSearchItems: [CPListItem]?
+    public var recentSearchItems: [CPListItem]?
     
     /**
      The most recent search text.
      */
-    var recentSearchText: String?
+    public var recentSearchText: String?
     
     private var defaultMapButtons: [CPMapButton]?
 
@@ -194,6 +194,15 @@ public class CarPlayManager: NSObject {
     @objc public static var isConnected = false
 
     public var eventsManager: NavigationEventsManager!
+    
+    #if canImport(MapboxGeocoder)
+    public var geocoder: Geocoder!
+
+    convenience public init(_ eventsManager: NavigationEventsManager = NavigationEventsManager(dataSource: nil), geocoder: Geocoder = Geocoder.shared) {
+        self.init(eventsManager)
+        self.geocoder = geocoder
+    }
+    #endif
 
     public init(_ eventsManager: NavigationEventsManager = NavigationEventsManager(dataSource: nil)) {
         super.init()
@@ -332,7 +341,7 @@ extension CarPlayManager: CPApplicationDelegate {
         return closeButton
     }
 
-    func resetPanButtons(_ mapTemplate: CPMapTemplate) {
+    public func resetPanButtons(_ mapTemplate: CPMapTemplate) {
         if mapTemplate.isPanningInterfaceVisible, let mapButtons = defaultMapButtons {
             mapTemplate.mapButtons = mapButtons
             mapTemplate.dismissPanningInterface(animated: false)
