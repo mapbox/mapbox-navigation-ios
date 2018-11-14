@@ -224,6 +224,7 @@
 		8D2AA745211CDD4000EB7F72 /* NavigationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D2AA744211CDD4000EB7F72 /* NavigationService.swift */; };
 		8D391CE21FD71E78006BB91F /* Waypoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D391CE11FD71E78006BB91F /* Waypoint.swift */; };
 		8D424F28215ECAF200432491 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D424F26215ECA5D00432491 /* CoreLocation.framework */; };
+		8D4B60E7219CBEB300C41906 /* CarPlayManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4B60E6219CBEB300C41906 /* CarPlayManagerDelegate.swift */; };
 		8D4CF9C621349FFB009C3FEE /* NavigationServiceDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4CF9C521349FFB009C3FEE /* NavigationServiceDelegate.swift */; };
 		8D53136B20653FA20044891E /* ExitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D53136A20653FA20044891E /* ExitView.swift */; };
 		8D54F14A206ECF720038736D /* InstructionPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D54F149206ECF720038736D /* InstructionPresenterTests.swift */; };
@@ -756,6 +757,7 @@
 		8D2AA744211CDD4000EB7F72 /* NavigationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationService.swift; sourceTree = "<group>"; };
 		8D391CE11FD71E78006BB91F /* Waypoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Waypoint.swift; sourceTree = "<group>"; };
 		8D424F26215ECA5D00432491 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		8D4B60E6219CBEB300C41906 /* CarPlayManagerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayManagerDelegate.swift; sourceTree = "<group>"; };
 		8D4CF9C521349FFB009C3FEE /* NavigationServiceDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationServiceDelegate.swift; sourceTree = "<group>"; };
 		8D53136A20653FA20044891E /* ExitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExitView.swift; sourceTree = "<group>"; };
 		8D54F149206ECF720038736D /* InstructionPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionPresenterTests.swift; sourceTree = "<group>"; };
@@ -1106,6 +1108,7 @@
 			isa = PBXGroup;
 			children = (
 				16C2A420211526EE00FE6E68 /* CarPlayManager.swift */,
+				8D4B60E6219CBEB300C41906 /* CarPlayManagerDelegate.swift */,
 				16EF6C21211BA4B300AA580B /* CarPlayMapViewController.swift */,
 				C5FFAC1420D96F5B009E7F98 /* CarPlayNavigationViewController.swift */,
 				35379D0121480E1300FD402E /* CarPlayManager+Search.swift */,
@@ -2259,6 +2262,7 @@
 				3EA937B1F4DF73EB004BA6BE /* InstructionPresenter.swift in Sources */,
 				3EA93A1FEFDDB709DE84BED9 /* ImageRepository.swift in Sources */,
 				3EA9371104016CD402547F1A /* ImageCache.swift in Sources */,
+				8D4B60E7219CBEB300C41906 /* CarPlayManagerDelegate.swift in Sources */,
 				3EA9369C33A8F10DAE9043AA /* ImageDownloader.swift in Sources */,
 				3EA9301B03F8679BEDD4795F /* Cache.swift in Sources */,
 				35379D0321480E5700FD402E /* RecentItem.swift in Sources */,
