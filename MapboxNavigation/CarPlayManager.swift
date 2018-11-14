@@ -179,12 +179,12 @@ open class CarPlayManager: NSObject {
     /**
      The most recent search results.
      */
-    public var recentSearchItems: [CPListItem]?
+    var recentSearchItems: [CPListItem]?
     
     /**
      The most recent search text.
      */
-    public var recentSearchText: String?
+    var recentSearchText: String?
     
     private var defaultMapButtons: [CPMapButton]?
 
