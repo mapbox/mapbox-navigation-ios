@@ -3,7 +3,7 @@
 ## master
 
 * Fixed a crash during turn-by-turn navigation. ([#1820](https://github.com/mapbox/mapbox-navigation-ios/pull/1820))
-* Fixed a crash that could happen during route-simulation. ([#1820](https://github.com/mapbox/mapbox-navigation-ios/pull/1820))
+* Fixed a crash that could happen while simulating a route. ([#1820](https://github.com/mapbox/mapbox-navigation-ios/pull/1820))
 
 ## v0.24.0 (November 7, 2018)
 
