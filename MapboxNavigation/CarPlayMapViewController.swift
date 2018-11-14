@@ -7,7 +7,17 @@ class CarPlayMapViewController: UIViewController {
     
     static let defaultAltitude: CLLocationDistance = 16000
     
-    var styleManager: StyleManager!
+    var styleManager: StyleManager?
+    
+    /**
+     The interface styles available to `styleManager` for display.
+     */
+    var styles: [Style] {
+        didSet {
+            styleManager?.styles = styles
+        }
+    }
+    
     /// A very coarse location manager used for distinguishing between daytime and nighttime.
     fileprivate let coarseLocationManager: CLLocationManager = {
         let coarseLocationManager = CLLocationManager()
@@ -40,6 +50,32 @@ class CarPlayMapViewController: UIViewController {
     
     var styleObservation: NSKeyValueObservation?
     
+    /**
+     Initializes a new CarPlay map view controller.
+     
+     - parameter styles: The interface styles initially available to the style manager for display.
+     */
+    required init(styles: [Style]) {
+        self.styles = styles
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        guard let styles = aDecoder.decodeObject(of: [NSArray.self, Style.self], forKey: "styles") as? [Style] else {
+            return nil
+        }
+        self.styles = styles
+        
+        super.init(coder: aDecoder)
+    }
+    
+    override func encode(with aCoder: NSCoder) {
+        super.encode(with: aCoder)
+        
+        aCoder.encode(styles, forKey: "styles")
+    }
+    
     override func loadView() {
         let mapView = NavigationMapView()
 //        mapView.navigationMapDelegate = self
@@ -58,9 +94,10 @@ class CarPlayMapViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        styleManager = StyleManager(self)
-        styleManager.styles = [DayStyle(), NightStyle()]
+        
+        styleManager = StyleManager()
+        styleManager!.delegate = self
+        styleManager!.styles = styles
         
         resetCamera(animated: false, altitude: CarPlayMapViewController.defaultAltitude)
         mapView.setUserTrackingMode(.followWithCourse, animated: true)

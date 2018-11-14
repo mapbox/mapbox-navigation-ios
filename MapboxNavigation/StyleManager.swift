@@ -65,13 +65,7 @@ open class StyleManager: NSObject {
     
     var currentStyleType: StyleType?
     
-    /**
-     Initializes a new `StyleManager`.
-     
-     - parameter delegate: The receiver’s delegate
-     */
-    required public init(_ delegate: StyleManagerDelegate) {
-        self.delegate = delegate
+    @objc public override init() {
         super.init()
         resumeNotifications()
         resetTimeOfDayTimer()
