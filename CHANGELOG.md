@@ -1,5 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## master
+
+* Fixed an issue causing `UserCourseView` to lag behind `NavigationMapView` whenever the map’s camera or content insets change significantly or when the map rotates. ([#1838](https://github.com/mapbox/mapbox-navigation-ios/pull/1838))
+
 ## v0.24.0 (November 7, 2018)
 
 * It is now safe to set the `NavigationMapView.delegate` property of the `NavigationMapView` in `NavigationViewController.mapView`. Implement `MGLMapViewDelegate` in your own class to customize annotations and other details. ([#1601](https://github.com/mapbox/mapbox-navigation-ios/pull/1601))
