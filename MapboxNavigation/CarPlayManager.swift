@@ -76,17 +76,51 @@ public class CarPlayManager: NSObject {
      */
     @objc public static var isConnected = false
 
-    public let eventsManager: NavigationEventsManager
-    public let directions: Directions
+    /**
+     The events manager used during turn-by-turn navigation while connected to
+     CarPlay.
+     */
+    @objc public let eventsManager: NavigationEventsManager
+    
+    /**
+     The object that calculates routes when the user interacts with the CarPlay
+     interface.
+     */
+    @objc public let directions: Directions
 
     /**
-     Initializes a new CarPlayManager, which manages a connection to the CarPlay interface.
-     - parameter directions: An optional directions client. Pass `nil` to use the default shared client.
-     - parameter eventsManager: And optional events manager. Pass `nil` to use the default events manager.
-    */
-    public init(directions: Directions? = nil, eventsManager: NavigationEventsManager? = nil) {
+     The styles displayed in the CarPlay interface.
+     */
+    @objc public var styles: [Style] {
+        didSet {
+            if let mapViewController = carWindow?.rootViewController as? CarPlayMapViewController {
+                mapViewController.styles = styles
+            }
+            currentNavigator?.styles = styles
+        }
+    }
+
+    /**
+     Initializes a new CarPlay manager that manages a connection to the CarPlay
+     interface.
+     
+     - parameter styles: The styles to display in the CarPlay interface. If this
+        argument is omitted, `DayStyle` and `NightStyle` are displayed by
+        default.
+     - parameter directions: The object that calculates routes when the user
+        interacts with the CarPlay interface. If this argument is `nil` or
+        omitted, the shared `Directions` object is used by default.
+     - parameter eventsManager: The events manager to use during turn-by-turn
+        navigation while connected to CarPlay. If this argument is `nil` or
+        omitted, a standard `NavigationEventsManager` object is used by default.
+     */
+    @objc public init(styles: [Style]? = nil,
+                      directions: Directions? = nil,
+                      eventsManager: NavigationEventsManager? = nil) {
+        self.styles = styles ?? [DayStyle(), NightStyle()]
         self.directions = directions ?? .shared
         self.eventsManager = eventsManager ?? NavigationEventsManager(dataSource: nil)
+        
         super.init()
     }
 
@@ -129,7 +163,7 @@ extension CarPlayManager: CPApplicationDelegate {
             UIApplication.shared.isIdleTimerDisabled = true
         }
 
-        let viewController = CarPlayMapViewController()
+        let viewController = CarPlayMapViewController(styles: styles)
         window.rootViewController = viewController
         self.carWindow = window
 
@@ -414,10 +448,11 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let navigationMapTemplate = self.mapTemplate(forNavigating: trip)
         interfaceController.setRootTemplate(navigationMapTemplate, animated: true)
 
-        let navigationViewController = CarPlayNavigationViewController(with: service,
+        let navigationViewController = CarPlayNavigationViewController(navigationService: service,
                                                                        mapTemplate: navigationMapTemplate,
                                                                        interfaceController: interfaceController,
-                                                                       manager: self)
+                                                                       manager: self,
+                                                                       styles: styles)
         navigationViewController.startNavigationSession(for: trip)
         navigationViewController.carPlayNavigationDelegate = self
         currentNavigator = navigationViewController

@@ -169,6 +169,7 @@ class CarPlayManagerTests: XCTestCase {
 
         XCTAssertTrue(exampleDelegate.navigationEnded, "The CarPlayManagerDelegate should have been told that navigation ended.")
     }
+    
     func testDirectionsOverride() {
         
         class DirectionsInvocationSpy: Directions {
@@ -195,6 +196,17 @@ class CarPlayManagerTests: XCTestCase {
         wait(for: [expectation], timeout: 1.0)
         
         XCTAssert(subject.directions == spy, "Directions client is not overridden properly.")
+    }
+    
+    func testCustomStyles() {
+        class CustomStyle: DayStyle {}
+        
+        XCTAssertEqual(manager?.styles.count, 2)
+        XCTAssertEqual(manager?.styles.first?.styleType, StyleType.day)
+        XCTAssertEqual(manager?.styles.last?.styleType, StyleType.night)
+        
+        let styles = [CustomStyle()]
+        XCTAssertEqual(CarPlayManager(styles: styles).styles, styles, "CarPlayManager should persist the initial styles given to it.")
     }
 }
 
@@ -313,7 +325,7 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
         return trailingBarButtons
     }
 
-    func carPlayManager(_ carplayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]? {
+    func carPlayManager(_ carPlayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]? {
         return mapButtons
     }
 
