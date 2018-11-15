@@ -4,6 +4,7 @@
 
 ### CarPlay
 
+* Fixed an issue causing `UserCourseView` to lag behind `NavigationMapView` whenever the map’s camera or content insets change significantly or when the map rotates. ([#1838](https://github.com/mapbox/mapbox-navigation-ios/pull/1838))
 * Renamed `CarPlayManager(_:)` to `CarPlayManager(styles:directions:eventsManager:)` and `CarPlayNavigationViewController(with:mapTemplate:interfaceController:manager:styles:)` to `CarPlayNavigationViewController(navigationService:mapTemplate:interfaceController:manager:styles:)`. These initializers now accept an array of `Style` objects to apply throughout the CarPlay interface, similar to `NavigationViewController`. You can also change the styles at any time by setting the `CarPlayManager.styles` property. ([#1836](https://github.com/mapbox/mapbox-navigation-ios/pull/1836))
 * `CarPlayManager(styles:directions:eventsManager:)` also allows you to pass in a custom `Directions` object to use when calculating routes. ([#1834](https://github.com/mapbox/mapbox-navigation-ios/pull/1834/))
 * Removed the `StyleManager(_:)` initializer. After initializing a `StyleManager` object, set the `StyleManager.delegate` property to ensure that the style manager’s settings take effect. ([#1836](https://github.com/mapbox/mapbox-navigation-ios/pull/1836))
