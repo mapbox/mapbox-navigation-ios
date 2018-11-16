@@ -77,13 +77,31 @@ open class CarPlayManager: NSObject {
     @objc public static var isConnected = false
     
     #if canImport(MapboxGeocoder)
+    /**
+     The geocoder object that would convert between latitude and longitude values and a placemark when connected to CarPlay.
+     */
     public var geocoder: Geocoder!
-
-    convenience public init(_ eventsManager: NavigationEventsManager = NavigationEventsManager(dataSource: nil), geocoder: Geocoder = Geocoder.shared) {
-        self.init(eventsManager)
-        self.geocoder = geocoder
+    
+    /**
+     The convenience Initializes a new CarPlay manager that manages a connection to the CarPlay interface.
+     
+     - parameter styles: The styles to display in the CarPlay interface. If this
+     argument is omitted, `DayStyle` and `NightStyle` are displayed by
+     default.
+     - parameter directions: The object that calculates routes when the user
+     interacts with the CarPlay interface. If this argument is `nil` or
+     omitted, the shared `Directions` object is used by default.
+     - parameter eventsManager: The events manager to use during turn-by-turn
+     navigation while connected to CarPlay. If this argument is `nil` or
+     omitted, a standard `NavigationEventsManager` object is used by default.
+     - parameter geocoder: The geocoder object that would convert between latitude and longitude values and a placemark when connected to CarPlay. If this argumnet is `nil` or `ommitted`, the shared `Geocoder` object is used by default.
+     */
+    convenience public init(styles: [Style]? = nil, directions: Directions? = nil, eventsManager: NavigationEventsManager? = nil, geocoder: Geocoder? = nil) {
+        self.init(styles: styles, directions: directions, eventsManager: eventsManager)
+        self.geocoder = geocoder ?? .shared
     }
     #endif
+    
     /**
      The events manager used during turn-by-turn navigation while connected to
      CarPlay.
