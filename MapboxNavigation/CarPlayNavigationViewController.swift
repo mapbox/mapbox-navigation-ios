@@ -30,7 +30,18 @@ public class CarPlayNavigationViewController: UIViewController {
     var carFeedbackTemplate: CPGridTemplate!
     var carInterfaceController: CPInterfaceController
     var previousSafeAreaInsets: UIEdgeInsets?
-    var styleManager: StyleManager!
+    var styleManager: StyleManager?
+    
+    /**
+     The interface styles available for display.
+     
+     These are the styles available to the view controller’s internal `StyleManager` object. In CarPlay, `Style` objects primarily affect the appearance of the map, not guidance-related overlay views.
+     */
+    @objc public var styles: [Style] {
+        didSet {
+            styleManager?.styles = styles
+        }
+    }
     
     let distanceFormatter = DistanceFormatter(approximate: true)
     
@@ -51,17 +62,20 @@ public class CarPlayNavigationViewController: UIViewController {
      - parameter mapTemplate: The map template visible during the navigation session.
      - parameter interfaceController: The interface controller for CarPlay.
      - parameter manager: The manager for CarPlay.
+     - parameter styles: The interface styles that the view controller’s internal `StyleManager` object can select from for display.
      
      - postcondition: Call `startNavigationSession(for:)` after initializing this object to begin navigation.
      */
-    @objc(initWithNavigationService:mapTemplate:interfaceController:manager:)
-    public init(with navigationService: NavigationService,
-                mapTemplate: CPMapTemplate,
-                interfaceController: CPInterfaceController, manager: CarPlayManager) {
+    @objc public init(navigationService: NavigationService,
+                      mapTemplate: CPMapTemplate,
+                      interfaceController: CPInterfaceController,
+                      manager: CarPlayManager,
+                      styles: [Style]? = nil) {
         self.navService = navigationService
         self.mapTemplate = mapTemplate
         self.carInterfaceController = interfaceController
         self.carPlayManager = manager
+        self.styles = styles ?? [DayStyle(), NightStyle()]
         
         super.init(nibName: nil, bundle: nil)
         carFeedbackTemplate = createFeedbackUI()
@@ -97,8 +111,9 @@ public class CarPlayNavigationViewController: UIViewController {
             self?.mapView?.recenterMap()
         }
         
-        styleManager = StyleManager(self)
-        styleManager.styles = [DayStyle(), NightStyle()]
+        styleManager = StyleManager()
+        styleManager!.delegate = self
+        styleManager!.styles = self.styles
         
         makeGestureRecognizersResetFrameRate()
         resumeNotifications()

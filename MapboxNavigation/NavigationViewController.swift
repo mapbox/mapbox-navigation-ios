@@ -354,10 +354,15 @@ open class NavigationViewController: UIViewController {
      Initializes a `NavigationViewController` that provides turn by turn navigation for the given route. A optional `direction` object is needed for  potential rerouting.
 
      See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
+     
+     - parameter route: The route to navigate along.
+     - parameter styles: The styles that the view controller’s internal `StyleManager` object can select from for display.
+     - parameter navigationService: The navigation service that manages navigation along the route.
+     - parameter voiceController: The voice controller that manages the delivery of voice instructions during navigation.
      */
     @objc(initWithRoute:styles:navigationService:voiceController:)
     required public init(for route: Route,
-                         styles: [Style]? = [DayStyle(), NightStyle()],
+                         styles: [Style]? = nil,
                          navigationService: NavigationService? = nil,
                          voiceController: RouteVoiceController? = nil) {
         
@@ -387,8 +392,9 @@ open class NavigationViewController: UIViewController {
         mapSubview.pinInSuperview()
         mapViewController.reportButton.isHidden = !showsReportFeedback
         
-        self.styleManager = StyleManager(self)
-        self.styleManager.styles = styles ?? [DayStyle(), NightStyle()]
+        styleManager = StyleManager()
+        styleManager.delegate = self
+        styleManager.styles = styles ?? [DayStyle(), NightStyle()]
         
         if !(route.routeOptions is NavigationRouteOptions) {
             print("`Route` was created using `RouteOptions` and not `NavigationRouteOptions`. Although not required, this may lead to a suboptimal navigation experience. Without `NavigationRouteOptions`, it is not guaranteed you will get congestion along the route line, better ETAs and ETA label color dependent on congestion.")
