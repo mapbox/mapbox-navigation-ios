@@ -20,6 +20,20 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     @objc optional func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool)
     
     /**
+     Called as the user approaches a waypoint.
+     
+     This message is sent, once per progress update, as the user is approaching a waypoint. You can use this to cue UI, to do network pre-loading, etc.
+     - parameter navigationViewController: The Navigation VC that is detecting the users' approach.
+     - parameter waypoint: The waypoint that the service is arriving at.
+     - parameter eta: The estimated time of arrival, in seconds.
+     - parameter distance: The current distance from the waypoint, in meters.
+     - important: This method will likely be called several times as you approach a destination. If only one consumption of this method is desired, then usage of an internal flag is reccomended.
+     */
+    
+    @objc(navigationViewController:willArriveAtWaypoint:in:distance:)
+    optional func navigationViewController(_ navigationViewController: NavigationViewController, willArriveAt waypoint: Waypoint, in eta:TimeInterval, distance: CLLocationDistance)
+    
+    /**
      Called when the user arrives at the destination waypoint for a route leg.
      
      This method is called when the navigation view controller arrives at the waypoint. You can implement this method to prevent the navigation view controller from automatically advancing to the next leg. For example, you can and show an interstitial sheet upon arrival and pause navigation by returning `false`, then continue the route when the user dismisses the sheet. If this method is unimplemented, the navigation view controller automatically advances to the next leg when arriving at a waypoint.
@@ -658,6 +672,10 @@ extension NavigationViewController: NavigationServiceDelegate {
         } else  {
             mapViewController?.labelCurrentRoad(at: rawLocation)
         }
+    }
+    
+    @objc public func navigationService(_ service: NavigationService, willArriveAt waypoint: Waypoint, in eta: TimeInterval, distance: CLLocationDistance) {
+        delegate?.navigationViewController?(self, willArriveAt: waypoint, in: eta, distance: distance)
     }
     
     @objc public func navigationService(_ service: NavigationService, didArriveAt waypoint: Waypoint) -> Bool {

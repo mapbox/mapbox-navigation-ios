@@ -30,7 +30,7 @@ class NavigationServiceTests: XCTestCase {
         let firstLocation = CLLocation(coordinate: firstCoord, altitude: 5, horizontalAccuracy: 10, verticalAccuracy: 5, course: 20, speed: 4, timestamp: Date())
 
         let remainingStepCount = legProgress.remainingSteps.count
-        let penultimateCoord = legProgress.remainingSteps[remainingStepCount - 2].coordinates!.first!
+        let penultimateCoord = legProgress.remainingSteps[6].coordinates!.first!
         let penultimateLocation = CLLocation(coordinate: penultimateCoord, altitude: 5, horizontalAccuracy: 10, verticalAccuracy: 5, course: 20, speed: 4, timestamp: Date())
 
         let lastCoord = legProgress.remainingSteps.last!.coordinates!.first!
@@ -295,8 +295,14 @@ class NavigationServiceTests: XCTestCase {
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeNavigationDepart))
         // TODO: should there be a delegate message here as well?
 
-        // MARK: When at a valid location just before the last location (should this really be necessary?)
+        //Advance to the penultimate step.
+        navigationService.routeProgress.currentLegProgress.stepIndex = 7
+        navigationService.routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex = 1
+
+        // MARK: When at a valid location just before the last location
         navigationService.locationManager!(navigationService.locationManager, didUpdateLocations: [penultimateLocation])
+        
+    XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:willArriveAt:in:distance:)"), "Pre-arrival delegate message not fired.")
 
         // MARK: When navigation continues with a location update to the last location
         navigationService.locationManager!(navigationService.locationManager, didUpdateLocations: [lastLocation])

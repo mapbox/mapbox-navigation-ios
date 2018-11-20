@@ -73,6 +73,20 @@ import MapboxDirections
     optional func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation)
     
     /**
+     Called as the navigation service approaches a waypoint.
+     
+     This message is sent, once per progress update, as the user is approaching a waypoint. You can use this to cue UI, to do network pre-loading, etc.
+     - parameter service: The Navigation service that is detecting the destination approach.
+     - parameter waypoint: The waypoint that the service is arriving at.
+     - parameter eta: The estimated time of arrival, in seconds.
+     - parameter distance: The current distance from the waypoint, in meters.
+     - important: This method will likely be called several times as you approach a destination. If only one consumption of this method is desired, then usage of an internal flag is reccomended.
+     */
+    
+    @objc(navigationService:willArriveAtWaypoint:in:distance:)
+    optional func navigationService(_ service: NavigationService, willArriveAt waypoint: Waypoint, in eta:TimeInterval, distance: CLLocationDistance)
+    
+    /**
      Called when the navigation service arrives at a waypoint.
      
      You can implement this method to prevent the navigation service from automatically advancing to the next leg. For example, you can and show an interstitial sheet upon arrival and pause navigation by returning `false`, then continue the route when the user dismisses the sheet. If this method is unimplemented, the navigation service automatically advances to the next leg when arriving at a waypoint.
