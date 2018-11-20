@@ -142,7 +142,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         // Inset by the safe area to avoid notches or CarPlay template content.
         // Inset by the content inset to avoid application-defined content.
-        var contentFrame = UIEdgeInsetsInsetRect(UIEdgeInsetsInsetRect(bounds, safeArea), contentInset)
+        var contentFrame = UIEdgeInsetsInsetRect(bounds, contentInset)
         
         // Avoid letting the puck go partially off-screen, and add a comfortable padding beyond that.
         let courseViewBounds = userCourseView?.bounds ?? .zero

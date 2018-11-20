@@ -24,6 +24,7 @@ public class CarPlayNavigationViewController: UIViewController {
     var navService: NavigationService
     var mapView: NavigationMapView?
     let shieldHeight: CGFloat = 16
+    var mapViewSafeAreaBalancingConstraint: NSLayoutConstraint?
     
     var carSession: CPNavigationSession!
     var mapTemplate: CPMapTemplate
@@ -90,7 +91,7 @@ public class CarPlayNavigationViewController: UIViewController {
         super.viewDidLoad()
         
         let mapView = NavigationMapView(frame: view.bounds)
-        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        mapView.translatesAutoresizingMaskIntoConstraints = false
         mapView.compassView.isHidden = true
         mapView.logoView.isHidden = true
         mapView.attributionButton.isHidden = true
@@ -101,6 +102,12 @@ public class CarPlayNavigationViewController: UIViewController {
 
         self.mapView = mapView
         view.addSubview(mapView)
+        
+        view.addConstraint(NSLayoutConstraint(item: mapView, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1, constant: 0))
+        mapViewSafeAreaBalancingConstraint = NSLayoutConstraint(item: mapView, attribute: .trailing, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: 1, constant: 0)
+        view.addConstraint(mapViewSafeAreaBalancingConstraint!)
+        view.addConstraint(NSLayoutConstraint(item: mapView, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1, constant: 0))
+        view.addConstraint(NSLayoutConstraint(item: mapView, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1, constant: 0))
         
         styleObservation = mapView.observe(\.style, options: .new) { [weak self] (mapView, change) in
             guard change.newValue != nil else {
@@ -148,6 +155,11 @@ public class CarPlayNavigationViewController: UIViewController {
         }
         
         previousSafeAreaInsets = view.safeAreaInsets
+        
+        // Adjust the map’s vanishing point to counterbalance the side maneuver panels by extending the view off beyond the other side of the screen.
+        if let mapView = mapView {
+            mapViewSafeAreaBalancingConstraint?.constant = mapView.safeArea.left - mapView.safeArea.right
+        }
     }
     
     /**
