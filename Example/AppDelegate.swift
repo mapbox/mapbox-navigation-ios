@@ -8,6 +8,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     @available(iOS 12.0, *)
     lazy var carPlayManager: CarPlayManager = CarPlayManager()
+    
+    @available(iOS 12.0, *)
+    lazy var carPlaySearchManager: CarPlaySearchManager = {
+       return CarPlaySearchManager()
+    }()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 
