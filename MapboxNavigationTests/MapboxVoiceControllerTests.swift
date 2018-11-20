@@ -89,7 +89,6 @@ class MapboxVoiceControllerTests: XCTestCase {
     }
     
     func testAccessTokenPropagatesFromNavigationViewController() {
-        
         let directions = DirectionsSpy(accessToken: "foo")
         let service = MapboxNavigationService(route: route, directions: directions)
         let nvc = NavigationViewController(for: route, navigationService: service)
@@ -97,7 +96,6 @@ class MapboxVoiceControllerTests: XCTestCase {
         let voiceController = nvc.voiceController as! MapboxVoiceController
         XCTAssertEqual(voiceController.speech.accessToken, "foo",
                        "Access token should propagate from NavigationViewController to SpeechSynthesizer")
-        
     }
 }
 
