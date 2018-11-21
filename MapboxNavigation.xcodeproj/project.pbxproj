@@ -65,6 +65,8 @@
 		3525449D1E663D32004C8F1C /* MapboxCoreNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */; };
 		352690491ECC843700E387BD /* Fixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352690481ECC843700E387BD /* Fixture.swift */; };
 		3527D2B91EC4619400C07FC9 /* Fixtures.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3527D2B61EC45FBD00C07FC9 /* Fixtures.xcassets */; };
+		3529FCEA21A5A23000AEA9AA /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCE921A5A23000AEA9AA /* Settings.swift */; };
+		3529FCEC21A5B68600AEA9AA /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCEB21A5B68600AEA9AA /* UIViewController.swift */; };
 		352BBC3B1E5E6A0C00703DF1 /* MapboxCoreNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */; };
 		352BBC401E5E6C9F00703DF1 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C6A3471E5E418D0004CA57 /* AppDelegate.m */; };
 		352BBC4A1E5E78D700703DF1 /* Example_SwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352BBC491E5E78D700703DF1 /* Example_SwiftTests.swift */; };
@@ -624,6 +626,8 @@
 		35213DAD1EC456CF00A62B21 /* FBSnapshotTestCase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSnapshotTestCase.framework; path = Carthage/Build/iOS/FBSnapshotTestCase.framework; sourceTree = "<group>"; };
 		352690481ECC843700E387BD /* Fixture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Fixture.swift; sourceTree = "<group>"; };
 		3527D2B61EC45FBD00C07FC9 /* Fixtures.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Fixtures.xcassets; sourceTree = "<group>"; };
+		3529FCE921A5A23000AEA9AA /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		3529FCEB21A5B68600AEA9AA /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
 		352AFFA22139986E00EB3567 /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
 		352BBC471E5E78D700703DF1 /* Example-SwiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Example-SwiftTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		352BBC491E5E78D700703DF1 /* Example_SwiftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Example_SwiftTests.swift; sourceTree = "<group>"; };
@@ -1327,6 +1331,8 @@
 				35E3B48F21873941002803BE /* OfflineViewController.swift */,
 				35E3B49121873C18002803BE /* SettingsItems.swift */,
 				351FCEF521887F890098550A /* ResizableView.swift */,
+				3529FCE921A5A23000AEA9AA /* Settings.swift */,
+				3529FCEB21A5B68600AEA9AA /* UIViewController.swift */,
 			);
 			name = Swift;
 			path = Examples/Swift;
@@ -2319,6 +2325,8 @@
 				351FCEF621887F890098550A /* ResizableView.swift in Sources */,
 				35E3B49221873C18002803BE /* SettingsItems.swift in Sources */,
 				35E3B49021873941002803BE /* OfflineViewController.swift in Sources */,
+				3529FCEC21A5B68600AEA9AA /* UIViewController.swift in Sources */,
+				3529FCEA21A5A23000AEA9AA /* Settings.swift in Sources */,
 				C5D9800D1EFA8BA9006DBF2E /* CustomViewController.swift in Sources */,
 				C51FC31720F689F800400CE7 /* CustomStyles.swift in Sources */,
 				6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */,

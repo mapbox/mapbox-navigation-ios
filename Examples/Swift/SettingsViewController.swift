@@ -1,31 +1,7 @@
 import UIKit
 import MapboxDirections
+import MapboxCoreNavigation
 
-typealias Payload = () -> ()
-
-struct Item {
-    let title: String
-    let subtitle: String?
-    // View controller to present on SettingsViewController.tableView(_:didSelectRowAt:)
-    let viewControllerType: UIViewController.Type?
-    // Closure to call on SettingsViewController.tableView(_:didSelectRowAt:)
-    let payload: Payload?
-    // SettingsViewController.tableView(_:canEditRowAt:)
-    var canEditRow: Bool = false
-    
-    init(title: String, subtitle: String? = nil, viewControllerType: UIViewController.Type? = nil, payload: Payload? = nil, canEditRow: Bool = false) {
-        self.title = title
-        self.subtitle = subtitle
-        self.viewControllerType = viewControllerType
-        self.payload = payload
-        self.canEditRow = canEditRow
-    }
-}
-
-struct Section {
-    let title: String
-    let items: [Item]
-}
 
 class SettingsViewController: UITableViewController {
     
@@ -60,6 +36,14 @@ class SettingsViewController: UITableViewController {
         
         cell.textLabel?.text = item.title
         cell.detailTextLabel?.text = item.subtitle
+        
+        if let item = item as? OfflineVersionItem {
+            let toggle = OfflineSwitch(frame: .zero)
+            toggle.item = item
+            toggle.addTarget(self, action: #selector(switchValueChanged(_:)), for: .valueChanged)
+            toggle.isOn = item.title == Settings.selectedOfflineVersion
+            cell.accessoryView = toggle
+        }
         
         return cell
     }
@@ -106,6 +90,19 @@ class SettingsViewController: UITableViewController {
         
         if let payload = item.payload {
             payload()
+        }
+    }
+    
+    @objc func switchValueChanged(_ toggle: OfflineSwitch) {
+        Settings.selectedOfflineVersion = toggle.isOn ? toggle.item?.title : nil
+        
+        if let selectedOfflineVersion = Settings.selectedOfflineVersion {
+            let tilesURL = Bundle.mapboxCoreNavigation.suggestedTilePath(for: selectedOfflineVersion)
+            
+            Settings.directions.configureRouter(tilesURL: tilesURL!) { [weak self] (numberOfTiles) in
+                let message = "Router configured w/ \(numberOfTiles) tiles."
+                self?.presentAlert(message: message)
+            }
         }
     }
 }

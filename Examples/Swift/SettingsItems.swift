@@ -2,6 +2,70 @@ import UIKit
 import MapboxDirections
 import MapboxCoreNavigation
 
+typealias Payload = () -> ()
+
+let MBSelectedOfflineVersion = "MBSelectedOfflineVersion"
+
+protocol ItemProtocol {
+    var title: String { get }
+    var subtitle: String? { get }
+    // View controller to present on SettingsViewController.tableView(_:didSelectRowAt:)
+    var viewControllerType: UIViewController.Type? { get }
+    // Closure to call on SettingsViewController.tableView(_:didSelectRowAt:)
+    var payload: Payload? { get }
+    // SettingsViewController.tableView(_:canEditRowAt:)
+    var canEditRow: Bool { get }
+}
+
+struct Item: ItemProtocol {
+    let title: String
+    let subtitle: String?
+    let viewControllerType: UIViewController.Type?
+    let payload: Payload?
+    var canEditRow: Bool
+    
+    init(title: String, subtitle: String? = nil, viewControllerType: UIViewController.Type? = nil, payload: Payload? = nil, canEditRow: Bool = false) {
+        self.title = title
+        self.subtitle = subtitle
+        self.viewControllerType = viewControllerType
+        self.payload = payload
+        self.canEditRow = canEditRow
+    }
+}
+
+struct OfflineVersionItem: ItemProtocol {
+    var title: String
+    var subtitle: String?
+    var viewControllerType: UIViewController.Type?
+    var payload: Payload?
+    var canEditRow: Bool
+    
+    init(title: String, subtitle: String? = nil, viewControllerType: UIViewController.Type? = nil, payload: Payload? = nil, canEditRow: Bool = false) {
+        self.title = title
+        self.subtitle = subtitle
+        self.viewControllerType = viewControllerType
+        self.payload = payload
+        self.canEditRow = canEditRow
+    }
+}
+
+class OfflineSwitch: UISwitch {
+    var payload: Payload?
+    var item: OfflineVersionItem?
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+struct Section {
+    let title: String
+    let items: [ItemProtocol]
+}
 
 extension SettingsViewController {
     
@@ -14,9 +78,9 @@ extension SettingsViewController {
         return [offlineSection, versionSection]
     }
     
-    func versionDirectories() -> [Item] {
+    func versionDirectories() -> [ItemProtocol] {
         
-        var versions = [Item]()
+        var versions = [OfflineVersionItem]()
         
         let directories = try? FileManager.default.contentsOfDirectory(atPath: Bundle.mapboxCoreNavigation.suggestedTilePath!.path)
         
@@ -32,7 +96,7 @@ extension SettingsViewController {
             if let directorySize = path.directorySize {
                 subtitle = byteCountFormatter.string(fromByteCount: Int64(directorySize))
             }
-            versions.append(Item(title: $0, subtitle: subtitle, canEditRow: true))
+            versions.append(OfflineVersionItem(title: $0, subtitle: subtitle, canEditRow: true))
         }
         
         return versions

@@ -61,6 +61,7 @@ class ViewController: UIViewController {
     fileprivate lazy var defaultFailure: RouteRequestFailure = { [weak self] (error) in
         self?.routes = nil //clear routes from the map
         print(error.localizedDescription)
+        self?.presentAlert(message: error.localizedDescription)
     }
 
     var alertController: UIAlertController!
@@ -197,13 +198,15 @@ class ViewController: UIViewController {
 
     fileprivate func requestRoute(with options: RouteOptions, success: @escaping RouteRequestSuccess, failure: RouteRequestFailure?) {
 
-        let handler: Directions.RouteCompletionHandler = {(waypoints, potentialRoutes, potentialError) in
-            if let error = potentialError, let fail = failure { return fail(error) }
-            guard let routes = potentialRoutes else { return }
+        let handler: Directions.RouteCompletionHandler = { (waypoints, routes, error) in
+            if let error = error { failure?(error) }
+            guard let routes = routes else { return }
             return success(routes)
         }
 
-        _ = Directions.shared.calculate(options, completionHandler: handler)
+        // Calculate route offline if an offline version is selected
+        let offline = Settings.selectedOfflineVersion != nil
+        Settings.directions.calculate(options, offline: offline, completionHandler: handler)
     }
 
     // MARK: Basic Navigation
@@ -260,7 +263,7 @@ class ViewController: UIViewController {
         guard let route = routes?.first else { return nil }
         let simulate = simulationButton.isSelected
         let mode: SimulationMode = simulate ? .always : .onPoorGPS
-        return MapboxNavigationService(route: route, simulating: mode)
+        return MapboxNavigationService(route: route, directions: Settings.directions, simulating: mode)
     }
 
     func presentAndRemoveMapview(_ navigationViewController: NavigationViewController) {
