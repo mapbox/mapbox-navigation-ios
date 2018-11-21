@@ -9,11 +9,11 @@ class OfflineRoutingTests: XCTestCase {
         
         let bundle = Bundle(for: OfflineRoutingTests.self)
         let tilesURL = URL(fileURLWithPath: bundle.bundlePath.appending("/routing/liechtenstein"))
-        let translationsURL = URL(fileURLWithPath: bundle.bundlePath.appending("/translations"))
         
         let setupExpectation = expectation(description: "Set up offline routing")
         
-        let directions = NavigationDirections(tilesURL: tilesURL, translationsURL: translationsURL, accessToken: "foo") { (numberOfTiles) in
+        let directions = NavigationDirections(accessToken: "foo")
+        directions.configureRouter(tilesURL: tilesURL) { (numberOfTiles) in
             XCTAssertEqual(numberOfTiles, 5)
             setupExpectation.fulfill()
         }
@@ -46,11 +46,12 @@ class OfflineRoutingTests: XCTestCase {
         
         let bundle = Bundle(for: OfflineRoutingTests.self)
         let tilesURL = URL(fileURLWithPath: bundle.bundlePath).appendingPathComponent("/routing/liechtenstein")
-        let translationsURL = URL(fileURLWithPath: bundle.bundlePath).appendingPathComponent("/translations")
+        //let translationsURL = URL(fileURLWithPath: bundle.bundlePath).appendingPathComponent("/translations")
         
         let setupExpectation = expectation(description: "Set up offline routing")
         
-        let directions = NavigationDirections(tilesURL: tilesURL, translationsURL: translationsURL, accessToken: "foo") { (numberOfTiles) in
+        let directions = NavigationDirections(accessToken: "foo")
+        directions.configureRouter(tilesURL: tilesURL) { (numberOfTiles) in
             XCTAssertEqual(numberOfTiles, 5)
             setupExpectation.fulfill()
         }
@@ -114,8 +115,9 @@ class OfflineRoutingTests: XCTestCase {
         
         let configureExpectation = self.expectation(description: "Configure router with unpacked tar")
         
-        _ = NavigationDirections(tilesURL: outputDirectory, translationsURL: translationsURL, accessToken: "foo") { (tileCount) in
-            XCTAssertEqual(tileCount, 8)
+        let directions = NavigationDirections(accessToken: "foo")
+        directions.configureRouter(tilesURL: outputDirectory) { (numberOfTiles) in
+            XCTAssertEqual(numberOfTiles, 8)
             configureExpectation.fulfill()
         }
         
