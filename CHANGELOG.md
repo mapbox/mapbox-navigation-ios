@@ -1,7 +1,7 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
 ## master
-* Adding support for multi-leg routes in `CarPlayManager`. ([#1841](https://github.com/mapbox/mapbox-navigation-ios/pull/1841))
+* Renamed `CarPlayManager.calculateRouteAndStart(from:to:completionHandler:)` to `CarPlayManager.previewRoutes(between:completionHandler:)` and added a `CarplayManager.previewRoutes(to:completionHandler)`, as well as a `CarPlayManager.previewRoutes(for:completionHandler:)` method that accepts an arbitrary `NavigationRouteOptions` object. ([#1841](https://github.com/mapbox/mapbox-navigation-ios/pull/1841))
 * Renamed `CarPlayManager(_:)` to `CarPlayManager(directions:eventsManager:)`, allowing you to pass in a custom `Directions` object to use when calculating routes. ([#1834](https://github.com/mapbox/mapbox-navigation-ios/pull/1834/))
 * Fixed a crash during turn-by-turn navigation. ([#1820](https://github.com/mapbox/mapbox-navigation-ios/pull/1820))
 * Fixed a crash that could happen while simulating a route. ([#1820](https://github.com/mapbox/mapbox-navigation-ios/pull/1820))
