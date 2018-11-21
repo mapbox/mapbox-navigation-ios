@@ -225,6 +225,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         addGestureRecognizer(mapTapGesture)
     }
     
+    open override func layoutMarginsDidChange() {
+        super.layoutMarginsDidChange()
+        enableFrameByFrameCourseViewTracking(for: 3)
+    }
+    
     //MARK: - Overrides
     
     open override func prepareForInterfaceBuilder() {
@@ -389,8 +394,14 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         if sender.state == .changed {
             guard let location = userLocationForCourseTracking else { return }
-            userCourseView?.layer.removeAllAnimations()
-            userCourseView?.center = convert(location.coordinate, toPointTo: self)
+            
+            if let userCourseView = userCourseView as? UserCourseView {
+                userCourseView.update?(location: location,
+                                       pitch: camera.pitch,
+                                       direction: direction,
+                                       animated: false,
+                                       tracksUserCourse: tracksUserCourse)
+            }
         }
     }
     

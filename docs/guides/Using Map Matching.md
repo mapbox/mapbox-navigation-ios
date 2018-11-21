@@ -38,4 +38,4 @@ This will cause a waterfall effect, everything downstream should react to the ad
 
 Always make sure to use `NavigationMatchOptions` when creating a map matching request. This is subclass of `MatchOptions` which applies a good set of default options for navigation.
 
-It is also import to use `Directions.calculateRoutes(matching:completionHandler:).` when creating the request. This returns a `Route` instead of `Match` which allows us to navigate on it.
+It is also important to use `Directions.calculateRoutes(matching:completionHandler:).` when creating the request. This returns a `Route` instead of `Match` which allows us to navigate on it.

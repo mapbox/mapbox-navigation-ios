@@ -15,7 +15,8 @@ class StyleManagerTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        styleManager = StyleManager(self)
+        styleManager = StyleManager()
+        styleManager.delegate = self
         styleManager.automaticallyAdjustsStyleForTimeOfDay = true
     }
     
