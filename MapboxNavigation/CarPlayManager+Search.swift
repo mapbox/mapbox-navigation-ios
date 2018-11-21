@@ -120,7 +120,7 @@ extension CarPlayManager: CPSearchTemplateDelegate {
         CarPlayManager.recentItems.save()
         
         let destinationWaypoint = Waypoint(location: location, heading: nil, name: placemark.formattedName)
-        calculateRouteAndStart(to: destinationWaypoint, completionHandler: completionHandler)
+        previewRoutes(to: destinationWaypoint, completionHandler: completionHandler)
     }
     
     @available(iOS 12.0, *)
