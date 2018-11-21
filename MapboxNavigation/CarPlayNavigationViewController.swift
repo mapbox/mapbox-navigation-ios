@@ -448,8 +448,8 @@ extension CarPlayNavigationViewController: NavigationMapViewDelegate {
         
         // Avoid letting the puck go partially off-screen, and add a comfortable padding beyond that.
         let courseViewBounds = mapView.userCourseView?.bounds ?? .zero
-        contentFrame = contentFrame.insetBy(dx: min(50 + courseViewBounds.width / 2.0, contentFrame.width / 2.0),
-                                            dy: min(50 + courseViewBounds.height / 2.0, contentFrame.height / 2.0))
+        contentFrame = contentFrame.insetBy(dx: min(NavigationMapView.courseViewMinimumInsets.left + courseViewBounds.width / 2.0, contentFrame.width / 2.0),
+                                            dy: min(NavigationMapView.courseViewMinimumInsets.top + courseViewBounds.height / 2.0, contentFrame.height / 2.0))
         
         // Get the bottom-center of the remaining frame.
         assert(!contentFrame.isInfinite)
