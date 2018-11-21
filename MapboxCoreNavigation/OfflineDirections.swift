@@ -39,14 +39,14 @@ struct OfflineDirectionsConstants {
 public protocol NavigatorDirectionsProtocol {
     
     /**
-     Initializes a newly created directions object with an optional access token and host.
+     Configures the router with the given set of tiles
      
-     - parameter tilesPath: The location where the tiles has been sideloaded to.
-     - parameter translationsPath: The location where the translations has been sideloaded to.
+     - parameter tilesURL: The location where the tiles has been sideloaded to.
+     - parameter translationsURL: The location where the translations has been downloaded to.
      - parameter accessToken: A Mapbox [access token](https://www.mapbox.com/help/define-access-token/). If an access token is not specified when initializing the directions object, it should be specified in the `MGLMapboxAccessToken` key in the main application bundle’s Info.plist.
      - parameter host: An optional hostname to the server API. The [Mapbox Directions API](https://www.mapbox.com/api-documentation/?language=Swift#directions) endpoint is used by default.
      */
-    init(tilesURL: URL, translationsURL: URL?, accessToken: String?, host: String?, completionHandler: @escaping OfflineDirectionsCompletionHandler)
+    func configureRouter(tilesURL: URL, translationsURL: URL?, completionHandler: @escaping OfflineDirectionsCompletionHandler)
     
     /**
      Begins asynchronously calculating the route or routes using the given options and delivers the results to a closure.
@@ -67,9 +67,11 @@ public class NavigationDirections: Directions, NavigatorDirectionsProtocol {
     public typealias UnpackProgressHandler = (_ totalBytes: UInt64, _ remainingBytes: UInt64) -> ()
     public typealias UnpackCompletionHandler = (_ result: UInt64, _ error: Error?) -> ()
     
-    public required init(tilesURL: URL, translationsURL: URL? = nil, accessToken: String?, host: String? = nil, completionHandler: @escaping OfflineDirectionsCompletionHandler) {
-        
+    public override init(accessToken: String? = nil, host: String? = nil) {
         super.init(accessToken: accessToken, host: host)
+    }
+    
+    public func configureRouter(tilesURL: URL, translationsURL: URL? = nil, completionHandler: @escaping OfflineDirectionsCompletionHandler) {
         
         OfflineDirectionsConstants.offlineSerialQueue.sync {
             // Translations files bundled winthin navigation native
@@ -116,7 +118,7 @@ public class NavigationDirections: Directions, NavigatorDirectionsProtocol {
         }
     }
     
-    public func calculate(_ options: RouteOptions, offline: Bool = false, completionHandler: @escaping Directions.RouteCompletionHandler) {
+    public func calculate(_ options: RouteOptions, offline: Bool = true, completionHandler: @escaping Directions.RouteCompletionHandler) {
         
         guard offline == true else {
             return calculate(options, completionHandler: completionHandler)
