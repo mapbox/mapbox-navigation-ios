@@ -674,7 +674,7 @@ extension NavigationViewController: NavigationServiceDelegate {
         }
     }
     
-    @objc public func navigationService(_ service: NavigationService, willArriveAt waypoint: Waypoint, in eta: TimeInterval, distance: CLLocationDistance) {
+    @objc public func navigationService(_ service: NavigationService, willArriveAt waypoint: Waypoint, after eta: TimeInterval, distance: CLLocationDistance) {
         delegate?.navigationViewController?(self, willArriveAt: waypoint, in: eta, distance: distance)
     }
     

@@ -75,9 +75,7 @@ open class RouteController: NSObject, Router {
             _routeProgress = newValue
             announce(reroute: routeProgress.route, at: dataSource.location, proactive: didFindFasterRoute)
         }
-
     }
-    
     
     private var _routeProgress: RouteProgress {
         didSet {
@@ -411,7 +409,7 @@ extension RouteController: CLLocationManagerDelegate {
                 updateDistanceToManeuver()
                 
             } else { //we are approaching the destination
-                delegate?.router?(self, willArriveAt: currentDestination, in: legProgress.durationRemaining, distance: legProgress.distanceRemaining)
+                delegate?.router?(self, willArriveAt: currentDestination, after: legProgress.durationRemaining, distance: legProgress.distanceRemaining)
             }
 
         }

@@ -27,7 +27,7 @@ public protocol RouterDelegate: class {
     optional func router(_ router: Router, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation)
     
     @objc(router:willArriveAtWaypoint:in:distance:)
-    optional func router(_ router: Router, willArriveAt waypoint: Waypoint, in eta:TimeInterval, distance: CLLocationDistance)
+    optional func router(_ router: Router, willArriveAt waypoint: Waypoint, after remainingTimeInterval:TimeInterval, distance: CLLocationDistance)
     
     @objc(router:didArriveAtWaypoint:)
     optional func router(_ router: Router, didArriveAt waypoint: Waypoint) -> Bool

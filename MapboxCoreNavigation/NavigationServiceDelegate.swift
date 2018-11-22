@@ -84,7 +84,7 @@ import MapboxDirections
      */
     
     @objc(navigationService:willArriveAtWaypoint:in:distance:)
-    optional func navigationService(_ service: NavigationService, willArriveAt waypoint: Waypoint, in eta:TimeInterval, distance: CLLocationDistance)
+    optional func navigationService(_ service: NavigationService, willArriveAt waypoint: Waypoint, after remainingTimeInterval:TimeInterval, distance: CLLocationDistance)
     
     /**
      Called when the navigation service arrives at a waypoint.
