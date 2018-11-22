@@ -32,7 +32,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      */
     
     @objc(navigationViewController:willArriveAtWaypoint:in:distance:)
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, willArriveAt waypoint: Waypoint, in eta:TimeInterval, distance: CLLocationDistance)
+    optional func navigationViewController(_ navigationViewController: NavigationViewController, willArriveAt waypoint: Waypoint, after remainingTimeInterval: TimeInterval, distance: CLLocationDistance)
     
     /**
      Called when the user arrives at the destination waypoint for a route leg.
@@ -675,8 +675,8 @@ extension NavigationViewController: NavigationServiceDelegate {
         }
     }
     
-    @objc public func navigationService(_ service: NavigationService, willArriveAt waypoint: Waypoint, after eta: TimeInterval, distance: CLLocationDistance) {
-        delegate?.navigationViewController?(self, willArriveAt: waypoint, in: eta, distance: distance)
+    @objc public func navigationService(_ service: NavigationService, willArriveAt waypoint: Waypoint, after remainingTimeInterval: TimeInterval, distance: CLLocationDistance) {
+        delegate?.navigationViewController?(self, willArriveAt: waypoint, after: remainingTimeInterval, distance: distance)
     }
     
     @objc public func navigationService(_ service: NavigationService, didArriveAt waypoint: Waypoint) -> Bool {

@@ -302,7 +302,7 @@ class NavigationServiceTests: XCTestCase {
         // MARK: When at a valid location just before the last location
         navigationService.locationManager!(navigationService.locationManager, didUpdateLocations: [penultimateLocation])
         
-        XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:willArriveAt:in:distance:)"), "Pre-arrival delegate message not fired.")
+        XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:willArriveAt:after:distance:)"), "Pre-arrival delegate message not fired.")
         
         // MARK: When navigation continues with a location update to the last location
         navigationService.locationManager!(navigationService.locationManager, didUpdateLocations: [lastLocation])
