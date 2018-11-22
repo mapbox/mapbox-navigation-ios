@@ -104,7 +104,7 @@ extension AppDelegate: CPListTemplateDelegate {
         // Selected a favorite
         if let userInfo = item.userInfo as? [String: Any],
             let waypoint = userInfo[CarPlayManager.CarPlayWaypointKey] as? Waypoint {
-            carPlayManager.preview(waypoints: [waypoint], completionHandler: completionHandler)
+            carPlayManager.previewRoutes(between: [waypoint], completionHandler: completionHandler)
             return
         }
         
