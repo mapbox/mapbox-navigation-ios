@@ -156,6 +156,13 @@ class DistanceFormatterTests: XCTestCase {
         assertDistance(384_400_000, displayed: "३,८४,४०० कि॰मी॰", quantity: "३,८४,४००")
     }
     
+    @available(iOS 10.0, *)
+    func testMeters() {
+        let oneMeter: CLLocationDistance = 1
+        let measurement = DistanceFormatter().roundingTableMetric.thresholds.first?.measurement(for: oneMeter)
+        XCTAssertEqual(measurement?.value, oneMeter)
+    }
+    
     func testInches() {
         let oneMeter: CLLocationDistance = 1
         let oneMeterInInches = oneMeter.converted(to: .inch)
