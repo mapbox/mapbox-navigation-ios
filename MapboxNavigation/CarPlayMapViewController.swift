@@ -5,7 +5,7 @@ import CarPlay
 @available(iOS 12.0, *)
 class CarPlayMapViewController: UIViewController {
     
-    static let defaultAltitude: CLLocationDistance = 16000
+    static let defaultAltitude: CLLocationDistance = 850
     
     var styleManager: StyleManager?
     
@@ -100,7 +100,6 @@ class CarPlayMapViewController: UIViewController {
         styleManager!.styles = styles
         
         resetCamera(animated: false, altitude: CarPlayMapViewController.defaultAltitude)
-        mapView.setUserTrackingMode(.followWithCourse, animated: true)
     }
     
     override func viewWillDisappear(_ animated: Bool) {

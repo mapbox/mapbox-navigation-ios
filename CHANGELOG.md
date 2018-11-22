@@ -11,6 +11,7 @@
 * Removed the `StyleManager(_:)` initializer. After initializing a `StyleManager` object, set the `StyleManager.delegate` property to ensure that the style manager’s settings take effect. ([#1836](https://github.com/mapbox/mapbox-navigation-ios/pull/1836))
 * Some additional members of `CarPlayManager` are now accessible in Objective-C code. ([#1836](https://github.com/mapbox/mapbox-navigation-ios/pull/1836))
 * Fixed an issue where the user puck pointed away from the route line during turn-by-turn navigation in CarPlay. The map’s vanishing point now accounts for safe area insets, including the side maneuver view. ([#1845](https://github.com/mapbox/mapbox-navigation-ios/pull/1845))
+* Fixed an issue where the map view used for browsing and previewing failed to call `MGLMapViewDelegate.mapView(_:viewFor:)` and `MGLMapViewDelegate.mapViewWillStartLocatingUser(_:)`. ([#1852](https://github.com/mapbox/mapbox-navigation-ios/pull/1852))
 
 ### Other changes
 
