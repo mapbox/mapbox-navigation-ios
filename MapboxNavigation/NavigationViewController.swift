@@ -1,6 +1,7 @@
 import UIKit
 import MapboxCoreNavigation
 import MapboxDirections
+import MapboxSpeech
 import Mapbox
 #if canImport(CarPlay)
 import CarPlay
@@ -371,7 +372,7 @@ open class NavigationViewController: UIViewController {
         self.navigationService = navigationService ?? MapboxNavigationService(route: route)
         self.navigationService.usesDefaultUserInterface = true
         self.navigationService.delegate = self
-        self.voiceController = voiceController ?? MapboxVoiceController()
+        self.voiceController = voiceController ?? MapboxVoiceController(speechClient: SpeechSynthesizer(accessToken: navigationService?.directions.accessToken))
 
         NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
         

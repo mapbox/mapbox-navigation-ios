@@ -24,6 +24,8 @@ public class CarPlayNavigationViewController: UIViewController {
     var navService: NavigationService
     var mapView: NavigationMapView?
     let shieldHeight: CGFloat = 16
+    var mapViewLeftSafeAreaBalancingConstraint: NSLayoutConstraint?
+    var mapViewRightSafeAreaBalancingConstraint: NSLayoutConstraint?
     
     var carSession: CPNavigationSession!
     var mapTemplate: CPMapTemplate
@@ -90,7 +92,7 @@ public class CarPlayNavigationViewController: UIViewController {
         super.viewDidLoad()
         
         let mapView = NavigationMapView(frame: view.bounds)
-        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        mapView.translatesAutoresizingMaskIntoConstraints = false
         mapView.compassView.isHidden = true
         mapView.logoView.isHidden = true
         mapView.attributionButton.isHidden = true
@@ -98,9 +100,21 @@ public class CarPlayNavigationViewController: UIViewController {
         mapView.defaultAltitude = 500
         mapView.zoomedOutMotorwayAltitude = 1000
         mapView.longManeuverDistance = 500
+        
+        mapView.navigationMapDelegate = self
 
         self.mapView = mapView
         view.addSubview(mapView)
+        
+        // These constraints don’t account for language direction, because the
+        // safe area insets are nondirectional and may be affected by the side
+        // on which the driver is sitting.
+        mapViewRightSafeAreaBalancingConstraint = NSLayoutConstraint(item: mapView, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1, constant: 0)
+        view.addConstraint(mapViewRightSafeAreaBalancingConstraint!)
+        mapViewLeftSafeAreaBalancingConstraint = NSLayoutConstraint(item: mapView, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1, constant: 0)
+        view.addConstraint(mapViewLeftSafeAreaBalancingConstraint!)
+        view.addConstraint(NSLayoutConstraint(item: mapView, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1, constant: 0))
+        view.addConstraint(NSLayoutConstraint(item: mapView, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1, constant: 0))
         
         styleObservation = mapView.observe(\.style, options: .new) { [weak self] (mapView, change) in
             guard change.newValue != nil else {
@@ -148,6 +162,12 @@ public class CarPlayNavigationViewController: UIViewController {
         }
         
         previousSafeAreaInsets = view.safeAreaInsets
+        
+        // Adjust the map’s vanishing point to counterbalance the side maneuver panels by extending the view off beyond the other side of the screen.
+        if let mapView = mapView {
+            mapViewRightSafeAreaBalancingConstraint?.constant = -mapView.safeArea.right
+            mapViewLeftSafeAreaBalancingConstraint?.constant = mapView.safeArea.left
+        }
     }
     
     /**
@@ -417,6 +437,23 @@ public class CarPlayNavigationViewController: UIViewController {
         
         let waypointArrival = CPAlertTemplate(titleVariants: [title], actions: [continueAlert])
         carInterfaceController.presentTemplate(waypointArrival, animated: true)
+    }
+}
+
+@available(iOS 12.0, *)
+extension CarPlayNavigationViewController: NavigationMapViewDelegate {
+    public func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint {
+        // Inset by the content inset to avoid application-defined content.
+        var contentFrame = UIEdgeInsetsInsetRect(mapView.bounds, mapView.contentInset)
+        
+        // Avoid letting the puck go partially off-screen, and add a comfortable padding beyond that.
+        let courseViewBounds = mapView.userCourseView?.bounds ?? .zero
+        contentFrame = contentFrame.insetBy(dx: min(NavigationMapView.courseViewMinimumInsets.left + courseViewBounds.width / 2.0, contentFrame.width / 2.0),
+                                            dy: min(NavigationMapView.courseViewMinimumInsets.top + courseViewBounds.height / 2.0, contentFrame.height / 2.0))
+        
+        // Get the bottom-center of the remaining frame.
+        assert(!contentFrame.isInfinite)
+        return CGPoint(x: contentFrame.midX, y: contentFrame.maxY)
     }
 }
 
