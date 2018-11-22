@@ -1,6 +1,6 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## master
+## v0.25.0 (November 22, 2018)
 
 ### CarPlay
 
