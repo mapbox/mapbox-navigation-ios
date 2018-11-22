@@ -78,7 +78,7 @@ import MapboxDirections
      This message is sent, once per progress update, as the user is approaching a waypoint. You can use this to cue UI, to do network pre-loading, etc.
      - parameter service: The Navigation service that is detecting the destination approach.
      - parameter waypoint: The waypoint that the service is arriving at.
-     - parameter eta: The estimated time of arrival, in seconds.
+     - parameter remainingTimeInterval: The estimated number of seconds until arrival.
      - parameter distance: The current distance from the waypoint, in meters.
      - important: This method will likely be called several times as you approach a destination. If only one consumption of this method is desired, then usage of an internal flag is reccomended.
      */
