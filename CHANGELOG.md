@@ -9,9 +9,12 @@
 * Renamed `CarPlayManager(_:)` to `CarPlayManager(styles:directions:eventsManager:)` and `CarPlayNavigationViewController(with:mapTemplate:interfaceController:manager:styles:)` to `CarPlayNavigationViewController(navigationService:mapTemplate:interfaceController:manager:styles:)`. These initializers now accept an array of `Style` objects to apply throughout the CarPlay interface, similar to `NavigationViewController`. You can also change the styles at any time by setting the `CarPlayManager.styles` property. ([#1836](https://github.com/mapbox/mapbox-navigation-ios/pull/1836))
 * `CarPlayManager(styles:directions:eventsManager:)` also allows you to pass in a custom `Directions` object to use when calculating routes. ([#1834](https://github.com/mapbox/mapbox-navigation-ios/pull/1834/))
 * Removed the `StyleManager(_:)` initializer. After initializing a `StyleManager` object, set the `StyleManager.delegate` property to ensure that the style manager’s settings take effect. ([#1836](https://github.com/mapbox/mapbox-navigation-ios/pull/1836))
+* Added `CarPlayManager.mapView` and `CarPlayNavigationViewController.mapView` properties. ([#1852](https://github.com/mapbox/mapbox-navigation-ios/pull/1852))
 * Some additional members of `CarPlayManager` are now accessible in Objective-C code. ([#1836](https://github.com/mapbox/mapbox-navigation-ios/pull/1836))
 * Fixed an issue where distances are incorrectly displayed as “0 m” in regions that use the metric system. ([#1854](https://github.com/mapbox/mapbox-navigation-ios/pull/1854))
 * Fixed an issue where the user puck pointed away from the route line during turn-by-turn navigation in CarPlay. The map’s vanishing point now accounts for safe area insets, including the side maneuver view. ([#1845](https://github.com/mapbox/mapbox-navigation-ios/pull/1845))
+* Fixed an issue where the map view used for browsing and previewing failed to call `MGLMapViewDelegate.mapView(_:viewFor:)` and `MGLMapViewDelegate.mapViewWillStartLocatingUser(_:)`. ([#1852](https://github.com/mapbox/mapbox-navigation-ios/pull/1852))
+* You can now create a `UserPuckCourseView` using the `UserPuckCourseView(frame:)` initializer. ([#1852](https://github.com/mapbox/mapbox-navigation-ios/pull/1852))
 
 ### Other changes
 

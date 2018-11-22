@@ -22,7 +22,12 @@ public class CarPlayNavigationViewController: UIViewController {
     @objc public var drivingSide: DrivingSide = .right
     
     var navService: NavigationService
-    var mapView: NavigationMapView?
+    
+    /**
+     The map view showing the route and the user’s location.
+     */
+    @objc public fileprivate(set) var mapView: NavigationMapView?
+    
     let shieldHeight: CGFloat = 16
     var mapViewLeftSafeAreaBalancingConstraint: NSLayoutConstraint?
     var mapViewRightSafeAreaBalancingConstraint: NSLayoutConstraint?
