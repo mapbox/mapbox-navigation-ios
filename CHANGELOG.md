@@ -1,5 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## master
+
+* Fixed an issue where the CarPlay navigation map’s vanishing point and user puck initially remained centered on screen, instead of accounting for the maneuver panel, until the navigation bar was shown. ([#1856](https://github.com/mapbox/mapbox-navigation-ios/pull/1856))
+
 ## v0.25.0 (November 22, 2018)
 
 ### CarPlay
