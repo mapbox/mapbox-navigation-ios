@@ -144,6 +144,14 @@ public class CarPlayManager: NSObject {
         formatter.allowedUnits = [.day, .hour, .minute]
         return formatter
     }()
+    
+    /**
+     The main map view displayed inside CarPlay.
+     */
+    @objc public var mapView: NavigationMapView? {
+        let mapViewController = carWindow?.rootViewController as? CarPlayMapViewController
+        return mapViewController?.mapView
+    }
 }
 
 
