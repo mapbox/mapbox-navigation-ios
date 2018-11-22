@@ -1,8 +1,10 @@
 import XCTest
-import MapboxNavigation
 import MapboxCoreNavigation
 import MapboxDirections
 import MapboxMobileEvents
+@testable import TestHelper
+@testable import MapboxNavigation
+
 
 #if canImport(CarPlay)
 import CarPlay
@@ -18,9 +20,8 @@ class CarPlayManagerTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        manager = CarPlayManager()
         eventsManagerSpy = NavigationEventsManagerSpy()
-        manager!.eventsManager = eventsManagerSpy!
+        manager = CarPlayManager(eventsManager: eventsManagerSpy)
     }
 
     override func tearDown() {
@@ -152,7 +153,7 @@ class CarPlayManagerTests: XCTestCase {
         // given the user is previewing route choices
         // when a trip is started using one of the route choices
         let choice = CPRouteChoice(summaryVariants: ["summary1"], additionalInformationVariants: ["addl1"], selectionSummaryVariants: ["selection1"])
-        choice.userInfo = Fixture.routeWithBannerInstructions()
+        choice.userInfo = Fixture.route(from: "route-with-banner-instructions")
 
         manager.mapTemplate(mapTemplate, startedTrip: CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [choice]), using: choice)
 
@@ -168,7 +169,49 @@ class CarPlayManagerTests: XCTestCase {
 
         XCTAssertTrue(exampleDelegate.navigationEnded, "The CarPlayManagerDelegate should have been told that navigation ended.")
     }
+    
+    func testDirectionsOverride() {
+        
+        class DirectionsInvocationSpy: Directions {
+            typealias VoidClosure = () -> Void
+            var payload: VoidClosure?
+            
+            override func calculate(_ options: RouteOptions, completionHandler: @escaping Directions.RouteCompletionHandler) -> URLSessionDataTask {
+                payload?()
+                
+                return URLSessionDataTask()
+            }
+        }
+        
+        let expectation = XCTestExpectation(description: "Ensuring Spy is called")
+        let spy = DirectionsInvocationSpy(accessToken: "DeadBeefCafe", host: nil)
+        spy.payload = expectation.fulfill
+        
+        let subject = CarPlayManager(directions: spy)
+      
+        let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
+        let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
+        let options = RouteOptions(waypoints: [waypoint1, waypoint2])
+        subject.calculate(options, completionHandler: {})
+        wait(for: [expectation], timeout: 1.0)
+        
+        XCTAssert(subject.directions == spy, "Directions client is not overridden properly.")
+    }
+    
+    func testCustomStyles() {
+        class CustomStyle: DayStyle {}
+        
+        XCTAssertEqual(manager?.styles.count, 2)
+        XCTAssertEqual(manager?.styles.first?.styleType, StyleType.day)
+        XCTAssertEqual(manager?.styles.last?.styleType, StyleType.night)
+        
+        let styles = [CustomStyle()]
+        XCTAssertEqual(CarPlayManager(styles: styles).styles, styles, "CarPlayManager should persist the initial styles given to it.")
+    }
 }
+
+
+
 
 @available(iOS 12.0, *)
 func simulateCarPlayConnection(_ manager: CarPlayManager) {
@@ -202,7 +245,7 @@ class CarPlayManagerSpec: QuickSpec {
             let action = {
                 let fakeTemplate = CPMapTemplate()
                 let fakeRouteChoice = CPRouteChoice(summaryVariants: ["summary1"], additionalInformationVariants: ["addl1"], selectionSummaryVariants: ["selection1"])
-                fakeRouteChoice.userInfo = Fixture.routeWithBannerInstructions()
+                fakeRouteChoice.userInfo = Fixture.route(from: "route-with-banner-instructions")
                 let fakeTrip = CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [fakeRouteChoice])
 
                 //simulate starting a fake trip
@@ -282,7 +325,7 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
         return trailingBarButtons
     }
 
-    func carPlayManager(_ carplayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]? {
+    func carPlayManager(_ carPlayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]? {
         return mapButtons
     }
 

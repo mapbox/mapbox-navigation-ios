@@ -93,7 +93,7 @@ public class NavigationDirections: Directions, NavigatorDirectionsProtocol {
             // Report 0% progress
             progressHandler?(totalPackedBytes, totalPackedBytes)
             
-            var timer: CountdownTimer? = CountdownTimer(countdown: .seconds(500), accuracy: .seconds(500), executingOn: OfflineDirectionsConstants.unpackSerialQueue) {
+            var timer: DispatchTimer? = DispatchTimer(countdown: .seconds(500), accuracy: .seconds(500), executingOn: OfflineDirectionsConstants.unpackSerialQueue) {
                 if let remainingBytes = filePath.fileSize {
                     progressHandler?(totalPackedBytes, remainingBytes)
                 }

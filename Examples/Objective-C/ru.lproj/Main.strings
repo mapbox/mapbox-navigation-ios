@@ -1,6 +1,0 @@
-
-/* Class = "UIButton"; normalTitle = "Start Navigation"; ObjectID = "8Sl-bV-xyU"; */
-"8Sl-bV-xyU.normalTitle" = "Начать";
-
-/* Class = "UILabel"; text = "Long press map to select a route"; ObjectID = "Hk0-SM-2Wl"; */
-"Hk0-SM-2Wl.text" = "Нажмите и удерживайте на карте, чтобы выбрать маршрут";

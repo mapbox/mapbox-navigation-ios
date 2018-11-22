@@ -1,9 +1,10 @@
 import XCTest
 import FBSnapshotTestCase
 import Turf
+import TestHelper
+import MapboxDirections
 @testable import MapboxCoreNavigation
 @testable import MapboxNavigation
-import MapboxDirections
 
 
 class RouteControllerSnapshotTests: FBSnapshotTestCase {

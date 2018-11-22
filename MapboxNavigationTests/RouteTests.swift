@@ -1,7 +1,9 @@
 import XCTest
 import MapboxDirections
-@testable import MapboxNavigation
+import TestHelper
 import Turf
+@testable import MapboxNavigation
+
 
 class RouteTests: XCTestCase {
     func testPolylineAroundManeuver() {
