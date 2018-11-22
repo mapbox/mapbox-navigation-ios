@@ -106,8 +106,8 @@ extension AppDelegate: CarPlayManagerDelegate {
 
 @available(iOS 12.0, *)
 extension AppDelegate: CarPlaySearchManagerDelegate {
-    func calculateRoute(to toWaypoint: Waypoint, completionHandler: @escaping () -> Void) {
-        carPlayManager.calculateRouteAndStart(to: toWaypoint, completionHandler: completionHandler)
+    func previewRoutes(between waypoints: [Waypoint], completionHandler: @escaping () -> Void) {
+        carPlayManager.previewRoutes(between: waypoints, completionHandler: completionHandler)
     }
     
     func resetPanButtons(_ mapTemplate: CPMapTemplate) {
@@ -133,7 +133,7 @@ extension AppDelegate: CPListTemplateDelegate {
         // Selected a favorite
         if let userInfo = item.userInfo as? [String: Any],
             let waypoint = userInfo[CarPlayManager.CarPlayWaypointKey] as? Waypoint {
-            carPlayManager.calculateRouteAndStart(to: waypoint, completionHandler: completionHandler)
+            carPlayManager.previewRoutes(between: [waypoint], completionHandler: completionHandler)
             return
         }
         
