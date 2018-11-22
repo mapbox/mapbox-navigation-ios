@@ -80,7 +80,7 @@ import MapboxDirections
      - parameter waypoint: The waypoint that the service is arriving at.
      - parameter remainingTimeInterval: The estimated number of seconds until arrival.
      - parameter distance: The current distance from the waypoint, in meters.
-     - important: This method will likely be called several times as you approach a destination. If only one consumption of this method is desired, then usage of an internal flag is reccomended.
+     - important: This method will likely be called several times as you approach a destination. If only one consumption of this method is desired, then usage of an internal flag is recommended.
      */
     
     @objc(navigationService:willArriveAtWaypoint:after:distance:)
