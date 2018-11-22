@@ -83,7 +83,7 @@ import MapboxDirections
      - important: This method will likely be called several times as you approach a destination. If only one consumption of this method is desired, then usage of an internal flag is reccomended.
      */
     
-    @objc(navigationService:willArriveAtWaypoint:in:distance:)
+    @objc(navigationService:willArriveAtWaypoint:after:distance:)
     optional func navigationService(_ service: NavigationService, willArriveAt waypoint: Waypoint, after remainingTimeInterval:TimeInterval, distance: CLLocationDistance)
     
     /**

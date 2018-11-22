@@ -31,7 +31,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      - important: This method will likely be called several times as you approach a destination. If only one consumption of this method is desired, then usage of an internal flag is reccomended.
      */
     
-    @objc(navigationViewController:willArriveAtWaypoint:in:distance:)
+    @objc(navigationViewController:willArriveAtWaypoint:after:distance:)
     optional func navigationViewController(_ navigationViewController: NavigationViewController, willArriveAt waypoint: Waypoint, after remainingTimeInterval: TimeInterval, distance: CLLocationDistance)
     
     /**
