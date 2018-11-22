@@ -411,12 +411,9 @@ extension RouteController: CLLocationManagerDelegate {
             } else { //we are approaching the destination
                 delegate?.router?(self, willArriveAt: currentDestination, after: legProgress.durationRemaining, distance: legProgress.distanceRemaining)
             }
-
         }
     }
-
     
- 
     func checkForFasterRoute(from location: CLLocation) {
         guard let currentUpcomingManeuver = routeProgress.currentLegProgress.upComingStep else {
             return
