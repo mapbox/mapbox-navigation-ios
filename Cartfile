@@ -1,7 +1,7 @@
 binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" ~> 4.3
 binary "https://www.mapbox.com/ios-sdk/MapboxNavigationNative.json" ~> 3.2
-github "mapbox/MapboxDirections.swift" "master"
+github "mapbox/MapboxDirections.swift" ~> 0.25.1
 github "mapbox/turf-swift" ~> 0.2
 github "mapbox/mapbox-events-ios" ~> 0.6
 github "ceeK/Solar" ~> 2.1.0
-github "mapbox/mapbox-voice-swift" "fred/access-level"
+github "mapbox/mapbox-speech-swift" ~> 0.1.0
