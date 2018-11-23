@@ -1,5 +1,6 @@
 import XCTest
 import MapboxDirections
+import TestHelper
 @testable import MapboxCoreNavigation
 
 
@@ -7,8 +8,8 @@ class OfflineRoutingTests: XCTestCase {
     
     func testOfflineDirections() {
         
-        let bundle = Bundle(for: OfflineRoutingTests.self)
-        let tilesURL = URL(fileURLWithPath: bundle.bundlePath.appending("/routing/liechtenstein"))
+        let bundle = Bundle(for: Fixture.self)
+        let tilesURL = URL(fileURLWithPath: bundle.bundlePath.appending("/tiles/liechtenstein"))
         
         let setupExpectation = expectation(description: "Set up offline routing")
         
@@ -46,7 +47,6 @@ class OfflineRoutingTests: XCTestCase {
         
         let bundle = Bundle(for: OfflineRoutingTests.self)
         let tilesURL = URL(fileURLWithPath: bundle.bundlePath).appendingPathComponent("/routing/liechtenstein")
-        //let translationsURL = URL(fileURLWithPath: bundle.bundlePath).appendingPathComponent("/translations")
         
         let setupExpectation = expectation(description: "Set up offline routing")
         
@@ -78,7 +78,7 @@ class OfflineRoutingTests: XCTestCase {
     
     func testUnpackTilePack() {
         
-        let bundle = Bundle(for: OfflineRoutingTests.self)
+        let bundle = Bundle(for: Fixture.self)
         let readonlyPackURL = URL(fileURLWithPath: bundle.path(forResource: "li", ofType: "tar")!)
         
         let documentDirectory = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
@@ -110,8 +110,6 @@ class OfflineRoutingTests: XCTestCase {
         }
         
         wait(for: [progressExpectation, unpackExpectation], timeout: 60 * 2)
-        
-        let translationsURL = URL(fileURLWithPath: bundle.bundlePath).appendingPathComponent("translations")
         
         let configureExpectation = self.expectation(description: "Configure router with unpacked tar")
         
