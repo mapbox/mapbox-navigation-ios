@@ -5,13 +5,13 @@ import CarPlay
 
 extension VisualInstruction {
     
-    var containsLaneIndications: Bool {
+    public var containsLaneIndications: Bool {
         return components.contains(where: { $0 is LaneIndicationComponent })
     }
 
 #if canImport(CarPlay)
     @available(iOS 12.0, *)
-    func maneuverImageSet(side: DrivingSide) -> CPImageSet? {
+    public func maneuverImageSet(side: DrivingSide) -> CPImageSet? {
         let colors: [UIColor] = [.black, .white]
         let blackAndWhiteManeuverIcons: [UIImage] = colors.compactMap { (color) in
             let mv = ManeuverView()
@@ -27,7 +27,7 @@ extension VisualInstruction {
         return CPImageSet(lightContentImage: blackAndWhiteManeuverIcons[1], darkContentImage: blackAndWhiteManeuverIcons[0])
     }
     
-    func shouldFlipImage(side: DrivingSide) -> Bool {
+    public func shouldFlipImage(side: DrivingSide) -> Bool {
         let leftDirection = [.left, .slightLeft, .sharpLeft].contains(maneuverDirection)
         
         switch maneuverType {
@@ -42,7 +42,7 @@ extension VisualInstruction {
     }
 
     @available(iOS 12.0, *)
-    func carPlayManeuverLabelAttributedText(bounds: @escaping () -> (CGRect), shieldHeight: CGFloat, window: UIWindow?) -> NSAttributedString? {
+    public func carPlayManeuverLabelAttributedText(bounds: @escaping () -> (CGRect), shieldHeight: CGFloat, window: UIWindow?) -> NSAttributedString? {
         let instructionLabel = InstructionLabel()
         instructionLabel.availableBounds = bounds
         instructionLabel.shieldHeight = shieldHeight
