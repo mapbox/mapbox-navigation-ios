@@ -84,7 +84,8 @@ extension CarPlaySearchManager: CPSearchTemplateDelegate {
                 strongSelf.delegate?.resetPanButtons(mapTemplate)
             }
             
-            interfaceController.pushTemplate(searchTemplate, animated: true)
+
+            self?.delegate?.pushTemplate(searchTemplate, animated: false)
         }
         
         let bundle = Bundle.mapboxNavigation
