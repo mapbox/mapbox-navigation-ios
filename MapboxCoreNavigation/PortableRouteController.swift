@@ -18,7 +18,7 @@ open class PortableRouteController: RouteController {
         }
     }
     
-    func updateNavigator() {
+    public func updateNavigator() {
         assert(route.json != nil, "route.json missing, please verify the version of MapboxDirections.swift")
         
         let data = try! JSONSerialization.data(withJSONObject: route.json!, options: [])
@@ -77,5 +77,15 @@ open class PortableRouteController: RouteController {
     
     public func locationHistory() -> String {
         return navigator.getHistory()
+    }
+
+    public func setMinimumSpeedForLocationProjection(metersPerSecond: Double = 7.0) {
+        navigator.configureNavigator(forName: "min_prediction_speed", value: String(metersPerSecond))
+    }
+    
+    public func projectedLocation(date: Date, projectedSeconds: TimeInterval) -> (coordinate: CLLocationCoordinate2D, course: CLLocationDirection) {
+        let projectedDate = date.addingTimeInterval(projectedSeconds) // + projectedMilliseconds
+        let status = navigator.getStatusForTimestamp(projectedDate)
+        return (coordinate: status.location, course: CLLocationDirection(status.bearing))
     }
 }
