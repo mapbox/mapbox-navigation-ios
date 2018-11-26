@@ -6,6 +6,7 @@ let oneMile: CLLocationDistance = .metersPerMile
 let oneYard: CLLocationDistance = 0.9144
 let oneFeet: CLLocationDistance = 0.3048
 
+
 class DistanceFormatterTests: XCTestCase {
     
     var distanceFormatter = DistanceFormatter(approximate: true)
@@ -14,9 +15,15 @@ class DistanceFormatterTests: XCTestCase {
         super.setUp()
     }
     
-    func assertDistance(_ distance: CLLocationDistance, displayed: String, quantity: String) {
+    func assertDistance(_ distance: CLLocationDistance, displayed: String, quantity: String, testMeasurement: Bool = false) {
         let displayedString = distanceFormatter.string(from: distance)
         XCTAssertEqual(displayedString, displayed, "Displayed: '\(displayedString)' should be equal to \(displayed)")
+        
+        if testMeasurement {
+            if #available(iOS 10.0, *) {
+                XCTAssertEqual(distanceFormatter.measurement(of: distance).value, Double(quantity)!)
+            }
+        }
         
         let attributedString = distanceFormatter.attributedString(for: distance as NSNumber)
         XCTAssertEqual(attributedString?.string, displayed, "Displayed: '\(attributedString?.string ?? "")' should be equal to \(displayed)")
@@ -45,7 +52,7 @@ class DistanceFormatterTests: XCTestCase {
     func testDistanceFormatters_US() {
         NavigationSettings.shared.distanceUnit = .mile
         distanceFormatter.numberFormatter.locale = Locale(identifier: "en-US")
-        
+
         assertDistance(0,               displayed: "0 ft",      quantity: "0")
         assertDistance(oneFeet*50,      displayed: "50 ft",     quantity: "50")
         assertDistance(oneFeet*100,     displayed: "100 ft",    quantity: "100")
@@ -66,31 +73,31 @@ class DistanceFormatterTests: XCTestCase {
     func testDistanceFormatters_DE() {
         NavigationSettings.shared.distanceUnit = .kilometer
         distanceFormatter.numberFormatter.locale = Locale(identifier: "de-DE")
-        
-        assertDistance(0,       displayed: "0 m",       quantity: "0")
-        assertDistance(4,       displayed: "5 m",       quantity: "5")
-        assertDistance(11,      displayed: "10 m",      quantity: "10")
-        assertDistance(15,      displayed: "15 m",      quantity: "15")
-        assertDistance(24,      displayed: "25 m",      quantity: "25")
-        assertDistance(89,      displayed: "100 m",     quantity: "100")
-        assertDistance(226,     displayed: "250 m",     quantity: "250")
-        assertDistance(275,     displayed: "300 m",     quantity: "300")
-        assertDistance(500,     displayed: "500 m",     quantity: "500")
-        assertDistance(949,     displayed: "950 m",     quantity: "950")
-        assertDistance(951,     displayed: "950 m",     quantity: "950")
-        assertDistance(999,     displayed: "1 km",      quantity: "1")
-        assertDistance(1000,    displayed: "1 km",      quantity: "1")
-        assertDistance(1001,    displayed: "1 km",      quantity: "1")
-        assertDistance(2_500,   displayed: "2.5 km",    quantity: "2.5")
-        assertDistance(2_900,   displayed: "2.9 km",    quantity: "2.9")
-        assertDistance(3_000,   displayed: "3 km",      quantity: "3")
-        assertDistance(3_500,   displayed: "4 km",      quantity: "4")
+
+        assertDistance(0,       displayed: "0 m",       quantity: "0",      testMeasurement: true)
+        assertDistance(4,       displayed: "5 m",       quantity: "5",      testMeasurement: true)
+        assertDistance(11,      displayed: "10 m",      quantity: "10",     testMeasurement: true)
+        assertDistance(15,      displayed: "15 m",      quantity: "15",     testMeasurement: true)
+        assertDistance(24,      displayed: "25 m",      quantity: "25",     testMeasurement: true)
+        assertDistance(89,      displayed: "100 m",     quantity: "100",    testMeasurement: true)
+        assertDistance(226,     displayed: "250 m",     quantity: "250",    testMeasurement: true)
+        assertDistance(275,     displayed: "300 m",     quantity: "300",    testMeasurement: true)
+        assertDistance(500,     displayed: "500 m",     quantity: "500",    testMeasurement: true)
+        assertDistance(949,     displayed: "950 m",     quantity: "950",    testMeasurement: true)
+        assertDistance(951,     displayed: "950 m",     quantity: "950",    testMeasurement: true)
+        assertDistance(999,     displayed: "1 km",      quantity: "1",      testMeasurement: true)
+        assertDistance(1000,    displayed: "1 km",      quantity: "1",      testMeasurement: true)
+        assertDistance(1001,    displayed: "1 km",      quantity: "1",      testMeasurement: true)
+        assertDistance(2_500,   displayed: "2.5 km",    quantity: "2.5",    testMeasurement: true)
+        assertDistance(2_900,   displayed: "2.9 km",    quantity: "2.9",    testMeasurement: true)
+        assertDistance(3_000,   displayed: "3 km",      quantity: "3",      testMeasurement: true)
+        assertDistance(3_500,   displayed: "4 km",      quantity: "4",      testMeasurement: true)
     }
     
     func testDistanceFormatters_GB() {
         NavigationSettings.shared.distanceUnit = .mile
         distanceFormatter.numberFormatter.locale = Locale(identifier: "en-GB")
-        
+
         assertDistance(0,               displayed: "0 yd",      quantity: "0")
         assertDistance(oneYard*4,       displayed: "0 yd",      quantity: "0")
         assertDistance(oneYard*5,       displayed: "10 yd",     quantity: "10")
@@ -112,7 +119,7 @@ class DistanceFormatterTests: XCTestCase {
     func testDistanceFormatters_he_IL() {
         NavigationSettings.shared.distanceUnit = .kilometer
         distanceFormatter.numberFormatter.locale = Locale(identifier: "he-IL")
-        
+
         assertDistance(0,       displayed: "0 מ׳",       quantity: "0")
         assertDistance(4,       displayed: "5 מ׳",       quantity: "5")
         assertDistance(11,      displayed: "10 מ׳",      quantity: "10")
@@ -135,7 +142,7 @@ class DistanceFormatterTests: XCTestCase {
     func testDistanceFormatters_hi_IN() {
         NavigationSettings.shared.distanceUnit = .kilometer
         distanceFormatter.numberFormatter.locale = Locale(identifier: "hi-IN")
-    
+
         assertDistance(0,       displayed: "० मी॰",       quantity: "०")
         assertDistance(4,       displayed: "५ मी॰",       quantity: "५")
         assertDistance(11,      displayed: "१० मी॰",      quantity: "१०")
@@ -154,13 +161,6 @@ class DistanceFormatterTests: XCTestCase {
         assertDistance(3_000,   displayed: "३ कि॰मी॰",      quantity: "३")
         assertDistance(3_500,   displayed: "४ कि॰मी॰",      quantity: "४")
         assertDistance(384_400_000, displayed: "३,८४,४०० कि॰मी॰", quantity: "३,८४,४००")
-    }
-    
-    @available(iOS 10.0, *)
-    func testMeters() {
-        let oneMeter: CLLocationDistance = 1
-        let measurement = DistanceFormatter().roundingTableMetric.thresholds.first?.measurement(for: oneMeter)
-        XCTAssertEqual(measurement?.value, oneMeter)
     }
     
     func testInches() {

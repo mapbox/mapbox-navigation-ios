@@ -74,7 +74,18 @@ struct RoundingTable {
             case .meter:
                 return Measurement(value: distance, unit: .meters)
             case .kilometer:
-                return Measurement(value: distance.kilometers, unit: .kilometers)
+                let meterMeasurement = Measurement(value: distance, unit: UnitLength.meters)
+                let kilometerMeasurement = meterMeasurement.converted(to: UnitLength.kilometers)
+                
+                var newDistance = kilometerMeasurement.value
+                
+                if maximumFractionDigits == 1 {
+                    newDistance = newDistance.rounded(precision: 1e1)
+                } else {
+                    newDistance = newDistance.rounded()
+                }
+                
+                return Measurement(value: newDistance, unit: UnitLength.kilometers)
             case .inch:
                 return Measurement(value: distance.feet * 12, unit: .inches)
             case .foot:
@@ -213,10 +224,16 @@ open class DistanceFormatter: LengthFormatter {
     @objc(measurementOfDistance:)
     public func measurement(of distance: CLLocationDistance) -> Measurement<UnitLength> {
         let threshold = self.threshold(for: distance)
-        numberFormatter.maximumFractionDigits = threshold.maximumFractionDigits
-        numberFormatter.roundingIncrement = threshold.roundingIncrement as NSNumber
+        
+        var newDistance: CLLocationDistance?
+        
+        if threshold.unit == .meter {
+            newDistance = distance.rounded(precision: Double(threshold.maximumFractionDigits) * 1e1)
+                                  .rounded(roundingIncrement: threshold.roundingIncrement)
+        }
+        
         unit = threshold.unit
-        return threshold.measurement(for: distance)
+        return threshold.measurement(for: newDistance ?? distance)
     }
     
     /**
@@ -240,5 +257,24 @@ open class DistanceFormatter: LengthFormatter {
             }
         }
         return attributedString
+    }
+}
+
+extension Double {
+    
+    func rounded(precision: Double) -> Double {
+        if precision == 0 {
+            return Double(Int(rounded()))
+        }
+        
+        return (self * precision).rounded() / precision
+    }
+    
+    func rounded(roundingIncrement: Double) -> Double {
+        if roundingIncrement == 0 {
+            return rounded()
+        }
+        
+        return (self / roundingIncrement).rounded() * roundingIncrement
     }
 }
