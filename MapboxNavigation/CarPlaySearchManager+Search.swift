@@ -70,7 +70,7 @@ extension CarPlaySearchManager: CPSearchTemplateDelegate {
         CarPlaySearchManager.recentItems.save()
         
         let destinationWaypoint = Waypoint(location: location, heading: nil, name: placemark.formattedName)
-        delegate?.previewRoutes(between: [destinationWaypoint], completionHandler: completionHandler)
+        delegate?.previewRoutes(to: destinationWaypoint, completionHandler: completionHandler)
     }
     
     public func searchTemplateButton(searchTemplate: CPSearchTemplate, interfaceController: CPInterfaceController, traitCollection: UITraitCollection) -> CPBarButton {
@@ -141,7 +141,7 @@ extension CarPlaySearchManager: CPListTemplateDelegate {
             let location = placemark.location {
             let destinationWaypoint = Waypoint(location: location)
             delegate?.popTemplate(animated: false)
-            delegate?.previewRoutes(between: [destinationWaypoint], completionHandler: completionHandler)
+            delegate?.previewRoutes(to: destinationWaypoint, completionHandler: completionHandler)
             return
         }
     }

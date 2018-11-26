@@ -4,7 +4,7 @@ import MapboxDirections
 
 @available(iOS 12.0, *)
 public protocol CarPlaySearchManagerDelegate: class {
-    func previewRoutes(between waypoints: [Waypoint], completionHandler: @escaping () -> Void)
+    func previewRoutes(to waypoint: Waypoint, completionHandler: @escaping () -> Void)
     func resetPanButtons(_ mapTemplate: CPMapTemplate)
     func pushTemplate(_ template: CPTemplate, animated: Bool)
     func popTemplate(animated: Bool)
