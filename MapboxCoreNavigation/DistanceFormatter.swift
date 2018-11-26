@@ -68,32 +68,25 @@ struct RoundingTable {
         func measurement(for distance: CLLocationDistance) -> Measurement<UnitLength> {
             switch unit {
             case .millimeter:
-                return Measurement(value: distance * 1_000, unit: .millimeters)
+                return Measurement(value: distance, unit: .meters).converted(to: .millimeters)
             case .centimeter:
-                return Measurement(value: distance * 100, unit: .centimeters)
+                return Measurement(value: distance, unit: .meters).converted(to: .centimeters)
             case .meter:
                 return Measurement(value: distance, unit: .meters)
             case .kilometer:
-                let meterMeasurement = Measurement(value: distance, unit: UnitLength.meters)
-                let kilometerMeasurement = meterMeasurement.converted(to: UnitLength.kilometers)
+                let measurement = Measurement(value: distance, unit: UnitLength.meters)
+                let kilometers = measurement.converted(to: UnitLength.kilometers).value
                 
-                var newDistance = kilometerMeasurement.value
-                
-                if maximumFractionDigits == 1 {
-                    newDistance = newDistance.rounded(precision: 1e1)
-                } else {
-                    newDistance = newDistance.rounded()
-                }
-                
-                return Measurement(value: newDistance, unit: UnitLength.kilometers)
+                return Measurement(value: kilometers.rounded(precision: Double(maximumFractionDigits) * 1e1),
+                                   unit: .kilometers)
             case .inch:
-                return Measurement(value: distance.feet * 12, unit: .inches)
+                return Measurement(value: distance, unit: .meters).converted(to: .inches)
             case .foot:
-                return Measurement(value: distance.feet, unit: .feet)
+                return Measurement(value: distance, unit: .meters).converted(to: .feet)
             case .yard:
-                return Measurement(value: distance.yards, unit: .yards)
+                return Measurement(value: distance, unit: .meters).converted(to: .yards)
             case .mile:
-                return Measurement(value: distance.miles, unit: .miles)
+                return Measurement(value: distance, unit: .meters).converted(to: .miles)
             }
         }
         
