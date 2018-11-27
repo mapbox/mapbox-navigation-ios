@@ -121,7 +121,8 @@ public class NavigationDirections: Directions, NavigatorDirectionsProtocol {
     public func calculate(_ options: RouteOptions, offline: Bool = true, completionHandler: @escaping Directions.RouteCompletionHandler) {
         
         guard offline == true else {
-            return calculate(options, completionHandler: completionHandler)
+            super.calculate(options, completionHandler: completionHandler)
+            return
         }
         
         let url = self.url(forCalculating: options)

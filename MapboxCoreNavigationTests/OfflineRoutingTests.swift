@@ -14,6 +14,7 @@ class OfflineRoutingTests: XCTestCase {
         let setupExpectation = expectation(description: "Set up offline routing")
 
         let directions = NavigationDirections(accessToken: "foo")
+        
         directions.configureRouter(tilesURL: tilesURL) { (numberOfTiles) in
             XCTAssertEqual(numberOfTiles, 5)
             setupExpectation.fulfill()
@@ -40,7 +41,7 @@ class OfflineRoutingTests: XCTestCase {
         wait(for: [calculateRouteExpectation], timeout: 2)
 
         XCTAssertNotNil(route)
-        XCTAssertEqual(route!.coordinates!.count, 239)
+        XCTAssertEqual(route!.coordinates!.count, 47)
     }
     
     func testOfflineDirectionsError() {

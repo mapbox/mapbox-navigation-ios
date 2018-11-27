@@ -205,8 +205,8 @@ class ViewController: UIViewController {
         }
 
         // Calculate route offline if an offline version is selected
-        let offline = Settings.selectedOfflineVersion != nil
-        Settings.directions.calculate(options, offline: offline, completionHandler: handler)
+        let shouldUseOfflineRouting = Settings.selectedOfflineVersion != nil
+        Settings.directions.calculate(options, offline: shouldUseOfflineRouting, completionHandler: handler)
     }
 
     // MARK: Basic Navigation
@@ -357,6 +357,32 @@ extension ViewController: VoiceControllerDelegate {
     // See CLLocation.swift `isQualified` for what makes a location update unqualified.
     func navigationViewController(_ navigationViewController: NavigationViewController, shouldDiscard location: CLLocation) -> Bool {
         return true
+    }
+    
+    func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool {
+        
+        let shouldUseOfflineRouting = Settings.selectedOfflineVersion != nil
+        
+        if shouldUseOfflineRouting {
+            let currentRoute = navigationViewController.route
+            let profileIdentifier = currentRoute.routeOptions.profileIdentifier
+            
+            var waypoints: [Waypoint] = [Waypoint(location: location)]
+            var remainingWaypoints = currentRoute.routeOptions.waypoints
+            remainingWaypoints.removeFirst()
+            waypoints.append(contentsOf: remainingWaypoints)
+            
+            let options = NavigationRouteOptions(waypoints: waypoints, profileIdentifier: profileIdentifier)
+            
+            Settings.directions.calculate(options, offline: true) { (waypoints, routes, error) in
+                guard let route = routes?.first else { return }
+                navigationViewController.navigationService.route = route
+            }
+            
+            return false
+        } else {
+            return true
+        }
     }
 }
 
