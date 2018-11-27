@@ -15,14 +15,13 @@ class DistanceFormatterTests: XCTestCase {
         super.setUp()
     }
     
-    func assertDistance(_ distance: CLLocationDistance, displayed: String, quantity: String, testMeasurement: Bool = false) {
+    func assertDistance(_ distance: CLLocationDistance, displayed: String, quantity: String) {
         let displayedString = distanceFormatter.string(from: distance)
         XCTAssertEqual(displayedString, displayed, "Displayed: '\(displayedString)' should be equal to \(displayed)")
         
-        if testMeasurement {
-            if #available(iOS 10.0, *) {
-                XCTAssertEqual(distanceFormatter.measurement(of: distance).value, Double(quantity)!)
-            }
+        if #available(iOS 10.0, *) {
+            let value = distanceFormatter.measurement(of: distance).value
+            XCTAssertEqual(distanceFormatter.numberFormatter.string(from: value as NSNumber), quantity)
         }
         
         let attributedString = distanceFormatter.attributedString(for: distance as NSNumber)
@@ -74,24 +73,24 @@ class DistanceFormatterTests: XCTestCase {
         NavigationSettings.shared.distanceUnit = .kilometer
         distanceFormatter.numberFormatter.locale = Locale(identifier: "de-DE")
 
-        assertDistance(0,       displayed: "0 m",       quantity: "0",      testMeasurement: true)
-        assertDistance(4,       displayed: "5 m",       quantity: "5",      testMeasurement: true)
-        assertDistance(11,      displayed: "10 m",      quantity: "10",     testMeasurement: true)
-        assertDistance(15,      displayed: "15 m",      quantity: "15",     testMeasurement: true)
-        assertDistance(24,      displayed: "25 m",      quantity: "25",     testMeasurement: true)
-        assertDistance(89,      displayed: "100 m",     quantity: "100",    testMeasurement: true)
-        assertDistance(226,     displayed: "250 m",     quantity: "250",    testMeasurement: true)
-        assertDistance(275,     displayed: "300 m",     quantity: "300",    testMeasurement: true)
-        assertDistance(500,     displayed: "500 m",     quantity: "500",    testMeasurement: true)
-        assertDistance(949,     displayed: "950 m",     quantity: "950",    testMeasurement: true)
-        assertDistance(951,     displayed: "950 m",     quantity: "950",    testMeasurement: true)
-        assertDistance(999,     displayed: "1 km",      quantity: "1",      testMeasurement: true)
-        assertDistance(1000,    displayed: "1 km",      quantity: "1",      testMeasurement: true)
-        assertDistance(1001,    displayed: "1 km",      quantity: "1",      testMeasurement: true)
-        assertDistance(2_500,   displayed: "2.5 km",    quantity: "2.5",    testMeasurement: true)
-        assertDistance(2_900,   displayed: "2.9 km",    quantity: "2.9",    testMeasurement: true)
-        assertDistance(3_000,   displayed: "3 km",      quantity: "3",      testMeasurement: true)
-        assertDistance(3_500,   displayed: "4 km",      quantity: "4",      testMeasurement: true)
+        assertDistance(0,       displayed: "0 m",       quantity: "0")
+        assertDistance(4,       displayed: "5 m",       quantity: "5")
+        assertDistance(11,      displayed: "10 m",      quantity: "10")
+        assertDistance(15,      displayed: "15 m",      quantity: "15")
+        assertDistance(24,      displayed: "25 m",      quantity: "25")
+        assertDistance(89,      displayed: "100 m",     quantity: "100")
+        assertDistance(226,     displayed: "250 m",     quantity: "250")
+        assertDistance(275,     displayed: "300 m",     quantity: "300")
+        assertDistance(500,     displayed: "500 m",     quantity: "500")
+        assertDistance(949,     displayed: "950 m",     quantity: "950")
+        assertDistance(951,     displayed: "950 m",     quantity: "950")
+        assertDistance(999,     displayed: "1 km",      quantity: "1")
+        assertDistance(1000,    displayed: "1 km",      quantity: "1")
+        assertDistance(1001,    displayed: "1 km",      quantity: "1")
+        assertDistance(2_500,   displayed: "2.5 km",    quantity: "2.5")
+        assertDistance(2_900,   displayed: "2.9 km",    quantity: "2.9")
+        assertDistance(3_000,   displayed: "3 km",      quantity: "3")
+        assertDistance(3_500,   displayed: "4 km",      quantity: "4")
     }
     
     func testDistanceFormatters_GB() {
