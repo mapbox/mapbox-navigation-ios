@@ -108,6 +108,23 @@ extension CarPlaySearchManager: CPSearchTemplateDelegate {
     }
     
     @available(iOS 12.0, *)
+    public func selectResult(item: CPListItem, completionHandler: @escaping () -> Void) {
+        
+        guard let userInfo = item.userInfo as? [String: Any],
+            let placemark = userInfo[CarPlayManager.CarPlayGeocodedPlacemarkKey] as? GeocodedPlacemark,
+            let location = placemark.routableLocations?.first ?? placemark.location else {
+                completionHandler()
+                return
+        }
+        
+        CarPlayManager.recentItems.add(RecentItem(placemark))
+        CarPlayManager.recentItems.save()
+        
+        let destinationWaypoint = Waypoint(location: location, heading: nil, name: placemark.formattedName)
+        previewRoutes(to: destinationWaypoint, completionHandler: completionHandler)
+    }
+    
+    @available(iOS 12.0, *)
     func recentSearches(_ searchText: String) -> [CPListItem] {
         if searchText.isEmpty {
             return CarPlaySearchManager.recentItems.map { $0.geocodedPlacemark.listItem() }
