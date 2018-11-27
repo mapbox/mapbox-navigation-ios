@@ -10,25 +10,25 @@ class OfflineRoutingTests: XCTestCase {
         
         let bundle = Bundle(for: Fixture.self)
         let tilesURL = URL(fileURLWithPath: bundle.bundlePath.appending("/tiles/liechtenstein"))
-        
+
         let setupExpectation = expectation(description: "Set up offline routing")
-        
+
         let directions = NavigationDirections(accessToken: "foo")
         directions.configureRouter(tilesURL: tilesURL) { (numberOfTiles) in
             XCTAssertEqual(numberOfTiles, 5)
             setupExpectation.fulfill()
         }
-        
+
         wait(for: [setupExpectation], timeout: 2)
 
         // Coordinates within Liechtenstein
-        let coordinates = [CLLocationCoordinate2D(latitude: 47.1192, longitude: 9.5412),
-                           CLLocationCoordinate2D(latitude: 47.1153, longitude: 9.5531)]
+        let coordinates = [CLLocationCoordinate2D(latitude: 47.208674, longitude: 9.524650),
+                           CLLocationCoordinate2D(latitude: 47.211247, longitude: 9.526666)]
 
         let options = NavigationRouteOptions(coordinates: coordinates, profileIdentifier: .automobile)
         let calculateRouteExpectation = expectation(description: "Calculate route offline")
         var route: Route?
-        
+
         directions.calculate(options, offline: true) { (waypoints, routes, error) in
             XCTAssertNil(error)
             XCTAssertNotNil(waypoints)
@@ -38,15 +38,15 @@ class OfflineRoutingTests: XCTestCase {
         }
 
         wait(for: [calculateRouteExpectation], timeout: 2)
-        
+
         XCTAssertNotNil(route)
         XCTAssertEqual(route!.coordinates!.count, 239)
     }
     
     func testOfflineDirectionsError() {
         
-        let bundle = Bundle(for: OfflineRoutingTests.self)
-        let tilesURL = URL(fileURLWithPath: bundle.bundlePath).appendingPathComponent("/routing/liechtenstein")
+        let bundle = Bundle(for: Fixture.self)
+        let tilesURL = URL(fileURLWithPath: bundle.bundlePath).appendingPathComponent("/tiles/liechtenstein")
         
         let setupExpectation = expectation(description: "Set up offline routing")
         
@@ -115,7 +115,7 @@ class OfflineRoutingTests: XCTestCase {
         
         let directions = NavigationDirections(accessToken: "foo")
         directions.configureRouter(tilesURL: outputDirectory) { (numberOfTiles) in
-            XCTAssertEqual(numberOfTiles, 8)
+            XCTAssertEqual(numberOfTiles, 5)
             configureExpectation.fulfill()
         }
         
