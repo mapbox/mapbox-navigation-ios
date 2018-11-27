@@ -461,6 +461,10 @@ extension MapboxNavigationService: RouterDelegate {
         return delegate?.navigationService?(self, shouldDiscard: location) ?? Default.shouldDiscardLocation
     }
     
+    public func router(_ router: Router, willArriveAt waypoint: Waypoint, after remainingTimeInterval: TimeInterval, distance: CLLocationDistance) {
+        delegate?.navigationService?(self, willArriveAt: waypoint, after: remainingTimeInterval, distance: distance)
+    }
+    
     public func router(_ router: Router, didArriveAt waypoint: Waypoint) -> Bool {
         
         //Notify the events manager that we've arrived at a waypoint

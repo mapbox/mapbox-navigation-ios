@@ -68,11 +68,11 @@ struct RoundingTable {
         func measurement(for distance: CLLocationDistance) -> Measurement<UnitLength> {
             switch unit {
             case .millimeter:
-                return Measurement(value: distance.kilometers / 1e6, unit: .millimeters)
+                return Measurement(value: distance * 1_000, unit: .millimeters)
             case .centimeter:
-                return Measurement(value: distance.kilometers / 1e5, unit: .centimeters)
+                return Measurement(value: distance * 100, unit: .centimeters)
             case .meter:
-                return Measurement(value: distance.kilometers / 1e3, unit: .meters)
+                return Measurement(value: distance, unit: .meters)
             case .kilometer:
                 return Measurement(value: distance.kilometers, unit: .kilometers)
             case .inch:

@@ -22,7 +22,12 @@ public class CarPlayNavigationViewController: UIViewController {
     @objc public var drivingSide: DrivingSide = .right
     
     var navService: NavigationService
-    var mapView: NavigationMapView?
+    
+    /**
+     The map view showing the route and the user’s location.
+     */
+    @objc public fileprivate(set) var mapView: NavigationMapView?
+    
     let shieldHeight: CGFloat = 16
     var mapViewLeftSafeAreaBalancingConstraint: NSLayoutConstraint?
     var mapViewRightSafeAreaBalancingConstraint: NSLayoutConstraint?
@@ -109,9 +114,9 @@ public class CarPlayNavigationViewController: UIViewController {
         // These constraints don’t account for language direction, because the
         // safe area insets are nondirectional and may be affected by the side
         // on which the driver is sitting.
-        mapViewRightSafeAreaBalancingConstraint = NSLayoutConstraint(item: mapView, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1, constant: 0)
+        mapViewRightSafeAreaBalancingConstraint = NSLayoutConstraint(item: mapView, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1, constant: -mapView.safeArea.right)
         view.addConstraint(mapViewRightSafeAreaBalancingConstraint!)
-        mapViewLeftSafeAreaBalancingConstraint = NSLayoutConstraint(item: mapView, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1, constant: 0)
+        mapViewLeftSafeAreaBalancingConstraint = NSLayoutConstraint(item: mapView, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1, constant: mapView.safeArea.left)
         view.addConstraint(mapViewLeftSafeAreaBalancingConstraint!)
         view.addConstraint(NSLayoutConstraint(item: mapView, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1, constant: 0))
         view.addConstraint(NSLayoutConstraint(item: mapView, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1, constant: 0))
