@@ -14,11 +14,11 @@ open class PortableRouteController: RouteController {
         }
         set {
             routeProgress = RouteProgress(route: newValue)
-            updateNavigator()
+            updateNavigator(route: newValue)
         }
     }
     
-    public func updateNavigator() {
+    public func updateNavigator(route: Route) {
         assert(route.json != nil, "route.json missing, please verify the version of MapboxDirections.swift")
         
         let data = try! JSONSerialization.data(withJSONObject: route.json!, options: [])
@@ -30,7 +30,7 @@ open class PortableRouteController: RouteController {
     
     public required init(along route: Route, directions: Directions, dataSource source: RouterDataSource) {
         super.init(along: route, directions: directions, dataSource: source)
-        updateNavigator()
+        updateNavigator(route: route)
     }
     
     override func getDirections(from location: CLLocation, along progress: RouteProgress, completion: @escaping (Route?, Error?) -> Void) {
