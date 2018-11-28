@@ -6,6 +6,7 @@ let oneMile: CLLocationDistance = .metersPerMile
 let oneYard: CLLocationDistance = 0.9144
 let oneFeet: CLLocationDistance = 0.3048
 
+
 class DistanceFormatterTests: XCTestCase {
     
     var distanceFormatter = DistanceFormatter(approximate: true)
@@ -17,6 +18,11 @@ class DistanceFormatterTests: XCTestCase {
     func assertDistance(_ distance: CLLocationDistance, displayed: String, quantity: String) {
         let displayedString = distanceFormatter.string(from: distance)
         XCTAssertEqual(displayedString, displayed, "Displayed: '\(displayedString)' should be equal to \(displayed)")
+        
+        if #available(iOS 10.0, *) {
+            let value = distanceFormatter.measurement(of: distance).value
+            XCTAssertEqual(distanceFormatter.numberFormatter.string(from: value as NSNumber), quantity)
+        }
         
         let attributedString = distanceFormatter.attributedString(for: distance as NSNumber)
         XCTAssertEqual(attributedString?.string, displayed, "Displayed: '\(attributedString?.string ?? "")' should be equal to \(displayed)")
@@ -45,7 +51,7 @@ class DistanceFormatterTests: XCTestCase {
     func testDistanceFormatters_US() {
         NavigationSettings.shared.distanceUnit = .mile
         distanceFormatter.numberFormatter.locale = Locale(identifier: "en-US")
-        
+
         assertDistance(0,               displayed: "0 ft",      quantity: "0")
         assertDistance(oneFeet*50,      displayed: "50 ft",     quantity: "50")
         assertDistance(oneFeet*100,     displayed: "100 ft",    quantity: "100")
@@ -66,7 +72,7 @@ class DistanceFormatterTests: XCTestCase {
     func testDistanceFormatters_DE() {
         NavigationSettings.shared.distanceUnit = .kilometer
         distanceFormatter.numberFormatter.locale = Locale(identifier: "de-DE")
-        
+
         assertDistance(0,       displayed: "0 m",       quantity: "0")
         assertDistance(4,       displayed: "5 m",       quantity: "5")
         assertDistance(11,      displayed: "10 m",      quantity: "10")
@@ -90,7 +96,7 @@ class DistanceFormatterTests: XCTestCase {
     func testDistanceFormatters_GB() {
         NavigationSettings.shared.distanceUnit = .mile
         distanceFormatter.numberFormatter.locale = Locale(identifier: "en-GB")
-        
+
         assertDistance(0,               displayed: "0 yd",      quantity: "0")
         assertDistance(oneYard*4,       displayed: "0 yd",      quantity: "0")
         assertDistance(oneYard*5,       displayed: "10 yd",     quantity: "10")
@@ -112,7 +118,7 @@ class DistanceFormatterTests: XCTestCase {
     func testDistanceFormatters_he_IL() {
         NavigationSettings.shared.distanceUnit = .kilometer
         distanceFormatter.numberFormatter.locale = Locale(identifier: "he-IL")
-        
+
         assertDistance(0,       displayed: "0 מ׳",       quantity: "0")
         assertDistance(4,       displayed: "5 מ׳",       quantity: "5")
         assertDistance(11,      displayed: "10 מ׳",      quantity: "10")
@@ -135,7 +141,7 @@ class DistanceFormatterTests: XCTestCase {
     func testDistanceFormatters_hi_IN() {
         NavigationSettings.shared.distanceUnit = .kilometer
         distanceFormatter.numberFormatter.locale = Locale(identifier: "hi-IN")
-    
+
         assertDistance(0,       displayed: "० मी॰",       quantity: "०")
         assertDistance(4,       displayed: "५ मी॰",       quantity: "५")
         assertDistance(11,      displayed: "१० मी॰",      quantity: "१०")
@@ -154,13 +160,6 @@ class DistanceFormatterTests: XCTestCase {
         assertDistance(3_000,   displayed: "३ कि॰मी॰",      quantity: "३")
         assertDistance(3_500,   displayed: "४ कि॰मी॰",      quantity: "४")
         assertDistance(384_400_000, displayed: "३,८४,४०० कि॰मी॰", quantity: "३,८४,४००")
-    }
-    
-    @available(iOS 10.0, *)
-    func testMeters() {
-        let oneMeter: CLLocationDistance = 1
-        let measurement = DistanceFormatter().roundingTableMetric.thresholds.first?.measurement(for: oneMeter)
-        XCTAssertEqual(measurement?.value, oneMeter)
     }
     
     func testInches() {
