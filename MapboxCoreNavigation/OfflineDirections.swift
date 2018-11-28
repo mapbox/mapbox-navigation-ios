@@ -127,7 +127,7 @@ public class NavigationDirections: Directions, NavigatorDirectionsProtocol {
         
         let url = self.url(forCalculating: options)
         
-        OfflineDirectionsConstants.offlineSerialQueue.sync { [weak self] in
+        OfflineDirectionsConstants.offlineSerialQueue.async { [weak self] in
             
             guard let result = self?.navigator.getRouteForDirectionsUri(url.absoluteString) else {
                 let error = OfflineRoutingError.unexpectedRouteResult("Unexpected routing result")
@@ -147,9 +147,9 @@ public class NavigationDirections: Directions, NavigatorDirectionsProtocol {
                         return completionHandler(nil, nil, error as NSError)
                     }
                 } else {
-                    let response = options.response(from: json)
                     
                     DispatchQueue.main.async {
+                        let response = options.response(from: json)
                         return completionHandler(response.0, response.1, nil)
                     }
                 }
