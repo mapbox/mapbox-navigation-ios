@@ -2,8 +2,11 @@
 
 ## master
 
+### CarPlay
+
 * When selecting a search result in CarPlay, the resulting routes lead to the search result’s routable location when available. Routes to a routable location are more likely to be passable. ([#1859](https://github.com/mapbox/mapbox-navigation-ios/pull/1859))
 * Fixed an issue where the CarPlay navigation map’s vanishing point and user puck initially remained centered on screen, instead of accounting for the maneuver panel, until the navigation bar was shown. ([#1856](https://github.com/mapbox/mapbox-navigation-ios/pull/1856))
+* Fixed an issue where route shields and exit numbers appeared blurry in the maneuver panel on CarPlay devices and failed to appear in the CarPlay simulator. ([#1868](https://github.com/mapbox/mapbox-navigation-ios/pull/1868))
 * Added `VisualInstruction.containsLaneIndications`, `VisualInstruction.maneuverImageSet(side:)`, `VisualInstruction.shouldFlipImage(side:)`, and `VisualInstruction.carPlayManeuverLabelAttributedText(bounds:shieldHeight:window:)`. ([#1860](https://github.com/mapbox/mapbox-navigation-ios/pull/1860))
 
 ## v0.25.0 (November 22, 2018)
