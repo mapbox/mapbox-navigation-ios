@@ -6,7 +6,7 @@ import MapboxDirections
 @objc(MBPortableRouteController)
 open class PortableRouteController: RouteController {
     
-    let navigator = MBNavigator()
+    public let navigator = MBNavigator()
     
     override public var route: Route {
         get {
