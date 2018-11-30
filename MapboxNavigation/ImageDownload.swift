@@ -139,7 +139,7 @@ class ImageDownloadOperation: Operation, ImageDownload {
             return
         }
 
-        if let data = incomingData, let image = UIImage.init(data: data, scale: UIScreen.main.scale) {
+        if let data = incomingData, let image = UIImage(data: data, scale: UIScreen.main.scale) {
             fireAllCompletions(image, data: data, error: nil)
         } else {
             fireAllCompletions(nil, data: incomingData, error: DownloadError.noImageData)
