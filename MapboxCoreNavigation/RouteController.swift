@@ -221,6 +221,11 @@ open class RouteController: NSObject, Router {
      Monitors the user's course to see if it is consistantly moving away from what we expect the course to be at a given point.
      */
     func userCourseIsOnRoute(_ location: CLLocation) -> Bool {
+        // if we have yet to travel along the current leg, don't check for heading conformance
+        guard routeProgress.currentLegProgress.distanceTraveled > 0 else {
+            return true
+        }
+        
         let nearByCoordinates = routeProgress.currentLegProgress.nearbyCoordinates
         guard let calculatedCourseForLocationOnStep = location.interpolatedCourse(along: nearByCoordinates) else { return true }
         
