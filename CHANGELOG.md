@@ -2,6 +2,8 @@
 
 ## master
 
+* Speculatively fixed spurious rerouting when passing an intermediate waypoint. ([#1869](https://github.com/mapbox/mapbox-navigation-ios/pull/1869))
+
 ### CarPlay
 
 * When selecting a search result in CarPlay, the resulting routes lead to the search result’s routable location when available. Routes to a routable location are more likely to be passable. ([#1859](https://github.com/mapbox/mapbox-navigation-ios/pull/1859))
