@@ -1,8 +1,6 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## master
-
-* Speculatively fixed spurious rerouting when passing an intermediate waypoint. ([#1869](https://github.com/mapbox/mapbox-navigation-ios/pull/1869))
+## v0.26.0
 
 ### CarPlay
 
@@ -10,6 +8,10 @@
 * Fixed an issue where the CarPlay navigation map’s vanishing point and user puck initially remained centered on screen, instead of accounting for the maneuver panel, until the navigation bar was shown. ([#1856](https://github.com/mapbox/mapbox-navigation-ios/pull/1856))
 * Fixed an issue where route shields and exit numbers appeared blurry in the maneuver panel on CarPlay devices and failed to appear in the CarPlay simulator. ([#1868](https://github.com/mapbox/mapbox-navigation-ios/pull/1868))
 * Added `VisualInstruction.containsLaneIndications`, `VisualInstruction.maneuverImageSet(side:)`, `VisualInstruction.shouldFlipImage(side:)`, and `VisualInstruction.carPlayManeuverLabelAttributedText(bounds:shieldHeight:window:)`. ([#1860](https://github.com/mapbox/mapbox-navigation-ios/pull/1860))
+
+### Other changes
+
+* This release includes a possible fix for spurious rerouting when passing an intermediate waypoint. ([#1869](https://github.com/mapbox/mapbox-navigation-ios/pull/1869))
 
 ## v0.25.0 (November 22, 2018)
 
