@@ -223,6 +223,7 @@ open class RouteController: NSObject, Router {
     func userCourseIsOnRoute(_ location: CLLocation) -> Bool {
         // if we have yet to travel along the current leg, don't check for heading conformance
         guard routeProgress.currentLegProgress.distanceTraveled > 0 else {
+            movementsAwayFromRoute = 0
             return true
         }
         
