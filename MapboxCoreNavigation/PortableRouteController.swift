@@ -61,7 +61,7 @@ open class PortableRouteController: RouteController {
         super.locationManager(manager, didUpdateLocations: locations)
     }
     
-    override internal func userIsWithinRadiusOfRoute(location: CLLocation) -> Bool {
+    override internal func userIsWithinEnvelope(of step: RouteStep, at location: CLLocation) -> Bool {
         let status = navigator.getStatusForTimestamp(location.timestamp)
         let offRoute = status.routeState == .offRoute
         return !offRoute

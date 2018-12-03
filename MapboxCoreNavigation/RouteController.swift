@@ -250,25 +250,27 @@ open class RouteController: NSObject, Router {
      */
     @objc public func userIsOnRoute(_ location: CLLocation) -> Bool {
         
+        let legProgress = routeProgress.currentLegProgress
+        
         // If the user has arrived, do not continue monitor reroutes, step progress, etc
-        if routeProgress.currentLegProgress.userHasArrivedAtWaypoint &&
-            (delegate?.router?(self, shouldPreventReroutesWhenArrivingAt: routeProgress.currentLeg.destination) ??
+        if legProgress.userHasArrivedAtWaypoint &&
+            (delegate?.router?(self, shouldPreventReroutesWhenArrivingAt: legProgress.leg.destination) ??
              DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint) {
             return true
         }
         
-        let isCloseToCurrentStep = userIsWithinRadiusOfRoute(location: location)
         
-        guard !isCloseToCurrentStep || !userCourseIsOnRoute(location) else { return true }
+        // We must fail an envelope check at the current point to continue, otherwise we're on route.
+        guard !userIsWithinEnvelope(of: legProgress.currentStep, at: location) else { return true }
         
         // Check and see if the user is near a future step.
-        guard let nearestStep = routeProgress.currentLegProgress.closestStep(to: location.coordinate) else {
+        guard let nearestStep = legProgress.closestStep(to: location.coordinate) else {
             return false
         }
         
         if nearestStep.distance < RouteControllerUserLocationSnappingDistance {
             // Only advance the stepIndex to a future step if the step is new. Otherwise, the user is still on the current step.
-            if nearestStep.index != routeProgress.currentLegProgress.stepIndex {
+            if nearestStep.index != legProgress.stepIndex {
                 advanceStepIndex(to: nearestStep.index)
             }
             return true
@@ -277,10 +279,11 @@ open class RouteController: NSObject, Router {
         return false
     }
     
-    internal func userIsWithinRadiusOfRoute(location: CLLocation) -> Bool {
+    internal func userIsWithinEnvelope(of step: RouteStep, at location: CLLocation) -> Bool {
         let radius = max(reroutingTolerance, RouteControllerManeuverZoneRadius)
-        let isCloseToCurrentStep = location.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
-        return isCloseToCurrentStep
+        let isCloseToCurrentStep = location.isWithin(radius, of: step)
+        let isWithinCourseTolerances = userCourseIsOnRoute(location)
+        return isCloseToCurrentStep && isWithinCourseTolerances
     }
 }
 
