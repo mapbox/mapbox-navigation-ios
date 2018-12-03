@@ -51,7 +51,7 @@ extension Bundle {
         return path.appendingPathComponent("tiles")
     }
     
-    public func suggestedTilePath(for version: String) -> URL? {
+    public func suggestedTilePathURL(for version: String) -> URL? {
         return suggestedTilePath?.appendingPathComponent(version)
     }
 }

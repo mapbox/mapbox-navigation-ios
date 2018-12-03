@@ -89,14 +89,14 @@ class OfflineRoutingTests: XCTestCase {
         let packURL = URL(fileURLWithPath: documentDirectory, isDirectory: true).appendingPathComponent(readonlyPackURL.lastPathComponent)
         try! data.write(to: packURL)
         
-        let outputDirectory = URL(fileURLWithPath: documentDirectory, isDirectory: true).appendingPathComponent("tiles/test")
-        try? FileManager.default.createDirectory(atPath: outputDirectory.path, withIntermediateDirectories: true, attributes: nil)
+        let outputDirectoryURL = URL(fileURLWithPath: documentDirectory, isDirectory: true).appendingPathComponent("tiles/test")
+        try? FileManager.default.createDirectory(atPath: outputDirectoryURL.path, withIntermediateDirectories: true, attributes: nil)
         
         var progressUpdates = 0
         let unpackExpectation = self.expectation(description: "Tar file should be unpacked")
         let progressExpectation = self.expectation(description: "Progress should be reported")
         
-        NavigationDirections.unpackTilePack(at: packURL, outputDirectory: outputDirectory, progressHandler: { (totalBytes, unpackedBytes) in
+        NavigationDirections.unpackTilePack(at: packURL, outputDirectoryURL: outputDirectoryURL, progressHandler: { (totalBytes, unpackedBytes) in
             
             progressUpdates += 1
             
@@ -115,7 +115,7 @@ class OfflineRoutingTests: XCTestCase {
         let configureExpectation = self.expectation(description: "Configure router with unpacked tar")
         
         let directions = NavigationDirections(accessToken: "foo")
-        directions.configureRouter(tilesURL: outputDirectory) { (numberOfTiles) in
+        directions.configureRouter(tilesURL: outputDirectoryURL) { (numberOfTiles) in
             XCTAssertEqual(numberOfTiles, 5)
             configureExpectation.fulfill()
         }

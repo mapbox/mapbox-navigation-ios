@@ -84,25 +84,25 @@ public class NavigationDirections: Directions, NavigatorDirectionsProtocol {
         }
     }
     
-    public class func unpackTilePack(at filePath: URL, outputDirectory: URL, progressHandler: UnpackProgressHandler?, completionHandler: UnpackCompletionHandler?) {
+    public class func unpackTilePack(at filePathURL: URL, outputDirectoryURL: URL, progressHandler: UnpackProgressHandler?, completionHandler: UnpackCompletionHandler?) {
         
         OfflineDirectionsConstants.offlineSerialQueue.sync {
             
-            let totalPackedBytes = filePath.fileSize!
+            let totalPackedBytes = filePathURL.fileSize!
             
             // Report 0% progress
             progressHandler?(totalPackedBytes, totalPackedBytes)
             
             var timer: DispatchTimer? = DispatchTimer(countdown: .seconds(500), accuracy: .seconds(500), executingOn: OfflineDirectionsConstants.unpackSerialQueue) {
-                if let remainingBytes = filePath.fileSize {
+                if let remainingBytes = filePathURL.fileSize {
                     progressHandler?(totalPackedBytes, remainingBytes)
                 }
             }
 
             timer?.arm()
             
-            let tilePath = filePath.absoluteString.replacingOccurrences(of: "file://", with: "")
-            let outputPath = outputDirectory.absoluteString.replacingOccurrences(of: "file://", with: "")
+            let tilePath = filePathURL.path
+            let outputPath = outputDirectoryURL.path
             
             let result = MBNavigator().unpackTiles(forPacked_tiles_path: tilePath, output_directory: outputPath)
             
