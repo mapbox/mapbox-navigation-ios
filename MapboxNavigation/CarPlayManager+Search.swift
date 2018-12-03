@@ -111,7 +111,7 @@ extension CarPlayManager: CPSearchTemplateDelegate {
         
         guard let userInfo = item.userInfo as? [String: Any],
             let placemark = userInfo[CarPlayManager.CarPlayGeocodedPlacemarkKey] as? GeocodedPlacemark,
-            let location = placemark.location else {
+            let location = placemark.routableLocations?.first ?? placemark.location else {
                 completionHandler()
                 return
         }

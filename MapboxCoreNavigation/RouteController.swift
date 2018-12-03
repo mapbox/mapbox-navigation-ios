@@ -48,6 +48,13 @@ open class RouteController: NSObject, Router {
 
 
     /**
+     The threshold used when we determine when the user has arrived at the waypoint.
+     By default, we claim arrival 5 seconds before the user is physically estimated to arrive.
+    */
+    @objc public var waypointArrivalThreshold: TimeInterval = 5.0
+    
+    
+    /**
      If true, the `RouteController` attempts to calculate a more optimal route for the user on an interval defined by `RouteControllerProactiveReroutingInterval`.
      */
     @objc public var reroutesProactively = false
@@ -68,8 +75,8 @@ open class RouteController: NSObject, Router {
             _routeProgress = newValue
             announce(reroute: routeProgress.route, at: dataSource.location, proactive: didFindFasterRoute)
         }
-
     }
+    
     private var _routeProgress: RouteProgress {
         didSet {
             movementsAwayFromRoute = 0
@@ -214,6 +221,12 @@ open class RouteController: NSObject, Router {
      Monitors the user's course to see if it is consistantly moving away from what we expect the course to be at a given point.
      */
     func userCourseIsOnRoute(_ location: CLLocation) -> Bool {
+        // if we have yet to travel along the current leg, don't check for heading conformance
+        guard routeProgress.currentLegProgress.distanceTraveled > 0 else {
+            movementsAwayFromRoute = 0
+            return true
+        }
+        
         let nearByCoordinates = routeProgress.currentLegProgress.nearbyCoordinates
         guard let calculatedCourseForLocationOnStep = location.interpolatedCourse(along: nearByCoordinates) else { return true }
         
@@ -384,23 +397,29 @@ extension RouteController: CLLocationManagerDelegate {
 
     func updateRouteLegProgress(for location: CLLocation) {
         let currentDestination = routeProgress.currentLeg.destination
-        guard let remainingVoiceInstructions = routeProgress.currentLegProgress.currentStepProgress.remainingSpokenInstructions else { return }
+        let legProgress = routeProgress.currentLegProgress
+        guard let remainingVoiceInstructions = legProgress.currentStepProgress.remainingSpokenInstructions else { return }
 
-        if routeProgress.currentLegProgress.remainingSteps.count <= 1 && remainingVoiceInstructions.count == 0 && currentDestination != previousArrivalWaypoint {
-            previousArrivalWaypoint = currentDestination
+        // We are at least at the "You will arrive" instruction
+        if legProgress.remainingSteps.count <= 1 && remainingVoiceInstructions.count <= 1 && currentDestination != previousArrivalWaypoint {
 
-            routeProgress.currentLegProgress.userHasArrivedAtWaypoint = true
-
-            let advancesToNextLeg = delegate?.router?(self, didArriveAt: currentDestination) ?? DefaultBehavior.didArriveAtWaypoint
-
-            if !routeProgress.isFinalLeg && advancesToNextLeg {
+            //Have we actually arrived? Last instruction is "You have arrived"
+            if remainingVoiceInstructions.count == 0, legProgress.durationRemaining <= waypointArrivalThreshold {
+                previousArrivalWaypoint = currentDestination
+                legProgress.userHasArrivedAtWaypoint = true
+                
+                let advancesToNextLeg = delegate?.router?(self, didArriveAt: currentDestination) ?? DefaultBehavior.didArriveAtWaypoint
+                
+                guard !routeProgress.isFinalLeg && advancesToNextLeg else { return }
                 routeProgress.legIndex += 1
                 updateDistanceToManeuver()
+                
+            } else { //we are approaching the destination
+                delegate?.router?(self, willArriveAt: currentDestination, after: legProgress.durationRemaining, distance: legProgress.distanceRemaining)
             }
         }
     }
-
- 
+    
     func checkForFasterRoute(from location: CLLocation) {
         guard let currentUpcomingManeuver = routeProgress.currentLegProgress.upComingStep else {
             return

@@ -1,6 +1,19 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## master
+## v0.26.0
+
+### CarPlay
+
+* When selecting a search result in CarPlay, the resulting routes lead to the search result’s routable location when available. Routes to a routable location are more likely to be passable. ([#1859](https://github.com/mapbox/mapbox-navigation-ios/pull/1859))
+* Fixed an issue where the CarPlay navigation map’s vanishing point and user puck initially remained centered on screen, instead of accounting for the maneuver panel, until the navigation bar was shown. ([#1856](https://github.com/mapbox/mapbox-navigation-ios/pull/1856))
+* Fixed an issue where route shields and exit numbers appeared blurry in the maneuver panel on CarPlay devices and failed to appear in the CarPlay simulator. ([#1868](https://github.com/mapbox/mapbox-navigation-ios/pull/1868))
+* Added `VisualInstruction.containsLaneIndications`, `VisualInstruction.maneuverImageSet(side:)`, `VisualInstruction.shouldFlipImage(side:)`, and `VisualInstruction.carPlayManeuverLabelAttributedText(bounds:shieldHeight:window:)`. ([#1860](https://github.com/mapbox/mapbox-navigation-ios/pull/1860))
+
+### Other changes
+
+* This release includes a possible fix for spurious rerouting when passing an intermediate waypoint. ([#1869](https://github.com/mapbox/mapbox-navigation-ios/pull/1869))
+
+## v0.25.0 (November 22, 2018)
 
 ### CarPlay
 
@@ -9,14 +22,19 @@
 * Renamed `CarPlayManager(_:)` to `CarPlayManager(styles:directions:eventsManager:)` and `CarPlayNavigationViewController(with:mapTemplate:interfaceController:manager:styles:)` to `CarPlayNavigationViewController(navigationService:mapTemplate:interfaceController:manager:styles:)`. These initializers now accept an array of `Style` objects to apply throughout the CarPlay interface, similar to `NavigationViewController`. You can also change the styles at any time by setting the `CarPlayManager.styles` property. ([#1836](https://github.com/mapbox/mapbox-navigation-ios/pull/1836))
 * `CarPlayManager(styles:directions:eventsManager:)` also allows you to pass in a custom `Directions` object to use when calculating routes. ([#1834](https://github.com/mapbox/mapbox-navigation-ios/pull/1834/))
 * Removed the `StyleManager(_:)` initializer. After initializing a `StyleManager` object, set the `StyleManager.delegate` property to ensure that the style manager’s settings take effect. ([#1836](https://github.com/mapbox/mapbox-navigation-ios/pull/1836))
+* Added `CarPlayManager.mapView` and `CarPlayNavigationViewController.mapView` properties. ([#1852](https://github.com/mapbox/mapbox-navigation-ios/pull/1852))
 * Some additional members of `CarPlayManager` are now accessible in Objective-C code. ([#1836](https://github.com/mapbox/mapbox-navigation-ios/pull/1836))
+* Fixed an issue where distances are incorrectly displayed as “0 m” in regions that use the metric system. ([#1854](https://github.com/mapbox/mapbox-navigation-ios/pull/1854))
 * Fixed an issue where the user puck pointed away from the route line during turn-by-turn navigation in CarPlay. The map’s vanishing point now accounts for safe area insets, including the side maneuver view. ([#1845](https://github.com/mapbox/mapbox-navigation-ios/pull/1845))
+* Fixed an issue where the map view used for browsing and previewing failed to call `MGLMapViewDelegate.mapView(_:viewFor:)` and `MGLMapViewDelegate.mapViewWillStartLocatingUser(_:)`. ([#1852](https://github.com/mapbox/mapbox-navigation-ios/pull/1852))
+* You can now create a `UserPuckCourseView` using the `UserPuckCourseView(frame:)` initializer. ([#1852](https://github.com/mapbox/mapbox-navigation-ios/pull/1852))
 
 ### Other changes
 
 * Fixed a crash during turn-by-turn navigation. ([#1820](https://github.com/mapbox/mapbox-navigation-ios/pull/1820))
 * Fixed a crash that could happen while simulating a route. ([#1820](https://github.com/mapbox/mapbox-navigation-ios/pull/1820))
 * Fixed an issue causing MapboxVoiceController to speak instructions using VoiceOver instead of the Mapbox Voice API. ([#1830](https://github.com/mapbox/mapbox-navigation-ios/issues/1830))
+* Added `NavigationViewController.navigationService(_:willArriveAt:after:distance:)` to assist with preparations for arrival. ([#1847](https://github.com/mapbox/mapbox-navigation-ios/pull/1847))
 
 ## v0.24.0 (November 7, 2018)
 
@@ -24,7 +42,7 @@
 * Fixed an issue where the map view while navigating in CarPlay showed labels in the style’s original language instead of the local language. ([#1601](https://github.com/mapbox/mapbox-navigation-ios/pull/1601))
 * Fixed an issue where rerouting could still occur after arrival, even though `NavigationServiceDelegate.navigationService(_:shouldPreventReroutesWhenArrivingAt:)` returned `true`. ([#1833](https://github.com/mapbox/mapbox-navigation-ios/pull/1833))
 * `NavigationMapViewDelegate.navigationMapView(_:routeStyleLayerWithIdentifier:source:)`, `NavigationMapViewDelegate.navigationMapView(_:routeCasingStyleLayerWithIdentifier:source:)`, `NavigationViewControllerDelegate.navigationViewController(_:routeStyleLayerWithIdentifier:source:)`, and `NavigationViewControllerDelegate.navigationViewController(_:routeCasingStyleLayerWithIdentifier:source:)` can now set the `MGLLineStyleLayer.lineGradient` property. ([#1799](https://github.com/mapbox/mapbox-navigation-ios/pull/1799))
-* Reduced the `NavigationMapView.minimumFramesPerSecond` property’s default value from 30 frames per second to 20 frames per second for improved performance on battery power. ([#1818](https://github.com/mapbox/mapbox-navigation-ios/pull/1818)) 
+* Reduced the `NavigationMapView.minimumFramesPerSecond` property’s default value from 30 frames per second to 20 frames per second for improved performance on battery power. ([#1818](https://github.com/mapbox/mapbox-navigation-ios/pull/1818))
 
 ## v0.23.0 (October 24, 2018)
 * `CarPlayManager` is no longer a singleton; your application delegate is responsible for creating and owning an instance of this class. This fixes a crash in applications that specify the access token programmatically instead of in the Info.plist file. ([#1792](https://github.com/mapbox/mapbox-navigation-ios/pull/1792))
