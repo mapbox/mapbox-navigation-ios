@@ -11,7 +11,6 @@
 
 ### Other changes
 
-* This release includes a possible fix for spurious rerouting when passing an intermediate waypoint. ([#1869](https://github.com/mapbox/mapbox-navigation-ios/pull/1869))
 * The `NavigationSettings.shared` property is now accessible in Objective-C code as `MBNavigationSettings.sharedSettings`. ([#1882](https://github.com/mapbox/mapbox-navigation-ios/pull/1882))
 * Adding property `RouteController.nearbyCoordinates`, which offers similar behavior to `RouteLegProgress.nearbyCoordinates`, which the addition of step lookahead/lookbehind in multi-leg routes.
 
