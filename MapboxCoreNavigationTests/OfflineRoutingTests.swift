@@ -92,17 +92,13 @@ class OfflineRoutingTests: XCTestCase {
         let outputDirectoryURL = URL(fileURLWithPath: documentDirectory, isDirectory: true).appendingPathComponent("tiles/test")
         try? FileManager.default.createDirectory(atPath: outputDirectoryURL.path, withIntermediateDirectories: true, attributes: nil)
         
-        var progressUpdates = 0
         let unpackExpectation = self.expectation(description: "Tar file should be unpacked")
         let progressExpectation = self.expectation(description: "Progress should be reported")
+        progressExpectation.expectedFulfillmentCount = 2
         
         NavigationDirections.unpackTilePack(at: packURL, outputDirectoryURL: outputDirectoryURL, progressHandler: { (totalBytes, unpackedBytes) in
             
-            progressUpdates += 1
-            
-            if (progressUpdates >= 2) {
-                progressExpectation.fulfill()
-            }
+            progressExpectation.fulfill()
             
         }) { (result, error) in
             XCTAssertEqual(result, 5)
