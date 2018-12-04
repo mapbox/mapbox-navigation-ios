@@ -282,6 +282,16 @@ open class RouteController: NSObject, Router {
         let isCloseToCurrentStep = location.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
         return isCloseToCurrentStep
     }
+    
+    /**
+     Advances the leg index.
+     
+     This is a convienence method provided to advance the leg index of any given router without having to worry about the internal data structure of the router.
+     */
+    public func advanceLegIndex(location: CLLocation) {
+        routeProgress.legIndex += 1
+    }
+    
 }
 
 extension RouteController: CLLocationManagerDelegate {
@@ -411,7 +421,7 @@ extension RouteController: CLLocationManagerDelegate {
                 let advancesToNextLeg = delegate?.router?(self, didArriveAt: currentDestination) ?? DefaultBehavior.didArriveAtWaypoint
                 
                 guard !routeProgress.isFinalLeg && advancesToNextLeg else { return }
-                routeProgress.legIndex += 1
+                advanceLegIndex(location: location)
                 updateDistanceToManeuver()
                 
             } else { //we are approaching the destination
@@ -419,6 +429,8 @@ extension RouteController: CLLocationManagerDelegate {
             }
         }
     }
+    
+
     
     func checkForFasterRoute(from location: CLLocation) {
         guard let currentUpcomingManeuver = routeProgress.currentLegProgress.upComingStep else {
