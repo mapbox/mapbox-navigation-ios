@@ -33,10 +33,19 @@ struct OfflineDirectionsConstants {
 }
 
 /**
- Defines additional functionality similar to `Directions` with support for offline routing.
+ A `NavigationDirections` object provides you with optimal directions between different locations, or waypoints. The directions object passes your request to the [Mapbox Directions API](https://www.mapbox.com/api-documentation/?language=Swift#directions) and returns the requested information to a closure (block) that you provide. A directions object can handle multiple simultaneous requests. A `RouteOptions` object specifies criteria for the results, such as intermediate waypoints, a mode of transportation, or the level of detail to be returned. In addition to `Directions`, `NavigationDiretions` provides support for offline routing.
+ 
+ Each result produced by the directions object is stored in a `Route` object. Depending on the `RouteOptions` object you provide, each route may include detailed information suitable for turn-by-turn directions, or it may include only high-level information such as the distance, estimated travel time, and name of each leg of the trip. The waypoints that form the request may be conflated with nearby locations, as appropriate; the resulting waypoints are provided to the closure.
  */
-@objc(MBNavigatorDirectionsProtocol)
-public protocol NavigatorDirectionsProtocol {
+@objc(MBNavigationDirections)
+public class NavigationDirections: Directions {
+    
+    public typealias UnpackProgressHandler = (_ totalBytes: UInt64, _ remainingBytes: UInt64) -> ()
+    public typealias UnpackCompletionHandler = (_ result: UInt64, _ error: Error?) -> ()
+    
+    public override init(accessToken: String? = nil, host: String? = nil) {
+        super.init(accessToken: accessToken, host: host)
+    }
     
     /**
      Configures the router with the given set of tiles
@@ -46,35 +55,10 @@ public protocol NavigatorDirectionsProtocol {
      - parameter accessToken: A Mapbox [access token](https://www.mapbox.com/help/define-access-token/). If an access token is not specified when initializing the directions object, it should be specified in the `MGLMapboxAccessToken` key in the main application bundle’s Info.plist.
      - parameter host: An optional hostname to the server API. The [Mapbox Directions API](https://www.mapbox.com/api-documentation/?language=Swift#directions) endpoint is used by default.
      */
-    func configureRouter(tilesURL: URL, translationsURL: URL?, completionHandler: @escaping OfflineDirectionsCompletionHandler)
-    
-    /**
-     Begins asynchronously calculating the route or routes using the given options and delivers the results to a closure.
-     
-     This method retrieves the routes asynchronously via MapboxNavigationNative.
-     
-     Routes may be displayed atop a [Mapbox map](https://www.mapbox.com/maps/). They may be cached but may not be stored permanently. To use the results in other contexts or store them permanently, [upgrade to a Mapbox enterprise plan](https://www.mapbox.com/directions/#pricing).
-     
-     - parameter options: A `RouteOptions` object specifying the requirements for the resulting routes.
-     - parameter completionHandler: The closure (block) to call with the resulting routes. This closure is executed on the application’s main thread.
-     */
-    func calculate(_ options: RouteOptions, offline: Bool, completionHandler: @escaping Directions.RouteCompletionHandler)
-}
-
-@objc(MBNavigationDirections)
-public class NavigationDirections: Directions, NavigatorDirectionsProtocol {
-    
-    public typealias UnpackProgressHandler = (_ totalBytes: UInt64, _ remainingBytes: UInt64) -> ()
-    public typealias UnpackCompletionHandler = (_ result: UInt64, _ error: Error?) -> ()
-    
-    public override init(accessToken: String? = nil, host: String? = nil) {
-        super.init(accessToken: accessToken, host: host)
-    }
-    
     public func configureRouter(tilesURL: URL, translationsURL: URL? = nil, completionHandler: @escaping OfflineDirectionsCompletionHandler) {
         
         OfflineDirectionsConstants.offlineSerialQueue.sync {
-            // Translations files bundled winthin navigation native
+            // Translations files bundled within navigation native
             // will be used when passing an empty string to `translationsPath`.
             let tileCount = self.navigator.configureRouter(forTilesPath: tilesURL.path, translationsPath: translationsURL?.path ?? "")
             
@@ -84,6 +68,15 @@ public class NavigationDirections: Directions, NavigatorDirectionsProtocol {
         }
     }
     
+    /**
+     Unpacks a .tar-file at the given filePathURL to a writeable output directory.
+     The target at the filePathURL will be consumed while unpacking.
+     
+     - parameter filePathURL: The file path to the .tar-file.
+     - parameter outputDirectoryURL: The output directory.
+     - parameter progressHandler: Unpacking reports progress every 500ms.
+     - parameter completionHandler: Called when unpacking completed.
+     */
     public class func unpackTilePack(at filePathURL: URL, outputDirectoryURL: URL, progressHandler: UnpackProgressHandler?, completionHandler: UnpackCompletionHandler?) {
         
         OfflineDirectionsConstants.offlineSerialQueue.sync {
@@ -118,6 +111,17 @@ public class NavigationDirections: Directions, NavigatorDirectionsProtocol {
         }
     }
     
+    /**
+     Begins asynchronously calculating the route or routes using the given options and delivers the results to a closure.
+     
+     This method retrieves the routes asynchronously via MapboxNavigationNative.
+     
+     Routes may be displayed atop a [Mapbox map](https://www.mapbox.com/maps/). They may be cached but may not be stored permanently. To use the results in other contexts or store them permanently, [upgrade to a Mapbox enterprise plan](https://www.mapbox.com/directions/#pricing).
+     
+     - parameter options: A `RouteOptions` object specifying the requirements for the resulting routes.
+     - parameter offline: Determines whether to calculate the route offline or online.
+     - parameter completionHandler: The closure (block) to call with the resulting routes. This closure is executed on the application’s main thread.
+     */
     public func calculate(_ options: RouteOptions, offline: Bool = true, completionHandler: @escaping Directions.RouteCompletionHandler) {
         
         guard offline == true else {
