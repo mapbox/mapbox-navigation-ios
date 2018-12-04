@@ -68,8 +68,8 @@ class ResizableView: UIControl {
             
             let origin = CGPoint(x: frame.minX, y: frame.minY)
             frame = CGRect(origin: origin,
-                           size: CGSize(width: location.x.distance(origin.x),
-                                        height: location.y.distance(origin.y)))
+                           size: CGSize(width: location.x - origin.x,
+                                        height: location.y - origin.y))
             layoutSubviews()
         }
     }
@@ -115,10 +115,6 @@ fileprivate extension CGFloat {
     
     var mid: CGFloat {
         return self / 2
-    }
-    
-    func distance(_ to: CGFloat) -> CGFloat {
-        return self - to
     }
 }
 

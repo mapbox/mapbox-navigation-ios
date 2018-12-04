@@ -363,26 +363,26 @@ extension ViewController: VoiceControllerDelegate {
         
         let shouldUseOfflineRouting = Settings.selectedOfflineVersion != nil
         
-        if shouldUseOfflineRouting {
-            let currentRoute = navigationViewController.route
-            let profileIdentifier = currentRoute.routeOptions.profileIdentifier
-            
-            var waypoints: [Waypoint] = [Waypoint(location: location)]
-            var remainingWaypoints = currentRoute.routeOptions.waypoints
-            remainingWaypoints.removeFirst()
-            waypoints.append(contentsOf: remainingWaypoints)
-            
-            let options = NavigationRouteOptions(waypoints: waypoints, profileIdentifier: profileIdentifier)
-            
-            Settings.directions.calculate(options, offline: true) { (waypoints, routes, error) in
-                guard let route = routes?.first else { return }
-                navigationViewController.navigationService.route = route
-            }
-            
-            return false
-        } else {
+        guard shouldUseOfflineRouting == true else {
             return true
         }
+        
+        let currentRoute = navigationViewController.route
+        let profileIdentifier = currentRoute.routeOptions.profileIdentifier
+        
+        var waypoints: [Waypoint] = [Waypoint(location: location)]
+        var remainingWaypoints = currentRoute.routeOptions.waypoints
+        remainingWaypoints.removeFirst()
+        waypoints.append(contentsOf: remainingWaypoints)
+        
+        let options = NavigationRouteOptions(waypoints: waypoints, profileIdentifier: profileIdentifier)
+        
+        Settings.directions.calculate(options, offline: true) { (waypoints, routes, error) in
+            guard let route = routes?.first else { return }
+            navigationViewController.navigationService.route = route
+        }
+        
+        return false
     }
 }
 
