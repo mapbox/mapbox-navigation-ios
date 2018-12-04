@@ -98,6 +98,42 @@ open class RouteProgress: NSObject {
      */
     @objc public var currentLegProgress: RouteLegProgress
 
+    @objc public var nearbyCoordinates: [CLLocationCoordinate2D] {
+        
+        var coords: [CLLocationCoordinate2D] = []
+        
+        //If we're on the first step of a leg, add coords from previous leg.
+        if let firstStep = currentLegProgress.leg.steps.first,
+            currentLegProgress.currentStep == firstStep,
+            legIndex > 0 {
+            
+            let lastLeg = route.legs[legIndex - 1]
+            
+            if let lastStep = lastLeg.steps.last,
+               let priorCoords = lastStep.coordinates {
+                coords += priorCoords
+            }
+        }
+        
+        //Add nearby coordinates from current step.
+        coords += currentLegProgress.nearbyCoordinates
+        
+        //If we're on the last step of a leg, add coordinates from the next leg.
+        if let lastStep = currentLegProgress.leg.steps.last,
+            currentLegProgress.currentStep == lastStep,
+            legIndex < (route.legs.count - 1) {
+            
+            let nextLeg = route.legs[legIndex + 1]
+            
+            if let nextStep = nextLeg.steps.first,
+               let upcomingCoords = nextStep.coordinates {
+                coords += upcomingCoords
+            }
+        }
+        
+        return coords
+    }
+    
     /**
      Tuple containing a `CongestionLevel` and a corresponding `TimeInterval` representing the expected travel time for this segment.
      */
