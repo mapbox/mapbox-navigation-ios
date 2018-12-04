@@ -31,7 +31,7 @@ extension SpokenInstruction {
     @available(iOS 10.0, *)
     func attributedText(for legProgress: RouteLegProgress) -> NSAttributedString {
         let attributedText = NSMutableAttributedString(string: text)
-        if let step = legProgress.upComingStep,
+        if let step = legProgress.upcomingStep,
             let name = step.names?.first,
             let phoneticName = step.phoneticNames?.first {
             let nameRange = attributedText.mutableString.range(of: name)

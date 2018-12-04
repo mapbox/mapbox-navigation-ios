@@ -415,7 +415,7 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     func checkForFasterRoute(from location: CLLocation) {
-        guard let currentUpcomingManeuver = routeProgress.currentLegProgress.upComingStep else {
+        guard let currentUpcomingManeuver = routeProgress.currentLegProgress.upcomingStep else {
             return
         }
 
@@ -533,7 +533,7 @@ extension RouteController: CLLocationManagerDelegate {
         let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
 
         // The intersections array does not include the upcoming maneuver intersection.
-        if let upcomingStep = routeProgress.currentLegProgress.upComingStep, let upcomingIntersection = upcomingStep.intersections, let firstUpcomingIntersection = upcomingIntersection.first {
+        if let upcomingStep = routeProgress.currentLegProgress.upcomingStep, let upcomingIntersection = upcomingStep.intersections, let firstUpcomingIntersection = upcomingIntersection.first {
             intersections += [firstUpcomingIntersection]
         }
 
@@ -557,7 +557,7 @@ extension RouteController: CLLocationManagerDelegate {
 
         // Bearings need to normalized so when the `finalHeading` is 359 and the user heading is 1,
         // we count this as within the `RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion`
-        if let upcomingStep = routeProgress.currentLegProgress.upComingStep, let finalHeading = upcomingStep.finalHeading, let initialHeading = upcomingStep.initialHeading {
+        if let upcomingStep = routeProgress.currentLegProgress.upcomingStep, let finalHeading = upcomingStep.finalHeading, let initialHeading = upcomingStep.initialHeading {
             let initialHeadingNormalized = initialHeading.wrap(min: 0, max: 360)
             let finalHeadingNormalized = finalHeading.wrap(min: 0, max: 360)
             let userHeadingNormalized = location.course.wrap(min: 0, max: 360)
@@ -576,7 +576,7 @@ extension RouteController: CLLocationManagerDelegate {
             }
         }
 
-        let step = routeProgress.currentLegProgress.upComingStep?.maneuverLocation ?? routeProgress.currentLegProgress.currentStep.maneuverLocation
+        let step = routeProgress.currentLegProgress.upcomingStep?.maneuverLocation ?? routeProgress.currentLegProgress.currentStep.maneuverLocation
         let userAbsoluteDistance = step.distance(to: location.coordinate)
         let lastKnownUserAbsoluteDistance = routeProgress.currentLegProgress.currentStepProgress.userDistanceToManeuverLocation
 

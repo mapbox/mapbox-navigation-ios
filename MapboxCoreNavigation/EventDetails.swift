@@ -271,10 +271,10 @@ extension RouteLegProgress: Encodable {
     
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(upComingStep?.instructions, forKey: .upcomingInstruction)
-        try container.encodeIfPresent(upComingStep?.maneuverType.description, forKey: .upcomingType)
-        try container.encodeIfPresent(upComingStep?.maneuverDirection.description, forKey: .upcomingModifier)
-        try container.encodeIfPresent(upComingStep?.names?.joined(separator: ";"), forKey: .upcomingName)
+        try container.encodeIfPresent(upcomingStep?.instructions, forKey: .upcomingInstruction)
+        try container.encodeIfPresent(upcomingStep?.maneuverType.description, forKey: .upcomingType)
+        try container.encodeIfPresent(upcomingStep?.maneuverDirection.description, forKey: .upcomingModifier)
+        try container.encodeIfPresent(upcomingStep?.names?.joined(separator: ";"), forKey: .upcomingName)
         try container.encodeIfPresent(currentStep.instructions, forKey: .previousInstruction)
         try container.encode(currentStep.maneuverType.description, forKey: .previousType)
         try container.encode(currentStep.maneuverDirection.description, forKey: .previousModifier)

@@ -124,7 +124,7 @@ class NavigationServiceTests: XCTestCase {
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocation])
         XCTAssertEqual(navigation.router.location!.coordinate, firstLocation.coordinate, "Check snapped location is working")
         
-        let firstCoordinateOnUpcomingStep = navigation.router.routeProgress.currentLegProgress.upComingStep!.coordinates!.first!
+        let firstCoordinateOnUpcomingStep = navigation.router.routeProgress.currentLegProgress.upcomingStep!.coordinates!.first!
         let firstLocationOnNextStepWithNoSpeed = CLLocation(coordinate: firstCoordinateOnUpcomingStep, altitude: 0, horizontalAccuracy: 10, verticalAccuracy: 10, course: 10, speed: 0, timestamp: Date())
         
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocationOnNextStepWithNoSpeed])
@@ -144,9 +144,9 @@ class NavigationServiceTests: XCTestCase {
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocation])
         XCTAssertEqual(navigation.router.location!.coordinate, firstLocation.coordinate, "Check snapped location is working")
         
-        let firstCoordinateOnUpcomingStep = navigation.router.routeProgress.currentLegProgress.upComingStep!.coordinates!.first!
+        let firstCoordinateOnUpcomingStep = navigation.router.routeProgress.currentLegProgress.upcomingStep!.coordinates!.first!
         
-        let finalHeading = navigation.router.routeProgress.currentLegProgress.upComingStep!.finalHeading!
+        let finalHeading = navigation.router.routeProgress.currentLegProgress.upcomingStep!.finalHeading!
         let firstLocationOnNextStepWithDifferentCourse = CLLocation(coordinate: firstCoordinateOnUpcomingStep, altitude: 0, horizontalAccuracy: 30, verticalAccuracy: 10, course: -finalHeading, speed: 5, timestamp: Date())
         
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocationOnNextStepWithDifferentCourse])

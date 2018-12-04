@@ -110,7 +110,7 @@ extension CLLocation {
         
         // If the upcoming maneuver a sharp turn, only look at the current step for snapping.
         // Otherwise, we may get false positives from nearby step coordinates
-        if let upcomingStep = legProgress.upComingStep,
+        if let upcomingStep = legProgress.upcomingStep,
             let initialHeading = upcomingStep.initialHeading,
             let finalHeading = upcomingStep.finalHeading {
             
