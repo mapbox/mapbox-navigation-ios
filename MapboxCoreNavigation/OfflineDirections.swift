@@ -130,12 +130,14 @@ public class NavigationDirections: Directions, NavigatorDirectionsProtocol {
         OfflineDirectionsConstants.offlineSerialQueue.async { [weak self] in
             
             guard let result = self?.navigator.getRouteForDirectionsUri(url.absoluteString) else {
-                let error = OfflineRoutingError.unexpectedRouteResult("Unexpected routing result")
+                let message = NSLocalizedString("OFFLINE_NO_RESULT", bundle: .mapboxCoreNavigation, value: "No result", comment: "No result from offline route request")
+                let error = OfflineRoutingError.unexpectedRouteResult(message)
                 return completionHandler(nil, nil, error as NSError)
             }
             
             guard let data = result.json.data(using: .utf8) else {
-                let error = OfflineRoutingError.corruptRouteData("Corrupt route data")
+                let message = NSLocalizedString("OFFLINE_CORRUPT_DATA", bundle: .mapboxCoreNavigation, value: "Corrupt route data", comment: "Unable to deserialize the offline route response")
+                let error = OfflineRoutingError.corruptRouteData(message)
                 return completionHandler(nil, nil, error as NSError)
             }
             
