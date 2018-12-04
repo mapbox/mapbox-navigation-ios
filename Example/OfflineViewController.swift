@@ -37,14 +37,13 @@ class OfflineViewController: UIViewController {
         
         let coordinateBounds = CoordinateBounds([northWest, southEast])
         
-        updateTitle("Fetching versions")
+        updateTitle("Fetching Versions")
         
         Directions.shared.fetchAvailableOfflineVersions { [weak self] (versions, error) in
             
-            let nonEmptyVersions = versions?.filter { !$0.isEmpty }
-            guard let version = nonEmptyVersions?.first else { return }
+            guard let version = versions?.first(where: { !$0.isEmpty } ) else { return }
             
-            self?.updateTitle("Downloading tiles")
+            self?.updateTitle("Downloading Tiles")
             
             Directions.shared.downloadTiles(in: coordinateBounds, version: version, completionHandler: { (url, response, error) in
                 guard let url = url else { return assert(false, "Unable to locate temporary file") }

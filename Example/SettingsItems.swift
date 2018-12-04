@@ -71,9 +71,9 @@ extension SettingsViewController {
     
     func sections() -> [Section] {
         
-        let offlineItem = Item(title: "Download arbitrary region", viewControllerType: OfflineViewController.self, payload: nil)
+        let offlineItem = Item(title: "Download Region", viewControllerType: OfflineViewController.self, payload: nil)
         let offlineSection = Section(title: "Offline Examples", items: [offlineItem])
-        let versionSection = Section(title: "Downloaded versions", items: versionDirectories())
+        let versionSection = Section(title: "Downloaded Versions", items: versionDirectories())
         
         return [offlineSection, versionSection]
     }
