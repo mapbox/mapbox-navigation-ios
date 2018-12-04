@@ -26,7 +26,7 @@ class NavigationServiceTests: XCTestCase {
 
         let legProgress: RouteLegProgress = navigationService.router.routeProgress.currentLegProgress
 
-        let firstCoord = legProgress.nearbyCoordinates.first!
+        let firstCoord = navigationService.router.routeProgress.nearbyCoordinates.first!
         let firstLocation = CLLocation(coordinate: firstCoord, altitude: 5, horizontalAccuracy: 10, verticalAccuracy: 5, course: 20, speed: 4, timestamp: Date())
 
         let remainingStepCount = legProgress.remainingSteps.count
@@ -163,7 +163,7 @@ class NavigationServiceTests: XCTestCase {
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocation])
         XCTAssertEqual(navigation.router.location!.coordinate, firstLocation.coordinate, "Check snapped location is working")
 
-        let futureCoord = Polyline(navigation.router.routeProgress.currentLegProgress.nearbyCoordinates).coordinateFromStart(distance: 100)!
+        let futureCoord = Polyline(navigation.router.routeProgress.nearbyCoordinates).coordinateFromStart(distance: 100)!
         let futureInaccurateLocation = CLLocation(coordinate: futureCoord, altitude: 0, horizontalAccuracy: 1, verticalAccuracy: 200, course: 0, speed: 5, timestamp: Date())
 
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [futureInaccurateLocation])
@@ -181,9 +181,9 @@ class NavigationServiceTests: XCTestCase {
         route.accessToken = "foo"
         let navigation = MapboxNavigationService(route: route, directions: directions)
         let router = navigation.router!
-        let firstCoord = router.routeProgress.currentLegProgress.nearbyCoordinates.first!
+        let firstCoord = router.routeProgress.nearbyCoordinates.first!
         let firstLocation = CLLocation(latitude: firstCoord.latitude, longitude: firstCoord.longitude)
-        let coordNearStart = Polyline(router.routeProgress.currentLegProgress.nearbyCoordinates).coordinateFromStart(distance: 10)!
+        let coordNearStart = Polyline(router.routeProgress.nearbyCoordinates).coordinateFromStart(distance: 10)!
 
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [firstLocation])
 
@@ -196,7 +196,7 @@ class NavigationServiceTests: XCTestCase {
 
         // The course should not be the interpolated course, rather the raw course.
         XCTAssertEqual(directionToStart, router.location!.course, "The course should be the raw course and not an interpolated course")
-        XCTAssertFalse(facingTowardsStartLocation.shouldSnap(toRouteWith: facingTowardsStartLocation.interpolatedCourse(along: router.routeProgress.currentLegProgress.nearbyCoordinates)!, distanceToFirstCoordinateOnLeg: facingTowardsStartLocation.distance(from: firstLocation)), "Should not snap")
+        XCTAssertFalse(facingTowardsStartLocation.shouldSnap(toRouteWith: facingTowardsStartLocation.interpolatedCourse(along: router.routeProgress.nearbyCoordinates)!, distanceToFirstCoordinateOnLeg: facingTowardsStartLocation.distance(from: firstLocation)), "Should not snap")
     }
 
     //TODO: Broken by PortableRoutecontroller & MBNavigator -- needs team discussion.

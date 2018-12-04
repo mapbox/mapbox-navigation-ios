@@ -227,7 +227,7 @@ open class RouteController: NSObject, Router {
             return true
         }
         
-        let nearByCoordinates = routeProgress.currentLegProgress.nearbyCoordinates
+        let nearByCoordinates = routeProgress.nearbyCoordinates
         guard let calculatedCourseForLocationOnStep = location.interpolatedCourse(along: nearByCoordinates) else { return true }
         
         let maxUpdatesAwayFromRouteGivenAccuracy = Int(location.horizontalAccuracy / Double(RouteControllerIncorrectCourseMultiplier))
