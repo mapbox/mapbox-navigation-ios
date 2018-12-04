@@ -616,11 +616,8 @@
 		351BEC091E5BCC72006FE110 /* DashedLineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashedLineView.swift; sourceTree = "<group>"; };
 		351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DistanceFormatter.swift; sourceTree = "<group>"; };
 		351BEC281E5BD530006FE110 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Resources/Assets.xcassets; sourceTree = "<group>"; };
-		351FCEF521887F890098550A /* ResizableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResizableView.swift; sourceTree = "<group>"; };
 		35213DAD1EC456CF00A62B21 /* FBSnapshotTestCase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSnapshotTestCase.framework; path = Carthage/Build/iOS/FBSnapshotTestCase.framework; sourceTree = "<group>"; };
 		3527D2B61EC45FBD00C07FC9 /* Fixtures.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Fixtures.xcassets; sourceTree = "<group>"; };
-		3529FCE921A5A23000AEA9AA /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
-		3529FCEB21A5B68600AEA9AA /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
 		3529FCEF21A5C59400AEA9AA /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Settings.swift; path = Example/Settings.swift; sourceTree = "<group>"; };
 		3529FCF121A5C5B300AEA9AA /* ResizableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ResizableView.swift; path = Example/ResizableView.swift; sourceTree = "<group>"; };
 		3529FCF321A5C5C600AEA9AA /* SettingsItems.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsItems.swift; path = Example/SettingsItems.swift; sourceTree = "<group>"; };
@@ -758,9 +755,6 @@
 		35DC9D8E1F4321CC001ECD64 /* route-with-lanes.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "route-with-lanes.json"; sourceTree = "<group>"; };
 		35DC9D901F4323AA001ECD64 /* LanesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanesView.swift; sourceTree = "<group>"; };
 		35E102652166360300A07109 /* OfflineDirections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineDirections.swift; sourceTree = "<group>"; };
-		35E3B48D21873298002803BE /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
-		35E3B48F21873941002803BE /* OfflineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineViewController.swift; sourceTree = "<group>"; };
-		35E3B49121873C18002803BE /* SettingsItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsItems.swift; sourceTree = "<group>"; };
 		35E407671F5625FF00EFC814 /* StyleKitMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleKitMarker.swift; sourceTree = "<group>"; };
 		35EB9A6920A1A89500CB1225 /* turn_left.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = turn_left.data; sourceTree = "<group>"; };
 		35ECAF2C2092275100DC3BC3 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
@@ -1202,19 +1196,6 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
-		3529FCEE21A5C52C00AEA9AA /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-				351FCEF521887F890098550A /* ResizableView.swift */,
-				35E3B49121873C18002803BE /* SettingsItems.swift */,
-				35E3B48F21873941002803BE /* OfflineViewController.swift */,
-				3529FCEB21A5B68600AEA9AA /* UIViewController.swift */,
-				3529FCE921A5A23000AEA9AA /* Settings.swift */,
-				35E3B48D21873298002803BE /* SettingsViewController.swift */,
-			);
-			name = "Recovered References";
-			sourceTree = "<group>";
-		};
 		354A9BC920EA9BC100F03325 /* Events */ = {
 			isa = PBXGroup;
 			children = (
@@ -1505,7 +1486,6 @@
 				35CDA85F2190F2A30072B675 /* TestHelper */,
 				C5ADFBCA1DDCC7840011824B /* Products */,
 				A9E2B43473B53369153F54C6 /* Frameworks */,
-				3529FCEE21A5C52C00AEA9AA /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
