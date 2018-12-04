@@ -1,3 +1,9 @@
-﻿/* Inform developer an update is available */
+﻿/* Unable to deserialize the offline route response */
+"OFFLINE_CORRUPT_DATA" = "Corrupt route data";
+
+/* No result from offline route request */
+"OFFLINE_NO_RESULT" = "No result";
+
+/* Inform developer an update is available */
 "UPDATE_AVAILABLE" = "Mapbox Navigation SDK for iOS version %@ is now available.";
 
