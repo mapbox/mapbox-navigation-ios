@@ -20,7 +20,7 @@ Get up and running in a few minutes with our drop-in turn-by-turn navigation `Na
 * Natural-sounding turn instructions powered by [Amazon Polly](https://aws.amazon.com/polly/) (no configuration needed)
 * [Support for over a dozen languages](https://www.mapbox.com/ios-sdk/navigation/overview/localization-and-internationalization/)
 
-## [Documentation](https://www.mapbox.com/mapbox-navigation-ios/navigation/)
+## [Documentation](https://www.mapbox.com/ios-sdk/api/navigation/)
 
 ## Requirements
 
@@ -87,11 +87,11 @@ Directions.shared.calculate(options) { (waypoints, routes, error) in
 }
 ```
 
-Consult the [API reference](https://www.mapbox.com/mapbox-navigation-ios/navigation/) for further details.
+Consult the [API reference](https://www.mapbox.com/ios-sdk/api/navigation/) for further details.
 
 ## Examples
 
-The [API reference](https://www.mapbox.com/mapbox-navigation-ios/navigation/) includes example code for accomplishing common tasks. You can run these examples as part of the [navigation-ios-examples](https://github.com/mapbox/navigation-ios-examples) project.
+The [API reference](https://www.mapbox.com/ios-sdk/api/navigation/) includes example code for accomplishing common tasks. You can run these examples as part of the [navigation-ios-examples](https://github.com/mapbox/navigation-ios-examples) project.
 
 This repository also contains [Swift and Objective-C testbeds](https://github.com/mapbox/mapbox-navigation-ios/blob/master/Examples/) that exercise a variety of navigation SDK features:
 
