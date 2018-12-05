@@ -1,0 +1,39 @@
+/* Alert action */
+"ALERT_OK" = "OK";
+
+/* Title of button that downloads an offline region */
+"OFFLINE_ITEM_DOWNLOAD" = "Download";
+
+/* Status item while downloading an offline region */
+"OFFLINE_TITLE_DOWNLOADING_TILES" = "Downloading Tiles…";
+
+/* Status item while downloading an offline region */
+"OFFLINE_TITLE_FETCHING_VERSIONS" = "Fetching Versions…";
+
+/* Status item while downloading an offline region; 1 = percentage complete */
+"OFFLINE_TITLE_UNPACKING_FMT" = "Unpacking… (%@)";
+
+/* Title of action for dismissing waypoint removal confirmation sheet */
+"REMOVE_WAYPOINT_CONFIRM_CANCEL" = "Cancel";
+
+/* Message of sheet confirming waypoint removal */
+"REMOVE_WAYPOINT_CONFIRM_MSG" = "Do you want to remove this waypoint?";
+
+/* Title of alert sheet action for removing a waypoint */
+"REMOVE_WAYPOINT_CONFIRM_REMOVE" = "Remove Waypoint";
+
+/* Title of sheet confirming waypoint removal */
+"REMOVE_WAYPOINT_CONFIRM_TITLE" = "Remove Waypoint?";
+
+/* Alert message when a router has been configured; 1 = number of map tiles */
+"ROUTER_CONFIGURED_MSG" = "Router configured with %ld tile(s).";
+
+/* Title of table view item that downloads a new offline region */
+"SETTINGS_ITEM_DOWNLOAD_REGION_TITLE" = "Download Region";
+
+/* Section of offline settings table view */
+"SETTINGS_SECTION_DOWNLOADED_VERSIONS" = "Downloaded Versions";
+
+/* Section of offline settings table view */
+"SETTINGS_SECTION_OFFLINE_EXAMPLES" = "Offline Examples";
+

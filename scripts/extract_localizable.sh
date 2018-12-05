@@ -2,6 +2,7 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+EXAMPLE="${DIR}/../Example"
 NAVIGATION="${DIR}/../MapboxNavigation"
 CORE="${DIR}/../MapboxCoreNavigation"
 
@@ -12,6 +13,11 @@ source "${DIR}/file_conversion.sh"
 for lang in ${LANGUAGES[@]}
 do
     echo "Extracting ${lang} strings"
+
+    # Extract localizable strings from .swift files
+    find ${EXAMPLE} -name "*.swift" -print0 | xargs -0 xcrun extractLocStrings -o "${EXAMPLE}/${lang}.lproj"
+    STRINGS_FILE="${EXAMPLE}/${lang}.lproj/Localizable.strings"
+    convertIfNeeded ${STRINGS_FILE}
 
     # Extract localizable strings from .swift files
     find ${NAVIGATION} -name "*.swift" -print0 | xargs -0 xcrun extractLocStrings -o "${NAVIGATION}/Resources/${lang}.lproj"

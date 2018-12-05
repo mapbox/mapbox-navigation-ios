@@ -24,7 +24,7 @@ class OfflineViewController: UIViewController {
         
         view.addSubview(resizableView)
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Download", style: .done, target: self, action: #selector(downloadRegion))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("OFFLINE_ITEM_DOWNLOAD", value: "Download", comment: "Title of button that downloads an offline region"), style: .done, target: self, action: #selector(downloadRegion))
     }
     
     @objc func downloadRegion() {
@@ -37,13 +37,13 @@ class OfflineViewController: UIViewController {
         
         let coordinateBounds = CoordinateBounds([northWest, southEast])
         
-        updateTitle("Fetching Versions")
+        updateTitle(NSLocalizedString("OFFLINE_TITLE_FETCHING_VERSIONS", value: "Fetching Versions…", comment: "Status item while downloading an offline region"))
         
         Directions.shared.fetchAvailableOfflineVersions { [weak self] (versions, error) in
             
             guard let version = versions?.first(where: { !$0.isEmpty } ) else { return }
             
-            self?.updateTitle("Downloading Tiles")
+            self?.updateTitle(NSLocalizedString("OFFLINE_TITLE_DOWNLOADING_TILES", value: "Downloading Tiles…", comment: "Status item while downloading an offline region"))
             
             Directions.shared.downloadTiles(in: coordinateBounds, version: version, completionHandler: { (url, response, error) in
                 guard let url = url else { return assert(false, "Unable to locate temporary file") }
@@ -53,8 +53,10 @@ class OfflineViewController: UIViewController {
                 
                 NavigationDirections.unpackTilePack(at: url, outputDirectoryURL: outputDirectoryURL!, progressHandler: { (totalBytes, bytesRemaining) in
 
-                    let progress = (Float(bytesRemaining) / Float(totalBytes)) * 100
-                    self?.updateTitle("Unpacking \(Int(progress))%")
+                    let progress = Float(bytesRemaining) / Float(totalBytes)
+                    let formattedProgress = NumberFormatter.localizedString(from: progress as NSNumber, number: .percent)
+                    let title = String.localizedStringWithFormat(NSLocalizedString("OFFLINE_TITLE_UNPACKING_FMT", value: "Unpacking… (%@)", comment: "Status item while downloading an offline region; 1 = percentage complete"), formattedProgress)
+                    self?.updateTitle(title)
 
                 }, completionHandler: { (result, error) in
 

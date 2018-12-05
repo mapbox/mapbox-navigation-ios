@@ -100,8 +100,7 @@ class SettingsViewController: UITableViewController {
             let tilesURL = Bundle.mapboxCoreNavigation.suggestedTilePathURL(for: selectedOfflineVersion)
             
             Settings.directions.configureRouter(tilesURL: tilesURL!) { [weak self] (numberOfTiles) in
-                let formattedTileCount = NumberFormatter.localizedString(from: numberOfTiles as NSNumber, number: .decimal)
-                let message = String.localizedStringWithFormat(NSLocalizedString("Router configured with %@ tile(s).", comment: "Alert message when a router has been configured"), formattedTileCount)
+                let message = String.localizedStringWithFormat(NSLocalizedString("ROUTER_CONFIGURED_MSG", value: "Router configured with %ld tile(s).", comment: "Alert message when a router has been configured; 1 = number of map tiles"), numberOfTiles)
                 self?.presentAlert(message: message)
             }
         }
