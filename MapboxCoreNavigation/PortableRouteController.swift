@@ -73,16 +73,13 @@ open class PortableRouteController: RouteController {
      This is a convienence method provided to advance the leg index of any given router without having to worry about the internal data structure of the router.
      */
     override public func advanceLegIndex(location: CLLocation) {
-        precondition(!routeProgress.isFinalLeg, "Can not increment leg index beyond final leg.")
-        
         super.advanceLegIndex(location: location)
         
         let status = navigator.getStatusForTimestamp(location.timestamp)
-        let legIndex = status.legIndex
         let routeIndex = status.routeIndex
 
         //The first route is the active one in the navigator.
-        navigator.changeRouteLeg(forRoute: routeIndex, leg: routeProgress.legIndex)
+        navigator.changeRouteLeg(forRoute: routeIndex, leg: UInt32(routeProgress.legIndex))
     }
     
     public func enableLocationRecording() {

@@ -288,6 +288,7 @@ open class RouteController: NSObject, Router {
      
      This is a convienence method provided to advance the leg index of any given router without having to worry about the internal data structure of the router.
      */
+    @objc(advanceLegIndexWithLocation:)
     public func advanceLegIndex(location: CLLocation) {
         precondition(!routeProgress.isFinalLeg, "Can not increment leg index beyond final leg.")
         routeProgress.legIndex += 1
