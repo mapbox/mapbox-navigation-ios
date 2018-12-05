@@ -414,6 +414,20 @@ open class RouteLegProgress: NSObject {
         currentStepProgress = RouteStepProgress(step: leg.steps[stepIndex], spokenInstructionIndex: spokenInstructionIndex)
     }
 
+    /**
+     Returns an array of `CLLocationCoordinate2D` of the prior, current and upcoming step geometry.
+     */
+    
+    @available(*, deprecated: 0.1, message: "Use RouteProgress.nearbyCoordinates")
+    @objc public var nearbyCoordinates: [CLLocationCoordinate2D] {
+        let priorCoords = priorStep?.coordinates ?? []
+        let upcomingCoords = upcomingStep?.coordinates ?? []
+        let currentCoords = currentStep.coordinates ?? []
+        let nearby = priorCoords + currentCoords + upcomingCoords
+        assert(!nearby.isEmpty, "Step must have coordinates")
+        return nearby
+    }
+
     typealias StepIndexDistance = (index: Int, distance: CLLocationDistance)
 
     func closestStep(to coordinate: CLLocationCoordinate2D) -> StepIndexDistance? {
