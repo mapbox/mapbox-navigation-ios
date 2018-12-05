@@ -109,7 +109,7 @@ public class NavigationDirections: Directions {
             let tilePath = filePathURL.path
             let outputPath = outputDirectoryURL.path
             
-            let result = MBNavigator().unpackTiles(forPacked_tiles_path: tilePath, output_directory: outputPath)
+            let numberOfTiles = MBNavigator().unpackTiles(forPacked_tiles_path: tilePath, output_directory: outputPath)
             
             // Report 100% progress
             progressHandler?(totalPackedBytes, totalPackedBytes)
@@ -118,7 +118,7 @@ public class NavigationDirections: Directions {
             timer = nil
             
             DispatchQueue.main.async {
-                completionHandler?(result, nil)
+                completionHandler?(numberOfTiles, nil)
             }
         }
     }
