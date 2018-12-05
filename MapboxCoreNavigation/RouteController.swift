@@ -156,7 +156,7 @@ open class RouteController: NSObject, Router {
      - important: If the rawLocation is outside of the route snapping tolerances, this value is nil.
      */
     var snappedLocation: CLLocation? {
-        return rawLocation?.snapped(to: routeProgress.currentLegProgress)
+        return rawLocation?.snapped(to: routeProgress)
     }
 
     var heading: CLHeading?

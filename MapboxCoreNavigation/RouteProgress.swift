@@ -116,7 +116,9 @@ open class RouteProgress: NSObject {
         }
         
         //Add nearby coordinates from current step.
-        coords += currentLegProgress.nearbyCoordinates
+        coords += currentLegProgress.priorStep?.coordinates ?? []
+        coords += currentLegProgress.currentStep.coordinates ?? []
+        coords += currentLegProgress.upcomingStep?.coordinates ?? []
         
         //If we're on the last step of a leg, add coordinates from the next leg.
         if let lastStep = currentLegProgress.leg.steps.last,
@@ -403,18 +405,6 @@ open class RouteLegProgress: NSObject {
         self.leg = leg
         self.stepIndex = stepIndex
         currentStepProgress = RouteStepProgress(step: leg.steps[stepIndex], spokenInstructionIndex: spokenInstructionIndex)
-    }
-
-    /**
-     Returns an array of `CLLocationCoordinate2D` of the prior, current and upcoming step geometry.
-     */
-    @objc public var nearbyCoordinates: [CLLocationCoordinate2D] {
-        let priorCoords = priorStep?.coordinates ?? []
-        let upcomingCoords = upcomingStep?.coordinates ?? []
-        let currentCoords = currentStep.coordinates ?? []
-        let nearby = priorCoords + currentCoords + upcomingCoords
-        assert(!nearby.isEmpty, "Step must have coordinates")
-        return nearby
     }
 
     typealias StepIndexDistance = (index: Int, distance: CLLocationDistance)
