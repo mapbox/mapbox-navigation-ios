@@ -48,7 +48,7 @@ class OfflineViewController: UIViewController {
             Directions.shared.downloadTiles(in: coordinateBounds, version: version, completionHandler: { (url, response, error) in
                 guard let url = url else { return assert(false, "Unable to locate temporary file") }
                 
-                let outputDirectoryURL = Bundle.mapboxCoreNavigation.suggestedTilePathURL(for: version)
+                let outputDirectoryURL = Bundle.mapboxCoreNavigation.suggestedTileURL(version: version)
                 outputDirectoryURL?.ensureDirectoryExists()
                 
                 NavigationDirections.unpackTilePack(at: url, outputDirectoryURL: outputDirectoryURL!, progressHandler: { (totalBytes, bytesRemaining) in

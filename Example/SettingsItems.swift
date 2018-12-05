@@ -82,7 +82,7 @@ extension SettingsViewController {
         
         var versions = [OfflineVersionItem]()
         
-        let directories = try? FileManager.default.contentsOfDirectory(atPath: Bundle.mapboxCoreNavigation.suggestedTilePath!.path)
+        let directories = try? FileManager.default.contentsOfDirectory(atPath: Bundle.mapboxCoreNavigation.suggestedTileURL!.path)
         
         let byteCountFormatter = ByteCountFormatter()
         byteCountFormatter.allowedUnits = .useMB
@@ -92,7 +92,7 @@ extension SettingsViewController {
         
         filteredDirectories?.forEach {
             var subtitle: String? = nil
-            let path = Bundle.mapboxCoreNavigation.suggestedTilePath!.appendingPathComponent($0)
+            let path = Bundle.mapboxCoreNavigation.suggestedTileURL!.appendingPathComponent($0)
             if let directorySize = path.directorySize {
                 subtitle = byteCountFormatter.string(fromByteCount: Int64(directorySize))
             }

@@ -71,7 +71,7 @@ class SettingsViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         let item = dataSource[indexPath.section].items[indexPath.row]
         
-        guard let url = Bundle.mapboxCoreNavigation.suggestedTilePathURL(for: item.title) else { return }
+        guard let url = Bundle.mapboxCoreNavigation.suggestedTileURL(version: item.title) else { return }
         try? FileManager.default.removeItem(atPath: url.path)
         
         dataSource = sections()
@@ -97,7 +97,7 @@ class SettingsViewController: UITableViewController {
         Settings.selectedOfflineVersion = toggle.isOn ? toggle.item?.title : nil
         
         if let selectedOfflineVersion = Settings.selectedOfflineVersion {
-            let tilesURL = Bundle.mapboxCoreNavigation.suggestedTilePathURL(for: selectedOfflineVersion)
+            let tilesURL = Bundle.mapboxCoreNavigation.suggestedTileURL(version: selectedOfflineVersion)
             
             Settings.directions.configureRouter(tilesURL: tilesURL!) { [weak self] (numberOfTiles) in
                 let message = String.localizedStringWithFormat(NSLocalizedString("ROUTER_CONFIGURED_MSG", value: "Router configured with %ld tile(s).", comment: "Alert message when a router has been configured; 1 = number of map tiles"), numberOfTiles)
