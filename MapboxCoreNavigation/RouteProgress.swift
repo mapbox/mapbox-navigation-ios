@@ -133,7 +133,9 @@ open class RouteProgress: NSObject {
     }
     
     /**
-     Returns an array of `CLLocationCoordinate2D` of the prior, current and upcoming step geometry.
+     Returns an array of `CLLocationCoordinate2D` of the coordinates along the current step and any adjacent steps.
+     
+     - important: The adjacent steps may be part of legs other than the current leg.
      */
 
     @objc public var nearbyCoordinates: [CLLocationCoordinate2D] {
