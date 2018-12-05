@@ -134,13 +134,13 @@ public class NavigationDirections: Directions {
         OfflineDirectionsConstants.offlineSerialQueue.async { [weak self] in
             
             guard let result = self?.navigator.getRouteForDirectionsUri(url.absoluteString) else {
-                let message = NSLocalizedString("OFFLINE_NO_RESULT", bundle: .mapboxCoreNavigation, value: "No result", comment: "No result from offline route request")
+                let message = NSLocalizedString("OFFLINE_NO_RESULT", bundle: .mapboxCoreNavigation, value: "Unable to calculate the requested route while offline.", comment: "Error description when an offline route request returns no result")
                 let error = OfflineRoutingError.unexpectedRouteResult(message)
                 return completionHandler(nil, nil, error as NSError)
             }
             
             guard let data = result.json.data(using: .utf8) else {
-                let message = NSLocalizedString("OFFLINE_CORRUPT_DATA", bundle: .mapboxCoreNavigation, value: "Corrupt route data", comment: "Unable to deserialize the offline route response")
+                let message = NSLocalizedString("OFFLINE_CORRUPT_DATA", bundle: .mapboxCoreNavigation, value: "Found an invalid route while offline.", comment: "Error message when an offline route request returns a response that can’t be deserialized")
                 let error = OfflineRoutingError.corruptRouteData(message)
                 return completionHandler(nil, nil, error as NSError)
             }
