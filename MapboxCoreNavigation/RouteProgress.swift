@@ -97,43 +97,50 @@ open class RouteProgress: NSObject {
      Returns the progress along the current `RouteLeg`.
      */
     @objc public var currentLegProgress: RouteLegProgress
+    
+    @objc public var priorLeg: RouteLeg? {
+        return legIndex > 0 ? route.legs[legIndex - 1] : nil
+    }
+    
+    /**
+     Returns the prior `RouteStep`.
+     
+     If there is no `prior`, nil is returned.
+     */
+    
+    @objc public var priorStep: RouteStep? {
+        return currentLegProgress.priorStep ?? priorLeg?.steps.last
+    }
+    
+    /**
+     Returns the upcoming `RouteLeg`.
+     
+     If there is no `upcomingLeg`, nil is returned.
+     */
+    
+    @objc public var upcomingLeg: RouteLeg? {
+        return legIndex + 1 < route.legs.endIndex ? route.legs[legIndex + 1] : nil
+    }
+    
+    /**
+     Returns the upcoming `RouteStep`.
+     
+     If there is no `upcomingStep`, nil is returned.
+     */
+    
+    public var upcomingStep: RouteStep? {
+        return currentLegProgress.upcomingStep ?? upcomingLeg?.steps.first
+    }
+    
+    /**
+     Returns an array of `CLLocationCoordinate2D` of the prior, current and upcoming step geometry.
+     */
 
     @objc public var nearbyCoordinates: [CLLocationCoordinate2D] {
-        
-        var coords: [CLLocationCoordinate2D] = []
-        
-        //If we're on the first step of a leg, add coords from previous leg.
-        if let firstStep = currentLegProgress.leg.steps.first,
-            currentLegProgress.currentStep == firstStep,
-            legIndex > 0 {
-            
-            let lastLeg = route.legs[legIndex - 1]
-            
-            if let lastStep = lastLeg.steps.last,
-               let priorCoords = lastStep.coordinates {
-                coords += priorCoords
-            }
-        }
-        
-        //Add nearby coordinates from current step.
-        coords += currentLegProgress.priorStep?.coordinates ?? []
-        coords += currentLegProgress.currentStep.coordinates ?? []
-        coords += currentLegProgress.upcomingStep?.coordinates ?? []
-        
-        //If we're on the last step of a leg, add coordinates from the next leg.
-        if let lastStep = currentLegProgress.leg.steps.last,
-            currentLegProgress.currentStep == lastStep,
-            legIndex < (route.legs.count - 1) {
-            
-            let nextLeg = route.legs[legIndex + 1]
-            
-            if let nextStep = nextLeg.steps.first,
-               let upcomingCoords = nextStep.coordinates {
-                coords += upcomingCoords
-            }
-        }
-        
-        return coords
+        let priorCoordinates = priorStep?.coordinates?.dropLast() ?? []
+        let currentCoordinates = currentLegProgress.currentStep.coordinates ?? []
+        let upcomingCoordinates = upcomingStep?.coordinates?.dropFirst() ?? []
+        return priorCoordinates + currentCoordinates + upcomingCoordinates
     }
     
     /**
