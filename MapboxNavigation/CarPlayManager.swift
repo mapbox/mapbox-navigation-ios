@@ -624,7 +624,13 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let shiftedCenterCoordinate = mapView.centerCoordinate.coordinate(at: distance, facing: shiftedDirection)
         mapView.setCenter(shiftedCenterCoordinate, animated: true)
     }
-
+    
+    public func mapTemplate(_ mapTemplate: CPMapTemplate, displayStyleFor maneuver: CPManeuver) -> CPManeuverDisplayStyle {
+        if let visualInstruction = maneuver.userInfo as? VisualInstruction, visualInstruction.containsLaneIndications {
+            return .symbolOnly
+        }
+        return []
+    }
 }
 
 // MARK: CarPlayNavigationDelegate

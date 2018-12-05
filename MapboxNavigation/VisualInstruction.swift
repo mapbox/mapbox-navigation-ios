@@ -3,6 +3,32 @@ import MapboxDirections
 import CarPlay
 #endif
 
+extension VisualInstructionBanner {
+    #if canImport(CarPlay)
+    @available(iOS 12.0, *)
+    public func lanesImageSet(size: CGSize, window: UIWindow?) -> CPImageSet? {
+        let colors: [UIColor] = [.black, .white]
+        let blackAndWhiteLaneIcons: [UIImage] = colors.compactMap { (color) in
+            let lanesView = LanesView(frame: CGRect(origin: .zero, size: size))
+            
+            // Temporarily add the view to the view hierarchy for UIAppearance to work its magic.
+            if let carWindow = window {
+                carWindow.addSubview(lanesView)
+                lanesView.update(for: self)
+                lanesView.removeFromSuperview()
+            } else {
+                lanesView.update(for: self)
+            }
+            
+            lanesView.backgroundColor = .clear
+            return lanesView.imageRepresentation
+        }
+        guard blackAndWhiteLaneIcons.count == 2 else { return nil }
+        return CPImageSet(lightContentImage: blackAndWhiteLaneIcons[1], darkContentImage: blackAndWhiteLaneIcons[0])
+    }
+    #endif
+}
+
 extension VisualInstruction {
     
     /// Returns true if `VisualInstruction.components` contains any `LaneIndicationComponent`.
