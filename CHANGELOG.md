@@ -11,8 +11,8 @@
 
 ### Other changes
 
-* This release includes a possible fix for spurious rerouting when passing an intermediate waypoint. ([#1869](https://github.com/mapbox/mapbox-navigation-ios/pull/1869))
 * The `NavigationSettings.shared` property is now accessible in Objective-C code as `MBNavigationSettings.sharedSettings`. ([#1882](https://github.com/mapbox/mapbox-navigation-ios/pull/1882))
+* Fixed spurious rerouting on multi-leg routes. ([#1884](https://github.com/mapbox/mapbox-navigation-ios/pull/1884))
 
 ## v0.25.0 (November 22, 2018)
 
