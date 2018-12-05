@@ -36,24 +36,25 @@ struct NavigationDirectionsConstants {
 }
 
 /**
+ A closure to call when an unpacking operation has made some progress.
+ 
+ - parameter totalBytes: The total size of tile pack in bytes.
+ - parameter remainingBytes: The remaining number of bytes left to download.
+ */
+public typealias UnpackProgressHandler = (_ totalBytes: UInt64, _ remainingBytes: UInt64) -> ()
+
+/**
+ A closure to call once an unpacking operation has completed.
+ */
+public typealias UnpackCompletionHandler = (_ numberOfTiles: UInt64, _ error: Error?) -> ()
+
+/**
  A `NavigationDirections` object provides you with optimal directions between different locations, or waypoints. The directions object passes your request to a built-in routing engine and returns the requested information to a closure (block) that you provide. A directions object can handle multiple simultaneous requests. A `RouteOptions` object specifies criteria for the results, such as intermediate waypoints, a mode of transportation, or the level of detail to be returned. In addition to `Directions`, `NavigationDirections` provides support for offline routing.
  
  Each result produced by the directions object is stored in a `Route` object. Depending on the `RouteOptions` object you provide, each route may include detailed information suitable for turn-by-turn directions, or it may include only high-level information such as the distance, estimated travel time, and name of each leg of the trip. The waypoints that form the request may be conflated with nearby locations, as appropriate; the resulting waypoints are provided to the closure.
  */
 @objc(MBNavigationDirections)
 public class NavigationDirections: Directions {
-    /**
-     A closure to call when an unpacking operation has made some progress.
-     
-     - parameter totalBytes: The total size of tile pack in bytes.
-     - parameter remainingBytes: The remaining number of bytes left to download.
-     */
-    public typealias UnpackProgressHandler = (_ totalBytes: UInt64, _ remainingBytes: UInt64) -> ()
-    
-    /**
-     A closure to call once an unpacking operation has completed.
-     */
-    public typealias UnpackCompletionHandler = (_ result: UInt64, _ error: Error?) -> ()
     
     public override init(accessToken: String? = nil, host: String? = nil) {
         super.init(accessToken: accessToken, host: host)
