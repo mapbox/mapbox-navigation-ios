@@ -82,7 +82,7 @@ open class PortableRouteController: RouteController {
         let routeIndex = status.routeIndex
 
         //The first route is the active one in the navigator.
-        navigator.changeRouteLeg(forRoute: routeIndex, leg: legIndex + 1)
+        navigator.changeRouteLeg(forRoute: routeIndex, leg: routeProgress.legIndex)
     }
     
     public func enableLocationRecording() {
