@@ -14,6 +14,7 @@
 
 * The `NavigationSettings.shared` property is now accessible in Objective-C code as `MBNavigationSettings.sharedSettings`. ([#1882](https://github.com/mapbox/mapbox-navigation-ios/pull/1882))
 * Fixed spurious rerouting on multi-leg routes. ([#1884](https://github.com/mapbox/mapbox-navigation-ios/pull/1884))
+* Fixed a hang that occurred when failing to fetch a route shield image for display in a visual instruction banner. ([#1888](https://github.com/mapbox/mapbox-navigation-ios/pull/1888))
 * Adding property `RouteController.nearbyCoordinates`, which offers similar behavior to `RouteLegProgress.nearbyCoordinates`, which the addition of step lookahead/lookbehind in multi-leg routes. ([#1883](https://github.com/mapbox/mapbox-navigation-ios/pull/1883))
 * The `MGLShapeSourceOptions.lineDistanceMetrics` property has been temporarily disabled from the route line shape source due to a crash. This means it isn’t possible to set the `MGLLineStyleLayer.lineGradient` property on the route line style layers. ([#1886](https://github.com/mapbox/mapbox-navigation-ios/pull/1886))
 
