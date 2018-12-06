@@ -2,6 +2,11 @@
 
 ## v0.26.0
 
+### Client-side routing
+
+* Added a `NavigationDirections` class that manages offline tile packs and client-side route calculation. ([#1808](https://github.com/mapbox/mapbox-navigation-ios/pull/1808))
+* Extended `Bundle` with `Bundle.suggestedTileURL` and other properties to facilitate offline downloads. ([#1808](https://github.com/mapbox/mapbox-navigation-ios/pull/1808))
+
 ### CarPlay
 
 * When selecting a search result in CarPlay, the resulting routes lead to the search result’s routable location when available. Routes to a routable location are more likely to be passable. ([#1859](https://github.com/mapbox/mapbox-navigation-ios/pull/1859))

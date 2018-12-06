@@ -82,3 +82,4 @@ extern const MBRouteControllerNotificationUserInfoKey MBRouteControllerIsProacti
 @interface NSString (MD5)
 - (NSString * _Nonnull)md5;
 @end
+
