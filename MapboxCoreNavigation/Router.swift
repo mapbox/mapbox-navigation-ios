@@ -21,6 +21,8 @@ public protocol RouterDataSource {
     @objc func reroute(from: CLLocation, along: RouteProgress)
     @objc var location: CLLocation? { get }
     
+    @objc func advanceLegIndex(location: CLLocation)
+    
     @objc optional func enableLocationRecording()
     @objc optional func disableLocationRecording()
     @objc optional func locationHistory() -> String
