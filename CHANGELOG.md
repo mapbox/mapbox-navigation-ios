@@ -8,11 +8,13 @@
 * Fixed an issue where the CarPlay navigation map’s vanishing point and user puck initially remained centered on screen, instead of accounting for the maneuver panel, until the navigation bar was shown. ([#1856](https://github.com/mapbox/mapbox-navigation-ios/pull/1856))
 * Fixed an issue where route shields and exit numbers appeared blurry in the maneuver panel on CarPlay devices and failed to appear in the CarPlay simulator. ([#1868](https://github.com/mapbox/mapbox-navigation-ios/pull/1868))
 * Added `VisualInstruction.containsLaneIndications`, `VisualInstruction.maneuverImageSet(side:)`, `VisualInstruction.shouldFlipImage(side:)`, and `VisualInstruction.carPlayManeuverLabelAttributedText(bounds:shieldHeight:window:)`. ([#1860](https://github.com/mapbox/mapbox-navigation-ios/pull/1860))
+* `RouteLegProgress.upComingStep` has been renamed to `upcomingStep`.  ([#1860](https://github.com/mapbox/mapbox-navigation-ios/pull/1860))
 
 ### Other changes
 
 * The `NavigationSettings.shared` property is now accessible in Objective-C code as `MBNavigationSettings.sharedSettings`. ([#1882](https://github.com/mapbox/mapbox-navigation-ios/pull/1882))
 * Fixed spurious rerouting on multi-leg routes. ([#1884](https://github.com/mapbox/mapbox-navigation-ios/pull/1884))
+* Adding property `RouteController.nearbyCoordinates`, which offers similar behavior to `RouteLegProgress.nearbyCoordinates`, which the addition of step lookahead/lookbehind in multi-leg routes. ([#1883](https://github.com/mapbox/mapbox-navigation-ios/pull/1883))
 
 ## v0.25.0 (November 22, 2018)
 

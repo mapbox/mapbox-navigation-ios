@@ -97,7 +97,54 @@ open class RouteProgress: NSObject {
      Returns the progress along the current `RouteLeg`.
      */
     @objc public var currentLegProgress: RouteLegProgress
+    
+    @objc public var priorLeg: RouteLeg? {
+        return legIndex > 0 ? route.legs[legIndex - 1] : nil
+    }
+    
+    /**
+     The step prior to the current step along this route.
+     
+     The prior step may be part of a different RouteLeg than the current step. If the current step is the first step along the route, this property is set to nil.
+     */
+    
+    @objc public var priorStep: RouteStep? {
+        return currentLegProgress.priorStep ?? priorLeg?.steps.last
+    }
+    
+    /**
+     The leg following the current leg along this route.
+     
+     If this leg is the last leg of the route, this property is set to nil.
+    */
+    
+    @objc public var upcomingLeg: RouteLeg? {
+        return legIndex + 1 < route.legs.endIndex ? route.legs[legIndex + 1] : nil
+    }
+    
+    /**
+     The step following the current step along this route.
+     
+     The upcoming step may be part of a different RouteLeg than the current step. If it is the last step along the route, this property is set to nil.
+     */
+    
+    public var upcomingStep: RouteStep? {
+        return currentLegProgress.upcomingStep ?? upcomingLeg?.steps.first
+    }
+    
+    /**
+     Returns an array of `CLLocationCoordinate2D` of the coordinates along the current step and any adjacent steps.
+     
+     - important: The adjacent steps may be part of legs other than the current leg.
+     */
 
+    @objc public var nearbyCoordinates: [CLLocationCoordinate2D] {
+        let priorCoordinates = priorStep?.coordinates?.dropLast() ?? []
+        let currentCoordinates = currentLegProgress.currentStep.coordinates ?? []
+        let upcomingCoordinates = upcomingStep?.coordinates?.dropFirst() ?? []
+        return priorCoordinates + currentCoordinates + upcomingCoordinates
+    }
+    
     /**
      Tuple containing a `CongestionLevel` and a corresponding `TimeInterval` representing the expected travel time for this segment.
      */
@@ -321,7 +368,12 @@ open class RouteLegProgress: NSObject {
 
      If there is no `upcomingStep`, nil is returned.
      */
+    @available(*, deprecated, renamed: "upcomingStep")
     @objc public var upComingStep: RouteStep? {
+        return upcomingStep
+    }
+    
+    @objc public var upcomingStep: RouteStep? {
         guard stepIndex + 1 < leg.steps.endIndex else {
             return nil
         }
@@ -367,9 +419,11 @@ open class RouteLegProgress: NSObject {
     /**
      Returns an array of `CLLocationCoordinate2D` of the prior, current and upcoming step geometry.
      */
+    
+    @available(*, deprecated: 0.1, message: "Use RouteProgress.nearbyCoordinates")
     @objc public var nearbyCoordinates: [CLLocationCoordinate2D] {
         let priorCoords = priorStep?.coordinates ?? []
-        let upcomingCoords = upComingStep?.coordinates ?? []
+        let upcomingCoords = upcomingStep?.coordinates ?? []
         let currentCoords = currentStep.coordinates ?? []
         let nearby = priorCoords + currentCoords + upcomingCoords
         assert(!nearby.isEmpty, "Step must have coordinates")
