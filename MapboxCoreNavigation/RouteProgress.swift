@@ -103,9 +103,9 @@ open class RouteProgress: NSObject {
     }
     
     /**
-     Returns the prior `RouteStep`.
+     The step prior to the current step along this route.
      
-     If there is no `prior`, nil is returned.
+     The prior step may be part of a different RouteLeg than the current step. If the current step is the first step along the route, this property is set to nil.
      */
     
     @objc public var priorStep: RouteStep? {
@@ -113,19 +113,19 @@ open class RouteProgress: NSObject {
     }
     
     /**
-     Returns the upcoming `RouteLeg`.
+     The leg following the current leg along this route.
      
-     If there is no `upcomingLeg`, nil is returned.
-     */
+     If this leg is the last leg of the route, this property is set to nil.
+    */
     
     @objc public var upcomingLeg: RouteLeg? {
         return legIndex + 1 < route.legs.endIndex ? route.legs[legIndex + 1] : nil
     }
     
     /**
-     Returns the upcoming `RouteStep`.
+     The step following the current step along this route.
      
-     If there is no `upcomingStep`, nil is returned.
+     The upcoming step may be part of a different RouteLeg than the current step. If it is the last step along the route, this property is set to nil.
      */
     
     public var upcomingStep: RouteStep? {
