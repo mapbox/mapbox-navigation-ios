@@ -32,6 +32,9 @@ public protocol RouterDelegate: class {
     @objc(router:didPassSpokenInstructionPoint:alongRouteProgress:)
     optional func router(_ router: Router, didPassSpokenInstructionPoint instruction: SpokenInstruction, along routeProgress: RouteProgress)
     
+    @objc(router:willArriveAtWaypoint:in:distance:)
+    optional func router(_ router: Router, willArriveAt waypoint: Waypoint, after remainingTimeInterval:TimeInterval, distance: CLLocationDistance)
+    
     @objc(router:didArriveAtWaypoint:)
     optional func router(_ router: Router, didArriveAt waypoint: Waypoint) -> Bool
     

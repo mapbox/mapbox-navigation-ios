@@ -47,7 +47,11 @@ public class NavigationServiceDelegateSpy: NavigationServiceDelegate {
     public func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         recentMessages.append(#function)
     }
-
+    
+    public func navigationService(_ service: NavigationService, willArriveAt waypoint: Waypoint, after remainingTimeInterval: TimeInterval, distance: CLLocationDistance) {
+        recentMessages.append(#function)
+    }
+    
     public func navigationService(_ service: NavigationService, didArriveAt waypoint: Waypoint) -> Bool {
         recentMessages.append(#function)
         return true

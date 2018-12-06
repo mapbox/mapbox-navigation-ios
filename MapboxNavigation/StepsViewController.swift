@@ -48,7 +48,7 @@ public class StepsViewController: UIViewController {
      Initializes StepsViewController with a RouteProgress object.
 
      - parameter routeProgress: The user's current route progress.
-     - SeeAlso: [RouteProgress](https://www.mapbox.com/mapbox-navigation-ios/navigation/0.14.1/Classes/RouteProgress.html)
+     - seealso: RouteProgress
      */
     public convenience init(routeProgress: RouteProgress) {
         self.init()

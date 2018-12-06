@@ -1,6 +1,7 @@
 import UIKit
 import MapboxCoreNavigation
 import MapboxDirections
+import MapboxSpeech
 import Mapbox
 #if canImport(CarPlay)
 import CarPlay
@@ -18,6 +19,20 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      - parameter canceled: True if the user dismissed the navigation view controller by tapping the Cancel button; false if the navigation view controller dismissed by some other means.
      */
     @objc optional func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool)
+    
+    /**
+     Called as the user approaches a waypoint.
+     
+     This message is sent, once per progress update, as the user is approaching a waypoint. You can use this to cue UI, to do network pre-loading, etc.
+     - parameter navigationViewController: The Navigation VC that is detecting the users' approach.
+     - parameter waypoint: The waypoint that the service is arriving at.
+     - parameter remainingTimeInterval: The estimated number of seconds until arrival.
+     - parameter distance: The current distance from the waypoint, in meters.
+     - important: This method will likely be called several times as you approach a destination. If only one consumption of this method is desired, then usage of an internal flag is reccomended.
+     */
+    
+    @objc(navigationViewController:willArriveAtWaypoint:after:distance:)
+    optional func navigationViewController(_ navigationViewController: NavigationViewController, willArriveAt waypoint: Waypoint, after remainingTimeInterval: TimeInterval, distance: CLLocationDistance)
     
     /**
      Called when the user arrives at the destination waypoint for a route leg.
@@ -354,10 +369,15 @@ open class NavigationViewController: UIViewController {
      Initializes a `NavigationViewController` that provides turn by turn navigation for the given route. A optional `direction` object is needed for  potential rerouting.
 
      See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
+     
+     - parameter route: The route to navigate along.
+     - parameter styles: The styles that the view controller’s internal `StyleManager` object can select from for display.
+     - parameter navigationService: The navigation service that manages navigation along the route.
+     - parameter voiceController: The voice controller that manages the delivery of voice instructions during navigation.
      */
     @objc(initWithRoute:styles:navigationService:voiceController:)
     required public init(for route: Route,
-                         styles: [Style]? = [DayStyle(), NightStyle()],
+                         styles: [Style]? = nil,
                          navigationService: NavigationService? = nil,
                          voiceController: RouteVoiceController? = nil) {
         
@@ -366,7 +386,7 @@ open class NavigationViewController: UIViewController {
         self.navigationService = navigationService ?? MapboxNavigationService(route: route)
         self.navigationService.usesDefaultUserInterface = true
         self.navigationService.delegate = self
-        self.voiceController = voiceController ?? MapboxVoiceController()
+        self.voiceController = voiceController ?? MapboxVoiceController(speechClient: SpeechSynthesizer(accessToken: navigationService?.directions.accessToken))
 
         NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
         
@@ -387,8 +407,9 @@ open class NavigationViewController: UIViewController {
         mapSubview.pinInSuperview()
         mapViewController.reportButton.isHidden = !showsReportFeedback
         
-        self.styleManager = StyleManager(self)
-        self.styleManager.styles = styles ?? [DayStyle(), NightStyle()]
+        styleManager = StyleManager()
+        styleManager.delegate = self
+        styleManager.styles = styles ?? [DayStyle(), NightStyle()]
         
         if !(route.routeOptions is NavigationRouteOptions) {
             print("`Route` was created using `RouteOptions` and not `NavigationRouteOptions`. Although not required, this may lead to a suboptimal navigation experience. Without `NavigationRouteOptions`, it is not guaranteed you will get congestion along the route line, better ETAs and ETA label color dependent on congestion.")
@@ -643,6 +664,10 @@ extension NavigationViewController: NavigationServiceDelegate {
             userHasArrivedAndShouldPreventRerouting {
             mapViewController?.mapView.updateCourseTracking(location: location, animated: true)
         }
+    }
+    
+    @objc public func navigationService(_ service: NavigationService, willArriveAt waypoint: Waypoint, after remainingTimeInterval: TimeInterval, distance: CLLocationDistance) {
+        delegate?.navigationViewController?(self, willArriveAt: waypoint, after: remainingTimeInterval, distance: distance)
     }
     
     @objc public func navigationService(_ service: NavigationService, didArriveAt waypoint: Waypoint) -> Bool {

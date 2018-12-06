@@ -130,6 +130,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
     
+    /**
+     The minimum default insets from the content frame to the edges of the user course view.
+     */
+    static let courseViewMinimumInsets = UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50)
     
     /**
      Center point of the user course view in screen coordinates relative to the map view.
@@ -140,14 +144,14 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return anchorPoint
         }
         
-        // Inset by the safe area to avoid notches or CarPlay template content.
+        // Inset by the safe area to avoid notches.
         // Inset by the content inset to avoid application-defined content.
         var contentFrame = UIEdgeInsetsInsetRect(UIEdgeInsetsInsetRect(bounds, safeArea), contentInset)
         
         // Avoid letting the puck go partially off-screen, and add a comfortable padding beyond that.
         let courseViewBounds = userCourseView?.bounds ?? .zero
-        contentFrame = contentFrame.insetBy(dx: min(50 + courseViewBounds.width / 2.0, contentFrame.width / 2.0),
-                                            dy: min(50 + courseViewBounds.height / 2.0, contentFrame.height / 2.0))
+        contentFrame = contentFrame.insetBy(dx: min(NavigationMapView.courseViewMinimumInsets.left + courseViewBounds.width / 2.0, contentFrame.width / 2.0),
+                                            dy: min(NavigationMapView.courseViewMinimumInsets.top + courseViewBounds.height / 2.0, contentFrame.height / 2.0))
         
         // Get the bottom-center of the remaining frame.
         assert(!contentFrame.isInfinite)
@@ -225,6 +229,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         addGestureRecognizer(mapTapGesture)
     }
     
+    open override func layoutMarginsDidChange() {
+        super.layoutMarginsDidChange()
+        enableFrameByFrameCourseViewTracking(for: 3)
+    }
+    
     //MARK: - Overrides
     
     open override func prepareForInterfaceBuilder() {
@@ -280,7 +289,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         if UIDevice.current.isPluggedIn {
             preferredFramesPerSecond = FrameIntervalOptions.pluggedInFramesPerSecond
-        } else if let upcomingStep = routeProgress.currentLegProgress.upComingStep,
+        } else if let upcomingStep = routeProgress.currentLegProgress.upcomingStep,
             upcomingStep.maneuverDirection == .straightAhead || upcomingStep.maneuverDirection == .slightLeft || upcomingStep.maneuverDirection == .slightRight {
             preferredFramesPerSecond = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFramesPerSecond : minimumFramesPerSecond
         } else if durationUntilNextManeuver > FrameIntervalOptions.durationUntilNextManeuver &&
@@ -389,8 +398,14 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         if sender.state == .changed {
             guard let location = userLocationForCourseTracking else { return }
-            userCourseView?.layer.removeAllAnimations()
-            userCourseView?.center = convert(location.coordinate, toPointTo: self)
+            
+            if let userCourseView = userCourseView as? UserCourseView {
+                userCourseView.update?(location: location,
+                                       pitch: camera.pitch,
+                                       direction: direction,
+                                       animated: false,
+                                       tracksUserCourse: tracksUserCourse)
+            }
         }
     }
     
@@ -442,8 +457,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             source.shape = polylines
             sourceSimplified.shape = mainPolylineSimplified
         } else {
-            let lineSource = MGLShapeSource(identifier: sourceIdentifier, shape: polylines, options: [.lineDistanceMetrics: true])
-            let lineCasingSource = MGLShapeSource(identifier: sourceCasingIdentifier, shape: mainPolylineSimplified, options: [.lineDistanceMetrics: true])
+            let lineSource = MGLShapeSource(identifier: sourceIdentifier, shape: polylines, options: nil)
+            let lineCasingSource = MGLShapeSource(identifier: sourceCasingIdentifier, shape: mainPolylineSimplified, options: nil)
             style.addSource(lineSource)
             style.addSource(lineCasingSource)
             

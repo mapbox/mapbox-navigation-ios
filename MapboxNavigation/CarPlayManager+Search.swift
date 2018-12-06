@@ -111,7 +111,7 @@ extension CarPlayManager: CPSearchTemplateDelegate {
         
         guard let userInfo = item.userInfo as? [String: Any],
             let placemark = userInfo[CarPlayManager.CarPlayGeocodedPlacemarkKey] as? GeocodedPlacemark,
-            let location = placemark.location else {
+            let location = placemark.routableLocations?.first ?? placemark.location else {
                 completionHandler()
                 return
         }
@@ -120,7 +120,7 @@ extension CarPlayManager: CPSearchTemplateDelegate {
         CarPlayManager.recentItems.save()
         
         let destinationWaypoint = Waypoint(location: location, heading: nil, name: placemark.formattedName)
-        calculateRouteAndStart(to: destinationWaypoint, completionHandler: completionHandler)
+        previewRoutes(to: destinationWaypoint, completionHandler: completionHandler)
     }
     
     @available(iOS 12.0, *)

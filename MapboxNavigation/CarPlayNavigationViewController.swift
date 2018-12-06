@@ -22,15 +22,33 @@ public class CarPlayNavigationViewController: UIViewController {
     @objc public var drivingSide: DrivingSide = .right
     
     var navService: NavigationService
-    var mapView: NavigationMapView?
+    
+    /**
+     The map view showing the route and the user’s location.
+     */
+    @objc public fileprivate(set) var mapView: NavigationMapView?
+    
     let shieldHeight: CGFloat = 16
+    var mapViewLeftSafeAreaBalancingConstraint: NSLayoutConstraint?
+    var mapViewRightSafeAreaBalancingConstraint: NSLayoutConstraint?
     
     var carSession: CPNavigationSession!
     var mapTemplate: CPMapTemplate
     var carFeedbackTemplate: CPGridTemplate!
     var carInterfaceController: CPInterfaceController
     var previousSafeAreaInsets: UIEdgeInsets?
-    var styleManager: StyleManager!
+    var styleManager: StyleManager?
+    
+    /**
+     The interface styles available for display.
+     
+     These are the styles available to the view controller’s internal `StyleManager` object. In CarPlay, `Style` objects primarily affect the appearance of the map, not guidance-related overlay views.
+     */
+    @objc public var styles: [Style] {
+        didSet {
+            styleManager?.styles = styles
+        }
+    }
     
     let distanceFormatter = DistanceFormatter(approximate: true)
     
@@ -51,17 +69,20 @@ public class CarPlayNavigationViewController: UIViewController {
      - parameter mapTemplate: The map template visible during the navigation session.
      - parameter interfaceController: The interface controller for CarPlay.
      - parameter manager: The manager for CarPlay.
+     - parameter styles: The interface styles that the view controller’s internal `StyleManager` object can select from for display.
      
      - postcondition: Call `startNavigationSession(for:)` after initializing this object to begin navigation.
      */
-    @objc(initWithNavigationService:mapTemplate:interfaceController:manager:)
-    public init(with navigationService: NavigationService,
-                mapTemplate: CPMapTemplate,
-                interfaceController: CPInterfaceController, manager: CarPlayManager) {
+    @objc public init(navigationService: NavigationService,
+                      mapTemplate: CPMapTemplate,
+                      interfaceController: CPInterfaceController,
+                      manager: CarPlayManager,
+                      styles: [Style]? = nil) {
         self.navService = navigationService
         self.mapTemplate = mapTemplate
         self.carInterfaceController = interfaceController
         self.carPlayManager = manager
+        self.styles = styles ?? [DayStyle(), NightStyle()]
         
         super.init(nibName: nil, bundle: nil)
         carFeedbackTemplate = createFeedbackUI()
@@ -76,7 +97,7 @@ public class CarPlayNavigationViewController: UIViewController {
         super.viewDidLoad()
         
         let mapView = NavigationMapView(frame: view.bounds)
-        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        mapView.translatesAutoresizingMaskIntoConstraints = false
         mapView.compassView.isHidden = true
         mapView.logoView.isHidden = true
         mapView.attributionButton.isHidden = true
@@ -84,9 +105,21 @@ public class CarPlayNavigationViewController: UIViewController {
         mapView.defaultAltitude = 500
         mapView.zoomedOutMotorwayAltitude = 1000
         mapView.longManeuverDistance = 500
+        
+        mapView.navigationMapDelegate = self
 
         self.mapView = mapView
         view.addSubview(mapView)
+        
+        // These constraints don’t account for language direction, because the
+        // safe area insets are nondirectional and may be affected by the side
+        // on which the driver is sitting.
+        mapViewRightSafeAreaBalancingConstraint = NSLayoutConstraint(item: mapView, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1, constant: -mapView.safeArea.right)
+        view.addConstraint(mapViewRightSafeAreaBalancingConstraint!)
+        mapViewLeftSafeAreaBalancingConstraint = NSLayoutConstraint(item: mapView, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1, constant: mapView.safeArea.left)
+        view.addConstraint(mapViewLeftSafeAreaBalancingConstraint!)
+        view.addConstraint(NSLayoutConstraint(item: mapView, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1, constant: 0))
+        view.addConstraint(NSLayoutConstraint(item: mapView, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1, constant: 0))
         
         styleObservation = mapView.observe(\.style, options: .new) { [weak self] (mapView, change) in
             guard change.newValue != nil else {
@@ -97,8 +130,9 @@ public class CarPlayNavigationViewController: UIViewController {
             self?.mapView?.recenterMap()
         }
         
-        styleManager = StyleManager(self)
-        styleManager.styles = [DayStyle(), NightStyle()]
+        styleManager = StyleManager()
+        styleManager!.delegate = self
+        styleManager!.styles = self.styles
         
         makeGestureRecognizersResetFrameRate()
         resumeNotifications()
@@ -133,6 +167,12 @@ public class CarPlayNavigationViewController: UIViewController {
         }
         
         previousSafeAreaInsets = view.safeAreaInsets
+        
+        // Adjust the map’s vanishing point to counterbalance the side maneuver panels by extending the view off beyond the other side of the screen.
+        if let mapView = mapView {
+            mapViewRightSafeAreaBalancingConstraint?.constant = -mapView.safeArea.right
+            mapViewLeftSafeAreaBalancingConstraint?.constant = mapView.safeArea.left
+        }
     }
     
     /**
@@ -276,6 +316,13 @@ public class CarPlayNavigationViewController: UIViewController {
             return CGRect(x: 0, y: 0, width: widthOfManeuverView, height: 30)
         }
         
+        // Over a certain height, CarPlay devices downsize the image and CarPlay simulators hide the image.
+        let maximumImageSize = CGSize(width: .infinity, height: shieldHeight)
+        let imageRendererFormat = UIGraphicsImageRendererFormat(for: UITraitCollection(userInterfaceIdiom: .carPlay))
+        if let window = carPlayManager.carWindow {
+            imageRendererFormat.scale = window.screen.scale
+        }
+        
         if let attributedPrimary = visualInstruction.primaryInstruction.carPlayManeuverLabelAttributedText(bounds: bounds, shieldHeight: shieldHeight, window: carPlayManager.carWindow) {
             let instruction = NSMutableAttributedString(attributedString: attributedPrimary)
             
@@ -284,7 +331,7 @@ public class CarPlayNavigationViewController: UIViewController {
                 instruction.append(attributedSecondary)
             }
             
-            instruction.canonicalizeAttachments()
+            instruction.canonicalizeAttachments(maximumImageSize: maximumImageSize, imageRendererFormat: imageRendererFormat)
             primaryManeuver.attributedInstructionVariants = [instruction]
         }
         
@@ -300,11 +347,11 @@ public class CarPlayNavigationViewController: UIViewController {
             }
             if let attributedTertiary = tertiaryInstruction.carPlayManeuverLabelAttributedText(bounds: bounds, shieldHeight: shieldHeight, window: carPlayManager.carWindow) {
                 let attributedTertiary = NSMutableAttributedString(attributedString: attributedTertiary)
-                attributedTertiary.canonicalizeAttachments()
+                attributedTertiary.canonicalizeAttachments(maximumImageSize: maximumImageSize, imageRendererFormat: imageRendererFormat)
                 tertiaryManeuver.attributedInstructionVariants = [attributedTertiary]
             }
             
-            if let upcomingStep = navService.routeProgress.currentLegProgress.upComingStep {
+            if let upcomingStep = navService.routeProgress.currentLegProgress.upcomingStep {
                 let distance = distanceFormatter.measurement(of: upcomingStep.distance)
                 tertiaryManeuver.initialTravelEstimates = CPTravelEstimates(distanceRemaining: distance, timeRemaining: upcomingStep.expectedTravelTime)
             }
@@ -402,6 +449,23 @@ public class CarPlayNavigationViewController: UIViewController {
         
         let waypointArrival = CPAlertTemplate(titleVariants: [title], actions: [continueAlert])
         carInterfaceController.presentTemplate(waypointArrival, animated: true)
+    }
+}
+
+@available(iOS 12.0, *)
+extension CarPlayNavigationViewController: NavigationMapViewDelegate {
+    public func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint {
+        // Inset by the content inset to avoid application-defined content.
+        var contentFrame = UIEdgeInsetsInsetRect(mapView.bounds, mapView.contentInset)
+        
+        // Avoid letting the puck go partially off-screen, and add a comfortable padding beyond that.
+        let courseViewBounds = mapView.userCourseView?.bounds ?? .zero
+        contentFrame = contentFrame.insetBy(dx: min(NavigationMapView.courseViewMinimumInsets.left + courseViewBounds.width / 2.0, contentFrame.width / 2.0),
+                                            dy: min(NavigationMapView.courseViewMinimumInsets.top + courseViewBounds.height / 2.0, contentFrame.height / 2.0))
+        
+        // Get the bottom-center of the remaining frame.
+        assert(!contentFrame.isInfinite)
+        return CGPoint(x: contentFrame.midX, y: contentFrame.maxY)
     }
 }
 

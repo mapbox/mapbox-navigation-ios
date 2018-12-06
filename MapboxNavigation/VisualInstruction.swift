@@ -5,13 +5,15 @@ import CarPlay
 
 extension VisualInstruction {
     
-    var containsLaneIndications: Bool {
+    /// Returns true if `VisualInstruction.components` contains any `LaneIndicationComponent`.
+    public var containsLaneIndications: Bool {
         return components.contains(where: { $0 is LaneIndicationComponent })
     }
 
 #if canImport(CarPlay)
+    /// Returns a `CPImageSet` representing the maneuver.
     @available(iOS 12.0, *)
-    func maneuverImageSet(side: DrivingSide) -> CPImageSet? {
+    public func maneuverImageSet(side: DrivingSide) -> CPImageSet? {
         let colors: [UIColor] = [.black, .white]
         let blackAndWhiteManeuverIcons: [UIImage] = colors.compactMap { (color) in
             let mv = ManeuverView()
@@ -27,7 +29,8 @@ extension VisualInstruction {
         return CPImageSet(lightContentImage: blackAndWhiteManeuverIcons[1], darkContentImage: blackAndWhiteManeuverIcons[0])
     }
     
-    func shouldFlipImage(side: DrivingSide) -> Bool {
+    /// Returns whether the `VisualInstruction`’s maneuver image should be flipped according to the driving side.
+    public func shouldFlipImage(side: DrivingSide) -> Bool {
         let leftDirection = [.left, .slightLeft, .sharpLeft].contains(maneuverDirection)
         
         switch maneuverType {
@@ -41,8 +44,17 @@ extension VisualInstruction {
         }
     }
 
+    /**
+     Glanceable instruction given the available space, appearance styling, and attachments.
+     
+     - parameter bounds: A closure that calculates the available bounds for the maneuver text.
+     - parameter shieldHeight: The height of the shield.
+     - parameter window: A `UIWindow` that holds the `UIAppearance` styling properties, preferably the CarPlay window.
+     
+     - returns: An `NSAttributedString` with maneuver instructions.
+     */
     @available(iOS 12.0, *)
-    func carPlayManeuverLabelAttributedText(bounds: @escaping () -> (CGRect), shieldHeight: CGFloat, window: UIWindow?) -> NSAttributedString? {
+    public func carPlayManeuverLabelAttributedText(bounds: @escaping () -> (CGRect), shieldHeight: CGFloat, window: UIWindow?) -> NSAttributedString? {
         let instructionLabel = InstructionLabel()
         instructionLabel.availableBounds = bounds
         instructionLabel.shieldHeight = shieldHeight
