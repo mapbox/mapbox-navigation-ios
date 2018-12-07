@@ -1,8 +1,5 @@
 #if canImport(CarPlay)
 import CarPlay
-#if canImport(MapboxGeocoder)
-import MapboxGeocoder
-#endif
 import Turf
 import MapboxCoreNavigation
 import MapboxDirections
