@@ -4,14 +4,29 @@
 /* Title of button that downloads an offline region */
 "OFFLINE_ITEM_DOWNLOAD" = "Download";
 
+/* Message to display when the user needs to obtain an enterprise token */
+"OFFLINE_MESSAGE_ENTERPRISE_TOKEN_NEEDED" = "Before you can fetch routing tiles you must obtain an enterprise access token. Please contact us at support@mapbox.com";
+
+/* Message to display when the user needs to select a smaller bounding box */
+"OFFLINE_MESSAGE_USE_SMALLER_BOUNDING_BOX" = "The bounding box you have specified is too large. Please select a smaller box and try again.";
+
+/* Error message to display when no routing tile versions are available */
+"OFFLINE_MESSAGE_VERSION_FETCHING_FAILED" = "No routing tile versions are available for download. Please try again later.";
+
 /* Status item while downloading an offline region */
 "OFFLINE_TITLE_DOWNLOADING_TILES" = "Downloading Tiles…";
 
 /* Status item while downloading an offline region */
 "OFFLINE_TITLE_FETCHING_VERSIONS" = "Fetching Versions…";
 
+/* Title to display when tile downloading fails */
+"OFFLINE_TITLE_TILE_DOWNLOAD_FAILED" = "Unable to fetch tiles";
+
 /* Status item while downloading an offline region; 1 = percentage complete */
 "OFFLINE_TITLE_UNPACKING_FMT" = "Unpacking… (%@)";
+
+/* Error title to display when no routing tile versions are available */
+"OFFLINE_TITLE_VERSION_FETCHING_FAILED" = "Unable to fetch available routing tile versions";
 
 /* Title of action for dismissing waypoint removal confirmation sheet */
 "REMOVE_WAYPOINT_CONFIRM_CANCEL" = "Cancel";
