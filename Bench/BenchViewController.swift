@@ -42,10 +42,20 @@ class BenchViewController: UITableViewController {
         let controlRoute2 = Item(name: "Pipe Fitters Union to Four Seasons Boston",
                                  route: Fixture.route(from: "PipeFittersUnion-FourSeasonsBoston"))
         
+        let controlRoute3 = Item(name: "Denver Union Station to IKEA Centennial",
+                                 route: Fixture.route(from: "Denver-Ikea"))
+        
+        let controlRoute4 = Item(name: "Downington to Westchester, PA (Truck Route)",
+                                 route: Fixture.route(from: "Downington-Westchester"))
+        
+        let controlRoute5 = Item(name: "St. Petersburg to Orlando, FL",
+                                 route: Fixture.route(from: "StPetersburg-Orlando"))
+        
         let temporaryControlRoute = Item(name: "Temporary Control Route",
                                          route: Fixture.route(from: "short-route"))
         
-        let section = Section(title: "Control Routes", items: [controlRoute1, controlRoute2, temporaryControlRoute])
+        let controlRoutes = [controlRoute1, controlRoute2, controlRoute3, controlRoute4, controlRoute5]
+        let section = Section(title: "Control Routes", items: controlRoutes + [temporaryControlRoute])
         
         dataSource = [section]
     }

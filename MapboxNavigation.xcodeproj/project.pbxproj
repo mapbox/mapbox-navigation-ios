@@ -49,6 +49,9 @@
 		351BEC0D1E5BCC72006FE110 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC081E5BCC72006FE110 /* Bundle.swift */; };
 		351BEC0E1E5BCC72006FE110 /* DashedLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC091E5BCC72006FE110 /* DashedLineView.swift */; };
 		351BEC291E5BD530006FE110 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 351BEC281E5BD530006FE110 /* Assets.xcassets */; };
+		351FB51721BA966700032A21 /* Denver-Ikea.json in Resources */ = {isa = PBXBuildFile; fileRef = 351FB51621BA966700032A21 /* Denver-Ikea.json */; };
+		351FB51921BA96B000032A21 /* Downington-Westchester.json in Resources */ = {isa = PBXBuildFile; fileRef = 351FB51821BA96B000032A21 /* Downington-Westchester.json */; };
+		351FB51B21BA970600032A21 /* StPetersburg-Orlando.json in Resources */ = {isa = PBXBuildFile; fileRef = 351FB51A21BA970600032A21 /* StPetersburg-Orlando.json */; };
 		3525449D1E663D32004C8F1C /* MapboxCoreNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */; };
 		3527D2B91EC4619400C07FC9 /* Fixtures.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3527D2B61EC45FBD00C07FC9 /* Fixtures.xcassets */; };
 		3529FCF021A5C59400AEA9AA /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCEF21A5C59400AEA9AA /* Settings.swift */; };
@@ -660,6 +663,9 @@
 		351BEC091E5BCC72006FE110 /* DashedLineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashedLineView.swift; sourceTree = "<group>"; };
 		351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DistanceFormatter.swift; sourceTree = "<group>"; };
 		351BEC281E5BD530006FE110 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Resources/Assets.xcassets; sourceTree = "<group>"; };
+		351FB51621BA966700032A21 /* Denver-Ikea.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Denver-Ikea.json"; sourceTree = "<group>"; };
+		351FB51821BA96B000032A21 /* Downington-Westchester.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Downington-Westchester.json"; sourceTree = "<group>"; };
+		351FB51A21BA970600032A21 /* StPetersburg-Orlando.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "StPetersburg-Orlando.json"; sourceTree = "<group>"; };
 		35213DAD1EC456CF00A62B21 /* FBSnapshotTestCase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSnapshotTestCase.framework; path = Carthage/Build/iOS/FBSnapshotTestCase.framework; sourceTree = "<group>"; };
 		3527D2B61EC45FBD00C07FC9 /* Fixtures.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Fixtures.xcassets; sourceTree = "<group>"; };
 		3529FCEF21A5C59400AEA9AA /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Settings.swift; path = Example/Settings.swift; sourceTree = "<group>"; };
@@ -1255,6 +1261,20 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		351FB51521BA95B700032A21 /* control routes */ = {
+			isa = PBXGroup;
+			children = (
+				35CDA8862190F50C0072B675 /* DCA-Arboretum.json */,
+				35C8DC0E2191DE940053328C /* DCA-Arboretum.trace.json */,
+				355832AA2192F60800141922 /* PipeFittersUnion-FourSeasonsBoston.json */,
+				355832AC2192F7E300141922 /* PipeFittersUnion-FourSeasonsBoston.trace.json */,
+				351FB51621BA966700032A21 /* Denver-Ikea.json */,
+				351FB51821BA96B000032A21 /* Downington-Westchester.json */,
+				351FB51A21BA970600032A21 /* StPetersburg-Orlando.json */,
+			);
+			path = "control routes";
+			sourceTree = "<group>";
+		};
 		354A9BC920EA9BC100F03325 /* Events */ = {
 			isa = PBXGroup;
 			children = (
@@ -1378,15 +1398,12 @@
 		35CDA85F2190F2A30072B675 /* TestHelper */ = {
 			isa = PBXGroup;
 			children = (
+				351FB51521BA95B700032A21 /* control routes */,
 				3557506E21A8293E00AEF9B6 /* tiles */,
 				35C8DBF7219198310053328C /* route.json */,
 				AEF2C8F12072B603007B061F /* routeWithTunnels_9thStreetDC.json */,
 				C5EF397420599120009A2C50 /* straight-line.json */,
 				C5387A9C1F8FDB13000D2E93 /* routeWithInstructions.json */,
-				35CDA8862190F50C0072B675 /* DCA-Arboretum.json */,
-				35C8DC0E2191DE940053328C /* DCA-Arboretum.trace.json */,
-				355832AA2192F60800141922 /* PipeFittersUnion-FourSeasonsBoston.json */,
-				355832AC2192F7E300141922 /* PipeFittersUnion-FourSeasonsBoston.trace.json */,
 				35CDA88A2190F5120072B675 /* EmptyStyle.json */,
 				35CDA8842190F5090072B675 /* route-doubling-back.json */,
 				35CDA8822190F5080072B675 /* route-for-lane-testing.json */,
@@ -2101,9 +2118,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				351FB51921BA96B000032A21 /* Downington-Westchester.json in Resources */,
+				351FB51B21BA970600032A21 /* StPetersburg-Orlando.json in Resources */,
 				3557506D21A827E800AEF9B6 /* li.tar in Resources */,
 				35CDA88D2190F5210072B675 /* DCA-Arboretum.json in Resources */,
 				35CDA8912190F6980072B675 /* route-for-lane-testing.json in Resources */,
+				351FB51721BA966700032A21 /* Denver-Ikea.json in Resources */,
 				3557506F21A8293E00AEF9B6 /* tiles in Resources */,
 				35CDA8902190F6980072B675 /* route-doubling-back.json in Resources */,
 				35CDA8952190F6980072B675 /* route-with-straight-roundabout.json in Resources */,
