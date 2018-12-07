@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
   # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.name = "MapboxNavigation"
-  s.version = "0.24.0"
+  s.version = "0.26.0"
   s.summary = "Complete turn-by-turn navigation interface for iOS."
 
   s.description  = <<-DESC
@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
                    DESC
 
   s.homepage = "https://www.mapbox.com/ios-sdk/navigation/"
-  s.documentation_url = "https://www.mapbox.com/mapbox-navigation-ios/navigation/"
+  s.documentation_url = "https://www.mapbox.com/ios-sdk/api/navigation/"
 
   # ―――  Spec License  ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
@@ -46,7 +46,7 @@ Pod::Spec.new do |s|
   s.dependency "MapboxCoreNavigation", "#{s.version.to_s}"
   s.dependency "Mapbox-iOS-SDK", "~> 4.3"
   s.dependency "Solar", "~> 2.1"
-  s.dependency "MapboxSpeech", "~> 0.0.1"
+  s.dependency "MapboxSpeech", "~> 0.1.0"
 
   # `swift_version` was introduced in CocoaPods 1.4.0. Without this check, if a user were to
   # directly specify this podspec while using <1.4.0, ruby would throw an unknown method error.

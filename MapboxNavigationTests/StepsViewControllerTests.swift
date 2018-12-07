@@ -22,7 +22,7 @@ class StepsViewControllerTests: XCTestCase {
         
         let stepsViewController = StepsViewController(routeProgress: routeController.routeProgress)
         
-        let firstCoord = routeController.routeProgress.currentLegProgress.nearbyCoordinates.first!
+        let firstCoord = routeController.routeProgress.nearbyCoordinates.first!
         let firstLocation = CLLocation(coordinate: firstCoord, altitude: 5, horizontalAccuracy: 10, verticalAccuracy: 5, course: 20, speed: 4, timestamp: Date())
         
         let lastCoord = routeController.routeProgress.currentLegProgress.remainingSteps.last!.coordinates!.first!

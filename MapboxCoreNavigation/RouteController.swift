@@ -48,6 +48,13 @@ open class RouteController: NSObject, Router {
 
 
     /**
+     The threshold used when we determine when the user has arrived at the waypoint.
+     By default, we claim arrival 5 seconds before the user is physically estimated to arrive.
+    */
+    @objc public var waypointArrivalThreshold: TimeInterval = 5.0
+    
+    
+    /**
      If true, the `RouteController` attempts to calculate a more optimal route for the user on an interval defined by `RouteControllerProactiveReroutingInterval`.
      */
     @objc public var reroutesProactively = false
@@ -68,8 +75,8 @@ open class RouteController: NSObject, Router {
             _routeProgress = newValue
             announce(reroute: routeProgress.route, at: dataSource.location, proactive: didFindFasterRoute)
         }
-
     }
+    
     private var _routeProgress: RouteProgress {
         didSet {
             movementsAwayFromRoute = 0
@@ -149,7 +156,7 @@ open class RouteController: NSObject, Router {
      - important: If the rawLocation is outside of the route snapping tolerances, this value is nil.
      */
     var snappedLocation: CLLocation? {
-        return rawLocation?.snapped(to: routeProgress.currentLegProgress)
+        return rawLocation?.snapped(to: routeProgress)
     }
 
     var heading: CLHeading?
@@ -214,8 +221,8 @@ open class RouteController: NSObject, Router {
      Monitors the user's course to see if it is consistantly moving away from what we expect the course to be at a given point.
      */
     func userCourseIsOnRoute(_ location: CLLocation) -> Bool {
-        let nearByCoordinates = routeProgress.currentLegProgress.nearbyCoordinates
-        guard let calculatedCourseForLocationOnStep = location.interpolatedCourse(along: nearByCoordinates) else { return true }
+        let nearbyCoordinates = routeProgress.nearbyCoordinates
+        guard let calculatedCourseForLocationOnStep = location.interpolatedCourse(along: nearbyCoordinates) else { return true }
         
         let maxUpdatesAwayFromRouteGivenAccuracy = Int(location.horizontalAccuracy / Double(RouteControllerIncorrectCourseMultiplier))
         
@@ -238,7 +245,9 @@ open class RouteController: NSObject, Router {
     @objc public func userIsOnRoute(_ location: CLLocation) -> Bool {
         
         // If the user has arrived, do not continue monitor reroutes, step progress, etc
-        guard !routeProgress.currentLegProgress.userHasArrivedAtWaypoint || (delegate?.router?(self, shouldPreventReroutesWhenArrivingAt: routeProgress.currentLeg.destination) ?? DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint) else {
+        if routeProgress.currentLegProgress.userHasArrivedAtWaypoint &&
+            (delegate?.router?(self, shouldPreventReroutesWhenArrivingAt: routeProgress.currentLeg.destination) ??
+             DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint) {
             return true
         }
         
@@ -267,6 +276,18 @@ open class RouteController: NSObject, Router {
         let isCloseToCurrentStep = location.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
         return isCloseToCurrentStep
     }
+    
+    /**
+     Advances the leg index.
+     
+     This is a convienence method provided to advance the leg index of any given router without having to worry about the internal data structure of the router.
+     */
+    @objc(advanceLegIndexWithLocation:)
+    public func advanceLegIndex(location: CLLocation) {
+        precondition(!routeProgress.isFinalLeg, "Can not increment leg index beyond final leg.")
+        routeProgress.legIndex += 1
+    }
+    
 }
 
 extension RouteController: CLLocationManagerDelegate {
@@ -382,25 +403,33 @@ extension RouteController: CLLocationManagerDelegate {
 
     func updateRouteLegProgress(for location: CLLocation) {
         let currentDestination = routeProgress.currentLeg.destination
-        guard let remainingVoiceInstructions = routeProgress.currentLegProgress.currentStepProgress.remainingSpokenInstructions else { return }
+        let legProgress = routeProgress.currentLegProgress
+        guard let remainingVoiceInstructions = legProgress.currentStepProgress.remainingSpokenInstructions else { return }
 
-        if routeProgress.currentLegProgress.remainingSteps.count <= 1 && remainingVoiceInstructions.count == 0 && currentDestination != previousArrivalWaypoint {
-            previousArrivalWaypoint = currentDestination
+        // We are at least at the "You will arrive" instruction
+        if legProgress.remainingSteps.count <= 1 && remainingVoiceInstructions.count <= 1 && currentDestination != previousArrivalWaypoint {
 
-            routeProgress.currentLegProgress.userHasArrivedAtWaypoint = true
-
-            let advancesToNextLeg = delegate?.router?(self, didArriveAt: currentDestination) ?? DefaultBehavior.didArriveAtWaypoint
-
-            if !routeProgress.isFinalLeg && advancesToNextLeg {
-                routeProgress.legIndex += 1
+            //Have we actually arrived? Last instruction is "You have arrived"
+            if remainingVoiceInstructions.count == 0, legProgress.durationRemaining <= waypointArrivalThreshold {
+                previousArrivalWaypoint = currentDestination
+                legProgress.userHasArrivedAtWaypoint = true
+                
+                let advancesToNextLeg = delegate?.router?(self, didArriveAt: currentDestination) ?? DefaultBehavior.didArriveAtWaypoint
+                
+                guard !routeProgress.isFinalLeg && advancesToNextLeg else { return }
+                advanceLegIndex(location: location)
                 updateDistanceToManeuver()
+                
+            } else { //we are approaching the destination
+                delegate?.router?(self, willArriveAt: currentDestination, after: legProgress.durationRemaining, distance: legProgress.distanceRemaining)
             }
         }
     }
+    
 
- 
+    
     func checkForFasterRoute(from location: CLLocation) {
-        guard let currentUpcomingManeuver = routeProgress.currentLegProgress.upComingStep else {
+        guard let currentUpcomingManeuver = routeProgress.currentLegProgress.upcomingStep else {
             return
         }
 
@@ -518,7 +547,7 @@ extension RouteController: CLLocationManagerDelegate {
         let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
 
         // The intersections array does not include the upcoming maneuver intersection.
-        if let upcomingStep = routeProgress.currentLegProgress.upComingStep, let upcomingIntersection = upcomingStep.intersections, let firstUpcomingIntersection = upcomingIntersection.first {
+        if let upcomingStep = routeProgress.currentLegProgress.upcomingStep, let upcomingIntersection = upcomingStep.intersections, let firstUpcomingIntersection = upcomingIntersection.first {
             intersections += [firstUpcomingIntersection]
         }
 
@@ -542,7 +571,7 @@ extension RouteController: CLLocationManagerDelegate {
 
         // Bearings need to normalized so when the `finalHeading` is 359 and the user heading is 1,
         // we count this as within the `RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion`
-        if let upcomingStep = routeProgress.currentLegProgress.upComingStep, let finalHeading = upcomingStep.finalHeading, let initialHeading = upcomingStep.initialHeading {
+        if let upcomingStep = routeProgress.currentLegProgress.upcomingStep, let finalHeading = upcomingStep.finalHeading, let initialHeading = upcomingStep.initialHeading {
             let initialHeadingNormalized = initialHeading.wrap(min: 0, max: 360)
             let finalHeadingNormalized = finalHeading.wrap(min: 0, max: 360)
             let userHeadingNormalized = location.course.wrap(min: 0, max: 360)
@@ -561,7 +590,7 @@ extension RouteController: CLLocationManagerDelegate {
             }
         }
 
-        let step = routeProgress.currentLegProgress.upComingStep?.maneuverLocation ?? routeProgress.currentLegProgress.currentStep.maneuverLocation
+        let step = routeProgress.currentLegProgress.upcomingStep?.maneuverLocation ?? routeProgress.currentLegProgress.currentStep.maneuverLocation
         let userAbsoluteDistance = step.distance(to: location.coordinate)
         let lastKnownUserAbsoluteDistance = routeProgress.currentLegProgress.currentStepProgress.userDistanceToManeuverLocation
 

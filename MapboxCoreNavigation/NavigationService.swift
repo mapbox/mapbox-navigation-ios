@@ -203,7 +203,7 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
         }
     }
     
-    var poorGPSTimer: CountdownTimer!
+    var poorGPSTimer: DispatchTimer!
     private var isSimulating: Bool { return simulatedLocationSource != nil }
     private var _simulationSpeedMultiplier: Double = 1.0
     
@@ -248,7 +248,7 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
         super.init()
         resumeNotifications()
         
-        poorGPSTimer = CountdownTimer(countdown: poorGPSPatience.dispatchInterval)  { [weak self] in
+        poorGPSTimer = DispatchTimer(countdown: poorGPSPatience.dispatchInterval)  { [weak self] in
             guard let mode = self?.simulationMode, mode == .onPoorGPS else { return }
             self?.simulate(intent: .poorGPS)
         }
@@ -268,6 +268,8 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
     deinit {
         suspendNotifications()
         endNavigation()
+        nativeLocationSource.delegate = nil
+        simulatedLocationSource?.delegate = nil
     }
     
     /**
@@ -457,6 +459,10 @@ extension MapboxNavigationService: RouterDelegate {
     
     public func router(_ router: Router, shouldDiscard location: CLLocation) -> Bool {
         return delegate?.navigationService?(self, shouldDiscard: location) ?? Default.shouldDiscardLocation
+    }
+    
+    public func router(_ router: Router, willArriveAt waypoint: Waypoint, after remainingTimeInterval: TimeInterval, distance: CLLocationDistance) {
+        delegate?.navigationService?(self, willArriveAt: waypoint, after: remainingTimeInterval, distance: distance)
     }
     
     public func router(_ router: Router, didArriveAt waypoint: Waypoint) -> Bool {

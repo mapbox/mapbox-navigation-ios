@@ -22,123 +22,6 @@ public enum CarPlayActivity: Int {
 }
 
 /**
- `CarPlayManagerDelegate` is the main integration point for Mapbox CarPlay support.
- 
- Implement this protocol and assign an instance to the `delegate` property of the shared instance of `CarPlayManager`.
- */
-@available(iOS 12.0, *)
-@objc(MBCarPlayManagerDelegate)
-public protocol CarPlayManagerDelegate {
-
-    /**
-     Offers the delegate an opportunity to provide a customized list of leading bar buttons.
-     
-     These buttons' tap handlers encapsulate the action to be taken, so it is up to the developer to ensure the hierarchy of templates is adequately navigable.
-     If this method is not implemented, or if nil is returned, an implementation of CPSearchTemplate will be provided which uses the Mapbox Geocoder.
-     
-     - parameter carPlayManager: The shared CarPlay manager.
-     - parameter traitCollection: The trait collection of the view controller being shown in the CarPlay window.
-     - parameter template: The template into which the returned bar buttons will be inserted.
-     - parameter activity: What the user is currently doing on the CarPlay screen. Use this parameter to distinguish between multiple templates of the same kind, such as multiple `CPMapTemplate`s.
-     - returns: An array of bar buttons to display on the leading side of the navigation bar while `template` is visible.
-     */
-    @objc(carPlayManager:leadingNavigationBarButtonsWithTraitCollection:inTemplate:forActivity:)
-    optional func carPlayManager(_ carPlayManager: CarPlayManager, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]?
-
-    /**
-     Offers the delegate an opportunity to provide a customized list of trailing bar buttons.
-     
-     These buttons' tap handlers encapsulate the action to be taken, so it is up to the developer to ensure the hierarchy of templates is adequately navigable.
-     
-     - parameter carPlayManager: The shared CarPlay manager.
-     - parameter traitCollection: The trait collection of the view controller being shown in the CarPlay window.
-     - parameter template: The template into which the returned bar buttons will be inserted.
-     - parameter activity: What the user is currently doing on the CarPlay screen. Use this parameter to distinguish between multiple templates of the same kind, such as multiple `CPMapTemplate`s.
-     - returns: An array of bar buttons to display on the trailing side of the navigation bar while `template` is visible.
-     */
-    @objc(carPlayManager:trailingNavigationBarButtonsWithTraitCollection:inTemplate:forActivity:)
-    optional func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]?
-
-    /**
-     Offers the delegate an opportunity to provide a customized list of buttons displayed on the map.
-     
-     These buttons handle the gestures on the map view, so it is up to the developer to ensure the map template is interactive.
-     If this method is not implemented, or if nil is returned, a default set of zoom and pan buttons will be provided.
-     
-     - parameter carPlayManager: The shared CarPlay manager.
-     - parameter traitCollection: The trait collection of the view controller being shown in the CarPlay window.
-     - parameter template: The template into which the returned map buttons will be inserted.
-     - parameter activity: What the user is currently doing on the CarPlay screen. Use this parameter to distinguish between multiple templates of the same kind, such as multiple `CPMapTemplate`s.
-     - returns: An array of map buttons to display on the map while `template` is visible.
-     */
-    @objc(carPlayManager:mapButtonsCompatibleWithTraitCollection:inTemplate:forActivity:)
-    optional func carPlayManager(_ carplayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]?
-
-    
-    /**
-     Offers the delegate an opportunity to provide an alternate navigation service, otherwise a default built-in MapboxNavigationService will be created and used.
-     
-     - parameter carPlayManager: The shared CarPlay manager.
-     - parameter route: The route for which the returned route controller will manage location updates.
-     - returns: A navigation service that manages location updates along `route`.
-     */
-    
-    @objc(carPlayManager:navigationServiceAlongRoute:)
-    optional func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route) -> NavigationService
-
-    /**
-     Offers the delegate an opportunity to react to updates in the search text.
-     
-     - parameter carPlayManager: The shared CarPlay manager.
-     - parameter searchTemplate: The search template currently accepting user input.
-     - parameter searchText: The updated search text in `searchTemplate`.
-     - parameter completionHandler: Called when the search is complete. Accepts a list of search results.
-     
-     - postcondition: You must call `completionHandler` within this method.
-     */
-    @objc(carPlayManager:searchTemplate:updatedSearchText:completionHandler:)
-    optional func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void)
-
-    /**
-     Offers the delegate an opportunity to react to selection of a search result.
-     
-     - parameter carPlayManager: The shared CarPlay manager.
-     - parameter searchTemplate: The search template currently accepting user input.
-     - parameter item: The search result the user has selected.
-     - parameter completionHandler: Called when the delegate is done responding to the selection.
-     
-     - postcondition: You must call `completionHandler` within this method.
-     */
-    @objc(carPlayManager:searchTemplate:selectedResult:completionHandler:)
-    optional func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void)
-
-    /**
-     Called when navigation begins so that the containing app can update accordingly.
-     
-     - parameter carPlayManager: The shared CarPlay manager.
-     - parameter service: The navigation service that has begun managing location updates for a navigation session.
-     */
-    @objc(carPlayManager:didBeginNavigationWithNavigationService:)
-    func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith service: NavigationService) -> ()
-
-    /**
-     Called when navigation ends so that the containing app can update accordingly.
-     
-     - parameter carPlayManager: The shared CarPlay manager.
-     */
-    @objc func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) -> ()
-
-    /**
-     Called when the carplay manager will disable the idle timer.
-
-     Implementing this method will allow developers to change whether idle timer is disabled when carplay is connected and the vice-versa when disconnected.
-
-     - parameter carPlayManager: The shared CarPlay manager.
-     - returns: A Boolean value indicating whether to disable idle timer when carplay is connected and enable when disconnected.
-     */
-    @objc optional func carplayManagerShouldDisableIdleTimer(_ carPlayManager: CarPlayManager) -> Bool
-}
-/**
  `CarPlayManager` is the main object responsible for orchestrating interactions with a Mapbox map on CarPlay.
  
  Messages declared in the `CPApplicationDelegate` protocol should be sent to this object in the containing application's application delegate. Implement `CarPlayManagerDelegate` in the containing application and assign an instance to the `delegate` property of your `CarPlayManager` instance.
@@ -193,11 +76,52 @@ public class CarPlayManager: NSObject {
      */
     @objc public static var isConnected = false
 
-    public var eventsManager: NavigationEventsManager!
+    /**
+     The events manager used during turn-by-turn navigation while connected to
+     CarPlay.
+     */
+    @objc public let eventsManager: NavigationEventsManager
+    
+    /**
+     The object that calculates routes when the user interacts with the CarPlay
+     interface.
+     */
+    @objc public let directions: Directions
 
-    public init(_ eventsManager: NavigationEventsManager = NavigationEventsManager(dataSource: nil)) {
+    /**
+     The styles displayed in the CarPlay interface.
+     */
+    @objc public var styles: [Style] {
+        didSet {
+            if let mapViewController = carWindow?.rootViewController as? CarPlayMapViewController {
+                mapViewController.styles = styles
+            }
+            currentNavigator?.styles = styles
+        }
+    }
+
+    /**
+     Initializes a new CarPlay manager that manages a connection to the CarPlay
+     interface.
+     
+     - parameter styles: The styles to display in the CarPlay interface. If this
+        argument is omitted, `DayStyle` and `NightStyle` are displayed by
+        default.
+     - parameter directions: The object that calculates routes when the user
+        interacts with the CarPlay interface. If this argument is `nil` or
+        omitted, the shared `Directions` object is used by default.
+     - parameter eventsManager: The events manager to use during turn-by-turn
+        navigation while connected to CarPlay. If this argument is `nil` or
+        omitted, a standard `NavigationEventsManager` object is used by default.
+     */
+    @objc public init(styles: [Style]? = nil,
+                      directions: Directions? = nil,
+                      eventsManager: NavigationEventsManager? = nil) {
+        self.styles = styles ?? [DayStyle(), NightStyle()]
+        self.directions = directions ?? .shared
+        self.eventsManager = eventsManager ?? NavigationEventsManager(dataSource: nil)
+        
         super.init()
-        self.eventsManager = eventsManager
     }
 
     lazy var fullDateComponentsFormatter: DateComponentsFormatter = {
@@ -220,6 +144,14 @@ public class CarPlayManager: NSObject {
         formatter.allowedUnits = [.day, .hour, .minute]
         return formatter
     }()
+    
+    /**
+     The main map view displayed inside CarPlay.
+     */
+    @objc public var mapView: NavigationMapView? {
+        let mapViewController = carWindow?.rootViewController as? CarPlayMapViewController
+        return mapViewController?.mapView
+    }
 }
 
 
@@ -239,7 +171,7 @@ extension CarPlayManager: CPApplicationDelegate {
             UIApplication.shared.isIdleTimerDisabled = true
         }
 
-        let viewController = CarPlayMapViewController()
+        let viewController = CarPlayMapViewController(styles: styles)
         window.rootViewController = viewController
         self.carWindow = window
 
@@ -388,7 +320,7 @@ extension CarPlayManager: CPListTemplateDelegate {
             let location = placemark.location {
             let destinationWaypoint = Waypoint(location: location)
             interfaceController?.popTemplate(animated: false)
-            calculateRouteAndStart(to: destinationWaypoint, completionHandler: completionHandler)
+            previewRoutes(to: destinationWaypoint, completionHandler: completionHandler)
             return
         }
         #endif
@@ -396,78 +328,98 @@ extension CarPlayManager: CPListTemplateDelegate {
         // Selected a favorite? or any item with a waypoint.
         if let userInfo = item.userInfo as? [String: Any],
             let waypoint = userInfo[CarPlayManager.CarPlayWaypointKey] as? Waypoint {
-            calculateRouteAndStart(to: waypoint, completionHandler: completionHandler)
+            previewRoutes(to: waypoint, completionHandler: completionHandler)
             return
         }
         
         completionHandler()
     }
-
-    public func calculateRouteAndStart(from fromWaypoint: Waypoint? = nil, to toWaypoint: Waypoint, completionHandler: @escaping () -> Void) {
+    public func previewRoutes(to destination: Waypoint, completionHandler: @escaping CompletionHandler) {
+        
         guard let rootViewController = self.carWindow?.rootViewController as? CarPlayMapViewController,
-            let mapTemplate = self.interfaceController?.rootTemplate as? CPMapTemplate,
             let userLocation = rootViewController.mapView.userLocation,
-            let location = userLocation.location,
-            let interfaceController = interfaceController else {
+            let location = userLocation.location else {
                 completionHandler()
                 return
         }
-
         let name = NSLocalizedString("CARPLAY_CURRENT_LOCATION", bundle: .mapboxNavigation, value: "Current Location", comment: "Name of the waypoint associated with the current location")
-        let originWaypoint = fromWaypoint ?? Waypoint(location: location, heading: userLocation.heading, name: name)
-
-        let routeOptions = NavigationRouteOptions(waypoints: [originWaypoint, toWaypoint])
-        Directions.shared.calculate(routeOptions) { [weak self, weak mapTemplate] (waypoints, routes, error) in
-            defer {
-                completionHandler()
-            }
-
-            guard let strongSelf = self, let mapTemplate = mapTemplate else {
-                return
-            }
-            if let error = error {
-                let okTitle = NSLocalizedString("CARPLAY_OK", bundle: .mapboxNavigation, value: "OK", comment: "CPNavigationAlert OK button title")
-                let okAction = CPAlertAction(title: okTitle, style: .default) { _ in
-                    interfaceController.popToRootTemplate(animated: true)
-                }
-                let alert = CPNavigationAlert(titleVariants: [error.localizedDescription],
-                                              subtitleVariants: [error.localizedFailureReason ?? ""],
-                                              imageSet: nil,
-                                              primaryAction: okAction,
-                                              secondaryAction: nil,
-                                              duration: 0)
-                mapTemplate.present(navigationAlert: alert, animated: true)
-            }
-            guard let waypoints = waypoints, let routes = routes else {
-                return
-            }
-
-            let routeChoices = routes.map { (route) -> CPRouteChoice in
-                let summaryVariants = [
-                    strongSelf.fullDateComponentsFormatter.string(from: route.expectedTravelTime)!,
-                    strongSelf.shortDateComponentsFormatter.string(from: route.expectedTravelTime)!,
-                    strongSelf.briefDateComponentsFormatter.string(from: route.expectedTravelTime)!
-                ]
-                let routeChoice = CPRouteChoice(summaryVariants: summaryVariants, additionalInformationVariants: [route.description], selectionSummaryVariants: [route.description])
-                routeChoice.userInfo = route
-                return routeChoice
-            }
-
-            let originPlacemark = MKPlacemark(coordinate: waypoints.first!.coordinate)
-            let destinationPlacemark = MKPlacemark(coordinate: waypoints.last!.coordinate, addressDictionary: ["street": waypoints.last!.name ?? ""])
-            let trip = CPTrip(origin: MKMapItem(placemark: originPlacemark), destination: MKMapItem(placemark: destinationPlacemark), routeChoices: routeChoices)
-            trip.userInfo = routeOptions
-
-            let goTitle = NSLocalizedString("CARPLAY_GO", bundle: .mapboxNavigation, value: "Go", comment: "Title for start button in CPTripPreviewTextConfiguration")
-            let alternativeRoutesTitle = NSLocalizedString("CARPLAY_MORE_ROUTES", bundle: .mapboxNavigation, value: "More Routes", comment: "Title for alternative routes in CPTripPreviewTextConfiguration")
-            let overviewTitle = NSLocalizedString("CARPLAY_OVERVIEW", bundle: .mapboxNavigation, value: "Overview", comment: "Title for overview button in CPTripPreviewTextConfiguration")
-            let defaultPreviewText = CPTripPreviewTextConfiguration(startButtonTitle: goTitle, additionalRoutesButtonTitle: alternativeRoutesTitle, overviewButtonTitle: overviewTitle)
-
-            let previewMapTemplate = strongSelf.mapTemplate(forPreviewing: trip)
-            interfaceController.pushTemplate(previewMapTemplate, animated: true)
-
-            previewMapTemplate.showTripPreviews([trip], textConfiguration: defaultPreviewText)
+        let origin = Waypoint(location: location, heading: userLocation.heading, name: name)
+        
+        previewRoutes(between: [origin, destination], completionHandler: completionHandler)
+    }
+    
+    public func previewRoutes(between waypoints: [Waypoint], completionHandler: @escaping CompletionHandler) {
+        let options = NavigationRouteOptions(waypoints: waypoints)
+        previewRoutes(for: options, completionHandler: completionHandler)
+    }
+    
+    public func previewRoutes(for options: RouteOptions, completionHandler: @escaping CompletionHandler) {
+        calculate(options) { [weak self] (waypoints, routes, error) in
+            self?.didCalculate(routes,
+                               for: options,
+                               between: waypoints,
+                               error: error,
+                               completionHandler: completionHandler)
         }
+    }
+    
+    internal func calculate(_ options: RouteOptions, completionHandler: @escaping Directions.RouteCompletionHandler) {
+        directions.calculate(options, completionHandler: completionHandler)
+    }
+    
+    
+    internal func didCalculate(_ routes: [Route]?, for routeOptions: RouteOptions, between waypoints: [Waypoint]?, error: NSError?, completionHandler: @escaping () -> Void) {
+        defer {
+            completionHandler()
+        }
+        
+        guard let interfaceController = interfaceController,
+              let mapTemplate = interfaceController.rootTemplate as? CPMapTemplate else {
+            return
+        }
+        
+        if let error = error {
+            let okTitle = NSLocalizedString("CARPLAY_OK", bundle: .mapboxNavigation, value: "OK", comment: "CPNavigationAlert OK button title")
+            let okAction = CPAlertAction(title: okTitle, style: .default) { _ in
+                interfaceController.popToRootTemplate(animated: true)
+            }
+            let alert = CPNavigationAlert(titleVariants: [error.localizedDescription],
+                                          subtitleVariants: [error.localizedFailureReason ?? ""],
+                                          imageSet: nil,
+                                          primaryAction: okAction,
+                                          secondaryAction: nil,
+                                          duration: 0)
+            mapTemplate.present(navigationAlert: alert, animated: true)
+        }
+        guard let waypoints = waypoints, let routes = routes else {
+            return
+        }
+        
+        let routeChoices = routes.map { (route) -> CPRouteChoice in
+            let summaryVariants = [
+               fullDateComponentsFormatter.string(from: route.expectedTravelTime)!,
+               shortDateComponentsFormatter.string(from: route.expectedTravelTime)!,
+               briefDateComponentsFormatter.string(from: route.expectedTravelTime)!
+            ]
+            let routeChoice = CPRouteChoice(summaryVariants: summaryVariants, additionalInformationVariants: [route.description], selectionSummaryVariants: [route.description])
+            routeChoice.userInfo = route
+            return routeChoice
+        }
+        
+        let originPlacemark = MKPlacemark(coordinate: waypoints.first!.coordinate)
+        let destinationPlacemark = MKPlacemark(coordinate: waypoints.last!.coordinate, addressDictionary: ["street": waypoints.last!.name ?? ""])
+        let trip = CPTrip(origin: MKMapItem(placemark: originPlacemark), destination: MKMapItem(placemark: destinationPlacemark), routeChoices: routeChoices)
+        trip.userInfo = routeOptions
+        
+        let goTitle = NSLocalizedString("CARPLAY_GO", bundle: .mapboxNavigation, value: "Go", comment: "Title for start button in CPTripPreviewTextConfiguration")
+        let alternativeRoutesTitle = NSLocalizedString("CARPLAY_MORE_ROUTES", bundle: .mapboxNavigation, value: "More Routes", comment: "Title for alternative routes in CPTripPreviewTextConfiguration")
+        let overviewTitle = NSLocalizedString("CARPLAY_OVERVIEW", bundle: .mapboxNavigation, value: "Overview", comment: "Title for overview button in CPTripPreviewTextConfiguration")
+        let defaultPreviewText = CPTripPreviewTextConfiguration(startButtonTitle: goTitle, additionalRoutesButtonTitle: alternativeRoutesTitle, overviewButtonTitle: overviewTitle)
+        
+        let previewMapTemplate = self.mapTemplate(forPreviewing: trip)
+        interfaceController.pushTemplate(previewMapTemplate, animated: true)
+        
+        previewMapTemplate.showTripPreviews([trip], textConfiguration: defaultPreviewText)
     }
 
     func mapTemplate(forPreviewing trip: CPTrip) -> CPMapTemplate {
@@ -514,10 +466,11 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let navigationMapTemplate = self.mapTemplate(forNavigating: trip)
         interfaceController.setRootTemplate(navigationMapTemplate, animated: true)
 
-        let navigationViewController = CarPlayNavigationViewController(with: service,
+        let navigationViewController = CarPlayNavigationViewController(navigationService: service,
                                                                        mapTemplate: navigationMapTemplate,
                                                                        interfaceController: interfaceController,
-                                                                       manager: self)
+                                                                       manager: self,
+                                                                       styles: styles)
         navigationViewController.startNavigationSession(for: trip)
         navigationViewController.carPlayNavigationDelegate = self
         currentNavigator = navigationViewController

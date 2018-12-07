@@ -47,7 +47,7 @@ public class Fixture: NSObject {
         let filePath = (NSTemporaryDirectory() as NSString).appendingPathComponent(fileName)
         
         _ = directions.calculate(options, completionHandler: { (waypoints, routes, error) in
-            guard let route = routes?.first else { return }
+            guard let _ = routes?.first else { return }
             print("Route downloaded to \(filePath)")
             completion()
         })
