@@ -6,7 +6,7 @@ class LocationTests: XCTestCase {
     
     var setup: (progress: RouteProgress, firstLocation: CLLocation) {
         let progress = RouteProgress(route: route)
-        let firstCoord = progress.currentLegProgress.nearbyCoordinates.first!
+        let firstCoord = progress.nearbyCoordinates.first!
         let firstLocation = CLLocation(latitude: firstCoord.latitude, longitude: firstCoord.longitude)
         
         return (progress, firstLocation)
@@ -47,7 +47,7 @@ class LocationTests: XCTestCase {
         let initialHeadingOnFirstStep = progress.currentLegProgress.currentStep.finalHeading!
         let coordinateAlongFirstStep = firstLocation.coordinate.coordinate(at: 100, facing: initialHeadingOnFirstStep)
         let locationAlongFirstStep = CLLocation(latitude: coordinateAlongFirstStep.latitude, longitude: coordinateAlongFirstStep.longitude)
-        guard let snapped = locationAlongFirstStep.snapped(to: progress.currentLegProgress) else {
+        guard let snapped = locationAlongFirstStep.snapped(to: progress) else {
             return XCTFail("Location should have snapped to route")
         }
         

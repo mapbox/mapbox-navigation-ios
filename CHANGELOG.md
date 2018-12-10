@@ -1,12 +1,27 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## master
+## v0.26.0
+
+### Client-side routing
+
+* Added a `NavigationDirections` class that manages offline tile packs and client-side route calculation. ([#1808](https://github.com/mapbox/mapbox-navigation-ios/pull/1808))
+* Extended `Bundle` with `Bundle.suggestedTileURL` and other properties to facilitate offline downloads. ([#1808](https://github.com/mapbox/mapbox-navigation-ios/pull/1808))
+
+### CarPlay
 
 * When selecting a search result in CarPlay, the resulting routes lead to the search result’s routable location when available. Routes to a routable location are more likely to be passable. ([#1859](https://github.com/mapbox/mapbox-navigation-ios/pull/1859))
 * Fixed an issue where the CarPlay navigation map’s vanishing point and user puck initially remained centered on screen, instead of accounting for the maneuver panel, until the navigation bar was shown. ([#1856](https://github.com/mapbox/mapbox-navigation-ios/pull/1856))
+* Fixed an issue where route shields and exit numbers appeared blurry in the maneuver panel on CarPlay devices and failed to appear in the CarPlay simulator. ([#1868](https://github.com/mapbox/mapbox-navigation-ios/pull/1868))
+* Added `VisualInstruction.containsLaneIndications`, `VisualInstruction.maneuverImageSet(side:)`, `VisualInstruction.shouldFlipImage(side:)`, and `VisualInstruction.carPlayManeuverLabelAttributedText(bounds:shieldHeight:window:)`. ([#1860](https://github.com/mapbox/mapbox-navigation-ios/pull/1860))
+* `RouteLegProgress.upComingStep` has been renamed to `upcomingStep`.  ([#1860](https://github.com/mapbox/mapbox-navigation-ios/pull/1860))
 
-### CarPlay
-* `VisualInstruction.containsLaneIndications`, `VisualInstruction.maneuverImageSet(side:)`, `VisualInstruction.shouldFlipImage(side:)`, and `VisualInstruction.carPlayManeuverLabelAttributedText(bounds:shieldHeight:window:)` are now public. ([#1860](https://github.com/mapbox/mapbox-navigation-ios/pull/1860))
+### Other changes
+
+* The `NavigationSettings.shared` property is now accessible in Objective-C code as `MBNavigationSettings.sharedSettings`. ([#1882](https://github.com/mapbox/mapbox-navigation-ios/pull/1882))
+* Fixed spurious rerouting on multi-leg routes. ([#1884](https://github.com/mapbox/mapbox-navigation-ios/pull/1884))
+* Fixed a hang that occurred when failing to fetch a route shield image for display in a visual instruction banner. ([#1888](https://github.com/mapbox/mapbox-navigation-ios/pull/1888))
+* Adding property `RouteController.nearbyCoordinates`, which offers similar behavior to `RouteLegProgress.nearbyCoordinates`, which the addition of step lookahead/lookbehind in multi-leg routes. ([#1883](https://github.com/mapbox/mapbox-navigation-ios/pull/1883))
+* The `MGLShapeSourceOptions.lineDistanceMetrics` property has been temporarily disabled from the route line shape source due to a crash. This means it isn’t possible to set the `MGLLineStyleLayer.lineGradient` property on the route line style layers. ([#1886](https://github.com/mapbox/mapbox-navigation-ios/pull/1886))
 
 ## v0.25.0 (November 22, 2018)
 
@@ -37,7 +52,7 @@
 * Fixed an issue where the map view while navigating in CarPlay showed labels in the style’s original language instead of the local language. ([#1601](https://github.com/mapbox/mapbox-navigation-ios/pull/1601))
 * Fixed an issue where rerouting could still occur after arrival, even though `NavigationServiceDelegate.navigationService(_:shouldPreventReroutesWhenArrivingAt:)` returned `true`. ([#1833](https://github.com/mapbox/mapbox-navigation-ios/pull/1833))
 * `NavigationMapViewDelegate.navigationMapView(_:routeStyleLayerWithIdentifier:source:)`, `NavigationMapViewDelegate.navigationMapView(_:routeCasingStyleLayerWithIdentifier:source:)`, `NavigationViewControllerDelegate.navigationViewController(_:routeStyleLayerWithIdentifier:source:)`, and `NavigationViewControllerDelegate.navigationViewController(_:routeCasingStyleLayerWithIdentifier:source:)` can now set the `MGLLineStyleLayer.lineGradient` property. ([#1799](https://github.com/mapbox/mapbox-navigation-ios/pull/1799))
-* Reduced the `NavigationMapView.minimumFramesPerSecond` property’s default value from 30 frames per second to 20 frames per second for improved performance on battery power. ([#1818](https://github.com/mapbox/mapbox-navigation-ios/pull/1818))
+* Reduced the `NavigationMapView.minimumFramesPerSecond` property’s default value from 30 frames per second to 20 frames per second for improved performance on battery power. ([#1819](https://github.com/mapbox/mapbox-navigation-ios/pull/1819))
 
 ## v0.23.0 (October 24, 2018)
 * `CarPlayManager` is no longer a singleton; your application delegate is responsible for creating and owning an instance of this class. This fixes a crash in applications that specify the access token programmatically instead of in the Info.plist file. ([#1792](https://github.com/mapbox/mapbox-navigation-ios/pull/1792))

@@ -385,7 +385,7 @@ class RouteMapViewController: UIViewController {
         let defaultAltitude = mapView.defaultAltitude
         let isLongRoad = routeProgress.distanceRemaining >= mapView.longManeuverDistance
         let currentStep = routeProgress.currentLegProgress.currentStep
-        let upComingStep = routeProgress.currentLegProgress.upComingStep
+        let upComingStep = routeProgress.currentLegProgress.upcomingStep
 
         //If the user is at the last turn maneuver, the map should zoom in to the default altitude.
         let currentInstruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction
@@ -935,7 +935,7 @@ extension RouteMapViewController: NavigationViewDelegate {
         guard let stepIndex = leg.steps.index(of: step) else { return }
         
         let legProgress = RouteLegProgress(leg: leg, stepIndex: stepIndex)
-        guard let upcomingStep = legProgress.upComingStep else { return }
+        guard let upcomingStep = legProgress.upcomingStep else { return }
         addPreviewInstructions(step: legProgress.currentStep, maneuverStep: upcomingStep, distance: instructionsBannerView.distance)
         
         mapView.enableFrameByFrameCourseViewTracking(for: 1)
@@ -973,7 +973,7 @@ extension RouteMapViewController: StepsViewControllerDelegate {
         
         let legProgress = RouteLegProgress(leg: router.route.legs[legIndex], stepIndex: stepIndex)
         let step = legProgress.currentStep
-        guard let upcomingStep = legProgress.upComingStep else { return }
+        guard let upcomingStep = legProgress.upcomingStep else { return }
 
         currentPreviewInstructionBannerStepIndex = router.routeProgress.remainingSteps.index(of: step)
         

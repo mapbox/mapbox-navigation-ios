@@ -20,7 +20,7 @@ class RouteProgressTests: XCTestCase {
         XCTAssertEqual(routeProgress.currentLegProgress.fractionTraveled, 0)
         XCTAssertEqual(routeProgress.currentLegProgress.stepIndex, 0)
         XCTAssertEqual(routeProgress.currentLegProgress.followOnStep?.description, "Turn left onto Gough Street")
-        XCTAssertEqual(routeProgress.currentLegProgress.upComingStep?.description, "Turn right onto Sacramento Street")
+        XCTAssertEqual(routeProgress.currentLegProgress.upcomingStep?.description, "Turn right onto Sacramento Street")
     }
     
     func testRouteStepProgress() {

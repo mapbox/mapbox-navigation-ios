@@ -17,6 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if isRunningTests() {
             window!.rootViewController = UIViewController()
         }
+        
         return true
     }
 

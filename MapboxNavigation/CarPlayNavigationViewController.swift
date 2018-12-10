@@ -316,6 +316,13 @@ public class CarPlayNavigationViewController: UIViewController {
             return CGRect(x: 0, y: 0, width: widthOfManeuverView, height: 30)
         }
         
+        // Over a certain height, CarPlay devices downsize the image and CarPlay simulators hide the image.
+        let maximumImageSize = CGSize(width: .infinity, height: shieldHeight)
+        let imageRendererFormat = UIGraphicsImageRendererFormat(for: UITraitCollection(userInterfaceIdiom: .carPlay))
+        if let window = carPlayManager.carWindow {
+            imageRendererFormat.scale = window.screen.scale
+        }
+        
         if let attributedPrimary = visualInstruction.primaryInstruction.carPlayManeuverLabelAttributedText(bounds: bounds, shieldHeight: shieldHeight, window: carPlayManager.carWindow) {
             let instruction = NSMutableAttributedString(attributedString: attributedPrimary)
             
@@ -324,7 +331,7 @@ public class CarPlayNavigationViewController: UIViewController {
                 instruction.append(attributedSecondary)
             }
             
-            instruction.canonicalizeAttachments()
+            instruction.canonicalizeAttachments(maximumImageSize: maximumImageSize, imageRendererFormat: imageRendererFormat)
             primaryManeuver.attributedInstructionVariants = [instruction]
         }
         
@@ -340,11 +347,11 @@ public class CarPlayNavigationViewController: UIViewController {
             }
             if let attributedTertiary = tertiaryInstruction.carPlayManeuverLabelAttributedText(bounds: bounds, shieldHeight: shieldHeight, window: carPlayManager.carWindow) {
                 let attributedTertiary = NSMutableAttributedString(attributedString: attributedTertiary)
-                attributedTertiary.canonicalizeAttachments()
+                attributedTertiary.canonicalizeAttachments(maximumImageSize: maximumImageSize, imageRendererFormat: imageRendererFormat)
                 tertiaryManeuver.attributedInstructionVariants = [attributedTertiary]
             }
             
-            if let upcomingStep = navService.routeProgress.currentLegProgress.upComingStep {
+            if let upcomingStep = navService.routeProgress.currentLegProgress.upcomingStep {
                 let distance = distanceFormatter.measurement(of: upcomingStep.distance)
                 tertiaryManeuver.initialTravelEstimates = CPTravelEstimates(distanceRemaining: distance, timeRemaining: upcomingStep.expectedTravelTime)
             }

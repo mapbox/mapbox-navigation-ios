@@ -25,7 +25,7 @@ class NavigationViewControllerTests: XCTestCase {
         
         let navigationService = navigationViewController.navigationService!
         let router = navigationService.router!
-        let firstCoord      = router.routeProgress.currentLegProgress.nearbyCoordinates.first!
+        let firstCoord      = router.routeProgress.nearbyCoordinates.first!
         let firstLocation   = location(at: firstCoord)
         
         var poi = [CLLocation]()

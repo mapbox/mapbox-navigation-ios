@@ -20,7 +20,7 @@ Get up and running in a few minutes with our drop-in turn-by-turn navigation `Na
 * Natural-sounding turn instructions powered by [Amazon Polly](https://aws.amazon.com/polly/) (no configuration needed)
 * [Support for over a dozen languages](https://www.mapbox.com/ios-sdk/navigation/overview/localization-and-internationalization/)
 
-## [Documentation](https://www.mapbox.com/mapbox-navigation-ios/navigation/)
+## [Documentation](https://www.mapbox.com/ios-sdk/api/navigation/)
 
 ## Requirements
 
@@ -38,7 +38,7 @@ To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
 
 1. Create a [Podfile](https://guides.cocoapods.org/syntax/podfile.html) with the following specification:
    ```ruby
-   pod 'MapboxNavigation', '~> 0.25.0'
+   pod 'MapboxNavigation', '~> 0.26.0'
    ```
 
 1. Run `pod repo update && pod install` and open the resulting Xcode workspace.
@@ -49,7 +49,7 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
 
 1. Create a [Cartfile](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#github-repositories) with the following dependency:
    ```cartfile
-   github "mapbox/mapbox-navigation-ios" ~> 0.25
+   github "mapbox/mapbox-navigation-ios" ~> 0.26
    ```
 
 1. Run `carthage update --platform iOS` to build just the iOS dependencies.
@@ -87,11 +87,11 @@ Directions.shared.calculate(options) { (waypoints, routes, error) in
 }
 ```
 
-Consult the [API reference](https://www.mapbox.com/mapbox-navigation-ios/navigation/) for further details.
+Consult the [API reference](https://www.mapbox.com/ios-sdk/api/navigation/) for further details.
 
 ## Examples
 
-The [API reference](https://www.mapbox.com/mapbox-navigation-ios/navigation/) includes example code for accomplishing common tasks. You can run these examples as part of the [navigation-ios-examples](https://github.com/mapbox/navigation-ios-examples) project.
+The [API reference](https://www.mapbox.com/ios-sdk/api/navigation/) includes example code for accomplishing common tasks. You can run these examples as part of the [navigation-ios-examples](https://github.com/mapbox/navigation-ios-examples) project.
 
 This repository also contains [Swift and Objective-C testbeds](https://github.com/mapbox/mapbox-navigation-ios/blob/master/Examples/) that exercise a variety of navigation SDK features:
 
