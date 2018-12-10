@@ -89,7 +89,8 @@ public class NavigationDirections: Directions {
      - parameter progressHandler: Unpacking reports progress every 500ms.
      - parameter completionHandler: Called when unpacking completed.
      */
-    @objc public class func unpackTilePack(at filePathURL: URL, outputDirectoryURL: URL, progressHandler: UnpackProgressHandler?, completionHandler: UnpackCompletionHandler?) {
+    @objc(unpackTilePackAtURL:outputDirectoryURL:progressHandler:completionHandler:)
+    public class func unpackTilePack(at filePathURL: URL, outputDirectoryURL: URL, progressHandler: UnpackProgressHandler?, completionHandler: UnpackCompletionHandler?) {
         
         NavigationDirectionsConstants.offlineSerialQueue.sync {
             

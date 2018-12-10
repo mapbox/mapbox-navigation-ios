@@ -57,7 +57,7 @@
             
             NSURL *outputDirectoryURL = [[NSBundle mapboxCoreNavigation] suggestedTileURLWithVersion:versions.firstObject];
             
-            [MBNavigationDirections unpackTilePackAt:url outputDirectoryURL:outputDirectoryURL progressHandler:^(uint64_t totalBytes, uint64_t bytesRemaining) {
+            [MBNavigationDirections unpackTilePackAtURL:url outputDirectoryURL:outputDirectoryURL progressHandler:^(uint64_t totalBytes, uint64_t bytesRemaining) {
                 // Show unpacking progress
             } completionHandler:^(uint64_t numberOfTiles, NSError * _Nullable error) {
                 // Dismiss UI
