@@ -1,12 +1,8 @@
 import XCTest
 import Solar
+import TestHelper
 @testable import MapboxNavigation
 
-struct Location {
-    static let sf = CLLocation(latitude: 37.78, longitude: -122.40)
-    static let london = CLLocation(latitude: 51.50, longitude: -0.12)
-    static let paris = CLLocation(latitude: 48.85, longitude: 2.35)
-}
 
 class StyleManagerTests: XCTestCase {
     

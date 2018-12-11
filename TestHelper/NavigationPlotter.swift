@@ -205,6 +205,7 @@ public class NavigationPlotter: UIView {
         linePlotters?.forEach { $0.draw(on: self) }
         coordinatePlotters?.forEach { $0.draw(on: self) }
         locationPlotters?.forEach { $0.draw(on: self) }
+        linePlotters?.forEach { $0.draw(on: self) }
     }
     
     func drawLines(between coordinates: [CLLocationCoordinate2D]?, color: UIColor = UIColor.route, lineWidth: CGFloat = 4, drawDotIndicator: Bool = true, drawTextIndicator: Bool = true) {

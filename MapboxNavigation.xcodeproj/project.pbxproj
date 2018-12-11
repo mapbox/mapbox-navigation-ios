@@ -128,6 +128,8 @@
 		35BF8CA21F28EB60003F6125 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BF8CA11F28EB60003F6125 /* Array.swift */; };
 		35BF8CA41F28EBD8003F6125 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BF8CA31F28EBD8003F6125 /* String.swift */; };
 		35C11359215BADF900CC2929 /* sthlm-double-back-replay.json in Resources */ = {isa = PBXBuildFile; fileRef = 35C11358215BADF800CC2929 /* sthlm-double-back-replay.json */; };
+		35C1E07221BFF2C4000F3EC6 /* HistoricRouteProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C1E07121BFF2C4000F3EC6 /* HistoricRouteProgressTests.swift */; };
+		35C1E07421BFF973000F3EC6 /* historic-route-progress.trace.json in Resources */ = {isa = PBXBuildFile; fileRef = 35C1E07321BFF973000F3EC6 /* historic-route-progress.trace.json */; };
 		35C57D6A208DD4A200BDD2A6 /* BridgingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C57D69208DD4A200BDD2A6 /* BridgingTests.m */; };
 		35C714B0203B251F00F0C2AE /* MapboxSpeech.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A9DDBD202E12EE007D52DA /* MapboxSpeech.framework */; };
 		35C714B1203B251F00F0C2AE /* MapboxSpeech.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C5A9DDBD202E12EE007D52DA /* MapboxSpeech.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -710,6 +712,8 @@
 		35BF8CA11F28EB60003F6125 /* Array.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
 		35BF8CA31F28EBD8003F6125 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		35C11358215BADF800CC2929 /* sthlm-double-back-replay.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "sthlm-double-back-replay.json"; sourceTree = "<group>"; };
+		35C1E07121BFF2C4000F3EC6 /* HistoricRouteProgressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricRouteProgressTests.swift; sourceTree = "<group>"; };
+		35C1E07321BFF973000F3EC6 /* historic-route-progress.trace.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "historic-route-progress.trace.json"; sourceTree = "<group>"; };
 		35C57D69208DD4A200BDD2A6 /* BridgingTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BridgingTests.m; sourceTree = "<group>"; };
 		35C6ED9A1EBB1DE400A27EF8 /* ca */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ca; path = ca.lproj/Localizable.strings; sourceTree = "<group>"; };
 		35C6ED9C1EBB224A00A27EF8 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
@@ -1278,6 +1282,7 @@
 				8D9CD7FD20880581004DC4B3 /* XCTestCase.swift */,
 				3597ABCF21553B6F00C12785 /* SimulatedLocationManagerTests.swift */,
 				3573EA70215A5A9F009899D7 /* RouteControllerSnapshotTests.swift */,
+				35C1E07121BFF2C4000F3EC6 /* HistoricRouteProgressTests.swift */,
 			);
 			path = MapboxNavigationTests;
 			sourceTree = "<group>";
@@ -1370,6 +1375,7 @@
 				3EA93170CB959F3065ACFFC3 /* SpeechAPISpy.swift */,
 				35C8DBFC2191D0370053328C /* CoreLocation.swift */,
 				35C8DC102191E1140053328C /* DirectionsSpy.swift */,
+				35C1E07321BFF973000F3EC6 /* historic-route-progress.trace.json */,
 			);
 			path = TestHelper;
 			sourceTree = "<group>";
@@ -2059,6 +2065,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				35C1E07421BFF973000F3EC6 /* historic-route-progress.trace.json in Resources */,
 				3557506D21A827E800AEF9B6 /* li.tar in Resources */,
 				35CDA88D2190F5210072B675 /* DCA-Arboretum.json in Resources */,
 				35CDA8912190F6980072B675 /* route-for-lane-testing.json in Resources */,
@@ -2366,6 +2373,7 @@
 				16E4F97F205B05FE00531791 /* MapboxVoiceControllerTests.swift in Sources */,
 				35A262B92050A5CD00AEFF6D /* InstructionsBannerViewSnapshotTests.swift in Sources */,
 				8D5CF3B0215054AF005592D6 /* FBSnapshotTestCase.swift in Sources */,
+				35C1E07221BFF2C4000F3EC6 /* HistoricRouteProgressTests.swift in Sources */,
 				16AC9D11212E356200CECE44 /* CPMapTemplate+MBTestable.mm in Sources */,
 				3597ABD021553B6F00C12785 /* SimulatedLocationManagerTests.swift in Sources */,
 				35F1F5931FD57EFD00F8E502 /* StyleManagerTests.swift in Sources */,
