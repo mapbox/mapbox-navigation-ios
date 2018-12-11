@@ -10,6 +10,7 @@ extension VisualInstructionBanner {
         let colors: [UIColor] = [.black, .white]
         let blackAndWhiteLaneIcons: [UIImage] = colors.compactMap { (color) in
             let lanesView = LanesView(frame: CGRect(origin: .zero, size: size))
+            lanesView.widthAnchor.constraint(equalToConstant: size.width).isActive = true
             
             // Temporarily add the view to the view hierarchy for UIAppearance to work its magic.
             if let carWindow = window {
@@ -19,6 +20,9 @@ extension VisualInstructionBanner {
             } else {
                 lanesView.update(for: self)
             }
+            
+            lanesView.show(animated: false)
+            lanesView.layoutIfNeeded()
             
             lanesView.backgroundColor = .clear
             return lanesView.imageRepresentation
