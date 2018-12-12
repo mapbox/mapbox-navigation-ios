@@ -127,14 +127,27 @@ class BenchViewController: UITableViewController {
         let speechAPI = SpeechAPISpy(accessToken: "foo")
         let voiceController = MapboxVoiceController(speechClient: speechAPI, audioPlayerType: AudioPlayerDummy.self)
         let directions = DirectionsSpy(accessToken: "foo")
+        
+        let natStyle = NatStyle()
         let service = MapboxNavigationService(route: route,
                                               directions: directions,
                                               locationSource: locationManager,
                                               eventsManagerType: NavigationEventsManagerSpy.self,
-                                              simulating: .onPoorGPS,
+                                              simulating: .never,
                                               routerType: PortableRouteController.self)
         
-        return ControlRouteViewController(for: route, navigationService: service, voiceController: voiceController)
+        return ControlRouteViewController(for: route, styles: [natStyle], navigationService: service, voiceController: voiceController)
+        
+        
+    }
+}
+
+class NatStyle: DayStyle {
+    let natURL: URL = URL(string: "mapbox://styles/slaughternat/cjpej84eed8xy2ro79uyxw5fh")!
+    
+    public required init() {
+        super.init()
+        mapStyleURL = natURL
     }
 }
 
