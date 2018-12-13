@@ -31,6 +31,7 @@
 		35002D691E5F6B2F0090E733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35002D661E5F6B1B0090E733 /* Main.storyboard */; };
 		3502231A205BC94E00E1449A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35022319205BC94E00E1449A /* Constants.swift */; };
 		35025F3F1F051DD2002BA3EA /* DialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35025F3E1F051DD2002BA3EA /* DialogViewController.swift */; };
+		3506870621C3ED9100D1A9BE /* historic-route-progress-reroute.json in Resources */ = {isa = PBXBuildFile; fileRef = 3506870521C3ED9100D1A9BE /* historic-route-progress-reroute.json */; };
 		3507F9FB2134309E0086B39E /* MapboxGeocoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3507F9F92134305C0086B39E /* MapboxGeocoder.framework */; };
 		3507F9FC2134309E0086B39E /* MapboxGeocoder.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3507F9F92134305C0086B39E /* MapboxGeocoder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3510300F1F54B67000E3B7E7 /* LaneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3510300E1F54B67000E3B7E7 /* LaneTests.swift */; };
@@ -607,6 +608,7 @@
 		35002D671E5F6B1B0090E733 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		35022319205BC94E00E1449A /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		35025F3E1F051DD2002BA3EA /* DialogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogViewController.swift; sourceTree = "<group>"; };
+		3506870521C3ED9100D1A9BE /* historic-route-progress-reroute.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "historic-route-progress-reroute.json"; sourceTree = "<group>"; };
 		3506DE39216E2ADE007DA352 /* OfflineRoutingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineRoutingTests.swift; sourceTree = "<group>"; };
 		3507F9F92134305C0086B39E /* MapboxGeocoder.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxGeocoder.framework; path = Carthage/Build/iOS/MapboxGeocoder.framework; sourceTree = "<group>"; };
 		3510300E1F54B67000E3B7E7 /* LaneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaneTests.swift; sourceTree = "<group>"; };
@@ -1348,7 +1350,6 @@
 			children = (
 				3557506E21A8293E00AEF9B6 /* tiles */,
 				35CDA8812190F5080072B675 /* turn_left.data */,
-				35CDA8602190F2A40072B675 /* TestHelper.h */,
 				35CDA8862190F50C0072B675 /* DCA-Arboretum.json */,
 				35C8DC0E2191DE940053328C /* DCA-Arboretum.trace.json */,
 				35CDA88A2190F5120072B675 /* EmptyStyle.json */,
@@ -1368,7 +1369,6 @@
 				35CDA8882190F5100072B675 /* sthlm-double-back-replay.json */,
 				35CDA8852190F50A0072B675 /* sthlm-double-back.json */,
 				C5EF397420599120009A2C50 /* straight-line.json */,
-				35CDA8612190F2A40072B675 /* Info.plist */,
 				35CDA88B2190F5130072B675 /* UnionSquare-to-GGPark.route */,
 				35C8DBFC2191D0370053328C /* CoreLocation.swift */,
 				35C8DC102191E1140053328C /* DirectionsSpy.swift */,
@@ -1381,6 +1381,7 @@
 				3EA93EBD6E6BEC966BBE51D6 /* NavigationServiceTestDoubles.swift */,
 				3EA93170CB959F3065ACFFC3 /* SpeechAPISpy.swift */,
 				3557506C21A827E800AEF9B6 /* li.tar */,
+				3506870521C3ED9100D1A9BE /* historic-route-progress-reroute.json */,
 			);
 			path = TestHelper;
 			sourceTree = "<group>";
@@ -2085,6 +2086,7 @@
 				355832AD2192F7E300141922 /* PipeFittersUnion-FourSeasonsBoston.trace.json in Resources */,
 				35CDA8942190F6980072B675 /* route-with-lanes.json in Resources */,
 				8D86AE8C21C31F210064A304 /* waypoint-after-turn.json in Resources */,
+				3506870621C3ED9100D1A9BE /* historic-route-progress-reroute.json in Resources */,
 				35CDA8972190F6980072B675 /* sthlm-double-back.json in Resources */,
 				35CDA88F2190F6980072B675 /* EmptyStyle.json in Resources */,
 				35CDA8992190F6980072B675 /* UnionSquare-to-GGPark.route in Resources */,

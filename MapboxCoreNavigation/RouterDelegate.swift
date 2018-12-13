@@ -37,5 +37,8 @@ public protocol RouterDelegate: class {
 
     @objc(routerShouldDisableBatteryMonitoring:)
     optional func routerShouldDisableBatteryMonitoring(_ router: Router) -> Bool
+    
+    @objc(routerShouldDiscardHistory:)
+    optional func routerShouldDiscardHistory(_ router: Router) -> Bool
 }
 

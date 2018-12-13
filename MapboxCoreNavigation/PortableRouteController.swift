@@ -13,7 +13,7 @@ open class PortableRouteController: RouteController {
             return routeProgress.route
         }
         set {
-            routeProgress = RouteProgress(route: newValue)
+            super.route = newValue
             updateNavigator()
         }
     }

@@ -38,6 +38,9 @@ import MapboxDirections
     @objc(navigationService:shouldDiscardLocation:)
     optional func navigationService(_ service: NavigationService, shouldDiscard location: CLLocation) -> Bool
     
+    @objc(navigationServiceShouldDiscardHistory:)
+    optional func navigationServiceShouldDiscardHistory(_ service: NavigationService) -> Bool
+    
     /**
      Called immediately after the navigation service receives a new route.
      

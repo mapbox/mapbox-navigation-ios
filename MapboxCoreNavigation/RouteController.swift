@@ -20,15 +20,14 @@ protocol RouteControllerDataSource: class {
  */
 @objc(MBRouteController)
 open class RouteController: NSObject, Router {
-    
 
     public enum DefaultBehavior {
         public static let shouldRerouteFromLocation: Bool = true
         public static let shouldDiscardLocation: Bool = true
+        public static let shouldDiscardHistory: Bool = true
         public static let didArriveAtWaypoint: Bool = true
         public static let shouldPreventReroutesWhenArrivingAtWaypoint: Bool = true
         public static let shouldDisableBatteryMonitoring: Bool = true
-        
     }
     
     /**
@@ -72,6 +71,7 @@ open class RouteController: NSObject, Router {
             if let location = self.location {
                 delegate?.router?(self, willRerouteFrom: location)
             }
+            
             _routeProgress = newValue
             announce(reroute: routeProgress.route, at: dataSource.location, proactive: didFindFasterRoute)
         }
@@ -88,7 +88,8 @@ open class RouteController: NSObject, Router {
             return routeProgress.route
         }
         set {
-            routeProgress = RouteProgress(route: newValue)
+            let shouldDiscardHistory = delegate?.routerShouldDiscardHistory?(self) ?? false
+            routeProgress = RouteProgress(route: newValue, previousRouteProgress: shouldDiscardHistory ? nil : routeProgress)
         }
     }
 
@@ -465,7 +466,12 @@ extension RouteController: CLLocationManagerDelegate {
             if routeIsFaster {
                 strongSelf.didFindFasterRoute = true
                 // If the upcoming maneuver in the new route is the same as the current upcoming maneuver, don't announce it
-                strongSelf._routeProgress = RouteProgress(route: route, legIndex: 0, spokenInstructionIndex: strongSelf._routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex)
+                let shouldDiscardHistory = strongSelf.delegate?.routerShouldDiscardHistory?(strongSelf) ?? false
+                let previousRouteProgress: RouteProgress? = shouldDiscardHistory ? nil : strongSelf.routeProgress
+                strongSelf._routeProgress = RouteProgress(route: route,
+                                                          previousRouteProgress: previousRouteProgress,
+                                                          legIndex: 0,
+                                                          spokenInstructionIndex: strongSelf._routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex)
                 strongSelf.announce(reroute: route, at: location, proactive: true)
                 strongSelf.movementsAwayFromRoute = 0
                 strongSelf.didFindFasterRoute = false
@@ -508,7 +514,9 @@ extension RouteController: CLLocationManagerDelegate {
 
             guard let route = route else { return }
             strongSelf.isRerouting = false
-            strongSelf._routeProgress = RouteProgress(route: route, legIndex: 0)
+            let shouldDiscardHistory = strongSelf.delegate?.routerShouldDiscardHistory?(strongSelf) ?? false
+            let previousRouteProgress: RouteProgress? = shouldDiscardHistory ? nil : strongSelf.routeProgress
+            strongSelf._routeProgress = RouteProgress(route: route, previousRouteProgress: previousRouteProgress, legIndex: 0)
             strongSelf._routeProgress.currentLegProgress.stepIndex = 0
             strongSelf.announce(reroute: route, at: location, proactive: false)
         }

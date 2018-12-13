@@ -64,6 +64,22 @@ open class RouteProgress: NSObject {
     @objc public var distanceTraveled: CLLocationDistance {
         return route.legs.prefix(upTo: legIndex).map { $0.distance }.reduce(0, +) + currentLegProgress.distanceTraveled
     }
+    
+    @objc public var totalDistanceTraveled: CLLocationDistance {
+        return routeProgresses().map { $0.distanceTraveled }.reduce(0, +)
+    }
+    
+    func routeProgresses() -> [RouteProgress] {
+        var current = self
+        var progresses = [current]
+        
+        while let prev = current.previousRouteProgress {
+            progresses.append(prev)
+            current = prev
+        }
+        
+        return progresses
+    }
 
     /**
      Total seconds remaining on all legs.
@@ -77,6 +93,14 @@ open class RouteProgress: NSObject {
      */
     @objc public var fractionTraveled: Double {
         return distanceTraveled / route.distance
+    }
+    
+    @objc public var totalFractionTraveled: Double {
+        return totalDistanceTraveled / totalDistance
+    }
+    
+    @objc public var totalDistance: CLLocationDistance {
+        return routeProgresses().map { $0.route.distance }.reduce(0, +)
     }
 
     /**
@@ -159,6 +183,8 @@ open class RouteProgress: NSObject {
      An dictionary containing a `TimeInterval` total per `CongestionLevel`. Only `CongestionLevel` founnd on that step will present. Broken up by leg and then step.
      */
     public var congestionTimesPerStep: [[[CongestionLevel: TimeInterval]]]  = [[[:]]]
+    
+    public var previousRouteProgress: RouteProgress?
 
     /**
      Intializes a new `RouteProgress`.
@@ -166,9 +192,10 @@ open class RouteProgress: NSObject {
      - parameter route: The route to follow.
      - parameter legIndex: Zero-based index indicating the current leg the user is on.
      */
-    @objc public init(route: Route, legIndex: Int = 0, spokenInstructionIndex: Int = 0) {
+    @objc public init(route: Route, previousRouteProgress: RouteProgress? = nil, legIndex: Int = 0, spokenInstructionIndex: Int = 0) {
         self.route = route
         self.legIndex = legIndex
+        self.previousRouteProgress = previousRouteProgress
         self.currentLegProgress = RouteLegProgress(leg: route.legs[legIndex], stepIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
         super.init()
 

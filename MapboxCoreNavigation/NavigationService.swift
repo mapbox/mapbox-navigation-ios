@@ -461,6 +461,10 @@ extension MapboxNavigationService: RouterDelegate {
         return delegate?.navigationService?(self, shouldDiscard: location) ?? Default.shouldDiscardLocation
     }
     
+    public func routerShouldDiscardHistory(_ router: Router) -> Bool {
+        return delegate?.navigationServiceShouldDiscardHistory?(self) ?? Default.shouldDiscardHistory
+    }
+    
     public func router(_ router: Router, willArriveAt waypoint: Waypoint, after remainingTimeInterval: TimeInterval, distance: CLLocationDistance) {
         delegate?.navigationService?(self, willArriveAt: waypoint, after: remainingTimeInterval, distance: distance)
     }

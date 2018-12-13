@@ -2,6 +2,7 @@ import Foundation
 import CoreLocation
 import MapboxDirections
 @testable import MapboxCoreNavigation
+@testable import MapboxNavigation
 
 
 @objc(MBFixture)
@@ -137,6 +138,14 @@ class TraceCollector: NSObject, CLLocationManagerDelegate {
     var locations = [CLLocation]()
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        self.locations.append(contentsOf: locations)
+        let location = self.locations.isEmpty ? locations.first! : locations.first!.shifted(to: self.locations.last!.timestamp.addingTimeInterval(1))
+        self.locations.append(location)
+    }
+}
+
+extension CLLocation {
+    
+    func shifted(to newTimestamp: Date) -> CLLocation {
+        return CLLocation(coordinate: coordinate, altitude: altitude, horizontalAccuracy: horizontalAccuracy, verticalAccuracy: verticalAccuracy, course: course, speed: speed, timestamp: newTimestamp)
     }
 }

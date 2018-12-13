@@ -185,6 +185,9 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     @objc(navigationViewController:shouldDiscardLocation:)
     optional func navigationViewController(_ navigationViewController: NavigationViewController, shouldDiscard location: CLLocation) -> Bool
     
+    @objc(navigationViewControllerShouldDiscardHistory:)
+    optional func navigationViewControllerShouldDiscardHistory(_ navigationViewController: NavigationViewController) -> Bool
+    
     /**
      Called to allow the delegate to customize the contents of the road name label that is displayed towards the bottom of the map view.
      
