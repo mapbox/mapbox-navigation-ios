@@ -67,7 +67,7 @@ extension LocationPlotter {
 
 class RoutePlotter: UIView {
     
-    var mapView: MGLMapView?
+    var mapView: NavigationMapView?
     var coordinateBounds: MGLCoordinateBounds?
     var route: Route? { didSet { setNeedsDisplay() } }
     var match: Match? { didSet { setNeedsDisplay() } }
@@ -77,7 +77,7 @@ class RoutePlotter: UIView {
     func updateCoordinateBounds() {
         guard let coordinates = route?.coordinates ?? match?.coordinates else { return }
         coordinateBounds = coordinates.bounds
-        mapView = MGLMapView(frame: bounds)
+        mapView = NavigationMapView(frame: bounds)
         let padding = UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50)
         mapView?.setVisibleCoordinateBounds(coordinateBounds!, edgePadding: padding, animated: false)
     }

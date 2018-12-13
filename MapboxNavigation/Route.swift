@@ -19,7 +19,7 @@ extension Route {
         let precedingSteps = legs[legIndex].steps.prefix(upTo: stepIndex)
         let precedingStepCoordinates = precedingSteps.compactMap { $0.coordinates }.reduce([], +)
         let precedingPolyline = Polyline((precedingLegCoordinates + precedingStepCoordinates).reversed())
-        
+
         let followingLegs = legs.suffix(from: legIndex).dropFirst()
         let followingLegCoordinates = followingLegs.flatMap { $0.steps }.flatMap { $0.coordinates ?? [] }
         
