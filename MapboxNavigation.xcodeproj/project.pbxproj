@@ -130,6 +130,7 @@
 		35C11359215BADF900CC2929 /* sthlm-double-back-replay.json in Resources */ = {isa = PBXBuildFile; fileRef = 35C11358215BADF800CC2929 /* sthlm-double-back-replay.json */; };
 		35C1E07221BFF2C4000F3EC6 /* HistoricRouteProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C1E07121BFF2C4000F3EC6 /* HistoricRouteProgressTests.swift */; };
 		35C1E07421BFF973000F3EC6 /* historic-route-progress.trace.json in Resources */ = {isa = PBXBuildFile; fileRef = 35C1E07321BFF973000F3EC6 /* historic-route-progress.trace.json */; };
+		35C1E07621C295C0000F3EC6 /* historic-route-progress.json in Resources */ = {isa = PBXBuildFile; fileRef = 35C1E07521C295C0000F3EC6 /* historic-route-progress.json */; };
 		35C57D6A208DD4A200BDD2A6 /* BridgingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C57D69208DD4A200BDD2A6 /* BridgingTests.m */; };
 		35C714B0203B251F00F0C2AE /* MapboxSpeech.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A9DDBD202E12EE007D52DA /* MapboxSpeech.framework */; };
 		35C714B1203B251F00F0C2AE /* MapboxSpeech.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C5A9DDBD202E12EE007D52DA /* MapboxSpeech.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -714,6 +715,7 @@
 		35C11358215BADF800CC2929 /* sthlm-double-back-replay.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "sthlm-double-back-replay.json"; sourceTree = "<group>"; };
 		35C1E07121BFF2C4000F3EC6 /* HistoricRouteProgressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricRouteProgressTests.swift; sourceTree = "<group>"; };
 		35C1E07321BFF973000F3EC6 /* historic-route-progress.trace.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "historic-route-progress.trace.json"; sourceTree = "<group>"; };
+		35C1E07521C295C0000F3EC6 /* historic-route-progress.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "historic-route-progress.json"; sourceTree = "<group>"; };
 		35C57D69208DD4A200BDD2A6 /* BridgingTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BridgingTests.m; sourceTree = "<group>"; };
 		35C6ED9A1EBB1DE400A27EF8 /* ca */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ca; path = ca.lproj/Localizable.strings; sourceTree = "<group>"; };
 		35C6ED9C1EBB224A00A27EF8 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
@@ -1345,37 +1347,40 @@
 			isa = PBXGroup;
 			children = (
 				3557506E21A8293E00AEF9B6 /* tiles */,
-				35C8DBF7219198310053328C /* route.json */,
-				AEF2C8F12072B603007B061F /* routeWithTunnels_9thStreetDC.json */,
-				C5EF397420599120009A2C50 /* straight-line.json */,
-				C5387A9C1F8FDB13000D2E93 /* routeWithInstructions.json */,
+				35CDA8812190F5080072B675 /* turn_left.data */,
+				35CDA8602190F2A40072B675 /* TestHelper.h */,
 				35CDA8862190F50C0072B675 /* DCA-Arboretum.json */,
 				35C8DC0E2191DE940053328C /* DCA-Arboretum.trace.json */,
+				35CDA88A2190F5120072B675 /* EmptyStyle.json */,
+				35C1E07521C295C0000F3EC6 /* historic-route-progress.json */,
+				35C1E07321BFF973000F3EC6 /* historic-route-progress.trace.json */,
 				355832AA2192F60800141922 /* PipeFittersUnion-FourSeasonsBoston.json */,
 				355832AC2192F7E300141922 /* PipeFittersUnion-FourSeasonsBoston.trace.json */,
-				35CDA88A2190F5120072B675 /* EmptyStyle.json */,
 				35CDA8842190F5090072B675 /* route-doubling-back.json */,
 				35CDA8822190F5080072B675 /* route-for-lane-testing.json */,
 				35CDA88C2190F5140072B675 /* route-with-banner-instructions.json */,
 				35CDA8892190F5110072B675 /* route-with-instructions.json */,
 				35CDA8832190F5090072B675 /* route-with-lanes.json */,
 				35CDA8872190F50D0072B675 /* route-with-straight-roundabout.json */,
+				35C8DBF7219198310053328C /* route.json */,
+				C5387A9C1F8FDB13000D2E93 /* routeWithInstructions.json */,
+				AEF2C8F12072B603007B061F /* routeWithTunnels_9thStreetDC.json */,
 				35CDA8882190F5100072B675 /* sthlm-double-back-replay.json */,
 				35CDA8852190F50A0072B675 /* sthlm-double-back.json */,
-				3557506C21A827E800AEF9B6 /* li.tar */,
-				16120A4C20645D6E007EA21D /* NavigationEventsManagerTestDoubles.swift */,
-				3EA93EBD6E6BEC966BBE51D6 /* NavigationServiceTestDoubles.swift */,
-				35CDA8812190F5080072B675 /* turn_left.data */,
+				C5EF397420599120009A2C50 /* straight-line.json */,
+				35CDA8612190F2A40072B675 /* Info.plist */,
 				35CDA88B2190F5130072B675 /* UnionSquare-to-GGPark.route */,
+				35C8DBFC2191D0370053328C /* CoreLocation.swift */,
+				35C8DC102191E1140053328C /* DirectionsSpy.swift */,
 				16435E04206EE37800AF48B6 /* DummyURLSessionDataTask.swift */,
 				3559FE4E21C3195700B6613F /* NavigationPlotter.swift */,
 				35CDA8602190F2A40072B675 /* TestHelper.h */,
 				35CDA8612190F2A40072B675 /* Info.plist */,
 				35CDA8772190F2F00072B675 /* Fixture.swift */,
+				16120A4C20645D6E007EA21D /* NavigationEventsManagerTestDoubles.swift */,
+				3EA93EBD6E6BEC966BBE51D6 /* NavigationServiceTestDoubles.swift */,
 				3EA93170CB959F3065ACFFC3 /* SpeechAPISpy.swift */,
-				35C8DBFC2191D0370053328C /* CoreLocation.swift */,
-				35C8DC102191E1140053328C /* DirectionsSpy.swift */,
-				35C1E07321BFF973000F3EC6 /* historic-route-progress.trace.json */,
+				3557506C21A827E800AEF9B6 /* li.tar */,
 			);
 			path = TestHelper;
 			sourceTree = "<group>";
@@ -2066,6 +2071,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				35C1E07421BFF973000F3EC6 /* historic-route-progress.trace.json in Resources */,
+				35C1E07621C295C0000F3EC6 /* historic-route-progress.json in Resources */,
 				3557506D21A827E800AEF9B6 /* li.tar in Resources */,
 				35CDA88D2190F5210072B675 /* DCA-Arboretum.json in Resources */,
 				35CDA8912190F6980072B675 /* route-for-lane-testing.json in Resources */,
