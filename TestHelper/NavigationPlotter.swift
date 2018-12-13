@@ -10,88 +10,204 @@ fileprivate struct Constants {
 }
 
 extension UIColor {
-    fileprivate class var route: UIColor { get { return #colorLiteral(red:0.00, green:0.70, blue:0.99, alpha:1.0) } }
-    fileprivate class var routeCoordinate: UIColor { get { return #colorLiteral(red: 0, green: 1, blue: 0.99, alpha: 0.3012764085) } }
+    public class var route: UIColor { get { return #colorLiteral(red:0.00, green:0.70, blue:0.99, alpha:1.0) } }
+    public class var routeCoordinate: UIColor { get { return #colorLiteral(red: 0, green: 1, blue: 0.99, alpha: 0.3012764085) } }
     fileprivate class var rawLocation: UIColor { get { return #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1) } }
     fileprivate class var snappedLocation: UIColor { get { return #colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1) } }
 }
 
-protocol Plotter {
+public protocol Plotter {
     var color: UIColor { get }
     var drawIndexesAsText: Bool { get }
-    func draw(on routePlotter: RoutePlotter)
+    func draw(on plotter: NavigationPlotter)
 }
 
-struct CoordinatePlotter: Plotter {
-    let coordinates: [CLLocationCoordinate2D]
-    let color: UIColor
-    let drawIndexesAsText: Bool
+public struct CoordinatePlotter: Plotter {
+    public let coordinates: [CLLocationCoordinate2D]
+    public let color: UIColor
+    public let drawIndexesAsText: Bool
+    
+    public init(coordinates: [CLLocationCoordinate2D], color: UIColor, drawIndexesAsText: Bool) {
+        self.coordinates = coordinates
+        self.color = color
+        self.drawIndexesAsText = drawIndexesAsText
+    }
 }
 
-struct LocationPlotter: Plotter {
-    let locations: [CLLocation]
-    let color: UIColor
-    let drawIndexesAsText: Bool
+public struct LocationPlotter: Plotter {
+    public let locations: [CLLocation]
+    public let color: UIColor
+    public let drawIndexesAsText: Bool
+    
+    public init(locations: [CLLocation], color: UIColor, drawIndexesAsText: Bool) {
+        self.locations = locations
+        self.color = color
+        self.drawIndexesAsText = drawIndexesAsText
+    }
+}
+
+public struct LinePlotter: Plotter {
+    public let coordinates: [CLLocationCoordinate2D]
+    public let color: UIColor
+    public let lineWidth: CGFloat
+    public let drawIndexesAsText: Bool
+    
+    public init(coordinates: [CLLocationCoordinate2D], color: UIColor, lineWidth: CGFloat, drawIndexesAsText: Bool) {
+        self.coordinates = coordinates
+        self.color = color
+        self.lineWidth = lineWidth
+        self.drawIndexesAsText = drawIndexesAsText
+    }
+}
+
+public struct RoutePlotter: Plotter {
+    public let route: Route
+    public let color: UIColor
+    public let lineWidth: CGFloat
+    public let drawIndexesAsText: Bool
+    public let drawDotIndicator: Bool
+    public let drawTextIndicator: Bool
+    
+    public init(route: Route, color: UIColor = UIColor.route, lineWidth: CGFloat = 4, drawIndexesAsText: Bool = false, drawDotIndicator: Bool = true, drawTextIndicator: Bool = true) {
+        self.route = route
+        self.color = color
+        self.lineWidth = lineWidth
+        self.drawIndexesAsText = drawIndexesAsText
+        self.drawDotIndicator = drawDotIndicator
+        self.drawTextIndicator = drawTextIndicator
+    }
+}
+
+public struct MatchPlotter: Plotter {
+    public let match: Match
+    public let color: UIColor
+    public let lineWidth: CGFloat
+    public let drawIndexesAsText: Bool
+    public let drawDotIndicator: Bool
+    public let drawTextIndicator: Bool
+    
+    public init(match: Match, color: UIColor = UIColor.route, lineWidth: CGFloat = 4, drawIndexesAsText: Bool = false, drawDotIndicator: Bool = true, drawTextIndicator: Bool = true) {
+        self.match = match
+        self.color = color
+        self.lineWidth = lineWidth
+        self.drawIndexesAsText = drawIndexesAsText
+        self.drawDotIndicator = drawDotIndicator
+        self.drawTextIndicator = drawTextIndicator
+    }
+}
+
+extension RoutePlotter {
+    public func draw(on plotter: NavigationPlotter) {
+        plotter.drawLines(between: route.coordinates!, color: color, lineWidth: lineWidth, drawDotIndicator: drawDotIndicator, drawTextIndicator: drawTextIndicator)
+    }
+}
+
+extension MatchPlotter {
+    public func draw(on plotter: NavigationPlotter) {
+        plotter.drawLines(between: match.coordinates!, color: color, lineWidth: lineWidth, drawDotIndicator: drawDotIndicator, drawTextIndicator: drawTextIndicator)
+    }
 }
 
 extension CoordinatePlotter {
-    func draw(on routePlotter: RoutePlotter) {
+    public func draw(on plotter: NavigationPlotter) {
         for (i, coordinate) in coordinates.enumerated() {
-            let position = routePlotter.mapView!.convert(coordinate, toPointTo: routePlotter)
+            let position = plotter.mapView!.convert(coordinate, toPointTo: plotter)
             let centeredPosition = CGPoint(x: position.x - Constants.dotSize.width / 2,
                                            y: position.y - Constants.dotSize.height / 2)
-            routePlotter.drawDot(at: centeredPosition, color: color)
+            plotter.drawDot(at: centeredPosition, color: color)
             
             if drawIndexesAsText {
-                routePlotter.drawText(at: centeredPosition, text: "\(i)")
+                plotter.drawText(at: centeredPosition, text: "\(i)")
             }
         }
     }
 }
 
 extension LocationPlotter {
-    func draw(on routePlotter: RoutePlotter) {
+    public func draw(on plotter: NavigationPlotter) {
         for (i, location) in locations.enumerated() {
-            let position = routePlotter.mapView!.convert(location.coordinate, toPointTo: routePlotter)
+            let position = plotter.mapView!.convert(location.coordinate, toPointTo: plotter)
             let centeredPosition = CGPoint(x: position.x - Constants.dotSize.width / 2,
                                            y: position.y - Constants.dotSize.height / 2)
-            routePlotter.drawDot(at: centeredPosition, color: color)
-            routePlotter.drawCourseIndicator(at: centeredPosition, course: location.course)
+            plotter.drawDot(at: centeredPosition, color: color)
+            plotter.drawCourseIndicator(at: centeredPosition, course: location.course)
             
             if drawIndexesAsText {
-                routePlotter.drawText(at: centeredPosition, text: "\(i)")
+                plotter.drawText(at: centeredPosition, text: "\(i)")
             }
         }
     }
 }
 
-class RoutePlotter: UIView {
+extension LinePlotter {
+    public func draw(on plotter: NavigationPlotter) {
+        plotter.drawLines(between: coordinates, color: color, lineWidth: lineWidth, drawDotIndicator: false, drawTextIndicator: false)
+    }
+}
+
+public class NavigationPlotter: UIView {
     
     var mapView: MGLMapView?
     var coordinateBounds: MGLCoordinateBounds?
-    var route: Route? { didSet { setNeedsDisplay() } }
-    var match: Match? { didSet { setNeedsDisplay() } }
-    var coordinatePlotters: [CoordinatePlotter]?
-    var locationPlotters: [LocationPlotter]?
+    public var routePlotters: [RoutePlotter]? { didSet { setNeedsDisplay() } }
+    public var matchPlotters: [MatchPlotter]? { didSet { setNeedsDisplay() } }
+    public var coordinatePlotters: [CoordinatePlotter]? { didSet { setNeedsDisplay() } }
+    public var locationPlotters: [LocationPlotter]? { didSet { setNeedsDisplay() } }
+    public var linePlotters: [LinePlotter]? { didSet { setNeedsDisplay() } }
     
     func updateCoordinateBounds() {
-        guard let coordinates = route?.coordinates ?? match?.coordinates else { return }
-        coordinateBounds = coordinates.bounds
+        coordinateBounds = allBoundingCoordinates.bounds
         mapView = MGLMapView(frame: bounds)
         let padding = UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50)
         mapView?.setVisibleCoordinateBounds(coordinateBounds!, edgePadding: padding, animated: false)
     }
     
-    override func draw(_ rect: CGRect) {
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    var allBoundingCoordinates: [CLLocationCoordinate2D] {
+        var coordinates = [CLLocationCoordinate2D]()
+        
+        routePlotters?.forEach({ (plotter) in
+            coordinates += plotter.route.coordinates!
+        })
+        
+        matchPlotters?.forEach({ (plotter) in
+            coordinates += plotter.match.coordinates!
+        })
+        
+        coordinatePlotters?.forEach({ (plotter) in
+            coordinates += plotter.coordinates
+        })
+        
+        locationPlotters?.forEach({ (plotter) in
+            coordinates += plotter.locations.map { $0.coordinate }
+        })
+        
+        linePlotters?.forEach({ (plotter) in
+            coordinates += plotter.coordinates
+        })
+        
+        return coordinates
+    }
+    
+    override public func draw(_ rect: CGRect) {
         super.draw(rect)
         updateCoordinateBounds()
-        drawLines(between: route?.coordinates)
-        drawLines(between: match?.coordinates)
+        
+        routePlotters?.forEach { $0.draw(on: self) }
+        matchPlotters?.forEach { $0.draw(on: self) }
+        linePlotters?.forEach { $0.draw(on: self) }
         coordinatePlotters?.forEach { $0.draw(on: self) }
         locationPlotters?.forEach { $0.draw(on: self) }
     }
     
-    func drawLines(between coordinates: [CLLocationCoordinate2D]?) {
+    func drawLines(between coordinates: [CLLocationCoordinate2D]?, color: UIColor = UIColor.route, lineWidth: CGFloat = 4, drawDotIndicator: Bool = true, drawTextIndicator: Bool = true) {
         guard let coordinates = coordinates else { return }
         let path = UIBezierPath()
         for coordinate in coordinates {
@@ -103,16 +219,20 @@ class RoutePlotter: UIView {
             }
         }
         
-        UIColor.route.setStroke()
-        path.lineWidth = 4
+        color.setStroke()
+        path.lineWidth = lineWidth
         path.stroke()
         
         for (i, coordinate) in coordinates.enumerated() {
             let position = mapView!.convert(coordinate, toPointTo: self)
             let centeredPosition = CGPoint(x: position.x - Constants.dotSize.width / 2,
                                            y: position.y - Constants.dotSize.height / 2)
-            drawDot(at: centeredPosition, color: .routeCoordinate)
-            drawText(at: position, text: "\(i)")
+            if drawDotIndicator {
+                drawDot(at: centeredPosition, color: .routeCoordinate)
+            }
+            if drawTextIndicator {
+                drawText(at: position, text: "\(i)")
+            }
         }
     }
 }
@@ -151,7 +271,13 @@ extension UIView {
         let textStyle = NSMutableParagraphStyle()
         textStyle.alignment = .left
         
-        let attributes: [NSAttributedStringKey: Any] = [
+        #if swift(>=4.2)
+            let attributes: [NSAttributedString.Key: Any]
+        #else
+            let attributes: [NSAttributedStringKey: Any]
+        #endif
+        
+        attributes = [
             .font: UIFont.systemFont(ofSize: 9, weight: .medium),
             .foregroundColor: UIColor.white,
             .paragraphStyle: textStyle,
@@ -178,7 +304,13 @@ extension UIView {
         let textStyle = NSMutableParagraphStyle()
         textStyle.alignment = .left
         
-        let attributes: [NSAttributedStringKey: Any] = [
+        #if swift(>=4.2)
+            let attributes: [NSAttributedString.Key: Any]
+        #else
+            let attributes: [NSAttributedStringKey: Any]
+        #endif
+        
+        attributes = [
             .font: UIFont.systemFont(ofSize: 7, weight: .medium),
             .foregroundColor: UIColor.white,
             .paragraphStyle: textStyle,
@@ -193,14 +325,6 @@ extension UIView {
         let rect = CGRect(x: textRect.minX, y: textRect.minY + (textRect.height - height) / 2, width: textRect.width, height: height)
         text.draw(in: rect, withAttributes: attributes)
         context.restoreGState()
-    }
-}
-
-extension MGLCoordinateBounds {
-    fileprivate var frame: CGRect {
-        let maxX = Swift.abs(ne.latitude-sw.latitude)
-        let maxY = Swift.abs(ne.longitude-sw.longitude)
-        return CGRect(origin: .zero, size: CGSize(width: maxX, height: maxY))
     }
 }
 
