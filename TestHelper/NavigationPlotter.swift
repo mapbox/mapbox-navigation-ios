@@ -147,7 +147,7 @@ extension LinePlotter {
 
 public class NavigationPlotter: UIView {
     
-    var mapView: MGLMapView?
+    var mapView: NavigationMapView?
     var coordinateBounds: MGLCoordinateBounds?
     public var routePlotters: [RoutePlotter]? { didSet { setNeedsDisplay() } }
     public var matchPlotters: [MatchPlotter]? { didSet { setNeedsDisplay() } }
@@ -157,7 +157,7 @@ public class NavigationPlotter: UIView {
     
     func updateCoordinateBounds() {
         coordinateBounds = allBoundingCoordinates.bounds
-        mapView = MGLMapView(frame: bounds)
+        mapView = NavigationMapView(frame: bounds)
         let padding = UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50)
         mapView?.setVisibleCoordinateBounds(coordinateBounds!, edgePadding: padding, animated: false)
     }
