@@ -9,16 +9,9 @@ class ManeuverArrowTests: FBSnapshotTestCase {
     
     let waypointRoute = Fixture.route(from: "waypoint-after-turn")
 
-    
-    
-
     override func setUp() {
         super.setUp()
-        recordMode = true
-    }
-
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        recordMode = false
     }
 
     
@@ -30,8 +23,6 @@ class ManeuverArrowTests: FBSnapshotTestCase {
         plotter.linePlotters = [linePlotter]
         print(polyline.coordinates.count)
         
-        
         verify(plotter)
     }
-
 }
