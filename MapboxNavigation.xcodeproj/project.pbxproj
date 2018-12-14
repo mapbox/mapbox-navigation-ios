@@ -240,6 +240,9 @@
 		8D5CF3B0215054AF005592D6 /* FBSnapshotTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D5CF3AF215054AF005592D6 /* FBSnapshotTestCase.swift */; };
 		8D5DFFF1207C04840093765A /* NSAttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D5DFFF0207C04840093765A /* NSAttributedString.swift */; };
 		8D75F991212B5C7F00F99CF3 /* TunnelAuthority.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D75F990212B5C7F00F99CF3 /* TunnelAuthority.swift */; };
+		8D86AE8921C31C640064A304 /* waypoint-after-turn.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D86AE8821C31C640064A304 /* waypoint-after-turn.json */; };
+		8D86AE8B21C31CC80064A304 /* ManeuverArrowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D86AE8A21C31CC80064A304 /* ManeuverArrowTests.swift */; };
+		8D86AE8C21C31F210064A304 /* waypoint-after-turn.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D86AE8821C31C640064A304 /* waypoint-after-turn.json */; };
 		8D8EA9BC20575CD80077F478 /* FeedbackCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D8EA9BB20575CD80077F478 /* FeedbackCollectionViewCell.swift */; };
 		8D9ADEA720A0C61A0067E845 /* GenericRouteShield.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D9ADEA620A0C61A0067E845 /* GenericRouteShield.swift */; };
 		8D9CD7FF20880581004DC4B3 /* XCTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D9CD7FD20880581004DC4B3 /* XCTestCase.swift */; };
@@ -794,6 +797,8 @@
 		8D5CF3AF215054AF005592D6 /* FBSnapshotTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBSnapshotTestCase.swift; sourceTree = "<group>"; };
 		8D5DFFF0207C04840093765A /* NSAttributedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSAttributedString.swift; sourceTree = "<group>"; };
 		8D75F990212B5C7F00F99CF3 /* TunnelAuthority.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelAuthority.swift; sourceTree = "<group>"; };
+		8D86AE8821C31C640064A304 /* waypoint-after-turn.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "waypoint-after-turn.json"; sourceTree = "<group>"; };
+		8D86AE8A21C31CC80064A304 /* ManeuverArrowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManeuverArrowTests.swift; sourceTree = "<group>"; };
 		8D8EA9BB20575CD80077F478 /* FeedbackCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackCollectionViewCell.swift; sourceTree = "<group>"; };
 		8D9ADEA620A0C61A0067E845 /* GenericRouteShield.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericRouteShield.swift; sourceTree = "<group>"; };
 		8D9CD7FD20880581004DC4B3 /* XCTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTestCase.swift; sourceTree = "<group>"; };
@@ -1237,6 +1242,7 @@
 				3597ABD321553F6800C12785 /* sthlm-double-back.json */,
 				35C11358215BADF800CC2929 /* sthlm-double-back-replay.json */,
 				DAA96D17215A961D00BEF703 /* route-doubling-back.json */,
+				8D86AE8821C31C640064A304 /* waypoint-after-turn.json */,
 			);
 			path = Fixtures;
 			sourceTree = "<group>";
@@ -1262,6 +1268,7 @@
 				35B1AEBB20AD9B3C00C8544E /* LeaksSpec.swift */,
 				35B1AEBD20AD9C7800C8544E /* LeakTest.swift */,
 				3540514E1F73F3F300ED572D /* ManeuverViewTests.swift */,
+				8D86AE8A21C31CC80064A304 /* ManeuverArrowTests.swift */,
 				16E11B54212B40A900027CD3 /* MapboxNavigationTests-Bridging.h */,
 				16E4F97E205B05FE00531791 /* MapboxVoiceControllerTests.swift */,
 				C55C299820D2E2F600B0406C /* NavigationMapViewTests.swift */,
@@ -2018,6 +2025,7 @@
 				8D07C5A820B612310093D779 /* EmptyStyle.json in Resources */,
 				35C11359215BADF900CC2929 /* sthlm-double-back-replay.json in Resources */,
 				16B63DCD205C8EEF002D56D4 /* route-with-instructions.json in Resources */,
+				8D86AE8921C31C640064A304 /* waypoint-after-turn.json in Resources */,
 				AE5F8771209A082500F58FDB /* route-with-banner-instructions.json in Resources */,
 				DAA96D18215A961D00BEF703 /* route-doubling-back.json in Resources */,
 				35DC9D8F1F4321CC001ECD64 /* route-with-lanes.json in Resources */,
@@ -2063,6 +2071,7 @@
 				35C8DBF42191937A0053328C /* routeWithInstructions.json in Resources */,
 				355832AD2192F7E300141922 /* PipeFittersUnion-FourSeasonsBoston.trace.json in Resources */,
 				35CDA8942190F6980072B675 /* route-with-lanes.json in Resources */,
+				8D86AE8C21C31F210064A304 /* waypoint-after-turn.json in Resources */,
 				35CDA8972190F6980072B675 /* sthlm-double-back.json in Resources */,
 				35CDA88F2190F6980072B675 /* EmptyStyle.json in Resources */,
 				35CDA8992190F6980072B675 /* UnionSquare-to-GGPark.route in Resources */,
@@ -2363,6 +2372,7 @@
 				AE00A73A209A2C38006A3DC7 /* StepsViewControllerTests.swift in Sources */,
 				35B1AEBC20AD9B3C00C8544E /* LeaksSpec.swift in Sources */,
 				16A509D5202A87B20011D788 /* ImageDownloaderTests.swift in Sources */,
+				8D86AE8B21C31CC80064A304 /* ManeuverArrowTests.swift in Sources */,
 				8D54F14A206ECF720038736D /* InstructionPresenterTests.swift in Sources */,
 				166224452025699600EA4824 /* ImageRepositoryTests.swift in Sources */,
 				160D827B2059973C00D278D6 /* DataCacheTests.swift in Sources */,

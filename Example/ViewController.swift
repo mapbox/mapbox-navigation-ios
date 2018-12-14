@@ -262,7 +262,7 @@ class ViewController: UIViewController {
     func navigationService() -> NavigationService? {
         guard let route = routes?.first else { return nil }
         let simulate = simulationButton.isSelected
-        let mode: SimulationMode = simulate ? .always : .onPoorGPS
+        let mode: SimulationMode = simulate ? .always : .never//.onPoorGPS
         return MapboxNavigationService(route: route, directions: Settings.directions, simulating: mode)
     }
 
