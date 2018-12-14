@@ -23,13 +23,13 @@ extension AppDelegate: CPApplicationDelegate {
     
     func application(_ application: UIApplication, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPWindow) {
         carPlayManager.delegate = self
-        carPlaySearchManager.delegate = self
+        carPlaySearchController.delegate = self
         carPlayManager.application(application, didConnectCarInterfaceController: interfaceController, to: window)
     }
     
     func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPWindow) {
         carPlayManager.delegate = nil
-        carPlaySearchManager.delegate = nil
+        carPlaySearchController.delegate = nil
         carPlayManager.application(application, didDisconnectCarInterfaceController: interfaceController, from: window)
     }
 }
@@ -69,8 +69,8 @@ extension AppDelegate: CarPlayManagerDelegate {
         switch activity {
         case .browsing:
             let searchTemplate = CPSearchTemplate()
-            searchTemplate.delegate = carPlaySearchManager
-            let searchButton = carPlaySearchManager.searchTemplateButton(searchTemplate: searchTemplate, interfaceController: interfaceController, traitCollection: traitCollection)
+            searchTemplate.delegate = carPlaySearchController
+            let searchButton = carPlaySearchController.searchTemplateButton(searchTemplate: searchTemplate, interfaceController: interfaceController, traitCollection: traitCollection)
             return [searchButton]
         default:
             return nil
@@ -105,7 +105,7 @@ extension AppDelegate: CarPlayManagerDelegate {
 }
 
 @available(iOS 12.0, *)
-extension AppDelegate: CarPlaySearchManagerDelegate {
+extension AppDelegate: CarPlaySearchControllerDelegate {
     func previewRoutes(to waypoint: Waypoint, completionHandler: @escaping () -> Void) {
         carPlayManager.previewRoutes(to: waypoint, completionHandler: completionHandler)
     }
@@ -116,7 +116,7 @@ extension AppDelegate: CarPlaySearchManagerDelegate {
     
     func pushTemplate(_ template: CPTemplate, animated: Bool) {
         if let listTemplate = template as? CPListTemplate {
-            listTemplate.delegate = carPlaySearchManager
+            listTemplate.delegate = carPlaySearchController
         }
         carPlayManager.interfaceController?.pushTemplate(template, animated: animated)
     }

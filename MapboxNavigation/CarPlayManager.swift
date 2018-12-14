@@ -528,6 +528,8 @@ extension CarPlayManager: CPMapTemplateDelegate {
 
         let padding = NavigationMapView.defaultPadding + mapView.safeArea
         mapView.showcase([route], padding: padding)
+        
+        delegate?.carPlayManager?(self, selectedPreviewFor: trip, using: routeChoice)
     }
 
     public func mapTemplateDidCancelNavigation(_ mapTemplate: CPMapTemplate) {

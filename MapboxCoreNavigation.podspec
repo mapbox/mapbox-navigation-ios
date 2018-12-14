@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
   # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.name = "MapboxCoreNavigation"
-  s.version = "0.25.0"
+  s.version = "0.26.0"
   s.summary = "Core components for turn-by-turn navigation on iOS."
 
   s.description  = <<-DESC
@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
                    DESC
 
   s.homepage = "https://www.mapbox.com/ios-sdk/navigation/"
-  s.documentation_url = "https://www.mapbox.com/mapbox-navigation-ios/navigation/"
+  s.documentation_url = "https://www.mapbox.com/ios-sdk/api/navigation/"
 
   # ―――  Spec License  ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
@@ -40,7 +40,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.module_name = "MapboxCoreNavigation"
 
-  s.dependency "MapboxNavigationNative", "~> 3.3.0"
+  s.dependency "MapboxNavigationNative", "~> 3.4.6"
   s.dependency "MapboxDirections.swift", "~> 0.25.1"    # Always pin to a patch release if pre-1.0
   s.dependency "MapboxMobileEvents", "~> 0.6.0"         # Always pin to a patch release if pre-1.0
   s.dependency "Turf", "~> 0.2.0"                       # Always pin to a patch release if pre-1.0

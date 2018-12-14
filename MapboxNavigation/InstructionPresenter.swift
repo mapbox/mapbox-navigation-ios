@@ -237,6 +237,7 @@ class InstructionPresenter {
     }
     
     private func completeShieldDownload(_ image: UIImage?) {
+        guard image != nil else { return }
         //We *must* be on main thread here, because attributedText() looks at object properties only accessible on main thread.
         DispatchQueue.main.async {
             self.onShieldDownload?(self.attributedText()) //FIXME: Can we work with the image directly?

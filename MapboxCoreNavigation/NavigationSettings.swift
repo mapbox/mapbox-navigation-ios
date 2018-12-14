@@ -49,6 +49,10 @@ public class NavigationSettings: NSObject {
         }
     }
     
+    /*
+     The shared navigation settings object that affects the entire application.
+     */
+    @objc(sharedSettings)
     public static let shared = NavigationSettings()
     
     /// Returns a reflection of this class excluding the `properties` variable.

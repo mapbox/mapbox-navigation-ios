@@ -61,6 +61,7 @@ class ViewController: UIViewController {
     fileprivate lazy var defaultFailure: RouteRequestFailure = { [weak self] (error) in
         self?.routes = nil //clear routes from the map
         print(error.localizedDescription)
+        self?.presentAlert(message: error.localizedDescription)
     }
 
     var alertController: UIAlertController!
@@ -96,6 +97,8 @@ class ViewController: UIViewController {
         if let popoverController = alertController.popoverPresentationController {
             popoverController.sourceView = self.startButton
         }
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "settings"), style: .plain, target: self, action: #selector(openSettings))
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -119,6 +122,11 @@ class ViewController: UIViewController {
                 }
             }
         }
+    }
+    
+    @IBAction func openSettings() {
+        let controller = UINavigationController(rootViewController: SettingsViewController())
+        present(controller, animated: true, completion: nil)
     }
 
     // MARK: Gesture Recognizer Handlers
@@ -190,13 +198,15 @@ class ViewController: UIViewController {
 
     fileprivate func requestRoute(with options: RouteOptions, success: @escaping RouteRequestSuccess, failure: RouteRequestFailure?) {
 
-        let handler: Directions.RouteCompletionHandler = {(waypoints, potentialRoutes, potentialError) in
-            if let error = potentialError, let fail = failure { return fail(error) }
-            guard let routes = potentialRoutes else { return }
+        let handler: Directions.RouteCompletionHandler = { (waypoints, routes, error) in
+            if let error = error { failure?(error) }
+            guard let routes = routes else { return }
             return success(routes)
         }
 
-        _ = Directions.shared.calculate(options, completionHandler: handler)
+        // Calculate route offline if an offline version is selected
+        let shouldUseOfflineRouting = Settings.selectedOfflineVersion != nil
+        Settings.directions.calculate(options, offline: shouldUseOfflineRouting, completionHandler: handler)
     }
 
     // MARK: Basic Navigation
@@ -253,7 +263,7 @@ class ViewController: UIViewController {
         guard let route = routes?.first else { return nil }
         let simulate = simulationButton.isSelected
         let mode: SimulationMode = simulate ? .always : .onPoorGPS
-        return MapboxNavigationService(route: route, simulating: mode)
+        return MapboxNavigationService(route: route, directions: Settings.directions, simulating: mode)
     }
 
     func presentAndRemoveMapview(_ navigationViewController: NavigationViewController) {
@@ -311,10 +321,10 @@ extension ViewController: NavigationMapViewDelegate {
     }
 
     private func presentWaypointRemovalActionSheet(completionHandler approve: @escaping ((UIAlertAction) -> Void)) {
-        let title = NSLocalizedString("Remove Waypoint?", comment: "Waypoint Removal Action Sheet Title")
-        let message = NSLocalizedString("Would you like to remove this waypoint?", comment: "Waypoint Removal Action Sheet Message")
-        let removeTitle = NSLocalizedString("Remove Waypoint", comment: "Waypoint Removal Action Item Title")
-        let cancelTitle = NSLocalizedString("Cancel", comment: "Waypoint Removal Action Sheet Cancel Item Title")
+        let title = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_TITLE", value: "Remove Waypoint?", comment: "Title of sheet confirming waypoint removal")
+        let message = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_MSG", value: "Do you want to remove this waypoint?", comment: "Message of sheet confirming waypoint removal")
+        let removeTitle = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_REMOVE", value: "Remove Waypoint", comment: "Title of alert sheet action for removing a waypoint")
+        let cancelTitle = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_CANCEL", value: "Cancel", comment: "Title of action for dismissing waypoint removal confirmation sheet")
 
         let actionSheet = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
         let remove = UIAlertAction(title: removeTitle, style: .destructive, handler: approve)
@@ -347,6 +357,32 @@ extension ViewController: VoiceControllerDelegate {
     // See CLLocation.swift `isQualified` for what makes a location update unqualified.
     func navigationViewController(_ navigationViewController: NavigationViewController, shouldDiscard location: CLLocation) -> Bool {
         return true
+    }
+    
+    func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool {
+        
+        let shouldUseOfflineRouting = Settings.selectedOfflineVersion != nil
+        
+        guard shouldUseOfflineRouting == true else {
+            return true
+        }
+        
+        let currentRoute = navigationViewController.route
+        let profileIdentifier = currentRoute.routeOptions.profileIdentifier
+        
+        var waypoints: [Waypoint] = [Waypoint(location: location)]
+        var remainingWaypoints = currentRoute.routeOptions.waypoints
+        remainingWaypoints.removeFirst()
+        waypoints.append(contentsOf: remainingWaypoints)
+        
+        let options = NavigationRouteOptions(waypoints: waypoints, profileIdentifier: profileIdentifier)
+        
+        Settings.directions.calculate(options, offline: true) { (waypoints, routes, error) in
+            guard let route = routes?.first else { return }
+            navigationViewController.navigationService.route = route
+        }
+        
+        return false
     }
 }
 

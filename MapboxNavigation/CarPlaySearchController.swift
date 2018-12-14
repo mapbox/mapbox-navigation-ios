@@ -3,7 +3,7 @@ import CarPlay
 import MapboxDirections
 
 @available(iOS 12.0, *)
-public protocol CarPlaySearchManagerDelegate: class {
+public protocol CarPlaySearchControllerDelegate: class {
     func previewRoutes(to waypoint: Waypoint, completionHandler: @escaping () -> Void)
     func resetPanButtons(_ mapTemplate: CPMapTemplate)
     func pushTemplate(_ template: CPTemplate, animated: Bool)
@@ -11,8 +11,8 @@ public protocol CarPlaySearchManagerDelegate: class {
 }
 
 @available(iOS 12.0, *)
-@objc(MBCarPlaySearchManager)
-public class CarPlaySearchManager: NSObject {
+@objc(MBCarPlaySearchController)
+public class CarPlaySearchController: NSObject {
     
     /**
      The completion handler that will process the list of search results initiated on CarPlay.
@@ -29,15 +29,15 @@ public class CarPlaySearchManager: NSObject {
      */
     var recentSearchText: String?
     
-    public weak var delegate: CarPlaySearchManagerDelegate?
+    public weak var delegate: CarPlaySearchControllerDelegate?
 
 }
 #else
 /**
  CarPlay support requires iOS 12.0 or above and the CarPlay framework.
  */
-@objc(MBCarPlaySearchManager)
-public class CarPlaySearchManager: NSObject {
+@objc(MBCarPlaySearchController)
+public class CarPlaySearchController: NSObject {
     
 }
 #endif
