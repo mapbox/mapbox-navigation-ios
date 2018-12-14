@@ -14,7 +14,7 @@ class ManeuverArrowTests: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-        recordMode = false
+        recordMode = true
     }
 
     override func tearDown() {
@@ -23,11 +23,11 @@ class ManeuverArrowTests: FBSnapshotTestCase {
 
     
     func testManeuverArrowHandlesWaypointsCorrectly() {
-        let plotter = RoutePlotter(frame: CGRect(origin: .zero, size: CGSize(width: 1000, height: 1000)))
-        plotter.route = waypointRoute
+        let plotter = NavigationPlotter(frame: CGRect(origin: .zero, size: CGSize(width: 1000, height: 1000)))
+        plotter.routePlotters = [RoutePlotter(route: waypointRoute)]
         let polyline = waypointRoute.polylineAroundManeuver(legIndex: 0, stepIndex: waypointRoute.legs.first!.steps.count - 1, distance: 100.0)
-        let coordPlotter = CoordinatePlotter.init(coordinates: polyline.coordinates, color: .red, drawIndexesAsText: false)
-        plotter.coordinatePlotters = [coordPlotter]
+        let linePlotter = LinePlotter.init(coordinates: polyline.coordinates, color: .red, lineWidth: 5.0, drawIndexesAsText: false)
+        plotter.linePlotters = [linePlotter]
         print(polyline.coordinates.count)
         
         
