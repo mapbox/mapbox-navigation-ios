@@ -255,6 +255,8 @@
 		8D5CF3B0215054AF005592D6 /* FBSnapshotTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D5CF3AF215054AF005592D6 /* FBSnapshotTestCase.swift */; };
 		8D5DFFF1207C04840093765A /* NSAttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D5DFFF0207C04840093765A /* NSAttributedString.swift */; };
 		8D75F991212B5C7F00F99CF3 /* TunnelAuthority.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D75F990212B5C7F00F99CF3 /* TunnelAuthority.swift */; };
+		8D86AE8E21C44DA40064A304 /* nat-test.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D86AE8D21C44DA40064A304 /* nat-test.json */; };
+		8D86AE8F21C44DA40064A304 /* nat-test.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D86AE8D21C44DA40064A304 /* nat-test.json */; };
 		8D8EA9BC20575CD80077F478 /* FeedbackCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D8EA9BB20575CD80077F478 /* FeedbackCollectionViewCell.swift */; };
 		8D9ADEA720A0C61A0067E845 /* GenericRouteShield.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D9ADEA620A0C61A0067E845 /* GenericRouteShield.swift */; };
 		8D9CD7FF20880581004DC4B3 /* XCTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D9CD7FD20880581004DC4B3 /* XCTestCase.swift */; };
@@ -836,6 +838,7 @@
 		8D5CF3AF215054AF005592D6 /* FBSnapshotTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBSnapshotTestCase.swift; sourceTree = "<group>"; };
 		8D5DFFF0207C04840093765A /* NSAttributedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSAttributedString.swift; sourceTree = "<group>"; };
 		8D75F990212B5C7F00F99CF3 /* TunnelAuthority.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelAuthority.swift; sourceTree = "<group>"; };
+		8D86AE8D21C44DA40064A304 /* nat-test.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "nat-test.json"; sourceTree = "<group>"; };
 		8D8EA9BB20575CD80077F478 /* FeedbackCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackCollectionViewCell.swift; sourceTree = "<group>"; };
 		8D9ADEA620A0C61A0067E845 /* GenericRouteShield.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericRouteShield.swift; sourceTree = "<group>"; };
 		8D9CD7FD20880581004DC4B3 /* XCTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTestCase.swift; sourceTree = "<group>"; };
@@ -1264,6 +1267,7 @@
 		351FB51521BA95B700032A21 /* control routes */ = {
 			isa = PBXGroup;
 			children = (
+				8D86AE8D21C44DA40064A304 /* nat-test.json */,
 				35CDA8862190F50C0072B675 /* DCA-Arboretum.json */,
 				35C8DC0E2191DE940053328C /* DCA-Arboretum.trace.json */,
 				355832AA2192F60800141922 /* PipeFittersUnion-FourSeasonsBoston.json */,
@@ -2095,6 +2099,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8D86AE8F21C44DA40064A304 /* nat-test.json in Resources */,
 				35CDA81321908F310072B675 /* LaunchScreen.storyboard in Resources */,
 				35CDA81021908F310072B675 /* Assets.xcassets in Resources */,
 			);
@@ -2137,6 +2142,7 @@
 				35CDA88F2190F6980072B675 /* EmptyStyle.json in Resources */,
 				35CDA8992190F6980072B675 /* UnionSquare-to-GGPark.route in Resources */,
 				35C8DBF6219194380053328C /* routeWithTunnels_9thStreetDC.json in Resources */,
+				8D86AE8E21C44DA40064A304 /* nat-test.json in Resources */,
 				35C8DBF52191940C0053328C /* straight-line.json in Resources */,
 				35C8DC0F2191DE940053328C /* DCA-Arboretum.trace.json in Resources */,
 				35CDA8932190F6980072B675 /* route-with-instructions.json in Resources */,

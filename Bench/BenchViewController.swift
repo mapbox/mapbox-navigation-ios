@@ -36,6 +36,8 @@ class BenchViewController: UITableViewController {
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         
+        let natRoute = Item(name: "Nat's Route", route: Fixture.route(from: "nat-test"))
+        
         let controlRoute1 = Item(name: "DCA to Arboretum",
                                  route: Fixture.route(from: "DCA-Arboretum"))
         
@@ -54,7 +56,7 @@ class BenchViewController: UITableViewController {
         let temporaryControlRoute = Item(name: "Temporary Control Route",
                                          route: Fixture.route(from: "short-route"))
         
-        let controlRoutes = [controlRoute1, controlRoute2, controlRoute3, controlRoute4, controlRoute5]
+        let controlRoutes = [natRoute, controlRoute1, controlRoute2, controlRoute3, controlRoute4, controlRoute5]
         let section = Section(title: "Control Routes", items: controlRoutes + [temporaryControlRoute])
         
         dataSource = [section]
