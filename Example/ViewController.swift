@@ -185,14 +185,18 @@ class ViewController: UIViewController {
     // MARK: - Public Methods
     // MARK: Route Requests
     func requestRoute() {
-        guard waypoints.count > 0 else { return }
+//        guard waypoints.count > 0 else { return }
         guard let mapView = mapView else { return }
 
-        let userWaypoint = Waypoint(location: mapView.userLocation!.location!, heading: mapView.userLocation?.heading, name: "User location")
-        waypoints.insert(userWaypoint, at: 0)
+//        let userWaypoint = Waypoint(location: mapView.userLocation!.location!, heading: mapView.userLocation?.heading, name: "User location")
+//        waypoints.insert(userWaypoint, at: 0)
 
+//        let options = NavigationRouteOptions(waypoints: waypoints)
+
+        let start = CLLocationCoordinate2D(latitude: 46.4312, longitude: 6.9107)
+        let end = CLLocationCoordinate2D(latitude: 46.2947, longitude: 7.8821)
+        let waypoints = [start, end].map{ Waypoint(coordinate: $0) }
         let options = NavigationRouteOptions(waypoints: waypoints)
-
         requestRoute(with: options, success: defaultSuccess, failure: defaultFailure)
     }
 
