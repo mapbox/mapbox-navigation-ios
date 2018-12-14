@@ -188,9 +188,22 @@ open class RouteProgress: NSObject {
 
     /**
      Intializes a new `RouteProgress`.
-
+     
      - parameter route: The route to follow.
      - parameter legIndex: Zero-based index indicating the current leg the user is on.
+     - parameter spokenInstructionIndex: Zero-based index indicating the current spoken instruction the user is on.
+     */
+    @objc public convenience init(route: Route, legIndex: Int = 0, spokenInstructionIndex: Int = 0) {
+        self.init(route: route, previousRouteProgress: nil, legIndex: legIndex, spokenInstructionIndex: spokenInstructionIndex)
+    }
+    
+    /**
+     Intializes a new `RouteProgress`.
+
+     - parameter route: The route to follow.
+     - parameter previousRouteProgress: The previous route progress. Used to calculate total distances between reroutes.
+     - parameter legIndex: Zero-based index indicating the current leg the user is on.
+     - parameter spokenInstructionIndex: Zero-based index indicating the current spoken instruction the user is on.
      */
     @objc public init(route: Route, previousRouteProgress: RouteProgress? = nil, legIndex: Int = 0, spokenInstructionIndex: Int = 0) {
         self.route = route
