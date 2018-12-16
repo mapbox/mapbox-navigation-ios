@@ -33,11 +33,17 @@ import MapboxDirections
      
      - parameter service: The navigation service that discarded the location.
      - parameter location: The location that will be discarded.
-     - return: If `true`, the location is discarded and the `NavigationService` will not consider it. If `false`, the location will not be thrown out.
+     - returns: If `true`, the location is discarded and the `NavigationService` will not consider it. If `false`, the location will not be thrown out.
      */
     @objc(navigationService:shouldDiscardLocation:)
     optional func navigationService(_ service: NavigationService, shouldDiscard location: CLLocation) -> Bool
     
+    /**
+     Determines whether to discard the current `RouteProgress` when rerouting.
+     
+     - parameter service: The navigation service.
+     - returns: A Boolean value indicating whether the history should be discarded.
+     */
     @objc(navigationServiceShouldDiscardHistory:)
     optional func navigationServiceShouldDiscardHistory(_ service: NavigationService) -> Bool
     

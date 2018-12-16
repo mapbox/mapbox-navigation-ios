@@ -185,6 +185,12 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     @objc(navigationViewController:shouldDiscardLocation:)
     optional func navigationViewController(_ navigationViewController: NavigationViewController, shouldDiscard location: CLLocation) -> Bool
     
+    /**
+     Determines whether to discard the current `RouteProgress` when rerouting.
+     
+     - parameter navigationViewController: The navigation view controller.
+     - returns: A Boolean value indicating whether the history should be discarded.
+     */
     @objc(navigationViewControllerShouldDiscardHistory:)
     optional func navigationViewControllerShouldDiscardHistory(_ navigationViewController: NavigationViewController) -> Bool
     
