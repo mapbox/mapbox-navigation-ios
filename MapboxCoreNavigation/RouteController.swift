@@ -88,7 +88,6 @@ open class RouteController: NSObject, Router {
             return routeProgress.route
         }
         set {
-            let shouldDiscardHistory = delegate?.routerShouldDiscardHistory?(self) ?? false
             routeProgress = RouteProgress(route: newValue, previousRouteProgress: shouldDiscardHistory ? nil : routeProgress)
         }
     }
@@ -106,6 +105,10 @@ open class RouteController: NSObject, Router {
     var previousArrivalWaypoint: Waypoint?
 
     var userSnapToStepDistanceFromManeuver: CLLocationDistance?
+    
+    var shouldDiscardHistory: Bool {
+        return delegate?.routerShouldDiscardHistory?(self) ?? false
+    }
     
     /**
      Intializes a new `RouteController`.
@@ -466,8 +469,7 @@ extension RouteController: CLLocationManagerDelegate {
             if routeIsFaster {
                 strongSelf.didFindFasterRoute = true
                 // If the upcoming maneuver in the new route is the same as the current upcoming maneuver, don't announce it
-                let shouldDiscardHistory = strongSelf.delegate?.routerShouldDiscardHistory?(strongSelf) ?? false
-                let previousRouteProgress: RouteProgress? = shouldDiscardHistory ? nil : strongSelf.routeProgress
+                let previousRouteProgress: RouteProgress? = strongSelf.shouldDiscardHistory ? nil : strongSelf.routeProgress
                 strongSelf._routeProgress = RouteProgress(route: route,
                                                           previousRouteProgress: previousRouteProgress,
                                                           legIndex: 0,
@@ -514,8 +516,7 @@ extension RouteController: CLLocationManagerDelegate {
 
             guard let route = route else { return }
             strongSelf.isRerouting = false
-            let shouldDiscardHistory = strongSelf.delegate?.routerShouldDiscardHistory?(strongSelf) ?? false
-            let previousRouteProgress: RouteProgress? = shouldDiscardHistory ? nil : strongSelf.routeProgress
+            let previousRouteProgress: RouteProgress? = strongSelf.shouldDiscardHistory ? nil : strongSelf.routeProgress
             strongSelf._routeProgress = RouteProgress(route: route, previousRouteProgress: previousRouteProgress, legIndex: 0)
             strongSelf._routeProgress.currentLegProgress.stepIndex = 0
             strongSelf.announce(reroute: route, at: location, proactive: false)
