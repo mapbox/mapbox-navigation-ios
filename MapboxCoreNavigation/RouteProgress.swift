@@ -65,13 +65,30 @@ open class RouteProgress: NSObject {
         return route.legs.prefix(upTo: legIndex).map { $0.distance }.reduce(0, +) + currentLegProgress.distanceTraveled
     }
     
+    /**
+     Total distance traveled including the traveled distance on previous routes during the same session.
+     */
     @objc public var totalDistanceTraveled: CLLocationDistance {
-        return routeProgresses().map { $0.distanceTraveled }.reduce(0, +)
+        return previousRouteProgresses().map { $0.distanceTraveled }.reduce(0, +) + distanceTraveled
     }
     
-    func routeProgresses() -> [RouteProgress] {
+    /**
+     Total distance since the navigation session started, excluding distances when being rerouted.
+     */
+    @objc public var totalDistance: CLLocationDistance {
+        return previousRouteProgresses().map { $0.distanceTraveled }.reduce(0, +) + route.distance
+    }
+    
+    /**
+     Number between 0 and 1 representing how far along the `Route`, the user has traveled, including half completed routes.
+     */
+    @objc public var totalFractionTraveled: Double {
+        return totalDistanceTraveled / totalDistance
+    }
+    
+    func previousRouteProgresses() -> [RouteProgress] {
         var current = self
-        var progresses = [current]
+        var progresses = [RouteProgress]()
         
         while let prev = current.previousRouteProgress {
             progresses.append(prev)
@@ -93,14 +110,6 @@ open class RouteProgress: NSObject {
      */
     @objc public var fractionTraveled: Double {
         return distanceTraveled / route.distance
-    }
-    
-    @objc public var totalFractionTraveled: Double {
-        return totalDistanceTraveled / totalDistance
-    }
-    
-    @objc public var totalDistance: CLLocationDistance {
-        return routeProgresses().map { $0.route.distance }.reduce(0, +)
     }
 
     /**
