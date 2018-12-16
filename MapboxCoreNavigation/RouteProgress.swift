@@ -86,6 +86,7 @@ open class RouteProgress: NSObject {
         return totalDistanceTraveled / totalDistance
     }
     
+    // Recursively finds all previous route progresses, excluding `self`.
     func previousRouteProgresses() -> [RouteProgress] {
         var current = self
         var progresses = [RouteProgress]()
