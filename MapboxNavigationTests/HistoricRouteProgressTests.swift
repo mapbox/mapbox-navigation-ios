@@ -61,8 +61,9 @@ class HistoricRouteProgressTests: FBSnapshotTestCase {
             
             let totalDistanceTraveled = service.router!.routeProgress.totalDistanceTraveled
             let totalFractionTraveled = service.router!.routeProgress.totalFractionTraveled
-            let loc = AssociatedLocation.init(location: location, text: "\(Int(totalDistanceTraveled)):\( Double(round(1000*totalFractionTraveled)/1000))")
-            associatedLocations.append(loc)
+            let alocation = AssociatedLocation(location: location, text: "\(Int(totalDistanceTraveled)):\(totalFractionTraveled.rounded(precision: 1e3))")
+            
+            associatedLocations.append(alocation)
         }
         
         view.coordinatePlotters = [CoordinatePlotter(coordinates: associatedLocations.map { $0.location.coordinate },
@@ -70,7 +71,7 @@ class HistoricRouteProgressTests: FBSnapshotTestCase {
                                                      fontSize: 16,
                                                      color: .red,
                                                      drawIndexesAsText: false)]
-        
+        tester.navigationService.delegate = nil
         verify(view)
     }
 }
@@ -85,7 +86,6 @@ class HistoricProgressTester: NavigationServiceDelegate {
         self.navigationService = navigationService
         self.shouldDiscardHistory = shouldDiscardHistory
         self.upcomingRoutes = upcomingRoutes
-        
         self.navigationService.delegate = self
     }
     
