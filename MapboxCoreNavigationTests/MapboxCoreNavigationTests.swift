@@ -27,6 +27,11 @@ class MapboxCoreNavigationTests: XCTestCase {
         navigation = MapboxNavigationService(route: route, directions: directions, simulating: .never)
         let depart = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165), altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 0, speed: 10, timestamp: Date())
         
+        let locations = [depart.shifted(to: Date().addingTimeInterval(-5)),
+                         depart.shifted(to: Date().addingTimeInterval(-4)),
+                         depart.shifted(to: Date().addingTimeInterval(-3)),
+                         depart.shifted(to: Date().addingTimeInterval(-2))]
+        
         expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: navigation.router) { (notification) -> Bool in
             XCTAssertEqual(notification.userInfo?.count, 1)
             
@@ -36,7 +41,8 @@ class MapboxCoreNavigationTests: XCTestCase {
         }
         
         navigation.start()
-        navigation.locationManager(navigation.locationManager, didUpdateLocations: [depart])
+        
+        locations.forEach { navigation.locationManager(navigation.locationManager, didUpdateLocations: [$0]) }
         
         waitForExpectations(timeout: waitForInterval) { (error) in
             XCTAssertNil(error)

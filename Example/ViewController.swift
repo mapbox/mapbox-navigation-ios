@@ -347,6 +347,8 @@ extension ViewController: VoiceControllerDelegate {
         print(interruptedInstruction.text, interruptingInstruction.text)
     }
     
+    //.voiceController(_:willSpeak:routeProgress:)
+    //VoiceControllerDelegate.voiceController(_:willSpeak:routeProgress:)
     func voiceController(_ voiceController: RouteVoiceController, willSpeak instruction: SpokenInstruction, routeProgress: RouteProgress) -> SpokenInstruction? {
         return SpokenInstruction(distanceAlongStep: instruction.distanceAlongStep, text: "New Instruction!", ssmlText: "<speak>New Instruction!</speak>")
     }
@@ -437,6 +439,7 @@ extension ViewController: NavigationViewControllerDelegate {
 
 // Mark: VisualInstructionDelegate
 extension ViewController: VisualInstructionDelegate {
+    //VisualInstructionDelegate.label(_:willPresent:as:)
     func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
         
         // Uncomment to mutate the instruction shown in the top instruction banner

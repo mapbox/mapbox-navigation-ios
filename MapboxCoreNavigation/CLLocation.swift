@@ -191,4 +191,8 @@ extension CLLocation {
         }
         return true
     }
+    
+    func shifted(to newTimestamp: Date) -> CLLocation {
+        return CLLocation(coordinate: coordinate, altitude: altitude, horizontalAccuracy: horizontalAccuracy, verticalAccuracy: verticalAccuracy, course: course, speed: speed, timestamp: newTimestamp)
+    }
 }
