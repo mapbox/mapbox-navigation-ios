@@ -417,6 +417,7 @@ open class NavigationViewController: UIViewController {
     }
     
     deinit {
+        navigationService.stop()
         suspendNotifications()
     }
     
@@ -445,7 +446,6 @@ open class NavigationViewController: UIViewController {
             UIApplication.shared.isIdleTimerDisabled = false
         }
         
-        navigationService.stop()
     }
     
     // MARK: Route controller notifications
