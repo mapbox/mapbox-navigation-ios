@@ -2,6 +2,7 @@
 
 ## master
 
+* Added `NavigationViewControllerDelegate.navigationViewControllerShouldDiscardHistory(_:)` which lets you preserve history between reroutes. ([#1895](https://github.com/mapbox/mapbox-navigation-ios/pull/1895))
 * The `NavigationDirections.unpackTilePack(at:outputDirectoryURL:progressHandler:completionHandler:)` method is now available to Objective-C code as `-[MBNavigationDirections unpackTilePackAtURL:outputDirectoryURL:progressHandler:completionHandler:]`. ([#1891](https://github.com/mapbox/mapbox-navigation-ios/pull/1891))
 
 ## v0.26.0
