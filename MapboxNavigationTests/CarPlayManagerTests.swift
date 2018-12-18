@@ -16,16 +16,19 @@ import CarPlay
 class CarPlayManagerTests: XCTestCase {
 
     var manager: CarPlayManager?
+    var searchController: CarPlaySearchController?
     var eventsManagerSpy: NavigationEventsManagerSpy?
 
     override func setUp() {
         super.setUp()
         eventsManagerSpy = NavigationEventsManagerSpy()
         manager = CarPlayManager(eventsManager: eventsManagerSpy)
+        searchController = CarPlaySearchController()
     }
 
     override func tearDown() {
         manager = nil
+        searchController = nil
         super.tearDown()
     }
 
@@ -65,12 +68,14 @@ class CarPlayManagerTests: XCTestCase {
     func testWindowAndIntefaceControllerAreSetUpWithSearchWhenConnected() {
         // NOTE: Xcode is going to complain here - ignore. This is a known XCTest bug.
         guard #available(iOS 12, *) else { return }
-
-        let exampleDelegate = TestCarPlayManagerDelegate()
         
-        exampleDelegate.leadingBarButtons = [CPBarButton(type: .image, handler: { button in button.title = "Search" })]
+        let exampleDelegate = TestCarPlayManagerDelegate()
+        let searchDelegate = TestCarPlaySearchControllerDelegate()
+        let searchButtonHandler: ((CPBarButton) -> Void) = { _ in self.manager!.interfaceController!.pushTemplate(CPSearchTemplate(), animated: true)}
+        exampleDelegate.leadingBarButtons = [CPBarButton(type: .image, handler: searchButtonHandler)]
         
         manager?.delegate = exampleDelegate
+        searchController?.delegate = searchDelegate
         
         simulateCarPlayConnection(manager!)
 
@@ -78,6 +83,8 @@ class CarPlayManagerTests: XCTestCase {
             XCTFail("Dependencies not met! Bailing...")
             return
         }
+
+        searchDelegate.carPlaySearchController(searchController!, carPlayManager: manager!, interfaceController: fakeInterfaceController)
 
         let view = fakeWindow.rootViewController?.view
         XCTAssert((view?.isKind(of: NavigationMapView.self))!, "CarPlay window's root view should be a map view")
@@ -91,7 +98,7 @@ class CarPlayManagerTests: XCTestCase {
         searchButton.handler!(searchButton)
 
         // TODO: Setup leading buttons to be pushed on top of the interface controller
-        // XCTAssert(fakeInterfaceController.topTemplate?.isKind(of: CPSearchTemplate.self) ?? false, "Expecting a search template to be on top")
+        XCTAssert(fakeInterfaceController.topTemplate?.isKind(of: CPSearchTemplate.self) ?? false, "Expecting a search template to be on top")
     }
 
     func testManagerAsksDelegateForLeadingAndTrailingBarButtonsIfAvailable() {
@@ -302,7 +309,9 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
     public fileprivate(set) var navigationInitiated = false
     public fileprivate(set) var currentService: NavigationService?
     public fileprivate(set) var navigationEnded = false
-
+    
+    public var interfaceController: CPInterfaceController?
+    public var searchController: CarPlaySearchController?
     public var leadingBarButtons: [CPBarButton]?
     public var trailingBarButtons: [CPBarButton]?
     public var mapButtons: [CPMapButton]?
@@ -346,6 +355,33 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
         XCTAssertTrue(navigationInitiated)
         navigationEnded = true
         currentService = nil
+    }
+}
+
+@available(iOS 12.0, *)
+class TestCarPlaySearchControllerDelegate: CarPlaySearchControllerDelegate {
+    
+    public fileprivate(set) var interfaceController: CPInterfaceController?
+    public fileprivate(set) var carPlayManager: CarPlayManager?
+    
+    func carPlaySearchController(_ searchController: CarPlaySearchController, carPlayManager: CarPlayManager, interfaceController: CPInterfaceController) {
+        self.interfaceController = interfaceController
+    }
+    
+    func previewRoutes(to waypoint: Waypoint, completionHandler: @escaping () -> Void) {
+        carPlayManager?.previewRoutes(to: waypoint, completionHandler: completionHandler)
+    }
+    
+    func resetPanButtons(_ mapTemplate: CPMapTemplate) {
+        carPlayManager?.resetPanButtons(mapTemplate)
+    }
+    
+    func pushTemplate(_ template: CPTemplate, animated: Bool) {
+        interfaceController?.pushTemplate(template, animated: animated)
+    }
+    
+    func popTemplate(animated: Bool) {
+        interfaceController?.popTemplate(animated: animated)
     }
 }
 
