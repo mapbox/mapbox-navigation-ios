@@ -56,16 +56,6 @@ public class CarPlayManager: NSObject {
     public fileprivate(set) weak var currentNavigator: CarPlayNavigationViewController?
     public static let CarPlayWaypointKey: String = "MBCarPlayWaypoint"
     
-    /**
-     The most recent search results.
-     */
-    var recentSearchItems: [CPListItem]?
-    
-    /**
-     The most recent search text.
-     */
-    var recentSearchText: String?
-    
     private var defaultMapButtons: [CPMapButton]?
 
     /**
