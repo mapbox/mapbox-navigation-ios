@@ -4,6 +4,7 @@
 @import MapboxCoreNavigation;
 @import MapboxDirections;
 @import TestHelper;
+@import MapKit;
 
 @interface BridgingTests : XCTestCase
 @property (nonatomic) MBRouteController *routeController;
@@ -40,6 +41,43 @@
     
     _routeController.routeProgress = [[MBRouteProgress alloc] initWithRoute:route legIndex:0 spokenInstructionIndex:0];
     [self waitForExpectations:@[expectation] timeout:5];
+}
+
+// This test is excluded from the test suite. We are just verifying that offline routing bridges to Obj-C at compile time.
+- (void)testOfflineRouting {
+    [[[MBDirections sharedDirections] fetchAvailableOfflineVersionsWithCompletionHandler:^(NSArray<NSString *> * _Nullable versions, NSError * _Nullable error) {
+        
+        NSArray <NSValue *> *coordinates = nil;
+        coordinates = @[[NSValue valueWithMKCoordinate:CLLocationCoordinate2DMake(0, 0)],
+                        [NSValue valueWithMKCoordinate:CLLocationCoordinate2DMake(1, 1)]];
+        
+        MBCoordinateBounds *bounds = [[MBCoordinateBounds alloc] init:coordinates];
+        
+        [[[MBDirections sharedDirections] downloadTilesIn:bounds version:versions.firstObject session:nil completionHandler:^(NSURL * _Nullable url, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+            
+            NSURL *outputDirectoryURL = [[NSBundle mapboxCoreNavigation] suggestedTileURLWithVersion:versions.firstObject];
+            
+            [MBNavigationDirections unpackTilePackAtURL:url outputDirectoryURL:outputDirectoryURL progressHandler:^(uint64_t totalBytes, uint64_t bytesRemaining) {
+                // Show unpacking progress
+            } completionHandler:^(uint64_t numberOfTiles, NSError * _Nullable error) {
+                // Dismiss UI
+            }];
+            
+        }] resume];
+    }] resume];
+    
+    MBNavigationRouteOptions *options = [[MBNavigationRouteOptions alloc] initWithLocations:@[] profileIdentifier:MBDirectionsProfileIdentifierCycling];
+    
+    MBNavigationDirections *directions = nil;
+    
+    [directions calculateDirectionsWithOptions:options offline:YES completionHandler:^(NSArray<MBWaypoint *> * _Nullable waypoints, NSArray<MBRoute *> * _Nullable routes, NSError * _Nullable error) {
+        
+    }];
+    
+    NSURL *url = [NSURL URLWithString:@""];
+    [directions configureRouterWithTilesURL:url translationsURL:url completionHandler:^(uint64_t numberOfTiles) {
+        
+    }];
 }
     
 @end

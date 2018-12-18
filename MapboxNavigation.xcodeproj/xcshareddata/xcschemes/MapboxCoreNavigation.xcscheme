@@ -49,6 +49,9 @@
             </BuildableReference>
             <SkippedTests>
                <Test
+                  Identifier = "BridgingTests/testOfflineRouting">
+               </Test>
+               <Test
                   Identifier = "MapboxNavigationTests/testLowAlert()">
                </Test>
             </SkippedTests>

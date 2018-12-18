@@ -1,8 +1,8 @@
 import XCTest
 import FBSnapshotTestCase
 import Turf
-import TestHelper
 import MapboxDirections
+import TestHelper
 @testable import MapboxCoreNavigation
 @testable import MapboxNavigation
 
@@ -44,8 +44,8 @@ class RouteControllerSnapshotTests: FBSnapshotTestCase {
             snappedLocations.append(routeController.location!)
         }
         
-        let view = RoutePlotter(frame: CGRect(origin: .zero, size: CGSize(width: 1000, height: 1000)))
-        view.route = route
+        let view = NavigationPlotter(frame: CGRect(origin: .zero, size: CGSize(width: 1000, height: 1000)))
+        view.routePlotters = [RoutePlotter(route: route)]
         view.locationPlotters = [LocationPlotter(locations: locations, color: #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 0.5043463908), drawIndexesAsText: true),
                                  LocationPlotter(locations: snappedLocations, color: #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 0.3969795335), drawIndexesAsText: true)]
         
