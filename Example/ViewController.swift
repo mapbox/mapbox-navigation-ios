@@ -432,6 +432,12 @@ extension ViewController: NavigationViewControllerDelegate {
     func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool) {
         navigationViewController.dismiss(animated: true, completion: nil)
     }
+    
+    // Called when a new route is set on the router.
+    // If implemented and `true` is returned, history through reroutes will be preserved.
+    func navigationViewControllerShouldDiscardHistory(_ navigationViewController: NavigationViewController) -> Bool {
+        return false
+    }
 }
 
 

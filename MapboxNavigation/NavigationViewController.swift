@@ -663,6 +663,10 @@ extension NavigationViewController: NavigationServiceDelegate {
         return delegate?.navigationViewController?(self, shouldDiscard: location) ?? true
     }
     
+    @objc public func navigationServiceShouldDiscardHistory(_ service: NavigationService) -> Bool {
+        return delegate?.navigationViewControllerShouldDiscardHistory?(self) ?? RouteController.DefaultBehavior.shouldDiscardHistory
+    }
+    
     @objc public func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         
         //Check to see if we're in a tunnel.
