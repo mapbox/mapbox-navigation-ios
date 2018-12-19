@@ -44,49 +44,52 @@ open class LaneView: UIView {
     
     override open func draw(_ rect: CGRect) {
         super.draw(rect)
+        
+        let resizing: LanesStyleKit.ResizingBehavior = .aspectFit
+        
         if let lane = lane {
             var flipLane: Bool
             if lane.indications.isSuperset(of: [.straightAhead, .sharpRight]) || lane.indications.isSuperset(of: [.straightAhead, .right]) || lane.indications.isSuperset(of: [.straightAhead, .slightRight]) {
                 flipLane = false
                 if !isValid {
                     if lane.indications == .slightRight {
-                        LanesStyleKit.drawLane_slight_right(primaryColor: appropriatePrimaryColor)
+                        LanesStyleKit.drawLaneSlightRight(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, size: bounds.size)
                     } else {
-                        LanesStyleKit.drawLane_straight_right(primaryColor: appropriatePrimaryColor)
+                        LanesStyleKit.drawLaneStraightRight(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, size: bounds.size)
                     }
                     alpha = invalidAlpha
                 } else if maneuverDirection == .straightAhead {
-                    LanesStyleKit.drawLane_straight_only(primaryColor: appropriatePrimaryColor, secondaryColor: secondaryColor)
+                    LanesStyleKit.drawLaneStraightOnly(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, secondaryColor: secondaryColor, size: bounds.size)
                 } else if maneuverDirection == .sharpLeft || maneuverDirection == .left || maneuverDirection == .slightLeft {
                     if lane.indications == .slightLeft {
-                        LanesStyleKit.drawLane_slight_right(primaryColor: appropriatePrimaryColor)
+                        LanesStyleKit.drawLaneSlightRight(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, size: bounds.size)
                     } else {
-                        LanesStyleKit.drawLane_right_h(primaryColor: appropriatePrimaryColor)
+                        LanesStyleKit.drawLaneRight(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, size: bounds.size)
                     }
                     flipLane = true
                 } else {
-                    LanesStyleKit.drawLane_right_only(primaryColor: appropriatePrimaryColor, secondaryColor: secondaryColor)
+                    LanesStyleKit.drawLaneRightOnly(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, secondaryColor: secondaryColor, size: bounds.size)
                 }
             } else if lane.indications.isSuperset(of: [.straightAhead, .sharpLeft]) || lane.indications.isSuperset(of: [.straightAhead, .left]) || lane.indications.isSuperset(of: [.straightAhead, .slightLeft]) {
                 flipLane = true
                 if !isValid {
                     if lane.indications == .slightLeft {
-                        LanesStyleKit.drawLane_slight_right(primaryColor: appropriatePrimaryColor)
+                        LanesStyleKit.drawLaneSlightRight(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, size: bounds.size)
                     } else {
-                        LanesStyleKit.drawLane_straight_right(primaryColor: appropriatePrimaryColor)
+                        LanesStyleKit.drawLaneStraightRight(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, size: bounds.size)
                     }
                     
                     alpha = invalidAlpha
                 } else if maneuverDirection == .straightAhead {
-                    LanesStyleKit.drawLane_straight_only(primaryColor: appropriatePrimaryColor, secondaryColor: secondaryColor)
+                    LanesStyleKit.drawLaneStraightOnly(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, secondaryColor: secondaryColor, size: bounds.size)
                 } else if maneuverDirection == .sharpRight || maneuverDirection == .right {
-                    LanesStyleKit.drawLane_right_h(primaryColor: appropriatePrimaryColor)
+                    LanesStyleKit.drawLaneRight(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, size: bounds.size)
                     flipLane = false
                 } else if maneuverDirection == .slightRight {
-                    LanesStyleKit.drawLane_slight_right(primaryColor: appropriatePrimaryColor)
+                    LanesStyleKit.drawLaneSlightRight(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, size: bounds.size)
                     flipLane = false
                 } else {
-                    LanesStyleKit.drawLane_right_only(primaryColor: appropriatePrimaryColor, secondaryColor: secondaryColor)
+                    LanesStyleKit.drawLaneRightOnly(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, secondaryColor: secondaryColor, size: bounds.size)
                 }
             } else if lane.indications.description.components(separatedBy: ",").count >= 2 {
                 // Hack:
@@ -94,38 +97,38 @@ open class LaneView: UIView {
                 // but there are at least 2 indications.
                 // In this situation, just draw a left/right arrow
                 if maneuverDirection == .sharpRight || maneuverDirection == .right {
-                    LanesStyleKit.drawLane_right_h(primaryColor: appropriatePrimaryColor)
+                    LanesStyleKit.drawLaneRight(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, size: bounds.size)
                     flipLane = false
                 } else if maneuverDirection == .slightRight {
-                    LanesStyleKit.drawLane_slight_right(primaryColor: appropriatePrimaryColor)
+                    LanesStyleKit.drawLaneSlightRight(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, size: bounds.size)
                     flipLane = false
                 } else {
-                    LanesStyleKit.drawLane_right_h(primaryColor: appropriatePrimaryColor)
+                    LanesStyleKit.drawLaneRight(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, size: bounds.size)
                     flipLane = true
                 }
                 alpha = isValid ? 1 : invalidAlpha
             } else if lane.indications.isSuperset(of: [.sharpRight]) || lane.indications.isSuperset(of: [.right]) || lane.indications.isSuperset(of: [.slightRight]) {
                 if lane.indications == .slightRight {
-                    LanesStyleKit.drawLane_slight_right(primaryColor: appropriatePrimaryColor)
+                    LanesStyleKit.drawLaneSlightRight(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, size: bounds.size)
                 } else {
-                    LanesStyleKit.drawLane_right_h(primaryColor: appropriatePrimaryColor)
+                    LanesStyleKit.drawLaneRight(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, size: bounds.size)
                 }
                 flipLane = false
                 alpha = isValid ? 1 : invalidAlpha
             } else if lane.indications.isSuperset(of: [.sharpLeft]) || lane.indications.isSuperset(of: [.left]) || lane.indications.isSuperset(of: [.slightLeft]) {
                 if lane.indications == .slightLeft {
-                    LanesStyleKit.drawLane_slight_right(primaryColor: appropriatePrimaryColor)
+                    LanesStyleKit.drawLaneSlightRight(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, size: bounds.size)
                 } else {
-                    LanesStyleKit.drawLane_right_h(primaryColor: appropriatePrimaryColor)
+                    LanesStyleKit.drawLaneRight(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, size: bounds.size)
                 }
                 flipLane = true
                 alpha = isValid ? 1 : invalidAlpha
             } else if lane.indications.isSuperset(of: [.straightAhead]) {
-                LanesStyleKit.drawLane_straight(primaryColor: appropriatePrimaryColor)
+                LanesStyleKit.drawLaneStraight(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, size: bounds.size)
                 flipLane = false
                 alpha = isValid ? 1 : invalidAlpha
             } else if lane.indications.isSuperset(of: [.uTurn]) {
-                LanesStyleKit.drawLane_uturn(primaryColor: appropriatePrimaryColor)
+                LanesStyleKit.drawLaneUturn(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, size: bounds.size)
                 flipLane = false
                 alpha = isValid ? 1 : invalidAlpha
             } else if lane.indications.isEmpty && isValid {
@@ -133,24 +136,24 @@ open class LaneView: UIView {
                 // show the turn in the lane image.
                 if maneuverDirection == .sharpRight || maneuverDirection == .right || maneuverDirection == .slightRight {
                     if maneuverDirection == .slightRight {
-                        LanesStyleKit.drawLane_slight_right(primaryColor: appropriatePrimaryColor)
+                        LanesStyleKit.drawLaneSlightRight(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, size: bounds.size)
                     } else {
-                        LanesStyleKit.drawLane_right_h(primaryColor: appropriatePrimaryColor)
+                        LanesStyleKit.drawLaneRight(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, size: bounds.size)
                     }
                     flipLane = false
                 } else if maneuverDirection == .sharpLeft || maneuverDirection == .left || maneuverDirection == .slightLeft {
                     if maneuverDirection == .slightLeft {
-                        LanesStyleKit.drawLane_slight_right(primaryColor: appropriatePrimaryColor)
+                        LanesStyleKit.drawLaneSlightRight(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, size: bounds.size)
                     } else {
-                        LanesStyleKit.drawLane_right_h(primaryColor: appropriatePrimaryColor)
+                        LanesStyleKit.drawLaneRight(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, size: bounds.size)
                     }
                     flipLane = true
                 } else {
-                    LanesStyleKit.drawLane_straight(primaryColor: appropriatePrimaryColor)
+                    LanesStyleKit.drawLaneStraight(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, size: bounds.size)
                     flipLane = false
                 }
             } else {
-                LanesStyleKit.drawLane_straight(primaryColor: appropriatePrimaryColor)
+                LanesStyleKit.drawLaneStraight(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, size: bounds.size)
                 flipLane = false
                 alpha = isValid ? 1 : invalidAlpha
             }
