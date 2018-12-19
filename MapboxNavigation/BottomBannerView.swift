@@ -9,7 +9,10 @@ protocol BottomBannerViewDelegate: class {
 /// :nodoc:
 @IBDesignable
 @objc(MBBottomBannerView)
-open class BottomBannerView: UIView {
+open class BottomBannerView: UIView, NavigationComponent {
+    
+    weak var previousProgress: RouteProgress?
+    var timer: Timer?
     
     weak var timeRemainingLabel: TimeRemainingLabel!
     weak var distanceRemainingLabel: DistanceRemainingLabel!
@@ -56,6 +59,20 @@ open class BottomBannerView: UIView {
         commonInit()
     }
     
+    deinit {
+        removeTimer()
+    }
+    
+    private func resumeNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(removeTimer), name: .UIApplicationDidEnterBackground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(resetETATimer), name: .UIApplicationWillEnterForeground, object: nil)
+    }
+    
+    private func suspendNotifications() {
+        NotificationCenter.default.removeObserver(self, name: .UIApplicationWillEnterForeground, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .UIApplicationDidEnterBackground, object: nil)
+    }
+    
     func commonInit() {
         dateFormatter.timeStyle = .short
         dateComponentsFormatter.allowedUnits = [.hour, .minute]
@@ -75,6 +92,31 @@ open class BottomBannerView: UIView {
         timeRemainingLabel.text = "22 min"
         distanceRemainingLabel.text = "4 mi"
         arrivalTimeLabel.text = "10:09"
+    }
+    
+    @objc public func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
+        refreshETA()
+    }
+    
+    @objc public func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
+        resetETATimer()
+        updateETA(routeProgress: progress)
+        previousProgress = progress
+    }
+    
+    @objc func removeTimer() {
+        timer?.invalidate()
+        timer = nil
+    }
+    
+    @objc func resetETATimer() {
+        removeTimer()
+        timer = Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(refreshETA), userInfo: nil, repeats: true)
+    }
+    
+    @objc func refreshETA() {
+        guard let progress = previousProgress else { return }
+        updateETA(routeProgress: progress)
     }
     
     func updateETA(routeProgress: RouteProgress) {

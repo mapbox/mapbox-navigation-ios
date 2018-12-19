@@ -31,7 +31,11 @@ public protocol InstructionsBannerViewDelegate: class {
 /// :nodoc:
 @IBDesignable
 @objc(MBInstructionsBannerView)
-open class InstructionsBannerView: BaseInstructionsBannerView { }
+open class InstructionsBannerView: BaseInstructionsBannerView, NavigationComponent {
+    @objc public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, along routeProgress: RouteProgress) {
+        update(for: instruction)
+    }
+}
 
 /// :nodoc:
 open class BaseInstructionsBannerView: UIControl {

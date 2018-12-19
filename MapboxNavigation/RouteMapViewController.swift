@@ -12,8 +12,8 @@ class ArrowStrokePolyline: ArrowFillPolyline {}
 extension RouteMapViewController: NavigationComponent {
         
     func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
-        resetETATimer()
-        updateETA()
+        
+        navigationComponents.forEach { $0.navigationService?(service, didUpdate: progress, with: location, rawLocation: rawLocation) }
         
         let route = progress.route
         let legIndex = progress.legIndex
@@ -43,6 +43,11 @@ extension RouteMapViewController: NavigationComponent {
         updateCameraAltitude(for: routeProgress)
     }
     
+    @objc public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, along routeProgress: RouteProgress) {
+        guard currentPreviewInstructionBannerStepIndex == nil else { return }
+        navigationComponents.forEach {$0.navigationService?(service, didPassVisualInstructionPoint: instruction, along: routeProgress)}
+    }
+    
     func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {
         let title = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
         lanesView.hide()
@@ -50,7 +55,7 @@ extension RouteMapViewController: NavigationComponent {
     }
     
     func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
-        updateETA()
+        navigationComponents.forEach { $0.navigationService?(service, didRerouteAlong: route, at: location, proactive: proactive) }
         currentStepIndexMapped = 0
         let route = router.route
         let stepIndex = router.routeProgress.currentLegProgress.stepIndex
@@ -111,7 +116,12 @@ class RouteMapViewController: UIViewController {
     var nextBannerView: NextBannerView { return navigationView.nextBannerView }
     var instructionsBannerView: InstructionsBannerView { return navigationView.instructionsBannerView }
     var instructionsBannerContentView: InstructionsBannerContentView { return navigationView.instructionsBannerContentView }
+    var bottomBannerView: BottomBannerView { return navigationView.bottomBannerView }
 
+    var navigationComponents: [NavigationComponent] {
+        return [instructionsBannerView, nextBannerView, lanesView, bottomBannerView]
+    }
+    
     lazy var endOfRouteViewController: EndOfRouteViewController = {
         let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
         let viewController = storyboard.instantiateViewController(withIdentifier: "EndOfRouteViewController") as! EndOfRouteViewController
@@ -127,7 +137,6 @@ class RouteMapViewController: UIViewController {
 
     var route: Route { return navService.router.route }
     var currentPreviewInstructionBannerStepIndex: Int?
-    var updateETATimer: Timer?
     var previewInstructionsView: StepInstructionsView?
     var lastTimeUserRerouted: Date?
     var stepsViewController: StepsViewController?
@@ -197,7 +206,7 @@ class RouteMapViewController: UIViewController {
     var annotatesSpokenInstructions = false
 
     var overheadInsets: UIEdgeInsets {
-        return UIEdgeInsets(top: navigationView.instructionsBannerView.bounds.height, left: 20, bottom: navigationView.bottomBannerView.bounds.height, right: 20)
+        return UIEdgeInsets(top: navigationView.instructionsBannerView.bounds.height, left: 20, bottom: bottomBannerView.bounds.height, right: 20)
     }
 
     typealias LabelRoadNameCompletionHandler = (_ defaultRaodNameAssigned: Bool) -> Void
@@ -248,13 +257,11 @@ class RouteMapViewController: UIViewController {
 
     deinit {
         suspendNotifications()
-        removeTimer()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        resetETATimer()
 
         navigationView.muteButton.isSelected = NavigationSettings.shared.voiceMuted
         mapView.compassView.isHidden = true
@@ -285,21 +292,16 @@ class RouteMapViewController: UIViewController {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        removeTimer()
         styleObservation = nil
     }
 
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground(notification:)), name: .UIApplicationWillEnterForeground, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(removeTimer), name: .UIApplicationDidEnterBackground, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(updateInstructionsBanner(notification:)), name: .routeControllerDidPassVisualInstructionPoint, object: router)
         subscribeToKeyboardNotifications()
     }
 
     func suspendNotifications() {
         NotificationCenter.default.removeObserver(self, name: .UIApplicationWillEnterForeground, object: nil)
-        NotificationCenter.default.removeObserver(self, name: .UIApplicationDidEnterBackground, object: nil)
-        NotificationCenter.default.removeObserver(self, name: .routeControllerDidPassVisualInstructionPoint, object: nil)
         unsubscribeFromKeyboardNotifications()
     }
 
@@ -320,10 +322,6 @@ class RouteMapViewController: UIViewController {
         removePreviewInstructions()
     }
 
-    @objc func removeTimer() {
-        updateETATimer?.invalidate()
-        updateETATimer = nil
-    }
 
     func removePreviewInstructions() {
         if let view = previewInstructionsView {
@@ -373,7 +371,6 @@ class RouteMapViewController: UIViewController {
 
     @objc func applicationWillEnterForeground(notification: NSNotification) {
         mapView.updateCourseTracking(location: router.location, animated: false)
-        resetETATimer()
     }
 
     func notifyUserAboutLowVolume() {
@@ -454,8 +451,8 @@ class RouteMapViewController: UIViewController {
     }
 
     var contentInsets: UIEdgeInsets {
-        let top = navigationView.instructionsBannerContentView.bounds.height
-        let bottom = navigationView.bottomBannerView.bounds.height
+        let top = instructionsBannerContentView.bounds.height
+        let bottom = bottomBannerView.bounds.height
         return UIEdgeInsets(top: top, left: 0, bottom: bottom, right: 0)
     }
 
@@ -905,16 +902,6 @@ extension RouteMapViewController: NavigationViewDelegate {
 
         let attachment = RoadNameLabelAttachment(image: image, text: text, color: textColor, font: UIFont.boldSystemFont(ofSize: UIFont.systemFontSize), scale: UIScreen.main.scale)
         return NSAttributedString(attachment: attachment)
-    }
-
-    @objc func updateETA() {
-        guard isViewLoaded else { return }
-        navigationView.bottomBannerView.updateETA(routeProgress: router.routeProgress)
-    }
-
-    func resetETATimer() {
-        removeTimer()
-        updateETATimer = Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(updateETA), userInfo: nil, repeats: true)
     }
 
     func showRouteIfNeeded() {

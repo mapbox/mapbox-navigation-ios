@@ -2,4 +2,4 @@ import Foundation
 import MapboxCoreNavigation
 import CoreLocation
 
-@objc protocol NavigationComponent: NavigationServiceDelegate, UIContentContainer {}
+@objc protocol NavigationComponent: NavigationServiceDelegate/*, UIContentContainer*/ {}
