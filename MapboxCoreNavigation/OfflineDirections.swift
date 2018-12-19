@@ -56,7 +56,7 @@ public typealias UnpackCompletionHandler = (_ numberOfTiles: UInt64, _ error: Er
 @objc(MBNavigationDirections)
 public class NavigationDirections: Directions {
     
-    public override init(accessToken: String? = nil, host: String? = nil) {
+    @objc public override init(accessToken: String? = nil, host: String? = nil) {
         super.init(accessToken: accessToken, host: host)
     }
     
@@ -67,7 +67,7 @@ public class NavigationDirections: Directions {
      - parameter translationsURL: The location where the translations has been downloaded to.
      - parameter completionHandler: A block that is called when the router is completely configured.
      */
-    public func configureRouter(tilesURL: URL, translationsURL: URL? = nil, completionHandler: @escaping NavigationDirectionsCompletionHandler) {
+    @objc public func configureRouter(tilesURL: URL, translationsURL: URL? = nil, completionHandler: @escaping NavigationDirectionsCompletionHandler) {
         
         NavigationDirectionsConstants.offlineSerialQueue.sync {
             // Translations files bundled within navigation native
@@ -89,6 +89,7 @@ public class NavigationDirections: Directions {
      - parameter progressHandler: Unpacking reports progress every 500ms.
      - parameter completionHandler: Called when unpacking completed.
      */
+    @objc(unpackTilePackAtURL:outputDirectoryURL:progressHandler:completionHandler:)
     public class func unpackTilePack(at filePathURL: URL, outputDirectoryURL: URL, progressHandler: UnpackProgressHandler?, completionHandler: UnpackCompletionHandler?) {
         
         NavigationDirectionsConstants.offlineSerialQueue.sync {
@@ -134,6 +135,7 @@ public class NavigationDirections: Directions {
      - parameter offline: Determines whether to calculate the route offline or online.
      - parameter completionHandler: The closure (block) to call with the resulting routes. This closure is executed on the application’s main thread.
      */
+    @objc(calculateDirectionsWithOptions:offline:completionHandler:)
     public func calculate(_ options: RouteOptions, offline: Bool = true, completionHandler: @escaping Directions.RouteCompletionHandler) {
         
         guard offline == true else {

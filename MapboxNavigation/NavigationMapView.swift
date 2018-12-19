@@ -525,7 +525,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 let symbols = navigationMapDelegate?.navigationMapView?(self, waypointSymbolStyleLayerWithIdentifier: waypointSymbolIdentifier, source: sourceShape) ?? routeWaypointSymbolStyleLayer(identifier: waypointSymbolIdentifier, source: sourceShape)
                 
                 if let arrowLayer = style.layer(withIdentifier: arrowCasingSymbolLayerIdentifier) {
-                    style.insertLayer(circles, below: arrowLayer)
+                    style.insertLayer(circles, above: arrowLayer)
                 } else {
                     style.addLayer(circles)
                 }
@@ -621,7 +621,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 arrow.lineColor = NSExpression(forConstantValue: maneuverArrowColor)
                 
                 style.addSource(arrowSource)
-                style.addLayer(arrow)
+                if let waypoints = style.layer(withIdentifier: waypointCircleIdentifier) {
+                    style.insertLayer(arrow, below: waypoints)
+                } else {
+                    style.addLayer(arrow)
+                }
             }
             
             if let source = style.source(withIdentifier: arrowSourceStrokeIdentifier) as? MGLShapeSource {
@@ -1002,7 +1006,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             }
             
             // Road labels should match road signage.
-            let locale = layer.sourceLayerIdentifier == "road_label" ? Locale(identifier: "mul") : nil
+            let isLabelLayer = MGLVectorTileSource.roadLabelLayerIdentifiersByTileSetIdentifier.values.contains(layer.sourceLayerIdentifier ?? "")
+            let locale = isLabelLayer ? Locale(identifier: "mul") : nil
             
             let localizedText = text.mgl_expressionLocalized(into: locale)
             if localizedText != text {
