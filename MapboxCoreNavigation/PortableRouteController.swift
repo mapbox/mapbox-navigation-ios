@@ -25,6 +25,7 @@ open class PortableRouteController: NSObject {
     private var _routeProgress: RouteProgress {
         didSet {
             movementsAwayFromRoute = 0
+            updateNavigator()
         }
     }
     
@@ -134,6 +135,8 @@ open class PortableRouteController: NSObject {
         UIDevice.current.isBatteryMonitoringEnabled = true
         
         super.init()
+        
+        updateNavigator()
     }
     
     func getDirections(from location: CLLocation, along progress: RouteProgress, completion: @escaping (Route?, Error?) -> Void) {
