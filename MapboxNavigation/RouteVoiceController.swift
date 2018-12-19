@@ -136,11 +136,11 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     }
     
     @objc func pauseSpeechAndPlayReroutingDing(notification: NSNotification) {
-        speechSynth.stopSpeaking(at: .word)
-        
         guard playRerouteSound && !NavigationSettings.shared.voiceMuted else {
             return
         }
+        
+        speechSynth.stopSpeaking(at: .word)
         
         do {
             try mixAudio()
