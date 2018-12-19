@@ -9,11 +9,6 @@ fileprivate let mbTestHeading: CLLocationDirection = 50
 
 class NavigationServiceTests: XCTestCase {
 
-    struct Constants {
-        static let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String: Any]
-        static let accessToken = "nonsense"
-    }
-
     var eventsManagerSpy: NavigationEventsManagerSpy!
     let directionsClientSpy = DirectionsSpy(accessToken: "garbage", host: nil)
     let delegate = NavigationServiceDelegateSpy()
@@ -29,8 +24,8 @@ class NavigationServiceTests: XCTestCase {
         let firstCoord = navigationService.router.routeProgress.nearbyCoordinates.first!
         let firstLocation = CLLocation(coordinate: firstCoord, altitude: 5, horizontalAccuracy: 10, verticalAccuracy: 5, course: 20, speed: 4, timestamp: Date())
 
-        let remainingStepCount = legProgress.remainingSteps.count
-        let penultimateCoord = legProgress.remainingSteps[6].coordinates!.first!
+        let remainingSteps = legProgress.remainingSteps
+        let penultimateCoord = legProgress.remainingSteps[4].coordinates!.first!
         let penultimateLocation = CLLocation(coordinate: penultimateCoord, altitude: 5, horizontalAccuracy: 10, verticalAccuracy: 5, course: 20, speed: 4, timestamp: Date())
 
         let lastCoord = legProgress.remainingSteps.last!.coordinates!.first!
@@ -41,25 +36,9 @@ class NavigationServiceTests: XCTestCase {
         return (navigationService: navigationService, routeLocations: routeLocations)
     }()
 
-    lazy var initialRoute: Route = {
-        let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
-        let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
-        let options = NavigationRouteOptions(waypoints: [waypoint1, waypoint2])
-        options.shapeFormat = .polyline
-        let route = Route(json: Constants.jsonRoute, waypoints: [waypoint1, waypoint2], options: options)
-        route.accessToken = Constants.accessToken
-        return route
-    }()
-
-    lazy var alternateRoute: Route = {
-        let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 38.893922, longitude: -77.023900))
-        let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 38.880727, longitude: -77.024888))
-        let options = NavigationRouteOptions(waypoints: [waypoint1, waypoint2])
-        options.shapeFormat = .polyline
-        let route = Route(json: Constants.jsonRoute, waypoints: [waypoint1, waypoint2], options: options)
-        route.accessToken = Constants.accessToken
-        return route
-    }()
+    let initialRoute = Fixture.route(from: "routeWithInstructions")
+    
+    let alternateRoute = Fixture.route(from: "routeWithInstructions")
 
     override func setUp() {
         super.setUp()
@@ -296,7 +275,7 @@ class NavigationServiceTests: XCTestCase {
         // TODO: should there be a delegate message here as well?
 
         //Advance to the penultimate step.
-        navigationService.routeProgress.currentLegProgress.stepIndex = 7
+        navigationService.routeProgress.currentLegProgress.stepIndex = 5
         navigationService.routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex = 1
 
         // MARK: When at a valid location just before the last location
