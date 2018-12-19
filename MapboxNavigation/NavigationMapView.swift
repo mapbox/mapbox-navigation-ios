@@ -1006,7 +1006,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             }
             
             // Road labels should match road signage.
-            let locale = layer.sourceLayerIdentifier == "road_label" ? Locale(identifier: "mul") : nil
+            let isLabelLayer = MGLVectorTileSource.roadLabelLayerIdentifiersByTileSetIdentifier.values.contains(layer.sourceLayerIdentifier ?? "")
+            let locale = isLabelLayer ? Locale(identifier: "mul") : nil
             
             let localizedText = text.mgl_expressionLocalized(into: locale)
             if localizedText != text {
