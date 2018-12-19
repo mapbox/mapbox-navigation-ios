@@ -14,10 +14,24 @@ public protocol CarPlaySearchControllerDelegate: class {
 @objc(MBCarPlaySearchController)
 public class CarPlaySearchController: NSObject {
     
+    /**
+     The completion handler that will process the list of search results initiated on CarPlay.
+     */
     var searchCompletionHandler: (([CPListItem]) -> Void)?
+    
+    /**
+     The most recent search results.
+     */
     var recentSearchItems: [CPListItem]?
+    
+    /**
+     The most recent search text.
+     */
     var recentSearchText: String?
     
+    /**
+     The `CarPlaySearchController` delegate.
+     */
     public weak var delegate: CarPlaySearchControllerDelegate?
 
 }
