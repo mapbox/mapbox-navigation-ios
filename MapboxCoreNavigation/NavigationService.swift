@@ -224,9 +224,6 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
      */
     @objc convenience init(route: Route) {
         self.init(route: route, directions: nil, locationSource: nil, eventsManagerType: nil)
-        
-        checkForUpdates()
-        checkForLocationUsageDescription()
     }
     /**
      Intializes a new `NavigationService`.
@@ -266,6 +263,9 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
         
         router.delegate = self
         nativeLocationSource.delegate = self
+        
+        checkForUpdates()
+        checkForLocationUsageDescription()
     }
     
     deinit {
