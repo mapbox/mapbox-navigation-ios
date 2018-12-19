@@ -39,6 +39,10 @@ extension RouteMapViewController: NavigationComponent {
         }
     }
     
+    @objc public func navigationService(_ service: NavigationService, didPassSpokenInstructionPoint instruction: SpokenInstruction, along routeProgress: RouteProgress) {
+        updateCameraAltitude(for: routeProgress)
+    }
+    
     func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {
         let title = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
         lanesView.hide()

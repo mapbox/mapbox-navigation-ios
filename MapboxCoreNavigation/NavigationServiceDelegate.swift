@@ -72,11 +72,24 @@ import MapboxDirections
     @objc(navigationService:didUpdateProgress:withLocation:rawLocation:)
     optional func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation)
     
-    @objc(router:didPassVisualInstructionPoint:alongRouteProgress:)
-    optional func router(_ router: Router, didPassVisualInstructionPoint instruction: VisualInstructionBanner, along routeProgress: RouteProgress)
+    /**
+     Called when the navigation services passes a visual instruction point.
+     - parameter service: The navigation service that passed the instruction point.
+     - parameter instruction: The instruction to be presented.
+     - parameter routeProgress: The routeProgress model through which the service is progressing.
+    */
+    @objc(navigationService:didPassVisualInstructionPoint:alongRouteProgress:)
+    optional func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, along routeProgress: RouteProgress)
     
-    @objc(router:didPassSpokenInstructionPoint:alongRouteProgress:)
-    optional func router(_ router: Router, didPassSpokenInstructionPoint instruction: SpokenInstruction, along routeProgress: RouteProgress)
+    
+    /**
+     Called when the navigation services passes a spoken instruction point.
+     - parameter service: The navigation service that passed the instruction point.
+     - parameter instruction: The instruction to be spoken.
+     - parameter routeProgress: The routeProgress model through which the service is progressing.
+     */
+    @objc(navigationService:didPassSpokenInstructionPoint:alongRouteProgress:)
+    optional func navigationService(_ service: NavigationService, didPassSpokenInstructionPoint instruction: SpokenInstruction, along routeProgress: RouteProgress)
     
     /**
      Called as the navigation service approaches a waypoint.
