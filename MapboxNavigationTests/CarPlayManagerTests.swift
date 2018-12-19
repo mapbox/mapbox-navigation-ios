@@ -96,8 +96,7 @@ class CarPlayManagerTests: XCTestCase {
         // simulate tap by invoking stored copy of handler
         let searchButton = template.leadingNavigationBarButtons.first!
         searchButton.handler!(searchButton)
-
-        // TODO: Setup leading buttons to be pushed on top of the interface controller
+        
         XCTAssert(fakeInterfaceController.topTemplate?.isKind(of: CPSearchTemplate.self) ?? false, "Expecting a search template to be on top")
     }
 

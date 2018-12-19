@@ -72,7 +72,7 @@ extension AppDelegate: CarPlayManagerDelegate {
             searchTemplate.delegate = carPlaySearchController
             let searchButton = carPlaySearchController.searchTemplateButton(searchTemplate: searchTemplate, interfaceController: interfaceController, traitCollection: traitCollection)
             return [searchButton]
-        default:
+        case .navigating, .previewing:
             return nil
         }
     }
