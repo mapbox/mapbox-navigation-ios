@@ -182,7 +182,7 @@ open class PortableRouteController: NSObject {
         // Notify observers if the step’s remaining distance has changed.
         update(progress: routeProgress, with: CLLocation(status), rawLocation: location)
         updateDistanceToIntersection(from: location)
-        updateRouteStepProgress(for: location)
+        updateRouteStepProgress(for: location, status: status)
         updateRouteLegProgress(for: location)
         updateVisualInstructionProgress(for: location)
         
@@ -256,43 +256,12 @@ open class PortableRouteController: NSObject {
         }
     }
     
-    func updateRouteStepProgress(for location: CLLocation) {
-        guard routeProgress.currentLegProgress.remainingSteps.count > 0 else { return }
+    func updateRouteStepProgress(for location: CLLocation, status: MBNavigationStatus) {
+        let stepIndex: Int = Int(status.stepIndex)
         
-        guard let userSnapToStepDistanceFromManeuver = userSnapToStepDistanceFromManeuver else { return }
-        var courseMatchesManeuverFinalHeading = false
-        
-        // Bearings need to normalized so when the `finalHeading` is 359 and the user heading is 1,
-        // we count this as within the `RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion`
-        if let upcomingStep = routeProgress.currentLegProgress.upcomingStep, let finalHeading = upcomingStep.finalHeading, let initialHeading = upcomingStep.initialHeading {
-            let initialHeadingNormalized = initialHeading.wrap(min: 0, max: 360)
-            let finalHeadingNormalized = finalHeading.wrap(min: 0, max: 360)
-            let userHeadingNormalized = location.course.wrap(min: 0, max: 360)
-            let expectedTurningAngle = initialHeadingNormalized.difference(from: finalHeadingNormalized)
-            
-            // If the upcoming maneuver is fairly straight,
-            // do not check if the user is within x degrees of the exit heading.
-            // For ramps, their current heading will very close to the exit heading.
-            // We need to wait until their moving away from the maneuver location instead.
-            // We can do this by looking at their snapped distance from the maneuver.
-            // Once this distance is zero, they are at more moving away from the maneuver location
-            if expectedTurningAngle <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion {
-                courseMatchesManeuverFinalHeading = userSnapToStepDistanceFromManeuver == 0
-            } else {
-                courseMatchesManeuverFinalHeading = finalHeadingNormalized.difference(from: userHeadingNormalized) <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion
-            }
+        if stepIndex != routeProgress.currentLegProgress.stepIndex {
+            advanceStepIndex(to: stepIndex)
         }
-        
-        let step = routeProgress.currentLegProgress.upcomingStep?.maneuverLocation ?? routeProgress.currentLegProgress.currentStep.maneuverLocation
-        let userAbsoluteDistance = step.distance(to: location.coordinate)
-        let lastKnownUserAbsoluteDistance = routeProgress.currentLegProgress.currentStepProgress.userDistanceToManeuverLocation
-        
-        if userSnapToStepDistanceFromManeuver <= RouteControllerManeuverZoneRadius &&
-            (courseMatchesManeuverFinalHeading || (userAbsoluteDistance > lastKnownUserAbsoluteDistance && lastKnownUserAbsoluteDistance > RouteControllerManeuverZoneRadius)) {
-            advanceStepIndex()
-        }
-        
-        routeProgress.currentLegProgress.currentStepProgress.userDistanceToManeuverLocation = userAbsoluteDistance
     }
     
     func advanceStepIndex(to index: Array<RouteStep>.Index? = nil) {
