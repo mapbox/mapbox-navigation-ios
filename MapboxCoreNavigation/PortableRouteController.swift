@@ -185,8 +185,26 @@ open class PortableRouteController: NSObject {
         updateRouteStepProgress(for: location)
         updateRouteLegProgress(for: location)
         updateVisualInstructionProgress(for: location)
-        updateRouteLegProgress(for: location)
-        updateVisualInstructionProgress(for: location)
+        
+        // TODO: Ask delegate if we should reroute when necessary
+        
+        updateSpokenInstructionProgress(status: status)
+    }
+    
+    func updateSpokenInstructionProgress(status: MBNavigationStatus) {
+        let firstInstructionOnFirstStep = routeProgress.currentLegProgress.stepIndex == 0 && routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex == 0
+        let voiceInstructionIndex: Int = Int(status.voiceInstruction?.index ?? 0)
+        let willChangeSpokenInstructionIndex = voiceInstructionIndex != routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex
+        
+        if firstInstructionOnFirstStep || willChangeSpokenInstructionIndex {
+            NotificationCenter.default.post(name: .routeControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
+                RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress
+                ])
+            
+            if let spokenInstructionIndex = status.voiceInstruction?.index {
+                routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex = Int(spokenInstructionIndex)
+            }
+        }
     }
     
     func updateVisualInstructionProgress(for location: CLLocation) {
