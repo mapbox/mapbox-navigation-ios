@@ -4,6 +4,10 @@
 
 * The `NavigationDirections.unpackTilePack(at:outputDirectoryURL:progressHandler:completionHandler:)` method is now available to Objective-C code as `-[MBNavigationDirections unpackTilePackAtURL:outputDirectoryURL:progressHandler:completionHandler:]`. ([#1891](https://github.com/mapbox/mapbox-navigation-ios/pull/1891))
 
+### CarPlay
+
+* Added the `CarPlayManagerDelegate.carPlayManager(_:selectedPreviewFor:using:)` method for any additional customization after a trip is selected on CarPlay. ([#1846](https://github.com/mapbox/mapbox-navigation-ios/pull/1846))
+
 ## v0.26.0
 
 ### Client-side routing
