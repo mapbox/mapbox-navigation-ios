@@ -186,7 +186,10 @@ open class PortableRouteController: NSObject {
         updateRouteLegProgress(for: location)
         updateVisualInstructionProgress(for: location)
         
-        // TODO: Ask delegate if we should reroute when necessary
+        if status.routeState == .offRoute && delegate?.router?(self, shouldRerouteFrom: location) ?? RouteController.DefaultBehavior.shouldRerouteFromLocation {
+            reroute(from: location, along: routeProgress)
+            return // Skip spoken instruction if we are going to reroute
+        }
         
         updateSpokenInstructionProgress(status: status)
     }
@@ -213,6 +216,7 @@ open class PortableRouteController: NSObject {
         
         let firstInstructionOnFirstStep = routeProgress.currentLegProgress.stepIndex == 0 && routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex == 0
         
+        // TODO: Use NavigationNative’s logic to trigger
         for visualInstruction in visualInstructions {
             if userSnapToStepDistanceFromManeuver <= visualInstruction.distanceAlongStep || firstInstructionOnFirstStep {
                 
@@ -425,23 +429,5 @@ extension PortableRouteController: Router {
             strongSelf._routeProgress.currentLegProgress.stepIndex = 0
             strongSelf.announce(reroute: route, at: location, proactive: false)
         }
-    }
-}
-
-extension MBNavigationStatus {
-    
-    
-}
-
-extension CLLocation {
-    
-    convenience init(_ status: MBNavigationStatus) {
-        self.init(coordinate: status.location,
-                  altitude: 0,
-                  horizontalAccuracy: 0,
-                  verticalAccuracy: 0,
-                  course: CLLocationDirection(status.bearing),
-                  speed: 0,
-                  timestamp: status.time)
     }
 }

@@ -6,8 +6,7 @@ import Turf
 extension CLLocation {
     
     var isQualified: Bool {
-        return
-            0...100 ~= horizontalAccuracy
+        return 0...100 ~= horizontalAccuracy
     }
     
     var isQualifiedForStartingRoute: Bool {
@@ -194,5 +193,9 @@ extension CLLocation {
     
     func shifted(to newTimestamp: Date) -> CLLocation {
         return CLLocation(coordinate: coordinate, altitude: altitude, horizontalAccuracy: horizontalAccuracy, verticalAccuracy: verticalAccuracy, course: course, speed: speed, timestamp: newTimestamp)
+    }
+    
+    convenience init(_ status: MBNavigationStatus) {
+        self.init(coordinate: status.location, altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: CLLocationDirection(status.bearing), speed: 0, timestamp: status.time)
     }
 }
