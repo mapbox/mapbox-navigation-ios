@@ -50,7 +50,7 @@ class OfflineViewController: UIViewController, MGLMapViewDelegate {
         
         let northWest = mapView.convert(resizableView.frame.minXY, toCoordinateFrom: nil)
         let southEast = mapView.convert(resizableView.frame.maxXY, toCoordinateFrom: nil)
-        let coordinateBounds = CoordinateBounds([northWest, southEast])
+        let coordinateBounds = CoordinateBounds(northWest: northWest, southEast: southEast)
         
         disableUserInterface()
         
