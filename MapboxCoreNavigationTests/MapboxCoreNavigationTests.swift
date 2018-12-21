@@ -114,11 +114,10 @@ class MapboxCoreNavigationTests: XCTestCase {
         let offRouteCoordinates = [[-122.41765, 37.79095],[-122.41830,37.79087],[-122.41907,37.79079],[-122.41960,37.79073]]
             .map { CLLocationCoordinate2D(latitude: $0[1], longitude: $0[0]) }
         
-        let offRouteLocations = offRouteCoordinates.enumerated()
-            .map {
-                CLLocation(coordinate: $0.element, altitude: -1, horizontalAccuracy: 10,
-                           verticalAccuracy: -1, course: -1, speed: 10,
-                           timestamp: Date().addingTimeInterval(TimeInterval(locations.count + $0.offset)))
+        let offRouteLocations = offRouteCoordinates.enumerated().map {
+            CLLocation(coordinate: $0.element, altitude: -1, horizontalAccuracy: 10,
+                       verticalAccuracy: -1, course: -1, speed: 10,
+                       timestamp: Date().addingTimeInterval(TimeInterval(locations.count + $0.offset)))
         }
         
         let locationManager = ReplayLocationManager(locations: locations + offRouteLocations)

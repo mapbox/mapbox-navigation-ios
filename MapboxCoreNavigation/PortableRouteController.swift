@@ -355,11 +355,6 @@ open class PortableRouteController: NSObject {
         delegate?.router?(self, didRerouteAlong: routeProgress.route, at: dataSource.location, proactive: didFindFasterRoute)
     }
     
-    /**
-     Advances the leg index. This override also advances the leg index of the native navigator.
-     
-     This is a convienence method provided to advance the leg index of any given router without having to worry about the internal data structure of the router.
-     */
     public func advanceLegIndex(location: CLLocation) {
         let status = navigator.getStatusForTimestamp(location.timestamp)
         routeProgress.legIndex = Int(status.legIndex)

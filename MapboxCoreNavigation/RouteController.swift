@@ -21,7 +21,6 @@ protocol RouteControllerDataSource: class {
 @objc(MBRouteController)
 open class RouteController: NSObject, Router {
     
-
     public enum DefaultBehavior {
         public static let shouldRerouteFromLocation: Bool = true
         public static let shouldDiscardLocation: Bool = true
@@ -31,14 +30,8 @@ open class RouteController: NSObject, Router {
         
     }
     
-    /**
-     The route controller’s delegate.
-     */
     @objc public weak var delegate: RouterDelegate?
 
-    /**
-     The route controller’s associated location manager.
-     */
     @objc public unowned var dataSource: RouterDataSource
     
     /**
@@ -61,9 +54,6 @@ open class RouteController: NSObject, Router {
 
     var didFindFasterRoute = false
 
-    /**
-     Details about the user’s progress along the current route, leg, and step.
-     */
     @objc public var routeProgress: RouteProgress {
         get {
             return _routeProgress
@@ -106,13 +96,6 @@ open class RouteController: NSObject, Router {
 
     var userSnapToStepDistanceFromManeuver: CLLocationDistance?
     
-    /**
-     Intializes a new `RouteController`.
-
-     - parameter route: The route to follow.
-     - parameter directions: The Directions object that created `route`.
-     - parameter source: The data source for the RouteController.
-     */
     required public init(along route: Route, directions: Directions = Directions.shared, dataSource source: RouterDataSource) {
         self.directions = directions
         self._routeProgress = RouteProgress(route: route)
@@ -131,12 +114,7 @@ open class RouteController: NSObject, Router {
         }
   
     }
-
-
-    /**
-     The idealized user location. Snapped to the route line, if applicable, otherwise raw.
-     - seeAlso: snappedLocation, rawLocation
-     */
+    
     @objc public var location: CLLocation? {
 
         // If there is no snapped location, and the rawLocation course is unqualified, use the user's heading as long as it is accurate.
@@ -237,11 +215,6 @@ open class RouteController: NSObject, Router {
         return true
     }
     
-    /**
-     Given a users current location, returns a Boolean whether they are currently on the route.
-     
-     If the user is not on the route, they should be rerouted.
-     */
     @objc public func userIsOnRoute(_ location: CLLocation) -> Bool {
         
         // If the user has arrived, do not continue monitor reroutes, step progress, etc
@@ -277,17 +250,10 @@ open class RouteController: NSObject, Router {
         return isCloseToCurrentStep
     }
     
-    /**
-     Advances the leg index.
-     
-     This is a convienence method provided to advance the leg index of any given router without having to worry about the internal data structure of the router.
-     */
-    @objc(advanceLegIndexWithLocation:)
     public func advanceLegIndex(location: CLLocation) {
         precondition(!routeProgress.isFinalLeg, "Can not increment leg index beyond final leg.")
         routeProgress.legIndex += 1
     }
-    
 }
 
 extension RouteController: CLLocationManagerDelegate {
