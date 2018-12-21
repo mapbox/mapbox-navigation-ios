@@ -82,10 +82,6 @@ class MapboxCoreNavigationTests: XCTestCase {
         
         let coordinates = route.legs[0].steps.map { $0.coordinates! }.flatMap { $0 }
         
-        let geojson = try! JSONEncoder().encode(coordinates)
-        let string = NSString(string: String(data: geojson, encoding: .utf8)!)
-        print(string)
-        
         let locations = coordinates.enumerated().map { CLLocation(coordinate: $0.element, altitude: -1, horizontalAccuracy: -1, verticalAccuracy: -1, timestamp: Date().addingTimeInterval(TimeInterval($0.offset))) }
         
         let locationManager = ReplayLocationManager(locations: locations)
