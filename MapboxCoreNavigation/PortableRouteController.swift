@@ -183,7 +183,7 @@ open class PortableRouteController: NSObject {
         update(progress: routeProgress, with: CLLocation(status), rawLocation: location)
         updateDistanceToIntersection(from: location)
         updateRouteStepProgress(for: location, status: status)
-        updateRouteLegProgress(for: location)
+        updateRouteLegProgress(for: location, status: status)
         updateVisualInstructionProgress(for: location)
         
         if status.routeState == .offRoute && delegate?.router?(self, shouldRerouteFrom: location) ?? RouteController.DefaultBehavior.shouldRerouteFromLocation {
@@ -235,28 +235,23 @@ open class PortableRouteController: NSObject {
         }
     }
     
-    func updateRouteLegProgress(for location: CLLocation) {
-        let currentDestination = routeProgress.currentLeg.destination
-        let legProgress = routeProgress.currentLegProgress
-        guard let remainingVoiceInstructions = legProgress.currentStepProgress.remainingSpokenInstructions else { return }
+    func updateRouteLegProgress(for location: CLLocation, status: MBNavigationStatus) {
         
-        // We are at least at the "You will arrive" instruction
-        if legProgress.remainingSteps.count <= 1 && remainingVoiceInstructions.count <= 1 && currentDestination != previousArrivalWaypoint {
+        let legProgress = routeProgress.currentLegProgress
+        let currentDestination = routeProgress.currentLeg.destination
+        
+        if status.remainingLegDuration <= waypointArrivalThreshold {
+            previousArrivalWaypoint = currentDestination
+            legProgress.userHasArrivedAtWaypoint = true
             
-            //Have we actually arrived? Last instruction is "You have arrived"
-            if remainingVoiceInstructions.count == 0, legProgress.durationRemaining <= waypointArrivalThreshold {
-                previousArrivalWaypoint = currentDestination
-                legProgress.userHasArrivedAtWaypoint = true
-                
-                let advancesToNextLeg = delegate?.router?(self, didArriveAt: currentDestination) ?? RouteController.DefaultBehavior.didArriveAtWaypoint
-                
-                guard !routeProgress.isFinalLeg && advancesToNextLeg else { return }
-                advanceLegIndex(location: location)
-                updateDistanceToManeuver()
-                
-            } else { //we are approaching the destination
-                delegate?.router?(self, willArriveAt: currentDestination, after: legProgress.durationRemaining, distance: legProgress.distanceRemaining)
-            }
+            let advancesToNextLeg = delegate?.router?(self, didArriveAt: currentDestination) ?? RouteController.DefaultBehavior.didArriveAtWaypoint
+            
+            guard !routeProgress.isFinalLeg && advancesToNextLeg else { return }
+            
+            advanceLegIndex(location: location)
+            
+        } else { //we are approaching the destination
+            delegate?.router?(self, willArriveAt: currentDestination, after: legProgress.durationRemaining, distance: legProgress.distanceRemaining)
         }
     }
     
@@ -385,6 +380,14 @@ open class PortableRouteController: NSObject {
 
 extension PortableRouteController: Router {
     public func userIsOnRoute(_ location: CLLocation) -> Bool {
+        
+        // If the user has arrived, do not continue monitor reroutes, step progress, etc
+        if routeProgress.currentLegProgress.userHasArrivedAtWaypoint &&
+            (delegate?.router?(self, shouldPreventReroutesWhenArrivingAt: routeProgress.currentLeg.destination) ??
+                RouteController.DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint) {
+            return true
+        }
+        
         let status = navigator.getStatusForTimestamp(location.timestamp)
         let offRoute = status.routeState == .offRoute
         return !offRoute
