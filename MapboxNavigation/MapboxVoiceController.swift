@@ -50,12 +50,24 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
         muteToken = NavigationSettings.shared.observe(\.voiceMuted) { [weak self] (settings, change) in
             if settings.voiceMuted {
                 self?.audioPlayer?.stop()
+             
+                guard let self = self else { return }
+                do {
+                    try self.unDuckAudio()
+                } catch {
+                    self.voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
+                }
             }
         }
     }
     
     deinit {
         audioPlayer?.stop()
+        do {
+            try unDuckAudio()
+        } catch {
+            voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
+        }
         audioPlayer?.delegate = nil
     }
     
