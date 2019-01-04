@@ -1,8 +1,10 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## master
+## v0.27.0
 
 * The `NavigationDirections.unpackTilePack(at:outputDirectoryURL:progressHandler:completionHandler:)` method is now available to Objective-C code as `-[MBNavigationDirections unpackTilePackAtURL:outputDirectoryURL:progressHandler:completionHandler:]`. ([#1891](https://github.com/mapbox/mapbox-navigation-ios/pull/1891))
+* Added support for styles powered by [version 8 of the Mapbox Streets source](https://www.mapbox.com/vector-tiles/mapbox-streets-v8/). ([#1909](https://github.com/mapbox/mapbox-navigation-ios/pull/1909))
+* Fixed potential inaccuracies in location snapping, off-route detection, and the current road name label. ([mapbox/turf-swift#74](https://github.com/mapbox/turf-swift/pull/74))
 
 ### CarPlay
 
