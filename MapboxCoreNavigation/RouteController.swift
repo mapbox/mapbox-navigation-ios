@@ -612,8 +612,8 @@ extension RouteController: CLLocationManagerDelegate {
         for voiceInstruction in spokenInstructions {
             if userSnapToStepDistanceFromManeuver <= voiceInstruction.distanceAlongStep || firstInstructionOnFirstStep {
                 
-                routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex += 1
                 announcePassage(of: voiceInstruction, along: routeProgress)
+                routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex += 1
                 
                 return
             }
