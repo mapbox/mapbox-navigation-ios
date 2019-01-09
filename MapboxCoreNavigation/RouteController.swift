@@ -311,7 +311,6 @@ extension RouteController: CLLocationManagerDelegate {
         updateVisualInstructionProgress()
 
         if !userIsOnRoute(location) && delegate?.router?(self, shouldRerouteFrom: location) ?? DefaultBehavior.shouldRerouteFromLocation {
-
             reroute(from: location, along: routeProgress)
             return
         }
@@ -391,8 +390,6 @@ extension RouteController: CLLocationManagerDelegate {
             }
         }
     }
-    
-
     
     func checkForFasterRoute(from location: CLLocation) {
         guard let currentUpcomingManeuver = routeProgress.currentLegProgress.upcomingStep else {

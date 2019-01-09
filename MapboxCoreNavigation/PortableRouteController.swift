@@ -181,32 +181,30 @@ open class PortableRouteController: NSObject {
         
         // Notify observers if the step’s remaining distance has changed.
         update(progress: routeProgress, with: CLLocation(status), rawLocation: location)
+        
+        // TODO: Skip spoken instruction if we're going to reroute
+        updateSpokenInstructionProgress(status: status)
         updateDistanceToIntersection(from: location)
         updateRouteStepProgress(for: location, status: status)
         updateRouteLegProgress(for: location, status: status)
         updateVisualInstructionProgress(for: location)
         
-        if status.routeState == .offRoute && delegate?.router?(self, shouldRerouteFrom: location) ?? RouteController.DefaultBehavior.shouldRerouteFromLocation {
+        if !userIsOnRoute(location) && delegate?.router?(self, shouldRerouteFrom: location) ?? RouteController.DefaultBehavior.shouldRerouteFromLocation {
             reroute(from: location, along: routeProgress)
-            return // Skip spoken instruction if we are going to reroute
         }
-        
-        updateSpokenInstructionProgress(status: status)
     }
     
     func updateSpokenInstructionProgress(status: MBNavigationStatus) {
         let firstInstructionOnFirstStep = routeProgress.currentLegProgress.stepIndex == 0 && routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex == 0
-        let voiceInstructionIndex: Int = Int(status.voiceInstruction?.index ?? 0)
-        let willChangeSpokenInstructionIndex = voiceInstructionIndex != routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex
+        let spokenInstructionIndex: Int = Int(status.voiceInstruction?.index ?? 0)
+        let willChangeSpokenInstructionIndex = spokenInstructionIndex != routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex
         
         if firstInstructionOnFirstStep || willChangeSpokenInstructionIndex {
             NotificationCenter.default.post(name: .routeControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
                 RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress
                 ])
             
-            if let spokenInstructionIndex = status.voiceInstruction?.index {
-                routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex = Int(spokenInstructionIndex)
-            }
+            routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex = spokenInstructionIndex
         }
     }
     
@@ -239,19 +237,29 @@ open class PortableRouteController: NSObject {
         
         let legProgress = routeProgress.currentLegProgress
         let currentDestination = routeProgress.currentLeg.destination
+        guard let remainingVoiceInstructions = legProgress.currentStepProgress.remainingSpokenInstructions else { return }
         
-        if status.remainingLegDuration <= waypointArrivalThreshold {
-            previousArrivalWaypoint = currentDestination
-            legProgress.userHasArrivedAtWaypoint = true
+        // We are at least at the "You will arrive" instruction
+        if legProgress.remainingSteps.count <= 1 && remainingVoiceInstructions.count <= 1 {
             
-            let advancesToNextLeg = delegate?.router?(self, didArriveAt: currentDestination) ?? RouteController.DefaultBehavior.didArriveAtWaypoint
+            let willArrive = status.routeState != .complete && legProgress.remainingSteps.count <= 1 && remainingVoiceInstructions.count <= 1
+            let didArrive = status.routeState == .complete && currentDestination != previousArrivalWaypoint && status.remainingLegDuration <= waypointArrivalThreshold
             
-            guard !routeProgress.isFinalLeg && advancesToNextLeg else { return }
-            
-            advanceLegIndex(location: location)
-            
-        } else { //we are approaching the destination
-            delegate?.router?(self, willArriveAt: currentDestination, after: legProgress.durationRemaining, distance: legProgress.distanceRemaining)
+            // TODO: fix so willArrive triggers correctly before didArrive
+            if willArrive {
+                
+                delegate?.router?(self, willArriveAt: currentDestination, after: legProgress.durationRemaining, distance: legProgress.distanceRemaining)
+                
+            } else if didArrive {
+                
+                previousArrivalWaypoint = currentDestination
+                legProgress.userHasArrivedAtWaypoint = true
+                
+                let advancesToNextLeg = delegate?.router?(self, didArriveAt: currentDestination) ?? RouteController.DefaultBehavior.didArriveAtWaypoint
+                guard !routeProgress.isFinalLeg && advancesToNextLeg else { return }
+                
+                advanceLegIndex(location: location)
+            }
         }
     }
     
@@ -374,6 +382,7 @@ open class PortableRouteController: NSObject {
 }
 
 extension PortableRouteController: Router {
+    
     public func userIsOnRoute(_ location: CLLocation) -> Bool {
         
         // If the user has arrived, do not continue monitor reroutes, step progress, etc

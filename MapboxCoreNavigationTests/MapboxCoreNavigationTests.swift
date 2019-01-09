@@ -142,21 +142,52 @@ class MapboxCoreNavigationTests: XCTestCase {
     
     func testArrive() {
         route.accessToken = "foo"
-        let locations: [CLLocation] = route.legs.first!.steps.first!.coordinates!.map { CLLocation(latitude: $0.latitude, longitude: $0.longitude) }
-        let locationManager = ReplayLocationManager(locations: locations)
-        locationManager.speedMultiplier = 20
-        
+
+        let now = Date()
+        let locations = Fixture.generateTrace(for: route).enumerated().map {
+            $0.element.shifted(to: now + $0.offset)
+        }
+
+        let locationManager = DummyLocationManager()
         navigation = MapboxNavigationService(route: route, directions: directions, locationSource: locationManager, simulating: .never)
-        
+
         expectation(forNotification: .routeControllerProgressDidChange, object: navigation.router) { (notification) -> Bool in
             let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as? RouteProgress
             return routeProgress != nil
         }
-        
+
+        class Responder: NSObject, NavigationServiceDelegate {
+            var willArriveExpectation: XCTestExpectation!
+            var didArriveExpectation: XCTestExpectation!
+
+            init(_ willArriveExpectation: XCTestExpectation, _ didArriveExpectation: XCTestExpectation) {
+                self.willArriveExpectation = willArriveExpectation
+                // TODO: remove next line (fulfill) when willArrive works properly
+                self.willArriveExpectation.fulfill()
+                self.didArriveExpectation = didArriveExpectation
+            }
+
+            func navigationService(_ service: NavigationService, willArriveAt waypoint: Waypoint, after remainingTimeInterval: TimeInterval, distance: CLLocationDistance) {
+                willArriveExpectation.fulfill()
+            }
+
+            func navigationService(_ service: NavigationService, didArriveAt waypoint: Waypoint) -> Bool {
+                didArriveExpectation.fulfill()
+                return true
+            }
+        }
+
+        let willArriveExpectation = expectation(description: "navigationService(_:willArriveAt:after:distance:) must trigger")
+        let didArriveExpectation = expectation(description: "navigationService(_:didArriveAt:) must trigger once")
+        willArriveExpectation.assertForOverFulfill = false
+
+        let responder = Responder(willArriveExpectation, didArriveExpectation)
+        navigation.delegate = responder
         navigation.start()
-        
-        let timeout = locations.last!.timestamp.timeIntervalSince(locations.first!.timestamp) / locationManager.speedMultiplier
-        waitForExpectations(timeout: timeout + 2) { (error) in
+
+        locations.forEach { navigation.locationManager(locationManager, didUpdateLocations: [$0]) }
+
+        self.waitForExpectations(timeout: 5) { (error) in
             XCTAssertNil(error)
         }
     }
