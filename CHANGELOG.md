@@ -6,6 +6,10 @@
 * Added support for styles powered by [version 8 of the Mapbox Streets source](https://www.mapbox.com/vector-tiles/mapbox-streets-v8/). ([#1909](https://github.com/mapbox/mapbox-navigation-ios/pull/1909))
 * Fixed potential inaccuracies in location snapping, off-route detection, and the current road name label. ([mapbox/turf-swift#74](https://github.com/mapbox/turf-swift/pull/74))
 
+### CarPlay
+
+* Added the `CarPlayManagerDelegate.carPlayManager(_:selectedPreviewFor:using:)` method for any additional customization after a trip is selected on CarPlay. ([#1846](https://github.com/mapbox/mapbox-navigation-ios/pull/1846))
+
 ## v0.26.0
 
 ### Client-side routing

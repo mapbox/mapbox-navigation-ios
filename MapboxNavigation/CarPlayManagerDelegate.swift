@@ -1,8 +1,5 @@
 #if canImport(CarPlay)
 import CarPlay
-#if canImport(MapboxGeocoder)
-import MapboxGeocoder
-#endif
 import Turf
 import MapboxCoreNavigation
 import MapboxDirections
@@ -97,6 +94,16 @@ public protocol CarPlayManagerDelegate {
      */
     @objc(carPlayManager:searchTemplate:selectedResult:completionHandler:)
     optional func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void)
+    
+    /**
+     Offers the delegate the opportunity to react to selection of a trip. Certain trips may have alternate route(s).
+     
+     - parameter carPlayManager: The shared CarPlay manager.
+     - parameter trip: The trip to begin navigating along.
+     - parameter routeChoice: The possible route for the chosen trip.
+     */
+    @objc(carPlayManager:selectedPreviewForTrip:usingRouteChoice:)
+    optional func carPlayManager(_ carPlayManager: CarPlayManager, selectedPreviewFor trip: CPTrip, using routeChoice: CPRouteChoice) -> ()
     
     /**
      Called when navigation begins so that the containing app can update accordingly.

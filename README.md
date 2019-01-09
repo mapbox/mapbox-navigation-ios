@@ -16,7 +16,7 @@ Get up and running in a few minutes with our drop-in turn-by-turn navigation `Na
 * A full-fledged turn-by-turn navigation UI for iPhone, iPad, and CarPlay that’s ready to drop into your application
 * [Professionally designed map styles](https://www.mapbox.com/maps/) for daytime and nighttime driving
 * Worldwide driving, cycling, and walking directions powered by [open data](https://www.mapbox.com/about/open/) and user feedback
-* Traffic avoidance and proactive rerouting based on current conditions in [over 30 countries](https://www.mapbox.com/api-documentation/pages/traffic-countries.html)
+* Traffic avoidance and proactive rerouting based on current conditions in [over 55 countries](https://www.mapbox.com/api-documentation/pages/traffic-countries.html)
 * Natural-sounding turn instructions powered by [Amazon Polly](https://aws.amazon.com/polly/) (no configuration needed)
 * [Support for over a dozen languages](https://www.mapbox.com/ios-sdk/navigation/overview/localization-and-internationalization/)
 
