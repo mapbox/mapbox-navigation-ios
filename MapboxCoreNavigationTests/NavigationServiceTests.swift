@@ -291,8 +291,7 @@ class NavigationServiceTests: XCTestCase {
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeNavigationDepart))
 
         // MARK: When at a valid location just before the last location
-        // TODO: Fix willArrive trigger
-        //XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:willArriveAt:after:distance:)"), "Pre-arrival delegate message not fired.")
+        XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:willArriveAt:after:distance:)"), "Pre-arrival delegate message not fired.")
 
         // MARK: It tells the delegate that the user did arrive
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didArriveAt:)"))

@@ -225,12 +225,11 @@ open class PortableRouteController: NSObject {
         guard let remainingVoiceInstructions = legProgress.currentStepProgress.remainingSpokenInstructions else { return }
         
         // We are at least at the "You will arrive" instruction
-        if legProgress.remainingSteps.count <= 1 && remainingVoiceInstructions.count <= 1 {
+        if legProgress.remainingSteps.count <= 2 && remainingVoiceInstructions.count <= 2 {
             
-            let willArrive = status.routeState != .complete && legProgress.remainingSteps.count <= 1 && remainingVoiceInstructions.count <= 1
+            let willArrive = status.routeState == .tracking
             let didArrive = status.routeState == .complete && currentDestination != previousArrivalWaypoint && status.remainingLegDuration <= waypointArrivalThreshold
             
-            // TODO: fix so willArrive triggers correctly before didArrive
             if willArrive {
                 
                 delegate?.router?(self, willArriveAt: currentDestination, after: legProgress.durationRemaining, distance: legProgress.distanceRemaining)
