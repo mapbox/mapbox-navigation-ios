@@ -191,15 +191,12 @@ open class PortableRouteController: NSObject {
     }
     
     func updateSpokenInstructionProgress(status: MBNavigationStatus, willReRoute: Bool) {
-        let voiceInstructionIndex = Int(status.voiceInstruction?.index ?? 0)
-        let willChangeVoiceInstructionIndex = voiceInstructionIndex != routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex
         
-        if status.isFirstInstructionOnFirstStep || willChangeVoiceInstructionIndex {
+        if let voiceInstructionIndex = status.voiceInstruction?.index {
+            routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex = Int(voiceInstructionIndex)
             NotificationCenter.default.post(name: .routeControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
                 RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress
                 ])
-            
-            routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex = voiceInstructionIndex
         }
     }
     
