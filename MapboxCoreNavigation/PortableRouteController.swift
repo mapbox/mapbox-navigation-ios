@@ -79,12 +79,7 @@ open class PortableRouteController: NSObject {
      The most recently received user location.
      - note: This is a raw location received from `locationManager`. To obtain an idealized location, use the `location` property.
      */
-    var rawLocation: CLLocation? {
-        didSet {
-            // TODO: Verify we need to update distanceToManeuver
-            //updateDistanceToManeuver()
-        }
-    }
+    var rawLocation: CLLocation?
     
     /**
      The route controller’s delegate.
@@ -182,58 +177,48 @@ open class PortableRouteController: NSObject {
         // Notify observers if the step’s remaining distance has changed.
         update(progress: routeProgress, with: CLLocation(status), rawLocation: location)
         
-        // TODO: Skip spoken instruction if we're going to reroute
-        updateSpokenInstructionProgress(status: status)
-        updateDistanceToIntersection(from: location)
-        updateRouteStepProgress(for: location, status: status)
-        updateRouteLegProgress(for: location, status: status)
-        updateVisualInstructionProgress(for: location)
+        let willReroute = !userIsOnRoute(location) && delegate?.router?(self, shouldRerouteFrom: location)
+                          ?? RouteController.DefaultBehavior.shouldRerouteFromLocation
         
-        if !userIsOnRoute(location) && delegate?.router?(self, shouldRerouteFrom: location) ?? RouteController.DefaultBehavior.shouldRerouteFromLocation {
+        updateSpokenInstructionProgress(status: status, willReRoute: willReroute)
+        updateRouteStepProgress(status: status)
+        updateRouteLegProgress(status: status)
+        updateVisualInstructionProgress(status: status)
+        
+        if willReroute {
             reroute(from: location, along: routeProgress)
         }
     }
     
-    func updateSpokenInstructionProgress(status: MBNavigationStatus) {
-        let firstInstructionOnFirstStep = routeProgress.currentLegProgress.stepIndex == 0 && routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex == 0
-        let spokenInstructionIndex: Int = Int(status.voiceInstruction?.index ?? 0)
-        let willChangeSpokenInstructionIndex = spokenInstructionIndex != routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex
+    func updateSpokenInstructionProgress(status: MBNavigationStatus, willReRoute: Bool) {
+        let voiceInstructionIndex = Int(status.voiceInstruction?.index ?? 0)
+        let willChangeVoiceInstructionIndex = voiceInstructionIndex != routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex
         
-        if firstInstructionOnFirstStep || willChangeSpokenInstructionIndex {
+        if status.isFirstInstructionOnFirstStep || willChangeVoiceInstructionIndex {
             NotificationCenter.default.post(name: .routeControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
                 RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress
                 ])
             
-            routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex = spokenInstructionIndex
+            routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex = voiceInstructionIndex
         }
     }
     
-    func updateVisualInstructionProgress(for location: CLLocation) {
-        guard let userSnapToStepDistanceFromManeuver = userSnapToStepDistanceFromManeuver else { return }
-        guard let visualInstructions = routeProgress.currentLegProgress.currentStepProgress.remainingVisualInstructions else { return }
+    func updateVisualInstructionProgress(status: MBNavigationStatus) {
         
-        let firstInstructionOnFirstStep = routeProgress.currentLegProgress.stepIndex == 0 && routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex == 0
+        let visualInstructionIndex = Int(status.bannerInstruction?.index ?? 0)
+        let willChangeVisualInstructionIndex = status.isFirstInstructionOnFirstStep
+            || (visualInstructionIndex != routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex)
         
-        // TODO: Use NavigationNative’s logic to trigger
-        for visualInstruction in visualInstructions {
-            if userSnapToStepDistanceFromManeuver <= visualInstruction.distanceAlongStep || firstInstructionOnFirstStep {
-                
-                NotificationCenter.default.post(name: .routeControllerDidPassVisualInstructionPoint, object: self, userInfo: [
-                    RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress
-                    ])
-                
-                let status = navigator.getStatusForTimestamp(location.timestamp)
-                
-                if let visualInstructionIndex = status.voiceInstruction?.index {
-                    routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex = Int(visualInstructionIndex)
-                }
-                
-                return
-            }
+        if willChangeVisualInstructionIndex {
+            routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex = visualInstructionIndex
+            
+            NotificationCenter.default.post(name: .routeControllerDidPassVisualInstructionPoint, object: self, userInfo: [
+                RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress
+                ])
         }
     }
     
-    func updateRouteLegProgress(for location: CLLocation, status: MBNavigationStatus) {
+    func updateRouteLegProgress(status: MBNavigationStatus) {
         
         let legProgress = routeProgress.currentLegProgress
         let currentDestination = routeProgress.currentLeg.destination
@@ -258,12 +243,12 @@ open class PortableRouteController: NSObject {
                 let advancesToNextLeg = delegate?.router?(self, didArriveAt: currentDestination) ?? RouteController.DefaultBehavior.didArriveAtWaypoint
                 guard !routeProgress.isFinalLeg && advancesToNextLeg else { return }
                 
-                advanceLegIndex(location: location)
+                routeProgress.legIndex = Int(status.legIndex)
             }
         }
     }
     
-    func updateRouteStepProgress(for location: CLLocation, status: MBNavigationStatus) {
+    func updateRouteStepProgress(status: MBNavigationStatus) {
         let stepIndex: Int = Int(status.stepIndex)
         
         if stepIndex != routeProgress.currentLegProgress.stepIndex {
@@ -279,17 +264,6 @@ open class PortableRouteController: NSObject {
             let status = navigator.getStatusForTimestamp(Date())
             routeProgress.currentLegProgress.stepIndex = Int(status.stepIndex)
         }
-        
-        updateIntersectionDistances()
-        updateDistanceToManeuver()
-    }
-    
-    func updateDistanceToManeuver() {
-        guard let coordinates = routeProgress.currentLegProgress.currentStep.coordinates, let coordinate = rawLocation?.coordinate else {
-            userSnapToStepDistanceFromManeuver = nil
-            return
-        }
-        userSnapToStepDistanceFromManeuver = Polyline(coordinates).distance(from: coordinate)
     }
     
     private func update(progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
@@ -313,37 +287,6 @@ open class PortableRouteController: NSObject {
                 RouteControllerNotificationUserInfoKey.locationKey: location, //guaranteed value
                 RouteControllerNotificationUserInfoKey.rawLocationKey: rawLocation //raw
                 ])
-        }
-    }
-    
-    // TODO: Try to replace with MapboxNavigationNative
-    func updateDistanceToIntersection(from location: CLLocation) {
-        guard var intersections = routeProgress.currentLegProgress.currentStepProgress.step.intersections else { return }
-        let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
-        
-        // The intersections array does not include the upcoming maneuver intersection.
-        if let upcomingStep = routeProgress.currentLegProgress.upcomingStep, let upcomingIntersection = upcomingStep.intersections, let firstUpcomingIntersection = upcomingIntersection.first {
-            intersections += [firstUpcomingIntersection]
-        }
-        
-        routeProgress.currentLegProgress.currentStepProgress.intersectionsIncludingUpcomingManeuverIntersection = intersections
-        
-        if let upcomingIntersection = routeProgress.currentLegProgress.currentStepProgress.upcomingIntersection {
-            routeProgress.currentLegProgress.currentStepProgress.userDistanceToUpcomingIntersection = Polyline(currentStepProgress.step.coordinates!).distance(from: location.coordinate, to: upcomingIntersection.location)
-        }
-        
-        if routeProgress.currentLegProgress.currentStepProgress.intersectionDistances == nil {
-            routeProgress.currentLegProgress.currentStepProgress.intersectionDistances = [CLLocationDistance]()
-            updateIntersectionDistances()
-        }
-    }
-    
-    // TODO: Try to replace with MapboxNavigationNative
-    func updateIntersectionDistances() {
-        if let coordinates = routeProgress.currentLegProgress.currentStep.coordinates, let intersections = routeProgress.currentLegProgress.currentStep.intersections {
-            let polyline = Polyline(coordinates)
-            let distances: [CLLocationDistance] = intersections.map { polyline.distance(from: coordinates.first, to: $0.location) }
-            routeProgress.currentLegProgress.currentStepProgress.intersectionDistances = distances
         }
     }
     

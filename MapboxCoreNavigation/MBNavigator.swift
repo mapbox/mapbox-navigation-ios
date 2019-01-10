@@ -34,3 +34,10 @@ extension MBRouteState: CustomStringConvertible {
         }
     }
 }
+
+extension MBNavigationStatus {
+    
+    var isFirstInstructionOnFirstStep: Bool {
+        return stepIndex == 0 && voiceInstruction?.index ?? 0 == 0
+    }
+}
