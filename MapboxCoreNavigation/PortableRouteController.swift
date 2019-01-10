@@ -290,12 +290,6 @@ open class PortableRouteController: NSObject {
         }
     }
     
-    func userIsWithinRadiusOfRoute(location: CLLocation) -> Bool {
-        let status = navigator.getStatusForTimestamp(location.timestamp)
-        let offRoute = status.routeState == .offRoute
-        return !offRoute
-    }
-    
     private func announce(reroute newRoute: Route, at location: CLLocation?, proactive: Bool) {
         var userInfo = [RouteControllerNotificationUserInfoKey: Any]()
         if let location = location {
