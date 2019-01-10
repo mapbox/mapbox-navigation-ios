@@ -91,7 +91,6 @@ class MapboxCoreNavigationTests: XCTestCase {
             XCTAssertEqual(notification.userInfo?.count, 1)
             
             let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as? RouteProgress
-            // TODO: stepIndex should be 5, which corresponds to the arrival step
             return routeProgress?.currentLegProgress.stepIndex == 4
         }
         
