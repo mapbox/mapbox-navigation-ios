@@ -43,6 +43,8 @@ open class PortableRouteController: NSObject {
     
     var previousArrivalWaypoint: Waypoint?
     
+    var isFirstLocation: Bool = true
+    
     /**
      The threshold used when we determine when the user has arrived at the waypoint.
      By default, we claim arrival 5 seconds before the user is physically estimated to arrive.
@@ -79,7 +81,13 @@ open class PortableRouteController: NSObject {
      The most recently received user location.
      - note: This is a raw location received from `locationManager`. To obtain an idealized location, use the `location` property.
      */
-    var rawLocation: CLLocation?
+    var rawLocation: CLLocation? {
+        didSet {
+            if isFirstLocation == true {
+                isFirstLocation = false
+            }
+        }
+    }
     
     /**
      The route controller’s delegate.
@@ -202,13 +210,10 @@ open class PortableRouteController: NSObject {
     
     func updateVisualInstructionProgress(status: MBNavigationStatus) {
         
-        let visualInstructionIndex = Int(status.bannerInstruction?.index ?? 0)
-        let willChangeVisualInstructionIndex = status.isFirstInstructionOnFirstStep
-            || (visualInstructionIndex != routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex)
+        let willChangeVisualIndex = status.bannerInstruction != nil
         
-        if willChangeVisualInstructionIndex {
-            routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex = visualInstructionIndex
-            
+        if willChangeVisualIndex || isFirstLocation {
+            routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex = Int(status.bannerInstruction?.index ?? 0)
             NotificationCenter.default.post(name: .routeControllerDidPassVisualInstructionPoint, object: self, userInfo: [
                 RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress
                 ])
