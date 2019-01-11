@@ -435,6 +435,9 @@ extension MapboxNavigationService: RouterDelegate {
         //notify the events manager that the route has changed
         eventsManager.reportReroute(progress: router.routeProgress, proactive: proactive)
         
+        //update the route progress model of the simulated location manager, if applicable.
+        simulatedLocationSource?.route = router.route
+        
         //notify our consumer
         delegate?.navigationService?(self, didRerouteAlong: route, at: location, proactive: proactive)
     }

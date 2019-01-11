@@ -70,7 +70,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
         return copy
     }
     
-    var routeProgress: RouteProgress?
+    private var routeProgress: RouteProgress?
     
     /**
      Initalizes a new `SimulatedLocationManager` with the given route.
