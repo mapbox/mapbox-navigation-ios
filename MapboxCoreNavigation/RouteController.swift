@@ -57,7 +57,9 @@ open class RouteController: NSObject {
      The threshold used when we determine when the user has arrived at the waypoint.
      By default, we claim arrival 5 seconds before the user is physically estimated to arrive.
      */
-    @objc public var waypointArrivalThreshold: TimeInterval = 5.0
+    @objc func setWaypointArrivalThreshold(_ threshold: TimeInterval) {
+        navigator.configureNavigator(forName: "arrival_threshold_duration", value: "\(threshold)")
+    }
     
     /**
      Details about the user’s progress along the current route, leg, and step.
@@ -80,7 +82,11 @@ open class RouteController: NSObject {
      - important: If the rawLocation is outside of the route snapping tolerances, this value is nil.
      */
     var snappedLocation: CLLocation? {
-        return rawLocation?.snapped(to: routeProgress)
+        let status = navigator.getStatusForTimestamp(Date())
+        guard status.routeState == .tracking || status.routeState == .complete else {
+            return nil
+        }
+        return CLLocation(status)
     }
     
     var heading: CLHeading?
@@ -117,15 +123,6 @@ open class RouteController: NSObject {
      - seeAlso: snappedLocation, rawLocation
      */
     @objc public var location: CLLocation? {
-        // If there is no snapped location, and the rawLocation course is unqualified, use the user's heading as long as it is accurate.
-        if snappedLocation == nil,
-            let heading = heading,
-            let loc = rawLocation,
-            !loc.course.isQualified,
-            heading.trueHeading.isQualified {
-            return CLLocation(coordinate: loc.coordinate, altitude: loc.altitude, horizontalAccuracy: loc.horizontalAccuracy, verticalAccuracy: loc.verticalAccuracy, course: heading.trueHeading, speed: loc.speed, timestamp: loc.timestamp)
-        }
-        
         return snappedLocation ?? rawLocation
     }
     
@@ -238,7 +235,7 @@ open class RouteController: NSObject {
         if legProgress.remainingSteps.count <= 2 && remainingVoiceInstructions.count <= 2 {
             
             let willArrive = status.routeState == .tracking
-            let didArrive = status.routeState == .complete && currentDestination != previousArrivalWaypoint && status.remainingLegDuration <= waypointArrivalThreshold
+            let didArrive = status.routeState == .complete && currentDestination != previousArrivalWaypoint
             
             if willArrive {
                 
