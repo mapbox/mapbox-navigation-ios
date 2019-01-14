@@ -118,7 +118,7 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
 @objc(MBNavigationService)
 public class MapboxNavigationService: NSObject, NavigationService, DefaultInterfaceFlag {
     
-    typealias DefaultRouter = PortableRouteController
+    typealias DefaultRouter = RouteController
     
     /**
      The default time interval before beginning simulation when the `.onPoorGPS` simulation option is enabled.

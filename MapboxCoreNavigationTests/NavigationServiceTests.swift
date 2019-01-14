@@ -351,11 +351,11 @@ class NavigationServiceTests: XCTestCase {
     }
     
     func testPortableRouteControllerDoesNotHaveRetainCycle() {
-        weak var subject: PortableRouteController? = nil
+        weak var subject: RouteController? = nil
         
         autoreleasepool {
             let fakeDataSource = RouteControllerDataSourceFake()
-            let routeController = PortableRouteController(along: initialRoute, directions: directionsClientSpy, dataSource: fakeDataSource)
+            let routeController = RouteController(along: initialRoute, directions: directionsClientSpy, dataSource: fakeDataSource)
             subject = routeController
         }
         

@@ -758,7 +758,7 @@ extension NavigationViewController: StyleManagerDelegate {
 public extension NavigationViewController {
     @available(*, obsoleted: 0.1, renamed: "navigationService", message: "NavigationViewController no-longer directly manages a RouteController. See MapboxNavigationService, which contains a protocol-bound reference to the RouteController, for more information.")
     /// :nodoc: obsoleted
-    @objc public final var routeController: RouteController! {
+    @objc public final var routeController: LegacyRouteController! {
         get {
             fatalError()
         }
@@ -795,7 +795,7 @@ public extension NavigationViewController {
     public convenience init(for route: Route,
                          directions: Directions = Directions.shared,
                          styles: [Style]? = [DayStyle(), NightStyle()],
-                         routeController: RouteController? = nil,
+                         routeController: LegacyRouteController? = nil,
                          locationManager: NavigationLocationManager? = nil,
                          voiceController: RouteVoiceController? = nil,
                          eventsManager: NavigationEventsManager? = nil) {

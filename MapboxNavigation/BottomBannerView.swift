@@ -19,7 +19,6 @@ open class BottomBannerView: UIView {
     weak var verticalDividerView: SeparatorView!
     // Horizontal divider between the map view and the bottom banner
     weak var horizontalDividerView: SeparatorView!
-    weak var routeController: RouteController!
     weak var delegate: BottomBannerViewDelegate?
     
     let dateFormatter = DateFormatter()

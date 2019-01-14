@@ -124,11 +124,11 @@ open class SimulatedLocationManager: NavigationLocationManager {
     }
     
     @objc private func didReroute(_ notification: Notification) {
-        guard let routeController = notification.object as? RouteController else {
+        guard let router = notification.object as? Router else {
             return
         }
         
-        route = routeController.routeProgress.route
+        route = router.routeProgress.route
     }
     
     deinit {
