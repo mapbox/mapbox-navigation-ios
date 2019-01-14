@@ -344,7 +344,7 @@ extension RouteController: CLLocationManagerDelegate {
         updateRouteLegProgress(for: location)
         updateVisualInstructionProgress()
 
-        if !userIsOnRoute(location) && delegate?.router?(self, shouldRerouteFrom: location) ?? DefaultBehavior.shouldRerouteFromLocation {
+        if !isRerouting, !userIsOnRoute(location), delegate?.router?(self, shouldRerouteFrom: location) ?? DefaultBehavior.shouldRerouteFromLocation {
 
             reroute(from: location, along: routeProgress)
             return
