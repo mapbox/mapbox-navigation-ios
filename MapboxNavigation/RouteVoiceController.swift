@@ -159,14 +159,23 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     }
     
     func duckAudio() throws {
-        let categoryOptions: AVAudioSessionCategoryOptions = [.duckOthers, .interruptSpokenAudioAndMixWithOthers]
-        try AVAudioSession.sharedInstance().setMode(AVAudioSessionModeSpokenAudio)
-        try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: categoryOptions)
+        if #available(iOS 12.0, *), CarPlayManager.isConnected {
+            try AVAudioSession.sharedInstance().setMode(AVAudioSessionModeVoicePrompt)
+        } else {
+            try AVAudioSession.sharedInstance().setMode(AVAudioSessionModeSpokenAudio)
+        }
+        
+        try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: [.duckOthers, .interruptSpokenAudioAndMixWithOthers])
         try AVAudioSession.sharedInstance().setActive(true)
     }
     
     func mixAudio() throws {
-        try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryAmbient)
+        if #available(iOS 12.0, *), CarPlayManager.isConnected {
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: [.duckOthers, .interruptSpokenAudioAndMixWithOthers])
+        } else {
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryAmbient)
+        }
+        
         try AVAudioSession.sharedInstance().setActive(true)
     }
     
