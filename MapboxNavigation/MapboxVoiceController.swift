@@ -51,11 +51,11 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
             if settings.voiceMuted {
                 self?.audioPlayer?.stop()
              
-                guard let self = self else { return }
+                guard let strongSelf = self else { return }
                 do {
-                    try self.unDuckAudio()
+                    try strongSelf.unDuckAudio()
                 } catch {
-                    self.voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
+                    strongSelf.voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
                 }
             }
         }
