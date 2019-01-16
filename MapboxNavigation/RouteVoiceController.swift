@@ -82,8 +82,6 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     var volumeToken: NSKeyValueObservation?
     var muteToken: NSKeyValueObservation?
     
-    fileprivate let categoryOptions: AVAudioSessionCategoryOptions = [.duckOthers, .interruptSpokenAudioAndMixWithOthers]
-    
     /**
      Default initializer for `RouteVoiceController`.
      */
@@ -162,23 +160,16 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     
     func duckAudio() throws {
         if #available(iOS 12.0, *) {
-            let categoryMode = CarPlayManager.isConnected ? AVAudioSessionModeVoicePrompt : AVAudioSessionModeSpokenAudio
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, mode: categoryMode, options: categoryOptions)
-        } else if #available(iOS 10.0, *) {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, mode: AVAudioSessionModeSpokenAudio, options: categoryOptions)
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, mode: AVAudioSessionModeVoicePrompt, options: [.duckOthers])
         } else {
             try AVAudioSession.sharedInstance().setMode(AVAudioSessionModeSpokenAudio)
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: categoryOptions)
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: [.duckOthers])
         }
         try AVAudioSession.sharedInstance().setActive(true)
     }
     
     func mixAudio() throws {
-        if #available(iOS 12.0, *), CarPlayManager.isConnected {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: categoryOptions)
-        } else {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryAmbient)
-        }
+        try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryAmbient)
         try AVAudioSession.sharedInstance().setActive(true)
     }
     
