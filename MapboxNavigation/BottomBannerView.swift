@@ -12,7 +12,7 @@ protocol BottomBannerViewDelegate: class {
 open class BottomBannerView: UIView, NavigationComponent {
     
     weak var previousProgress: RouteProgress?
-    var timer: Timer?
+    var timer: DispatchTimer?
     
     weak var timeRemainingLabel: TimeRemainingLabel!
     weak var distanceRemainingLabel: DistanceRemainingLabel!
@@ -63,6 +63,13 @@ open class BottomBannerView: UIView, NavigationComponent {
         removeTimer()
     }
     
+    override open func willMove(toSuperview newSuperview: UIView?) {
+        super.willMove(toSuperview: newSuperview)
+        if superview != nil, newSuperview == nil {
+            removeTimer()
+        }
+    }
+    
     private func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(removeTimer), name: .UIApplicationDidEnterBackground, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(resetETATimer), name: .UIApplicationWillEnterForeground, object: nil)
@@ -105,13 +112,16 @@ open class BottomBannerView: UIView, NavigationComponent {
     }
     
     @objc func removeTimer() {
-        timer?.invalidate()
+        timer?.disarm()
         timer = nil
     }
     
     @objc func resetETATimer() {
         removeTimer()
-        timer = Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(refreshETA), userInfo: nil, repeats: true)
+        timer = MapboxCoreNavigation.DispatchTimer(countdown: .seconds(30), repeating: .seconds(30)) { [weak self] in
+            self?.refreshETA()
+        }
+        timer?.arm()
     }
     
     @objc func refreshETA() {
