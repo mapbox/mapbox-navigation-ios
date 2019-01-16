@@ -13,6 +13,7 @@
 
 import UIKit
 
+@objc(MBLanesStyleKit)
 public class LanesStyleKit : NSObject {
 
     //// Drawing Methods
