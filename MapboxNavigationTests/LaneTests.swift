@@ -24,34 +24,45 @@ class LaneTests: FBSnapshotTestCase {
     
     func verifyAllLanes(size: CGSize) {
         
-        let testableLanes = TestableLane.testableLanes(drivingSide: .right)
-        let padding: CGFloat = 4
-        let count = CGFloat(testableLanes.count)
-        let viewSize = CGSize(width: size.width * count + padding * (count + 1),
-                              height: size.height * CGFloat(2) + padding * 3)
+        let leftHandLanes = TestableLane.testableLanes(drivingSide: .left)
+        let rightHandLanes = TestableLane.testableLanes(drivingSide: .right)
         
-        let view = UIView(frame: CGRect(origin: .zero, size: viewSize))
-        view.backgroundColor = .black
-        
-        for (i, lane) in testableLanes.enumerated() {
+        func addLanes(lanes: [TestableLane], stackView: UIStackView) {
             
-            let usableComponent = LaneIndicationComponent(indications: lane.indications, isUsable: true)
-            let unusableComponent = LaneIndicationComponent(indications: lane.indications, isUsable: false)
+            let horizontalStackView = UIStackView(orientation: .horizontal, spacing: 5, autoLayout: true)
+            horizontalStackView.distribution = .equalCentering
             
-            let usableLane = LaneView(component: usableComponent)
-            let unusableLane = LaneView(component: unusableComponent)
+            for lane in lanes {
+                let groupView = UIStackView(orientation: .vertical, autoLayout: true)
+                groupView.distribution = .equalCentering
+                groupView.alignment = .center
+                
+                let component = LaneIndicationComponent(indications: lane.indications, isUsable: true)
+                let laneView = LaneView(component: component)
+                
+                laneView.backgroundColor = .white
+                laneView.widthAnchor.constraint(equalToConstant: size.width)
+                laneView.heightAnchor.constraint(equalToConstant: size.height)
+                
+                let label = UILabel(frame: .zero)
+                label.textColor = .white
+                label.text = "\(lane.description) (\(lane.drivingSide == .left ? "L" : "R"))"
+                label.widthAnchor.constraint(equalTo: laneView.widthAnchor)
+                
+                groupView.addArrangedSubview(label)
+                groupView.addArrangedSubview(laneView)
+                
+                horizontalStackView.addArrangedSubview(groupView)
+            }
             
-            usableLane.backgroundColor = .white
-            unusableLane.backgroundColor = .white
-            
-            usableLane.frame = CGRect(origin: CGPoint(x: size.width * CGFloat(i) + padding * CGFloat(i + 1),
-                                                      y: padding), size: size)
-            unusableLane.frame = CGRect(origin: CGPoint(x: size.width * CGFloat(i)  + padding * CGFloat(i + 1),
-                                                        y: size.height + padding * 2), size: size)
-            
-            view.addSubview(usableLane)
-            view.addSubview(unusableLane)
+            stackView.addArrangedSubview(horizontalStackView)
         }
+        
+        let view = UIStackView(orientation: .vertical, spacing: 5, autoLayout: true)
+        view.setBackgroundColor(.black)
+        
+        addLanes(lanes: rightHandLanes, stackView: view)
+        addLanes(lanes: leftHandLanes, stackView: view)
         
         verify(view, overallTolerance: 0)
     }
@@ -66,18 +77,30 @@ struct TestableLane {
         let namedIndications: [(String, LaneIndication)]
         
         namedIndications = [
-            ("Left", [.left]),
-            ("Slight Left", [.slightLeft]),
-            ("Sharp Left", [.sharpLeft]),
-            ("Straight Ahead", [.straightAhead]),
-            ("u-Turn", [.uTurn]),
-            ("Sharp Right", [.sharpRight]),
-            ("Slight Right", [.slightRight]),
-            ("Right", [.right]),
-            ("Sharp Right, Straight Ahead", [.sharpRight, .straightAhead]),
-            ("Straight Ahead, Sharp Right", [.straightAhead, .sharpRight]),
+            ("Sharp Left, Straight Ahead",      [.sharpLeft, .straightAhead]),
+            ("Straight Ahead, Sharp Left",      [.straightAhead, .sharpLeft]),
+            ("Left",                            [.left]),
+            ("Slight Left",                     [.slightLeft]),
+            ("Sharp Left",                      [.sharpLeft]),
+            ("Straight Ahead",                  [.straightAhead]),
+            ("u-Turn",                          [.uTurn]),
+            ("Sharp Right",                     [.sharpRight]),
+            ("Slight Right",                    [.slightRight]),
+            ("Right",                           [.right]),
+            ("Sharp Right, Straight Ahead",     [.sharpRight, .straightAhead]),
+            ("Straight Ahead, Sharp Right",     [.straightAhead, .sharpRight]),
         ]
         
         return namedIndications.map { TestableLane(description: $0.0, indications: $0.1, drivingSide: drivingSide) }
+    }
+}
+
+extension UIStackView {
+    
+    func setBackgroundColor(_ color: UIColor) {
+        let subview = UIView(frame: bounds)
+        subview.backgroundColor = color
+        subview.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        insertSubview(subview, at: 0)
     }
 }
