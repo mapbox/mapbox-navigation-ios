@@ -25,6 +25,12 @@ open class LaneView: UIView {
         }
     }
     
+    var drivingSide: DrivingSide = .right {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+    
     override open var intrinsicContentSize: CGSize {
         return bounds.size
     }
@@ -130,11 +136,8 @@ open class LaneView: UIView {
                 LanesStyleKit.drawLaneStraight(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor)
                 alpha = isValid ? 1 : invalidAlpha
             } else if lane.indications.isSuperset(of: [.uTurn]) {
-                if maneuverDirection == .sharpRight || maneuverDirection == .right || maneuverDirection == .slightRight {
-                    LanesStyleKit.drawLaneUturn(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor)
-                } else {
-                    LanesStyleKit.drawLaneUturn(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, flipHorizontally: true)
-                }
+                let flip = drivingSide == .left
+                LanesStyleKit.drawLaneUturn(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, flipHorizontally: flip)
                 alpha = isValid ? 1 : invalidAlpha
             } else if lane.indications.isEmpty && isValid {
                 // If the lane indication is `none` and the maneuver modifier has a turn in it,
