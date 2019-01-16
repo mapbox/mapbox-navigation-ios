@@ -62,7 +62,7 @@ step-library:
   - &prepare-iphone6s-plus-ios-12
       run:
         name: Prepare iPhone 6s Plus iOS 12
-        command: xcrun instruments -w "iPhone 6 Plus (12.0) [" || true
+        command: xcrun instruments -w "iPhone 6 Plus (12.1) [" || true
 
   - &verify-missing-localizable-strings
       run:
@@ -86,7 +86,7 @@ step-library:
       run:
         name: Build and Test MapboxCoreNavigation
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test -enableCodeCoverage "YES"
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.1,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test -enableCodeCoverage "YES"
 
   - &build-test-MapboxNavigation-ios-11
       run:
@@ -98,13 +98,13 @@ step-library:
       run:
         name: Build and Test MapboxNavigation
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build test -enableCodeCoverage "YES"
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.1,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build test -enableCodeCoverage "YES"
 
   - &build-test-Bench-ios-12
       run:
         name: Build and Test Bench
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone X' -project MapboxNavigation.xcodeproj -scheme Bench clean build test
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.1,name=iPhone X' -project MapboxNavigation.xcodeproj -scheme Bench clean build test
 
   - &build-Example
       run:
@@ -136,7 +136,7 @@ step-library:
 jobs:
   xcode-10:
     macos:
-      xcode: "10.0.0"
+      xcode: "10.1.0"
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
@@ -168,7 +168,7 @@ jobs:
 
   xcode-10-bench:
     macos:
-      xcode: "10.0.0"
+      xcode: "10.1.0"
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
@@ -181,7 +181,7 @@ jobs:
 
   xcode-10-cocoapods-install:
     macos:
-      xcode: "10.0.0"
+      xcode: "10.1.0"
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
@@ -194,7 +194,7 @@ jobs:
 
   xcode-10-cocoapods-update:
     macos:
-      xcode: "10.0.0"
+      xcode: "10.1.0"
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
