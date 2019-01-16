@@ -8,56 +8,10 @@ import MapboxDirections
 
 class LaneTests: FBSnapshotTestCase {
     
-    let route = Fixture.route(from: "route-for-lane-testing")
-    
-    var steps: [RouteStep]!
-    var routeProgress: RouteProgress!
-    var routeController: RouteController!
-    let routerDataSource = RouteControllerDataSourceFake()
-    var directions: DirectionsSpy!
-    
     override func setUp() {
         super.setUp()
         recordMode = false
         agnosticOptions = [.OS, .device]
-        
-        let bogusToken = "pk.feedCafeDeadBeefBadeBede"
-        directions = DirectionsSpy(accessToken: bogusToken)
-        
-        route.accessToken = bogusToken
-        routeController = RouteController(along: route, directions: directions, dataSource: routerDataSource)
-        
-        steps = routeController.routeProgress.currentLeg.steps
-        routeProgress = routeController.routeProgress
-    }
-    
-    func assertLanes(stepIndex: Array<RouteStep>.Index) {
-        let rect = CGRect(origin: .zero, size: .iPhone6Plus)
-        let navigationView = NavigationView(frame: rect)
-        
-        routeController.advanceStepIndex(to: stepIndex)
-        
-        navigationView.lanesView.update(for: routeController.routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
-        navigationView.lanesView.show(animated: false)
-        
-        verify(navigationView.lanesView)
-    }
-    
-    func testStraightRight() {
-        assertLanes(stepIndex: 0)
-    }
-    
-    func testRightRight() {
-        assertLanes(stepIndex: 1)
-    }
-    
-    func testSlightRight() {
-        let view = LaneView(frame: CGRect(origin: .zero, size: CGSize(width: 30, height: 30)))
-        view.backgroundColor = .white
-        view.lane = Lane(indications: [.slightRight])
-        view.maneuverDirection = .slightRight
-        view.isValid = true
-        verify(view)
     }
     
     func testAllLanes30x30() {
@@ -70,18 +24,19 @@ class LaneTests: FBSnapshotTestCase {
     
     func verifyAllLanes(size: CGSize) {
         
+        let testableLanes = TestableLane.testableLanes(drivingSide: .right)
         let padding: CGFloat = 4
-        let count = CGFloat(LaneIndication.allTestLanes.count)
+        let count = CGFloat(testableLanes.count)
         let viewSize = CGSize(width: size.width * count + padding * (count + 1),
                               height: size.height * CGFloat(2) + padding * 3)
         
         let view = UIView(frame: CGRect(origin: .zero, size: viewSize))
         view.backgroundColor = .black
         
-        for (i, indication) in LaneIndication.allTestLanes.enumerated() {
+        for (i, lane) in testableLanes.enumerated() {
             
-            let usableComponent = LaneIndicationComponent(indications: indication, isUsable: true)
-            let unusableComponent = LaneIndicationComponent(indications: indication, isUsable: false)
+            let usableComponent = LaneIndicationComponent(indications: lane.indications, isUsable: true)
+            let unusableComponent = LaneIndicationComponent(indications: lane.indications, isUsable: false)
             
             let usableLane = LaneView(component: usableComponent)
             let unusableLane = LaneView(component: unusableComponent)
@@ -102,16 +57,27 @@ class LaneTests: FBSnapshotTestCase {
     }
 }
 
-extension LaneIndication {
+struct TestableLane {
+    var description: String
+    var indications: LaneIndication
+    var drivingSide: DrivingSide
     
-    static var allTestLanes: [LaneIndication] {
-        return [LaneIndication.straightAhead,
-                LaneIndication.uTurn,
-                LaneIndication.left,
-                LaneIndication.slightLeft,
-                LaneIndication.sharpLeft,
-                LaneIndication.right,
-                LaneIndication.slightRight,
-                LaneIndication.sharpRight]
+    static func testableLanes(drivingSide: DrivingSide) -> [TestableLane] {
+        let namedIndications: [(String, LaneIndication)]
+        
+        namedIndications = [
+            ("Left", [.left]),
+            ("Slight Left", [.slightLeft]),
+            ("Sharp Left", [.sharpLeft]),
+            ("Straight Ahead", [.straightAhead]),
+            ("u-Turn", [.uTurn]),
+            ("Sharp Right", [.sharpRight]),
+            ("Slight Right", [.slightRight]),
+            ("Right", [.right]),
+            ("Sharp Right, Straight Ahead", [.sharpRight, .straightAhead]),
+            ("Straight Ahead, Sharp Right", [.straightAhead, .sharpRight]),
+        ]
+        
+        return namedIndications.map { TestableLane(description: $0.0, indications: $0.1, drivingSide: drivingSide) }
     }
 }
