@@ -1,3 +1,9 @@
+/* Error message when an offline route request returns a response that can’t be deserialized */
+"OFFLINE_CORRUPT_DATA" = "Foi encontrada uma rota inválida desligado da internet.";
+
+/* Error description when an offline route request returns no result */
+"OFFLINE_NO_RESULT" = "Não é possível calcular a rota pedida desligado da internet.";
+
 /* Inform developer an update is available */
 "UPDATE_AVAILABLE" = "O SDK de Navegação Mapbox para iOS versão %@ já está disponível.";
 
