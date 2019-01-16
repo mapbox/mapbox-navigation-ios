@@ -29,12 +29,10 @@ class LaneTests: FBSnapshotTestCase {
         
         func addLanes(lanes: [TestableLane], stackView: UIStackView) {
             
-            let horizontalStackView = UIStackView(orientation: .horizontal, spacing: 5, autoLayout: true)
-            horizontalStackView.distribution = .equalCentering
+            let containerView = UIStackView(orientation: .vertical, spacing: 5, autoLayout: true)
             
             for lane in lanes {
                 let groupView = UIStackView(orientation: .vertical, autoLayout: true)
-                groupView.distribution = .equalCentering
                 groupView.alignment = .center
                 
                 let component = LaneIndicationComponent(indications: lane.indications, isUsable: true)
@@ -44,6 +42,7 @@ class LaneTests: FBSnapshotTestCase {
                 laneView.backgroundColor = .white
                 laneView.widthAnchor.constraint(equalToConstant: size.width)
                 laneView.heightAnchor.constraint(equalToConstant: size.height)
+                laneView.bounds = CGRect(origin: .zero, size: size)
                 
                 let label = UILabel(frame: .zero)
                 label.textColor = .white
@@ -53,10 +52,10 @@ class LaneTests: FBSnapshotTestCase {
                 groupView.addArrangedSubview(label)
                 groupView.addArrangedSubview(laneView)
                 
-                horizontalStackView.addArrangedSubview(groupView)
+                containerView.addArrangedSubview(groupView)
             }
             
-            stackView.addArrangedSubview(horizontalStackView)
+            stackView.addArrangedSubview(containerView)
         }
         
         let view = UIStackView(orientation: .vertical, spacing: 5, autoLayout: true)
