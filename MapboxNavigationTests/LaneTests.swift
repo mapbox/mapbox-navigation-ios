@@ -39,6 +39,7 @@ class LaneTests: FBSnapshotTestCase {
                 
                 let component = LaneIndicationComponent(indications: lane.indications, isUsable: true)
                 let laneView = LaneView(component: component)
+                laneView.drivingSide = lane.drivingSide
                 
                 laneView.backgroundColor = .white
                 laneView.widthAnchor.constraint(equalToConstant: size.width)
