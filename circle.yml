@@ -104,7 +104,7 @@ step-library:
       run:
         name: Build and Test Bench
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.1,name=iPhone X' -project MapboxNavigation.xcodeproj -scheme Bench clean build test
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.1,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme Bench clean build test
 
   - &build-Example
       run:
