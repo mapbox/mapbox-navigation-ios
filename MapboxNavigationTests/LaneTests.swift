@@ -71,14 +71,14 @@ class LaneTests: FBSnapshotTestCase {
     func verifyAllLanes(size: CGSize) {
         
         let padding: CGFloat = 4
-        let count = CGFloat(LaneIndication.allCases.count)
+        let count = CGFloat(LaneIndication.allTestLanes.count)
         let viewSize = CGSize(width: size.width * count + padding * (count + 1),
                               height: size.height * CGFloat(2) + padding * 3)
         
         let view = UIView(frame: CGRect(origin: .zero, size: viewSize))
         view.backgroundColor = .black
         
-        for (i, indication) in LaneIndication.allCases.enumerated() {
+        for (i, indication) in LaneIndication.allTestLanes.enumerated() {
             
             let usableComponent = LaneIndicationComponent(indications: indication, isUsable: true)
             let unusableComponent = LaneIndicationComponent(indications: indication, isUsable: false)
@@ -102,9 +102,9 @@ class LaneTests: FBSnapshotTestCase {
     }
 }
 
-extension LaneIndication: CaseIterable {
+extension LaneIndication {
     
-    public static var allCases: [LaneIndication] {
+    static var allTestLanes: [LaneIndication] {
         return [LaneIndication.straightAhead,
                 LaneIndication.uTurn,
                 LaneIndication.left,
