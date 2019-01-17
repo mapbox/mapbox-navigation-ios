@@ -1,9 +1,3 @@
 
-/* Class = "UIButton"; normalTitle = "Resume"; ObjectID = "5HY-QD-dBq"; */
-"5HY-QD-dBq.normalTitle" = "Folytatás";
-
-/* Class = "UILabel"; text = "Rerouting"; ObjectID = "bUX-dR-1V6"; */
-"bUX-dR-1V6.text" = "Újratervezés";
-
-/* Class = "UIButton"; normalTitle = "Cancel"; ObjectID = "l2B-fb-Dkb"; */
-"l2B-fb-Dkb.normalTitle" = "Mégse";
+/* Class = "UILabel"; text = "Rate your trip"; ObjectID = "W5U-cV-cDO"; */
+"W5U-cV-cDO.text" = "Értékeld az utadat";

@@ -301,7 +301,7 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
     
     private func endSimulation(intent: SimulationIntent = .manual) {
         guard isSimulating else { return }
-        let progress = simulatedLocationSource?.routeProgress ?? router.routeProgress
+        let progress = router.routeProgress
         delegate?.navigationService?(self, willEndSimulating: progress, becauseOf: intent)
         simulatedLocationSource?.stopUpdatingLocation()
         simulatedLocationSource?.stopUpdatingHeading()
@@ -437,6 +437,9 @@ extension MapboxNavigationService: RouterDelegate {
         
         //notify the events manager that the route has changed
         eventsManager.reportReroute(progress: router.routeProgress, proactive: proactive)
+        
+        //update the route progress model of the simulated location manager, if applicable.
+        simulatedLocationSource?.route = router.route
         
         //notify our consumer
         delegate?.navigationService?(self, didRerouteAlong: route, at: location, proactive: proactive)

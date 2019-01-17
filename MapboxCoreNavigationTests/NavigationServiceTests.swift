@@ -224,6 +224,22 @@ class NavigationServiceTests: XCTestCase {
         let eventsManagerSpy = service.eventsManager as! NavigationEventsManagerSpy
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeAppUserTurnstile))
     }
+
+    func testReroutingFromLocationUpdatesSimulatedLocationSource() {
+        let navigationService = MapboxNavigationService(route: initialRoute, directions: directionsClientSpy, eventsManagerType: NavigationEventsManagerSpy.self, simulating: .always)
+        navigationService.delegate = delegate
+        let router = navigationService.router!
+        
+        navigationService.eventsManager.delaysEventFlushing = false
+        navigationService.start()
+        
+        router.route = alternateRoute
+        
+        let simulatedLocationManager = navigationService.locationManager as! SimulatedLocationManager
+        
+        XCTAssert(simulatedLocationManager.route == alternateRoute, "Simulated Location Manager should be updated with new route progress model")
+    }
+    
     
     func testReroutingFromALocationSendsEvents() {
         let navigationService = dependencies.navigationService
