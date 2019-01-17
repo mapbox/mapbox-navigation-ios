@@ -11,12 +11,8 @@ protocol RouteControllerDataSource: class {
     var locationProvider: NavigationLocationManager.Type { get }
 }
 
-
 /**
- A `RouteController` tracks the user’s progress along a route, posting notifications as the user reaches significant points along the route. On every location update, the route controller evaluates the user’s location, determining whether the user remains on the route. If not, the route controller calculates a new route.
-
- `RouteController` is responsible for the core navigation logic whereas
- `NavigationViewController` is responsible for displaying a default drop-in navigation UI.
+ The `LegacyRouteController`, previously named `RouteController` has been deprecated and will be removed in future versions.
  */
 @objc(MBLegacyRouteController)
 @available(*, deprecated, renamed: "RouteController")
