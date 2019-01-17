@@ -136,7 +136,7 @@ open class LaneView: UIView {
                 LanesStyleKit.drawLaneStraight(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor)
                 alpha = isValid ? 1 : invalidAlpha
             } else if lane.indications.isSuperset(of: [.uTurn]) {
-                let flip = drivingSide == .left
+                let flip = !(drivingSide == .left)
                 LanesStyleKit.drawLaneUturn(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, flipHorizontally: flip)
                 alpha = isValid ? 1 : invalidAlpha
             } else if lane.indications.isEmpty && isValid {
