@@ -60,8 +60,9 @@ class NavigationServiceTests: XCTestCase {
         let route = navigation.route
         
         let coordinates = route.coordinates!.prefix(3)
+        let now = Date()
         let locations = coordinates.enumerated().map { CLLocation(coordinate: $0.element,
-                                                                  altitude: -1, horizontalAccuracy: 10, verticalAccuracy: -1, course: -1, speed: 10, timestamp: Date().addingTimeInterval(TimeInterval($0.offset))) }
+                                                                  altitude: -1, horizontalAccuracy: 10, verticalAccuracy: -1, course: -1, speed: 10, timestamp: now + $0.offset) }
         
         locations.forEach { navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [$0]) }
         
@@ -71,7 +72,7 @@ class NavigationServiceTests: XCTestCase {
         let locationsOffRoute = coordinatesOffRoute.enumerated().map {
             CLLocation(coordinate: $0.element, altitude: -1, horizontalAccuracy: 10,
                        verticalAccuracy: -1, course: -1, speed: 10,
-                       timestamp: Date().addingTimeInterval(TimeInterval(locations.count + $0.offset)))
+                       timestamp: now + locations.count + $0.offset)
         }
         
         locationsOffRoute.forEach { navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [$0]) }
@@ -84,8 +85,9 @@ class NavigationServiceTests: XCTestCase {
         let route = navigation.route
         
         let firstStepCoordinates = route.legs[0].steps[0].coordinates!
+        let now = Date()
         let firstStepLocations = firstStepCoordinates.enumerated().map {
-            CLLocation(coordinate: $0.element, altitude: -1, horizontalAccuracy: 10, verticalAccuracy: -1, course: -1, speed: 10, timestamp: Date().addingTimeInterval(TimeInterval($0.offset)))
+            CLLocation(coordinate: $0.element, altitude: -1, horizontalAccuracy: 10, verticalAccuracy: -1, course: -1, speed: 10, timestamp: now + $0.offset)
         }
         
         firstStepLocations.forEach { navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [$0]) }
@@ -94,7 +96,7 @@ class NavigationServiceTests: XCTestCase {
         
         let thirdStepCoordinates = route.legs[0].steps[2].coordinates!
         let thirdStepLocations = thirdStepCoordinates.enumerated().map {
-            CLLocation(coordinate: $0.element, altitude: -1, horizontalAccuracy: 10, verticalAccuracy: -1, course: -1, speed: 10, timestamp: Date().addingTimeInterval(TimeInterval(firstStepCoordinates.count + $0.offset)))
+            CLLocation(coordinate: $0.element, altitude: -1, horizontalAccuracy: 10, verticalAccuracy: -1, course: -1, speed: 10, timestamp: now + firstStepCoordinates.count + $0.offset)
         }
         
         thirdStepLocations.forEach { navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [$0]) }
@@ -320,7 +322,7 @@ class NavigationServiceTests: XCTestCase {
         // MARK: Continue off route after arrival
         let offRouteCoordinate = trace.map { $0.coordinate }.last!.coordinate(at: 200, facing: 0)
         let offRouteLocations = (0...3).map {
-            CLLocation(coordinate: offRouteCoordinate, altitude: -1, horizontalAccuracy: 10, verticalAccuracy: -1, course: -1, speed: 10, timestamp: Date().addingTimeInterval(TimeInterval(trace.count + $0)))
+            CLLocation(coordinate: offRouteCoordinate, altitude: -1, horizontalAccuracy: 10, verticalAccuracy: -1, course: -1, speed: 10, timestamp: now + trace.count + $0)
         }
 
         offRouteLocations.forEach { navigation.router.locationManager!(navigation.locationManager, didUpdateLocations: [$0]) }

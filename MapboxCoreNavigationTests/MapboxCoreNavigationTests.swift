@@ -27,10 +27,11 @@ class MapboxCoreNavigationTests: XCTestCase {
         
         // Coordinates from first step
         let coordinates = route.legs[0].steps[0].coordinates!
+        let now = Date()
         let locations = coordinates.enumerated().map { CLLocation(coordinate: $0.element,
                                                                   altitude: -1, horizontalAccuracy: 10,
                                                                   verticalAccuracy: -1, course: -1, speed: 10,
-                                                                  timestamp: Date().addingTimeInterval(TimeInterval($0.offset))) }
+                                                                  timestamp: now + $0.offset) }
         
         expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: navigation.router) { (notification) -> Bool in
             XCTAssertEqual(notification.userInfo?.count, 1)
@@ -55,9 +56,10 @@ class MapboxCoreNavigationTests: XCTestCase {
         // Coordinates from beginning of step[1] to end of step[2]
         let coordinates = route.legs[0].steps[1].coordinates! + route.legs[0].steps[2].coordinates!
         let locations: [CLLocation]
+        let now = Date()
         locations = coordinates.enumerated().map { CLLocation(coordinate: $0.element,
                                                               altitude: -1, horizontalAccuracy: -1, verticalAccuracy: -1, course: -1, speed: 10,
-                                                              timestamp: Date().addingTimeInterval(TimeInterval($0.offset))) }
+                                                              timestamp: now + $0.offset) }
         
         navigation = MapboxNavigationService(route: route, directions: directions, simulating: .never)
         expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: navigation.router) { (notification) -> Bool in
@@ -82,7 +84,8 @@ class MapboxCoreNavigationTests: XCTestCase {
         
         let coordinates = route.legs[0].steps.map { $0.coordinates! }.flatMap { $0 }
         
-        let locations = coordinates.enumerated().map { CLLocation(coordinate: $0.element, altitude: -1, horizontalAccuracy: -1, verticalAccuracy: -1, timestamp: Date().addingTimeInterval(TimeInterval($0.offset))) }
+        let now = Date()
+        let locations = coordinates.enumerated().map { CLLocation(coordinate: $0.element, altitude: -1, horizontalAccuracy: -1, verticalAccuracy: -1, timestamp: now + $0.offset) }
         
         let locationManager = ReplayLocationManager(locations: locations)
         navigation = MapboxNavigationService(route: route, directions: directions, locationSource: locationManager, simulating: .never)
@@ -107,8 +110,9 @@ class MapboxCoreNavigationTests: XCTestCase {
         route.accessToken = "foo"
         
         let coordinates = route.legs[0].steps[1].coordinates!
+        let now = Date()
         let locations = coordinates.enumerated().map { CLLocation(coordinate: $0.element,
-                                                                  altitude: -1, horizontalAccuracy: 10, verticalAccuracy: -1, course: -1, speed: 10, timestamp: Date().addingTimeInterval(TimeInterval($0.offset))) }
+                                                                  altitude: -1, horizontalAccuracy: 10, verticalAccuracy: -1, course: -1, speed: 10, timestamp: now + $0.offset) }
         
         let offRouteCoordinates = [[-122.41765, 37.79095],[-122.41830,37.79087],[-122.41907,37.79079],[-122.41960,37.79073]]
             .map { CLLocationCoordinate2D(latitude: $0[1], longitude: $0[0]) }
@@ -116,7 +120,7 @@ class MapboxCoreNavigationTests: XCTestCase {
         let offRouteLocations = offRouteCoordinates.enumerated().map {
             CLLocation(coordinate: $0.element, altitude: -1, horizontalAccuracy: 10,
                        verticalAccuracy: -1, course: -1, speed: 10,
-                       timestamp: Date().addingTimeInterval(TimeInterval(locations.count + $0.offset)))
+                       timestamp: now + locations.count + $0.offset)
         }
         
         let locationManager = ReplayLocationManager(locations: locations + offRouteLocations)
