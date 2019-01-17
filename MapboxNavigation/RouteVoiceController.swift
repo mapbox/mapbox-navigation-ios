@@ -160,10 +160,10 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     
     func duckAudio() throws {
         if #available(iOS 12.0, *) {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, mode: AVAudioSessionModeVoicePrompt, options: [.duckOthers])
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, mode: AVAudioSessionModeVoicePrompt, options: [.duckOthers, .mixWithOthers])
         } else {
             try AVAudioSession.sharedInstance().setMode(AVAudioSessionModeSpokenAudio)
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: [.duckOthers])
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: [.duckOthers, .mixWithOthers])
         }
         try AVAudioSession.sharedInstance().setActive(true)
     }
