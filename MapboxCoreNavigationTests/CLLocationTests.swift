@@ -13,13 +13,13 @@ class CLLocationTests: XCTestCase {
         let altitude: CLLocationDistance = 10
         let horizontalAccuracy: CLLocationAccuracy = 50
         
-        let fixLocation = MBFixLocation(location: coordinate, time: timestamp,
+        let fixLocation = MBFixLocation(coordinate: coordinate, time: timestamp,
                                         speed: speed as NSNumber, bearing: bearing as NSNumber,
                                         altitude: altitude as NSNumber, accuracyHorizontal: horizontalAccuracy as NSNumber, provider: nil)
         
         let location = CLLocation(fixLocation)
         
-        XCTAssertEqual(location.coordinate, fixLocation.location)
+        XCTAssertEqual(location.coordinate, fixLocation.coordinate)
         XCTAssertEqual(location.timestamp, fixLocation.time)
         XCTAssertEqual(location.speed, fixLocation.speed?.doubleValue)
         XCTAssertEqual(location.altitude, fixLocation.altitude?.doubleValue)

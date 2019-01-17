@@ -5,7 +5,7 @@ import CoreLocation
 extension MBFixLocation {
     
     convenience init(_ location: CLLocation) {
-        self.init(location: location.coordinate,
+        self.init(coordinate: location.coordinate,
                   time: location.timestamp,
                   speed: location.speed as NSNumber,
                   bearing: location.course as NSNumber,

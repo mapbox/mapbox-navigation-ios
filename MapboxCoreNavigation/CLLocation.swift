@@ -64,7 +64,7 @@ extension CLLocation {
     }
     
     convenience init(_ location: MBFixLocation) {
-        self.init(coordinate: location.location,
+        self.init(coordinate: location.coordinate,
                   altitude: location.altitude?.doubleValue ?? 0,
                   horizontalAccuracy: location.accuracyHorizontal?.doubleValue ?? 0,
                   verticalAccuracy: 0,
@@ -195,7 +195,10 @@ extension CLLocation {
         return CLLocation(coordinate: coordinate, altitude: altitude, horizontalAccuracy: horizontalAccuracy, verticalAccuracy: verticalAccuracy, course: course, speed: speed, timestamp: newTimestamp)
     }
     
-    convenience init(_ status: MBNavigationStatus) {
-        self.init(coordinate: status.location, altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: CLLocationDirection(status.bearing), speed: 0, timestamp: status.time)
+    convenience init(fixLocation: MBFixLocation) {
+        self.init(coordinate: fixLocation.coordinate, altitude: 0,
+                  horizontalAccuracy: fixLocation.accuracyHorizontal?.doubleValue ?? 0,
+                  verticalAccuracy: 0, course: fixLocation.bearing?.doubleValue ?? 0,
+                  speed: fixLocation.speed?.doubleValue ?? 0, timestamp: fixLocation.time)
     }
 }

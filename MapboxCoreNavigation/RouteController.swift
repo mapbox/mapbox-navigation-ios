@@ -92,7 +92,7 @@ open class RouteController: NSObject {
         guard status.routeState == .tracking || status.routeState == .complete else {
             return nil
         }
-        return CLLocation(status)
+        return CLLocation(status.location)
     }
     
     var heading: CLHeading?
@@ -194,7 +194,7 @@ open class RouteController: NSObject {
         currentStepProgress.intersectionIndex = Int(status.intersectionIndex)
         
         // Notify observers if the step’s remaining distance has changed.
-        update(progress: routeProgress, with: CLLocation(status), rawLocation: location)
+        update(progress: routeProgress, with: CLLocation(status.location), rawLocation: location)
         
         let willReroute = !userIsOnRoute(location) && delegate?.router?(self, shouldRerouteFrom: location)
                           ?? DefaultBehavior.shouldRerouteFromLocation
