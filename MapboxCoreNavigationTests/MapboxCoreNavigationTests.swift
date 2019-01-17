@@ -43,7 +43,9 @@ class MapboxCoreNavigationTests: XCTestCase {
         
         navigation.start()
         
-        locations.forEach { navigation.locationManager(navigation.locationManager, didUpdateLocations: [$0]) }
+        for location in locations {
+            navigation.locationManager(navigation.locationManager, didUpdateLocations: [location])
+        }
         
         waitForExpectations(timeout: waitForInterval) { (error) in
             XCTAssertNil(error)
@@ -188,7 +190,9 @@ class MapboxCoreNavigationTests: XCTestCase {
         navigation.delegate = responder
         navigation.start()
 
-        locations.forEach { navigation.locationManager(locationManager, didUpdateLocations: [$0]) }
+        for location in locations {
+            navigation.locationManager(locationManager, didUpdateLocations: [location])
+        }
 
         self.waitForExpectations(timeout: 5) { (error) in
             XCTAssertNil(error)
