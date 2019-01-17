@@ -213,9 +213,13 @@ open class RouteController: NSObject {
         
         if let voiceInstructionIndex = status.voiceInstruction?.index {
             routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex = Int(voiceInstructionIndex)
-            NotificationCenter.default.post(name: .routeControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
-                RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress
-                ])
+            
+            // Don't annouce spoken instruction if we are going to reroute
+            if !willReRoute {
+                NotificationCenter.default.post(name: .routeControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
+                    RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress
+                    ])
+            }
         }
     }
     
