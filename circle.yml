@@ -8,7 +8,7 @@ workflows:
       - xcode-10-bench
       - xcode-10-cocoapods-install
       - xcode-10-cocoapods-update
-      - xcode-9-examples
+      - xcode-10-examples
 
 step-library:
   - &restore-cache
@@ -188,7 +188,7 @@ jobs:
       - *save-cache-cocoapods
       - *save-cache-podmaster
 
-  xcode-9-examples:
+  xcode-10-examples:
     macos:
       xcode: "10.1.0"
     environment:
