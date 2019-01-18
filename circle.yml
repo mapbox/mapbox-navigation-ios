@@ -5,7 +5,6 @@ workflows:
   default:
     jobs:
       - xcode-10
-      - xcode-9
       - xcode-10-bench
       - xcode-10-cocoapods-install
       - xcode-10-cocoapods-update
@@ -150,22 +149,6 @@ jobs:
       - *publish-codecov
       - *save-cache
 
-  xcode-9:
-    macos:
-      xcode: "9.4.1"
-    environment:
-      HOMEBREW_NO_AUTO_UPDATE: 1
-    steps:
-      - checkout
-      - *prepare
-      - *prepare-iphone6s-plus-ios-11
-      - *restore-cache
-      - *install-dependencies
-      - *verify-missing-localizable-strings
-      - *build-test-MapboxCoreNavigation-ios-11
-      - *build-test-MapboxNavigation-ios-11
-      - *save-cache
-
   xcode-10-bench:
     macos:
       xcode: "10.1.0"
@@ -207,13 +190,13 @@ jobs:
 
   xcode-9-examples:
     macos:
-      xcode: "9.4.1"
+      xcode: "10.1.0"
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
       - checkout
       - *prepare
-      - *prepare-iphone6s-plus-ios-11
+      - *prepare-iphone6s-plus-ios-12
       - *restore-cache
       - *install-dependencies
       - *build-Example
