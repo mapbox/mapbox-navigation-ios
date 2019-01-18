@@ -58,11 +58,6 @@ step-library:
         name: Prepare iPhone 6s Plus iOS 12
         command: xcrun instruments -w "iPhone 6 Plus (12.1) [" || true
 
-  - &prepare-iphone6s-plus-ios-12
-      run:
-        name: Prepare iPhone 6s Plus iOS 12
-        command: xcrun instruments -w "iPhone 6 Plus (12.1) [" || true
-
   - &verify-missing-localizable-strings
       run:
         name: Verify missing localizable strings
@@ -79,19 +74,7 @@ step-library:
       run:
         name: Build and Test MapboxCoreNavigation
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.1,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test
-
-  - &build-test-MapboxCoreNavigation-ios-12
-      run:
-        name: Build and Test MapboxCoreNavigation
-        command: |
           xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.1,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test -enableCodeCoverage "YES"
-
-  - &build-test-MapboxNavigation-ios-12
-      run:
-        name: Build and Test MapboxNavigation
-        command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.1,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build test
 
   - &build-test-MapboxNavigation-ios-12
       run:
