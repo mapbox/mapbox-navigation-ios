@@ -53,10 +53,10 @@ step-library:
           if (brew outdated | grep carthage > /dev/null); then brew upgrade carthage; fi
           echo "foo" > ~/.mapbox
 
-  - &prepare-iphone6s-plus-ios-11
+  - &prepare-iphone6s-plus-ios-12
       run:
-        name: Prepare iPhone 6s Plus iOS 11
-        command: xcrun instruments -w "iPhone 6 Plus (11.4) [" || true
+        name: Prepare iPhone 6s Plus iOS 12
+        command: xcrun instruments -w "iPhone 6 Plus (12.1) [" || true
 
   - &prepare-iphone6s-plus-ios-12
       run:
@@ -75,11 +75,11 @@ step-library:
         name: Install Dependencies
         command: carthage bootstrap --platform ios --cache-builds --configuration Debug --no-use-binaries
 
-  - &build-test-MapboxCoreNavigation-ios-11
+  - &build-test-MapboxCoreNavigation-ios-12
       run:
         name: Build and Test MapboxCoreNavigation
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.1,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test
 
   - &build-test-MapboxCoreNavigation-ios-12
       run:
@@ -87,11 +87,11 @@ step-library:
         command: |
           xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.1,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test -enableCodeCoverage "YES"
 
-  - &build-test-MapboxNavigation-ios-11
+  - &build-test-MapboxNavigation-ios-12
       run:
         name: Build and Test MapboxNavigation
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build test
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.1,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build test
 
   - &build-test-MapboxNavigation-ios-12
       run:
@@ -109,7 +109,7 @@ step-library:
       run:
         name: Build Example
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme Example clean build | xcpretty
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.1,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme Example clean build | xcpretty
 
   - &cocoapods-integration-install
       run:
