@@ -65,7 +65,6 @@
 		353280A11FA72871005175F3 /* InstructionLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353280A01FA72871005175F3 /* InstructionLabel.swift */; };
 		353610CE1FAB6A8F00FB1746 /* BottomBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353610CD1FAB6A8F00FB1746 /* BottomBannerView.swift */; };
 		35379CFD21480C0500FD402E /* AppDelegate+CarPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35379CFB21480BFB00FD402E /* AppDelegate+CarPlay.swift */; };
-		35379D0221480E1300FD402E /* CarPlayManager+Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35379D0121480E1300FD402E /* CarPlayManager+Search.swift */; };
 		35379D0321480E5700FD402E /* RecentItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352C35BF2134958F00D77796 /* RecentItem.swift */; };
 		353AA5601FCEF583009F0384 /* StyleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353AA55F1FCEF583009F0384 /* StyleManager.swift */; };
 		353E3C8F20A3501C00FD1789 /* MGLStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353E3C8E20A3501C00FD1789 /* MGLStyle.swift */; };
@@ -262,6 +261,8 @@
 		AE291FFF20975A7E00F23DFC /* NavigationViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED2156E208F7FEA009AA673 /* NavigationViewControllerTests.swift */; };
 		AE46F95520EA735B00537AC2 /* VisualInstruction.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE46F95420EA735B00537AC2 /* VisualInstruction.swift */; };
 		AE5F8771209A082500F58FDB /* route-with-banner-instructions.json in Resources */ = {isa = PBXBuildFile; fileRef = AE5F8770209A082500F58FDB /* route-with-banner-instructions.json */; };
+		AE7DE6C421A47A03002653D1 /* CarPlaySearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7DE6C321A47A03002653D1 /* CarPlaySearchController.swift */; };
+		AE7DE6C621A47A23002653D1 /* CarPlaySearchController+ CPSearchTemplateDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7DE6C521A47A23002653D1 /* CarPlaySearchController+ CPSearchTemplateDelegate.swift */; };
 		AE997D2221137B8B00EB0AAB /* String+LocalizedConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE997D2121137B8B00EB0AAB /* String+LocalizedConstants.swift */; };
 		AEC3AC9A2106703100A26F34 /* HighwayShield.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC3AC992106703100A26F34 /* HighwayShield.swift */; };
 		C51511D120EAC89D00372A91 /* CPMapTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51511D020EAC89D00372A91 /* CPMapTemplate.swift */; };
@@ -361,6 +362,7 @@
 		DADAD82E20350849002E25CA /* MBRouteVoiceController.h in Headers */ = {isa = PBXBuildFile; fileRef = DADAD82C20350849002E25CA /* MBRouteVoiceController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DADAD82F20350849002E25CA /* MBRouteVoiceController.m in Sources */ = {isa = PBXBuildFile; fileRef = DADAD82D20350849002E25CA /* MBRouteVoiceController.m */; };
 		DADD82802161EC0300B8B47D /* UIViewAnimationOptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DADD827F2161EC0300B8B47D /* UIViewAnimationOptionsTests.swift */; };
+		DAE22A2921C9DEDA00CA269D /* MGLVectorTileSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE22A2821C9DEDA00CA269D /* MGLVectorTileSourceTests.swift */; };
 		DAFA92071F01735000A7FB09 /* DistanceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */; };
 /* End PBXBuildFile section */
 
@@ -655,7 +657,6 @@
 		353610CD1FAB6A8F00FB1746 /* BottomBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomBannerView.swift; sourceTree = "<group>"; };
 		35375EC01F31FA86004CE727 /* NavigationSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationSettings.swift; sourceTree = "<group>"; };
 		35379CFB21480BFB00FD402E /* AppDelegate+CarPlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "AppDelegate+CarPlay.swift"; path = "Example/AppDelegate+CarPlay.swift"; sourceTree = "<group>"; };
-		35379D0121480E1300FD402E /* CarPlayManager+Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CarPlayManager+Search.swift"; sourceTree = "<group>"; };
 		353AA55F1FCEF583009F0384 /* StyleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleManager.swift; sourceTree = "<group>"; };
 		353E3C8E20A3501C00FD1789 /* MGLStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MGLStyle.swift; sourceTree = "<group>"; };
 		353E68FB1EF0B7F8007B2AE5 /* NavigationLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationLocationManager.swift; sourceTree = "<group>"; };
@@ -819,6 +820,8 @@
 		AE00A739209A2C38006A3DC7 /* StepsViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepsViewControllerTests.swift; sourceTree = "<group>"; };
 		AE46F95420EA735B00537AC2 /* VisualInstruction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualInstruction.swift; sourceTree = "<group>"; };
 		AE5F8770209A082500F58FDB /* route-with-banner-instructions.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-with-banner-instructions.json"; sourceTree = "<group>"; };
+		AE7DE6C321A47A03002653D1 /* CarPlaySearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlaySearchController.swift; sourceTree = "<group>"; };
+		AE7DE6C521A47A23002653D1 /* CarPlaySearchController+ CPSearchTemplateDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CarPlaySearchController+ CPSearchTemplateDelegate.swift"; sourceTree = "<group>"; };
 		AE8B1B96207D2B2B003050F6 /* TunnelAuthorityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelAuthorityTests.swift; sourceTree = "<group>"; };
 		AE997D2121137B8B00EB0AAB /* String+LocalizedConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+LocalizedConstants.swift"; sourceTree = "<group>"; };
 		AEC3AC992106703100A26F34 /* HighwayShield.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighwayShield.swift; sourceTree = "<group>"; };
@@ -949,6 +952,7 @@
 		DADAD82C20350849002E25CA /* MBRouteVoiceController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MBRouteVoiceController.h; sourceTree = "<group>"; };
 		DADAD82D20350849002E25CA /* MBRouteVoiceController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MBRouteVoiceController.m; sourceTree = "<group>"; };
 		DADD827F2161EC0300B8B47D /* UIViewAnimationOptionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewAnimationOptionsTests.swift; sourceTree = "<group>"; };
+		DAE22A2821C9DEDA00CA269D /* MGLVectorTileSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MGLVectorTileSourceTests.swift; sourceTree = "<group>"; };
 		DAE26B1A20644047001D6E1F /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Main.strings; sourceTree = "<group>"; };
 		DAE26B1C20644047001D6E1F /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Navigation.strings; sourceTree = "<group>"; };
 		DAE26B1F2064407D001D6E1F /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1114,6 +1118,7 @@
 				DAD17201214DB12B009C8161 /* CPMapTemplateTests.swift */,
 				DA0557242155040700A1F2AA /* RouteTests.swift */,
 				DADD827F2161EC0300B8B47D /* UIViewAnimationOptionsTests.swift */,
+				DAE22A2821C9DEDA00CA269D /* MGLVectorTileSourceTests.swift */,
 			);
 			name = "Extensions and Categories";
 			sourceTree = "<group>";
@@ -1149,10 +1154,11 @@
 			isa = PBXGroup;
 			children = (
 				16C2A420211526EE00FE6E68 /* CarPlayManager.swift */,
+				AE7DE6C321A47A03002653D1 /* CarPlaySearchController.swift */,
+				AE7DE6C521A47A23002653D1 /* CarPlaySearchController+ CPSearchTemplateDelegate.swift */,
 				8D4B60E6219CBEB300C41906 /* CarPlayManagerDelegate.swift */,
 				16EF6C21211BA4B300AA580B /* CarPlayMapViewController.swift */,
 				C5FFAC1420D96F5B009E7F98 /* CarPlayNavigationViewController.swift */,
-				35379D0121480E1300FD402E /* CarPlayManager+Search.swift */,
 				352C35BF2134958F00D77796 /* RecentItem.swift */,
 			);
 			name = CarPlay;
@@ -2266,6 +2272,7 @@
 				8D24A2FA20449B430098CBF8 /* Dictionary.swift in Sources */,
 				8DB45E90201698EB001EA6A3 /* UIStackView.swift in Sources */,
 				351BEBFC1E5BCC63006FE110 /* NavigationViewController.swift in Sources */,
+				AE7DE6C621A47A23002653D1 /* CarPlaySearchController+ CPSearchTemplateDelegate.swift in Sources */,
 				8D8EA9BC20575CD80077F478 /* FeedbackCollectionViewCell.swift in Sources */,
 				35E407681F5625FF00EFC814 /* StyleKitMarker.swift in Sources */,
 				C588C3C21F33882100520EF2 /* String.swift in Sources */,
@@ -2279,13 +2286,13 @@
 				35726EE81F0856E900AFA1B6 /* DayStyle.swift in Sources */,
 				8D9ADEA720A0C61A0067E845 /* GenericRouteShield.swift in Sources */,
 				35DC9D911F4323AA001ECD64 /* LanesView.swift in Sources */,
+				AE7DE6C421A47A03002653D1 /* CarPlaySearchController.swift in Sources */,
 				359D1B281FFE70D30052FA42 /* NavigationView.swift in Sources */,
 				C5FFAC1520D96F5C009E7F98 /* CarPlayNavigationViewController.swift in Sources */,
 				8DE879661FBB9980002F06C0 /* EndOfRouteViewController.swift in Sources */,
 				DA0557232154FFB200A1F2AA /* Route.swift in Sources */,
 				8D24A2F62040960C0098CBF8 /* UIEdgeInsets.swift in Sources */,
 				353E3C8F20A3501C00FD1789 /* MGLStyle.swift in Sources */,
-				35379D0221480E1300FD402E /* CarPlayManager+Search.swift in Sources */,
 				DADAD82F20350849002E25CA /* MBRouteVoiceController.m in Sources */,
 				AE997D2221137B8B00EB0AAB /* String+LocalizedConstants.swift in Sources */,
 				C57491DF1FACC42F006F97BC /* CGPoint.swift in Sources */,
@@ -2398,6 +2405,7 @@
 				3510300F1F54B67000E3B7E7 /* LaneTests.swift in Sources */,
 				160A4A712127A46C0028B070 /* CPBarButton+MBTestable.m in Sources */,
 				169A970A216440820082A6A0 /* NavigationViewControllerTestDoubles.swift in Sources */,
+				DAE22A2921C9DEDA00CA269D /* MGLVectorTileSourceTests.swift in Sources */,
 				3573EA71215A5A9F009899D7 /* RouteControllerSnapshotTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2819,7 +2827,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 4;
+				DYLIB_CURRENT_VERSION = 5;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2843,7 +2851,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 4;
+				DYLIB_CURRENT_VERSION = 5;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3169,12 +3177,12 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 4;
+				DYLIB_CURRENT_VERSION = 5;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3205,11 +3213,11 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 4;
+				DYLIB_CURRENT_VERSION = 5;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3316,7 +3324,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -3380,7 +3388,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -3413,7 +3421,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 4;
+				DYLIB_CURRENT_VERSION = 5;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3439,7 +3447,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 4;
+				DYLIB_CURRENT_VERSION = 5;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

@@ -776,14 +776,14 @@ extension RouteMapViewController: NavigationViewDelegate {
 
         // Add Mapbox Streets if the map does not already have it
         if streetsSources.isEmpty {
-            let source = MGLVectorTileSource(identifier: "mapboxStreetsv7", configurationURL: URL(string: "mapbox://mapbox.mapbox-streets-v7")!)
+            let source = MGLVectorTileSource(identifier: "com.mapbox.MapboxStreets", configurationURL: URL(string: "mapbox://mapbox.mapbox-streets-v8")!)
             style.addSource(source)
             streetsSources.append(source)
         }
 
-        if let mapboxSteetsSource = streetsSources.first, style.layer(withIdentifier: roadLabelLayerIdentifier) == nil {
-            let streetLabelLayer = MGLLineStyleLayer(identifier: roadLabelLayerIdentifier, source: mapboxSteetsSource)
-            streetLabelLayer.sourceLayerIdentifier = "road_label"
+        if let mapboxStreetsSource = streetsSources.first, style.layer(withIdentifier: roadLabelLayerIdentifier) == nil {
+            let streetLabelLayer = MGLLineStyleLayer(identifier: roadLabelLayerIdentifier, source: mapboxStreetsSource)
+            streetLabelLayer.sourceLayerIdentifier = mapboxStreetsSource.roadLabelLayerIdentifier
             streetLabelLayer.lineOpacity = NSExpression(forConstantValue: 1)
             streetLabelLayer.lineWidth = NSExpression(forConstantValue: 20)
             streetLabelLayer.lineColor = NSExpression(forConstantValue: UIColor.white)

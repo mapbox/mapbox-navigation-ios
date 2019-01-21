@@ -697,12 +697,17 @@ extension NavigationViewController: NavigationServiceDelegate {
         
         if !isConnectedToCarPlay, // CarPlayManager shows rating on CarPlay if it's connected
             service.routeProgress.isFinalLeg && advancesToNextLeg && showsEndOfRouteFeedback {
-            self.mapViewController?.showEndOfRoute { _ in }
+            showEndOfRoute()
         }
         return advancesToNextLeg
 
     }
     
+    @objc public func showEndOfRoute(duration: TimeInterval = 1.0, completion: ((Bool) -> Void)? = nil) {
+        guard let mapController = mapViewController else { return }
+        mapController.showEndOfRoute(duration: duration, completion: completion)
+    }
+
     @objc public func navigationService(_ service: NavigationService, willBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
         switch service.simulationMode {
         case .always:
