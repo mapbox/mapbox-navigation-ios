@@ -36,6 +36,8 @@ class RouteMapViewController: UIViewController {
     var route: Route { return navService.router.route }
     var currentPreviewInstructionBannerStepIndex: Int?
     var updateETATimer: Timer?
+    // True if the viewcontroller is being dismissed and should stop creating timers.
+    var dismissed = false
     var previewInstructionsView: StepInstructionsView?
     var lastTimeUserRerouted: Date?
     var stepsViewController: StepsViewController?
@@ -464,6 +466,7 @@ class RouteMapViewController: UIViewController {
 
         endOfRoute.dismissHandler = { [weak self] (stars, comment) in
             guard let rating = self?.rating(for: stars) else { return }
+            self?.dismissed = true
             let feedback = EndOfRouteFeedback(rating: rating, comment: comment)
             self?.navService.endNavigation(feedback: feedback)
             self?.delegate?.mapViewControllerDidDismiss(self!, byCanceling: false)
@@ -580,6 +583,7 @@ extension RouteMapViewController {
 extension RouteMapViewController: NavigationViewDelegate {
     // MARK: NavigationViewDelegate
     func navigationView(_ view: NavigationView, didTapCancelButton: CancelButton) {
+        self?.dismissed = true
         delegate?.mapViewControllerDidDismiss(self, byCanceling: true)
     }
     
@@ -908,7 +912,9 @@ extension RouteMapViewController: NavigationViewDelegate {
 
     func resetETATimer() {
         removeTimer()
-        updateETATimer = Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(updateETA), userInfo: nil, repeats: true)
+        if dismissed == false {
+            updateETATimer = Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(updateETA), userInfo: nil, repeats: true)
+        }
     }
 
     func showRouteIfNeeded() {
