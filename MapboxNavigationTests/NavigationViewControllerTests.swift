@@ -1,12 +1,12 @@
 import XCTest
 import MapboxDirections
-import MapboxCoreNavigation
 import Turf
-import TestHelper
+@testable import TestHelper
+@testable import MapboxCoreNavigation
 @testable import MapboxNavigation
 
 
-let response = Fixture.JSONFromFileNamed(name: "route-with-instructions")
+let response = Fixture.JSONFromFileNamed(name: "routeWithInstructions")
 let otherResponse = Fixture.JSONFromFileNamed(name: "route-for-lane-testing")
 
 class NavigationViewControllerTests: XCTestCase {
@@ -44,25 +44,11 @@ class NavigationViewControllerTests: XCTestCase {
     }()
     
     lazy var initialRoute: Route = {
-        let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String: Any]
-        let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
-        let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
-        let route     = Route(json: jsonRoute, waypoints: [waypoint1, waypoint2], options: NavigationRouteOptions(waypoints: [waypoint1, waypoint2]))
-        
-        route.accessToken = "foo"
-        
-        return route
+        return Fixture.route(from: "routeWithInstructions")
     }()
     
     lazy var newRoute: Route = {
-        let jsonRoute = (otherResponse["routes"] as! [AnyObject]).first as! [String: Any]
-        let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 38.901166, longitude: -77.036548))
-        let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 38.900206, longitude: -77.033792))
-        let route     = Route(json: jsonRoute, waypoints: [waypoint1, waypoint2], options: NavigationRouteOptions(waypoints: [waypoint1, waypoint2]))
-        
-        route.accessToken = "bar"
-        
-        return route
+        return Fixture.route(from: "routeWithInstructions")
     }()
     
     override func setUp() {
@@ -103,6 +89,31 @@ class NavigationViewControllerTests: XCTestCase {
         
         XCTAssertEqual(updatedStyleNumberOfTimes, 0, "The style should not be updated.")
         updatedStyleNumberOfTimes = 0
+    }
+    
+    func testCompleteRoute() {
+        let deps = dependencies
+        let navigationViewController = deps.navigationViewController
+        let service = deps.navigationService
+        
+        let delegate = NavigationServiceDelegateSpy()
+        service.delegate = delegate
+        
+        let rootViewController = UIApplication.shared.delegate!.window!!.rootViewController!
+        rootViewController.present(navigationViewController, animated: false, completion: nil)
+        
+        let now = Date()
+        let rawLocations = Fixture.generateTrace(for: initialRoute)
+        let locations = rawLocations.enumerated().map { $0.element.shifted(to: now + $0.offset) }
+        
+        for location in locations {
+            service.locationManager!(service.locationManager, didUpdateLocations: [location])
+        }
+        
+        XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:willArriveAt:after:distance:)"), "Pre-arrival delegate message not fired.")
+        XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didArriveAt:)"))
+        
+        navigationViewController.dismiss(animated: false, completion: nil)
     }
     
     // If tunnel flags are enabled and we need to switch styles, we should not force refresh the map style because we have only 1 style.

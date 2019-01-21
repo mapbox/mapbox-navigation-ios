@@ -21,7 +21,6 @@
 		16A509D5202A87B20011D788 /* ImageDownloaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A509D4202A87B20011D788 /* ImageDownloaderTests.swift */; };
 		16A509D7202BC0CA0011D788 /* ImageDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A509D6202BC0CA0011D788 /* ImageDownload.swift */; };
 		16AC9D11212E356200CECE44 /* CPMapTemplate+MBTestable.mm in Sources */ = {isa = PBXBuildFile; fileRef = 16AC9D10212E356200CECE44 /* CPMapTemplate+MBTestable.mm */; };
-		16B63DCD205C8EEF002D56D4 /* route-with-instructions.json in Resources */ = {isa = PBXBuildFile; fileRef = 16B63DCC205C8EEF002D56D4 /* route-with-instructions.json */; };
 		16C2A421211526EE00FE6E68 /* CarPlayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C2A420211526EE00FE6E68 /* CarPlayManager.swift */; };
 		16E3625C201265D600DF0592 /* ImageDownloadOperationSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E3625B201265D600DF0592 /* ImageDownloadOperationSpy.swift */; };
 		16E4F97F205B05FE00531791 /* MapboxVoiceControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E4F97E205B05FE00531791 /* MapboxVoiceControllerTests.swift */; };
@@ -597,7 +596,6 @@
 		16A509D6202BC0CA0011D788 /* ImageDownload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDownload.swift; sourceTree = "<group>"; };
 		16AC9D0F212E356200CECE44 /* CPMapTemplate+MBTestable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CPMapTemplate+MBTestable.h"; sourceTree = "<group>"; };
 		16AC9D10212E356200CECE44 /* CPMapTemplate+MBTestable.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = "CPMapTemplate+MBTestable.mm"; sourceTree = "<group>"; };
-		16B63DCC205C8EEF002D56D4 /* route-with-instructions.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-with-instructions.json"; sourceTree = "<group>"; };
 		16C2A420211526EE00FE6E68 /* CarPlayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayManager.swift; sourceTree = "<group>"; };
 		16E11B54212B40A900027CD3 /* MapboxNavigationTests-Bridging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MapboxNavigationTests-Bridging.h"; sourceTree = "<group>"; };
 		16E3625B201265D600DF0592 /* ImageDownloadOperationSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDownloadOperationSpy.swift; sourceTree = "<group>"; };
@@ -1247,7 +1245,6 @@
 				355DB5741EFA78070091BFB7 /* GGPark-to-BernalHeights.route */,
 				355DB5761EFA780E0091BFB7 /* UnionSquare-to-GGPark.route */,
 				351030101F54B72000E3B7E7 /* route-for-lane-testing.json */,
-				16B63DCC205C8EEF002D56D4 /* route-with-instructions.json */,
 				35DC9D8E1F4321CC001ECD64 /* route-with-lanes.json */,
 				3540514C1F73F3BB00ED572D /* route-with-straight-roundabout.json */,
 				AE5F8770209A082500F58FDB /* route-with-banner-instructions.json */,
@@ -2039,7 +2036,6 @@
 				3540514D1F73F3BB00ED572D /* route-with-straight-roundabout.json in Resources */,
 				8D07C5A820B612310093D779 /* EmptyStyle.json in Resources */,
 				35C11359215BADF900CC2929 /* sthlm-double-back-replay.json in Resources */,
-				16B63DCD205C8EEF002D56D4 /* route-with-instructions.json in Resources */,
 				8D86AE8921C31C640064A304 /* waypoint-after-turn.json in Resources */,
 				AE5F8771209A082500F58FDB /* route-with-banner-instructions.json in Resources */,
 				DAA96D18215A961D00BEF703 /* route-doubling-back.json in Resources */,
