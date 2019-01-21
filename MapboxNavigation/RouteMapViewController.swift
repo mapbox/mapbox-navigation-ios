@@ -583,7 +583,7 @@ extension RouteMapViewController {
 extension RouteMapViewController: NavigationViewDelegate {
     // MARK: NavigationViewDelegate
     func navigationView(_ view: NavigationView, didTapCancelButton: CancelButton) {
-        self?.dismissed = true
+        self.dismissed = true
         delegate?.mapViewControllerDidDismiss(self, byCanceling: true)
     }
     
