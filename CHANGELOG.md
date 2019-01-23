@@ -1,5 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## master
+
+* No longer support Xcode 9. [#1936](https://github.com/mapbox/mapbox-navigation-ios/pull/1936)
+
 ## v0.28.0
 
 * Added the `CarPlayManagerDelegate.carPlayManager(_:selectedPreviewFor:using:)` method for any additional customization after a trip is selected on CarPlay. ([#1846](https://github.com/mapbox/mapbox-navigation-ios/pull/1846))
