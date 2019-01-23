@@ -625,7 +625,9 @@ extension NavigationViewController: NavigationServiceDelegate {
         
         
         //Pass the message onto our navigation components
-        navigationComponents.forEach { $0.navigationService?(service, didUpdate: progress, with: location, rawLocation: rawLocation) }
+        for component in navigationComponents {
+            component.navigationService?(service, didUpdate: progress, with: location, rawLocation: rawLocation)
+        }
 
         // If the user has arrived, don't snap the user puck.
         // In the case the user drives beyond the waypoint,
