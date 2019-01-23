@@ -9,6 +9,7 @@
 * Fixed an issue where a left-or-through lane was displayed as a right turn lane. ([#1910](https://github.com/mapbox/mapbox-navigation-ios/pull/1910))
 * Programmatically setting `Router.route` no longer causes `NavigationViewControllerDelegate.navigationViewController(_:shouldRerouteFrom:)` or `RouterDelegate.router(_:shouldRerouteFrom:)` to be called. ([#1931](https://github.com/mapbox/mapbox-navigation-ios/pull/1931))
 * Fixed redundant calls to `NavigationViewControllerDelegate.navigationViewController(_:shouldRerouteFrom:)` and `RouterDelegate.router(_:shouldRerouteFrom:)` when rerouting repeatedly. ([#1930](https://github.com/mapbox/mapbox-navigation-ios/pull/1930))
+* No longer support Xcode 9. [#1936](https://github.com/mapbox/mapbox-navigation-ios/pull/1936)
 
 ## v0.27.0
 
