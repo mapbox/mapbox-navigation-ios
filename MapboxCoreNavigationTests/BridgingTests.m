@@ -47,11 +47,7 @@
 - (void)testOfflineRouting {
     [[[MBDirections sharedDirections] fetchAvailableOfflineVersionsWithCompletionHandler:^(NSArray<NSString *> * _Nullable versions, NSError * _Nullable error) {
         
-        NSArray <NSValue *> *coordinates = nil;
-        coordinates = @[[NSValue valueWithMKCoordinate:CLLocationCoordinate2DMake(0, 0)],
-                        [NSValue valueWithMKCoordinate:CLLocationCoordinate2DMake(1, 1)]];
-        
-        MBCoordinateBounds *bounds = [[MBCoordinateBounds alloc] init:coordinates];
+        MBCoordinateBounds *bounds = [[MBCoordinateBounds alloc] initWithNorthWest:CLLocationCoordinate2DMake(0, 0) southEast:CLLocationCoordinate2DMake(1, 1)];
         
         [[[MBDirections sharedDirections] downloadTilesIn:bounds version:versions.firstObject session:nil completionHandler:^(NSURL * _Nullable url, NSURLResponse * _Nullable response, NSError * _Nullable error) {
             

@@ -1,8 +1,5 @@
 #if canImport(CarPlay)
 import CarPlay
-#if canImport(MapboxGeocoder)
-import MapboxGeocoder
-#endif
 import Turf
 import MapboxCoreNavigation
 import MapboxDirections
@@ -58,16 +55,6 @@ public class CarPlayManager: NSObject {
     public fileprivate(set) var mainMapTemplate: CPMapTemplate?
     public fileprivate(set) weak var currentNavigator: CarPlayNavigationViewController?
     public static let CarPlayWaypointKey: String = "MBCarPlayWaypoint"
-    
-    /**
-     The most recent search results.
-     */
-    var recentSearchItems: [CPListItem]?
-    
-    /**
-     The most recent search text.
-     */
-    var recentSearchText: String?
     
     private var defaultMapButtons: [CPMapButton]?
 
@@ -205,14 +192,6 @@ extension CarPlayManager: CPApplicationDelegate {
 
         if let leadingButtons = delegate?.carPlayManager?(self, leadingNavigationBarButtonsCompatibleWith: traitCollection, in: mapTemplate, for: .browsing) {
             mapTemplate.leadingNavigationBarButtons = leadingButtons
-        } else {
-            #if canImport(CarPlay) && canImport(MapboxGeocoder)
-            let searchTemplate = CPSearchTemplate()
-            searchTemplate.delegate = self
-
-            let searchButton = searchTemplateButton(searchTemplate: searchTemplate, interfaceController: interfaceController, traitCollection: traitCollection)
-            mapTemplate.leadingNavigationBarButtons = [searchButton]
-            #endif
         }
 
         if let trailingButtons = delegate?.carPlayManager?(self, trailingNavigationBarButtonsCompatibleWith: traitCollection, in: mapTemplate, for: .browsing) {
@@ -264,7 +243,7 @@ extension CarPlayManager: CPApplicationDelegate {
         return closeButton
     }
 
-    func resetPanButtons(_ mapTemplate: CPMapTemplate) {
+    public func resetPanButtons(_ mapTemplate: CPMapTemplate) {
         if mapTemplate.isPanningInterfaceVisible, let mapButtons = defaultMapButtons {
             mapTemplate.mapButtons = mapButtons
             mapTemplate.dismissPanningInterface(animated: false)
@@ -312,18 +291,6 @@ extension CarPlayManager: CPInterfaceControllerDelegate {
 extension CarPlayManager: CPListTemplateDelegate {
 
     public func listTemplate(_ listTemplate: CPListTemplate, didSelect item: CPListItem, completionHandler: @escaping () -> Void) {
-        
-        // Selected a search item from the extended list?
-        #if canImport(CarPlay) && canImport(MapboxGeocoder)
-        if let userInfo = item.userInfo as? [String: Any],
-            let placemark = userInfo[CarPlayManager.CarPlayGeocodedPlacemarkKey] as? GeocodedPlacemark,
-            let location = placemark.location {
-            let destinationWaypoint = Waypoint(location: location)
-            interfaceController?.popTemplate(animated: false)
-            previewRoutes(to: destinationWaypoint, completionHandler: completionHandler)
-            return
-        }
-        #endif
         
         // Selected a favorite? or any item with a waypoint.
         if let userInfo = item.userInfo as? [String: Any],
@@ -551,6 +518,8 @@ extension CarPlayManager: CPMapTemplateDelegate {
 
         let padding = NavigationMapView.defaultPadding + mapView.safeArea
         mapView.showcase([route], padding: padding)
+        
+        delegate?.carPlayManager?(self, selectedPreviewFor: trip, using: routeChoice)
     }
 
     public func mapTemplateDidCancelNavigation(_ mapTemplate: CPMapTemplate) {

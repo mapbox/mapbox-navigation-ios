@@ -69,9 +69,6 @@ open class RouteController: NSObject, Router {
             return _routeProgress
         }
         set {
-            if let location = self.location {
-                delegate?.router?(self, willRerouteFrom: location)
-            }
             _routeProgress = newValue
             announce(reroute: routeProgress.route, at: dataSource.location, proactive: didFindFasterRoute)
         }
@@ -344,7 +341,7 @@ extension RouteController: CLLocationManagerDelegate {
         updateRouteLegProgress(for: location)
         updateVisualInstructionProgress()
 
-        if !userIsOnRoute(location) && delegate?.router?(self, shouldRerouteFrom: location) ?? DefaultBehavior.shouldRerouteFromLocation {
+        if !isRerouting, !userIsOnRoute(location), delegate?.router?(self, shouldRerouteFrom: location) ?? DefaultBehavior.shouldRerouteFromLocation {
 
             reroute(from: location, along: routeProgress)
             return

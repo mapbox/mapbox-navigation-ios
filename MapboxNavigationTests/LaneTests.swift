@@ -7,56 +7,100 @@ import MapboxDirections
 
 
 class LaneTests: FBSnapshotTestCase {
-
-    let route = Fixture.route(from: "route-for-lane-testing")
-    
-    var steps: [RouteStep]!
-    var routeProgress: RouteProgress!
-    var routeController: RouteController!
-    let routerDataSource = RouteControllerDataSourceFake()
-    var directions: DirectionsSpy!
     
     override func setUp() {
         super.setUp()
         recordMode = false
         agnosticOptions = [.OS, .device]
-
-        let bogusToken = "pk.feedCafeDeadBeefBadeBede"
-        directions = DirectionsSpy(accessToken: bogusToken)
-
-        route.accessToken = bogusToken
-        routeController = RouteController(along: route, directions: directions, dataSource: routerDataSource)
-
-        steps = routeController.routeProgress.currentLeg.steps
-        routeProgress = routeController.routeProgress
     }
-
-    func assertLanes(stepIndex: Array<RouteStep>.Index) {
-        let rect = CGRect(origin: .zero, size: .iPhone6Plus)
-        let navigationView = NavigationView(frame: rect)
-
-        routeController.advanceStepIndex(to: stepIndex)
-
-        navigationView.lanesView.update(for: routeController.routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
-        navigationView.lanesView.show(animated: false)
-
-        verify(navigationView.lanesView)
+    
+    func testAllLanes30x30() {
+        verifyAllLanes(size: CGSize(size: 30))
     }
-
-    func testStraightRight() {
-        assertLanes(stepIndex: 0)
+    
+    func testAllLanes90x90() {
+        verifyAllLanes(size: CGSize(size: 90))
     }
-
-    func testRightRight() {
-        assertLanes(stepIndex: 1)
+    
+    func verifyAllLanes(size: CGSize) {
+        
+        let leftHandLanes = TestableLane.testableLanes(drivingSide: .left)
+        let rightHandLanes = TestableLane.testableLanes(drivingSide: .right)
+        
+        func addLanes(lanes: [TestableLane], stackView: UIStackView) {
+            
+            let containerView = UIStackView(orientation: .vertical, spacing: 5, autoLayout: true)
+            
+            for lane in lanes {
+                let groupView = UIStackView(orientation: .vertical, autoLayout: true)
+                groupView.alignment = .center
+                
+                let component = LaneIndicationComponent(indications: lane.indications, isUsable: true)
+                let laneView = LaneView(component: component)
+                laneView.drivingSide = lane.drivingSide
+                
+                laneView.backgroundColor = .white
+                laneView.widthAnchor.constraint(equalToConstant: size.width)
+                laneView.heightAnchor.constraint(equalToConstant: size.height)
+                laneView.bounds = CGRect(origin: .zero, size: size)
+                
+                let label = UILabel(frame: .zero)
+                label.textColor = .white
+                label.text = "\(lane.description) (\(lane.drivingSide == .left ? "L" : "R"))"
+                label.widthAnchor.constraint(equalTo: laneView.widthAnchor)
+                
+                groupView.addArrangedSubview(label)
+                groupView.addArrangedSubview(laneView)
+                
+                containerView.addArrangedSubview(groupView)
+            }
+            
+            stackView.addArrangedSubview(containerView)
+        }
+        
+        let view = UIStackView(orientation: .vertical, spacing: 5, autoLayout: true)
+        view.setBackgroundColor(.black)
+        
+        addLanes(lanes: rightHandLanes, stackView: view)
+        addLanes(lanes: leftHandLanes, stackView: view)
+        
+        verify(view, overallTolerance: 0)
     }
+}
 
-    func testSlightRight() {
-        let view = LaneView(frame: CGRect(origin: .zero, size: CGSize(width: 30, height: 30)))
-        view.backgroundColor = .white
-        view.lane = Lane(indications: [.slightRight])
-        view.maneuverDirection = .slightRight
-        view.isValid = true
-        verify(view)
+struct TestableLane {
+    var description: String
+    var indications: LaneIndication
+    var drivingSide: DrivingSide
+    
+    static func testableLanes(drivingSide: DrivingSide) -> [TestableLane] {
+        let namedIndications: [(String, LaneIndication)]
+        
+        namedIndications = [
+            ("Sharp Left, Straight Ahead",      [.sharpLeft, .straightAhead]),
+            ("Straight Ahead, Sharp Left",      [.straightAhead, .sharpLeft]),
+            ("Left",                            [.left]),
+            ("Slight Left",                     [.slightLeft]),
+            ("Sharp Left",                      [.sharpLeft]),
+            ("Straight Ahead",                  [.straightAhead]),
+            ("u-Turn",                          [.uTurn]),
+            ("Sharp Right",                     [.sharpRight]),
+            ("Slight Right",                    [.slightRight]),
+            ("Right",                           [.right]),
+            ("Sharp Right, Straight Ahead",     [.sharpRight, .straightAhead]),
+            ("Straight Ahead, Sharp Right",     [.straightAhead, .sharpRight]),
+        ]
+        
+        return namedIndications.map { TestableLane(description: $0.0, indications: $0.1, drivingSide: drivingSide) }
+    }
+}
+
+extension UIStackView {
+    
+    func setBackgroundColor(_ color: UIColor) {
+        let subview = UIView(frame: bounds)
+        subview.backgroundColor = color
+        subview.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        insertSubview(subview, at: 0)
     }
 }

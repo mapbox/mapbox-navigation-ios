@@ -1,3 +1,9 @@
+/* Error message when an offline route request returns a response that can’t be deserialized */
+"OFFLINE_CORRUPT_DATA" = "Получен неверный маршрут без интернета.";
+
+/* Error description when an offline route request returns no result */
+"OFFLINE_NO_RESULT" = "Требуемый маршрут невозможно рассчитать без интернета.";
+
 /* Inform developer an update is available */
 "UPDATE_AVAILABLE" = "Доступна версия Mapbox Navigation SDK %@ для iOS.";
 

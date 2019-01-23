@@ -1,23 +1,23 @@
 PODS:
-  - Mapbox-iOS-SDK (4.6.0)
-  - MapboxCoreNavigation (0.26.0-beta.1):
-    - MapboxDirections.swift (~> 0.25.1)
+  - Mapbox-iOS-SDK (4.7.0)
+  - MapboxCoreNavigation (0.27.0):
+    - MapboxDirections.swift (~> 0.26.0)
     - MapboxMobileEvents (~> 0.6.0)
     - MapboxNavigationNative (~> 3.4.6)
-    - Turf (~> 0.2.0)
-  - MapboxDirections.swift (0.25.1):
+    - Turf (~> 0.3.0)
+  - MapboxDirections.swift (0.26.0):
     - Polyline (~> 4.2)
   - MapboxMobileEvents (0.6.0)
-  - MapboxNavigation (0.26.0-beta.1):
+  - MapboxNavigation (0.27.0):
     - Mapbox-iOS-SDK (~> 4.3)
-    - MapboxCoreNavigation (= 0.26.0-beta.1)
+    - MapboxCoreNavigation (= 0.27.0)
     - MapboxSpeech (~> 0.1.0)
     - Solar (~> 2.1)
-  - MapboxNavigationNative (3.4.6)
+  - MapboxNavigationNative (3.4.11)
   - MapboxSpeech (0.1.0)
   - Polyline (4.2.0)
   - Solar (2.1.0)
-  - Turf (0.2.1)
+  - Turf (0.3.0)
 
 DEPENDENCIES:
   - MapboxCoreNavigation (from `../../../`)
@@ -41,17 +41,17 @@ EXTERNAL SOURCES:
     :path: "../../../"
 
 SPEC CHECKSUMS:
-  Mapbox-iOS-SDK: 204c04713477cf2a88c52c5a8eed1790eb75a02a
-  MapboxCoreNavigation: bc7fce7cc9e8fb4a0676dd6c110e41cd2aaa1c0b
-  MapboxDirections.swift: d08d40a6b50c13e1e83c165565b7aaec752eb087
+  Mapbox-iOS-SDK: d8f60f4cbfcd1bfcb3b68d07ac38135d2880d97d
+  MapboxCoreNavigation: 2db374b84cbc570c34d65c6f43a046a26f87e3a6
+  MapboxDirections.swift: a9c923dc7d1a36b8ecc6cbdc77a22f932dc518f3
   MapboxMobileEvents: 0218869f556a7fdac9f869e2f9c10e8c6dd7eed5
-  MapboxNavigation: 892ce0e3d3fcccce96d20c28501437c5b28e35b0
-  MapboxNavigationNative: c3c1f42ccab227d47cce8f37ef315ffbadaacf1f
+  MapboxNavigation: 983638887ace6ebae6e918836ff8a8b65fd254af
+  MapboxNavigationNative: 9a1c0215eb1ee0d4757e03d79566d4eff64a72b0
   MapboxSpeech: d7569ee91dd8bdca3ef8d19b6828e8754c1073ec
   Polyline: 3d69f75bb136357e27291d439d0436c6ebda57a4
   Solar: 2dc6e7cc39186cb0c8228fa08df76fb50c7d8f24
-  Turf: 9763a5a2d7da05dfdd5ed56aeb0414b291b0fee1
+  Turf: c6bdf62d6a70c647874f295dd1cf4eefc0c3e9e6
 
 PODFILE CHECKSUM: 55ae5a7edbc3dedda5149ba3d58b992ab7327f95
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.6.0.beta.2
