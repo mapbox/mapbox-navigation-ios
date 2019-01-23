@@ -1,6 +1,6 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## v0.28.0
+## master
 
 * Search functionality on CarPlay is now managed by `CarPlaySearchController`. Added the `CarPlayManagerDelegate.carPlayManager(_:selectedPreviewFor:using:)` method for any additional customization after a trip is selected on CarPlay. ([#1846](https://github.com/mapbox/mapbox-navigation-ios/pull/1846))
 * Added the `NavigationViewController.showEndOfRouteFeedback(duration:completionHandler:)` method for showing the end-of-route feedback UI after manually ending a navigation session. ([#1932](https://github.com/mapbox/mapbox-navigation-ios/pull/1932))
