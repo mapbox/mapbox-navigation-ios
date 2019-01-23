@@ -20,19 +20,19 @@ public class NavigationEventsManagerSpy: NavigationEventsManager {
         mobileEventsManagerSpy.reset()
     }
 
-    func hasFlushedEvent(with eventName: String) -> Bool {
+    public func hasFlushedEvent(with eventName: String) -> Bool {
         return mobileEventsManagerSpy.hasFlushedEvent(with: eventName)
     }
 
-    func hasEnqueuedEvent(with eventName: String) -> Bool {
+    public func hasEnqueuedEvent(with eventName: String) -> Bool {
         return mobileEventsManagerSpy.hasEnqueuedEvent(with: eventName)
     }
 
-    func enqueuedEventCount(with eventName: String) -> Int {
+    public func enqueuedEventCount(with eventName: String) -> Int {
         return mobileEventsManagerSpy.enqueuedEventCount(with: eventName)
     }
 
-    func flushedEventCount(with eventName: String) -> Int {
+    public func flushedEventCount(with eventName: String) -> Int {
         return mobileEventsManagerSpy.flushedEventCount(with: eventName)
     }
 }
