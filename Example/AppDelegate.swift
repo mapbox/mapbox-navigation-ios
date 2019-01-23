@@ -1,6 +1,6 @@
 import UIKit
 import MapboxNavigation
-
+import MapboxCarPlay
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

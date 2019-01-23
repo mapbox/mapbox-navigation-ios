@@ -1,6 +1,6 @@
 import Foundation
-#if canImport(CarPlay)
 import CarPlay
+import MapboxNavigation
 
 @available(iOS 12.0, *)
 class CarPlayMapViewController: UIViewController {
@@ -179,5 +179,4 @@ extension CarPlayMapViewController: StyleManagerDelegate {
         mapView.reloadStyle(self)
     }
 }
-#endif
 

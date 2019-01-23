@@ -12,11 +12,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     
     // MARK: Class Constants
     
-    struct FrameIntervalOptions {
-        static let durationUntilNextManeuver: TimeInterval = 7
-        static let durationSincePreviousManeuver: TimeInterval = 3
-        static let defaultFramesPerSecond = MGLMapViewPreferredFramesPerSecond.maximum
-        static let pluggedInFramesPerSecond = MGLMapViewPreferredFramesPerSecond.lowPower
+    public struct FrameIntervalOptions {
+        public static let durationUntilNextManeuver: TimeInterval = 7
+        public static let durationSincePreviousManeuver: TimeInterval = 3
+        public static let defaultFramesPerSecond = MGLMapViewPreferredFramesPerSecond.maximum
+        public static let pluggedInFramesPerSecond = MGLMapViewPreferredFramesPerSecond.lowPower
     }
     
     /**
@@ -56,6 +56,16 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      */
     public weak var courseTrackingDelegate: NavigationMapViewCourseTrackingDelegate?
     
+    /**
+     TODO: [INSERT_DOCUMENTATION_HERE]
+     */
+    public var routes: [Route]?
+    
+    /**
+     TODO: [INSERT_DOCUMENTATION_HERE]
+     */
+    public var userLocationForCourseTracking: CLLocation?
+    
     let sourceOptions: [MGLShapeSourceOption: Any] = [.maximumZoomLevel: 16]
 
     // MARK: - Instance Properties
@@ -88,10 +98,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     @objc dynamic public var maneuverArrowColor: UIColor = .defaultManeuverArrow
     @objc dynamic public var maneuverArrowStrokeColor: UIColor = .defaultManeuverArrowStroke
     
-    var userLocationForCourseTracking: CLLocation?
     var animatesUserLocation: Bool = false
     var altitude: CLLocationDistance
-    var routes: [Route]?
     var isAnimatingToOverheadMode = false
     
     var shouldPositionCourseViewFrameByFrame = false {
@@ -133,7 +141,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      The minimum default insets from the content frame to the edges of the user course view.
      */
-    static let courseViewMinimumInsets = UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50)
+    public static let courseViewMinimumInsets = UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50)
     
     /**
      Center point of the user course view in screen coordinates relative to the map view.
@@ -430,7 +438,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         fit(to: active, facing: 0, padding: padding, animated: animated)
     }
     
-    func fit(to route: Route, facing direction:CLLocationDirection = 0, padding: UIEdgeInsets = NavigationMapView.defaultPadding, animated: Bool = false) {
+    public func fit(to route: Route, facing direction:CLLocationDirection = 0, padding: UIEdgeInsets = NavigationMapView.defaultPadding, animated: Bool = false) {
         guard let coords = route.coordinates, !coords.isEmpty else { return }
       
         setUserTrackingMode(.none, animated: false)

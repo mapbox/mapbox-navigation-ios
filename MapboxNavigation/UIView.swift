@@ -90,7 +90,7 @@ extension UIView {
         return view
     }
     
-    var safeArea: UIEdgeInsets {
+    public var safeArea: UIEdgeInsets {
         guard #available(iOS 11.0, *) else { return .zero }
         return safeAreaInsets
     }
