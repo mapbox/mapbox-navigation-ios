@@ -601,4 +601,16 @@ open class RouteStepProgress: NSObject {
         guard visualInstructionIndex < instructionsDisplayedAlongStep.count else { return nil }
         return instructionsDisplayedAlongStep[visualInstructionIndex]
     }
+    
+    @objc override open class func keyPathsForValuesAffectingValue(forKey key: String) -> Set<String> {
+        switch key {
+        case "remainingVisualInstructions":
+            return ["step.instructionsDisplayedAlongStep", "visualInstructionIndex"]
+        case "remainingSpokenInstructions":
+            return ["step.instructionsDisplayedAlongStep", "spokenInstructionIndex"]
+        default:
+            return super.keyPathsForValuesAffectingValue(forKey: key)
+        }
+    }
+
 }
