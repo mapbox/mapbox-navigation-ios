@@ -90,17 +90,17 @@ step-library:
         command: |
           xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.1,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build test -enableCodeCoverage "YES"
 
-  - &build-test-MapboxCoreNavigation-ios-9
+  - &build-MapboxCoreNavigation-ios-9
       run:
-        name: Build and Test MapboxCoreNavigation
+        name: Build MapboxCoreNavigation
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=9.3,name=iPhone 6s Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=9.3,name=iPhone 6s Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build
 
-  - &build-test-MapboxNavigation-ios-9
+  - &build-MapboxNavigation-ios-9
       run:
-        name: Build and Test MapboxNavigation
+        name: Build MapboxNavigation
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=9.3,name=iPhone 6s Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build test
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=9.3,name=iPhone 6s Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build
 
   - &build-test-Bench-ios-12
       run:
@@ -163,8 +163,8 @@ jobs:
       - *prepare-iphone6s-plus-ios-9
       - *restore-cache
       - *install-dependencies
-      - *build-test-MapboxCoreNavigation-ios-9
-      - *build-test-MapboxNavigation-ios-9
+      - *build-MapboxCoreNavigation-ios-9
+      - *build-MapboxNavigation-ios-9
       - *save-cache
 
   xcode-10-bench:
