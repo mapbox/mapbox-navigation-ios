@@ -57,14 +57,14 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     public weak var courseTrackingDelegate: NavigationMapViewCourseTrackingDelegate?
     
     /**
-     TODO: [INSERT_DOCUMENTATION_HERE]
+     The possible routes that can be represented on the map view.
      */
     public var routes: [Route]?
     
     /**
-     TODO: [INSERT_DOCUMENTATION_HERE]
+     The user location the map view should follow.
      */
-    public var userLocationForCourseTracking: CLLocation?
+    @objc public var userLocationForCourseTracking: CLLocation?
     
     let sourceOptions: [MGLShapeSourceOption: Any] = [.maximumZoomLevel: 16]
 
