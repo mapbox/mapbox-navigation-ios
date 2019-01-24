@@ -157,6 +157,7 @@ class RouteMapViewController: UIViewController {
     }
 
     deinit {
+        self.dismissed = true
         suspendNotifications()
         removeTimer()
     }
