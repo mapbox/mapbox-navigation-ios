@@ -417,6 +417,20 @@
 			remoteGlobalIDString = C5ADFBC81DDCC7840011824B;
 			remoteInfo = MapboxCoreNavigation;
 		};
+		356F411721F9E09500E68F1A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AE38B56121F8C11C0041B384;
+			remoteInfo = MapboxCarPlay;
+		};
+		356F411921F9E10600E68F1A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AE38B56121F8C11C0041B384;
+			remoteInfo = MapboxCarPlay;
+		};
 		3595FE4A219191FE0035B765 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
@@ -1522,7 +1536,7 @@
 		AE38B57021F8C11D0041B384 /* MapboxCarPlayTests */ = {
 			isa = PBXGroup;
 			children = (
-				AE38B58821F8C5250041B384 /* Extensions and Categories */,
+				AE38B58821F8C5250041B384 /* Extensions */,
 				16EF6C1D21193A9600AA580B /* CarPlayManagerTests.swift */,
 				AE38B57121F8C11D0041B384 /* MapboxCarPlayTests.swift */,
 				AE38B57321F8C11D0041B384 /* Info.plist */,
@@ -1531,7 +1545,7 @@
 			path = MapboxCarPlayTests;
 			sourceTree = "<group>";
 		};
-		AE38B58821F8C5250041B384 /* Extensions and Categories */ = {
+		AE38B58821F8C5250041B384 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
 				160A4A68212791010028B070 /* CPBarButton+MBTestable.h */,
@@ -1540,7 +1554,7 @@
 				16AC9D10212E356200CECE44 /* CPMapTemplate+MBTestable.mm */,
 				DAD17201214DB12B009C8161 /* CPMapTemplateTests.swift */,
 			);
-			path = "Extensions and Categories";
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		AE38B59921F8D7250041B384 /* Extensions */ = {
@@ -1838,6 +1852,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				356F411A21F9E10600E68F1A /* PBXTargetDependency */,
 				354A01D41E66268800D765C2 /* PBXTargetDependency */,
 				354A01D21E66268400D765C2 /* PBXTargetDependency */,
 			);
@@ -2002,6 +2017,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				356F411821F9E09500E68F1A /* PBXTargetDependency */,
 				C53F2EDF20EBC95600D9798F /* PBXTargetDependency */,
 				C53F2EE120EBC95600D9798F /* PBXTargetDependency */,
 			);
@@ -2789,6 +2805,16 @@
 			isa = PBXTargetDependency;
 			target = C5ADFBC81DDCC7840011824B /* MapboxCoreNavigation */;
 			targetProxy = 354A01D31E66268800D765C2 /* PBXContainerItemProxy */;
+		};
+		356F411821F9E09500E68F1A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AE38B56121F8C11C0041B384 /* MapboxCarPlay */;
+			targetProxy = 356F411721F9E09500E68F1A /* PBXContainerItemProxy */;
+		};
+		356F411A21F9E10600E68F1A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AE38B56121F8C11C0041B384 /* MapboxCarPlay */;
+			targetProxy = 356F411921F9E10600E68F1A /* PBXContainerItemProxy */;
 		};
 		3595FE4B219191FE0035B765 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

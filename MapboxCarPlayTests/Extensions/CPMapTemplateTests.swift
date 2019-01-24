@@ -1,6 +1,8 @@
 import XCTest
-@testable import MapboxNavigation
 import CarPlay
+@testable import MapboxNavigation
+@testable import MapboxCarPlay
+
 
 @available(iOS 12.0, *)
 class CPMapTemplateTests: XCTestCase {
