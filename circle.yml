@@ -106,7 +106,7 @@ step-library:
       run:
         name: Build and Test MapboxCarPlay
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.1,name=iPhone 6 Plus' -project MapboxCarPlay.xcodeproj -scheme MapboxCarPlay clean build test -enableCodeCoverage "YES"
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.1,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCarPlay clean build test -enableCodeCoverage "YES"
 
   - &build-test-Bench-ios-12
       run:
