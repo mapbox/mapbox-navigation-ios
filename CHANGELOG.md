@@ -1,6 +1,6 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## master
+## v0.28.0
 
 * Xcode 10 or above is now required for building this SDK. ([#1936](https://github.com/mapbox/mapbox-navigation-ios/pull/1936))
 * Search functionality on CarPlay is now managed by `CarPlaySearchController`. Added the `CarPlayManagerDelegate.carPlayManager(_:selectedPreviewFor:using:)` method for any additional customization after a trip is selected on CarPlay. ([#1846](https://github.com/mapbox/mapbox-navigation-ios/pull/1846))
