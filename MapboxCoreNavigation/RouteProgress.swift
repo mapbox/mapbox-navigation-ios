@@ -602,15 +602,12 @@ open class RouteStepProgress: NSObject {
         return instructionsDisplayedAlongStep[visualInstructionIndex]
     }
     
-    @objc override open class func keyPathsForValuesAffectingValue(forKey key: String) -> Set<String> {
-        switch key {
-        case "remainingVisualInstructions":
-            return ["step.instructionsDisplayedAlongStep", "visualInstructionIndex"]
-        case "remainingSpokenInstructions":
-            return ["step.instructionsDisplayedAlongStep", "spokenInstructionIndex"]
-        default:
-            return super.keyPathsForValuesAffectingValue(forKey: key)
-        }
+    @objc public var keyPathsAffectingValueForRemainingVisualInstructions: Set<String> {
+        return ["step.instructionsDisplayedAlongStep", "visualInstructionIndex"]
+    }
+    
+    @objc public var keyPathsAffectingValueForRemainingSpokenInstructions: Set<String> {
+        return ["step.instructionsDisplayedAlongStep", "spokenInstructionIndex"]
     }
 
 }
