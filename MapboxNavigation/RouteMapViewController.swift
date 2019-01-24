@@ -39,13 +39,13 @@ extension RouteMapViewController: NavigationComponent {
         }
     }
     
-    @objc public func navigationService(_ service: NavigationService, didPassSpokenInstructionPoint instruction: SpokenInstruction, along routeProgress: RouteProgress) {
+    @objc public func navigationService(_ service: NavigationService, didPassSpokenInstructionPoint instruction: SpokenInstruction, routeProgress: RouteProgress) {
         updateCameraAltitude(for: routeProgress)
     }
     
-    @objc public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, along routeProgress: RouteProgress) {
+    @objc public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
         guard currentPreviewInstructionBannerStepIndex == nil else { return }
-        navigationComponents.forEach {$0.navigationService?(service, didPassVisualInstructionPoint: instruction, along: routeProgress)}
+        navigationComponents.forEach {$0.navigationService?(service, didPassVisualInstructionPoint: instruction, routeProgress: routeProgress)}
     }
     
     func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {

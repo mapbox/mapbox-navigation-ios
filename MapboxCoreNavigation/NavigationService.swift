@@ -455,12 +455,12 @@ extension MapboxNavigationService: RouterDelegate {
         delegate?.navigationService?(self, didUpdate: progress, with: location, rawLocation: rawLocation)
     }
     
-    public func router(_ router: Router, didPassVisualInstructionPoint instruction: VisualInstructionBanner, along routeProgress: RouteProgress) {
-        delegate?.navigationService?(self, didPassVisualInstructionPoint: instruction, along: routeProgress)
+    public func router(_ router: Router, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
+        delegate?.navigationService?(self, didPassVisualInstructionPoint: instruction, routeProgress: routeProgress)
     }
     
-    public func router(_ router: Router, didPassSpokenInstructionPoint instruction: SpokenInstruction, along routeProgress: RouteProgress) {
-        delegate?.navigationService?(self, didPassSpokenInstructionPoint: instruction, along: routeProgress)
+    public func router(_ router: Router, didPassSpokenInstructionPoint instruction: SpokenInstruction, routeProgress: RouteProgress) {
+        delegate?.navigationService?(self, didPassSpokenInstructionPoint: instruction, routeProgress: routeProgress)
     }
     
     //MARK: Questions

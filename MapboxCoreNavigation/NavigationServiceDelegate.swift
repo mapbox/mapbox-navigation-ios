@@ -78,8 +78,8 @@ import MapboxDirections
      - parameter instruction: The instruction to be presented.
      - parameter routeProgress: The routeProgress model through which the service is progressing.
     */
-    @objc(navigationService:didPassVisualInstructionPoint:alongRouteProgress:)
-    optional func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, along routeProgress: RouteProgress)
+    @objc(navigationService:didPassVisualInstructionPoint:routeProgress:)
+    optional func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress)
     
     
     /**
@@ -88,8 +88,8 @@ import MapboxDirections
      - parameter instruction: The instruction to be spoken.
      - parameter routeProgress: The routeProgress model through which the service is progressing.
      */
-    @objc(navigationService:didPassSpokenInstructionPoint:alongRouteProgress:)
-    optional func navigationService(_ service: NavigationService, didPassSpokenInstructionPoint instruction: SpokenInstruction, along routeProgress: RouteProgress)
+    @objc(navigationService:didPassSpokenInstructionPoint:routeProgress:)
+    optional func navigationService(_ service: NavigationService, didPassSpokenInstructionPoint instruction: SpokenInstruction, routeProgress: RouteProgress)
     
     /**
      Called as the navigation service approaches a waypoint.

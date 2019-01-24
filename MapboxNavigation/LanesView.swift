@@ -66,7 +66,7 @@ open class LanesView: UIView, NavigationComponent {
         separatorView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
     }
     
-    @objc public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, along routeProgress: RouteProgress) {
+    @objc public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
         update(for: instruction)
     }
     

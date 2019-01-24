@@ -609,7 +609,7 @@ extension RouteController: CLLocationManagerDelegate {
         for voiceInstruction in spokenInstructions {
             if userSnapToStepDistanceFromManeuver <= voiceInstruction.distanceAlongStep || firstInstructionOnFirstStep {
                 
-                announcePassage(of: voiceInstruction, along: routeProgress)
+                announcePassage(of: voiceInstruction, routeProgress: routeProgress)
                 routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex += 1
                 
                 return
@@ -627,16 +627,16 @@ extension RouteController: CLLocationManagerDelegate {
             if userSnapToStepDistanceFromManeuver <= visualInstruction.distanceAlongStep || firstInstructionOnFirstStep {
                 
                 routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex += 1
-                announcePassage(of: visualInstruction, along: routeProgress)
+                announcePassage(of: visualInstruction, routeProgress: routeProgress)
                 
                 return
             }
         }
     }
     
-    private func announcePassage(of spokenInstructionPoint: SpokenInstruction, along routeProgress: RouteProgress) {
+    private func announcePassage(of spokenInstructionPoint: SpokenInstruction, routeProgress: RouteProgress) {
         
-        delegate?.router?(self, didPassSpokenInstructionPoint: spokenInstructionPoint, along: routeProgress)
+        delegate?.router?(self, didPassSpokenInstructionPoint: spokenInstructionPoint, routeProgress: routeProgress)
         
         let info: [RouteControllerNotificationUserInfoKey: Any] = [
                 .routeProgressKey: routeProgress,
@@ -646,9 +646,9 @@ extension RouteController: CLLocationManagerDelegate {
         NotificationCenter.default.post(name: .routeControllerDidPassSpokenInstructionPoint, object: self, userInfo: info)
     }
     
-    private func announcePassage(of visualInstructionPoint: VisualInstructionBanner, along routeProgress: RouteProgress) {
+    private func announcePassage(of visualInstructionPoint: VisualInstructionBanner, routeProgress: RouteProgress) {
         
-        delegate?.router?(self, didPassVisualInstructionPoint: visualInstructionPoint, along: routeProgress)
+        delegate?.router?(self, didPassVisualInstructionPoint: visualInstructionPoint, routeProgress: routeProgress)
         
         let info: [RouteControllerNotificationUserInfoKey: Any] = [
             .routeProgressKey: routeProgress,

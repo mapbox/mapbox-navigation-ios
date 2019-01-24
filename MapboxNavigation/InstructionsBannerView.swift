@@ -32,7 +32,7 @@ public protocol InstructionsBannerViewDelegate: class {
 @IBDesignable
 @objc(MBInstructionsBannerView)
 open class InstructionsBannerView: BaseInstructionsBannerView, NavigationComponent {
-    @objc public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, along routeProgress: RouteProgress) {
+    @objc public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
         update(for: instruction)
     }
 }

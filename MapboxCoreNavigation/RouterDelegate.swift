@@ -26,11 +26,11 @@ public protocol RouterDelegate: class {
     @objc(router:didUpdateProgress:withLocation:rawLocation:)
     optional func router(_ router: Router, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation)
     
-    @objc(router:didPassVisualInstructionPoint:alongRouteProgress:)
-    optional func router(_ router: Router, didPassVisualInstructionPoint instruction: VisualInstructionBanner, along routeProgress: RouteProgress)
+    @objc(router:didPassVisualInstructionPoint:routeProgress:)
+    optional func router(_ router: Router, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress)
     
-    @objc(router:didPassSpokenInstructionPoint:alongRouteProgress:)
-    optional func router(_ router: Router, didPassSpokenInstructionPoint instruction: SpokenInstruction, along routeProgress: RouteProgress)
+    @objc(router:didPassSpokenInstructionPoint:routeProgress:)
+    optional func router(_ router: Router, didPassSpokenInstructionPoint instruction: SpokenInstruction, routeProgress: RouteProgress)
     
     @objc(router:willArriveAtWaypoint:in:distance:)
     optional func router(_ router: Router, willArriveAt waypoint: Waypoint, after remainingTimeInterval:TimeInterval, distance: CLLocationDistance)

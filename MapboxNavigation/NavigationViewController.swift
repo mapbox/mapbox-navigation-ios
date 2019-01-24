@@ -650,8 +650,8 @@ extension NavigationViewController: NavigationServiceDelegate {
         }
     }
     
-    @objc public func navigationService(_ service: NavigationService, didPassSpokenInstructionPoint instruction: SpokenInstruction, along routeProgress: RouteProgress) {
-        navigationComponents.forEach { $0.navigationService?(service, didPassSpokenInstructionPoint: instruction, along: routeProgress) }
+    @objc public func navigationService(_ service: NavigationService, didPassSpokenInstructionPoint instruction: SpokenInstruction, routeProgress: RouteProgress) {
+        navigationComponents.forEach { $0.navigationService?(service, didPassSpokenInstructionPoint: instruction, routeProgress: routeProgress) }
         
         clearStaleNotifications()
         
@@ -660,8 +660,8 @@ extension NavigationViewController: NavigationServiceDelegate {
         }
     }
     
-    @objc public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, along routeProgress: RouteProgress) {
-        navigationComponents.forEach { $0.navigationService?(service, didPassVisualInstructionPoint: instruction, along: routeProgress) }
+    @objc public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
+        navigationComponents.forEach { $0.navigationService?(service, didPassVisualInstructionPoint: instruction, routeProgress: routeProgress) }
     }
     
     
