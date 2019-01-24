@@ -1,10 +1,13 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## master
+## v0.28.0
 
+* Xcode 10 or above is now required for building this SDK. ([#1936](https://github.com/mapbox/mapbox-navigation-ios/pull/1936))
 * Search functionality on CarPlay is now managed by `CarPlaySearchController`. Added the `CarPlayManagerDelegate.carPlayManager(_:selectedPreviewFor:using:)` method for any additional customization after a trip is selected on CarPlay. ([#1846](https://github.com/mapbox/mapbox-navigation-ios/pull/1846))
 * Added the `NavigationViewController.showEndOfRouteFeedback(duration:completionHandler:)` method for showing the end-of-route feedback UI after manually ending a navigation session. ([#1932](https://github.com/mapbox/mapbox-navigation-ios/pull/1932))
 * Fixed an issue where setting `Router.route` did not update `SimulatedLocationManager.route`. ([#1928](https://github.com/mapbox/mapbox-navigation-ios/pull/1928))
+* Fixed an issue where U-turn lane was displayed as a U-turn to the right even in regions that drive on the right. ([#1910](https://github.com/mapbox/mapbox-navigation-ios/pull/1910))
+* Fixed an issue where a left-or-through lane was displayed as a right turn lane. ([#1910](https://github.com/mapbox/mapbox-navigation-ios/pull/1910))
 * Programmatically setting `Router.route` no longer causes `NavigationViewControllerDelegate.navigationViewController(_:shouldRerouteFrom:)` or `RouterDelegate.router(_:shouldRerouteFrom:)` to be called. ([#1931](https://github.com/mapbox/mapbox-navigation-ios/pull/1931))
 * Fixed redundant calls to `NavigationViewControllerDelegate.navigationViewController(_:shouldRerouteFrom:)` and `RouterDelegate.router(_:shouldRerouteFrom:)` when rerouting repeatedly. ([#1930](https://github.com/mapbox/mapbox-navigation-ios/pull/1930))
 
