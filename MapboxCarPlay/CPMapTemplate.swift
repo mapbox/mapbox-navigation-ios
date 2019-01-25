@@ -1,6 +1,5 @@
 import Foundation
 import MapboxDirections
-#if canImport(CarPlay)
 import CarPlay
 
 @available(iOS 12.0, *)
@@ -32,5 +31,4 @@ extension CLLocationDirection {
         self = heading.wrap(min: 0, max: 360)
     }
 }
-#endif
 

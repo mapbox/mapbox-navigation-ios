@@ -260,7 +260,7 @@
 		AE38B58321F8C27C0041B384 /* CarPlayMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EF6C21211BA4B300AA580B /* CarPlayMapViewController.swift */; };
 		AE38B58421F8C27C0041B384 /* CarPlayManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4B60E6219CBEB300C41906 /* CarPlayManagerDelegate.swift */; };
 		AE38B58521F8C27C0041B384 /* CarPlaySearchController+ CPSearchTemplateDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7DE6C521A47A23002653D1 /* CarPlaySearchController+ CPSearchTemplateDelegate.swift */; };
-		AE38B58621F8C3D60041B384 /* CongestionLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F4D21820DC468B0059FABF /* CongestionLevel.swift */; };
+		AE38B58621F8C3D60041B384 /* CongestionLevel+CarPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F4D21820DC468B0059FABF /* CongestionLevel+CarPlay.swift */; };
 		AE38B58721F8C4170041B384 /* CPMapTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51511D020EAC89D00372A91 /* CPMapTemplate.swift */; };
 		AE38B58921F8C56F0041B384 /* CarPlayManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EF6C1D21193A9600AA580B /* CarPlayManagerTests.swift */; };
 		AE38B58B21F8C9E70041B384 /* NavigationViewController+CarPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE38B58A21F8C9E70041B384 /* NavigationViewController+CarPlay.swift */; };
@@ -965,7 +965,7 @@
 		C5E7A31B1F4F6828001CB015 /* NavigationRouteOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationRouteOptions.swift; sourceTree = "<group>"; };
 		C5EF397420599120009A2C50 /* straight-line.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "straight-line.json"; sourceTree = "<group>"; };
 		C5F2DC9F206DBF5E002F99F6 /* Sequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sequence.swift; sourceTree = "<group>"; };
-		C5F4D21820DC468B0059FABF /* CongestionLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CongestionLevel.swift; sourceTree = "<group>"; };
+		C5F4D21820DC468B0059FABF /* CongestionLevel+CarPlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CongestionLevel+CarPlay.swift"; sourceTree = "<group>"; };
 		C5FFAC1420D96F5B009E7F98 /* CarPlayNavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CarPlayNavigationViewController.swift; sourceTree = "<group>"; };
 		CFD47D8F20FD85EC00BC1E49 /* MGLAccountManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MGLAccountManager.swift; sourceTree = "<group>"; };
 		DA0557202154EF4700A1F2AA /* Route.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
@@ -1524,7 +1524,7 @@
 				16EF6C21211BA4B300AA580B /* CarPlayMapViewController.swift */,
 				C5FFAC1420D96F5B009E7F98 /* CarPlayNavigationViewController.swift */,
 				352C35BF2134958F00D77796 /* RecentItem.swift */,
-				C5F4D21820DC468B0059FABF /* CongestionLevel.swift */,
+				C5F4D21820DC468B0059FABF /* CongestionLevel+CarPlay.swift */,
 				C51511D020EAC89D00372A91 /* CPMapTemplate.swift */,
 				AE38B56421F8C11D0041B384 /* MapboxCarPlay.h */,
 				AE38B56521F8C11D0041B384 /* Info.plist */,
@@ -2671,7 +2671,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AE38B57F21F8C27C0041B384 /* CarPlayManager.swift in Sources */,
-				AE38B58621F8C3D60041B384 /* CongestionLevel.swift in Sources */,
+				AE38B58621F8C3D60041B384 /* CongestionLevel+CarPlay.swift in Sources */,
 				AE38B58121F8C27C0041B384 /* CarPlaySearchController.swift in Sources */,
 				AE38B59721F8CF1A0041B384 /* UIViewController+CarPlay.swift in Sources */,
 				AE38B58021F8C27C0041B384 /* CarPlayNavigationViewController.swift in Sources */,

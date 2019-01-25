@@ -1,6 +1,5 @@
 import Foundation
 import MapboxDirections
-#if canImport(CarPlay)
 import CarPlay
 
 extension CongestionLevel {
@@ -23,4 +22,3 @@ extension CongestionLevel {
         }
     }
 }
-#endif

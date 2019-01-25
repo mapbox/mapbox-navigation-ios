@@ -3,9 +3,6 @@ import MapboxCoreNavigation
 import MapboxDirections
 import MapboxSpeech
 import Mapbox
-#if canImport(CarPlay)
-import CarPlay
-#endif
 
 /**
  The `NavigationViewControllerDelegate` protocol provides methods for configuring the map view shown by a `NavigationViewController` and responding to the cancellation of a navigation session.
@@ -46,7 +43,15 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      */
     @objc(navigationViewController:didArriveAtWaypoint:)
     optional func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool
-
+    
+    /**
+     Called when the user completes the final leg on the route.
+     
+     You can use this to detect the status of `CarPlayManager.isConnected`.
+     
+     */
+    @objc optional func navigationViewControllerDidFinishRoute(_ navigationViewController: NavigationViewController, byArrivingAtFinalStep isFinalLeg: Bool) -> Bool
+    
     /**
      Returns whether the navigation view controller should be allowed to calculate a new route.
      
@@ -631,13 +636,18 @@ extension NavigationViewController: NavigationServiceDelegate {
     
     @objc public func navigationService(_ service: NavigationService, didArriveAt waypoint: Waypoint) -> Bool {
         let advancesToNextLeg = delegate?.navigationViewController?(self, didArriveAt: waypoint) ?? true
+       
+        guard service.routeProgress.isFinalLeg else {
+            return advancesToNextLeg
+        }
         
-        // TODO: !isConnectedToCarPlay, // CarPlayManager shows rating on CarPlay if it's connected
-        if service.routeProgress.isFinalLeg && advancesToNextLeg && showsEndOfRouteFeedback {
+        let isConnectedToCarPlay = delegate?.navigationViewControllerDidFinishRoute?(self, byArrivingAtFinalStep: service.routeProgress.isFinalLeg) ?? false
+        
+        if !isConnectedToCarPlay && advancesToNextLeg && showsEndOfRouteFeedback {
             showEndOfRouteFeedback()
         }
+        
         return advancesToNextLeg
-
     }
     
     @objc public func showEndOfRouteFeedback(duration: TimeInterval = 1.0, completionHandler: ((Bool) -> Void)? = nil) {
