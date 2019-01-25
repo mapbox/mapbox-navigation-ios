@@ -63,8 +63,15 @@ open class RouteController: NSObject {
      The threshold used when we determine when the user has arrived at the waypoint.
      By default, we claim arrival 5 seconds before the user is physically estimated to arrive.
      */
-    @objc func setWaypointArrivalThreshold(_ threshold: TimeInterval) {
-        navigator.configureNavigator(forName: "arrival_threshold_duration", value: "\(threshold)")
+    var waypointArrivalThreshold: TimeInterval? {
+        get {
+            return navigator.getConfig().arrivalThresholdDuration?.doubleValue
+        }
+        set {
+            let config = navigator.getConfig()
+            config.arrivalThresholdDuration = (newValue != nil) ? (newValue! as NSNumber) : nil
+            navigator.setConfigFor(config)
+        }
     }
     
     /**
