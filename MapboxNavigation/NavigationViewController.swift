@@ -45,12 +45,15 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     optional func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool
     
     /**
-     Called when the user completes the final leg on the route.
+     Called when the user arrives at the destination of the current route leg.
      
-     You can use this to detect the status of `CarPlayManager.isConnected`.
-     
+     If implemented, you can use this to detect the status of `CarPlayManager.isConnected` when the user arrives at the final route leg.
+   
+     - parameter navigationViewController: The navigation view controller that has arrived at the leg of route.
+     - parameter isFinalLeg: The flag to deterime whether this is the last leg on the route.
+     - returns: This will most likely be used to determine when to show feedback when the user arrives at the final leg of the route.
      */
-    @objc optional func navigationViewControllerDidFinishRoute(_ navigationViewController: NavigationViewController, byArrivingAtFinalStep isFinalLeg: Bool) -> Bool
+    @objc optional func navigationViewControllerDidFinishRouteLeg(_ navigationViewController: NavigationViewController, byArrivingAtRouteLeg isFinalLeg: Bool) -> Bool
     
     /**
      Returns whether the navigation view controller should be allowed to calculate a new route.
@@ -641,7 +644,7 @@ extension NavigationViewController: NavigationServiceDelegate {
             return advancesToNextLeg
         }
         
-        let isConnectedToCarPlay = delegate?.navigationViewControllerDidFinishRoute?(self, byArrivingAtFinalStep: service.routeProgress.isFinalLeg) ?? false
+        let isConnectedToCarPlay = delegate?.navigationViewControllerDidFinishRouteLeg?(self, byArrivingAtRouteLeg: service.routeProgress.isFinalLeg) ?? false
         
         if !isConnectedToCarPlay && advancesToNextLeg && showsEndOfRouteFeedback {
             showEndOfRouteFeedback()

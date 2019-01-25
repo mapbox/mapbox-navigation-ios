@@ -36,7 +36,7 @@ extension AppDelegate: CPApplicationDelegate {
 
 @available(iOS 12.0, *)
 extension AppDelegate: NavigationViewControllerDelegate {
-    func navigationViewControllerDidFinishRoute(_ navigationViewController: NavigationViewController, byArrivingAtFinalStep isFinalLeg: Bool) -> Bool {
+    func navigationViewControllerDidFinishRouteLeg(_ navigationViewController: NavigationViewController, byArrivingAtRouteLeg isFinalLeg: Bool) -> Bool {
         return CarPlayManager.isConnected
     }
 }
