@@ -11,9 +11,7 @@ protocol RouteControllerDataSource: class {
     var locationProvider: NavigationLocationManager.Type { get }
 }
 
-/**
- The `LegacyRouteController`, previously named `RouteController` has been deprecated and will be removed in future versions.
- */
+
 @objc(MBLegacyRouteController)
 @available(*, deprecated, renamed: "RouteController")
 open class LegacyRouteController: NSObject, Router {
