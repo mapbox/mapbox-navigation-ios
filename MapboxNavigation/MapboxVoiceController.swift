@@ -55,7 +55,7 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
                 do {
                     try strongSelf.unDuckAudio()
                 } catch {
-                    strongSelf.voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
+                    strongSelf.voiceControllerDelegate?.voiceController?(strongSelf, spokenInstructionsDidFailWith: error)
                 }
             }
         }
