@@ -45,16 +45,15 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     optional func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool
     
     /**
-     Called when the user has arrived at the destination of the current route leg and may display a feedback
+     Called when the user has arrives at the final destination of the current route leg and may display a feedback
      UI to the user.
      
-     If implemented, you can use this to detect the status of `CarPlayManager.isConnected` when the user arrives at the final route leg.
+     If implemented, you can use this to detect the status of `CarPlayManager.isConnected` when the user arrives at the final destination.
    
      - parameter navigationViewController: The navigation view controller that has arrived at the leg of route.
-     - parameter isFinalLeg: The flag to deterime whether this is the last leg on the route.
      - returns: This will most likely be used to determine when to show feedback when the user arrives at the final leg of the route.
      */
-    @objc optional func navigationViewControllerShouldShowFeedback(_ navigationViewController: NavigationViewController, byArrivingAtRouteLeg isFinalLeg: Bool) -> Bool
+    @objc optional func navigationViewControllerShouldShowFeedback(_ navigationViewController: NavigationViewController) -> Bool
     
     /**
      Returns whether the navigation view controller should be allowed to calculate a new route.
@@ -302,16 +301,6 @@ open class NavigationViewController: UIViewController {
     @objc public var showsReportFeedback: Bool = true {
         didSet {
             mapViewController?.reportButton.isHidden = !showsReportFeedback
-            showsEndOfRouteFeedback = showsReportFeedback
-        }
-    }
-    
-    /**
-    Shows End of route Feedback UI when the route controller arrives at the final destination. Defaults to `true.`
-    */
-    @objc public var showsEndOfRouteFeedback: Bool = true {
-        didSet {
-            mapViewController?.showsEndOfRoute = showsEndOfRouteFeedback
         }
     }
     
@@ -640,15 +629,14 @@ extension NavigationViewController: NavigationServiceDelegate {
     
     @objc public func navigationService(_ service: NavigationService, didArriveAt waypoint: Waypoint) -> Bool {
         let advancesToNextLeg = delegate?.navigationViewController?(self, didArriveAt: waypoint) ?? true
-       
-        guard service.routeProgress.isFinalLeg else {
-            return advancesToNextLeg
-        }
         
-        let shouldShowFeedback = delegate?.navigationViewControllerShouldShowFeedback?(self, byArrivingAtRouteLeg: service.routeProgress.isFinalLeg) ?? true
-        
-        if advancesToNextLeg && showsEndOfRouteFeedback && shouldShowFeedback {
-            showEndOfRouteFeedback()
+        if service.routeProgress.isFinalLeg {
+            let shouldShowFeedback = delegate?.navigationViewControllerShouldShowFeedback?(self) ?? true
+            if shouldShowFeedback {
+                defer {
+                    showEndOfRouteFeedback()
+                }
+            }
         }
         
         return advancesToNextLeg

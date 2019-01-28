@@ -1,9 +1,11 @@
 import UIKit
+import UserNotifications
 import MapboxCoreNavigation
 import MapboxNavigation
 import MapboxDirections
-import UserNotifications
-
+#if canImport(MapboxCarPlay)
+import MapboxCarPlay
+#endif
 
 private typealias RouteRequestSuccess = (([Route]) -> Void)
 private typealias RouteRequestFailure = ((NSError) -> Void)
@@ -431,6 +433,17 @@ extension ViewController: NavigationViewControllerDelegate {
     // If implemented, you are responsible for also dismissing the UI.
     func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool) {
         navigationViewController.dismiss(animated: true, completion: nil)
+    }
+    
+    func navigationViewControllerShouldShowFeedback(_ navigationViewController: NavigationViewController, byArrivingAtRouteLeg isFinalLeg: Bool) -> Bool {
+        // Feedback view is displayed on the head unit if CarPlay is connected
+        if #available(iOS 12.0, *) {
+            #if canImport(MapboxCarPlay)
+            return !CarPlayManager.isConnected
+            #endif
+        }
+        
+        return true
     }
 }
 

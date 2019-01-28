@@ -259,7 +259,7 @@
 		AE38B58221F8C27C0041B384 /* RecentItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352C35BF2134958F00D77796 /* RecentItem.swift */; };
 		AE38B58321F8C27C0041B384 /* CarPlayMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EF6C21211BA4B300AA580B /* CarPlayMapViewController.swift */; };
 		AE38B58421F8C27C0041B384 /* CarPlayManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4B60E6219CBEB300C41906 /* CarPlayManagerDelegate.swift */; };
-		AE38B58521F8C27C0041B384 /* CarPlaySearchController+ CPSearchTemplateDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7DE6C521A47A23002653D1 /* CarPlaySearchController+ CPSearchTemplateDelegate.swift */; };
+		AE38B58521F8C27C0041B384 /* CarPlaySearchController+CPSearchTemplateDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7DE6C521A47A23002653D1 /* CarPlaySearchController+CPSearchTemplateDelegate.swift */; };
 		AE38B58621F8C3D60041B384 /* CongestionLevel+CarPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F4D21820DC468B0059FABF /* CongestionLevel+CarPlay.swift */; };
 		AE38B58721F8C4170041B384 /* CPMapTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51511D020EAC89D00372A91 /* CPMapTemplate.swift */; };
 		AE38B58921F8C56F0041B384 /* CarPlayManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EF6C1D21193A9600AA580B /* CarPlayManagerTests.swift */; };
@@ -904,7 +904,7 @@
 		AE46F95420EA735B00537AC2 /* VisualInstruction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualInstruction.swift; sourceTree = "<group>"; };
 		AE5F8770209A082500F58FDB /* route-with-banner-instructions.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-with-banner-instructions.json"; sourceTree = "<group>"; };
 		AE7DE6C321A47A03002653D1 /* CarPlaySearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlaySearchController.swift; sourceTree = "<group>"; };
-		AE7DE6C521A47A23002653D1 /* CarPlaySearchController+ CPSearchTemplateDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CarPlaySearchController+ CPSearchTemplateDelegate.swift"; sourceTree = "<group>"; };
+		AE7DE6C521A47A23002653D1 /* CarPlaySearchController+CPSearchTemplateDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CarPlaySearchController+CPSearchTemplateDelegate.swift"; sourceTree = "<group>"; };
 		AE8B1B96207D2B2B003050F6 /* TunnelAuthorityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelAuthorityTests.swift; sourceTree = "<group>"; };
 		AE997D2121137B8B00EB0AAB /* String+LocalizedConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+LocalizedConstants.swift"; sourceTree = "<group>"; };
 		AEC3AC992106703100A26F34 /* HighwayShield.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighwayShield.swift; sourceTree = "<group>"; };
@@ -1519,7 +1519,7 @@
 			children = (
 				16C2A420211526EE00FE6E68 /* CarPlayManager.swift */,
 				AE7DE6C321A47A03002653D1 /* CarPlaySearchController.swift */,
-				AE7DE6C521A47A23002653D1 /* CarPlaySearchController+ CPSearchTemplateDelegate.swift */,
+				AE7DE6C521A47A23002653D1 /* CarPlaySearchController+CPSearchTemplateDelegate.swift */,
 				8D4B60E6219CBEB300C41906 /* CarPlayManagerDelegate.swift */,
 				16EF6C21211BA4B300AA580B /* CarPlayMapViewController.swift */,
 				C5FFAC1420D96F5B009E7F98 /* CarPlayNavigationViewController.swift */,
@@ -2680,7 +2680,7 @@
 				AE38B58221F8C27C0041B384 /* RecentItem.swift in Sources */,
 				AE38B58421F8C27C0041B384 /* CarPlayManagerDelegate.swift in Sources */,
 				AE38B58B21F8C9E70041B384 /* NavigationViewController+CarPlay.swift in Sources */,
-				AE38B58521F8C27C0041B384 /* CarPlaySearchController+ CPSearchTemplateDelegate.swift in Sources */,
+				AE38B58521F8C27C0041B384 /* CarPlaySearchController+CPSearchTemplateDelegate.swift in Sources */,
 				AE38B59821F8D0880041B384 /* Locale+CarPlay.swift in Sources */,
 				AE38B59B21F8D73E0041B384 /* NSMutableAttributedString+CarPlay.swift in Sources */,
 			);
