@@ -45,7 +45,8 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     optional func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool
     
     /**
-     Called when the user arrives at the destination of the current route leg.
+     Called when the user has arrived at the destination of the current route leg and may display a feedback
+     UI to the user.
      
      If implemented, you can use this to detect the status of `CarPlayManager.isConnected` when the user arrives at the final route leg.
    
@@ -53,7 +54,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      - parameter isFinalLeg: The flag to deterime whether this is the last leg on the route.
      - returns: This will most likely be used to determine when to show feedback when the user arrives at the final leg of the route.
      */
-    @objc optional func navigationViewControllerDidFinishRouteLeg(_ navigationViewController: NavigationViewController, byArrivingAtRouteLeg isFinalLeg: Bool) -> Bool
+    @objc optional func navigationViewControllerShouldShowFeedback(_ navigationViewController: NavigationViewController, byArrivingAtRouteLeg isFinalLeg: Bool) -> Bool
     
     /**
      Returns whether the navigation view controller should be allowed to calculate a new route.
@@ -644,9 +645,9 @@ extension NavigationViewController: NavigationServiceDelegate {
             return advancesToNextLeg
         }
         
-        let isConnectedToCarPlay = delegate?.navigationViewControllerDidFinishRouteLeg?(self, byArrivingAtRouteLeg: service.routeProgress.isFinalLeg) ?? false
+        let shouldShowFeedback = delegate?.navigationViewControllerShouldShowFeedback?(self, byArrivingAtRouteLeg: service.routeProgress.isFinalLeg) ?? true
         
-        if !isConnectedToCarPlay && advancesToNextLeg && showsEndOfRouteFeedback {
+        if advancesToNextLeg && showsEndOfRouteFeedback && shouldShowFeedback {
             showEndOfRouteFeedback()
         }
         
