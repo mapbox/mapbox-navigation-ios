@@ -59,18 +59,12 @@ open class RouteController: NSObject {
     
     var isFirstLocation: Bool = true
     
-    /**
-     The threshold used when we determine when the user has arrived at the waypoint.
-     By default, we claim arrival 5 seconds before the user is physically estimated to arrive.
-     */
-    var waypointArrivalThreshold: TimeInterval? {
+    @objc public var config: MBNavigatorConfig {
         get {
-            return navigator.getConfig().arrivalThresholdDuration?.doubleValue
+            return navigator.getConfig()
         }
         set {
-            let config = navigator.getConfig()
-            config.arrivalThresholdDuration = (newValue != nil) ? (newValue! as NSNumber) : nil
-            navigator.setConfigFor(config)
+            navigator.setConfigFor(newValue)
         }
     }
     
