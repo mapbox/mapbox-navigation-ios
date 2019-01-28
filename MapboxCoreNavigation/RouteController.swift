@@ -59,7 +59,7 @@ open class RouteController: NSObject {
     
     var isFirstLocation: Bool = true
     
-    @objc public var config: MBNavigatorConfig {
+    @objc public var config: MBNavigatorConfig? {
         get {
             return navigator.getConfig()
         }
