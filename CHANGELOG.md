@@ -1,5 +1,12 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## master
+
+* `RouteController` has been renamed to `LegacyRouteController` which will be removed in a future release. ([#1904](https://github.com/mapbox/mapbox-navigation-ios/pull/1904))
+* PortableRouteController has been renamed to `RouteController`. ([#1904](https://github.com/mapbox/mapbox-navigation-ios/pull/1904))
+* `waypointArrivalThreshold` and other configurations are now exposed via `RouteController.config`. ([#1904](https://github.com/mapbox/mapbox-navigation-ios/pull/1904))
+* Deprecated properties (`routeController`, `eventsManager`, `locationManager`) on `NavigationViewController` has been removed ([#1904](https://github.com/mapbox/mapbox-navigation-ios/pull/1904))
+
 ## v0.28.0
 
 * Xcode 10 or above is now required for building this SDK. ([#1936](https://github.com/mapbox/mapbox-navigation-ios/pull/1936))
