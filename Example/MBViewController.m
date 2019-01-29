@@ -114,7 +114,7 @@
     MBNavigationService *service = [[MBNavigationService alloc] initWithRoute:route directions:self.directions locationSource:nil eventsManagerType:nil simulating:MBNavigationSimulationOptionsAlways routerType:nil];
     
     self.navigation = service;
-    MBNavigationViewController *controller = [[MBNavigationViewController alloc] initWithRoute:route styles:nil navigationService:service voiceController: nil];
+    MBNavigationViewController *controller = [[MBNavigationViewController alloc] initWithRoute:route styles:nil navigationService:service voiceController: nil bottomBanner:nil];
     
     [self presentViewController:controller animated:YES completion:nil];
     

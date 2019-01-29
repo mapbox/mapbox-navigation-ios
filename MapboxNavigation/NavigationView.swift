@@ -119,7 +119,7 @@ open class NavigationView: UIView {
         return view
     }()
     
-//    lazy var bottomBannerContentView: BottomBannerContentView = .forAutoLayout()
+    lazy var bottomBannerContainerView: BottomBannerContainerView = .forAutoLayout()
 //    lazy var bottomBannerView: BottomBannerView = {
 //        let view: BottomBannerView = .forAutoLayout()
 //        view.cancelButton.addTarget(self, action: Actions.cancelButton, for: .touchUpInside)
@@ -202,7 +202,7 @@ open class NavigationView: UIView {
             floatingStackView,
             resumeButton,
             wayNameView,
-//            bottomBannerContentView,
+            bottomBannerContainerView,
             instructionsBannerContentView
         ]
         
@@ -212,7 +212,7 @@ open class NavigationView: UIView {
     open override func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         DayStyle().apply()
-        [mapView, instructionsBannerView, lanesView, /*bottomBannerView,*/ nextBannerView].forEach { $0.prepareForInterfaceBuilder() }
+        [mapView, instructionsBannerView, lanesView, bottomBannerContainerView, nextBannerView].forEach( { $0.prepareForInterfaceBuilder() })
         wayNameView.text = "Street Label"
     }
     

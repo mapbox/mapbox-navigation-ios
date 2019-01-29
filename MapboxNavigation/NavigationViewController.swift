@@ -191,11 +191,12 @@ open class NavigationViewController: UIViewController {
      - parameter navigationService: The navigation service that manages navigation along the route.
      - parameter voiceController: The voice controller that manages the delivery of voice instructions during navigation.
      */
-    @objc(initWithRoute:styles:navigationService:voiceController:)
+    @objc(initWithRoute:styles:navigationService:voiceController:bottomBanner:)
     required public init(for route: Route,
                          styles: [Style]? = nil,
                          navigationService: NavigationService? = nil,
-                         voiceController: RouteVoiceController? = nil) {
+                         voiceController: RouteVoiceController? = nil,
+                         bottomBanner: UIViewController? = nil) {
         
         super.init(nibName: nil, bundle: nil)
         
@@ -209,18 +210,30 @@ open class NavigationViewController: UIViewController {
         let mapViewController = RouteMapViewController(navigationService: self.navigationService, delegate: self)
         self.mapViewController = mapViewController
         mapViewController.destination = route.legs.last?.destination
-        mapViewController.willMove(toParentViewController: self)
-        addChildViewController(mapViewController)
-        mapViewController.didMove(toParentViewController: self)
-        let mapSubview: UIView = mapViewController.view
-        mapSubview.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(mapSubview)
+        mapViewController.view.translatesAutoresizingMaskIntoConstraints = false
         
+        embed(mapViewController, in: view) { (parent, map) -> [NSLayoutConstraint] in
+            return map.view.constraintsForPinning(to: parent.view)
+        }
+        
+        let defaultBottomFactory: () -> BottomBannerViewController = {
+            let banner = BottomBannerViewController()
+            banner.delegate = nil //self
+            return banner
+        }
+        
+        let bottomBanner = bottomBanner ?? defaultBottomFactory()
+        bottomBanner.view.translatesAutoresizingMaskIntoConstraints = false
+        
+        embed(bottomBanner, in:  mapViewController.navigationView.bottomBannerContainerView) { (parent, banner) -> [NSLayoutConstraint] in
+            return banner.view.constraintsForPinning(to: parent.mapViewController!.navigationView.bottomBannerContainerView)
+        }
+
         
         //Do not start the navigation session until after you create the MapViewController, otherwise you'll miss important messages.
         self.navigationService.start()
         
-        mapSubview.pinInSuperview()
+        mapViewController.view.pinInSuperview()
         mapViewController.reportButton.isHidden = !showsReportFeedback
         
         styleManager = StyleManager()
@@ -260,6 +273,18 @@ open class NavigationViewController: UIViewController {
             UIApplication.shared.isIdleTimerDisabled = false
         }
         
+    }
+    
+    // MARK: Containerization
+    
+    func embed(_ child: UIViewController, in container: UIView, constrainedBy constraints: ((NavigationViewController, UIViewController) -> [NSLayoutConstraint])?) {
+        child.willMove(toParentViewController: self)
+        addChildViewController(child)
+        container.addSubview(child.view)
+        if let childConstraints: [NSLayoutConstraint] = constraints?(self, child) {
+            view.addConstraints(childConstraints)
+        }
+        child.didMove(toParentViewController: self)
     }
     
     // MARK: Route controller notifications

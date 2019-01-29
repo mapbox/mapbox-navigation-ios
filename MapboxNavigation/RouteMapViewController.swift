@@ -116,7 +116,7 @@ class RouteMapViewController: UIViewController {
     var nextBannerView: NextBannerView { return navigationView.nextBannerView }
     var instructionsBannerView: InstructionsBannerView { return navigationView.instructionsBannerView }
     var instructionsBannerContentView: InstructionsBannerContentView { return navigationView.instructionsBannerContentView }
-//    var bottomBannerView: BottomBannerView { return navigationView.bottomBannerView }
+    var bottomBannerContainerView: BottomBannerContainerView { return navigationView.bottomBannerContainerView }
 
     var navigationComponents: [NavigationComponent] {
         return [instructionsBannerView, nextBannerView, lanesView]//, bottomBannerView]
@@ -452,7 +452,7 @@ class RouteMapViewController: UIViewController {
 
     var contentInsets: UIEdgeInsets {
         let top = instructionsBannerContentView.bounds.height
-        let bottom = CGFloat(0)//bottomBannerView.bounds.height
+        let bottom = bottomBannerContainerView.bounds.height
         return UIEdgeInsets(top: top, left: 0, bottom: bottom, right: 0)
     }
 

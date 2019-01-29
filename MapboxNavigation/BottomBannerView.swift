@@ -8,8 +8,8 @@ protocol BottomBannerViewDelegate: class {
 
 /// :nodoc:
 @IBDesignable
-@objc(MBBottomBannerView)
-open class BottomBannerView: UIView, NavigationComponent {
+@objc(MBBottomBannerViewController)
+open class BottomBannerViewController: UIViewController, NavigationComponent {
     
     weak var previousProgress: RouteProgress?
     var timer: DispatchTimer?
@@ -49,10 +49,11 @@ open class BottomBannerView: UIView, NavigationComponent {
         }
     }
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override public init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         commonInit()
     }
+
     
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -63,11 +64,13 @@ open class BottomBannerView: UIView, NavigationComponent {
         removeTimer()
     }
     
-    override open func willMove(toSuperview newSuperview: UIView?) {
-        super.willMove(toSuperview: newSuperview)
-        if superview != nil, newSuperview == nil {
-            removeTimer()
-        }
+    override open func loadView() {
+        view = BottomBannerView.forAutoLayout()
+        view.backgroundColor = .purple
+    }
+    
+    override open func viewWillDisappear(_ animated: Bool) {
+        removeTimer()
     }
     
     private func resumeNotifications() {
@@ -87,7 +90,7 @@ open class BottomBannerView: UIView, NavigationComponent {
         
         setupViews()
         
-        cancelButton.addTarget(self, action: #selector(BottomBannerView.cancel(_:)), for: .touchUpInside)
+        cancelButton.addTarget(self, action: #selector(BottomBannerViewController.cancel(_:)), for: .touchUpInside)
     }
     
     @IBAction func cancel(_ sender: Any) {
