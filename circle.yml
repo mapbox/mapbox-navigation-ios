@@ -126,7 +126,8 @@ step-library:
         command: |
           cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall
           pod install --repo-update
-          xcodebuild -workspace PodInstall.xcworkspace/ -scheme PodInstall -destination 'platform=iOS Simulator,OS=12.1,name=iPhone 6 Plus' clean build | xcpretty
+          xcrun simctl list
+          xcodebuild -workspace PodInstall.xcworkspace/ -scheme PodInstall -destination 'platform=iOS Simulator,OS=12.1,name=iPhone 6s' clean build | xcpretty
 
   - &cocoapods-integration-update
       run:
@@ -134,7 +135,8 @@ step-library:
         command: |
           cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall
           pod update --repo-update
-          xcodebuild -workspace PodInstall.xcworkspace/ -scheme PodInstall -destination 'platform=iOS Simulator,OS=12.1,name=iPhone 6 Plus' clean build | xcpretty
+          xcrun simctl list
+          xcodebuild -workspace PodInstall.xcworkspace/ -scheme PodInstall -destination 'platform=iOS Simulator,OS=12.1,name=iPhone 6' clean build | xcpretty
   
   - &publish-codecov
       run:
