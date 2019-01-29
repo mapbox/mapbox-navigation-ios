@@ -229,14 +229,8 @@ open class NavigationViewController: UIViewController {
         embed(mapViewController, in: view) { (parent, map) -> [NSLayoutConstraint] in
             return map.view.constraintsForPinning(to: parent.view)
         }
-        
-        let defaultBottomFactory: () -> BottomBannerViewController = {
-            let banner = BottomBannerViewController()
-            banner.delegate = nil //self
-            return banner
-        }
-        
-        let bottomBanner = bottomBanner ?? defaultBottomFactory()
+                
+        let bottomBanner = bottomBanner ?? BottomBannerViewController(delegate: self)
         bottomBanner.view.translatesAutoresizingMaskIntoConstraints = false
         bottomViewController = bottomBanner
         
@@ -413,6 +407,7 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
         return delegate?.navigationViewController?(self, viewFor: annotation)
     }
     
+    //Still Kept around for the EORVC. On it's way out.
     func mapViewControllerDidDismiss(_ mapViewController: RouteMapViewController, byCanceling canceled: Bool) {
         if delegate?.navigationViewControllerDidDismiss?(self, byCanceling: canceled) != nil {
             // The receiver should handle dismissal of the NavigationViewController
@@ -420,6 +415,7 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
             dismiss(animated: true, completion: nil)
         }
     }
+
     
     public func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint {
         return delegate?.navigationViewController?(self, mapViewUserAnchorPoint: mapView) ?? .zero
@@ -571,6 +567,8 @@ extension NavigationViewController: NavigationServiceDelegate {
     }
 }
 
+// MARK: - StyleManagerDelegate
+
 extension NavigationViewController: StyleManagerDelegate {
     
     public func location(for styleManager: StyleManager) -> CLLocation? {
@@ -597,3 +595,19 @@ extension NavigationViewController: StyleManagerDelegate {
         mapView?.reloadStyle(self)
     }
 }
+
+// MARK: - BottomBannerViewControllerDelegate
+
+// Handling cancel action in new Bottom Banner container.
+// Code duplicated with RouteMapViewController.mapViewControllerDidDismiss(_:byCanceling:)
+
+extension NavigationViewController: BottomBannerViewControllerDelegate {
+    public func didTapCancel(_ sender: Any) {
+        if delegate?.navigationViewControllerDidDismiss?(self, byCanceling: true) != nil {
+            // The receiver should handle dismissal of the NavigationViewController
+        } else {
+            dismiss(animated: true, completion: nil)
+        }
+    }
+}
+

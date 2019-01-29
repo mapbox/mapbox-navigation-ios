@@ -2,8 +2,8 @@ import UIKit
 import MapboxCoreNavigation
 import MapboxDirections
 
-protocol BottomBannerViewDelegate: class {
-    func didCancel()
+public protocol BottomBannerViewControllerDelegate: class {
+    func didTapCancel(_ sender: Any)
 }
 
 /// :nodoc:
@@ -23,7 +23,7 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
     // Horizontal divider between the map view and the bottom banner
     weak var horizontalDividerView: SeparatorView!
     weak var routeController: RouteController!
-    weak var delegate: BottomBannerViewDelegate?
+    weak var delegate: BottomBannerViewControllerDelegate?
     
     let dateFormatter = DateFormatter()
     let dateComponentsFormatter = DateComponentsFormatter()
@@ -47,6 +47,11 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
                 timeRemainingLabel.textColor = timeRemainingLabel.trafficSevereColor
             }
         }
+    }
+    
+    public convenience init(delegate: BottomBannerViewControllerDelegate?) {
+        self.init(nibName: nil, bundle: nil)
+        self.delegate = delegate
     }
     
     override public init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -94,7 +99,7 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
     }
     
     @IBAction func cancel(_ sender: Any) {
-        delegate?.didCancel()
+        delegate?.didTapCancel(sender)
     }
     
     override open func prepareForInterfaceBuilder() {
