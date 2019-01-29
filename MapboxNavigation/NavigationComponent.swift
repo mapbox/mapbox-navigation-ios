@@ -2,4 +2,7 @@ import Foundation
 import MapboxCoreNavigation
 import CoreLocation
 
-@objc protocol NavigationComponent: NavigationServiceDelegate/*, UIContentContainer*/ {}
+/*
+ A NavigationComponent is any component that can receive NavigationService messages.
+ */
+@objc public protocol NavigationComponent: NavigationServiceDelegate/*, UIContentContainer*/ {}

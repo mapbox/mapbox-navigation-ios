@@ -8,6 +8,12 @@ import CarPlay
 #endif
 
 /**
+ A ContainerViewController is any UIViewController that suscribes to the NavigationComponent messaging protocol.
+ - seealso: NavigationComponent
+ */
+public typealias ContainerViewController = UIViewController & NavigationComponent
+
+/**
  `NavigationViewController` is a fully-featured turn-by-turn navigation UI.
  
  It provides step by step instructions, an overview of all steps for the given route and support for basic styling.
@@ -150,9 +156,17 @@ open class NavigationViewController: UIViewController {
     
     var mapViewController: RouteMapViewController?
     
+    var bottomViewController: ContainerViewController?
+    
     var navigationComponents: [NavigationComponent] {
-        guard let mvc = mapViewController else { return [] }
-        return [mvc]
+        var components: [NavigationComponent] = []
+        if let mvc = mapViewController {
+            components.append(mvc)
+        }
+        if let bottomViewController = bottomViewController {
+            components.append(bottomViewController)
+        }
+        return components
     }
     
     /**
@@ -196,7 +210,7 @@ open class NavigationViewController: UIViewController {
                          styles: [Style]? = nil,
                          navigationService: NavigationService? = nil,
                          voiceController: RouteVoiceController? = nil,
-                         bottomBanner: UIViewController? = nil) {
+                         bottomBanner: ContainerViewController? = nil) {
         
         super.init(nibName: nil, bundle: nil)
         
@@ -224,6 +238,7 @@ open class NavigationViewController: UIViewController {
         
         let bottomBanner = bottomBanner ?? defaultBottomFactory()
         bottomBanner.view.translatesAutoresizingMaskIntoConstraints = false
+        bottomViewController = bottomBanner
         
         embed(bottomBanner, in:  mapViewController.navigationView.bottomBannerContainerView) { (parent, banner) -> [NSLayoutConstraint] in
             return banner.view.constraintsForPinning(to: parent.mapViewController!.navigationView.bottomBannerContainerView)
