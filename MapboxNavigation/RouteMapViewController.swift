@@ -116,10 +116,10 @@ class RouteMapViewController: UIViewController {
     var nextBannerView: NextBannerView { return navigationView.nextBannerView }
     var instructionsBannerView: InstructionsBannerView { return navigationView.instructionsBannerView }
     var instructionsBannerContentView: InstructionsBannerContentView { return navigationView.instructionsBannerContentView }
-    var bottomBannerView: BottomBannerView { return navigationView.bottomBannerView }
+//    var bottomBannerView: BottomBannerView { return navigationView.bottomBannerView }
 
     var navigationComponents: [NavigationComponent] {
-        return [instructionsBannerView, nextBannerView, lanesView, bottomBannerView]
+        return [instructionsBannerView, nextBannerView, lanesView]//, bottomBannerView]
     }
     
     lazy var endOfRouteViewController: EndOfRouteViewController = {
@@ -206,7 +206,7 @@ class RouteMapViewController: UIViewController {
     var annotatesSpokenInstructions = false
 
     var overheadInsets: UIEdgeInsets {
-        return UIEdgeInsets(top: navigationView.instructionsBannerView.bounds.height, left: 20, bottom: bottomBannerView.bounds.height, right: 20)
+        return UIEdgeInsets(top: navigationView.instructionsBannerView.bounds.height, left: 20, bottom: 0/*bottomBannerView.bounds.height*/, right: 20)
     }
 
     typealias LabelRoadNameCompletionHandler = (_ defaultRaodNameAssigned: Bool) -> Void
@@ -452,7 +452,7 @@ class RouteMapViewController: UIViewController {
 
     var contentInsets: UIEdgeInsets {
         let top = instructionsBannerContentView.bounds.height
-        let bottom = bottomBannerView.bounds.height
+        let bottom = CGFloat(0)//bottomBannerView.bounds.height
         return UIEdgeInsets(top: top, left: 0, bottom: bottom, right: 0)
     }
 

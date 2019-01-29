@@ -69,7 +69,7 @@ open class NavigationView: UIView {
     }
     
     private enum Actions {
-        static let cancelButton: Selector = #selector(NavigationView.cancelButtonTapped(_:))
+//        static let cancelButton: Selector = #selector(NavigationView.cancelButtonTapped(_:))
     }
     
     lazy var mapView: NavigationMapView = {
@@ -119,12 +119,12 @@ open class NavigationView: UIView {
         return view
     }()
     
-    lazy var bottomBannerContentView: BottomBannerContentView = .forAutoLayout()
-    lazy var bottomBannerView: BottomBannerView = {
-        let view: BottomBannerView = .forAutoLayout()
-        view.cancelButton.addTarget(self, action: Actions.cancelButton, for: .touchUpInside)
-        return view
-        }()
+//    lazy var bottomBannerContentView: BottomBannerContentView = .forAutoLayout()
+//    lazy var bottomBannerView: BottomBannerView = {
+//        let view: BottomBannerView = .forAutoLayout()
+//        view.cancelButton.addTarget(self, action: Actions.cancelButton, for: .touchUpInside)
+//        return view
+//        }()
     
 
     weak var delegate: NavigationViewDelegate? {
@@ -186,8 +186,8 @@ open class NavigationView: UIView {
     
     func setupContainers() {
         let containers: [(UIView, UIView)] = [
-            (instructionsBannerContentView, instructionsBannerView),
-            (bottomBannerContentView, bottomBannerView)
+            (instructionsBannerContentView, instructionsBannerView)//,
+//            (bottomBannerContentView, bottomBannerView)
         ]
         containers.forEach { $0.addSubview($1) }
     }
@@ -202,7 +202,7 @@ open class NavigationView: UIView {
             floatingStackView,
             resumeButton,
             wayNameView,
-            bottomBannerContentView,
+//            bottomBannerContentView,
             instructionsBannerContentView
         ]
         
@@ -212,13 +212,13 @@ open class NavigationView: UIView {
     open override func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         DayStyle().apply()
-        [mapView, instructionsBannerView, lanesView, bottomBannerView, nextBannerView].forEach { $0.prepareForInterfaceBuilder() }
+        [mapView, instructionsBannerView, lanesView, /*bottomBannerView,*/ nextBannerView].forEach { $0.prepareForInterfaceBuilder() }
         wayNameView.text = "Street Label"
     }
     
-    @objc func cancelButtonTapped(_ sender: CancelButton) {
-        delegate?.navigationView(self, didTapCancelButton: bottomBannerView.cancelButton)
-    }
+//    @objc func cancelButtonTapped(_ sender: CancelButton) {
+//        delegate?.navigationView(self, didTapCancelButton: bottomBannerView.cancelButton)
+//    }
     
     private func updateDelegates() {
         mapView.navigationMapDelegate = delegate
