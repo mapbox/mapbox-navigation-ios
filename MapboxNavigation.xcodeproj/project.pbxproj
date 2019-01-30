@@ -340,7 +340,7 @@
 		C582FD5F203626E900A9086E /* CLLocationDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C582FD5E203626E900A9086E /* CLLocationDirection.swift */; };
 		C58822001FB0F0D7008B0A2D /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58821FF1FB0F0D7008B0A2D /* Error.swift */; };
 		C588C3C21F33882100520EF2 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BF8CA31F28EBD8003F6125 /* String.swift */; };
-		C58D6BAD1DDCF2AE00387F53 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58D6BAC1DDCF2AE00387F53 /* Constants.swift */; };
+		C58D6BAD1DDCF2AE00387F53 /* CoreConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58D6BAC1DDCF2AE00387F53 /* CoreConstants.swift */; };
 		C5A60ECC20A25BC900C21178 /* MD5Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A60EC820A2417200C21178 /* MD5Tests.swift */; };
 		C5A60ECD20A25DA100C21178 /* md5_crazy_strings.txt in Resources */ = {isa = PBXBuildFile; fileRef = C5A60ECA20A241B600C21178 /* md5_crazy_strings.txt */; };
 		C5A6B2DD1F4CE8E8004260EA /* StyleType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A6B2DC1F4CE8E8004260EA /* StyleType.swift */; };
@@ -940,7 +940,7 @@
 		C582BA2B2073E77E00647DAA /* StringTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringTests.swift; sourceTree = "<group>"; };
 		C582FD5E203626E900A9086E /* CLLocationDirection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationDirection.swift; sourceTree = "<group>"; };
 		C58821FF1FB0F0D7008B0A2D /* Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
-		C58D6BAC1DDCF2AE00387F53 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		C58D6BAC1DDCF2AE00387F53 /* CoreConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreConstants.swift; sourceTree = "<group>"; };
 		C5A60EC820A2417200C21178 /* MD5Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MD5Tests.swift; sourceTree = "<group>"; };
 		C5A60ECA20A241B600C21178 /* md5_crazy_strings.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = md5_crazy_strings.txt; sourceTree = "<group>"; };
 		C5A6B2DC1F4CE8E8004260EA /* StyleType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleType.swift; sourceTree = "<group>"; };
@@ -1705,7 +1705,7 @@
 				354A9BC920EA9BC100F03325 /* Events */,
 				C56173591F182103005954F6 /* Extensions */,
 				C53C196A1F38E9C1008DB406 /* Resources */,
-				C58D6BAC1DDCF2AE00387F53 /* Constants.swift */,
+				C58D6BAC1DDCF2AE00387F53 /* CoreConstants.swift */,
 				351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */,
 				8DCE104F210FC5880048B0FB /* EndOfRouteFeedback.swift */,
 				64847A031F04629D003F3A69 /* Feedback.swift */,
@@ -2754,7 +2754,7 @@
 				C5F2DCA0206DBF5E002F99F6 /* Sequence.swift in Sources */,
 				35BF8CA41F28EBD8003F6125 /* String.swift in Sources */,
 				64847A041F04629D003F3A69 /* Feedback.swift in Sources */,
-				C58D6BAD1DDCF2AE00387F53 /* Constants.swift in Sources */,
+				C58D6BAD1DDCF2AE00387F53 /* CoreConstants.swift in Sources */,
 				35C77F621FE8219900338416 /* NavigationSettings.swift in Sources */,
 				C51DF8661F38C31C006C6A15 /* Locale.swift in Sources */,
 			);
