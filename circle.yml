@@ -139,7 +139,7 @@ step-library:
   - &publish-codecov
       run:
         name: Publish Code Coverage data
-        command: bash <(curl -s https://codecov.io/bash)
+        command: bash <(curl -s https://codecov.io/bash) -J 'MapboxCoreNavigation' -J 'MapboxNavigation' -J 'MapboxCarPlay'
 
 jobs:
   xcode-10:
@@ -154,9 +154,7 @@ jobs:
       - *restore-cache
       - *install-dependencies
       - *build-test-MapboxCoreNavigation-ios-12
-      - *publish-codecov
       - *build-test-MapboxNavigation-ios-12
-      - *publish-codecov
       - *build-test-MapboxCarPlay-ios-12
       - *publish-codecov
       - *save-cache
