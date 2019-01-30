@@ -1,10 +1,20 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## master
+
+* Added an initializer to DispatchTimer, along with methods for arming and disarming the timer. ([#1912](https://github.com/mapbox/mapbox-navigation-ios/pull/1912))
+* Added the `MapboxNavigationService.router(_:didPassVisualInstructionPoint:routeProgress:)` and `MapboxNavigationService.router(_:didPassSpokenInstructionPoint:routeProgress:)` methods, which correspond to `Notification.Name.routeControllerDidPassVisualInstructionPoint` and `Notification.Name.routeControllerDidPassSpokenInstructionPoint`, respectively. ([#1912](https://github.com/mapbox/mapbox-navigation-ios/pull/1912))
+* Restored “Declaration” and “Parameters” sections throughout the API reference. ([#1952](https://github.com/mapbox/mapbox-navigation-ios/pull/1952))
+* `RouteController` has been renamed to `LegacyRouteController` which will be removed in a future release. ([#1904](https://github.com/mapbox/mapbox-navigation-ios/pull/1904))
+* PortableRouteController has been renamed to `RouteController`. ([#1904](https://github.com/mapbox/mapbox-navigation-ios/pull/1904))
+* Deprecated properties (`routeController`, `eventsManager`, `locationManager`) on `NavigationViewController` has been removed ([#1904](https://github.com/mapbox/mapbox-navigation-ios/pull/1904))
+
 ## v0.28.0
 
 * Xcode 10 or above is now required for building this SDK. ([#1936](https://github.com/mapbox/mapbox-navigation-ios/pull/1936))
 * Search functionality on CarPlay is now managed by `CarPlaySearchController`. Added the `CarPlayManagerDelegate.carPlayManager(_:selectedPreviewFor:using:)` method for any additional customization after a trip is selected on CarPlay. ([#1846](https://github.com/mapbox/mapbox-navigation-ios/pull/1846))
 * Added the `NavigationViewController.showEndOfRouteFeedback(duration:completionHandler:)` method for showing the end-of-route feedback UI after manually ending a navigation session. ([#1932](https://github.com/mapbox/mapbox-navigation-ios/pull/1932))
+* Fixed inaudible spoken instructions while other audio is playing. ([#1933](https://github.com/mapbox/mapbox-navigation-ios/pull/1933))
 * Fixed an issue where setting `Router.route` did not update `SimulatedLocationManager.route`. ([#1928](https://github.com/mapbox/mapbox-navigation-ios/pull/1928))
 * Fixed an issue where U-turn lane was displayed as a U-turn to the right even in regions that drive on the right. ([#1910](https://github.com/mapbox/mapbox-navigation-ios/pull/1910))
 * Fixed an issue where a left-or-through lane was displayed as a right turn lane. ([#1910](https://github.com/mapbox/mapbox-navigation-ios/pull/1910))
