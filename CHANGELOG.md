@@ -1,5 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## master
+* Added an initializer to DispatchTimer, along with methods for arming and disarming the timer. ([#1912](https://github.com/mapbox/mapbox-navigation-ios/pull/1912))
+* Added the `MapboxNavigationService.router(_:didPassVisualInstructionPoint:routeProgress:)` and `MapboxNavigationService.router(_:didPassSpokenInstructionPoint:routeProgress:)` methods, which correspond to `Notification.Name.routeControllerDidPassVisualInstructionPoint` and `Notification.Name.routeControllerDidPassSpokenInstructionPoint`, respectively. ([#1912](https://github.com/mapbox/mapbox-navigation-ios/pull/1912))
+
 ## v0.28.0
 
 * Xcode 10 or above is now required for building this SDK. ([#1936](https://github.com/mapbox/mapbox-navigation-ios/pull/1936))
