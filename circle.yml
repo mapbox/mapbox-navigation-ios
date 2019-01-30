@@ -154,7 +154,9 @@ jobs:
       - *restore-cache
       - *install-dependencies
       - *build-test-MapboxCoreNavigation-ios-12
+      - *publish-codecov
       - *build-test-MapboxNavigation-ios-12
+      - *publish-codecov
       - *build-test-MapboxCarPlay-ios-12
       - *publish-codecov
       - *save-cache
