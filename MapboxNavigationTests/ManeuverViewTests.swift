@@ -50,6 +50,16 @@ class ManeuverViewTests: FBSnapshotTestCase {
         verify(maneuverView.layer)
     }
     
+    func testArrive() {
+        maneuverView.visualInstruction = maneuverInstruction(.arrive, .right)
+        verify(maneuverView.layer)
+    }
+    
+    func testArriveNone() {
+        maneuverView.visualInstruction = maneuverInstruction(.arrive, .none)
+        verify(maneuverView.layer)
+    }
+    
     func testLeftUTurn() {
         maneuverView.drivingSide = .right
         maneuverView.visualInstruction = maneuverInstruction(.turn, .uTurn)
@@ -60,7 +70,7 @@ class ManeuverViewTests: FBSnapshotTestCase {
         let imageView = UIImageView(image: flipped)
         verify(imageView)
     }
-    
+
     func testRightUTurn() {
         maneuverView.drivingSide = .left
         maneuverView.visualInstruction = maneuverInstruction(.turn, .uTurn)
@@ -69,7 +79,7 @@ class ManeuverViewTests: FBSnapshotTestCase {
         let imageView = UIImageView(image: image)
         verify(imageView)
     }
-    
+
     func testRoundabout() {
         let incrementer: CGFloat = 45
         let size = CGSize(width: maneuverView.bounds.width * (360 / incrementer), height: maneuverView.bounds.height)
@@ -82,7 +92,7 @@ class ManeuverViewTests: FBSnapshotTestCase {
             view.visualInstruction = maneuverInstruction(.takeRoundabout, .right, CLLocationDegrees(bearing))
             views.addSubview(view)
         }
-        
+
         verify(views.layer)
     }
 }
