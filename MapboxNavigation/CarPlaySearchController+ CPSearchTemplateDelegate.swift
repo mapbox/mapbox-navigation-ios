@@ -98,7 +98,7 @@ extension CarPlaySearchController: CPSearchTemplateDelegate {
     static func forwardGeocodeOptions(_ searchText: String) -> ForwardGeocodeOptions {
         let options = ForwardGeocodeOptions(query: searchText)
         options.focalLocation = CarPlaySearchController.coarseLocationManager.location
-        options.locale = .autoupdatingNonEnglish
+        options.locale = Locale.autoupdatingCurrent.languageCode == "en" ? nil : .autoupdatingCurrent
         var allScopes: PlacemarkScope = .all
         allScopes.remove(.postalCode)
         options.allowedScopes = allScopes
