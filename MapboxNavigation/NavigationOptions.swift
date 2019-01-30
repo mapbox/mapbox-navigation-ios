@@ -1,12 +1,38 @@
 import Foundation
 import MapboxCoreNavigation
 
-class NavigationOptions {
-    lazy var styles: [Style] = [DayStyle(), NightStyle()]
+/*
+    Object representing available options for a Navigation Session.
+ */
+
+@objc(MBNavigationOptions)
+open class NavigationOptions: NSObject {
     
-    var navigationService: NavigationService?
+    /*
+     The styles that the view controller’s internal `StyleManager` object can select from for display. Defaults to `[DayStyle(), NightStyle()]`
+     */
+    @objc public var styles: [Style]? = nil
     
-    var voiceController: RouteVoiceController?
+    /*
+     The navigation service that manages navigation along the route.
+     */
+    @objc open var navigationService: NavigationService?
     
-    var bottomBanner: UIViewController?
+    /*
+     The voice controller that manages the delivery of voice instructions during navigation.
+    */
+    @objc public var voiceController: RouteVoiceController?
+    
+    /*
+     The view controlelr to embed into the bottom section of the UI. Defaults to `BottomBannerViewController`.
+     */
+    @objc public var bottomBanner: ContainerViewController?
+    
+    @objc public convenience init(styles: [Style]? = nil, navigationService: NavigationService? = nil, voiceController: RouteVoiceController? = nil, bottomBanner: ContainerViewController? = nil) {
+        self.init()
+        self.styles = styles
+        self.navigationService = navigationService
+        self.voiceController = voiceController
+        self.bottomBanner = bottomBanner
+    }
 }

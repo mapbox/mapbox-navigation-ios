@@ -201,23 +201,18 @@ open class NavigationViewController: UIViewController {
      See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
      
      - parameter route: The route to navigate along.
-     - parameter styles: The styles that the view controller’s internal `StyleManager` object can select from for display.
-     - parameter navigationService: The navigation service that manages navigation along the route.
-     - parameter voiceController: The voice controller that manages the delivery of voice instructions during navigation.
+     - parameter options: The navigation options to use for the navigation session. See `NavigationOptions`.
      */
-    @objc(initWithRoute:styles:navigationService:voiceController:bottomBanner:)
+    @objc(initWithRoute:options:)
     required public init(for route: Route,
-                         styles: [Style]? = nil,
-                         navigationService: NavigationService? = nil,
-                         voiceController: RouteVoiceController? = nil,
-                         bottomBanner: ContainerViewController? = nil) {
+                         options: NavigationOptions? = nil) {
         
         super.init(nibName: nil, bundle: nil)
         
-        self.navigationService = navigationService ?? MapboxNavigationService(route: route)
+        self.navigationService = options?.navigationService ?? MapboxNavigationService(route: route)
         self.navigationService.usesDefaultUserInterface = true
         self.navigationService.delegate = self
-        self.voiceController = voiceController ?? MapboxVoiceController(speechClient: SpeechSynthesizer(accessToken: navigationService?.directions.accessToken))
+        self.voiceController = options?.voiceController ?? MapboxVoiceController(speechClient: SpeechSynthesizer(accessToken: navigationService?.directions.accessToken))
 
         NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
         
@@ -230,7 +225,7 @@ open class NavigationViewController: UIViewController {
             return map.view.constraintsForPinning(to: parent.view)
         }
                 
-        let bottomBanner = bottomBanner ?? BottomBannerViewController(delegate: self)
+        let bottomBanner = options?.bottomBanner ?? BottomBannerViewController(delegate: self)
         bottomViewController = bottomBanner
         
         embed(bottomBanner, in:  mapViewController.navigationView.bottomBannerContainerView) { (parent, banner) -> [NSLayoutConstraint] in
@@ -247,7 +242,7 @@ open class NavigationViewController: UIViewController {
         
         styleManager = StyleManager()
         styleManager.delegate = self
-        styleManager.styles = styles ?? [DayStyle(), NightStyle()]
+        styleManager.styles = options?.styles ?? [DayStyle(), NightStyle()]
         
         if !(route.routeOptions is NavigationRouteOptions) {
             print("`Route` was created using `RouteOptions` and not `NavigationRouteOptions`. Although not required, this may lead to a suboptimal navigation experience. Without `NavigationRouteOptions`, it is not guaranteed you will get congestion along the route line, better ETAs and ETA label color dependent on congestion.")
@@ -344,7 +339,8 @@ open class NavigationViewController: UIViewController {
                 let route = navigationService.routeProgress.route
                 
                 let service = MapboxNavigationService(route: route, directions: directions, simulating: navigationService.simulationMode)
-                let navigationViewController = NavigationViewController(for: route, navigationService: service)
+                let options = NavigationOptions(navigationService: service)
+                let navigationViewController = NavigationViewController(for: route, options: options)
                 
                 window.rootViewController?.topMostViewController()?.present(navigationViewController, animated: true, completion: {
                     navigationViewController.isUsedInConjunctionWithCarPlayWindow = true
