@@ -231,10 +231,10 @@ open class NavigationViewController: UIViewController {
         }
                 
         let bottomBanner = bottomBanner ?? BottomBannerViewController(delegate: self)
-        bottomBanner.view.translatesAutoresizingMaskIntoConstraints = false
         bottomViewController = bottomBanner
         
         embed(bottomBanner, in:  mapViewController.navigationView.bottomBannerContainerView) { (parent, banner) -> [NSLayoutConstraint] in
+            banner.view.translatesAutoresizingMaskIntoConstraints = false
             return banner.view.constraintsForPinning(to: parent.mapViewController!.navigationView.bottomBannerContainerView)
         }
 

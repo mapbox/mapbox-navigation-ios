@@ -70,12 +70,19 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
     }
     
     override open func loadView() {
-        view = BottomBannerView.forAutoLayout()
-        view.backgroundColor = .purple
+        let root: BottomBannerView = .forAutoLayout() //Must use local var to prevent generic factory from messing up.
+        view = root
     }
     
     override open func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         removeTimer()
+    }
+    
+    override open func viewDidLoad() {
+        super.viewDidLoad()
+        setupViews()
+        cancelButton.addTarget(self, action: #selector(BottomBannerViewController.cancel(_:)), for: .touchUpInside)
     }
     
     private func resumeNotifications() {
@@ -92,10 +99,6 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
         dateFormatter.timeStyle = .short
         dateComponentsFormatter.allowedUnits = [.hour, .minute]
         dateComponentsFormatter.unitsStyle = .abbreviated
-        
-        setupViews()
-        
-        cancelButton.addTarget(self, action: #selector(BottomBannerViewController.cancel(_:)), for: .touchUpInside)
     }
     
     @IBAction func cancel(_ sender: Any) {
