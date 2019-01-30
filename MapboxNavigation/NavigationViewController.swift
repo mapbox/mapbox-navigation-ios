@@ -45,13 +45,13 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     optional func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool
     
     /**
-     Called when the user has arrives at the final destination of the current route leg and may display a feedback
+     Called when the user arrives at the final destination of the current route leg and may display a feedback
      UI to the user.
      
      If implemented, you can use this to detect the status of `CarPlayManager.isConnected` when the user arrives at the final destination.
    
      - parameter navigationViewController: The navigation view controller that has arrived at the leg of route.
-     - returns: This will most likely be used to determine when to show feedback when the user arrives at the final leg of the route.
+     - returns: This will most likely be used to determine whether to show feedback when the user arrives at the final leg of the route.
      */
     @objc optional func navigationViewControllerShouldShowFeedback(_ navigationViewController: NavigationViewController) -> Bool
     
