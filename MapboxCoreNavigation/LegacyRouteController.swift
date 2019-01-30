@@ -616,8 +616,8 @@ extension LegacyRouteController: CLLocationManagerDelegate {
 public extension LegacyRouteController {
     @available(*, obsoleted: 0.1, message: "MapboxNavigationService is now the point-of-entry to MapboxCoreNavigation. Direct use of RouteController is no longer reccomended. See MapboxNavigationService for more information.")
     /// :nodoc: Obsoleted method.
-    @objc(initWithRoute:directions:locationManager:eventsManager:)
-    public convenience init(along route: Route, directions: Directions = Directions.shared, locationManager: NavigationLocationManager = NavigationLocationManager(), eventsManager: NavigationEventsManager) {
+    @objc(initWithRoute:directions:dataSource:eventsManager:)
+    public convenience init(along route: Route, directions: Directions = Directions.shared, dataSource: NavigationLocationManager = NavigationLocationManager(), eventsManager: NavigationEventsManager) {
         fatalError()
     }
     

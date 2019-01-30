@@ -27,7 +27,7 @@ public protocol RouterDataSource {
      - parameter directions: The Directions object that created `route`.
      - parameter source: The data source for the RouteController.
      */
-    @objc(initWithRoute:directions:locationManager:)
+    @objc(initWithRoute:directions:dataSource:)
     init(along route: Route, directions: Directions, dataSource source: RouterDataSource)
     
     /**
