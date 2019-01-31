@@ -468,7 +468,7 @@ extension LegacyRouteController: CLLocationManagerDelegate {
         guard (NSClassFromString("XCTestCase") == nil) else { return } // Short-circuit when running unit tests
             guard let version = Bundle(for: LegacyRouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString") else { return }
             let latestVersion = String(describing: version)
-            _ = URLSession.shared.dataTask(with: URL(string: "https://www.mapbox.com/mapbox-navigation-ios/latest_version")!, completionHandler: { (data, response, error) in
+            _ = URLSession.shared.dataTask(with: URL(string: "https://docs.mapbox.com/ios/navigation/latest_version.txt")!, completionHandler: { (data, response, error) in
                 if let _ = error { return }
                 guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else { return }
 

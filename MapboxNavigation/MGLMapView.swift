@@ -4,7 +4,7 @@ import MapboxDirections
 import MapboxCoreNavigation
 
 /**
- An extension on `MGLMapView` that allows for toggling traffic on a map style that contains a [Mapbox Traffic source](https://www.mapbox.com/vector-tiles/mapbox-traffic-v1/).
+ An extension on `MGLMapView` that allows for toggling traffic on a map style that contains a [Mapbox Traffic source](https://docs.mapbox.com/vector-tiles/mapbox-traffic-v1/).
  */
 extension MGLMapView {
     /**

@@ -22,7 +22,7 @@
 ## v0.27.0
 
 * The `NavigationDirections.unpackTilePack(at:outputDirectoryURL:progressHandler:completionHandler:)` method is now available to Objective-C code as `-[MBNavigationDirections unpackTilePackAtURL:outputDirectoryURL:progressHandler:completionHandler:]`. ([#1891](https://github.com/mapbox/mapbox-navigation-ios/pull/1891))
-* Added support for styles powered by [version 8 of the Mapbox Streets source](https://www.mapbox.com/vector-tiles/mapbox-streets-v8/). ([#1909](https://github.com/mapbox/mapbox-navigation-ios/pull/1909))
+* Added support for styles powered by [version 8 of the Mapbox Streets source](https://docs.mapbox.com/vector-tiles/mapbox-streets-v8/). ([#1909](https://github.com/mapbox/mapbox-navigation-ios/pull/1909))
 * Fixed potential inaccuracies in location snapping, off-route detection, and the current road name label. ([mapbox/turf-swift#74](https://github.com/mapbox/turf-swift/pull/74))
 
 ## v0.26.0
@@ -185,7 +185,7 @@
 
 ### Packaging
 
-* Moved guides and examples to [a new Mapbox Navigation SDK for iOS website](https://www.mapbox.com/ios-sdk/navigation/). ([#1552](https://github.com/mapbox/mapbox-navigation-ios/pull/1552))
+* Moved guides and examples to [a new Mapbox Navigation SDK for iOS website](https://docs.mapbox.com/ios/navigation/). ([#1552](https://github.com/mapbox/mapbox-navigation-ios/pull/1552))
 * Applications intended for use in mainland China can set the `MGLMapboxAPIBaseURL` key in Info.plist to `https://api.mapbox.cn/` to use China-optimized APIs. This setting causes `NavigationMapView` to default to China-optimized day and night styles with places and roads labeled in Simplified Chinese. ([#1558](https://github.com/mapbox/mapbox-navigation-ios/pull/1558))
 
 ### User interface
@@ -516,7 +516,7 @@
 
 ## v0.12.2 (January 12, 2018)
 
-Beginning with this release, we’ve compiled [a set of examples](https://www.mapbox.com/mapbox-navigation-ios/navigation/0.12.2/Examples.html) showing how to accomplish common tasks with this SDK. You can also check out the [navigation-ios-examples](https://github.com/mapbox/navigation-ios-examples) project and run the included application on your device.
+Beginning with this release, we’ve compiled [a set of examples](https://docs.mapbox.com/ios/api/navigation/0.12.2/Examples.html) showing how to accomplish common tasks with this SDK. You can also check out the [navigation-ios-examples](https://github.com/mapbox/navigation-ios-examples) project and run the included application on your device.
 
 ### User interface
 

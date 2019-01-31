@@ -7,7 +7,7 @@ Bug reports and feature requests are more than welcome, but please consider the 
 Before reporting a bug here, please determine whether the issue lies with the navigation SDK itself or with another Mapbox product:
 
 * For general questions and troubleshooting help, please contact the [Mapbox support](https://www.mapbox.com/contact/support/) team.
-* Report problems with the map’s contents or routing problems, especially problems specific to a particular route or region, using the [Mapbox Feedback](https://www.mapbox.com/feedback/) tool.
+* Report problems with the map’s contents or routing problems, especially problems specific to a particular route or region, using the [Mapbox Feedback](https://apps.mapbox.com/feedback/) tool.
 * Report problems in guidance instructions in the [OSRM Text Instructions](https://github.com/Project-OSRM/osrm-text-instructions/) repository.
 
 When reporting a bug in the navigation SDK itself, please indicate:
@@ -41,7 +41,7 @@ To add any type, constant, or member to the SDK’s public interface:
 1. Ensure that the symbol bridges to Objective-C and does not rely on any language features specific to Swift – so no namespaced types or classes named with emoji! 🙃
 1. Name the symbol according to [Swift design guidelines](https://swift.org/documentation/api-design-guidelines/) and [Cocoa naming conventions](https://developer.apple.com/library/prerelease/content/documentation/Cocoa/Conceptual/CodingGuidelines/CodingGuidelines.html#//apple_ref/doc/uid/10000146i).
 1. Use `@objc(…)` to specify an Objective-C-specific name that conforms to Objective-C naming conventions. Use the `MB` class prefix to avoid conflicts with client code.
-1. Provide full documentation comments. We use [jazzy](https://github.com/realm/jazzy/) to produce the documentation found [on the website for this SDK](http://mapbox.com/mapbox-navigation-ios/navigation/). Many developers also rely on Xcode’s Quick Help feature, which supports a subset of Markdown.
+1. Provide full documentation comments. We use [jazzy](https://github.com/realm/jazzy/) to produce the documentation found [on the website for this SDK](https://docs.mapbox.com/ios/api/navigation/). Many developers also rely on Xcode’s Quick Help feature, which supports a subset of Markdown.
 1. _(Optional.)_ Add the type or constant’s name to the relevant category in the `custom_categories` section of [the jazzy configuration file](./docs/jazzy.yml). This is required for classes and protocols and also recommended for any other type that is strongly associated with a particular class or protocol. If you leave out this step, the symbol will appear in an “Other” section in the generated HTML documentation’s table of contents.
 
 ## Adding image assets

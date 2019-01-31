@@ -964,7 +964,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      
      When this property is enabled, the style automatically modifies the `text`
      property of any symbol style layer whose source is the
-     <a href="https://www.mapbox.com/vector-tiles/mapbox-streets-v7/#overview">Mapbox
+     <a href="https://docs.mapbox.com/vector-tiles/mapbox-streets-v7/#overview">Mapbox
      Streets source</a>. On iOS, the user can set the system’s preferred
      language in Settings, General Settings, Language & Region.
      
