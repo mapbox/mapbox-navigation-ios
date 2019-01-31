@@ -12,8 +12,7 @@ open class NavigationRouteOptions: RouteOptions {
     /**
      Initializes a navigation route options object for routes between the given waypoints and an optional profile identifier optimized for navigation.
 
-     - SeeAlso:
-     [RouteOptions](https://www.mapbox.com/mapbox-navigation-ios/directions/0.10.1/Classes/RouteOptions.html)
+     - seealso: `RouteOptions`
      */
     @objc public required init(waypoints: [Waypoint], profileIdentifier: MBDirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
         super.init(waypoints: waypoints.map {
@@ -35,8 +34,7 @@ open class NavigationRouteOptions: RouteOptions {
     /**
      Initializes a navigation route options object for routes between the given locations and an optional profile identifier optimized for navigation.
 
-     - SeeAlso:
-     [RouteOptions](https://www.mapbox.com/mapbox-navigation-ios/directions/0.19.0/Classes/RouteOptions.html)
+     - seealso: `RouteOptions`
      */
     @objc public convenience init(locations: [CLLocation], profileIdentifier: MBDirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
         self.init(waypoints: locations.map { Waypoint(location: $0) }, profileIdentifier: profileIdentifier)
@@ -45,8 +43,7 @@ open class NavigationRouteOptions: RouteOptions {
     /**
      Initializes a route options object for routes between the given geographic coordinates and an optional profile identifier optimized for navigation.
 
-     - SeeAlso:
-     [RouteOptions](https://www.mapbox.com/mapbox-navigation-ios/directions/0.19.0/Classes/RouteOptions.html)
+     - seealso: `RouteOptions`
      */
     @objc public convenience init(coordinates: [CLLocationCoordinate2D], profileIdentifier: MBDirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
         self.init(waypoints: coordinates.map { Waypoint(coordinate: $0) }, profileIdentifier: profileIdentifier)
@@ -70,8 +67,7 @@ open class NavigationMatchOptions: MatchOptions {
     /**
      Initializes a navigation route options object for routes between the given waypoints and an optional profile identifier optimized for navigation.
      
-     - SeeAlso:
-     [MatchOptions](https://www.mapbox.com/mapbox-navigation-ios/directions/0.19.0/Classes/MatchOptions.html)
+     - seealso: `MatchOptions`
      */
     @objc public required init(waypoints: [Waypoint], profileIdentifier: MBDirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
         super.init(waypoints: waypoints.map {
@@ -90,8 +86,7 @@ open class NavigationMatchOptions: MatchOptions {
     /**
      Initializes a navigation match options object for routes between the given locations and an optional profile identifier optimized for navigation.
      
-     - SeeAlso:
-     [MatchOptions](https://www.mapbox.com/mapbox-navigation-ios/directions/0.19.0/Classes/MatchOptions.html)
+     - seealso: `MatchOptions`
      */
     @objc public convenience init(locations: [CLLocation], profileIdentifier: MBDirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
         self.init(waypoints: locations.map { Waypoint(location: $0) }, profileIdentifier: profileIdentifier)
@@ -100,8 +95,7 @@ open class NavigationMatchOptions: MatchOptions {
     /**
      Initializes a navigation match options object for routes between the given geographic coordinates and an optional profile identifier optimized for navigation.
      
-     - SeeAlso:
-     [MatchOptions](https://www.mapbox.com/mapbox-navigation-ios/directions/0.19.0/Classes/MatchOptions.html)
+     - seealso: `MatchOptions`
      */
     @objc public convenience init(coordinates: [CLLocationCoordinate2D], profileIdentifier: MBDirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
         self.init(waypoints: coordinates.map { Waypoint(coordinate: $0) }, profileIdentifier: profileIdentifier)

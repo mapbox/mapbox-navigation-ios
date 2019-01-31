@@ -129,7 +129,7 @@ public class NavigationDirections: Directions {
      
      This method retrieves the routes asynchronously via MapboxNavigationNative.
      
-     Routes may be displayed atop a [Mapbox map](https://www.mapbox.com/maps/). They may be cached but may not be stored permanently. To use the results in other contexts or store them permanently, [upgrade to a Mapbox enterprise plan](https://www.mapbox.com/directions/#pricing).
+     Routes may be displayed atop a [Mapbox map](https://www.mapbox.com/maps/). They may be cached but may not be stored permanently. To use the results in other contexts or store them permanently, [upgrade to a Mapbox enterprise plan](https://www.mapbox.com/navigation/#pricing).
      
      - parameter options: A `RouteOptions` object specifying the requirements for the resulting routes.
      - parameter offline: Determines whether to calculate the route offline or online.
