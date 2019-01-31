@@ -603,13 +603,17 @@ extension NavigationViewController: NavigationServiceDelegate {
     }
     
     @objc public func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
-        navigationComponents.forEach { $0.navigationService?(service, didRerouteAlong: route, at: location, proactive: proactive) }
+        for component in navigationComponents {
+            component.navigationService?(service, didRerouteAlong: route, at: location, proactive: proactive)
+        }
 
         delegate?.navigationViewController?(self, didRerouteAlong: route)
     }
     
     @objc public func navigationService(_ service: NavigationService, didFailToRerouteWith error: Error) {
-        navigationComponents.forEach { $0.navigationService?(service, didFailToRerouteWith: error) }
+        for component in navigationComponents {
+            component.navigationService?(service, didFailToRerouteWith: error)
+        }
 
         delegate?.navigationViewController?(self, didFailToRerouteWith: error)
     }
