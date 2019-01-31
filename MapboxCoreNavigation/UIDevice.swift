@@ -4,11 +4,6 @@ import CoreLocation
     import UIKit
 #endif
 
-#if os(iOS)
-    import UIKit
-#endif
-
-
 extension UIDevice {
     
     /**
