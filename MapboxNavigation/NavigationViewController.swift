@@ -8,7 +8,7 @@ import CarPlay
 #endif
 
 /**
- A ContainerViewController is any UIViewController that suscribes to the NavigationComponent messaging protocol.
+ A ContainerViewController is any UIViewController that subscribes to the NavigationComponent messaging protocol.
  - seealso: NavigationComponent
  */
 public typealias ContainerViewController = UIViewController & NavigationComponent
