@@ -24,21 +24,35 @@ class MapboxCoreNavigationTests: XCTestCase {
     func testNavigationNotificationsInfoDict() {
         route.accessToken = "foo"
         navigation = MapboxNavigationService(route: route, directions: directions, simulating: .never)
-        let depart = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165), altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 0, speed: 10, timestamp: Date())
+        let now = Date()
+        let steps = route.legs.first!.steps
+        let coordinates = steps[2].coordinates! + steps[3].coordinates!
         
-       let spokenTest = expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: navigation.router) { (note) -> Bool in
+        let locations = coordinates.enumerated().map { CLLocation(coordinate: $0.element,
+                                                                  altitude: -1, horizontalAccuracy: 10,
+                                                                  verticalAccuracy: -1, course: -1, speed: 10,
+                                                                  timestamp: now + $0.offset) }
+        
+        
+        let spokenTest = expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: navigation.router) { (note) -> Bool in
             return note.userInfo!.count == 2
         }
         spokenTest.expectationDescription = "Spoken Instruction notification expected to have user info dictionary with two values"
         
         navigation.start()
-        navigation.locationManager(navigation.locationManager, didUpdateLocations: [depart])
-        let location = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.78895, longitude: -122.42543), altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 171, speed: 10, timestamp: Date())
-
+        
+        for loc in locations {
+            navigation.locationManager(navigation.locationManager, didUpdateLocations: [loc])
+        }
+        
+        let location = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.78895, longitude: -122.42543), altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 171, speed: 10, timestamp: Date() + 4)
+        
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [location])
         
+        
+        
         wait(for: [spokenTest], timeout: waitForInterval)
-
+        
     }
     
     func testDepart() {
