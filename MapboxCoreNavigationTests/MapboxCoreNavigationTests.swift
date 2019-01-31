@@ -21,6 +21,40 @@ class MapboxCoreNavigationTests: XCTestCase {
     
     var navigation: MapboxNavigationService!
     
+    func testNavigationNotificationsInfoDict() {
+        route.accessToken = "foo"
+        navigation = MapboxNavigationService(route: route, directions: directions, simulating: .never)
+        let now = Date()
+        let steps = route.legs.first!.steps
+        let coordinates = steps[2].coordinates! + steps[3].coordinates!
+        
+        let locations = coordinates.enumerated().map { CLLocation(coordinate: $0.element,
+                                                                  altitude: -1, horizontalAccuracy: 10,
+                                                                  verticalAccuracy: -1, course: -1, speed: 10,
+                                                                  timestamp: now + $0.offset) }
+        
+        
+        let spokenTest = expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: navigation.router) { (note) -> Bool in
+            return note.userInfo!.count == 2
+        }
+        spokenTest.expectationDescription = "Spoken Instruction notification expected to have user info dictionary with two values"
+        
+        navigation.start()
+        
+        for loc in locations {
+            navigation.locationManager(navigation.locationManager, didUpdateLocations: [loc])
+        }
+        
+        let location = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.78895, longitude: -122.42543), altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 171, speed: 10, timestamp: Date() + 4)
+        
+        navigation.locationManager(navigation.locationManager, didUpdateLocations: [location])
+        
+        
+        
+        wait(for: [spokenTest], timeout: waitForInterval)
+        
+    }
+    
     func testDepart() {
         route.accessToken = "foo"
         navigation = MapboxNavigationService(route: route, directions: directions, simulating: .never)
@@ -34,8 +68,6 @@ class MapboxCoreNavigationTests: XCTestCase {
                                                                   timestamp: now + $0.offset) }
         
         expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: navigation.router) { (notification) -> Bool in
-            XCTAssertEqual(notification.userInfo?.count, 1)
-            
             let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as? RouteProgress
             
             return routeProgress != nil && routeProgress?.currentLegProgress.userHasArrivedAtWaypoint == false
@@ -65,8 +97,6 @@ class MapboxCoreNavigationTests: XCTestCase {
         
         navigation = MapboxNavigationService(route: route, directions: directions, simulating: .never)
         expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: navigation.router) { (notification) -> Bool in
-            XCTAssertEqual(notification.userInfo?.count, 1)
-            
             let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as? RouteProgress
             
             return routeProgress?.currentLegProgress.stepIndex == 2
@@ -93,8 +123,6 @@ class MapboxCoreNavigationTests: XCTestCase {
         navigation = MapboxNavigationService(route: route, directions: directions, locationSource: locationManager, simulating: .never)
         
         expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: navigation.router) { (notification) -> Bool in
-            XCTAssertEqual(notification.userInfo?.count, 1)
-            
             let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as? RouteProgress
             return routeProgress?.currentLegProgress.stepIndex == 4
         }

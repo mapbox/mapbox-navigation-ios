@@ -601,4 +601,13 @@ open class RouteStepProgress: NSObject {
         guard visualInstructionIndex < instructionsDisplayedAlongStep.count else { return nil }
         return instructionsDisplayedAlongStep[visualInstructionIndex]
     }
+    
+    @objc public var keyPathsAffectingValueForRemainingVisualInstructions: Set<String> {
+        return ["step.instructionsDisplayedAlongStep", "visualInstructionIndex"]
+    }
+    
+    @objc public var keyPathsAffectingValueForRemainingSpokenInstructions: Set<String> {
+        return ["step.instructionsDisplayedAlongStep", "spokenInstructionIndex"]
+    }
+
 }

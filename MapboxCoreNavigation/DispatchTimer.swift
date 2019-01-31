@@ -1,13 +1,16 @@
 import Foundation
 import Dispatch
 
-class DispatchTimer {
-    enum State {
+/**
+ `DispatchTimer` is a general-purpose wrapper over the `DispatchSourceTimer` mechanism in GCD.
+ */
+public class DispatchTimer {
+    public enum State {
         case armed, disarmed
     }
     
-    typealias Payload = DispatchSource.DispatchSourceHandler
-    static let defaultAccuracy: DispatchTimeInterval = .milliseconds(500)
+    public typealias Payload = DispatchSource.DispatchSourceHandler
+    public static let defaultAccuracy: DispatchTimeInterval = .milliseconds(500)
     var countdownInterval: DispatchTimeInterval {
         didSet {
             reset()
@@ -21,9 +24,19 @@ class DispatchTimer {
     let executionQueue: DispatchQueue
     let timer: DispatchSourceTimer
     
-    private(set) var state: State = .disarmed
+    private(set) public var state: State = .disarmed
     
-    init(countdown: DispatchTimeInterval, repeating repetition: DispatchTimeInterval = .never, accuracy: DispatchTimeInterval = defaultAccuracy, executingOn executionQueue: DispatchQueue = .main, payload: @escaping Payload) {
+    /**
+     Initializes a new timer.
+     
+     - parameter countdown: The initial time interval for the timer to wait before firing off the payload for the first time.
+     - parameter repeating: The subsequent time interval for the timer to wait before firing off the payload an additional time. Repeats until manually stopped.
+     - parameter accuracy: The amount of leeway, expressed as a time interval, that the timer has in it's timing of the payload execution. Default is 500 milliseconds.
+     - parameter executingOn: the queue on which the timer executes. Default is main queue.
+     - parameter payload: The payload that executes when the timer expires.
+     */
+    
+    public init(countdown: DispatchTimeInterval, repeating repetition: DispatchTimeInterval = .never, accuracy: DispatchTimeInterval = defaultAccuracy, executingOn executionQueue: DispatchQueue = .main, payload: @escaping Payload) {
         countdownInterval = countdown
         repetitionInterval = repetition
         self.executionQueue = executionQueue
@@ -52,7 +65,10 @@ class DispatchTimer {
         executionQueue.async(execute: payload)
     }
     
-    func arm() {
+    /**
+     Arm the timer. Countdown will begin after this function returns.
+    */
+    public func arm() {
         guard state == .disarmed, !timer.isCancelled else { return }
         state = .armed
         scheduleTimer()
@@ -60,14 +76,20 @@ class DispatchTimer {
         timer.resume()
     }
     
-    func reset() {
+    /**
+     Re-arm the timer. Countdown will restart after this function returns.
+     */
+    public func reset() {
         guard state == .armed, !timer.isCancelled else { return }
         timer.suspend()
         scheduleTimer()
         timer.resume()
     }
 
-    func disarm() {
+    /**
+     Disarm the timer. Countdown will stop after this function returns.
+     */
+    public func disarm() {
         guard state == .armed, !timer.isCancelled else { return }
         state = .disarmed
         timer.suspend()

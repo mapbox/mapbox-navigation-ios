@@ -2,6 +2,8 @@
 
 ## master
 
+* Added an initializer to DispatchTimer, along with methods for arming and disarming the timer. ([#1912](https://github.com/mapbox/mapbox-navigation-ios/pull/1912))
+* Added the `MapboxNavigationService.router(_:didPassVisualInstructionPoint:routeProgress:)` and `MapboxNavigationService.router(_:didPassSpokenInstructionPoint:routeProgress:)` methods, which correspond to `Notification.Name.routeControllerDidPassVisualInstructionPoint` and `Notification.Name.routeControllerDidPassSpokenInstructionPoint`, respectively. ([#1912](https://github.com/mapbox/mapbox-navigation-ios/pull/1912))
 * Restored “Declaration” and “Parameters” sections throughout the API reference. ([#1952](https://github.com/mapbox/mapbox-navigation-ios/pull/1952))
 * `RouteController` has been renamed to `LegacyRouteController` which will be removed in a future release. ([#1904](https://github.com/mapbox/mapbox-navigation-ios/pull/1904))
 * PortableRouteController has been renamed to `RouteController`. ([#1904](https://github.com/mapbox/mapbox-navigation-ios/pull/1904))

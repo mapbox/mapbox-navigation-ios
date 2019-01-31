@@ -217,9 +217,7 @@ open class RouteController: NSObject {
             
             // Don't annouce spoken instruction if we are going to reroute
             if !willReRoute {
-                NotificationCenter.default.post(name: .routeControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
-                    RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress
-                    ])
+                announcePassage(of: routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction!, routeProgress: routeProgress)
             }
         }
     }
@@ -229,10 +227,10 @@ open class RouteController: NSObject {
         let willChangeVisualIndex = status.bannerInstruction != nil
         
         if willChangeVisualIndex || isFirstLocation {
-            routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex = Int(status.bannerInstruction?.index ?? 0)
-            NotificationCenter.default.post(name: .routeControllerDidPassVisualInstructionPoint, object: self, userInfo: [
-                RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress
-                ])
+            let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
+            currentStepProgress.visualInstructionIndex = Int(status.bannerInstruction?.index ?? 0)
+            let instruction = currentStepProgress.currentVisualInstruction
+            announcePassage(of: instruction!, routeProgress: routeProgress)
         }
     }
     
@@ -315,6 +313,30 @@ open class RouteController: NSObject {
         userInfo[.isProactiveKey] = didFindFasterRoute
         NotificationCenter.default.post(name: .routeControllerDidReroute, object: self, userInfo: userInfo)
         delegate?.router?(self, didRerouteAlong: routeProgress.route, at: dataSource.location, proactive: didFindFasterRoute)
+    }
+    
+    private func announcePassage(of spokenInstructionPoint: SpokenInstruction, routeProgress: RouteProgress) {
+        
+        delegate?.router?(self, didPassSpokenInstructionPoint: spokenInstructionPoint, routeProgress: routeProgress)
+        
+        let info: [RouteControllerNotificationUserInfoKey: Any] = [
+            .routeProgressKey: routeProgress,
+            .spokenInstructionKey: spokenInstructionPoint
+        ]
+        
+        NotificationCenter.default.post(name: .routeControllerDidPassSpokenInstructionPoint, object: self, userInfo: info)
+    }
+    
+    private func announcePassage(of visualInstructionPoint: VisualInstructionBanner, routeProgress: RouteProgress) {
+        
+        delegate?.router?(self, didPassVisualInstructionPoint: visualInstructionPoint, routeProgress: routeProgress)
+        
+        let info: [RouteControllerNotificationUserInfoKey: Any] = [
+            .routeProgressKey: routeProgress,
+            .visualInstructionKey: visualInstructionPoint
+        ]
+        
+        NotificationCenter.default.post(name: .routeControllerDidPassVisualInstructionPoint, object: self, userInfo: info)
     }
     
     public func advanceLegIndex(location: CLLocation) {

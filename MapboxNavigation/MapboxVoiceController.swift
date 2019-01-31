@@ -72,25 +72,11 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
         locale = routeProgresss.route.routeOptions.locale
         let currentLegProgress: RouteLegProgress = routeProgresss.currentLegProgress
 
-        for (stepIndex, step) in currentLegProgress.leg.steps.suffix(from: currentLegProgress.stepIndex).enumerated() {
-            let adjustedStepIndex = stepIndex + currentLegProgress.stepIndex
-
-            guard adjustedStepIndex < currentLegProgress.stepIndex + stepsAheadToCache else {
-                continue
-            }
-
-            guard let instructions = step.instructionsSpokenAlongStep else {
-                continue
-            }
-
-            for instruction in instructions {
-                guard !hasCachedSpokenInstructionForKey(instruction.ssmlText) else {
-                    continue
-                }
-
-                downloadAndCacheSpokenInstruction(instruction: instruction)
-            }
-        }
+        let instructionSets = currentLegProgress.remainingSteps.prefix(stepsAheadToCache).compactMap { $0.instructionsSpokenAlongStep }
+        let instructions = instructionSets.flatMap { $0 }
+        let unfetchedInstructions = instructions.filter { !hasCachedSpokenInstructionForKey($0.ssmlText) }
+        
+        unfetchedInstructions.forEach( downloadAndCacheSpokenInstruction(instruction:) )
         
         super.didPassSpokenInstructionPoint(notification: notification)
     }

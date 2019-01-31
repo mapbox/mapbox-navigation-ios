@@ -251,6 +251,7 @@
 		8DB7EF6A2176674800DA83A3 /* MapboxNavigationServiceSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DB7EF692176674800DA83A3 /* MapboxNavigationServiceSpec.swift */; };
 		8DB7EF6B2176680E00DA83A3 /* Cedar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1603C890214351EE00167D95 /* Cedar.framework */; };
 		8DB7EF6C2176688D00DA83A3 /* LeakTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B1AEBD20AD9C7800C8544E /* LeakTest.swift */; };
+		8DCB4248218A540A00D6FCAD /* NavigationComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCB4247218A540A00D6FCAD /* NavigationComponent.swift */; };
 		8DCE1050210FC5880048B0FB /* EndOfRouteFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCE104F210FC5880048B0FB /* EndOfRouteFeedback.swift */; };
 		8DE879661FBB9980002F06C0 /* EndOfRouteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DE879651FBB9980002F06C0 /* EndOfRouteViewController.swift */; };
 		8DF399B21FB257B30034904C /* UIGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DF399B11FB257B30034904C /* UIGestureRecognizer.swift */; };
@@ -807,9 +808,19 @@
 		8DB45E8F201698EB001EA6A3 /* UIStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIStackView.swift; sourceTree = "<group>"; };
 		8DB63A391FBBCA2200928389 /* RatingControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingControl.swift; sourceTree = "<group>"; };
 		8DB7EF692176674800DA83A3 /* MapboxNavigationServiceSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxNavigationServiceSpec.swift; sourceTree = "<group>"; };
+		8DCB4247218A540A00D6FCAD /* NavigationComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationComponent.swift; sourceTree = "<group>"; };
 		8DCE104F210FC5880048B0FB /* EndOfRouteFeedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndOfRouteFeedback.swift; sourceTree = "<group>"; };
 		8DE879651FBB9980002F06C0 /* EndOfRouteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndOfRouteViewController.swift; sourceTree = "<group>"; };
 		8DF399B11FB257B30034904C /* UIGestureRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIGestureRecognizer.swift; sourceTree = "<group>"; };
+		8DF8E4DE2202696800B29FEF /* Cartfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
+		8DF8E4DF2202696800B29FEF /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		8DF8E4E02202696800B29FEF /* MapboxNavigation-Documentation.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = "MapboxNavigation-Documentation.podspec"; sourceTree = "<group>"; };
+		8DF8E4E12202696800B29FEF /* MapboxCoreNavigation.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = MapboxCoreNavigation.podspec; sourceTree = "<group>"; };
+		8DF8E4E22202696800B29FEF /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
+		8DF8E4E32202696800B29FEF /* Cartfile.private */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile.private; sourceTree = "<group>"; };
+		8DF8E4E42202696800B29FEF /* custom-navigation.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "custom-navigation.md"; sourceTree = "<group>"; };
+		8DF8E4E52202696800B29FEF /* MapboxNavigation.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = MapboxNavigation.podspec; sourceTree = "<group>"; };
+		8DF8E4E62202696800B29FEF /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
 		AE00A739209A2C38006A3DC7 /* StepsViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepsViewControllerTests.swift; sourceTree = "<group>"; };
 		AE46F95420EA735B00537AC2 /* VisualInstruction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualInstruction.swift; sourceTree = "<group>"; };
 		AE5F8770209A082500F58FDB /* route-with-banner-instructions.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-with-banner-instructions.json"; sourceTree = "<group>"; };
@@ -1160,6 +1171,7 @@
 		351BEBD81E5BCC28006FE110 /* MapboxNavigation */ = {
 			isa = PBXGroup;
 			children = (
+				8DCB4246218A53F500D6FCAD /* Protocols */,
 				3507F9FD213430CB0086B39E /* CarPlay */,
 				C51923B41EA55C5E002AF9E1 /* Extensions */,
 				356B7D8A1EE166E100FE5B89 /* scripts */,
@@ -1382,6 +1394,30 @@
 			path = TestHelper;
 			sourceTree = "<group>";
 		};
+		8DCB4246218A53F500D6FCAD /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				8DCB4247218A540A00D6FCAD /* NavigationComponent.swift */,
+			);
+			name = Protocols;
+			sourceTree = "<group>";
+		};
+		8DF8E4DD2202694100B29FEF /* Documents */ = {
+			isa = PBXGroup;
+			children = (
+				8DF8E4DE2202696800B29FEF /* Cartfile */,
+				8DF8E4E32202696800B29FEF /* Cartfile.private */,
+				8DF8E4E22202696800B29FEF /* CHANGELOG.md */,
+				8DF8E4E42202696800B29FEF /* custom-navigation.md */,
+				8DF8E4E62202696800B29FEF /* LICENSE.md */,
+				8DF8E4E12202696800B29FEF /* MapboxCoreNavigation.podspec */,
+				8DF8E4E02202696800B29FEF /* MapboxNavigation-Documentation.podspec */,
+				8DF8E4E52202696800B29FEF /* MapboxNavigation.podspec */,
+				8DF8E4DF2202696800B29FEF /* README.md */,
+			);
+			name = Documents;
+			sourceTree = "<group>";
+		};
 		A9E2B43473B53369153F54C6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -1503,6 +1539,7 @@
 		C5ADFBBF1DDCC7840011824B = {
 			isa = PBXGroup;
 			children = (
+				8DF8E4DD2202694100B29FEF /* Documents */,
 				35B711DB1E5E7B70001EDA8D /* Example */,
 				C5ADFBCB1DDCC7840011824B /* MapboxCoreNavigation */,
 				351BEBD81E5BCC28006FE110 /* MapboxNavigation */,
@@ -2296,6 +2333,7 @@
 				355ED3701FAB724F00BCE1B8 /* BottomBannerViewLayout.swift in Sources */,
 				351BEC0E1E5BCC72006FE110 /* DashedLineView.swift in Sources */,
 				35ECAF2D2092275100DC3BC3 /* UIImage.swift in Sources */,
+				8DCB4248218A540A00D6FCAD /* NavigationComponent.swift in Sources */,
 				351BEC051E5BCC6C006FE110 /* LaneView.swift in Sources */,
 				C5A7EC5C1FD610A80008B9BA /* VisualInstructionComponent.swift in Sources */,
 				CFD47D9020FD85EC00BC1E49 /* MGLAccountManager.swift in Sources */,
