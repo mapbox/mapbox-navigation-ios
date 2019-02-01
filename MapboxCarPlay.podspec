@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
   s.summary      = "CarPlay features and functionalities for turn-by-turn navigation on iOS."
 
   s.description  = <<-DESC
-  The Mapbox CarPlay Framework inherits certain Mapbox Navigation experience and display it on the car’s built-in display. 
+  A MapboxNavigation helper library that integrates with the CarPlay framework for in-car display.
                    DESC
 
   s.homepage = "https://www.mapbox.com/ios-sdk/navigation/"
