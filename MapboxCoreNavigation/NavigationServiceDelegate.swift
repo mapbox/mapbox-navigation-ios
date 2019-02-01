@@ -73,6 +73,25 @@ import MapboxDirections
     optional func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation)
     
     /**
+     Called when the navigation service detects that the user has passed a point at which an instruction should be displayed.
+     - parameter service: The navigation service that passed the instruction point.
+     - parameter instruction: The instruction to be presented.
+     - parameter routeProgress: The route progress object that the navigation service is updating.
+    */
+    @objc(navigationService:didPassVisualInstructionPoint:routeProgress:)
+    optional func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress)
+    
+    
+    /**
+     Called when the navigation service detects that the user has passed a point at which an instruction should be spoken.
+     - parameter service: The navigation service that passed the instruction point.
+     - parameter instruction: The instruction to be spoken.
+     - parameter routeProgress: The route progress object that the navigation service is updating.
+     */
+    @objc(navigationService:didPassSpokenInstructionPoint:routeProgress:)
+    optional func navigationService(_ service: NavigationService, didPassSpokenInstructionPoint instruction: SpokenInstruction, routeProgress: RouteProgress)
+    
+    /**
      Called as the navigation service approaches a waypoint.
      
      This message is sent, once per progress update, as the user is approaching a waypoint. You can use this to cue UI, to do network pre-loading, etc.

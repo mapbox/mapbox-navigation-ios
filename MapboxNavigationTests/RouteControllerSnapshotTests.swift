@@ -61,6 +61,4 @@ extension RouteControllerSnapshotTests: RouterDataSource {
     var locationProvider: NavigationLocationManager.Type {
         return NavigationLocationManager.self
     }
-    
-    
 }

@@ -32,7 +32,7 @@
     MBDirectionsSpy *directions = [[MBDirectionsSpy alloc] initWithAccessToken:@"garbage" host:nil];
     MBNavigationLocationManager *locationManager = [[MBNavigationLocationManager alloc] init];
     _locationManager = locationManager;
-    _routeController = [[MBRouteController alloc] initWithRoute:route directions:directions locationManager:locationManager];
+    _routeController = [[MBRouteController alloc] initWithRoute:route directions:directions dataSource:locationManager];
     XCTAssertNotNil(_routeController);
     
     XCTestExpectation *expectation = [self expectationForNotification:MBRouteControllerDidRerouteNotification object:nil handler:^BOOL(NSNotification * _Nonnull notification) {

@@ -1,4 +1,4 @@
-Copyright © 2014–2018, Mapbox
+Copyright © 2014–2019, Mapbox
 
 Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
 

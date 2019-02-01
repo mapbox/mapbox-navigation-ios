@@ -228,7 +228,8 @@ open class NavigationViewController: UIViewController {
         set {
             navigationService.route = newValue
             NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
-            mapViewController?.notifyDidReroute(route: route)
+            
+            navigationComponents.forEach { $0.navigationService?(navigationService, didRerouteAlong: newValue, at: nil, proactive: false) }
         }
     }
     
@@ -329,6 +330,11 @@ open class NavigationViewController: UIViewController {
     
     var mapViewController: RouteMapViewController?
     
+    var navigationComponents: [NavigationComponent] {
+        guard let mvc = mapViewController else { return [] }
+        return [mvc]
+    }
+    
     /**
      A Boolean value that determines whether the map annotates the locations at which instructions are spoken for debugging purposes.
      */
@@ -408,7 +414,6 @@ open class NavigationViewController: UIViewController {
     
     deinit {
         navigationService.stop()
-        suspendNotifications()
     }
     
     override open func viewDidLoad() {
@@ -416,7 +421,6 @@ open class NavigationViewController: UIViewController {
         // Initialize voice controller if it hasn't been overridden.
         // This is optional and lazy so it can be mutated by the developer after init.
         _ = voiceController
-        resumeNotifications()
         view.clipsToBounds = true
     }
     
@@ -439,49 +443,6 @@ open class NavigationViewController: UIViewController {
     }
     
     // MARK: Route controller notifications
-    
-    func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(notification:)), name: .routeControllerProgressDidChange, object: navigationService.router)
-        NotificationCenter.default.addObserver(self, selector: #selector(didPassInstructionPoint(notification:)), name: .routeControllerDidPassSpokenInstructionPoint, object: navigationService.router)
-    }
-    
-    func suspendNotifications() {
-        NotificationCenter.default.removeObserver(self, name: .routeControllerProgressDidChange, object: navigationService.router)
-        NotificationCenter.default.removeObserver(self, name: .routeControllerDidPassSpokenInstructionPoint, object: navigationService.router)
-    }
-    
-    @objc func progressDidChange(notification: NSNotification) {
-        let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
-        let location = notification.userInfo![RouteControllerNotificationUserInfoKey.locationKey] as! CLLocation
-        let secondsRemaining = routeProgress.currentLegProgress.currentStepProgress.durationRemaining
-
-        mapViewController?.notifyDidChange(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
-        
-        // If the user has arrived, don't snap the user puck.
-        // In the case the user drives beyond the waypoint,
-        // we should accurately depict this.
-        let progress = navigationService.routeProgress
-        let destination = progress.currentLeg.destination
-        let shouldPrevent = navigationService.delegate?.navigationService?(navigationService, shouldPreventReroutesWhenArrivingAt: destination) ?? RouteController.DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint
-        let userHasArrivedAndShouldPreventRerouting = shouldPrevent && !progress.currentLegProgress.userHasArrivedAtWaypoint
-        
-        if snapsUserLocationAnnotationToRoute,
-            userHasArrivedAndShouldPreventRerouting {
-            mapViewController?.mapView.updateCourseTracking(location: location, animated: true)
-        }
-    }
-    
-    @objc func didPassInstructionPoint(notification: NSNotification) {
-        let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
-        
-        mapViewController?.updateCameraAltitude(for: routeProgress)
-        
-        clearStaleNotifications()
-        
-        if routeProgress.currentLegProgress.currentStepProgress.durationRemaining <= RouteControllerHighAlertInterval {
-            scheduleLocalNotification(about: routeProgress.currentLegProgress.currentStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count)
-        }
-    }
     
     func scheduleLocalNotification(about step: RouteStep, legIndex: Int?, numberOfLegs: Int?) {
         guard sendsNotifications else { return }
@@ -589,12 +550,19 @@ extension NavigationViewController: NavigationServiceDelegate {
         delegate?.navigationViewController?(self, willRerouteFrom: location)
     }
     
-    @objc public func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at: CLLocation?, proactive: Bool) {
-        mapViewController?.notifyDidReroute(route: route)
+    @objc public func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
+        for component in navigationComponents {
+            component.navigationService?(service, didRerouteAlong: route, at: location, proactive: proactive)
+        }
+
         delegate?.navigationViewController?(self, didRerouteAlong: route)
     }
     
     @objc public func navigationService(_ service: NavigationService, didFailToRerouteWith error: Error) {
+        for component in navigationComponents {
+            component.navigationService?(service, didFailToRerouteWith: error)
+        }
+
         delegate?.navigationViewController?(self, didFailToRerouteWith: error)
     }
     
@@ -606,14 +574,20 @@ extension NavigationViewController: NavigationServiceDelegate {
         
         //Check to see if we're in a tunnel.
         checkTunnelState(at: location, along: progress)
+        
+        
+        //Pass the message onto our navigation components
+        for component in navigationComponents {
+            component.navigationService?(service, didUpdate: progress, with: location, rawLocation: rawLocation)
+        }
 
         // If the user has arrived, don't snap the user puck.
         // In the case the user drives beyond the waypoint,
         // we should accurately depict this.
         
-        // Delegate method is trying to figure
-        let shouldPreventReroutesWhenArrivingAtWaypoint = service.delegate?.navigationService?(service, shouldPreventReroutesWhenArrivingAt: service.routeProgress.currentLeg.destination) ?? true
-        let userHasArrivedAndShouldPreventRerouting = shouldPreventReroutesWhenArrivingAtWaypoint && !service.routeProgress.currentLegProgress.userHasArrivedAtWaypoint
+        let destination = progress.currentLeg.destination
+        let shouldPrevent = navigationService.delegate?.navigationService?(navigationService, shouldPreventReroutesWhenArrivingAt: destination) ?? RouteController.DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint
+        let userHasArrivedAndShouldPreventRerouting = shouldPrevent && !progress.currentLegProgress.userHasArrivedAtWaypoint
         
         if snapsUserLocationAnnotationToRoute,
             userHasArrivedAndShouldPreventRerouting {
@@ -621,7 +595,29 @@ extension NavigationViewController: NavigationServiceDelegate {
         } else  {
             mapViewController?.labelCurrentRoad(at: rawLocation)
         }
+        
+        if snapsUserLocationAnnotationToRoute,
+            userHasArrivedAndShouldPreventRerouting {
+            mapViewController?.mapView.updateCourseTracking(location: location, animated: true)
+        }
     }
+    
+    @objc public func navigationService(_ service: NavigationService, didPassSpokenInstructionPoint instruction: SpokenInstruction, routeProgress: RouteProgress) {
+        navigationComponents.forEach { $0.navigationService?(service, didPassSpokenInstructionPoint: instruction, routeProgress: routeProgress) }
+        
+        clearStaleNotifications()
+        
+        if routeProgress.currentLegProgress.currentStepProgress.durationRemaining <= RouteControllerHighAlertInterval {
+            scheduleLocalNotification(about: routeProgress.currentLegProgress.currentStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count)
+        }
+    }
+    
+    @objc public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
+        navigationComponents.forEach { $0.navigationService?(service, didPassVisualInstructionPoint: instruction, routeProgress: routeProgress) }
+    }
+    
+    
+    
     
     @objc public func navigationService(_ service: NavigationService, willArriveAt waypoint: Waypoint, after remainingTimeInterval: TimeInterval, distance: CLLocationDistance) {
         delegate?.navigationViewController?(self, willArriveAt: waypoint, after: remainingTimeInterval, distance: distance)
@@ -706,56 +702,5 @@ extension NavigationViewController: StyleManagerDelegate {
     
     public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
         mapView?.reloadStyle(self)
-    }
-}
-
-
-//MARK: - Obsoleted Interfaces
-
-public extension NavigationViewController {
-    @available(*, obsoleted: 0.1, renamed: "navigationService", message: "NavigationViewController no-longer directly manages a RouteController. See MapboxNavigationService, which contains a protocol-bound reference to the RouteController, for more information.")
-    /// :nodoc: obsoleted
-    @objc public final var routeController: RouteController! {
-        get {
-            fatalError()
-        }
-        set {
-            fatalError()
-        }
-    }
-    
-    @available(*, obsoleted: 0.1, renamed: "navigationService.eventsManager", message: "NavigationViewController no-longer directly manages a NavigationEventsManager. See MapboxNavigationService, which contains a reference to the eventsManager, for more information.")
-    /// :nodoc: obsoleted
-    @objc public final var eventsManager: NavigationEventsManager! {
-        get {
-            fatalError()
-        }
-        set {
-            fatalError()
-        }
-    }
-    
-    @available(*, obsoleted: 0.1, renamed: "navigationService.locationManager", message: "NavigationViewController no-longer directly manages an NavigationLocationManager. See MapboxNavigationService, which contains a reference to the locationManager, for more information.")
-    /// :nodoc: obsoleted
-    @objc public final var locationManager: NavigationLocationManager! {
-        get {
-            fatalError()
-        }
-        set {
-            fatalError()
-        }
-    }
-    
-    @available(*, obsoleted: 0.1, renamed: "init(for:styles:navigationService:voiceController:)", message: "Intializing a NavigationViewController directly with a RouteController is no longer supported. Use a NavigationService instead.")
-    /// :nodoc: Obsoleted method.
-    @objc(initWithRoute:directions:styles:routeController:locationManager:voiceController:eventsManager:)
-    public convenience init(for route: Route,
-                         directions: Directions = Directions.shared,
-                         styles: [Style]? = [DayStyle(), NightStyle()],
-                         routeController: RouteController? = nil,
-                         locationManager: NavigationLocationManager? = nil,
-                         voiceController: RouteVoiceController? = nil,
-                         eventsManager: NavigationEventsManager? = nil) {
-        fatalError()
     }
 }

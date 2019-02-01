@@ -59,7 +59,7 @@ class BenchTests: XCTestCase, CLLocationManagerDelegate {
                                               locationSource: locationManager,
                                               eventsManagerType: NavigationEventsManagerSpy.self,
                                               simulating: .never,
-                                              routerType: PortableRouteController.self)
+                                              routerType: RouteController.self)
         
         return NavigationViewController(for: route, navigationService: service, voiceController: voiceController)
     }
