@@ -14,19 +14,17 @@ import MapboxDirections
 public protocol CarPlayManagerDelegate {
     
     /**
-     Offers the delegate an opportunity to provide a customized list of leading bar buttons.
+     Offers the delegate an opportunity to provide a customized list of leading bar buttons for the given activity.
      
      These buttons' tap handlers encapsulate the action to be taken, so it is up to the developer to ensure the hierarchy of templates is adequately navigable.
-     If this method is not implemented, or if nil is returned, an implementation of CPSearchTemplate will be provided which uses the Mapbox Geocoder.
      
      - parameter carPlayManager: The shared CarPlay manager.
      - parameter traitCollection: The trait collection of the view controller being shown in the CarPlay window.
-     - parameter template: The template into which the returned bar buttons will be inserted.
      - parameter activity: What the user is currently doing on the CarPlay screen. Use this parameter to distinguish between multiple templates of the same kind, such as multiple `CPMapTemplate`s.
-     - returns: An array of bar buttons to display on the leading side of the navigation bar while `template` is visible.
+     - returns: An array of bar buttons to display on the leading side of the navigation bar during the given activity.
      */
-    @objc(carPlayManager:leadingNavigationBarButtonsWithTraitCollection:inTemplate:forActivity:)
-    optional func carPlayManager(_ carPlayManager: CarPlayManager, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]?
+    @objc(carPlayManager:leadingNavigationBarButtonsWithTraitCollection:forActivity:)
+    optional func carPlayManager(_ carPlayManager: CarPlayManager, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, for activity: CarPlayActivity) -> [CPBarButton]?
     
     /**
      Offers the delegate an opportunity to provide a customized list of trailing bar buttons.
@@ -35,12 +33,11 @@ public protocol CarPlayManagerDelegate {
      
      - parameter carPlayManager: The shared CarPlay manager.
      - parameter traitCollection: The trait collection of the view controller being shown in the CarPlay window.
-     - parameter template: The template into which the returned bar buttons will be inserted.
      - parameter activity: What the user is currently doing on the CarPlay screen. Use this parameter to distinguish between multiple templates of the same kind, such as multiple `CPMapTemplate`s.
-     - returns: An array of bar buttons to display on the trailing side of the navigation bar while `template` is visible.
+     - returns: An array of bar buttons to display on the trailing side of the navigation bar during the given activity.
      */
-    @objc(carPlayManager:trailingNavigationBarButtonsWithTraitCollection:inTemplate:forActivity:)
-    optional func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]?
+    @objc(carPlayManager:trailingNavigationBarButtonsWithTraitCollection:forActivity:)
+    optional func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, for activity: CarPlayActivity) -> [CPBarButton]?
     
     /**
      Offers the delegate an opportunity to provide a customized list of buttons displayed on the map.
