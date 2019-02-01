@@ -14,7 +14,7 @@
 * Restored “Declaration” and “Parameters” sections throughout the API reference. ([#1952](https://github.com/mapbox/mapbox-navigation-ios/pull/1952))
 * Fixed audio ducking issues. ([#1915](https://github.com/mapbox/mapbox-navigation-ios/pull/1915))
 
-## v0.28.0
+## v0.28.0 (January 23, 2018)
 
 * Xcode 10 or above is now required for building this SDK. ([#1936](https://github.com/mapbox/mapbox-navigation-ios/pull/1936))
 * Search functionality on CarPlay is now managed by `CarPlaySearchController`. Added the `CarPlayManagerDelegate.carPlayManager(_:selectedPreviewFor:using:)` method for any additional customization after a trip is selected on CarPlay. ([#1846](https://github.com/mapbox/mapbox-navigation-ios/pull/1846))
@@ -26,13 +26,13 @@
 * Programmatically setting `Router.route` no longer causes `NavigationViewControllerDelegate.navigationViewController(_:shouldRerouteFrom:)` or `RouterDelegate.router(_:shouldRerouteFrom:)` to be called. ([#1931](https://github.com/mapbox/mapbox-navigation-ios/pull/1931))
 * Fixed redundant calls to `NavigationViewControllerDelegate.navigationViewController(_:shouldRerouteFrom:)` and `RouterDelegate.router(_:shouldRerouteFrom:)` when rerouting repeatedly. ([#1930](https://github.com/mapbox/mapbox-navigation-ios/pull/1930))
 
-## v0.27.0
+## v0.27.0 (December 20, 2018)
 
 * The `NavigationDirections.unpackTilePack(at:outputDirectoryURL:progressHandler:completionHandler:)` method is now available to Objective-C code as `-[MBNavigationDirections unpackTilePackAtURL:outputDirectoryURL:progressHandler:completionHandler:]`. ([#1891](https://github.com/mapbox/mapbox-navigation-ios/pull/1891))
 * Added support for styles powered by [version 8 of the Mapbox Streets source](https://docs.mapbox.com/vector-tiles/mapbox-streets-v8/). ([#1909](https://github.com/mapbox/mapbox-navigation-ios/pull/1909))
 * Fixed potential inaccuracies in location snapping, off-route detection, and the current road name label. ([mapbox/turf-swift#74](https://github.com/mapbox/turf-swift/pull/74))
 
-## v0.26.0
+## v0.26.0 (December 6, 2018)
 
 ### Client-side routing
 
