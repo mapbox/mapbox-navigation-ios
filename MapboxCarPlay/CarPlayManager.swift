@@ -434,7 +434,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let navigationMapTemplate = self.mapTemplate(forNavigating: trip)
         interfaceController.setRootTemplate(navigationMapTemplate, animated: true)
 
-        let navigationViewController = CarPlayNavigationViewController.init(navigationService: service, mapTemplate: navigationMapTemplate, interfaceController: interfaceController, manager: self, styles: styles)
+        let navigationViewController = CarPlayNavigationViewController(navigationService: service, mapTemplate: navigationMapTemplate, interfaceController: interfaceController, manager: self, styles: styles)
         
         navigationViewController.startNavigationSession(for: trip)
         navigationViewController.carPlayNavigationDelegate = self
