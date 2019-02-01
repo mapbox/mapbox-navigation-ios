@@ -8,7 +8,7 @@ import CarPlay
 #endif
 
 /**
- A ContainerViewController is any UIViewController that subscribes to the NavigationComponent messaging protocol.
+ A ContainerViewController is any UIViewController that conforms to the NavigationComponent messaging protocol.
  - seealso: NavigationComponent
  */
 public typealias ContainerViewController = UIViewController & NavigationComponent
@@ -247,6 +247,17 @@ open class NavigationViewController: UIViewController {
         if !(route.routeOptions is NavigationRouteOptions) {
             print("`Route` was created using `RouteOptions` and not `NavigationRouteOptions`. Although not required, this may lead to a suboptimal navigation experience. Without `NavigationRouteOptions`, it is not guaranteed you will get congestion along the route line, better ETAs and ETA label color dependent on congestion.")
         }
+    }
+    
+    /**
+     Convienence Initalizer for initalizing a NavigationService with a custom navigation service.
+     
+     - parameter route: The route to navigate along.
+     - parameter navigationService: The navigation service that manages navigation along the route.
+     */
+    convenience init(route: Route, navigationService service: NavigationService) {
+        let options = NavigationOptions(navigationService: service)
+        self.init(for: route, options: options)
     }
     
     deinit {

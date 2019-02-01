@@ -5,7 +5,7 @@ import MapboxDirections
 //MARK: - Obsoleted Interfaces
 
 public extension NavigationViewController {
-    @available(*, deprecated: 0.1, renamed: "init(route:options:)", message: "Use the new NavigationOptions initalizer.")
+    @available(*, deprecated: 0.1, message: "Use the new init(route:options:) initalizer.")
     @objc(initWithRoute:styles:navigationService:voiceController:)
     public convenience init(for route: Route,
                          styles: [Style]? = nil,
@@ -19,7 +19,7 @@ public extension NavigationViewController {
         self.init(for: route, options: bridge)
     }
     
-    @available(*, obsoleted: 0.1, renamed: "navigationService", message: "NavigationViewController no-longer directly manages a RouteController. See MapboxNavigationService, which contains a protocol-bound reference to the RouteController, for more information.")
+    @available(*, obsoleted: 0.1, renamed: "navigationService", message: "NavigationViewController no longer directly manages a RouteController. See MapboxNavigationService, which contains a protocol-bound reference to the RouteController, for more information.")
     /// :nodoc: obsoleted
     @objc public final var routeController: RouteController! {
         get {
