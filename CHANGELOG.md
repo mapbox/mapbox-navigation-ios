@@ -8,6 +8,7 @@
 * `RouteController` has been renamed to `LegacyRouteController` which will be removed in a future release. ([#1904](https://github.com/mapbox/mapbox-navigation-ios/pull/1904))
 * PortableRouteController has been renamed to `RouteController`. ([#1904](https://github.com/mapbox/mapbox-navigation-ios/pull/1904))
 * Deprecated properties (`routeController`, `eventsManager`, `locationManager`) on `NavigationViewController` has been removed ([#1904](https://github.com/mapbox/mapbox-navigation-ios/pull/1904))
+* Fixed audio ducking issues. ([#1915](https://github.com/mapbox/mapbox-navigation-ios/pull/1915))
 
 ## v0.28.0
 
