@@ -4,6 +4,7 @@ import MapboxCoreNavigation
 /*
     Options that are available to customize the NavigationViewController.
     - note: Use this class if you wish to customize the internals of the navigation experience, such as a custom style or voice controller.
+    - important: Do not confuse this class with the NavigationRouteOptions type, which is intended to provide custom, navigation-optimized parameters to a Directions request.
  */
 
 @objc(MBNavigationOptions)

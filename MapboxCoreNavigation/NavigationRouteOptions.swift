@@ -5,6 +5,7 @@ import MapboxDirections
  A `NavigationRouteOptions` object specifies turn-by-turn-optimized criteria for results returned by the Mapbox Directions API.
 
  `NavigationRouteOptions` is a subclass of `RouteOptions` that has been optimized for navigation. Pass an instance of this class into the `Directions.calculate(_:completionHandler:)` method.
+ - important: Do not confuse this with a NavigationOptions type, which is used to customize the NavigationViewController user experience.
  */
 @objc(MBNavigationRouteOptions)
 open class NavigationRouteOptions: RouteOptions {
