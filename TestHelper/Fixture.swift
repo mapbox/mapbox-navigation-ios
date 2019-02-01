@@ -58,6 +58,10 @@ public class Fixture: NSObject {
         return URL(fileURLWithPath: path!)
     }
     
+    public static let waypoint1: Waypoint = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
+    
+    public static let waypoint2: Waypoint = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
+    
     public class func locations(from name: String) -> [CLLocation] {
         guard let path = Bundle(for: Fixture.self).path(forResource: name, ofType: "json") else {
             assert(false, "Fixture \(name) not found.")
@@ -91,7 +95,6 @@ public class Fixture: NSObject {
         }
         return waypoints
     }
-    
     
     // Returns `Route` objects from a match response
     public class func routesFromMatches(at filePath: String) -> [Route]? {
