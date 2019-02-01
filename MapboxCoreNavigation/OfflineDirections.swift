@@ -137,12 +137,12 @@ public class NavigationDirections: Directions {
      */
     @objc(calculateDirectionsWithOptions:offline:completionHandler:)
     public func calculate(_ options: RouteOptions, offline: Bool = true, completionHandler: @escaping Directions.RouteCompletionHandler) {
+        
         guard offline == true else {
             super.calculate(options, completionHandler: completionHandler)
             return
         }
         
-        let fetchStartDate = Date()
         let url = self.url(forCalculating: options)
         
         NavigationDirectionsConstants.offlineSerialQueue.async { [weak self] in
@@ -167,13 +167,9 @@ public class NavigationDirections: Directions {
                         return completionHandler(nil, nil, error as NSError)
                     }
                 } else {
+                    
                     DispatchQueue.main.async {
                         let response = options.response(from: json)
-                        let responseEndDate = Date()
-                        for route in response.1 ?? [] {
-                            route.fetchStartDate = fetchStartDate
-                            route.responseEndDate = responseEndDate
-                        }
                         return completionHandler(response.0, response.1, nil)
                     }
                 }
