@@ -60,7 +60,7 @@ extension AppDelegate: CarPlayManagerDelegate {
         return CPListTemplate(title: "Favorites List", sections: [listSection])
     }
     
-    func carPlayManager(_ carPlayManager: CarPlayManager, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]? {
+    func carPlayManager(_ carPlayManager: CarPlayManager, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, for activity: CarPlayActivity) -> [CPBarButton]? {
         
         guard let interfaceController = self.carPlayManager.interfaceController else {
             return nil
@@ -77,7 +77,7 @@ extension AppDelegate: CarPlayManagerDelegate {
         }
     }
     
-    func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]? {
+    func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, for activity: CarPlayActivity) -> [CPBarButton]? {
         
         switch activity {
         case .previewing:
