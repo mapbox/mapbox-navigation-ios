@@ -2,12 +2,16 @@
 
 ## master
 
-* Added an initializer to DispatchTimer, along with methods for arming and disarming the timer. ([#1912](https://github.com/mapbox/mapbox-navigation-ios/pull/1912))
+### Core Navigation
+
+* `PortableRouteController` has been renamed to `RouteController`. The previous `RouteController` has been renamed to `LegacyRouteController` and will be removed in a future release. ([#1904](https://github.com/mapbox/mapbox-navigation-ios/pull/1904))
 * Added the `MapboxNavigationService.router(_:didPassVisualInstructionPoint:routeProgress:)` and `MapboxNavigationService.router(_:didPassSpokenInstructionPoint:routeProgress:)` methods, which correspond to `Notification.Name.routeControllerDidPassVisualInstructionPoint` and `Notification.Name.routeControllerDidPassSpokenInstructionPoint`, respectively. ([#1912](https://github.com/mapbox/mapbox-navigation-ios/pull/1912))
+* Removed the deprecated `NavigationViewController.routeController`, `NavigationViewController.eventsManager`, and `NavigationViewController.locationManager` properties. ([#1904](https://github.com/mapbox/mapbox-navigation-ios/pull/1904))
+* Added an initializer to `DispatchTimer`, along with methods for arming and disarming the timer. ([#1912](https://github.com/mapbox/mapbox-navigation-ios/pull/1912))
+
+### Other changes
+
 * Restored “Declaration” and “Parameters” sections throughout the API reference. ([#1952](https://github.com/mapbox/mapbox-navigation-ios/pull/1952))
-* `RouteController` has been renamed to `LegacyRouteController` which will be removed in a future release. ([#1904](https://github.com/mapbox/mapbox-navigation-ios/pull/1904))
-* PortableRouteController has been renamed to `RouteController`. ([#1904](https://github.com/mapbox/mapbox-navigation-ios/pull/1904))
-* Deprecated properties (`routeController`, `eventsManager`, `locationManager`) on `NavigationViewController` has been removed ([#1904](https://github.com/mapbox/mapbox-navigation-ios/pull/1904))
 * Fixed audio ducking issues. ([#1915](https://github.com/mapbox/mapbox-navigation-ios/pull/1915))
 
 ## v0.28.0
