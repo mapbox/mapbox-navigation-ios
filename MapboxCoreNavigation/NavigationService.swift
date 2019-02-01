@@ -334,6 +334,8 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
         if simulationMode == .always {
             simulate()
         }
+        
+        eventsManager.sendRouteRetrievalEvent()
     }
     
     public func stop() {
