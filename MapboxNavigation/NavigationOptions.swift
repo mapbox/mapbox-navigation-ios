@@ -2,7 +2,8 @@ import Foundation
 import MapboxCoreNavigation
 
 /*
-    Object representing available options for a Navigation Session.
+    Options that are available to customize the NavigationViewController.
+    - note: Use this class if you wish to customize the internals of the navigation experience, such as a custom style or voice controller.
  */
 
 @objc(MBNavigationOptions)
