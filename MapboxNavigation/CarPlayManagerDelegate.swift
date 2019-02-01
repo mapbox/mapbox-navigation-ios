@@ -14,7 +14,7 @@ import MapboxDirections
 public protocol CarPlayManagerDelegate {
     
     /**
-     Offers the delegate an opportunity to provide a customized list of leading bar buttons for the given activity.
+     Offers the delegate an opportunity to provide a customized list of leading bar buttons at the root of the template stack for the given activity.
      
      These buttons' tap handlers encapsulate the action to be taken, so it is up to the developer to ensure the hierarchy of templates is adequately navigable.
      
@@ -28,7 +28,7 @@ public protocol CarPlayManagerDelegate {
     optional func carPlayManager(_ carPlayManager: CarPlayManager, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]?
     
     /**
-     Offers the delegate an opportunity to provide a customized list of trailing bar buttons.
+     Offers the delegate an opportunity to provide a customized list of trailing bar buttons at the root of the template stack for the given activity.
      
      These buttons' tap handlers encapsulate the action to be taken, so it is up to the developer to ensure the hierarchy of templates is adequately navigable.
      
