@@ -63,7 +63,6 @@ open class DayStyle: Style {
         
         ArrivalTimeLabel.appearance().font = UIFont.systemFont(ofSize: 18, weight: .medium).adjustedFont
         ArrivalTimeLabel.appearance().normalTextColor = .defaultPrimaryText
-//        BottomBannerContentView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         BottomBannerView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         Button.appearance().textColor = .defaultPrimaryText
         CancelButton.appearance().tintColor = .defaultPrimaryText
