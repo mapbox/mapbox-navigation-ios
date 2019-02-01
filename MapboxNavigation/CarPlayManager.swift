@@ -59,7 +59,7 @@ public class CarPlayManager: NSObject {
     
     private var defaultMapButtons: [CPMapButton]?
 
-    private let mapTemplateProvider = MapTemplateProvider()
+    internal var mapTemplateProvider: MapTemplateProvider
 
     /**
      A Boolean value indicating whether the phone is connected to CarPlay.
@@ -110,8 +110,11 @@ public class CarPlayManager: NSObject {
         self.styles = styles ?? [DayStyle(), NightStyle()]
         self.directions = directions ?? .shared
         self.eventsManager = eventsManager ?? NavigationEventsManager(dataSource: nil)
+        self.mapTemplateProvider = MapTemplateProvider()
         
         super.init()
+        
+        self.mapTemplateProvider.delegate = self
     }
 
     lazy var fullDateComponentsFormatter: DateComponentsFormatter = {
@@ -193,11 +196,11 @@ extension CarPlayManager: CPApplicationDelegate {
         let mapTemplate = CPMapTemplate()
         mapTemplate.mapDelegate = self
 
-        if let leadingButtons = delegate?.carPlayManager?(self, leadingNavigationBarButtonsCompatibleWith: traitCollection, for: .browsing) {
+        if let leadingButtons = delegate?.carPlayManager?(self, leadingNavigationBarButtonsCompatibleWith: traitCollection, in: mapTemplate, for: .browsing) {
             mapTemplate.leadingNavigationBarButtons = leadingButtons
         }
 
-        if let trailingButtons = delegate?.carPlayManager?(self, trailingNavigationBarButtonsCompatibleWith: traitCollection, for: .browsing) {
+        if let trailingButtons = delegate?.carPlayManager?(self, trailingNavigationBarButtonsCompatibleWith: traitCollection, in: mapTemplate, for: .browsing) {
             mapTemplate.trailingNavigationBarButtons = trailingButtons
         }
 
@@ -390,10 +393,8 @@ extension CarPlayManager: CPListTemplateDelegate {
         let defaultPreviewText = CPTripPreviewTextConfiguration(startButtonTitle: goTitle, additionalRoutesButtonTitle: alternativeRoutesTitle, overviewButtonTitle: overviewTitle)
         
         let traitCollection = (self.carWindow?.rootViewController as! CarPlayMapViewController).traitCollection
-        let leadingButtons = delegate?.carPlayManager?(self, leadingNavigationBarButtonsCompatibleWith: traitCollection, for: .previewing)
-        let trailingButtons = delegate?.carPlayManager?(self, trailingNavigationBarButtonsCompatibleWith: traitCollection, for: .previewing)
         
-        let previewMapTemplate = mapTemplateProvider.mapTemplate(forPreviewing: trip, leadingButtons: leadingButtons, trailingButtons: trailingButtons, mapDelegate: self)
+        let previewMapTemplate = mapTemplateProvider.mapTemplate(forPreviewing: trip, traitCollection: traitCollection, mapDelegate: self)
         
         interfaceController.pushTemplate(previewMapTemplate, animated: true)
         
@@ -474,7 +475,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         mapTemplate.mapButtons = [overviewButton, showFeedbackButton]
 
         if let rootViewController = self.carWindow?.rootViewController as? CarPlayMapViewController,
-            let leadingButtons = delegate?.carPlayManager?(self, leadingNavigationBarButtonsCompatibleWith: rootViewController.traitCollection, for: .navigating) {
+            let leadingButtons = delegate?.carPlayManager?(self, leadingNavigationBarButtonsCompatibleWith: rootViewController.traitCollection, in: mapTemplate, for: .navigating) {
             mapTemplate.leadingNavigationBarButtons = leadingButtons
         }
         
@@ -489,7 +490,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         mapTemplate.leadingNavigationBarButtons.insert(muteButton, at: 0)
 
         if let rootViewController = self.carWindow?.rootViewController as? CarPlayMapViewController,
-            let trailingButtons = delegate?.carPlayManager?(self, trailingNavigationBarButtonsCompatibleWith: rootViewController.traitCollection, for: .navigating) {
+            let trailingButtons = delegate?.carPlayManager?(self, trailingNavigationBarButtonsCompatibleWith: rootViewController.traitCollection, in: mapTemplate, for: .navigating) {
             mapTemplate.trailingNavigationBarButtons = trailingButtons
         }
         let exitButton = CPBarButton(type: .text) { [weak self] (button: CPBarButton) in
@@ -572,8 +573,6 @@ extension CarPlayManager: CPMapTemplateDelegate {
         
         mapView.setContentInset(mapView.safeArea, animated: false) //make sure this is always up to date in-case safe area changes during gesture
         updatePan(by: translation, mapTemplate: mapTemplate, animated: false)
-
-        
     }
     
     private func updatePan(by offset: CGPoint, mapTemplate: CPMapTemplate, animated: Bool) {
@@ -640,26 +639,49 @@ extension CarPlayManager: CarPlayNavigationDelegate {
     }
 }
 
+@available(iOS 12.0, *)
+extension CarPlayManager: MapTemplateProviderDelegate {
+    func mapTemplateProvider(_ provider: MapTemplateProvider, mapTemplate: CPMapTemplate, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, for activity: CarPlayActivity) -> [CPBarButton]? {
+        return delegate?.carPlayManager?(self, leadingNavigationBarButtonsCompatibleWith: traitCollection, in: mapTemplate, for: activity)
+    }
+    
+    func mapTemplateProvider(_ provider: MapTemplateProvider, mapTemplate: CPMapTemplate, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, for activity: CarPlayActivity) -> [CPBarButton]? {
+        return delegate?.carPlayManager?(self, trailingNavigationBarButtonsCompatibleWith: traitCollection, in: mapTemplate, for: activity)
+    }
+}
 
 @available(iOS 12.0, *)
-internal class MapTemplateProvider {
+@objc(MBMapTemplateProviderDelegate)
+internal protocol MapTemplateProviderDelegate {
+    @objc optional func mapTemplateProvider(_ provider: MapTemplateProvider, mapTemplate: CPMapTemplate, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, for activity: CarPlayActivity) -> [CPBarButton]?
+    
+    @objc optional func mapTemplateProvider(_ provider: MapTemplateProvider, mapTemplate: CPMapTemplate, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, for activity: CarPlayActivity) -> [CPBarButton]?
+}
 
-    func mapTemplate(forPreviewing trip: CPTrip, leadingButtons: [CPBarButton]?, trailingButtons: [CPBarButton]?, mapDelegate: CPMapTemplateDelegate) -> CPMapTemplate {
+@available(iOS 12.0, *)
+internal class MapTemplateProvider: NSObject {
+
+    weak var delegate: MapTemplateProviderDelegate?
+
+    func mapTemplate(forPreviewing trip: CPTrip, traitCollection: UITraitCollection, mapDelegate: CPMapTemplateDelegate) -> CPMapTemplate {
         
-        let mapTemplate = CPMapTemplate()
+        let mapTemplate = createMapTemplate()
         mapTemplate.mapDelegate = mapDelegate
         
-        if let leadingButtons = leadingButtons {
+        if let leadingButtons = delegate?.mapTemplateProvider?(self, mapTemplate: mapTemplate, leadingNavigationBarButtonsCompatibleWith: traitCollection, for: .previewing) {
             mapTemplate.leadingNavigationBarButtons = leadingButtons
         }
         
-        if let trailingButtons = trailingButtons {
+        if let trailingButtons = delegate?.mapTemplateProvider?(self, mapTemplate: mapTemplate, trailingNavigationBarButtonsCompatibleWith: traitCollection, for: .previewing) {
             mapTemplate.trailingNavigationBarButtons = trailingButtons
         }
         
         return mapTemplate
     }
 
+    open func createMapTemplate() -> CPMapTemplate {
+        return CPMapTemplate()
+    }
 }
 
 #else
