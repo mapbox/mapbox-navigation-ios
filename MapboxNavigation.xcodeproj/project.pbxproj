@@ -1122,6 +1122,30 @@
 			name = Templates;
 			sourceTree = "<group>";
 		};
+		165F91502204D50B0036CB9E /* Fixtures */ = {
+			isa = PBXGroup;
+			children = (
+				35CDA8862190F50C0072B675 /* DCA-Arboretum.json */,
+				35C8DC0E2191DE940053328C /* DCA-Arboretum.trace.json */,
+				35CDA88A2190F5120072B675 /* EmptyStyle.json */,
+				355832AA2192F60800141922 /* PipeFittersUnion-FourSeasonsBoston.json */,
+				355832AC2192F7E300141922 /* PipeFittersUnion-FourSeasonsBoston.trace.json */,
+				35CDA8842190F5090072B675 /* route-doubling-back.json */,
+				35CDA8822190F5080072B675 /* route-for-lane-testing.json */,
+				35CDA88C2190F5140072B675 /* route-with-banner-instructions.json */,
+				35CDA8892190F5110072B675 /* route-with-instructions.json */,
+				35CDA8832190F5090072B675 /* route-with-lanes.json */,
+				35CDA8872190F50D0072B675 /* route-with-straight-roundabout.json */,
+				35C8DBF7219198310053328C /* route.json */,
+				C5387A9C1F8FDB13000D2E93 /* routeWithInstructions.json */,
+				AEF2C8F12072B603007B061F /* routeWithTunnels_9thStreetDC.json */,
+				35CDA8882190F5100072B675 /* sthlm-double-back-replay.json */,
+				35CDA8852190F50A0072B675 /* sthlm-double-back.json */,
+				C5EF397420599120009A2C50 /* straight-line.json */,
+			);
+			path = Fixtures;
+			sourceTree = "<group>";
+		};
 		16E11B53212B3D4700027CD3 /* Extensions and Categories */ = {
 			isa = PBXGroup;
 			children = (
@@ -1372,39 +1396,23 @@
 		35CDA85F2190F2A30072B675 /* TestHelper */ = {
 			isa = PBXGroup;
 			children = (
-				3557506E21A8293E00AEF9B6 /* tiles */,
-				35C8DBF7219198310053328C /* route.json */,
-				AEF2C8F12072B603007B061F /* routeWithTunnels_9thStreetDC.json */,
-				C5EF397420599120009A2C50 /* straight-line.json */,
-				C5387A9C1F8FDB13000D2E93 /* routeWithInstructions.json */,
-				35CDA8862190F50C0072B675 /* DCA-Arboretum.json */,
-				35C8DC0E2191DE940053328C /* DCA-Arboretum.trace.json */,
-				355832AA2192F60800141922 /* PipeFittersUnion-FourSeasonsBoston.json */,
-				355832AC2192F7E300141922 /* PipeFittersUnion-FourSeasonsBoston.trace.json */,
-				35CDA88A2190F5120072B675 /* EmptyStyle.json */,
-				35CDA8842190F5090072B675 /* route-doubling-back.json */,
-				35CDA8822190F5080072B675 /* route-for-lane-testing.json */,
-				35CDA88C2190F5140072B675 /* route-with-banner-instructions.json */,
-				35CDA8892190F5110072B675 /* route-with-instructions.json */,
-				35CDA8832190F5090072B675 /* route-with-lanes.json */,
-				35CDA8872190F50D0072B675 /* route-with-straight-roundabout.json */,
-				35CDA8882190F5100072B675 /* sthlm-double-back-replay.json */,
-				35CDA8852190F50A0072B675 /* sthlm-double-back.json */,
-				3557506C21A827E800AEF9B6 /* li.tar */,
-				16120A4C20645D6E007EA21D /* NavigationEventsManagerTestDoubles.swift */,
-				3EA93EBD6E6BEC966BBE51D6 /* NavigationServiceTestDoubles.swift */,
-				35CDA8812190F5080072B675 /* turn_left.data */,
-				35CDA88B2190F5130072B675 /* UnionSquare-to-GGPark.route */,
-				16435E04206EE37800AF48B6 /* DummyURLSessionDataTask.swift */,
-				3559FE4E21C3195700B6613F /* NavigationPlotter.swift */,
-				35CDA8602190F2A40072B675 /* TestHelper.h */,
-				35CDA8612190F2A40072B675 /* Info.plist */,
-				35CDA8772190F2F00072B675 /* Fixture.swift */,
-				3EA93170CB959F3065ACFFC3 /* SpeechAPISpy.swift */,
+				165F91502204D50B0036CB9E /* Fixtures */,
 				35C8DBFC2191D0370053328C /* CoreLocation.swift */,
+				3537DCE621E6447600E78CE6 /* Date.swift */,
 				35C8DC102191E1140053328C /* DirectionsSpy.swift */,
 				358E856321DD23E200E415C2 /* DummyLocationManager.swift */,
-				3537DCE621E6447600E78CE6 /* Date.swift */,
+				16435E04206EE37800AF48B6 /* DummyURLSessionDataTask.swift */,
+				35CDA8772190F2F00072B675 /* Fixture.swift */,
+				35CDA8612190F2A40072B675 /* Info.plist */,
+				3557506C21A827E800AEF9B6 /* li.tar */,
+				16120A4C20645D6E007EA21D /* NavigationEventsManagerTestDoubles.swift */,
+				3559FE4E21C3195700B6613F /* NavigationPlotter.swift */,
+				3EA93EBD6E6BEC966BBE51D6 /* NavigationServiceTestDoubles.swift */,
+				3EA93170CB959F3065ACFFC3 /* SpeechAPISpy.swift */,
+				35CDA8602190F2A40072B675 /* TestHelper.h */,
+				3557506E21A8293E00AEF9B6 /* tiles */,
+				35CDA8812190F5080072B675 /* turn_left.data */,
+				35CDA88B2190F5130072B675 /* UnionSquare-to-GGPark.route */,
 			);
 			path = TestHelper;
 			sourceTree = "<group>";
