@@ -22,7 +22,8 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      - parameter waypoint: The waypoint that the service is arriving at.
      - parameter remainingTimeInterval: The estimated number of seconds until arrival.
      - parameter distance: The current distance from the waypoint, in meters.
-     - important: This method will likely be called several times as you approach a destination. If only one consumption of this method is desired, then usage of an internal flag is reccomended.
+     - note: This method will likely be called several times as you approach a destination. To respond to the user’s arrival only once, your delegate can define a property that keeps track of whether this method has already been called for the given waypoint.
+
      */
     
     @objc(navigationViewController:willArriveAtWaypoint:after:distance:)

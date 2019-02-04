@@ -250,7 +250,7 @@ open class NavigationViewController: UIViewController {
     }
     
     /**
-     Convienence Initalizer for initalizing a NavigationService with a custom navigation service.
+    Initializes a navigation view controller with the given route and navigation service.
      
      - parameter route: The route to navigate along.
      - parameter navigationService: The navigation service that manages navigation along the route.
