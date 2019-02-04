@@ -435,7 +435,7 @@ extension ViewController: NavigationViewControllerDelegate {
         navigationViewController.dismiss(animated: true, completion: nil)
     }
     
-    func navigationViewControllerShouldShowFeedback(_ navigationViewController: NavigationViewController, byArrivingAtRouteLeg isFinalLeg: Bool) -> Bool {
+    func navigationViewControllerShouldShowEndOfRouteFeedback(_ navigationViewController: NavigationViewController) -> Bool {
         // Feedback view is displayed on the head unit if CarPlay is connected
         if #available(iOS 12.0, *) {
             #if canImport(MapboxCarPlay)

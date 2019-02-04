@@ -53,7 +53,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      - parameter navigationViewController: The navigation view controller that has arrived at the leg of route.
      - returns: This will most likely be used to determine whether to show feedback when the user arrives at the final leg of the route.
      */
-    @objc optional func navigationViewControllerShouldShowFeedback(_ navigationViewController: NavigationViewController) -> Bool
+    @objc optional func navigationViewControllerShouldShowEndOfRouteFeedback(_ navigationViewController: NavigationViewController) -> Bool
     
     /**
      Returns whether the navigation view controller should be allowed to calculate a new route.
@@ -627,7 +627,7 @@ extension NavigationViewController: NavigationServiceDelegate {
         let advancesToNextLeg = delegate?.navigationViewController?(self, didArriveAt: waypoint) ?? true
         
         if service.routeProgress.isFinalLeg {
-            let shouldShowFeedback = delegate?.navigationViewControllerShouldShowFeedback?(self) ?? true
+            let shouldShowFeedback = delegate?.navigationViewControllerShouldShowEndOfRouteFeedback?(self) ?? true
             if shouldShowFeedback {
                 defer {
                     showEndOfRouteFeedback()

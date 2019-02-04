@@ -273,7 +273,7 @@ public class CarPlayNavigationViewController: UIViewController {
     }
     
     @objc func resetFrameRate(_ sender: UIGestureRecognizer) {
-        mapView?.preferredFramesPerSecond = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
+        mapView?.preferredFramesPerSecond = MGLMapViewPreferredFramesPerSecond.maximum
     }
     
     @objc func rerouted(_ notification: NSNotification) {

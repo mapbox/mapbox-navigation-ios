@@ -12,11 +12,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     
     // MARK: Class Constants
     
-    public struct FrameIntervalOptions {
-        public static let durationUntilNextManeuver: TimeInterval = 7
-        public static let durationSincePreviousManeuver: TimeInterval = 3
-        public static let defaultFramesPerSecond = MGLMapViewPreferredFramesPerSecond.maximum
-        public static let pluggedInFramesPerSecond = MGLMapViewPreferredFramesPerSecond.lowPower
+    struct FrameIntervalOptions {
+        static let durationUntilNextManeuver: TimeInterval = 7
+        static let durationSincePreviousManeuver: TimeInterval = 3
+        static let defaultFramesPerSecond = MGLMapViewPreferredFramesPerSecond.maximum
+        static let pluggedInFramesPerSecond = MGLMapViewPreferredFramesPerSecond.lowPower
     }
     
     /**
@@ -57,12 +57,12 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     public weak var courseTrackingDelegate: NavigationMapViewCourseTrackingDelegate?
     
     /**
-     The possible routes that can be represented on the map view.
+     :nodoc:
      */
     public var routes: [Route]?
     
     /**
-     The user location the map view should follow.
+     :nodoc:
      */
     @objc public var userLocationForCourseTracking: CLLocation?
     

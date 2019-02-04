@@ -273,7 +273,6 @@
 		AE38B59421F8CDE60041B384 /* Solar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C57607B01F4CC97D00C27423 /* Solar.framework */; };
 		AE38B59521F8CDF20041B384 /* MapboxSpeech.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A9DDBD202E12EE007D52DA /* MapboxSpeech.framework */; };
 		AE38B59721F8CF1A0041B384 /* UIViewController+CarPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3512C7C71FB0A0C100CDD2A3 /* UIViewController+CarPlay.swift */; };
-		AE38B59821F8D0880041B384 /* Locale+CarPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BA8238214BDBBD00468349 /* Locale+CarPlay.swift */; };
 		AE38B59B21F8D73E0041B384 /* NSMutableAttributedString+CarPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE38B59A21F8D73E0041B384 /* NSMutableAttributedString+CarPlay.swift */; };
 		AE46F95520EA735B00537AC2 /* VisualInstruction.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE46F95420EA735B00537AC2 /* VisualInstruction.swift */; };
 		AE5948462200C3E8005590F7 /* CPMapTemplate+MBTestable.mm in Sources */ = {isa = PBXBuildFile; fileRef = 16AC9D10212E356200CECE44 /* CPMapTemplate+MBTestable.mm */; };
@@ -794,7 +793,6 @@
 		35B711D31E5E7AD2001EDA8D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		35B7837D1F9547B300291F9A /* Transitioning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transitioning.swift; sourceTree = "<group>"; };
 		35B839481E2E3D5D0045A868 /* MBRouteController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBRouteController.m; sourceTree = "<group>"; };
-		35BA8238214BDBBD00468349 /* Locale+CarPlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Locale+CarPlay.swift"; sourceTree = "<group>"; };
 		35BF8CA11F28EB60003F6125 /* Array.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
 		35BF8CA31F28EBD8003F6125 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		35C11358215BADF800CC2929 /* sthlm-double-back-replay.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "sthlm-double-back-replay.json"; sourceTree = "<group>"; };
@@ -1601,7 +1599,6 @@
 			children = (
 				AE38B58A21F8C9E70041B384 /* NavigationViewController+CarPlay.swift */,
 				3512C7C71FB0A0C100CDD2A3 /* UIViewController+CarPlay.swift */,
-				35BA8238214BDBBD00468349 /* Locale+CarPlay.swift */,
 				AE38B59A21F8D73E0041B384 /* NSMutableAttributedString+CarPlay.swift */,
 			);
 			path = Extensions;
@@ -2694,7 +2691,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				35C8DC172191E5DB0053328C /* NavigationServiceTestDoubles.swift in Sources */,
-				3537DCE721E6447600E78CE6 /* Date.swift in Sources */,
 				35C8DC122191E15A0053328C /* DummyURLSessionDataTask.swift in Sources */,
 				35C8DC152191E4420053328C /* SpeechAPISpy.swift in Sources */,
 				35CDA8782190F2F00072B675 /* Fixture.swift in Sources */,
@@ -2721,7 +2717,6 @@
 				AE38B58421F8C27C0041B384 /* CarPlayManagerDelegate.swift in Sources */,
 				AE38B58B21F8C9E70041B384 /* NavigationViewController+CarPlay.swift in Sources */,
 				AE38B58521F8C27C0041B384 /* CarPlaySearchController+CPSearchTemplateDelegate.swift in Sources */,
-				AE38B59821F8D0880041B384 /* Locale+CarPlay.swift in Sources */,
 				AE38B59B21F8D73E0041B384 /* NSMutableAttributedString+CarPlay.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3147,6 +3142,7 @@
 		351BEBDC1E5BCC28006FE110 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -3159,6 +3155,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = MapboxNavigation/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -3173,6 +3170,7 @@
 		351BEBDD1E5BCC28006FE110 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
@@ -3183,6 +3181,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = MapboxNavigation/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -3282,12 +3281,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = MapboxNavigationTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxNavigationTests;
@@ -3303,11 +3304,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = MapboxNavigationTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxNavigationTests;
@@ -3872,6 +3875,7 @@
 		C5ADFBDE1DDCC7840011824B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -3884,6 +3888,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = MapboxCoreNavigation/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -3899,6 +3904,7 @@
 		C5ADFBDF1DDCC7840011824B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
@@ -3910,6 +3916,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = MapboxCoreNavigation/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -3925,12 +3932,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = MapboxCoreNavigationTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) $(PROJECT_DIR)/Carthage/Build/iOS @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxCoreNavigationTests;
@@ -3947,12 +3956,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = MapboxCoreNavigationTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) $(PROJECT_DIR)/Carthage/Build/iOS @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxCoreNavigationTests;
