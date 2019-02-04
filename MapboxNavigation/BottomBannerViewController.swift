@@ -6,23 +6,52 @@ public protocol BottomBannerViewControllerDelegate: class {
     func didTapCancel(_ sender: Any)
 }
 
-/// :nodoc:
+/**
+ The BottomBannerUIController is a UI Element designed to display the ETA, Distance, and Time Remaining, as well as give the user a control the cancel the navigation session.
+ */
 @IBDesignable
 @objc(MBBottomBannerViewController)
 open class BottomBannerViewController: UIViewController, NavigationComponent {
     
-    weak var previousProgress: RouteProgress?
+    /**
+     The Time Remaing label that displayes the estimated time until the user's arrival.
+     */
+    open var timeRemainingLabel: TimeRemainingLabel!
+    
+    /**
+     The label that represents the user's remaining distance.
+    */
+    open var distanceRemainingLabel: DistanceRemainingLabel!
+    
+    /**
+     The label that displays the user's estimate time of arrival.
+     */
+    open var arrivalTimeLabel: ArrivalTimeLabel!
+    
+    /**
+     The button that, by default, allows the user to cancel the navigation session.
+    */
+    open var cancelButton: CancelButton!
+    
+    /**
+     A vertical divider that seperates the cancel button and informative labels.
+    */
+    open var verticalDividerView: SeparatorView!
+    
+    /**
+     A horizontal divider that adds visual seperation between the bottom banner and it's superview.
+    */
+    open var horizontalDividerView: SeparatorView!
+    
+    /**
+     The delegate for the view controller.
+     - seealso: BottomBannerViewControllerDelegate
+    */
+    open var delegate: BottomBannerViewControllerDelegate?
+    
+    var previousProgress: RouteProgress?
     var timer: DispatchTimer?
     
-    weak var timeRemainingLabel: TimeRemainingLabel!
-    weak var distanceRemainingLabel: DistanceRemainingLabel!
-    weak var arrivalTimeLabel: ArrivalTimeLabel!
-    weak var cancelButton: CancelButton!
-    // Vertical divider between cancel button and the labels
-    weak var verticalDividerView: SeparatorView!
-    // Horizontal divider between the map view and the bottom banner
-    weak var horizontalDividerView: SeparatorView!
-    weak var delegate: BottomBannerViewControllerDelegate?
     
     let dateFormatter = DateFormatter()
     let dateComponentsFormatter = DateComponentsFormatter()
@@ -47,18 +76,32 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
             }
         }
     }
-    
+    /**
+     Initializes a `BottomBannerViewController` that provides ETA, Distance to arrival, and Time to arrival.
+     
+     - parameter delegate: A delegate to recieve BottomBannerViewControllerDelegate messages.
+     */
     public convenience init(delegate: BottomBannerViewControllerDelegate?) {
         self.init(nibName: nil, bundle: nil)
         self.delegate = delegate
     }
     
+    /**
+     Initializes a `BottomBannerViewController` that provides ETA, Distance to arrival, and Time to arrival.
+     
+     - parameter nibNameOrNil: Ignored.
+     - parameter nibBundleOrNil: Ignored.
+     */
     override public init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         commonInit()
     }
 
-    
+    /**
+     Initializes a `BottomBannerViewController` that provides ETA, Distance to arrival, and Time to arrival.
+     
+     - parameter aDecoder: Ignored.
+     */
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit()
@@ -68,6 +111,9 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
         removeTimer()
     }
     
+    /**
+     This override loads a custom UIView subclass as the root view, for UIAppearance purposes.
+    */
     override open func loadView() {
         let root: BottomBannerView = .forAutoLayout() //Must use local var to prevent generic factory from messing up.
         view = root
