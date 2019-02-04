@@ -733,7 +733,7 @@ extension RouteMapViewController: NavigationViewDelegate {
 
      - parameter location: The user’s current location.
      */
-    func labelCurrentRoad(at rawLocation: CLLocation, for snappedLoction: CLLocation? = nil) {
+    func labelCurrentRoad(at rawLocation: CLLocation, for snappedLocation: CLLocation? = nil) {
 
         guard navigationView.resumeButton.isHidden else {
                 return
@@ -755,7 +755,7 @@ extension RouteMapViewController: NavigationViewDelegate {
             return
         }
 
-        let location = snappedLoction ?? rawLocation
+        let location = snappedLocation ?? rawLocation
 
         labelCurrentRoadFeature(at: location)
 
