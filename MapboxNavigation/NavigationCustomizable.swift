@@ -6,7 +6,7 @@ import MapboxCoreNavigation
  */
 protocol NavigationCustomizable {
     /**
-     The styles that the User Interface can select from for display.
+     The styles that the user interface can select from for display.
     */
     var styles: [Style]? { get }
     

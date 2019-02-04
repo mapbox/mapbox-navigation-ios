@@ -15,14 +15,14 @@ public protocol BottomBannerViewControllerDelegate: class {
 }
 
 /**
- The BottomBannerUIController is a UI Element designed to display the ETA, Distance, and Time Remaining, as well as give the user a control the cancel the navigation session.
+ A user interface element designed to display the estimated arrival time, distance, and time remaining, as well as give the user a control the cancel the navigation session.
  */
 @IBDesignable
 @objc(MBBottomBannerViewController)
 open class BottomBannerViewController: UIViewController, NavigationComponent {
     
     /**
-     The Time Remaing label that displayes the estimated time until the user's arrival.
+     The label that displays the estimated time until the user arrives at the final destination.
      */
     open var timeRemainingLabel: TimeRemainingLabel!
     
@@ -47,7 +47,7 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
     open var verticalDividerView: SeparatorView!
     
     /**
-     A horizontal divider that adds visual seperation between the bottom banner and it's superview.
+     A horizontal divider that adds visual separation between the bottom banner and its superview.
     */
     open var horizontalDividerView: SeparatorView!
     
@@ -85,7 +85,7 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
         }
     }
     /**
-     Initializes a `BottomBannerViewController` that provides ETA, Distance to arrival, and Time to arrival.
+     Initializes a `BottomBannerViewController` that provides estimated arrival time, distance to arrival, and time to arrival.
      
      - parameter delegate: A delegate to recieve BottomBannerViewControllerDelegate messages.
      */
