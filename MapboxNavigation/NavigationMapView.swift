@@ -591,9 +591,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         guard step.maneuverType != .arrive else { return }
         
-        let minimumZoomLevel: Float = 14.5
+        let minimumZoomLevel: Float = 2.0
         
-        let shaftLength = max(min(30 * metersPerPoint(atLatitude: maneuverCoordinate.latitude), 30), 10)
+        let shaftLength = max(min(60 * metersPerPoint(atLatitude: maneuverCoordinate.latitude), 60), 30)
         let shaftPolyline = route.polylineAroundManeuver(legIndex: legIndex, stepIndex: stepIndex, distance: shaftLength)
         
         if shaftPolyline.coordinates.count > 1 {
