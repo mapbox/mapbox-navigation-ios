@@ -55,7 +55,7 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
      The delegate for the view controller.
      - seealso: BottomBannerViewControllerDelegate
     */
-    open var delegate: BottomBannerViewControllerDelegate?
+    open weak var delegate: BottomBannerViewControllerDelegate?
     
     var previousProgress: RouteProgress?
     var timer: DispatchTimer?
