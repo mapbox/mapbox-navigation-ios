@@ -467,25 +467,10 @@ extension CarPlayManager: CPMapTemplateDelegate {
             mapTemplate.leadingNavigationBarButtons = leadingButtons
         }
         
-        let muteTitle = NSLocalizedString("CARPLAY_MUTE", bundle: .mapboxNavigation, value: "Mute", comment: "Title for mute button")
-        let unmuteTitle = NSLocalizedString("CARPLAY_UNMUTE", bundle: .mapboxNavigation, value: "Unmute", comment: "Title for unmute button")
-        
-        let muteButton = CPBarButton(type: .text) { (button: CPBarButton) in
-            NavigationSettings.shared.voiceMuted = !NavigationSettings.shared.voiceMuted
-            button.title = NavigationSettings.shared.voiceMuted ? unmuteTitle : muteTitle
-        }
-        muteButton.title = NavigationSettings.shared.voiceMuted ? unmuteTitle : muteTitle
-        mapTemplate.leadingNavigationBarButtons.insert(muteButton, at: 0)
-
         if let rootViewController = self.carWindow?.rootViewController as? CarPlayMapViewController,
             let trailingButtons = delegate?.carPlayManager?(self, trailingNavigationBarButtonsCompatibleWith: rootViewController.traitCollection, in: mapTemplate, for: .navigating) {
             mapTemplate.trailingNavigationBarButtons = trailingButtons
         }
-        let exitButton = CPBarButton(type: .text) { [weak self] (button: CPBarButton) in
-            self?.currentNavigator?.exitNavigation(byCanceling: true)
-        }
-        exitButton.title = NSLocalizedString("CARPLAY_END", bundle: .mapboxNavigation, value: "End", comment: "Title for end navigation button")
-        mapTemplate.trailingNavigationBarButtons.append(exitButton)
 
         return mapTemplate
     }

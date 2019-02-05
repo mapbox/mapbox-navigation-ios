@@ -72,7 +72,16 @@ extension AppDelegate: CarPlayManagerDelegate {
             searchTemplate.delegate = carPlaySearchController
             let searchButton = carPlaySearchController.searchTemplateButton(searchTemplate: searchTemplate, interfaceController: interfaceController, traitCollection: traitCollection)
             return [searchButton]
-        case .navigating, .previewing:
+        case .navigating:
+            let muteTitle = NSLocalizedString("CARPLAY_MUTE", value: "Mute", comment: "Title for mute button")
+            let unmuteTitle = NSLocalizedString("CARPLAY_UNMUTE", value: "Unmute", comment: "Title for unmute button")
+            let muteButton = CPBarButton(type: .text) { (button: CPBarButton) in
+                NavigationSettings.shared.voiceMuted = !NavigationSettings.shared.voiceMuted
+                button.title = NavigationSettings.shared.voiceMuted ? unmuteTitle : muteTitle
+            }
+            muteButton.title = NavigationSettings.shared.voiceMuted ? unmuteTitle : muteTitle
+            return [muteButton]
+        case .previewing:
             return nil
         }
     }
@@ -99,7 +108,11 @@ extension AppDelegate: CarPlayManagerDelegate {
             favoriteTemplateButton.image = UIImage(named: "carplay_star", in: nil, compatibleWith: traitCollection)
             return [favoriteTemplateButton]
         case .navigating:
-            return nil
+            let exitButton = CPBarButton(type: .text) { _ in
+                carPlayManager.currentNavigator?.exitNavigation(byCanceling: true)
+            }
+            exitButton.title = NSLocalizedString("CARPLAY_END", value: "End", comment: "Title for end navigation button")
+            return [exitButton]
         }
     }
     
