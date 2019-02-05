@@ -216,22 +216,19 @@ open class NavigationViewController: UIViewController {
 
         NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
         
-        let mapViewController = RouteMapViewController(navigationService: self.navigationService, delegate: self)
+        let bottomBanner = options?.bottomBanner ?? BottomBannerViewController(delegate: self)
+        bottomViewController = bottomBanner
+
+        let mapViewController = RouteMapViewController(navigationService: self.navigationService, delegate: self, bottomBanner: bottomBanner)
         self.mapViewController = mapViewController
         mapViewController.destination = route.legs.last?.destination
         mapViewController.view.translatesAutoresizingMaskIntoConstraints = false
+
         
         embed(mapViewController, in: view) { (parent, map) -> [NSLayoutConstraint] in
             return map.view.constraintsForPinning(to: parent.view)
         }
-                
-        let bottomBanner = options?.bottomBanner ?? BottomBannerViewController(delegate: self)
-        bottomViewController = bottomBanner
         
-        embed(bottomBanner, in:  mapViewController.navigationView.bottomBannerContainerView) { (parent, banner) -> [NSLayoutConstraint] in
-            banner.view.translatesAutoresizingMaskIntoConstraints = false
-            return banner.view.constraintsForPinning(to: parent.mapViewController!.navigationView.bottomBannerContainerView)
-        }
 
         
         //Do not start the navigation session until after you create the MapViewController, otherwise you'll miss important messages.

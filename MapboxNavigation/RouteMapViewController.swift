@@ -213,11 +213,17 @@ class RouteMapViewController: UIViewController {
 
     var labelRoadNameCompletionHandler: (LabelRoadNameCompletionHandler)?
 
-    convenience init(navigationService: NavigationService, delegate: RouteMapViewControllerDelegate? = nil) {
+    convenience init(navigationService: NavigationService, delegate: RouteMapViewControllerDelegate? = nil, bottomBanner: ContainerViewController) {
+        
         self.init()
         self.navService = navigationService
         self.delegate = delegate
         automaticallyAdjustsScrollViewInsets = false
+        
+        embed(bottomBanner, in: navigationView.bottomBannerContainerView) { (parent, banner) -> [NSLayoutConstraint] in
+            banner.view.translatesAutoresizingMaskIntoConstraints = false
+            return banner.view.constraintsForPinning(to: self.navigationView.bottomBannerContainerView)
+        }
     }
 
 
@@ -305,6 +311,16 @@ class RouteMapViewController: UIViewController {
         unsubscribeFromKeyboardNotifications()
     }
 
+    func embed(_ child: UIViewController, in container: UIView, constrainedBy constraints: ((RouteMapViewController, UIViewController) -> [NSLayoutConstraint])?) {
+        child.willMove(toParentViewController: self)
+        addChildViewController(child)
+        container.addSubview(child.view)
+        if let childConstraints: [NSLayoutConstraint] = constraints?(self, child) {
+            view.addConstraints(childConstraints)
+        }
+        child.didMove(toParentViewController: self)
+    }
+    
     @objc func recenter(_ sender: AnyObject) {
         mapView.tracksUserCourse = true
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
