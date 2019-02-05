@@ -120,7 +120,7 @@ open class NavigationEventsManager: NSObject {
         event.counters.append(PerformanceEventDetails.Counter(name: "elapsed_time",
                                                               value: responseEndDate.timeIntervalSince(fetchStartDate)))
         if let routeIdentifier = sessionState.currentRoute.routeIdentifier {
-            event.attributes.append(PerformanceEventDetails.Attribute(name: "routeUuid", value: routeIdentifier))
+            event.attributes.append(PerformanceEventDetails.Attribute(name: "route_uuid", value: routeIdentifier))
         }
         return event
     }
