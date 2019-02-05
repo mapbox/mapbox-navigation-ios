@@ -19,7 +19,8 @@ class NavigationViewControllerTests: XCTestCase {
         let fakeVoice: RouteVoiceController = RouteVoiceControllerStub()
         let fakeDirections = DirectionsSpy(accessToken: "garbage", host: nil)
         let fakeService = MapboxNavigationService(route: initialRoute, directions: fakeDirections, locationSource: NavigationLocationManagerStub(), simulating: .never)
-        let navigationViewController = NavigationViewController(for: initialRoute, navigationService: fakeService, voiceController: fakeVoice)
+        let options = NavigationOptions(navigationService: fakeService, voiceController: fakeVoice)
+        let navigationViewController = NavigationViewController(for: initialRoute, options: options)
         
         navigationViewController.delegate = self
         
@@ -77,7 +78,8 @@ class NavigationViewControllerTests: XCTestCase {
     }
     
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceMoreThanOnceWithOneStyle() {
-        let navigationViewController = NavigationViewController(for: initialRoute, styles: [DayStyle()], navigationService: dependencies.navigationService, voiceController: RouteVoiceControllerStub())
+        let options = NavigationOptions(styles: [DayStyle()], navigationService: dependencies.navigationService, voiceController: RouteVoiceControllerStub())
+        let navigationViewController = NavigationViewController(for: initialRoute, options: options)
         let service = dependencies.navigationService
         navigationViewController.styleManager.delegate = self
         
@@ -118,7 +120,8 @@ class NavigationViewControllerTests: XCTestCase {
     
     // If tunnel flags are enabled and we need to switch styles, we should not force refresh the map style because we have only 1 style.
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceWhenOnlyOneStyle() {
-        let navigationViewController = NavigationViewController(for: initialRoute, styles: [NightStyle()], navigationService: dependencies.navigationService, voiceController: RouteVoiceControllerStub())
+        let options = NavigationOptions(styles:[NightStyle()], navigationService: dependencies.navigationService, voiceController: RouteVoiceControllerStub())
+        let navigationViewController = NavigationViewController(for: initialRoute, options: options)
         let service = dependencies.navigationService
         navigationViewController.styleManager.delegate = self
         
@@ -133,7 +136,8 @@ class NavigationViewControllerTests: XCTestCase {
     }
     
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceMoreThanOnceWithTwoStyles() {
-        let navigationViewController = NavigationViewController(for: initialRoute, styles: [DayStyle(), NightStyle()], navigationService: dependencies.navigationService, voiceController: RouteVoiceControllerStub())
+        let options = NavigationOptions(styles: [DayStyle(), NightStyle()], navigationService: dependencies.navigationService, voiceController:RouteVoiceControllerStub())
+        let navigationViewController = NavigationViewController(for: initialRoute, options: options)
         let service = dependencies.navigationService
         navigationViewController.styleManager.delegate = self
         
@@ -190,7 +194,8 @@ class NavigationViewControllerTests: XCTestCase {
     
     func testDestinationAnnotationUpdatesUponReroute() {
         let service = MapboxNavigationService(route: initialRoute, directions: DirectionsSpy(accessToken: "beef"), simulating: .never)
-        let navigationViewController = NavigationViewController(for: initialRoute,  styles: [TestableDayStyle()], navigationService: service)
+        let options = NavigationOptions(styles: [TestableDayStyle()], navigationService: service)
+        let navigationViewController = NavigationViewController(for: initialRoute, options: options)
         let styleLoaded = keyValueObservingExpectation(for: navigationViewController, keyPath: "mapView.style", expectedValue: nil)
         
         //wait for the style to load -- routes won't show without it.

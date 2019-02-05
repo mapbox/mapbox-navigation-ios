@@ -631,7 +631,7 @@ public extension LegacyRouteController {
             fatalError()
         }
     }
-    @available(*, obsoleted: 0.1, renamed: "NavigationService.locationManager", message: "NavigationViewController no-longer directly manages an NavigationLocationManager. See MapboxNavigationService, which contains a reference to the locationManager, for more information.")
+    @available(*, obsoleted: 0.1, renamed: "NavigationService.locationManager", message: "NavigationViewController no longer directly manages an NavigationLocationManager. See MapboxNavigationService, which contains a reference to the locationManager, for more information.")
     /// :nodoc: obsoleted
     @objc public final var tunnelIntersectionManager: Any! {
         get {
@@ -641,7 +641,7 @@ public extension LegacyRouteController {
             fatalError()
         }
     }
-    @available(*, obsoleted: 0.1, renamed: "navigationService.eventsManager", message: "NavigationViewController no-longer directly manages a NavigationEventsManager. See MapboxNavigationService, which contains a reference to the eventsManager, for more information.")
+    @available(*, obsoleted: 0.1, renamed: "navigationService.eventsManager", message: "NavigationViewController no longer directly manages a NavigationEventsManager. See MapboxNavigationService, which contains a reference to the eventsManager, for more information.")
     /// :nodoc: obsoleted
     @objc public final var eventsManager: NavigationEventsManager! {
         get {

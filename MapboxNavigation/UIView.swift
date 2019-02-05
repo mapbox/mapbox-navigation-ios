@@ -68,10 +68,8 @@ extension UIView {
             return false
         }
     }
-    
-    func pinInSuperview(respectingMargins margins: Bool = false) {
-        guard let superview = superview else { return }
-        let guide: Anchorable = (margins) ? superview.layoutMarginsGuide : superview
+    func constraintsForPinning(to parentView: UIView, respectingMargins margins: Bool = false) -> [NSLayoutConstraint] {
+        let guide: Anchorable = (margins) ? parentView.layoutMarginsGuide : parentView
         
         let constraints = [
             topAnchor.constraint(equalTo: guide.topAnchor),
@@ -79,7 +77,17 @@ extension UIView {
             bottomAnchor.constraint(equalTo: guide.bottomAnchor),
             rightAnchor.constraint(equalTo: guide.rightAnchor)
         ]
+        return constraints
+    }
+    
+    func pinTo(parentView parent: UIView, respectingMargins margins: Bool = false) {
+        let constraints = constraintsForPinning(to: parent, respectingMargins: margins)
         NSLayoutConstraint.activate(constraints)
+    }
+    
+    func pinInSuperview(respectingMargins margins: Bool = false) {
+        guard let superview = superview else { return }
+        pinTo(parentView: superview, respectingMargins: margins)
     }
     
 

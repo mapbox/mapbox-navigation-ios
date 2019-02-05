@@ -25,19 +25,15 @@ extension NavigationView {
         floatingStackView.trailingAnchor.constraint(equalTo: safeTrailingAnchor, constant: -10).isActive = true
         
         resumeButton.leadingAnchor.constraint(equalTo: safeLeadingAnchor, constant: 10).isActive = true
-        resumeButton.bottomAnchor.constraint(equalTo: bottomBannerView.topAnchor, constant: -10).isActive = true
+        resumeButton.bottomAnchor.constraint(equalTo: bottomBannerContainerView.topAnchor, constant: -10).isActive = true
+
+        bottomBannerContainerView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        bottomBannerContainerView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        bottomBannerContainerView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         
-        bottomBannerContentView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        bottomBannerContentView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        bottomBannerContentView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        bottomBannerContentView.topAnchor.constraint(equalTo: bottomBannerView.topAnchor).isActive = true
-        
-        bottomBannerView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        bottomBannerView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        bottomBannerView.bottomAnchor.constraint(equalTo: safeBottomAnchor).isActive = true
         
         wayNameView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        wayNameView.bottomAnchor.constraint(equalTo: bottomBannerView.topAnchor, constant: -10).isActive = true
+        wayNameView.bottomAnchor.constraint(equalTo: bottomBannerContainerView.topAnchor, constant: -10).isActive = true
     }
 
     func constrainEndOfRoute() {
