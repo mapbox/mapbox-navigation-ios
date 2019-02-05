@@ -457,23 +457,10 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let mapTemplate = CPMapTemplate()
         mapTemplate.mapDelegate = self
 
-        let showFeedbackButton = CPMapButton { [weak self] (button) in
-            self?.currentNavigator?.showFeedback()
+        if let rootViewController = self.carWindow?.rootViewController as? CarPlayMapViewController,
+            let mapButtons = delegate?.carPlayManager?(self, mapButtonsCompatibleWith: rootViewController.traitCollection, in: mapTemplate, for: .navigating) {
+            mapTemplate.mapButtons = mapButtons
         }
-        showFeedbackButton.image = UIImage(named: "carplay_feedback", in: .mapboxNavigation, compatibleWith: nil)
-
-        let overviewButton = CPMapButton { [weak self] (button) in
-            guard let navigationViewController = self?.currentNavigator else {
-                return
-            }
-            navigationViewController.tracksUserCourse = !navigationViewController.tracksUserCourse
-
-            let imageName = navigationViewController.tracksUserCourse ? "carplay_overview" : "carplay_locate"
-            button.image = UIImage(named: imageName, in: .mapboxNavigation, compatibleWith: nil)
-        }
-        overviewButton.image = UIImage(named: "carplay_overview", in: .mapboxNavigation, compatibleWith: nil)
-
-        mapTemplate.mapButtons = [overviewButton, showFeedbackButton]
 
         if let rootViewController = self.carWindow?.rootViewController as? CarPlayMapViewController,
             let leadingButtons = delegate?.carPlayManager?(self, leadingNavigationBarButtonsCompatibleWith: rootViewController.traitCollection, in: mapTemplate, for: .navigating) {

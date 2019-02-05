@@ -102,6 +102,32 @@ extension AppDelegate: CarPlayManagerDelegate {
             return nil
         }
     }
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]? {
+        
+        switch activity {
+        case .navigating:
+            let showFeedbackButton = CPMapButton { button in
+                carPlayManager.currentNavigator?.showFeedback()
+            }
+            showFeedbackButton.image = UIImage(named: "carplay_feedback", in: nil, compatibleWith: nil)
+            
+            let overviewButton = CPMapButton { button in
+                guard let navigationViewController = carPlayManager.currentNavigator else {
+                    return
+                }
+                navigationViewController.tracksUserCourse = !navigationViewController.tracksUserCourse
+                
+                let imageName = navigationViewController.tracksUserCourse ? "carplay_overview" : "carplay_locate"
+                button.image = UIImage(named: imageName, in: nil, compatibleWith: nil)
+            }
+            overviewButton.image = UIImage(named: "carplay_overview", in: nil, compatibleWith: nil)
+            
+            return [overviewButton, showFeedbackButton]
+        case .previewing, .browsing:
+            return nil
+        }
+    }
 }
 
 @available(iOS 12.0, *)
