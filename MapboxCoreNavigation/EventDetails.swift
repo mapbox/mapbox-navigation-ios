@@ -15,8 +15,8 @@ struct PerformanceEventDetails: EventDetails {
     let event: String?
     let created: Date
     let sessionIdentifier: String
-    var counters: [String: Double] = [:]
-    var attributes: [String: String] = [:]
+    var counters: [Counter] = []
+    var attributes: [Attribute] = []
     
     private enum CodingKeys: String, CodingKey {
         case event
@@ -24,6 +24,16 @@ struct PerformanceEventDetails: EventDetails {
         case sessionIdentifier = "sessionId"
         case counters
         case attributes
+    }
+    
+    struct Counter: Encodable {
+        let name: String
+        let value: Double
+    }
+    
+    struct Attribute: Encodable {
+        let name: String
+        let value: String
     }
     
     init(event: String?, session: SessionState, createdOn created: Date?) {
