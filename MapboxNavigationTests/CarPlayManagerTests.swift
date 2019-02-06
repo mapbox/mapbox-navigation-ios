@@ -6,6 +6,8 @@ import MapboxMobileEvents
 @testable import MapboxNavigation
 
 
+
+
 #if canImport(CarPlay)
 import CarPlay
 
@@ -250,22 +252,41 @@ class CarPlayManagerSpec: QuickSpec {
             beforeEach {
                 manager!.mapTemplateProvider = MapTemplateSpyProvider()
             }
-            
-            xcontext("when the developer provides a custom trip", {
+
+            let previewRoutesAction = {
+                let route = Fixture.route(from: "route-with-banner-instructions")
+                let waypoints = route.routeOptions.waypoints
+
+                let directionsSpy = manager!.directions as! DirectionsSpy
+
+                manager!.previewRoutes(for: route.routeOptions, completionHandler: {})
+                directionsSpy.fireLastCalculateCompletion(with: waypoints, routes: [route], error: nil)
+            }
+
+            context("when the delegate provides a custom trip", {
+                var customTrip: CPTrip!
+
+                beforeEach {
+                    let customTripDelegate = CustomTripDelegate()
+                    customTrip = CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [])
+                    customTripDelegate.customTrip = customTrip
+                    manager!.delegate = customTripDelegate
+
+                    previewRoutesAction()
+                }
+
                 it("shows trip previews for the custom trip") {
-                    //TODO
+                    let interfaceController = manager!.interfaceController as! FakeCPInterfaceController
+                    let mapTemplateSpy: MapTemplateSpy =  interfaceController.topTemplate as! MapTemplateSpy
+
+                    expect(mapTemplateSpy.currentTripPreviews).to(contain(customTrip))
+                    expect(mapTemplateSpy.currentPreviewTextConfiguration).toNot(beNil())
                 }
             })
             
             context("when not customized by the developer", closure: {
                 beforeEach {
-                    let route = Fixture.route(from: "route-with-banner-instructions")
-                    let waypoints = route.routeOptions.waypoints
-                    
-                    let directionsSpy = manager!.directions as! DirectionsSpy
-                    
-                    manager!.previewRoutes(for: route.routeOptions, completionHandler: {})
-                    directionsSpy.fireLastCalculateCompletion(with: waypoints, routes: [route], error: nil)
+                    previewRoutesAction()
                 }
 
                 it("previews a route/options with the default configuration") {
@@ -322,6 +343,18 @@ class CarPlayManagerSpec: QuickSpec {
                 }
             })
         })
+    }
+
+    private class CustomTripDelegate: CarPlayManagerDelegate {
+        var customTrip: CPTrip!
+
+        func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith service: NavigationService) {
+            //no-op
+        }
+
+        func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
+            //no-op
+        }
     }
 }
 
