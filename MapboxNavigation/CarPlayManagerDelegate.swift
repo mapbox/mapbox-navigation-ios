@@ -95,6 +95,16 @@ public protocol CarPlayManagerDelegate {
     optional func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void)
     
     /**
+     Offers the delegate the opportunity to customize a trip before it is presented to the user to preview.
+     
+     - parameter carPlayManager: The shared CarPlay manager.
+     - parameter trip: The trip to preview.
+     - returns: The trip to be previewed. This can be the same trip or a new/alternate trip if desired.
+     */
+    @objc(carPlayManager:willPreviewTrip:)
+    optional func carPlayManager(_ carPlayManager: CarPlayManager, willPreview trip: CPTrip) -> (CPTrip)
+
+    /**
      Offers the delegate the opportunity to react to selection of a trip. Certain trips may have alternate route(s).
      
      - parameter carPlayManager: The shared CarPlay manager.
