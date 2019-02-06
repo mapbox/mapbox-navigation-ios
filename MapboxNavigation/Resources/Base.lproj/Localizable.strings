@@ -16,9 +16,6 @@
 /* Title for dismiss button */
 "CARPLAY_DISMISS" = "Dismiss";
 
-/* Title for end navigation button */
-"CARPLAY_END" = "End";
-
 /* Title on the exit button in the arrival form */
 "CARPLAY_EXIT_NAVIGATION" = "Exit navigation";
 
@@ -30,9 +27,6 @@
 
 /* Title for alternative routes in CPTripPreviewTextConfiguration */
 "CARPLAY_MORE_ROUTES" = "More Routes";
-
-/* Title for mute button */
-"CARPLAY_MUTE" = "Mute";
 
 /* CPNavigationAlert OK button title */
 "CARPLAY_OK" = "OK";
@@ -49,14 +43,8 @@
 /* Message when search returned zero results in CarPlay */
 "CARPLAY_SEARCH_NO_RESULTS" = "No results";
 
-/* Title in search template when search is unimplemented */
-"CARPLAY_SEARCH_NOT_IMPLEMENTED" = "Search not implemented";
-
 /* Alert title that shows when feedback has been submitted */
 "CARPLAY_SUBMITTED_FEEDBACK" = "Submitted";
-
-/* Title for unmute button */
-"CARPLAY_UNMUTE" = "Unmute";
 
 /* Format string for indicating the device volume is low; 1 = device model */
 "DEVICE_VOLUME_LOW" = "%@ Volume Low";

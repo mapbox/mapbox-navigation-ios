@@ -16,9 +16,6 @@
 /* Title for dismiss button */
 "CARPLAY_DISMISS" = "Descartar";
 
-/* Title for end navigation button */
-"CARPLAY_END" = "Terminar";
-
 /* Title on the exit button in the arrival form */
 "CARPLAY_EXIT_NAVIGATION" = "Sair da navegação";
 
@@ -30,9 +27,6 @@
 
 /* Title for alternative routes in CPTripPreviewTextConfiguration */
 "CARPLAY_MORE_ROUTES" = "Mais Rotas";
-
-/* Title for mute button */
-"CARPLAY_MUTE" = "Desligar som";
 
 /* CPNavigationAlert OK button title */
 "CARPLAY_OK" = "OK";

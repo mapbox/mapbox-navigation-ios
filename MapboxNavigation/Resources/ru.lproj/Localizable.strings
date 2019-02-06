@@ -16,9 +16,6 @@
 /* Title for dismiss button */
 "CARPLAY_DISMISS" = "Отказаться";
 
-/* Title for end navigation button */
-"CARPLAY_END" = "Завершить";
-
 /* Title on the exit button in the arrival form */
 "CARPLAY_EXIT_NAVIGATION" = "Закончить маршрут";
 
@@ -30,9 +27,6 @@
 
 /* Title for alternative routes in CPTripPreviewTextConfiguration */
 "CARPLAY_MORE_ROUTES" = "Другие маршруты";
-
-/* Title for mute button */
-"CARPLAY_MUTE" = "Без звука";
 
 /* CPNavigationAlert OK button title */
 "CARPLAY_OK" = "Хорошо";

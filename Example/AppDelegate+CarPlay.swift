@@ -73,8 +73,8 @@ extension AppDelegate: CarPlayManagerDelegate {
             let searchButton = carPlaySearchController.searchTemplateButton(searchTemplate: searchTemplate, interfaceController: interfaceController, traitCollection: traitCollection)
             return [searchButton]
         case .navigating:
-            let muteTitle = NSLocalizedString("CARPLAY_MUTE", value: "Mute", comment: "Title for mute button")
-            let unmuteTitle = NSLocalizedString("CARPLAY_UNMUTE", value: "Unmute", comment: "Title for unmute button")
+            let muteTitle = "Mute"
+            let unmuteTitle = "Unmute"
             let muteButton = CPBarButton(type: .text) { (button: CPBarButton) in
                 NavigationSettings.shared.voiceMuted = !NavigationSettings.shared.voiceMuted
                 button.title = NavigationSettings.shared.voiceMuted ? unmuteTitle : muteTitle
@@ -111,7 +111,7 @@ extension AppDelegate: CarPlayManagerDelegate {
             let exitButton = CPBarButton(type: .text) { _ in
                 carPlayManager.currentNavigator?.exitNavigation(byCanceling: true)
             }
-            exitButton.title = NSLocalizedString("CARPLAY_END", value: "End", comment: "Title for end navigation button")
+            exitButton.title = "End"
             return [exitButton]
         }
     }
