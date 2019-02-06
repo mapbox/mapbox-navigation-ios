@@ -348,6 +348,10 @@ class CarPlayManagerSpec: QuickSpec {
     private class CustomTripDelegate: CarPlayManagerDelegate {
         var customTrip: CPTrip!
 
+        func carPlayManager(_ carPlayManager: CarPlayManager, willPreview trip: CPTrip) -> (CPTrip) {
+            return customTrip
+        }
+
         func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith service: NavigationService) {
             //no-op
         }
