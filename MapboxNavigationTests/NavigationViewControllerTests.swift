@@ -5,8 +5,8 @@ import Turf
 @testable import MapboxCoreNavigation
 @testable import MapboxNavigation
 
-
-let response = Fixture.JSONFromFileNamed(name: "routeWithInstructions")
+let jsonFileName = "routeWithInstructions"
+let response = Fixture.JSONFromFileNamed(name: jsonFileName)
 let otherResponse = Fixture.JSONFromFileNamed(name: "route-for-lane-testing")
 
 class NavigationViewControllerTests: XCTestCase {
@@ -45,11 +45,11 @@ class NavigationViewControllerTests: XCTestCase {
     }()
     
     lazy var initialRoute: Route = {
-        return Fixture.route(from: "routeWithInstructions")
+        return Fixture.route(from: jsonFileName)
     }()
     
     lazy var newRoute: Route = {
-        return Fixture.route(from: "routeWithInstructions")
+        return Fixture.route(from: jsonFileName)
     }()
     
     override func setUp() {
