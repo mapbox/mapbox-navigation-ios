@@ -158,11 +158,11 @@ extension CarPlayManager: CPApplicationDelegate {
             UIApplication.shared.isIdleTimerDisabled = true
         }
 
-        let viewController = CarPlayMapViewController(styles: styles)
-        window.rootViewController = viewController
+        let carPlayMapViewController = CarPlayMapViewController(styles: styles)
+        window.rootViewController = carPlayMapViewController
         self.carWindow = window
 
-        let mapTemplate = self.mapTemplate(for: interfaceController, viewController: viewController)
+        let mapTemplate = self.mapTemplate(for: interfaceController, carPlayMapViewController: carPlayMapViewController)
         mainMapTemplate = mapTemplate
         interfaceController.setRootTemplate(mapTemplate, animated: false)
 
@@ -183,9 +183,9 @@ extension CarPlayManager: CPApplicationDelegate {
         }
     }
 
-    func mapTemplate(for interfaceController: CPInterfaceController, viewController: UIViewController) -> CPMapTemplate {
+    func mapTemplate(for interfaceController: CPInterfaceController, carPlayMapViewController: CarPlayMapViewController) -> CPMapTemplate {
 
-        let traitCollection = viewController.traitCollection
+        let traitCollection = carPlayMapViewController.traitCollection
 
         let mapTemplate = CPMapTemplate()
         mapTemplate.mapDelegate = self
@@ -198,33 +198,11 @@ extension CarPlayManager: CPApplicationDelegate {
             mapTemplate.trailingNavigationBarButtons = trailingButtons
         }
 
-        if let mapButtons = delegate?.carPlayManager?(self, mapButtonsCompatibleWith: traitCollection, in: mapTemplate, for: .browsing) {
+        if let mapButtons = delegate?.carPlayManager?(self, mapButtonsCompatibleWith: traitCollection, in: mapTemplate, for: .browsing, carPlayMapViewController: carPlayMapViewController) {
             mapTemplate.mapButtons = mapButtons
-        } else if let vc = viewController as? CarPlayMapViewController {
-            mapTemplate.mapButtons = [vc.recenterButton, panMapButton(for: mapTemplate, traitCollection: traitCollection), vc.zoomInButton(), vc.zoomOutButton()]
         }
 
         return mapTemplate
-    }
-
-    func panMapButton(for mapTemplate: CPMapTemplate, traitCollection: UITraitCollection) -> CPMapButton {
-        let panButton = CPMapButton { [weak self] (button) in
-            guard let strongSelf = self else {
-                return
-            }
-
-            if !mapTemplate.isPanningInterfaceVisible {
-                strongSelf.defaultMapButtons = mapTemplate.mapButtons
-                let closeButton = strongSelf.dismissPanButton(for: mapTemplate, traitCollection: traitCollection)
-                mapTemplate.mapButtons = [closeButton]
-                mapTemplate.showPanningInterface(animated: true)
-            }
-        }
-
-        let bundle = Bundle.mapboxNavigation
-        panButton.image = UIImage(named: "carplay_pan", in: bundle, compatibleWith: traitCollection)
-
-        return panButton
     }
 
     func dismissPanButton(for mapTemplate: CPMapTemplate, traitCollection: UITraitCollection) -> CPMapButton {
@@ -457,8 +435,8 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let mapTemplate = CPMapTemplate()
         mapTemplate.mapDelegate = self
 
-        if let rootViewController = self.carWindow?.rootViewController as? CarPlayMapViewController,
-            let mapButtons = delegate?.carPlayManager?(self, mapButtonsCompatibleWith: rootViewController.traitCollection, in: mapTemplate, for: .navigating) {
+        if let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController,
+            let mapButtons = delegate?.carPlayManager?(self, mapButtonsCompatibleWith: carPlayMapViewController.traitCollection, in: mapTemplate, for: .navigating, carPlayMapViewController: carPlayMapViewController) {
             mapTemplate.mapButtons = mapButtons
         }
 
@@ -523,6 +501,16 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let decelerationRate: CGFloat = 0.9
         let offset = CGPoint(x: velocity.x * decelerationRate / 4, y: velocity.y * decelerationRate / 4)
         updatePan(by: offset, mapTemplate: mapTemplate, animated: true)
+    }
+    
+    public func mapTemplateDidShowPanningInterface(_ mapTemplate: CPMapTemplate) {
+        guard let carPlayMapViewController = carWindow?.rootViewController as? CarPlayMapViewController else {
+            return
+        }
+        
+        self.defaultMapButtons = mapTemplate.mapButtons
+        let closeButton = self.dismissPanButton(for: mapTemplate, traitCollection: carPlayMapViewController.traitCollection)
+        mapTemplate.mapButtons = [closeButton]
     }
     
     public func mapTemplateWillDismissPanningInterface(_ mapTemplate: CPMapTemplate) {

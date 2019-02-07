@@ -116,7 +116,7 @@ extension AppDelegate: CarPlayManagerDelegate {
         }
     }
     
-    func carPlayManager(_ carPlayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]? {
+    func carPlayManager(_ carPlayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity, carPlayMapViewController: CarPlayMapViewController) -> [CPMapButton]? {
         
         switch activity {
         case .navigating:
@@ -137,7 +137,17 @@ extension AppDelegate: CarPlayManagerDelegate {
             overviewButton.image = UIImage(named: "carplay_overview", in: nil, compatibleWith: nil)
             
             return [overviewButton, showFeedbackButton]
-        case .previewing, .browsing:
+        case .browsing:
+            var mapButtons = [carPlayMapViewController.recenterButton,
+                              carPlayMapViewController.zoomInButton,
+                              carPlayMapViewController.zoomOutButton]
+            
+            if let mapTemplate = template as? CPMapTemplate {
+                mapButtons.insert(carPlayMapViewController.createPanMapButton(for: mapTemplate), at: 1)
+            }
+            
+            return mapButtons
+        case .previewing:
             return nil
         }
     }
