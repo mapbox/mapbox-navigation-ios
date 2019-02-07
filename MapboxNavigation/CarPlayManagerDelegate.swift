@@ -46,7 +46,7 @@ public protocol CarPlayManagerDelegate {
      Offers the delegate an opportunity to provide a customized list of buttons displayed on the map.
      
      These buttons handle the gestures on the map view, so it is up to the developer to ensure the map template is interactive.
-     Implement this method to set the trailing bottom map buttons such as the zoom and pan buttons or the route overview and feedback buttons, depending on the user's activity mode on the CarPlay screen.
+     Implement this method to set the trailing bottom map buttons such as the zoom and pan buttons dependent on the user's activity on the CarPlay screen.
      
      - parameter carPlayManager: The shared CarPlay manager.
      - parameter traitCollection: The trait collection of the view controller being shown in the CarPlay window.
