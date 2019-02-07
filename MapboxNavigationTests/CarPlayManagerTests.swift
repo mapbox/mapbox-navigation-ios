@@ -389,7 +389,7 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
     public var mapButtons: [CPMapButton]?
 
     func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route) -> NavigationService {
-        let response = Fixture.JSONFromFileNamed(name: "routeWithInstructions")
+        let response = Fixture.JSONFromFileNamed(name: jsonFileName)
         let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String: Any]
         let initialRoute: Route = {
             let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
