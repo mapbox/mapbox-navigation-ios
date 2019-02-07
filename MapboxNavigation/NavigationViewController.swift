@@ -5,206 +5,10 @@ import MapboxSpeech
 import Mapbox
 
 /**
- The `NavigationViewControllerDelegate` protocol provides methods for configuring the map view shown by a `NavigationViewController` and responding to the cancellation of a navigation session.
+ A ContainerViewController is any UIViewController that conforms to the NavigationComponent messaging protocol.
+ - seealso: NavigationComponent
  */
-@objc(MBNavigationViewControllerDelegate)
-public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
-    /**
-     Called when the navigation view controller is dismissed, such as when the user ends a trip.
-     
-     - parameter navigationViewController: The navigation view controller that was dismissed.
-     - parameter canceled: True if the user dismissed the navigation view controller by tapping the Cancel button; false if the navigation view controller dismissed by some other means.
-     */
-    @objc optional func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool)
-    
-    /**
-     Called as the user approaches a waypoint.
-     
-     This message is sent, once per progress update, as the user is approaching a waypoint. You can use this to cue UI, to do network pre-loading, etc.
-     - parameter navigationViewController: The Navigation VC that is detecting the users' approach.
-     - parameter waypoint: The waypoint that the service is arriving at.
-     - parameter remainingTimeInterval: The estimated number of seconds until arrival.
-     - parameter distance: The current distance from the waypoint, in meters.
-     - important: This method will likely be called several times as you approach a destination. If only one consumption of this method is desired, then usage of an internal flag is reccomended.
-     */
-    
-    @objc(navigationViewController:willArriveAtWaypoint:after:distance:)
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, willArriveAt waypoint: Waypoint, after remainingTimeInterval: TimeInterval, distance: CLLocationDistance)
-    
-    /**
-     Called when the user arrives at the destination waypoint for a route leg.
-     
-     This method is called when the navigation view controller arrives at the waypoint. You can implement this method to prevent the navigation view controller from automatically advancing to the next leg. For example, you can and show an interstitial sheet upon arrival and pause navigation by returning `false`, then continue the route when the user dismisses the sheet. If this method is unimplemented, the navigation view controller automatically advances to the next leg when arriving at a waypoint.
-     
-     - postcondition: If you return `false` within this method, you must manually advance to the next leg: obtain the value of the `navigationService` and its `NavigationService.routeProgress` property, then increment the `RouteProgress.legIndex` property.
-     - parameter navigationViewController: The navigation view controller that has arrived at a waypoint.
-     - parameter waypoint: The waypoint that the user has arrived at.
-     - returns: True to automatically advance to the next leg, or false to remain on the now completed leg.
-     */
-    @objc(navigationViewController:didArriveAtWaypoint:)
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool
-    
-    /**
-     Called when the user arrives at the final destination of the current route leg and may display a feedback
-     UI to the user.
-     
-     If implemented, you can use this to detect the status of `CarPlayManager.isConnected` when the user arrives at the final destination.
-   
-     - parameter navigationViewController: The navigation view controller that has arrived at the leg of route.
-     - returns: This will most likely be used to determine whether to show feedback when the user arrives at the final leg of the route.
-     */
-    @objc optional func navigationViewControllerShouldShowEndOfRouteFeedback(_ navigationViewController: NavigationViewController) -> Bool
-    
-    /**
-     Returns whether the navigation view controller should be allowed to calculate a new route.
-     
-     If implemented, this method is called as soon as the navigation view controller detects that the user is off the predetermined route. Implement this method to conditionally prevent rerouting. If this method returns `true`, `navigationViewController(_:willRerouteFrom:)` will be called immediately afterwards.
-     
-     - parameter navigationViewController: The navigation view controller that has detected the need to calculate a new route.
-     - parameter location: The user’s current location.
-     - returns: True to allow the navigation view controller to calculate a new route; false to keep tracking the current route.
-    */
-    @objc(navigationViewController:shouldRerouteFromLocation:)
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool
-    
-    /**
-     Called immediately before the navigation view controller calculates a new route.
-     
-     This method is called after `navigationViewController(_:shouldRerouteFrom:)` is called, simultaneously with the `RouteControllerWillReroute` notification being posted, and before `navigationViewController(_:didRerouteAlong:)` is called.
-     
-     - parameter navigationViewController: The navigation view controller that will calculate a new route.
-     - parameter location: The user’s current location.
-     */
-    @objc(navigationViewController:willRerouteFromLocation:)
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, willRerouteFrom location: CLLocation?)
-    
-    /**
-     Called immediately after the navigation view controller receives a new route.
-     
-     This method is called after `navigationViewController(_:willRerouteFrom:)` and simultaneously with the `RouteControllerDidReroute` notification being posted.
-     
-     - parameter navigationViewController: The navigation view controller that has calculated a new route.
-     - parameter route: The new route.
-     */
-    @objc(navigationViewController:didRerouteAlongRoute:)
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, didRerouteAlong route: Route)
-    
-    /**
-     Called when the navigation view controller fails to receive a new route.
-     
-     This method is called after `navigationViewController(_:willRerouteFrom:)` and simultaneously with the `RouteControllerDidFailToReroute` notification being posted.
-     
-     - parameter navigationViewController: The navigation view controller that has calculated a new route.
-     - parameter error: An error raised during the process of obtaining a new route.
-     */
-    @objc(navigationViewController:didFailToRerouteWithError:)
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, didFailToRerouteWith error: Error)
-    
-    /**
-     Returns an `MGLStyleLayer` that determines the appearance of the route line.
-     
-     If this method is unimplemented, the navigation view controller’s map view draws the route line using an `MGLLineStyleLayer`.
-     */
-    @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
-    
-    /**
-     Returns an `MGLStyleLayer` that determines the appearance of the route line’s casing.
-     
-     If this method is unimplemented, the navigation view controller’s map view draws the route line’s casing using an `MGLLineStyleLayer` whose width is greater than that of the style layer returned by `navigationViewController(_:routeStyleLayerWithIdentifier:source:)`.
-     */
-    @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
-    
-    /**
-     Returns an `MGLShape` that represents the path of the route line.
-     
-     If this method is unimplemented, the navigation view controller’s map view represents the route line using an `MGLPolylineFeature` based on `route`’s `coordinates` property.
-     */
-    @objc(navigationViewController:shapeForRoutes:)
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, shapeFor routes: [Route]) -> MGLShape?
-    
-    /**
-     Returns an `MGLShape` that represents the path of the route line’s casing.
-     
-     If this method is unimplemented, the navigation view controller’s map view represents the route line’s casing using an `MGLPolylineFeature` identical to the one returned by `navigationViewController(_:shapeFor:)`.
-     */
-    @objc(navigationViewController:simplifiedShapeForRoute:)
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, simplifiedShapeFor route: Route) -> MGLShape?
-    
-    /*
-     Returns an `MGLStyleLayer` that marks the location of each destination along the route when there are multiple destinations. The returned layer is added to the map below the layer returned by `navigationViewController(_:waypointSymbolStyleLayerWithIdentifier:source:)`.
-     
-     If this method is unimplemented, the navigation view controller’s map view marks each destination waypoint with a circle.
-     */
-    @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
-    
-    /*
-     Returns an `MGLStyleLayer` that places an identifying symbol on each destination along the route when there are multiple destinations. The returned layer is added to the map above the layer returned by `navigationViewController(_:waypointStyleLayerWithIdentifier:source:)`.
-     
-     If this method is unimplemented, the navigation view controller’s map view labels each destination waypoint with a number, starting with 1 at the first destination, 2 at the second destination, and so on.
-     */
-    @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
-    
-    /**
-     Returns an `MGLShape` that represents the destination waypoints along the route (that is, excluding the origin).
-     
-     If this method is unimplemented, the navigation map view represents the route waypoints using `navigationViewController(_:shapeFor:legIndex:)`.
-     */
-    @objc(navigationViewController:shapeForWaypoints:legIndex:)
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, shapeFor waypoints: [Waypoint], legIndex: Int) -> MGLShape?
-    
-    /**
-     Called when the user taps to select a route on the navigation view controller’s map view.
-     - parameter navigationViewController: The navigation view controller presenting the route that the user selected.
-     - parameter route: The route on the map that the user selected.
-     */
-    @objc(navigationViewController:didSelectRoute:)
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, didSelect route: Route)
-    
-    /**
-     Return an `MGLAnnotationImage` that represents the destination marker.
-     
-     If this method is unimplemented, the navigation view controller’s map view will represent the destination annotation with the default marker.
-     */
-    @objc(navigationViewController:imageForAnnotation:)
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage?
-    
-    /**
-     Returns a view object to mark the given point annotation object on the map.
-     
-     The user location annotation view can also be customized via this method. When annotation is an instance of `MGLUserLocation`, return an instance of `MGLUserLocationAnnotationView` (or a subclass thereof). Note that when `NavigationMapView.tracksUserCourse` is set to `true`, the navigation view controller’s map view uses a distinct user course view; to customize it, set the `NavigationMapView.userCourseView` property of the map view stored by the `NavigationViewController.mapView` property.
-     */
-    @objc(navigationViewController:viewForAnnotation:)
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, viewFor annotation: MGLAnnotation) -> MGLAnnotationView?
-    
-    /**
-     Returns the center point of the user course view in screen coordinates relative to the map view.
-     */
-    @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint
-    
-    /**
-     Allows the delegate to decide whether to ignore a location update.
-     
-     This method is called on every location update. By default, the navigation view controller ignores certain location updates that appear to be unreliable, as determined by the `CLLocation.isQualified` property.
-     
-     - parameter navigationViewController: The navigation view controller that discarded the location.
-     - parameter location: The location that will be discarded.
-     - returns: If `true`, the location is discarded and the `NavigationViewController` will not consider it. If `false`, the location will not be thrown out.
-     */
-    @objc(navigationViewController:shouldDiscardLocation:)
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, shouldDiscard location: CLLocation) -> Bool
-    
-    /**
-     Called to allow the delegate to customize the contents of the road name label that is displayed towards the bottom of the map view.
-     
-     This method is called on each location update. By default, the label displays the name of the road the user is currently traveling on.
-     
-     - parameter navigationViewController: The navigation view controller that will display the road name.
-     - parameter location: The user’s current location.
-     - returns: The road name to display in the label, or nil to hide the label.
-     */
-    @objc(navigationViewController:roadNameAtLocation:)
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, roadNameAt location: CLLocation) -> String?
-}
+public typealias ContainerViewController = UIViewController & NavigationComponent
 
 /**
  `NavigationViewController` is a fully-featured turn-by-turn navigation UI.
@@ -213,6 +17,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
  
  - seealso: CarPlayNavigationViewController
  */
+
 @objc(MBNavigationViewController)
 open class NavigationViewController: UIViewController {
     
@@ -330,9 +135,17 @@ open class NavigationViewController: UIViewController {
     
     var mapViewController: RouteMapViewController?
     
+    var bottomViewController: ContainerViewController?
+    
     var navigationComponents: [NavigationComponent] {
-        guard let mvc = mapViewController else { return [] }
-        return [mvc]
+        var components: [NavigationComponent] = []
+        if let mvc = mapViewController {
+            components.append(mvc)
+        }
+        if let bottomViewController = bottomViewController {
+            components.append(bottomViewController)
+        }
+        return components
     }
     
     /**
@@ -367,49 +180,60 @@ open class NavigationViewController: UIViewController {
      See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
      
      - parameter route: The route to navigate along.
-     - parameter styles: The styles that the view controller’s internal `StyleManager` object can select from for display.
-     - parameter navigationService: The navigation service that manages navigation along the route.
-     - parameter voiceController: The voice controller that manages the delivery of voice instructions during navigation.
+     - parameter options: The navigation options to use for the navigation session. See `NavigationOptions`.
      */
-    @objc(initWithRoute:styles:navigationService:voiceController:)
+    @objc(initWithRoute:options:)
     required public init(for route: Route,
-                         styles: [Style]? = nil,
-                         navigationService: NavigationService? = nil,
-                         voiceController: RouteVoiceController? = nil) {
+                         options: NavigationOptions? = nil) {
         
         super.init(nibName: nil, bundle: nil)
         
-        self.navigationService = navigationService ?? MapboxNavigationService(route: route)
+        self.navigationService = options?.navigationService ?? MapboxNavigationService(route: route)
         self.navigationService.usesDefaultUserInterface = true
         self.navigationService.delegate = self
-        self.voiceController = voiceController ?? MapboxVoiceController(speechClient: SpeechSynthesizer(accessToken: navigationService?.directions.accessToken))
+        self.voiceController = options?.voiceController ?? MapboxVoiceController(speechClient: SpeechSynthesizer(accessToken: navigationService?.directions.accessToken))
 
         NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
         
-        let mapViewController = RouteMapViewController(navigationService: self.navigationService, delegate: self)
+        let bottomBanner = options?.bottomBanner ?? BottomBannerViewController(delegate: self)
+        bottomViewController = bottomBanner
+
+        let mapViewController = RouteMapViewController(navigationService: self.navigationService, delegate: self, bottomBanner: bottomBanner)
         self.mapViewController = mapViewController
         mapViewController.destination = route.legs.last?.destination
-        mapViewController.willMove(toParentViewController: self)
-        addChildViewController(mapViewController)
-        mapViewController.didMove(toParentViewController: self)
-        let mapSubview: UIView = mapViewController.view
-        mapSubview.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(mapSubview)
+        mapViewController.view.translatesAutoresizingMaskIntoConstraints = false
+
         
+        embed(mapViewController, in: view) { (parent, map) -> [NSLayoutConstraint] in
+            return map.view.constraintsForPinning(to: parent.view)
+        }
+        
+
         
         //Do not start the navigation session until after you create the MapViewController, otherwise you'll miss important messages.
         self.navigationService.start()
         
-        mapSubview.pinInSuperview()
+        mapViewController.view.pinInSuperview()
         mapViewController.reportButton.isHidden = !showsReportFeedback
         
         styleManager = StyleManager()
         styleManager.delegate = self
-        styleManager.styles = styles ?? [DayStyle(), NightStyle()]
+        styleManager.styles = options?.styles ?? [DayStyle(), NightStyle()]
         
         if !(route.routeOptions is NavigationRouteOptions) {
             print("`Route` was created using `RouteOptions` and not `NavigationRouteOptions`. Although not required, this may lead to a suboptimal navigation experience. Without `NavigationRouteOptions`, it is not guaranteed you will get congestion along the route line, better ETAs and ETA label color dependent on congestion.")
         }
+    }
+    
+    /**
+    Initializes a navigation view controller with the given route and navigation service.
+     
+     - parameter route: The route to navigate along.
+     - parameter navigationService: The navigation service that manages navigation along the route.
+     */
+    convenience init(route: Route, navigationService service: NavigationService) {
+        let options = NavigationOptions(navigationService: service)
+        self.init(for: route, options: options)
     }
     
     deinit {
@@ -440,6 +264,18 @@ open class NavigationViewController: UIViewController {
             UIApplication.shared.isIdleTimerDisabled = false
         }
         
+    }
+    
+    // MARK: Containerization
+    
+    func embed(_ child: UIViewController, in container: UIView, constrainedBy constraints: ((NavigationViewController, UIViewController) -> [NSLayoutConstraint])?) {
+        child.willMove(toParentViewController: self)
+        addChildViewController(child)
+        container.addSubview(child.view)
+        if let childConstraints: [NSLayoutConstraint] = constraints?(self, child) {
+            view.addConstraints(childConstraints)
+        }
+        child.didMove(toParentViewController: self)
     }
     
     // MARK: Route controller notifications
@@ -511,6 +347,7 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
         return delegate?.navigationViewController?(self, viewFor: annotation)
     }
     
+    //Still Kept around for the EORVC. On it's way out.
     func mapViewControllerDidDismiss(_ mapViewController: RouteMapViewController, byCanceling canceled: Bool) {
         if delegate?.navigationViewControllerDidDismiss?(self, byCanceling: canceled) != nil {
             // The receiver should handle dismissal of the NavigationViewController
@@ -518,6 +355,7 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
             dismiss(animated: true, completion: nil)
         }
     }
+
     
     public func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint {
         return delegate?.navigationViewController?(self, mapViewUserAnchorPoint: mapView) ?? .zero
@@ -677,6 +515,7 @@ extension NavigationViewController: NavigationServiceDelegate {
     }
 }
 
+// MARK: - StyleManagerDelegate
 
 extension NavigationViewController: StyleManagerDelegate {
     
@@ -704,3 +543,19 @@ extension NavigationViewController: StyleManagerDelegate {
         mapView?.reloadStyle(self)
     }
 }
+
+// MARK: - BottomBannerViewControllerDelegate
+
+// Handling cancel action in new Bottom Banner container.
+// Code duplicated with RouteMapViewController.mapViewControllerDidDismiss(_:byCanceling:)
+
+extension NavigationViewController: BottomBannerViewControllerDelegate {
+    public func didTapCancel(_ sender: Any) {
+        if delegate?.navigationViewControllerDidDismiss?(self, byCanceling: true) != nil {
+            // The receiver should handle dismissal of the NavigationViewController
+        } else {
+            dismiss(animated: true, completion: nil)
+        }
+    }
+}
+

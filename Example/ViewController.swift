@@ -163,7 +163,8 @@ class ViewController: UIViewController {
         let locationManager = ReplayLocationManager(locations: Array<CLLocation>.locations(from: filePath))
 
         let navigationService = MapboxNavigationService(route: route, locationSource: locationManager)
-        let navigationViewController = NavigationViewController(for: route, navigationService: navigationService)
+        let options = NavigationOptions(navigationService: navigationService)
+        let navigationViewController = NavigationViewController(for: route, options: options)
 
         present(navigationViewController, animated: true, completion: nil)
     }
@@ -216,7 +217,8 @@ class ViewController: UIViewController {
     func startBasicNavigation() {
         guard let route = routes?.first else { return }
 
-        let navigationViewController = NavigationViewController(for: route, navigationService: navigationService())
+        let options = NavigationOptions(navigationService: navigationService())
+        let navigationViewController = NavigationViewController(for: route, options: options)
         navigationViewController.delegate = self
         navigationViewController.mapView?.delegate = self
         
@@ -226,7 +228,8 @@ class ViewController: UIViewController {
     func startNavigation(styles: [Style]) {
         guard let route = routes?.first else { return }
         
-        let navigationViewController = NavigationViewController(for: route, styles: styles, navigationService: navigationService())
+        let options = NavigationOptions(styles: styles, navigationService: navigationService())
+        let navigationViewController = NavigationViewController(for: route, options: options)
         navigationViewController.delegate = self
         
         presentAndRemoveMapview(navigationViewController)
@@ -254,8 +257,8 @@ class ViewController: UIViewController {
         guard let route = routes?.first else { return }
 
         let styles = [CustomDayStyle(), CustomNightStyle()]
-
-        let navigationViewController = NavigationViewController(for: route, styles: styles, navigationService: navigationService())
+        let options = NavigationOptions(styles:styles, navigationService: navigationService())
+        let navigationViewController = NavigationViewController(for: route, options: options)
         navigationViewController.delegate = self
 
         presentAndRemoveMapview(navigationViewController)

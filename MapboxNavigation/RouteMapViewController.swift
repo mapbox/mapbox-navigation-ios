@@ -116,10 +116,10 @@ class RouteMapViewController: UIViewController {
     var nextBannerView: NextBannerView { return navigationView.nextBannerView }
     var instructionsBannerView: InstructionsBannerView { return navigationView.instructionsBannerView }
     var instructionsBannerContentView: InstructionsBannerContentView { return navigationView.instructionsBannerContentView }
-    var bottomBannerView: BottomBannerView { return navigationView.bottomBannerView }
+    var bottomBannerContainerView: BottomBannerContainerView { return navigationView.bottomBannerContainerView }
 
     var navigationComponents: [NavigationComponent] {
-        return [instructionsBannerView, nextBannerView, lanesView, bottomBannerView]
+        return [instructionsBannerView, nextBannerView, lanesView]//, bottomBannerView]
     }
     
     lazy var endOfRouteViewController: EndOfRouteViewController = {
@@ -206,18 +206,24 @@ class RouteMapViewController: UIViewController {
     var annotatesSpokenInstructions = false
 
     var overheadInsets: UIEdgeInsets {
-        return UIEdgeInsets(top: navigationView.instructionsBannerView.bounds.height, left: 20, bottom: bottomBannerView.bounds.height, right: 20)
+        return UIEdgeInsets(top: navigationView.instructionsBannerView.bounds.height, left: 20, bottom: bottomBannerContainerView.bounds.height, right: 20)
     }
 
     typealias LabelRoadNameCompletionHandler = (_ defaultRaodNameAssigned: Bool) -> Void
 
     var labelRoadNameCompletionHandler: (LabelRoadNameCompletionHandler)?
 
-    convenience init(navigationService: NavigationService, delegate: RouteMapViewControllerDelegate? = nil) {
+    convenience init(navigationService: NavigationService, delegate: RouteMapViewControllerDelegate? = nil, bottomBanner: ContainerViewController) {
+        
         self.init()
         self.navService = navigationService
         self.delegate = delegate
         automaticallyAdjustsScrollViewInsets = false
+        
+        embed(bottomBanner, in: navigationView.bottomBannerContainerView) { (parent, banner) -> [NSLayoutConstraint] in
+            banner.view.translatesAutoresizingMaskIntoConstraints = false
+            return banner.view.constraintsForPinning(to: self.navigationView.bottomBannerContainerView)
+        }
     }
 
 
@@ -305,6 +311,16 @@ class RouteMapViewController: UIViewController {
         unsubscribeFromKeyboardNotifications()
     }
 
+    func embed(_ child: UIViewController, in container: UIView, constrainedBy constraints: ((RouteMapViewController, UIViewController) -> [NSLayoutConstraint])?) {
+        child.willMove(toParentViewController: self)
+        addChildViewController(child)
+        container.addSubview(child.view)
+        if let childConstraints: [NSLayoutConstraint] = constraints?(self, child) {
+            view.addConstraints(childConstraints)
+        }
+        child.didMove(toParentViewController: self)
+    }
+    
     @objc func recenter(_ sender: AnyObject) {
         mapView.tracksUserCourse = true
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
@@ -452,7 +468,7 @@ class RouteMapViewController: UIViewController {
 
     var contentInsets: UIEdgeInsets {
         let top = instructionsBannerContentView.bounds.height
-        let bottom = bottomBannerView.bounds.height
+        let bottom = bottomBannerContainerView.bounds.height
         return UIEdgeInsets(top: top, left: 0, bottom: bottom, right: 0)
     }
 
@@ -733,7 +749,7 @@ extension RouteMapViewController: NavigationViewDelegate {
 
      - parameter location: The user’s current location.
      */
-    func labelCurrentRoad(at rawLocation: CLLocation, for snappedLoction: CLLocation? = nil) {
+    func labelCurrentRoad(at rawLocation: CLLocation, for snappedLocation: CLLocation? = nil) {
 
         guard navigationView.resumeButton.isHidden else {
                 return
@@ -755,7 +771,7 @@ extension RouteMapViewController: NavigationViewDelegate {
             return
         }
 
-        let location = snappedLoction ?? rawLocation
+        let location = snappedLocation ?? rawLocation
 
         labelCurrentRoadFeature(at: location)
 
