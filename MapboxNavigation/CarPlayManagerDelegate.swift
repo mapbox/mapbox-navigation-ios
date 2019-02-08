@@ -40,12 +40,12 @@ public protocol CarPlayManagerDelegate {
      */
     @objc(carPlayManager:trailingNavigationBarButtonsWithTraitCollection:inTemplate:forActivity:)
     optional func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]?
-    
+   
     /**
      Offers the delegate an opportunity to provide a customized list of buttons displayed on the map.
      
      These buttons handle the gestures on the map view, so it is up to the developer to ensure the map template is interactive.
-     If this method is not implemented, or if nil is returned, a default set of zoom and pan buttons will be provided.
+     If this method is not implemented, or if nil is returned, a default set of zoom and pan buttons declared in the `CarPlayMapViewController` will be provided.
      
      - parameter carPlayManager: The shared CarPlay manager.
      - parameter traitCollection: The trait collection of the view controller being shown in the CarPlay window.
@@ -55,7 +55,6 @@ public protocol CarPlayManagerDelegate {
      */
     @objc(carPlayManager:mapButtonsCompatibleWithTraitCollection:inTemplate:forActivity:)
     optional func carPlayManager(_ carPlayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]?
-    
     
     /**
      Offers the delegate an opportunity to provide an alternate navigation service, otherwise a default built-in MapboxNavigationService will be created and used.

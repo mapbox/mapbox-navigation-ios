@@ -46,12 +46,6 @@
 /* Title on rate button in CarPlay */
 "CARPLAY_RATE_TRIP" = "Betygsätt din resa";
 
-/* Message when search returned zero results in CarPlay */
-"CARPLAY_SEARCH_NO_RESULTS" = "Inga resultat";
-
-/* Title in search template when search is unimplemented */
-"CARPLAY_SEARCH_NOT_IMPLEMENTED" = "Sökfunktionen är inte implementerad";
-
 /* Alert title that shows when feedback has been submitted */
 "CARPLAY_SUBMITTED_FEEDBACK" = "Skickat";
 

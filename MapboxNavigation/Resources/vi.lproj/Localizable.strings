@@ -49,9 +49,6 @@
 /* Message when search returned zero results in CarPlay */
 "CARPLAY_SEARCH_NO_RESULTS" = "Không tìm thấy kết quả";
 
-/* Title in search template when search is unimplemented */
-"CARPLAY_SEARCH_NOT_IMPLEMENTED" = "Không có chức năng tìm kiếm";
-
 /* Alert title that shows when feedback has been submitted */
 "CARPLAY_SUBMITTED_FEEDBACK" = "Đã gửi";
 

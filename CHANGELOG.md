@@ -8,6 +8,12 @@
 * Added the `MapboxNavigationService.router(_:didPassVisualInstructionPoint:routeProgress:)` and `MapboxNavigationService.router(_:didPassSpokenInstructionPoint:routeProgress:)` methods, which correspond to `Notification.Name.routeControllerDidPassVisualInstructionPoint` and `Notification.Name.routeControllerDidPassSpokenInstructionPoint`, respectively. ([#1912](https://github.com/mapbox/mapbox-navigation-ios/pull/1912))
 * Added an initializer to `DispatchTimer`, along with methods for arming and disarming the timer. ([#1912](https://github.com/mapbox/mapbox-navigation-ios/pull/1912))
 
+### CarPlay
+
+* You can now customize the control layer of the map template comprising of the navigation bar's leading and trailing buttons and the map buttons. ([#1962](https://github.com/mapbox/mapbox-navigation-ios/pull/1962))
+* Added new map buttons in the `CarPlayManager` and the `CarPlayMapViewController`. You can now access map buttons that perform built-in actions on the map by accessing read-only properties such as: `CarPlayManager.exitButton`, `CarPlayManager.muteButton`, `CarPlayManager.showFeedbackButton`, `CarPlayManager.overviewButton`, `CarPlayMapViewController.recenterButton`, `CarPlayMapViewController.zoomInButton`, `CarPlayMapViewController.zoomOutButton`, `CarPlayMapViewController.panningInterfaceDisplayButton(for:)`, `CarPlayMapViewController.panningInterfaceDismissalButton(for:)`. ([#1962](https://github.com/mapbox/mapbox-navigation-ios/pull/1962))
+
+
 ### Other changes
 
 * Restored “Declaration” and “Parameters” sections throughout the API reference. ([#1952](https://github.com/mapbox/mapbox-navigation-ios/pull/1952))
