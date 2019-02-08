@@ -68,15 +68,15 @@ public class CarPlayMapViewController: UIViewController {
      The map button for zooming out the current map view.
      */
     @objc public lazy var zoomOutButton: CPMapButton = {
-        let zoomInOut = CPMapButton { [weak self] (button) in
+        let zoomOutButton = CPMapButton { [weak self] (button) in
             guard let strongSelf = self else {
                 return
             }
             strongSelf.mapView.setZoomLevel(strongSelf.mapView.zoomLevel - 1, animated: true)
         }
         let bundle = Bundle.mapboxNavigation
-        zoomInOut.image = UIImage(named: "carplay_minus", in: bundle, compatibleWith: traitCollection)
-        return zoomInOut
+        zoomOutButton.image = UIImage(named: "carplay_minus", in: bundle, compatibleWith: traitCollection)
+        return zoomOutButton
     }()
     
     /**
