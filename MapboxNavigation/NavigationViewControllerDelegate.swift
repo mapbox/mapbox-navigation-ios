@@ -179,11 +179,11 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     
     //MARK: Obsolete
     
-    @available(*, obsoleted: 0.1, message: "The NavigationViewController no longer forwards MGLMapView messages. Use MGLMapViewDelegate.mapView(_:imageFor:) instead.")
+    @available(*, obsoleted: 0.1, message: "Use MGLMapViewDelegate.mapView(_:imageFor:) instead.")
     @objc(navigationViewController:imageForAnnotation:)
     optional func navigationViewController(_ navigationViewController: NavigationViewController, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage?
     
-    @available(*, obsoleted: 0.1, message: "The NavigationViewController no longer forwards MGLMapView messages. Use MGLMapViewDelegate.mapView(_:viewFor:) instead.")
+    @available(*, obsoleted: 0.1, message: "Use MGLMapViewDelegate.mapView(_:viewFor:) instead.")
     @objc(navigationViewController:viewForAnnotation:)
     optional func navigationViewController(_ navigationViewController: NavigationViewController, viewFor annotation: MGLAnnotation) -> MGLAnnotationView?
 }
