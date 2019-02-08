@@ -98,11 +98,22 @@ public protocol CarPlayManagerDelegate {
      Offers the delegate the opportunity to customize a trip before it is presented to the user to preview.
      
      - parameter carPlayManager: The shared CarPlay manager.
-     - parameter trip: The trip to preview.
-     - returns: The trip to be previewed. This can be the same trip or a new/alternate trip if desired.
+     - parameter trip: The trip that will be previewed.
+     - returns: The actual trip to be previewed. This can be the same trip or a new/alternate trip if desired.
      */
     @objc(carPlayManager:willPreviewTrip:)
     optional func carPlayManager(_ carPlayManager: CarPlayManager, willPreview trip: CPTrip) -> (CPTrip)
+
+    /**
+     Offers the delegate the opportunity to customize a trip preview text configuration for a given trip.
+
+     - parameter carPlayManager: The shared CarPlay manager.
+     - parameter trip: The trip that will be previewed.
+     - parameter previewTextConfiguration: The trip preview text configuration that will be presented alongside the trip.
+     - returns: The actual preview text configuration to be presented alongside the trip.
+    */
+    @objc(carPlayManager:willPreviewTrip:withPreviewTextConfiguration:)
+    optional func carPlayManager(_ carPlayManager: CarPlayManager, willPreview trip: CPTrip, with previewTextConfiguration: CPTripPreviewTextConfiguration) -> (CPTripPreviewTextConfiguration)
 
     /**
      Offers the delegate the opportunity to react to selection of a trip. Certain trips may have alternate route(s).
