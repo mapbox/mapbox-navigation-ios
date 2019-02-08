@@ -200,6 +200,14 @@ extension CarPlayManager: CPApplicationDelegate {
 
         if let mapButtons = delegate?.carPlayManager?(self, mapButtonsCompatibleWith: traitCollection, in: mapTemplate, for: .browsing, carPlayMapViewController: carPlayMapViewController) {
             mapTemplate.mapButtons = mapButtons
+        } else {
+            var mapButtons = [carPlayMapViewController.recenterButton,
+                              carPlayMapViewController.zoomInButton,
+                              carPlayMapViewController.zoomOutButton]
+            
+            mapButtons.insert(carPlayMapViewController.createPanMapButton(for: mapTemplate), at: 1)
+            
+            mapTemplate.mapButtons = mapButtons
         }
 
         return mapTemplate
@@ -438,16 +446,50 @@ extension CarPlayManager: CPMapTemplateDelegate {
         if let carPlayMapViewController = self.carWindow?.rootViewController as? CarPlayMapViewController,
             let mapButtons = delegate?.carPlayManager?(self, mapButtonsCompatibleWith: carPlayMapViewController.traitCollection, in: mapTemplate, for: .navigating, carPlayMapViewController: carPlayMapViewController) {
             mapTemplate.mapButtons = mapButtons
+        } else {
+            let showFeedbackButton = CPMapButton { button in
+                self.currentNavigator?.showFeedback()
+            }
+            showFeedbackButton.image = UIImage(named: "carplay_feedback", in: .mapboxNavigation, compatibleWith: nil)
+            
+            let overviewButton = CPMapButton { button in
+                guard let navigationViewController = self.currentNavigator else {
+                    return
+                }
+                navigationViewController.tracksUserCourse = !navigationViewController.tracksUserCourse
+                
+                let imageName = navigationViewController.tracksUserCourse ? "carplay_overview" : "carplay_locate"
+                button.image = UIImage(named: imageName, in: .mapboxNavigation, compatibleWith: nil)
+            }
+            overviewButton.image = UIImage(named: "carplay_overview", in: .mapboxNavigation, compatibleWith: nil)
+            
+            mapTemplate.mapButtons = [overviewButton, showFeedbackButton]
         }
 
         if let rootViewController = self.carWindow?.rootViewController as? CarPlayMapViewController,
             let leadingButtons = delegate?.carPlayManager?(self, leadingNavigationBarButtonsCompatibleWith: rootViewController.traitCollection, in: mapTemplate, for: .navigating) {
             mapTemplate.leadingNavigationBarButtons = leadingButtons
+        } else {
+            let muteTitle = NSLocalizedString("CARPLAY_MUTE", bundle: .mapboxNavigation, value: "Mute", comment: "Title for mute button")
+            let unmuteTitle = NSLocalizedString("CARPLAY_UNMUTE", bundle: .mapboxNavigation, value: "Unmute", comment: "Title for unmute button")
+            
+            let muteButton = CPBarButton(type: .text) { (button: CPBarButton) in
+                NavigationSettings.shared.voiceMuted = !NavigationSettings.shared.voiceMuted
+                button.title = NavigationSettings.shared.voiceMuted ? unmuteTitle : muteTitle
+            }
+            muteButton.title = NavigationSettings.shared.voiceMuted ? unmuteTitle : muteTitle
+            mapTemplate.leadingNavigationBarButtons.insert(muteButton, at: 0)
         }
         
         if let rootViewController = self.carWindow?.rootViewController as? CarPlayMapViewController,
             let trailingButtons = delegate?.carPlayManager?(self, trailingNavigationBarButtonsCompatibleWith: rootViewController.traitCollection, in: mapTemplate, for: .navigating) {
             mapTemplate.trailingNavigationBarButtons = trailingButtons
+        } else {
+            let exitButton = CPBarButton(type: .text) { [weak self] (button: CPBarButton) in
+                self?.currentNavigator?.exitNavigation(byCanceling: true)
+            }
+            exitButton.title = NSLocalizedString("CARPLAY_END", bundle: .mapboxNavigation, value: "End", comment: "Title for end navigation button")
+            mapTemplate.trailingNavigationBarButtons.append(exitButton)
         }
 
         return mapTemplate

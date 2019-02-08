@@ -16,6 +16,9 @@
 /* Title for dismiss button */
 "CARPLAY_DISMISS" = "Mellőzés";
 
+/* Title for end navigation button */
+"CARPLAY_END" = "Befejezés";
+
 /* Title on the exit button in the arrival form */
 "CARPLAY_EXIT_NAVIGATION" = "Kilépés a navigációból";
 
@@ -27,6 +30,9 @@
 
 /* Title for alternative routes in CPTripPreviewTextConfiguration */
 "CARPLAY_MORE_ROUTES" = "Több útvonal";
+
+/* Title for mute button */
+"CARPLAY_MUTE" = "Némítás";
 
 /* CPNavigationAlert OK button title */
 "CARPLAY_OK" = "OK";

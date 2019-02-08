@@ -121,6 +121,22 @@ class CarPlayManagerTests: XCTestCase {
         XCTAssertEqual(2, mapTemplate.leadingNavigationBarButtons.count)
         XCTAssertEqual(2, mapTemplate.trailingNavigationBarButtons.count)
     }
+    
+    func testManagerAsksDelegateForLeadingAndTrailingBarButtonsIfNotAvailable() {
+        // NOTE: Xcode is going to complain here - ignore. This is a known XCTest bug.
+        guard #available(iOS 12, *) else { return }
+        
+        simulateCarPlayConnection(manager!)
+        
+        guard let fakeInterfaceController = manager?.interfaceController else {
+            XCTFail("Dependencies not met! Bailing...")
+            return
+        }
+        
+        let mapTemplate: CPMapTemplate = fakeInterfaceController.rootTemplate as! CPMapTemplate
+        XCTAssertEqual(0, mapTemplate.leadingNavigationBarButtons.count)
+        XCTAssertEqual(0, mapTemplate.trailingNavigationBarButtons.count)
+    }
 
     func testManagerAsksDelegateForMapButtonsIfAvailable() {
         // NOTE: Xcode is going to complain here - ignore. This is a known XCTest bug.
@@ -140,6 +156,21 @@ class CarPlayManagerTests: XCTestCase {
 
         let mapTemplate: CPMapTemplate = fakeInterfaceController.rootTemplate as! CPMapTemplate
         XCTAssertEqual(1, mapTemplate.mapButtons.count)
+    }
+    
+    func testManagerAsksDelegateForMapButtonsIfNotAvailable() {
+        // NOTE: Xcode is going to complain here - ignore. This is a known XCTest bug.
+        guard #available(iOS 12, *) else { return }
+        
+        simulateCarPlayConnection(manager!)
+        
+        guard let fakeInterfaceController = manager?.interfaceController else {
+            XCTFail("Dependencies not met! Bailing...")
+            return
+        }
+        
+        let mapTemplate: CPMapTemplate = fakeInterfaceController.rootTemplate as! CPMapTemplate
+        XCTAssertEqual(4, mapTemplate.mapButtons.count)
     }
 
     func testManagerTellsDelegateWhenNavigationStartsAndEndsDueToArrival() {

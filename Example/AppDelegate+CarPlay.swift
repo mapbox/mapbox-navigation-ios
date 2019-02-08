@@ -72,16 +72,7 @@ extension AppDelegate: CarPlayManagerDelegate {
             searchTemplate.delegate = carPlaySearchController
             let searchButton = carPlaySearchController.searchTemplateButton(searchTemplate: searchTemplate, interfaceController: interfaceController, traitCollection: traitCollection)
             return [searchButton]
-        case .navigating:
-            let muteTitle = "Mute"
-            let unmuteTitle = "Unmute"
-            let muteButton = CPBarButton(type: .text) { (button: CPBarButton) in
-                NavigationSettings.shared.voiceMuted = !NavigationSettings.shared.voiceMuted
-                button.title = NavigationSettings.shared.voiceMuted ? unmuteTitle : muteTitle
-            }
-            muteButton.title = NavigationSettings.shared.voiceMuted ? unmuteTitle : muteTitle
-            return [muteButton]
-        case .previewing:
+        case .navigating, .previewing:
             return nil
         }
     }
@@ -108,46 +99,6 @@ extension AppDelegate: CarPlayManagerDelegate {
             favoriteTemplateButton.image = UIImage(named: "carplay_star", in: nil, compatibleWith: traitCollection)
             return [favoriteTemplateButton]
         case .navigating:
-            let exitButton = CPBarButton(type: .text) { _ in
-                carPlayManager.currentNavigator?.exitNavigation(byCanceling: true)
-            }
-            exitButton.title = "End"
-            return [exitButton]
-        }
-    }
-    
-    func carPlayManager(_ carPlayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity, carPlayMapViewController: CarPlayMapViewController) -> [CPMapButton]? {
-        
-        switch activity {
-        case .navigating:
-            let showFeedbackButton = CPMapButton { button in
-                carPlayManager.currentNavigator?.showFeedback()
-            }
-            showFeedbackButton.image = UIImage(named: "carplay_feedback", in: nil, compatibleWith: nil)
-            
-            let overviewButton = CPMapButton { button in
-                guard let navigationViewController = carPlayManager.currentNavigator else {
-                    return
-                }
-                navigationViewController.tracksUserCourse = !navigationViewController.tracksUserCourse
-                
-                let imageName = navigationViewController.tracksUserCourse ? "carplay_overview" : "carplay_locate"
-                button.image = UIImage(named: imageName, in: nil, compatibleWith: nil)
-            }
-            overviewButton.image = UIImage(named: "carplay_overview", in: nil, compatibleWith: nil)
-            
-            return [overviewButton, showFeedbackButton]
-        case .browsing:
-            var mapButtons = [carPlayMapViewController.recenterButton,
-                              carPlayMapViewController.zoomInButton,
-                              carPlayMapViewController.zoomOutButton]
-            
-            if let mapTemplate = template as? CPMapTemplate {
-                mapButtons.insert(carPlayMapViewController.createPanMapButton(for: mapTemplate), at: 1)
-            }
-            
-            return mapButtons
-        case .previewing:
             return nil
         }
     }
