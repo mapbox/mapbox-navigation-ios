@@ -387,24 +387,29 @@ extension CarPlayManager: CPListTemplateDelegate {
         var trip = CPTrip(origin: MKMapItem(placemark: originPlacemark), destination: MKMapItem(placemark: destinationPlacemark), routeChoices: routeChoices)
         trip.userInfo = routeOptions
 
-        if let customTrip = delegate?.carPlayManager?(self, willPreview: trip) {
-            trip = customTrip
+        trip = delegate?.carPlayManager?(self, willPreview: trip) ?? trip
+
+        var previewText = defaultTripPreviewTextConfiguration()
+
+        if let customPreviewText = delegate?.carPlayManager?(self, willPreview: trip, with: previewText) {
+            previewText = customPreviewText
         }
 
+        let traitCollection = (self.carWindow?.rootViewController as! CarPlayMapViewController).traitCollection
+        let previewMapTemplate = mapTemplateProvider.mapTemplate(forPreviewing: trip, traitCollection: traitCollection, mapDelegate: self)
+
+        previewMapTemplate.showTripPreviews([trip], textConfiguration: previewText)
+
+        interfaceController.pushTemplate(previewMapTemplate, animated: true)
+    }
+
+    private func defaultTripPreviewTextConfiguration() -> CPTripPreviewTextConfiguration {
         let goTitle = NSLocalizedString("CARPLAY_GO", bundle: .mapboxNavigation, value: "Go", comment: "Title for start button in CPTripPreviewTextConfiguration")
         let alternativeRoutesTitle = NSLocalizedString("CARPLAY_MORE_ROUTES", bundle: .mapboxNavigation, value: "More Routes", comment: "Title for alternative routes in CPTripPreviewTextConfiguration")
         let overviewTitle = NSLocalizedString("CARPLAY_OVERVIEW", bundle: .mapboxNavigation, value: "Overview", comment: "Title for overview button in CPTripPreviewTextConfiguration")
-        
-        //TODO: delegate based on trip
+
         let defaultPreviewText = CPTripPreviewTextConfiguration(startButtonTitle: goTitle, additionalRoutesButtonTitle: alternativeRoutesTitle, overviewButtonTitle: overviewTitle)
-        
-        let traitCollection = (self.carWindow?.rootViewController as! CarPlayMapViewController).traitCollection
-        
-        let previewMapTemplate = mapTemplateProvider.mapTemplate(forPreviewing: trip, traitCollection: traitCollection, mapDelegate: self)
-        
-        interfaceController.pushTemplate(previewMapTemplate, animated: true)
-        
-        previewMapTemplate.showTripPreviews([trip], textConfiguration: defaultPreviewText)
+        return defaultPreviewText
     }
 }
 
