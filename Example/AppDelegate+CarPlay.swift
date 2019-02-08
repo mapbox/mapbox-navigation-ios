@@ -102,6 +102,24 @@ extension AppDelegate: CarPlayManagerDelegate {
             return nil
         }
     }
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]? {
+        
+        switch activity {
+        case .browsing:
+            guard let mapViewController = carPlayManager.carPlayMapViewController,
+                  let mapTemplate = template as? CPMapTemplate else {
+                return nil
+            }
+            var mapButtons = [mapViewController.recenterButton,
+                              mapViewController.zoomInButton,
+                              mapViewController.zoomOutButton]
+            mapButtons.insert(mapViewController.panningInterfaceDisplayButton(for: mapTemplate), at: 1)
+            return mapButtons
+        case .previewing, .navigating, .panningInBrowsingMode:
+            return nil
+        }
+    }
 }
 
 @available(iOS 12.0, *)
