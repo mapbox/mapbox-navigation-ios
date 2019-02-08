@@ -36,9 +36,9 @@ class NavigationServiceTests: XCTestCase {
         return (navigationService: navigationService, routeLocations: routeLocations)
     }()
     
-    let initialRoute = Fixture.route(from: "routeWithInstructions")
+    let initialRoute = Fixture.route(from: jsonFileName)
     
-    let alternateRoute = Fixture.route(from: "routeWithInstructions")
+    let alternateRoute = Fixture.route(from: jsonFileName)
     
     override func setUp() {
         super.setUp()

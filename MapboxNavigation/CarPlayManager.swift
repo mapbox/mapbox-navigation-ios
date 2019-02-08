@@ -45,8 +45,9 @@ public class CarPlayManager: NSObject {
     @objc public var simulatesLocations = false
 
     private weak var navigationService: NavigationService?
+
     /**
-     This property specifies a multiplier to be applied to the user's speed in simulation mode.
+     A multiplier to be applied to the user's speed in simulation mode.
      */
     @objc public var simulatedSpeedMultiplier = 1.0 {
         didSet {
@@ -57,6 +58,8 @@ public class CarPlayManager: NSObject {
     public fileprivate(set) var mainMapTemplate: CPMapTemplate?
     public fileprivate(set) weak var currentNavigator: CarPlayNavigationViewController?
     public static let CarPlayWaypointKey: String = "MBCarPlayWaypoint"
+
+    internal var mapTemplateProvider: MapTemplateProvider
 
     /**
      A Boolean value indicating whether the phone is connected to CarPlay.
@@ -172,8 +175,11 @@ public class CarPlayManager: NSObject {
         self.styles = styles ?? [DayStyle(), NightStyle()]
         self.directions = directions ?? .shared
         self.eventsManager = eventsManager ?? NavigationEventsManager(dataSource: nil)
+        self.mapTemplateProvider = MapTemplateProvider()
         
         super.init()
+        
+        self.mapTemplateProvider.delegate = self
     }
 
     lazy var fullDateComponentsFormatter: DateComponentsFormatter = {
@@ -353,6 +359,7 @@ extension CarPlayManager: CPListTemplateDelegate {
         
         completionHandler()
     }
+    
     public func previewRoutes(to destination: Waypoint, completionHandler: @escaping CompletionHandler) {
         
         guard let rootViewController = carPlayMapViewController,
@@ -361,6 +368,7 @@ extension CarPlayManager: CPListTemplateDelegate {
                 completionHandler()
                 return
         }
+        
         let name = NSLocalizedString("CARPLAY_CURRENT_LOCATION", bundle: .mapboxNavigation, value: "Current Location", comment: "Name of the waypoint associated with the current location")
         let origin = Waypoint(location: location, heading: userLocation.heading, name: name)
         
@@ -410,6 +418,7 @@ extension CarPlayManager: CPListTemplateDelegate {
                                           duration: 0)
             mapTemplate.present(navigationAlert: alert, animated: true)
         }
+        
         guard let waypoints = waypoints, let routes = routes else {
             return
         }
@@ -427,31 +436,33 @@ extension CarPlayManager: CPListTemplateDelegate {
         
         let originPlacemark = MKPlacemark(coordinate: waypoints.first!.coordinate)
         let destinationPlacemark = MKPlacemark(coordinate: waypoints.last!.coordinate, addressDictionary: ["street": waypoints.last!.name ?? ""])
-        let trip = CPTrip(origin: MKMapItem(placemark: originPlacemark), destination: MKMapItem(placemark: destinationPlacemark), routeChoices: routeChoices)
-        trip.userInfo = routeOptions
         
+        var trip = CPTrip(origin: MKMapItem(placemark: originPlacemark), destination: MKMapItem(placemark: destinationPlacemark), routeChoices: routeChoices)
+        trip.userInfo = routeOptions
+
+        trip = delegate?.carPlayManager?(self, willPreview: trip) ?? trip
+
+        var previewText = defaultTripPreviewTextConfiguration()
+
+        if let customPreviewText = delegate?.carPlayManager?(self, willPreview: trip, with: previewText) {
+            previewText = customPreviewText
+        }
+
+        let traitCollection = (self.carWindow?.rootViewController as! CarPlayMapViewController).traitCollection
+        let previewMapTemplate = mapTemplateProvider.mapTemplate(forPreviewing: trip, traitCollection: traitCollection, mapDelegate: self)
+
+        previewMapTemplate.showTripPreviews([trip], textConfiguration: previewText)
+
+        interfaceController.pushTemplate(previewMapTemplate, animated: true)
+    }
+
+    private func defaultTripPreviewTextConfiguration() -> CPTripPreviewTextConfiguration {
         let goTitle = NSLocalizedString("CARPLAY_GO", bundle: .mapboxNavigation, value: "Go", comment: "Title for start button in CPTripPreviewTextConfiguration")
         let alternativeRoutesTitle = NSLocalizedString("CARPLAY_MORE_ROUTES", bundle: .mapboxNavigation, value: "More Routes", comment: "Title for alternative routes in CPTripPreviewTextConfiguration")
         let overviewTitle = NSLocalizedString("CARPLAY_OVERVIEW", bundle: .mapboxNavigation, value: "Overview", comment: "Title for overview button in CPTripPreviewTextConfiguration")
-        let defaultPreviewText = CPTripPreviewTextConfiguration(startButtonTitle: goTitle, additionalRoutesButtonTitle: alternativeRoutesTitle, overviewButtonTitle: overviewTitle)
-        
-        let previewMapTemplate = self.mapTemplate(forPreviewing: trip)
-        interfaceController.pushTemplate(previewMapTemplate, animated: true)
-        
-        previewMapTemplate.showTripPreviews([trip], textConfiguration: defaultPreviewText)
-    }
 
-    func mapTemplate(forPreviewing trip: CPTrip) -> CPMapTemplate {
-        let rootViewController = self.carWindow?.rootViewController as! CarPlayMapViewController
-        let mapTemplate = CPMapTemplate()
-        mapTemplate.mapDelegate = self
-        if let leadingButtons = delegate?.carPlayManager?(self, leadingNavigationBarButtonsCompatibleWith: rootViewController.traitCollection, in: mapTemplate, for: .previewing) {
-            mapTemplate.leadingNavigationBarButtons = leadingButtons
-        }
-        if let trailingButtons = delegate?.carPlayManager?(self, trailingNavigationBarButtonsCompatibleWith: rootViewController.traitCollection, in: mapTemplate, for: .previewing) {
-            mapTemplate.trailingNavigationBarButtons = trailingButtons
-        }
-        return mapTemplate
+        let defaultPreviewText = CPTripPreviewTextConfiguration(startButtonTitle: goTitle, additionalRoutesButtonTitle: alternativeRoutesTitle, overviewButtonTitle: overviewTitle)
+        return defaultPreviewText
     }
 }
 
@@ -635,7 +646,6 @@ extension CarPlayManager: CPMapTemplateDelegate {
     }
 
     func coordinate(of offset: CGPoint, in mapView: NavigationMapView) -> CLLocationCoordinate2D {
-        
         let contentFrame = UIEdgeInsetsInsetRect(mapView.bounds, mapView.safeArea)
         let centerPoint = CGPoint(x: contentFrame.midX, y: contentFrame.midY)
         let endCameraPoint = CGPoint(x: centerPoint.x - offset.x, y: centerPoint.y - offset.y)
@@ -684,6 +694,52 @@ extension CarPlayManager: CarPlayNavigationDelegate {
         delegate?.carPlayManagerDidEndNavigation(self)
     }
 }
+
+@available(iOS 12.0, *)
+extension CarPlayManager: MapTemplateProviderDelegate {
+    func mapTemplateProvider(_ provider: MapTemplateProvider, mapTemplate: CPMapTemplate, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, for activity: CarPlayActivity) -> [CPBarButton]? {
+        return delegate?.carPlayManager?(self, leadingNavigationBarButtonsCompatibleWith: traitCollection, in: mapTemplate, for: activity)
+    }
+    
+    func mapTemplateProvider(_ provider: MapTemplateProvider, mapTemplate: CPMapTemplate, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, for activity: CarPlayActivity) -> [CPBarButton]? {
+        return delegate?.carPlayManager?(self, trailingNavigationBarButtonsCompatibleWith: traitCollection, in: mapTemplate, for: activity)
+    }
+}
+
+@available(iOS 12.0, *)
+@objc(MBMapTemplateProviderDelegate)
+internal protocol MapTemplateProviderDelegate {
+    @objc optional func mapTemplateProvider(_ provider: MapTemplateProvider, mapTemplate: CPMapTemplate, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, for activity: CarPlayActivity) -> [CPBarButton]?
+    
+    @objc optional func mapTemplateProvider(_ provider: MapTemplateProvider, mapTemplate: CPMapTemplate, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, for activity: CarPlayActivity) -> [CPBarButton]?
+}
+
+@available(iOS 12.0, *)
+internal class MapTemplateProvider: NSObject {
+
+    weak var delegate: MapTemplateProviderDelegate?
+
+    func mapTemplate(forPreviewing trip: CPTrip, traitCollection: UITraitCollection, mapDelegate: CPMapTemplateDelegate) -> CPMapTemplate {
+        
+        let mapTemplate = createMapTemplate()
+        mapTemplate.mapDelegate = mapDelegate
+        
+        if let leadingButtons = delegate?.mapTemplateProvider?(self, mapTemplate: mapTemplate, leadingNavigationBarButtonsCompatibleWith: traitCollection, for: .previewing) {
+            mapTemplate.leadingNavigationBarButtons = leadingButtons
+        }
+        
+        if let trailingButtons = delegate?.mapTemplateProvider?(self, mapTemplate: mapTemplate, trailingNavigationBarButtonsCompatibleWith: traitCollection, for: .previewing) {
+            mapTemplate.trailingNavigationBarButtons = trailingButtons
+        }
+        
+        return mapTemplate
+    }
+
+    open func createMapTemplate() -> CPMapTemplate {
+        return CPMapTemplate()
+    }
+}
+
 #else
 /**
  CarPlay support requires iOS 12.0 or above and the CarPlay framework.

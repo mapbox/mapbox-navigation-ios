@@ -92,7 +92,6 @@ public class Fixture: NSObject {
         return waypoints
     }
     
-    
     // Returns `Route` objects from a match response
     public class func routesFromMatches(at filePath: String) -> [Route]? {
         let path = Bundle(for: Fixture.self).path(forResource: filePath, ofType: "json")
