@@ -13,6 +13,7 @@
 * Restored “Declaration” and “Parameters” sections throughout the API reference. ([#1952](https://github.com/mapbox/mapbox-navigation-ios/pull/1952))
 * Removed the deprecated `NavigationViewController.routeController`, `NavigationViewController.eventsManager`, and `NavigationViewController.locationManager` properties. ([#1904](https://github.com/mapbox/mapbox-navigation-ios/pull/1904))
 * Fixed audio ducking issues. ([#1915](https://github.com/mapbox/mapbox-navigation-ios/pull/1915))
+* The `NavigationViewController.navigationService` property is now read-only. ([#1965](https://github.com/mapbox/mapbox-navigation-ios/pull/1965]))
 
 ## v0.28.0 (January 23, 2018)
 

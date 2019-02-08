@@ -75,7 +75,7 @@ open class NavigationViewController: UIViewController {
 
      See `NavigationService` for more information.
      */
-    @objc public var navigationService: NavigationService! {
+    @objc private(set) public var navigationService: NavigationService! {
         didSet {
             mapViewController?.navService = navigationService
         }
