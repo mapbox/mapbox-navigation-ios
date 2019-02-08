@@ -36,7 +36,7 @@ public class CarPlayMapViewController: UIViewController {
     /**
      The map button for recentering the map view if a user action causes it to stop following the user.
      */
-    public lazy var recenterButton: CPMapButton = {
+    @objc public lazy var recenterButton: CPMapButton = {
         let recenter = CPMapButton { [weak self] button in
             
             self?.mapView.setUserTrackingMode(.followWithCourse, animated: true)
@@ -50,7 +50,7 @@ public class CarPlayMapViewController: UIViewController {
     /**
      The map button for zooming in the current map view.
      */
-    public lazy var zoomInButton: CPMapButton = {
+    @objc public lazy var zoomInButton: CPMapButton = {
         let zoomInButton = CPMapButton { [weak self] (button) in
             let zoomLevel = self?.mapView.zoomLevel ?? 0
             self?.mapView.setZoomLevel(zoomLevel + 1, animated: true)
@@ -63,7 +63,7 @@ public class CarPlayMapViewController: UIViewController {
     /**
      The map button for zooming out the current map view.
      */
-    public lazy var zoomOutButton: CPMapButton = {
+    @objc public lazy var zoomOutButton: CPMapButton = {
         let zoomInOut = CPMapButton { [weak self] (button) in
             guard let strongSelf = self else {
                 return
@@ -78,7 +78,7 @@ public class CarPlayMapViewController: UIViewController {
     /**
      The map button property for hiding or showing the pan map button.
      */
-    private(set) public var panMapButton: CPMapButton?
+    @objc private(set) public var panMapButton: CPMapButton?
     
     var styleObservation: NSKeyValueObservation?
     
