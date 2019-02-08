@@ -10,7 +10,7 @@
 
 ### CarPlay
 
-* Renamed `CarPlayManagerDelegate.carPlayManager(_:mapButtonsCompatibleWith:in:for:)` to `CarPlayManagerDelegate.carPlayManager(_:mapButtonsCompatibleWith:in:for:carPlayMapViewController:)`. You can now create and return map buttons that perform built-in actions on the map by calling methods such as `CarPlayMapViewController.zoomInButton()`. ([#1962](https://github.com/mapbox/mapbox-navigation-ios/pull/1962))
+* Renamed `CarPlayManagerDelegate.carPlayManager(_:mapButtonsCompatibleWith:in:for:)` to `CarPlayManagerDelegate.carPlayManager(_:mapButtonsCompatibleWith:in:for:carPlayMapViewController:)`. You can now access map buttons that perform built-in actions on the map by accessing read-only properties such as `CarPlayMapViewController.zoomInButton`. ([#1962](https://github.com/mapbox/mapbox-navigation-ios/pull/1962))
 
 ### Other changes
 
