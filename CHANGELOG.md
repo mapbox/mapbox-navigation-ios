@@ -8,7 +8,8 @@
 * Added the `MapboxNavigationService.router(_:didPassVisualInstructionPoint:routeProgress:)` and `MapboxNavigationService.router(_:didPassSpokenInstructionPoint:routeProgress:)` methods, which correspond to `Notification.Name.routeControllerDidPassVisualInstructionPoint` and `Notification.Name.routeControllerDidPassSpokenInstructionPoint`, respectively. ([#1912](https://github.com/mapbox/mapbox-navigation-ios/pull/1912))
 * Added an initializer to `DispatchTimer`, along with methods for arming and disarming the timer. ([#1912](https://github.com/mapbox/mapbox-navigation-ios/pull/1912))
 
-### Navigation
+### CarPlay
+
 * Renamed `CarPlayManagerDelegate.carPlayManager(_:mapButtonsCompatibleWith:in:for:)` to `CarPlayManagerDelegate.carPlayManager(_:mapButtonsCompatibleWith:in:for:carPlayMapViewController:)`. You can now create and return map buttons that perform built-in actions on the map by calling methods such as `CarPlayMapViewController.zoomInButton()`. ([#1962](https://github.com/mapbox/mapbox-navigation-ios/pull/1962))
 
 ### Other changes
