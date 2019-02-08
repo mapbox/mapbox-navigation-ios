@@ -371,7 +371,7 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
         return trailingBarButtons
     }
 
-    func carPlayManager(_ carPlayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity, carPlayMapViewController: CarPlayMapViewController) -> [CPMapButton]? {
+    func carPlayManager(_ carPlayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]? {
         return mapButtons
     }
 

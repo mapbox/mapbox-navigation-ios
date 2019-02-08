@@ -46,35 +46,16 @@ public protocol CarPlayManagerDelegate {
      Offers the delegate an opportunity to provide a customized list of buttons displayed on the map.
      
      These buttons handle the gestures on the map view, so it is up to the developer to ensure the map template is interactive.
-     If this method is not implemented, or if nil is returned, a default set of zoom and pan buttons will be provided.
+     If this method is not implemented, or if nil is returned, a default set of zoom and pan buttons declared in the `CarPlayMapViewController` will be provided.
      
      - parameter carPlayManager: The shared CarPlay manager.
      - parameter traitCollection: The trait collection of the view controller being shown in the CarPlay window.
      - parameter template: The template into which the returned map buttons will be inserted.
      - parameter activity: What the user is currently doing on the CarPlay screen. Use this parameter to distinguish between multiple templates of the same kind, such as multiple `CPMapTemplate`s.
-     - parameter carPlayMapViewController: The view controller that provides the collection of trailing bottom buttons added to the map template ex. `recenterButton`, `zoomInButton`, `zoomOutButton` and `panMapButton`.
      - returns: An array of map buttons to display on the map while `template` is visible.
      */
-    @available(*, deprecated, message: "Use the new CarPlayManagerDelegate.carPlayManager(_:mapButtonsCompatibleWith:in:for:carPlayMapViewController:)")
     @objc(carPlayManager:mapButtonsCompatibleWithTraitCollection:inTemplate:forActivity:)
     optional func carPlayManager(_ carPlayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]?
-    
-    /**
-     Offers the delegate an opportunity to provide a customized list of buttons displayed on the map.
-     
-     These buttons handle the gestures on the map view, so it is up to the developer to ensure the map template is interactive.
-     Implement this method to set the trailing bottom map buttons such as the zoom and pan buttons dependent on the user's activity on the CarPlay screen. If this method is not implemented, or if nil is returned, a default set of zoom and pan buttons will be provided.
-     
-     - parameter carPlayManager: The shared CarPlay manager.
-     - parameter traitCollection: The trait collection of the view controller being shown in the CarPlay window.
-     - parameter template: The template into which the returned map buttons will be inserted.
-     - parameter activity: What the user is currently doing on the CarPlay screen. Use this parameter to distinguish between multiple templates of the same kind, such as multiple `CPMapTemplate`s.
-     - parameter carPlayMapViewController: The view controller that provides the collection of trailing bottom buttons added to the map template ex. `recenterButton`, `zoomInButton`, `zoomOutButton` and `panMapButton`.
-     - returns: An array of map buttons to display on the map while `template` is visible.
-     */
-    @objc(carPlayManager:mapButtonsCompatibleWithTraitCollection:inTemplate:forActivity:carplayMapViewController:)
-    optional func carPlayManager(_ carPlayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity, carPlayMapViewController: CarPlayMapViewController) -> [CPMapButton]?
-    
     
     /**
      Offers the delegate an opportunity to provide an alternate navigation service, otherwise a default built-in MapboxNavigationService will be created and used.

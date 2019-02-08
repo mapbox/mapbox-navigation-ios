@@ -82,12 +82,12 @@ public class CarPlayMapViewController: UIViewController {
     /**
      The map button property for hiding or showing the pan map button.
      */
-    @objc private(set) public var panMapButton: CPMapButton?
+    @objc internal(set) public var panMapButton: CPMapButton?
     
     /**
      The map button property for exiting the pan map mode.
      */
-    @objc private(set) public var dismissPanningButton: CPMapButton?
+    @objc internal(set) public var dismissPanningButton: CPMapButton?
     
     var styleObservation: NSKeyValueObservation?
     
@@ -153,7 +153,7 @@ public class CarPlayMapViewController: UIViewController {
      
      - parameter mapTemplate: The map template available to the pan map button for display.
      */
-    @discardableResult public func createPanMapButton(for mapTemplate: CPMapTemplate) -> CPMapButton {
+    @discardableResult public func panningInterfaceDisplayButton(for mapTemplate: CPMapTemplate) -> CPMapButton {
         let panButton = CPMapButton { _ in
             if !mapTemplate.isPanningInterfaceVisible {
                 mapTemplate.showPanningInterface(animated: true)
@@ -162,7 +162,6 @@ public class CarPlayMapViewController: UIViewController {
         
         let bundle = Bundle.mapboxNavigation
         panButton.image = UIImage(named: "carplay_pan", in: bundle, compatibleWith: traitCollection)
-        self.panMapButton = panButton
         
         return panButton
     }
@@ -172,7 +171,7 @@ public class CarPlayMapViewController: UIViewController {
      
      - parameter mapTemplate: The map template available to the pan map button for display.
      */
-    @discardableResult public func createDismissPanningButton(for mapTemplate: CPMapTemplate) -> CPMapButton {
+    @discardableResult public func panningInterfaceDismissalButton(for mapTemplate: CPMapTemplate) -> CPMapButton {
         let defaultButtons = mapTemplate.mapButtons
         let closeButton = CPMapButton { _ in
             mapTemplate.mapButtons = defaultButtons
@@ -181,7 +180,6 @@ public class CarPlayMapViewController: UIViewController {
         
         let bundle = Bundle.mapboxNavigation
         closeButton.image = UIImage(named: "carplay_close", in: bundle, compatibleWith: traitCollection)
-        self.dismissPanningButton = closeButton
         
         return closeButton
     }
