@@ -15,7 +15,7 @@
 * Fixed audio ducking issues. ([#1915](https://github.com/mapbox/mapbox-navigation-ios/pull/1915))
 * Removed the `NavigationViewControllerDelegate.navigationViewController(_:imageFor:)` and `NavigationViewControllerDelegate.navigationViewController(_:viewFor:)` methods in favor of `NavigationMapViewDelegate.navigationMapView(_:imageFor:)` and `NavigationMapViewDelegate.navigationMapView(_:viewFor:)`, respectively. ([#1964](https://github.com/mapbox/mapbox-navigation-ios/pull/1964))
 * The `NavigationViewController.navigationService` property is now read-only. ([#1965](https://github.com/mapbox/mapbox-navigation-ios/pull/1965]))
-
+* CarPlayManager now offers its delegate the opportunity to customize a trip and its related preview text configuration before displaying it for preview ([#1955](https://github.com/mapbox/mapbox-navigation-ios/pull/1955))
 
 ## v0.28.0 (January 23, 2018)
 
