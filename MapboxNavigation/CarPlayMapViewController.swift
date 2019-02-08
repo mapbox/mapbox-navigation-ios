@@ -2,7 +2,11 @@ import Foundation
 #if canImport(CarPlay)
 import CarPlay
 
+/**
+ `CarPlayMapViewController` is responsible for administering the Mapbox map, the interface styles and the map template buttons to display on CarPlay.
+ */
 @available(iOS 12.0, *)
+@objc(MBCarPlayMapViewController)
 public class CarPlayMapViewController: UIViewController {
     
     static let defaultAltitude: CLLocationDistance = 850
@@ -80,6 +84,11 @@ public class CarPlayMapViewController: UIViewController {
      */
     @objc private(set) public var panMapButton: CPMapButton?
     
+    /**
+     The map button property for exiting the pan map mode.
+     */
+    @objc private(set) public var dismissPanningButton: CPMapButton?
+    
     var styleObservation: NSKeyValueObservation?
     
     /**
@@ -156,6 +165,25 @@ public class CarPlayMapViewController: UIViewController {
         self.panMapButton = panButton
         
         return panButton
+    }
+    
+    /**
+     Creates a new close button to dismiss the visible panning buttons on the map.
+     
+     - parameter mapTemplate: The map template available to the pan map button for display.
+     */
+    @discardableResult public func createDismissPanningButton(for mapTemplate: CPMapTemplate) -> CPMapButton {
+        let defaultButtons = mapTemplate.mapButtons
+        let closeButton = CPMapButton { _ in
+            mapTemplate.mapButtons = defaultButtons
+            mapTemplate.dismissPanningInterface(animated: true)
+        }
+        
+        let bundle = Bundle.mapboxNavigation
+        closeButton.image = UIImage(named: "carplay_close", in: bundle, compatibleWith: traitCollection)
+        self.dismissPanningButton = closeButton
+        
+        return closeButton
     }
     
     func resetCamera(animated: Bool = false, altitude: CLLocationDistance? = nil) {

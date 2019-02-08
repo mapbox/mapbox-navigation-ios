@@ -72,7 +72,7 @@ extension AppDelegate: CarPlayManagerDelegate {
             searchTemplate.delegate = carPlaySearchController
             let searchButton = carPlaySearchController.searchTemplateButton(searchTemplate: searchTemplate, interfaceController: interfaceController, traitCollection: traitCollection)
             return [searchButton]
-        case .navigating, .previewing:
+        case .navigating, .previewing, .panning:
             return nil
         }
     }
@@ -98,7 +98,7 @@ extension AppDelegate: CarPlayManagerDelegate {
             }
             favoriteTemplateButton.image = UIImage(named: "carplay_star", in: nil, compatibleWith: traitCollection)
             return [favoriteTemplateButton]
-        case .navigating:
+        case .navigating, .panning:
             return nil
         }
     }

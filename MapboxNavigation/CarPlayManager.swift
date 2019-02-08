@@ -16,6 +16,8 @@ public enum CarPlayActivity: Int {
     case previewing
     /// The user is actively navigating along a route.
     case navigating
+    /// The user is panning the map.
+    case panning
 }
 
 /**
@@ -55,8 +57,6 @@ public class CarPlayManager: NSObject {
     public fileprivate(set) var mainMapTemplate: CPMapTemplate?
     public fileprivate(set) weak var currentNavigator: CarPlayNavigationViewController?
     public static let CarPlayWaypointKey: String = "MBCarPlayWaypoint"
-    
-    private var defaultMapButtons: [CPMapButton]?
 
     /**
      A Boolean value indicating whether the phone is connected to CarPlay.
@@ -201,39 +201,30 @@ extension CarPlayManager: CPApplicationDelegate {
         if let mapButtons = delegate?.carPlayManager?(self, mapButtonsCompatibleWith: traitCollection, in: mapTemplate, for: .browsing, carPlayMapViewController: carPlayMapViewController) {
             mapTemplate.mapButtons = mapButtons
         } else {
-            var mapButtons = [carPlayMapViewController.recenterButton,
-                              carPlayMapViewController.zoomInButton,
-                              carPlayMapViewController.zoomOutButton]
-            
-            mapButtons.insert(carPlayMapViewController.createPanMapButton(for: mapTemplate), at: 1)
-            
-            mapTemplate.mapButtons = mapButtons
+            mapTemplate.mapButtons = self.browsingMapButtons(for: mapTemplate, carPlayMapViewController: carPlayMapViewController)
         }
-
         return mapTemplate
     }
 
-    func dismissPanButton(for mapTemplate: CPMapTemplate, traitCollection: UITraitCollection) -> CPMapButton {
-        let closeButton = CPMapButton { [weak self] button in
-            guard let strongSelf = self, let mapButtons = strongSelf.defaultMapButtons else {
-                return
-            }
-
-            mapTemplate.mapButtons = mapButtons
-            mapTemplate.dismissPanningInterface(animated: true)
-        }
-
-        let bundle = Bundle.mapboxNavigation
-        closeButton.image = UIImage(named: "carplay_close", in: bundle, compatibleWith: traitCollection)
-
-        return closeButton
-    }
-
     public func resetPanButtons(_ mapTemplate: CPMapTemplate) {
-        if mapTemplate.isPanningInterfaceVisible, let mapButtons = defaultMapButtons {
-            mapTemplate.mapButtons = mapButtons
+        if mapTemplate.isPanningInterfaceVisible, let carPlayMapViewController = carWindow?.rootViewController as? CarPlayMapViewController {
+            if let mapButtons = delegate?.carPlayManager?(self, mapButtonsCompatibleWith: carPlayMapViewController.traitCollection, in: mapTemplate, for: .browsing, carPlayMapViewController: carPlayMapViewController) {
+               mapTemplate.mapButtons = mapButtons
+            } else {
+                mapTemplate.mapButtons = self.browsingMapButtons(for: mapTemplate, carPlayMapViewController: carPlayMapViewController)
+            }
             mapTemplate.dismissPanningInterface(animated: false)
         }
+    }
+    
+    private func browsingMapButtons(for mapTemplate: CPMapTemplate, carPlayMapViewController: CarPlayMapViewController) -> [CPMapButton] {
+        var mapButtons = [carPlayMapViewController.recenterButton,
+                          carPlayMapViewController.zoomInButton,
+                          carPlayMapViewController.zoomOutButton]
+        
+        mapButtons.insert(carPlayMapViewController.createPanMapButton(for: mapTemplate), at: 1)
+        
+        return mapButtons
     }
 }
 
@@ -550,9 +541,12 @@ extension CarPlayManager: CPMapTemplateDelegate {
             return
         }
         
-        self.defaultMapButtons = mapTemplate.mapButtons
-        let closeButton = self.dismissPanButton(for: mapTemplate, traitCollection: carPlayMapViewController.traitCollection)
-        mapTemplate.mapButtons = [closeButton]
+        if let mapButtons = delegate?.carPlayManager?(self, mapButtonsCompatibleWith: carPlayMapViewController.traitCollection, in: mapTemplate, for: .panning) {
+            mapTemplate.mapButtons = mapButtons
+        } else {
+            let closeButton = carPlayMapViewController.createDismissPanningButton(for: mapTemplate)
+            mapTemplate.mapButtons = [closeButton]
+        }
     }
     
     public func mapTemplateWillDismissPanningInterface(_ mapTemplate: CPMapTemplate) {
@@ -576,8 +570,6 @@ extension CarPlayManager: CPMapTemplateDelegate {
         
         mapView.setContentInset(mapView.safeArea, animated: false) //make sure this is always up to date in-case safe area changes during gesture
         updatePan(by: translation, mapTemplate: mapTemplate, animated: false)
-
-        
     }
     
     private func updatePan(by offset: CGPoint, mapTemplate: CPMapTemplate, animated: Bool) {
