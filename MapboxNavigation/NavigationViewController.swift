@@ -403,13 +403,6 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
         return delegate?.navigationViewController?(self, shapeFor: waypoints, legIndex: legIndex)
     }
     
-    @objc public func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
-        return delegate?.navigationViewController?(self, imageFor: annotation)
-    }
-    
-    @objc public func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
-        return delegate?.navigationViewController?(self, viewFor: annotation)
-    }
     
     //Still Kept around for the EORVC. On it's way out.
     func mapViewControllerDidDismiss(_ mapViewController: RouteMapViewController, byCanceling canceled: Bool) {
