@@ -5,9 +5,6 @@ import MapboxMobileEvents
 @testable import TestHelper
 @testable import MapboxNavigation
 
-
-
-
 #if canImport(CarPlay)
 import CarPlay
 
@@ -263,11 +260,26 @@ class CarPlayManagerSpec: QuickSpec {
                 directionsSpy.fireLastCalculateCompletion(with: waypoints, routes: [route], error: nil)
             }
 
+            context("when the trip is not customized by the developer", {
+                beforeEach {
+                    previewRoutesAction()
+                }
+                
+                it("previews a route/options with the default configuration") {
+                    let interfaceController = manager!.interfaceController as! FakeCPInterfaceController
+                    let mapTemplateSpy: MapTemplateSpy =  interfaceController.topTemplate as! MapTemplateSpy
+                    
+                    expect(mapTemplateSpy.currentTripPreviews).toNot(beEmpty())
+                    let expectedStartButtonTitle = NSLocalizedString("CARPLAY_GO", bundle: .mapboxNavigation, value: "Go", comment: "Title for start button in CPTripPreviewTextConfiguration")
+                    expect(mapTemplateSpy.currentPreviewTextConfiguration?.startButtonTitle).to(equal(expectedStartButtonTitle))
+                }
+            })
+            
             context("when the delegate provides a custom trip", {
                 var customTrip: CPTrip!
 
                 beforeEach {
-                    let customTripDelegate = CustomTripDelegate()
+                    let customTripDelegate = CustomTripPreviewDelegate()
                     customTrip = CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [])
                     customTripDelegate.customTrip = customTrip
                     manager!.delegate = customTripDelegate
@@ -284,18 +296,27 @@ class CarPlayManagerSpec: QuickSpec {
                 }
             })
             
-            context("when not customized by the developer", closure: {
+            context("when the delegate provides a custom trip preview text", {
+                var customTripPreviewTextConfiguration: CPTripPreviewTextConfiguration!
+                let customStartButtonTitleText = "Let's roll"
+                
                 beforeEach {
+                    let customTripDelegate = CustomTripPreviewDelegate()
+                    customTripPreviewTextConfiguration = CPTripPreviewTextConfiguration(startButtonTitle: customStartButtonTitleText, additionalRoutesButtonTitle: nil, overviewButtonTitle: nil)
+                    customTripDelegate.customTripPreviewTextConfiguration = customTripPreviewTextConfiguration
+                    manager!.delegate = customTripDelegate
+
                     previewRoutesAction()
                 }
-
-                it("previews a route/options with the default configuration") {
+                
+                it("previews a route/options with the custom trip configuration") {
                     let interfaceController = manager!.interfaceController as! FakeCPInterfaceController
                     let mapTemplateSpy: MapTemplateSpy =  interfaceController.topTemplate as! MapTemplateSpy
                     
                     expect(mapTemplateSpy.currentTripPreviews).toNot(beEmpty())
-                    expect(mapTemplateSpy.currentPreviewTextConfiguration).toNot(beNil())
+                    expect(mapTemplateSpy.currentPreviewTextConfiguration?.startButtonTitle).to(equal(customStartButtonTitleText))
                 }
+
             })
         })
         
@@ -345,11 +366,16 @@ class CarPlayManagerSpec: QuickSpec {
         })
     }
 
-    private class CustomTripDelegate: CarPlayManagerDelegate {
-        var customTrip: CPTrip!
+    private class CustomTripPreviewDelegate: CarPlayManagerDelegate {
+        var customTripPreviewTextConfiguration: CPTripPreviewTextConfiguration?
+        var customTrip: CPTrip?
 
         func carPlayManager(_ carPlayManager: CarPlayManager, willPreview trip: CPTrip) -> (CPTrip) {
-            return customTrip
+            return customTrip ?? trip
+        }
+
+        func carPlayManager(_ carPlayManager: CarPlayManager, willPreview trip: CPTrip, with previewTextConfiguration: CPTripPreviewTextConfiguration) -> (CPTripPreviewTextConfiguration) {
+            return customTripPreviewTextConfiguration ?? previewTextConfiguration
         }
 
         func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith service: NavigationService) {
