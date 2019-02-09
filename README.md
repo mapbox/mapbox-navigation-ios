@@ -127,7 +127,8 @@ class CustomStyle: DayStyle {
 then initialize `NavigationViewController` with your style or styles:
 
 ```swift
-NavigationViewController(for: route, styles: [CustomStyle()])
+let options = NavigationOptions(styles: [CustomStyle()])
+NavigationViewController(for: route, options: options)
 ```
 
 ### Starting from scratch
