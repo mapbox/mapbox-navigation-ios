@@ -41,8 +41,8 @@ Pod::Spec.new do |s|
   s.module_name = "MapboxCoreNavigation"
 
   s.dependency "MapboxNavigationNative", "~> 5.0.0"
-  s.dependency "MapboxDirections.swift", "~> 0.26.0"    # Always pin to a patch release if pre-1.0
-  s.dependency "MapboxMobileEvents", "~> 0.6.0"         # Always pin to a patch release if pre-1.0
+  s.dependency "MapboxDirections.swift", "~> 0.27.0"    # Always pin to a patch release if pre-1.0
+  s.dependency "MapboxMobileEvents", "~> 0.8.1"         # Always pin to a patch release if pre-1.0
   s.dependency "Turf", "~> 0.3.0"                       # Always pin to a patch release if pre-1.0
 
   # `swift_version` was introduced in CocoaPods 1.4.0. Without this check, if a user were to

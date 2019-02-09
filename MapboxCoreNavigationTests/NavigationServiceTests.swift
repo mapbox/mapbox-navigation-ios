@@ -233,6 +233,9 @@ class NavigationServiceTests: XCTestCase {
         navigationService.eventsManager.delaysEventFlushing = false
         navigationService.start()
         
+        let eventsManagerSpy = navigationService.eventsManager as! NavigationEventsManagerSpy
+        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: NavigationEventTypeRouteRetrieval))
+        
         router.route = alternateRoute
         
         let simulatedLocationManager = navigationService.locationManager as! SimulatedLocationManager
