@@ -363,14 +363,7 @@ public class CarPlayNavigationViewController: UIViewController {
     }
     
     func createFeedbackUI() -> CPGridTemplate {
-        let feedbackItems: [FeedbackItem] = [
-            .turnNotAllowed,
-            .closure,
-            .reportTraffic,
-            .confusingInstructions,
-            .generalMapError,
-            .badRoute
-        ]
+        let feedbackItems: [FeedbackItem] = FeedbackItem.feedbackOptionItems
         
         let feedbackButtonHandler: (_: CPGridButton) -> Void = { [weak self] (button) in
             self?.carInterfaceController.popTemplate(animated: true)
