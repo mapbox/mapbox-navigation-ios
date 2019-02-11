@@ -4,14 +4,11 @@ import Turf
 import TestHelper
 @testable import MapboxCoreNavigation
 
-let response = Fixture.JSONFromFileNamed(name: "routeWithInstructions")
-let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String : Any]
-let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
-let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
+let jsonFileName = "routeWithInstructions"
+let response = Fixture.JSONFromFileNamed(name: jsonFileName)
 let directions = DirectionsSpy(accessToken: "pk.feedCafeDeadBeefBadeBede")
 let route: Route = {
-    let options = NavigationRouteOptions(waypoints: [waypoint1, waypoint2])
-    return Route(json: jsonRoute, waypoints: [waypoint1, waypoint2], options: options)
+    return Fixture.route(from: jsonFileName)
 }()
 
 let waitForInterval: TimeInterval = 5

@@ -158,22 +158,6 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     optional func navigationViewController(_ navigationViewController: NavigationViewController, didSelect route: Route)
     
     /**
-     Return an `MGLAnnotationImage` that represents the destination marker.
-     
-     If this method is unimplemented, the navigation view controller’s map view will represent the destination annotation with the default marker.
-     */
-    @objc(navigationViewController:imageForAnnotation:)
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage?
-    
-    /**
-     Returns a view object to mark the given point annotation object on the map.
-     
-     The user location annotation view can also be customized via this method. When annotation is an instance of `MGLUserLocation`, return an instance of `MGLUserLocationAnnotationView` (or a subclass thereof). Note that when `NavigationMapView.tracksUserCourse` is set to `true`, the navigation view controller’s map view uses a distinct user course view; to customize it, set the `NavigationMapView.userCourseView` property of the map view stored by the `NavigationViewController.mapView` property.
-     */
-    @objc(navigationViewController:viewForAnnotation:)
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, viewFor annotation: MGLAnnotation) -> MGLAnnotationView?
-    
-    /**
      Returns the center point of the user course view in screen coordinates relative to the map view.
      */
     @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint
@@ -201,4 +185,15 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      */
     @objc(navigationViewController:roadNameAtLocation:)
     optional func navigationViewController(_ navigationViewController: NavigationViewController, roadNameAt location: CLLocation) -> String?
+    
+    
+    //MARK: Obsolete
+    
+    @available(*, obsoleted: 0.1, message: "Use MGLMapViewDelegate.mapView(_:imageFor:) instead.")
+    @objc(navigationViewController:imageForAnnotation:)
+    optional func navigationViewController(_ navigationViewController: NavigationViewController, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage?
+    
+    @available(*, obsoleted: 0.1, message: "Use MGLMapViewDelegate.mapView(_:viewFor:) instead.")
+    @objc(navigationViewController:viewForAnnotation:)
+    optional func navigationViewController(_ navigationViewController: NavigationViewController, viewFor annotation: MGLAnnotation) -> MGLAnnotationView?
 }

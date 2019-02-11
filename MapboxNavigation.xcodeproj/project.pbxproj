@@ -248,6 +248,7 @@
 		8DCE1050210FC5880048B0FB /* EndOfRouteFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCE104F210FC5880048B0FB /* EndOfRouteFeedback.swift */; };
 		8DDBFCA32205016E0064DEBB /* NavigationCustomizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DDBFCA22205016E0064DEBB /* NavigationCustomizable.swift */; };
 		8DE879661FBB9980002F06C0 /* EndOfRouteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DE879651FBB9980002F06C0 /* EndOfRouteViewController.swift */; };
+		8DEB4066220CE596008BAAB4 /* NavigationMapViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DEB4065220CE596008BAAB4 /* NavigationMapViewDelegate.swift */; };
 		8DEDEF3421E3FBE80049E114 /* NavigationViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DEDEF3321E3FBE80049E114 /* NavigationViewControllerDelegate.swift */; };
 		8DF399B21FB257B30034904C /* UIGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DF399B11FB257B30034904C /* UIGestureRecognizer.swift */; };
 		AE00A73A209A2C38006A3DC7 /* StepsViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE00A739209A2C38006A3DC7 /* StepsViewControllerTests.swift */; };
@@ -900,6 +901,7 @@
 		8DCE104F210FC5880048B0FB /* EndOfRouteFeedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndOfRouteFeedback.swift; sourceTree = "<group>"; };
 		8DDBFCA22205016E0064DEBB /* NavigationCustomizable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationCustomizable.swift; sourceTree = "<group>"; };
 		8DE879651FBB9980002F06C0 /* EndOfRouteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndOfRouteViewController.swift; sourceTree = "<group>"; };
+		8DEB4065220CE596008BAAB4 /* NavigationMapViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationMapViewDelegate.swift; sourceTree = "<group>"; };
 		8DEDEF3321E3FBE80049E114 /* NavigationViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewControllerDelegate.swift; sourceTree = "<group>"; };
 		8DF399B11FB257B30034904C /* UIGestureRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIGestureRecognizer.swift; sourceTree = "<group>"; };
 		8DF8E4DE2202696800B29FEF /* Cartfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
@@ -1246,6 +1248,30 @@
 			name = Templates;
 			sourceTree = "<group>";
 		};
+		165F91502204D50B0036CB9E /* Fixtures */ = {
+			isa = PBXGroup;
+			children = (
+				35CDA8862190F50C0072B675 /* DCA-Arboretum.json */,
+				35C8DC0E2191DE940053328C /* DCA-Arboretum.trace.json */,
+				35CDA88A2190F5120072B675 /* EmptyStyle.json */,
+				355832AA2192F60800141922 /* PipeFittersUnion-FourSeasonsBoston.json */,
+				355832AC2192F7E300141922 /* PipeFittersUnion-FourSeasonsBoston.trace.json */,
+				35CDA8842190F5090072B675 /* route-doubling-back.json */,
+				35CDA8822190F5080072B675 /* route-for-lane-testing.json */,
+				35CDA88C2190F5140072B675 /* route-with-banner-instructions.json */,
+				35CDA8892190F5110072B675 /* route-with-instructions.json */,
+				35CDA8832190F5090072B675 /* route-with-lanes.json */,
+				35CDA8872190F50D0072B675 /* route-with-straight-roundabout.json */,
+				35C8DBF7219198310053328C /* route.json */,
+				C5387A9C1F8FDB13000D2E93 /* routeWithInstructions.json */,
+				AEF2C8F12072B603007B061F /* routeWithTunnels_9thStreetDC.json */,
+				35CDA8882190F5100072B675 /* sthlm-double-back-replay.json */,
+				35CDA8852190F50A0072B675 /* sthlm-double-back.json */,
+				C5EF397420599120009A2C50 /* straight-line.json */,
+			);
+			path = Fixtures;
+			sourceTree = "<group>";
+		};
 		16E11B53212B3D4700027CD3 /* Extensions and Categories */ = {
 			isa = PBXGroup;
 			children = (
@@ -1324,6 +1350,7 @@
 				DADAD82D20350849002E25CA /* MBRouteVoiceController.m */,
 				CFD47D8F20FD85EC00BC1E49 /* MGLAccountManager.swift */,
 				C53208AA1E81FFB900910266 /* NavigationMapView.swift */,
+				8DEB4065220CE596008BAAB4 /* NavigationMapViewDelegate.swift */,
 				359D1B271FFE70D30052FA42 /* NavigationView.swift */,
 				351BEBEA1E5BCC63006FE110 /* NavigationViewController.swift */,
 				8D3322262200E4CA001D44AA /* NavigationOptions.swift */,
@@ -1482,39 +1509,23 @@
 		35CDA85F2190F2A30072B675 /* TestHelper */ = {
 			isa = PBXGroup;
 			children = (
-				3557506E21A8293E00AEF9B6 /* tiles */,
-				35C8DBF7219198310053328C /* route.json */,
-				AEF2C8F12072B603007B061F /* routeWithTunnels_9thStreetDC.json */,
-				C5EF397420599120009A2C50 /* straight-line.json */,
-				C5387A9C1F8FDB13000D2E93 /* routeWithInstructions.json */,
-				35CDA8862190F50C0072B675 /* DCA-Arboretum.json */,
-				35C8DC0E2191DE940053328C /* DCA-Arboretum.trace.json */,
-				355832AA2192F60800141922 /* PipeFittersUnion-FourSeasonsBoston.json */,
-				355832AC2192F7E300141922 /* PipeFittersUnion-FourSeasonsBoston.trace.json */,
-				35CDA88A2190F5120072B675 /* EmptyStyle.json */,
-				35CDA8842190F5090072B675 /* route-doubling-back.json */,
-				35CDA8822190F5080072B675 /* route-for-lane-testing.json */,
-				35CDA88C2190F5140072B675 /* route-with-banner-instructions.json */,
-				35CDA8892190F5110072B675 /* route-with-instructions.json */,
-				35CDA8832190F5090072B675 /* route-with-lanes.json */,
-				35CDA8872190F50D0072B675 /* route-with-straight-roundabout.json */,
-				35CDA8882190F5100072B675 /* sthlm-double-back-replay.json */,
-				35CDA8852190F50A0072B675 /* sthlm-double-back.json */,
-				3557506C21A827E800AEF9B6 /* li.tar */,
-				16120A4C20645D6E007EA21D /* NavigationEventsManagerTestDoubles.swift */,
-				3EA93EBD6E6BEC966BBE51D6 /* NavigationServiceTestDoubles.swift */,
-				35CDA8812190F5080072B675 /* turn_left.data */,
-				35CDA88B2190F5130072B675 /* UnionSquare-to-GGPark.route */,
-				16435E04206EE37800AF48B6 /* DummyURLSessionDataTask.swift */,
-				3559FE4E21C3195700B6613F /* NavigationPlotter.swift */,
-				35CDA8602190F2A40072B675 /* TestHelper.h */,
-				35CDA8612190F2A40072B675 /* Info.plist */,
-				35CDA8772190F2F00072B675 /* Fixture.swift */,
-				3EA93170CB959F3065ACFFC3 /* SpeechAPISpy.swift */,
+				165F91502204D50B0036CB9E /* Fixtures */,
 				35C8DBFC2191D0370053328C /* CoreLocation.swift */,
+				3537DCE621E6447600E78CE6 /* Date.swift */,
 				35C8DC102191E1140053328C /* DirectionsSpy.swift */,
 				358E856321DD23E200E415C2 /* DummyLocationManager.swift */,
-				3537DCE621E6447600E78CE6 /* Date.swift */,
+				16435E04206EE37800AF48B6 /* DummyURLSessionDataTask.swift */,
+				35CDA8772190F2F00072B675 /* Fixture.swift */,
+				35CDA8612190F2A40072B675 /* Info.plist */,
+				3557506C21A827E800AEF9B6 /* li.tar */,
+				16120A4C20645D6E007EA21D /* NavigationEventsManagerTestDoubles.swift */,
+				3559FE4E21C3195700B6613F /* NavigationPlotter.swift */,
+				3EA93EBD6E6BEC966BBE51D6 /* NavigationServiceTestDoubles.swift */,
+				3EA93170CB959F3065ACFFC3 /* SpeechAPISpy.swift */,
+				35CDA8602190F2A40072B675 /* TestHelper.h */,
+				3557506E21A8293E00AEF9B6 /* tiles */,
+				35CDA8812190F5080072B675 /* turn_left.data */,
+				35CDA88B2190F5130072B675 /* UnionSquare-to-GGPark.route */,
 			);
 			path = TestHelper;
 			sourceTree = "<group>";
@@ -2594,6 +2605,7 @@
 				C565168B1FE1E23E00A0AD18 /* MapboxVoiceController.swift in Sources */,
 				35CF34B11F0A733200C2692E /* UIFont.swift in Sources */,
 				C51DF8671F38C337006C6A15 /* Date.swift in Sources */,
+				8DEB4066220CE596008BAAB4 /* NavigationMapViewDelegate.swift in Sources */,
 				359D283C1F9DC14F00FDE9C9 /* UICollectionView.swift in Sources */,
 				8D24A2F820409A890098CBF8 /* CGSize.swift in Sources */,
 				35CB1E131F97DD740011CC44 /* FeedbackItem.swift in Sources */,
@@ -3166,7 +3178,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 6;
+				DYLIB_CURRENT_VERSION = 7;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3192,7 +3204,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 6;
+				DYLIB_CURRENT_VERSION = 7;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3523,12 +3535,12 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 6;
+				DYLIB_CURRENT_VERSION = 7;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3559,11 +3571,11 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 6;
+				DYLIB_CURRENT_VERSION = 7;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3801,7 +3813,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -3865,7 +3877,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -3899,7 +3911,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 6;
+				DYLIB_CURRENT_VERSION = 7;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3927,7 +3939,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 6;
+				DYLIB_CURRENT_VERSION = 7;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

@@ -72,7 +72,7 @@ extension AppDelegate: CarPlayManagerDelegate {
             searchTemplate.delegate = carPlaySearchController
             let searchButton = carPlaySearchController.searchTemplateButton(searchTemplate: searchTemplate, interfaceController: interfaceController, traitCollection: traitCollection)
             return [searchButton]
-        case .navigating, .previewing:
+        case .navigating, .previewing, .panningInBrowsingMode:
             return nil
         }
     }
@@ -98,7 +98,25 @@ extension AppDelegate: CarPlayManagerDelegate {
             }
             favoriteTemplateButton.image = UIImage(named: "carplay_star", in: nil, compatibleWith: traitCollection)
             return [favoriteTemplateButton]
-        case .navigating:
+        case .navigating, .panningInBrowsingMode:
+            return nil
+        }
+    }
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]? {
+        
+        switch activity {
+        case .browsing:
+            guard let mapViewController = carPlayManager.carPlayMapViewController,
+                  let mapTemplate = template as? CPMapTemplate else {
+                return nil
+            }
+            var mapButtons = [mapViewController.recenterButton,
+                              mapViewController.zoomInButton,
+                              mapViewController.zoomOutButton]
+            mapButtons.insert(mapViewController.panningInterfaceDisplayButton(for: mapTemplate), at: 1)
+            return mapButtons
+        case .previewing, .navigating, .panningInBrowsingMode:
             return nil
         }
     }

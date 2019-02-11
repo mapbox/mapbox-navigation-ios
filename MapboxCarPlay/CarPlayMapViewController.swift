@@ -2,8 +2,12 @@ import Foundation
 import CarPlay
 import MapboxNavigation
 
+/**
+ `CarPlayMapViewController` is responsible for administering the Mapbox map, the interface styles and the map template buttons to display on CarPlay.
+ */
 @available(iOS 12.0, *)
-class CarPlayMapViewController: UIViewController {
+@objc(MBCarPlayMapViewController)
+public class CarPlayMapViewController: UIViewController {
     
     static let defaultAltitude: CLLocationDistance = 850
     
@@ -32,21 +36,58 @@ class CarPlayMapViewController: UIViewController {
             return self.view as! NavigationMapView
         }
     }
-
-    lazy var recenterButton: CPMapButton = {
-        let recenterButton = CPMapButton { [weak self] button in
+    
+    /**
+     The map button for recentering the map view if a user action causes it to stop following the user.
+     */
+    @objc public lazy var recenterButton: CPMapButton = {
+        let recenter = CPMapButton { [weak self] button in
+            
+            self?.mapView.setUserTrackingMode(.followWithCourse, animated: true)
+            button.isHidden = true
+        }
+        let bundle = Bundle.mapboxNavigation
+        recenter.image = UIImage(named: "carplay_locate", in: bundle, compatibleWith: traitCollection)
+        return recenter
+    }()
+    
+    /**
+     The map button for zooming in the current map view.
+     */
+    @objc public lazy var zoomInButton: CPMapButton = {
+        let zoomInButton = CPMapButton { [weak self] (button) in
+            let zoomLevel = self?.mapView.zoomLevel ?? 0
+            self?.mapView.setZoomLevel(zoomLevel + 1, animated: true)
+        }
+        let bundle = Bundle.mapboxNavigation
+        zoomInButton.image = UIImage(named: "carplay_plus", in: bundle, compatibleWith: traitCollection)
+        return zoomInButton
+    }()
+    
+    /**
+     The map button for zooming out the current map view.
+     */
+    @objc public lazy var zoomOutButton: CPMapButton = {
+        let zoomOutButton = CPMapButton { [weak self] (button) in
             guard let strongSelf = self else {
                 return
             }
-            
-            strongSelf.mapView.setUserTrackingMode(.followWithCourse, animated: true)
-            button.isHidden = true
+            strongSelf.mapView.setZoomLevel(strongSelf.mapView.zoomLevel - 1, animated: true)
         }
-        
         let bundle = Bundle.mapboxNavigation
-        recenterButton.image = UIImage(named: "carplay_locate", in: bundle, compatibleWith: traitCollection)
-        return recenterButton
+        zoomOutButton.image = UIImage(named: "carplay_minus", in: bundle, compatibleWith: traitCollection)
+        return zoomOutButton
     }()
+    
+    /**
+     The map button property for hiding or showing the pan map button.
+     */
+    @objc internal(set) public var panMapButton: CPMapButton?
+    
+    /**
+     The map button property for exiting the pan map mode.
+     */
+    @objc internal(set) public var dismissPanningButton: CPMapButton?
     
     var styleObservation: NSKeyValueObservation?
     
@@ -70,13 +111,13 @@ class CarPlayMapViewController: UIViewController {
         super.init(coder: aDecoder)
     }
     
-    override func encode(with aCoder: NSCoder) {
+    override public func encode(with aCoder: NSCoder) {
         super.encode(with: aCoder)
         
         aCoder.encode(styles, forKey: "styles")
     }
     
-    override func loadView() {
+    override public func loadView() {
         let mapView = NavigationMapView()
 //        mapView.navigationMapDelegate = self
         mapView.logoView.isHidden = true
@@ -92,7 +133,7 @@ class CarPlayMapViewController: UIViewController {
         self.view = mapView
     }
 
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
         
         styleManager = StyleManager()
@@ -102,35 +143,46 @@ class CarPlayMapViewController: UIViewController {
         resetCamera(animated: false, altitude: CarPlayMapViewController.defaultAltitude)
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
+    override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         styleObservation = nil
     }
     
-    public func zoomInButton() -> CPMapButton {
-        let zoomInButton = CPMapButton { [weak self] (button) in
-            guard let strongSelf = self else {
-                return
+    /**
+     Creates a new pan map button for the CarPlay map view controller.
+     
+     - parameter mapTemplate: The map template available to the pan map button for display.
+     */
+    @discardableResult public func panningInterfaceDisplayButton(for mapTemplate: CPMapTemplate) -> CPMapButton {
+        let panButton = CPMapButton { _ in
+            if !mapTemplate.isPanningInterfaceVisible {
+                mapTemplate.showPanningInterface(animated: true)
             }
-            strongSelf.mapView.setZoomLevel(strongSelf.mapView.zoomLevel + 1, animated: true)
         }
+        
         let bundle = Bundle.mapboxNavigation
-        zoomInButton.image = UIImage(named: "carplay_plus", in: bundle, compatibleWith: traitCollection)
-        return zoomInButton
+        panButton.image = UIImage(named: "carplay_pan", in: bundle, compatibleWith: traitCollection)
+        
+        return panButton
     }
     
-    public func zoomOutButton() -> CPMapButton {
-        let zoomInOut = CPMapButton { [weak self] (button) in
-            guard let strongSelf = self else {
-                return
-            }
-            strongSelf.mapView.setZoomLevel(strongSelf.mapView.zoomLevel - 1, animated: true)
+    /**
+     Creates a new close button to dismiss the visible panning buttons on the map.
+     
+     - parameter mapTemplate: The map template available to the pan map button for display.
+     */
+    @discardableResult public func panningInterfaceDismissalButton(for mapTemplate: CPMapTemplate) -> CPMapButton {
+        let defaultButtons = mapTemplate.mapButtons
+        let closeButton = CPMapButton { _ in
+            mapTemplate.mapButtons = defaultButtons
+            mapTemplate.dismissPanningInterface(animated: true)
         }
+        
         let bundle = Bundle.mapboxNavigation
-        zoomInOut.image = UIImage(named: "carplay_minus", in: bundle, compatibleWith: traitCollection)
-        return zoomInOut
+        closeButton.image = UIImage(named: "carplay_close", in: bundle, compatibleWith: traitCollection)
+        
+        return closeButton
     }
-
     
     func resetCamera(animated: Bool = false, altitude: CLLocationDistance? = nil) {
         let camera = mapView.camera
@@ -142,7 +194,7 @@ class CarPlayMapViewController: UIViewController {
 
     }
     
-    override func viewSafeAreaInsetsDidChange() {
+    override public func viewSafeAreaInsetsDidChange() {
         mapView.setContentInset(mapView.safeArea, animated: false)
         
         guard isOverviewingRoutes else {
@@ -163,7 +215,7 @@ class CarPlayMapViewController: UIViewController {
 
 @available(iOS 12.0, *)
 extension CarPlayMapViewController: StyleManagerDelegate {
-    func location(for styleManager: StyleManager) -> CLLocation? {
+    public func location(for styleManager: StyleManager) -> CLLocation? {
         return mapView.userLocationForCourseTracking ?? mapView.userLocation?.location ?? coarseLocationManager.location
     }
     

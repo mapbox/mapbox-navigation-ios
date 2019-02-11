@@ -726,14 +726,6 @@ extension RouteMapViewController: NavigationViewDelegate {
         return delegate?.navigationMapView?(mapView, simplifiedShapeFor: route)
     }
 
-    func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
-        return delegate?.navigationMapView?(mapView, imageFor: annotation)
-    }
-
-    func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
-        return delegate?.navigationMapView?(mapView, viewFor: annotation)
-    }
-
     func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint {
         //If the end of route component is showing, then put the anchor point slightly above the middle of the map
         if navigationView.endOfRouteView != nil, let show = navigationView.endOfRouteShowConstraint, show.isActive {

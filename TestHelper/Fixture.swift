@@ -77,7 +77,15 @@ public class Fixture: NSObject {
         let response = JSONFromFileNamed(name: jsonFile)
         let waypoints = Fixture.waypoints(from: jsonFile)
         let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String : Any]
-        return Route(json: jsonRoute, waypoints: waypoints, options: NavigationRouteOptions(waypoints: waypoints))
+        let route = Route(json: jsonRoute, waypoints: waypoints, options: NavigationRouteOptions(waypoints: waypoints))
+        
+        // Like `Directions.postprocess(_:fetchStartDate:uuid:)`
+        route.routeIdentifier = response["uuid"] as? String
+        let fetchStartDate = Date(timeIntervalSince1970: 3600)
+        route.fetchStartDate = fetchStartDate
+        route.responseEndDate = Date(timeInterval: 1, since: fetchStartDate)
+        
+        return route
     }
     
     public class func waypoints(from jsonFile: String) -> [Waypoint] {
@@ -91,7 +99,6 @@ public class Fixture: NSObject {
         }
         return waypoints
     }
-    
     
     // Returns `Route` objects from a match response
     public class func routesFromMatches(at filePath: String) -> [Route]? {
