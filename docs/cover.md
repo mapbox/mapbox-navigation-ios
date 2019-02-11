@@ -4,7 +4,7 @@
 
 The Mapbox Navigation SDK gives you all the tools you need to add turn-by-turn navigation to your application. It takes just a few minutes to drop a full-fledged turn-by-turn navigation view controller into your application. Or use the Core Navigation framework directly to build something truly custom.
 
-The Mapbox Navigation SDK and Core Navigation are compatible with applications written in Swift 4 or Objective-C in Xcode 9.0. The Mapbox Navigation and Mapbox Core Navigation frameworks run on iOS 9.0 and above.
+The Mapbox Navigation SDK, Core Navigation and CarPlay are compatible with applications written in Swift 4 or Objective-C in Xcode 10.0. The Mapbox Navigation and Mapbox Core Navigation frameworks run on iOS 10.0 and above while the Mapbox CarPlay framework is fully functional on iOS 12.0 and above.
 
 ## Installation
 
@@ -30,7 +30,7 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
 
 1. Run `carthage update --platform iOS` to build just the iOS dependencies.
 
-1. Follow the rest of [Carthage’s iOS integration instructions](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos). Your application target’s Embedded Frameworks should include `MapboxNavigation.framework`, `MapboxCoreNavigation.framework`, and `MapboxNavigationNative.framework`.
+1. Follow the rest of [Carthage’s iOS integration instructions](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos). Your application target’s Embedded Frameworks should include `MapboxNavigation.framework`, `MapboxCoreNavigation.framework`, `MapboxNavigationNative.framework` and `MapboxCarPlay.framework`.
 
 ## Configuration
 
@@ -65,7 +65,7 @@ Directions.shared.calculate(options) { (waypoints, routes, error) in
 
 ## Starting points
 
-This SDK is divided into two frameworks: the Mapbox Navigation framework (`MapboxNavigation`) is the ready-made turn-by-turn navigation UI, while the Mapbox Core Navigation framework (`MapboxCoreNavigation`) is responsible for the underlying navigation logic.
+This SDK is divided into three frameworks: the Mapbox Navigation framework (`MapboxNavigation`) is the ready-made turn-by-turn navigation UI and the Mapbox Core Navigation framework (`MapboxCoreNavigation`) is responsible for the underlying navigation logic while the Mapbox CarPlay framework (`MapboxCarPlay`) is the helper library that imports the Apple `CarPlay` framework along with customized Mapbox in-car display and navigation experience.
 
 ### Mapbox Navigation
 
@@ -73,10 +73,12 @@ This SDK is divided into two frameworks: the Mapbox Navigation framework (`Mapbo
 
 `NavigationMapView` is the map view at the center of the turn-by-turn navigation UI. You can also use this class independently of `NavigationViewController`, for example to display a route preview map. The `NavigationMapViewDelegate` protocol allows your application to customize various aspects of the map view’s appearance.
 
-`CarPlayManager` is the class that manages the [CarPlay](https://developer.apple.com/carplay/) screen if your application is CarPlay-enabled. It provides a main map for browsing, a search interface powered by [MapboxGeocoder.swift](https://github.com/mapbox/MapboxGeocoder.swift/), and a turn-by-turn navigation UI similar to the one provided by `NavigationViewController`. Your `UIApplicationDelegate` subclass can conform to the `CarPlayManagerDelegate` protocol to manage handoffs between `NavigationViewController` and the CarPlay device, as well as to customize some aspects of the CarPlay navigation experience. To take advantage of CarPlay functionality, your application must have a CarPlay navigation application entitlement and be built in Xcode 10 or above, and the user’s iPhone or iPad must have iOS 12 or above installed.
-
 ### Core Navigation
 
 `MapboxNavigationService` is responsible for receiving user location updates and determining their relation to the route line. If you build a completely custom navigation UI, this is the class your code would interact with directly. The `NavigationServiceDelegate` protocol allows your application to react to location-related events as they occur. Corresponding `Notification`s  from the `NavigationService`'s `RouteController` are also posted to the shared `NotificationCenter`. These notifications indicate the current state of the application in the form of a `RouteProgress` object.
 
 For further details, consult the guides and examples included with this API reference. If you have any questions, please see [our help page](https://docs.mapbox.com/help/). We welcome your [bug reports, feature requests, and contributions](https://github.com/mapbox/mapbox-navigation-ios/blob/master/CONTRIBUTING.md).
+
+### Mapbox CarPlay
+
+`CarPlayManager` is the class that manages the [CarPlay](https://developer.apple.com/carplay/) screen if your application is CarPlay-enabled. It provides a main map for browsing, a search interface powered by [MapboxGeocoder.swift](https://github.com/mapbox/MapboxGeocoder.swift/), and a turn-by-turn navigation UI similar to the one provided by `NavigationViewController`. Your `UIApplicationDelegate` subclass can conform to the `CarPlayManagerDelegate` protocol to manage handoffs between `CarPlayNavigationViewController` and the CarPlay device, as well as to customize some aspects of the CarPlay navigation experience. To take advantage of CarPlay functionality, your application must have a CarPlay navigation application entitlement and be built in Xcode 10 or above, and the user’s iPhone or iPad must have iOS 12 or above installed.
