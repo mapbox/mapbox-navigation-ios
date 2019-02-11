@@ -2,7 +2,7 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "carplay_close.pdf"
+      "filename" : "carplay_volume_off.pdf"
     }
   ],
   "info" : {
@@ -10,7 +10,6 @@
     "author" : "xcode"
   },
   "properties" : {
-    "template-rendering-intent" : "original",
-    "preserves-vector-representation" : true
+    "template-rendering-intent" : "original"
   }
 }

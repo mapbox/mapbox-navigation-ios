@@ -2,7 +2,7 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "carplay_minus.pdf"
+      "filename" : "carplay_search.pdf"
     }
   ],
   "info" : {
@@ -10,7 +10,6 @@
     "author" : "xcode"
   },
   "properties" : {
-    "template-rendering-intent" : "original",
-    "preserves-vector-representation" : true
+    "template-rendering-intent" : "original"
   }
 }

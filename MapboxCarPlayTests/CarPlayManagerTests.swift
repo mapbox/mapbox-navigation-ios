@@ -301,7 +301,7 @@ class CarPlayManagerSpec: QuickSpec {
                     let mapTemplateSpy: MapTemplateSpy =  interfaceController.topTemplate as! MapTemplateSpy
                     
                     expect(mapTemplateSpy.currentTripPreviews).toNot(beEmpty())
-                    let expectedStartButtonTitle = NSLocalizedString("CARPLAY_GO", bundle: .mapboxNavigation, value: "Go", comment: "Title for start button in CPTripPreviewTextConfiguration")
+                    let expectedStartButtonTitle = NSLocalizedString("CARPLAY_GO", bundle: .carPlay, value: "Go", comment: "Title for start button in CPTripPreviewTextConfiguration")
                     expect(mapTemplateSpy.currentPreviewTextConfiguration?.startButtonTitle).to(equal(expectedStartButtonTitle))
                 }
             })

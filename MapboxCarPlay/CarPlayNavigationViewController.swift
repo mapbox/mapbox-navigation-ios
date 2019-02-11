@@ -374,8 +374,8 @@ public class CarPlayNavigationViewController: UIViewController {
             guard let feedbackItem = foundItem.first else { return }
             self?.navService.eventsManager.updateFeedback(uuid: uuid, type: feedbackItem.feedbackType, source: .user, description: nil)
             
-            let dismissTitle = NSLocalizedString("CARPLAY_DISMISS", bundle: .mapboxNavigation, value: "Dismiss", comment: "Title for dismiss button")
-            let submittedTitle = NSLocalizedString("CARPLAY_SUBMITTED_FEEDBACK", bundle: .mapboxNavigation, value: "Submitted", comment: "Alert title that shows when feedback has been submitted")
+            let dismissTitle = NSLocalizedString("CARPLAY_DISMISS", bundle: .carPlay, value: "Dismiss", comment: "Title for dismiss button")
+            let submittedTitle = NSLocalizedString("CARPLAY_SUBMITTED_FEEDBACK", bundle: .carPlay, value: "Submitted", comment: "Alert title that shows when feedback has been submitted")
             let action = CPAlertAction(title: dismissTitle, style: .default, handler: {_ in })
             let alert = CPNavigationAlert(titleVariants: [submittedTitle], subtitleVariants: nil, imageSet: nil, primaryAction: action, secondaryAction: nil, duration: 2.5)
             self?.mapTemplate.present(navigationAlert: alert, animated: true)
@@ -384,7 +384,7 @@ public class CarPlayNavigationViewController: UIViewController {
         let buttons: [CPGridButton] = feedbackItems.map {
             return CPGridButton(titleVariants: [$0.title.components(separatedBy: "\n").joined(separator: " ")], image: $0.image, handler: feedbackButtonHandler)
         }
-        let gridTitle = NSLocalizedString("CARPLAY_FEEDBACK", bundle: .mapboxNavigation, value: "Feedback", comment: "Title for feedback template in CarPlay")
+        let gridTitle = NSLocalizedString("CARPLAY_FEEDBACK", bundle: .carPlay, value: "Feedback", comment: "Title for feedback template in CarPlay")
         return CPGridTemplate(title: gridTitle, gridButtons: buttons)
     }
     
@@ -401,39 +401,39 @@ public class CarPlayNavigationViewController: UIViewController {
         }
         
         var buttons: [CPGridButton] = []
-        let starImage = UIImage(named: "star", in: .mapboxNavigation, compatibleWith: nil)!
+        let starImage = UIImage(named: "star", in: .carPlay, compatibleWith: nil)!
         for i in 1...5 {
             let button = CPGridButton(titleVariants: ["\(i) star\(i == 1 ? "" : "s")"], image: starImage, handler: buttonHandler)
             buttons.append(button)
         }
         
-        let gridTitle = NSLocalizedString("CARPLAY_RATE_RIDE", bundle: .mapboxNavigation, value: "Rate your ride", comment: "Title for rating template in CarPlay")
+        let gridTitle = NSLocalizedString("CARPLAY_RATE_RIDE", bundle: .carPlay, value: "Rate your ride", comment: "Title for rating template in CarPlay")
         return CPGridTemplate(title: gridTitle, gridButtons: buttons)
     }
     
     func presentArrivalUI() {
-        let exitTitle = NSLocalizedString("CARPLAY_EXIT_NAVIGATION", bundle: .mapboxNavigation, value: "Exit navigation", comment: "Title on the exit button in the arrival form")
+        let exitTitle = NSLocalizedString("CARPLAY_EXIT_NAVIGATION", bundle: .carPlay, value: "Exit navigation", comment: "Title on the exit button in the arrival form")
         let exitAction = CPAlertAction(title: exitTitle, style: .cancel) { (action) in
             self.exitNavigation()
             self.dismiss(animated: true, completion: nil)
         }
-        let rateTitle = NSLocalizedString("CARPLAY_RATE_TRIP", bundle: .mapboxNavigation, value: "Rate your trip", comment: "Title on rate button in CarPlay")
+        let rateTitle = NSLocalizedString("CARPLAY_RATE_TRIP", bundle: .carPlay, value: "Rate your trip", comment: "Title on rate button in CarPlay")
         let rateAction = CPAlertAction(title: rateTitle, style: .default) { (action) in
             self.carInterfaceController.pushTemplate(self.endOfRouteFeedbackTemplate(), animated: true)
         }
-        let arrivalTitle = NSLocalizedString("CARPLAY_ARRIVED", bundle: .mapboxNavigation, value: "You have arrived", comment: "Title on arrival action sheet")
-        let arrivalMessage = NSLocalizedString("CARPLAY_ARRIVED_MESSAGE", bundle: .mapboxNavigation, value: "What would you like to do?", comment: "Message on arrival action sheet")
+        let arrivalTitle = NSLocalizedString("CARPLAY_ARRIVED", bundle: .carPlay, value: "You have arrived", comment: "Title on arrival action sheet")
+        let arrivalMessage = NSLocalizedString("CARPLAY_ARRIVED_MESSAGE", bundle: .carPlay, value: "What would you like to do?", comment: "Message on arrival action sheet")
         let alert = CPActionSheetTemplate(title: arrivalTitle, message: arrivalMessage, actions: [rateAction, exitAction])
         carInterfaceController.presentTemplate(alert, animated: true)
     }
     
     func presentWaypointArrivalUI(for waypoint: Waypoint) {
-        var title = NSLocalizedString("CARPLAY_ARRIVED", bundle: .mapboxNavigation, value: "You have arrived", comment: "Title on arrival action sheet")
+        var title = NSLocalizedString("CARPLAY_ARRIVED", bundle: .carPlay, value: "You have arrived", comment: "Title on arrival action sheet")
         if let name = waypoint.name {
             title = name
         }
         
-        let continueTitle = NSLocalizedString("CARPLAY_CONTINUE", bundle: .mapboxNavigation, value: "Continue", comment: "Title on continue button in CarPlay")
+        let continueTitle = NSLocalizedString("CARPLAY_CONTINUE", bundle: .carPlay, value: "Continue", comment: "Title on continue button in CarPlay")
         let continueAlert = CPAlertAction(title: continueTitle, style: .default) { (action) in
             self.navService.routeProgress.legIndex += 1
             self.carInterfaceController.dismissTemplate(animated: true)

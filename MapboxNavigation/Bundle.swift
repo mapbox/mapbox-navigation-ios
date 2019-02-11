@@ -2,7 +2,7 @@ import Foundation
 
 extension Bundle {
     
-    public class var mapboxNavigation: Bundle {
+    class var mapboxNavigation: Bundle {
         get { return Bundle(for: NavigationViewController.self) }
     }
     

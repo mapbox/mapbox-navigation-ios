@@ -46,8 +46,8 @@ public class CarPlayMapViewController: UIViewController {
             self?.mapView.setUserTrackingMode(.followWithCourse, animated: true)
             button.isHidden = true
         }
-        let bundle = Bundle.mapboxNavigation
-        recenter.image = UIImage(named: "carplay_locate", in: bundle, compatibleWith: traitCollection)
+        
+        recenter.image = UIImage(named: "carplay_locate", in: .carPlay, compatibleWith: traitCollection)
         return recenter
     }()
     
@@ -59,8 +59,8 @@ public class CarPlayMapViewController: UIViewController {
             let zoomLevel = self?.mapView.zoomLevel ?? 0
             self?.mapView.setZoomLevel(zoomLevel + 1, animated: true)
         }
-        let bundle = Bundle.mapboxNavigation
-        zoomInButton.image = UIImage(named: "carplay_plus", in: bundle, compatibleWith: traitCollection)
+        
+        zoomInButton.image = UIImage(named: "carplay_plus", in: .carPlay, compatibleWith: traitCollection)
         return zoomInButton
     }()
     
@@ -74,8 +74,8 @@ public class CarPlayMapViewController: UIViewController {
             }
             strongSelf.mapView.setZoomLevel(strongSelf.mapView.zoomLevel - 1, animated: true)
         }
-        let bundle = Bundle.mapboxNavigation
-        zoomOutButton.image = UIImage(named: "carplay_minus", in: bundle, compatibleWith: traitCollection)
+        
+        zoomOutButton.image = UIImage(named: "carplay_minus", in: .carPlay, compatibleWith: traitCollection)
         return zoomOutButton
     }()
     
@@ -160,8 +160,7 @@ public class CarPlayMapViewController: UIViewController {
             }
         }
         
-        let bundle = Bundle.mapboxNavigation
-        panButton.image = UIImage(named: "carplay_pan", in: bundle, compatibleWith: traitCollection)
+        panButton.image = UIImage(named: "carplay_pan", in: .carPlay, compatibleWith: traitCollection)
         
         return panButton
     }
@@ -178,8 +177,7 @@ public class CarPlayMapViewController: UIViewController {
             mapTemplate.dismissPanningInterface(animated: true)
         }
         
-        let bundle = Bundle.mapboxNavigation
-        closeButton.image = UIImage(named: "carplay_close", in: bundle, compatibleWith: traitCollection)
+        closeButton.image = UIImage(named: "carplay_close", in: .carPlay, compatibleWith: traitCollection)
         
         return closeButton
     }

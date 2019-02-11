@@ -108,7 +108,7 @@ public class CarPlayManager: NSObject {
         let exitButton = CPBarButton(type: .text) { [weak self] (button: CPBarButton) in
             self?.currentNavigator?.exitNavigation(byCanceling: true)
         }
-        exitButton.title = NSLocalizedString("CARPLAY_END", bundle: .mapboxNavigation, value: "End", comment: "Title for end navigation button")
+        exitButton.title = NSLocalizedString("CARPLAY_END", bundle: .carPlay, value: "End", comment: "Title for end navigation button")
         return exitButton
     }()
     
@@ -116,8 +116,8 @@ public class CarPlayManager: NSObject {
      The bar button that mutes the voice turn-by-turn instruction announcements during navigation.
      */
     @objc public lazy var muteButton: CPBarButton = {
-        let muteTitle = NSLocalizedString("CARPLAY_MUTE", bundle: .mapboxNavigation, value: "Mute", comment: "Title for mute button")
-        let unmuteTitle = NSLocalizedString("CARPLAY_UNMUTE", bundle: .mapboxNavigation, value: "Unmute", comment: "Title for unmute button")
+        let muteTitle = NSLocalizedString("CARPLAY_MUTE", bundle: .carPlay, value: "Mute", comment: "Title for mute button")
+        let unmuteTitle = NSLocalizedString("CARPLAY_UNMUTE", bundle: .carPlay, value: "Unmute", comment: "Title for unmute button")
         
         let muteButton = CPBarButton(type: .text) { (button: CPBarButton) in
             NavigationSettings.shared.voiceMuted = !NavigationSettings.shared.voiceMuted
@@ -134,7 +134,7 @@ public class CarPlayManager: NSObject {
         let showFeedbackButton = CPMapButton { button in
             self.currentNavigator?.showFeedback()
         }
-        showFeedbackButton.image = UIImage(named: "carplay_feedback", in: .mapboxNavigation, compatibleWith: nil)
+        showFeedbackButton.image = UIImage(named: "carplay_feedback", in: .carPlay, compatibleWith: nil)
         
         return showFeedbackButton
     }()
@@ -150,9 +150,9 @@ public class CarPlayManager: NSObject {
             navigationViewController.tracksUserCourse = !navigationViewController.tracksUserCourse
             
             let imageName = navigationViewController.tracksUserCourse ? "carplay_overview" : "carplay_locate"
-            button.image = UIImage(named: imageName, in: .mapboxNavigation, compatibleWith: nil)
+            button.image = UIImage(named: imageName, in: .carPlay, compatibleWith: nil)
         }
-        overviewButton.image = UIImage(named: "carplay_overview", in: .mapboxNavigation, compatibleWith: nil)
+        overviewButton.image = UIImage(named: "carplay_overview", in: .carPlay, compatibleWith: nil)
         return overviewButton
     }()
     
@@ -370,7 +370,7 @@ extension CarPlayManager: CPListTemplateDelegate {
                 return
         }
         
-        let name = NSLocalizedString("CARPLAY_CURRENT_LOCATION", bundle: .mapboxNavigation, value: "Current Location", comment: "Name of the waypoint associated with the current location")
+        let name = NSLocalizedString("CARPLAY_CURRENT_LOCATION", bundle: .carPlay, value: "Current Location", comment: "Name of the waypoint associated with the current location")
         let origin = Waypoint(location: location, heading: userLocation.heading, name: name)
         
         previewRoutes(between: [origin, destination], completionHandler: completionHandler)
@@ -407,7 +407,7 @@ extension CarPlayManager: CPListTemplateDelegate {
         }
         
         if let error = error {
-            let okTitle = NSLocalizedString("CARPLAY_OK", bundle: .mapboxNavigation, value: "OK", comment: "CPNavigationAlert OK button title")
+            let okTitle = NSLocalizedString("CARPLAY_OK", bundle: .carPlay, value: "OK", comment: "CPNavigationAlert OK button title")
             let okAction = CPAlertAction(title: okTitle, style: .default) { _ in
                 interfaceController.popToRootTemplate(animated: true)
             }
@@ -458,9 +458,10 @@ extension CarPlayManager: CPListTemplateDelegate {
     }
 
     private func defaultTripPreviewTextConfiguration() -> CPTripPreviewTextConfiguration {
-        let goTitle = NSLocalizedString("CARPLAY_GO", bundle: .mapboxNavigation, value: "Go", comment: "Title for start button in CPTripPreviewTextConfiguration")
-        let alternativeRoutesTitle = NSLocalizedString("CARPLAY_MORE_ROUTES", bundle: .mapboxNavigation, value: "More Routes", comment: "Title for alternative routes in CPTripPreviewTextConfiguration")
-        let overviewTitle = NSLocalizedString("CARPLAY_OVERVIEW", bundle: .mapboxNavigation, value: "Overview", comment: "Title for overview button in CPTripPreviewTextConfiguration")
+        let goTitle = NSLocalizedString("CARPLAY_GO", bundle: .carPlay, value: "Go", comment: "Title for start button in CPTripPreviewTextConfiguration")
+        let alternativeRoutesTitle = NSLocalizedString("CARPLAY_MORE_ROUTES", bundle: .carPlay, value: "More Routes", comment: "Title for alternative routes in CPTripPreviewTextConfiguration")
+        let overviewTitle = NSLocalizedString("CARPLAY_OVERVIEW", bundle: .carPlay
+            , value: "Overview", comment: "Title for overview button in CPTripPreviewTextConfiguration")
 
         let defaultPreviewText = CPTripPreviewTextConfiguration(startButtonTitle: goTitle, additionalRoutesButtonTitle: alternativeRoutesTitle, overviewButtonTitle: overviewTitle)
         return defaultPreviewText
