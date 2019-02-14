@@ -14,7 +14,7 @@ protocol RouteControllerDataSource: class {
 
 @objc(MBLegacyRouteController)
 @available(*, deprecated, renamed: "RouteController")
-open class LegacyRouteController: NSObject, Router {
+open class LegacyRouteController: NSObject, Router, CLLocationManagerDelegate {
     
     @objc public weak var delegate: RouterDelegate?
 
@@ -240,11 +240,9 @@ open class LegacyRouteController: NSObject, Router {
         precondition(!routeProgress.isFinalLeg, "Can not increment leg index beyond final leg.")
         routeProgress.legIndex += 1
     }
-}
-
-extension LegacyRouteController: CLLocationManagerDelegate {
-
-
+    
+    // MARK: CLLocationManagerDelegate methods
+    
     @objc public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
         heading = newHeading
     }
@@ -443,7 +441,7 @@ extension LegacyRouteController: CLLocationManagerDelegate {
         self.lastRerouteLocation = location
 
         getDirections(from: location, along: progress) { [weak self] (route, error) in
-            guard let strongSelf: LegacyRouteController = self else {
+            guard let strongSelf = self else {
                 return
             }
 
@@ -466,7 +464,7 @@ extension LegacyRouteController: CLLocationManagerDelegate {
     private func checkForUpdates() {
         #if TARGET_IPHONE_SIMULATOR
         guard (NSClassFromString("XCTestCase") == nil) else { return } // Short-circuit when running unit tests
-            guard let version = Bundle(for: LegacyRouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString") else { return }
+            guard let version = Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString") else { return }
             let latestVersion = String(describing: version)
             _ = URLSession.shared.dataTask(with: URL(string: "https://docs.mapbox.com/ios/navigation/latest_version.txt")!, completionHandler: { (data, response, error) in
                 if let _ = error { return }
@@ -609,11 +607,9 @@ extension LegacyRouteController: CLLocationManagerDelegate {
             routeProgress.currentLegProgress.currentStepProgress.intersectionDistances = distances
         }
     }
-}
-
-//MARK: - Obsolete Interfaces
-
-public extension LegacyRouteController {
+    
+    // MARK: Obsolete methods
+    
     @available(*, obsoleted: 0.1, message: "MapboxNavigationService is now the point-of-entry to MapboxCoreNavigation. Direct use of RouteController is no longer reccomended. See MapboxNavigationService for more information.")
     /// :nodoc: Obsoleted method.
     @objc(initWithRoute:directions:dataSource:eventsManager:)
