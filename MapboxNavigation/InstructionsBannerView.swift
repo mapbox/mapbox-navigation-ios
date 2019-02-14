@@ -28,10 +28,19 @@ public protocol InstructionsBannerViewDelegate: class {
     @objc optional func didSwipeInstructionsBanner(_ sender: BaseInstructionsBannerView, swipeDirection direction: UISwipeGestureRecognizerDirection)
 }
 
+@objc private protocol InstructionsBannerViewDelegateDeprecations {
+    @objc(didDragInstructionsBanner:)
+    optional func didDragInstructionsBanner(_ sender: BaseInstructionsBannerView)
+}
+
 /// :nodoc:
 @IBDesignable
 @objc(MBInstructionsBannerView)
-open class InstructionsBannerView: BaseInstructionsBannerView { }
+open class InstructionsBannerView: BaseInstructionsBannerView, NavigationComponent {
+    @objc public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
+        update(for: instruction)
+    }
+}
 
 /// :nodoc:
 open class BaseInstructionsBannerView: UIControl {
@@ -137,7 +146,7 @@ open class BaseInstructionsBannerView: UIControl {
             
             if let delegate = delegate {
                 delegate.didSwipeInstructionsBanner?(self, swipeDirection: .down)
-                delegate.didDragInstructionsBanner?(self)
+                (delegate as? InstructionsBannerViewDelegateDeprecations)?.didDragInstructionsBanner?(self)
             }
         }
     }

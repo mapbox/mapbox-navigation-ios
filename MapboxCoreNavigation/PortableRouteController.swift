@@ -94,13 +94,5 @@ open class PortableRouteController: RouteController {
         return navigator.getHistory()
     }
 
-    public func setMinimumSpeedForLocationProjection(metersPerSecond: Double = 7.0) {
-        navigator.configureNavigator(forName: "min_prediction_speed", value: String(metersPerSecond))
-    }
     
-    public func projectedLocation(date: Date, projectedSeconds: TimeInterval) -> (coordinate: CLLocationCoordinate2D, course: CLLocationDirection) {
-        let projectedDate = date.addingTimeInterval(projectedSeconds) // + projectedMilliseconds
-        let status = navigator.getStatusForTimestamp(projectedDate)
-        return (coordinate: status.location, course: CLLocationDirection(status.bearing))
-    }
 }

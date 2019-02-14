@@ -1,8 +1,5 @@
 #if canImport(CarPlay)
 import CarPlay
-#if canImport(MapboxGeocoder)
-import MapboxGeocoder
-#endif
 import Turf
 import MapboxCoreNavigation
 import MapboxDirections
@@ -17,10 +14,9 @@ import MapboxDirections
 public protocol CarPlayManagerDelegate {
     
     /**
-     Offers the delegate an opportunity to provide a customized list of leading bar buttons.
+     Offers the delegate an opportunity to provide a customized list of leading bar buttons at the root of the template stack for the given activity.
      
      These buttons' tap handlers encapsulate the action to be taken, so it is up to the developer to ensure the hierarchy of templates is adequately navigable.
-     If this method is not implemented, or if nil is returned, an implementation of CPSearchTemplate will be provided which uses the Mapbox Geocoder.
      
      - parameter carPlayManager: The shared CarPlay manager.
      - parameter traitCollection: The trait collection of the view controller being shown in the CarPlay window.
@@ -32,7 +28,7 @@ public protocol CarPlayManagerDelegate {
     optional func carPlayManager(_ carPlayManager: CarPlayManager, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]?
     
     /**
-     Offers the delegate an opportunity to provide a customized list of trailing bar buttons.
+     Offers the delegate an opportunity to provide a customized list of trailing bar buttons at the root of the template stack for the given activity.
      
      These buttons' tap handlers encapsulate the action to be taken, so it is up to the developer to ensure the hierarchy of templates is adequately navigable.
      
@@ -44,12 +40,12 @@ public protocol CarPlayManagerDelegate {
      */
     @objc(carPlayManager:trailingNavigationBarButtonsWithTraitCollection:inTemplate:forActivity:)
     optional func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]?
-    
+   
     /**
      Offers the delegate an opportunity to provide a customized list of buttons displayed on the map.
      
      These buttons handle the gestures on the map view, so it is up to the developer to ensure the map template is interactive.
-     If this method is not implemented, or if nil is returned, a default set of zoom and pan buttons will be provided.
+     If this method is not implemented, or if nil is returned, a default set of zoom and pan buttons declared in the `CarPlayMapViewController` will be provided.
      
      - parameter carPlayManager: The shared CarPlay manager.
      - parameter traitCollection: The trait collection of the view controller being shown in the CarPlay window.
@@ -59,7 +55,6 @@ public protocol CarPlayManagerDelegate {
      */
     @objc(carPlayManager:mapButtonsCompatibleWithTraitCollection:inTemplate:forActivity:)
     optional func carPlayManager(_ carPlayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]?
-    
     
     /**
      Offers the delegate an opportunity to provide an alternate navigation service, otherwise a default built-in MapboxNavigationService will be created and used.
@@ -97,6 +92,37 @@ public protocol CarPlayManagerDelegate {
      */
     @objc(carPlayManager:searchTemplate:selectedResult:completionHandler:)
     optional func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void)
+    
+    /**
+     Offers the delegate the opportunity to customize a trip before it is presented to the user to preview.
+     
+     - parameter carPlayManager: The shared CarPlay manager.
+     - parameter trip: The trip that will be previewed.
+     - returns: The actual trip to be previewed. This can be the same trip or a new/alternate trip if desired.
+     */
+    @objc(carPlayManager:willPreviewTrip:)
+    optional func carPlayManager(_ carPlayManager: CarPlayManager, willPreview trip: CPTrip) -> (CPTrip)
+
+    /**
+     Offers the delegate the opportunity to customize a trip preview text configuration for a given trip.
+
+     - parameter carPlayManager: The shared CarPlay manager.
+     - parameter trip: The trip that will be previewed.
+     - parameter previewTextConfiguration: The trip preview text configuration that will be presented alongside the trip.
+     - returns: The actual preview text configuration to be presented alongside the trip.
+    */
+    @objc(carPlayManager:willPreviewTrip:withPreviewTextConfiguration:)
+    optional func carPlayManager(_ carPlayManager: CarPlayManager, willPreview trip: CPTrip, with previewTextConfiguration: CPTripPreviewTextConfiguration) -> (CPTripPreviewTextConfiguration)
+
+    /**
+     Offers the delegate the opportunity to react to selection of a trip. Certain trips may have alternate route(s).
+     
+     - parameter carPlayManager: The shared CarPlay manager.
+     - parameter trip: The trip to begin navigating along.
+     - parameter routeChoice: The possible route for the chosen trip.
+     */
+    @objc(carPlayManager:selectedPreviewForTrip:usingRouteChoice:)
+    optional func carPlayManager(_ carPlayManager: CarPlayManager, selectedPreviewFor trip: CPTrip, using routeChoice: CPRouteChoice) -> ()
     
     /**
      Called when navigation begins so that the containing app can update accordingly.

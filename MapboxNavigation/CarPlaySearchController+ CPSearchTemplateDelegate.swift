@@ -5,8 +5,7 @@ import MapboxGeocoder
 import MapboxDirections
 
 @available(iOS 12.0, *)
-extension CarPlayManager: CPSearchTemplateDelegate {
-    
+extension CarPlaySearchController: CPSearchTemplateDelegate {
     
     static var recentItems = RecentItem.loadDefaults()
     public static let CarPlayGeocodedPlacemarkKey: String = "MBGecodedPlacemark"
@@ -20,52 +19,8 @@ extension CarPlayManager: CPSearchTemplateDelegate {
         return coarseLocationManager
     }()
     
-    // MARK: CPSearchTemplateDelegate
-    
     public func searchTemplate(_ searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void) {
-        let title = NSLocalizedString("CARPLAY_SEARCH_NOT_IMPLEMENTED", bundle: .mapboxNavigation, value: "Search not implemented", comment: "Title in search template when search is unimplemented")
-        let notImplementedItem = CPListItem(text: title, detailText: nil)
-        delegate?.carPlayManager?(self, searchTemplate: searchTemplate, updatedSearchText: searchText, completionHandler: completionHandler)
-            ?? completionHandler([notImplementedItem])
-    }
-    
-    public func searchTemplateSearchButtonPressed(_ searchTemplate: CPSearchTemplate) {
-        guard let items = recentSearchItems else { return }
-        let extendedItems = resultsOrNoResults(items, limit: CarPlayManager.MaximumExtendedSearchResults)
         
-        let section = CPListSection(items: extendedItems)
-        let template = CPListTemplate(title: recentSearchText, sections: [section])
-        template.delegate = self
-        
-        interfaceController?.pushTemplate(template, animated: true)
-    }
-    
-    public func searchTemplate(_ searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void) {
-        delegate?.carPlayManager?(self, searchTemplate: searchTemplate, selectedResult: item, completionHandler: completionHandler)
-    }
-    
-    func searchTemplateButton(searchTemplate: CPSearchTemplate, interfaceController: CPInterfaceController, traitCollection: UITraitCollection) -> CPBarButton {
-        
-        let searchTemplateButton = CPBarButton(type: .image) { [weak self] button in
-            guard let strongSelf = self else {
-                return
-            }
-            
-            if let mapTemplate = interfaceController.topTemplate as? CPMapTemplate {
-                strongSelf.resetPanButtons(mapTemplate)
-            }
-            
-            interfaceController.pushTemplate(searchTemplate, animated: true)
-        }
-        
-        let bundle = Bundle.mapboxNavigation
-        searchTemplateButton.image = UIImage(named: "carplay_search", in: bundle, compatibleWith: traitCollection)
-        
-        return searchTemplateButton
-    }
-    
-    @available(iOS 12.0, *)
-    public func update(searchText: String, completionHandler: @escaping ([CPListItem]) -> Void) {
         recentSearchText = searchText
         
         // Append recent searches
@@ -75,33 +30,79 @@ extension CarPlayManager: CPSearchTemplateDelegate {
         let shouldSearch = searchText.count > 2
         if shouldSearch {
             
-            let options = CarPlayManager.forwardGeocodeOptions(searchText)
+            let options = CarPlaySearchController.forwardGeocodeOptions(searchText)
             Geocoder.shared.geocode(options, completionHandler: { [weak self] (placemarks, attribution, error) in
                 guard let strongSelf = self else { return }
                 guard let placemarks = placemarks else {
-                    completionHandler(strongSelf.resultsOrNoResults(items, limit: CarPlayManager.MaximumInitialSearchResults))
+                    completionHandler(strongSelf.resultsOrNoResults(items, limit: CarPlaySearchController.MaximumInitialSearchResults))
                     return
                 }
                 
                 let results = placemarks.map { $0.listItem() }
                 items.append(contentsOf: results)
-                completionHandler(strongSelf.resultsOrNoResults(results, limit: CarPlayManager.MaximumInitialSearchResults))
+                completionHandler(strongSelf.resultsOrNoResults(results, limit: CarPlaySearchController.MaximumInitialSearchResults))
             })
             
         } else {
-            completionHandler(resultsOrNoResults(items, limit: CarPlayManager.MaximumInitialSearchResults))
+            completionHandler(resultsOrNoResults(items, limit: CarPlaySearchController.MaximumInitialSearchResults))
         }
+    }
+    
+    public func searchTemplateSearchButtonPressed(_ searchTemplate: CPSearchTemplate) {
+        guard let items = recentSearchItems else { return }
+        let extendedItems = resultsOrNoResults(items, limit: CarPlaySearchController.MaximumExtendedSearchResults)
+        
+        let section = CPListSection(items: extendedItems)
+        let template = CPListTemplate(title: recentSearchText, sections: [section])
+        template.delegate = self
+        delegate?.pushTemplate(template, animated: true)
+    }
+    
+    public func searchTemplate(_ searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void) {
+        guard let userInfo = item.userInfo as? [String: Any],
+            let placemark = userInfo[CarPlaySearchController.CarPlayGeocodedPlacemarkKey] as? GeocodedPlacemark,
+            let location = placemark.location else {
+                completionHandler()
+                return
+        }
+        
+        CarPlaySearchController.recentItems.add(RecentItem(placemark))
+        CarPlaySearchController.recentItems.save()
+        
+        let destinationWaypoint = Waypoint(location: location, heading: nil, name: placemark.formattedName)
+        delegate?.previewRoutes(to: destinationWaypoint, completionHandler: completionHandler)
+    }
+    
+    public func searchTemplateButton(searchTemplate: CPSearchTemplate, interfaceController: CPInterfaceController, traitCollection: UITraitCollection) -> CPBarButton {
+        
+        let searchTemplateButton = CPBarButton(type: .image) { [weak self] button in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            if let mapTemplate = interfaceController.topTemplate as? CPMapTemplate {
+                strongSelf.delegate?.resetPanButtons(mapTemplate)
+            }
+            
+
+            self?.delegate?.pushTemplate(searchTemplate, animated: false)
+        }
+        
+        let bundle = Bundle.mapboxNavigation
+        searchTemplateButton.image = UIImage(named: "carplay_search", in: bundle, compatibleWith: traitCollection)
+        
+        return searchTemplateButton
     }
     
     @available(iOS 12.0, *)
     static func forwardGeocodeOptions(_ searchText: String) -> ForwardGeocodeOptions {
         let options = ForwardGeocodeOptions(query: searchText)
-        options.focalLocation = CarPlayManager.coarseLocationManager.location
-        options.locale = .autoupdatingNonEnglish
+        options.focalLocation = CarPlaySearchController.coarseLocationManager.location
+        options.locale = Locale.autoupdatingCurrent.languageCode == "en" ? nil : .autoupdatingCurrent
         var allScopes: PlacemarkScope = .all
         allScopes.remove(.postalCode)
         options.allowedScopes = allScopes
-        options.maximumResultCount = CarPlayManager.MaximumExtendedSearchResults
+        options.maximumResultCount = CarPlaySearchController.MaximumExtendedSearchResults
         options.includesRoutableLocations = true
         return options
     }
@@ -110,25 +111,25 @@ extension CarPlayManager: CPSearchTemplateDelegate {
     public func selectResult(item: CPListItem, completionHandler: @escaping () -> Void) {
         
         guard let userInfo = item.userInfo as? [String: Any],
-            let placemark = userInfo[CarPlayManager.CarPlayGeocodedPlacemarkKey] as? GeocodedPlacemark,
+            let placemark = userInfo[CarPlaySearchController.CarPlayGeocodedPlacemarkKey] as? GeocodedPlacemark,
             let location = placemark.routableLocations?.first ?? placemark.location else {
                 completionHandler()
                 return
         }
         
-        CarPlayManager.recentItems.add(RecentItem(placemark))
-        CarPlayManager.recentItems.save()
+        CarPlaySearchController.recentItems.add(RecentItem(placemark))
+        CarPlaySearchController.recentItems.save()
         
         let destinationWaypoint = Waypoint(location: location, heading: nil, name: placemark.formattedName)
-        previewRoutes(to: destinationWaypoint, completionHandler: completionHandler)
+        delegate?.previewRoutes(to: destinationWaypoint, completionHandler: completionHandler)
     }
     
     @available(iOS 12.0, *)
     func recentSearches(_ searchText: String) -> [CPListItem] {
         if searchText.isEmpty {
-            return CarPlayManager.recentItems.map { $0.geocodedPlacemark.listItem() }
+            return CarPlaySearchController.recentItems.map { $0.geocodedPlacemark.listItem() }
         }
-        return CarPlayManager.recentItems.filter { $0.matches(searchText) }.map { $0.geocodedPlacemark.listItem() }
+        return CarPlaySearchController.recentItems.filter { $0.matches(searchText) }.map { $0.geocodedPlacemark.listItem() }
     }
     
     @available(iOS 12.0, *)
@@ -149,12 +150,27 @@ extension CarPlayManager: CPSearchTemplateDelegate {
     }
 }
 
+@available(iOS 12.0, *)
+extension CarPlaySearchController: CPListTemplateDelegate {
+    public func listTemplate(_ listTemplate: CPListTemplate, didSelect item: CPListItem, completionHandler: @escaping () -> Void) {
+        // Selected a search item from the extended list?
+        if let userInfo = item.userInfo as? [String: Any],
+            let placemark = userInfo[CarPlaySearchController.CarPlayGeocodedPlacemarkKey] as? GeocodedPlacemark,
+            let location = placemark.location {
+            let destinationWaypoint = Waypoint(location: location)
+            delegate?.popTemplate(animated: false)
+            delegate?.previewRoutes(to: destinationWaypoint, completionHandler: completionHandler)
+            return
+        }
+    }
+}
+
 extension GeocodedPlacemark {
     
     @available(iOS 12.0, *)
     func listItem() -> CPListItem {
         let item = CPListItem(text: formattedName, detailText: subtitle, image: nil, showsDisclosureIndicator: true)
-        item.userInfo = [CarPlayManager.CarPlayGeocodedPlacemarkKey: self]
+        item.userInfo = [CarPlaySearchController.CarPlayGeocodedPlacemarkKey: self]
         return item
     }
     

@@ -1,27 +1,141 @@
-/* Feedback type for Accident */
-"FEEDBACK_ACCIDENT" = "Baleset";
+/* Delimiter between lines in an address when displayed inline */
+"ADDRESS_LINE_SEPARATOR" = ", ";
 
-/* Feedback type for Closure */
-"FEEDBACK_CLOSURE" = "Lezárás";
+/* Title on arrival action sheet */
+"CARPLAY_ARRIVED" = "Megérkeztél";
 
-/* Feedback type for Confusing */
-"FEEDBACK_CONFUSING" = "Megtévesztő";
+/* Message on arrival action sheet */
+"CARPLAY_ARRIVED_MESSAGE" = "Mit szeretnél tenni?";
 
-/* Feedback type for Hazard */
-"FEEDBACK_HAZARD" = "Veszélyhelyzet";
+/* Title on continue button in CarPlay */
+"CARPLAY_CONTINUE" = "Folytatás";
 
-/* Feedback type for Other Issue */
-"FEEDBACK_OTHER" = "Más probléma";
+/* Name of the waypoint associated with the current location */
+"CARPLAY_CURRENT_LOCATION" = "Jelenlegi helyzet";
 
-/* Feedback type for Unallowed Turn */
-"FEEDBACK_UNALLOWED_TURN" = "Nem engedélyezett";
+/* Title for dismiss button */
+"CARPLAY_DISMISS" = "Mellőzés";
 
-/* Format string for less than; 1 = duration remaining */
-"LESS_THAN" = "%@";
+/* Title for end navigation button */
+"CARPLAY_END" = "Befejezés";
+
+/* Title on the exit button in the arrival form */
+"CARPLAY_EXIT_NAVIGATION" = "Kilépés a navigációból";
+
+/* Title for feedback template in CarPlay */
+"CARPLAY_FEEDBACK" = "Visszajelzés";
+
+/* Title for start button in CPTripPreviewTextConfiguration */
+"CARPLAY_GO" = "Gyerünk";
+
+/* Title for alternative routes in CPTripPreviewTextConfiguration */
+"CARPLAY_MORE_ROUTES" = "Több útvonal";
+
+/* Title for mute button */
+"CARPLAY_MUTE" = "Némítás";
+
+/* CPNavigationAlert OK button title */
+"CARPLAY_OK" = "OK";
+
+/* Title for overview button in CPTripPreviewTextConfiguration */
+"CARPLAY_OVERVIEW" = "Áttekintés";
+
+/* Title for rating template in CarPlay */
+"CARPLAY_RATE_RIDE" = "Rate your ride";
+
+/* Title on rate button in CarPlay */
+"CARPLAY_RATE_TRIP" = "Értékeld az utadat";
+
+/* Message when search returned zero results in CarPlay */
+"CARPLAY_SEARCH_NO_RESULTS" = "Nincsenek találatok";
+
+/* Alert title that shows when feedback has been submitted */
+"CARPLAY_SUBMITTED_FEEDBACK" = "Elküldve";
+
+/* Title for unmute button */
+"CARPLAY_UNMUTE" = "Unmute";
+
+/* Format string for indicating the device volume is low; 1 = device model */
+"DEVICE_VOLUME_LOW" = "%@ Volume Low";
+
+/* Dismiss button title on the steps view */
+"DISMISS_STEPS_TITLE" = "Bezárás";
+
+/* End Navigation Button Text */
+"END_NAVIGATION" = "Navigáció befejezése";
+
+/* Title used for arrival */
+"END_OF_ROUTE_ARRIVED" = "Megérkeztél";
+
+/* Comment Placeholder Text */
+"END_OF_ROUTE_TITLE" = "Hogyan tudnánk fejlődni?";
+
+/* Error message when the SDK is unable to read a spoken instruction. */
+"FAILED_INSTRUCTION" = "Unable to read instruction aloud.";
+
+/* Indicates a faster route was found */
+"FASTER_ROUTE_FOUND" = "Gyorsabb útvonal elérhető";
+
+/* Feedback type for Bad Route */
+"FEEDBACK_BAD_ROUTE" = "Rossz \nútvonal";
+
+/* Feedback type for Confusing Instruction */
+"FEEDBACK_CONFUSING_INSTRUCTION" = "Megtévesztő\nutasítás";
+
+/* Feedback type for Other Map Issue Issue */
+"FEEDBACK_GENERAL_ISSUE" = "Egyéb\ntérkép probléma";
+
+/* Feedback type for Missing Exit */
+"FEEDBACK_MISSING_EXIT" = "Hiányzó\nkijárat";
+
+/* Feedback type for Missing Road */
+"FEEDBACK_MISSING_ROAD" = "Hiányzó\nút";
+
+/* Feedback type for a maneuver that is Not Allowed */
+"FEEDBACK_NOT_ALLOWED" = "Nem\nengedélyezett";
+
+/* Feedback type for Report Traffic */
+"FEEDBACK_REPORT_TRAFFIC" = "Forgalom\njelentése";
+
+/* Feedback type for Road Closed */
+"FEEDBACK_ROAD_CLOSURE" = "Út\nlezárva";
+
+/* Message confirming that the user has successfully sent feedback */
+"FEEDBACK_THANK_YOU" = "Köszönjük bejelentésed!";
+
+/* Title of view controller for sending feedback */
+"FEEDBACK_TITLE" = "Probléma jelentése";
+
+/* Format for displaying the first two major ways */
+"LEG_MAJOR_WAYS_FORMAT" = "%1$@ és %2$@";
+
+/* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
+"LESS_THAN" = "<%@";
+
+/* Accessibility value of label indicating the absence of a rating */
+"NO_RATING" = "Nincs értékelés beállítva.";
+
+/* Rating Reset To Zero Accessability Hint */
+"RATING_ACCESSIBILITY_RESET" = "Tap to reset the rating to zero.";
+
+/* Format for accessibility label of button for setting a rating; 1 = number of stars */
+"RATING_ACCESSIBILITY_SET" = "%ld csillagos értékelés beállítása";
+
+/* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
+"RATING_STARS_FORMAT" = "%ld csillag beállítva.";
 
 /* Indicates that rerouting is in progress */
-"REROUTING" = "Újratervezés...";
+"REROUTING" = "Újratervezés…";
 
 /* Button title for resume tracking */
-"RESUME" = "Resume";
+"RESUME" = "Folytatás";
+
+/* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
+"USER_IN_SIMULATION_MODE" = "Navigáció szimulációja %d× sebességgel";
+
+/* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
+"WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%1$@, ezen keresztül: %2$@";
+
+/* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
+"WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@ és %2$@";
 

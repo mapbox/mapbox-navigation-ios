@@ -1,3 +1,60 @@
+/* Delimiter between lines in an address when displayed inline */
+"ADDRESS_LINE_SEPARATOR" = ", ";
+
+/* Title on arrival action sheet */
+"CARPLAY_ARRIVED" = "Вы прибыли";
+
+/* Message on arrival action sheet */
+"CARPLAY_ARRIVED_MESSAGE" = "Что вы хотите дальше?";
+
+/* Title on continue button in CarPlay */
+"CARPLAY_CONTINUE" = "Продолжить";
+
+/* Name of the waypoint associated with the current location */
+"CARPLAY_CURRENT_LOCATION" = "Текущее положение";
+
+/* Title for dismiss button */
+"CARPLAY_DISMISS" = "Отказаться";
+
+/* Title for end navigation button */
+"CARPLAY_END" = "Завершить";
+
+/* Title on the exit button in the arrival form */
+"CARPLAY_EXIT_NAVIGATION" = "Закончить маршрут";
+
+/* Title for feedback template in CarPlay */
+"CARPLAY_FEEDBACK" = "Отзыв";
+
+/* Title for start button in CPTripPreviewTextConfiguration */
+"CARPLAY_GO" = "Старт";
+
+/* Title for alternative routes in CPTripPreviewTextConfiguration */
+"CARPLAY_MORE_ROUTES" = "Другие маршруты";
+
+/* Title for mute button */
+"CARPLAY_MUTE" = "Без звука";
+
+/* CPNavigationAlert OK button title */
+"CARPLAY_OK" = "Хорошо";
+
+/* Title for overview button in CPTripPreviewTextConfiguration */
+"CARPLAY_OVERVIEW" = "Обзор";
+
+/* Title for rating template in CarPlay */
+"CARPLAY_RATE_RIDE" = "Оцените вашу поездку";
+
+/* Title on rate button in CarPlay */
+"CARPLAY_RATE_TRIP" = "Оцените вашу поездку";
+
+/* Message when search returned zero results in CarPlay */
+"CARPLAY_SEARCH_NO_RESULTS" = "Нет результатов";
+
+/* Alert title that shows when feedback has been submitted */
+"CARPLAY_SUBMITTED_FEEDBACK" = "Отправлено";
+
+/* Title for unmute button */
+"CARPLAY_UNMUTE" = "Звук";
+
 /* Format string for indicating the device volume is low; 1 = device model */
 "DEVICE_VOLUME_LOW" = "Недостаточно места в %@";
 
@@ -26,7 +83,7 @@
 "FEEDBACK_CONFUSING_INSTRUCTION" = "Непонятная\nинструкция";
 
 /* Feedback type for Other Map Issue Issue */
-"FEEDBACK_GENERAL_ISSUE" = "Ошибка\nв карте";
+"FEEDBACK_GENERAL_ISSUE" = "Ошибка\nна карте";
 
 /* Feedback type for Missing Exit */
 "FEEDBACK_MISSING_EXIT" = "Нет\nсъезда";

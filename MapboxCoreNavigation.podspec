@@ -3,15 +3,15 @@ Pod::Spec.new do |s|
   # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.name = "MapboxCoreNavigation"
-  s.version = "0.27.0"
+  s.version = "0.29.0"
   s.summary = "Core components for turn-by-turn navigation on iOS."
 
   s.description  = <<-DESC
   Mapbox Core Navigation provides the core spatial and timing logic for turn-by-turn navigation along a route. For a complete turn-by-turn navigation interface, use the Mapbox Navigation SDK for iOS (MapboxNavigation).
                    DESC
 
-  s.homepage = "https://www.mapbox.com/ios-sdk/navigation/"
-  s.documentation_url = "https://www.mapbox.com/ios-sdk/api/navigation/"
+  s.homepage = "https://docs.mapbox.com/ios/navigation/"
+  s.documentation_url = "https://docs.mapbox.com/ios/api/navigation/"
 
   # ―――  Spec License  ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
@@ -40,9 +40,9 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.module_name = "MapboxCoreNavigation"
 
-  s.dependency "MapboxNavigationNative", "~> 3.4.6"
-  s.dependency "MapboxDirections.swift", "~> 0.26.0"    # Always pin to a patch release if pre-1.0
-  s.dependency "MapboxMobileEvents", "~> 0.6.0"         # Always pin to a patch release if pre-1.0
+  s.dependency "MapboxNavigationNative", "~> 5.0.0"
+  s.dependency "MapboxDirections.swift", "~> 0.27.0"    # Always pin to a patch release if pre-1.0
+  s.dependency "MapboxMobileEvents", "~> 0.8.1"         # Always pin to a patch release if pre-1.0
   s.dependency "Turf", "~> 0.3.0"                       # Always pin to a patch release if pre-1.0
 
   # `swift_version` was introduced in CocoaPods 1.4.0. Without this check, if a user were to

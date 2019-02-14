@@ -41,7 +41,8 @@ class LeaksSpec: QuickSpec {
             let navigationViewController = LeakTest {
                 let directions = DirectionsSpy(accessToken: "deadbeef")
                 let service = MapboxNavigationService(route: route, directions: directions, eventsManagerType: NavigationEventsManagerSpy.self)
-                return NavigationViewController(for: route, navigationService: service, voiceController: RouteVoiceControllerStub())
+                let options = NavigationOptions(navigationService: service, voiceController: RouteVoiceControllerStub())
+                return NavigationViewController(for: route, options: options)
             }
             
             it("must not leak") {

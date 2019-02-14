@@ -5,11 +5,11 @@ workflows:
   default:
     jobs:
       - xcode-10
-      - xcode-9
+      - xcode-10-ios-9
       - xcode-10-bench
       - xcode-10-cocoapods-install
       - xcode-10-cocoapods-update
-      - xcode-9-examples
+      - xcode-10-examples
 
 step-library:
   - &restore-cache
@@ -54,15 +54,17 @@ step-library:
           if (brew outdated | grep carthage > /dev/null); then brew upgrade carthage; fi
           echo "foo" > ~/.mapbox
 
-  - &prepare-iphone6s-plus-ios-11
-      run:
-        name: Prepare iPhone 6s Plus iOS 11
-        command: xcrun instruments -w "iPhone 6 Plus (11.4) [" || true
-
-  - &prepare-iphone6s-plus-ios-12
+  - &prepare-iphone6-plus-ios-12
       run:
         name: Prepare iPhone 6s Plus iOS 12
-        command: xcrun instruments -w "iPhone 6 Plus (12.0) [" || true
+        command: xcrun instruments -w "iPhone 6 Plus (12.1) [" || true
+
+  - &prepare-iphone6s-plus-ios-9
+      run:
+        name: Prepare iPhone 6s Plus iOS 12
+        command: |
+         xcversion simulators --install='iOS 9.3'
+         xcrun instruments -w "iPhone 6s Plus (9.3) [" || true
 
   - &verify-missing-localizable-strings
       run:
@@ -76,41 +78,41 @@ step-library:
         name: Install Dependencies
         command: carthage bootstrap --platform ios --cache-builds --configuration Debug --no-use-binaries
 
-  - &build-test-MapboxCoreNavigation-ios-11
-      run:
-        name: Build and Test MapboxCoreNavigation
-        command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test
-
   - &build-test-MapboxCoreNavigation-ios-12
       run:
         name: Build and Test MapboxCoreNavigation
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test -enableCodeCoverage "YES"
-
-  - &build-test-MapboxNavigation-ios-11
-      run:
-        name: Build and Test MapboxNavigation
-        command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build test
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.1,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test -enableCodeCoverage "YES"
 
   - &build-test-MapboxNavigation-ios-12
       run:
         name: Build and Test MapboxNavigation
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build test -enableCodeCoverage "YES"
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.1,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build test -enableCodeCoverage "YES"
+
+  - &build-MapboxCoreNavigation-ios-9
+      run:
+        name: Build MapboxCoreNavigation
+        command: |
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=9.3,name=iPhone 6s Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build
+
+  - &build-MapboxNavigation-ios-9
+      run:
+        name: Build MapboxNavigation
+        command: |
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=9.3,name=iPhone 6s Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build
 
   - &build-test-Bench-ios-12
       run:
         name: Build and Test Bench
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.0,name=iPhone X' -project MapboxNavigation.xcodeproj -scheme Bench clean build test
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.1,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme Bench clean build test
 
   - &build-Example
       run:
         name: Build Example
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=11.4,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme Example clean build | xcpretty
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.1,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme Example clean build | xcpretty
 
   - &cocoapods-integration-install
       run:
@@ -136,39 +138,38 @@ step-library:
 jobs:
   xcode-10:
     macos:
-      xcode: "10.0.0"
+      xcode: "10.1.0"
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
       - checkout
       - *prepare
-      - *prepare-iphone6s-plus-ios-12
+      - *prepare-iphone6-plus-ios-12
       - *restore-cache
       - *install-dependencies
       - *build-test-MapboxCoreNavigation-ios-12
       - *build-test-MapboxNavigation-ios-12
       - *publish-codecov
       - *save-cache
-
-  xcode-9:
+  
+  xcode-10-ios-9:
     macos:
-      xcode: "9.4.1"
+      xcode: "10.1.0"
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
       - checkout
       - *prepare
-      - *prepare-iphone6s-plus-ios-11
+      - *prepare-iphone6s-plus-ios-9
       - *restore-cache
       - *install-dependencies
-      - *verify-missing-localizable-strings
-      - *build-test-MapboxCoreNavigation-ios-11
-      - *build-test-MapboxNavigation-ios-11
+      - *build-MapboxCoreNavigation-ios-9
+      - *build-MapboxNavigation-ios-9
       - *save-cache
 
   xcode-10-bench:
     macos:
-      xcode: "10.0.0"
+      xcode: "10.1.0"
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
@@ -181,7 +182,7 @@ jobs:
 
   xcode-10-cocoapods-install:
     macos:
-      xcode: "10.0.0"
+      xcode: "10.1.0"
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
@@ -194,7 +195,7 @@ jobs:
 
   xcode-10-cocoapods-update:
     macos:
-      xcode: "10.0.0"
+      xcode: "10.1.0"
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
@@ -205,15 +206,15 @@ jobs:
       - *save-cache-cocoapods
       - *save-cache-podmaster
 
-  xcode-9-examples:
+  xcode-10-examples:
     macos:
-      xcode: "9.4.1"
+      xcode: "10.1.0"
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
       - checkout
       - *prepare
-      - *prepare-iphone6s-plus-ios-11
+      - *prepare-iphone6-plus-ios-12
       - *restore-cache
       - *install-dependencies
       - *build-Example

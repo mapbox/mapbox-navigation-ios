@@ -271,8 +271,8 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
 
         let secondary = VisualInstructionComponent(type: .text, text: "Anytown Avenue", imageURL: nil, abbreviation: "Anytown Ave", abbreviationPriority: 0)
 
-        window.addSubview(view)
         DayStyle().apply()
+        window.addSubview(view)
 
         view.update(for: makeVisualInstruction(.takeOffRamp, .right, primaryInstruction: primary, secondaryInstruction: [secondary]))
         verify(view)
