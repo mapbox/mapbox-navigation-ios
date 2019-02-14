@@ -254,6 +254,7 @@
 		AE00A73A209A2C38006A3DC7 /* StepsViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE00A739209A2C38006A3DC7 /* StepsViewControllerTests.swift */; };
 		AE0EE1212212186000CC7F16 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AE0EE1202212186000CC7F16 /* Assets.xcassets */; };
 		AE0EE1232212192A00CC7F16 /* Bundle+CarPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0EE1222212192A00CC7F16 /* Bundle+CarPlay.swift */; };
+		AE0EE12822122C1200CC7F16 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = AE0EE12622122C1200CC7F16 /* Localizable.strings */; };
 		AE291FFF20975A7E00F23DFC /* NavigationViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED2156E208F7FEA009AA673 /* NavigationViewControllerTests.swift */; };
 		AE38B56B21F8C11D0041B384 /* MapboxCarPlay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE38B56221F8C11C0041B384 /* MapboxCarPlay.framework */; };
 		AE38B57421F8C11D0041B384 /* MapboxCarPlay.h in Headers */ = {isa = PBXBuildFile; fileRef = AE38B56421F8C11D0041B384 /* MapboxCarPlay.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -918,6 +919,7 @@
 		AE00A739209A2C38006A3DC7 /* StepsViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepsViewControllerTests.swift; sourceTree = "<group>"; };
 		AE0EE1202212186000CC7F16 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AE0EE1222212192A00CC7F16 /* Bundle+CarPlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+CarPlay.swift"; sourceTree = "<group>"; };
+		AE0EE12722122C1200CC7F16 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = MapboxCarPlay/Resources/Base.lproj/Localizable.strings; sourceTree = SOURCE_ROOT; };
 		AE38B56221F8C11C0041B384 /* MapboxCarPlay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MapboxCarPlay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE38B56421F8C11D0041B384 /* MapboxCarPlay.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MapboxCarPlay.h; sourceTree = "<group>"; };
 		AE38B56521F8C11D0041B384 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -934,6 +936,11 @@
 		AE997D2121137B8B00EB0AAB /* String+LocalizedConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+LocalizedConstants.swift"; sourceTree = "<group>"; };
 		AEC3AC992106703100A26F34 /* HighwayShield.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighwayShield.swift; sourceTree = "<group>"; };
 		AED2156E208F7FEA009AA673 /* NavigationViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewControllerTests.swift; sourceTree = "<group>"; };
+		AEE943932215BDD3006DEC40 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = ../../Resources/sv.lproj/Localizable.strings; sourceTree = "<group>"; };
+		AEE943942215BDD8006DEC40 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = ../../Resources/vi.lproj/Localizable.strings; sourceTree = "<group>"; };
+		AEE943952215BDDC006DEC40 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = ../../Resources/hu.lproj/Localizable.strings; sourceTree = "<group>"; };
+		AEE943962215BDE0006DEC40 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ../../Resources/ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		AEE943972215BE0C006DEC40 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "../../Resources/pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		AEF2C8F12072B603007B061F /* routeWithTunnels_9thStreetDC.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = routeWithTunnels_9thStreetDC.json; sourceTree = "<group>"; };
 		C51511D020EAC89D00372A91 /* CPMapTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPMapTemplate.swift; sourceTree = "<group>"; };
 		C51DF8651F38C31C006C6A15 /* Locale.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Locale.swift; sourceTree = "<group>"; };
@@ -1313,18 +1320,10 @@
 			path = Example;
 			sourceTree = "<group>";
 		};
-		3507F9FD213430CB0086B39E /* CarPlay */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = CarPlay;
-			sourceTree = "<group>";
-		};
 		351BEBD81E5BCC28006FE110 /* MapboxNavigation */ = {
 			isa = PBXGroup;
 			children = (
 				8DCB4246218A53F500D6FCAD /* Protocols */,
-				3507F9FD213430CB0086B39E /* CarPlay */,
 				C51923B41EA55C5E002AF9E1 /* Extensions */,
 				356B7D8A1EE166E100FE5B89 /* scripts */,
 				351BEC201E5BD4DC006FE110 /* Supporting files */,
@@ -1592,6 +1591,7 @@
 			isa = PBXGroup;
 			children = (
 				AE0EE1202212186000CC7F16 /* Assets.xcassets */,
+				AE0EE12622122C1200CC7F16 /* Localizable.strings */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -2405,6 +2405,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AE0EE1212212186000CC7F16 /* Assets.xcassets in Resources */,
+				AE0EE12822122C1200CC7F16 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3061,6 +3062,19 @@
 				35CDA81221908F310072B675 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		AE0EE12622122C1200CC7F16 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				AE0EE12722122C1200CC7F16 /* Base */,
+				AEE943932215BDD3006DEC40 /* sv */,
+				AEE943942215BDD8006DEC40 /* vi */,
+				AEE943952215BDDC006DEC40 /* hu */,
+				AEE943962215BDE0006DEC40 /* ru */,
+				AEE943972215BE0C006DEC40 /* pt-PT */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 		C520EE921EBB84F9008805BC /* Navigation.storyboard */ = {

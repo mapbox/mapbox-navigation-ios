@@ -5,6 +5,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 EXAMPLE="${DIR}/../Example"
 NAVIGATION="${DIR}/../MapboxNavigation"
 CORE="${DIR}/../MapboxCoreNavigation"
+CARPLAY="${DIR}/../MapboxCarPlay"
 
 LANGUAGES=( "Base" )
 
@@ -27,6 +28,11 @@ do
     # Extract localizable strings from .swift files
     find ${CORE} -name "*.swift" -print0 | xargs -0 xcrun extractLocStrings -o "${CORE}/Resources/${lang}.lproj"
     STRINGS_FILE="${CORE}/Resources/${lang}.lproj/Localizable.strings"
+    convertIfNeeded ${STRINGS_FILE}
+
+    # Extract localizable strings from .swift files
+    find ${CARPLAY} -name "*.swift" -print0 | xargs -0 xcrun extractLocStrings -o "${CARPLAY}/Resources/${lang}.lproj"
+    STRINGS_FILE="${CARPLAY}/Resources/${lang}.lproj/Localizable.strings"
     convertIfNeeded ${STRINGS_FILE}
 
     # Extract localizable strings from storyboard

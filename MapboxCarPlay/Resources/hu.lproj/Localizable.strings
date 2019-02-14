@@ -1,0 +1,56 @@
+/* Delimiter between lines in an address when displayed inline */
+"ADDRESS_LINE_SEPARATOR" = ", ";
+
+/* Title on arrival action sheet */
+"CARPLAY_ARRIVED" = "Megérkeztél";
+
+/* Message on arrival action sheet */
+"CARPLAY_ARRIVED_MESSAGE" = "Mit szeretnél tenni?";
+
+/* Title on continue button in CarPlay */
+"CARPLAY_CONTINUE" = "Folytatás";
+
+/* Name of the waypoint associated with the current location */
+"CARPLAY_CURRENT_LOCATION" = "Jelenlegi helyzet";
+
+/* Title for dismiss button */
+"CARPLAY_DISMISS" = "Mellőzés";
+
+/* Title for end navigation button */
+"CARPLAY_END" = "Befejezés";
+
+/* Title on the exit button in the arrival form */
+"CARPLAY_EXIT_NAVIGATION" = "Kilépés a navigációból";
+
+/* Title for feedback template in CarPlay */
+"CARPLAY_FEEDBACK" = "Visszajelzés";
+
+/* Title for start button in CPTripPreviewTextConfiguration */
+"CARPLAY_GO" = "Gyerünk";
+
+/* Title for alternative routes in CPTripPreviewTextConfiguration */
+"CARPLAY_MORE_ROUTES" = "Több útvonal";
+
+/* Title for mute button */
+"CARPLAY_MUTE" = "Némítás";
+
+/* CPNavigationAlert OK button title */
+"CARPLAY_OK" = "OK";
+
+/* Title for overview button in CPTripPreviewTextConfiguration */
+"CARPLAY_OVERVIEW" = "Áttekintés";
+
+/* Title for rating template in CarPlay */
+"CARPLAY_RATE_RIDE" = "Rate your ride";
+
+/* Title on rate button in CarPlay */
+"CARPLAY_RATE_TRIP" = "Értékeld az utadat";
+
+/* Message when search returned zero results in CarPlay */
+"CARPLAY_SEARCH_NO_RESULTS" = "Nincsenek találatok";
+
+/* Alert title that shows when feedback has been submitted */
+"CARPLAY_SUBMITTED_FEEDBACK" = "Elküldve";
+
+/* Title for unmute button */
+"CARPLAY_UNMUTE" = "Unmute";
