@@ -252,7 +252,6 @@
 		8DEDEF3421E3FBE80049E114 /* NavigationViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DEDEF3321E3FBE80049E114 /* NavigationViewControllerDelegate.swift */; };
 		8DF399B21FB257B30034904C /* UIGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DF399B11FB257B30034904C /* UIGestureRecognizer.swift */; };
 		AE00A73A209A2C38006A3DC7 /* StepsViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE00A739209A2C38006A3DC7 /* StepsViewControllerTests.swift */; };
-		AE0EE1212212186000CC7F16 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AE0EE1202212186000CC7F16 /* Assets.xcassets */; };
 		AE0EE1232212192A00CC7F16 /* Bundle+CarPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0EE1222212192A00CC7F16 /* Bundle+CarPlay.swift */; };
 		AE0EE12822122C1200CC7F16 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = AE0EE12622122C1200CC7F16 /* Localizable.strings */; };
 		AE291FFF20975A7E00F23DFC /* NavigationViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED2156E208F7FEA009AA673 /* NavigationViewControllerTests.swift */; };
@@ -289,6 +288,7 @@
 		AE8434F82211DB23005C3933 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3537DCE621E6447600E78CE6 /* Date.swift */; };
 		AE997D2221137B8B00EB0AAB /* String+LocalizedConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE997D2121137B8B00EB0AAB /* String+LocalizedConstants.swift */; };
 		AEC3AC9A2106703100A26F34 /* HighwayShield.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC3AC992106703100A26F34 /* HighwayShield.swift */; };
+		AEE9439A22174D90006DEC40 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AEE9439922174D90006DEC40 /* Assets.xcassets */; };
 		AEEDC49621F9139900CE60B9 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
 		AEEDC49721F9139D00CE60B9 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35B1AEB920AD9AE600C8544E /* Quick.framework */; };
 		AEEDC49821F913A100CE60B9 /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01BC1E66259600D765C2 /* Polyline.framework */; };
@@ -917,7 +917,6 @@
 		8DF8E4E52202696800B29FEF /* MapboxNavigation.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = MapboxNavigation.podspec; sourceTree = "<group>"; };
 		8DF8E4E62202696800B29FEF /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
 		AE00A739209A2C38006A3DC7 /* StepsViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepsViewControllerTests.swift; sourceTree = "<group>"; };
-		AE0EE1202212186000CC7F16 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AE0EE1222212192A00CC7F16 /* Bundle+CarPlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+CarPlay.swift"; sourceTree = "<group>"; };
 		AE0EE12722122C1200CC7F16 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = MapboxCarPlay/Resources/Base.lproj/Localizable.strings; sourceTree = SOURCE_ROOT; };
 		AE38B56221F8C11C0041B384 /* MapboxCarPlay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MapboxCarPlay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -941,6 +940,7 @@
 		AEE943952215BDDC006DEC40 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = ../../Resources/hu.lproj/Localizable.strings; sourceTree = "<group>"; };
 		AEE943962215BDE0006DEC40 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ../../Resources/ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		AEE943972215BE0C006DEC40 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "../../Resources/pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		AEE9439922174D90006DEC40 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = MapboxCarPlay/Resources/Assets.xcassets; sourceTree = SOURCE_ROOT; };
 		AEF2C8F12072B603007B061F /* routeWithTunnels_9thStreetDC.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = routeWithTunnels_9thStreetDC.json; sourceTree = "<group>"; };
 		C51511D020EAC89D00372A91 /* CPMapTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPMapTemplate.swift; sourceTree = "<group>"; };
 		C51DF8651F38C31C006C6A15 /* Locale.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Locale.swift; sourceTree = "<group>"; };
@@ -1582,7 +1582,7 @@
 		AE0EE11F2212183D00CC7F16 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				AE0EE1202212186000CC7F16 /* Assets.xcassets */,
+				AEE9439922174D90006DEC40 /* Assets.xcassets */,
 				AE0EE12622122C1200CC7F16 /* Localizable.strings */,
 			);
 			name = Resources;
@@ -2397,7 +2397,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AE0EE1212212186000CC7F16 /* Assets.xcassets in Resources */,
+				AEE9439A22174D90006DEC40 /* Assets.xcassets in Resources */,
 				AE0EE12822122C1200CC7F16 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
