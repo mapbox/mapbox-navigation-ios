@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
   # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.name         = "MapboxCarPlay"
-  s.version      = "0.28.0"
+  s.version      = "0.29.0"
   s.summary      = "CarPlay features and functionalities for turn-by-turn navigation on iOS."
 
   s.description  = <<-DESC
