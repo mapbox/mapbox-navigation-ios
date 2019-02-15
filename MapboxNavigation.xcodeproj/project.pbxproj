@@ -1579,21 +1579,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		AE0EE11E2212182300CC7F16 /* Supporting files */ = {
-			isa = PBXGroup;
-			children = (
-				AE0EE11F2212183D00CC7F16 /* Resources */,
-			);
-			path = "Supporting files";
-			sourceTree = "<group>";
-		};
 		AE0EE11F2212183D00CC7F16 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
 				AE0EE1202212186000CC7F16 /* Assets.xcassets */,
 				AE0EE12622122C1200CC7F16 /* Localizable.strings */,
 			);
-			path = Resources;
+			name = Resources;
+			path = "Supporting files/Resources";
 			sourceTree = "<group>";
 		};
 		AE38B56321F8C11D0041B384 /* MapboxCarPlay */ = {
@@ -1610,7 +1603,7 @@
 				C51511D020EAC89D00372A91 /* CPMapTemplate.swift */,
 				AE38B56421F8C11D0041B384 /* MapboxCarPlay.h */,
 				AE38B56521F8C11D0041B384 /* Info.plist */,
-				AE0EE11E2212182300CC7F16 /* Supporting files */,
+				AE0EE11F2212183D00CC7F16 /* Resources */,
 				AE38B59921F8D7250041B384 /* Extensions */,
 			);
 			path = MapboxCarPlay;

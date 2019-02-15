@@ -30,6 +30,10 @@ Pod::Spec.new do |s|
 
   s.source = { :git => "https://github.com/mapbox/mapbox-navigation-ios.git", :tag => "v#{s.version.to_s}" }
 
+  # ――― Resources ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
+
+  s.resources = ['MapboxCarPlay/Resources/*/*', 'MapboxCarPlay/Resources/*']
+
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.source_files = "MapboxCarPlay/**/*.{h,m,swift}"
