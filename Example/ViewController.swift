@@ -125,8 +125,11 @@ class ViewController: UIViewController {
     }
     
     @IBAction func openSettings() {
-        let controller = UINavigationController(rootViewController: SettingsViewController())
+        let controller = OfflineNavigationViewController()
         present(controller, animated: true, completion: nil)
+        
+//        let controller = UINavigationController(rootViewController: SettingsViewController())
+//        present(controller, animated: true, completion: nil)
     }
 
     // MARK: Gesture Recognizer Handlers
