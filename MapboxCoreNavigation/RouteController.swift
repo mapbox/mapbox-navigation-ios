@@ -59,6 +59,18 @@ open class RouteController: NSObject {
     
     var isFirstLocation: Bool = true
     
+    var cumulativeDistanceTraveled: CLLocationDistance {
+        return navigator.getTrackedRoutes().map { CLLocationDistance($0.distance) }.reduce(0, +) + routeProgress.distanceTraveled
+    }
+    
+    var cumulativeTotalDistance: CLLocationDistance {
+        return navigator.getTrackedRoutes().map { CLLocationDistance($0.distance) }.reduce(0, +) + route.distance
+    }
+    
+    var cumulativeProgressCompleted: Double {
+        return cumulativeDistanceTraveled / cumulativeTotalDistance
+    }
+    
     @objc public var config: MBNavigatorConfig? {
         get {
             return navigator.getConfig()
@@ -229,8 +241,10 @@ open class RouteController: NSObject {
         if willChangeVisualIndex || isFirstLocation {
             let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
             currentStepProgress.visualInstructionIndex = Int(status.bannerInstruction?.index ?? 0)
-            let instruction = currentStepProgress.currentVisualInstruction
-            announcePassage(of: instruction!, routeProgress: routeProgress)
+            
+            if let instruction = currentStepProgress.currentVisualInstruction {
+                announcePassage(of: instruction, routeProgress: routeProgress)
+            }
         }
     }
     

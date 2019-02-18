@@ -24,11 +24,15 @@ public protocol Plotter {
 
 public struct CoordinatePlotter: Plotter {
     public let coordinates: [CLLocationCoordinate2D]
+    public let coordinateText: [String]?
+    public let fontSize: CGFloat
     public let color: UIColor
     public let drawIndexesAsText: Bool
     
-    public init(coordinates: [CLLocationCoordinate2D], color: UIColor, drawIndexesAsText: Bool) {
+    public init(coordinates: [CLLocationCoordinate2D], coordinateText: [String]? = nil, fontSize: CGFloat = 9, color: UIColor, drawIndexesAsText: Bool) {
         self.coordinates = coordinates
+        self.coordinateText = coordinateText
+        self.fontSize = fontSize
         self.color = color
         self.drawIndexesAsText = drawIndexesAsText
     }
@@ -118,6 +122,11 @@ extension CoordinatePlotter {
             
             if drawIndexesAsText {
                 plotter.drawText(at: centeredPosition, text: "\(i)")
+            }
+            
+            if let coordinateText = coordinateText {
+                let text = coordinateText[i]
+                plotter.drawText(at: centeredPosition, text: text, fontSize: fontSize)
             }
         }
     }
@@ -265,9 +274,9 @@ extension UIView {
         path.stroke()
     }
     
-    fileprivate func drawText(at point: CGPoint, text: String) {
+    fileprivate func drawText(at point: CGPoint, text: String, fontSize: CGFloat = 9) {
         let context = UIGraphicsGetCurrentContext()!
-        let textRect = CGRect(origin: point, size: CGSize(width: 50, height: 20))
+        let textRect = CGRect(origin: point, size: CGSize(width: 80, height: 20))
         let textStyle = NSMutableParagraphStyle()
         textStyle.alignment = .left
         
@@ -278,7 +287,7 @@ extension UIView {
         #endif
         
         attributes = [
-            .font: UIFont.systemFont(ofSize: 9, weight: .medium),
+            .font: UIFont.systemFont(ofSize: fontSize, weight: .medium),
             .foregroundColor: UIColor.white,
             .paragraphStyle: textStyle,
             .strokeColor: UIColor.black,
