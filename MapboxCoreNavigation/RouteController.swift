@@ -32,7 +32,6 @@ open class RouteController: NSObject {
         }
         set {
             routeProgress = RouteProgress(route: newValue)
-            updateNavigator()
         }
     }
     
@@ -58,6 +57,23 @@ open class RouteController: NSObject {
     var previousArrivalWaypoint: Waypoint?
     
     var isFirstLocation: Bool = true
+    
+    var cumulativeDistanceTraveled: CLLocationDistance {
+        let distance = navigator.getTrackedRoutes()
+            .flatMap { $0.progresses }
+            .map { $0.initialStatus.remainingLegDistance - $0.finalStatus.remainingLegDistance }
+            .reduce(0, +)
+        
+        return CLLocationDistance(distance)
+    }
+    
+    var cumulativeTotalDistance: CLLocationDistance {
+        return navigator.getTrackedRoutes().map { CLLocationDistance($0.distance) }.reduce(0, +)
+    }
+    
+    var cumulativeProgressCompleted: Double {
+        return cumulativeDistanceTraveled / cumulativeTotalDistance
+    }
     
     @objc public var config: MBNavigatorConfig? {
         get {
@@ -229,8 +245,10 @@ open class RouteController: NSObject {
         if willChangeVisualIndex || isFirstLocation {
             let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
             currentStepProgress.visualInstructionIndex = Int(status.bannerInstruction?.index ?? 0)
-            let instruction = currentStepProgress.currentVisualInstruction
-            announcePassage(of: instruction!, routeProgress: routeProgress)
+            
+            if let instruction = currentStepProgress.currentVisualInstruction {
+                announcePassage(of: instruction, routeProgress: routeProgress)
+            }
         }
     }
     

@@ -52,8 +52,6 @@ class SimulatedLocationManagerTests: FBSnapshotTestCase {
         XCTAssert(notTooLittle, "Not enough time elapsed")
         XCTAssert(notTooMuch, "Too much time elapsed.")
     }
-    
-
 }
 
 class SimulatedLocationManagerSpy: NSObject, CLLocationManagerDelegate {

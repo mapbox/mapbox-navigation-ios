@@ -1,5 +1,5 @@
 binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" ~> 4.3
-binary "https://www.mapbox.com/ios-sdk/MapboxNavigationNative.json" ~> 5.0.0
+binary "https://www.mapbox.com/ios-sdk/MapboxNavigationNative.json" == 5.0.0-alpha.kk.prior.progress.10
 github "mapbox/MapboxDirections.swift" ~> 0.27.0
 github "mapbox/turf-swift" ~> 0.3
 github "mapbox/mapbox-events-ios" ~> 0.8.1

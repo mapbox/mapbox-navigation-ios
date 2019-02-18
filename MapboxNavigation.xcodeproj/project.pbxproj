@@ -204,6 +204,10 @@
 		35D825FC1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 35D825FA1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m */; };
 		35D825FE1E6A2EC60088F83B /* MapboxNavigation.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D825FD1E6A2EC60088F83B /* MapboxNavigation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		35DA85791FC45787004092EC /* StatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DA85781FC45787004092EC /* StatusView.swift */; };
+		35DACECF2215B33000D49EE3 /* HistoricRouteProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DACECE2215B33000D49EE3 /* HistoricRouteProgressTests.swift */; };
+		35DACED12215B50200D49EE3 /* historic-route-progress-reroute.json in Resources */ = {isa = PBXBuildFile; fileRef = 35DACED02215B50200D49EE3 /* historic-route-progress-reroute.json */; };
+		35DACED32215B52600D49EE3 /* historic-route-progress.json in Resources */ = {isa = PBXBuildFile; fileRef = 35DACED22215B52600D49EE3 /* historic-route-progress.json */; };
+		35DACED52215B54400D49EE3 /* historic-route-progress.trace.json in Resources */ = {isa = PBXBuildFile; fileRef = 35DACED42215B54400D49EE3 /* historic-route-progress.trace.json */; };
 		35DC585D1FABC61100B5A956 /* InstructionsBannerViewIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DC585C1FABC61100B5A956 /* InstructionsBannerViewIntegrationTests.swift */; };
 		35DC9D8F1F4321CC001ECD64 /* route-with-lanes.json in Resources */ = {isa = PBXBuildFile; fileRef = 35DC9D8E1F4321CC001ECD64 /* route-with-lanes.json */; };
 		35DC9D911F4323AA001ECD64 /* LanesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DC9D901F4323AA001ECD64 /* LanesView.swift */; };
@@ -772,6 +776,10 @@
 		35D825FA1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MGLMapView+MGLNavigationAdditions.m"; sourceTree = "<group>"; };
 		35D825FD1E6A2EC60088F83B /* MapboxNavigation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapboxNavigation.h; sourceTree = "<group>"; };
 		35DA85781FC45787004092EC /* StatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusView.swift; sourceTree = "<group>"; };
+		35DACECE2215B33000D49EE3 /* HistoricRouteProgressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricRouteProgressTests.swift; sourceTree = "<group>"; };
+		35DACED02215B50200D49EE3 /* historic-route-progress-reroute.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "historic-route-progress-reroute.json"; sourceTree = "<group>"; };
+		35DACED22215B52600D49EE3 /* historic-route-progress.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "historic-route-progress.json"; sourceTree = "<group>"; };
+		35DACED42215B54400D49EE3 /* historic-route-progress.trace.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "historic-route-progress.trace.json"; sourceTree = "<group>"; };
 		35DC585C1FABC61100B5A956 /* InstructionsBannerViewIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsBannerViewIntegrationTests.swift; sourceTree = "<group>"; };
 		35DC9D8E1F4321CC001ECD64 /* route-with-lanes.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "route-with-lanes.json"; sourceTree = "<group>"; };
 		35DC9D901F4323AA001ECD64 /* LanesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanesView.swift; sourceTree = "<group>"; };
@@ -1142,6 +1150,9 @@
 				35CDA8882190F5100072B675 /* sthlm-double-back-replay.json */,
 				35CDA8852190F50A0072B675 /* sthlm-double-back.json */,
 				C5EF397420599120009A2C50 /* straight-line.json */,
+				35DACED02215B50200D49EE3 /* historic-route-progress-reroute.json */,
+				35DACED22215B52600D49EE3 /* historic-route-progress.json */,
+				35DACED42215B54400D49EE3 /* historic-route-progress.trace.json */,
 			);
 			path = Fixtures;
 			sourceTree = "<group>";
@@ -1335,6 +1346,7 @@
 				8D9CD7FD20880581004DC4B3 /* XCTestCase.swift */,
 				3597ABCF21553B6F00C12785 /* SimulatedLocationManagerTests.swift */,
 				3573EA70215A5A9F009899D7 /* RouteControllerSnapshotTests.swift */,
+				35DACECE2215B33000D49EE3 /* HistoricRouteProgressTests.swift */,
 			);
 			path = MapboxNavigationTests;
 			sourceTree = "<group>";
@@ -2131,9 +2143,11 @@
 				3557506F21A8293E00AEF9B6 /* tiles in Resources */,
 				35CDA8902190F6980072B675 /* route-doubling-back.json in Resources */,
 				35CDA8952190F6980072B675 /* route-with-straight-roundabout.json in Resources */,
+				35DACED52215B54400D49EE3 /* historic-route-progress.trace.json in Resources */,
 				35CDA8982190F6980072B675 /* turn_left.data in Resources */,
 				35CDA8962190F6980072B675 /* sthlm-double-back-replay.json in Resources */,
 				35CDA8922190F6980072B675 /* route-with-banner-instructions.json in Resources */,
+				35DACED12215B50200D49EE3 /* historic-route-progress-reroute.json in Resources */,
 				35C8DBF42191937A0053328C /* routeWithInstructions.json in Resources */,
 				355832AD2192F7E300141922 /* PipeFittersUnion-FourSeasonsBoston.trace.json in Resources */,
 				35CDA8942190F6980072B675 /* route-with-lanes.json in Resources */,
@@ -2147,6 +2161,7 @@
 				35CDA8932190F6980072B675 /* route-with-instructions.json in Resources */,
 				35C8DBF8219198320053328C /* route.json in Resources */,
 				355832AB2192F60800141922 /* PipeFittersUnion-FourSeasonsBoston.json in Resources */,
+				35DACED32215B52600D49EE3 /* historic-route-progress.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2452,6 +2467,7 @@
 				16E3625C201265D600DF0592 /* ImageDownloadOperationSpy.swift in Sources */,
 				1662244B2029059C00EA4824 /* ImageCacheTests.swift in Sources */,
 				3510300F1F54B67000E3B7E7 /* LaneTests.swift in Sources */,
+				35DACECF2215B33000D49EE3 /* HistoricRouteProgressTests.swift in Sources */,
 				160A4A712127A46C0028B070 /* CPBarButton+MBTestable.m in Sources */,
 				169A970A216440820082A6A0 /* NavigationViewControllerTestDoubles.swift in Sources */,
 				DAE22A2921C9DEDA00CA269D /* MGLVectorTileSourceTests.swift in Sources */,
