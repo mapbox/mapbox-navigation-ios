@@ -402,12 +402,12 @@ extension CarPlayManager: CPListTemplateDelegate {
         
         guard let interfaceController = interfaceController,
               let mapTemplate = interfaceController.rootTemplate as? CPMapTemplate else {
-            return
+                return
         }
         
         if let error = error {
             guard let delegate = delegate,
-                  let alert = delegate.carplayManager?(self, didFailToFetchRouteBetweenWaypoints: waypoints, options: routeOptions, error: error) else {
+                  let alert = delegate.carPlayManager?(self, didFailToFetchRouteBetween: waypoints, options: routeOptions, error: error) else {
                     return
             }
 

@@ -103,7 +103,7 @@ public protocol CarPlayManagerDelegate {
      - returns Optionally, a CPNavigationAlert to present to the user. If an alert is returned, Carplay will transition back to the map template and display the alert. If `nil` is returned, nothing is done.
      */
     @objc(carPlayManager:didFailToFetchRouteBetweenWaypoints:withOptions:becauseOfError:)
-    optional func carplayManager(_ carPlayManager: CarPlayManager, didFailToFetchRouteBetweenWaypoints waypoints: [Waypoint]?, options: RouteOptions, error: NSError) -> CPNavigationAlert?
+    optional func carPlayManager(_ carPlayManager: CarPlayManager, didFailToFetchRouteBetween waypoints: [Waypoint]?, options: RouteOptions, error: NSError) -> CPNavigationAlert?
     
     /**
      Offers the delegate the opportunity to customize a trip before it is presented to the user to preview.
