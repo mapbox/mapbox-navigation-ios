@@ -229,8 +229,10 @@ open class RouteController: NSObject {
         if willChangeVisualIndex || isFirstLocation {
             let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
             currentStepProgress.visualInstructionIndex = Int(status.bannerInstruction?.index ?? 0)
-            let instruction = currentStepProgress.currentVisualInstruction
-            announcePassage(of: instruction!, routeProgress: routeProgress)
+            
+            if let instruction = currentStepProgress.currentVisualInstruction {
+                announcePassage(of: instruction, routeProgress: routeProgress)
+            }
         }
     }
     
