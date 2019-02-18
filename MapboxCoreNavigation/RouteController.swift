@@ -258,7 +258,11 @@ open class RouteController: NSObject {
                 let advancesToNextLeg = delegate?.router?(self, didArriveAt: currentDestination) ?? DefaultBehavior.didArriveAtWaypoint
                 guard !routeProgress.isFinalLeg && advancesToNextLeg else { return }
                 
-                routeProgress.legIndex = Int(status.legIndex)
+                if advancesToNextLeg {
+                    let legIndex = status.legIndex + 1
+                    navigator.changeRouteLeg(forRoute: 0, leg: legIndex)
+                    routeProgress.legIndex = Int(legIndex)
+                }
             }
         }
     }
