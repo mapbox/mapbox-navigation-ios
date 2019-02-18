@@ -395,7 +395,7 @@ extension CarPlayManager: CPListTemplateDelegate {
     }
     
     
-    internal func didCalculate(_ routes: [Route]?, for routeOptions: RouteOptions, between waypoints: [Waypoint]?, error: NSError?, completionHandler: @escaping () -> Void) {
+    internal func didCalculate(_ routes: [Route]?, for routeOptions: RouteOptions, between waypoints: [Waypoint]?, error: NSError?, completionHandler: CompletionHandler) {
         defer {
             completionHandler()
         }
@@ -406,16 +406,12 @@ extension CarPlayManager: CPListTemplateDelegate {
         }
         
         if let error = error {
-            let okTitle = NSLocalizedString("CARPLAY_OK", bundle: .mapboxNavigation, value: "OK", comment: "CPNavigationAlert OK button title")
-            let okAction = CPAlertAction(title: okTitle, style: .default) { _ in
-                interfaceController.popToRootTemplate(animated: true)
+            guard let delegate = delegate,
+                  let alert = delegate.carplayManager?(self, didFailToFetchRouteBetweenWaypoints: waypoints, options: routeOptions, error: error) else {
+                    return
             }
-            let alert = CPNavigationAlert(titleVariants: [error.localizedDescription],
-                                          subtitleVariants: [error.localizedFailureReason ?? ""],
-                                          imageSet: nil,
-                                          primaryAction: okAction,
-                                          secondaryAction: nil,
-                                          duration: 0)
+
+            interfaceController.popToRootTemplate(animated: true)
             mapTemplate.present(navigationAlert: alert, animated: true)
         }
         

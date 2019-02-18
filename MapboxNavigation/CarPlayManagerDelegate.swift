@@ -94,6 +94,18 @@ public protocol CarPlayManagerDelegate {
     optional func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void)
     
     /**
+     Called when the CarPlay manager fails to fetch a route.
+     - parameter carPlayManager: The shared CarPlay manager.
+     - parameter waypoints: the waypoints for which a route could not be retrieved.
+     - parameter options: The route options that were attached to the route request.
+     - parameter error: The error returned from the directions API.
+     
+     - returns Optionally, a CPNavigationAlert to present to the user. If an alert is returned, Carplay will transition back to the map template and display the alert. If `nil` is returned, nothing is done.
+     */
+    @objc(carPlayManager:didFailToFetchRouteBetweenWaypoints:withOptions:becauseOfError:)
+    optional func carplayManager(_ carPlayManager: CarPlayManager, didFailToFetchRouteBetweenWaypoints waypoints: [Waypoint]?, options: RouteOptions, error: NSError) -> CPNavigationAlert?
+    
+    /**
      Offers the delegate the opportunity to customize a trip before it is presented to the user to preview.
      
      - parameter carPlayManager: The shared CarPlay manager.
