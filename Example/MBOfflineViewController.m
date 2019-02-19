@@ -23,8 +23,8 @@
     
     self.navigationDirections = [[MBNavigationDirections alloc] initWithAccessToken:[MBDirections sharedDirections].accessToken host:[MBDirections sharedDirections].apiEndpoint.host];
     
-    CLLocationCoordinate2D southWest = CLLocationCoordinate2DMake(39.13991, -84.73858);
-    CLLocationCoordinate2D northEast = CLLocationCoordinate2DMake(39.00665, -84.41586);
+    CLLocationCoordinate2D southWest = CLLocationCoordinate2DMake(39.00665, -84.73858);
+    CLLocationCoordinate2D northEast = CLLocationCoordinate2DMake(39.13991, -84.41586);
     
     [self downloadMapTilesInCoordinateBounds:MGLCoordinateBoundsMake(southWest, northEast)];
 }
