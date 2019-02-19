@@ -400,10 +400,7 @@ extension CarPlayManager: CPListTemplateDelegate {
             completionHandler()
         }
         
-        guard let interfaceController = interfaceController,
-              let mapTemplate = interfaceController.rootTemplate as? CPMapTemplate else {
-                return
-        }
+
         
         if let error = error {
             guard let delegate = delegate,
@@ -411,8 +408,10 @@ extension CarPlayManager: CPListTemplateDelegate {
                     return
             }
 
-            interfaceController.popToRootTemplate(animated: true)
-            mapTemplate.present(navigationAlert: alert, animated: true)
+            let mapTemplate = interfaceController?.rootTemplate as? CPMapTemplate
+            interfaceController?.popToRootTemplate(animated: true)
+            mapTemplate?.present(navigationAlert: alert, animated: true)
+            return
         }
         
         guard let waypoints = waypoints, let routes = routes else {
@@ -448,7 +447,10 @@ extension CarPlayManager: CPListTemplateDelegate {
         let previewMapTemplate = mapTemplateProvider.mapTemplate(forPreviewing: trip, traitCollection: traitCollection, mapDelegate: self)
 
         previewMapTemplate.showTripPreviews([trip], textConfiguration: previewText)
-
+        
+        guard let interfaceController = interfaceController else {
+                return
+        }
         interfaceController.pushTemplate(previewMapTemplate, animated: true)
     }
 

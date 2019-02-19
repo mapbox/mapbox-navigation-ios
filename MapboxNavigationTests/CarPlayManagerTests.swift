@@ -213,6 +213,21 @@ class CarPlayManagerTests: XCTestCase {
         XCTAssertTrue(exampleDelegate.navigationEnded, "The CarPlayManagerDelegate should have been told that navigation ended.")
     }
     
+    func testRouteFailure() {
+        
+        let manager = CarPlayManager()
+        
+        let spy = CarPlayManagerFailureDelegateSpy()
+        let testError = NSError(domain: "com.mapbox.test", code: 42, userInfo: nil)
+        let locOne = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+        let fakeOptions = RouteOptions(coordinates: [locOne])
+        manager.delegate = spy
+        manager.didCalculate(nil, for: fakeOptions, between: nil, error: testError, completionHandler: { })
+        XCTAssert(spy.recievedError == testError, "Delegate should have receieved error")
+        
+    }
+    
+    
     func testDirectionsOverride() {
         
         class DirectionsInvocationSpy: Directions {
@@ -428,6 +443,25 @@ func simulateCarPlayConnection(_ manager: CarPlayManager) {
     let fakeWindow = CPWindow()
     
     manager.application(UIApplication.shared, didConnectCarInterfaceController: fakeInterfaceController, to: fakeWindow)
+}
+
+@available(iOS 12.0, *)
+class CarPlayManagerFailureDelegateSpy: CarPlayManagerDelegate {
+    private(set) var recievedError: NSError?
+    
+    @available(iOS 12.0, *)
+    func carPlayManager(_ carPlayManager: CarPlayManager, didFailToFetchRouteBetween waypoints: [Waypoint]?, options: RouteOptions, error: NSError) -> CPNavigationAlert? {
+        recievedError = error
+        return nil
+    }
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith service: NavigationService) {
+        fatalError("This is an empty stub.")
+    }
+    
+    func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
+        fatalError("This is an empty stub.")
+    }
 }
 
 //MARK: Test Objects / Classes.
