@@ -79,6 +79,8 @@ open class LegacyRouteController: NSObject, Router, CLLocationManagerDelegate {
     var movementsAwayFromRoute = 0
 
     var previousArrivalWaypoint: Waypoint?
+    
+    var isFirstLocation: Bool = true
 
     var userSnapToStepDistanceFromManeuver: CLLocationDistance?
     
@@ -131,6 +133,9 @@ open class LegacyRouteController: NSObject, Router, CLLocationManagerDelegate {
      */
     var rawLocation: CLLocation? {
         didSet {
+            if isFirstLocation == true {
+                isFirstLocation = false
+            }
             updateDistanceToManeuver()
         }
     }
@@ -571,18 +576,18 @@ open class LegacyRouteController: NSObject, Router, CLLocationManagerDelegate {
     
     func updateVisualInstructionProgress() {
         guard let userSnapToStepDistanceFromManeuver = userSnapToStepDistanceFromManeuver else { return }
-        guard let visualInstructions = routeProgress.currentLegProgress.currentStepProgress.remainingVisualInstructions else { return }
-        
-        let firstInstructionOnFirstStep = routeProgress.currentLegProgress.stepIndex == 0 && routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex == 0
+        let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
+        guard let visualInstructions = currentStepProgress.remainingVisualInstructions else { return }
         
         for visualInstruction in visualInstructions {
-            if userSnapToStepDistanceFromManeuver <= visualInstruction.distanceAlongStep || firstInstructionOnFirstStep {
-                
+            if userSnapToStepDistanceFromManeuver <= visualInstruction.distanceAlongStep || isFirstLocation {
+                let currentVisualInstruction = currentStepProgress.currentVisualInstruction!
+                delegate?.router?(self, didPassVisualInstructionPoint: currentVisualInstruction, routeProgress: routeProgress)
                 NotificationCenter.default.post(name: .routeControllerDidPassVisualInstructionPoint, object: self, userInfo: [
-                    RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress
-                    ])
-                
-                routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex += 1
+                    RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress,
+                    RouteControllerNotificationUserInfoKey.visualInstructionKey: currentVisualInstruction,
+                ])
+                currentStepProgress.visualInstructionIndex += 1
                 return
             }
         }

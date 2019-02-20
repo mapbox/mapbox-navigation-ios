@@ -1,5 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## master
+
+* Fixed an issue where the turn banner remained blank and  `RouterDelegate.router(_:didPassVisualInstructionPoint:routeProgress:)` was never called if `MapboxNavigationService` was created with a `LegacyRouteController` router. ([#1983](https://github.com/mapbox/mapbox-navigation-ios/pull/1983))
+
 ## v0.29.0
 
 ### Core Navigation
