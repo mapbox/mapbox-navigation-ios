@@ -127,10 +127,12 @@ class StyleManagerTests: XCTestCase {
 }
 
 extension StyleManagerTests: StyleManagerDelegate {
-    func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) { }
-    func styleManager(_ styleManager: StyleManager, didApply style: Style) { }
+    @objc public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) { }
+    @objc(styleManager:didApplyStyle:)
+    public func styleManager(_ styleManager: StyleManager, didApply style: Style) { }
     
-    func location(for styleManager: StyleManager) -> CLLocation? {
+    @objc(locationForStyleManager:)
+    public func location(for styleManager: StyleManager) -> CLLocation? {
         return location
     }
 }
