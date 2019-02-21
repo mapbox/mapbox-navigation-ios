@@ -110,6 +110,10 @@ open class RouteController: NSObject {
         }
     }
     
+    @objc public var reroutesProactively: Bool = false
+    
+    var lastProactiveRerouteDate: Date?
+    
     /**
      The route controller’s delegate.
      */
@@ -152,29 +156,6 @@ open class RouteController: NSObject {
         
         // TODO: Add support for alternative route
         navigator.setRouteForRouteResponse(jsonString, route: 0, leg: 0)
-    }
-    
-    func getDirections(from location: CLLocation, along progress: RouteProgress, completion: @escaping (Route?, Error?) -> Void) {
-        routeTask?.cancel()
-        let options = progress.reroutingOptions(with: location)
-        
-        self.lastRerouteLocation = location
-        
-        let complete = { [weak self] (route: Route?, error: NSError?) in
-            self?.isRerouting = false
-            completion(route, error)
-        }
-        
-        routeTask = directions.calculate(options) {(waypoints, potentialRoutes, potentialError) in
-            guard let routes = potentialRoutes else {
-                complete(nil, potentialError)
-                return
-            }
-            
-            let mostSimilar = routes.mostSimilar(to: progress.route)
-            
-            complete(mostSimilar ?? routes.first, potentialError)
-        }
     }
     
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -311,16 +292,6 @@ open class RouteController: NSObject {
         }
     }
     
-    private func announce(reroute newRoute: Route, at location: CLLocation?, proactive: Bool) {
-        var userInfo = [RouteControllerNotificationUserInfoKey: Any]()
-        if let location = location {
-            userInfo[.locationKey] = location
-        }
-        userInfo[.isProactiveKey] = didFindFasterRoute
-        NotificationCenter.default.post(name: .routeControllerDidReroute, object: self, userInfo: userInfo)
-        delegate?.router?(self, didRerouteAlong: routeProgress.route, at: dataSource.location, proactive: didFindFasterRoute)
-    }
-    
     private func announcePassage(of spokenInstructionPoint: SpokenInstruction, routeProgress: RouteProgress) {
         
         delegate?.router?(self, didPassSpokenInstructionPoint: spokenInstructionPoint, routeProgress: routeProgress)
@@ -428,3 +399,5 @@ extension RouteController: Router {
         }
     }
 }
+
+extension RouteController: InternalRouter { }
