@@ -24,7 +24,7 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
     /*
      A padded margin that covers the bottom safe area of the device, if any.
      */
-    lazy var bottomPaddingView: BottomPaddingView = .forAutoLayout()
+    lazy var bottomPaddingView: BottomBannerView = .forAutoLayout()
     
     /**
      The main bottom banner view that all UI components are added to.
@@ -129,6 +129,13 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
         removeTimer()
     }
     
+//    /**
+//     This override loads a custom UIView subclass as the root view, for UIAppearance purposes.
+//    */
+//    override open func loadView() {
+//        let root: BottomBannerView = .forAutoLayout() //Must use local var to prevent generic factory from messing up.
+//        view = root
+//    }
     
     override open func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)

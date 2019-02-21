@@ -64,7 +64,6 @@ open class DayStyle: Style {
         ArrivalTimeLabel.appearance().font = UIFont.systemFont(ofSize: 18, weight: .medium).adjustedFont
         ArrivalTimeLabel.appearance().normalTextColor = .defaultPrimaryText
         BottomBannerView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        BottomPaddingView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         Button.appearance().textColor = .defaultPrimaryText
         CancelButton.appearance().tintColor = .defaultPrimaryText
         DismissButton.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
@@ -179,7 +178,6 @@ open class NightStyle: DayStyle {
         
         ArrivalTimeLabel.appearance().normalTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
         BottomBannerView.appearance().backgroundColor = backgroundColor
-        BottomPaddingView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         Button.appearance().textColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         CancelButton.appearance().tintColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         DismissButton.appearance().backgroundColor = backgroundColor
