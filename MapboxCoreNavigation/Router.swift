@@ -89,6 +89,13 @@ protocol InternalRouter: class {
 extension InternalRouter where Self: Router {
     
     func checkForFasterRoute(from location: CLLocation, routeProgress: RouteProgress) {
+        // Check for faster route given users current location
+        guard reroutesProactively else { return }
+        // Only check for faster alternatives if the user has plenty of time left on the route.
+        guard routeProgress.durationRemaining > RouteControllerMinimumDurationRemainingForProactiveRerouting else { return }
+        // If the user is approaching a maneuver, don't check for a faster alternatives
+        guard routeProgress.currentLegProgress.currentStepProgress.durationRemaining > RouteControllerMediumAlertInterval else { return }
+        
         guard let currentUpcomingManeuver = routeProgress.currentLegProgress.upcomingStep else {
             return
         }
@@ -127,22 +134,22 @@ extension InternalRouter where Self: Router {
         routeTask?.cancel()
         let options = progress.reroutingOptions(with: location)
         
-        self.lastRerouteLocation = location
+        lastRerouteLocation = location
         
         let complete = { [weak self] (route: Route?, error: NSError?) in
             self?.isRerouting = false
             completion(route, error)
         }
         
-        routeTask = directions.calculate(options) {(waypoints, potentialRoutes, potentialError) in
+        routeTask = directions.calculate(options) {(waypoints, routes, error) in
             
-            guard let routes = potentialRoutes else {
-                return complete(nil, potentialError)
+            guard let routes = routes else {
+                return complete(nil, error)
             }
             
             let mostSimilar = routes.mostSimilar(to: progress.route)
             
-            return complete(mostSimilar ?? routes.first, potentialError)
+            return complete(mostSimilar ?? routes.first, error)
         }
     }
     

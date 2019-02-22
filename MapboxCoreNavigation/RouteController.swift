@@ -110,7 +110,7 @@ open class RouteController: NSObject {
         }
     }
     
-    @objc public var reroutesProactively: Bool = false
+    @objc public var reroutesProactively: Bool = true
     
     var lastProactiveRerouteDate: Date?
     
@@ -189,6 +189,9 @@ open class RouteController: NSObject {
         if willReroute {
             reroute(from: location, along: routeProgress)
         }
+        
+        // Check for faster route proactively (if reroutesProactively is enabled)
+        checkForFasterRoute(from: location, routeProgress: routeProgress)
     }
     
     func updateSpokenInstructionProgress(status: MBNavigationStatus, willReRoute: Bool) {

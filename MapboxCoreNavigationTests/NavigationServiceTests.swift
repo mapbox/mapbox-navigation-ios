@@ -427,4 +427,34 @@ class NavigationServiceTests: XCTestCase {
         
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didArriveAt:)"))
     }
+    
+    func testProactiveRerouting() {
+        typealias RouterComposition = Router & InternalRouter
+        
+        let route = Fixture.route(from: "DCA-Arboretum")
+        let trace = Fixture.generateTrace(for: route).shiftedToPresent()
+        let duration = trace.last!.timestamp.timeIntervalSince(trace.first!.timestamp)
+        
+        XCTAssert(duration > RouteControllerProactiveReroutingInterval + RouteControllerMinimumDurationRemainingForProactiveRerouting,
+                  "Duration must greater than rerouting interval and minimum duration remaining for proactive rerouting")
+        
+        let directions = DirectionsSpy(accessToken: "pk.feedCafeDeadBeefBadeBede")
+        let service = MapboxNavigationService(route: route, directions: directions)
+        let locationManager = NavigationLocationManager()
+        
+        let rerouteExpectation = expectation(description: "Proactive reroute should trigger")
+        
+        for location in trace {
+            service.router!.locationManager!(locationManager, didUpdateLocations: [location])
+            
+            let router = service.router! as! RouterComposition
+            
+            if router.lastRerouteLocation != nil {
+                rerouteExpectation.fulfill()
+                break
+            }
+        }
+        
+        waitForExpectations(timeout: 10)
+    }
 }
