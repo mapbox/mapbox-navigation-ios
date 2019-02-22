@@ -32,7 +32,7 @@ open class LegacyRouteController: NSObject, Router, CLLocationManagerDelegate {
     */
     @objc public var waypointArrivalThreshold: TimeInterval = 5.0
     
-    @objc public var reroutesProactively = false
+    @objc public var reroutesProactively = true
 
     var didFindFasterRoute = false
     
@@ -279,13 +279,8 @@ open class LegacyRouteController: NSObject, Router, CLLocationManagerDelegate {
         }
 
         updateSpokenInstructionProgress()
-
-        // Check for faster route given users current location
-        guard reroutesProactively else { return }
-        // Only check for faster alternatives if the user has plenty of time left on the route.
-        guard routeProgress.durationRemaining > 600 else { return }
-        // If the user is approaching a maneuver, don't check for a faster alternatives
-        guard routeProgress.currentLegProgress.currentStepProgress.durationRemaining > RouteControllerMediumAlertInterval else { return }
+        
+        // Check for faster route proactively (if reroutesProactively is enabled)
         checkForFasterRoute(from: location, routeProgress: routeProgress)
     }
     
