@@ -396,6 +396,8 @@ open class LegacyRouteController: NSObject, Router, CLLocationManagerDelegate {
         }
         let durationRemaining = routeProgress.durationRemaining
 
+        self.lastLocationDate = nil
+
         getDirections(from: location, along: routeProgress) { [weak self] (route, error) in
             guard let strongSelf = self else {
                 return
@@ -404,8 +406,6 @@ open class LegacyRouteController: NSObject, Router, CLLocationManagerDelegate {
             guard let route = route else {
                 return
             }
-
-            strongSelf.lastLocationDate = nil
 
             guard let firstLeg = route.legs.first, let firstStep = firstLeg.steps.first else {
                 return
