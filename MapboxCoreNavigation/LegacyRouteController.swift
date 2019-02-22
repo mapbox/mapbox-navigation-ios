@@ -526,7 +526,6 @@ open class LegacyRouteController: NSObject, Router, CLLocationManagerDelegate {
         if let upcomingStep = routeProgress.currentLegProgress.upcomingStep, let finalHeading = upcomingStep.finalHeading, let initialHeading = upcomingStep.initialHeading {
             let initialHeadingNormalized = initialHeading.wrap(min: 0, max: 360)
             let finalHeadingNormalized = finalHeading.wrap(min: 0, max: 360)
-            let userHeadingNormalized = location.course.wrap(min: 0, max: 360)
             let expectedTurningAngle = initialHeadingNormalized.difference(from: finalHeadingNormalized)
 
             // If the upcoming maneuver is fairly straight,
@@ -537,7 +536,8 @@ open class LegacyRouteController: NSObject, Router, CLLocationManagerDelegate {
             // Once this distance is zero, they are at more moving away from the maneuver location
             if expectedTurningAngle <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion {
                 courseMatchesManeuverFinalHeading = userSnapToStepDistanceFromManeuver == 0
-            } else {
+            } else if location.course.isQualified {
+                let userHeadingNormalized = location.course.wrap(min: 0, max: 360)
                 courseMatchesManeuverFinalHeading = finalHeadingNormalized.difference(from: userHeadingNormalized) <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion
             }
         }
