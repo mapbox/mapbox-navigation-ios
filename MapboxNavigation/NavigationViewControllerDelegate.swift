@@ -22,8 +22,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      - parameter waypoint: The waypoint that the service is arriving at.
      - parameter remainingTimeInterval: The estimated number of seconds until arrival.
      - parameter distance: The current distance from the waypoint, in meters.
-     - note: This method will likely be called several times as you approach a destination. To respond to the user’s arrival only once, your delegate can define a property that keeps track of whether this method has already been called for the given waypoint.
-
+     - important: This method will likely be called several times as you approach a destination. If only one consumption of this method is desired, then usage of an internal flag is reccomended.
      */
     
     @objc(navigationViewController:willArriveAtWaypoint:after:distance:)
@@ -41,6 +40,17 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      */
     @objc(navigationViewController:didArriveAtWaypoint:)
     optional func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool
+    
+    /**
+     Called when the user arrives at the final destination of the current route leg and may display a feedback
+     UI to the user.
+     
+     If implemented, you can use this to detect the status of `CarPlayManager.isConnected` when the user arrives at the final destination.
+     
+     - parameter navigationViewController: The navigation view controller that has arrived at the leg of route.
+     - returns: This will most likely be used to determine whether to show feedback when the user arrives at the final leg of the route.
+     */
+    @objc optional func navigationViewControllerShouldShowEndOfRouteFeedback(_ navigationViewController: NavigationViewController) -> Bool
     
     /**
      Returns whether the navigation view controller should be allowed to calculate a new route.
@@ -187,4 +197,3 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     @objc(navigationViewController:viewForAnnotation:)
     optional func navigationViewController(_ navigationViewController: NavigationViewController, viewFor annotation: MGLAnnotation) -> MGLAnnotationView?
 }
-

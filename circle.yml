@@ -102,6 +102,12 @@ step-library:
         command: |
           xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=9.3,name=iPhone 6s Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build
 
+  - &build-test-MapboxCarPlay-ios-12
+      run:
+        name: Build and Test MapboxCarPlay
+        command: |
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.1,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCarPlay clean build test -enableCodeCoverage "YES"
+
   - &build-test-Bench-ios-12
       run:
         name: Build and Test Bench
@@ -120,7 +126,7 @@ step-library:
         command: |
           cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall
           pod install --repo-update
-          xcodebuild -workspace PodInstall.xcworkspace/ -scheme PodInstall -destination 'platform=iOS Simulator,name=iPhone 6 Plus' clean build | xcpretty
+          xcodebuild -workspace PodInstall.xcworkspace/ -scheme PodInstall -destination 'platform=iOS Simulator,OS=12.1,name=iPhone 6s' clean build | xcpretty
 
   - &cocoapods-integration-update
       run:
@@ -128,7 +134,7 @@ step-library:
         command: |
           cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall
           pod update --repo-update
-          xcodebuild -workspace PodInstall.xcworkspace/ -scheme PodInstall -destination 'platform=iOS Simulator,name=iPhone 6 Plus' clean build | xcpretty
+          xcodebuild -workspace PodInstall.xcworkspace/ -scheme PodInstall -destination 'platform=iOS Simulator,OS=12.1,name=iPhone 6' clean build | xcpretty
   
   - &publish-codecov
       run:
@@ -148,7 +154,10 @@ jobs:
       - *restore-cache
       - *install-dependencies
       - *build-test-MapboxCoreNavigation-ios-12
+      - *publish-codecov
       - *build-test-MapboxNavigation-ios-12
+      - *publish-codecov
+      - *build-test-MapboxCarPlay-ios-12
       - *publish-codecov
       - *save-cache
   

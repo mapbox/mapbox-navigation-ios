@@ -2,10 +2,10 @@ import XCTest
 import MapboxCoreNavigation
 import MapboxDirections
 import MapboxMobileEvents
+import MapboxNavigation
 @testable import TestHelper
-@testable import MapboxNavigation
+@testable import MapboxCarPlay
 
-#if canImport(CarPlay)
 import CarPlay
 
 // For some reason XCTest bundles ignore @available annotations and these tests are run on iOS < 12 :(
@@ -301,7 +301,7 @@ class CarPlayManagerSpec: QuickSpec {
                     let mapTemplateSpy: MapTemplateSpy =  interfaceController.topTemplate as! MapTemplateSpy
                     
                     expect(mapTemplateSpy.currentTripPreviews).toNot(beEmpty())
-                    let expectedStartButtonTitle = NSLocalizedString("CARPLAY_GO", bundle: .mapboxNavigation, value: "Go", comment: "Title for start button in CPTripPreviewTextConfiguration")
+                    let expectedStartButtonTitle = NSLocalizedString("CARPLAY_GO", bundle: .carPlay, value: "Go", comment: "Title for start button in CPTripPreviewTextConfiguration")
                     expect(mapTemplateSpy.currentPreviewTextConfiguration?.startButtonTitle).to(equal(expectedStartButtonTitle))
                 }
             })
@@ -446,7 +446,7 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
     public var mapButtons: [CPMapButton]?
 
     func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route) -> NavigationService {
-        let response = Fixture.JSONFromFileNamed(name: jsonFileName)
+        let response = Fixture.JSONFromFileNamed(name: "routeWithInstructions")
         let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String: Any]
         let initialRoute: Route = {
             let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
@@ -578,4 +578,3 @@ class FakeCPInterfaceController: CPInterfaceController {
         }
     }
 }
-#endif

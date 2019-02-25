@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## master
+
+### CarPlay
+
+* Moved `CarPlay` features and functionality into its own framework, `MapboxCarPlay.framework`. ([#1943](https://github.com/mapbox/mapbox-navigation-ios/pull/1943))
+
 ## v0.29.1
 
 ### Core Navigation

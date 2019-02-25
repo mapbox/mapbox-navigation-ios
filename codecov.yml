@@ -2,6 +2,7 @@ ignore:
   - "Example"
   - "MapboxNavigationTests"
   - "MapboxCoreNavigationTests"
+  - "MapboxCarPlayTests"
   - "TestHelper"
 
 coverage:

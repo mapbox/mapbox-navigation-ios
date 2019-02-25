@@ -1,5 +1,6 @@
 import UIKit
 import MapboxNavigation
+import MapboxCarPlay
 
 
 @UIApplicationMain

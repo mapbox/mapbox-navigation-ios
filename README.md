@@ -54,7 +54,7 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
 
 1. Run `carthage update --platform iOS` to build just the iOS dependencies.
 
-1. Follow the rest of [Carthage’s iOS integration instructions](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos). Your application target’s Embedded Frameworks should include `MapboxNavigation.framework`, `MapboxCoreNavigation.framework`, and `MapboxNavigationNative.framework`.
+1. Follow the rest of [Carthage’s iOS integration instructions](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos). Your application target’s Embedded Frameworks should include `MapboxNavigation.framework`, `MapboxCoreNavigation.framework`, `MapboxNavigationNative.framework` and `MapboxCarPlay.framework`.
 
 ## Configuration
 

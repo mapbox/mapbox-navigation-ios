@@ -1,7 +1,7 @@
 import UIKit
-import MapboxNavigation
-#if canImport(CarPlay)
 import CarPlay
+import MapboxNavigation
+import MapboxCarPlay
 import MapboxCoreNavigation
 import MapboxDirections
 
@@ -158,4 +158,3 @@ extension AppDelegate: CPListTemplateDelegate {
         completionHandler()
     }
 }
-#endif

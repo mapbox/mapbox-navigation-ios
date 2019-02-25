@@ -28,6 +28,41 @@ public class FeedbackItem: NSObject {
     @objc public var feedbackType: FeedbackType
     
     /**
+     The feedback types that can be visible and selectable by the user.
+     */
+    public static var feebackOptionTypes: [FeedbackType] = [.roadClosed, .notAllowed, .reportTraffic, .confusingInstruction,
+                                                            .routingError, .missingRoad, .missingExit, .mapIssue]
+    /**
+     The feedback option items that are visible and selectable by the user.
+     */
+    @objc public static var feedbackOptionItems: [FeedbackItem] = {
+        
+        let feedbackOptions: [FeedbackItem] = FeedbackItem.feebackOptionTypes.compactMap { type in
+            switch(type) {
+            case .roadClosed:
+                return FeedbackItem.closure
+            case .notAllowed:
+                return FeedbackItem.turnNotAllowed
+            case .reportTraffic:
+                return FeedbackItem.reportTraffic
+            case .confusingInstruction:
+                return FeedbackItem.confusingInstructions
+            case .routingError:
+                return FeedbackItem.badRoute
+            case .missingRoad:
+                return FeedbackItem.missingRoad
+            case .missingExit:
+                return FeedbackItem.missingExit
+            case .mapIssue:
+                return FeedbackItem.generalMapError
+            default:
+                return nil
+            }
+        }
+        return feedbackOptions
+    }()
+    
+    /**
      Creates a new `FeedbackItem`.
      */
     @objc public init(title: String, image: UIImage, feedbackType: FeedbackType) {

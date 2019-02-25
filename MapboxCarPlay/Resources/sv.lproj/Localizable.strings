@@ -1,0 +1,54 @@
+/* Delimiter between lines in an address when displayed inline */
+"ADDRESS_LINE_SEPARATOR" = ", ";
+
+/* Title on arrival action sheet */
+"CARPLAY_ARRIVED" = "Du har anlänt";
+
+/* Message on arrival action sheet */
+"CARPLAY_ARRIVED_MESSAGE" = "Vad vill du göra?";
+
+/* Title on continue button in CarPlay */
+"CARPLAY_CONTINUE" = "Fortsätt";
+
+/* Name of the waypoint associated with the current location */
+"CARPLAY_CURRENT_LOCATION" = "Din Position";
+
+/* Title for dismiss button */
+"CARPLAY_DISMISS" = "Avfärda";
+
+/* Title for end navigation button */
+"CARPLAY_END" = "Avsluta";
+
+/* Title on the exit button in the arrival form */
+"CARPLAY_EXIT_NAVIGATION" = "Avsluta";
+
+/* Title for feedback template in CarPlay */
+"CARPLAY_FEEDBACK" = "Feedback";
+
+/* Title for start button in CPTripPreviewTextConfiguration */
+"CARPLAY_GO" = "Fortsätt";
+
+/* Title for alternative routes in CPTripPreviewTextConfiguration */
+"CARPLAY_MORE_ROUTES" = "Fler Rutter";
+
+/* Title for mute button */
+"CARPLAY_MUTE" = "Tyst";
+
+/* CPNavigationAlert OK button title */
+"CARPLAY_OK" = "OK";
+
+/* Title for overview button in CPTripPreviewTextConfiguration */
+"CARPLAY_OVERVIEW" = "Översikt";
+
+/* Title for rating template in CarPlay */
+"CARPLAY_RATE_RIDE" = "Betygsätt din resa";
+
+/* Title on rate button in CarPlay */
+"CARPLAY_RATE_TRIP" = "Betygsätt din resa";
+
+/* Alert title that shows when feedback has been submitted */
+"CARPLAY_SUBMITTED_FEEDBACK" = "Skickat";
+
+/* Title for unmute button */
+"CARPLAY_UNMUTE" = "Ljud på";
+

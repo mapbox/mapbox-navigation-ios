@@ -88,8 +88,7 @@ extension CarPlaySearchController: CPSearchTemplateDelegate {
             self?.delegate?.pushTemplate(searchTemplate, animated: false)
         }
         
-        let bundle = Bundle.mapboxNavigation
-        searchTemplateButton.image = UIImage(named: "carplay_search", in: bundle, compatibleWith: traitCollection)
+        searchTemplateButton.image = UIImage(named: "carplay_search", in: .carPlay, compatibleWith: traitCollection)
         
         return searchTemplateButton
     }
@@ -143,7 +142,7 @@ extension CarPlaySearchController: CPSearchTemplateDelegate {
             
             return items
         } else {
-            let title = NSLocalizedString("CARPLAY_SEARCH_NO_RESULTS", bundle: .mapboxNavigation, value: "No results", comment: "Message when search returned zero results in CarPlay")
+            let title = NSLocalizedString("CARPLAY_SEARCH_NO_RESULTS", bundle: .carPlay, value: "No results", comment: "Message when search returned zero results in CarPlay")
             let noResult = CPListItem(text: title, detailText: nil, image: nil, showsDisclosureIndicator: false)
             return [noResult]
         }
