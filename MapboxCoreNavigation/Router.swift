@@ -91,6 +91,7 @@ extension InternalRouter where Self: Router {
     func checkForFasterRoute(from location: CLLocation, routeProgress: RouteProgress) {
         // Check for faster route given users current location
         guard reroutesProactively else { return }
+        
         // Only check for faster alternatives if the user has plenty of time left on the route.
         guard routeProgress.durationRemaining > RouteControllerMinimumDurationRemainingForProactiveRerouting else { return }
         // If the user is approaching a maneuver, don't check for a faster alternatives
@@ -112,7 +113,13 @@ extension InternalRouter where Self: Router {
         
         let durationRemaining = routeProgress.durationRemaining
         
+        // Avoid interrupting an ongoing reroute
+        if isRerouting { return }
+        isRerouting = true
+        
         getDirections(from: location, along: routeProgress) { [weak self] (route, error) in
+            self?.isRerouting = false
+            
             guard let route = route else { return }
             
             self?.lastProactiveRerouteDate = nil
@@ -136,20 +143,14 @@ extension InternalRouter where Self: Router {
         
         lastRerouteLocation = location
         
-        let complete = { [weak self] (route: Route?, error: NSError?) in
-            self?.isRerouting = false
-            completion(route, error)
-        }
-        
         routeTask = directions.calculate(options) {(waypoints, routes, error) in
             
             guard let routes = routes else {
-                return complete(nil, error)
+                return completion(nil, error)
             }
             
             let mostSimilar = routes.mostSimilar(to: progress.route)
-            
-            return complete(mostSimilar ?? routes.first, error)
+            return completion(mostSimilar ?? routes.first, error)
         }
     }
     

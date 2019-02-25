@@ -368,12 +368,6 @@ extension RouteController: Router {
             }
         }
         
-        if isRerouting {
-            return
-        }
-        
-        isRerouting = true
-        
         delegate?.router?(self, willRerouteFrom: location)
         NotificationCenter.default.post(name: .routeControllerWillReroute, object: self, userInfo: [
             RouteControllerNotificationUserInfoKey.locationKey: location
@@ -381,7 +375,13 @@ extension RouteController: Router {
         
         self.lastRerouteLocation = location
         
+        // Avoid interrupting an ongoing reroute
+        if isRerouting { return }
+        isRerouting = true
+        
         getDirections(from: location, along: progress) { [weak self] (route, error) in
+            self?.isRerouting = false
+            
             guard let strongSelf: RouteController = self else {
                 return
             }
@@ -395,7 +395,6 @@ extension RouteController: Router {
             }
             
             guard let route = route else { return }
-            strongSelf.isRerouting = false
             strongSelf._routeProgress = RouteProgress(route: route, legIndex: 0)
             strongSelf._routeProgress.currentLegProgress.stepIndex = 0
             strongSelf.announce(reroute: route, at: location, proactive: false)
