@@ -395,28 +395,23 @@ extension CarPlayManager: CPListTemplateDelegate {
     }
     
     
-    internal func didCalculate(_ routes: [Route]?, for routeOptions: RouteOptions, between waypoints: [Waypoint]?, error: NSError?, completionHandler: @escaping () -> Void) {
+    internal func didCalculate(_ routes: [Route]?, for routeOptions: RouteOptions, between waypoints: [Waypoint]?, error: NSError?, completionHandler: CompletionHandler) {
         defer {
             completionHandler()
         }
         
-        guard let interfaceController = interfaceController,
-              let mapTemplate = interfaceController.rootTemplate as? CPMapTemplate else {
-            return
-        }
+
         
         if let error = error {
-            let okTitle = NSLocalizedString("CARPLAY_OK", bundle: .mapboxNavigation, value: "OK", comment: "CPNavigationAlert OK button title")
-            let okAction = CPAlertAction(title: okTitle, style: .default) { _ in
-                interfaceController.popToRootTemplate(animated: true)
+            guard let delegate = delegate,
+                  let alert = delegate.carPlayManager?(self, didFailToFetchRouteBetween: waypoints, options: routeOptions, error: error) else {
+                    return
             }
-            let alert = CPNavigationAlert(titleVariants: [error.localizedDescription],
-                                          subtitleVariants: [error.localizedFailureReason ?? ""],
-                                          imageSet: nil,
-                                          primaryAction: okAction,
-                                          secondaryAction: nil,
-                                          duration: 0)
-            mapTemplate.present(navigationAlert: alert, animated: true)
+
+            let mapTemplate = interfaceController?.rootTemplate as? CPMapTemplate
+            interfaceController?.popToRootTemplate(animated: true)
+            mapTemplate?.present(navigationAlert: alert, animated: true)
+            return
         }
         
         guard let waypoints = waypoints, let routes = routes else {
@@ -452,7 +447,10 @@ extension CarPlayManager: CPListTemplateDelegate {
         let previewMapTemplate = mapTemplateProvider.mapTemplate(forPreviewing: trip, traitCollection: traitCollection, mapDelegate: self)
 
         previewMapTemplate.showTripPreviews([trip], textConfiguration: previewText)
-
+        
+        guard let interfaceController = interfaceController else {
+                return
+        }
         interfaceController.pushTemplate(previewMapTemplate, animated: true)
     }
 
