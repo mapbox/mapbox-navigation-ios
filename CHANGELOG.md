@@ -16,6 +16,7 @@
 
 ### Other changes
 
+* The `BottomBannerViewController` now accounts for the safe-area inset correctly, if applicable. ([#1982](https://github.com/mapbox/mapbox-navigation-ios/pull/1982))
 * Replaced `NavigationViewController(for:styles:navigationService:viewController:)` with `NavigationViewController(for:options:)`, which accepts a `NavigationOptions` object (not to be confused with `NavigationRouteOptions`). `NavigationOptions` contains various options for customizing the user experience of a turn-by-turn navigation session, including replacing the bottom banner with a custom view controller. ([#1951](https://github.com/mapbox/mapbox-navigation-ios/pull/1951))
 * Restored “Declaration” and “Parameters” sections throughout the API reference. ([#1952](https://github.com/mapbox/mapbox-navigation-ios/pull/1952))
 * Removed the deprecated `NavigationViewController.routeController`, `NavigationViewController.eventsManager`, and `NavigationViewController.locationManager` properties. ([#1904](https://github.com/mapbox/mapbox-navigation-ios/pull/1904))
