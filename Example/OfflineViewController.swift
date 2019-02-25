@@ -48,9 +48,8 @@ class OfflineViewController: UIViewController, MGLMapViewDelegate {
     
     @objc func downloadRegion() {
         
-        let northWest = mapView.convert(resizableView.frame.minXY, toCoordinateFrom: nil)
-        let southEast = mapView.convert(resizableView.frame.maxXY, toCoordinateFrom: nil)
-        let coordinateBounds = CoordinateBounds(northWest: northWest, southEast: southEast)
+        let mapCoordinateBounds = mapView.convert(resizableView.frame, toCoordinateBoundsFrom: nil)
+        let coordinateBounds = CoordinateBounds(coordinates: [mapCoordinateBounds.sw, mapCoordinateBounds.ne])
         
         disableUserInterface()
         

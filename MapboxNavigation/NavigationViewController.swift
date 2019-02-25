@@ -511,7 +511,7 @@ extension NavigationViewController: NavigationServiceDelegate {
 // MARK: - StyleManagerDelegate
 
 extension NavigationViewController: StyleManagerDelegate {
-    
+    @objc(locationForStyleManager:)
     public func location(for styleManager: StyleManager) -> CLLocation? {
         if let location = navigationService.router.location {
             return location
@@ -522,6 +522,7 @@ extension NavigationViewController: StyleManagerDelegate {
         }
     }
     
+    @objc(styleManager:didApplyStyle:)
     public func styleManager(_ styleManager: StyleManager, didApply style: Style) {
         if mapView?.styleURL != style.mapStyleURL {
             mapView?.style?.transition = MGLTransition(duration: 0.5, delay: 0)
@@ -532,7 +533,7 @@ extension NavigationViewController: StyleManagerDelegate {
         setNeedsStatusBarAppearanceUpdate()
     }
     
-    public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
+    @objc public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
         mapView?.reloadStyle(self)
     }
 }

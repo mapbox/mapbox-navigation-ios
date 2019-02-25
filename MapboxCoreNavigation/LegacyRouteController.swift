@@ -14,7 +14,7 @@ protocol RouteControllerDataSource: class {
 
 @objc(MBLegacyRouteController)
 @available(*, deprecated, renamed: "RouteController")
-open class LegacyRouteController: NSObject, Router {
+open class LegacyRouteController: NSObject, Router, CLLocationManagerDelegate {
     
     @objc public weak var delegate: RouterDelegate?
 
@@ -79,6 +79,8 @@ open class LegacyRouteController: NSObject, Router {
     var movementsAwayFromRoute = 0
 
     var previousArrivalWaypoint: Waypoint?
+    
+    var isFirstLocation: Bool = true
 
     var userSnapToStepDistanceFromManeuver: CLLocationDistance?
     
@@ -131,6 +133,9 @@ open class LegacyRouteController: NSObject, Router {
      */
     var rawLocation: CLLocation? {
         didSet {
+            if isFirstLocation == true {
+                isFirstLocation = false
+            }
             updateDistanceToManeuver()
         }
     }
@@ -240,11 +245,9 @@ open class LegacyRouteController: NSObject, Router {
         precondition(!routeProgress.isFinalLeg, "Can not increment leg index beyond final leg.")
         routeProgress.legIndex += 1
     }
-}
-
-extension LegacyRouteController: CLLocationManagerDelegate {
-
-
+    
+    // MARK: CLLocationManagerDelegate methods
+    
     @objc public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
         heading = newHeading
     }
@@ -443,7 +446,7 @@ extension LegacyRouteController: CLLocationManagerDelegate {
         self.lastRerouteLocation = location
 
         getDirections(from: location, along: progress) { [weak self] (route, error) in
-            guard let strongSelf: LegacyRouteController = self else {
+            guard let strongSelf = self else {
                 return
             }
 
@@ -466,7 +469,7 @@ extension LegacyRouteController: CLLocationManagerDelegate {
     private func checkForUpdates() {
         #if TARGET_IPHONE_SIMULATOR
         guard (NSClassFromString("XCTestCase") == nil) else { return } // Short-circuit when running unit tests
-            guard let version = Bundle(for: LegacyRouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString") else { return }
+            guard let version = Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString") else { return }
             let latestVersion = String(describing: version)
             _ = URLSession.shared.dataTask(with: URL(string: "https://docs.mapbox.com/ios/navigation/latest_version.txt")!, completionHandler: { (data, response, error) in
                 if let _ = error { return }
@@ -523,7 +526,6 @@ extension LegacyRouteController: CLLocationManagerDelegate {
         if let upcomingStep = routeProgress.currentLegProgress.upcomingStep, let finalHeading = upcomingStep.finalHeading, let initialHeading = upcomingStep.initialHeading {
             let initialHeadingNormalized = initialHeading.wrap(min: 0, max: 360)
             let finalHeadingNormalized = finalHeading.wrap(min: 0, max: 360)
-            let userHeadingNormalized = location.course.wrap(min: 0, max: 360)
             let expectedTurningAngle = initialHeadingNormalized.difference(from: finalHeadingNormalized)
 
             // If the upcoming maneuver is fairly straight,
@@ -534,7 +536,8 @@ extension LegacyRouteController: CLLocationManagerDelegate {
             // Once this distance is zero, they are at more moving away from the maneuver location
             if expectedTurningAngle <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion {
                 courseMatchesManeuverFinalHeading = userSnapToStepDistanceFromManeuver == 0
-            } else {
+            } else if location.course.isQualified {
+                let userHeadingNormalized = location.course.wrap(min: 0, max: 360)
                 courseMatchesManeuverFinalHeading = finalHeadingNormalized.difference(from: userHeadingNormalized) <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion
             }
         }
@@ -573,18 +576,18 @@ extension LegacyRouteController: CLLocationManagerDelegate {
     
     func updateVisualInstructionProgress() {
         guard let userSnapToStepDistanceFromManeuver = userSnapToStepDistanceFromManeuver else { return }
-        guard let visualInstructions = routeProgress.currentLegProgress.currentStepProgress.remainingVisualInstructions else { return }
-        
-        let firstInstructionOnFirstStep = routeProgress.currentLegProgress.stepIndex == 0 && routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex == 0
+        let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
+        guard let visualInstructions = currentStepProgress.remainingVisualInstructions else { return }
         
         for visualInstruction in visualInstructions {
-            if userSnapToStepDistanceFromManeuver <= visualInstruction.distanceAlongStep || firstInstructionOnFirstStep {
-                
+            if userSnapToStepDistanceFromManeuver <= visualInstruction.distanceAlongStep || isFirstLocation {
+                let currentVisualInstruction = currentStepProgress.currentVisualInstruction!
+                delegate?.router?(self, didPassVisualInstructionPoint: currentVisualInstruction, routeProgress: routeProgress)
                 NotificationCenter.default.post(name: .routeControllerDidPassVisualInstructionPoint, object: self, userInfo: [
-                    RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress
-                    ])
-                
-                routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex += 1
+                    RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress,
+                    RouteControllerNotificationUserInfoKey.visualInstructionKey: currentVisualInstruction,
+                ])
+                currentStepProgress.visualInstructionIndex += 1
                 return
             }
         }
@@ -609,11 +612,9 @@ extension LegacyRouteController: CLLocationManagerDelegate {
             routeProgress.currentLegProgress.currentStepProgress.intersectionDistances = distances
         }
     }
-}
-
-//MARK: - Obsolete Interfaces
-
-public extension LegacyRouteController {
+    
+    // MARK: Obsolete methods
+    
     @available(*, obsoleted: 0.1, message: "MapboxNavigationService is now the point-of-entry to MapboxCoreNavigation. Direct use of RouteController is no longer reccomended. See MapboxNavigationService for more information.")
     /// :nodoc: Obsoleted method.
     @objc(initWithRoute:directions:dataSource:eventsManager:)

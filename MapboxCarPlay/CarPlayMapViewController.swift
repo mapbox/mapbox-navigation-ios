@@ -213,11 +213,13 @@ public class CarPlayMapViewController: UIViewController {
 
 @available(iOS 12.0, *)
 extension CarPlayMapViewController: StyleManagerDelegate {
+    @objc(locationForStyleManager:)
     public func location(for styleManager: StyleManager) -> CLLocation? {
         return mapView.userLocationForCourseTracking ?? mapView.userLocation?.location ?? coarseLocationManager.location
     }
     
-    func styleManager(_ styleManager: StyleManager, didApply style: Style) {
+    @objc(styleManager:didApplyStyle:)
+    public func styleManager(_ styleManager: StyleManager, didApply style: Style) {
         let styleURL = style.previewMapStyleURL
         if mapView.styleURL != styleURL {
             mapView.style?.transition = MGLTransition(duration: 0.5, delay: 0)
@@ -225,7 +227,7 @@ extension CarPlayMapViewController: StyleManagerDelegate {
         }
     }
     
-    func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
+    @objc public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
         mapView.reloadStyle(self)
     }
 }
