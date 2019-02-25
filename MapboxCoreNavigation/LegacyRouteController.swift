@@ -14,7 +14,7 @@ protocol RouteControllerDataSource: class {
 
 @objc(MBLegacyRouteController)
 @available(*, deprecated, renamed: "RouteController")
-open class LegacyRouteController: NSObject, Router, CLLocationManagerDelegate {
+open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationManagerDelegate {
     
     @objc public weak var delegate: RouterDelegate?
 
@@ -567,5 +567,3 @@ open class LegacyRouteController: NSObject, Router, CLLocationManagerDelegate {
         }
     }
 }
-
-extension LegacyRouteController: InternalRouter { }
