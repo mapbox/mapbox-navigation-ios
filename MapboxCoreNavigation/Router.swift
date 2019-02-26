@@ -133,6 +133,7 @@ extension InternalRouter where Self: Router {
             
             if routeIsFaster {
                 self?.setRoute(route: route, proactive: true)
+                
             }
         }
     }
@@ -156,8 +157,16 @@ extension InternalRouter where Self: Router {
     
     func setRoute(route: Route, proactive: Bool) {
         let spokenInstructionIndex = routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex
+        
+        if proactive {
+            didFindFasterRoute = true
+            
+            defer {
+                didFindFasterRoute = false
+            }
+        }
+        
         routeProgress = RouteProgress(route: route, legIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
-        announce(reroute: route, at: location, proactive: proactive)
     }
     
     func announce(reroute newRoute: Route, at location: CLLocation?, proactive: Bool) {
