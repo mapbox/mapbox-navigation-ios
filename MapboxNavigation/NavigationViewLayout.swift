@@ -15,13 +15,13 @@ extension NavigationView {
         instructionsBannerView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         instructionsBannerView.heightAnchor.constraint(equalToConstant: 96).isActive = true
         
-        NSLayoutConstraint.activate(bannerShowConstraints)
+//        NSLayoutConstraint.activate(bannerShowConstraints)
 
-        informationStackView.topAnchor.constraint(equalTo: instructionsBannerView.bottomAnchor).isActive = true
-        informationStackView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        informationStackView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+//        informationStackView.topAnchor.constraint(equalTo: instructionsBannerView.bottomAnchor).isActive = true
+//        informationStackView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+//        informationStackView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         
-        floatingStackView.topAnchor.constraint(equalTo: informationStackView.bottomAnchor, constant: 10).isActive = true
+        floatingStackView.topAnchor.constraint(equalTo: safeTopAnchor /*informationStackView.bottomAnchor*/, constant: 10).isActive = true
         floatingStackView.trailingAnchor.constraint(equalTo: safeTrailingAnchor, constant: -10).isActive = true
         
         resumeButton.leadingAnchor.constraint(equalTo: safeLeadingAnchor, constant: 10).isActive = true

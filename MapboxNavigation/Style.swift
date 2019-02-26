@@ -605,7 +605,7 @@ open class InstructionsBannerContentView: UIView { }
 
 /// :nodoc:
 @objc(MBBottomBannerContainerView)
-open class BottomBannerContainerView: UIView { }
+open class BannerContainerView: UIView { }
 
 /// :nodoc:
 @objc(MBBottomBannerView)
