@@ -1,5 +1,25 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## master
+
+* `CarPlayManager` will now notify its delegate if the route request fails and provide the option to present an alert on the map template. ([#1981](https://github.com/mapbox/mapbox-navigation-ios/pull/1981))
+
+## v0.29.1
+
+### Core Navigation
+
+* Fixed an issue where `RouteController` could not advance to a subsequent leg along the route. ([#1979](https://github.com/mapbox/mapbox-navigation-ios/pull/1979))
+* Fixed an issue where the turn banner remained blank and  `RouterDelegate.router(_:didPassVisualInstructionPoint:routeProgress:)` was never called if `MapboxNavigationService` was created with a `LegacyRouteController` router. ([#1983](https://github.com/mapbox/mapbox-navigation-ios/pull/1983))
+* Fixed an issue causing `LegacyRouteController` to prematurely advance to the next step when receiving an unreliable course from Core Location. ([#1989](https://github.com/mapbox/mapbox-navigation-ios/pull/1989))
+
+### Other changes
+
+* Fixed an issue preventing `CarPlayMapViewController` and `CarPlayNavigationViewController` from applying custom map styles. ([#1985](https://github.com/mapbox/mapbox-navigation-ios/pull/1985))
+* Renamed `-[MBStyleManagerDelegate styleManager:didApply:]` to `-[MBStyleManagerDelegate styleManager:didApplyStyle:]` in Objective-C. If your `StyleManagerDelegate`-conforming class is written in Swift, make sure its methods match `StyleManagerDelegate`’s method signatures, including `@objc` annotations. ([#1985](https://github.com/mapbox/mapbox-navigation-ios/pull/1985))
+* Restored the `RouteController.reroutesProactively` property. ([#1986](https://github.com/mapbox/mapbox-navigation-ios/pull/1986))
+* Added a `RouteControllerMinimumDurationRemainingForProactiveRerouting` global variable to customize when `RouteController` stops looking for more optimal routes as the user nears the destination. ([#1986](https://github.com/mapbox/mapbox-navigation-ios/pull/1986))
+* Fixed a bug which would cancel an ongoing reroute request when the request is taking longer than one second to complete. ([#1986](https://github.com/mapbox/mapbox-navigation-ios/pull/1986))
+
 ## v0.29.0
 
 ### Core Navigation

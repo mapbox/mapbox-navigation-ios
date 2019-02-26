@@ -300,7 +300,7 @@ class NavigationServiceTests: XCTestCase {
         let navigation = dependencies.navigationService
 
         let now = Date()
-        let trace = Fixture.generateTrace(for: route).enumerated().map { $0.element.shifted(to: now + $0.offset) }
+        let trace = Fixture.generateTrace(for: route).shiftedToPresent()
         trace.forEach { navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [$0]) }
 
         // TODO: Verify why we need a second location update when routeState == .complete to trigger `MMEEventTypeNavigationArrive`
@@ -328,7 +328,7 @@ class NavigationServiceTests: XCTestCase {
         
         // MARK: When navigation begins with a location update
         let now = Date()
-        let trace = Fixture.generateTrace(for: route).enumerated().map { $0.element.shifted(to: now + $0.offset) }
+        let trace = Fixture.generateTrace(for: route).shiftedToPresent()
         
         trace.forEach { navigation.router.locationManager!(navigation.locationManager, didUpdateLocations: [$0]) }
         
@@ -404,5 +404,57 @@ class NavigationServiceTests: XCTestCase {
         
         subject.poorGPSPatience = 5.0
         XCTAssert(subject.poorGPSTimer.countdownInterval == .milliseconds(5000), "Timer should now have a countdown interval of 5000 millseconds.")
+    }
+    
+    func testMultiLegRoute() {
+        let route = Fixture.route(from: "multileg-route")
+        let trace = Fixture.generateTrace(for: route).shiftedToPresent().qualified()
+        let service = dependencies.navigationService
+        
+        let routeController = service.router as! RouteController
+        routeController.route = route
+        
+        for (index, location) in trace.enumerated() {
+            
+            service.locationManager!(service.locationManager, didUpdateLocations: [location])
+            
+            if index < 33 {
+                XCTAssert(routeController.routeProgress.legIndex == 0)
+            } else {
+                XCTAssert(routeController.routeProgress.legIndex == 1)
+            }
+        }
+        
+        XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didArriveAt:)"))
+    }
+    
+    func testProactiveRerouting() {
+        typealias RouterComposition = Router & InternalRouter
+        
+        let route = Fixture.route(from: "DCA-Arboretum")
+        let trace = Fixture.generateTrace(for: route).shiftedToPresent()
+        let duration = trace.last!.timestamp.timeIntervalSince(trace.first!.timestamp)
+        
+        XCTAssert(duration > RouteControllerProactiveReroutingInterval + RouteControllerMinimumDurationRemainingForProactiveRerouting,
+                  "Duration must greater than rerouting interval and minimum duration remaining for proactive rerouting")
+        
+        let directions = DirectionsSpy(accessToken: "pk.feedCafeDeadBeefBadeBede")
+        let service = MapboxNavigationService(route: route, directions: directions)
+        let locationManager = NavigationLocationManager()
+        
+        let rerouteExpectation = expectation(description: "Proactive reroute should trigger")
+        
+        for location in trace {
+            service.router!.locationManager!(locationManager, didUpdateLocations: [location])
+            
+            let router = service.router! as! RouterComposition
+            
+            if router.lastRerouteLocation != nil {
+                rerouteExpectation.fulfill()
+                break
+            }
+        }
+        
+        waitForExpectations(timeout: 10)
     }
 }

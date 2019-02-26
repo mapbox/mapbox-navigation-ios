@@ -77,6 +77,18 @@ extension AppDelegate: CarPlayManagerDelegate {
         }
     }
     
+    func carPlayManager(_ carPlayManager: CarPlayManager, didFailToFetchRouteBetween waypoints: [Waypoint]?, options: RouteOptions, error: NSError) -> CPNavigationAlert? {
+        let okTitle = NSLocalizedString("CARPLAY_OK", bundle: .main, value: "OK", comment: "CPAlertTemplate OK button title")
+        let action = CPAlertAction(title: okTitle, style: .default, handler: {_ in })
+        let alert = CPNavigationAlert(titleVariants: [error.localizedDescription],
+                                      subtitleVariants: [error.localizedFailureReason ?? ""],
+                                      imageSet: nil,
+                                      primaryAction: action,
+                                      secondaryAction: nil,
+                                      duration: 5)
+        return alert
+    }
+    
     func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]? {
         
         switch activity {

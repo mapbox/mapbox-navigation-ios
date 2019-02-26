@@ -98,6 +98,7 @@
 		35726EE81F0856E900AFA1B6 /* DayStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35726EE71F0856E900AFA1B6 /* DayStyle.swift */; };
 		3573EA71215A5A9F009899D7 /* RouteControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3573EA70215A5A9F009899D7 /* RouteControllerSnapshotTests.swift */; };
 		3577B878214FF35800094294 /* FavoritesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3577B877214FF35800094294 /* FavoritesList.swift */; };
+		357DEC44221AEE150019BAEC /* multileg-route.json in Resources */ = {isa = PBXBuildFile; fileRef = 357DEC43221AEE150019BAEC /* multileg-route.json */; };
 		3582A25020EEC46B0029C5DE /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3582A24F20EEC46B0029C5DE /* Router.swift */; };
 		3582A25220EFA9680029C5DE /* RouterDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3582A25120EFA9680029C5DE /* RouterDelegate.swift */; };
 		358D14661E5E3B7700ADE590 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358D14651E5E3B7700ADE590 /* AppDelegate.swift */; };
@@ -686,6 +687,7 @@
 		35726EE71F0856E900AFA1B6 /* DayStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayStyle.swift; sourceTree = "<group>"; };
 		3573EA70215A5A9F009899D7 /* RouteControllerSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteControllerSnapshotTests.swift; sourceTree = "<group>"; };
 		3577B877214FF35800094294 /* FavoritesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FavoritesList.swift; path = Example/FavoritesList.swift; sourceTree = "<group>"; };
+		357DEC43221AEE150019BAEC /* multileg-route.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "multileg-route.json"; sourceTree = "<group>"; };
 		357F0DF01EB9D99F00A0B53C /* sv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
 		357F0DF11EB9DAB400A0B53C /* vi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3582A24F20EEC46B0029C5DE /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
@@ -1145,6 +1147,7 @@
 				35CDA8882190F5100072B675 /* sthlm-double-back-replay.json */,
 				35CDA8852190F50A0072B675 /* sthlm-double-back.json */,
 				C5EF397420599120009A2C50 /* straight-line.json */,
+				357DEC43221AEE150019BAEC /* multileg-route.json */,
 			);
 			path = Fixtures;
 			sourceTree = "<group>";
@@ -2147,6 +2150,7 @@
 				35CDA8972190F6980072B675 /* sthlm-double-back.json in Resources */,
 				35CDA88F2190F6980072B675 /* EmptyStyle.json in Resources */,
 				35CDA8992190F6980072B675 /* UnionSquare-to-GGPark.route in Resources */,
+				357DEC44221AEE150019BAEC /* multileg-route.json in Resources */,
 				35C8DBF6219194380053328C /* routeWithTunnels_9thStreetDC.json in Resources */,
 				35C8DBF52191940C0053328C /* straight-line.json in Resources */,
 				35C8DC0F2191DE940053328C /* DCA-Arboretum.trace.json in Resources */,
@@ -2905,7 +2909,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 7;
+				DYLIB_CURRENT_VERSION = 8;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2929,7 +2933,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 7;
+				DYLIB_CURRENT_VERSION = 8;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3255,12 +3259,12 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 7;
+				DYLIB_CURRENT_VERSION = 8;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3291,11 +3295,11 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 7;
+				DYLIB_CURRENT_VERSION = 8;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3402,7 +3406,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -3466,7 +3470,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -3499,7 +3503,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 7;
+				DYLIB_CURRENT_VERSION = 8;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3525,7 +3529,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 7;
+				DYLIB_CURRENT_VERSION = 8;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
