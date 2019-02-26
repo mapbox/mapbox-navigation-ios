@@ -178,8 +178,8 @@ open class NavigationViewController: UIViewController {
     
     var currentStatusBarStyle: UIStatusBarStyle = .default {
         didSet {
-            mapViewController?.instructionsBannerView.backgroundColor = InstructionsBannerView.appearance().backgroundColor
-            mapViewController?.instructionsBannerContentView.backgroundColor = InstructionsBannerContentView.appearance().backgroundColor
+//            mapViewController?.instructionsBannerView.backgroundColor = InstructionsBannerView.appearance().backgroundColor
+//            mapViewController?.instructionsBannerContentView.backgroundColor = InstructionsBannerContentView.appearance().backgroundColor
         }
     }
     

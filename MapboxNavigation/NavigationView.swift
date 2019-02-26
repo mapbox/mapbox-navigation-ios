@@ -46,14 +46,14 @@ open class NavigationView: UIView {
         static let buttonSpacing: CGFloat = 8.0
     }
     
-    lazy var bannerShowConstraints: [NSLayoutConstraint] = [
-        self.instructionsBannerView.topAnchor.constraint(equalTo: self.safeTopAnchor),
-        self.instructionsBannerContentView.topAnchor.constraint(equalTo: self.topAnchor)]
-    
-    lazy var bannerHideConstraints: [NSLayoutConstraint] = [
-        self.informationStackView.bottomAnchor.constraint(equalTo: self.topAnchor),
-        self.instructionsBannerContentView.topAnchor.constraint(equalTo: self.instructionsBannerView.topAnchor)
-    ]
+//    lazy var bannerShowConstraints: [NSLayoutConstraint] = [
+//        self.instructionsBannerView.topAnchor.constraint(equalTo: self.safeTopAnchor),
+//        self.instructionsBannerContentView.topAnchor.constraint(equalTo: self.topAnchor)]
+//
+//    lazy var bannerHideConstraints: [NSLayoutConstraint] = [
+//        self.informationStackView.bottomAnchor.constraint(equalTo: self.topAnchor),
+//        self.instructionsBannerContentView.topAnchor.constraint(equalTo: self.instructionsBannerView.topAnchor)
+//    ]
     
     lazy var endOfRouteShowConstraint: NSLayoutConstraint? = self.endOfRouteView?.bottomAnchor.constraint(equalTo: self.safeBottomAnchor)
     
@@ -76,15 +76,15 @@ open class NavigationView: UIView {
         return map
     }()
     
-    lazy var instructionsBannerContentView: InstructionsBannerContentView = .forAutoLayout()
+//    lazy var instructionsBannerContentView: InstructionsBannerContentView = .forAutoLayout()
+//    
+//    lazy var instructionsBannerView: InstructionsBannerView = {
+//        let banner: InstructionsBannerView = .forAutoLayout()
+//        banner.delegate = delegate
+//        return banner
+//    }()
     
-    lazy var instructionsBannerView: InstructionsBannerView = {
-        let banner: InstructionsBannerView = .forAutoLayout()
-        banner.delegate = delegate
-        return banner
-    }()
-    
-    lazy var informationStackView = UIStackView(orientation: .vertical, autoLayout: true)
+//    lazy var informationStackView = UIStackView(orientation: .vertical, autoLayout: true)
     
     lazy var floatingStackView: UIStackView = {
         let stackView = UIStackView(orientation: .vertical, autoLayout: true)
@@ -115,7 +115,9 @@ open class NavigationView: UIView {
         return view
     }()
     
-    lazy var bottomBannerContainerView: BottomBannerContainerView = .forAutoLayout()
+    lazy var topBannerContainerView: BannerContainerView = .forAutoLayout()
+    
+    lazy var bottomBannerContainerView: BannerContainerView = .forAutoLayout()
 
     weak var delegate: NavigationViewDelegate? {
         didSet {
@@ -160,39 +162,39 @@ open class NavigationView: UIView {
     
     func setupStackViews() {
     
-        setupInformationStackView()
+//        setupInformationStackView()
         floatingStackView.addArrangedSubviews([overviewButton, muteButton, reportButton])
     }
     
-    func setupInformationStackView() {
-        let informationChildren: [UIView] = [instructionsBannerView, lanesView, nextBannerView, statusView]
-        informationStackView.addArrangedSubviews(informationChildren)
-        
-        informationChildren.forEach {
-            $0.leadingAnchor.constraint(equalTo: informationStackView.leadingAnchor).isActive = true
-            $0.trailingAnchor.constraint(equalTo: informationStackView.trailingAnchor).isActive = true
-        }
-    }
+//    func setupInformationStackView() {
+//        let informationChildren: [UIView] = [instructionsBannerView, lanesView, nextBannerView, statusView]
+//        informationStackView.addArrangedSubviews(informationChildren)
+//
+//        informationChildren.forEach {
+//            $0.leadingAnchor.constraint(equalTo: informationStackView.leadingAnchor).isActive = true
+//            $0.trailingAnchor.constraint(equalTo: informationStackView.trailingAnchor).isActive = true
+//        }
+//    }
     
-    func setupContainers() {
-        let containers: [(UIView, UIView)] = [
-            (instructionsBannerContentView, instructionsBannerView)
-        ]
-        containers.forEach { $0.addSubview($1) }
-    }
+//    func setupContainers() {
+//        let containers: [(UIView, UIView)] = [
+//            (instructionsBannerContentView, instructionsBannerView)
+//        ]
+//        containers.forEach { $0.addSubview($1) }
+//    }
     
     func setupViews() {
         setupStackViews()
-        setupContainers()
+//        setupContainers()
         
         let subviews: [UIView] = [
             mapView,
-            informationStackView,
+//            informationStackView,
             floatingStackView,
             resumeButton,
             wayNameView,
-            bottomBannerContainerView,
-            instructionsBannerContentView
+            bottomBannerContainerView//,
+//            instructionsBannerContentView
         ]
         
         subviews.forEach(addSubview(_:))
@@ -201,15 +203,15 @@ open class NavigationView: UIView {
     open override func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         DayStyle().apply()
-        [mapView, instructionsBannerView, lanesView, bottomBannerContainerView, nextBannerView].forEach( { $0.prepareForInterfaceBuilder() })
+        [mapView, /*instructionsBannerView,*/ lanesView, bottomBannerContainerView, nextBannerView].forEach( { $0.prepareForInterfaceBuilder() })
         wayNameView.text = "Street Label"
     }
     
     private func updateDelegates() {
         mapView.navigationMapDelegate = delegate
         mapView.courseTrackingDelegate = delegate
-        instructionsBannerView.delegate = delegate
-        instructionsBannerView.instructionDelegate = delegate
+//        instructionsBannerView.delegate = delegate
+//        instructionsBannerView.instructionDelegate = delegate
         nextBannerView.instructionDelegate = delegate
         statusView.delegate = delegate
     }
