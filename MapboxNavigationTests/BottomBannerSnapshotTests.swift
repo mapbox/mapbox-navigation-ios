@@ -16,13 +16,11 @@ class BottomBannerSnapshotTests: SnapshotTest {
     
     func testBottomBannerViewController() {
         let host = UIViewController(nibName: nil, bundle: nil)
-        let rootView = host.view!
         let container = UIView.forAutoLayout()
         let subject = BottomBannerViewController(nibName: nil, bundle: nil)
         
-        rootView.addSubview(container)
-        
-        constrain(container, to: rootView)
+        host.view.addSubview(container)
+        constrain(container, to: host.view)
         
         embed(parent: host, child: subject, in: container) { (parent, banner) -> [NSLayoutConstraint] in
             banner.view.translatesAutoresizingMaskIntoConstraints = false
