@@ -207,21 +207,24 @@ class RouteMapViewController: UIViewController {
     var annotatesSpokenInstructions = false
 
     var overheadInsets: UIEdgeInsets {
-        return UIEdgeInsets(top: 0/*navigationView.instructionsBannerView.bounds.height*/, left: 20, bottom: bottomBannerContainerView.bounds.height, right: 20)
+        return UIEdgeInsets(top: topBannerContainerView.bounds.height, left: 20, bottom: bottomBannerContainerView.bounds.height, right: 20)
     }
 
     typealias LabelRoadNameCompletionHandler = (_ defaultRaodNameAssigned: Bool) -> Void
 
     var labelRoadNameCompletionHandler: (LabelRoadNameCompletionHandler)?
 
-    convenience init(navigationService: NavigationService, delegate: RouteMapViewControllerDelegate? = nil, bottomBanner: ContainerViewController) {
+    convenience init(navigationService: NavigationService, delegate: RouteMapViewControllerDelegate? = nil, topBanner: ContainerViewController, bottomBanner: ContainerViewController) {
         
         self.init()
         self.navService = navigationService
         self.delegate = delegate
         automaticallyAdjustsScrollViewInsets = false
         
-        
+        embed(topBanner, in: navigationView.topBannerContainerView) { (parent, banner) -> [NSLayoutConstraint] in
+            banner.view.translatesAutoresizingMaskIntoConstraints = false
+            return banner.view.constraintsForPinning(to: self.navigationView.topBannerContainerView)
+        }
         
         embed(bottomBanner, in: navigationView.bottomBannerContainerView) { (parent, banner) -> [NSLayoutConstraint] in
             banner.view.translatesAutoresizingMaskIntoConstraints = false
@@ -525,7 +528,7 @@ class RouteMapViewController: UIViewController {
         UIView.animate(withDuration: duration, delay: 0.0, options: [.curveLinear], animations: animate, completion: completion)
 
         guard let height = navigationView.endOfRouteHeightConstraint?.constant else { return }
-        let insets = UIEdgeInsets(top: 0 /*navigationView.instructionsBannerView.bounds.height*/, left: 20, bottom: height + 20, right: 20)
+        let insets = UIEdgeInsets(top: topBannerContainerView.bounds.height, left: 20, bottom: height + 20, right: 20)
         
         if let coordinates = route.coordinates, let userLocation = navService.router.location?.coordinate {
             let slicedLine = Polyline(coordinates).sliced(from: userLocation).coordinates

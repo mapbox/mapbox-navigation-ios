@@ -219,7 +219,10 @@ open class NavigationViewController: UIViewController {
         let bottomBanner = options?.bottomBanner ?? BottomBannerViewController(delegate: self)
         bottomViewController = bottomBanner
 
-        let mapViewController = RouteMapViewController(navigationService: self.navigationService, delegate: self, bottomBanner: bottomBanner)
+        let topBanner = TopBannerViewController(nibName: nil, bundle: nil)
+        
+        let mapViewController = RouteMapViewController(navigationService: self.navigationService, delegate: self, topBanner: topBanner, bottomBanner: bottomBanner)
+        
         self.mapViewController = mapViewController
         mapViewController.destination = route.legs.last?.destination
         mapViewController.view.translatesAutoresizingMaskIntoConstraints = false

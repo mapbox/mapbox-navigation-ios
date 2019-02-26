@@ -189,12 +189,11 @@ open class NavigationView: UIView {
         
         let subviews: [UIView] = [
             mapView,
-//            informationStackView,
+            topBannerContainerView,
             floatingStackView,
             resumeButton,
             wayNameView,
-            bottomBannerContainerView//,
-//            instructionsBannerContentView
+            bottomBannerContainerView
         ]
         
         subviews.forEach(addSubview(_:))
