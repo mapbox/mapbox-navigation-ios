@@ -5,7 +5,17 @@ import MapboxDirections
 
 public class NavigationEventsManagerSpy: NavigationEventsManager {
 
-    private var mobileEventsManagerSpy: MMEEventsManagerSpy!
+    var mobileEventsManagerSpy: MMEEventsManagerSpy!
+    
+    var _enqueuedEvents: [FakeTelemetryEvent] {
+        return mobileEventsManagerSpy.enqueuedEvents
+    }
+    
+    var _flushedEvents: [FakeTelemetryEvent] {
+        return mobileEventsManagerSpy.flushedEvents
+    }
+    
+    var debuggableEvents = [NavigationEventDetails]()
 
     required public init() {
         mobileEventsManagerSpy = MMEEventsManagerSpy()
@@ -35,14 +45,38 @@ public class NavigationEventsManagerSpy: NavigationEventsManager {
     func flushedEventCount(with eventName: String) -> Int {
         return mobileEventsManagerSpy.flushedEventCount(with: eventName)
     }
+    
+    override public func navigationDepartEvent() -> NavigationEventDetails? {
+        if let event = super.navigationDepartEvent() {
+            debuggableEvents.append(event)
+            return event
+        }
+        return nil
+    }
+    
+    override public func navigationArriveEvent() -> NavigationEventDetails? {
+        if let event = super.navigationArriveEvent() {
+            debuggableEvents.append(event)
+            return event
+        }
+        return nil
+    }
+    
+    override public func navigationRerouteEvent(eventType: String = MMEEventTypeNavigationReroute) -> NavigationEventDetails? {
+        if let event = super.navigationRerouteEvent() {
+            debuggableEvents.append(event)
+            return event
+        }
+        return nil
+    }
 }
 
 typealias FakeTelemetryEvent = (name: String, attributes: [String: Any])
 
 class MMEEventsManagerSpy: MMEEventsManager {
 
-    private var enqueuedEvents = [FakeTelemetryEvent]()
-    private var flushedEvents = [FakeTelemetryEvent]()
+    var enqueuedEvents = [FakeTelemetryEvent]()
+    var flushedEvents = [FakeTelemetryEvent]()
 
     public func reset() {
         enqueuedEvents.removeAll()
