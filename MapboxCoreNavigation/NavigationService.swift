@@ -505,7 +505,7 @@ extension MapboxNavigationService {
     }
     
     public var location: CLLocation? {
-        return self.locationManager.location
+        return self.router.location
     }
     
     public var desiredAccuracy: CLLocationAccuracy {

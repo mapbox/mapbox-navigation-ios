@@ -40,16 +40,22 @@ class NavigationEventsManagerTests: XCTestCase {
         }
         
         let eventsManager = service.eventsManager as! NavigationEventsManagerSpy
+        let events = eventsManager.debuggableEvents
         
-        let departEvents = eventsManager.debuggableEvents.filter { $0.event == MMEEventTypeNavigationDepart }
+        XCTAssertEqual(events.count, 3, "There should be one depart, one reroute, and one arrive event.")
         
-        XCTAssertTrue(departEvents.count == 2, "There should be two depart events")
+        let departEvent = events.filter { $0.event == MMEEventTypeNavigationDepart }.first!
+        let rerouteEvent = events.filter { $0.event == MMEEventTypeNavigationReroute }.first!
+        let arriveEvent = events.filter { $0.event == MMEEventTypeNavigationArrive }.first!
         
-        let firstDepartEvent = departEvents.sorted(by: { $0.startTimestamp! < $1.startTimestamp! }).first!
-        let secondDepartEvent = departEvents.sorted(by: { $0.startTimestamp! > $1.startTimestamp! }).first!
+        let durationBetweenDepartAndArrive = arriveEvent.arrivalTimestamp!.timeIntervalSince(departEvent.startTimestamp!)
+        let durationBetweenDepartAndReroute = rerouteEvent.startTimestamp!.timeIntervalSince(departEvent.startTimestamp!)
+        let durationBetweenRerouteAndArrive = arriveEvent.arrivalTimestamp!.timeIntervalSince(rerouteEvent.startTimestamp!)
         
-        let durationBetweenDepartures = secondDepartEvent.startTimestamp!.timeIntervalSince(firstDepartEvent.startTimestamp!)
-        
-        XCTAssertTrue(durationBetweenDepartures > 1040, "Second departure should be more than 1040 seconds later than the first departure")
+        XCTAssertTrue(durationBetweenDepartAndArrive > 1040, "Duration between depart and arrive should be greater than 1040 seconds")
+        // TODO: Figure out what timestamp to use for reroute and enable this test.
+        //XCTAssertTrue(durationBetweenDepartAndReroute > 0, "Duration between depart and reroute should be greater than 0 seconds")
+        // TODO: Figure out what timestamp to use for reroute and enable this test.
+        //XCTAssertEqual(durationBetweenRerouteAndArrive > 0, "Duration between reroute and arrive should be greater than 0 seconds")
     }
 }
