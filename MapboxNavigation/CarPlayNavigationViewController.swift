@@ -498,11 +498,18 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
 @available(iOS 12.0, *)
 extension CarPlayNavigationViewController: NavigationServiceDelegate {
     public func navigationService(_ service: NavigationService, didArriveAt waypoint: Waypoint) -> Bool {
+        
+        let shouldPresentArrivalUI = carPlayNavigationDelegate?.carPlayNavigationViewController(self, shouldPresentArrivalUIfor: waypoint) ?? true
+        
         if service.routeProgress.isFinalLeg {
-            presentArrivalUI()
+            if shouldPresentArrivalUI {
+                presentArrivalUI()
+            }
             carPlayNavigationDelegate?.carPlayNavigationViewControllerDidArrive(self)
         } else {
-            presentWaypointArrivalUI(for: waypoint)
+            if shouldPresentArrivalUI {
+                presentWaypointArrivalUI(for: waypoint)
+            }
         }
         return false
     }
@@ -529,5 +536,12 @@ public protocol CarPlayNavigationDelegate {
      - parameter carPlayNavigationViewController: The CarPlay navigation view controller that was dismissed.
      */
     @objc func carPlayNavigationViewControllerDidArrive(_ carPlayNavigationViewController: CarPlayNavigationViewController)
+    
+    /**
+     Called when the CarPlay navigation view controller detects an arrival.
+     
+     - returns: A boolean value indicating whether to display an arrival UI.
+     */
+    @objc func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController, shouldPresentArrivalUIfor waypoint: Waypoint) -> Bool
 }
 #endif

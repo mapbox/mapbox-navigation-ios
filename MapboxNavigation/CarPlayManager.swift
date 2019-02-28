@@ -680,6 +680,10 @@ extension CarPlayManager: CPMapTemplateDelegate {
 // MARK: CarPlayNavigationDelegate
 @available(iOS 12.0, *)
 extension CarPlayManager: CarPlayNavigationDelegate {
+    public func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController, shouldPresentArrivalUIfor waypoint: Waypoint) -> Bool {
+        return delegate?.carPlayManager?(self, shouldPresentArrivalUIfor: waypoint) ?? true
+    }
+    
     public func carPlayNavigationViewControllerDidArrive(_: CarPlayNavigationViewController) {
         delegate?.carPlayManagerDidEndNavigation(self)
     }

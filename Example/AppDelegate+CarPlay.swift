@@ -4,6 +4,7 @@ import MapboxNavigation
 import CarPlay
 import MapboxCoreNavigation
 import MapboxDirections
+import TestHelper
 
 
 /**
@@ -43,6 +44,10 @@ extension AppDelegate: CarPlayManagerDelegate {
         NavigationViewController.carPlayManager(carPlayManager, didBeginNavigationWith: service, window: window)
     }
     
+    func carPlayManager(_ carPlayManager: CarPlayManager, shouldPresentArrivalUIfor waypoint: Waypoint) -> Bool {
+        return false
+    }
+    
     func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
         // Dismiss NavigationViewController if it's present in the navigation stack
         guard let window = window else { return }
@@ -56,7 +61,12 @@ extension AppDelegate: CarPlayManagerDelegate {
                                          detailText: FavoritesList.POI.timesSquare.subTitle)
         mapboxSFItem.userInfo = [CarPlayManager.CarPlayWaypointKey: Waypoint(location: FavoritesList.POI.mapboxSF.location)]
         timesSquareItem.userInfo = [CarPlayManager.CarPlayWaypointKey: Waypoint(location: FavoritesList.POI.timesSquare.location)]
-        let listSection = CPListSection(items: [mapboxSFItem, timesSquareItem])
+        
+        let multilegRouteItem = CPListItem(text: "Multileg route", detailText: "Liechtenstein")
+        let multilegRoute = Fixture.route(from: "multileg-route")
+        multilegRouteItem.userInfo = [CarPlayManager.CarPlayWaypointKey: multilegRoute.routeOptions.waypoints]
+        
+        let listSection = CPListSection(items: [mapboxSFItem, timesSquareItem, multilegRouteItem])
         return CPListTemplate(title: "Favorites List", sections: [listSection])
     }
     
@@ -161,10 +171,17 @@ extension AppDelegate: CPListTemplateDelegate {
     
     func listTemplate(_ listTemplate: CPListTemplate, didSelect item: CPListItem, completionHandler: @escaping () -> Void) {
         // Selected a favorite
-        if let userInfo = item.userInfo as? [String: Any],
-            let waypoint = userInfo[CarPlayManager.CarPlayWaypointKey] as? Waypoint {
-            carPlayManager.previewRoutes(to: waypoint, completionHandler: completionHandler)
-            return
+        if let userInfo = item.userInfo as? [String: Any] {
+            
+            if let waypoint = userInfo[CarPlayManager.CarPlayWaypointKey] as? Waypoint {
+                carPlayManager.previewRoutes(to: waypoint, completionHandler: completionHandler)
+                return
+            }
+            
+            if let waypoints = userInfo[CarPlayManager.CarPlayWaypointKey] as? [Waypoint] {
+                carPlayManager.previewRoutes(between: waypoints, completionHandler: completionHandler)
+                return
+            }
         }
         
         completionHandler()

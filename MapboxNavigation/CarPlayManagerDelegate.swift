@@ -153,6 +153,13 @@ public protocol CarPlayManagerDelegate {
     @objc func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) -> ()
     
     /**
+     Called when the CarPlay navigation view controller detects an arrival.
+     
+     - returns: A boolean value indicating whether to display an arrival UI.
+     */
+    @objc optional func carPlayManager(_ carPlayManager: CarPlayManager, shouldPresentArrivalUIfor waypoint: Waypoint) -> Bool
+    
+    /**
      Called when the carplay manager will disable the idle timer.
      
      Implementing this method will allow developers to change whether idle timer is disabled when carplay is connected and the vice-versa when disconnected.
