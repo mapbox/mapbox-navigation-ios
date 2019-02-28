@@ -259,6 +259,7 @@ class RouteMapViewController: UIViewController {
         navigationView.resumeButton.addTarget(self, action: Actions.recenter, for: .touchUpInside)
         resumeNotifications()
         notifyUserAboutLowVolume()
+        updateInstructionBanners(visualInstructionBanner: router.routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
     }
 
     deinit {
@@ -267,7 +268,6 @@ class RouteMapViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
 
         navigationView.muteButton.isSelected = NavigationSettings.shared.voiceMuted
         mapView.compassView.isHidden = true
@@ -405,10 +405,14 @@ class RouteMapViewController: UIViewController {
         
         // only update banner with the current step if we are not previewing our route
         if currentPreviewInstructionBannerStepIndex == nil {
-            instructionsBannerView.update(for: routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
-            lanesView.update(for: routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
-            nextBannerView.update(for: routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
+            updateInstructionBanners(visualInstructionBanner: routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
         }
+    }
+    
+    func updateInstructionBanners(visualInstructionBanner: VisualInstructionBanner?) {
+        instructionsBannerView.update(for: visualInstructionBanner)
+        lanesView.update(for: visualInstructionBanner)
+        nextBannerView.update(for: visualInstructionBanner)
     }
 
     func updateMapOverlays(for routeProgress: RouteProgress) {
