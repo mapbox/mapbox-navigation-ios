@@ -53,6 +53,8 @@ class NavigationEventsManagerTests: XCTestCase {
         let durationBetweenRerouteAndArrive = arriveEvent.arrivalTimestamp!.timeIntervalSince(rerouteEvent.startTimestamp!)
         
         XCTAssertTrue(durationBetweenDepartAndArrive > 1040, "Duration between depart and arrive should be greater than 1040 seconds")
+        XCTAssertEqual(arriveEvent.rerouteCount, 1)
+        
         // TODO: Figure out what timestamp to use for reroute and enable this test.
         //XCTAssertTrue(durationBetweenDepartAndReroute > 0, "Duration between depart and reroute should be greater than 0 seconds")
         // TODO: Figure out what timestamp to use for reroute and enable this test.
