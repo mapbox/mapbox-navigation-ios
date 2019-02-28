@@ -224,6 +224,22 @@ class NavigationViewControllerTests: XCTestCase {
         
     }
     
+    func testBlankBanner() {
+        let window = UIApplication.shared.keyWindow!
+        let viewController = window.rootViewController!
+        
+        let route = Fixture.route(from: "DCA-Arboretum")
+        let navigationViewController = NavigationViewController(for: route)
+        
+        viewController.present(navigationViewController, animated: false, completion: nil)
+        
+        let firstInstruction = route.legs[0].steps[0].instructionsDisplayedAlongStep!.first
+        let instructionsBannerView = navigationViewController.mapViewController!.instructionsBannerView
+        
+        XCTAssertNotNil(instructionsBannerView.primaryLabel.text)
+        XCTAssertEqual(instructionsBannerView.primaryLabel.text, firstInstruction?.primaryInstruction.text)
+    }
+    
     private func annotationFilter(matching coordinate: CLLocationCoordinate2D) -> ((MGLAnnotation) -> Bool) {
         let filter = { (annotation: MGLAnnotation) -> Bool in
             guard let pointAnno = annotation as? MGLPointAnnotation else { return false }
