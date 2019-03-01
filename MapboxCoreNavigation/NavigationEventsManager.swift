@@ -173,6 +173,7 @@ open class NavigationEventsManager: NSObject {
         
         var event = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = eventType
+        event.created = timestamp
         
         if let lastRerouteDate = sessionState.lastRerouteDate {
             event.secondsSinceLastReroute = round(timestamp.timeIntervalSince(lastRerouteDate))

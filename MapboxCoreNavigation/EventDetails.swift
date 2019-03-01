@@ -59,7 +59,6 @@ struct NavigationEventDetails: EventDetails {
     let batteryLevel: Int = UIDevice.current.batteryLevel >= 0 ? Int(UIDevice.current.batteryLevel * 100) : -1
     let batteryPluggedIn: Bool = [.charging, .full].contains(UIDevice.current.batteryState)
     let coordinate: CLLocationCoordinate2D?
-    let created: Date = Date()
     let device: String = UIDevice.current.machine
     let distance: CLLocationDistance?
     let distanceCompleted: CLLocationDistance
@@ -96,6 +95,7 @@ struct NavigationEventDetails: EventDetails {
     let legCount: Int
     let totalStepCount: Int
     
+    var created: Date = Date()
     var event: String?
     var arrivalTimestamp: Date?
     var rating: Int?
