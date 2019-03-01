@@ -49,15 +49,12 @@ class NavigationEventsManagerTests: XCTestCase {
         let arriveEvent = events.filter { $0.event == MMEEventTypeNavigationArrive }.first!
         
         let durationBetweenDepartAndArrive = arriveEvent.arrivalTimestamp!.timeIntervalSince(departEvent.startTimestamp!)
-        let durationBetweenDepartAndReroute = rerouteEvent.startTimestamp!.timeIntervalSince(departEvent.startTimestamp!)
-        let durationBetweenRerouteAndArrive = arriveEvent.arrivalTimestamp!.timeIntervalSince(rerouteEvent.startTimestamp!)
+        let durationBetweenDepartAndReroute = rerouteEvent.created.timeIntervalSince(departEvent.startTimestamp!)
+        let durationBetweenRerouteAndArrive = arriveEvent.arrivalTimestamp!.timeIntervalSince(rerouteEvent.created)
         
-        XCTAssertTrue(durationBetweenDepartAndArrive > 1040, "Duration between depart and arrive should be greater than 1040 seconds")
+        XCTAssertEqual(Int(round(durationBetweenDepartAndArrive)), 1041)
+        XCTAssertEqual(Int(round(durationBetweenDepartAndReroute)), 225)
+        XCTAssertEqual(Int(round(durationBetweenRerouteAndArrive)), 816)
         XCTAssertEqual(arriveEvent.rerouteCount, 1)
-        
-        // TODO: Figure out what timestamp to use for reroute and enable this test.
-        //XCTAssertTrue(durationBetweenDepartAndReroute > 0, "Duration between depart and reroute should be greater than 0 seconds")
-        // TODO: Figure out what timestamp to use for reroute and enable this test.
-        //XCTAssertEqual(durationBetweenRerouteAndArrive > 0, "Duration between reroute and arrive should be greater than 0 seconds")
     }
 }
