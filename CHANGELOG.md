@@ -3,6 +3,7 @@
 ## master
 
 * `CarPlayManager` will now notify its delegate if the route request fails and provide the option to present an alert on the map template. ([#1981](https://github.com/mapbox/mapbox-navigation-ios/pull/1981))
+* Added `CarPlayManagerDelegate.carPlayManager(_:shouldPresentArrivalUIFor:)` to let developers present their own arrival UI. ([#1997](https://github.com/mapbox/mapbox-navigation-ios/pull/1997))
 
 ## v0.29.1
 
