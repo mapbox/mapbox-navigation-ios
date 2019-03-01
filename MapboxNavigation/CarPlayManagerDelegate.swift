@@ -157,7 +157,9 @@ public protocol CarPlayManagerDelegate {
      
      - returns: A boolean value indicating whether to display an arrival UI.
      */
-    @objc optional func carPlayManager(_ carPlayManager: CarPlayManager, shouldPresentArrivalUIfor waypoint: Waypoint) -> Bool
+    
+    @objc(carPlayerManager:shouldPresentArrivalUIForWaypoint:)
+    optional func carPlayManager(_ carPlayManager: CarPlayManager, shouldPresentArrivalUIFor waypoint: Waypoint) -> Bool
     
     /**
      Called when the carplay manager will disable the idle timer.

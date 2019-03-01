@@ -4,7 +4,6 @@ import MapboxNavigation
 import CarPlay
 import MapboxCoreNavigation
 import MapboxDirections
-import TestHelper
 
 
 /**
@@ -44,7 +43,7 @@ extension AppDelegate: CarPlayManagerDelegate {
         NavigationViewController.carPlayManager(carPlayManager, didBeginNavigationWith: service, window: window)
     }
     
-    func carPlayManager(_ carPlayManager: CarPlayManager, shouldPresentArrivalUIfor waypoint: Waypoint) -> Bool {
+    func carPlayManager(_ carPlayManager: CarPlayManager, shouldPresentArrivalUIFor waypoint: Waypoint) -> Bool {
         return false
     }
     
@@ -62,11 +61,14 @@ extension AppDelegate: CarPlayManagerDelegate {
         mapboxSFItem.userInfo = [CarPlayManager.CarPlayWaypointKey: Waypoint(location: FavoritesList.POI.mapboxSF.location)]
         timesSquareItem.userInfo = [CarPlayManager.CarPlayWaypointKey: Waypoint(location: FavoritesList.POI.timesSquare.location)]
         
-        let multilegRouteItem = CPListItem(text: "Multileg route", detailText: "Liechtenstein")
-        let multilegRoute = Fixture.route(from: "multileg-route")
-        multilegRouteItem.userInfo = [CarPlayManager.CarPlayWaypointKey: multilegRoute.routeOptions.waypoints]
+        let multiLegWaypoints: [Waypoint] = [Waypoint(coordinate: CLLocationCoordinate2D(latitude: 47.210823, longitude: 9.519172)),
+                                             Waypoint(coordinate: CLLocationCoordinate2D(latitude: 47.214268, longitude: 9.5222)),
+                                             Waypoint(coordinate: CLLocationCoordinate2D(latitude: 47.212326, longitude: 9.512569))]
+        let multiLegRouteItem = CPListItem(text: "Multileg route", detailText: "Liechtenstein")
         
-        let listSection = CPListSection(items: [mapboxSFItem, timesSquareItem, multilegRouteItem])
+        multiLegRouteItem.userInfo = [CarPlayManager.CarPlayWaypointKey: multiLegWaypoints]
+        
+        let listSection = CPListSection(items: [mapboxSFItem, timesSquareItem, multiLegRouteItem])
         return CPListTemplate(title: "Favorites List", sections: [listSection])
     }
     

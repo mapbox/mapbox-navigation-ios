@@ -499,7 +499,7 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
 extension CarPlayNavigationViewController: NavigationServiceDelegate {
     public func navigationService(_ service: NavigationService, didArriveAt waypoint: Waypoint) -> Bool {
         
-        let shouldPresentArrivalUI = carPlayNavigationDelegate?.carPlayNavigationViewController(self, shouldPresentArrivalUIfor: waypoint) ?? true
+        let shouldPresentArrivalUI = carPlayNavigationDelegate?.carPlayNavigationViewController(self, shouldPresentArrivalUIFor: waypoint) ?? true
         
         if service.routeProgress.isFinalLeg {
             if shouldPresentArrivalUI {
@@ -542,6 +542,6 @@ public protocol CarPlayNavigationDelegate {
      
      - returns: A boolean value indicating whether to display an arrival UI.
      */
-    @objc func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController, shouldPresentArrivalUIfor waypoint: Waypoint) -> Bool
+    @objc func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController, shouldPresentArrivalUIFor waypoint: Waypoint) -> Bool
 }
 #endif
