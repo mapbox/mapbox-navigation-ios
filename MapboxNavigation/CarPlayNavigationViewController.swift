@@ -540,7 +540,8 @@ public protocol CarPlayNavigationDelegate {
     /**
      Called when the CarPlay navigation view controller detects an arrival.
      
-     - returns: A boolean value indicating whether to display an arrival UI.
+     - parameter carPlayNavigationViewController: The CarPlay navigation view controller that was dismissed.
+     - returns: A boolean value indicating whether to show an arrival UI.
      */
     @objc func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController, shouldPresentArrivalUIFor waypoint: Waypoint) -> Bool
 }

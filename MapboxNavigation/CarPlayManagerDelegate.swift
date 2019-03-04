@@ -155,7 +155,8 @@ public protocol CarPlayManagerDelegate {
     /**
      Called when the CarPlay navigation view controller detects an arrival.
      
-     - returns: A boolean value indicating whether to display an arrival UI.
+     - parameter carPlayManager: The CarPlay manager instance.
+     - returns: A boolean value indicating whether to show an arrival UI.
      */
     
     @objc(carPlayerManager:shouldPresentArrivalUIForWaypoint:)
