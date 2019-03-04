@@ -33,6 +33,26 @@ class BottomBannerSnapshotTests: SnapshotTest {
         verify(host, for: Device.iPhoneX.portrait)
     }
     
+    @available(iOS 11.0, *)
+    func testBottomBannerViewControllerNoSafeArea() {
+        let host = UIViewController(nibName: nil, bundle: nil)
+        let container = UIView.forAutoLayout()
+        let subject = BottomBannerViewController(nibName: nil, bundle: nil)
+        
+        host.view.addSubview(container)
+        constrain(container, to: host.view)
+        
+        embed(parent: host, child: subject, in: container) { (parent, banner) -> [NSLayoutConstraint] in
+            banner.view.translatesAutoresizingMaskIntoConstraints = false
+            return banner.view.constraintsForPinning(to: container)
+        }
+        
+        applyStyling(to: subject)
+        subject.prepareForInterfaceBuilder()
+        
+        verify(host, for: Device.iPhone8.portrait)
+    }
+    
     func constrain(_ child: UIView, to parent: UIView) {
         let constraints = [
             child.leadingAnchor.constraint(equalTo: parent.leadingAnchor),
