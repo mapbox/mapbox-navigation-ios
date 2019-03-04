@@ -19,7 +19,7 @@ class NavigationEventsManagerTests: XCTestCase {
         let secondRoute = Fixture.route(from: "PipeFittersUnion-FourSeasonsBoston")
         
         let firstTrace = Array<CLLocation>(Fixture.generateTrace(for: firstRoute).prefix(upTo: firstRoute.coordinates!.count / 2)).shiftedToPresent().qualified()
-        let secondTrace = Fixture.generateTrace(for: secondRoute).shiftedTo(firstTrace.last!.timestamp + 1).qualified()
+        let secondTrace = Fixture.generateTrace(for: secondRoute).shifted(to: firstTrace.last!.timestamp + 1).qualified()
         
         let locationManager = NavigationLocationManager()
         let service = MapboxNavigationService(route: firstRoute,
