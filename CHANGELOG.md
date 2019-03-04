@@ -1,7 +1,8 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
 ## master
-* Fixed an issue preventing `CarPlayMapViewController` and `CarPlayNavigationViewController` from applying custom map styles. ([#1985](https://github.com/mapbox/mapbox-navigation-ios/pull/1985))
+
+* The `BottomBannerViewController` now accounts for the safe-area inset correctly, if applicable. ([#1982](https://github.com/mapbox/mapbox-navigation-ios/pull/1982))
 * `CarPlayManager` will now notify its delegate if the route request fails and provide the option to present an alert on the map template. ([#1981](https://github.com/mapbox/mapbox-navigation-ios/pull/1981))
 
 ## v0.29.1
@@ -14,6 +15,7 @@
 
 ### Other changes
 
+* Fixed an issue preventing `CarPlayMapViewController` and `CarPlayNavigationViewController` from applying custom map styles. ([#1985](https://github.com/mapbox/mapbox-navigation-ios/pull/1985))
 * Renamed `-[MBStyleManagerDelegate styleManager:didApply:]` to `-[MBStyleManagerDelegate styleManager:didApplyStyle:]` in Objective-C. If your `StyleManagerDelegate`-conforming class is written in Swift, make sure its methods match `StyleManagerDelegate`’s method signatures, including `@objc` annotations. ([#1985](https://github.com/mapbox/mapbox-navigation-ios/pull/1985))
 * Restored the `RouteController.reroutesProactively` property. ([#1986](https://github.com/mapbox/mapbox-navigation-ios/pull/1986))
 * Added a `RouteControllerMinimumDurationRemainingForProactiveRerouting` global variable to customize when `RouteController` stops looking for more optimal routes as the user nears the destination. ([#1986](https://github.com/mapbox/mapbox-navigation-ios/pull/1986))
@@ -35,7 +37,6 @@
 
 ### Other changes
 
-* The `BottomBannerViewController` now accounts for the safe-area inset correctly, if applicable. ([#1982](https://github.com/mapbox/mapbox-navigation-ios/pull/1982))
 * Replaced `NavigationViewController(for:styles:navigationService:viewController:)` with `NavigationViewController(for:options:)`, which accepts a `NavigationOptions` object (not to be confused with `NavigationRouteOptions`). `NavigationOptions` contains various options for customizing the user experience of a turn-by-turn navigation session, including replacing the bottom banner with a custom view controller. ([#1951](https://github.com/mapbox/mapbox-navigation-ios/pull/1951))
 * Restored “Declaration” and “Parameters” sections throughout the API reference. ([#1952](https://github.com/mapbox/mapbox-navigation-ios/pull/1952))
 * Removed the deprecated `NavigationViewController.routeController`, `NavigationViewController.eventsManager`, and `NavigationViewController.locationManager` properties. ([#1904](https://github.com/mapbox/mapbox-navigation-ios/pull/1904))
