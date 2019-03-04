@@ -136,11 +136,11 @@ extension Array where Element == CLLocation {
     
     // Shifts the [CLLocation]’s first location to now and offsets the remaining locations by one second after the prior.
     public func shiftedToPresent() -> [CLLocation] {
-        return shiftedTo(Date())
+        return shifted(to: Date())
     }
     
     // Shifts the [CLLocation]’s first location to the given timestamp and offsets the  remaining locations by one second after the prior.
-    public func shiftedTo(_ timestamp: Date) -> [CLLocation] {
+    public func shifted(to timestamp: Date) -> [CLLocation] {
         return enumerated().map { CLLocation(coordinate: $0.element.coordinate,
                                              altitude: $0.element.altitude,
                                              horizontalAccuracy: $0.element.horizontalAccuracy,
