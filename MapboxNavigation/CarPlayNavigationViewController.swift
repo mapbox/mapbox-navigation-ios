@@ -21,6 +21,12 @@ public class CarPlayNavigationViewController: UIViewController {
     
     @objc public var drivingSide: DrivingSide = .right
     
+    
+    /**
+     Provides all routing logic for the user.
+     
+     See `NavigationService` for more information.
+     */
     @objc public var navigationService: NavigationService
     
     /**
