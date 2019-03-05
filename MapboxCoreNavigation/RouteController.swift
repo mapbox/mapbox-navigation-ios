@@ -200,8 +200,9 @@ open class RouteController: NSObject {
             routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex = Int(voiceInstructionIndex)
             
             // Don't annouce spoken instruction if we are going to reroute
-            if !willReRoute {
-                announcePassage(of: routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction!, routeProgress: routeProgress)
+            if !willReRoute,
+                let spokenInstruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction {
+                announcePassage(of: spokenInstruction, routeProgress: routeProgress)
             }
         }
     }
