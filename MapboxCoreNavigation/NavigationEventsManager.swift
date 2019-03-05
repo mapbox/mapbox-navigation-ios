@@ -9,7 +9,7 @@ let NavigationEventTypeRouteRetrieval = "mobile.performance_trace"
  */
 @objc public protocol EventsManagerDataSource: class {
     var routeProgress: RouteProgress { get }
-    var location: CLLocation? { get }
+    var router: Router! { get }
     var desiredAccuracy: CLLocationAccuracy { get }
     var locationProvider: NavigationLocationManager.Type { get }
 }
@@ -139,7 +139,7 @@ open class NavigationEventsManager: NSObject {
         var event = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationArrive
         
-        event.arrivalTimestamp = dataSource.location?.timestamp ?? Date()
+        event.arrivalTimestamp = dataSource.router.rawLocation?.timestamp ?? Date()
         return event
     }
     
@@ -169,7 +169,7 @@ open class NavigationEventsManager: NSObject {
     func navigationRerouteEvent(eventType: String = MMEEventTypeNavigationReroute) -> NavigationEventDetails? {
         guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
 
-        let timestamp = dataSource.location?.timestamp ?? Date()
+        let timestamp = dataSource.router.rawLocation?.timestamp ?? Date()
         
         var event = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = eventType
@@ -250,7 +250,7 @@ open class NavigationEventsManager: NSObject {
 
     func enqueueRerouteEvent() {
         guard let eventDictionary = try? navigationRerouteEvent()?.asDictionary() else { return }
-        let timestamp = dataSource?.location?.timestamp ?? Date()
+        let timestamp = dataSource?.router.location?.timestamp ?? Date()
         
         sessionState?.lastRerouteDate = timestamp
         sessionState?.numberOfReroutes += 1
@@ -377,14 +377,14 @@ open class NavigationEventsManager: NSObject {
         
         if sessionState?.arrivalTimestamp == nil,
             progress.currentLegProgress.userHasArrivedAtWaypoint {
-            sessionState?.arrivalTimestamp = dataSource?.location?.timestamp ?? Date()
+            sessionState?.arrivalTimestamp = dataSource?.router.location?.timestamp ?? Date()
             sendArriveEvent()
             
             return
         }
         
         if sessionState?.departureTimestamp == nil {
-            sessionState?.departureTimestamp = dataSource?.location?.timestamp ?? Date()
+            sessionState?.departureTimestamp = dataSource?.router.location?.timestamp ?? Date()
             sendDepartEvent()
         }
     }
