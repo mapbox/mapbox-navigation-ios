@@ -611,6 +611,7 @@ open class BottomBannerContainerView: UIView { }
 @objc(MBBottomBannerView)
 open class BottomBannerView: UIView { }
 
+
 /// :nodoc:
 class NavigationAnnotation: MGLPointAnnotation { }
 

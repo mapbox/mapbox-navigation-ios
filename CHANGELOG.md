@@ -2,6 +2,7 @@
 
 ## master
 
+* The `BottomBannerViewController` now accounts for the safe-area inset correctly, if applicable. ([#1982](https://github.com/mapbox/mapbox-navigation-ios/pull/1982))
 * `CarPlayManager` will now notify its delegate if the route request fails and provide the option to present an alert on the map template. ([#1981](https://github.com/mapbox/mapbox-navigation-ios/pull/1981))
 
 ## v0.29.1

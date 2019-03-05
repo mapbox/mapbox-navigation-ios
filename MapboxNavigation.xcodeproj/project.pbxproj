@@ -261,6 +261,7 @@
 		8DEB4066220CE596008BAAB4 /* NavigationMapViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DEB4065220CE596008BAAB4 /* NavigationMapViewDelegate.swift */; };
 		8DEDEF3421E3FBE80049E114 /* NavigationViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DEDEF3321E3FBE80049E114 /* NavigationViewControllerDelegate.swift */; };
 		8DF399B21FB257B30034904C /* UIGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DF399B11FB257B30034904C /* UIGestureRecognizer.swift */; };
+		8DFD949E221F66BE00152F45 /* BottomBannerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DFD949D221F66BE00152F45 /* BottomBannerSnapshotTests.swift */; };
 		AE00A73A209A2C38006A3DC7 /* StepsViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE00A739209A2C38006A3DC7 /* StepsViewControllerTests.swift */; };
 		AE291FFF20975A7E00F23DFC /* NavigationViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED2156E208F7FEA009AA673 /* NavigationViewControllerTests.swift */; };
 		AE46F95520EA735B00537AC2 /* VisualInstruction.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE46F95420EA735B00537AC2 /* VisualInstruction.swift */; };
@@ -833,6 +834,8 @@
 		8DF8E4E42202696800B29FEF /* custom-navigation.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "custom-navigation.md"; sourceTree = "<group>"; };
 		8DF8E4E52202696800B29FEF /* MapboxNavigation.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = MapboxNavigation.podspec; sourceTree = "<group>"; };
 		8DF8E4E62202696800B29FEF /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
+		8DFD949D221F66BE00152F45 /* BottomBannerSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomBannerSnapshotTests.swift; sourceTree = "<group>"; };
+		8DFD949F2224ABE900152F45 /* SnappyShrimp.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SnappyShrimp.framework; path = Carthage/Build/iOS/SnappyShrimp.framework; sourceTree = "<group>"; };
 		AE00A739209A2C38006A3DC7 /* StepsViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepsViewControllerTests.swift; sourceTree = "<group>"; };
 		AE46F95420EA735B00537AC2 /* VisualInstruction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualInstruction.swift; sourceTree = "<group>"; };
 		AE5F8770209A082500F58FDB /* route-with-banner-instructions.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-with-banner-instructions.json"; sourceTree = "<group>"; };
@@ -1324,6 +1327,7 @@
 				8D54F149206ECF720038736D /* InstructionPresenterTests.swift */,
 				35DC585C1FABC61100B5A956 /* InstructionsBannerViewIntegrationTests.swift */,
 				35A262B82050A5CD00AEFF6D /* InstructionsBannerViewSnapshotTests.swift */,
+				8DFD949D221F66BE00152F45 /* BottomBannerSnapshotTests.swift */,
 				3510300E1F54B67000E3B7E7 /* LaneTests.swift */,
 				35B1AEBB20AD9B3C00C8544E /* LeaksSpec.swift */,
 				35B1AEBD20AD9C7800C8544E /* LeakTest.swift */,
@@ -1448,6 +1452,7 @@
 		A9E2B43473B53369153F54C6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8DFD949F2224ABE900152F45 /* SnappyShrimp.framework */,
 				8D424F26215ECA5D00432491 /* CoreLocation.framework */,
 				1603C890214351EE00167D95 /* Cedar.framework */,
 				35C98734212E042C00808B82 /* MapboxNavigationNative.framework */,
@@ -1699,6 +1704,7 @@
 				351BEBD21E5BCC28006FE110 /* Sources */,
 				351BEBD41E5BCC28006FE110 /* Headers */,
 				351BEBD51E5BCC28006FE110 /* Resources */,
+				8DFD94A12224AC1A00152F45 /* ShellScript */,
 				351BEBD31E5BCC28006FE110 /* Frameworks */,
 			);
 			buildRules = (
@@ -2241,6 +2247,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/Quick.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Nimble.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Cedar.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SnappyShrimp.framework",
 			);
 			name = "Carthage copy frameworks";
 			outputPaths = (
@@ -2266,6 +2273,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# This Run Script build phase helps to keep the navigation SDK’s developers from exposing their own access tokens during development. See <https://www.mapbox.com/help/ios-private-access-token/> for more information. If you are developing an application privately, you may add the MGLMapboxAccessToken key directly to your Info.plist file and delete this build phase.\n\ntoken_file=~/.mapbox\ntoken_file2=~/mapbox\ntoken=\"$(cat $token_file 2>/dev/null || cat $token_file2 2>/dev/null)\"\nif [ \"$token\" ]; then\nplutil -replace MGLMapboxAccessToken -string $token \"$TARGET_BUILD_DIR/$INFOPLIST_PATH\"\nelse\necho 'warning: Missing Mapbox access token'\nopen 'https://www.mapbox.com/account/access-tokens/'\necho \"warning: Get an access token from <https://www.mapbox.com/account/access-tokens/>, then create a new file at $token_file or $token_file2 that contains the access token.\"\nfi\n";
+		};
+		8DFD94A12224AC1A00152F45 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "
+";
 		};
 		C53F2F0320EBC95600D9798F /* Apply Mapbox Access Token */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2437,6 +2462,7 @@
 				AE291FFF20975A7E00F23DFC /* NavigationViewControllerTests.swift in Sources */,
 				16EF6C1E21193A9600AA580B /* CarPlayManagerTests.swift in Sources */,
 				DADD82802161EC0300B8B47D /* UIViewAnimationOptionsTests.swift in Sources */,
+				8DFD949E221F66BE00152F45 /* BottomBannerSnapshotTests.swift in Sources */,
 				DAD17202214DB12B009C8161 /* CPMapTemplateTests.swift in Sources */,
 				35EFD009207CA5E800BF3873 /* ManeuverViewTests.swift in Sources */,
 				16E4F97F205B05FE00531791 /* MapboxVoiceControllerTests.swift in Sources */,

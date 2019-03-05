@@ -21,6 +21,16 @@ public protocol BottomBannerViewControllerDelegate: class {
 @objc(MBBottomBannerViewController)
 open class BottomBannerViewController: UIViewController, NavigationComponent {
     
+    /*
+     A padded spacer view that covers the bottom safe area of the device, if any.
+     */
+    lazy open var bottomPaddingView: BottomBannerView = .forAutoLayout()
+    
+    /**
+     The main bottom banner view that all UI components are added to.
+     */
+    lazy open var bottomBannerView: BottomBannerView = .forAutoLayout()
+    
     /**
      The label that displays the estimated time until the user arrives at the final destination.
      */
@@ -119,14 +129,6 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
         removeTimer()
     }
     
-    /**
-     This override loads a custom UIView subclass as the root view, for UIAppearance purposes.
-    */
-    override open func loadView() {
-        let root: BottomBannerView = .forAutoLayout() //Must use local var to prevent generic factory from messing up.
-        view = root
-    }
-    
     override open func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         removeTimer()
@@ -134,7 +136,8 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
     
     override open func viewDidLoad() {
         super.viewDidLoad()
-        setupViews()
+        setupRootViews()
+        setupBottomBanner()
         cancelButton.addTarget(self, action: #selector(BottomBannerViewController.cancel(_:)), for: .touchUpInside)
     }
     
