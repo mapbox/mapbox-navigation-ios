@@ -21,7 +21,7 @@ public class CarPlayNavigationViewController: UIViewController {
     
     @objc public var drivingSide: DrivingSide = .right
     
-    var navService: NavigationService
+    @objc public var navigationService: NavigationService
     
     /**
      The map view showing the route and the user’s location.
@@ -78,7 +78,7 @@ public class CarPlayNavigationViewController: UIViewController {
                       interfaceController: CPInterfaceController,
                       manager: CarPlayManager,
                       styles: [Style]? = nil) {
-        self.navService = navigationService
+        self.navigationService = navigationService
         self.mapTemplate = mapTemplate
         self.carInterfaceController = interfaceController
         self.carPlayManager = manager
@@ -86,7 +86,7 @@ public class CarPlayNavigationViewController: UIViewController {
         
         super.init(nibName: nil, bundle: nil)
         carFeedbackTemplate = createFeedbackUI()
-        navService.delegate = self
+        navigationService.delegate = self
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -136,7 +136,7 @@ public class CarPlayNavigationViewController: UIViewController {
         
         makeGestureRecognizersResetFrameRate()
         resumeNotifications()
-        navService.start()
+        navigationService.start()
         mapView.recenterMap()
     }
     
@@ -214,14 +214,14 @@ public class CarPlayNavigationViewController: UIViewController {
             return mapView?.tracksUserCourse ?? false
         }
         set {
-            let progress = navService.routeProgress
+            let progress = navigationService.routeProgress
             if !tracksUserCourse && newValue {
                 mapView?.recenterMap()
                 mapView?.addArrow(route: progress.route,
                                  legIndex: progress.legIndex,
                                  stepIndex: progress.currentLegProgress.stepIndex + 1)
             } else if tracksUserCourse && !newValue {
-                guard let userLocation = self.navService.location?.coordinate else {
+                guard let userLocation = self.navigationService.location?.coordinate else {
                     return
                 }
                 mapView?.enableFrameByFrameCourseViewTracking(for: 3)
@@ -283,7 +283,7 @@ public class CarPlayNavigationViewController: UIViewController {
     
     func updateRouteOnMap() {
         guard let map = mapView else { return }
-        let progress = navService.routeProgress
+        let progress = navigationService.routeProgress
         let legIndex = progress.legIndex
         let nextStep = progress.currentLegProgress.stepIndex + 1 // look forward twoards the next step
         
@@ -294,7 +294,7 @@ public class CarPlayNavigationViewController: UIViewController {
     
     func updateManeuvers(for routeProgress: RouteProgress) {
         guard let visualInstruction = routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction else { return }
-        let step = navService.routeProgress.currentLegProgress.currentStep
+        let step = navigationService.routeProgress.currentLegProgress.currentStep
         
         let primaryManeuver = CPManeuver()
         let distance = distanceFormatter.measurement(of: step.distance)
@@ -351,7 +351,7 @@ public class CarPlayNavigationViewController: UIViewController {
                 tertiaryManeuver.attributedInstructionVariants = [attributedTertiary]
             }
             
-            if let upcomingStep = navService.routeProgress.currentLegProgress.upcomingStep {
+            if let upcomingStep = navigationService.routeProgress.currentLegProgress.upcomingStep {
                 let distance = distanceFormatter.measurement(of: upcomingStep.distance)
                 tertiaryManeuver.initialTravelEstimates = CPTravelEstimates(distanceRemaining: distance, timeRemaining: upcomingStep.expectedTravelTime)
             }
@@ -376,10 +376,10 @@ public class CarPlayNavigationViewController: UIViewController {
             self?.carInterfaceController.popTemplate(animated: true)
 
             //TODO: fix this Demeter violation with proper encapsulation
-            guard let uuid = self?.navService.eventsManager.recordFeedback() else { return }
+            guard let uuid = self?.navigationService.eventsManager.recordFeedback() else { return }
             let foundItem = feedbackItems.filter { $0.image == button.image }
             guard let feedbackItem = foundItem.first else { return }
-            self?.navService.eventsManager.updateFeedback(uuid: uuid, type: feedbackItem.feedbackType, source: .user, description: nil)
+            self?.navigationService.eventsManager.updateFeedback(uuid: uuid, type: feedbackItem.feedbackType, source: .user, description: nil)
             
             let dismissTitle = NSLocalizedString("CARPLAY_DISMISS", bundle: .mapboxNavigation, value: "Dismiss", comment: "Title for dismiss button")
             let submittedTitle = NSLocalizedString("CARPLAY_SUBMITTED_FEEDBACK", bundle: .mapboxNavigation, value: "Submitted", comment: "Alert title that shows when feedback has been submitted")
@@ -401,7 +401,7 @@ public class CarPlayNavigationViewController: UIViewController {
             let title: String? = button.titleVariants.first ?? nil
             let rating: Int? = title != nil ? Int(title!.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()) : nil
             let feedback: EndOfRouteFeedback? = rating != nil ? EndOfRouteFeedback(rating: rating, comment: nil) : nil
-            self?.navService.endNavigation(feedback: feedback)
+            self?.navigationService.endNavigation(feedback: feedback)
             
             self?.carInterfaceController.popTemplate(animated: true)
             self?.exitNavigation()
@@ -433,23 +433,6 @@ public class CarPlayNavigationViewController: UIViewController {
         let alert = CPActionSheetTemplate(title: arrivalTitle, message: arrivalMessage, actions: [rateAction, exitAction])
         carInterfaceController.presentTemplate(alert, animated: true)
     }
-    
-    func presentWaypointArrivalUI(for waypoint: Waypoint) {
-        var title = NSLocalizedString("CARPLAY_ARRIVED", bundle: .mapboxNavigation, value: "You have arrived", comment: "Title on arrival action sheet")
-        if let name = waypoint.name {
-            title = name
-        }
-        
-        let continueTitle = NSLocalizedString("CARPLAY_CONTINUE", bundle: .mapboxNavigation, value: "Continue", comment: "Title on continue button in CarPlay")
-        let continueAlert = CPAlertAction(title: continueTitle, style: .default) { (action) in
-            self.navService.routeProgress.legIndex += 1
-            self.carInterfaceController.dismissTemplate(animated: true)
-            self.updateRouteOnMap()
-        }
-        
-        let waypointArrival = CPAlertTemplate(titleVariants: [title], actions: [continueAlert])
-        carInterfaceController.presentTemplate(waypointArrival, animated: true)
-    }
 }
 
 @available(iOS 12.0, *)
@@ -473,9 +456,9 @@ extension CarPlayNavigationViewController: NavigationMapViewDelegate {
 extension CarPlayNavigationViewController: StyleManagerDelegate {
     @objc(locationForStyleManager:)
     public func location(for styleManager: StyleManager) -> CLLocation? {
-        if let location = navService.router.location {
+        if let location = navigationService.router.location {
             return location
-        } else if let origin = navService.route.coordinates?.first {
+        } else if let origin = navigationService.route.coordinates?.first {
             return CLLocation(latitude: origin.latitude, longitude: origin.longitude)
         } else {
             return nil
@@ -498,13 +481,9 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
 @available(iOS 12.0, *)
 extension CarPlayNavigationViewController: NavigationServiceDelegate {
     public func navigationService(_ service: NavigationService, didArriveAt waypoint: Waypoint) -> Bool {
-        if service.routeProgress.isFinalLeg {
-            presentArrivalUI()
-            carPlayNavigationDelegate?.carPlayNavigationViewControllerDidArrive(self)
-        } else {
-            presentWaypointArrivalUI(for: waypoint)
-        }
-        return false
+        let advancesToNextLeg = carPlayNavigationDelegate?.carPlaynavigationViewController?(self, didArriveAt: waypoint) ?? true
+        
+        return advancesToNextLeg
     }
 }
 
@@ -529,5 +508,18 @@ public protocol CarPlayNavigationDelegate {
      - parameter carPlayNavigationViewController: The CarPlay navigation view controller that was dismissed.
      */
     @objc func carPlayNavigationViewControllerDidArrive(_ carPlayNavigationViewController: CarPlayNavigationViewController)
+    
+    /**
+     Called when the user arrives at the destination waypoint for a route leg.
+     
+     This method is called when the CarPlay navigation view controller arrives at the waypoint. You can implement this method to prevent the navigation view controller from automatically advancing to the next leg. For example, you can and show an interstitial sheet upon arrival and pause navigation by returning `false`, then continue the route when the user dismisses the sheet. If this method is unimplemented, the CarPlay navigation view controller automatically advances to the next leg when arriving at a waypoint.
+     
+     - postcondition: If you return `false` within this method, you must manually advance to the next leg: obtain the value of the `navigationService` and its `NavigationService.routeProgress` property, then increment the `RouteProgress.legIndex` property.
+     - parameter carPlayNavigationViewController: The CarPlay navigation view controller that has arrived at a waypoint.
+     - parameter waypoint: The waypoint that the user has arrived at.
+     - returns: True to automatically advance to the next leg, or false to remain on the now completed leg.
+     */
+    @objc(carPlaynavigationViewController:didArriveAtWaypoint:)
+    optional func carPlaynavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController, didArriveAt waypoint: Waypoint) -> Bool
 }
 #endif
