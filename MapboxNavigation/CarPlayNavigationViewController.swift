@@ -227,7 +227,7 @@ public class CarPlayNavigationViewController: UIViewController {
                                  legIndex: progress.legIndex,
                                  stepIndex: progress.currentLegProgress.stepIndex + 1)
             } else if tracksUserCourse && !newValue {
-                guard let userLocation = self.navigationService.location?.coordinate else {
+                guard let userLocation = self.navigationService.router.location?.coordinate else {
                     return
                 }
                 mapView?.enableFrameByFrameCourseViewTracking(for: 3)

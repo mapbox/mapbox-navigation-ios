@@ -47,7 +47,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
                 delegate?.router?(self, willRerouteFrom: location)
             }
             _routeProgress = newValue
-            announce(reroute: routeProgress.route, at: dataSource.location, proactive: didFindFasterRoute)
+            announce(reroute: routeProgress.route, at: location, proactive: didFindFasterRoute)
         }
     }
     
@@ -129,7 +129,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
      The most recently received user location.
      - note: This is a raw location received from `locationManager`. To obtain an idealized location, use the `location` property.
      */
-    var rawLocation: CLLocation? {
+    public var rawLocation: CLLocation? {
         didSet {
             if isFirstLocation == true {
                 isFirstLocation = false

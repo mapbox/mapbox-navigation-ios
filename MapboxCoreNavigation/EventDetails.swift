@@ -110,7 +110,7 @@ struct NavigationEventDetails: EventDetails {
     var newGeometry: String?
     
     init(dataSource: EventsManagerDataSource, session: SessionState, defaultInterface: Bool) {
-        coordinate = dataSource.location?.coordinate
+        coordinate = dataSource.router.rawLocation?.coordinate
         startTimestamp = session.departureTimestamp ?? nil
         sdkIdentifier = defaultInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
         profile = dataSource.routeProgress.route.routeOptions.profileIdentifier.rawValue
@@ -120,7 +120,7 @@ struct NavigationEventDetails: EventDetails {
         originalRequestIdentifier = session.originalRoute.routeIdentifier
         requestIdentifier = dataSource.routeProgress.route.routeIdentifier
                 
-        if let location = dataSource.location,
+        if let location = dataSource.router.rawLocation,
            let coordinates = dataSource.routeProgress.route.coordinates,
            let lastCoord = coordinates.last {
             userAbsoluteDistanceToDestination = location.distance(from: CLLocation(latitude: lastCoord.latitude, longitude: lastCoord.longitude))
