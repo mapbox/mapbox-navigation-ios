@@ -200,7 +200,7 @@ public class CarPlayNavigationViewController: UIViewController {
     public func exitNavigation(byCanceling canceled: Bool = false) {
         carSession.finishTrip()
         dismiss(animated: true, completion: nil)
-        carPlayNavigationDelegate?.carPlayNavigationViewControllerDidDismiss(self, byCanceling: canceled)
+        carPlayNavigationDelegate?.carPlayNavigationViewControllerDidDismiss?(self, byCanceling: canceled)
     }
     
     /**
@@ -506,14 +506,7 @@ public protocol CarPlayNavigationDelegate {
      - parameter canceled: True if the user dismissed the CarPlay navigation view controller by tapping the Cancel button; false if the navigation view controller dismissed by some other means.
      */
     @objc(carPlayNavigationViewControllerDidDismiss:byCanceling:)
-    func carPlayNavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool)
-
-    /**
-     Called when the CarPlay navigation view controller detects an arrival.
-
-     - parameter carPlayNavigationViewController: The CarPlay navigation view controller that was dismissed.
-     */
-    @objc func carPlayNavigationViewControllerDidArrive(_ carPlayNavigationViewController: CarPlayNavigationViewController)
+    optional func carPlayNavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool)
     
     /**
      Called when the user arrives at the destination waypoint for a route leg.
