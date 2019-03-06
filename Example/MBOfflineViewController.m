@@ -9,7 +9,9 @@
 
 @property (nonatomic) MBNavigationDirections *navigationDirections;
 @property (nonatomic) MBNavigationService *navigationService;
-
+@property (nonatomic) BOOL hasDownloadedMapTiles;
+@property (nonatomic) BOOL hasDownloadedRoutingTiles;
+@property (nonatomic) MGLCoordinateBounds coordinateBounds;
 @end
 
 @implementation OfflineNavigationViewController
@@ -21,12 +23,47 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(offlinePackDidReceiveError:) name:MGLOfflinePackErrorNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(offlinePackDidReceiveMaximumAllowedMapboxTiles:) name:MGLOfflinePackMaximumMapboxTilesReachedNotification object:nil];
     
-    self.navigationDirections = [[MBNavigationDirections alloc] initWithAccessToken:[MBDirections sharedDirections].accessToken host:[MBDirections sharedDirections].apiEndpoint.host];
-    
     CLLocationCoordinate2D southWest = CLLocationCoordinate2DMake(39.00665, -84.73858);
     CLLocationCoordinate2D northEast = CLLocationCoordinate2DMake(39.13991, -84.41586);
     
-    [self downloadMapTilesInCoordinateBounds:MGLCoordinateBoundsMake(southWest, northEast)];
+    self.coordinateBounds = MGLCoordinateBoundsMake(southWest, northEast);
+    
+    self.navigationDirections = [[MBNavigationDirections alloc] initWithAccessToken:[MBDirections sharedDirections].accessToken host:[MBDirections sharedDirections].apiEndpoint.host];
+    
+    [self downloadMapTilesIfNecessary];
+    [self downloadRoutingTilesIfNecessary];
+}
+
+- (void)downloadMapTilesIfNecessary {
+    NSArray<MGLOfflinePack *> *packs = [[MGLOfflineStorage sharedOfflineStorage] packs];
+    
+    if (packs.count == 0) {
+        [self downloadMapTilesInCoordinateBounds:self.coordinateBounds];
+    } else {
+        self.hasDownloadedMapTiles = YES;
+    }
+}
+
+- (void)downloadRoutingTilesIfNecessary {
+    NSURL *url = [[NSBundle mapboxCoreNavigation] suggestedTileURL];
+    NSArray *routingTilesDirectories = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:url
+                                                                     includingPropertiesForKeys:nil
+                                                                                        options:NSDirectoryEnumerationSkipsHiddenFiles
+                                                                                          error:nil];
+    if (routingTilesDirectories.count == 0) {
+        MBCoordinateBounds *coordinateBounds = [[MBCoordinateBounds alloc] initWithCoordinates:@[[NSValue valueWithMGLCoordinate:self.coordinateBounds.sw], [NSValue valueWithMGLCoordinate:self.coordinateBounds.ne]]];
+        [self downloadRoutingTilesInCoordinateBounds:coordinateBounds withCompletionHandler:^{
+            self.hasDownloadedRoutingTiles = YES;
+        }];
+    } else {
+        NSURL *downloadedVersionURL = [routingTilesDirectories firstObject];
+        NSString *version = [downloadedVersionURL lastPathComponent];
+        
+        NSURL *tilePathURL = [[NSBundle mapboxCoreNavigation] suggestedTileURLWithVersion:version];
+        [self.navigationDirections configureRouterWithTilesURL:tilePathURL translationsURL:nil completionHandler:^(uint64_t numberOfTiles) {
+            self.hasDownloadedRoutingTiles = YES;
+        }];
+    }
 }
 
 - (void)dealloc {
@@ -65,14 +102,7 @@
 }
 
 - (void)offlinePackDidComplete:(MGLOfflinePack *)pack {
-    MGLTilePyramidOfflineRegion *offlineRegion = (MGLTilePyramidOfflineRegion *)pack.region;
-    MGLCoordinateBounds mapCoordinateBounds = offlineRegion.bounds;
-    MBCoordinateBounds *coordinateBounds = [[MBCoordinateBounds alloc] initWithCoordinates:@[[NSValue valueWithMGLCoordinate:mapCoordinateBounds.sw], [NSValue valueWithMGLCoordinate:mapCoordinateBounds.ne]]];
-    [self downloadRoutingTilesInCoordinateBounds:coordinateBounds withCompletionHandler:^{
-        MBWaypoint *unionTerminal = [[MBWaypoint alloc] initWithCoordinate:CLLocationCoordinate2DMake(39.10992, -84.53762) coordinateAccuracy:-1 name:@"Union Terminal"];
-        MBWaypoint *airport = [[MBWaypoint alloc] initWithCoordinate:CLLocationCoordinate2DMake(39.05008, -84.67105) coordinateAccuracy:-1 name:@"CVG"];
-        [self navigateBetweenWaypoints:@[unionTerminal, airport]];
-    }];
+    self.hasDownloadedMapTiles = YES;
 }
 
 - (void)offlinePackDidReceiveError:(NSNotification *)notification {
@@ -141,6 +171,28 @@
     
     MBNavigationViewController *controller = [[MBNavigationViewController alloc] initWithRoute:route options:options];
     [self presentViewController:controller animated:YES completion:nil];
+}
+
+- (void)setHasDownloadedMapTiles:(BOOL)hasDownloadedMapTiles {
+    _hasDownloadedMapTiles = hasDownloadedMapTiles;
+    
+    if (self.hasDownloadedRoutingTiles) {
+        [self startNavigating];
+    }
+}
+
+- (void)setHasDownloadedRoutingTiles:(BOOL)hasDownloadedRoutingTiles {
+    _hasDownloadedRoutingTiles = hasDownloadedRoutingTiles;
+    
+    if (self.hasDownloadedMapTiles) {
+        [self startNavigating];
+    }
+}
+
+- (void)startNavigating {
+    MBWaypoint *unionTerminal = [[MBWaypoint alloc] initWithCoordinate:CLLocationCoordinate2DMake(39.10992, -84.53762) coordinateAccuracy:-1 name:@"Union Terminal"];
+    MBWaypoint *airport = [[MBWaypoint alloc] initWithCoordinate:CLLocationCoordinate2DMake(39.05008, -84.67105) coordinateAccuracy:-1 name:@"CVG"];
+    [self navigateBetweenWaypoints:@[unionTerminal, airport]];
 }
 
 @end
