@@ -518,7 +518,7 @@ public protocol CarPlayNavigationDelegate {
      - parameter waypoint: The waypoint that the user has arrived at.
      - returns: True to automatically advance to the next leg, or false to remain on the now completed leg.
      */
-    @objc(carPlaynavigationViewController:didArriveAtWaypoint:)
-    optional func carPlaynavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController, didArriveAt waypoint: Waypoint) -> Bool
+    @objc(carPlayNavigationViewController:didArriveAtWaypoint:)
+    optional func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController, didArriveAt waypoint: Waypoint) -> Bool
 }
 #endif
