@@ -11,6 +11,7 @@ enum OfflineRoutingError: Error, LocalizedError {
     case unexpectedRouteResult(String)
     case corruptRouteData(String)
     case responseError(String)
+    case filePathNotFound(String)
     
     public var localizedDescription: String {
         switch self {
@@ -19,6 +20,8 @@ enum OfflineRoutingError: Error, LocalizedError {
         case .unexpectedRouteResult(let value):
             return value
         case .responseError(let value):
+            return value
+        case .filePathNotFound(let value):
             return value
         }
     }
@@ -78,6 +81,36 @@ public class NavigationDirections: Directions {
                 completionHandler(tileCount)
             }
         }
+    }
+    
+    /**
+     Returns a list of version downloaded at the given file path. Passing nil as
+     the file path URL will fallback to the suggested file path at
+     `Bundle.mapboxCoreNavigation.suggestedTileURL`.
+     
+     - parameter bundle: The file path to scan for versions
+     
+     - returns: A list of versions at the given file path that contains at least one tile.
+     */
+    @objc(downloadedVersionsInBundle:error:)
+    public static func downloadedVersions(in bundle: Bundle? = Bundle.mapboxCoreNavigation) throws -> [String] {
+        
+        let _bundle = bundle ?? Bundle.mapboxCoreNavigation
+        
+        guard let url = _bundle.suggestedTileURL else {
+                let message = NSLocalizedString("OFFLINE_FILEPATH_NOT_FOUND", bundle: .mapboxCoreNavigation, value: "Unable to find the file path for downloaded versions", comment: "Error description when the cache directory is inaccessible")
+                throw OfflineRoutingError.filePathNotFound(message)
+        }
+        
+        let navigator = MBNavigator()
+        
+        let versions = try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
+            .filter { $0.absoluteString.components(separatedBy: "-").count >= 3 }
+            .map { $0.lastPathComponent }
+            // Verify integrity of downloaded version by filtering on version packs that has more than 0 tiles
+            .filter { navigator.configureRouter(forTilesPath: _bundle.suggestedTileURL(version: $0)!.path, translationsPath: "") > 0 }
+        
+        return versions
     }
     
     /**

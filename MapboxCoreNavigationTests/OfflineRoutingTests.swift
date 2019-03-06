@@ -118,4 +118,10 @@ class OfflineRoutingTests: XCTestCase {
         
         wait(for: [configureExpectation], timeout: 60)
     }
+    
+    func testDownloadedVersions() {
+        let versions = try! NavigationDirections.downloadedVersions()
+        XCTAssert(versions.count == 1)
+        XCTAssert(versions[0] == "2018_12_18-20_59_05")
+    }
 }

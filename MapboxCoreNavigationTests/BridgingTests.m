@@ -75,6 +75,16 @@
         
     }];
 }
+
+- (void)testDownloadedVersions {
+    NSBundle *bundle = [NSBundle mapboxCoreNavigation];
+    NSArray<NSString *> *versions = [MBNavigationDirections downloadedVersionsInBundle:bundle error:NULL];
+    
+    NSString *version = versions.firstObject;
+    
+    XCTAssert(versions.count == 1);
+    XCTAssert([version isEqualToString:@"2018_12_18-20_59_05"]);
+}
     
 @end
 
