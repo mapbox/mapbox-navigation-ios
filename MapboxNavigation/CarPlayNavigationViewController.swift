@@ -487,7 +487,7 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
 @available(iOS 12.0, *)
 extension CarPlayNavigationViewController: NavigationServiceDelegate {
     public func navigationService(_ service: NavigationService, didArriveAt waypoint: Waypoint) -> Bool {
-        let advancesToNextLeg = carPlayNavigationDelegate?.carPlaynavigationViewController?(self, didArriveAt: waypoint) ?? true
+        let advancesToNextLeg = carPlayNavigationDelegate?.carPlayNavigationViewController?(self, didArriveAt: waypoint) ?? true
         
         return advancesToNextLeg
     }
