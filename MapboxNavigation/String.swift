@@ -12,21 +12,9 @@ extension String {
         return isEmpty ? nil : self
     }
     
-    var wholeRange: Range<String.Index> {
-        return startIndex..<endIndex
-    }
-    
     typealias Replacement = (of: String, with: String)
     
     func byReplacing(_ replacements: [Replacement]) -> String {
         return replacements.reduce(self) { $0.replacingOccurrences(of: $1.of, with: $1.with) }
-    }
-    
-    var isUppercased: Bool {
-        return self == uppercased() && self != lowercased()
-    }
-    
-    var containsDecimalDigit: Bool {
-        return self.rangeOfCharacter(from: CharacterSet.decimalDigits) != nil
     }
 }

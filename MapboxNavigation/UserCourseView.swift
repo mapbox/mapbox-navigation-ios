@@ -3,7 +3,6 @@ import Turf
 import Mapbox
 
 let PuckSize: CGFloat = 45
-let ArrowSize = PuckSize * 0.6
 
 /**
  A view that represents the user’s location and course on a `NavigationMapView`.
