@@ -101,7 +101,7 @@ public struct Location: Codable {
         try container.encode(verticalAccuracy, forKey: .verticalAccuracy)
         try container.encode(course, forKey: .course)
         try container.encode(speed, forKey: .speed)
-        try container.encode(timestamp, forKey: .timestamp)
+        try container.encode(timestamp.ISO8601, forKey: .timestamp)
     }
 }
 
@@ -159,5 +159,14 @@ extension Array where Element == CLLocation {
                                              course: -1,
                                              speed: 10,
                                              timestamp: $0.element.timestamp) }
+    }
+    
+    public static func locations(from filePath: String) -> [CLLocation] {
+        let url = URL(fileURLWithPath: filePath)
+        
+        let data = try! Data(contentsOf: url)
+        let locations = try! JSONDecoder().decode([Location].self, from: data)
+        
+        return locations.map { CLLocation($0) }
     }
 }

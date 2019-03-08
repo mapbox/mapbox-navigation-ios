@@ -27,10 +27,8 @@ class RouteControllerSnapshotTests: FBSnapshotTestCase {
         
         let bundle = Bundle(for: RouteControllerSnapshotTests.self)
         let filePath = bundle.path(forResource: "sthlm-double-back-replay", ofType: "json")
-        let jsonData = try! Data(contentsOf: URL(fileURLWithPath: filePath!))
         
-        let jsonLocations = try! JSONSerialization.jsonObject(with: jsonData, options: []) as! [[String: Any]]
-        let locations = jsonLocations.map { CLLocation(dictionary: $0) }
+        let locations = Array<CLLocation>.locations(from: filePath!)
         let locationManager = ReplayLocationManager(locations: locations)
         replayManager = locationManager
         locationManager.startDate = Date()
