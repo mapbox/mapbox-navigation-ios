@@ -22,13 +22,7 @@ extension UIView {
         layer.shadowRadius = 4
         layer.shadowOpacity = Float(shadowOpacity!)
     }
-    
-    func applyDefaultShadow(shadowOpacity: CGFloat? = 0.1) {
-        layer.shadowOffset = CGSize(width: 0, height: 0)
-        layer.shadowRadius = 4
-        layer.shadowOpacity = Float(shadowOpacity!)
-    }
-    
+
     func applyGradient(colors: [UIColor], locations: [NSNumber]? = nil) {
         let gradient: CAGradientLayer = CAGradientLayer()
         gradient.frame = self.bounds
@@ -40,11 +34,6 @@ extension UIView {
         } else {
             layer.addSublayer(gradient)
         }
-    }
-    
-    class func fromNib<ViewType : UIView>() -> ViewType? {
-        let nibName = String(describing: ViewType.self)
-        return Bundle.main.loadNibNamed(nibName, owner: nil, options: nil)?[0] as? ViewType
     }
     
     func constraints(affecting view: UIView?) -> [NSLayoutConstraint]? {
@@ -59,6 +48,7 @@ extension UIView {
             return false
         }
     }
+    
     func constraintsForPinning(to parentView: UIView, respectingMargins margins: Bool = false) -> [NSLayoutConstraint] {
         let guide: Anchorable = (margins) ? parentView.layoutMarginsGuide : parentView
         

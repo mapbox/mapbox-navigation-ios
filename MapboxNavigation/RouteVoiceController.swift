@@ -4,9 +4,6 @@ import AVFoundation
 import MapboxDirections
 import MapboxCoreNavigation
 
-extension ErrorUserInfoKey {
-    static let spokenInstructionErrorCode = MBSpokenInstructionErrorCodeKey
-}
 
 extension NSAttributedString {
     @available(iOS 10.0, *)

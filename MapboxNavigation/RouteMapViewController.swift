@@ -547,7 +547,8 @@ class RouteMapViewController: UIViewController {
 
     fileprivate func populateName(for waypoint: Waypoint, populated: @escaping (Waypoint) -> Void) {
         guard waypoint.name == nil else { return populated(waypoint) }
-        CLGeocoder().reverseGeocodeLocation(waypoint.location) { (places, error) in
+        let location = CLLocation(latitude: waypoint.coordinate.latitude, longitude: waypoint.coordinate.longitude)
+        CLGeocoder().reverseGeocodeLocation(location) { (places, error) in
         guard let place = places?.first, let placeName = place.name, error == nil else { return }
             let named = Waypoint(coordinate: waypoint.coordinate, name: placeName)
             return populated(named)
