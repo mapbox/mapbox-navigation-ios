@@ -268,7 +268,7 @@ open class NavigationEventsManager: NSObject {
     }
 
     func enqueueFoundFasterRouteEvent() {
-        guard let eventDictionary = try? navigationRerouteEvent()?.asDictionary() else { return }
+        guard let eventDictionary = try? navigationRerouteEvent(eventType: FasterRouteFoundEvent)?.asDictionary() else { return }
 
         let timestamp = Date()
         sessionState?.lastRerouteDate = timestamp
