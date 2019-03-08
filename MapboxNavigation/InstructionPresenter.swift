@@ -147,7 +147,7 @@ class InstructionPresenter {
         }
         
         // Let's download the shield
-        shieldImageForComponent(shield, in: repository, height: dataSource.shieldHeight, completion: onImageDownload)
+        shieldImageForComponent(shield, in: repository, completion: onImageDownload)
         
         //Return nothing in the meantime, triggering downstream behavior (generic shield or text)
         return nil
@@ -158,28 +158,12 @@ class InstructionPresenter {
         return NSAttributedString(string: text, attributes: attributes(for: dataSource))
     }
     
-    private func shieldImageForComponent(_ component: VisualInstructionComponent, in repository: ImageRepository, height: CGFloat, completion: @escaping ImageDownloadCompletion) {
+    private func shieldImageForComponent(_ component: VisualInstructionComponent, in repository: ImageRepository, completion: @escaping ImageDownloadCompletion) {
         guard let imageURL = component.imageURL, let shieldKey = component.cacheKey else {
             return
         }
 
         repository.imageWithURL(imageURL, cacheKey: shieldKey, completion: completion )
-    }
-
-    private func instructionHasDownloadedAllShields() -> Bool {
-        let textComponents = instruction.components.compactMap { $0 as? VisualInstructionComponent }
-        guard !textComponents.isEmpty else { return false }
-        
-        for component in textComponents {
-            guard let key = component.cacheKey else {
-                continue
-            }
-
-            if imageRepository.cachedImageForKey(key) == nil {
-                return false
-            }
-        }
-        return true
     }
 
     private func attributes(for dataSource: InstructionPresenterDataSource) -> [NSAttributedStringKey: Any] {
@@ -316,7 +300,6 @@ class RoadNameLabelAttachment: TextInstruction {
 }
 
 extension CGSize {
-    fileprivate static var greatestFiniteSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
     
     fileprivate static func +(lhs: CGSize, rhs: CGSize) -> CGSize {
         return CGSize(width: lhs.width + rhs.width, height: lhs.height +  rhs.height)

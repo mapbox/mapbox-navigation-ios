@@ -152,20 +152,6 @@ class ViewController: UIViewController {
 
 
     // MARK: - IBActions
-    @IBAction func replay(_ sender: Any) {
-        let bundle = Bundle(for: ViewController.self)
-        let filePath = bundle.path(forResource: "tunnel", ofType: "json")!
-        let routeFilePath = bundle.path(forResource: "tunnel", ofType: "route")!
-        let route = NSKeyedUnarchiver.unarchiveObject(withFile: routeFilePath) as! Route
-
-        let locationManager = ReplayLocationManager(locations: Array<CLLocation>.locations(from: filePath))
-
-        let navigationService = MapboxNavigationService(route: route, locationSource: locationManager)
-        let options = NavigationOptions(navigationService: navigationService)
-        let navigationViewController = NavigationViewController(for: route, options: options)
-
-        present(navigationViewController, animated: true, completion: nil)
-    }
 
     @IBAction func simulateButtonPressed(_ sender: Any) {
         simulationButton.isSelected = !simulationButton.isSelected

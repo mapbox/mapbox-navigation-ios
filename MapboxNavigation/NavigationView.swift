@@ -41,8 +41,6 @@ open class NavigationView: UIView {
     
     private enum Constants {
         static let endOfRouteHeight: CGFloat = 260.0
-        static let feedbackTopConstraintPadding: CGFloat = 10.0
-        static let buttonSize: CGSize = 50.0
         static let buttonSpacing: CGFloat = 8.0
     }
     

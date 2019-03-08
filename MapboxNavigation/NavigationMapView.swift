@@ -437,7 +437,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         let line = MGLPolyline(coordinates: coords, count: UInt(coords.count))
         let camera = cameraThatFitsShape(line, direction: direction, edgePadding: padding)
         
-        setCamera(camera, animated: false)
+        setCamera(camera, animated: animated)
     }
     
     
@@ -896,7 +896,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     func routeWaypointCircleStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
-        let circles = MGLCircleStyleLayer(identifier: waypointCircleIdentifier, source: source)
+        let circles = MGLCircleStyleLayer(identifier: identifier, source: source)
         let opacity = NSExpression(forConditional: NSPredicate(format: "waypointCompleted == true"), trueExpression: NSExpression(forConstantValue: 0.5), falseExpression: NSExpression(forConstantValue: 1))
         
         circles.circleColor = NSExpression(forConstantValue: UIColor(red:0.9, green:0.9, blue:0.9, alpha:1.0))
