@@ -21,7 +21,7 @@ public class GenericRouteShield: StylableView {
         let label: UILabel = .forAutoLayout()
         label.text = routeText
         label.textColor = .black
-        label.font = UIFont.boldSystemFont(ofSize: pointSize * ExitView.labelFontSizeScaleFactor)
+        label.font = UIFont.boldSystemFont(ofSize: pointSize * GenericRouteShield.labelFontSizeScaleFactor)
         
         return label
     }()
@@ -37,7 +37,7 @@ public class GenericRouteShield: StylableView {
     //The size of the text the view attachment is contained within.
     var pointSize: CGFloat {
         didSet {
-            routeLabel.font = routeLabel.font.withSize(pointSize * ExitView.labelFontSizeScaleFactor)
+            routeLabel.font = routeLabel.font.withSize(pointSize * GenericRouteShield.labelFontSizeScaleFactor)
             rebuildConstraints()
         }
     }
