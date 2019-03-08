@@ -212,7 +212,7 @@ open class NavigationViewController: UIViewController {
         self.navigationService = options?.navigationService ?? MapboxNavigationService(route: route)
         self.navigationService.usesDefaultUserInterface = true
         self.navigationService.delegate = self
-        self.voiceController = options?.voiceController ?? MapboxVoiceController(speechClient: SpeechSynthesizer(accessToken: navigationService?.directions.accessToken))
+        self.voiceController = options?.voiceController ?? MapboxVoiceController(speechClient: SpeechSynthesizer(accessToken: navigationService?.directions.accessToken), navigationService: navigationService)
 
         NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
         
