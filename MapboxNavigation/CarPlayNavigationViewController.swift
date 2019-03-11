@@ -92,7 +92,6 @@ public class CarPlayNavigationViewController: UIViewController {
         
         super.init(nibName: nil, bundle: nil)
         carFeedbackTemplate = createFeedbackUI()
-        navigationService.delegate = self
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -141,7 +140,7 @@ public class CarPlayNavigationViewController: UIViewController {
         styleManager!.styles = self.styles
         
         makeGestureRecognizersResetFrameRate()
-        resumeNotifications()
+        resumeNotifications(service: navigationService)
         navigationService.start()
         mapView.recenterMap()
     }
@@ -152,10 +151,10 @@ public class CarPlayNavigationViewController: UIViewController {
         suspendNotifications()
     }
     
-    func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_:)), name: .routeControllerProgressDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(rerouted(_:)), name: .routeControllerDidReroute, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(visualInstructionDidChange(_:)), name: .routeControllerDidPassVisualInstructionPoint, object: nil)
+    func resumeNotifications(service: NavigationService) {
+        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_:)), name: .routeControllerProgressDidChange, object: service.router)
+        NotificationCenter.default.addObserver(self, selector: #selector(rerouted(_:)), name: .routeControllerDidReroute, object: service.router)
+        NotificationCenter.default.addObserver(self, selector: #selector(visualInstructionDidChange(_:)), name: .routeControllerDidPassVisualInstructionPoint, object: service.router)
     }
     
     func suspendNotifications() {
@@ -484,15 +483,6 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
     }
 }
 
-@available(iOS 12.0, *)
-extension CarPlayNavigationViewController: NavigationServiceDelegate {
-    public func navigationService(_ service: NavigationService, didArriveAt waypoint: Waypoint) -> Bool {
-        let advancesToNextLeg = carPlayNavigationDelegate?.carPlayNavigationViewController?(self, didArriveAt: waypoint) ?? true
-        
-        return advancesToNextLeg
-    }
-}
-
 /**
  The `CarPlayNavigationDelegate` protocol provides methods for reacting to significant events during turn-by-turn navigation with `CarPlayNavigationViewController`.
  */
@@ -507,18 +497,5 @@ public protocol CarPlayNavigationDelegate {
      */
     @objc(carPlayNavigationViewControllerDidDismiss:byCanceling:)
     optional func carPlayNavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool)
-    
-    /**
-     Called when the user arrives at the destination waypoint for a route leg.
-     
-     This method is called when the CarPlay navigation view controller arrives at the waypoint. You can implement this method to prevent the navigation view controller from automatically advancing to the next leg. For example, you can and show an interstitial sheet upon arrival and pause navigation by returning `false`, then continue the route when the user dismisses the sheet. If this method is unimplemented, the CarPlay navigation view controller automatically advances to the next leg when arriving at a waypoint.
-     
-     - postcondition: If you return `false` within this method, you must manually advance to the next leg: obtain the value of the `navigationService` and its `NavigationService.routeProgress` property, then increment the `RouteProgress.legIndex` property.
-     - parameter carPlayNavigationViewController: The CarPlay navigation view controller that has arrived at a waypoint.
-     - parameter waypoint: The waypoint that the user has arrived at.
-     - returns: True to automatically advance to the next leg, or false to remain on the now completed leg.
-     */
-    @objc(carPlayNavigationViewController:didArriveAtWaypoint:)
-    optional func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController, didArriveAt waypoint: Waypoint) -> Bool
 }
 #endif
