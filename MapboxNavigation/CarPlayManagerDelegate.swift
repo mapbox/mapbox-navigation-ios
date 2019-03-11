@@ -57,7 +57,7 @@ public protocol CarPlayManagerDelegate {
     optional func carPlayManager(_ carPlayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]?
     
     /**
-     Asks the delegate to provide an alternate navigation service. If no delegate is set, a default built-in MapboxNavigationService will be created and used.
+     Asks the delegate to provide a navigation service. If no delegate is set, a default built-in MapboxNavigationService will be created and used.
      
      - parameter carPlayManager: The CarPlay manager instance.
      - parameter route: The route for which the returned route controller will manage location updates.
