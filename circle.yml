@@ -108,11 +108,11 @@ step-library:
         command: |
           xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.1,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme Bench clean build test
 
-  - &build-Example
+  - &build-Example-CarPlay
       run:
-        name: Build Example
+        name: Build Example App
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.1,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme Example clean build | xcpretty
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.1,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme Example-CarPlay clean build | xcpretty
 
   - &cocoapods-integration-install
       run:
@@ -217,5 +217,5 @@ jobs:
       - *prepare-iphone6-plus-ios-12
       - *restore-cache
       - *install-dependencies
-      - *build-Example
+      - *build-Example-CarPlay
       - *save-cache
