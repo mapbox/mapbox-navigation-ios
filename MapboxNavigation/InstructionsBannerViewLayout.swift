@@ -106,7 +106,7 @@ extension BaseInstructionsBannerView {
         secondaryLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -18).isActive = true
         baselineConstraints.append(secondaryLabel.lastBaselineAnchor.constraint(equalTo: distanceLabel.lastBaselineAnchor, constant: -BaseInstructionsBannerView.padding / 2))
         baselineConstraints.append(secondaryLabel.topAnchor.constraint(greaterThanOrEqualTo: primaryLabel.bottomAnchor, constant: 0))
-        centerYConstraints.append(secondaryLabel.topAnchor.constraint(greaterThanOrEqualTo: primaryLabel.bottomAnchor, constant: 0))
+        centerYConstraints.append(secondaryLabel.topAnchor.constraint(equalTo: primaryLabel.bottomAnchor, constant: 0))
         
         // Drag Indicator View
         stepListIndicatorView.heightAnchor.constraint(equalToConstant: BaseInstructionsBannerView.stepListIndicatorViewSize.height).isActive = true
