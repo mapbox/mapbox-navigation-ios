@@ -141,6 +141,7 @@ public class CarPlayNavigationViewController: UIViewController {
         
         makeGestureRecognizersResetFrameRate()
         resumeNotifications(service: navigationService)
+        updateManeuvers(for: navigationService.routeProgress)
         navigationService.start()
         mapView.recenterMap()
     }

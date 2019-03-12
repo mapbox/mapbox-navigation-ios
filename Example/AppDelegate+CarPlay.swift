@@ -25,6 +25,10 @@ extension AppDelegate: CPApplicationDelegate {
         carPlayManager.delegate = self
         carPlaySearchController.delegate = self
         carPlayManager.application(application, didConnectCarInterfaceController: interfaceController, to: window)
+        
+        if let navigationViewController = self.window!.rootViewController?.presentedViewController as? NavigationViewController, let service = navigationViewController.navigationService {
+            carPlayManager.beginNavigationWithCarPlay(using: service.router.location!.coordinate, navigationService: service)
+        }
     }
     
     func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPWindow) {
@@ -36,6 +40,14 @@ extension AppDelegate: CPApplicationDelegate {
 
 @available(iOS 12.0, *)
 extension AppDelegate: CarPlayManagerDelegate {
+    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route) -> NavigationService {
+
+        if let nvc = self.window?.rootViewController?.presentedViewController as? NavigationViewController, let service = nvc.navigationService {
+            return service
+        }
+        return MapboxNavigationService(route: route)
+    }
+    
     
     // MARK: CarPlayManagerDelegate
     func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith service: NavigationService) {
