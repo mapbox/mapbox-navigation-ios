@@ -127,7 +127,7 @@ extension AppDelegate: CarPlayManagerDelegate {
                               mapViewController.zoomInButton,
                               mapViewController.zoomOutButton]
             mapButtons.insert(mapViewController.panningInterfaceDisplayButton(for: mapTemplate), at: 1)
-            return mapButtons
+            return mapButtons // TODO: These buttons or an unbalanced call to begin/end appearance transitions triggers unsatisfiable constraints
         case .previewing, .navigating, .panningInBrowsingMode:
             return nil
         }
