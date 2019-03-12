@@ -31,11 +31,7 @@ public class CarPlayMapViewController: UIViewController {
     
     var isOverviewingRoutes: Bool = false
     
-    var mapView: NavigationMapView {
-        get {
-            return self.view as! NavigationMapView
-        }
-    }
+    weak var mapView: NavigationMapView!
     
     /**
      The map button for recentering the map view if a user action causes it to stop following the user.
@@ -116,12 +112,18 @@ public class CarPlayMapViewController: UIViewController {
         
         aCoder.encode(styles, forKey: "styles")
     }
-    
-    override public func loadView() {
+
+    override public func viewDidLoad() {
+        super.viewDidLoad()
+        
         let mapView = NavigationMapView()
 //        mapView.navigationMapDelegate = self
+        mapView.translatesAutoresizingMaskIntoConstraints = false
         mapView.logoView.isHidden = true
         mapView.attributionButton.isHidden = true
+        view.addSubview(mapView)
+        mapView.pinInSuperview()
+        self.mapView = mapView
         
         styleObservation = mapView.observe(\.style, options: .new) { (mapView, change) in
             guard change.newValue != nil else {
@@ -129,12 +131,6 @@ public class CarPlayMapViewController: UIViewController {
             }
             mapView.localizeLabels()
         }
-        
-        self.view = mapView
-    }
-
-    override public func viewDidLoad() {
-        super.viewDidLoad()
         
         styleManager = StyleManager()
         styleManager!.delegate = self
