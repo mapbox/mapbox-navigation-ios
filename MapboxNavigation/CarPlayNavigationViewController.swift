@@ -123,9 +123,11 @@ public class CarPlayNavigationViewController: UIViewController {
         mapViewRightSafeAreaBalancingConstraint = NSLayoutConstraint(item: mapView, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1, constant: -mapView.safeArea.right)
         view.addConstraint(mapViewRightSafeAreaBalancingConstraint!)
         mapViewLeftSafeAreaBalancingConstraint = NSLayoutConstraint(item: mapView, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1, constant: mapView.safeArea.left)
+        
         view.addConstraint(mapViewLeftSafeAreaBalancingConstraint!)
-        view.addConstraint(NSLayoutConstraint(item: mapView, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1, constant: 0))
-        view.addConstraint(NSLayoutConstraint(item: mapView, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1, constant: 0))
+        
+        mapView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
         styleObservation = mapView.observe(\.style, options: .new) { [weak self] (mapView, change) in
             guard change.newValue != nil else {
@@ -167,15 +169,18 @@ public class CarPlayNavigationViewController: UIViewController {
     public override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         
-        if let previousSafeAreaInsets = previousSafeAreaInsets {
-            let navigationBarIsOpen = view.safeAreaInsets > previousSafeAreaInsets
-            mapView?.compassView.isHidden = navigationBarIsOpen
+        defer {
+            previousSafeAreaInsets = view.safeAreaInsets
+            view.setNeedsUpdateConstraints()
         }
         
-        previousSafeAreaInsets = view.safeAreaInsets
+        // TODO: Verify `?? 0` should result in navigationBarIsOpen = false initially
+        let navigationBarIsOpen = view.safeAreaInsets.top > previousSafeAreaInsets?.top ?? 0
+        mapView?.compassView.isHidden = navigationBarIsOpen
         
         // Adjust the map’s vanishing point to counterbalance the side maneuver panels by extending the view off beyond the other side of the screen.
         if let mapView = mapView {
+            // TODO: We observe safeAreaInsets but safeArea is not updated initially
             mapViewRightSafeAreaBalancingConstraint?.constant = -mapView.safeArea.right
             mapViewLeftSafeAreaBalancingConstraint?.constant = mapView.safeArea.left
         }
