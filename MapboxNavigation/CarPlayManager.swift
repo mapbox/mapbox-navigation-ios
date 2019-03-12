@@ -320,12 +320,10 @@ extension CarPlayManager: CPInterfaceControllerDelegate {
     
     public func templateDidAppear(_ template: CPTemplate, animated: Bool) {
         guard interfaceController?.topTemplate == mainMapTemplate else { return }
-        if template == interfaceController?.rootTemplate, let mapViewController = carPlayMapViewController {
-            
-            let mapView = mapViewController.mapView
-            mapView.removeRoutes()
-            mapView.removeWaypoints()
-            mapView.setUserTrackingMode(.followWithCourse, animated: true)
+        if template == interfaceController?.rootTemplate {
+            mapView?.removeRoutes()
+            mapView?.removeWaypoints()
+            mapView?.setUserTrackingMode(.followWithCourse, animated: true)
         }
     }
     public func templateWillDisappear(_ template: CPTemplate, animated: Bool) {
@@ -506,10 +504,9 @@ extension CarPlayManager: CPMapTemplateDelegate {
 
         carPlayMapViewController.isOverviewingRoutes = false
         carPlayMapViewController.present(navigationViewController, animated: true, completion: nil)
-
-        let mapView = carPlayMapViewController.mapView
-        mapView.removeRoutes()
-        mapView.removeWaypoints()
+        
+        mapView?.removeRoutes()
+        mapView?.removeWaypoints()
 
         delegate?.carPlayManager(self, didBeginNavigationWith: service)
     }
@@ -543,11 +540,12 @@ extension CarPlayManager: CPMapTemplateDelegate {
     }
 
     public func mapTemplate(_ mapTemplate: CPMapTemplate, selectedPreviewFor trip: CPTrip, using routeChoice: CPRouteChoice) {
-        guard let carPlayMapViewController = carPlayMapViewController else {
-            return
+        guard let carPlayMapViewController = carPlayMapViewController,
+            let mapView = carPlayMapViewController.mapView else {
+                return
         }
         carPlayMapViewController.isOverviewingRoutes = true
-        let mapView = carPlayMapViewController.mapView
+        
         let route = routeChoice.userInfo as! Route
 
         //FIXME: Unable to tilt map during route selection -- https://github.com/mapbox/mapbox-gl-native/issues/2259
@@ -562,12 +560,8 @@ extension CarPlayManager: CPMapTemplateDelegate {
     }
 
     public func mapTemplateDidCancelNavigation(_ mapTemplate: CPMapTemplate) {
-        guard let carPlayMapViewController = carPlayMapViewController else {
-            return
-        }
-        let mapView = carPlayMapViewController.mapView
-        mapView.removeRoutes()
-        mapView.removeWaypoints()
+        mapView?.removeRoutes()
+        mapView?.removeWaypoints()
         delegate?.carPlayManagerDidEndNavigation(self)
     }
 
@@ -657,7 +651,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         }
 
         // Determine the screen distance to pan by based on the distance from the visual center to the closest side.
-        let mapView = carPlayMapViewController.mapView
+        guard let mapView = mapView else { return }
         let contentFrame = UIEdgeInsetsInsetRect(mapView.bounds, mapView.safeArea)
         let increment = min(mapView.bounds.width, mapView.bounds.height) / 2.0
         

@@ -117,7 +117,6 @@ public class CarPlayMapViewController: UIViewController {
         super.viewDidLoad()
         
         let mapView = NavigationMapView()
-//        mapView.navigationMapDelegate = self
         mapView.translatesAutoresizingMaskIntoConstraints = false
         mapView.logoView.isHidden = true
         mapView.attributionButton.isHidden = true
