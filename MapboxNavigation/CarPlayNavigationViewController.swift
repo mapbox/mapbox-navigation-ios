@@ -42,7 +42,6 @@ public class CarPlayNavigationViewController: UIViewController {
     var mapTemplate: CPMapTemplate
     var carFeedbackTemplate: CPGridTemplate!
     var carInterfaceController: CPInterfaceController
-    var previousSafeAreaInsets: UIEdgeInsets?
     var styleManager: StyleManager?
     
     /**
@@ -167,12 +166,8 @@ public class CarPlayNavigationViewController: UIViewController {
     public override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         
-        if let previousSafeAreaInsets = previousSafeAreaInsets {
-            let navigationBarIsOpen = view.safeAreaInsets > previousSafeAreaInsets
-            mapView?.compassView.isHidden = navigationBarIsOpen
-        }
-        
-        previousSafeAreaInsets = view.safeAreaInsets
+        let navigationBarIsOpen = view.safeAreaInsets.top > 0
+        mapView?.compassView.isHidden = navigationBarIsOpen
         
         // Adjust the map’s vanishing point to counterbalance the side maneuver panels by extending the view off beyond the other side of the screen.
         if let mapView = mapView {
