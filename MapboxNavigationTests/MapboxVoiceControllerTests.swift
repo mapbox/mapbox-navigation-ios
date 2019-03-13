@@ -35,7 +35,7 @@ class MapboxVoiceControllerTests: XCTestCase {
 
     func testControllerDownloadsAndCachesInstructionDataWhenNotified() {
         let service = MapboxNavigationService(route: route)
-        let subject = MapboxVoiceController(speechClient: speechAPISpy, audioPlayerType: AudioPlayerDummy.self, navigationService: service)
+        let subject = MapboxVoiceController(navigationService: service, speechClient: speechAPISpy, audioPlayerType: AudioPlayerDummy.self)
         let userInfo = [RouteControllerNotificationUserInfoKey.routeProgressKey : service.routeProgress]
         let notification = Notification.init(name: .routeControllerDidPassSpokenInstructionPoint, object: service.router, userInfo: userInfo)
 
@@ -68,7 +68,7 @@ class MapboxVoiceControllerTests: XCTestCase {
         service.routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex = 1
         
         let routeProgress = service.routeProgress
-        let subject = MapboxVoiceController(speechClient: speechAPISpy, audioPlayerType: AudioPlayerDummy.self, navigationService: service)
+        let subject = MapboxVoiceController(navigationService: service, speechClient: speechAPISpy, audioPlayerType: AudioPlayerDummy.self)
         subject.routeProgress = routeProgress
         
         let instruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction
