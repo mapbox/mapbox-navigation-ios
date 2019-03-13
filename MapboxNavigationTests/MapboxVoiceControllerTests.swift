@@ -10,7 +10,6 @@ import AVKit
 class MapboxVoiceControllerTests: XCTestCase {
 
     var speechAPISpy: SpeechAPISpy!
-//    var controller: MapboxVoiceController?
 
     var route: Route {
         get {
@@ -24,14 +23,12 @@ class MapboxVoiceControllerTests: XCTestCase {
         let signal = { _ = semaphore.signal() }
         FileCache().clearDisk(completion: signal)
         self.speechAPISpy = SpeechAPISpy(accessToken: "deadbeef")
-//        controller = MapboxVoiceController(speechClient: speechAPISpy, audioPlayerType: AudioPlayerDummy.self)
         
         XCTAssert(semaphore.wait(timeout: .now() + 5) == .success)
     }
     
     override func tearDown() {
         speechAPISpy.reset()
-//        controller = nil
         speechAPISpy = nil
         super.tearDown()
     }
