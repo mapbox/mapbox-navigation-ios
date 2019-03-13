@@ -35,6 +35,10 @@ extension AppDelegate: CPApplicationDelegate {
         carPlayManager.delegate = nil
         carPlaySearchController.delegate = nil
         carPlayManager.application(application, didDisconnectCarInterfaceController: interfaceController, from: window)
+        
+        if let navigationViewController = self.window!.rootViewController?.presentedViewController as? NavigationViewController {
+            navigationViewController.isUsedInConjunctionWithCarPlayWindow = false
+        }
     }
 }
 
