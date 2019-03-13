@@ -140,7 +140,7 @@ public class CarPlayNavigationViewController: UIViewController {
         styleManager!.styles = self.styles
         
         makeGestureRecognizersResetFrameRate()
-        resumeNotifications(by: navigationService)
+        observeNotifications(by: navigationService)
         navigationService.start()
         mapView.recenterMap()
     }
@@ -151,7 +151,7 @@ public class CarPlayNavigationViewController: UIViewController {
         suspendNotifications()
     }
     
-    func resumeNotifications(by service: NavigationService) {
+    func observeNotifications(by service: NavigationService) {
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_:)), name: .routeControllerProgressDidChange, object: service.router)
         NotificationCenter.default.addObserver(self, selector: #selector(rerouted(_:)), name: .routeControllerDidReroute, object: service.router)
         NotificationCenter.default.addObserver(self, selector: #selector(visualInstructionDidChange(_:)), name: .routeControllerDidPassVisualInstructionPoint, object: service.router)
