@@ -9,7 +9,7 @@ import MapboxDirections
  
  Implement this protocol and assign an instance to the `delegate` property of the shared instance of `CarPlayManager`.
  
- If no delegate is set, a default built-in MapboxNavigationService will be created and used.
+ If no delegate is set, a default built-in MapboxNavigationService will be created and used when a trip begins.
  */
 @available(iOS 12.0, *)
 @objc(MBCarPlayManagerDelegate)
