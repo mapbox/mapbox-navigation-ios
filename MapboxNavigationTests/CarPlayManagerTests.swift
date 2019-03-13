@@ -86,7 +86,8 @@ class CarPlayManagerTests: XCTestCase {
         searchDelegate.carPlaySearchController(searchController!, carPlayManager: manager!, interfaceController: fakeInterfaceController)
 
         let view = fakeWindow.rootViewController?.view
-        XCTAssert((view?.isKind(of: NavigationMapView.self))!, "CarPlay window's root view should be a map view")
+        let mapView = view?.subviews.filter { $0 is NavigationMapView }.first
+        XCTAssert(mapView is NavigationMapView, "CarPlayMapViewController should have a NavigationMapView")
 
         let template: CPMapTemplate = fakeInterfaceController.rootTemplate as! CPMapTemplate
         XCTAssertEqual(1, template.leadingNavigationBarButtons.count)
