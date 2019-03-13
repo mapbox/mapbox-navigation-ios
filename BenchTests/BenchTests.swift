@@ -59,7 +59,7 @@ class BenchTests: XCTestCase, CLLocationManagerDelegate {
                                               eventsManagerType: NavigationEventsManagerSpy.self,
                                               simulating: .never,
                                               routerType: RouteController.self)
-        let voiceController = MapboxVoiceController(speechClient: speechAPI, audioPlayerType: AudioPlayerDummy.self, navigationService: service)
+        let voiceController = MapboxVoiceController(navigationService: service, speechClient: speechAPI, audioPlayerType: AudioPlayerDummy.self)
         
         return NavigationViewController(for: route, navigationService: service, voiceController: voiceController)
     }

@@ -93,7 +93,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
 
         speechSynth.delegate = self
         
-        resumeNotifications(by: navigationService)
+        observeNotifications(by: navigationService)
     }
     
     @available(*, unavailable, message: "Use init(navigationService:) instead.")
@@ -116,7 +116,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         speechSynth.stopSpeaking(at: .immediate)
     }
     
-    func resumeNotifications(by service: NavigationService) {
+    func observeNotifications(by service: NavigationService) {
         NotificationCenter.default.addObserver(self, selector: #selector(didPassSpokenInstructionPoint(notification:)), name: .routeControllerDidPassSpokenInstructionPoint, object: service.router)
         NotificationCenter.default.addObserver(self, selector: #selector(pauseSpeechAndPlayReroutingDing(notification:)), name: .routeControllerWillReroute, object: service.router)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: .routeControllerDidReroute, object: service.router)

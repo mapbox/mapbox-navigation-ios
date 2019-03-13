@@ -433,7 +433,8 @@ class CarPlayManagerSpec: QuickSpec {
         }
         
         func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route) -> NavigationService {
-            return MapboxNavigationService(route: route)
+            let directionsFake = Directions(accessToken: "foo")
+            return MapboxNavigationService(route: route, directions: directionsFake)
         }
     }
 }
@@ -460,7 +461,7 @@ class CarPlayManagerFailureDelegateSpy: CarPlayManagerDelegate {
     }
     
     func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route) -> NavigationService {
-        return MapboxNavigationService(route: route)
+        fatalError("This is an empty stub.")
     }
     
     func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith service: NavigationService) {
