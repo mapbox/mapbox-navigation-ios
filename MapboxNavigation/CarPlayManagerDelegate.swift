@@ -59,7 +59,7 @@ public protocol CarPlayManagerDelegate {
     optional func carPlayManager(_ carPlayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]?
     
     /**
-     Asks the delegate to provide a navigation service.
+     Asks the delegate to provide a navigation service. In multi-screen applications this should be the same instance used to guide the user along the route on the phone.
      
      - parameter carPlayManager: The CarPlay manager instance.
      - parameter route: The route for which the returned route controller will manage location updates.
