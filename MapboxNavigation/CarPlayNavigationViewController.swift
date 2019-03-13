@@ -497,5 +497,11 @@ public protocol CarPlayNavigationDelegate {
      */
     @objc(carPlayNavigationViewControllerDidDismiss:byCanceling:)
     optional func carPlayNavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool)
+    
+    //MARK: - Deprecated.
+    
+    @available(*, obsoleted: 0.1, message: "Use NavigationViewControllerDelegate.navigationViewController(_:didArriveAt:) or  NavigationServiceDelegate.navigationService(_:didArriveAt:) instead.")
+    @objc(carPlayNavigationViewController:didArriveAtWaypoint:)
+    optional func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController, didArriveAt waypoint: Waypoint) -> Bool
 }
 #endif
