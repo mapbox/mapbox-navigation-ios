@@ -646,10 +646,6 @@ extension CarPlayManager: CPMapTemplateDelegate {
     }
 
     public func mapTemplate(_ mapTemplate: CPMapTemplate, panWith direction: CPMapTemplate.PanDirection) {
-        guard let carPlayMapViewController = carPlayMapViewController else {
-            return
-        }
-
         // Determine the screen distance to pan by based on the distance from the visual center to the closest side.
         guard let mapView = mapView else { return }
         let contentFrame = UIEdgeInsetsInsetRect(mapView.bounds, mapView.safeArea)

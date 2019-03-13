@@ -138,6 +138,11 @@ public class CarPlayMapViewController: UIViewController {
         resetCamera(animated: false, altitude: CarPlayMapViewController.defaultAltitude)
     }
     
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        print(".")
+    }
+    
     override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         styleObservation = nil
@@ -190,17 +195,23 @@ public class CarPlayMapViewController: UIViewController {
     }
     
     override public func viewSafeAreaInsetsDidChange() {
-        mapView.setContentInset(mapView.safeArea, animated: false)
+        super.viewSafeAreaInsetsDidChange()
         
-        guard isOverviewingRoutes else {
-            super.viewSafeAreaInsetsDidChange()
-            return
+        var safeArea = view.safeArea
+        safeArea += NavigationMapView.defaultPadding
+        
+        if let userCourseView = mapView.userCourseView {
+            let midX = userCourseView.bounds.midX
+            let midY = userCourseView.bounds.midY
+            safeArea += UIEdgeInsets(top: midY, left: midX, bottom: midY, right: midX)
         }
         
+        mapView.setContentInset(safeArea, animated: false)
+        
+        guard isOverviewingRoutes else { return }
         
         guard let routes = mapView.routes,
             let active = routes.first else {
-                super.viewSafeAreaInsetsDidChange()
                 return
         }
         
