@@ -85,7 +85,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     /**
      Default initializer for `RouteVoiceController`.
      */
-    @objc(initWithNavigationService:)
+    @objc
     public init(navigationService: NavigationService) {
         super.init()
 
