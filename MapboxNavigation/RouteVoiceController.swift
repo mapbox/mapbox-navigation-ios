@@ -96,8 +96,9 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         resumeNotifications(service: navigationService)
     }
     
+    @available(*, unavailable, message: "Use init(navigationService:) instead.")
     public override init() {
-        fatalError("Use init(navigationService:) instead.")
+        fatalError()
     }
 
     private func verifyBackgroundAudio() {
