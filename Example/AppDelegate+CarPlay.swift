@@ -36,6 +36,15 @@ extension AppDelegate: CPApplicationDelegate {
 
 @available(iOS 12.0, *)
 extension AppDelegate: CarPlayManagerDelegate {
+    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route) -> NavigationService {
+        
+        if let nvc = self.window?.rootViewController?.presentedViewController as? NavigationViewController, let service = nvc.navigationService {
+            return service
+        }
+        return MapboxNavigationService(route: route)
+    }
+
+    
     
     // MARK: CarPlayManagerDelegate
     func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith service: NavigationService) {

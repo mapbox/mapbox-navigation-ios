@@ -479,7 +479,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let route = routeChoice.userInfo as! Route
         var service: NavigationService
         
-        if let override = delegate?.carPlayManager?(self, navigationServiceAlong: route) {
+        if let override = delegate?.carPlayManager(self, navigationServiceAlong: route) {
             service = override
         } else {
             service = MapboxNavigationService(route: route, simulating: simulatesLocations ? .always : .onPoorGPS)

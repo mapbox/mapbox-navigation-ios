@@ -431,6 +431,11 @@ class CarPlayManagerSpec: QuickSpec {
         func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
             //no-op
         }
+        
+        func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route) -> NavigationService {
+            let directionsFake = Directions(accessToken: "foo")
+            return MapboxNavigationService(route: route, directions: directionsFake)
+        }
     }
 }
 
@@ -453,6 +458,10 @@ class CarPlayManagerFailureDelegateSpy: CarPlayManagerDelegate {
     func carPlayManager(_ carPlayManager: CarPlayManager, didFailToFetchRouteBetween waypoints: [Waypoint]?, options: RouteOptions, error: NSError) -> CPNavigationAlert? {
         recievedError = error
         return nil
+    }
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route) -> NavigationService {
+        fatalError("This is an empty stub.")
     }
     
     func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith service: NavigationService) {
