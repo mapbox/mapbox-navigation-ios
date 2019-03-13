@@ -155,6 +155,35 @@ public class CarPlayManager: NSObject {
         return overviewButton
     }()
     
+    lazy var fullDateComponentsFormatter: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .full
+        formatter.allowedUnits = [.day, .hour, .minute]
+        return formatter
+    }()
+    
+    lazy var shortDateComponentsFormatter: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .short
+        formatter.allowedUnits = [.day, .hour, .minute]
+        return formatter
+    }()
+    
+    lazy var briefDateComponentsFormatter: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .brief
+        formatter.allowedUnits = [.day, .hour, .minute]
+        return formatter
+    }()
+    
+    /**
+     The main map view displayed inside CarPlay.
+     */
+    @objc public var mapView: NavigationMapView? {
+        let mapViewController = carPlayMapViewController
+        return mapViewController?.mapView
+    }
+    
     /**
      Initializes a new CarPlay manager that manages a connection to the CarPlay
      interface.
@@ -181,37 +210,30 @@ public class CarPlayManager: NSObject {
         
         self.mapTemplateProvider.delegate = self
     }
-
-    lazy var fullDateComponentsFormatter: DateComponentsFormatter = {
-        let formatter = DateComponentsFormatter()
-        formatter.unitsStyle = .full
-        formatter.allowedUnits = [.day, .hour, .minute]
-        return formatter
-    }()
-
-    lazy var shortDateComponentsFormatter: DateComponentsFormatter = {
-        let formatter = DateComponentsFormatter()
-        formatter.unitsStyle = .short
-        formatter.allowedUnits = [.day, .hour, .minute]
-        return formatter
-    }()
-
-    lazy var briefDateComponentsFormatter: DateComponentsFormatter = {
-        let formatter = DateComponentsFormatter()
-        formatter.unitsStyle = .brief
-        formatter.allowedUnits = [.day, .hour, .minute]
-        return formatter
-    }()
     
-    /**
-     The main map view displayed inside CarPlay.
-     */
-    @objc public var mapView: NavigationMapView? {
-        let mapViewController = carPlayMapViewController
-        return mapViewController?.mapView
+    public func beginNavigationWithCarPlay(using currentLocation: CLLocationCoordinate2D, service: NavigationService) {
+        let route = service.route
+        guard let destination = route.routeOptions.waypoints.last else {
+            return
+        }
+        
+        let summaryVariants = [
+            fullDateComponentsFormatter.string(from: route.expectedTravelTime)!,
+            shortDateComponentsFormatter.string(from: route.expectedTravelTime)!,
+            briefDateComponentsFormatter.string(from: route.expectedTravelTime)!]
+        let routeChoice = CPRouteChoice(summaryVariants: summaryVariants, additionalInformationVariants: [route.description], selectionSummaryVariants: [route.description])
+        routeChoice.userInfo = route
+        
+        let originPlacemark = MKPlacemark(coordinate: currentLocation)
+        let destinationPlacemark = MKPlacemark(coordinate: destination.coordinate)
+        
+        let trip = CPTrip(origin: MKMapItem(placemark: originPlacemark), destination: MKMapItem(placemark: destinationPlacemark), routeChoices: [routeChoice])
+        
+        if let mapTemplate = interfaceController?.topTemplate as? CPMapTemplate {
+            self.mapTemplate(mapTemplate, startedTrip: trip, using: routeChoice)
+        }
     }
 }
-
 
 // MARK: CPApplicationDelegate
 @available(iOS 12.0, *)
