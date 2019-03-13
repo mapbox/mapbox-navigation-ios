@@ -7,6 +7,7 @@
 
 ### CarPlay
 
+* Added the ability to programatically start a CarPlay turn-by-turn navigation session. ([#2021](https://github.com/mapbox/mapbox-navigation-ios/pull/2021))
 * `CarPlayNavigationViewController` now exposes the `navigationService`. ([#2005](https://github.com/mapbox/mapbox-navigation-ios/pull/2005))
 * `CarPlayNavigationViewControllerDelegate` now has a message for when a user arrives at a waypoint. ([#2005](https://github.com/mapbox/mapbox-navigation-ios/pull/2005))
 * `CarPlayManager` will now notify its delegate if the route request fails and provide the option to present an alert on the map template. ([#1981](https://github.com/mapbox/mapbox-navigation-ios/pull/1981))

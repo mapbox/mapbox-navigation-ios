@@ -211,6 +211,12 @@ public class CarPlayManager: NSObject {
         self.mapTemplateProvider.delegate = self
     }
     
+    /**
+     Programatically begins a carplay turn-by-turn navigation session.
+     
+     - parameter currentLocation: The current location of the user. This will be used to initally draw the current location icon.
+     - parameter navigationService: The service with which to navigation. CarPlayNavigationViewController will observe the progress updates from this service.
+     */
     public func beginNavigationWithCarPlay(using currentLocation: CLLocationCoordinate2D, navigationService: NavigationService) {
         let route = navigationService.route
         guard let destination = route.routeOptions.waypoints.last else {
