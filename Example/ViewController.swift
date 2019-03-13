@@ -270,6 +270,12 @@ class ViewController: UIViewController {
     }
 
     func presentAndRemoveMapview(_ navigationViewController: NavigationViewController) {
+        let delegate = UIApplication.shared.delegate as? AppDelegate
+        
+        if #available(iOS 12.0, *), let service = navigationViewController.navigationService, let location = service.router.location {
+            delegate?.carPlayManager.beginNavigationWithCarPlay(using: location.coordinate, navigationService: service)
+        }
+        
         present(navigationViewController, animated: true) {
             self.mapView?.removeFromSuperview()
             self.mapView = nil
