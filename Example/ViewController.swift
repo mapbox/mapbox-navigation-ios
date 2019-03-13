@@ -440,7 +440,7 @@ extension ViewController: NavigationViewControllerDelegate {
     // If implemented, you are responsible for also dismissing the UI.
     func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool) {
         if let delegate = UIApplication.shared.delegate as? AppDelegate {
-            delegate.carPlayManager.currentNavigator?.exitNavigation(byCanceling: true)
+            delegate.carPlayManager.currentNavigator?.exitNavigation(byCanceling: canceled)
         }
         navigationViewController.dismiss(animated: true, completion: nil)
     }
