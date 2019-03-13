@@ -44,12 +44,13 @@ extension AppDelegate: CPApplicationDelegate {
 
 @available(iOS 12.0, *)
 extension AppDelegate: CarPlayManagerDelegate {
-    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route) -> NavigationService {
+    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, desiredSimulationMode: SimulationMode) -> NavigationService {
 
         if let nvc = self.window?.rootViewController?.presentedViewController as? NavigationViewController, let service = nvc.navigationService {
+            //Do not set simulation mode if we already have an active navigation session.
             return service
         }
-        return MapboxNavigationService(route: route)
+        return MapboxNavigationService(route: route, simulating: desiredSimulationMode)
     }
     
     
