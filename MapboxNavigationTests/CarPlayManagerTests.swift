@@ -413,6 +413,7 @@ class CarPlayManagerSpec: QuickSpec {
     }
 
     private class CustomTripPreviewDelegate: CarPlayManagerDelegate {
+        
         var customTripPreviewTextConfiguration: CPTripPreviewTextConfiguration?
         var customTrip: CPTrip?
 
@@ -432,9 +433,9 @@ class CarPlayManagerSpec: QuickSpec {
             //no-op
         }
         
-        func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route) -> NavigationService {
+        func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, desiredSimulationMode: SimulationMode) -> NavigationService {
             let directionsFake = Directions(accessToken: "foo")
-            return MapboxNavigationService(route: route, directions: directionsFake)
+            return MapboxNavigationService(route: route, directions: directionsFake, simulating: desiredSimulationMode)
         }
     }
 }
@@ -460,7 +461,7 @@ class CarPlayManagerFailureDelegateSpy: CarPlayManagerDelegate {
         return nil
     }
     
-    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route) -> NavigationService {
+    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, desiredSimulationMode: SimulationMode) -> NavigationService {
         fatalError("This is an empty stub.")
     }
     
@@ -488,7 +489,7 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
     public var trailingBarButtons: [CPBarButton]?
     public var mapButtons: [CPMapButton]?
 
-    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route) -> NavigationService {
+    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, desiredSimulationMode: SimulationMode) -> NavigationService {
         let response = Fixture.JSONFromFileNamed(name: jsonFileName)
         let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String: Any]
         let initialRoute: Route = {

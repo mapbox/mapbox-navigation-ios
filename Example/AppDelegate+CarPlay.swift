@@ -25,25 +25,33 @@ extension AppDelegate: CPApplicationDelegate {
         carPlayManager.delegate = self
         carPlaySearchController.delegate = self
         carPlayManager.application(application, didConnectCarInterfaceController: interfaceController, to: window)
+        
+        if let navigationViewController = self.window!.rootViewController?.presentedViewController as? NavigationViewController, let service = navigationViewController.navigationService {
+            carPlayManager.beginNavigationWithCarPlay(using: service.router.location!.coordinate, navigationService: service)
+        }
     }
     
     func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPWindow) {
         carPlayManager.delegate = nil
         carPlaySearchController.delegate = nil
         carPlayManager.application(application, didDisconnectCarInterfaceController: interfaceController, from: window)
+        
+        if let navigationViewController = self.window!.rootViewController?.presentedViewController as? NavigationViewController {
+            navigationViewController.isUsedInConjunctionWithCarPlayWindow = false
+        }
     }
 }
 
 @available(iOS 12.0, *)
 extension AppDelegate: CarPlayManagerDelegate {
-    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route) -> NavigationService {
-        
+    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, desiredSimulationMode: SimulationMode) -> NavigationService {
+
         if let nvc = self.window?.rootViewController?.presentedViewController as? NavigationViewController, let service = nvc.navigationService {
+            //Do not set simulation mode if we already have an active navigation session.
             return service
         }
-        return MapboxNavigationService(route: route)
+        return MapboxNavigationService(route: route, simulating: desiredSimulationMode)
     }
-
     
     
     // MARK: CarPlayManagerDelegate

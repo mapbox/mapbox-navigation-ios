@@ -61,7 +61,9 @@ class BenchTests: XCTestCase, CLLocationManagerDelegate {
                                               routerType: RouteController.self)
         let voiceController = MapboxVoiceController(navigationService: service, speechClient: speechAPI, audioPlayerType: AudioPlayerDummy.self)
         
-        return NavigationViewController(for: route, navigationService: service, voiceController: voiceController)
+        let options = NavigationOptions(navigationService: service, voiceController: voiceController)
+        
+        return NavigationViewController(for: route, options: options)
     }
 }
 

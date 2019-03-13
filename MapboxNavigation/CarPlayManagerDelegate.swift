@@ -63,11 +63,12 @@ public protocol CarPlayManagerDelegate {
      
      - parameter carPlayManager: The CarPlay manager instance.
      - parameter route: The route for which the returned route controller will manage location updates.
+     - parameter desiredSimulationMode: The desired simulation mode to use.
      - returns: A navigation service that manages location updates along `route`.
      */
     
-    @objc(carPlayManager:navigationServiceAlongRoute:)
-    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route) -> NavigationService
+    @objc(carPlayManager:navigationServiceAlongRoute:desiredSimulationMode:)
+    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, desiredSimulationMode: SimulationMode) -> NavigationService
     
     /**
      Offers the delegate an opportunity to react to updates in the search text.

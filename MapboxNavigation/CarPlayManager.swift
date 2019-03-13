@@ -155,6 +155,35 @@ public class CarPlayManager: NSObject {
         return overviewButton
     }()
     
+    lazy var fullDateComponentsFormatter: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .full
+        formatter.allowedUnits = [.day, .hour, .minute]
+        return formatter
+    }()
+    
+    lazy var shortDateComponentsFormatter: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .short
+        formatter.allowedUnits = [.day, .hour, .minute]
+        return formatter
+    }()
+    
+    lazy var briefDateComponentsFormatter: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .brief
+        formatter.allowedUnits = [.day, .hour, .minute]
+        return formatter
+    }()
+    
+    /**
+     The main map view displayed inside CarPlay.
+     */
+    @objc public var mapView: NavigationMapView? {
+        let mapViewController = carPlayMapViewController
+        return mapViewController?.mapView
+    }
+    
     /**
      Initializes a new CarPlay manager that manages a connection to the CarPlay
      interface.
@@ -181,37 +210,36 @@ public class CarPlayManager: NSObject {
         
         self.mapTemplateProvider.delegate = self
     }
-
-    lazy var fullDateComponentsFormatter: DateComponentsFormatter = {
-        let formatter = DateComponentsFormatter()
-        formatter.unitsStyle = .full
-        formatter.allowedUnits = [.day, .hour, .minute]
-        return formatter
-    }()
-
-    lazy var shortDateComponentsFormatter: DateComponentsFormatter = {
-        let formatter = DateComponentsFormatter()
-        formatter.unitsStyle = .short
-        formatter.allowedUnits = [.day, .hour, .minute]
-        return formatter
-    }()
-
-    lazy var briefDateComponentsFormatter: DateComponentsFormatter = {
-        let formatter = DateComponentsFormatter()
-        formatter.unitsStyle = .brief
-        formatter.allowedUnits = [.day, .hour, .minute]
-        return formatter
-    }()
     
     /**
-     The main map view displayed inside CarPlay.
+     Programatically begins a carplay turn-by-turn navigation session.
+     
+     - parameter currentLocation: The current location of the user. This will be used to initally draw the current location icon.
+     - parameter navigationService: The service with which to navigation. CarPlayNavigationViewController will observe the progress updates from this service.
      */
-    @objc public var mapView: NavigationMapView? {
-        let mapViewController = carPlayMapViewController
-        return mapViewController?.mapView
+    public func beginNavigationWithCarPlay(using currentLocation: CLLocationCoordinate2D, navigationService: NavigationService) {
+        let route = navigationService.route
+        guard let destination = route.routeOptions.waypoints.last else {
+            return
+        }
+        
+        let summaryVariants = [
+            fullDateComponentsFormatter.string(from: route.expectedTravelTime)!,
+            shortDateComponentsFormatter.string(from: route.expectedTravelTime)!,
+            briefDateComponentsFormatter.string(from: route.expectedTravelTime)!]
+        let routeChoice = CPRouteChoice(summaryVariants: summaryVariants, additionalInformationVariants: [route.description], selectionSummaryVariants: [route.description])
+        routeChoice.userInfo = route
+        
+        let originPlacemark = MKPlacemark(coordinate: currentLocation)
+        let destinationPlacemark = MKPlacemark(coordinate: destination.coordinate)
+        
+        let trip = CPTrip(origin: MKMapItem(placemark: originPlacemark), destination: MKMapItem(placemark: destinationPlacemark), routeChoices: [routeChoice])
+        
+        if let mapTemplate = mainMapTemplate {
+            self.mapTemplate(mapTemplate, startedTrip: trip, using: routeChoice)
+        }
     }
 }
-
 
 // MARK: CPApplicationDelegate
 @available(iOS 12.0, *)
@@ -479,10 +507,11 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let route = routeChoice.userInfo as! Route
         var service: NavigationService
         
-        if let override = delegate?.carPlayManager(self, navigationServiceAlong: route) {
+        let desiredSimulationMode: SimulationMode = simulatesLocations ? .always : .onPoorGPS
+        if let override = delegate?.carPlayManager(self, navigationServiceAlong: route, desiredSimulationMode: desiredSimulationMode) {
             service = override
         } else {
-            service = MapboxNavigationService(route: route, simulating: simulatesLocations ? .always : .onPoorGPS)
+            service = MapboxNavigationService(route: route, simulating: desiredSimulationMode)
         }
 
         if simulatesLocations == true {

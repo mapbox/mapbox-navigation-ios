@@ -343,11 +343,9 @@ open class NavigationViewController: UIViewController {
             
             if !navigationViewControllerExistsInStack {
                 
-                let directions = navigationService.directions
                 let route = navigationService.routeProgress.route
                 
-                let service = MapboxNavigationService(route: route, directions: directions, simulating: navigationService.simulationMode)
-                let options = NavigationOptions(navigationService: service)
+                let options = NavigationOptions(navigationService: navigationService)
                 let navigationViewController = NavigationViewController(for: route, options: options)
                 
                 window.rootViewController?.topMostViewController()?.present(navigationViewController, animated: true, completion: {

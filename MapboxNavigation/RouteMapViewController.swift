@@ -626,7 +626,13 @@ extension RouteMapViewController: NavigationViewDelegate {
 
     //MARK: InstructionsBannerViewDelegate
     func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView) {
-        displayPreviewInstructions()
+        if stepsViewController != nil {
+            stepsViewController?.dismiss() {
+                self.stepsViewController = nil
+            }
+        } else {
+            displayPreviewInstructions()
+        }
         
         if currentPreviewInstructionBannerStepIndex != nil {
             recenter(self)
@@ -678,23 +684,22 @@ extension RouteMapViewController: NavigationViewDelegate {
         if let controller = stepsViewController {
             stepsViewController = nil
             controller.dismiss()
-        } else {
-            let controller = StepsViewController(routeProgress: router.routeProgress)
-            controller.delegate = self
-            addChildViewController(controller)
-            view.insertSubview(controller.view, belowSubview: navigationView.instructionsBannerContentView)
-
-            controller.view.topAnchor.constraint(equalTo: navigationView.instructionsBannerContentView.bottomAnchor).isActive = true
-            controller.view.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-            controller.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-            controller.view.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-
-            controller.didMove(toParentViewController: self)
-            controller.dropDownAnimation()
-
-            stepsViewController = controller
-            return
         }
+        
+        let controller = StepsViewController(routeProgress: router.routeProgress)
+        controller.delegate = self
+        addChildViewController(controller)
+        view.insertSubview(controller.view, belowSubview: navigationView.instructionsBannerContentView)
+        
+        controller.view.topAnchor.constraint(equalTo: navigationView.instructionsBannerContentView.bottomAnchor).isActive = true
+        controller.view.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        controller.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        controller.view.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        
+        controller.didMove(toParentViewController: self)
+        controller.dropDownAnimation()
+        
+        stepsViewController = controller
     }
 
     //MARK: NavigationMapViewDelegate
