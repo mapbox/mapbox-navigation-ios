@@ -626,7 +626,13 @@ extension RouteMapViewController: NavigationViewDelegate {
 
     //MARK: InstructionsBannerViewDelegate
     func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView) {
-        displayPreviewInstructions()
+        if stepsViewController != nil {
+            stepsViewController?.dismiss() {
+                self.stepsViewController = nil
+            }
+        } else {
+            displayPreviewInstructions()
+        }
         
         if currentPreviewInstructionBannerStepIndex != nil {
             recenter(self)
