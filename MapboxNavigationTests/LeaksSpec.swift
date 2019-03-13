@@ -30,7 +30,7 @@ class LeaksSpec: QuickSpec {
             
             let resumeNotifications: (RouteVoiceController) -> () = { controller in
                 
-                controller.resumeNotifications(service: self.dummySvc)
+                controller.resumeNotifications(by: self.dummySvc)
             }
             
             it("must not leak") {

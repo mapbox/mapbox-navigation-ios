@@ -14,9 +14,4 @@ fileprivate class CarPlayNavigationDelegateSpy: NSObject, CarPlayNavigationDeleg
         self.didArriveExpectation = didArriveExpectation
     }
     
-    func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController, didArriveAt waypoint: Waypoint) -> Bool
-    {
-        self.didArriveExpectation.fulfill()
-        return true
-    }
 }

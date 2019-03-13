@@ -85,7 +85,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     /**
      Default initializer for `RouteVoiceController`.
      */
-    @objc(initWithNavigationService:)
+    @objc
     public init(navigationService: NavigationService) {
         super.init()
 
@@ -93,11 +93,12 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
 
         speechSynth.delegate = self
         
-        resumeNotifications(service: navigationService)
+        resumeNotifications(by: navigationService)
     }
     
+    @available(*, unavailable, message: "Use init(navigationService:) instead.")
     public override init() {
-        fatalError("Use init(navigationService:) instead.")
+        fatalError()
     }
 
     private func verifyBackgroundAudio() {
@@ -115,7 +116,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         speechSynth.stopSpeaking(at: .immediate)
     }
     
-    func resumeNotifications(service: NavigationService) {
+    func resumeNotifications(by service: NavigationService) {
         NotificationCenter.default.addObserver(self, selector: #selector(didPassSpokenInstructionPoint(notification:)), name: .routeControllerDidPassSpokenInstructionPoint, object: service.router)
         NotificationCenter.default.addObserver(self, selector: #selector(pauseSpeechAndPlayReroutingDing(notification:)), name: .routeControllerWillReroute, object: service.router)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: .routeControllerDidReroute, object: service.router)

@@ -2,6 +2,7 @@
 
 ## master
 
+* `MapboxVoiceController` / `RouteVoiceController` now requires a `NavigationService` at initalization. ([#2018](https://github.com/mapbox/mapbox-navigation-ios/pull/2018))
 * The `BottomBannerViewController` now accounts for the safe-area inset correctly, if applicable. ([#1982](https://github.com/mapbox/mapbox-navigation-ios/pull/1982))
 
 ### CarPlay

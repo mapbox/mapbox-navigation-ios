@@ -140,7 +140,7 @@ public class CarPlayNavigationViewController: UIViewController {
         styleManager!.styles = self.styles
         
         makeGestureRecognizersResetFrameRate()
-        resumeNotifications(service: navigationService)
+        resumeNotifications(by: navigationService)
         updateManeuvers(for: navigationService.routeProgress)
         navigationService.start()
         mapView.recenterMap()
@@ -152,7 +152,7 @@ public class CarPlayNavigationViewController: UIViewController {
         suspendNotifications()
     }
     
-    func resumeNotifications(service: NavigationService) {
+    func resumeNotifications(by service: NavigationService) {
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_:)), name: .routeControllerProgressDidChange, object: service.router)
         NotificationCenter.default.addObserver(self, selector: #selector(rerouted(_:)), name: .routeControllerDidReroute, object: service.router)
         NotificationCenter.default.addObserver(self, selector: #selector(visualInstructionDidChange(_:)), name: .routeControllerDidPassVisualInstructionPoint, object: service.router)
@@ -498,5 +498,11 @@ public protocol CarPlayNavigationDelegate {
      */
     @objc(carPlayNavigationViewControllerDidDismiss:byCanceling:)
     optional func carPlayNavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool)
+    
+    //MARK: - Deprecated.
+    
+    @available(*, obsoleted: 0.1, message: "Use NavigationViewControllerDelegate.navigationViewController(_:didArriveAt:) or  NavigationServiceDelegate.navigationService(_:didArriveAt:) instead.")
+    @objc(carPlayNavigationViewController:didArriveAtWaypoint:)
+    optional func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController, didArriveAt waypoint: Waypoint) -> Bool
 }
 #endif

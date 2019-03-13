@@ -10,7 +10,6 @@ import AVKit
 class MapboxVoiceControllerTests: XCTestCase {
 
     var speechAPISpy: SpeechAPISpy!
-//    var controller: MapboxVoiceController?
 
     var route: Route {
         get {
@@ -24,23 +23,19 @@ class MapboxVoiceControllerTests: XCTestCase {
         let signal = { _ = semaphore.signal() }
         FileCache().clearDisk(completion: signal)
         self.speechAPISpy = SpeechAPISpy(accessToken: "deadbeef")
-//        controller = MapboxVoiceController(speechClient: speechAPISpy, audioPlayerType: AudioPlayerDummy.self)
         
         XCTAssert(semaphore.wait(timeout: .now() + 5) == .success)
     }
     
     override func tearDown() {
         speechAPISpy.reset()
-//        controller = nil
         speechAPISpy = nil
         super.tearDown()
     }
 
     func testControllerDownloadsAndCachesInstructionDataWhenNotified() {
         let service = MapboxNavigationService(route: route)
-        service.routeProgress.legIndex = 0
-        service.routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex = 0
-        let subject = MapboxVoiceController(speechClient: speechAPISpy, audioPlayerType: AudioPlayerDummy.self, navigationService: service)
+        let subject = MapboxVoiceController(navigationService: service, speechClient: speechAPISpy, audioPlayerType: AudioPlayerDummy.self)
         let userInfo = [RouteControllerNotificationUserInfoKey.routeProgressKey : service.routeProgress]
         let notification = Notification.init(name: .routeControllerDidPassSpokenInstructionPoint, object: service.router, userInfo: userInfo)
 
@@ -73,7 +68,7 @@ class MapboxVoiceControllerTests: XCTestCase {
         service.routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex = 1
         
         let routeProgress = service.routeProgress
-        let subject = MapboxVoiceController(speechClient: speechAPISpy, audioPlayerType: AudioPlayerDummy.self, navigationService: service)
+        let subject = MapboxVoiceController(navigationService: service, speechClient: speechAPISpy, audioPlayerType: AudioPlayerDummy.self)
         subject.routeProgress = routeProgress
         
         let instruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction
