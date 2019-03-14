@@ -1,0 +1,9 @@
+/* Error message when an offline route request returns a response that can’t be deserialized */
+"OFFLINE_CORRUPT_DATA" = "オフラインの為ルートを作成できません";
+
+/* Error description when an offline route request returns no result */
+"OFFLINE_NO_RESULT" = "オフラインの為、ルートを作成できません";
+
+/* Inform developer an update is available */
+"UPDATE_AVAILABLE" = "iOS %@用 Mapbox Navigation SDKが使用できます";
+
