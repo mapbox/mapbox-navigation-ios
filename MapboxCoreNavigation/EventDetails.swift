@@ -59,7 +59,6 @@ struct NavigationEventDetails: EventDetails {
     let batteryLevel: Int = UIDevice.current.batteryLevel >= 0 ? Int(UIDevice.current.batteryLevel * 100) : -1
     let batteryPluggedIn: Bool = [.charging, .full].contains(UIDevice.current.batteryState)
     let coordinate: CLLocationCoordinate2D?
-    let created: Date = Date()
     let device: String = UIDevice.current.machine
     let distance: CLLocationDistance?
     let distanceCompleted: CLLocationDistance
@@ -96,6 +95,7 @@ struct NavigationEventDetails: EventDetails {
     let legCount: Int
     let totalStepCount: Int
     
+    var created: Date = Date()
     var event: String?
     var arrivalTimestamp: Date?
     var rating: Int?
@@ -110,7 +110,7 @@ struct NavigationEventDetails: EventDetails {
     var newGeometry: String?
     
     init(dataSource: EventsManagerDataSource, session: SessionState, defaultInterface: Bool) {
-        coordinate = dataSource.location?.coordinate
+        coordinate = dataSource.router.rawLocation?.coordinate
         startTimestamp = session.departureTimestamp ?? nil
         sdkIdentifier = defaultInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
         profile = dataSource.routeProgress.route.routeOptions.profileIdentifier.rawValue
@@ -120,7 +120,7 @@ struct NavigationEventDetails: EventDetails {
         originalRequestIdentifier = session.originalRoute.routeIdentifier
         requestIdentifier = dataSource.routeProgress.route.routeIdentifier
                 
-        if let location = dataSource.location,
+        if let location = dataSource.router.rawLocation,
            let coordinates = dataSource.routeProgress.route.coordinates,
            let lastCoord = coordinates.last {
             userAbsoluteDistanceToDestination = location.distance(from: CLLocation(latitude: lastCoord.latitude, longitude: lastCoord.longitude))

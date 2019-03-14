@@ -10,7 +10,6 @@ import AVKit
 class MapboxVoiceControllerTests: XCTestCase {
 
     var speechAPISpy: SpeechAPISpy!
-    var controller: MapboxVoiceController?
 
     var route: Route {
         get {
@@ -24,22 +23,21 @@ class MapboxVoiceControllerTests: XCTestCase {
         let signal = { _ = semaphore.signal() }
         FileCache().clearDisk(completion: signal)
         self.speechAPISpy = SpeechAPISpy(accessToken: "deadbeef")
-        controller = MapboxVoiceController(speechClient: speechAPISpy, audioPlayerType: AudioPlayerDummy.self)
         
         XCTAssert(semaphore.wait(timeout: .now() + 5) == .success)
     }
     
     override func tearDown() {
         speechAPISpy.reset()
-        controller = nil
         speechAPISpy = nil
         super.tearDown()
     }
 
     func testControllerDownloadsAndCachesInstructionDataWhenNotified() {
-        let routeProgress = RouteProgress.init(route: route, legIndex: 0, spokenInstructionIndex: 0)
-        let userInfo = [RouteControllerNotificationUserInfoKey.routeProgressKey : routeProgress]
-        let notification = Notification.init(name: .routeControllerDidPassSpokenInstructionPoint, object: nil, userInfo: userInfo)
+        let service = MapboxNavigationService(route: route)
+        let subject = MapboxVoiceController(navigationService: service, speechClient: speechAPISpy, audioPlayerType: AudioPlayerDummy.self)
+        let userInfo = [RouteControllerNotificationUserInfoKey.routeProgressKey : service.routeProgress]
+        let notification = Notification.init(name: .routeControllerDidPassSpokenInstructionPoint, object: service.router, userInfo: userInfo)
 
         NotificationCenter.default.post(notification)
 
@@ -52,11 +50,12 @@ class MapboxVoiceControllerTests: XCTestCase {
         let data = "Here is some data".data(using: .utf8)
         completion(data, nil)
 
-        XCTAssertTrue(controller!.hasCachedSpokenInstructionForKey(cacheKey))
+        XCTAssertTrue(subject.hasCachedSpokenInstructionForKey(cacheKey))
     }
     
     func testVoiceDeinit() {
-        var voiceController: MockMapboxVoiceController? = MockMapboxVoiceController()
+        let dummyService = MapboxNavigationService(route: route)
+        var voiceController: MockMapboxVoiceController? = MockMapboxVoiceController(navigationService: dummyService)
         let deinitExpectation = expectation(description: "Voice Controller should deinitialize")
         voiceController!.deinitExpectation = deinitExpectation
         voiceController = nil
@@ -65,8 +64,11 @@ class MapboxVoiceControllerTests: XCTestCase {
     
     func testAudioCalls() {
         typealias Note = Notification.Name.MapboxVoiceTests
-        let routeProgress = RouteProgress.init(route: route, legIndex: 0, spokenInstructionIndex: 1)
-        let subject = MapboxVoiceController(speechClient: speechAPISpy, audioPlayerType: AudioPlayerDummy.self)
+        let service = MapboxNavigationService(route: route)
+        service.routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex = 1
+        
+        let routeProgress = service.routeProgress
+        let subject = MapboxVoiceController(navigationService: service, speechClient: speechAPISpy, audioPlayerType: AudioPlayerDummy.self)
         subject.routeProgress = routeProgress
         
         let instruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction

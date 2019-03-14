@@ -270,6 +270,12 @@ class ViewController: UIViewController {
     }
 
     func presentAndRemoveMapview(_ navigationViewController: NavigationViewController) {
+        let delegate = UIApplication.shared.delegate as? AppDelegate
+        
+        if #available(iOS 12.0, *), let service = navigationViewController.navigationService, let location = service.router.location {
+            delegate?.carPlayManager.beginNavigationWithCarPlay(using: location.coordinate, navigationService: service)
+        }
+        
         present(navigationViewController, animated: true) {
             self.mapView?.removeFromSuperview()
             self.mapView = nil
@@ -433,7 +439,14 @@ extension ViewController: NavigationViewControllerDelegate {
     // Called when the user hits the exit button.
     // If implemented, you are responsible for also dismissing the UI.
     func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool) {
+        endCarPlayNavigation(canceled: canceled)
         navigationViewController.dismiss(animated: true, completion: nil)
+    }
+    
+    private func endCarPlayNavigation(canceled: Bool) {
+        if #available(iOS 12.0, *), let delegate = UIApplication.shared.delegate as? AppDelegate {
+            delegate.carPlayManager.currentNavigator?.exitNavigation(byCanceling: canceled)
+        }
     }
 }
 

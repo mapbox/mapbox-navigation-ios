@@ -212,11 +212,15 @@ open class NavigationViewController: UIViewController {
         self.navigationService = options?.navigationService ?? MapboxNavigationService(route: route)
         self.navigationService.usesDefaultUserInterface = true
         self.navigationService.delegate = self
-        self.voiceController = options?.voiceController ?? MapboxVoiceController(speechClient: SpeechSynthesizer(accessToken: navigationService?.directions.accessToken))
+        self.voiceController = options?.voiceController ?? MapboxVoiceController(navigationService: navigationService, speechClient: SpeechSynthesizer(accessToken: navigationService?.directions.accessToken))
 
         NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
         
-        let bottomBanner = options?.bottomBanner ?? BottomBannerViewController(delegate: self)
+        let bottomBanner = options?.bottomBanner ?? {
+            let viewController = BottomBannerViewController()
+            viewController.delegate = self
+            return viewController
+        }()
         bottomViewController = bottomBanner
 
         let mapViewController = RouteMapViewController(navigationService: self.navigationService, delegate: self, bottomBanner: bottomBanner)
@@ -343,11 +347,9 @@ open class NavigationViewController: UIViewController {
             
             if !navigationViewControllerExistsInStack {
                 
-                let directions = navigationService.directions
                 let route = navigationService.routeProgress.route
                 
-                let service = MapboxNavigationService(route: route, directions: directions, simulating: navigationService.simulationMode)
-                let options = NavigationOptions(navigationService: service)
+                let options = NavigationOptions(navigationService: navigationService)
                 let navigationViewController = NavigationViewController(for: route, options: options)
                 
                 window.rootViewController?.topMostViewController()?.present(navigationViewController, animated: true, completion: {
@@ -521,8 +523,7 @@ extension NavigationViewController: NavigationServiceDelegate {
     @objc public func navigationService(_ service: NavigationService, didArriveAt waypoint: Waypoint) -> Bool {
         let advancesToNextLeg = delegate?.navigationViewController?(self, didArriveAt: waypoint) ?? true
         
-        if !isConnectedToCarPlay, // CarPlayManager shows rating on CarPlay if it's connected
-            service.routeProgress.isFinalLeg && advancesToNextLeg && showsEndOfRouteFeedback {
+        if service.routeProgress.isFinalLeg && advancesToNextLeg && showsEndOfRouteFeedback {
             showEndOfRouteFeedback()
         }
         return advancesToNextLeg

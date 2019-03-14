@@ -208,7 +208,7 @@ class CarPlayManagerTests: XCTestCase {
         // the CarPlayNavigationDelegate is notified
         XCTAssertTrue(exampleDelegate.navigationInitiated, "The CarPlayManagerDelegate should have been told that navigation was initiated.")
 
-        manager.carPlayNavigationViewControllerDidArrive(manager.currentNavigator!)
+        manager.currentNavigator!.exitNavigation(byCanceling: true)
 
         XCTAssertTrue(exampleDelegate.navigationEnded, "The CarPlayManagerDelegate should have been told that navigation ended.")
     }
@@ -413,6 +413,7 @@ class CarPlayManagerSpec: QuickSpec {
     }
 
     private class CustomTripPreviewDelegate: CarPlayManagerDelegate {
+        
         var customTripPreviewTextConfiguration: CPTripPreviewTextConfiguration?
         var customTrip: CPTrip?
 
@@ -430,6 +431,11 @@ class CarPlayManagerSpec: QuickSpec {
 
         func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
             //no-op
+        }
+        
+        func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, desiredSimulationMode: SimulationMode) -> NavigationService {
+            let directionsFake = Directions(accessToken: "foo")
+            return MapboxNavigationService(route: route, directions: directionsFake, simulating: desiredSimulationMode)
         }
     }
 }
@@ -453,6 +459,10 @@ class CarPlayManagerFailureDelegateSpy: CarPlayManagerDelegate {
     func carPlayManager(_ carPlayManager: CarPlayManager, didFailToFetchRouteBetween waypoints: [Waypoint]?, options: RouteOptions, error: NSError) -> CPNavigationAlert? {
         recievedError = error
         return nil
+    }
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, desiredSimulationMode: SimulationMode) -> NavigationService {
+        fatalError("This is an empty stub.")
     }
     
     func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith service: NavigationService) {
@@ -479,7 +489,7 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
     public var trailingBarButtons: [CPBarButton]?
     public var mapButtons: [CPMapButton]?
 
-    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route) -> NavigationService {
+    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, desiredSimulationMode: SimulationMode) -> NavigationService {
         let response = Fixture.JSONFromFileNamed(name: jsonFileName)
         let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String: Any]
         let initialRoute: Route = {

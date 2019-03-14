@@ -7,6 +7,8 @@ import MapboxDirections
 
 /**
  `MapboxVoiceController` extends the default `RouteVoiceController` by providing a more robust speech synthesizer via the Mapbox Speech API. `RouteVoiceController` will be used as a fallback during poor network conditions.
+ 
+ If you need text-to-speech functionality without NavigationService, use SpeechSynthesizer directly.
  */
 @objc(MBMapboxVoiceController)
 open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
@@ -35,11 +37,11 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
     
     let localizedErrorMessage = NSLocalizedString("FAILED_INSTRUCTION", bundle: .mapboxNavigation, value: "Unable to read instruction aloud.", comment: "Error message when the SDK is unable to read a spoken instruction.")
 
-    @objc public init(speechClient: SpeechSynthesizer = SpeechSynthesizer(accessToken: nil), dataCache: BimodalDataCache = DataCache(), audioPlayerType: AVAudioPlayer.Type? = nil) {
+    @objc public init(navigationService: NavigationService, speechClient: SpeechSynthesizer = SpeechSynthesizer(accessToken: nil), dataCache: BimodalDataCache = DataCache(), audioPlayerType: AVAudioPlayer.Type? = nil) {
         speech = speechClient
         cache = dataCache
         self.audioPlayerType = audioPlayerType ?? AVAudioPlayer.self
-        super.init()
+        super.init(navigationService: navigationService)
         
         audioPlayer?.delegate = self
         

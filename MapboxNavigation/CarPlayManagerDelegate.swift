@@ -8,6 +8,8 @@ import MapboxDirections
  `CarPlayManagerDelegate` is the main integration point for Mapbox CarPlay support.
  
  Implement this protocol and assign an instance to the `delegate` property of the shared instance of `CarPlayManager`.
+ 
+ If no delegate is set, a default built-in MapboxNavigationService will be created and used when a trip begins.
  */
 @available(iOS 12.0, *)
 @objc(MBCarPlayManagerDelegate)
@@ -57,15 +59,16 @@ public protocol CarPlayManagerDelegate {
     optional func carPlayManager(_ carPlayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]?
     
     /**
-     Offers the delegate an opportunity to provide an alternate navigation service, otherwise a default built-in MapboxNavigationService will be created and used.
+     Asks the delegate to provide a navigation service. In multi-screen applications this should be the same instance used to guide the user along the route on the phone.
      
      - parameter carPlayManager: The CarPlay manager instance.
      - parameter route: The route for which the returned route controller will manage location updates.
+     - parameter desiredSimulationMode: The desired simulation mode to use.
      - returns: A navigation service that manages location updates along `route`.
      */
     
-    @objc(carPlayManager:navigationServiceAlongRoute:)
-    optional func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route) -> NavigationService
+    @objc(carPlayManager:navigationServiceAlongRoute:desiredSimulationMode:)
+    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, desiredSimulationMode: SimulationMode) -> NavigationService
     
     /**
      Offers the delegate an opportunity to react to updates in the search text.

@@ -92,8 +92,9 @@ public class UserPuckCourseView: UIView, UserCourseView {
     }
     
     func commonInit() {
-        puckView = UserPuckStyleKitView(frame: bounds)
+        isUserInteractionEnabled = false
         backgroundColor = .clear
+        puckView = UserPuckStyleKitView(frame: bounds)
         puckView.backgroundColor = .clear
         addSubview(puckView)
     }
