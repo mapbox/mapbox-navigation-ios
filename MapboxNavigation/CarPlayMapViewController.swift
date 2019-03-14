@@ -207,14 +207,14 @@ public class CarPlayMapViewController: UIViewController {
         
         mapView.setContentInset(edgePadding, animated: false)
         
-        guard isOverviewingRoutes,
-            let routes = mapView.routes,
-            let active = routes.first else {
-                mapView.setUserTrackingMode(.followWithCourse, animated: true)
-                return
+        guard let active = mapView.routes?.first else {
+            mapView.setUserTrackingMode(.followWithCourse, animated: true)
+            return
+        }
+        if isOverviewingRoutes {
+            mapView.fit(to: active, animated: false)
         }
         
-        mapView.fit(to: active, animated: false)
     }
 }
 
