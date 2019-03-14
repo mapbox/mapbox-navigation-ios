@@ -4,12 +4,11 @@
 
 ### Core Navigation
 
-* Fixed an issue where the wrong instruction could be announced or a crash could occur in some situations when using a RouteController. ([#2029](https://github.com/mapbox/mapbox-navigation-ios/pull/2029))
+* Fixed an issue where the wrong instruction could be announced or a crash could occur near maneuvers when using a `RouteController`. ([#2004](https://github.com/mapbox/mapbox-navigation-ios/pull/2004), [#2029](https://github.com/mapbox/mapbox-navigation-ios/pull/2029))
 * Restored the `RouteController.reroutesProactively` property. By default, `RouteController` and `LegacyRouteController` proactively check for a faster route on an interval defined by `RouteControllerProactiveReroutingInterval`. ([#1986](https://github.com/mapbox/mapbox-navigation-ios/pull/1986))
 * Added a `RouteControllerMinimumDurationRemainingForProactiveRerouting` global variable to customize when `RouteController` stops looking for more optimal routes as the user nears the destination. ([#1986](https://github.com/mapbox/mapbox-navigation-ios/pull/1986))
 * Fixed a bug which would cancel an ongoing reroute request when the request takes longer than one second to complete. ([#1986](https://github.com/mapbox/mapbox-navigation-ios/pull/1986))
 * Fixed an issue where rerouting would ignore any waypoints from the original route options where the `Waypoint.separatesLegs` property was set to `false`. ([#2014](https://github.com/mapbox/mapbox-navigation-ios/pull/2014))
-* Fixed a crash that could occur near maneuvers when using a `RouteController`. ([#2004](https://github.com/mapbox/mapbox-navigation-ios/pull/2004))
 
 ### CarPlay
 
