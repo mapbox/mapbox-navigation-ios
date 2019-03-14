@@ -359,14 +359,12 @@ extension CarPlayManager: CPInterfaceControllerDelegate {
     public func templateWillDisappear(_ template: CPTemplate, animated: Bool) {
         guard let interface = interfaceController else { return }
         
-        let listOrSearchOrMap = [CPSearchTemplate.self, CPListTemplate.self, CPMapTemplate.self]
-        let currentlyOnHomeScreen = interface.templates.count == 1
-        let presentingFromFavOrSearchOrNav = currentlyOnHomeScreen && listOrSearchOrMap.contains { $0 == type(of: template) }
+        let onFreedriveMapOrNavigating = interface.templates.count == 1
 
         guard let top = interface.topTemplate,
-            type(of: top) == CPSearchTemplate.self || presentingFromFavOrSearchOrNav else { return }
+            type(of: top) == CPSearchTemplate.self || onFreedriveMapOrNavigating else { return }
         
-        if presentingFromFavOrSearchOrNav {
+        if onFreedriveMapOrNavigating {
             carPlayMapViewController?.isOverviewingRoutes = false
         }
         
