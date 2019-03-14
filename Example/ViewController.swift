@@ -423,7 +423,6 @@ extension ViewController: NavigationViewControllerDelegate {
         
         //If we're not in a "Multiple Stops" demo, show the normal EORVC
         if navigationViewController.navigationService.router.routeProgress.isFinalLeg {
-            endCarplayNavigation(canceled: false)
             return true
         }
         
@@ -440,11 +439,11 @@ extension ViewController: NavigationViewControllerDelegate {
     // Called when the user hits the exit button.
     // If implemented, you are responsible for also dismissing the UI.
     func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool) {
-        endCarplayNavigation(canceled: canceled)
+        endCarPlayNavigation(canceled: canceled)
         navigationViewController.dismiss(animated: true, completion: nil)
     }
     
-    private func endCarplayNavigation(canceled: Bool) {
+    private func endCarPlayNavigation(canceled: Bool) {
         if #available(iOS 12.0, *), let delegate = UIApplication.shared.delegate as? AppDelegate {
             delegate.carPlayManager.currentNavigator?.exitNavigation(byCanceling: canceled)
         }
