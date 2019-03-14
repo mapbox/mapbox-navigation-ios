@@ -99,6 +99,7 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
      
      - parameter delegate: A delegate to recieve BottomBannerViewControllerDelegate messages.
      */
+    @available(*, deprecated, message: "Set the delegate property separately after initializing this object.")
     public convenience init(delegate: BottomBannerViewControllerDelegate?) {
         self.init(nibName: nil, bundle: nil)
         self.delegate = delegate
