@@ -1,3 +1,9 @@
+/* Error message when an offline route request returns a response that can’t be deserialized */
+"OFFLINE_CORRUPT_DATA" = "Đã tìm thấy tuyến đường không hợp lệ trong khi ngoại tuyến.";
+
+/* Error description when an offline route request returns no result */
+"OFFLINE_NO_RESULT" = "Không tìm thấy tuyến đường trong khi ngoại tuyến.";
+
 /* Inform developer an update is available */
 "UPDATE_AVAILABLE" = "Mapbox Navigation SDK cho iOS mới ra phiên bản %@.";
 
