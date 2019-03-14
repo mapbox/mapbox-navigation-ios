@@ -519,8 +519,7 @@ extension NavigationViewController: NavigationServiceDelegate {
     @objc public func navigationService(_ service: NavigationService, didArriveAt waypoint: Waypoint) -> Bool {
         let advancesToNextLeg = delegate?.navigationViewController?(self, didArriveAt: waypoint) ?? true
         
-        if !isConnectedToCarPlay, // CarPlayManager shows rating on CarPlay if it's connected
-            service.routeProgress.isFinalLeg && advancesToNextLeg && showsEndOfRouteFeedback {
+        if service.routeProgress.isFinalLeg && advancesToNextLeg && showsEndOfRouteFeedback {
             showEndOfRouteFeedback()
         }
         return advancesToNextLeg
