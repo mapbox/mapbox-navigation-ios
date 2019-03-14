@@ -1,0 +1,141 @@
+/* Delimiter between lines in an address when displayed inline */
+"ADDRESS_LINE_SEPARATOR" = "​";
+
+/* Title on arrival action sheet */
+"CARPLAY_ARRIVED" = "目的地に到着しました";
+
+/* Message on arrival action sheet */
+"CARPLAY_ARRIVED_MESSAGE" = "ご希望の操作を教えて下さい";
+
+/* Title on continue button in CarPlay */
+"CARPLAY_CONTINUE" = "運行を続ける";
+
+/* Name of the waypoint associated with the current location */
+"CARPLAY_CURRENT_LOCATION" = "現在地";
+
+/* Title for dismiss button */
+"CARPLAY_DISMISS" = "閉じる";
+
+/* Title for end navigation button */
+"CARPLAY_END" = "終了";
+
+/* Title on the exit button in the arrival form */
+"CARPLAY_EXIT_NAVIGATION" = "ナビゲーションを終了する";
+
+/* Title for feedback template in CarPlay */
+"CARPLAY_FEEDBACK" = "フィードバック";
+
+/* Title for start button in CPTripPreviewTextConfiguration */
+"CARPLAY_GO" = "発車する";
+
+/* Title for alternative routes in CPTripPreviewTextConfiguration */
+"CARPLAY_MORE_ROUTES" = "他のルートを表示";
+
+/* Title for mute button */
+"CARPLAY_MUTE" = "消音";
+
+/* CPNavigationAlert OK button title */
+"CARPLAY_OK" = "OK";
+
+/* Title for overview button in CPTripPreviewTextConfiguration */
+"CARPLAY_OVERVIEW" = "全体を見る";
+
+/* Title for rating template in CarPlay */
+"CARPLAY_RATE_RIDE" = "乗車の評価を行う";
+
+/* Title on rate button in CarPlay */
+"CARPLAY_RATE_TRIP" = "乗車の評価を行う";
+
+/* Message when search returned zero results in CarPlay */
+"CARPLAY_SEARCH_NO_RESULTS" = "検索結果がありません";
+
+/* Alert title that shows when feedback has been submitted */
+"CARPLAY_SUBMITTED_FEEDBACK" = "提出済み";
+
+/* Title for unmute button */
+"CARPLAY_UNMUTE" = "音声を出す";
+
+/* Format string for indicating the device volume is low; 1 = device model */
+"DEVICE_VOLUME_LOW" = "%@音量を下げる";
+
+/* Dismiss button title on the steps view */
+"DISMISS_STEPS_TITLE" = "閉じる";
+
+/* End Navigation Button Text */
+"END_NAVIGATION" = "ナビゲーションを終了する";
+
+/* Title used for arrival */
+"END_OF_ROUTE_ARRIVED" = "目的地に到着しました";
+
+/* Comment Placeholder Text */
+"END_OF_ROUTE_TITLE" = "改善点を教えてください";
+
+/* Error message when the SDK is unable to read a spoken instruction. */
+"FAILED_INSTRUCTION" = "音声案内は使用できません";
+
+/* Indicates a faster route was found */
+"FASTER_ROUTE_FOUND" = "より早い経路が見つかりました";
+
+/* Feedback type for Bad Route */
+"FEEDBACK_BAD_ROUTE" = "経路が悪い";
+
+/* Feedback type for Confusing Instruction */
+"FEEDBACK_CONFUSING_INSTRUCTION" = "案内がわかりにくい";
+
+/* Feedback type for Other Map Issue Issue */
+"FEEDBACK_GENERAL_ISSUE" = "その他、地図の問題";
+
+/* Feedback type for Missing Exit */
+"FEEDBACK_MISSING_EXIT" = "出口を間違えた";
+
+/* Feedback type for Missing Road */
+"FEEDBACK_MISSING_ROAD" = "道を間違えた";
+
+/* Feedback type for a maneuver that is Not Allowed */
+"FEEDBACK_NOT_ALLOWED" = "ルートが法規に反する";
+
+/* Feedback type for Report Traffic */
+"FEEDBACK_REPORT_TRAFFIC" = "渋滞状況を報告する";
+
+/* Feedback type for Road Closed */
+"FEEDBACK_ROAD_CLOSURE" = "通行止めの道があった";
+
+/* Message confirming that the user has successfully sent feedback */
+"FEEDBACK_THANK_YOU" = "フィードバックにご協力頂きありがとうございました";
+
+/* Title of view controller for sending feedback */
+"FEEDBACK_TITLE" = "問題を報告する";
+
+/* Format for displaying the first two major ways */
+"LEG_MAJOR_WAYS_FORMAT" = "%1$@と%2$@";
+
+/* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
+"LESS_THAN" = "%@より小さい";
+
+/* Accessibility value of label indicating the absence of a rating */
+"NO_RATING" = "評価レートがありません";
+
+/* Rating Reset To Zero Accessability Hint */
+"RATING_ACCESSIBILITY_RESET" = "タップすることで評価レートを０にできます";
+
+/* Format for accessibility label of button for setting a rating; 1 = number of stars */
+"RATING_ACCESSIBILITY_SET" = "%ld つ星のレートをつける";
+
+/* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
+"RATING_STARS_FORMAT" = "%ld つ星のレート";
+
+/* Indicates that rerouting is in progress */
+"REROUTING" = "経路を再検索中です…";
+
+/* Button title for resume tracking */
+"RESUME" = "再開する";
+
+/* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
+"USER_IN_SIMULATION_MODE" = "%dにてナビのシュミレーションを行う";
+
+/* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
+"WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%2$@経由で%1$@に向かう";
+
+/* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
+"WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@と%2$@";
+

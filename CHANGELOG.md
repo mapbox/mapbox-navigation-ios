@@ -29,6 +29,7 @@
 * The `BottomBannerViewController` now accounts for the safe area inset if present. ([#1982](https://github.com/mapbox/mapbox-navigation-ios/pull/1982))
 * Deprecated `BottomBannerViewController(delegate:)`. Set the `BottomBannerViewController.delegate` property separately after initializing a `BottomBannerViewController`. ([#2027](https://github.com/mapbox/mapbox-navigation-ios/pull/2027))
 * The map now pans when the user drags a `UserCourseView`. ([#2012](https://github.com/mapbox/mapbox-navigation-ios/pull/2012))
+* Added a Japanese localization. ([#2032](https://github.com/mapbox/mapbox-navigation-ios/pull/2032))
 
 ## v0.29.1
 
