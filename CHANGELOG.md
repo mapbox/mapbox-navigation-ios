@@ -4,7 +4,7 @@
 
 ### Core Navigation
 
-* Restored the `RouteController.reroutesProactively` property. ([#1986](https://github.com/mapbox/mapbox-navigation-ios/pull/1986))
+* Restored the `RouteController.reroutesProactively` property. By default, `RouteController` and `LegacyRouteController` proactively check for a faster route on an interval defined by `RouteControllerProactiveReroutingInterval`. ([#1986](https://github.com/mapbox/mapbox-navigation-ios/pull/1986))
 * Added a `RouteControllerMinimumDurationRemainingForProactiveRerouting` global variable to customize when `RouteController` stops looking for more optimal routes as the user nears the destination. ([#1986](https://github.com/mapbox/mapbox-navigation-ios/pull/1986))
 * Fixed a bug which would cancel an ongoing reroute request when the request takes longer than one second to complete. ([#1986](https://github.com/mapbox/mapbox-navigation-ios/pull/1986))
 
