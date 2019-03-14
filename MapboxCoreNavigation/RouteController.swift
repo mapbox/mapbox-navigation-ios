@@ -181,9 +181,9 @@ open class RouteController: NSObject {
         let willReroute = !userIsOnRoute(location) && delegate?.router?(self, shouldRerouteFrom: location)
                           ?? DefaultBehavior.shouldRerouteFromLocation
         
-        updateSpokenInstructionProgress(status: status, willReRoute: willReroute)
         updateRouteStepProgress(status: status)
         updateRouteLegProgress(status: status)
+        updateSpokenInstructionProgress(status: status, willReRoute: willReroute)
         updateVisualInstructionProgress(status: status)
         
         if willReroute {
