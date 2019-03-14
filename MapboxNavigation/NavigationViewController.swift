@@ -216,7 +216,11 @@ open class NavigationViewController: UIViewController {
 
         NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
         
-        let bottomBanner = options?.bottomBanner ?? BottomBannerViewController(delegate: self)
+        let bottomBanner = options?.bottomBanner ?? {
+            let viewController = BottomBannerViewController()
+            viewController.delegate = self
+            return viewController
+        }()
         bottomViewController = bottomBanner
 
         let mapViewController = RouteMapViewController(navigationService: self.navigationService, delegate: self, bottomBanner: bottomBanner)
