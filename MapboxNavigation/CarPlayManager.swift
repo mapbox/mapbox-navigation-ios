@@ -709,10 +709,6 @@ extension CarPlayManager: CPMapTemplateDelegate {
 // MARK: CarPlayNavigationDelegate
 @available(iOS 12.0, *)
 extension CarPlayManager: CarPlayNavigationDelegate {
-    public func carPlayNavigationViewControllerDidArrive(_: CarPlayNavigationViewController) {
-        delegate?.carPlayManagerDidEndNavigation(self)
-    }
-
     public func carPlayNavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool) {
         if let mainMapTemplate = mainMapTemplate {
             interfaceController?.setRootTemplate(mainMapTemplate, animated: true)

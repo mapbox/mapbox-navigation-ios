@@ -208,7 +208,7 @@ class CarPlayManagerTests: XCTestCase {
         // the CarPlayNavigationDelegate is notified
         XCTAssertTrue(exampleDelegate.navigationInitiated, "The CarPlayManagerDelegate should have been told that navigation was initiated.")
 
-        manager.carPlayNavigationViewControllerDidArrive(manager.currentNavigator!)
+        manager.currentNavigator!.exitNavigation(byCanceling: true)
 
         XCTAssertTrue(exampleDelegate.navigationEnded, "The CarPlayManagerDelegate should have been told that navigation ended.")
     }
