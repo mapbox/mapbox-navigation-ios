@@ -17,7 +17,8 @@
 * A modal alert is no longer displayed when the user arrives at an intermediate waypoint. This fixes a crash that occurred when the user tapped the Continue button. ([#2005](https://github.com/mapbox/mapbox-navigation-ios/pull/2005))
 * Added the `CarPlayNavigationViewController.navigationService` property. ([#2005](https://github.com/mapbox/mapbox-navigation-ios/pull/2005))
 * `CarPlayNavigationDelegate.carPlayNavigationViewControllerDidDismiss(_:byCanceling:)` is now optional. ([#2005](https://github.com/mapbox/mapbox-navigation-ios/pull/2005))
-* Renamed the `CarPlayNavigationDelegate.carPlayNavigationViewControllerDidArrive(_:)` method to `CarPlayNavigationDelegate.carPlayNavigationViewController(_:didArriveAt:)` and deprecated it. This method is now called when the user arrives at any waypoint at the end of a route leg, but you should implement `NavigationServiceDelegate.navigationService(_:didArriveAt:)` instead. ([#2005](https://github.com/mapbox/mapbox-navigation-ios/pull/2005), [#2018](https://github.com/mapbox/mapbox-navigation-ios/pull/2018))
+* Removed the `CarPlayNavigationDelegate.carPlayNavigationViewControllerDidArrive(_:)` method in favor of `NavigationServiceDelegate.navigationService(_:didArriveAt:)`. ([#2005](https://github.com/mapbox/mapbox-navigation-ios/pull/2005), [#2025](https://github.com/mapbox/mapbox-navigation-ios/pull/2025))
+* Fixed an issue where compass would remain visible while the navigation bar is visible. ([#2023](https://github.com/mapbox/mapbox-navigation-ios/pull/2023))
 
 ### Other changes
 
