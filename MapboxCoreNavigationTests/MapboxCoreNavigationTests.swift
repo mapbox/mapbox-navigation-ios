@@ -301,6 +301,24 @@ class MapboxCoreNavigationTests: XCTestCase {
         XCTAssertEqual(points[3].visualInstructionIndex, 0)
         XCTAssertEqual(points[3].spokenInstructionIndex, 0)
         XCTAssertEqual(points[3].type, .spoken)
+        
+        // Make sure we never have unsynced indexes or move backward in time by comparing previous to current instruction point
+        let zippedPoints = zip(points, points.suffix(from: 1))
+        
+        for seq in zippedPoints {
+            let previous = seq.0
+            let current = seq.1
+            
+            let sameStepAndLeg = previous.legIndex == current.legIndex && previous.stepIndex == current.stepIndex
+            
+            if sameStepAndLeg {
+                XCTAssert(current.visualInstructionIndex >= previous.visualInstructionIndex)
+                XCTAssert(current.spokenInstructionIndex >= previous.spokenInstructionIndex)
+            } else {
+                XCTAssert(current.visualInstructionIndex == 0)
+                XCTAssert(current.spokenInstructionIndex == 0)
+            }
+        }
     }
     
     func testFailToReroute() {
