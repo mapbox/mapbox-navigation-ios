@@ -48,5 +48,12 @@ open class NavigationOptions: NSObject, NavigationCustomizable {
         self.voiceController = voiceController
         self.bottomBanner = bottomBanner
     }
+    
+    /**
+     Convienence factory-method for convenient bridging to OBJ-C.
+     */
+    @objc public class func navigationOptions() -> Self {
+        return self.init()
+    }
 }
 
