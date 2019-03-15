@@ -1,5 +1,62 @@
+/* Delimiter between lines in an address when displayed inline */
+"ADDRESS_LINE_SEPARATOR" = ",";
+
+/* Title on arrival action sheet */
+"CARPLAY_ARRIVED" = "Vous êtes arrivé";
+
+/* Message on arrival action sheet */
+"CARPLAY_ARRIVED_MESSAGE" = "Que voulez-vous faire ?";
+
+/* Title on continue button in CarPlay */
+"CARPLAY_CONTINUE" = "Continuer";
+
+/* Name of the waypoint associated with the current location */
+"CARPLAY_CURRENT_LOCATION" = "Position actuelle";
+
+/* Title for dismiss button */
+"CARPLAY_DISMISS" = "Annuler";
+
+/* Title for end navigation button */
+"CARPLAY_END" = "Terminer";
+
+/* Title on the exit button in the arrival form */
+"CARPLAY_EXIT_NAVIGATION" = "Quitter la navigation";
+
+/* Title for feedback template in CarPlay */
+"CARPLAY_FEEDBACK" = "Commentaire";
+
+/* Title for start button in CPTripPreviewTextConfiguration */
+"CARPLAY_GO" = "C'est parti ";
+
+/* Title for alternative routes in CPTripPreviewTextConfiguration */
+"CARPLAY_MORE_ROUTES" = "Autres itinéraires";
+
+/* Title for mute button */
+"CARPLAY_MUTE" = "Muet";
+
+/* CPNavigationAlert OK button title */
+"CARPLAY_OK" = "Ok";
+
+/* Title for overview button in CPTripPreviewTextConfiguration */
+"CARPLAY_OVERVIEW" = "Aperçu";
+
+/* Title for rating template in CarPlay */
+"CARPLAY_RATE_RIDE" = "Évaluer votre trajet";
+
+/* Title on rate button in CarPlay */
+"CARPLAY_RATE_TRIP" = "Évaluer votre voyage";
+
+/* Message when search returned zero results in CarPlay */
+"CARPLAY_SEARCH_NO_RESULTS" = "Pas de résultats";
+
+/* Alert title that shows when feedback has been submitted */
+"CARPLAY_SUBMITTED_FEEDBACK" = "Envoyé ";
+
+/* Title for unmute button */
+"CARPLAY_UNMUTE" = "Réactiver le son";
+
 /* Format string for indicating the device volume is low; 1 = device model */
-"DEVICE_VOLUME_LOW" = "%@ Volume Low";
+"DEVICE_VOLUME_LOW" = "%@ Volume moins";
 
 /* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "Fermer";
@@ -56,13 +113,13 @@
 "LESS_THAN" = "< %@";
 
 /* Accessibility value of label indicating the absence of a rating */
-"NO_RATING" = "No rating set.";
+"NO_RATING" = "Pas encore d'evaluation.";
 
 /* Rating Reset To Zero Accessability Hint */
 "RATING_ACCESSIBILITY_RESET" = "Taper pour remettre à zéro l’évaluation.";
 
 /* Format for accessibility label of button for setting a rating; 1 = number of stars */
-"RATING_ACCESSIBILITY_SET" = "Évaluer à %ld étoile(s)";
+"RATING_ACCESSIBILITY_SET" = "Évaluer à %ld étoiles";
 
 /* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
 "RATING_STARS_FORMAT" = "Évalué à %ld étoile(s).";

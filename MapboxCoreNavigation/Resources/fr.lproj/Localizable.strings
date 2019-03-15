@@ -1,3 +1,9 @@
+/* Error message when an offline route request returns a response that can’t be deserialized */
+"OFFLINE_CORRUPT_DATA" = "Impossible de charger cet itinéraire hors ligne";
+
+/* Error description when an offline route request returns no result */
+"OFFLINE_NO_RESULT" = "Impossible de calculer cet itinéraire hors ligne";
+
 /* Inform developer an update is available */
-"UPDATE_AVAILABLE" = "Le SDK de Navigation Mapbox pour iOS version %@ est maintenant disponible.";
+"UPDATE_AVAILABLE" = "La version %@ du SDK iOS Mapbox est maintenant disponible";
 
