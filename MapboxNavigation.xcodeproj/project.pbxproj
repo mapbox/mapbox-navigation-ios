@@ -117,6 +117,7 @@
 		359D1B281FFE70D30052FA42 /* NavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359D1B271FFE70D30052FA42 /* NavigationView.swift */; };
 		359D283C1F9DC14F00FDE9C9 /* UICollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359D283B1F9DC14F00FDE9C9 /* UICollectionView.swift */; };
 		35A262B92050A5CD00AEFF6D /* InstructionsBannerViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35A262B82050A5CD00AEFF6D /* InstructionsBannerViewSnapshotTests.swift */; };
+		35A43F77223BD632000CB367 /* RouteLeg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35A43F76223BD632000CB367 /* RouteLeg.swift */; };
 		35A5413B1EFC052700E49846 /* RouteOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35A5413A1EFC052700E49846 /* RouteOptions.swift */; };
 		35B1AEBC20AD9B3C00C8544E /* LeaksSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B1AEBB20AD9B3C00C8544E /* LeaksSpec.swift */; };
 		35B1AEBE20AD9C7800C8544E /* LeakTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B1AEBD20AD9C7800C8544E /* LeakTest.swift */; };
@@ -364,7 +365,6 @@
 		DADAD82F20350849002E25CA /* MBRouteVoiceController.m in Sources */ = {isa = PBXBuildFile; fileRef = DADAD82D20350849002E25CA /* MBRouteVoiceController.m */; };
 		DADD82802161EC0300B8B47D /* UIViewAnimationOptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DADD827F2161EC0300B8B47D /* UIViewAnimationOptionsTests.swift */; };
 		DAE22A2921C9DEDA00CA269D /* MGLVectorTileSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE22A2821C9DEDA00CA269D /* MGLVectorTileSourceTests.swift */; };
-		DAE9ED522233097C00C01291 /* RouteLeg.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE9ED512233097C00C01291 /* RouteLeg.swift */; };
 		DAFA92071F01735000A7FB09 /* DistanceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */; };
 /* End PBXBuildFile section */
 
@@ -704,6 +704,7 @@
 		359D283B1F9DC14F00FDE9C9 /* UICollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UICollectionView.swift; sourceTree = "<group>"; };
 		35A1D3651E6624EF00A48FE8 /* Mapbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mapbox.framework; path = Carthage/Build/iOS/Mapbox.framework; sourceTree = "<group>"; };
 		35A262B82050A5CD00AEFF6D /* InstructionsBannerViewSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsBannerViewSnapshotTests.swift; sourceTree = "<group>"; };
+		35A43F76223BD632000CB367 /* RouteLeg.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteLeg.swift; sourceTree = "<group>"; };
 		35A5413A1EFC052700E49846 /* RouteOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteOptions.swift; sourceTree = "<group>"; };
 		35B1AEB920AD9AE600C8544E /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/iOS/Quick.framework; sourceTree = "<group>"; };
 		35B1AEBA20AD9AEC00C8544E /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/iOS/Nimble.framework; sourceTree = "<group>"; };
@@ -1308,6 +1309,14 @@
 			path = Fixtures;
 			sourceTree = "<group>";
 		};
+		35A43F75223BD5C3000CB367 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				DAE9ED512233097C00C01291 /* RouteLeg.swift */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		35B711D01E5E7AD2001EDA8D /* MapboxNavigationTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -1559,6 +1568,7 @@
 				C57491DE1FACC42F006F97BC /* CGPoint.swift */,
 				C582FD5E203626E900A9086E /* CLLocationDirection.swift */,
 				35C98732212E037900808B82 /* MBNavigator.swift */,
+				35A43F76223BD632000CB367 /* RouteLeg.swift */,
 				35F338792232AE780071DB5C /* Route.swift */,
 				35F3387B2232AEBF0071DB5C /* String.swift */,
 			);
@@ -1580,6 +1590,7 @@
 				35CDA85F2190F2A30072B675 /* TestHelper */,
 				C5ADFBCA1DDCC7840011824B /* Products */,
 				A9E2B43473B53369153F54C6 /* Frameworks */,
+				35A43F75223BD5C3000CB367 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -2575,6 +2586,7 @@
 				351927361F0FA072003A702D /* ScreenCapture.swift in Sources */,
 				35F3387C2232AEBF0071DB5C /* String.swift in Sources */,
 				C5D9800F1EFBCDAD006DBF2E /* Date.swift in Sources */,
+				35A43F77223BD632000CB367 /* RouteLeg.swift in Sources */,
 				35B839491E2E3D5D0045A868 /* MBRouteController.m in Sources */,
 				8D2AA745211CDD4000EB7F72 /* NavigationService.swift in Sources */,
 				DADAD829203504C6002E25CA /* MBNavigationSettings.m in Sources */,
@@ -2590,7 +2602,6 @@
 				C58D6BAD1DDCF2AE00387F53 /* CoreConstants.swift in Sources */,
 				35C77F621FE8219900338416 /* NavigationSettings.swift in Sources */,
 				C51DF8661F38C31C006C6A15 /* Locale.swift in Sources */,
-				DAE9ED522233097C00C01291 /* RouteLeg.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
