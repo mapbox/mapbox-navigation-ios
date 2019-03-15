@@ -357,18 +357,19 @@ extension CarPlayManager: CPInterfaceControllerDelegate {
         }
     }
     public func templateWillDisappear(_ template: CPTemplate, animated: Bool) {
+        guard let interface = interfaceController else { return }
+        
+        let onFreedriveMapOrNavigating = interface.templates.count == 1
 
-        let isCorrectType = type(of: template) == CPSearchTemplate.self || type(of: template) == CPMapTemplate.self
-
-        guard let interface = interfaceController, let top = interface.topTemplate,
-            type(of: top) == CPSearchTemplate.self || interface.templates.count == 1,
-            isCorrectType,
-            let carPlayMapViewController = carPlayMapViewController else { return }
-            if type(of: template) == CPSearchTemplate.self {
-                carPlayMapViewController.isOverviewingRoutes = false
-            }
-            carPlayMapViewController.resetCamera(animated: false)
-
+        guard let top = interface.topTemplate,
+            type(of: top) == CPSearchTemplate.self || onFreedriveMapOrNavigating else { return }
+        
+        if onFreedriveMapOrNavigating {
+            carPlayMapViewController?.isOverviewingRoutes = false
+        }
+        
+        carPlayMapViewController?.resetCamera(animated: false)
+        
     }
 }
 

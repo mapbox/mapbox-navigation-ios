@@ -9,6 +9,13 @@ public extension UIEdgeInsets {
                             bottom: left.bottom + right.bottom,
                             right: left.right + right.right )
     }
+
+    static func +=(lhs: inout UIEdgeInsets, rhs: UIEdgeInsets) {
+        lhs.top += rhs.top
+        lhs.left += rhs.left
+        lhs.bottom += rhs.bottom
+        lhs.right += rhs.right
+    }
 }
 
 extension UIEdgeInsets: ExpressibleByFloatLiteral {
