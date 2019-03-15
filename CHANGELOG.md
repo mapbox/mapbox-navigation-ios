@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## master
+
+### Carplay
+
+* Fixed an issue where the camera would sometimes not animate properly when returning to the free-drive map screen. [#2022](https://github.com/mapbox/mapbox-navigation-ios/pull/2022))
+
 ## v0.30.0
 
 ### Core Navigation
