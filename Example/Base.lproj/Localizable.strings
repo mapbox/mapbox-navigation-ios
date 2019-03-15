@@ -1,6 +1,9 @@
 /* Alert action */
 "ALERT_OK" = "OK";
 
+/* CPAlertTemplate OK button title */
+"CARPLAY_OK" = "OK";
+
 /* Title of button that downloads an offline region */
 "OFFLINE_ITEM_DOWNLOAD" = "Download";
 
