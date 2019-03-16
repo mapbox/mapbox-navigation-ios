@@ -139,7 +139,7 @@ class ViewController: UIViewController {
         }
 
         if waypoints.count > 1 {
-            waypoints = Array(waypoints.suffix(1))
+            waypoints = Array(waypoints.dropFirst())
         }
         
         let coordinates = mapView.convert(tap.location(in: mapView), toCoordinateFrom: mapView)
