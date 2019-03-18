@@ -216,6 +216,7 @@ public class CarPlayManager: NSObject {
      
      - parameter currentLocation: The current location of the user. This will be used to initally draw the current location icon.
      - parameter navigationService: The service with which to navigation. CarPlayNavigationViewController will observe the progress updates from this service.
+     - precondition: The NavigationViewController must be fully presented at the time of this call.
      */
     public func beginNavigationWithCarPlay(using currentLocation: CLLocationCoordinate2D, navigationService: NavigationService) {
         let route = navigationService.route
@@ -508,20 +509,14 @@ extension CarPlayManager: CPMapTemplateDelegate {
         mapTemplate.hideTripPreviews()
 
         let route = routeChoice.userInfo as! Route
-        var service: NavigationService
         
         let desiredSimulationMode: SimulationMode = simulatesLocations ? .always : .onPoorGPS
-        if let navService = navigationService {
-            service = navService
-        } else {
-            if let override = delegate?.carPlayManager(self, navigationServiceAlong: route, desiredSimulationMode: desiredSimulationMode) {
-                service = override
-            } else {
-                service = MapboxNavigationService(route: route, simulating: desiredSimulationMode)
-            }
-            navigationService = service
-        }
-
+        
+        let service = navigationService ??
+            delegate?.carPlayManager(self, navigationServiceAlong: route, desiredSimulationMode: desiredSimulationMode) ??
+            MapboxNavigationService(route: route, simulating: desiredSimulationMode)
+        
+        navigationService = service //store the service it was newly created/fetched
 
         if simulatesLocations == true {
             service.simulationSpeedMultiplier = simulatedSpeedMultiplier
