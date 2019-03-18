@@ -15,7 +15,15 @@ public class CarPlayNavigationViewController: UIViewController {
     /**
      The view controller’s delegate.
      */
-    @objc public weak var carPlayNavigationDelegate: CarPlayNavigationDelegate?
+    @objc public weak var carPlayNavigationDelegate: CarPlayNavigationDelegate? {
+        didSet {
+            if let carPlayNavigationDelegate = carPlayNavigationDelegate as? NSObjectProtocol {
+                // This rigamarole avoids a compiler error when using a #selector literal, as well as a compiler warning when calling the Selector(_:) initializer with a string literal.
+                let carPlayNavigationViewControllerDidArrive = Selector(("carPlayNavigationViewControllerDidArrive:" as NSString) as String)
+                assert(!carPlayNavigationDelegate.responds(to: carPlayNavigationViewControllerDidArrive), "CarPlayNavigationDelegate.carPlayNavigationViewControllerDidArrive(_:) has been removed. Use NavigationViewControllerDelegate.navigationViewController(_:didArriveAt:) or  NavigationServiceDelegate.navigationService(_:didArriveAt:) instead.")
+            }
+        }
+    }
     
     public var carPlayManager: CarPlayManager
     
