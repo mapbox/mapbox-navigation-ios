@@ -235,6 +235,8 @@ public class CarPlayManager: NSObject {
         
         let trip = CPTrip(origin: MKMapItem(placemark: originPlacemark), destination: MKMapItem(placemark: destinationPlacemark), routeChoices: [routeChoice])
         
+        self.navigationService = navigationService
+        
         if let mapTemplate = mainMapTemplate {
             self.mapTemplate(mapTemplate, startedTrip: trip, using: routeChoice)
         }
@@ -509,14 +511,19 @@ extension CarPlayManager: CPMapTemplateDelegate {
         var service: NavigationService
         
         let desiredSimulationMode: SimulationMode = simulatesLocations ? .always : .onPoorGPS
-        if let override = delegate?.carPlayManager(self, navigationServiceAlong: route, desiredSimulationMode: desiredSimulationMode) {
-            service = override
+        if let navService = navigationService {
+            service = navService
         } else {
-            service = MapboxNavigationService(route: route, simulating: desiredSimulationMode)
+            if let override = delegate?.carPlayManager(self, navigationServiceAlong: route, desiredSimulationMode: desiredSimulationMode) {
+                service = override
+            } else {
+                service = MapboxNavigationService(route: route, simulating: desiredSimulationMode)
+            }
+            navigationService = service
         }
 
+
         if simulatesLocations == true {
-            service.simulationMode = .always
             service.simulationSpeedMultiplier = simulatedSpeedMultiplier
         }
 
@@ -532,7 +539,6 @@ extension CarPlayManager: CPMapTemplateDelegate {
         navigationViewController.startNavigationSession(for: trip)
         navigationViewController.carPlayNavigationDelegate = self
         currentNavigator = navigationViewController
-        navigationService = service
 
         carPlayMapViewController.isOverviewingRoutes = false
         carPlayMapViewController.present(navigationViewController, animated: true, completion: nil)
