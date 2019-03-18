@@ -502,7 +502,7 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
             return route
         }()
         let directionsClientSpy = DirectionsSpy(accessToken: "garbage", host: nil)
-        let service = MapboxNavigationService(route: initialRoute, directions: directionsClientSpy, locationSource: NavigationLocationManager(), eventsManagerType: NavigationEventsManagerSpy.self)
+        let service = MapboxNavigationService(route: initialRoute, directions: directionsClientSpy, locationSource: NavigationLocationManager(), eventsManagerType: NavigationEventsManagerSpy.self, simulating: desiredSimulationMode)
         return service
     }
 
