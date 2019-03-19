@@ -65,6 +65,24 @@ class ViewController: UIViewController {
     }
 
     var alertController: UIAlertController!
+    // MARK: - Init
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        setAppDelegateProperty()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setAppDelegateProperty()
+    }
+    
+    private func setAppDelegateProperty() {
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+            appDelegate.currentAppRootViewController = self
+        }
+    }
+    
     
     // MARK: - Lifecycle Methods
 

@@ -5,6 +5,8 @@ import MapboxNavigation
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    weak var currentAppRootViewController: ViewController?
+    
     var window: UIWindow?
     @available(iOS 12.0, *)
     lazy var carPlayManager: CarPlayManager = CarPlayManager()

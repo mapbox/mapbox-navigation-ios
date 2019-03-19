@@ -57,7 +57,9 @@ extension AppDelegate: CarPlayManagerDelegate {
     // MARK: CarPlayManagerDelegate
     func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith service: NavigationService) {
         guard let window = self.window else { return }
-        NavigationViewController.carPlayManager(carPlayManager, didBeginNavigationWith: service, window: window)
+        
+        precondition(currentAppRootViewController != nil)
+        NavigationViewController.carPlayManager(carPlayManager, didBeginNavigationWith: service, window: window, delegate: currentAppRootViewController)
     }
     
     func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
