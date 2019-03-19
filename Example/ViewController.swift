@@ -46,6 +46,8 @@ class ViewController: UIViewController {
             mapView?.showWaypoints(current)
         }
     }
+    
+    weak var activeNavigationViewController: NavigationViewController?
 
     // MARK: Directions Request Handlers
 
@@ -218,23 +220,40 @@ class ViewController: UIViewController {
 
     func startBasicNavigation() {
         guard let route = routes?.first else { return }
-
-        let options = NavigationOptions(navigationService: navigationService())
-        let navigationViewController = NavigationViewController(for: route, options: options)
-        navigationViewController.delegate = self
-        navigationViewController.mapView?.delegate = self
         
-        presentAndRemoveMapview(navigationViewController)
+        let service = navigationService(route: route)
+        let navigationViewController = createNavigationViewController(navigationService: service)
+        
+        presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
     
     func startNavigation(styles: [Style]) {
         guard let route = routes?.first else { return }
         
-        let options = NavigationOptions(styles: styles, navigationService: navigationService())
+        let options = NavigationOptions(styles: styles, navigationService: navigationService(route: route))
         let navigationViewController = NavigationViewController(for: route, options: options)
         navigationViewController.delegate = self
         
-        presentAndRemoveMapview(navigationViewController)
+        presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
+    }
+    
+    func createNavigationViewController(navigationService: NavigationService) -> NavigationViewController {
+        let route = navigationService.route
+        let options = NavigationOptions( navigationService: navigationService)
+        
+        let nav = NavigationViewController(for: route, options: options)
+        nav.delegate = self
+        nav.mapView?.delegate = self
+        return nav
+    }
+    
+    public func beginNavigationWithCarplay(navigationService: NavigationService) {
+        if activeNavigationViewController != nil {
+            activeNavigationViewController?.isUsedInConjunctionWithCarPlayWindow = true
+        } else {
+            let navigationViewController = createNavigationViewController(navigationService: navigationService)
+            presentAndRemoveMapview(navigationViewController, completion: nil)
+        }
     }
     
     // MARK: Custom Navigation UI
@@ -259,33 +278,44 @@ class ViewController: UIViewController {
         guard let route = routes?.first else { return }
 
         let styles = [CustomDayStyle(), CustomNightStyle()]
-        let options = NavigationOptions(styles:styles, navigationService: navigationService())
+        let options = NavigationOptions(styles:styles, navigationService: navigationService(route: route))
         let navigationViewController = NavigationViewController(for: route, options: options)
         navigationViewController.delegate = self
 
-        presentAndRemoveMapview(navigationViewController)
+        presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
 
-    func navigationService() -> NavigationService? {
-        guard let route = routes?.first else { return nil }
+    func navigationService(route: Route) -> NavigationService {
         let simulate = simulationButton.isSelected
-        let mode: SimulationMode = simulate ? .always : .never//.onPoorGPS
+        let mode: SimulationMode = simulate ? .always : .onPoorGPS
         return MapboxNavigationService(route: route, directions: Settings.directions, simulating: mode)
     }
 
-    func presentAndRemoveMapview(_ navigationViewController: NavigationViewController) {
-        let delegate = UIApplication.shared.delegate as? AppDelegate
+    func presentAndRemoveMapview(_ navigationViewController: NavigationViewController, completion: CompletionHandler?) {
+        activeNavigationViewController = navigationViewController
         
         present(navigationViewController, animated: true) {
-            if #available(iOS 12.0, *),
-                let service = navigationViewController.navigationService,
-                let location = service.router.location {
-                delegate?.carPlayManager.beginNavigationWithCarPlay(using: location.coordinate,
-                                                                    navigationService: service)
-            }
+            completion?()
             
             self.mapView?.removeFromSuperview()
             self.mapView = nil
+        }
+    }
+    
+    func beginCarPlayNavigation() {
+        let delegate = UIApplication.shared.delegate as? AppDelegate
+        
+        if #available(iOS 12.0, *),
+            let service = activeNavigationViewController?.navigationService,
+            let location = service.router.location {
+            delegate?.carPlayManager.beginNavigationWithCarPlay(using: location.coordinate,
+                                                                navigationService: service)
+        }
+    }
+    
+    func dismissActiveNavigationViewController() {
+        activeNavigationViewController?.dismiss(animated: true) {
+            self.activeNavigationViewController = nil
         }
     }
 
@@ -448,10 +478,9 @@ extension ViewController: NavigationViewControllerDelegate {
     // If implemented, you are responsible for also dismissing the UI.
     func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool) {
         endCarPlayNavigation(canceled: canceled)
-        navigationViewController.dismiss(animated: true, completion: nil)
+        dismissActiveNavigationViewController()
     }
-    
-    private func endCarPlayNavigation(canceled: Bool) {
+    func endCarPlayNavigation(canceled: Bool) {
         if #available(iOS 12.0, *), let delegate = UIApplication.shared.delegate as? AppDelegate {
             delegate.carPlayManager.currentNavigator?.exitNavigation(byCanceling: canceled)
         }
