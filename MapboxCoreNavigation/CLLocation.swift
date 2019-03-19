@@ -30,10 +30,10 @@ extension CLLocation {
     convenience init(_ location: MBFixLocation) {
         self.init(coordinate: location.coordinate,
                   altitude: location.altitude?.doubleValue ?? 0,
-                  horizontalAccuracy: location.accuracyHorizontal?.doubleValue ?? 0,
+                  horizontalAccuracy: location.accuracyHorizontal?.doubleValue ?? -1,
                   verticalAccuracy: 0,
-                  course: location.bearing?.doubleValue ?? 0,
-                  speed: location.speed?.doubleValue ?? 0,
+                  course: location.bearing?.doubleValue ?? -1,
+                  speed: location.speed?.doubleValue ?? -1,
                   timestamp: location.time)
     }
     
@@ -157,12 +157,5 @@ extension CLLocation {
     
     func shifted(to newTimestamp: Date) -> CLLocation {
         return CLLocation(coordinate: coordinate, altitude: altitude, horizontalAccuracy: horizontalAccuracy, verticalAccuracy: verticalAccuracy, course: course, speed: speed, timestamp: newTimestamp)
-    }
-    
-    convenience init(fixLocation: MBFixLocation) {
-        self.init(coordinate: fixLocation.coordinate, altitude: 0,
-                  horizontalAccuracy: fixLocation.accuracyHorizontal?.doubleValue ?? 0,
-                  verticalAccuracy: 0, course: fixLocation.bearing?.doubleValue ?? 0,
-                  speed: fixLocation.speed?.doubleValue ?? 0, timestamp: fixLocation.time)
     }
 }
