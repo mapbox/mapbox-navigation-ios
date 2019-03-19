@@ -412,6 +412,7 @@ extension ViewController: NavigationViewControllerDelegate {
         
         //If we're not in a "Multiple Stops" demo, show the normal EORVC
         if navigationViewController.navigationService.router.routeProgress.isFinalLeg {
+            endCarPlayNavigation(canceled: false)
             return true
         }
         
