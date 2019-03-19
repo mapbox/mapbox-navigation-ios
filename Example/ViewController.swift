@@ -71,15 +71,15 @@ class ViewController: UIViewController {
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        setAppDelegateProperty()
+        commonInit()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        setAppDelegateProperty()
+        commonInit()
     }
     
-    private func setAppDelegateProperty() {
+    private func commonInit() {
         if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
             appDelegate.currentAppRootViewController = self
         }
