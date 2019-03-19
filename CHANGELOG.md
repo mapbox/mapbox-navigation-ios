@@ -12,6 +12,8 @@
 
 ### CarPlay
 
+* Removed `NavigationViewController.carPlayManager(_:didBeginNavigationWith:window:)` that created and presented a `NavigationViewController`. Have your NavigationViewControllerDelegate (such as a UIViewController subclass, or a discrete delegate) create and present a NavigationViewController. ([#2045](https://github.com/mapbox/mapbox-navigation-ios/pull/2045)
+* Removed `NavigationViewController.carPlayManagerDidEndNaviation(_:window:). Have your NavigationViewControllerDelegate (such as a UIViewController subclass, or a discrete delegate) dismiss the active NavigationViewController. ([#2045](https://github.com/mapbox/mapbox-navigation-ios/pull/2045)
 * Fixing issue where a data-race could cause CarPlay to create it's own NavigationService, resulting in unexpected behavior. ([#2041](https://github.com/mapbox/mapbox-navigation-ios/pull/2041)
 * Fixing issue where data-race could unexpectedly cause a NavigationViewController to be created and presented on-screen.  ([#2041](https://github.com/mapbox/mapbox-navigation-ios/pull/2041)
 * Added the `CarPlayManager.beginNavigationWithCarPlay(_:navigationService:)` method. Use this method to programmatically start navigation in CarPlay if CarPlay is being connected while turn-by-turn navigation is already underway on the iOS device. ([#2021](https://github.com/mapbox/mapbox-navigation-ios/pull/2021))
