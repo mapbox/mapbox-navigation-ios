@@ -480,6 +480,7 @@ extension ViewController: NavigationViewControllerDelegate {
         endCarPlayNavigation(canceled: canceled)
         dismissActiveNavigationViewController()
     }
+    
     func endCarPlayNavigation(canceled: Bool) {
         if #available(iOS 12.0, *), let delegate = UIApplication.shared.delegate as? AppDelegate {
             delegate.carPlayManager.currentNavigator?.exitNavigation(byCanceling: canceled)
