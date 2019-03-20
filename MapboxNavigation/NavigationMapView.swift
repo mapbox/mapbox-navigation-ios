@@ -1102,11 +1102,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
     
-    open override func setContentInset(_ contentInset: UIEdgeInsets, animated: Bool) {
-        super.setContentInset(contentInset, animated: animated)
-        print("!!! contentInset \(contentInset)")
-    }
-    
     /**
      Recenters the camera and begins tracking the user's location.
      */
