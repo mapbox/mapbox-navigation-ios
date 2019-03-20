@@ -228,13 +228,27 @@ public class CarPlayNavigationViewController: UIViewController {
                                  legIndex: progress.legIndex,
                                  stepIndex: progress.currentLegProgress.stepIndex + 1)
             } else if tracksUserCourse && !newValue {
-                guard let userLocation = self.navigationService.router.location?.coordinate else {
-                    return
+                guard let userLocation = self.navigationService.router.location?.coordinate,
+                    let coordinates = progress.route.coordinates else {
+                        return
                 }
                 mapView?.enableFrameByFrameCourseViewTracking(for: 3)
-                mapView?.setOverheadCameraView(from: userLocation, along: progress.route.coordinates!, for: self.edgePadding)
+                mapView?.setOverheadCameraView(from: userLocation,
+                                               along: coordinates,
+                                               contentInsets: contentInset(forOverviewing: false))
             }
         }
+    }
+    
+    func contentInset(forOverviewing overviewing: Bool) -> UIEdgeInsets {
+        var contentInsets = view.safeArea
+        
+        if overviewing {
+            let padding = UIEdgeInsets(top: 40, left: 40, bottom: 40, right: 40)
+            contentInsets += padding
+        }
+        
+        return contentInsets
     }
     
     public func beginPanGesture() {
