@@ -474,20 +474,14 @@ class RouteMapViewController: UIViewController {
         let instructionBannerHeight = instructionsBannerContentView.bounds.height
         let bottomBannerHeight = bottomBannerContainerView.bounds.height
         
-        var insets = UIEdgeInsets(top: instructionBannerHeight,
-                                  left: 0,
-                                  bottom: bottomBannerHeight,
-                                  right: 0)
+        var insets = UIEdgeInsets(top: instructionBannerHeight, left: 0,
+                                  bottom: bottomBannerHeight, right: 0)
         
         if overviewing {
-            let courseView = mapView.userCourseView != nil ? mapView.userCourseView!.bounds.midX : 0
-            let routeLineWidths = MBRouteLineWidthByZoomLevel.compactMap { $0.value.constantValue as? Int }
-            let maxRouteLineWidth = CGFloat(routeLineWidths.max() ?? 0)
+            insets += NavigationMapView.courseViewMinimumInsets
             
-            insets.top += maxRouteLineWidth + courseView
-            insets.left += maxRouteLineWidth + courseView
-            insets.bottom += maxRouteLineWidth + courseView
-            insets.right += maxRouteLineWidth + courseView
+            let routeLineWidths = MBRouteLineWidthByZoomLevel.compactMap { $0.value.constantValue as? Int }
+            insets += UIEdgeInsets(floatLiteral: Double(routeLineWidths.max() ?? 0))
         }
         
         return insets
