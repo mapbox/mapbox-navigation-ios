@@ -248,6 +248,8 @@ class ViewController: UIViewController {
     }
     
     public func beginNavigationWithCarplay(navigationService: NavigationService) {
+        self.routes = [navigationService.route]
+        
         if activeNavigationViewController != nil {
             activeNavigationViewController?.isUsedInConjunctionWithCarPlayWindow = true
         } else {
