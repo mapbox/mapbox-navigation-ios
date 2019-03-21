@@ -21,7 +21,7 @@ class CarPlayManagerTests: XCTestCase {
     override func setUp() {
         super.setUp()
         eventsManagerSpy = NavigationEventsManagerSpy()
-        manager = CarPlayManager(eventsManager: eventsManagerSpy, navigationViewController: CarPlayNavigationViewControllerTestable.self)
+        manager = CarPlayManager(eventsManager: eventsManagerSpy, navigationViewControllerClass: CarPlayNavigationViewControllerTestable.self)
         searchController = CarPlaySearchController()
     }
 
