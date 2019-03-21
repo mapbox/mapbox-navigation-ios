@@ -78,7 +78,7 @@ public class CarPlayNavigationViewController: UIViewController {
      
      - postcondition: Call `startNavigationSession(for:)` after initializing this object to begin navigation.
      */
-    @objc public init(navigationService: NavigationService,
+    @objc required public init(navigationService: NavigationService,
                       mapTemplate: CPMapTemplate,
                       interfaceController: CPInterfaceController,
                       manager: CarPlayManager,
