@@ -1069,7 +1069,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Sets the camera directly over a series of coordinates.
      */
-    @objc public func setOverheadCameraView(from userLocation: CLLocationCoordinate2D, along coordinates: [CLLocationCoordinate2D], contentInsets: UIEdgeInsets) {
+    @objc public func setOverheadCameraView(from userLocation: CLLocationCoordinate2D, along coordinates: [CLLocationCoordinate2D], contentInsets: UIEdgeInsets, animated: Bool = true) {
         self.contentInset = contentInsets
         isAnimatingToOverheadMode = true
         
@@ -1077,6 +1077,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         let line = MGLPolyline(coordinates: slicedLine, count: UInt(slicedLine.count))
         
         tracksUserCourse = false
+        
+        let duration: TimeInterval = animated ? 1 : 0
         
         // If the user has a short distance left on the route, prevent the camera from zooming all the way.
         // `MGLMapView.setVisibleCoordinateBounds(:edgePadding:animated:)` will go beyond what is convenient for the driver.
@@ -1086,7 +1088,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             camera.heading = 0
             camera.centerCoordinate = userLocation
             camera.altitude = self.defaultAltitude
-            setCamera(camera, withDuration: 1, animationTimingFunction: nil) { [weak self] in
+            setCamera(camera, withDuration: duration, animationTimingFunction: nil) { [weak self] in
                 self?.isAnimatingToOverheadMode = false
             }
             return
@@ -1098,7 +1100,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         let newCamera = camera(currentCamera, fitting: line, edgePadding: .zero)
         
-        setCamera(newCamera, withDuration: 1, animationTimingFunction: nil) { [weak self] in
+        setCamera(newCamera, withDuration: duration, animationTimingFunction: nil) { [weak self] in
             self?.isAnimatingToOverheadMode = false
         }
     }
