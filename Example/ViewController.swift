@@ -315,6 +315,12 @@ class ViewController: UIViewController {
         }
     }
     
+    func endCarPlayNavigation(canceled: Bool) {
+        if #available(iOS 12.0, *), let delegate = UIApplication.shared.delegate as? AppDelegate {
+            delegate.carPlayManager.currentNavigator?.exitNavigation(byCanceling: canceled)
+        }
+    }
+    
     func dismissActiveNavigationViewController() {
         activeNavigationViewController?.dismiss(animated: true) {
             self.activeNavigationViewController = nil
@@ -481,12 +487,6 @@ extension ViewController: NavigationViewControllerDelegate {
     func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool) {
         endCarPlayNavigation(canceled: canceled)
         dismissActiveNavigationViewController()
-    }
-    
-    func endCarPlayNavigation(canceled: Bool) {
-        if #available(iOS 12.0, *), let delegate = UIApplication.shared.delegate as? AppDelegate {
-            delegate.carPlayManager.currentNavigator?.exitNavigation(byCanceling: canceled)
-        }
     }
 }
 
