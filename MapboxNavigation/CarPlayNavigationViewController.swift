@@ -46,6 +46,8 @@ public class CarPlayNavigationViewController: UIViewController {
     var mapViewLeftSafeAreaBalancingConstraint: NSLayoutConstraint?
     var mapViewRightSafeAreaBalancingConstraint: NSLayoutConstraint?
     
+    var mapViewOverviewRightConstraint: NSLayoutConstraint?
+    
     var carSession: CPNavigationSession!
     var mapTemplate: CPMapTemplate
     var carFeedbackTemplate: CPGridTemplate!
@@ -133,6 +135,8 @@ public class CarPlayNavigationViewController: UIViewController {
         view.addConstraint(NSLayoutConstraint(item: mapView, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1, constant: 0))
         view.addConstraint(NSLayoutConstraint(item: mapView, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1, constant: 0))
         
+        mapViewOverviewRightConstraint = view.rightAnchor.constraint(equalTo: mapView.rightAnchor)
+        
         styleObservation = mapView.observe(\.style, options: .new) { [weak self] (mapView, change) in
             guard change.newValue != nil else {
                 return
@@ -175,10 +179,31 @@ public class CarPlayNavigationViewController: UIViewController {
         super.viewSafeAreaInsetsDidChange()
         
         // Adjust the map’s vanishing point to counterbalance the side maneuver panels by extending the view off beyond the other side of the screen.
-        if let mapView = mapView {
-            mapViewRightSafeAreaBalancingConstraint?.constant = -mapView.safeArea.right
-            mapViewLeftSafeAreaBalancingConstraint?.constant = mapView.safeArea.left
+        guard let mapView = mapView else { return }
+        
+        mapViewRightSafeAreaBalancingConstraint?.constant = -mapView.safeArea.right
+        mapViewLeftSafeAreaBalancingConstraint?.constant = mapView.safeArea.left
+        view.setNeedsUpdateConstraints()
+        
+        mapView.enableFrameByFrameCourseViewTracking(for: 1)
+        
+        if !tracksUserCourse {
+            mapView.setContentInset(overviewContentInsets(), animated: false)
+            mapView.fit(to: navigationService.route, facing: 0, padding: .zero, animated: false)
         }
+    }
+    
+    func overviewContentInsets() -> UIEdgeInsets {
+        guard let mapView = mapView else { return .zero }
+        var edgePadding = view.safeArea
+        
+        if let userCourseView = mapView.userCourseView {
+            let midX = userCourseView.bounds.midX
+            let midY = userCourseView.bounds.midY
+            edgePadding += UIEdgeInsets(top: midY, left: midX, bottom: midY, right: midX)
+        }
+        
+        return edgePadding
     }
     
     /**
@@ -223,18 +248,33 @@ public class CarPlayNavigationViewController: UIViewController {
         set {
             let progress = navigationService.routeProgress
             if !tracksUserCourse && newValue {
+                
+                adjustMapViewVanishingPoint(forOverview: false)
+                
                 mapView?.recenterMap()
                 mapView?.addArrow(route: progress.route,
                                  legIndex: progress.legIndex,
                                  stepIndex: progress.currentLegProgress.stepIndex + 1)
             } else if tracksUserCourse && !newValue {
-                guard let userLocation = self.navigationService.router.location?.coordinate else {
+                
+                adjustMapViewVanishingPoint(forOverview: true)
+                
+                guard let userLocation = self.navigationService.router.location?.coordinate,
+                let coordinates = navigationService.route.coordinates else {
                     return
                 }
-                mapView?.enableFrameByFrameCourseViewTracking(for: 3)
-                mapView?.setOverheadCameraView(from: userLocation, along: progress.route.coordinates!, for: self.edgePadding)
+                mapView?.enableFrameByFrameCourseViewTracking(for: 1)
+                mapView?.setOverheadCameraView(from: userLocation, along: coordinates, for: .zero)
             }
         }
+    }
+    
+    func adjustMapViewVanishingPoint(forOverview overviewing: Bool) {
+        mapViewLeftSafeAreaBalancingConstraint?.isActive = !overviewing
+        mapViewOverviewRightConstraint?.isActive = overviewing
+        
+        view.setNeedsUpdateConstraints()
+        mapView?.setNeedsUpdateConstraints()
     }
     
     public func beginPanGesture() {
