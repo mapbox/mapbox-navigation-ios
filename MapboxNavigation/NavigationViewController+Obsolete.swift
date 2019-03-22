@@ -64,4 +64,15 @@ public extension NavigationViewController {
                             eventsManager: NavigationEventsManager? = nil) {
         fatalError()
     }
+    
+    @available(iOS, introduced: 12.0, obsoleted: 0.1, message: "Have your NavigationViewControllerDelegate (such as a UIViewController subclass, or a discrete delegate) create and present a NavigationViewController.")
+    public class func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith navigationService: NavigationService, window: UIWindow, delegate: NavigationViewControllerDelegate?) {
+        fatalError()
+    }
+    
+    @available(iOS, introduced: 12.0, obsoleted: 0.1, message: "Have your NavigationViewControllerDelegate (such as a UIViewController subclass, or a discrete delegate) dismiss the active NavigationViewController.")
+    public class func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager, window: UIWindow) {
+        fatalError()
+    }
+
 }

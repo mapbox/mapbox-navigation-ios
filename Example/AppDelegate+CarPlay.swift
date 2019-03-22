@@ -36,7 +36,7 @@ extension AppDelegate: CPApplicationDelegate {
         carPlaySearchController.delegate = nil
         carPlayManager.application(application, didDisconnectCarInterfaceController: interfaceController, from: window)
         
-        if let navigationViewController = self.window!.rootViewController?.presentedViewController as? NavigationViewController {
+        if let navigationViewController = currentAppRootViewController?.activeNavigationViewController {
             navigationViewController.isUsedInConjunctionWithCarPlayWindow = false
         }
     }
@@ -56,14 +56,12 @@ extension AppDelegate: CarPlayManagerDelegate {
     
     // MARK: CarPlayManagerDelegate
     func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith service: NavigationService) {
-        guard let window = self.window else { return }
-        NavigationViewController.carPlayManager(carPlayManager, didBeginNavigationWith: service, window: window)
+        currentAppRootViewController?.beginNavigationWithCarplay(navigationService: service)
     }
     
     func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
         // Dismiss NavigationViewController if it's present in the navigation stack
-        guard let window = window else { return }
-        NavigationViewController.carPlayManagerDidEndNavigation(carPlayManager, window: window)
+        currentAppRootViewController?.dismissActiveNavigationViewController()
     }
     
     func favoritesListTemplate() -> CPListTemplate {
