@@ -222,7 +222,7 @@ class ViewController: UIViewController {
         guard let route = routes?.first else { return }
         
         let service = navigationService(route: route)
-        let navigationViewController = createNavigationViewController(navigationService: service)
+        let navigationViewController = self.navigationViewController(navigationService: service)
         
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
@@ -237,25 +237,22 @@ class ViewController: UIViewController {
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
     
-    func createNavigationViewController(navigationService: NavigationService) -> NavigationViewController {
+    func navigationViewController(navigationService: NavigationService) -> NavigationViewController {
         let route = navigationService.route
         let options = NavigationOptions( navigationService: navigationService)
         
-        let nav = NavigationViewController(for: route, options: options)
-        nav.delegate = self
-        nav.mapView?.delegate = self
-        return nav
+        let navigationViewController = NavigationViewController(for: route, options: options)
+        navigationViewController.delegate = self
+        navigationViewController.mapView?.delegate = self
+        return navigationViewController
     }
     
     public func beginNavigationWithCarplay(navigationService: NavigationService) {
         self.routes = [navigationService.route]
         
-        if activeNavigationViewController != nil {
-            activeNavigationViewController?.isUsedInConjunctionWithCarPlayWindow = true
-        } else {
-            let navigationViewController = createNavigationViewController(navigationService: navigationService)
-            presentAndRemoveMapview(navigationViewController, completion: nil)
-        }
+        let navigationViewController = activeNavigationViewController ?? self.navigationViewController(navigationService: navigationService)
+        navigationViewController.isUsedInConjunctionWithCarPlayWindow = true
+        presentAndRemoveMapview(navigationViewController, completion: nil)
     }
     
     // MARK: Custom Navigation UI
