@@ -174,9 +174,6 @@ public class CarPlayNavigationViewController: UIViewController {
     public override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         
-        let navigationBarIsOpen = view.safeAreaInsets.top > 0
-        mapView?.compassView.isHidden = navigationBarIsOpen
-        
         // Adjust the map’s vanishing point to counterbalance the side maneuver panels by extending the view off beyond the other side of the screen.
         if let mapView = mapView {
             mapViewRightSafeAreaBalancingConstraint?.constant = -mapView.safeArea.right
