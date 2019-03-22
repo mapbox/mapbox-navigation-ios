@@ -252,6 +252,9 @@ class ViewController: UIViewController {
         
         let navigationViewController = activeNavigationViewController ?? self.navigationViewController(navigationService: navigationService)
         navigationViewController.isUsedInConjunctionWithCarPlayWindow = true
+        
+        guard activeNavigationViewController == nil else { return }
+        
         presentAndRemoveMapview(navigationViewController, completion: nil)
     }
     
@@ -293,11 +296,11 @@ class ViewController: UIViewController {
     func presentAndRemoveMapview(_ navigationViewController: NavigationViewController, completion: CompletionHandler?) {
         activeNavigationViewController = navigationViewController
         
-        present(navigationViewController, animated: true) {
+        present(navigationViewController, animated: true) { [weak self] in
             completion?()
             
-            self.mapView?.removeFromSuperview()
-            self.mapView = nil
+            self?.mapView?.removeFromSuperview()
+            self?.mapView = nil
         }
     }
     
