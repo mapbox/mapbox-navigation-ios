@@ -73,6 +73,7 @@ extension RouteMapViewController: NavigationComponent {
         
         if isInOverviewMode {
             if let coordinates = route.coordinates, let userLocation = router.location?.coordinate {
+                mapView.contentInset = contentInset(forOverviewing: true)
                 mapView.setOverheadCameraView(from: userLocation, along: coordinates, for: contentInset(forOverviewing: true))
             }
         } else {
@@ -352,7 +353,8 @@ class RouteMapViewController: UIViewController {
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
         if let coordinates = router.route.coordinates,
             let userLocation = router.location?.coordinate {
-            mapView.setOverheadCameraView(from: userLocation, along: coordinates, for: contentInset(forOverviewing: true))
+            mapView.contentInset = contentInset(forOverviewing: true)
+            mapView.setOverheadCameraView(from: userLocation, along: coordinates, for: .zero)
         }
         isInOverviewMode = true
     }
