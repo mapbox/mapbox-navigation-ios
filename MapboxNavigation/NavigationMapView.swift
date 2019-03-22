@@ -1072,8 +1072,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     @objc public func setOverheadCameraView(from userLocation: CLLocationCoordinate2D, along coordinates: [CLLocationCoordinate2D], for padding: UIEdgeInsets) {
         isAnimatingToOverheadMode = true
         
-        let slicedLine = Polyline(coordinates).sliced(from: userLocation).coordinates
-        let line = MGLPolyline(coordinates: slicedLine, count: UInt(slicedLine.count))
+        let line = MGLPolyline(coordinates: coordinates, count: UInt(coordinates.count))
         
         tracksUserCourse = false
         
