@@ -57,7 +57,6 @@ public class CarPlayManager: NSObject {
 
     public fileprivate(set) var mainMapTemplate: CPMapTemplate?
     public fileprivate(set) weak var currentNavigator: CarPlayNavigationViewController?
-    public static let CarPlayWaypointKey: String = "MBCarPlayWaypoint"
 
     internal var mapTemplateProvider: MapTemplateProvider
 
@@ -392,22 +391,8 @@ extension CarPlayManager: CPInterfaceControllerDelegate {
     }
 }
 
-// MARK: CPListTemplateDelegate
 @available(iOS 12.0, *)
-extension CarPlayManager: CPListTemplateDelegate {
-
-    public func listTemplate(_ listTemplate: CPListTemplate, didSelect item: CPListItem, completionHandler: @escaping () -> Void) {
-        
-        // Selected a favorite? or any item with a waypoint.
-        if let userInfo = item.userInfo as? [String: Any],
-            let waypoint = userInfo[CarPlayManager.CarPlayWaypointKey] as? Waypoint {
-            previewRoutes(to: waypoint, completionHandler: completionHandler)
-            return
-        }
-        
-        completionHandler()
-    }
-    
+extension CarPlayManager {
     public func previewRoutes(to destination: Waypoint, completionHandler: @escaping CompletionHandler) {
         
         guard let rootViewController = carPlayMapViewController,
