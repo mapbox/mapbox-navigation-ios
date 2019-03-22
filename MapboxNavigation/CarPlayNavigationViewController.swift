@@ -86,7 +86,7 @@ public class CarPlayNavigationViewController: UIViewController {
      
      - postcondition: Call `startNavigationSession(for:)` after initializing this object to begin navigation.
      */
-    @objc public init(navigationService: NavigationService,
+    @objc required public init(navigationService: NavigationService,
                       mapTemplate: CPMapTemplate,
                       interfaceController: CPInterfaceController,
                       manager: CarPlayManager,
@@ -202,8 +202,9 @@ public class CarPlayNavigationViewController: UIViewController {
     @objc(exitNavigationByCanceling:)
     public func exitNavigation(byCanceling canceled: Bool = false) {
         carSession.finishTrip()
-        dismiss(animated: true, completion: nil)
-        carPlayNavigationDelegate?.carPlayNavigationViewControllerDidDismiss?(self, byCanceling: canceled)
+        dismiss(animated: true) {
+            self.carPlayNavigationDelegate?.carPlayNavigationViewControllerDidDismiss?(self, byCanceling: canceled)
+        }
     }
     
     /**

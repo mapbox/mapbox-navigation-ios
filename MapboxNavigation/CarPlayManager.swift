@@ -77,6 +77,8 @@ public class CarPlayManager: NSObject {
      interface.
      */
     @objc public let directions: Directions
+    
+    @objc public let navigationViewControllerType: CarPlayNavigationViewController.Type
 
     /**
      The styles displayed in the CarPlay interface.
@@ -197,14 +199,28 @@ public class CarPlayManager: NSObject {
      - parameter eventsManager: The events manager to use during turn-by-turn
         navigation while connected to CarPlay. If this argument is `nil` or
         omitted, a standard `NavigationEventsManager` object is used by default.
+
      */
-    @objc public init(styles: [Style]? = nil,
+    @objc public convenience init(styles: [Style]? = nil,
                       directions: Directions? = nil,
                       eventsManager: NavigationEventsManager? = nil) {
+        
+        self.init(styles: styles,
+                          directions: directions,
+                          eventsManager: eventsManager,
+                          navigationViewControllerClass: nil)
+    }
+    
+    
+    @objc internal init(styles: [Style]? = nil,
+                      directions: Directions? = nil,
+                      eventsManager: NavigationEventsManager? = nil,
+                      navigationViewControllerClass: CarPlayNavigationViewController.Type? = nil) {
         self.styles = styles ?? [DayStyle(), NightStyle()]
         self.directions = directions ?? .shared
         self.eventsManager = eventsManager ?? NavigationEventsManager(dataSource: nil)
         self.mapTemplateProvider = MapTemplateProvider()
+        self.navigationViewControllerType = navigationViewControllerClass ?? CarPlayNavigationViewController.self
         
         super.init()
         
@@ -526,7 +542,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let navigationMapTemplate = self.mapTemplate(forNavigating: trip)
         interfaceController.setRootTemplate(navigationMapTemplate, animated: true)
 
-        let navigationViewController = CarPlayNavigationViewController(navigationService: service,
+        let navigationViewController = navigationViewControllerType.init(navigationService: service,
                                                                        mapTemplate: navigationMapTemplate,
                                                                        interfaceController: interfaceController,
                                                                        manager: self,

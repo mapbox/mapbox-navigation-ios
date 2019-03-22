@@ -21,7 +21,7 @@ class CarPlayManagerTests: XCTestCase {
     override func setUp() {
         super.setUp()
         eventsManagerSpy = NavigationEventsManagerSpy()
-        manager = CarPlayManager(eventsManager: eventsManagerSpy)
+        manager = CarPlayManager(eventsManager: eventsManagerSpy, navigationViewControllerClass: CarPlayNavigationViewControllerTestable.self)
         searchController = CarPlaySearchController()
     }
 
@@ -528,6 +528,13 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
         XCTAssertTrue(navigationInitiated)
         navigationEnded = true
         currentService = nil
+    }
+}
+
+@available(iOS 12.0, *)
+class CarPlayNavigationViewControllerTestable: CarPlayNavigationViewController {
+    override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+        completion?()
     }
 }
 
