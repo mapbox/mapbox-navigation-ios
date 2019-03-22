@@ -221,10 +221,6 @@ public class CarPlayNavigationViewController: UIViewController {
             return mapView?.tracksUserCourse ?? false
         }
         set {
-            defer {
-                mapView?.tracksUserCourse = newValue
-            }
-            
             let progress = navigationService.routeProgress
             if !tracksUserCourse && newValue {
                 mapView?.recenterMap()
@@ -232,18 +228,11 @@ public class CarPlayNavigationViewController: UIViewController {
                                  legIndex: progress.legIndex,
                                  stepIndex: progress.currentLegProgress.stepIndex + 1)
             } else if tracksUserCourse && !newValue {
-                guard let userLocation = self.navigationService.router.location?.coordinate,
-                    let coordinates = progress.route.coordinates else {
-                        return
+                guard let userLocation = self.navigationService.router.location?.coordinate else {
+                    return
                 }
-                
-                let contentInsets = carPlayContentInsets(forOverviewing: true)
-                // TODO: The balancing constraints should probably be accounted for here
-                
-                mapView?.setOverheadCameraView(from: userLocation,
-                                               along: coordinates,
-                                               contentInsets: contentInsets,
-                                               animated: false)
+                mapView?.enableFrameByFrameCourseViewTracking(for: 3)
+                mapView?.setOverheadCameraView(from: userLocation, along: progress.route.coordinates!, for: self.edgePadding)
             }
         }
     }

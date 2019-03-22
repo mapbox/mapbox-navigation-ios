@@ -587,7 +587,8 @@ extension CarPlayManager: CPMapTemplateDelegate {
         topDownCamera.pitch = 0
         mapView.setCamera(topDownCamera, animated: false)
 
-        mapView.showcase([route])
+        let padding = NavigationMapView.defaultPadding + mapView.safeArea
+        mapView.showcase([route], padding: padding)
         
         delegate?.carPlayManager?(self, selectedPreviewFor: trip, using: routeChoice)
     }
