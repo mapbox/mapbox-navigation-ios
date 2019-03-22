@@ -5,6 +5,7 @@ import CarPlay
 import MapboxCoreNavigation
 import MapboxDirections
 
+let CarPlayWaypointKey: String = "MBCarPlayWaypoint"
 
 /**
  This example application delegate implementation is used in both our "Example-Swift" and our "Example-CarPlay" example apps.
@@ -69,8 +70,8 @@ extension AppDelegate: CarPlayManagerDelegate {
                                       detailText: FavoritesList.POI.mapboxSF.subTitle)
         let timesSquareItem = CPListItem(text: FavoritesList.POI.timesSquare.rawValue,
                                          detailText: FavoritesList.POI.timesSquare.subTitle)
-        mapboxSFItem.userInfo = [CarPlayManager.CarPlayWaypointKey: Waypoint(location: FavoritesList.POI.mapboxSF.location)]
-        timesSquareItem.userInfo = [CarPlayManager.CarPlayWaypointKey: Waypoint(location: FavoritesList.POI.timesSquare.location)]
+        mapboxSFItem.userInfo = [CarPlayWaypointKey: Waypoint(location: FavoritesList.POI.mapboxSF.location)]
+        timesSquareItem.userInfo = [CarPlayWaypointKey: Waypoint(location: FavoritesList.POI.timesSquare.location)]
         let listSection = CPListSection(items: [mapboxSFItem, timesSquareItem])
         return CPListTemplate(title: "Favorites List", sections: [listSection])
     }
@@ -177,7 +178,7 @@ extension AppDelegate: CPListTemplateDelegate {
     func listTemplate(_ listTemplate: CPListTemplate, didSelect item: CPListItem, completionHandler: @escaping () -> Void) {
         // Selected a favorite
         if let userInfo = item.userInfo as? [String: Any],
-            let waypoint = userInfo[CarPlayManager.CarPlayWaypointKey] as? Waypoint {
+            let waypoint = userInfo[CarPlayWaypointKey] as? Waypoint {
             carPlayManager.previewRoutes(to: waypoint, completionHandler: completionHandler)
             return
         }
