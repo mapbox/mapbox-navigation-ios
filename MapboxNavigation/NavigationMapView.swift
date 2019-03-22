@@ -421,7 +421,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     */
     public static let defaultPadding: UIEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
     
-    @objc public func showcase(_ routes: [Route], animated: Bool = false) {
+    @objc public func showcase(_ routes: [Route], padding: UIEdgeInsets = NavigationMapView.defaultPadding, animated: Bool = false) {
         guard let active = routes.first,
               let coords = active.coordinates,
               !coords.isEmpty else { return } //empty array
@@ -433,15 +433,15 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         showRoutes(routes)
         showWaypoints(active)
         
-        fit(to: active, facing: 0, animated: animated)
+        fit(to: active, facing: 0, padding: padding, animated: animated)
     }
     
-    func fit(to route: Route, facing direction: CLLocationDirection = 0, animated: Bool = false) {
+    func fit(to route: Route, facing direction:CLLocationDirection = 0, padding: UIEdgeInsets = NavigationMapView.defaultPadding, animated: Bool = false) {
         guard let coords = route.coordinates, !coords.isEmpty else { return }
       
         setUserTrackingMode(.none, animated: false)
         let line = MGLPolyline(coordinates: coords, count: UInt(coords.count))
-        let camera = cameraThatFitsShape(line, direction: direction, edgePadding: .zero)
+        let camera = cameraThatFitsShape(line, direction: direction, edgePadding: padding)
         
         setCamera(camera, animated: animated)
     }
@@ -1069,16 +1069,13 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Sets the camera directly over a series of coordinates.
      */
-    @objc public func setOverheadCameraView(from userLocation: CLLocationCoordinate2D, along coordinates: [CLLocationCoordinate2D], contentInsets: UIEdgeInsets, animated: Bool = true) {
-        self.contentInset = contentInsets
+    @objc public func setOverheadCameraView(from userLocation: CLLocationCoordinate2D, along coordinates: [CLLocationCoordinate2D], for padding: UIEdgeInsets) {
         isAnimatingToOverheadMode = true
         
         let slicedLine = Polyline(coordinates).sliced(from: userLocation).coordinates
         let line = MGLPolyline(coordinates: slicedLine, count: UInt(slicedLine.count))
         
         tracksUserCourse = false
-        
-        let duration: TimeInterval = animated ? 1 : 0
         
         // If the user has a short distance left on the route, prevent the camera from zooming all the way.
         // `MGLMapView.setVisibleCoordinateBounds(:edgePadding:animated:)` will go beyond what is convenient for the driver.
@@ -1088,7 +1085,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             camera.heading = 0
             camera.centerCoordinate = userLocation
             camera.altitude = self.defaultAltitude
-            setCamera(camera, withDuration: duration, animationTimingFunction: nil) { [weak self] in
+            setCamera(camera, withDuration: 1, animationTimingFunction: nil) { [weak self] in
                 self?.isAnimatingToOverheadMode = false
             }
             return
@@ -1098,9 +1095,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         currentCamera.pitch = 0
         currentCamera.heading = 0
         
-        let newCamera = camera(currentCamera, fitting: line, edgePadding: .zero)
+        let newCamera = camera(currentCamera, fitting: line, edgePadding: padding)
         
-        setCamera(newCamera, withDuration: duration, animationTimingFunction: nil) { [weak self] in
+        setCamera(newCamera, withDuration: 1, animationTimingFunction: nil) { [weak self] in
             self?.isAnimatingToOverheadMode = false
         }
     }

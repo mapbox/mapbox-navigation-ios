@@ -195,6 +195,17 @@ public class CarPlayMapViewController: UIViewController {
     override public func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         
+        var edgePadding = view.safeArea
+        edgePadding += NavigationMapView.defaultPadding
+        
+        if let userCourseView = mapView.userCourseView {
+            let midX = userCourseView.bounds.midX
+            let midY = userCourseView.bounds.midY
+            edgePadding += UIEdgeInsets(top: midY, left: midX, bottom: midY, right: midX)
+        }
+        
+        mapView.setContentInset(edgePadding, animated: false)
+        
         guard let active = mapView.routes?.first else {
             mapView.setUserTrackingMode(.followWithCourse, animated: true)
             return

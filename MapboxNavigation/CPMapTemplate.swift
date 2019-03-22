@@ -32,6 +32,8 @@ extension CLLocationDirection {
         self = heading.wrap(min: 0, max: 360)
     }
 }
+#endif
+
 
 extension UIViewController {
     
@@ -39,14 +41,10 @@ extension UIViewController {
         var contentInsets = view.safeArea
         
         if overviewing {
-            //let routeLineWidths = MBRouteLineWidthByZoomLevel.compactMap { $0.value.constantValue as? Int }
-            //contentInsets += UIEdgeInsets(floatLiteral: Double(routeLineWidths.max() ?? 0))
             contentInsets += NavigationMapView.courseViewMinimumInsets
         }
         
         return contentInsets
     }
 }
-
-#endif
 
