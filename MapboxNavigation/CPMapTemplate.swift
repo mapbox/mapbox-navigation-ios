@@ -34,17 +34,3 @@ extension CLLocationDirection {
 }
 #endif
 
-
-extension UIViewController {
-    
-    func carPlayContentInsets(forOverviewing overviewing: Bool) -> UIEdgeInsets {
-        var contentInsets = view.safeArea
-        
-        if overviewing {
-            contentInsets += NavigationMapView.courseViewMinimumInsets
-        }
-        
-        return contentInsets
-    }
-}
-
