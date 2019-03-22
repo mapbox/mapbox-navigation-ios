@@ -12,8 +12,10 @@
 
 ### CarPlay
 
-* Fixing issue where a data-race could cause CarPlay to create it's own NavigationService, resulting in unexpected behavior. ([#2041](https://github.com/mapbox/mapbox-navigation-ios/pull/2041)
-* Fixing issue where data-race could unexpectedly cause a NavigationViewController to be created and presented on-screen.  ([#2041](https://github.com/mapbox/mapbox-navigation-ios/pull/2041)
+* Removed `NavigationViewController.carPlayManager(_:didBeginNavigationWith:window:)` that created and presented a `NavigationViewController`. Have your `NavigationViewControllerDelegate` (such as a `UIViewController` subclass, or a discrete delegate) create and present a `NavigationViewController`. ([#2045](https://github.com/mapbox/mapbox-navigation-ios/pull/2045))
+* Removed `NavigationViewController.carPlayManagerDidEndNaviation(_:window:)`. Have your `NavigationViewControllerDelegate` (such as a `UIViewController` subclass, or a discrete delegate) dismiss the active `NavigationViewController`. ([#2045](https://github.com/mapbox/mapbox-navigation-ios/pull/2045))
+* Fixed an issue where `CarPlayManager` sometimes created a redundant `NavigationService` object, resulting in unexpected behavior. ([#2041](https://github.com/mapbox/mapbox-navigation-ios/pull/2041))
+* Fixed an issue where `CarPlayManager` sometimes created and presented a redundant `NavigationViewController`. ([#2041](https://github.com/mapbox/mapbox-navigation-ios/pull/2041))
 * Added the `CarPlayManager.beginNavigationWithCarPlay(_:navigationService:)` method. Use this method to programmatically start navigation in CarPlay if CarPlay is being connected while turn-by-turn navigation is already underway on the iOS device. ([#2021](https://github.com/mapbox/mapbox-navigation-ios/pull/2021))
 * Renamed the `CarPlayManagerDelegate.carPlayManager(_:navigationServiceAlong:)` method to `CarPlayManagerDelegate.carPlayManager(_:navigationServiceAlong:desiredSimulationMode:)`. `CarPlayManagerDelegate` implementations are now required to implement this method. ([#2018](https://github.com/mapbox/mapbox-navigation-ios/pull/2018), [#2021](https://github.com/mapbox/mapbox-navigation-ios/pull/2021))
 * Renamed the `MapboxVoiceController(speechClient:dataCache:audioPlayerType:)` initializer to `MapboxVoiceController(navigationService:speechClient:dataCache:audioPlayerType:)` and the `RouteVoiceController()` initializer to `RouteVoiceController(navigationService:)`. ([#2018](https://github.com/mapbox/mapbox-navigation-ios/pull/2018))
@@ -27,6 +29,7 @@
 
 ### Other changes
 
+* Fixed an issue where the example application didn’t automatically simulate movement within tunnels.  ([#2045](https://github.com/mapbox/mapbox-navigation-ios/pull/2045))
 * Fixed an issue where the turn banner stayed blank when using a `RouteController`. ([#1996](https://github.com/mapbox/mapbox-navigation-ios/pull/1996))
 * The `BottomBannerViewController` now accounts for the safe area inset if present. ([#1982](https://github.com/mapbox/mapbox-navigation-ios/pull/1982))
 * Deprecated `BottomBannerViewController(delegate:)`. Set the `BottomBannerViewController.delegate` property separately after initializing a `BottomBannerViewController`. ([#2027](https://github.com/mapbox/mapbox-navigation-ios/pull/2027))
