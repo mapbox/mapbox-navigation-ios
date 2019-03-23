@@ -35,7 +35,7 @@ class ImageRepositoryTests: XCTestCase {
         let imageName = "1.png"
         let fakeURL = URL(string: "http://an.image.url/\(imageName)")!
 
-        ImageLoadingURLProtocolSpy.registerData(UIImagePNGRepresentation(ShieldImage.i280.image)!, forURL: fakeURL)
+        ImageLoadingURLProtocolSpy.registerData(ShieldImage.i280.image.pngData()!, forURL: fakeURL)
         XCTAssertNil(repository.cachedImageForKey(imageName))
 
         var imageReturned: UIImage? = nil

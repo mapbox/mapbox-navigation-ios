@@ -61,7 +61,7 @@ class ImageLoadingURLProtocolSpy: URLProtocol {
 
             ImageLoadingURLProtocolSpy.imageLoadingSemaphore.wait()
 
-            client.urlProtocol(self, didLoad: UIImagePNGRepresentation(image)!)
+            client.urlProtocol(self, didLoad: image.pngData()!)
             client.urlProtocolDidFinishLoading(self)
 
             ImageLoadingURLProtocolSpy.imageLoadingSemaphore.signal()
