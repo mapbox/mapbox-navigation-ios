@@ -24,12 +24,11 @@
 * Added the `CarPlayNavigationViewController.navigationService` property. ([#2005](https://github.com/mapbox/mapbox-navigation-ios/pull/2005))
 * `CarPlayNavigationDelegate.carPlayNavigationViewControllerDidDismiss(_:byCanceling:)` is now optional. ([#2005](https://github.com/mapbox/mapbox-navigation-ios/pull/2005))
 * Removed the `CarPlayNavigationDelegate.carPlayNavigationViewControllerDidArrive(_:)` method in favor of `NavigationServiceDelegate.navigationService(_:didArriveAt:)`. ([#2005](https://github.com/mapbox/mapbox-navigation-ios/pull/2005), [#2025](https://github.com/mapbox/mapbox-navigation-ios/pull/2025))
-* Fixed an issue where the camera would sometimes not animate properly when returning to the free-drive map screen. [#2022](https://github.com/mapbox/mapbox-navigation-ios/pull/2022))
+* Fixed an issue where the camera would sometimes fail to animate properly when returning to the browsing activity. [#2022](https://github.com/mapbox/mapbox-navigation-ios/pull/2022))
 * Removed the compass from `CarPlayNavigationViewController`. ([#2051](https://github.com/mapbox/mapbox-navigation-ios/pull/2051))
 
 ### Other changes
 
-* Fixed an issue where the example application didn’t automatically simulate movement within tunnels.  ([#2045](https://github.com/mapbox/mapbox-navigation-ios/pull/2045))
 * Fixed an issue where the turn banner stayed blank when using a `RouteController`. ([#1996](https://github.com/mapbox/mapbox-navigation-ios/pull/1996))
 * The `BottomBannerViewController` now accounts for the safe area inset if present. ([#1982](https://github.com/mapbox/mapbox-navigation-ios/pull/1982))
 * Deprecated `BottomBannerViewController(delegate:)`. Set the `BottomBannerViewController.delegate` property separately after initializing a `BottomBannerViewController`. ([#2027](https://github.com/mapbox/mapbox-navigation-ios/pull/2027))
