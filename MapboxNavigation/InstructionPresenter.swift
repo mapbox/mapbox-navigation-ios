@@ -166,7 +166,7 @@ class InstructionPresenter {
         repository.imageWithURL(imageURL, cacheKey: shieldKey, completion: completion )
     }
 
-    private func attributes(for dataSource: InstructionPresenterDataSource) -> [NSAttributedStringKey: Any] {
+    private func attributes(for dataSource: InstructionPresenterDataSource) -> [NSAttributedString.Key: Any] {
         return [.font: dataSource.font as Any, .foregroundColor: dataSource.textColor as Any]
     }
 

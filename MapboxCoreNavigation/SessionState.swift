@@ -53,7 +53,7 @@ struct SessionState {
         }
     }
     
-    public mutating func reportChange(to applicationState: UIApplicationState) {
+    public mutating func reportChange(to applicationState: UIApplication.State) {
         if applicationState == .active {
             timeSpentInForeground += abs(lastTimeInBackground.timeIntervalSinceNow)
             

@@ -64,11 +64,11 @@ class SettingsViewController: UITableViewController {
         return dataSource[indexPath.section].items[indexPath.row].canEditRow
     }
     
-    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         return .delete
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         let item = dataSource[indexPath.section].items[indexPath.row]
         
         guard let url = Bundle.mapboxCoreNavigation.suggestedTileURL(version: item.title) else { return }

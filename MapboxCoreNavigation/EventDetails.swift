@@ -55,7 +55,7 @@ struct PerformanceEventDetails: EventDetails {
 struct NavigationEventDetails: EventDetails {
     
     let audioType: String = AVAudioSession.sharedInstance().audioType
-    let applicationState: UIApplicationState = UIApplication.shared.applicationState
+    let applicationState = UIApplication.shared.applicationState
     let batteryLevel: Int = UIDevice.current.batteryLevel >= 0 ? Int(UIDevice.current.batteryLevel * 100) : -1
     let batteryPluggedIn: Bool = [.charging, .full].contains(UIDevice.current.batteryState)
     let coordinate: CLLocationCoordinate2D?
@@ -347,7 +347,7 @@ extension EventDetails {
     }
 }
 
-extension UIApplicationState: Encodable {
+extension UIApplication.State: Encodable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         let stringRepresentation: String
@@ -365,42 +365,20 @@ extension UIApplicationState: Encodable {
 
 extension AVAudioSession {
     var audioType: String {
-        if isOutputBluetooth() {
-            return "bluetooth"
-        }
-        if isOutputHeadphones() {
-            return "headphones"
-        }
-        if isOutputSpeaker() {
-            return "speaker"
+        for output in currentRoute.outputs {
+            switch output.portType {
+            case .bluetoothA2DP, .bluetoothHFP, .bluetoothLE:
+                return "bluetooth"
+            case .headphones, .airPlay, .HDMI, .lineOut, .carAudio, .usbAudio:
+                return "headphones"
+            case .builtInSpeaker, .builtInReceiver:
+                return "speaker"
+            case .builtInMic, .headsetMic, .lineIn:
+                continue
+            default:
+                continue
+            }
         }
         return "unknown"
-    }
-    
-    func isOutputBluetooth() -> Bool {
-        for output in currentRoute.outputs {
-            if [AVAudioSessionPortBluetoothA2DP, AVAudioSessionPortBluetoothLE].contains(output.portType) {
-                return true
-            }
-        }
-        return false
-    }
-    
-    func isOutputHeadphones() -> Bool {
-        for output in currentRoute.outputs {
-            if [AVAudioSessionPortHeadphones, AVAudioSessionPortAirPlay, AVAudioSessionPortHDMI, AVAudioSessionPortLineOut].contains(output.portType) {
-                return true
-            }
-        }
-        return false
-    }
-    
-    func isOutputSpeaker() -> Bool {
-        for output in currentRoute.outputs {
-            if [AVAudioSessionPortBuiltInSpeaker, AVAudioSessionPortBuiltInReceiver].contains(output.portType) {
-                return true
-            }
-        }
-        return false
     }
 }

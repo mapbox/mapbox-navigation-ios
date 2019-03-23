@@ -10,7 +10,7 @@ internal class ImageCache: BimodalImageCache {
 
         fileCache = FileCache()
 
-        NotificationCenter.default.addObserver(self, selector: #selector(DataCache.clearMemory), name: .UIApplicationDidReceiveMemoryWarning, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(DataCache.clearMemory), name: UIApplication.didReceiveMemoryWarningNotification, object: nil)
     }
 
     // MARK: Image cache
@@ -21,7 +21,7 @@ internal class ImageCache: BimodalImageCache {
     public func store(_ image: UIImage, forKey key: String, toDisk: Bool, completion: CompletionHandler?) {
         storeImageInMemoryCache(image, forKey: key)
         
-        guard toDisk == true, let data = UIImagePNGRepresentation(image) else {
+        guard toDisk == true, let data = image.pngData() else {
             completion?()
             return
         }

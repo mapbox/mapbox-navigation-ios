@@ -101,7 +101,7 @@ class ViewController: UIViewController {
         let custom: ActionHandler = {_ in self.startCustomNavigation() }
         let styled: ActionHandler = {_ in self.startStyledNavigation() }
         
-        let actionPayloads: [(String, UIAlertActionStyle, ActionHandler?)] = [
+        let actionPayloads: [(String, UIAlertAction.Style, ActionHandler?)] = [
             ("Default UI", .default, basic),
             ("DayStyle UI", .default, day),
             ("NightStyle UI", .default, night),

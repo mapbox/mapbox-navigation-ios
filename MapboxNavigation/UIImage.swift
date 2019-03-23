@@ -24,7 +24,7 @@ extension UIImage {
         let textStyle = NSMutableParagraphStyle()
         textStyle.alignment = .center
         
-        let textFontAttributes: [NSAttributedStringKey: Any] = [.font: font, .foregroundColor: color, .paragraphStyle: textStyle]
+        let textFontAttributes: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: color, .paragraphStyle: textStyle]
         draw(in: CGRect(x: 0, y: 0, width: size.width, height: size.height))
         
         let rect = CGRect(x: atPoint.x, y: atPoint.y, width: size.width, height: size.height)

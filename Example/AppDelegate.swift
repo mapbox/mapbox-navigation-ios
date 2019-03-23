@@ -14,7 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     @available(iOS 12.0, *)
     lazy var carPlaySearchController: CarPlaySearchController = CarPlaySearchController()
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
         if isRunningTests() {
             window!.rootViewController = UIViewController()
