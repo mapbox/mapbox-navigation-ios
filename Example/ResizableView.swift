@@ -99,14 +99,14 @@ class ResizableView: UIControl {
             let path = UIBezierPath(rect: frame)
             path.append(UIBezierPath(rect: backgroundLayer.bounds))
             
-            maskLayer.fillRule = kCAFillRuleEvenOdd
+            maskLayer.fillRule = .evenOdd
             maskLayer.path = path.cgPath
             backgroundLayer.mask = maskLayer
         }
         
         imageView.center = CGPoint(x: bounds.maxX-5, y: bounds.maxY-5)
         
-        bringSubview(toFront: imageView)
+        bringSubviewToFront(imageView)
     }
     
 }

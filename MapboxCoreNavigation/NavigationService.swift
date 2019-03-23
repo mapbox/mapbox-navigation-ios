@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 import CoreLocation
 import MapboxDirections
 
@@ -240,7 +240,7 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
                                locationSource: NavigationLocationManager? = nil,
                                eventsManagerType: NavigationEventsManager.Type? = nil,
                                simulating simulationMode: SimulationMode = .onPoorGPS,
-                               routerType: Router.Type? = DefaultRouter.self)
+                               routerType: Router.Type? = nil)
     {
         nativeLocationSource = locationSource ?? NavigationLocationManager()
         self.directions = directions ?? Directions.shared
@@ -373,7 +373,7 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
     }
     
     func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillTerminate(_:)), name: .UIApplicationWillTerminate, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillTerminate(_:)), name: UIApplication.willTerminateNotification, object: nil)
     }
     
     func suspendNotifications() {

@@ -78,13 +78,13 @@ open class StyleManager: NSObject {
     }
     
     func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(timeOfDayChanged), name: .UIApplicationSignificantTimeChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(preferredContentSizeChanged(_:)), name: .UIContentSizeCategoryDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(timeOfDayChanged), name: UIApplication.significantTimeChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(preferredContentSizeChanged(_:)), name: UIContentSizeCategory.didChangeNotification, object: nil)
     }
     
     func suspendNotifications() {
-        NotificationCenter.default.removeObserver(self, name: .UIContentSizeCategoryDidChange, object: nil)
-        NotificationCenter.default.removeObserver(self, name: .UIApplicationSignificantTimeChange, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIContentSizeCategory.didChangeNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIApplication.significantTimeChangeNotification, object: nil)
     }
     
     func resetTimeOfDayTimer() {

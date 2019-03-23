@@ -1,5 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## master
+
+* Fixed a number of warnings and errors when building the SDK from source using CocoaPods in Swift 4.2. ([#2058](https://github.com/mapbox/mapbox-navigation-ios/pull/2058))
+
 ## v0.30.0
 
 ### Core Navigation

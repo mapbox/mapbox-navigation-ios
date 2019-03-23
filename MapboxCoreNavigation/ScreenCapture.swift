@@ -43,7 +43,7 @@ extension UIImage {
 func captureScreen(scaledToFit width: CGFloat) -> Data? {
     #if os(iOS)
         guard let image = UIApplication.shared.keyWindow?.capture()?.scaled(toFit: width) else { return nil }
-        return UIImageJPEGRepresentation(image, 0.2)
+        return image.jpegData(compressionQuality: 0.2)
     #else
         
         return nil // Not yet implemented for other platforms

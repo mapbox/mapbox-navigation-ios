@@ -486,7 +486,7 @@ public class CarPlayNavigationViewController: UIViewController {
 extension CarPlayNavigationViewController: NavigationMapViewDelegate {
     public func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint {
         // Inset by the content inset to avoid application-defined content.
-        var contentFrame = UIEdgeInsetsInsetRect(mapView.bounds, mapView.contentInset)
+        var contentFrame = mapView.bounds.inset(by: mapView.contentInset)
         
         // Avoid letting the puck go partially off-screen, and add a comfortable padding beyond that.
         let courseViewBounds = mapView.userCourseView?.bounds ?? .zero

@@ -38,14 +38,14 @@ class DistanceFormatterTests: XCTestCase {
         
         var effectiveQuantityRange = NSRange(location: NSNotFound, length: 0)
         let quantityAttrs = checkedAttributedString.attributes(at: checkedQuantityRange.lowerBound.encodedOffset, effectiveRange: &effectiveQuantityRange)
-        XCTAssertEqual(quantityAttrs[NSAttributedStringKey.quantity] as? NSNumber, distance as NSNumber, "'\(quantity)' should have quantity \(distance)")
+        XCTAssertEqual(quantityAttrs[.quantity] as? NSNumber, distance as NSNumber, "'\(quantity)' should have quantity \(distance)")
         XCTAssertEqual(effectiveQuantityRange.length, quantity.count)
         
         guard checkedQuantityRange.upperBound.encodedOffset < checkedAttributedString.length else {
             return
         }
         let unitAttrs = checkedAttributedString.attributes(at: checkedQuantityRange.upperBound.encodedOffset, effectiveRange: nil)
-        XCTAssertNil(unitAttrs[NSAttributedStringKey.quantity], "Unit should not be emphasized like a quantity")
+        XCTAssertNil(unitAttrs[.quantity], "Unit should not be emphasized like a quantity")
     }
     
     func testDistanceFormatters_US() {

@@ -1,7 +1,7 @@
 import Foundation
 
 extension UIStackView {
-    convenience init(orientation: UILayoutConstraintAxis, alignment: UIStackViewAlignment? = nil, distribution: UIStackViewDistribution? = nil, spacing: CGFloat? = nil, autoLayout: Bool = false) {
+    convenience init(orientation: NSLayoutConstraint.Axis, alignment: UIStackView.Alignment? = nil, distribution: UIStackView.Distribution? = nil, spacing: CGFloat? = nil, autoLayout: Bool = false) {
         self.init(frame: .zero)
         axis = orientation
         if let alignment = alignment { self.alignment = alignment }

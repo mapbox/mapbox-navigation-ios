@@ -146,7 +146,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         // Inset by the safe area to avoid notches.
         // Inset by the content inset to avoid application-defined content.
-        var contentFrame = UIEdgeInsetsInsetRect(UIEdgeInsetsInsetRect(bounds, safeArea), contentInset)
+        var contentFrame = bounds.inset(by: safeArea).inset(by: contentInset)
         
         // Avoid letting the puck go partially off-screen, and add a comfortable padding beyond that.
         let courseViewBounds = userCourseView?.bounds ?? .zero
@@ -331,7 +331,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         if tracksUserCourse {
             let newCamera = camera ?? MGLMapCamera(lookingAtCenter: location.coordinate, altitude: altitude, pitch: 45, heading: location.course)
-            let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear) : nil
+            let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: .linear) : nil
             let point = userAnchorPoint
             let padding = UIEdgeInsets(top: point.y, left: point.x, bottom: bounds.height - point.y, right: bounds.width - point.x)
             // Omit padding when https://github.com/mapbox/mapbox-gl-native/pull/14081 has landed
