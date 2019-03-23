@@ -36,6 +36,8 @@
 * The map now pans when the user drags a `UserCourseView`. ([#2012](https://github.com/mapbox/mapbox-navigation-ios/pull/2012))
 * Added a Japanese localization. ([#2032](https://github.com/mapbox/mapbox-navigation-ios/pull/2032))
 * Fixed a compiler error when rendering a `NavigationViewController` designable inside an Interface Builder storyboard. ([#2039](https://github.com/mapbox/mapbox-navigation-ios/pull/2039))
+* Fixed an issue where the user puck moved around onscreen while tracking the user’s location. ([#2047](https://github.com/mapbox/mapbox-navigation-ios/pull/2047))
+* Fixed an issue where the user puck briefly moved away from the route line as the user completed a turn. ([#2047](https://github.com/mapbox/mapbox-navigation-ios/pull/2047))
 
 ## v0.29.1
 
