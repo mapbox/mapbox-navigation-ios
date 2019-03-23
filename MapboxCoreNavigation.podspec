@@ -45,10 +45,4 @@ Pod::Spec.new do |s|
   s.dependency "MapboxMobileEvents", "~> 0.8.1"         # Always pin to a patch release if pre-1.0
   s.dependency "Turf", "~> 0.3.0"                       # Always pin to a patch release if pre-1.0
 
-  # `swift_version` was introduced in CocoaPods 1.4.0. Without this check, if a user were to
-  # directly specify this podspec while using <1.4.0, ruby would throw an unknown method error.
-  if s.respond_to?(:swift_version)
-    s.swift_version = "4.0"
-  end
-
 end
