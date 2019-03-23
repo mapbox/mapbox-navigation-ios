@@ -210,10 +210,10 @@ public class CarPlayMapViewController: UIViewController {
             mapView.setUserTrackingMode(.followWithCourse, animated: true)
             return
         }
+        
         if isOverviewingRoutes {
             mapView.fit(to: active, animated: false)
         }
-        
     }
 }
 

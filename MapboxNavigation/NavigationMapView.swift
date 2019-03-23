@@ -320,7 +320,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         tracksUserCourse = false
     }
     
-
     @objc public func updateCourseTracking(location: CLLocation?, camera: MGLMapCamera? = nil, animated: Bool = false) {
         // While animating to overhead mode, don't animate the puck.
         let duration: TimeInterval = animated && !isAnimatingToOverheadMode ? 1 : 0
@@ -331,15 +330,18 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
         
         if tracksUserCourse {
-            let point = userAnchorPoint
-            let padding = UIEdgeInsets(top: point.y, left: point.x, bottom: bounds.height - point.y, right: bounds.width - point.x)
             let newCamera = camera ?? MGLMapCamera(lookingAtCenter: location.coordinate, altitude: altitude, pitch: 45, heading: location.course)
             let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear) : nil
+            let point = userAnchorPoint
+            let padding = UIEdgeInsets(top: point.y, left: point.x, bottom: bounds.height - point.y, right: bounds.width - point.x)
+            // Omit padding when https://github.com/mapbox/mapbox-gl-native/pull/14081 has landed
             setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: padding, completionHandler: nil)
-        }
-        if !tracksUserCourse || userAnchorPoint != userCourseView?.center ?? userAnchorPoint {
-            UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
-                self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
+            userCourseView?.center = userAnchorPoint
+        } else {
+            // Animate course view updates in overview mode
+            UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear], animations: { [weak self] in
+                guard let point = self?.convert(location.coordinate, toPointTo: self) else { return }
+                self?.userCourseView?.center = point
             })
         }
         
@@ -373,6 +375,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
     }
     
+    typealias CompositeCourseView = UIView & UserCourseView
+    
     @objc func updateCourseView(_ sender: UIGestureRecognizer) {
         if sender.state == .ended {
             altitude = self.camera.altitude
@@ -399,12 +403,14 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         if sender.state == .changed {
             guard let location = userLocationForCourseTracking else { return }
             
-            if let userCourseView = userCourseView as? UserCourseView {
+            if let userCourseView = userCourseView as? CompositeCourseView {
                 userCourseView.update?(location: location,
                                        pitch: camera.pitch,
                                        direction: direction,
                                        animated: false,
                                        tracksUserCourse: tracksUserCourse)
+                
+                userCourseView.center = convert(location.coordinate, toPointTo: self)
             }
         }
     }
@@ -439,7 +445,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         setCamera(camera, animated: animated)
     }
-    
     
     /**
      Adds or updates both the route line and the route line casing
@@ -1064,10 +1069,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Sets the camera directly over a series of coordinates.
      */
-    @objc public func setOverheadCameraView(from userLocation: CLLocationCoordinate2D, along coordinates: [CLLocationCoordinate2D], for bounds: UIEdgeInsets) {
+    @objc public func setOverheadCameraView(from userLocation: CLLocationCoordinate2D, along coordinates: [CLLocationCoordinate2D], for padding: UIEdgeInsets) {
         isAnimatingToOverheadMode = true
-        let slicedLine = Polyline(coordinates).sliced(from: userLocation).coordinates
-        let line = MGLPolyline(coordinates: slicedLine, count: UInt(slicedLine.count))
+        
+        let line = MGLPolyline(coordinates: coordinates, count: UInt(coordinates.count))
         
         tracksUserCourse = false
         
@@ -1085,12 +1090,13 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return
         }
         
-        let cam = self.camera
-        cam.pitch = 0
-        cam.heading = 0
+        let currentCamera = self.camera
+        currentCamera.pitch = 0
+        currentCamera.heading = 0
         
-        let cameraForLine = camera(cam, fitting: line, edgePadding: bounds)
-        setCamera(cameraForLine, withDuration: 1, animationTimingFunction: nil) { [weak self] in
+        let newCamera = camera(currentCamera, fitting: line, edgePadding: padding)
+        
+        setCamera(newCamera, withDuration: 1, animationTimingFunction: nil) { [weak self] in
             self?.isAnimatingToOverheadMode = false
         }
     }

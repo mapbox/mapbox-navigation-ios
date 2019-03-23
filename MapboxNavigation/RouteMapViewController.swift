@@ -73,7 +73,8 @@ extension RouteMapViewController: NavigationComponent {
         
         if isInOverviewMode {
             if let coordinates = route.coordinates, let userLocation = router.location?.coordinate {
-                mapView.setOverheadCameraView(from: userLocation, along: coordinates, for: overheadInsets)
+                mapView.contentInset = contentInset(forOverviewing: true)
+                mapView.setOverheadCameraView(from: userLocation, along: coordinates, for: contentInset(forOverviewing: true))
             }
         } else {
             mapView.tracksUserCourse = true
@@ -102,7 +103,6 @@ extension RouteMapViewController: NavigationComponent {
     func navigationService(_ service: NavigationService, didFailToRerouteWith error: Error) {
         statusView.hide()
     }
-    
 }
 
 
@@ -236,7 +236,7 @@ class RouteMapViewController: UIViewController {
         super.viewDidLoad()
         
         let mapView = self.mapView
-        mapView.contentInset = contentInsets
+        mapView.contentInset = contentInset(forOverviewing: false)
         view.layoutIfNeeded()
 
         mapView.tracksUserCourse = true
@@ -351,8 +351,10 @@ class RouteMapViewController: UIViewController {
 
     @objc func toggleOverview(_ sender: Any) {
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
-        if let coordinates = router.route.coordinates, let userLocation = router.location?.coordinate {
-            mapView.setOverheadCameraView(from: userLocation, along: coordinates, for: overheadInsets)
+        if let coordinates = router.route.coordinates,
+            let userLocation = router.location?.coordinate {
+            mapView.contentInset = contentInset(forOverviewing: true)
+            mapView.setOverheadCameraView(from: userLocation, along: coordinates, for: .zero)
         }
         isInOverviewMode = true
     }
@@ -381,7 +383,7 @@ class RouteMapViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        mapView.setContentInset(contentInsets, animated: true)
+        mapView.setContentInset(contentInset(forOverviewing: isInOverviewMode), animated: true)
         mapView.setNeedsUpdateConstraints()
     }
 
@@ -469,11 +471,22 @@ class RouteMapViewController: UIViewController {
     @objc func resetFrameRate(_ sender: UIGestureRecognizer) {
         mapView.preferredFramesPerSecond = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
     }
-
-    var contentInsets: UIEdgeInsets {
-        let top = instructionsBannerContentView.bounds.height
-        let bottom = bottomBannerContainerView.bounds.height
-        return UIEdgeInsets(top: top, left: 0, bottom: bottom, right: 0)
+    
+    func contentInset(forOverviewing overviewing: Bool) -> UIEdgeInsets {
+        let instructionBannerHeight = instructionsBannerContentView.bounds.height
+        let bottomBannerHeight = bottomBannerContainerView.bounds.height
+        
+        var insets = UIEdgeInsets(top: instructionBannerHeight, left: 0,
+                                  bottom: bottomBannerHeight, right: 0)
+        
+        if overviewing {
+            insets += NavigationMapView.courseViewMinimumInsets
+            
+            let routeLineWidths = MBRouteLineWidthByZoomLevel.compactMap { $0.value.constantValue as? Int }
+            insets += UIEdgeInsets(floatLiteral: Double(routeLineWidths.max() ?? 0))
+        }
+        
+        return insets
     }
 
     // MARK: End Of Route
