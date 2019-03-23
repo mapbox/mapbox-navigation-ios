@@ -365,20 +365,18 @@ extension UIApplication.State: Encodable {
 
 extension AVAudioSession {
     var audioType: String {
-        for output in currentRoute.outputs {
-            switch output.portType {
-            case .bluetoothA2DP, .bluetoothHFP, .bluetoothLE:
-                return "bluetooth"
-            case .headphones, .airPlay, .HDMI, .lineOut, .carAudio, .usbAudio:
-                return "headphones"
-            case .builtInSpeaker, .builtInReceiver:
-                return "speaker"
-            case .builtInMic, .headsetMic, .lineIn:
-                continue
-            default:
-                continue
-            }
+        if currentRoute.outputs.contains(where: { [.bluetoothA2DP, .bluetoothHFP, .bluetoothLE].contains($0.portType) }) {
+            return "bluetooth"
         }
+        if currentRoute.outputs.contains(where: { [.headphones, .airPlay, .HDMI, .lineOut, .carAudio, .usbAudio].contains($0.portType) }) {
+            return "headphones"
+        }
+        if currentRoute.outputs.contains(where: { [.builtInSpeaker, .builtInReceiver].contains($0.portType) }) {
+            return "speaker"
+        }
+//        if currentRoute.outputs.contains(where: { [.builtInMic, .headsetMic, .lineIn].contains($0.portType) }) {
+//            return "microphone"
+//        }
         return "unknown"
     }
 }
