@@ -42,10 +42,10 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Mapbox-iOS-SDK: 225036950837cbe408e6b333e51cd6001c122499
-  MapboxCoreNavigation: 0934533a1d1306d74c53ed709e3ca6a1bc73c1ca
+  MapboxCoreNavigation: a05f5ea6f903d32f52e9aa08f2357852164a90cc
   MapboxDirections.swift: b67d0b0bd0ac46906642baba38f4be777c50d68e
   MapboxMobileEvents: 0f30fe39687f26fd8f255335053023ba039a0392
-  MapboxNavigation: 9b2371167b4e1234cd66c4e29f43ce69a0512d92
+  MapboxNavigation: 31d1bd3076da438fbd7cfaaa34ea1f41b9c1723c
   MapboxNavigationNative: bb220f45f93123adae2c05dfb74080773af128f3
   MapboxSpeech: 59b3984d3f433a443d24acf53097f918c5cc70f9
   Polyline: 3d69f75bb136357e27291d439d0436c6ebda57a4
