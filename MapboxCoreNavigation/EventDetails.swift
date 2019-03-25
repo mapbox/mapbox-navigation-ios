@@ -374,9 +374,6 @@ extension AVAudioSession {
         if currentRoute.outputs.contains(where: { [.builtInSpeaker, .builtInReceiver].contains($0.portType) }) {
             return "speaker"
         }
-//        if currentRoute.outputs.contains(where: { [.builtInMic, .headsetMic, .lineIn].contains($0.portType) }) {
-//            return "microphone"
-//        }
         return "unknown"
     }
 }
