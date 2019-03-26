@@ -49,7 +49,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      The object that acts as the navigation delegate of the map view.
      */
-    public weak var navigationMapDelegate: NavigationMapViewDelegate?
+    @objc public weak var navigationMapDelegate: NavigationMapViewDelegate?
     
     /**
      The object that acts as the course tracking delegate of the map view.
