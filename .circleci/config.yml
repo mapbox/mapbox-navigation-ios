@@ -1,16 +1,5 @@
 version: 2.1
 
-workflows:
-  workflow:
-    jobs:
-      - xcode-10
-      - xcode-10_2
-      - xcode-10-ios-9
-      - xcode-10-bench
-      - xcode-10-cocoapods-install
-      - xcode-10-cocoapods-update
-      - xcode-10-examples
-
 step-library:
   - &restore-cache
       restore_cache:
@@ -112,9 +101,22 @@ step-library:
         command: bash <(curl -s https://codecov.io/bash)
 
 jobs:
-  xcode-10:
+  build-job:
+    parameters:
+      xcode:
+        type: string
+        default: "10.1.0"
+      codecoverage:
+        type: string
+        default: "YES"
+      device:
+        type: string
+        default: "iPhone 6 Plus"
+      OS:
+        type: string
+        default: "12.1"
     macos:
-      xcode: "10.1.0"
+      xcode: << parameters.xcode >>
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
@@ -125,56 +127,15 @@ jobs:
       - *install-dependencies
       - build-test-sdk:
           scheme: "MapboxCoreNavigation"
-          OS: "12.1"
-          device: "iPhone 6 Plus"
-          codecoverage: "YES"
+          OS: << parameters.OS >>
+          device: << parameters.device >>
+          codecoverage: << parameters.codecoverage >>
       - build-test-sdk:
           scheme: "MapboxNavigation"
-          OS: "12.1"
-          device: "iPhone 6 Plus"
-          codecoverage: "YES"
+          OS: << parameters.OS >>
+          device: << parameters.device >>
+          codecoverage: << parameters.codecoverage >>
       - *publish-codecov
-      - *save-cache
-  
-  xcode-10_2:
-    macos:
-      xcode: "10.2.0"
-    environment:
-      HOMEBREW_NO_AUTO_UPDATE: 1
-    steps:
-      - checkout
-      - *prepare
-      - *prepare-iphone6-plus-ios-12
-      - *restore-cache
-      - *install-dependencies
-      - build-test-sdk:
-          scheme: "MapboxCoreNavigation"
-          OS: "12.1"
-          device: "iPhone 6 Plus"
-      - build-test-sdk:
-          scheme: "MapboxNavigation"
-          OS: "12.1"
-          device: "iPhone 6 Plus"
-      - *publish-codecov
-      - *save-cache
-  
-  xcode-10-ios-9:
-    macos:
-      xcode: "10.1.0"
-    environment:
-      HOMEBREW_NO_AUTO_UPDATE: 1
-    steps:
-      - checkout
-      - *prepare
-      - *prepare-iphone6s-plus-ios-9
-      - *restore-cache
-      - *install-dependencies
-      - build-test-sdk:
-          scheme: "MapboxCoreNavigation"
-          OS: "9.3"
-      - build-test-sdk:
-          scheme: "MapboxNavigation"
-          OS: "9.3"
       - *save-cache
 
   xcode-10-bench:
@@ -250,3 +211,20 @@ commands:
           name: Build and Test
           command: |
             xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.OS >>,name=<< parameters.OS >>' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test -enableCodeCoverage "<< parameters.codecoverage >>"
+
+workflows:
+  workflow:
+    jobs:
+      - build-job:
+          xcode: "10.1.0"
+          OS: "12.1"
+      - build-job:
+          xcode: "10.2.0"
+          OS: "12.1"
+      - build-job:
+          xcode: "10.1.0"
+          OS: "9.3"
+      - xcode-10-bench
+      - xcode-10-cocoapods-install
+      - xcode-10-cocoapods-update
+      - xcode-10-examples
