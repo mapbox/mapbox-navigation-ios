@@ -2,6 +2,20 @@ import Foundation
 import CoreLocation
 import MapboxDirections
 
+/**
+ NavigationServiceDelegate is the main delegation protocol in MapboxCoreNavigation. It's purpose is to delegate the operational parameters of the core navigation engine. See discussion for use-case examples.
+
+ You can use this protocol to:
+ * Recieve navigation progress updates
+ * Decide when to reroute the user
+ * Decide what location updates are considered 'qualified'
+ * Customize visual / spoken instructions that are presented to the user
+ * Decide if battery monitoring should be disabled
+ * Decide if the SDK should pause navigation when the user reaches an intermediate destination (for example, to show a interstitial modal UI)
+ * Be told when the SDK fails to fetch a new route
+ * Be told when the SDK is beginning or ending route-simulation
+ * Be told when the user is about to arrive, or has arrived at their destination
+ */
 @objc public protocol NavigationServiceDelegate {
     /**
      Returns whether the navigation service should be allowed to calculate a new route.
