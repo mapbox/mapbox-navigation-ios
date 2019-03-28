@@ -431,7 +431,7 @@ open class RouteLegProgress: NSObject {
      Returns an array of `CLLocationCoordinate2D` of the prior, current and upcoming step geometry.
      */
     
-    @available(*, deprecated: 0.1, message: "Use RouteProgress.nearbyCoordinates")
+    @available(*, deprecated, message: "Use RouteProgress.nearbyCoordinates")
     @objc public var nearbyCoordinates: [CLLocationCoordinate2D] {
         let priorCoords = priorStep?.coordinates ?? []
         let upcomingCoords = upcomingStep?.coordinates ?? []
