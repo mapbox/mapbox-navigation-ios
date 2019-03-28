@@ -1,10 +1,10 @@
-version: 2
+version: 2.1
 
 workflows:
-  version: 2
-  default:
+  workflow:
     jobs:
       - xcode-10
+      - xcode-10_2
       - xcode-10-ios-9
       - xcode-10-bench
       - xcode-10-cocoapods-install
@@ -78,30 +78,6 @@ step-library:
         name: Install Dependencies
         command: carthage bootstrap --platform ios --cache-builds --configuration Debug --no-use-binaries
 
-  - &build-test-MapboxCoreNavigation-ios-12
-      run:
-        name: Build and Test MapboxCoreNavigation
-        command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.1,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test -enableCodeCoverage "YES"
-
-  - &build-test-MapboxNavigation-ios-12
-      run:
-        name: Build and Test MapboxNavigation
-        command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.1,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build test -enableCodeCoverage "YES"
-
-  - &build-MapboxCoreNavigation-ios-9
-      run:
-        name: Build MapboxCoreNavigation
-        command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=9.3,name=iPhone 6s Plus' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build
-
-  - &build-MapboxNavigation-ios-9
-      run:
-        name: Build MapboxNavigation
-        command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=9.3,name=iPhone 6s Plus' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build
-
   - &build-test-Bench-ios-12
       run:
         name: Build and Test Bench
@@ -147,8 +123,38 @@ jobs:
       - *prepare-iphone6-plus-ios-12
       - *restore-cache
       - *install-dependencies
-      - *build-test-MapboxCoreNavigation-ios-12
-      - *build-test-MapboxNavigation-ios-12
+      - build-test-sdk:
+          scheme: "MapboxCoreNavigation"
+          OS: "12.1"
+          device: "iPhone 6 Plus"
+          codecoverage: "YES"
+      - build-test-sdk:
+          scheme: "MapboxNavigation"
+          OS: "12.1"
+          device: "iPhone 6 Plus"
+          codecoverage: "YES"
+      - *publish-codecov
+      - *save-cache
+  
+  xcode-10_2:
+    macos:
+      xcode: "10.2.0"
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+    steps:
+      - checkout
+      - *prepare
+      - *prepare-iphone6-plus-ios-12
+      - *restore-cache
+      - *install-dependencies
+      - build-test-sdk:
+          scheme: "MapboxCoreNavigation"
+          OS: "12.1"
+          device: "iPhone 6 Plus"
+      - build-test-sdk:
+          scheme: "MapboxNavigation"
+          OS: "12.1"
+          device: "iPhone 6 Plus"
       - *publish-codecov
       - *save-cache
   
@@ -163,8 +169,12 @@ jobs:
       - *prepare-iphone6s-plus-ios-9
       - *restore-cache
       - *install-dependencies
-      - *build-MapboxCoreNavigation-ios-9
-      - *build-MapboxNavigation-ios-9
+      - build-test-sdk:
+          scheme: "MapboxCoreNavigation"
+          OS: "9.3"
+      - build-test-sdk:
+          scheme: "MapboxNavigation"
+          OS: "9.3"
       - *save-cache
 
   xcode-10-bench:
@@ -219,3 +229,24 @@ jobs:
       - *install-dependencies
       - *build-Example
       - *save-cache
+
+commands:
+  build-test-sdk:
+    description: "Command for building the SDK //use scheme param here?"
+    parameters:
+        OS:
+          type: string
+          default: "12.1"
+        device:
+          type: string
+          default: "iPhone 6 Plus"
+        codecoverage:
+          type: string
+          default: "NO"
+        scheme:
+          type: string
+    steps:
+      - run:
+          name: Build and Test
+          command: |
+            xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.OS >>,name=<< parameters.OS >>' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test -enableCodeCoverage "<< parameters.codecoverage >>"
