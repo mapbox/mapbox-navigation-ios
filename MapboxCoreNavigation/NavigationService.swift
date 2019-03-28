@@ -342,7 +342,7 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
         nativeLocationSource.stopUpdatingHeading()
         nativeLocationSource.stopUpdatingLocation()
         
-        if simulationMode == .always {
+        if [.always, .onPoorGPS].contains(simulationMode) {
             endSimulation()
         }
         
