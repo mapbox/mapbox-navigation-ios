@@ -118,8 +118,9 @@ jobs:
       jobname:
         type: string
         default: "build-job"
-      scheme:
-        type: string
+      test:
+          type: string
+          default: "test"
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -131,15 +132,10 @@ jobs:
       - *restore-cache
       - *install-dependencies
       - build-test-sdk:
-          scheme: "MapboxCoreNavigation"
           OS: << parameters.OS >>
           device: << parameters.device >>
           codecoverage: << parameters.codecoverage >>
-      - build-test-sdk:
-          scheme: "MapboxNavigation"
-          OS: << parameters.OS >>
-          device: << parameters.device >>
-          codecoverage: << parameters.codecoverage >>
+          test: << parameters.test >>
       - *publish-codecov
       - *save-cache
 
