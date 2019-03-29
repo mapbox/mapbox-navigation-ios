@@ -120,9 +120,6 @@ jobs:
         default: "build-job"
       scheme:
         type: string
-      jobdesc:
-        type: string
-    description: << parameters.jobdesc >>
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -201,7 +198,7 @@ jobs:
 
 commands:
   build-test-sdk:
-    description: "Command for building the SDK //use scheme param here?"
+    description: "Command for building the SDK"
     parameters:
         OS:
           type: string
@@ -224,27 +221,27 @@ workflows:
   workflow:
     jobs:
       - build-job:
-          jobdesc: "MapboxNavigation iOS 12.1 Xcode 10.1"
+          name: "MapboxNavigation iOS 12.1 Xcode 10.1"
           scheme: "MapboxNavigation"
           xcode: "10.1.0"
           OS: "12.1"
       - build-job:
-          jobdesc: "MapboxCoreNavigation iOS 12.1 Xcode 10.1"
+          name: "MapboxCoreNavigation iOS 12.1 Xcode 10.1"
           scheme: "MapboxCoreNavigation"
           xcode: "10.1.0"
           OS: "12.1"
       - build-job:
-          jobdesc: "MapboxNavigation iOS 12.1 Xcode 10.2"
+          name: "MapboxNavigation iOS 12.1 Xcode 10.2"
           scheme: "MapboxNavigation"
           xcode: "10.2.0"
           OS: "12.1"
       - build-job:
-          jobdesc: "MapboxCoreNavigation iOS 12.1 Xcode 10.2"
+          name: "MapboxCoreNavigation iOS 12.1 Xcode 10.2"
           scheme: "MapboxCoreNavigation"
           xcode: "10.2.0"
           OS: "12.1"
       - build-job:
-          jobdesc: "MapboxCoreNavigation iOS 9.3 Xcode 10.1"
+          name: "MapboxCoreNavigation iOS 9.3 Xcode 10.1"
           scheme: "MapboxCoreNavigation"
           xcode: "10.1.0"
           OS: "9.3"
