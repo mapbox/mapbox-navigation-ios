@@ -209,41 +209,39 @@ commands:
         codecoverage:
           type: string
           default: "NO"
-        scheme:
+        test:
           type: string
+          default: "test"
     steps:
       - run:
           name: Build and Test
           command: |
-            xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.OS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test -enableCodeCoverage "<< parameters.codecoverage >>"
+            xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.OS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build << parameters.test >> -enableCodeCoverage "<< parameters.codecoverage >>"
+            xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.OS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build << parameters.test >> -enableCodeCoverage "<< parameters.codecoverage >>"
 
 workflows:
   workflow:
     jobs:
       - build-job:
-          name: "MapboxNavigation iOS 12.1 Xcode 10.1"
-          scheme: "MapboxNavigation"
+          name: "iOS 12.1 Xcode 10.1"
           xcode: "10.1.0"
           OS: "12.1"
       - build-job:
-          name: "MapboxCoreNavigation iOS 12.1 Xcode 10.1"
-          scheme: "MapboxCoreNavigation"
+          name: "iOS 12.1 Xcode 10.1"
           xcode: "10.1.0"
           OS: "12.1"
       - build-job:
-          name: "MapboxNavigation iOS 12.1 Xcode 10.2"
-          scheme: "MapboxNavigation"
+          name: "iOS 12.1 Xcode 10.2"
           xcode: "10.2.0"
           OS: "12.1"
       - build-job:
-          name: "MapboxCoreNavigation iOS 12.1 Xcode 10.2"
-          scheme: "MapboxCoreNavigation"
+          name: "iOS 12.1 Xcode 10.2"
           xcode: "10.2.0"
           OS: "12.1"
       - build-job:
-          name: "MapboxCoreNavigation iOS 9.3 Xcode 10.1"
-          scheme: "MapboxCoreNavigation"
+          name: "iOS 9.3 Xcode 10.1"
           xcode: "10.1.0"
+          test: ""
           OS: "9.3"
       - xcode-10-bench
       - xcode-10-cocoapods-install
