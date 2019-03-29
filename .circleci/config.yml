@@ -115,6 +115,14 @@ jobs:
       OS:
         type: string
         default: "12.1"
+      jobname:
+        type: string
+        default: "build-job"
+      scheme:
+        type: string
+      jobdesc:
+        type: string
+    description: << parameters.jobdesc >>
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -210,18 +218,34 @@ commands:
       - run:
           name: Build and Test
           command: |
-            xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.OS >>,name=<< parameters.OS >>' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test -enableCodeCoverage "<< parameters.codecoverage >>"
+            xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.OS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build test -enableCodeCoverage "<< parameters.codecoverage >>"
 
 workflows:
   workflow:
     jobs:
       - build-job:
+          jobdesc: "MapboxNavigation iOS 12.1 Xcode 10.1"
+          scheme: "MapboxNavigation"
           xcode: "10.1.0"
           OS: "12.1"
       - build-job:
+          jobdesc: "MapboxCoreNavigation iOS 12.1 Xcode 10.1"
+          scheme: "MapboxCoreNavigation"
+          xcode: "10.1.0"
+          OS: "12.1"
+      - build-job:
+          jobdesc: "MapboxNavigation iOS 12.1 Xcode 10.2"
+          scheme: "MapboxNavigation"
           xcode: "10.2.0"
           OS: "12.1"
       - build-job:
+          jobdesc: "MapboxCoreNavigation iOS 12.1 Xcode 10.2"
+          scheme: "MapboxCoreNavigation"
+          xcode: "10.2.0"
+          OS: "12.1"
+      - build-job:
+          jobdesc: "MapboxCoreNavigation iOS 9.3 Xcode 10.1"
+          scheme: "MapboxCoreNavigation"
           xcode: "10.1.0"
           OS: "9.3"
       - xcode-10-bench
