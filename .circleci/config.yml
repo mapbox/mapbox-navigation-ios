@@ -40,20 +40,8 @@ step-library:
       run:
         name: Prepare
         command: |
-          if (brew outdated | grep carthage > /dev/null); then brew upgrade carthage; fi
+          if [ $(carthage outdated | grep -cF "latest Carthage version") -eq 0 ]; then brew update && brew upgrade carthage || true; fi
           echo "foo" > ~/.mapbox
-
-  - &prepare-iphone6-plus-ios-12
-      run:
-        name: Prepare iPhone 6s Plus iOS 12
-        command: xcrun instruments -w "iPhone 6 Plus (12.1) [" || true
-
-  - &prepare-iphone6s-plus-ios-9
-      run:
-        name: Prepare iPhone 6s Plus iOS 12
-        command: |
-         xcversion simulators --install='iOS 9.3'
-         xcrun instruments -w "iPhone 6s Plus (9.3) [" || true
 
   - &verify-missing-localizable-strings
       run:
@@ -66,12 +54,6 @@ step-library:
       run:
         name: Install Dependencies
         command: carthage bootstrap --platform ios --cache-builds --configuration Debug --no-use-binaries
-
-  - &build-test-Bench-ios-12
-      run:
-        name: Build and Test Bench
-        command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.1,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme Bench clean build test
 
   - &build-Example
       run:
@@ -94,11 +76,6 @@ step-library:
           cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall
           pod update --repo-update
           xcodebuild -workspace PodInstall.xcworkspace/ -scheme PodInstall -destination 'platform=iOS Simulator,name=iPhone 6 Plus' clean build | xcpretty
-  
-  - &publish-codecov
-      run:
-        name: Publish Code Coverage data
-        command: bash <(curl -s https://codecov.io/bash)
 
 jobs:
   build-job:
@@ -112,15 +89,15 @@ jobs:
       OS:
         type: string
         default: "12.1"
-      jobname:
-        type: string
-        default: "build-job"
       test:
-        type: string
-        default: "test"
-      extra:
-        type: string
-        default: ""
+        type: boolean
+        default: true
+      codecoverage:
+        type: boolean
+        default: false
+      install_legacy_sim:
+        type: boolean
+        default: false
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -128,28 +105,21 @@ jobs:
     steps:
       - checkout
       - *prepare
-      - *prepare-iphone6-plus-ios-12
       - *restore-cache
+      - when:
+          condition: << parameters.install_legacy_sim >>
+          steps:
+            - run: xcversion simulators --install="iOS << parameters.OS >>"
       - *install-dependencies
+      - *verify-missing-localizable-strings
       - build-test-sdk:
           OS: << parameters.OS >>
           device: << parameters.device >>
           test: << parameters.test >>
-          extra: << parameters.extra >>
-      - *publish-codecov
-      - *save-cache
-
-  xcode-10-bench:
-    macos:
-      xcode: "10.1.0"
-    environment:
-      HOMEBREW_NO_AUTO_UPDATE: 1
-    steps:
-      - checkout
-      - *prepare
-      - *restore-cache
-      - *install-dependencies
-      - *build-test-Bench-ios-12
+      - when:
+          condition: << parameters.codecoverage >>
+          steps:
+            - run: bash <(curl -s https://codecov.io/bash)
       - *save-cache
 
   xcode-10-cocoapods-install:
@@ -186,7 +156,6 @@ jobs:
     steps:
       - checkout
       - *prepare
-      - *prepare-iphone6-plus-ios-12
       - *restore-cache
       - *install-dependencies
       - *build-Example
@@ -203,17 +172,17 @@ commands:
           type: string
           default: "iPhone 6 Plus"
         test:
-          type: string
-          default: "test"
-        extra:
-          type: string
-          default: ""
+          type: boolean
+          default: true
+        codecoverage:
+          type: boolean
+          default: false
     steps:
       - run:
           name: Build and Test
           command: |
-            xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.OS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build << parameters.test >> << parameters.extra >>
-            xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.OS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build << parameters.test >> << parameters.extra >>
+            xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.OS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build <<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >> 
+            xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.OS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build <<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >> 
 
 workflows:
   workflow:
@@ -225,14 +194,14 @@ workflows:
       - build-job:
           name: "iOS 12.2 Xcode 10.2"
           xcode: "10.2.0"
-          extra: "-enableCodeCoverage YES"
+          codecoverage: true
           OS: "12.2"
       - build-job:
           name: "iOS 9.3 Xcode 10.1"
           xcode: "10.1.0"
-          test: ""
+          test: false
+          install_legacy_sim: true
           OS: "9.3"
-      - xcode-10-bench
       - xcode-10-cocoapods-install
       - xcode-10-cocoapods-update
       - xcode-10-examples
