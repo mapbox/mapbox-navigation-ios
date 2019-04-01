@@ -15,7 +15,7 @@
 }
 
 - (void)testRouteVoiceController {
-    MBRoute *route = [MBFixture routeFrom:@"routeWithInstructions"];
+    MBRoute *route = [MBFixture routeFromJSONFileName:@"routeWithInstructions"];
     MBNavigationService *service = [[MBNavigationService alloc] initWithRoute:route
                                                                    directions:nil
                                                                locationSource:nil
@@ -29,7 +29,7 @@
 
 - (void)testNavigationMapView {
     MBNavigationMapView *mapView = nil;
-    mapView.navigationMapDelegate = self;
+    mapView.navigationMapViewDelegate = self;
 }
 
 @end
