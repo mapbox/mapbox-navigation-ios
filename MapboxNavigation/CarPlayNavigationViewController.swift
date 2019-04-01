@@ -120,7 +120,7 @@ public class CarPlayNavigationViewController: UIViewController {
         mapView.zoomedOutMotorwayAltitude = 1000
         mapView.longManeuverDistance = 500
         
-        mapView.navigationMapDelegate = self
+        mapView.navigationMapViewDelegate = self
 
         self.mapView = mapView
         view.addSubview(mapView)
