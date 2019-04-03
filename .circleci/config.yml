@@ -113,9 +113,6 @@ jobs:
       delete_private_deps:
         type: boolean
         default: false
-      carthage_head:
-        type: boolean
-        default: false
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -123,10 +120,6 @@ jobs:
     steps:
       - checkout
       - *prepare
-      - when:
-          condition: << parameters.carthage_head >>
-          steps:
-            - run: brew unlink carthage && brew install carthage --HEAD
       - *restore-cache
       - when:
           condition: << parameters.delete_private_deps >>
@@ -160,7 +153,7 @@ jobs:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
       - checkout
-      - run: brew unlink carthage && brew install carthage --HEAD
+      - *prepare
       - *restore-cache
       - *install-dependencies
       - *build-Example
@@ -173,7 +166,6 @@ workflows:
           name: "Xcode_10.2_iOS_12.2"
           xcode: "10.2.0"
           iOS: "12.2"
-          carthage_head: true
       - build-job:
           name: "Xcode_10.1_iOS_12.1"
           xcode: "10.1.0"
