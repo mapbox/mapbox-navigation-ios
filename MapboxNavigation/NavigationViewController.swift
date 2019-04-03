@@ -232,11 +232,7 @@ open class NavigationViewController: UIViewController {
         embed(mapViewController, in: view) { (parent, map) -> [NSLayoutConstraint] in
             return map.view.constraintsForPinning(to: parent.view)
         }
-        
-
-        
-        //Do not start the navigation session until after you create the MapViewController, otherwise you'll miss important messages.
-        self.navigationService.start()
+   
         
         mapViewController.view.pinInSuperview()
         mapViewController.reportButton.isHidden = !showsReportFeedback
@@ -276,6 +272,9 @@ open class NavigationViewController: UIViewController {
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        //start the navigation service on presentation.
+        self.navigationService.start()
+        
         if shouldManageApplicationIdleTimer {
             UIApplication.shared.isIdleTimerDisabled = true
         }
