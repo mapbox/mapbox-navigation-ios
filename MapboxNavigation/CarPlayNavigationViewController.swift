@@ -54,6 +54,8 @@ public class CarPlayNavigationViewController: UIViewController {
     var carInterfaceController: CPInterfaceController
     var styleManager: StyleManager?
     
+    weak var compassView: CarPlayCompassView!
+    
     /**
      The interface styles available for display.
      
@@ -136,6 +138,14 @@ public class CarPlayNavigationViewController: UIViewController {
         view.addConstraint(NSLayoutConstraint(item: mapView, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1, constant: 0))
         
         mapViewOverviewRightConstraint = view.rightAnchor.constraint(equalTo: mapView.rightAnchor)
+        
+        let compassView: CarPlayCompassView = CarPlayCompassView.rounded(size: CGSize(floatLiteral: 32))
+        
+        view.addSubview(compassView)
+        self.compassView = compassView
+        
+        compassView.topAnchor.constraint(equalTo: view.safeTopAnchor, constant: 8).isActive = true
+        compassView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8).isActive = true
         
         styleObservation = mapView.observe(\.style, options: .new) { [weak self] (mapView, change) in
             guard change.newValue != nil else {
@@ -310,6 +320,8 @@ public class CarPlayNavigationViewController: UIViewController {
         let stepDistance = distanceFormatter.measurement(of: stepProgress.distanceRemaining)
         let stepEstimates = CPTravelEstimates(distanceRemaining: stepDistance, timeRemaining: stepProgress.durationRemaining)
         carSession.updateEstimates(stepEstimates, for: maneuver)
+        
+        compassView.course = location.course
     }
     
     /** Modifies the gesture recognizers to also update the map’s frame rate. */

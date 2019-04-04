@@ -103,7 +103,7 @@ open class FloatingButton: Button {
         }
     }
     
-    class func rounded<T: FloatingButton>(image: UIImage, selectedImage: UIImage? = nil, size: CGSize = FloatingButton.buttonSize) -> T {
+    class func rounded<T: FloatingButton>(image: UIImage? = nil, selectedImage: UIImage? = nil, size: CGSize = FloatingButton.buttonSize) -> T {
         let button = T.init(type: .custom)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.constrainedSize = size
