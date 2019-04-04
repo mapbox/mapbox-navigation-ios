@@ -73,6 +73,7 @@ public class Fixture: NSObject {
         return locations.map { CLLocation($0) }
     }
     
+    @objc(routeFromJSONFileName:)
     public class func route(from jsonFile: String) -> Route {
         let response = JSONFromFileNamed(name: jsonFile)
         let waypoints = Fixture.waypoints(from: jsonFile)

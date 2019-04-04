@@ -55,11 +55,10 @@ struct PerformanceEventDetails: EventDetails {
 struct NavigationEventDetails: EventDetails {
     
     let audioType: String = AVAudioSession.sharedInstance().audioType
-    let applicationState: UIApplicationState = UIApplication.shared.applicationState
+    let applicationState = UIApplication.shared.applicationState
     let batteryLevel: Int = UIDevice.current.batteryLevel >= 0 ? Int(UIDevice.current.batteryLevel * 100) : -1
     let batteryPluggedIn: Bool = [.charging, .full].contains(UIDevice.current.batteryState)
     let coordinate: CLLocationCoordinate2D?
-    let created: Date = Date()
     let device: String = UIDevice.current.machine
     let distance: CLLocationDistance?
     let distanceCompleted: CLLocationDistance
@@ -96,6 +95,7 @@ struct NavigationEventDetails: EventDetails {
     let legCount: Int
     let totalStepCount: Int
     
+    var created: Date = Date()
     var event: String?
     var arrivalTimestamp: Date?
     var rating: Int?
@@ -110,7 +110,7 @@ struct NavigationEventDetails: EventDetails {
     var newGeometry: String?
     
     init(dataSource: EventsManagerDataSource, session: SessionState, defaultInterface: Bool) {
-        coordinate = dataSource.location?.coordinate
+        coordinate = dataSource.router.rawLocation?.coordinate
         startTimestamp = session.departureTimestamp ?? nil
         sdkIdentifier = defaultInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
         profile = dataSource.routeProgress.route.routeOptions.profileIdentifier.rawValue
@@ -120,7 +120,7 @@ struct NavigationEventDetails: EventDetails {
         originalRequestIdentifier = session.originalRoute.routeIdentifier
         requestIdentifier = dataSource.routeProgress.route.routeIdentifier
                 
-        if let location = dataSource.location,
+        if let location = dataSource.router.rawLocation,
            let coordinates = dataSource.routeProgress.route.coordinates,
            let lastCoord = coordinates.last {
             userAbsoluteDistanceToDestination = location.distance(from: CLLocation(latitude: lastCoord.latitude, longitude: lastCoord.longitude))
@@ -347,7 +347,7 @@ extension EventDetails {
     }
 }
 
-extension UIApplicationState: Encodable {
+extension UIApplication.State: Encodable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         let stringRepresentation: String
@@ -365,42 +365,15 @@ extension UIApplicationState: Encodable {
 
 extension AVAudioSession {
     var audioType: String {
-        if isOutputBluetooth() {
+        if currentRoute.outputs.contains(where: { [.bluetoothA2DP, .bluetoothHFP, .bluetoothLE].contains($0.portType) }) {
             return "bluetooth"
         }
-        if isOutputHeadphones() {
+        if currentRoute.outputs.contains(where: { [.headphones, .airPlay, .HDMI, .lineOut, .carAudio, .usbAudio].contains($0.portType) }) {
             return "headphones"
         }
-        if isOutputSpeaker() {
+        if currentRoute.outputs.contains(where: { [.builtInSpeaker, .builtInReceiver].contains($0.portType) }) {
             return "speaker"
         }
         return "unknown"
-    }
-    
-    func isOutputBluetooth() -> Bool {
-        for output in currentRoute.outputs {
-            if [AVAudioSessionPortBluetoothA2DP, AVAudioSessionPortBluetoothLE].contains(output.portType) {
-                return true
-            }
-        }
-        return false
-    }
-    
-    func isOutputHeadphones() -> Bool {
-        for output in currentRoute.outputs {
-            if [AVAudioSessionPortHeadphones, AVAudioSessionPortAirPlay, AVAudioSessionPortHDMI, AVAudioSessionPortLineOut].contains(output.portType) {
-                return true
-            }
-        }
-        return false
-    }
-    
-    func isOutputSpeaker() -> Bool {
-        for output in currentRoute.outputs {
-            if [AVAudioSessionPortBuiltInSpeaker, AVAudioSessionPortBuiltInReceiver].contains(output.portType) {
-                return true
-            }
-        }
-        return false
     }
 }

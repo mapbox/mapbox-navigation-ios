@@ -3,7 +3,6 @@ import Turf
 import Mapbox
 
 let PuckSize: CGFloat = 45
-let ArrowSize = PuckSize * 0.6
 
 /**
  A view that represents the user’s location and course on a `NavigationMapView`.
@@ -92,8 +91,9 @@ public class UserPuckCourseView: UIView, UserCourseView {
     }
     
     func commonInit() {
-        puckView = UserPuckStyleKitView(frame: bounds)
+        isUserInteractionEnabled = false
         backgroundColor = .clear
+        puckView = UserPuckStyleKitView(frame: bounds)
         puckView.backgroundColor = .clear
         addSubview(puckView)
     }

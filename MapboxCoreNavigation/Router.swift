@@ -4,7 +4,6 @@ import MapboxDirections
 
 @objc (MBRouterDataSource)
 public protocol RouterDataSource {
-    var location: CLLocation? { get }
     var locationProvider: NavigationLocationManager.Type { get }
 }
 
@@ -49,6 +48,13 @@ public protocol RouterDataSource {
      The idealized user location. Snapped to the route line, if applicable, otherwise raw or nil.
      */
     @objc var location: CLLocation? { get }
+    
+    /**
+     The most recently received user location.
+     - note: This is a raw location received from `locationManager`. To obtain an idealized location, use the `location` property.
+     */
+    @objc var rawLocation: CLLocation? { get }
+    
     
     /**
      If true, the `RouteController` attempts to calculate a more optimal route for the user on an interval defined by `RouteControllerProactiveReroutingInterval`.
@@ -176,7 +182,17 @@ extension InternalRouter where Self: Router {
         }
         userInfo[.isProactiveKey] = didFindFasterRoute
         NotificationCenter.default.post(name: .routeControllerDidReroute, object: self, userInfo: userInfo)
-        delegate?.router?(self, didRerouteAlong: routeProgress.route, at: dataSource.location, proactive: didFindFasterRoute)
+        delegate?.router?(self, didRerouteAlong: routeProgress.route, at: location, proactive: didFindFasterRoute)
     }
 }
 
+extension Array where Element: MapboxDirections.Route {
+    func mostSimilar(to route: Route) -> Route? {
+        let target = route.description
+        return self.min { (left, right) -> Bool in
+            let leftDistance = left.description.minimumEditDistance(to: target)
+            let rightDistance = right.description.minimumEditDistance(to: target)
+            return leftDistance < rightDistance
+        }
+    }
+}

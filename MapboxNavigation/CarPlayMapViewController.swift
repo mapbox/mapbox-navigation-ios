@@ -119,7 +119,6 @@ public class CarPlayMapViewController: UIViewController {
     
     override public func loadView() {
         let mapView = NavigationMapView()
-//        mapView.navigationMapDelegate = self
         mapView.logoView.isHidden = true
         mapView.attributionButton.isHidden = true
         
@@ -191,25 +190,30 @@ public class CarPlayMapViewController: UIViewController {
         }
         camera.pitch = 60
         mapView.setCamera(camera, animated: animated)
-
     }
     
     override public func viewSafeAreaInsetsDidChange() {
-        mapView.setContentInset(mapView.safeArea, animated: false)
+        super.viewSafeAreaInsetsDidChange()
         
-        guard isOverviewingRoutes else {
-            super.viewSafeAreaInsetsDidChange()
+        var edgePadding = view.safeArea
+        edgePadding += NavigationMapView.defaultPadding
+        
+        if let userCourseView = mapView.userCourseView {
+            let midX = userCourseView.bounds.midX
+            let midY = userCourseView.bounds.midY
+            edgePadding += UIEdgeInsets(top: midY, left: midX, bottom: midY, right: midX)
+        }
+        
+        mapView.setContentInset(edgePadding, animated: false)
+        
+        guard let active = mapView.routes?.first else {
+            mapView.setUserTrackingMode(.followWithCourse, animated: true)
             return
         }
         
-        
-        guard let routes = mapView.routes,
-            let active = routes.first else {
-                super.viewSafeAreaInsetsDidChange()
-                return
+        if isOverviewingRoutes {
+            mapView.fit(to: active, animated: false)
         }
-        
-        mapView.fit(to: active, animated: false)
     }
 }
 

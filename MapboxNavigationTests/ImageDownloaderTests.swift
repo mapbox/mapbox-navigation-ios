@@ -20,7 +20,7 @@ class ImageDownloaderTests: XCTestCase {
 
         ImageLoadingURLProtocolSpy.reset()
 
-        let imageData = UIImagePNGRepresentation(ShieldImage.i280.image)!
+        let imageData = ShieldImage.i280.image.pngData()!
         ImageLoadingURLProtocolSpy.registerData(imageData, forURL: imageURL)
 
         downloader = ImageDownloader(sessionConfiguration: sessionConfig)

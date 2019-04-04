@@ -1,6 +1,7 @@
 import XCTest
 import CoreLocation
 @testable import MapboxCoreNavigation
+@testable import TestHelper
 
 class LocationTests: XCTestCase {
     
@@ -12,7 +13,6 @@ class LocationTests: XCTestCase {
         return (progress, firstLocation)
     }
     
-    
     func testSerializeAndDeserializeLocation() {
         let coordinate = CLLocationCoordinate2D(latitude: 1.1, longitude: 2.2)
         let altitude: CLLocationAccuracy = 3.3
@@ -20,24 +20,21 @@ class LocationTests: XCTestCase {
         let horizontalAccuracy: CLLocationAccuracy = 5.5
         let verticalAccuracy: CLLocationAccuracy = 6.6
         let course: CLLocationDirection = 7.7
-        let timestamp = Date().ISO8601
+        let timestamp = Date()
         
-        var locationDictionary:[String: Any] = [:]
-        locationDictionary["lat"] = coordinate.latitude
-        locationDictionary["lng"] = coordinate.longitude
-        locationDictionary["altitude"] = altitude
-        locationDictionary["timestamp"] = timestamp
-        locationDictionary["horizontalAccuracy"] = horizontalAccuracy
-        locationDictionary["verticalAccuracy"] = verticalAccuracy
-        locationDictionary["course"] = course
-        locationDictionary["speed"] = speed
+        let location = CLLocation(coordinate: coordinate, altitude: altitude, horizontalAccuracy: horizontalAccuracy, verticalAccuracy: verticalAccuracy, course: course, speed: speed, timestamp: timestamp)
         
-        let location = CLLocation(dictionary: locationDictionary)
+        let encoded = try! JSONEncoder().encode(Location(location))
+        let decoded = CLLocation(try! JSONDecoder().decode(Location.self, from: encoded))
         
-        let lhs = locationDictionary as NSDictionary
-        let rhs = location.dictionaryRepresentation as NSDictionary
-        
-        XCTAssert(lhs == rhs)
+        XCTAssertEqual(decoded.coordinate.latitude, coordinate.latitude)
+        XCTAssertEqual(decoded.coordinate.longitude, coordinate.longitude)
+        XCTAssertEqual(decoded.altitude, altitude)
+        XCTAssertEqual(decoded.speed, speed)
+        XCTAssertEqual(decoded.horizontalAccuracy, horizontalAccuracy)
+        XCTAssertEqual(decoded.verticalAccuracy, verticalAccuracy)
+        XCTAssertEqual(decoded.course, course)
+        XCTAssertEqual(decoded.timestamp.timeIntervalSince1970, timestamp.timeIntervalSince1970, accuracy: 0.01)
     }
     
     func testSnappedLocation100MetersAlongRoute() {
@@ -51,9 +48,7 @@ class LocationTests: XCTestCase {
             return XCTFail("Location should have snapped to route")
         }
         
-        
         XCTAssertTrue(locationAlongFirstStep.distance(from: snapped) < 1, "The location is less than 1 meter away from the calculated snapped location")
- 
     }
     
     func testInterpolatedCourse() {

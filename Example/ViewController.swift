@@ -46,6 +46,8 @@ class ViewController: UIViewController {
             mapView?.showWaypoints(current)
         }
     }
+    
+    weak var activeNavigationViewController: NavigationViewController?
 
     // MARK: Directions Request Handlers
 
@@ -65,6 +67,24 @@ class ViewController: UIViewController {
     }
 
     var alertController: UIAlertController!
+    // MARK: - Init
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        commonInit()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        commonInit()
+    }
+    
+    private func commonInit() {
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+            appDelegate.currentAppRootViewController = self
+        }
+    }
+    
     
     // MARK: - Lifecycle Methods
 
@@ -81,7 +101,7 @@ class ViewController: UIViewController {
         let custom: ActionHandler = {_ in self.startCustomNavigation() }
         let styled: ActionHandler = {_ in self.startStyledNavigation() }
         
-        let actionPayloads: [(String, UIAlertActionStyle, ActionHandler?)] = [
+        let actionPayloads: [(String, UIAlertAction.Style, ActionHandler?)] = [
             ("Default UI", .default, basic),
             ("DayStyle UI", .default, day),
             ("NightStyle UI", .default, night),
@@ -139,7 +159,7 @@ class ViewController: UIViewController {
         }
 
         if waypoints.count > 1 {
-            waypoints = Array(waypoints.suffix(1))
+            waypoints = Array(waypoints.dropFirst())
         }
         
         let coordinates = mapView.convert(tap.location(in: mapView), toCoordinateFrom: mapView)
@@ -152,20 +172,6 @@ class ViewController: UIViewController {
 
 
     // MARK: - IBActions
-    @IBAction func replay(_ sender: Any) {
-        let bundle = Bundle(for: ViewController.self)
-        let filePath = bundle.path(forResource: "tunnel", ofType: "json")!
-        let routeFilePath = bundle.path(forResource: "tunnel", ofType: "route")!
-        let route = NSKeyedUnarchiver.unarchiveObject(withFile: routeFilePath) as! Route
-
-        let locationManager = ReplayLocationManager(locations: Array<CLLocation>.locations(from: filePath))
-
-        let navigationService = MapboxNavigationService(route: route, locationSource: locationManager)
-        let options = NavigationOptions(navigationService: navigationService)
-        let navigationViewController = NavigationViewController(for: route, options: options)
-
-        present(navigationViewController, animated: true, completion: nil)
-    }
 
     @IBAction func simulateButtonPressed(_ sender: Any) {
         simulationButton.isSelected = !simulationButton.isSelected
@@ -214,23 +220,42 @@ class ViewController: UIViewController {
 
     func startBasicNavigation() {
         guard let route = routes?.first else { return }
-
-        let options = NavigationOptions(navigationService: navigationService())
-        let navigationViewController = NavigationViewController(for: route, options: options)
-        navigationViewController.delegate = self
-        navigationViewController.mapView?.delegate = self
         
-        presentAndRemoveMapview(navigationViewController)
+        let service = navigationService(route: route)
+        let navigationViewController = self.navigationViewController(navigationService: service)
+        
+        presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
     
     func startNavigation(styles: [Style]) {
         guard let route = routes?.first else { return }
         
-        let options = NavigationOptions(styles: styles, navigationService: navigationService())
+        let options = NavigationOptions(styles: styles, navigationService: navigationService(route: route))
         let navigationViewController = NavigationViewController(for: route, options: options)
         navigationViewController.delegate = self
         
-        presentAndRemoveMapview(navigationViewController)
+        presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
+    }
+    
+    func navigationViewController(navigationService: NavigationService) -> NavigationViewController {
+        let route = navigationService.route
+        let options = NavigationOptions( navigationService: navigationService)
+        
+        let navigationViewController = NavigationViewController(for: route, options: options)
+        navigationViewController.delegate = self
+        navigationViewController.mapView?.delegate = self
+        return navigationViewController
+    }
+    
+    public func beginNavigationWithCarplay(navigationService: NavigationService) {
+        self.routes = [navigationService.route]
+        
+        let navigationViewController = activeNavigationViewController ?? self.navigationViewController(navigationService: navigationService)
+        navigationViewController.isUsedInConjunctionWithCarPlayWindow = true
+        
+        guard activeNavigationViewController == nil else { return }
+        
+        presentAndRemoveMapview(navigationViewController, completion: nil)
     }
     
     // MARK: Custom Navigation UI
@@ -255,31 +280,57 @@ class ViewController: UIViewController {
         guard let route = routes?.first else { return }
 
         let styles = [CustomDayStyle(), CustomNightStyle()]
-        let options = NavigationOptions(styles:styles, navigationService: navigationService())
+        let options = NavigationOptions(styles:styles, navigationService: navigationService(route: route))
         let navigationViewController = NavigationViewController(for: route, options: options)
         navigationViewController.delegate = self
 
-        presentAndRemoveMapview(navigationViewController)
+        presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
 
-    func navigationService() -> NavigationService? {
-        guard let route = routes?.first else { return nil }
+    func navigationService(route: Route) -> NavigationService {
         let simulate = simulationButton.isSelected
-        let mode: SimulationMode = simulate ? .always : .never//.onPoorGPS
+        let mode: SimulationMode = simulate ? .always : .onPoorGPS
         return MapboxNavigationService(route: route, directions: Settings.directions, simulating: mode)
     }
 
-    func presentAndRemoveMapview(_ navigationViewController: NavigationViewController) {
-        present(navigationViewController, animated: true) {
-            self.mapView?.removeFromSuperview()
-            self.mapView = nil
+    func presentAndRemoveMapview(_ navigationViewController: NavigationViewController, completion: CompletionHandler?) {
+        activeNavigationViewController = navigationViewController
+        
+        present(navigationViewController, animated: true) { [weak self] in
+            completion?()
+            
+            self?.mapView?.removeFromSuperview()
+            self?.mapView = nil
+        }
+    }
+    
+    func beginCarPlayNavigation() {
+        let delegate = UIApplication.shared.delegate as? AppDelegate
+        
+        if #available(iOS 12.0, *),
+            let service = activeNavigationViewController?.navigationService,
+            let location = service.router.location {
+            delegate?.carPlayManager.beginNavigationWithCarPlay(using: location.coordinate,
+                                                                navigationService: service)
+        }
+    }
+    
+    func endCarPlayNavigation(canceled: Bool) {
+        if #available(iOS 12.0, *), let delegate = UIApplication.shared.delegate as? AppDelegate {
+            delegate.carPlayManager.currentNavigator?.exitNavigation(byCanceling: canceled)
+        }
+    }
+    
+    func dismissActiveNavigationViewController() {
+        activeNavigationViewController?.dismiss(animated: true) {
+            self.activeNavigationViewController = nil
         }
     }
 
     func configureMapView(_ mapView: NavigationMapView) {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.delegate = self
-        mapView.navigationMapDelegate = self
+        mapView.navigationMapViewDelegate = self
         mapView.userTrackingMode = .follow
         mapView.logoView.isHidden = true
 
@@ -417,6 +468,7 @@ extension ViewController: NavigationViewControllerDelegate {
         
         //If we're not in a "Multiple Stops" demo, show the normal EORVC
         if navigationViewController.navigationService.router.routeProgress.isFinalLeg {
+            endCarPlayNavigation(canceled: false)
             return true
         }
         
@@ -433,7 +485,8 @@ extension ViewController: NavigationViewControllerDelegate {
     // Called when the user hits the exit button.
     // If implemented, you are responsible for also dismissing the UI.
     func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool) {
-        navigationViewController.dismiss(animated: true, completion: nil)
+        endCarPlayNavigation(canceled: canceled)
+        dismissActiveNavigationViewController()
     }
 }
 

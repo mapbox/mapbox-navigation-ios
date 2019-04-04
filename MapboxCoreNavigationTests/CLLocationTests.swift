@@ -1,7 +1,7 @@
 import XCTest
 import CoreLocation
 @testable import MapboxCoreNavigation
-import MapboxNavigationNative
+@testable import MapboxNavigationNative
 
 class CLLocationTests: XCTestCase {
     
@@ -35,6 +35,50 @@ class CLLocationTests: XCTestCase {
                                   timestamp: Date())
         
         XCTAssertEqual(location.timestamp, location.shifted(to: location.timestamp).timestamp)
+    }
+    
+    func testCLLocationToMBFixLocation() {
+        let coordinate = CLLocationCoordinate2D(latitude: 1, longitude: 2)
+        let now = Date()
+        
+        let location = CLLocation(coordinate: coordinate,
+                                  altitude: -1,
+                                  horizontalAccuracy: -1,
+                                  verticalAccuracy: 0,
+                                  course: -1,
+                                  speed: -1,
+                                  timestamp: now)
+        
+        let fixLocation = MBFixLocation(location)
+        
+        XCTAssertEqual(fixLocation.coordinate.latitude, coordinate.latitude)
+        XCTAssertEqual(fixLocation.coordinate.longitude, coordinate.longitude)
+        XCTAssertEqual(fixLocation.altitude, -1)
+        XCTAssertEqual(fixLocation.bearing, nil)
+        XCTAssertEqual(fixLocation.accuracyHorizontal, nil)
+        XCTAssertEqual(fixLocation.speed, nil)
+        XCTAssertEqual(fixLocation.time, now)
+    }
+    
+    func testMBFixLocationToCLLocation() {
+        let coordinate = CLLocationCoordinate2D(latitude: 1, longitude: 2)
+        let now = Date()
+        let fixLocation = MBFixLocation(coordinate: coordinate,
+                                        time: now,
+                                        speed: nil,
+                                        bearing: nil,
+                                        altitude: -1,
+                                        accuracyHorizontal: nil, provider: "default")
+        
+        let location = CLLocation(fixLocation)
+        
+        XCTAssertEqual(location.coordinate.latitude, 1)
+        XCTAssertEqual(location.coordinate.longitude, 2)
+        XCTAssertEqual(location.timestamp, now)
+        XCTAssertEqual(location.speed, -1)
+        XCTAssertEqual(location.course, -1)
+        XCTAssertEqual(location.altitude, -1)
+        XCTAssertEqual(location.horizontalAccuracy, -1)
     }
 }
 

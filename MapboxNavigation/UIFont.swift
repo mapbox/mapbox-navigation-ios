@@ -31,19 +31,7 @@ extension UIFont {
     }
     
     func with(multiplier: CGFloat) -> UIFont {
-        let font = UIFont(descriptor: fontDescriptor, size: pointSize * fontSizeMultiplier)
-        return font
-    }
-    
-    func with(fontFamily: String?) -> UIFont {
-        guard let fontFamily = fontFamily else { return self }
-        let weight = (fontDescriptor.object(forKey: .traits) as! [String: Any])[UIFontDescriptor.TraitKey.weight.rawValue]
-        let descriptor = UIFontDescriptor(name: fontName, size: pointSize).withFamily(fontFamily).addingAttributes([.traits: [UIFontDescriptor.TraitKey.weight: weight]])
-        return UIFont(descriptor: descriptor, size: pointSize)
-    }
-    
-    func with(weight: CGFloat) -> UIFont {
-        let font = UIFont(descriptor: fontDescriptor.addingAttributes([.traits: weight]), size: pointSize)
+        let font = UIFont(descriptor: fontDescriptor, size: pointSize * multiplier)
         return font
     }
 }

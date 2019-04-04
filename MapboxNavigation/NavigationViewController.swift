@@ -212,11 +212,15 @@ open class NavigationViewController: UIViewController {
         self.navigationService = options?.navigationService ?? MapboxNavigationService(route: route)
         self.navigationService.usesDefaultUserInterface = true
         self.navigationService.delegate = self
-        self.voiceController = options?.voiceController ?? MapboxVoiceController(speechClient: SpeechSynthesizer(accessToken: navigationService?.directions.accessToken))
+        self.voiceController = options?.voiceController ?? MapboxVoiceController(navigationService: navigationService, speechClient: SpeechSynthesizer(accessToken: navigationService?.directions.accessToken))
 
         NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
         
-        let bottomBanner = options?.bottomBanner ?? BottomBannerViewController(delegate: self)
+        let bottomBanner = options?.bottomBanner ?? {
+            let viewController = BottomBannerViewController()
+            viewController.delegate = self
+            return viewController
+        }()
         bottomViewController = bottomBanner
 
         let topBanner = TopBannerViewController(nibName: nil, bundle: nil)
@@ -293,18 +297,18 @@ open class NavigationViewController: UIViewController {
     // MARK: Containerization
     
     func embed(_ child: UIViewController, in container: UIView, constrainedBy constraints: ((NavigationViewController, UIViewController) -> [NSLayoutConstraint])?) {
-        child.willMove(toParentViewController: self)
-        addChildViewController(child)
+        child.willMove(toParent: self)
+        addChild(child)
         container.addSubview(child.view)
         if let childConstraints: [NSLayoutConstraint] = constraints?(self, child) {
             view.addConstraints(childConstraints)
         }
-        child.didMove(toParentViewController: self)
+        child.didMove(toParent: self)
     }
     
     // MARK: Route controller notifications
     
-    func scheduleLocalNotification(about step: RouteStep, legIndex: Int?, numberOfLegs: Int?) {
+    func scheduleLocalNotification(about step: RouteStep) {
         guard sendsNotifications else { return }
         guard UIApplication.shared.applicationState == .background else { return }
         guard let text = step.instructionsSpokenAlongStep?.last?.text else { return }
@@ -327,49 +331,6 @@ open class NavigationViewController: UIViewController {
         UIApplication.shared.applicationIconBadgeNumber = 1
         UIApplication.shared.applicationIconBadgeNumber = 0
     }
-    
-    #if canImport(CarPlay)
-    /**
-     Presents a `NavigationViewController` on the top most view controller in the window and opens up the `StepsViewController`.
-     If the `NavigationViewController` is already in the stack, it will open the `StepsViewController` unless it is already open.
-     */
-    @available(iOS 12.0, *)
-    public class func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith navigationService: NavigationService, window: UIWindow) {
-        
-        if let navigationViewController = window.viewControllerInStack(of: NavigationViewController.self) {
-            // Open StepsViewController on iPhone if NavigationViewController is being presented
-            navigationViewController.isUsedInConjunctionWithCarPlayWindow = true
-        } else {
-            
-            // Start NavigationViewController and open StepsViewController if navigation has not started on iPhone yet.
-            let navigationViewControllerExistsInStack = window.viewControllerInStack(of: NavigationViewController.self) != nil
-            
-            if !navigationViewControllerExistsInStack {
-                
-                let directions = navigationService.directions
-                let route = navigationService.routeProgress.route
-                
-                let service = MapboxNavigationService(route: route, directions: directions, simulating: navigationService.simulationMode)
-                let options = NavigationOptions(navigationService: service)
-                let navigationViewController = NavigationViewController(for: route, options: options)
-                
-                window.rootViewController?.topMostViewController()?.present(navigationViewController, animated: true, completion: {
-                    navigationViewController.isUsedInConjunctionWithCarPlayWindow = true
-                })
-            }
-        }
-    }
-    
-    /**
-     Dismisses a `NavigationViewController` if there is any in the navigation stack.
-     */
-    @available(iOS 12.0, *)
-    public class func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager, window: UIWindow) {
-        if let navigationViewController = window.viewControllerInStack(of: NavigationViewController.self) {
-            navigationViewController.dismiss(animated: true, completion: nil)
-        }
-    }
-    #endif
 }
 
 //MARK: - RouteMapViewControllerDelegate
@@ -506,7 +467,7 @@ extension NavigationViewController: NavigationServiceDelegate {
         clearStaleNotifications()
         
         if routeProgress.currentLegProgress.currentStepProgress.durationRemaining <= RouteControllerHighAlertInterval {
-            scheduleLocalNotification(about: routeProgress.currentLegProgress.currentStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count)
+            scheduleLocalNotification(about: routeProgress.currentLegProgress.currentStep)
         }
     }
     
@@ -524,8 +485,7 @@ extension NavigationViewController: NavigationServiceDelegate {
     @objc public func navigationService(_ service: NavigationService, didArriveAt waypoint: Waypoint) -> Bool {
         let advancesToNextLeg = delegate?.navigationViewController?(self, didArriveAt: waypoint) ?? true
         
-        if !isConnectedToCarPlay, // CarPlayManager shows rating on CarPlay if it's connected
-            service.routeProgress.isFinalLeg && advancesToNextLeg && showsEndOfRouteFeedback {
+        if service.routeProgress.isFinalLeg && advancesToNextLeg && showsEndOfRouteFeedback {
             showEndOfRouteFeedback()
         }
         return advancesToNextLeg

@@ -17,7 +17,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
     var userRoute: Route?
 
     // Start voice instructions
-    let voiceController = MapboxVoiceController()
+    var voiceController: MapboxVoiceController!
     
     var stepsViewController: StepsViewController?
 
@@ -40,7 +40,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
         
         let locationManager = simulateLocation ? SimulatedLocationManager(route: userRoute!) : NavigationLocationManager()
         navigationService = MapboxNavigationService(route: userRoute!, locationSource: locationManager, simulating: simulateLocation ? .always : .onPoorGPS)
-
+        voiceController = MapboxVoiceController(navigationService: navigationService)
         
         mapView.delegate = self
         mapView.compassView.isHidden = true
@@ -142,7 +142,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
             
             let controller = StepsViewController(routeProgress: service.routeProgress)
             controller.delegate = self
-            addChildViewController(controller)
+            addChild(controller)
             view.addSubview(controller.view)
             
             controller.view.topAnchor.constraint(equalTo: instructionsBannerView.bottomAnchor).isActive = true
@@ -150,7 +150,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
             controller.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
             controller.view.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
             
-            controller.didMove(toParentViewController: self)
+            controller.didMove(toParent: self)
             controller.dropDownAnimation()
             
             stepsViewController = controller
@@ -222,7 +222,7 @@ extension CustomViewController: InstructionsBannerViewDelegate {
         toggleStepsList()
     }
     
-    func didSwipeInstructionsBanner(_ sender: BaseInstructionsBannerView, swipeDirection direction: UISwipeGestureRecognizerDirection) {
+    func didSwipeInstructionsBanner(_ sender: BaseInstructionsBannerView, swipeDirection direction: UISwipeGestureRecognizer.Direction) {
         if direction == .down {
             toggleStepsList()
             return

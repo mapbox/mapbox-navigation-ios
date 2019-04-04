@@ -108,13 +108,13 @@ class ImageCacheTests: XCTestCase {
     func testClearingMemoryCacheOnMemoryWarning() {
         storeImageInMemory()
         
-        NotificationCenter.default.post(name: .UIApplicationDidReceiveMemoryWarning, object: nil)
+        NotificationCenter.default.post(name: UIApplication.didReceiveMemoryWarningNotification, object: nil)
 
         XCTAssertNil(cache.image(forKey: imageKey))
     }
 
     func testJPEGSupport() {
-        let imageJPEGData = UIImageJPEGRepresentation(ShieldImage.i280.image, 9.0)!
+        let imageJPEGData = ShieldImage.i280.image.jpegData(compressionQuality: 9.0)!
         let image = UIImage.init(data: imageJPEGData)!
 
         let expectation = self.expectation(description: "Storing image in disk cache")
@@ -132,6 +132,6 @@ class ImageCacheTests: XCTestCase {
         tempCache?.clearMemory()
         tempCache = nil
 
-        NotificationCenter.default.post(name: .UIApplicationDidReceiveMemoryWarning, object: nil)
+        NotificationCenter.default.post(name: UIApplication.didReceiveMemoryWarningNotification, object: nil)
     }
 }

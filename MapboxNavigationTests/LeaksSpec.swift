@@ -19,15 +19,18 @@ class LeaksSpec: QuickSpec {
         return route
     }()
     
+    lazy var dummySvc: NavigationService = MapboxNavigationService(route: self.initialRoute)
+    
     override func spec() {
         describe("RouteVoiceController") {
             
             let voiceController = LeakTest {
-                return RouteVoiceController()
+                return RouteVoiceController(navigationService: self.dummySvc)
             }
             
             let resumeNotifications: (RouteVoiceController) -> () = { controller in
-                controller.resumeNotifications()
+                
+                controller.observeNotifications(by: self.dummySvc)
             }
             
             it("must not leak") {
@@ -41,7 +44,7 @@ class LeaksSpec: QuickSpec {
             let navigationViewController = LeakTest {
                 let directions = DirectionsSpy(accessToken: "deadbeef")
                 let service = MapboxNavigationService(route: route, directions: directions, eventsManagerType: NavigationEventsManagerSpy.self)
-                let options = NavigationOptions(navigationService: service, voiceController: RouteVoiceControllerStub())
+                let options = NavigationOptions(navigationService: service, voiceController: RouteVoiceControllerStub(navigationService: self.dummySvc))
                 return NavigationViewController(for: route, options: options)
             }
             

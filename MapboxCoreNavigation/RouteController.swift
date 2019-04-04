@@ -80,7 +80,7 @@ open class RouteController: NSObject {
                 delegate?.router?(self, willRerouteFrom: location)
             }
             _routeProgress = newValue
-            announce(reroute: routeProgress.route, at: dataSource.location, proactive: didFindFasterRoute)
+            announce(reroute: routeProgress.route, at: rawLocation, proactive: didFindFasterRoute)
         }
     }
     
@@ -102,7 +102,7 @@ open class RouteController: NSObject {
      The most recently received user location.
      - note: This is a raw location received from `locationManager`. To obtain an idealized location, use the `location` property.
      */
-    var rawLocation: CLLocation? {
+    public var rawLocation: CLLocation? {
         didSet {
             if isFirstLocation == true {
                 isFirstLocation = false
@@ -181,9 +181,9 @@ open class RouteController: NSObject {
         let willReroute = !userIsOnRoute(location) && delegate?.router?(self, shouldRerouteFrom: location)
                           ?? DefaultBehavior.shouldRerouteFromLocation
         
-        updateSpokenInstructionProgress(status: status, willReRoute: willReroute)
         updateRouteStepProgress(status: status)
         updateRouteLegProgress(status: status)
+        updateSpokenInstructionProgress(status: status, willReRoute: willReroute)
         updateVisualInstructionProgress(status: status)
         
         if willReroute {
@@ -200,8 +200,9 @@ open class RouteController: NSObject {
             routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex = Int(voiceInstructionIndex)
             
             // Don't annouce spoken instruction if we are going to reroute
-            if !willReRoute {
-                announcePassage(of: routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction!, routeProgress: routeProgress)
+            if !willReRoute,
+                let spokenInstruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction {
+                announcePassage(of: spokenInstruction, routeProgress: routeProgress)
             }
         }
     }

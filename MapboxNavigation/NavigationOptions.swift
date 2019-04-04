@@ -50,9 +50,9 @@ open class NavigationOptions: NSObject, NavigationCustomizable {
     }
     
     /**
-    Convienence factory-method for convenient bridging to OBJ-C.
+     Convienence factory-method for convenient bridging to OBJ-C.
      */
-    class func navigationOptions() -> Self {
+    @objc public class func navigationOptions() -> Self {
         return self.init()
     }
 }

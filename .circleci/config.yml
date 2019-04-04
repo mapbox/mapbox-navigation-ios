@@ -1,0 +1,190 @@
+version: 2.1
+
+step-library:
+  - &restore-cache
+      restore_cache:
+        keys:
+          - nav-cache-v2-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cartfile.resolved" }}
+          - nav-cache-v2-{{ .Environment.CIRCLE_JOB }} # used if checksum fails
+
+  - &save-cache
+      save_cache:
+        key: nav-cache-v2-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cartfile.resolved" }}
+        paths:
+          - Carthage
+
+  - &restore-cache-cocoapods
+      restore_cache:
+        keys:
+          - nav-cache-pod-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "MapboxCoreNavigationTests/CocoaPodsTest/PodInstall/Podfile.lock" }}
+          - nav-cache-pod-v1
+  
+  - &save-cache-cocoapods
+      save_cache:
+        key: nav-cache-pod-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "MapboxCoreNavigationTests/CocoaPodsTest/PodInstall/Podfile.lock" }}
+        paths:
+          - MapboxCoreNavigationTests/CocoaPodsTest/PodInstall/Pods
+
+  - &restore-cache-podmaster
+      restore_cache:
+        keys:
+          - podmaster-cache
+
+  - &save-cache-podmaster
+      save_cache:
+        key: podmaster-cache
+        paths:
+          - "~/.cocoapods/repos/master"
+
+  - &prepare
+      run:
+        name: Prepare
+        command: |
+          if [ $(carthage outdated | grep -cF "latest Carthage version") -eq 0 ]; then brew update && brew upgrade carthage || true; fi
+          echo "foo" > ~/.mapbox
+
+  - &verify-missing-localizable-strings
+      run:
+        name: Verify missing localizable strings
+        command: |
+          ./scripts/convert_string_files.sh
+          git diff --exit-code -- */*/*.lproj
+
+  - &install-dependencies
+      run:
+        name: Install Dependencies
+        command: carthage bootstrap --platform ios --cache-builds --configuration Debug --no-use-binaries
+
+  - &build-Example
+      run:
+        name: Build Example
+        command: |
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.2,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme Example clean build | xcpretty
+
+jobs:
+  pod-job:
+    parameters:
+      update:
+        type: boolean
+        default: false
+      iOS:
+        type: string
+        default: "12.2"
+      xcode:
+        type: string
+        default: "10.2.0"
+    macos:
+      xcode: << parameters.xcode >>
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+    steps:
+      - checkout
+      - *restore-cache-podmaster
+      - *restore-cache-cocoapods
+      - when:
+          condition: << parameters.update >>
+          steps:
+            - run: cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall && pod update --repo-update
+      - unless:
+          condition: << parameters.update >>
+          steps:
+            - run: cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall && pod install --repo-update
+      - run: cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall && xcodebuild -workspace PodInstall.xcworkspace -scheme PodInstall -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=iPhone 6 Plus' clean build | xcpretty
+      - *save-cache-podmaster
+      - *save-cache-cocoapods
+
+  build-job:
+    parameters:
+      xcode:
+        type: string
+        default: "10.1.0"
+      device:
+        type: string
+        default: "iPhone 6 Plus"
+      iOS:
+        type: string
+        default: "12.1"
+      test:
+        type: boolean
+        default: true
+      codecoverage:
+        type: boolean
+        default: false
+      delete_private_deps:
+        type: boolean
+        default: false
+    macos:
+      xcode: << parameters.xcode >>
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+    steps:
+      - checkout
+      - *prepare
+      - *restore-cache
+      - when:
+          condition: << parameters.delete_private_deps >>
+          steps:
+            - run: rm -rf Cartfile.private && rm -rf Cartfile.resolved
+      - *install-dependencies
+      - *save-cache
+      - run:
+          name: Install prerequisites
+          command: if [ $(xcversion simulators | grep -cF "iOS << parameters.iOS >> Simulator (installed)") -eq 0 ]; then xcversion simulators --install="iOS << parameters.iOS >>" || true; fi
+      - *verify-missing-localizable-strings
+      - run:
+          name: MapboxCoreNavigation
+          command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build <<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >> 
+      - when:
+          condition: << parameters.codecoverage >>
+          steps:
+            - run: bash <(curl -s https://codecov.io/bash)
+      - run:
+          name: MapboxNavigation
+          command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build <<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >> 
+      - when:
+          condition: << parameters.codecoverage >>
+          steps:
+            - run: bash <(curl -s https://codecov.io/bash)
+
+  xcode-10-examples:
+    macos:
+      xcode: "10.2.0"
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+    steps:
+      - checkout
+      - *prepare
+      - *restore-cache
+      - *install-dependencies
+      - *build-Example
+      - *save-cache
+
+workflows:
+  workflow:
+    jobs:
+      - build-job:
+          name: "Xcode_10.2_iOS_12.2"
+          xcode: "10.2.0"
+          iOS: "12.2"
+      - build-job:
+          name: "Xcode_10.1_iOS_12.1"
+          xcode: "10.1.0"
+          iOS: "12.1"
+          codecoverage: true
+      - build-job:
+          name: "Xcode_10.1_iOS_9.3"
+          xcode: "10.1.0"
+          iOS: "9.3"
+          delete_private_deps: true
+          test: false
+      - pod-job:
+          name: "Xcode_10.2_iOS_12.2_CP_install"
+          update: false
+          xcode: "10.2.0"
+          iOS: "12.2"
+      - pod-job:
+          name: "Xcode_10.2_iOS_12.2_CP_update"
+          update: true
+          xcode: "10.2.0"
+          iOS: "12.2"
+      - xcode-10-examples

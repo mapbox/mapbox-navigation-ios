@@ -21,7 +21,7 @@ class CarPlayManagerTests: XCTestCase {
     override func setUp() {
         super.setUp()
         eventsManagerSpy = NavigationEventsManagerSpy()
-        manager = CarPlayManager(eventsManager: eventsManagerSpy)
+        manager = CarPlayManager(eventsManager: eventsManagerSpy, navigationViewControllerClass: CarPlayNavigationViewControllerTestable.self)
         searchController = CarPlaySearchController()
     }
 
@@ -208,7 +208,7 @@ class CarPlayManagerTests: XCTestCase {
         // the CarPlayNavigationDelegate is notified
         XCTAssertTrue(exampleDelegate.navigationInitiated, "The CarPlayManagerDelegate should have been told that navigation was initiated.")
 
-        manager.carPlayNavigationViewControllerDidArrive(manager.currentNavigator!)
+        manager.currentNavigator!.exitNavigation(byCanceling: true)
 
         XCTAssertTrue(exampleDelegate.navigationEnded, "The CarPlayManagerDelegate should have been told that navigation ended.")
     }
@@ -413,6 +413,7 @@ class CarPlayManagerSpec: QuickSpec {
     }
 
     private class CustomTripPreviewDelegate: CarPlayManagerDelegate {
+        
         var customTripPreviewTextConfiguration: CPTripPreviewTextConfiguration?
         var customTrip: CPTrip?
 
@@ -430,6 +431,11 @@ class CarPlayManagerSpec: QuickSpec {
 
         func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
             //no-op
+        }
+        
+        func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, desiredSimulationMode: SimulationMode) -> NavigationService {
+            let directionsFake = Directions(accessToken: "foo")
+            return MapboxNavigationService(route: route, directions: directionsFake, simulating: desiredSimulationMode)
         }
     }
 }
@@ -453,6 +459,10 @@ class CarPlayManagerFailureDelegateSpy: CarPlayManagerDelegate {
     func carPlayManager(_ carPlayManager: CarPlayManager, didFailToFetchRouteBetween waypoints: [Waypoint]?, options: RouteOptions, error: NSError) -> CPNavigationAlert? {
         recievedError = error
         return nil
+    }
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, desiredSimulationMode: SimulationMode) -> NavigationService {
+        fatalError("This is an empty stub.")
     }
     
     func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith service: NavigationService) {
@@ -479,7 +489,7 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
     public var trailingBarButtons: [CPBarButton]?
     public var mapButtons: [CPMapButton]?
 
-    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route) -> NavigationService {
+    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, desiredSimulationMode: SimulationMode) -> NavigationService {
         let response = Fixture.JSONFromFileNamed(name: jsonFileName)
         let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String: Any]
         let initialRoute: Route = {
@@ -492,7 +502,7 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
             return route
         }()
         let directionsClientSpy = DirectionsSpy(accessToken: "garbage", host: nil)
-        let service = MapboxNavigationService(route: initialRoute, directions: directionsClientSpy, locationSource: NavigationLocationManager(), eventsManagerType: NavigationEventsManagerSpy.self)
+        let service = MapboxNavigationService(route: initialRoute, directions: directionsClientSpy, locationSource: NavigationLocationManager(), eventsManagerType: NavigationEventsManagerSpy.self, simulating: desiredSimulationMode)
         return service
     }
 
@@ -518,6 +528,13 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
         XCTAssertTrue(navigationInitiated)
         navigationEnded = true
         currentService = nil
+    }
+}
+
+@available(iOS 12.0, *)
+class CarPlayNavigationViewControllerTestable: CarPlayNavigationViewController {
+    override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+        completion?()
     }
 }
 

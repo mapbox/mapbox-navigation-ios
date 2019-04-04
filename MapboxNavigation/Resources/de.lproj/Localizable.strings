@@ -1,3 +1,60 @@
+/* Delimiter between lines in an address when displayed inline */
+"ADDRESS_LINE_SEPARATOR" = ", ";
+
+/* Title on arrival action sheet */
+"CARPLAY_ARRIVED" = "Ziel erreicht";
+
+/* Message on arrival action sheet */
+"CARPLAY_ARRIVED_MESSAGE" = "Was möchtest du machen?";
+
+/* Title on continue button in CarPlay */
+"CARPLAY_CONTINUE" = "Fortfahren";
+
+/* Name of the waypoint associated with the current location */
+"CARPLAY_CURRENT_LOCATION" = "Aktuelle Position";
+
+/* Title for dismiss button */
+"CARPLAY_DISMISS" = "Schließen";
+
+/* Title for end navigation button */
+"CARPLAY_END" = "Ende";
+
+/* Title on the exit button in the arrival form */
+"CARPLAY_EXIT_NAVIGATION" = "Navigation beenden";
+
+/* Title for feedback template in CarPlay */
+"CARPLAY_FEEDBACK" = "Feedback";
+
+/* Title for start button in CPTripPreviewTextConfiguration */
+"CARPLAY_GO" = "Starten";
+
+/* Title for alternative routes in CPTripPreviewTextConfiguration */
+"CARPLAY_MORE_ROUTES" = "Alternative Routen";
+
+/* Title for mute button */
+"CARPLAY_MUTE" = "Stumm";
+
+/* CPNavigationAlert OK button title */
+"CARPLAY_OK" = "OK";
+
+/* Title for overview button in CPTripPreviewTextConfiguration */
+"CARPLAY_OVERVIEW" = "Übersicht";
+
+/* Title for rating template in CarPlay */
+"CARPLAY_RATE_RIDE" = "Bewerte deine Route";
+
+/* Title on rate button in CarPlay */
+"CARPLAY_RATE_TRIP" = "Bewerte deine Route";
+
+/* Message when search returned zero results in CarPlay */
+"CARPLAY_SEARCH_NO_RESULTS" = "Keine Ergebnisse";
+
+/* Alert title that shows when feedback has been submitted */
+"CARPLAY_SUBMITTED_FEEDBACK" = "Übermittelt";
+
+/* Title for unmute button */
+"CARPLAY_UNMUTE" = "Laut";
+
 /* Format string for indicating the device volume is low; 1 = device model */
 "DEVICE_VOLUME_LOW" = "%@ Lautstärke leiser";
 
