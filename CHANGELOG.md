@@ -7,6 +7,8 @@
 * Deprecated `NavigationMapView.navigationMapDelegate` in favor of `NavigationMapView.navigationMapViewDelegate`. ([#2061](https://github.com/mapbox/mapbox-navigation-ios/pull/2061))
 * The `NavigationMapView.navigationMapViewDelegate` and `RouteVoiceController.voiceControllerDelegate` properties are now accessible in Objective-C. ([#2061](https://github.com/mapbox/mapbox-navigation-ios/pull/2061))
 * The sources added to the style by `NavigationMapView.showRoutes(_:legIndex:)` once again enables `MGLShapeSourceOptions.lineDistanceMetrics`. ([#2071](https://github.com/mapbox/mapbox-navigation-ios/pull/2071))
+* Deprecated `NavigationDirections.configureRouter(tilesURL:translationsURL:completionHandler:)` in favor of `NavigationDirections.configureRouter(tilesURL:completionHandler:)`. ([#2079](https://github.com/mapbox/mapbox-navigation-ios/pull/2079))
+* Fixed an issue where using a route without voice instructions would result in a crash. ([#2079](https://github.com/mapbox/mapbox-navigation-ios/pull/2079))
 
 ## v0.30.0
 

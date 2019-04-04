@@ -70,7 +70,7 @@
     }];
     
     NSURL *url = [NSURL URLWithString:@""];
-    [directions configureRouterWithTilesURL:url translationsURL:url completionHandler:^(uint64_t numberOfTiles) {
+    [directions configureRouterWithTilesURL:url completionHandler:^(uint64_t numberOfTiles) {
         
     }];
 }
