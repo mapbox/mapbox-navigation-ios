@@ -78,7 +78,7 @@ public class NavigationDirections: Directions {
         }
     }
     
-    @available(*, deprecated, message: "Use NavigationDirections.configureRouter(tilesURL:completionHandler:)")
+    @available(*, deprecated, renamed: "NavigationDirections.configureRouter(tilesURL:completionHandler:)")
     @objc public func configureRouter(tilesURL: URL, translationsURL: URL? = nil, completionHandler: @escaping NavigationDirectionsCompletionHandler) {
         configureRouter(tilesURL: tilesURL, completionHandler: completionHandler)
     }
