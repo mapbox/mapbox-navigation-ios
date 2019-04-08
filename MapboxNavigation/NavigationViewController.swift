@@ -306,6 +306,13 @@ open class NavigationViewController: UIViewController {
         child.didMove(toParent: self)
     }
     
+    override open func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
+        let stacktrace = Thread.callStackSymbols
+        
+        print("Change! \(stacktrace)")
+    }
+    
+    
     // MARK: Route controller notifications
     
     func scheduleLocalNotification(about step: RouteStep) {

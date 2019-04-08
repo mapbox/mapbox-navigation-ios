@@ -265,7 +265,7 @@ class RouteMapViewController: UIViewController {
         navigationView.resumeButton.addTarget(self, action: Actions.recenter, for: .touchUpInside)
         resumeNotifications()
         notifyUserAboutLowVolume()
-        updateInstructionBanners(visualInstructionBanner: router.routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
+//        updateInstructionBanners(visualInstructionBanner: router.routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
     }
 
     deinit {
@@ -475,11 +475,10 @@ class RouteMapViewController: UIViewController {
     }
     
     func contentInset(forOverviewing overviewing: Bool) -> UIEdgeInsets {
-        let instructionBannerHeight = 0//instructionsBannerContentView.bounds.height
+        let instructionBannerHeight = topBannerContainerView.bounds.height//instructionsBannerContentView.bounds.height
         let bottomBannerHeight = bottomBannerContainerView.bounds.height
         
-        var insets = UIEdgeInsets(top: instructionBannerHeight, left: 0,
-                                  bottom: bottomBannerHeight, right: 0)
+        var insets = UIEdgeInsets(top: instructionBannerHeight, left: .zero, bottom: bottomBannerHeight, right: .zero)
         
         if overviewing {
             insets += NavigationMapView.courseViewMinimumInsets
