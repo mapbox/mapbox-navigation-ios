@@ -226,6 +226,7 @@
 		492B6F85213703EE0076D2C6 /* MapboxGeocoder.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3507F9F92134305C0086B39E /* MapboxGeocoder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */; };
 		64847A041F04629D003F3A69 /* Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64847A031F04629D003F3A69 /* Feedback.swift */; };
+		7C12F2D8225B7C320010A931 /* DCA-Arboretum-dummy-faster-route.json in Resources */ = {isa = PBXBuildFile; fileRef = 7C12F2D7225B7C310010A931 /* DCA-Arboretum-dummy-faster-route.json */; };
 		8D07C5A820B612310093D779 /* EmptyStyle.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D07C5A720B612310093D779 /* EmptyStyle.json */; };
 		8D1A5CD2212DDFCD0059BA4A /* DispatchTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D1A5CD1212DDFCD0059BA4A /* DispatchTimer.swift */; };
 		8D24A2F62040960C0098CBF8 /* UIEdgeInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D24A2F52040960C0098CBF8 /* UIEdgeInsets.swift */; };
@@ -782,6 +783,7 @@
 		3EA93EBD6E6BEC966BBE51D6 /* NavigationServiceTestDoubles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationServiceTestDoubles.swift; sourceTree = "<group>"; };
 		6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WaypointConfirmationViewController.swift; path = Example/WaypointConfirmationViewController.swift; sourceTree = "<group>"; };
 		64847A031F04629D003F3A69 /* Feedback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Feedback.swift; sourceTree = "<group>"; };
+		7C12F2D7225B7C310010A931 /* DCA-Arboretum-dummy-faster-route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "DCA-Arboretum-dummy-faster-route.json"; sourceTree = "<group>"; };
 		8D07C5A720B612310093D779 /* EmptyStyle.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = EmptyStyle.json; sourceTree = "<group>"; };
 		8D1A5CD1212DDFCD0059BA4A /* DispatchTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchTimer.swift; sourceTree = "<group>"; };
 		8D24A2F52040960C0098CBF8 /* UIEdgeInsets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIEdgeInsets.swift; sourceTree = "<group>"; };
@@ -1119,6 +1121,7 @@
 			children = (
 				35CDA8862190F50C0072B675 /* DCA-Arboretum.json */,
 				35C8DC0E2191DE940053328C /* DCA-Arboretum.trace.json */,
+				7C12F2D7225B7C310010A931 /* DCA-Arboretum-dummy-faster-route.json */,
 				35CDA88A2190F5120072B675 /* EmptyStyle.json */,
 				355832AA2192F60800141922 /* PipeFittersUnion-FourSeasonsBoston.json */,
 				355832AC2192F7E300141922 /* PipeFittersUnion-FourSeasonsBoston.trace.json */,
@@ -2108,6 +2111,7 @@
 				357DEC44221AEE150019BAEC /* multileg-route.json in Resources */,
 				35C8DBF6219194380053328C /* routeWithTunnels_9thStreetDC.json in Resources */,
 				35C8DBF52191940C0053328C /* straight-line.json in Resources */,
+				7C12F2D8225B7C320010A931 /* DCA-Arboretum-dummy-faster-route.json in Resources */,
 				35C8DC0F2191DE940053328C /* DCA-Arboretum.trace.json in Resources */,
 				35CDA8932190F6980072B675 /* route-with-instructions.json in Resources */,
 				35C8DBF8219198320053328C /* route.json in Resources */,
