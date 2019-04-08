@@ -138,6 +138,9 @@ jobs:
       - run:
           name: Install prerequisites
           command: if [ $(xcversion simulators | grep -cF "iOS << parameters.iOS >> Simulator (installed)") -eq 0 ]; then xcversion simulators --install="iOS << parameters.iOS >>" || true; fi
+      - run:
+          name: pre-start simulator
+          command: xcrun instruments -w "<< parameters.device >> (<< parameters.iOS >>) [" || true
       - *verify-missing-localizable-strings
       - run:
           name: MapboxCoreNavigation
