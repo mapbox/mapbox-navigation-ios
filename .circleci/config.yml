@@ -73,6 +73,9 @@ jobs:
       xcode:
         type: string
         default: "10.2.0"
+      lint:
+        type: boolean
+        default: false
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -90,6 +93,11 @@ jobs:
           steps:
             - run: cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall && pod install --repo-update
       - run: cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall && xcodebuild -workspace PodInstall.xcworkspace -scheme PodInstall -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=iPhone 6 Plus' clean build | xcpretty
+      - when:
+          condition: << parameters.lint >>
+          steps:
+            - run: pod lib lint MapboxCoreNavigation.podspec
+            - run: pod lib lint MapboxNavigation.podspec
       - *save-cache-podmaster
       - *save-cache-cocoapods
 
@@ -187,4 +195,5 @@ workflows:
           update: true
           xcode: "10.2.0"
           iOS: "12.2"
+          lint: true
       - xcode-10-examples
