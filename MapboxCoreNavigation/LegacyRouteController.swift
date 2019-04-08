@@ -478,8 +478,11 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         for voiceInstruction in spokenInstructions {
             if userSnapToStepDistanceFromManeuver <= voiceInstruction.distanceAlongStep || firstInstructionOnFirstStep {
 
+                let currentSpokenInstruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction!
+                delegate?.router?(self, didPassSpokenInstructionPoint: currentSpokenInstruction, routeProgress: routeProgress)
                 NotificationCenter.default.post(name: .routeControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
-                    RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress
+                    RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress,
+                    RouteControllerNotificationUserInfoKey.spokenInstructionKey: currentSpokenInstruction
                 ])
 
                 routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex += 1
