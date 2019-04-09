@@ -5,7 +5,7 @@
 * Fixed compiler warnings in Xcode 10.2 when installing the SDK using CocoaPods. ([#2087](https://github.com/mapbox/mapbox-navigation-ios/pull/2087))
 * Fixed an issue where `RouteControllerNotificationUserInfoKey.isProactiveKey` was not set to `true` in `Notification.Name.routeControllerDidReroute` notifications after proactively rerouting the user. ([#2086](https://github.com/mapbox/mapbox-navigation-ios/pull/2086))
 * Fixed an issue where `LegacyRouteController` failed to call `NavigationServiceDelegate.navigationService(_:didPassSpokenInstructionPoint:routeProgress:)` and omitted `RouteControllerNotificationUserInfoKey.spokenInstructionKey` from `Notification.Name.routeControllerDidPassSpokenInstructionPoint` notifications. ([#2089](https://github.com/mapbox/mapbox-navigation-ios/pull/2089))
-* `NavigationMatchOptions.shapeFormat` now defaults to `.polyline6` for consistency with `NavigationRouteOptions` and compatibility with the `RouteController`. ([#2084](https://github.com/mapbox/mapbox-navigation-ios/pull/2084))
+* `NavigationMatchOptions.shapeFormat` now defaults to `RouteShapeFormat.polyline6` for consistency with `NavigationRouteOptions` and compatibility with the `RouteController`. ([#2084](https://github.com/mapbox/mapbox-navigation-ios/pull/2084))
 
 ## v0.31.0
 
