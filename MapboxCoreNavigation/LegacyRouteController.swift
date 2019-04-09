@@ -475,11 +475,13 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         // Always give the first voice announcement when beginning a leg.
         let firstInstructionOnFirstStep = routeProgress.currentLegProgress.stepIndex == 0 && routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex == 0
 
-        for voiceInstruction in spokenInstructions {
-            if userSnapToStepDistanceFromManeuver <= voiceInstruction.distanceAlongStep || firstInstructionOnFirstStep {
+        for spokenInstruction in spokenInstructions {
+            if userSnapToStepDistanceFromManeuver <= spokenInstruction.distanceAlongStep || firstInstructionOnFirstStep {
 
+                delegate?.router?(self, didPassSpokenInstructionPoint: spokenInstruction, routeProgress: routeProgress)
                 NotificationCenter.default.post(name: .routeControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
-                    RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress
+                    RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress,
+                    RouteControllerNotificationUserInfoKey.spokenInstructionKey: spokenInstruction
                 ])
 
                 routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex += 1
@@ -495,11 +497,10 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         
         for visualInstruction in visualInstructions {
             if userSnapToStepDistanceFromManeuver <= visualInstruction.distanceAlongStep || isFirstLocation {
-                let currentVisualInstruction = currentStepProgress.currentVisualInstruction!
-                delegate?.router?(self, didPassVisualInstructionPoint: currentVisualInstruction, routeProgress: routeProgress)
+                delegate?.router?(self, didPassVisualInstructionPoint: visualInstruction, routeProgress: routeProgress)
                 NotificationCenter.default.post(name: .routeControllerDidPassVisualInstructionPoint, object: self, userInfo: [
                     RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress,
-                    RouteControllerNotificationUserInfoKey.visualInstructionKey: currentVisualInstruction,
+                    RouteControllerNotificationUserInfoKey.visualInstructionKey: visualInstruction,
                 ])
                 currentStepProgress.visualInstructionIndex += 1
                 return
