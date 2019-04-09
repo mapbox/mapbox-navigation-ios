@@ -3,6 +3,7 @@
 ## master
 
 * Fixed a bug where proactive route updates where not reported as such. ([#2086](https://github.com/mapbox/mapbox-navigation-ios/pull/2086))
+* Fixed compiler warnings in Xcode 10.2 when installing the SDK using CocoaPods. ([#2087](https://github.com/mapbox/mapbox-navigation-ios/pull/2087))
 * Uniformise events between `RouteController` and `LegacyRouteController`. `LegacyRouteController` was missing a call to `MapboxNavigationService.router(_:didPassSpokenInstructionPoint:routeProgress:)` and was not passing the `RouteControllerNotificationUserInfoKey.spokenInstructionKey` in `Notification.Name.routeControllerDidPassSpokenInstructionPoint` notification ([#2089](https://github.com/mapbox/mapbox-navigation-ios/pull/2089))
 
 ## v0.31.0
