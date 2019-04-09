@@ -3,6 +3,7 @@
 ## master
 
 * Fixed a bug where proactive route updates where not reported as such. ([#2086](https://github.com/mapbox/mapbox-navigation-ios/pull/2086))
+* Fixed compiler warnings in Xcode 10.2 when installing the SDK using CocoaPods. ([#2087](https://github.com/mapbox/mapbox-navigation-ios/pull/2087))
 
 ## v0.31.0
 
