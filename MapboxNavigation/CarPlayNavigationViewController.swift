@@ -241,7 +241,7 @@ public class CarPlayNavigationViewController: UIViewController {
      
      When this property is true, the map follows the user’s location and rotates when their course changes. Otherwise, the map shows an overview of the route.
      */
-    @objc public var tracksUserCourse: Bool {
+    @objc public dynamic var tracksUserCourse: Bool {
         get {
             return mapView?.tracksUserCourse ?? false
         }
@@ -278,6 +278,7 @@ public class CarPlayNavigationViewController: UIViewController {
     }
     
     public func beginPanGesture() {
+        tracksUserCourse = false
         mapView?.tracksUserCourse = false
         mapView?.enableFrameByFrameCourseViewTracking(for: 1)
     }
