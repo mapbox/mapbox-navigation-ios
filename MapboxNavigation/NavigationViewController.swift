@@ -270,6 +270,7 @@ open class NavigationViewController: UIViewController {
     
     override open func viewDidLoad() {
         super.viewDidLoad()
+        view.accessibilityIdentifier = "NVCRootView"
         // Initialize voice controller if it hasn't been overridden.
         // This is optional and lazy so it can be mutated by the developer after init.
         _ = voiceController

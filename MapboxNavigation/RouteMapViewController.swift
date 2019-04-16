@@ -226,10 +226,15 @@ class RouteMapViewController: UIViewController {
             return banner.view.constraintsForPinning(to: self.navigationView.topBannerContainerView)
         }
         
+        navigationView.topBannerContainerView.accessibilityIdentifier = "topBannerContainerView"
+        
         embed(bottomBanner, in: navigationView.bottomBannerContainerView) { (parent, banner) -> [NSLayoutConstraint] in
             banner.view.translatesAutoresizingMaskIntoConstraints = false
             return banner.view.constraintsForPinning(to: self.navigationView.bottomBannerContainerView)
         }
+          navigationView.bottomBannerContainerView.accessibilityIdentifier = "bottomBannerContainerView"
+        
+        view.bringSubviewToFront(topBannerContainerView)
     }
 
 

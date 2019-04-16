@@ -13,17 +13,39 @@ class TopBannerViewController: ContainerViewController, TapSensitive {
     
     var purpleShown = false
     
-    lazy open var topPaddingView: TopBannerView = .forAutoLayout()
+    lazy open var topPaddingView: TopBannerView =  {
+        let view: TopBannerView = .forAutoLayout()
+        view.accessibilityIdentifier = "topPaddingView"
+        return view
+        }()
     
-    lazy open var purpleContainerView: TopBannerView = .forAutoLayout()
+    lazy open var purpleContainerView: TopBannerView = {
+        let view: TopBannerView = .forAutoLayout()
+        view.accessibilityIdentifier = "purpleContainerView"
+        return view
+    }()
     
-    lazy open var orangeContainerView: TopBannerView = .forAutoLayout()
+    lazy open var orangeContainerView: TopBannerView = {
+        let view: TopBannerView = .forAutoLayout()
+        view.accessibilityIdentifier = "orangeContainerView"
+        return view
+    }()
     
-    lazy open var orange: OrangeViewController = OrangeViewController(delegate: self)
+    lazy open var orange: OrangeViewController = {
+       let vc = OrangeViewController(delegate: self)
+        vc.view.accessibilityIdentifier = "orange"
+        return vc
+    }()
     
-    lazy open var purple: PurpleViewController = PurpleViewController(delegate: self)
+    lazy open var purple: PurpleViewController = {
+       let vc = PurpleViewController(delegate: self)
+        vc.view.accessibilityIdentifier = "purple"
+        return vc
+    }()
     
     var currentChild: TappableContainer?
+    
+    
     
     lazy var orangeContainerConstraints: [NSLayoutConstraint] = {
         let constraints: [NSLayoutConstraint] = [
@@ -35,53 +57,66 @@ class TopBannerViewController: ContainerViewController, TapSensitive {
     }()
     
     lazy var purpleContainerConstraints: [NSLayoutConstraint] = {
-        let constraints: [NSLayoutConstraint] = [
+        return [
             purpleContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            purpleContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            purpleContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ]
-        return constraints
     }()
     
     lazy var purpleHideConstraints: [NSLayoutConstraint] = {
-        let constraints: [NSLayoutConstraint] = [
-            orangeContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        return [
+            //orangeContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            //purpleContainerView.topAnchor.constraint
             purpleContainerView.bottomAnchor.constraint(equalTo: orangeContainerView.bottomAnchor)
         ]
-        return constraints
     }()
     
     lazy var purpleShowConstraints: [NSLayoutConstraint] = {
-        let constraints: [NSLayoutConstraint] = [
+        return [
             purpleContainerView.topAnchor.constraint(equalTo: orangeContainerView.bottomAnchor),
-            purpleContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            view.bottomAnchor.constraint(equalTo: self.parent!.view.bottomAnchor)
+            //purpleContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ]
-        return constraints
     }()
-
     
+//    lazy var bottomConstraint: NSLayoutConstraint = {
+//        return view.bottomAnchor.constraint(equalTo: orangeContainerView.bottomAnchor)
+//    }()
+    var bottomConstraint: NSLayoutConstraint?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.accessibilityIdentifier = "topBannerRoot"
         addSubviews()
-        
+        topPaddingView.accessibilityIdentifier = "green"
         embed(orange, in: orangeContainerView) { (parent, child) -> [NSLayoutConstraint] in
             child.view.translatesAutoresizingMaskIntoConstraints = false
             return self.orange.view.constraintsForPinning(to: self.orangeContainerView)
         }
-        
-        embed(purple, in: purpleContainerView)  { (parent, child) -> [NSLayoutConstraint] in
-            child.view.translatesAutoresizingMaskIntoConstraints = false
-            return self.purple.view.constraintsForPinning(to: self.purpleContainerView)
-        }
+        view.clipsToBounds = false
+//        embed(purple, in: purpleContainerView)  { (parent, child) -> [NSLayoutConstraint] in
+//            child.view.translatesAutoresizingMaskIntoConstraints = false
+//            //return self.purple.view.constraintsForPinning(to: self.purpleContainerView)
+//            return nil
+//        }
+        embed(purple, in: purpleContainerView)
+        purpleContainerView.translatesAutoresizingMaskIntoConstraints = false
+        purple.view.pinInSuperview()
         
         setConstraints()
         
         topPaddingView.backgroundColor = .green
+        
+        NSLayoutConstraint.deactivate(purpleShowConstraints)
+        NSLayoutConstraint.activate(purpleHideConstraints)
+        
+        bottomConstraint = view.bottomAnchor.constraint(equalTo: orangeContainerView.bottomAnchor)
+        bottomConstraint?.isActive = true
     }
     
     override func viewDidAppear(_ animated: Bool) {
         
-        UIApplication.shared.delegate!.window!!.layer.speed = 0.1
+        //UIApplication.shared.delegate!.window!!.layer.speed = 0.1
         
         super.viewDidAppear(animated)
     }
@@ -103,8 +138,6 @@ class TopBannerViewController: ContainerViewController, TapSensitive {
         NSLayoutConstraint.activate(constraints + purpleContainerConstraints + orangeContainerConstraints + purpleHideConstraints)
     }
     
-
-    
     func embed(_ child: UIViewController, in container: UIView, constrainedBy constraints: ((UIViewController, UIViewController) -> [NSLayoutConstraint])? = nil) {
         child.willMove(toParent: self)
         addChild(child)
@@ -117,26 +150,34 @@ class TopBannerViewController: ContainerViewController, TapSensitive {
     
     
     func showPurple() {
-        view.layoutIfNeeded()
+        
         print("Frame! \(purpleContainerView.frame)")
-//        dropDownAnimation(view: purpleContainerView)
+        
         NSLayoutConstraint.deactivate(purpleHideConstraints)
         NSLayoutConstraint.activate(purpleShowConstraints)
         
-        UIView.animate(withDuration: 1.0) {
-            self.view.layoutIfNeeded()
+        bottomConstraint?.isActive = false
+        bottomConstraint = view.bottomAnchor.constraint(equalTo: purpleContainerView.bottomAnchor)
+        bottomConstraint?.isActive = true
+        parent?.view.setNeedsLayout()
+        UIView.animate(withDuration: 1) { [weak self] in
+            self?.parent?.view.layoutIfNeeded()
         }
-        
     }
     
     func hidePurple() {
-        view.layoutIfNeeded()
+        
         NSLayoutConstraint.deactivate(purpleShowConstraints)
         NSLayoutConstraint.activate(purpleHideConstraints)
+        bottomConstraint?.isActive = false
+        bottomConstraint = view.bottomAnchor.constraint(equalTo: orangeContainerView.bottomAnchor)
+        bottomConstraint?.isActive = true
         
-        UIView.animate(withDuration: 1.0, animations: view.superview!.layoutIfNeeded)// ?? view.layoutIfNeeded)
+        parent?.view.setNeedsLayout()
+        UIView.animate(withDuration: 1) { [weak self] in
+            self?.parent?.view.layoutIfNeeded()
+        }
     }
-    
     
     public func dropDownAnimation(view: UIView) {
 //        var frame = view.frame
@@ -212,6 +253,7 @@ class TappableContainer: ContainerViewController {
 class OrangeViewController: TappableContainer {
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.accessibilityIdentifier = "orange"
         view.backgroundColor = .orange
         view.heightAnchor.constraint(equalToConstant: 100).isActive = true
     }
@@ -220,23 +262,8 @@ class OrangeViewController: TappableContainer {
 class PurpleViewController: TappableContainer {
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.accessibilityIdentifier = "purple"
         view.backgroundColor = .purple
-        view.heightAnchor.constraint(equalToConstant: 200).isActive = true
-        
-        let image = UIImage(named: "80px-I-280", in: .mapboxNavigation, compatibleWith: nil)
-        let imageView = UIImageView(image: image)
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(imageView)
-        
-        let constraints = [
-            imageView.heightAnchor.constraint(equalToConstant: 100),
-            imageView.widthAnchor.constraint(equalToConstant: 100),
-            imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ]
-        
-        NSLayoutConstraint.activate(constraints)
-        view.layoutIfNeeded()
-        
+//        view.heightAnchor.constraint(equalToConstant: 200).isActive = true
     }
 }
