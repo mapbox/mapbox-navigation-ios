@@ -25,7 +25,7 @@ open class NavigationRouteOptions: RouteOptions {
         shapeFormat = .polyline6
         includesSteps = true
         routeShapeResolution = .full
-        attributeOptions = [.congestionLevel, .expectedTravelTime]
+        attributeOptions = [.congestionLevel, .expectedTravelTime, .maximumSpeedLimit]
         includesSpokenInstructions = true
         locale = Locale.nationalizedCurrent
         distanceMeasurementSystem = Locale.current.usesMetricSystem ? .metric : .imperial
@@ -79,7 +79,7 @@ open class NavigationMatchOptions: MatchOptions {
         includesSteps = true
         routeShapeResolution = .full
         shapeFormat = .polyline6
-        attributeOptions = [.congestionLevel, .expectedTravelTime]
+        attributeOptions = [.congestionLevel, .expectedTravelTime, .maximumSpeedLimit]
         includesSpokenInstructions = true
         locale = Locale.nationalizedCurrent
         distanceMeasurementSystem = Locale.current.usesMetricSystem ? .metric : .imperial
