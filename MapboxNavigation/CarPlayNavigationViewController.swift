@@ -189,7 +189,7 @@ public class CarPlayNavigationViewController: UIViewController {
         
         if !tracksUserCourse {
             mapView.setContentInset(overviewContentInsets(), animated: false)
-            mapView.fit(to: navigationService.route, facing: 0, padding: .zero, animated: false)
+            mapView.fit(to: navigationService.route, for: mapView.camera, facing: 0, padding: .zero, animated: false)
         }
     }
     
