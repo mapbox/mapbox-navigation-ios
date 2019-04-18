@@ -5,8 +5,10 @@
 * Fixed compiler warnings in Xcode 10.2 when installing the SDK using CocoaPods. ([#2087](https://github.com/mapbox/mapbox-navigation-ios/pull/2087))
 * Fixed an issue where `RouteControllerNotificationUserInfoKey.isProactiveKey` was not set to `true` in `Notification.Name.routeControllerDidReroute` notifications after proactively rerouting the user. ([#2086](https://github.com/mapbox/mapbox-navigation-ios/pull/2086))
 * Fixed an issue where `LegacyRouteController` failed to call `NavigationServiceDelegate.navigationService(_:didPassSpokenInstructionPoint:routeProgress:)` and omitted `RouteControllerNotificationUserInfoKey.spokenInstructionKey` from `Notification.Name.routeControllerDidPassSpokenInstructionPoint` notifications. ([#2089](https://github.com/mapbox/mapbox-navigation-ios/pull/2089))
+* Fixed an issue where `SimulatedLocationManager` would not update its current distance when updating the Router's route. As a result the user puck was being snapped at an invalid location on the new route ([#2096](https://github.com/mapbox/mapbox-navigation-ios/pull/2096))
 * `NavigationMatchOptions.shapeFormat` now defaults to `RouteShapeFormat.polyline6` for consistency with `NavigationRouteOptions` and compatibility with the `RouteController`. ([#2084](https://github.com/mapbox/mapbox-navigation-ios/pull/2084))
 * Fixed an issue where no more route could be requested in case a re-routing request failed when using `LegacyRouteController`. ([#2093](https://github.com/mapbox/mapbox-navigation-ios/pull/2093))
+* Fixed a regression where the puck could float around when standing still or moving backwards. ([#2109](https://github.com/mapbox/mapbox-navigation-ios/pull/2109))
 
 ## v0.31.0
 
