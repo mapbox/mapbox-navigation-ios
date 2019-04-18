@@ -413,6 +413,27 @@ open class RouteLegProgress: NSObject {
     @objc public var currentStepProgress: RouteStepProgress
 
     /**
+     Returns the SpeedLimit object for the current step
+     */
+    @objc public var currentSpeedLimit: SpeedLimit? {
+        return leg.segmentMaximumSpeedLimits?[stepIndex]
+    }
+
+    @objc public var priorSpeedLimit: SpeedLimit? {
+        guard stepIndex - 1 >= 0 else {
+            return nil
+        }
+        return leg.segmentMaximumSpeedLimits?[stepIndex - 1]
+    }
+
+    @objc public var upcomingSpeedLimit: SpeedLimit? {
+        guard stepIndex + 1 < leg.steps.endIndex else {
+            return nil
+        }
+        return leg.segmentMaximumSpeedLimits?[stepIndex + 1]
+    }
+
+    /**
      Intializes a new `RouteLegProgress`.
 
      - parameter leg: Leg on a `Route`.
