@@ -240,6 +240,9 @@ open class RouteProgress: NSObject {
         }
     }
 
+    /**
+     Returns the SpeedLimit for the current position along the route. Returns SpeedLimit.invalid if the speed limit is unknown or missing.
+     */
     public var currentSpeedLimit: SpeedLimit {
         let coordinatesLeftOnStepCount = Int(floor((Double(currentLegProgress.currentStepProgress.step.coordinateCount)) * currentLegProgress.currentStepProgress.fractionTraveled))
 
