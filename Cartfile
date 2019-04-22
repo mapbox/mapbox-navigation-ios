@@ -1,7 +1,5 @@
 binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" ~> 4.3
 binary "https://www.mapbox.com/ios-sdk/MapboxNavigationNative.json" ~> 6.1.1
-# github "https://github.com/avi-c/mapbox/MapboxDirections.swift.git"
-# git "https://github.com/avi-c/MapboxDirections.swift" "maxspeedAnnotations"
 github "mapbox/MapboxDirections.swift" "maxspeedAnnotations"
 github "mapbox/turf-swift" ~> 0.3
 github "mapbox/mapbox-events-ios" ~> 0.8.1
