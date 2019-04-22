@@ -266,6 +266,13 @@
 		AE00A73A209A2C38006A3DC7 /* StepsViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE00A739209A2C38006A3DC7 /* StepsViewControllerTests.swift */; };
 		AE291FFF20975A7E00F23DFC /* NavigationViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED2156E208F7FEA009AA673 /* NavigationViewControllerTests.swift */; };
 		AE46F95520EA735B00537AC2 /* VisualInstruction.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE46F95420EA735B00537AC2 /* VisualInstruction.swift */; };
+		AE54538F2268D7E100AD84F3 /* InstructionsCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE54538E2268D7E100AD84F3 /* InstructionsCardView.swift */; };
+		AE5453912268D99D00AD84F3 /* InstructionsCardStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5453902268D99D00AD84F3 /* InstructionsCardStyle.swift */; };
+		AE5453932268D9FA00AD84F3 /* DayInstructionsCardStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5453922268D9FA00AD84F3 /* DayInstructionsCardStyle.swift */; };
+		AE5453952268DA5D00AD84F3 /* UIColor+InstructionsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5453942268DA5D00AD84F3 /* UIColor+InstructionsCard.swift */; };
+		AE5453972268DB4500AD84F3 /* InstructionsCard+Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5453962268DB4500AD84F3 /* InstructionsCard+Font.swift */; };
+		AE5453992268E54000AD84F3 /* Constants+InstructionsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5453982268E54000AD84F3 /* Constants+InstructionsCard.swift */; };
+		AE54539B2268F3A100AD84F3 /* InstructionsCardCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE54539A2268F3A100AD84F3 /* InstructionsCardCollection.swift */; };
 		AE5F8771209A082500F58FDB /* route-with-banner-instructions.json in Resources */ = {isa = PBXBuildFile; fileRef = AE5F8770209A082500F58FDB /* route-with-banner-instructions.json */; };
 		AE7DE6C421A47A03002653D1 /* CarPlaySearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7DE6C321A47A03002653D1 /* CarPlaySearchController.swift */; };
 		AE7DE6C621A47A23002653D1 /* CarPlaySearchController+ CPSearchTemplateDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7DE6C521A47A23002653D1 /* CarPlaySearchController+ CPSearchTemplateDelegate.swift */; };
@@ -829,6 +836,13 @@
 		8DFD94A32225AF5600152F45 /* TopBannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBannerViewController.swift; sourceTree = "<group>"; };
 		AE00A739209A2C38006A3DC7 /* StepsViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepsViewControllerTests.swift; sourceTree = "<group>"; };
 		AE46F95420EA735B00537AC2 /* VisualInstruction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualInstruction.swift; sourceTree = "<group>"; };
+		AE54538E2268D7E100AD84F3 /* InstructionsCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsCardView.swift; sourceTree = "<group>"; };
+		AE5453902268D99D00AD84F3 /* InstructionsCardStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsCardStyle.swift; sourceTree = "<group>"; };
+		AE5453922268D9FA00AD84F3 /* DayInstructionsCardStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayInstructionsCardStyle.swift; sourceTree = "<group>"; };
+		AE5453942268DA5D00AD84F3 /* UIColor+InstructionsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+InstructionsCard.swift"; sourceTree = "<group>"; };
+		AE5453962268DB4500AD84F3 /* InstructionsCard+Font.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InstructionsCard+Font.swift"; sourceTree = "<group>"; };
+		AE5453982268E54000AD84F3 /* Constants+InstructionsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Constants+InstructionsCard.swift"; sourceTree = "<group>"; };
+		AE54539A2268F3A100AD84F3 /* InstructionsCardCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsCardCollection.swift; sourceTree = "<group>"; };
 		AE5F8770209A082500F58FDB /* route-with-banner-instructions.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-with-banner-instructions.json"; sourceTree = "<group>"; };
 		AE7DE6C321A47A03002653D1 /* CarPlaySearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlaySearchController.swift; sourceTree = "<group>"; };
 		AE7DE6C521A47A23002653D1 /* CarPlaySearchController+ CPSearchTemplateDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CarPlaySearchController+ CPSearchTemplateDelegate.swift"; sourceTree = "<group>"; };
@@ -1471,6 +1485,20 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		AE54538D2268D7B500AD84F3 /* GuidanceCards */ = {
+			isa = PBXGroup;
+			children = (
+				AE54538E2268D7E100AD84F3 /* InstructionsCardView.swift */,
+				AE54539A2268F3A100AD84F3 /* InstructionsCardCollection.swift */,
+				AE5453902268D99D00AD84F3 /* InstructionsCardStyle.swift */,
+				AE5453922268D9FA00AD84F3 /* DayInstructionsCardStyle.swift */,
+				AE5453942268DA5D00AD84F3 /* UIColor+InstructionsCard.swift */,
+				AE5453962268DB4500AD84F3 /* InstructionsCard+Font.swift */,
+				AE5453982268E54000AD84F3 /* Constants+InstructionsCard.swift */,
+			);
+			name = GuidanceCards;
+			sourceTree = "<group>";
+		};
 		C51923B41EA55C5E002AF9E1 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -1525,6 +1553,7 @@
 				35DA85781FC45787004092EC /* StatusView.swift */,
 				8DB63A391FBBCA2200928389 /* RatingControl.swift */,
 				35B5A47D1FFFDCE5000A3C8D /* NavigationViewLayout.swift */,
+				AE54538D2268D7B500AD84F3 /* GuidanceCards */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -2299,8 +2328,10 @@
 				351BEBF11E5BCC63006FE110 /* MGLMapView.swift in Sources */,
 				35D825FC1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m in Sources */,
 				8D3322252200E149001D44AA /* NavigationViewController+Obsolete.swift in Sources */,
+				AE54538F2268D7E100AD84F3 /* InstructionsCardView.swift in Sources */,
 				C51511D120EAC89D00372A91 /* CPMapTemplate.swift in Sources */,
 				353280A11FA72871005175F3 /* InstructionLabel.swift in Sources */,
+				AE5453932268D9FA00AD84F3 /* DayInstructionsCardStyle.swift in Sources */,
 				351BEBFF1E5BCC63006FE110 /* ManeuversStyleKit.swift in Sources */,
 				35D428291FA0B61F00176028 /* InstructionsBannerViewLayout.swift in Sources */,
 				C54C655220336F2600D338E0 /* Constants.swift in Sources */,
@@ -2322,11 +2353,13 @@
 				351BEBF61E5BCC63006FE110 /* RouteMapViewController.swift in Sources */,
 				16A509D7202BC0CA0011D788 /* ImageDownload.swift in Sources */,
 				8DB63A3A1FBBCA2200928389 /* RatingControl.swift in Sources */,
+				AE5453952268DA5D00AD84F3 /* UIColor+InstructionsCard.swift in Sources */,
 				353EC9D71FB09708002EB0AB /* StepsViewController.swift in Sources */,
 				35726EE81F0856E900AFA1B6 /* DayStyle.swift in Sources */,
 				8D9ADEA720A0C61A0067E845 /* GenericRouteShield.swift in Sources */,
 				35DC9D911F4323AA001ECD64 /* LanesView.swift in Sources */,
 				AE7DE6C421A47A03002653D1 /* CarPlaySearchController.swift in Sources */,
+				AE5453992268E54000AD84F3 /* Constants+InstructionsCard.swift in Sources */,
 				359D1B281FFE70D30052FA42 /* NavigationView.swift in Sources */,
 				C5FFAC1520D96F5C009E7F98 /* CarPlayNavigationViewController.swift in Sources */,
 				8DE879661FBB9980002F06C0 /* EndOfRouteViewController.swift in Sources */,
@@ -2342,6 +2375,7 @@
 				8D3322272200E4CA001D44AA /* NavigationOptions.swift in Sources */,
 				C58159011EA6D02700FC6C3D /* MGLVectorTileSource.swift in Sources */,
 				351BEC011E5BCC63006FE110 /* ManeuverView.swift in Sources */,
+				AE5453972268DB4500AD84F3 /* InstructionsCard+Font.swift in Sources */,
 				35B1E2951F1FF8EC00A13D32 /* UserCourseView.swift in Sources */,
 				35B5A47E1FFFDCE5000A3C8D /* NavigationViewLayout.swift in Sources */,
 				8DDBFCA32205016E0064DEBB /* NavigationCustomizable.swift in Sources */,
@@ -2363,6 +2397,7 @@
 				8DEDEF3421E3FBE80049E114 /* NavigationViewControllerDelegate.swift in Sources */,
 				8D5DFFF1207C04840093765A /* NSAttributedString.swift in Sources */,
 				C565168B1FE1E23E00A0AD18 /* MapboxVoiceController.swift in Sources */,
+				AE54539B2268F3A100AD84F3 /* InstructionsCardCollection.swift in Sources */,
 				35CF34B11F0A733200C2692E /* UIFont.swift in Sources */,
 				8DEB4066220CE596008BAAB4 /* NavigationMapViewDelegate.swift in Sources */,
 				359D283C1F9DC14F00FDE9C9 /* UICollectionView.swift in Sources */,
@@ -2371,6 +2406,7 @@
 				35F611C41F1E1C0500C43249 /* FeedbackViewController.swift in Sources */,
 				353AA5601FCEF583009F0384 /* StyleManager.swift in Sources */,
 				35F520C01FB482A200FC9C37 /* NextBannerView.swift in Sources */,
+				AE5453912268D99D00AD84F3 /* InstructionsCardStyle.swift in Sources */,
 				C5A6B2DD1F4CE8E8004260EA /* StyleType.swift in Sources */,
 				C5381F03204E052A00A5493E /* UIDevice.swift in Sources */,
 				351BEC021E5BCC63006FE110 /* UIView.swift in Sources */,

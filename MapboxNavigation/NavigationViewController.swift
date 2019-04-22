@@ -158,6 +158,8 @@ open class NavigationViewController: UIViewController {
     
     var bottomViewController: ContainerViewController?
     
+    var topViewController: ContainerViewController?
+    
     var navigationComponents: [NavigationComponent] {
         var components: [NavigationComponent] = []
         if let mvc = mapViewController {
@@ -165,6 +167,9 @@ open class NavigationViewController: UIViewController {
         }
         if let bottomViewController = bottomViewController {
             components.append(bottomViewController)
+        }
+        if let topViewController = topViewController {
+            components.append(topViewController)
         }
         return components
     }
@@ -223,7 +228,9 @@ open class NavigationViewController: UIViewController {
         }()
         bottomViewController = bottomBanner
 
-        let topBanner = TopBannerViewController(nibName: nil, bundle: nil)
+        let topBanner = InstructionsCardCollection() // TopBannerViewController(nibName: nil, bundle: nil)
+        
+        topViewController = topBanner
         
         let mapViewController = RouteMapViewController(navigationService: self.navigationService, delegate: self, topBanner: topBanner, bottomBanner: bottomBanner)
         
