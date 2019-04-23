@@ -65,6 +65,8 @@ open class DayStyle: Style {
         BottomBannerView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         Button.appearance().textColor = .defaultPrimaryText
         CancelButton.appearance().tintColor = .defaultPrimaryText
+        CarPlayCompassView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        CarPlayCompassView.appearance().cornerRadius = 5
         DismissButton.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         DismissButton.appearance().textColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
         DismissButton.appearance().textFont = UIFont.systemFont(ofSize: 20, weight: .medium).adjustedFont
@@ -181,6 +183,8 @@ open class NightStyle: DayStyle {
         BottomBannerView.appearance().backgroundColor = backgroundColor
         Button.appearance().textColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         CancelButton.appearance().tintColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
+        CarPlayCompassView.appearance().backgroundColor = backgroundColor
+        CarPlayCompassView.appearance().cornerRadius = 5
         DismissButton.appearance().backgroundColor = backgroundColor
         DismissButton.appearance().textColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         DistanceLabel.appearance(whenContainedInInstancesOf: [InstructionsBannerView.self]).unitTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
