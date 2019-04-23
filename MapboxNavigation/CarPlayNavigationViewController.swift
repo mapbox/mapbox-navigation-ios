@@ -139,7 +139,7 @@ public class CarPlayNavigationViewController: UIViewController {
         
         mapViewOverviewRightConstraint = view.rightAnchor.constraint(equalTo: mapView.rightAnchor)
         
-        let compassView: CarPlayCompassView = CarPlayCompassView.rounded(size: CGSize(floatLiteral: 32))
+        let compassView = CarPlayCompassView()
         
         view.addSubview(compassView)
         self.compassView = compassView

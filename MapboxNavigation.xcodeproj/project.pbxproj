@@ -129,6 +129,7 @@
 		35B711D41E5E7AD2001EDA8D /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigation.framework */; };
 		35B7837E1F9547B300291F9A /* Transitioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B7837D1F9547B300291F9A /* Transitioning.swift */; };
 		35B839491E2E3D5D0045A868 /* MBRouteController.m in Sources */ = {isa = PBXBuildFile; fileRef = 35B839481E2E3D5D0045A868 /* MBRouteController.m */; };
+		35BC7178226F6667003BB5F1 /* CompassViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BC7177226F6667003BB5F1 /* CompassViewTests.swift */; };
 		35C11359215BADF900CC2929 /* sthlm-double-back-replay.json in Resources */ = {isa = PBXBuildFile; fileRef = 35C11358215BADF800CC2929 /* sthlm-double-back-replay.json */; };
 		35C57D6A208DD4A200BDD2A6 /* BridgingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C57D69208DD4A200BDD2A6 /* BridgingTests.m */; };
 		35C714B0203B251F00F0C2AE /* MapboxSpeech.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A9DDBD202E12EE007D52DA /* MapboxSpeech.framework */; };
@@ -714,6 +715,7 @@
 		35B711D31E5E7AD2001EDA8D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		35B7837D1F9547B300291F9A /* Transitioning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transitioning.swift; sourceTree = "<group>"; };
 		35B839481E2E3D5D0045A868 /* MBRouteController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBRouteController.m; sourceTree = "<group>"; };
+		35BC7177226F6667003BB5F1 /* CompassViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompassViewTests.swift; sourceTree = "<group>"; };
 		35BF8CA31F28EBD8003F6125 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		35C11358215BADF800CC2929 /* sthlm-double-back-replay.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "sthlm-double-back-replay.json"; sourceTree = "<group>"; };
 		35C57D69208DD4A200BDD2A6 /* BridgingTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BridgingTests.m; sourceTree = "<group>"; };
@@ -1341,6 +1343,7 @@
 				3597ABCF21553B6F00C12785 /* SimulatedLocationManagerTests.swift */,
 				3573EA70215A5A9F009899D7 /* RouteControllerSnapshotTests.swift */,
 				35A43F78223BD836000CB367 /* BridgingTests.m */,
+				35BC7177226F6667003BB5F1 /* CompassViewTests.swift */,
 			);
 			path = MapboxNavigationTests;
 			sourceTree = "<group>";
@@ -2429,6 +2432,7 @@
 				35A262B92050A5CD00AEFF6D /* InstructionsBannerViewSnapshotTests.swift in Sources */,
 				8D5CF3B0215054AF005592D6 /* FBSnapshotTestCase.swift in Sources */,
 				16AC9D11212E356200CECE44 /* CPMapTemplate+MBTestable.mm in Sources */,
+				35BC7178226F6667003BB5F1 /* CompassViewTests.swift in Sources */,
 				3597ABD021553B6F00C12785 /* SimulatedLocationManagerTests.swift in Sources */,
 				35F1F5931FD57EFD00F8E502 /* StyleManagerTests.swift in Sources */,
 				AE00A73A209A2C38006A3DC7 /* StepsViewControllerTests.swift in Sources */,
