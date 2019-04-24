@@ -8,6 +8,7 @@
 * Fixed an issue where `SimulatedLocationManager` would not update its current distance when updating the Router's route. As a result the user puck was being snapped at an invalid location on the new route ([#2096](https://github.com/mapbox/mapbox-navigation-ios/pull/2096))
 * Fixed an issue where user location would incorrecly be unsnapped when the user's course was not available. ([#2092](https://github.com/mapbox/mapbox-navigation-ios/pull/2092))
 * `NavigationMatchOptions.shapeFormat` now defaults to `RouteShapeFormat.polyline6` for consistency with `NavigationRouteOptions` and compatibility with the `RouteController`. ([#2084](https://github.com/mapbox/mapbox-navigation-ios/pull/2084))
+* Fixed an issue where no more route could be requested in case a re-routing request failed when using `LegacyRouteController`. ([#2093](https://github.com/mapbox/mapbox-navigation-ios/pull/2093))
 * Fixed a regression where the puck could float around when standing still or moving backwards. ([#2109](https://github.com/mapbox/mapbox-navigation-ios/pull/2109))
 * Deprecated `CarPlayManager.overviewButton` in favor of `CarPlayManager.userTrackingButton` which now updates the icon correctly when panning out of tracking state. ([#2100](https://github.com/mapbox/mapbox-navigation-ios/pull/2100))
 
