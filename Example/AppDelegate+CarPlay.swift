@@ -58,6 +58,7 @@ extension AppDelegate: CarPlayManagerDelegate {
     // MARK: CarPlayManagerDelegate
     func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith service: NavigationService) {
         currentAppRootViewController?.beginNavigationWithCarplay(navigationService: service)
+        carPlayManager.currentNavigator?.compassView.isHidden = false
     }
     
     func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
