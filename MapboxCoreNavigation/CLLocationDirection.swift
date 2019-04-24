@@ -13,7 +13,7 @@ extension CLLocationDirection {
         return acos((inX * outX + inY * outY) / 1.0) * (180 / .pi)
     }
     
-    public var isQualified: Bool {
+    var isQualified: Bool {
         return self > -1
     }
 }
