@@ -49,6 +49,7 @@ open class CarPlayCompassView: StylableView {
     }
     
     func commonInit() {
+        isHidden = true
         let label = StylableLabel(frame: .zero)
         label.translatesAutoresizingMaskIntoConstraints = false
         addSubview(label)

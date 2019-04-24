@@ -54,7 +54,14 @@ public class CarPlayNavigationViewController: UIViewController {
     var carInterfaceController: CPInterfaceController
     var styleManager: StyleManager?
     
-    weak var compassView: CarPlayCompassView!
+    
+    /**
+     A view indicating what direction the vehicle is traveling towards, snapped
+     to eight cardinal directions in steps of 45°.
+     
+     This view is hidden by default.
+     */
+    @objc weak public var compassView: CarPlayCompassView!
     
     /**
      The interface styles available for display.
@@ -321,7 +328,9 @@ public class CarPlayNavigationViewController: UIViewController {
         let stepEstimates = CPTravelEstimates(distanceRemaining: stepDistance, timeRemaining: stepProgress.durationRemaining)
         carSession.updateEstimates(stepEstimates, for: maneuver)
         
-        compassView.course = location.course
+        if !compassView.isHidden {
+            compassView.course = location.course
+        }
     }
     
     /** Modifies the gesture recognizers to also update the map’s frame rate. */
