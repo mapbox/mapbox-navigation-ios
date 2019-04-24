@@ -217,5 +217,7 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
         
         guard let congestionForRemainingLeg = routeProgress.averageCongestionLevelRemainingOnLeg else { return }
         congestionLevel = congestionForRemainingLeg
+
+        print(routeProgress.currentSpeedLimit.value)
     }
 }
