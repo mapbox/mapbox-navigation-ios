@@ -20,7 +20,7 @@ open class CarPlayCompassView: StylableView {
     @objc
     open var course: CLLocationDirection = 0 {
         didSet {
-            if course.isQualified {
+            if course >= 0 {
                 snappedCourse = course.wrap(min: 0, max: 360)
             }
         }
