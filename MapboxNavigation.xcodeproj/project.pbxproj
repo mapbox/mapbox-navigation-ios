@@ -277,6 +277,7 @@
 		AE7DE6C421A47A03002653D1 /* CarPlaySearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7DE6C321A47A03002653D1 /* CarPlaySearchController.swift */; };
 		AE7DE6C621A47A23002653D1 /* CarPlaySearchController+ CPSearchTemplateDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7DE6C521A47A23002653D1 /* CarPlaySearchController+ CPSearchTemplateDelegate.swift */; };
 		AE997D2221137B8B00EB0AAB /* String+LocalizedConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE997D2121137B8B00EB0AAB /* String+LocalizedConstants.swift */; };
+		AE9F698E2270C08E00BE2A0D /* InstructionsCardViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE9F698D2270C08E00BE2A0D /* InstructionsCardViewLayout.swift */; };
 		AEC3AC9A2106703100A26F34 /* HighwayShield.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC3AC992106703100A26F34 /* HighwayShield.swift */; };
 		C51511D120EAC89D00372A91 /* CPMapTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51511D020EAC89D00372A91 /* CPMapTemplate.swift */; };
 		C51DF8661F38C31C006C6A15 /* Locale.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51DF8651F38C31C006C6A15 /* Locale.swift */; };
@@ -848,6 +849,7 @@
 		AE7DE6C521A47A23002653D1 /* CarPlaySearchController+ CPSearchTemplateDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CarPlaySearchController+ CPSearchTemplateDelegate.swift"; sourceTree = "<group>"; };
 		AE8B1B96207D2B2B003050F6 /* TunnelAuthorityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelAuthorityTests.swift; sourceTree = "<group>"; };
 		AE997D2121137B8B00EB0AAB /* String+LocalizedConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+LocalizedConstants.swift"; sourceTree = "<group>"; };
+		AE9F698D2270C08E00BE2A0D /* InstructionsCardViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsCardViewLayout.swift; sourceTree = "<group>"; };
 		AEC3AC992106703100A26F34 /* HighwayShield.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighwayShield.swift; sourceTree = "<group>"; };
 		AED2156E208F7FEA009AA673 /* NavigationViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewControllerTests.swift; sourceTree = "<group>"; };
 		AEF2C8F12072B603007B061F /* routeWithTunnels_9thStreetDC.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = routeWithTunnels_9thStreetDC.json; sourceTree = "<group>"; };
@@ -1490,6 +1492,7 @@
 			children = (
 				AE54538E2268D7E100AD84F3 /* InstructionsCardView.swift */,
 				AE54539A2268F3A100AD84F3 /* InstructionsCardCollection.swift */,
+				AE9F698D2270C08E00BE2A0D /* InstructionsCardViewLayout.swift */,
 				AE5453902268D99D00AD84F3 /* InstructionsCardStyle.swift */,
 				AE5453922268D9FA00AD84F3 /* DayInstructionsCardStyle.swift */,
 				AE5453942268DA5D00AD84F3 /* UIColor+InstructionsCard.swift */,
@@ -2363,6 +2366,7 @@
 				359D1B281FFE70D30052FA42 /* NavigationView.swift in Sources */,
 				C5FFAC1520D96F5C009E7F98 /* CarPlayNavigationViewController.swift in Sources */,
 				8DE879661FBB9980002F06C0 /* EndOfRouteViewController.swift in Sources */,
+				AE9F698E2270C08E00BE2A0D /* InstructionsCardViewLayout.swift in Sources */,
 				DA0557232154FFB200A1F2AA /* Route.swift in Sources */,
 				8D24A2F62040960C0098CBF8 /* UIEdgeInsets.swift in Sources */,
 				353E3C8F20A3501C00FD1789 /* MGLStyle.swift in Sources */,

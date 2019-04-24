@@ -23,7 +23,7 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
     
     var dayStyle = DayInstructionsCardStyle()
     
-    var instructionsCardView: UICollectionView!
+    var instructionCollectionView: UICollectionView!
     var instructionsCardLayout: InstructionsCardCollectionLayout!
     var isInPreview = false
     
@@ -64,45 +64,45 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
     override open func viewDidLoad() {
         super.viewDidLoad()
         view.accessibilityIdentifier = "topBannerRoot"
-        cardSize = cardCollectionDelegate?.instructionsCardCollection?(self, cardSizeForTraitcollection: traitCollection) ?? CGSize(width: 307.0, height: 100.0)
+        cardSize = cardCollectionDelegate?.instructionsCardCollection?(self, cardSizeForTraitcollection: traitCollection) ?? CGSize(width: 307.0, height: 100.0) // TODO: calculated screen width percentage to detect width of the card size
         
-        view.backgroundColor = .red // .clear
+        view.backgroundColor = .clear
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.heightAnchor.constraint(equalToConstant: cardSize.height).isActive = true
         
         instructionsCardLayout = InstructionsCardCollectionLayout()
         instructionsCardLayout.scrollDirection = .horizontal
         instructionsCardLayout.itemSize = cardSize
         
-        instructionsCardView = UICollectionView(frame: .zero, collectionViewLayout: instructionsCardLayout)
-        instructionsCardView.register(InstructionsCardCell.self, forCellWithReuseIdentifier: "cell")
-        instructionsCardView.contentInset = UIEdgeInsets(top: 0, left: 8.0, bottom: 0, right: 8.0)
-        instructionsCardView.contentOffset = CGPoint(x: -8.0, y: 0.0)
-        instructionsCardView.dataSource = self
-        instructionsCardView.delegate = self
+        instructionCollectionView = UICollectionView(frame: .zero, collectionViewLayout: instructionsCardLayout)
+        instructionCollectionView.register(InstructionsCardCell.self, forCellWithReuseIdentifier: "cell")
+        instructionCollectionView.contentInset = UIEdgeInsets(top: 0, left: 8.0, bottom: 0, right: 8.0)
+        instructionCollectionView.contentOffset = CGPoint(x: -8.0, y: 0.0)
+        instructionCollectionView.dataSource = self
+        instructionCollectionView.delegate = self
         
-        instructionsCardView.showsVerticalScrollIndicator = false
-        instructionsCardView.showsHorizontalScrollIndicator = false
-        instructionsCardView.backgroundColor = .clear
-        instructionsCardView.isPagingEnabled = true
+        instructionCollectionView.showsVerticalScrollIndicator = false
+        instructionCollectionView.showsHorizontalScrollIndicator = false
+        instructionCollectionView.backgroundColor = .clear
+        instructionCollectionView.isPagingEnabled = true
         
         addSubviews()
         setConstraints()
         
         view.clipsToBounds = false
-        topPaddingView.backgroundColor = .green
+        topPaddingView.backgroundColor = .clear
         
-        instructionsCardView.translatesAutoresizingMaskIntoConstraints = false
-        instructionsCardView.topAnchor.constraint(equalTo: topPaddingView.bottomAnchor).isActive = true
-        instructionsCardView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        instructionsCardView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        instructionsCardView.heightAnchor.constraint(equalToConstant: cardSize.height).isActive = true
+        instructionCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        instructionCollectionView.topAnchor.constraint(equalTo: topPaddingView.bottomAnchor).isActive = true
+        instructionCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        instructionCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        instructionCollectionView.heightAnchor.constraint(equalToConstant: cardSize.height).isActive = true
+        instructionCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
-        instructionsCardView.isHidden = false
+        instructionCollectionView.isHidden = false
     }
     
     func addSubviews() {
-        [topPaddingView, instructionsCardView].forEach(view.addSubview(_:))
+        [topPaddingView, instructionCollectionView].forEach(view.addSubview(_:))
     }
     
     func setConstraints() {
@@ -124,8 +124,8 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
     }
     
     func update(steps: [RouteStep]) {
-        instructionsCardView.contentSize = calculateNeededSpace(count: steps.count)
-        instructionsCardView.reloadData()
+        instructionCollectionView.contentSize = calculateNeededSpace(count: steps.count)
+        instructionCollectionView.reloadData()
     }
     
     func refresh() {
@@ -155,7 +155,7 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
     
     fileprivate func updateDistancesOnCards() {
         _ = distancesFromCurrentLocationToManeuver?.enumerated().map { (index, distance) in
-            if let card = instructionsCard(at: IndexPath(row: index, section: 0)) {
+            if let card = instructionsCardView(at: IndexPath(row: index, section: 0)) {
                 card.distanceFromCurrentLocation = distance
                 card.isActive = distance < card.highlightDistance
             }
@@ -164,7 +164,7 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
     
     func updateInstruction(for step: RouteStep) {
         guard let progress   = routeProgress,
-            let activeCard = instructionsCard(at: IndexPath(row: 0, section: 0)) else { return }
+            let activeCard = instructionsCardView(at: IndexPath(row: 0, section: 0)) else { return }
         
         if !progress.currentLegProgress.isCurrentStep(activeCard.step) {
             isSnapAndRemove = true
@@ -173,7 +173,7 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
     }
     
     func snapToIndex(index: IndexPath) {
-        let itemCount = collectionView(instructionsCardView, numberOfItemsInSection: 0)
+        let itemCount = collectionView(instructionCollectionView, numberOfItemsInSection: 0)
         guard itemCount >= 0 && index.row < itemCount else { return }
         instructionsCardLayout.collectionView?.scrollToItem(at: index, at: .left, animated: true)
     }
@@ -187,14 +187,14 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
             guard let currentStep = routeProgress?.currentLegProgress.currentStep else { return }
             guard let stepIndex = steps.index(of: currentStep) else { return }
             self.steps = Array(steps.suffix(from: stepIndex))
-            instructionsCardView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .left, animated: false)
+            instructionCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .left, animated: false)
         } else {
             snapToIndex(index: IndexPath(row: 0, section: 0))
         }
     }
     
-    fileprivate func instructionsCard(at index: IndexPath) -> InstructionsCardView? {
-        let cell = instructionsCardView.cellForItem(at: index)
+    fileprivate func instructionsCardView(at index: IndexPath) -> InstructionsCardView? {
+        let cell = instructionCollectionView.cellForItem(at: index)
         
         if cell?.subviews.count == 0 {
             return nil
@@ -208,7 +208,7 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
         return CGSize(width: cardSize.width * CGFloat(count), height: cardSize.height)
     }
     
-    fileprivate func calculateIndexToSnapToo() -> IndexPath {
+    fileprivate func calculateIndexToSnapTo() -> IndexPath {
         guard let collectionView = instructionsCardLayout.collectionView,
             let itemCount      = steps?.count else { return IndexPath(row: 0, section: 0) }
         
@@ -229,13 +229,13 @@ extension InstructionsCardCollection: UICollectionViewDelegate {
                 var mutatedSteps = Array(steps)
                 mutatedSteps.remove(at: 0)
                 self.steps = mutatedSteps
-                instructionsCardView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .left, animated: false)
+                instructionCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .left, animated: false)
             }
         }
     }
     
     public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        indexBeforeSwipe = calculateIndexToSnapToo()
+        indexBeforeSwipe = calculateIndexToSnapTo()
         contentOffsetBeforeSwipe = scrollView.contentOffset
     }
     
@@ -314,14 +314,16 @@ extension InstructionsCardCollection: UICollectionViewDataSource {
             instructionsCard.isActive = distance < instructionsCard.highlightDistance
         }
         
-        instructionsCard.isHidden = false
-        cell.isHidden = false
+        instructionsCard.accessibilityIdentifier = "InstructionsCard"
+        cell.accessibilityIdentifier = "InstructionsCardCollectionCell"
         cell.addSubview(instructionsCard)
-        instructionsCard.pinInSuperview()
         
         // this helps us show a shadow
+        instructionsCard.translatesAutoresizingMaskIntoConstraints = false
         instructionsCard.topAnchor.constraint(equalTo: cell.topAnchor, constant: 2).isActive = true
+        instructionsCard.leadingAnchor.constraint(equalTo: cell.leadingAnchor).isActive = true
         instructionsCard.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -2).isActive = true
+        instructionsCard.trailingAnchor.constraint(equalTo: cell.trailingAnchor).isActive = true
         
         return cell
     }

@@ -72,8 +72,6 @@ open class InstructionsCardView: BaseInstructionsBannerView, NavigationComponent
     fileprivate func prepareManeuver(_ style: InstructionsCardStyle) {
         maneuverView.primaryColor = style.maneuverViewPrimaryColor
         maneuverView.secondaryColor = style.maneuverViewSecondaryColor
-        maneuverView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        maneuverView.heightAnchor.constraint(equalToConstant: BaseInstructionsBannerView.maneuverViewSize.height).isActive = true
     }
     
     fileprivate func prepareDistance(_ style: InstructionsCardStyle) {
@@ -87,18 +85,11 @@ open class InstructionsCardView: BaseInstructionsBannerView, NavigationComponent
     fileprivate func preparePrimaryLabel(_ style: InstructionsCardStyle) {
         primaryLabel.normalFont = style.primaryLabelNormalFont
         primaryLabel.normalTextColor = style.primaryLabelTextColor
-        
-        primaryLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: InstructionsCardConstants.primaryLabelWidth).isActive = true
-        primaryLabel.leadingAnchor.constraint(equalTo: maneuverView.trailingAnchor,
-                                              constant: InstructionsCardConstants.primaryLabelLeadingPadding).isActive = true
     }
     
     fileprivate func prepareSecondaryLabel(_ style: InstructionsCardStyle) {
         secondaryLabel.normalFont = style.secondaryLabelNormalFont
         secondaryLabel.normalTextColor = style.secondaryLabelTextColor
-        
-        secondaryLabel.widthAnchor.constraint(lessThanOrEqualToConstant: InstructionsCardConstants.secondaryLabelWidth).isActive = true
-        secondaryLabel.leadingAnchor.constraint(equalTo: maneuverView.trailingAnchor).isActive = true
     }
     
     fileprivate func prepareCardDeck(_ style: InstructionsCardStyle) {
@@ -136,4 +127,3 @@ open class InstructionsCardView: BaseInstructionsBannerView, NavigationComponent
         })
     }
 }
-

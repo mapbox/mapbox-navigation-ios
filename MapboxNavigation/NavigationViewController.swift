@@ -228,8 +228,7 @@ open class NavigationViewController: UIViewController {
         }()
         bottomViewController = bottomBanner
 
-        let topBanner = InstructionsCardCollection() // TopBannerViewController(nibName: nil, bundle: nil)
-        
+        let topBanner = InstructionsCardCollection()
         topViewController = topBanner
         
         let mapViewController = RouteMapViewController(navigationService: self.navigationService, delegate: self, topBanner: topBanner, bottomBanner: bottomBanner)
