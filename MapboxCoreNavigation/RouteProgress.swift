@@ -173,6 +173,8 @@ open class RouteProgress: NSObject {
      */
     public var maximumSpeedLimitsByLeg: [[[SpeedLimit]]] = []
 
+    private var speedLimitDistancesByLeg = [[[(SpeedLimit, CLLocationDistance)]]]()
+
     /**
      Intializes a new `RouteProgress`.
 
@@ -187,6 +189,7 @@ open class RouteProgress: NSObject {
 
         for (legIndex, leg) in route.legs.enumerated() {
             var maximumSpeedLimitsByStep: [[SpeedLimit]] = []
+            var maximumSpeedLimitDistanceByStep: [[(SpeedLimit, CLLocationDistance)]] = []
             var maneuverCoordinateIndex = 0
 
             congestionTimesPerStep.append([])
@@ -194,19 +197,17 @@ open class RouteProgress: NSObject {
             /// An index into the route’s coordinates and congestionTravelTimesSegmentsByStep that corresponds to a step’s maneuver location.
             var congestionTravelTimesSegmentsByLeg: [[TimedCongestionLevel]] = []
 
-            if let segmentCongestionLevels = leg.segmentCongestionLevels, let expectedSegmentTravelTimes = leg.expectedSegmentTravelTimes {
+            for step in leg.steps {
+                guard let coordinates = step.coordinates else { continue }
+                let stepCoordinateCount = step.maneuverType == .arrive ? Int(step.coordinateCount) : coordinates.dropLast().count
+                let nextManeuverCoordinateIndex = maneuverCoordinateIndex + stepCoordinateCount - 1
 
-                for step in leg.steps {
-                    guard let coordinates = step.coordinates else { continue }
-                    let stepCoordinateCount = step.maneuverType == .arrive ? Int(step.coordinateCount) : coordinates.dropLast().count
-                    let nextManeuverCoordinateIndex = maneuverCoordinateIndex + stepCoordinateCount - 1
+                if let segmentCongestionLevels = leg.segmentCongestionLevels, let expectedSegmentTravelTimes = leg.expectedSegmentTravelTimes {
+                    let stepSegmentCongestionLevels = Array(segmentCongestionLevels[maneuverCoordinateIndex..<nextManeuverCoordinateIndex])
+                    let stepSegmentTravelTimes = Array(expectedSegmentTravelTimes[maneuverCoordinateIndex..<nextManeuverCoordinateIndex])
 
                     guard nextManeuverCoordinateIndex < segmentCongestionLevels.count else { continue }
                     guard nextManeuverCoordinateIndex < expectedSegmentTravelTimes.count else { continue }
-
-                    let stepSegmentCongestionLevels = Array(segmentCongestionLevels[maneuverCoordinateIndex..<nextManeuverCoordinateIndex])
-                    let stepSegmentTravelTimes = Array(expectedSegmentTravelTimes[maneuverCoordinateIndex..<nextManeuverCoordinateIndex])
-                    maneuverCoordinateIndex = nextManeuverCoordinateIndex
 
                     let stepTimedCongestionLevels = Array(zip(stepSegmentCongestionLevels, stepSegmentTravelTimes))
                     congestionTravelTimesSegmentsByLeg.append(stepTimedCongestionLevels)
@@ -217,26 +218,32 @@ open class RouteProgress: NSObject {
 
                     congestionTimesPerStep[legIndex].append(stepCongestionValues)
                 }
-            }
 
-            congestionTravelTimesSegmentsByStep.append(congestionTravelTimesSegmentsByLeg)
-
-            maneuverCoordinateIndex = 0
-            if let segmentMaximumSpeedLimits = leg.segmentMaximumSpeedLimits {
-                for step in leg.steps {
-                    guard let coordinates = step.coordinates else { continue }
-                    let stepCoordinateCount = step.maneuverType == .arrive ? Int(step.coordinateCount) : coordinates.dropLast().count
-                    let nextManeuverCoordinateIndex = maneuverCoordinateIndex + stepCoordinateCount - 1
-
+                if let segmentMaximumSpeedLimits = leg.segmentMaximumSpeedLimits {
                     guard nextManeuverCoordinateIndex < segmentMaximumSpeedLimits.count else { continue }
 
                     let stepSegmentMaximumSpeedLimits = Array(segmentMaximumSpeedLimits[maneuverCoordinateIndex..<nextManeuverCoordinateIndex])
-                    maneuverCoordinateIndex = nextManeuverCoordinateIndex
                     maximumSpeedLimitsByStep.append(stepSegmentMaximumSpeedLimits)
+
+                    let polyline = Polyline(coordinates)
+                    let initialCoordinate = coordinates.first
+                    var maximumSpeedPerCoordinate: [(SpeedLimit, CLLocationDistance)] = []
+
+                    for (index, speedLimit) in stepSegmentMaximumSpeedLimits.enumerated() {
+                        let currentCoordinate = coordinates[index]
+                        let distanceTraveled = polyline.distance(from: initialCoordinate, to: currentCoordinate)
+                        maximumSpeedPerCoordinate.append((speedLimit, distanceTraveled))
+                    }
+
+                    maximumSpeedLimitDistanceByStep.append(maximumSpeedPerCoordinate)
                 }
+
+                maneuverCoordinateIndex = nextManeuverCoordinateIndex
             }
 
+            congestionTravelTimesSegmentsByStep.append(congestionTravelTimesSegmentsByLeg)
             maximumSpeedLimitsByLeg.append(maximumSpeedLimitsByStep)
+            speedLimitDistancesByLeg.append(maximumSpeedLimitDistanceByStep)
         }
     }
 
@@ -244,17 +251,13 @@ open class RouteProgress: NSObject {
      Returns the SpeedLimit for the current position along the route. Returns SpeedLimit.invalid if the speed limit is unknown or missing.
      */
     public var currentSpeedLimit: SpeedLimit {
-        let coordinatesLeftOnStepCount = Int(floor((Double(currentLegProgress.currentStepProgress.step.coordinateCount)) * currentLegProgress.currentStepProgress.fractionTraveled))
 
-        guard coordinatesLeftOnStepCount >= 0, legIndex < maximumSpeedLimitsByLeg.count, currentLegProgress.stepIndex < maximumSpeedLimitsByLeg[legIndex].count, let coordinates = currentLegProgress.currentStepProgress.step.coordinates else { return SpeedLimit.invalid }
-
-        let indexedCoordinate = LineString(coordinates).indexedCoordinateFromStart(distance: currentLegProgress.currentStepProgress.distanceTraveled)
-
-        guard let index = indexedCoordinate?.index, index < maximumSpeedLimitsByLeg[legIndex][currentLegProgress.stepIndex].count else { return SpeedLimit.invalid }
-
-        let speedLimit = maximumSpeedLimitsByLeg[legIndex][currentLegProgress.stepIndex][index]
-
-        return speedLimit
+        let speedLimits = speedLimitDistancesByLeg[legIndex][currentLegProgress.stepIndex]
+        let lastSpeedLimitTuple = speedLimits.last { $0.1 <= currentLegProgress.currentStepProgress.distanceTraveled }
+        if let lastSpeedLimitTuple = lastSpeedLimitTuple {
+            return lastSpeedLimitTuple.0
+        }
+        return .invalid
     }
 
     public var averageCongestionLevelRemainingOnLeg: CongestionLevel? {
