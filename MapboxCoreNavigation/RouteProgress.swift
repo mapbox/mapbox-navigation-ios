@@ -169,11 +169,14 @@ open class RouteProgress: NSObject {
     public var congestionTimesPerStep: [[[CongestionLevel: TimeInterval]]]  = [[[:]]]
 
     /**
-     An array containing speed limits on the route broken up by leg and then step.
+     Tuple containing a `SpeedLimit` and a corresponding `CLLocationDistance` representing the position of the SpeedLimit along the current route step
      */
-    public var maximumSpeedLimitsByLeg: [[[SpeedLimit]]] = []
+    public typealias PositionedSpeedLimit = (SpeedLimit, CLLocationDistance)
 
-    private var speedLimitDistancesByLeg = [[[(SpeedLimit, CLLocationDistance)]]]()
+    /**
+     An array containing speed limits on the route broken up by route leg and then step.
+     */
+    public var positionedSpeedLimitsByStep = [[[PositionedSpeedLimit]]]()
 
     /**
      Intializes a new `RouteProgress`.
@@ -189,7 +192,7 @@ open class RouteProgress: NSObject {
 
         for (legIndex, leg) in route.legs.enumerated() {
             var maximumSpeedLimitsByStep: [[SpeedLimit]] = []
-            var maximumSpeedLimitDistanceByStep: [[(SpeedLimit, CLLocationDistance)]] = []
+            var maximumSpeedLimitDistanceByStep: [[PositionedSpeedLimit]] = []
             var maneuverCoordinateIndex = 0
 
             congestionTimesPerStep.append([])
@@ -225,14 +228,16 @@ open class RouteProgress: NSObject {
                     let stepSegmentMaximumSpeedLimits = Array(segmentMaximumSpeedLimits[maneuverCoordinateIndex..<nextManeuverCoordinateIndex])
                     maximumSpeedLimitsByStep.append(stepSegmentMaximumSpeedLimits)
 
-                    let polyline = Polyline(coordinates)
-                    let initialCoordinate = coordinates.first
-                    var maximumSpeedPerCoordinate: [(SpeedLimit, CLLocationDistance)] = []
+                    var totalDistanceTraveled = CLLocationDistance.zero
+                    var previousCoordinate = coordinates.first!
+                    var maximumSpeedPerCoordinate: [PositionedSpeedLimit] = []
 
                     for (index, speedLimit) in stepSegmentMaximumSpeedLimits.enumerated() {
                         let currentCoordinate = coordinates[index]
-                        let distanceTraveled = polyline.distance(from: initialCoordinate, to: currentCoordinate)
-                        maximumSpeedPerCoordinate.append((speedLimit, distanceTraveled))
+                        let distanceTraveled = previousCoordinate.distance(to: currentCoordinate)
+                        totalDistanceTraveled += distanceTraveled
+                        maximumSpeedPerCoordinate.append((speedLimit, totalDistanceTraveled))
+                        previousCoordinate = currentCoordinate
                     }
 
                     maximumSpeedLimitDistanceByStep.append(maximumSpeedPerCoordinate)
@@ -242,8 +247,7 @@ open class RouteProgress: NSObject {
             }
 
             congestionTravelTimesSegmentsByStep.append(congestionTravelTimesSegmentsByLeg)
-            maximumSpeedLimitsByLeg.append(maximumSpeedLimitsByStep)
-            speedLimitDistancesByLeg.append(maximumSpeedLimitDistanceByStep)
+            positionedSpeedLimitsByStep.append(maximumSpeedLimitDistanceByStep)
         }
     }
 
@@ -252,7 +256,7 @@ open class RouteProgress: NSObject {
      */
     public var currentSpeedLimit: SpeedLimit {
 
-        let speedLimits = speedLimitDistancesByLeg[legIndex][currentLegProgress.stepIndex]
+        let speedLimits = positionedSpeedLimitsByStep[legIndex][currentLegProgress.stepIndex]
         let lastSpeedLimitTuple = speedLimits.last { $0.1 <= currentLegProgress.currentStepProgress.distanceTraveled }
         if let lastSpeedLimitTuple = lastSpeedLimitTuple {
             return lastSpeedLimitTuple.0
