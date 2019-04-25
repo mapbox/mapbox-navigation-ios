@@ -68,7 +68,9 @@ class OfflineRoutingTests: XCTestCase {
         
         directions.calculate(options, offline: true) { (waypoints, routes, error) in
             XCTAssertNotNil(error)
-            XCTAssertEqual(error!.localizedDescription, "No suitable edges near location")
+            let validErrors = ["No suitable edges near location", "Unknown Routing Error"]
+            let validError = validErrors.contains(error!.localizedDescription)
+            XCTAssertTrue(validError)
             XCTAssertNil(routes)
             XCTAssertNil(waypoints)
             calculateRouteExpectation.fulfill()
