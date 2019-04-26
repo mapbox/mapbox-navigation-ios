@@ -228,7 +228,7 @@ open class RouteProgress: NSObject {
                     let stepSegmentMaximumSpeedLimits = Array(segmentMaximumSpeedLimits[maneuverCoordinateIndex..<nextManeuverCoordinateIndex])
                     maximumSpeedLimitsByStep.append(stepSegmentMaximumSpeedLimits)
 
-                    var totalDistanceTraveled = CLLocationDistance.zero
+                    var totalDistanceTraveled = 0.0
                     var previousCoordinate = coordinates.first!
                     var maximumSpeedPerCoordinate: [PositionedSpeedLimit] = []
 
