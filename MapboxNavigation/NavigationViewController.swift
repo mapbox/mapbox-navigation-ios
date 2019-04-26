@@ -411,6 +411,10 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
     @objc public func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
         return delegate?.label?(label, willPresent: instruction, as: presented)
     }
+    
+    @objc func mapViewControllerDidRecenter(_ mapViewController: RouteMapViewController) {
+        
+    }
 }
 
 //MARK: - NavigationServiceDelegate

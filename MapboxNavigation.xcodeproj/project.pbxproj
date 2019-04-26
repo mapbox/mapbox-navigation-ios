@@ -278,6 +278,7 @@
 		AE7DE6C621A47A23002653D1 /* CarPlaySearchController+ CPSearchTemplateDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7DE6C521A47A23002653D1 /* CarPlaySearchController+ CPSearchTemplateDelegate.swift */; };
 		AE997D2221137B8B00EB0AAB /* String+LocalizedConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE997D2121137B8B00EB0AAB /* String+LocalizedConstants.swift */; };
 		AE9F698E2270C08E00BE2A0D /* InstructionsCardViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE9F698D2270C08E00BE2A0D /* InstructionsCardViewLayout.swift */; };
+		AE9F69902272543000BE2A0D /* NavigationInteractionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE9F698F2272542F00BE2A0D /* NavigationInteractionDelegate.swift */; };
 		AEC3AC9A2106703100A26F34 /* HighwayShield.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC3AC992106703100A26F34 /* HighwayShield.swift */; };
 		C51511D120EAC89D00372A91 /* CPMapTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51511D020EAC89D00372A91 /* CPMapTemplate.swift */; };
 		C51DF8661F38C31C006C6A15 /* Locale.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51DF8651F38C31C006C6A15 /* Locale.swift */; };
@@ -850,6 +851,7 @@
 		AE8B1B96207D2B2B003050F6 /* TunnelAuthorityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelAuthorityTests.swift; sourceTree = "<group>"; };
 		AE997D2121137B8B00EB0AAB /* String+LocalizedConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+LocalizedConstants.swift"; sourceTree = "<group>"; };
 		AE9F698D2270C08E00BE2A0D /* InstructionsCardViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsCardViewLayout.swift; sourceTree = "<group>"; };
+		AE9F698F2272542F00BE2A0D /* NavigationInteractionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationInteractionDelegate.swift; sourceTree = "<group>"; };
 		AEC3AC992106703100A26F34 /* HighwayShield.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighwayShield.swift; sourceTree = "<group>"; };
 		AED2156E208F7FEA009AA673 /* NavigationViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewControllerTests.swift; sourceTree = "<group>"; };
 		AEF2C8F12072B603007B061F /* routeWithTunnels_9thStreetDC.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = routeWithTunnels_9thStreetDC.json; sourceTree = "<group>"; };
@@ -1436,6 +1438,7 @@
 			children = (
 				8DCB4247218A540A00D6FCAD /* NavigationComponent.swift */,
 				8DDBFCA22205016E0064DEBB /* NavigationCustomizable.swift */,
+				AE9F698F2272542F00BE2A0D /* NavigationInteractionDelegate.swift */,
 			);
 			name = Protocols;
 			sourceTree = "<group>";
@@ -2379,6 +2382,7 @@
 				8D3322272200E4CA001D44AA /* NavigationOptions.swift in Sources */,
 				C58159011EA6D02700FC6C3D /* MGLVectorTileSource.swift in Sources */,
 				351BEC011E5BCC63006FE110 /* ManeuverView.swift in Sources */,
+				AE9F69902272543000BE2A0D /* NavigationInteractionDelegate.swift in Sources */,
 				AE5453972268DB4500AD84F3 /* InstructionsCard+Font.swift in Sources */,
 				35B1E2951F1FF8EC00A13D32 /* UserCourseView.swift in Sources */,
 				35B5A47E1FFFDCE5000A3C8D /* NavigationViewLayout.swift in Sources */,

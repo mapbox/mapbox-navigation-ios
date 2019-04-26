@@ -346,6 +346,7 @@ class RouteMapViewController: UIViewController {
         // always remove preview index when we recenter
         currentPreviewInstructionBannerStepIndex = nil
         
+        delegate?.mapViewControllerDidRecenter(self)
 //        removePreviewInstructions()
     }
 
@@ -1086,4 +1087,6 @@ internal extension UIView.AnimationOptions {
      - return: The road name to display in the label, or the empty string to hide the label, or nil to query the map’s vector tiles for the road name.
      */
     @objc func mapViewController(_ mapViewController: RouteMapViewController, roadNameAt location: CLLocation) -> String?
+    
+    @objc func mapViewControllerDidRecenter(_ mapViewController: RouteMapViewController)
 }
