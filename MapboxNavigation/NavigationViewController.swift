@@ -413,7 +413,10 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
     }
     
     @objc func mapViewControllerDidRecenter(_ mapViewController: RouteMapViewController) {
-        
+        guard let instructionsCardCollection = topViewController as? InstructionsCardCollection else {
+            return
+        }
+        instructionsCardCollection.stopPreview()
     }
 }
 
