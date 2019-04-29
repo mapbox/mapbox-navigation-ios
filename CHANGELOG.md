@@ -10,6 +10,9 @@
 * `NavigationMatchOptions.shapeFormat` now defaults to `RouteShapeFormat.polyline6` for consistency with `NavigationRouteOptions` and compatibility with the `RouteController`. ([#2084](https://github.com/mapbox/mapbox-navigation-ios/pull/2084))
 * Fixed an issue where no more route could be requested in case a re-routing request failed when using `LegacyRouteController`. ([#2093](https://github.com/mapbox/mapbox-navigation-ios/pull/2093))
 * Fixed a regression where the puck could float around when standing still or moving backwards. ([#2109](https://github.com/mapbox/mapbox-navigation-ios/pull/2109))
+
+### CarPlay
+* Fixed issue where the Leg estimates (ETA, Distance Remaining, Time Remaining) were showing on CarPlay instead of Route estimates, as intended.
 * Deprecated `CarPlayManager.overviewButton` in favor of `CarPlayManager.userTrackingButton` which now updates the icon correctly when panning out of tracking state. ([#2100](https://github.com/mapbox/mapbox-navigation-ios/pull/2100))
 
 ## v0.31.0
