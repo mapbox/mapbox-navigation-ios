@@ -27,16 +27,17 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
     var instructionsCardLayout: InstructionsCardCollectionLayout!
     var isInPreview = false
     
-    var route: Route? {
+    var steps: [RouteStep]? {
         didSet {
-            steps = route?.steps
+            update(steps: modifiedSteps ?? [])
         }
     }
     
-    var steps: [RouteStep]? {
-        didSet {
-            update(steps: steps ?? [])
-        }
+    var modifiedSteps: [RouteStep]? {
+        guard let stepIndex = routeProgress?.currentLegProgress.stepIndex, let steps = steps else { return nil }
+        var mutatedSteps = Array(steps.suffix(from: stepIndex))
+        mutatedSteps.removeLast()
+        return mutatedSteps
     }
     
     var routeProgress: RouteProgress? {
@@ -106,36 +107,43 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
     }
     
     func setConstraints() {
-        let constraints: [NSLayoutConstraint] = [
+        let topPaddingConstraints: [NSLayoutConstraint] = [
             topPaddingView.topAnchor.constraint(equalTo: view.topAnchor),
             topPaddingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             topPaddingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             topPaddingView.bottomAnchor.constraint(equalTo: view.safeTopAnchor),
-            
             ]
         
-        NSLayoutConstraint.activate(constraints)
+        NSLayoutConstraint.activate(topPaddingConstraints)
     }
     
+    /// TODO: Use location to calculate the distance to upcoming maneuver.
     public func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
-        route = progress.route
+        steps = progress.currentLeg.steps
         routeProgress = progress
-        
+        updateInstruction(for: progress)
+        advanceLegIndex(for: progress)
+    }
+    
+    fileprivate func advanceLegIndex(for routeProgress: RouteProgress) {
+        guard routeProgress.currentLegProgress.userHasArrivedAtWaypoint, !routeProgress.isFinalLeg else { return }
+        routeProgress.legIndex += 1
     }
     
     func update(steps: [RouteStep]) {
         instructionCollectionView.contentSize = calculateNeededSpace(count: steps.count)
         instructionCollectionView.reloadData()
+        instructionCollectionView.layoutIfNeeded()
     }
     
-    func refresh() {
-        guard let progress = routeProgress else { return }
-        
-        var remainingSteps = progress.remainingSteps
-        _ = remainingSteps.popLast() // ignore last step
-        
-        steps = [progress.currentLegProgress.currentStep] + remainingSteps
-    }
+//    func refresh() {
+//        guard let progress = routeProgress else { return }
+//
+//        var remainingSteps = progress.remainingSteps
+//        _ = remainingSteps.popLast() // ignore last step
+//
+//        steps = [progress.currentLegProgress.currentStep] + remainingSteps
+//    }
     
     func didTap(_ source: TappableContainer) {
         
@@ -143,10 +151,9 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
     
     fileprivate func updateDistances() {
         guard let progress = routeProgress else { return }
-        
         let distanceRemaining = progress.currentLegProgress.currentStepProgress.distanceRemaining
         let distanceBetweenSteps = [distanceRemaining] + progress.remainingSteps.map {$0.distance}
-        distancesFromCurrentLocationToManeuver = steps?.enumerated().map { (index, _) in
+        distancesFromCurrentLocationToManeuver = modifiedSteps?.enumerated().map { (index, _) in
             let safeIndex = index < distanceBetweenSteps.endIndex ? index : distanceBetweenSteps.endIndex - 1
             let cardDistance = distanceBetweenSteps[0...safeIndex].reduce(0, +)
             return cardDistance > 5 ? cardDistance : 0
@@ -162,20 +169,18 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
         }
     }
     
-    func updateInstruction(for step: RouteStep) {
-        guard let progress   = routeProgress,
-            let activeCard = instructionsCardView(at: IndexPath(row: 0, section: 0)) else { return }
-        
+    func updateInstruction(for progress: RouteProgress) {
+        guard let activeCard = instructionsCardView(at: IndexPath(row: 0, section: 0)) else { return }
         if !progress.currentLegProgress.isCurrentStep(activeCard.step) {
             isSnapAndRemove = true
             snapToIndex(index: IndexPath(row: 1, section: 0))
         }
     }
     
-    func snapToIndex(index: IndexPath) {
+    func snapToIndex(index indexPath: IndexPath) {
         let itemCount = collectionView(instructionCollectionView, numberOfItemsInSection: 0)
-        guard itemCount >= 0 && index.row < itemCount else { return }
-        instructionsCardLayout.collectionView?.scrollToItem(at: index, at: .left, animated: true)
+        guard itemCount >= 0 && indexPath.row < itemCount else { return }
+        instructionsCardLayout.collectionView?.scrollToItem(at: indexPath, at: .left, animated: true)
     }
     
     func stopPreview() {
@@ -194,23 +199,21 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
     }
     
     fileprivate func instructionsCardView(at index: IndexPath) -> InstructionsCardView? {
-        let cell = instructionCollectionView.cellForItem(at: index)
-        
-        if cell?.subviews.count == 0 {
+        guard let cell = instructionCollectionView.cellForItem(at: index),
+                  cell.subviews.count > 0 else {
             return nil
         }
-        
-        return cell?.subviews[0] as? InstructionsCardView
+        return cell.subviews[0] as? InstructionsCardView
     }
     
     fileprivate func calculateNeededSpace(count: Int) -> CGSize {
         let cardSize = instructionsCardLayout.itemSize
-        return CGSize(width: cardSize.width * CGFloat(count), height: cardSize.height)
+        return CGSize(width: (cardSize.width + 10) * CGFloat(count), height: cardSize.height)
     }
     
     fileprivate func calculateIndexToSnapTo() -> IndexPath {
         guard let collectionView = instructionsCardLayout.collectionView,
-            let itemCount      = steps?.count else { return IndexPath(row: 0, section: 0) }
+            let itemCount      = modifiedSteps?.count else { return IndexPath(row: 0, section: 0) }
         
         let collectionViewFlowLayoutMinimumSpacingDefault: CGFloat = 10.0
         let estimatedIndex = Int(round((collectionView.contentOffset.x + collectionView.contentInset.left) / (cardSize.width + collectionViewFlowLayoutMinimumSpacingDefault)))
@@ -225,24 +228,23 @@ extension InstructionsCardCollection: UICollectionViewDelegate {
         if isSnapAndRemove {
             isSnapAndRemove = false
             
-            if let steps = steps {
+            if let steps = modifiedSteps {
                 var mutatedSteps = Array(steps)
                 mutatedSteps.remove(at: 0)
-                self.steps = mutatedSteps
-                instructionCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .left, animated: false)
+                instructionCollectionView.scrollToItem(at: IndexPath(row: 1, section: 0), at: .left, animated: false)
             }
         }
     }
     
     public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         indexBeforeSwipe = calculateIndexToSnapTo()
-        contentOffsetBeforeSwipe = scrollView.contentOffset
+        contentOffsetBeforeSwipe = scrollView.contentOffset /// TODO
     }
     
     public func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        targetContentOffset.pointee = scrollView.contentOffset
+        targetContentOffset.pointee = scrollView.contentOffset /// TODO
         
-        let itemCount = steps?.count ?? 0
+        let itemCount = modifiedSteps?.count ?? 0
         let velocityThreshold: CGFloat = 0.4
         
         let hasVelocityToSlideToNext = indexBeforeSwipe.row + 1 < itemCount && velocity.x > velocityThreshold
@@ -276,7 +278,7 @@ extension InstructionsCardCollection: UICollectionViewDelegate {
         
         isInPreview = previewIndex != indexBeforeSwipe.row
         
-        if isInPreview, let previewStep = steps?[previewIndex] {
+        if isInPreview, let previewStep = modifiedSteps?[previewIndex] {
             cardCollectionDelegate?.instructionsCardCollection(self, previewFor: previewStep)
         }
     }
@@ -284,12 +286,12 @@ extension InstructionsCardCollection: UICollectionViewDelegate {
 
 extension InstructionsCardCollection: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return steps?.count ?? 0
+        return modifiedSteps?.count ?? 0
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-        guard let step = steps?[indexPath.row], let distance = distancesFromCurrentLocationToManeuver?[indexPath.row] else { return cell }
+        guard let step = modifiedSteps?[indexPath.row], let distance = distancesFromCurrentLocationToManeuver?[indexPath.row] else { return cell }
         
         if cell.subviews.count > 0 {
             for card in cell.subviews {
@@ -331,41 +333,19 @@ extension InstructionsCardCollection: UICollectionViewDataSource {
 
 extension RouteProgress {
     var steps: [RouteStep] {
-        var steps = [RouteStep]()
-        
-        let curStepIndex = currentLeg.steps.index(of: currentLegProgress.currentStep)
-        for (index, step) in currentLeg.steps.enumerated() {
-            if index < curStepIndex! {
-                continue
+        var steps: [RouteStep] = currentLeg.steps.enumerated().compactMap { (index, step) in
+            guard index >= currentLegProgress.stepIndex && index != currentLeg.steps.count - 1 else {
+                return nil
             }
-            
-            if index == currentLeg.steps.count - 1 {
-                continue
-            }
-            
-            steps.append(step)
+            return step
         }
-        
-        for leg in remainingLegs {
-            var legSteps = leg.steps
-            _ = legSteps.popLast()
-            steps.append(contentsOf: legSteps)
-        }
-        
+        steps += remainingLegs.flatMap { $0.steps }
         return steps
     }
 }
 
 extension Route {
     var steps: [RouteStep] {
-        var steps = [RouteStep]()
-        
-        for leg in legs {
-            var legSteps = leg.steps
-            _ = legSteps.popLast()
-            steps.append(contentsOf: legSteps)
-        }
-        
-        return steps
+        return legs.flatMap { $0.steps }
     }
 }
