@@ -1,6 +1,5 @@
 #if canImport(CarPlay)
 import CarPlay
-import Turf
 import MapboxCoreNavigation
 import MapboxDirections
 
@@ -175,27 +174,6 @@ public class CarPlayManager: NSObject {
         get { return userTrackingButton }
     }
     
-    lazy var fullDateComponentsFormatter: DateComponentsFormatter = {
-        let formatter = DateComponentsFormatter()
-        formatter.unitsStyle = .full
-        formatter.allowedUnits = [.day, .hour, .minute]
-        return formatter
-    }()
-    
-    lazy var shortDateComponentsFormatter: DateComponentsFormatter = {
-        let formatter = DateComponentsFormatter()
-        formatter.unitsStyle = .short
-        formatter.allowedUnits = [.day, .hour, .minute]
-        return formatter
-    }()
-    
-    lazy var briefDateComponentsFormatter: DateComponentsFormatter = {
-        let formatter = DateComponentsFormatter()
-        formatter.unitsStyle = .brief
-        formatter.allowedUnits = [.day, .hour, .minute]
-        return formatter
-    }()
-    
     /**
      The main map view displayed inside CarPlay.
      */
@@ -254,25 +232,13 @@ public class CarPlayManager: NSObject {
      */
     public func beginNavigationWithCarPlay(using currentLocation: CLLocationCoordinate2D, navigationService: NavigationService) {
         let route = navigationService.route
-        guard let destination = route.routeOptions.waypoints.last else {
-            return
-        }
         
-        let summaryVariants = [
-            fullDateComponentsFormatter.string(from: route.expectedTravelTime)!,
-            shortDateComponentsFormatter.string(from: route.expectedTravelTime)!,
-            briefDateComponentsFormatter.string(from: route.expectedTravelTime)!]
-        let routeChoice = CPRouteChoice(summaryVariants: summaryVariants, additionalInformationVariants: [route.description], selectionSummaryVariants: [route.description])
-        routeChoice.userInfo = route
-        
-        let originPlacemark = MKPlacemark(coordinate: currentLocation)
-        let destinationPlacemark = MKPlacemark(coordinate: destination.coordinate)
-        
-        let trip = CPTrip(origin: MKMapItem(placemark: originPlacemark), destination: MKMapItem(placemark: destinationPlacemark), routeChoices: [routeChoice])
+        var trip = CPTrip(routes: [route], routeOptions: route.routeOptions, waypoints: route.routeOptions.waypoints)
+        trip = delegate?.carPlayManager?(self, willPreview: trip) ?? trip
         
         self.navigationService = navigationService
         
-        if let mapTemplate = mainMapTemplate {
+        if let mapTemplate = mainMapTemplate, let routeChoice = trip.routeChoices.first {
             self.mapTemplate(mapTemplate, startedTrip: trip, using: routeChoice)
         }
     }
@@ -470,23 +436,7 @@ extension CarPlayManager {
             return
         }
         
-        let routeChoices = routes.map { (route) -> CPRouteChoice in
-            let summaryVariants = [
-               fullDateComponentsFormatter.string(from: route.expectedTravelTime)!,
-               shortDateComponentsFormatter.string(from: route.expectedTravelTime)!,
-               briefDateComponentsFormatter.string(from: route.expectedTravelTime)!
-            ]
-            let routeChoice = CPRouteChoice(summaryVariants: summaryVariants, additionalInformationVariants: [route.description], selectionSummaryVariants: [route.description])
-            routeChoice.userInfo = route
-            return routeChoice
-        }
-        
-        let originPlacemark = MKPlacemark(coordinate: waypoints.first!.coordinate)
-        let destinationPlacemark = MKPlacemark(coordinate: waypoints.last!.coordinate, addressDictionary: ["street": waypoints.last!.name ?? ""])
-        
-        var trip = CPTrip(origin: MKMapItem(placemark: originPlacemark), destination: MKMapItem(placemark: destinationPlacemark), routeChoices: routeChoices)
-        trip.userInfo = routeOptions
-
+        var trip = CPTrip(routes: routes, routeOptions: routeOptions, waypoints: waypoints)
         trip = delegate?.carPlayManager?(self, willPreview: trip) ?? trip
 
         var previewText = defaultTripPreviewTextConfiguration()

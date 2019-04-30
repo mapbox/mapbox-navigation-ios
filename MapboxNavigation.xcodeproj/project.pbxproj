@@ -357,6 +357,7 @@
 		DA303CAA21B7A93400F921DC /* ResizableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCF121A5C5B300AEA9AA /* ResizableView.swift */; };
 		DA303CAB21B7A93B00F921DC /* OfflineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCF921A5C63A00AEA9AA /* OfflineViewController.swift */; };
 		DA3525702010A5210048DDFC /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = DA35256E2010A5200048DDFC /* Localizable.stringsdict */; };
+		DA443DDE2278C90E00ED1307 /* CPTrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA443DDD2278C90E00ED1307 /* CPTrip.swift */; };
 		DAA96D18215A961D00BEF703 /* route-doubling-back.json in Resources */ = {isa = PBXBuildFile; fileRef = DAA96D17215A961D00BEF703 /* route-doubling-back.json */; };
 		DAAE5F301EAE4C4700832871 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DAAE5F321EAE4C4700832871 /* Localizable.strings */; };
 		DAD17202214DB12B009C8161 /* CPMapTemplateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD17201214DB12B009C8161 /* CPMapTemplateTests.swift */; };
@@ -915,6 +916,7 @@
 		DA3525712011435E0048DDFC /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Main.strings; sourceTree = "<group>"; };
 		DA352572201143BA0048DDFC /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Navigation.strings; sourceTree = "<group>"; };
 		DA352573201143D30048DDFC /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Localizable.strings; sourceTree = "<group>"; };
+		DA443DDD2278C90E00ED1307 /* CPTrip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPTrip.swift; sourceTree = "<group>"; };
 		DA545ABA1FA993DF0090908E /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Main.strings; sourceTree = "<group>"; };
 		DA545ABC1FA9941F0090908E /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DA545ABE1FA9A1370090908E /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Main.strings; sourceTree = "<group>"; };
@@ -1474,6 +1476,7 @@
 				8D24A2F720409A890098CBF8 /* CGSize.swift */,
 				C5F4D21820DC468B0059FABF /* CongestionLevel.swift */,
 				C51511D020EAC89D00372A91 /* CPMapTemplate.swift */,
+				DA443DDD2278C90E00ED1307 /* CPTrip.swift */,
 				35BF8CA31F28EBD8003F6125 /* String.swift */,
 				8D24A2F920449B430098CBF8 /* Dictionary.swift */,
 				351BEBDF1E5BCC63006FE110 /* MGLMapView.swift */,
@@ -2292,6 +2295,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				351BEBF11E5BCC63006FE110 /* MGLMapView.swift in Sources */,
+				DA443DDE2278C90E00ED1307 /* CPTrip.swift in Sources */,
 				35D825FC1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m in Sources */,
 				8D3322252200E149001D44AA /* NavigationViewController+Obsolete.swift in Sources */,
 				C51511D120EAC89D00372A91 /* CPMapTemplate.swift in Sources */,
