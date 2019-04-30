@@ -550,6 +550,11 @@ extension CarPlayManager: CPMapTemplateDelegate {
         carPlayMapViewController.isOverviewingRoutes = true
         let mapView = carPlayMapViewController.mapView
         let route = routeChoice.userInfo as! Route
+        
+        let distanceFormatter = DistanceFormatter(approximate: true)
+        let estimates = CPTravelEstimates(distanceRemaining: distanceFormatter.measurement(of: route.distance),
+                                          timeRemaining: route.expectedTravelTime)
+        mapTemplate.updateEstimates(estimates, for: trip)
 
         //FIXME: Unable to tilt map during route selection -- https://github.com/mapbox/mapbox-gl-native/issues/2259
         let topDownCamera = mapView.camera
