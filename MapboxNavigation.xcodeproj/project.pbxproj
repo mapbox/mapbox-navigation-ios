@@ -281,6 +281,8 @@
 		AE9F69902272543000BE2A0D /* NavigationInteractionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE9F698F2272542F00BE2A0D /* NavigationInteractionDelegate.swift */; };
 		AEC3AC9A2106703100A26F34 /* HighwayShield.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC3AC992106703100A26F34 /* HighwayShield.swift */; };
 		AEDF76B62278F14100DFC96D /* InstructionsCardSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDF76B52278F14100DFC96D /* InstructionsCardSnapshotTests.swift */; };
+		AEDF76B82279DB3600DFC96D /* InstructionsCardCollectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDF76B72279DB3600DFC96D /* InstructionsCardCollectionTests.swift */; };
+		AEDF76BA2279E91800DFC96D /* InstructionsCardCollectionUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDF76B92279E91800DFC96D /* InstructionsCardCollectionUITest.swift */; };
 		C51511D120EAC89D00372A91 /* CPMapTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51511D020EAC89D00372A91 /* CPMapTemplate.swift */; };
 		C51DF8661F38C31C006C6A15 /* Locale.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51DF8651F38C31C006C6A15 /* Locale.swift */; };
 		C51FC31720F689F800400CE7 /* CustomStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51FC31620F689F800400CE7 /* CustomStyles.swift */; };
@@ -856,6 +858,8 @@
 		AEC3AC992106703100A26F34 /* HighwayShield.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighwayShield.swift; sourceTree = "<group>"; };
 		AED2156E208F7FEA009AA673 /* NavigationViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewControllerTests.swift; sourceTree = "<group>"; };
 		AEDF76B52278F14100DFC96D /* InstructionsCardSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsCardSnapshotTests.swift; sourceTree = "<group>"; };
+		AEDF76B72279DB3600DFC96D /* InstructionsCardCollectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsCardCollectionTests.swift; sourceTree = "<group>"; };
+		AEDF76B92279E91800DFC96D /* InstructionsCardCollectionUITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsCardCollectionUITest.swift; sourceTree = "<group>"; };
 		AEF2C8F12072B603007B061F /* routeWithTunnels_9thStreetDC.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = routeWithTunnels_9thStreetDC.json; sourceTree = "<group>"; };
 		C51511D020EAC89D00372A91 /* CPMapTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPMapTemplate.swift; sourceTree = "<group>"; };
 		C51DF8651F38C31C006C6A15 /* Locale.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Locale.swift; sourceTree = "<group>"; };
@@ -1336,6 +1340,8 @@
 				35B711D31E5E7AD2001EDA8D /* Info.plist */,
 				8D54F149206ECF720038736D /* InstructionPresenterTests.swift */,
 				35DC585C1FABC61100B5A956 /* InstructionsBannerViewIntegrationTests.swift */,
+				AEDF76B72279DB3600DFC96D /* InstructionsCardCollectionTests.swift */,
+				AEDF76B92279E91800DFC96D /* InstructionsCardCollectionUITest.swift */,
 				35A262B82050A5CD00AEFF6D /* InstructionsBannerViewSnapshotTests.swift */,
 				AEDF76B52278F14100DFC96D /* InstructionsCardSnapshotTests.swift */,
 				8DFD949D221F66BE00152F45 /* BottomBannerSnapshotTests.swift */,
@@ -2463,6 +2469,7 @@
 				DA0557252155040700A1F2AA /* RouteTests.swift in Sources */,
 				C55C299920D2E2F600B0406C /* NavigationMapViewTests.swift in Sources */,
 				1662244720256C0700EA4824 /* ImageLoadingURLProtocolSpy.swift in Sources */,
+				AEDF76BA2279E91800DFC96D /* InstructionsCardCollectionUITest.swift in Sources */,
 				AE291FFF20975A7E00F23DFC /* NavigationViewControllerTests.swift in Sources */,
 				16EF6C1E21193A9600AA580B /* CarPlayManagerTests.swift in Sources */,
 				DADD82802161EC0300B8B47D /* UIViewAnimationOptionsTests.swift in Sources */,
@@ -2489,6 +2496,7 @@
 				16E3625C201265D600DF0592 /* ImageDownloadOperationSpy.swift in Sources */,
 				1662244B2029059C00EA4824 /* ImageCacheTests.swift in Sources */,
 				3510300F1F54B67000E3B7E7 /* LaneTests.swift in Sources */,
+				AEDF76B82279DB3600DFC96D /* InstructionsCardCollectionTests.swift in Sources */,
 				160A4A712127A46C0028B070 /* CPBarButton+MBTestable.m in Sources */,
 				169A970A216440820082A6A0 /* NavigationViewControllerTestDoubles.swift in Sources */,
 				DAE22A2921C9DEDA00CA269D /* MGLVectorTileSourceTests.swift in Sources */,
