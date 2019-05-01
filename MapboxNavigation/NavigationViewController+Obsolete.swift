@@ -4,8 +4,8 @@ import MapboxDirections
 
 //MARK: - Obsoleted Interfaces
 
-public extension NavigationViewController {
-    @available(*, deprecated: 0.1, message: "Use the new init(route:options:) initalizer.")
+extension NavigationViewController {
+    @available(*, deprecated, message: "Use the new init(route:options:) initalizer.")
     @objc(initWithRoute:styles:navigationService:voiceController:)
     public convenience init(for route: Route,
                          styles: [Style]? = nil,
@@ -19,7 +19,7 @@ public extension NavigationViewController {
         self.init(for: route, options: bridge)
     }
     
-    @available(*, obsoleted: 0.1, renamed: "navigationService", message: "NavigationViewController no longer directly manages a RouteController. See MapboxNavigationService, which contains a protocol-bound reference to the RouteController, for more information.")
+    @available(*, deprecated, renamed: "navigationService", message: "NavigationViewController no longer directly manages a RouteController. See MapboxNavigationService, which contains a protocol-bound reference to the RouteController, for more information.")
     /// :nodoc: obsoleted
     @objc public final var routeController: RouteController! {
         get {
@@ -30,7 +30,7 @@ public extension NavigationViewController {
         }
     }
     
-    @available(*, obsoleted: 0.1, renamed: "navigationService.eventsManager", message: "NavigationViewController no-longer directly manages a NavigationEventsManager. See MapboxNavigationService, which contains a reference to the eventsManager, for more information.")
+    @available(*, deprecated, renamed: "navigationService.eventsManager", message: "NavigationViewController no-longer directly manages a NavigationEventsManager. See MapboxNavigationService, which contains a reference to the eventsManager, for more information.")
     /// :nodoc: obsoleted
     @objc public final var eventsManager: NavigationEventsManager! {
         get {
@@ -41,7 +41,7 @@ public extension NavigationViewController {
         }
     }
     
-    @available(*, obsoleted: 0.1, renamed: "navigationService.locationManager", message: "NavigationViewController no-longer directly manages an NavigationLocationManager. See MapboxNavigationService, which contains a reference to the locationManager, for more information.")
+    @available(*, deprecated, renamed: "navigationService.locationManager", message: "NavigationViewController no-longer directly manages an NavigationLocationManager. See MapboxNavigationService, which contains a reference to the locationManager, for more information.")
     /// :nodoc: obsoleted
     @objc public final var locationManager: NavigationLocationManager! {
         get {
@@ -52,7 +52,7 @@ public extension NavigationViewController {
         }
     }
     
-    @available(*, obsoleted: 0.1, renamed: "init(for:styles:navigationService:voiceController:)", message: "Intializing a NavigationViewController directly with a RouteController is no longer supported. Use a NavigationService instead.")
+    @available(*, deprecated, renamed: "init(for:styles:navigationService:voiceController:)", message: "Intializing a NavigationViewController directly with a RouteController is no longer supported. Use a NavigationService instead.")
     /// :nodoc: Obsoleted method.
     @objc(initWithRoute:directions:styles:routeController:locationManager:voiceController:eventsManager:)
     public convenience init(for route: Route,

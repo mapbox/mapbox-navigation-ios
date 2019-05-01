@@ -569,15 +569,27 @@ class TestCarPlaySearchControllerDelegate: CarPlaySearchControllerDelegate {
 class MapTemplateSpy: CPMapTemplate {
     private(set) var currentTripPreviews: [CPTrip]?
     private(set) var currentPreviewTextConfiguration: CPTripPreviewTextConfiguration?
+    
+    private(set) var estimatesUpdate: (CPTravelEstimates, CPTrip, CPTimeRemainingColor)?
+    
+    var fakeSession:  CPNavigationSession!
 
     override func showTripPreviews(_ tripPreviews: [CPTrip], textConfiguration: CPTripPreviewTextConfiguration?) {
         currentTripPreviews = tripPreviews
         currentPreviewTextConfiguration = textConfiguration
     }
     
+    override func update(_ estimates: CPTravelEstimates, for trip: CPTrip, with timeRemainingColor: CPTimeRemainingColor) {
+        estimatesUpdate = (estimates, trip, timeRemainingColor)
+    }
+    
     override func hideTripPreviews() {
         currentTripPreviews = nil
         currentPreviewTextConfiguration = nil
+    }
+    
+    override func startNavigationSession(for trip: CPTrip) -> CPNavigationSession {
+        return fakeSession
     }
 }
 

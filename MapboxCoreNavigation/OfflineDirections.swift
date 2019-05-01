@@ -45,6 +45,9 @@ public typealias UnpackProgressHandler = (_ totalBytes: UInt64, _ remainingBytes
 
 /**
  A closure to call once an unpacking operation has completed.
+ 
+ - parameter numberOfTiles: The number of tiles that were unpacked.
+ - parameter error: Potential error that occured when trying to unpack.
  */
 public typealias UnpackCompletionHandler = (_ numberOfTiles: UInt64, _ error: Error?) -> ()
 
@@ -64,20 +67,20 @@ public class NavigationDirections: Directions {
      Configures the router with the given set of tiles.
      
      - parameter tilesURL: The location where the tiles has been sideloaded to.
-     - parameter translationsURL: The location where the translations has been downloaded to.
      - parameter completionHandler: A block that is called when the router is completely configured.
      */
-    @objc public func configureRouter(tilesURL: URL, translationsURL: URL? = nil, completionHandler: @escaping NavigationDirectionsCompletionHandler) {
-        
+    @objc public func configureRouter(tilesURL: URL, completionHandler: @escaping NavigationDirectionsCompletionHandler) {
         NavigationDirectionsConstants.offlineSerialQueue.sync {
-            // Translations files bundled within navigation native
-            // will be used when passing an empty string to `translationsPath`.
-            let tileCount = self.navigator.configureRouter(forTilesPath: tilesURL.path, translationsPath: translationsURL?.path ?? "")
-            
+            let tileCount = self.navigator.configureRouter(forTilesPath: tilesURL.path)
             DispatchQueue.main.async {
                 completionHandler(tileCount)
             }
         }
+    }
+    
+    @available(*, deprecated, renamed: "NavigationDirections.configureRouter(tilesURL:completionHandler:)")
+    @objc public func configureRouter(tilesURL: URL, translationsURL: URL? = nil, completionHandler: @escaping NavigationDirectionsCompletionHandler) {
+        configureRouter(tilesURL: tilesURL, completionHandler: completionHandler)
     }
     
     /**

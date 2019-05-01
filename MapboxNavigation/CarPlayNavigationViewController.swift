@@ -241,7 +241,7 @@ public class CarPlayNavigationViewController: UIViewController {
      
      When this property is true, the map follows the user’s location and rotates when their course changes. Otherwise, the map shows an overview of the route.
      */
-    @objc public var tracksUserCourse: Bool {
+    @objc public dynamic var tracksUserCourse: Bool {
         get {
             return mapView?.tracksUserCourse ?? false
         }
@@ -278,6 +278,7 @@ public class CarPlayNavigationViewController: UIViewController {
     }
     
     public func beginPanGesture() {
+        tracksUserCourse = false
         mapView?.tracksUserCourse = false
         mapView?.enableFrameByFrameCourseViewTracking(for: 1)
     }
@@ -301,12 +302,11 @@ public class CarPlayNavigationViewController: UIViewController {
         let congestionLevel = routeProgress.averageCongestionLevelRemainingOnLeg ?? .unknown
         guard let maneuver = carSession.upcomingManeuvers.first else { return }
         
-        let legProgress = routeProgress.currentLegProgress
-        let legDistance = distanceFormatter.measurement(of: legProgress.distanceRemaining)
-        let legEstimates = CPTravelEstimates(distanceRemaining: legDistance, timeRemaining: legProgress.durationRemaining)
-        mapTemplate.update(legEstimates, for: carSession.trip, with: congestionLevel.asCPTimeRemainingColor)
+        let routeDistance = distanceFormatter.measurement(of: routeProgress.distanceRemaining)
+        let routeEstimates = CPTravelEstimates(distanceRemaining: routeDistance, timeRemaining: routeProgress.durationRemaining)
+        mapTemplate.update(routeEstimates, for: carSession.trip, with: congestionLevel.asCPTimeRemainingColor)
         
-        let stepProgress = legProgress.currentStepProgress
+        let stepProgress = routeProgress.currentLegProgress.currentStepProgress
         let stepDistance = distanceFormatter.measurement(of: stepProgress.distanceRemaining)
         let stepEstimates = CPTravelEstimates(distanceRemaining: stepDistance, timeRemaining: stepProgress.durationRemaining)
         carSession.updateEstimates(stepEstimates, for: maneuver)
@@ -542,7 +542,7 @@ public protocol CarPlayNavigationDelegate {
     
     //MARK: - Deprecated.
     
-    @available(*, obsoleted: 0.1, message: "Use NavigationViewControllerDelegate.navigationViewController(_:didArriveAt:) or  NavigationServiceDelegate.navigationService(_:didArriveAt:) instead.")
+    @available(*, deprecated, message: "Use NavigationViewControllerDelegate.navigationViewController(_:didArriveAt:) or  NavigationServiceDelegate.navigationService(_:didArriveAt:) instead.")
     @objc optional func carPlayNavigationViewControllerDidArrive(_ carPlayNavigationViewController: CarPlayNavigationViewController)
 }
 #endif
