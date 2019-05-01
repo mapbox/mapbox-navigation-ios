@@ -27,27 +27,33 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
     var instructionsCardLayout: InstructionsCardCollectionLayout!
     var isInPreview = false
     
-    var steps: [RouteStep]? {
-        didSet {
-            update(steps: modifiedSteps ?? [])
-        }
-    }
+    var steps: [RouteStep]? // TODO: Not needed at all!
     
-    var modifiedSteps: [RouteStep]? {
-        guard let stepIndex = routeProgress?.currentLegProgress.stepIndex, let steps = steps else { return nil }
-        var mutatedSteps = Array(steps.suffix(from: stepIndex))
-        mutatedSteps.removeLast()
+    var routeProgress: RouteProgress?
+    
+    var modifiedSteps: [RouteStep]? { // TODO: Will be renamed to steps
+        guard let stepIndex = routeProgress?.currentLegProgress.stepIndex, let steps = routeProgress?.currentLeg.steps else { return nil }
+        var mutatedSteps = steps
+        if mutatedSteps.count > 1 {
+            mutatedSteps = Array(mutatedSteps.suffix(from: stepIndex))
+            mutatedSteps.removeLast()
+        }
         return mutatedSteps
     }
     
-    var routeProgress: RouteProgress? {
-        didSet {
-            updateDistances()
-            updateDistancesOnCards()
+    var distancesFromCurrentLocationToManeuver: [CLLocationDistance]? {
+        guard let progress = routeProgress, let steps = modifiedSteps else { return nil }
+        let distanceRemaining = progress.currentLegProgress.currentStepProgress.distanceRemaining
+        let distanceBetweenSteps = [distanceRemaining] + progress.remainingSteps.map {$0.distance}
+        
+        let distancesFromCurrentLocationToManeuver: [CLLocationDistance] = steps.enumerated().map { (index, _) in
+            let safeIndex = index < distanceBetweenSteps.endIndex ? index : distanceBetweenSteps.endIndex - 1
+            let cardDistance = distanceBetweenSteps[0...safeIndex].reduce(0, +)
+            return cardDistance > 5 ? cardDistance : 0
         }
+        return distancesFromCurrentLocationToManeuver
+        
     }
-    
-    var distancesFromCurrentLocationToManeuver: [CLLocationDistance]?
     
     /// :nodoc: needs documentation
     public weak var cardCollectionDelegate: InstructionsCardCollectionDelegate?
@@ -119,8 +125,15 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
     
     /// TODO: Use location to calculate the distance to upcoming maneuver.
     public func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
-        steps = progress.currentLeg.steps
         routeProgress = progress
+        updateInstructionsCardDataSource(for: progress)
+    }
+    
+    fileprivate func updateInstructionsCardDataSource(for progress: RouteProgress) {
+        // steps = progress.currentLeg.steps
+        let steps = modifiedSteps ?? []
+        update(steps: steps)
+        updateDistancesOnCards()
         updateInstruction(for: progress)
         advanceLegIndex(for: progress)
     }
@@ -147,17 +160,6 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
     
     func didTap(_ source: TappableContainer) {
         
-    }
-    
-    fileprivate func updateDistances() {
-        guard let progress = routeProgress else { return }
-        let distanceRemaining = progress.currentLegProgress.currentStepProgress.distanceRemaining
-        let distanceBetweenSteps = [distanceRemaining] + progress.remainingSteps.map {$0.distance}
-        distancesFromCurrentLocationToManeuver = modifiedSteps?.enumerated().map { (index, _) in
-            let safeIndex = index < distanceBetweenSteps.endIndex ? index : distanceBetweenSteps.endIndex - 1
-            let cardDistance = distanceBetweenSteps[0...safeIndex].reduce(0, +)
-            return cardDistance > 5 ? cardDistance : 0
-        }
     }
     
     fileprivate func updateDistancesOnCards() {

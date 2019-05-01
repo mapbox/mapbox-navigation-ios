@@ -41,6 +41,19 @@ class InstructionsCard: SnapshotTest {
         subject.routeProgress = routeProgress
         subject.navigationService(service, didUpdate: routeProgress, with: fakeLocation, rawLocation: fakeLocation)
         
+        /// Validate the visible collection view cell
+        let cardWidth: CGFloat = 307.0, cardHeight: CGFloat = 100.0
+        let visibleCell = subject.collectionView(subject.instructionCollectionView, cellForItemAt: IndexPath(row: 0, section: 0))
+        XCTAssertEqual(visibleCell.frame.size, CGSize(width: cardWidth, height: cardHeight))
+        XCTAssertEqual(visibleCell.frame.origin, CGPoint(x: 0, y: 0))
+        
+        /// Validate the partially visible collection view cell
+        let collectionViewFlowLayoutMinimumSpacing: CGFloat = 10.0
+        let partiallyVisibleCell = subject.collectionView(subject.instructionCollectionView, cellForItemAt: IndexPath(row: 1, section: 0))
+        XCTAssertEqual(partiallyVisibleCell.frame.size, CGSize(width: cardWidth, height: cardHeight))
+        XCTAssertEqual(partiallyVisibleCell.frame.origin, CGPoint(x: cardWidth + collectionViewFlowLayoutMinimumSpacing, y: 0))
+        
+        /// Validate the currently setup instructions card's snapshot image
         verify(host, for: Device.iPhoneX.portrait)
     }
     
