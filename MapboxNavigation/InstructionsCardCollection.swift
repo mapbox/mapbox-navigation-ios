@@ -188,7 +188,7 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
     func stopPreview() {
         isInPreview = false
         
-        guard let steps = steps else { return }
+        guard let steps = routeProgress?.steps else { return }
         
         if steps.first != routeProgress?.currentLegProgress.currentStep {
             guard let currentStep = routeProgress?.currentLegProgress.currentStep else { return }
