@@ -156,6 +156,8 @@ open class NavigationViewController: UIViewController {
     
     var mapViewController: RouteMapViewController?
     
+    var topViewController: ContainerViewController?
+    
     var bottomViewController: ContainerViewController?
     
     var navigationComponents: [NavigationComponent] {
@@ -223,7 +225,9 @@ open class NavigationViewController: UIViewController {
         }()
         bottomViewController = bottomBanner
 
-        let topBanner = TopBannerViewController(nibName: nil, bundle: nil)
+        let topBanner = options?.topBanner ?? TopBannerViewController(nibName: nil, bundle: nil)
+        
+        topViewController = topBanner
         
         let mapViewController = RouteMapViewController(navigationService: self.navigationService, delegate: self, topBanner: topBanner, bottomBanner: bottomBanner)
         
