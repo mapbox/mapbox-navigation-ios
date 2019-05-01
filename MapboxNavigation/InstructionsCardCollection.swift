@@ -19,7 +19,7 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
     typealias InstructionsCardCollectionLayout = UICollectionViewFlowLayout
     typealias InstructionsCardCell = UICollectionViewCell
     
-    var cardSize = CGSize(width: 307.0, height: 100.0)
+    var cardSize = CGSize.zero
     
     var dayStyle = DayInstructionsCardStyle()
     
@@ -52,7 +52,6 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
             return cardDistance > 5 ? cardDistance : 0
         }
         return distancesFromCurrentLocationToManeuver
-        
     }
     
     /// :nodoc: needs documentation
@@ -71,8 +70,7 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
     override open func viewDidLoad() {
         super.viewDidLoad()
         view.accessibilityIdentifier = "topBannerRoot"
-        cardSize = cardCollectionDelegate?.instructionsCardCollection?(self, cardSizeForTraitcollection: traitCollection) ?? CGSize(width: 307.0, height: 100.0) // TODO: calculated screen width percentage to detect width of the card size
-        
+        cardSize = cardCollectionDelegate?.instructionsCardCollection?(self, cardSizeForTraitcollection: traitCollection) ?? CGSize(width: Int(floor(view.frame.size.width * 0.82)), height: 100)
         view.backgroundColor = .clear
         view.translatesAutoresizingMaskIntoConstraints = false
         
