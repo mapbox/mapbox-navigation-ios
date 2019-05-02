@@ -111,6 +111,8 @@ public protocol CarPlayManagerDelegate {
     /**
      Offers the delegate the opportunity to customize a trip before it is presented to the user to preview.
      
+     To customize the destination’s title, which is displayed when a route is selected, set the `MKMapItem.name` property of the `CPTrip.destination` property. To add a subtitle, create a new `MKMapItem` whose `MKPlacemark` has the `Street` key in its address dictionary.
+     
      - parameter carPlayManager: The CarPlay manager instance.
      - parameter trip: The trip that will be previewed.
      - returns: The actual trip to be previewed. This can be the same trip or a new/alternate trip if desired.
