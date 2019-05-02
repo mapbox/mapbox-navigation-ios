@@ -78,6 +78,7 @@ open class NavigationMatchOptions: MatchOptions {
         }, profileIdentifier: profileIdentifier)
         includesSteps = true
         routeShapeResolution = .full
+        shapeFormat = .polyline6
         attributeOptions = [.congestionLevel, .expectedTravelTime]
         includesSpokenInstructions = true
         locale = Locale.nationalizedCurrent

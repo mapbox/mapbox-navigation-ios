@@ -156,9 +156,9 @@ open class NavigationViewController: UIViewController {
     
     var mapViewController: RouteMapViewController?
     
-    var bottomViewController: ContainerViewController?
-    
     var topViewController: ContainerViewController?
+    
+    var bottomViewController: ContainerViewController?
     
     var navigationComponents: [NavigationComponent] {
         var components: [NavigationComponent] = []
@@ -228,8 +228,7 @@ open class NavigationViewController: UIViewController {
         }()
         bottomViewController = bottomBanner
 
-        let topBanner = InstructionsCardCollection()
-        topBanner.cardCollectionDelegate = self
+        let topBanner = options?.topBanner ?? TopBannerViewController(nibName: nil, bundle: nil)
         topViewController = topBanner
         
         let mapViewController = RouteMapViewController(navigationService: self.navigationService, delegate: self, topBanner: topBanner, bottomBanner: bottomBanner)
@@ -597,31 +596,3 @@ extension NavigationViewController: BottomBannerViewControllerDelegate {
         }
     }
 }
-
-extension NavigationViewController: InstructionsCardCollectionDelegate {
-    
-    public func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardCollection, previewFor step: RouteStep) {
-        let route = navigationService.route
-        
-        // find the leg that contains the step, legIndex, and stepIndex
-        guard let leg = route.legs.first(where: { $0.steps.contains(step) }),
-            let legIndex = route.legs.index(of: leg),
-            let stepIndex = leg.steps.index(of: step) else {
-                return
-        }
-        
-        // find the upcoming manuever step, and update instructions banner to show preview
-        guard stepIndex + 1 < leg.steps.endIndex, let mapView = mapView else { return }
-        let maneuverStep = leg.steps[stepIndex + 1]
-        
-        // stop tracking user, and move camera to step location
-        mapView.tracksUserCourse = false
-        mapView.userTrackingMode = .none
-        mapView.enableFrameByFrameCourseViewTracking(for: 1)
-        mapView.setCenter(maneuverStep.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: maneuverStep.initialHeading!, animated: true, completionHandler: nil)
-        
-        // add arrow to map for preview instruction
-        mapView.addArrow(route: route, legIndex: legIndex, stepIndex: stepIndex + 1)
-    }
-}
-

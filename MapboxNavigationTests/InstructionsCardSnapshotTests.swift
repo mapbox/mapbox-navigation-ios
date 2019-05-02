@@ -6,7 +6,7 @@ import MapboxDirections
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
-class InstructionsCard: SnapshotTest {
+class InstructionsCardSnapshotTest: SnapshotTest {
     
     override func setUp() {
         super.setUp()

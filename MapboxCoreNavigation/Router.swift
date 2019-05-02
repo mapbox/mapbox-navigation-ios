@@ -166,10 +166,9 @@ extension InternalRouter where Self: Router {
         
         if proactive {
             didFindFasterRoute = true
-            
-            defer {
-                didFindFasterRoute = false
-            }
+        }
+        defer {
+            didFindFasterRoute = false
         }
         
         routeProgress = RouteProgress(route: route, legIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
@@ -180,9 +179,9 @@ extension InternalRouter where Self: Router {
         if let location = location {
             userInfo[.locationKey] = location
         }
-        userInfo[.isProactiveKey] = didFindFasterRoute
+        userInfo[.isProactiveKey] = proactive
         NotificationCenter.default.post(name: .routeControllerDidReroute, object: self, userInfo: userInfo)
-        delegate?.router?(self, didRerouteAlong: routeProgress.route, at: location, proactive: didFindFasterRoute)
+        delegate?.router?(self, didRerouteAlong: routeProgress.route, at: location, proactive: proactive)
     }
 }
 

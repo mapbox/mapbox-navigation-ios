@@ -22,12 +22,12 @@ public protocol CarPlayManagerDelegate {
      
      - parameter carPlayManager: The CarPlay manager instance.
      - parameter traitCollection: The trait collection of the view controller being shown in the CarPlay window.
-     - parameter template: The template into which the returned bar buttons will be inserted.
+     - parameter carPlayTemplate: The template into which the returned bar buttons will be inserted.
      - parameter activity: What the user is currently doing on the CarPlay screen. Use this parameter to distinguish between multiple templates of the same kind, such as multiple `CPMapTemplate`s.
      - returns: An array of bar buttons to display on the leading side of the navigation bar while `template` is visible.
      */
     @objc(carPlayManager:leadingNavigationBarButtonsWithTraitCollection:inTemplate:forActivity:)
-    optional func carPlayManager(_ carPlayManager: CarPlayManager, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]?
+    optional func carPlayManager(_ carPlayManager: CarPlayManager, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in carPlayTemplate: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]?
     
     /**
      Offers the delegate an opportunity to provide a customized list of trailing bar buttons at the root of the template stack for the given activity.
@@ -36,12 +36,12 @@ public protocol CarPlayManagerDelegate {
      
      - parameter carPlayManager: The CarPlay manager instance.
      - parameter traitCollection: The trait collection of the view controller being shown in the CarPlay window.
-     - parameter template: The template into which the returned bar buttons will be inserted.
+     - parameter carPlayTemplate: The template into which the returned bar buttons will be inserted.
      - parameter activity: What the user is currently doing on the CarPlay screen. Use this parameter to distinguish between multiple templates of the same kind, such as multiple `CPMapTemplate`s.
      - returns: An array of bar buttons to display on the trailing side of the navigation bar while `template` is visible.
      */
     @objc(carPlayManager:trailingNavigationBarButtonsWithTraitCollection:inTemplate:forActivity:)
-    optional func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]?
+    optional func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in carPlayTemplate: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]?
    
     /**
      Offers the delegate an opportunity to provide a customized list of buttons displayed on the map.
@@ -51,12 +51,12 @@ public protocol CarPlayManagerDelegate {
      
      - parameter carPlayManager: The CarPlay manager instance.
      - parameter traitCollection: The trait collection of the view controller being shown in the CarPlay window.
-     - parameter template: The template into which the returned map buttons will be inserted.
+     - parameter carPlayTemplate: The template into which the returned map buttons will be inserted.
      - parameter activity: What the user is currently doing on the CarPlay screen. Use this parameter to distinguish between multiple templates of the same kind, such as multiple `CPMapTemplate`s.
      - returns: An array of map buttons to display on the map while `template` is visible.
      */
     @objc(carPlayManager:mapButtonsCompatibleWithTraitCollection:inTemplate:forActivity:)
-    optional func carPlayManager(_ carPlayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]?
+    optional func carPlayManager(_ carPlayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in carPlayTemplate: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]?
     
     /**
      Asks the delegate to provide a navigation service. In multi-screen applications this should be the same instance used to guide the user along the route on the phone.

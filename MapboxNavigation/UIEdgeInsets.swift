@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import MapboxDirections
 
-public extension UIEdgeInsets {
+extension UIEdgeInsets {
     public static func +(left: UIEdgeInsets, right: UIEdgeInsets) -> UIEdgeInsets {
         return UIEdgeInsets(top: left.top + right.top,
                             left: left.left + right.left,
