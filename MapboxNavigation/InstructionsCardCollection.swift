@@ -31,7 +31,7 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
     
     var routeProgress: RouteProgress?
     
-    var modifiedSteps: [RouteStep]? { // TODO: Will be renamed to steps
+    var cardSteps: [RouteStep]? { // TODO: Will be renamed to steps
         guard let stepIndex = routeProgress?.currentLegProgress.stepIndex, let steps = routeProgress?.currentLeg.steps else { return nil }
         var mutatedSteps = steps
         if mutatedSteps.count > 1 {
@@ -42,7 +42,7 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
     }
     
     var distancesFromCurrentLocationToManeuver: [CLLocationDistance]? {
-        guard let progress = routeProgress, let steps = modifiedSteps else { return nil }
+        guard let progress = routeProgress, let steps = cardSteps else { return nil }
         let distanceRemaining = progress.currentLegProgress.currentStepProgress.distanceRemaining
         let distanceBetweenSteps = [distanceRemaining] + progress.remainingSteps.map {$0.distance}
         
@@ -70,7 +70,11 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
     override open func viewDidLoad() {
         super.viewDidLoad()
         view.accessibilityIdentifier = "topBannerRoot"
+        
+        /// TODO: Card Protoype class that can be customizable
         cardSize = cardCollectionDelegate?.instructionsCardCollection?(self, cardSizeForTraitcollection: traitCollection) ?? CGSize(width: Int(floor(view.frame.size.width * 0.82)), height: 100)
+        
+        
         view.backgroundColor = .clear
         view.translatesAutoresizingMaskIntoConstraints = false
         
@@ -129,7 +133,7 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
     
     fileprivate func updateInstructionsCardDataSource(for progress: RouteProgress) {
         // steps = progress.currentLeg.steps
-        let steps = modifiedSteps ?? []
+        let steps = cardSteps ?? []
         update(steps: steps)
         updateDistancesOnCards()
         updateInstruction(for: progress)
@@ -213,7 +217,7 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
     
     fileprivate func calculateIndexToSnapTo() -> IndexPath {
         guard let collectionView = instructionsCardLayout.collectionView,
-            let itemCount      = modifiedSteps?.count else { return IndexPath(row: 0, section: 0) }
+            let itemCount      = cardSteps?.count else { return IndexPath(row: 0, section: 0) }
         
         let collectionViewFlowLayoutMinimumSpacingDefault: CGFloat = 10.0
         let estimatedIndex = Int(round((collectionView.contentOffset.x + collectionView.contentInset.left) / (cardSize.width + collectionViewFlowLayoutMinimumSpacingDefault)))
@@ -228,7 +232,7 @@ extension InstructionsCardCollection: UICollectionViewDelegate {
         if isSnapAndRemove {
             isSnapAndRemove = false
             
-            if let steps = modifiedSteps {
+            if let steps = cardSteps {
                 var mutatedSteps = Array(steps)
                 mutatedSteps.remove(at: 0)
                 instructionCollectionView.scrollToItem(at: IndexPath(row: 1, section: 0), at: .left, animated: false)
@@ -244,7 +248,7 @@ extension InstructionsCardCollection: UICollectionViewDelegate {
     public func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         targetContentOffset.pointee = scrollView.contentOffset /// TODO
         
-        let itemCount = modifiedSteps?.count ?? 0
+        let itemCount = cardSteps?.count ?? 0
         let velocityThreshold: CGFloat = 0.4
         
         let hasVelocityToSlideToNext = indexBeforeSwipe.row + 1 < itemCount && velocity.x > velocityThreshold
@@ -278,7 +282,7 @@ extension InstructionsCardCollection: UICollectionViewDelegate {
         
         isInPreview = previewIndex != indexBeforeSwipe.row
         
-        if isInPreview, let previewStep = modifiedSteps?[previewIndex] {
+        if isInPreview, let previewStep = cardSteps?[previewIndex] {
             cardCollectionDelegate?.instructionsCardCollection(self, previewFor: previewStep)
         }
     }
@@ -286,12 +290,12 @@ extension InstructionsCardCollection: UICollectionViewDelegate {
 
 extension InstructionsCardCollection: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return modifiedSteps?.count ?? 0
+        return cardSteps?.count ?? 0
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-        guard let step = modifiedSteps?[indexPath.row], let distance = distancesFromCurrentLocationToManeuver?[indexPath.row] else { return cell }
+        guard let step = cardSteps?[indexPath.row], let distance = distancesFromCurrentLocationToManeuver?[indexPath.row] else { return cell }
         
         if cell.subviews.count > 0 {
             for card in cell.subviews {
