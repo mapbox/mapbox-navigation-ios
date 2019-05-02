@@ -197,7 +197,7 @@ open class NightStyle: DayStyle {
         FloatingButton.appearance().backgroundColor = backgroundColor
         FloatingButton.appearance().tintColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         GenericRouteShield.appearance().foregroundColor = .white
-//        InstructionsBannerContentView.appearance().backgroundColor = backgroundColor
+        InstructionsBannerContentView.appearance().backgroundColor = backgroundColor
         InstructionsBannerView.appearance().backgroundColor = backgroundColor
         LaneView.appearance().primaryColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         LanesView.appearance().backgroundColor = backgroundColor
