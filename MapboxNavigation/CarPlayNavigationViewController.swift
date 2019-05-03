@@ -134,6 +134,10 @@ public class CarPlayNavigationViewController: UIViewController {
         self.mapView = mapView
         view.addSubview(mapView)
         
+        let compassView = CarPlayCompassView()
+        view.addSubview(compassView)
+        self.compassView = compassView
+        
         // These constraints don’t account for language direction, because the
         // safe area insets are nondirectional and may be affected by the side
         // on which the driver is sitting.
@@ -145,11 +149,6 @@ public class CarPlayNavigationViewController: UIViewController {
         view.addConstraint(NSLayoutConstraint(item: mapView, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1, constant: 0))
         
         mapViewOverviewRightConstraint = view.rightAnchor.constraint(equalTo: mapView.rightAnchor)
-        
-        let compassView = CarPlayCompassView()
-        
-        view.addSubview(compassView)
-        self.compassView = compassView
         
         compassView.topAnchor.constraint(equalTo: view.safeTopAnchor, constant: 8).isActive = true
         compassView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8).isActive = true
@@ -328,7 +327,8 @@ public class CarPlayNavigationViewController: UIViewController {
         let stepEstimates = CPTravelEstimates(distanceRemaining: stepDistance, timeRemaining: stepProgress.durationRemaining)
         carSession.updateEstimates(stepEstimates, for: maneuver)
         
-        if !compassView.isHidden {
+        if let compassView = self.compassView,
+            !compassView.isHidden {
             compassView.course = location.course
         }
     }
