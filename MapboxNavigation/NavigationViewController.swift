@@ -230,7 +230,7 @@ open class NavigationViewController: UIViewController {
         }()
         bottomViewController = bottomBanner
 
-        let topBanner = options?.topBanner ?? TopBannerViewController(nibName: nil, bundle: nil)
+        let topBanner = options?.topBanner ?? TopBannerViewController(delegate: self)
         
         topViewController = topBanner
         
@@ -575,6 +575,20 @@ extension NavigationViewController: StyleManagerDelegate {
         mapView?.reloadStyle(self)
     }
 }
+// MARK: - TopBannerViewController
+
+extension NavigationViewController: TopBannerViewControllerDelegate {
+    public func statusView(_ statusView: StatusView, valueChangedTo value: Double) {
+        let displayValue = 1+min(Int(9 * value), 8)
+        let title = String.Localized.simulationStatus(speed: displayValue)
+        statusView.showStatus(title: title, for: .infinity, interactive: true)
+        
+        if let locationManager = navigationService.locationManager as? SimulatedLocationManager {
+            locationManager.speedMultiplier = Double(displayValue)
+        }
+    }
+}
+
 
 // MARK: - BottomBannerViewControllerDelegate
 

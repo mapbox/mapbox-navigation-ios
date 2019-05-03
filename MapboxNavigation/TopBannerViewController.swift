@@ -2,9 +2,16 @@ import Foundation
 import MapboxCoreNavigation
 import MapboxDirections
 
-class TopBannerViewController: ContainerViewController, InstructionsBannerViewDelegate {
+
+typealias TopBannerViewControllerDelegate = InstructionsBannerViewDelegate & StatusViewDelegate
+
+class TopBannerViewController: ContainerViewController, InstructionsBannerViewDelegate, StatusViewDelegate {
     
-    var delegate: Any? = nil
+    weak var delegate: TopBannerViewControllerDelegate? = nil {
+        didSet {
+            statusView.delegate = delegate
+        }
+    }
 
     lazy var topPaddingView: TopBannerView = .forAutoLayout()
 
@@ -20,7 +27,7 @@ class TopBannerViewController: ContainerViewController, InstructionsBannerViewDe
     lazy var nextBannerView: NextBannerView = .forAutoLayout(hidden: true)
     lazy var statusView: StatusView = {
         let view: StatusView = .forAutoLayout()
-        //        view.delegate = delegate // TODO: Sim Speed
+        view.delegate = delegate
         view.isHidden = true
         return view
     }()
@@ -35,6 +42,12 @@ class TopBannerViewController: ContainerViewController, InstructionsBannerViewDe
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         commonInit()
+    }
+    
+    convenience init(delegate: TopBannerViewControllerDelegate) {
+        self.init(nibName: nil, bundle: nil)
+        self.delegate = delegate
+        statusView.delegate = delegate
     }
     
     func commonInit() {

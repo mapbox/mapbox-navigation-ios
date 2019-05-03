@@ -97,12 +97,12 @@ open class NavigationView: UIView {
     
     lazy var lanesView: LanesView = .forAutoLayout(hidden: true)
     lazy var nextBannerView: NextBannerView = .forAutoLayout(hidden: true)
-    lazy var statusView: StatusView = {
-        let view: StatusView = .forAutoLayout()
-        view.delegate = delegate
-        view.isHidden = true
-        return view
-    }()
+//    lazy var statusView: StatusView = {
+//        let view: StatusView = .forAutoLayout()
+//        view.delegate = delegate
+//        view.isHidden = true
+//        return view
+//    }()
     
     lazy var resumeButton: ResumeButton = .forAutoLayout()
     
@@ -212,7 +212,7 @@ open class NavigationView: UIView {
 //        instructionsBannerView.delegate = delegate
 //        instructionsBannerView.instructionDelegate = delegate
         nextBannerView.instructionDelegate = delegate
-        statusView.delegate = delegate
+//        statusView.delegate = delegate
     }
 }
 

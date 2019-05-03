@@ -84,19 +84,19 @@ extension RouteMapViewController: NavigationComponent {
         
         if let locationManager = navService.locationManager as? SimulatedLocationManager {
             let localized = String.Localized.simulationStatus(speed: Int(locationManager.speedMultiplier))
-            showStatus(title: localized, for: .infinity, interactive: true)
+//            showStatus(title: localized, for: .infinity, interactive: true)
         } else {
-            statusView.hide(delay: 2, animated: true)
+//            statusView.hide(delay: 2, animated: true)
         }
         
         if proactive {
             let title = NSLocalizedString("FASTER_ROUTE_FOUND", bundle: .mapboxNavigation, value: "Faster Route Found", comment: "Indicates a faster route was found")
-            showStatus(title: title, withSpinner: true, for: 3)
+//            showStatus(title: title, withSpinner: true, for: 3)
         }
     }
     
     func navigationService(_ service: NavigationService, didFailToRerouteWith error: Error) {
-        statusView.hide()
+//        statusView.hide()
     }
 }
 
@@ -105,7 +105,7 @@ class RouteMapViewController: UIViewController {
 
     var navigationView: NavigationView { return view as! NavigationView }
     var mapView: NavigationMapView { return navigationView.mapView }
-    var statusView: StatusView { return navigationView.statusView }
+//    var statusView: StatusView { return navigationView.statusView }
     var reportButton: FloatingButton { return navigationView.reportButton }
     var lanesView: LanesView { return navigationView.lanesView }
     var nextBannerView: NextBannerView { return navigationView.nextBannerView }
@@ -171,7 +171,7 @@ class RouteMapViewController: UIViewController {
     weak var delegate: RouteMapViewControllerDelegate?
     var navService: NavigationService! {
         didSet {
-            navigationView.statusView.canChangeValue = navService.locationManager is SimulatedLocationManager
+//            navigationView.statusView.canChangeValue = navService.locationManager is SimulatedLocationManager
             guard let destination = route.legs.last?.destination else { return }
             populateName(for: destination, populated: { self.destination = $0 })
         }
@@ -403,8 +403,8 @@ class RouteMapViewController: UIViewController {
         guard AVAudioSession.sharedInstance().outputVolume <= NavigationViewMinimumVolumeForWarning else { return }
 
         let title = String.localizedStringWithFormat(NSLocalizedString("DEVICE_VOLUME_LOW", bundle: .mapboxNavigation, value: "%@ Volume Low", comment: "Format string for indicating the device volume is low; 1 = device model"), UIDevice.current.model)
-        statusView.show(title, showSpinner: false)
-        statusView.hide(delay: 3, animated: true)
+//        statusView.show(title, showSpinner: false)
+//        statusView.hide(delay: 3, animated: true)
     }
 
 
@@ -450,11 +450,7 @@ class RouteMapViewController: UIViewController {
         }
     }
 
-    private func showStatus(title: String, withSpinner spin: Bool = false, for time: TimeInterval, animated: Bool = true, interactive: Bool = false) {
-        statusView.show(title, showSpinner: spin, interactive: interactive)
-        guard time < .infinity else { return }
-        statusView.hide(delay: time, animated: animated)
-    }
+
 
     private func setCamera(altitude: Double) {
         guard mapView.altitude != altitude else { return }
@@ -993,15 +989,7 @@ extension RouteMapViewController: StepsViewControllerDelegate {
         }
     }
 
-    func statusView(_ statusView: StatusView, valueChangedTo value: Double) {
-        let displayValue = 1+min(Int(9 * value), 8)
-        let title = String.Localized.simulationStatus(speed: displayValue)
-        showStatus(title: title, for: .infinity, interactive: true)
-        
-        if let locationManager = navService.locationManager as? SimulatedLocationManager {
-            locationManager.speedMultiplier = Double(displayValue)
-        }
-    }
+
 }
 
 // MARK: - Keyboard Handling
