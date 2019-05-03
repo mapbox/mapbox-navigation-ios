@@ -1,29 +1,93 @@
 import XCTest
 import MapboxDirections
+@testable import TestHelper
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
 class InstructionsCardCollectionTests: XCTestCase {
     
-    /**
-     /// TODO:
-     Create a delegate stud to test (Unit Test)
-        1. guidanceCardCollection:previewFor:
-     */
     
-    var instructionsCardView: InstructionsCardView!
+    lazy var initialRoute: Route = {
+        return Fixture.route(from: jsonFileName)
+    }()
     
-    override func tearDown() {
-        super.tearDown()
-        instructionsCardView = nil
+    @available(iOS 11.0, *)
+    func testInstructionsCardCollectionDelegate() {
+        let host = UIViewController(nibName: nil, bundle: nil)
+        let container = UIView.forAutoLayout()
+        let subject = InstructionsCardCollection(nibName: nil, bundle: nil)
+        let instructionsCardCollectionSpy = InstructionsCardCollectionDelegateSpy()
+        subject.cardCollectionDelegate = instructionsCardCollectionSpy
+        
+        host.view.addSubview(container)
+        constrain(container, to: host.view)
+        
+        embed(parent: host, child: subject, in: container) { (parent, guidanceCard) -> [NSLayoutConstraint] in
+            guidanceCard.view.translatesAutoresizingMaskIntoConstraints = false
+            return guidanceCard.view.constraintsForPinning(to: container)
+        }
+        
+        let fakeRoute = Fixture.route(from: "route-with-banner-instructions")
+        
+        let service = MapboxNavigationService(route: initialRoute, directions: DirectionsSpy(accessToken: "adbeknut"), simulating: .never)
+        let routeProgress = RouteProgress(route: fakeRoute)
+        subject.routeProgress = routeProgress
+        subject.steps = routeProgress.steps
+        
+        let intersectionLocation = routeProgress.route.legs.first!.steps.first!.intersections!.first!.location
+        let fakeLocation = CLLocation(latitude: intersectionLocation.latitude, longitude: intersectionLocation.longitude)
+        subject.navigationService(service, didUpdate: routeProgress, with: fakeLocation, rawLocation: fakeLocation)
+        
+        let activeCard = (subject.instructionCollectionView.cellForItem(at: IndexPath(row: 0, section: 0))!.subviews.first! as! InstructionsCardView)
+        XCTAssertEqual(activeCard.step!.instructions, "Head north on 6th Avenue")
+        
+        let nextCard = (subject.instructionCollectionView.cellForItem(at: IndexPath(row: 1, section: 0))!.subviews.first! as! InstructionsCardView)
+        XCTAssertEqual(nextCard.step!.instructions, "Turn right onto Lincoln Way")
+        
+        /// Simulation: Scroll to the next card step instructions.
+        let simulatedTargetContentOffset = UnsafeMutablePointer<CGPoint>.allocate(capacity: 1)
+        simulatedTargetContentOffset.pointee = CGPoint(x: 0, y: 50)
+        subject.scrollViewWillEndDragging(subject.instructionCollectionView, withVelocity: CGPoint(x: 2.0, y: 0.0), targetContentOffset: simulatedTargetContentOffset)
+        
+        /// Validation: Preview step instructions should be equal to next card step instructions
+        let previewStep = instructionsCardCollectionSpy.step
+        XCTAssertEqual(previewStep!.instructions, nextCard.step!.instructions)
     }
     
     func testVerifyInstructionsCardCustomStyle() {
-        instructionsCardView = InstructionsCardView()
+        let instructionsCardView = InstructionsCardView()
         XCTAssertTrue(instructionsCardView.style is DayInstructionsCardStyle)
 
         instructionsCardView.style = TestInstructionsCardStyle()
         XCTAssertTrue(instructionsCardView.style is TestInstructionsCardStyle)
+    }
+    
+    func constrain(_ child: UIView, to parent: UIView) {
+        let constraints = [
+            child.leadingAnchor.constraint(equalTo: parent.leadingAnchor),
+            child.trailingAnchor.constraint(equalTo: parent.trailingAnchor),
+            child.topAnchor.constraint(equalTo: parent.topAnchor, constant: 30.0)
+        ]
+        NSLayoutConstraint.activate(constraints)
+    }
+    
+    func embed(parent:UIViewController, child: UIViewController, in container: UIView, constrainedBy constraints: ((UIViewController, UIViewController) -> [NSLayoutConstraint])?) {
+        child.willMove(toParent: parent)
+        parent.addChild(child)
+        container.addSubview(child.view)
+        if let childConstraints: [NSLayoutConstraint] = constraints?(parent, child) {
+            parent.view.addConstraints(childConstraints)
+        }
+        child.didMove(toParent: parent)
+    }
+}
+
+fileprivate class InstructionsCardCollectionDelegateSpy: NSObject, InstructionsCardCollectionDelegate {
+    
+    var step: RouteStep? = nil
+    
+    func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardCollection, previewFor step: RouteStep) {
+        self.step = step
     }
 }
 
