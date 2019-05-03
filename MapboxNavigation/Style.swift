@@ -561,9 +561,6 @@ open class ManeuverContainerView: UIView {
     }
 }
 
-/// :nodoc:
-@objc(MBInstructionsBannerContentView)
-open class InstructionsBannerContentView: UIView { }
 
 /// :nodoc:
 @objc(MBBannerContainerView)

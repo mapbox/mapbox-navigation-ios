@@ -165,6 +165,11 @@ open class NavigationViewController: UIViewController {
         if let mvc = mapViewController {
             components.append(mvc)
         }
+        
+        if let topViewController = topViewController {
+            components.append(topViewController)
+        }
+        
         if let bottomViewController = bottomViewController {
             components.append(bottomViewController)
         }
