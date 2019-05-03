@@ -38,7 +38,7 @@ open class CarPlayCompassView: StylableView {
         }
     }
     
-    override init(frame: CGRect) {
+    override public init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
     }
@@ -51,6 +51,9 @@ open class CarPlayCompassView: StylableView {
     func commonInit() {
         isHidden = true
         let label = StylableLabel(frame: .zero)
+        label.textAlignment = .center
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.1
         label.translatesAutoresizingMaskIntoConstraints = false
         addSubview(label)
         self.label = label
@@ -62,7 +65,9 @@ open class CarPlayCompassView: StylableView {
         label.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         label.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         
+        label.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: 2).isActive = true
+        label.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -2).isActive = true
+        
         translatesAutoresizingMaskIntoConstraints = false
-        clipsToBounds = true
     }
 }
