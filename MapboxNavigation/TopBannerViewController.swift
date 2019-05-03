@@ -7,13 +7,25 @@ class TopBannerViewController: ContainerViewController, InstructionsBannerViewDe
     var delegate: Any? = nil
 
     lazy var topPaddingView: TopBannerView = .forAutoLayout()
+
+    lazy var informationStackView = UIStackView(orientation: .vertical, autoLayout: true)
+    
     lazy var instructionsBannerView: InstructionsBannerView = {
         let banner: InstructionsBannerView = .forAutoLayout()
         banner.delegate = self
         return banner
     }()
-
-    lazy var informationStackView = UIStackView(orientation: .vertical, autoLayout: true)
+    
+    lazy var lanesView: LanesView = .forAutoLayout(hidden: true)
+    lazy var nextBannerView: NextBannerView = .forAutoLayout(hidden: true)
+    lazy var statusView: StatusView = {
+        let view: StatusView = .forAutoLayout()
+        //        view.delegate = delegate // TODO: Sim Speed
+        view.isHidden = true
+        return view
+    }()
+    
+    
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -64,7 +76,7 @@ class TopBannerViewController: ContainerViewController, InstructionsBannerViewDe
     }
     
     private func setupInformationStackView() {
-        let children = [instructionsBannerView]
+        let children = [instructionsBannerView, lanesView, nextBannerView, statusView]
         informationStackView.addArrangedSubviews(children)
         for child in children {
             child.leadingAnchor.constraint(equalTo: informationStackView.leadingAnchor).isActive = true
@@ -74,13 +86,33 @@ class TopBannerViewController: ContainerViewController, InstructionsBannerViewDe
     
     func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         instructionsBannerView.updateDistance(for: progress.currentLegProgress.currentStepProgress)
+        
     }
     
     func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
         instructionsBannerView.update(for: instruction)
+        lanesView.update(for: instruction)
+        nextBannerView.update(for: instruction)
+    }
+    
+    func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {
+        let title = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
+        lanesView.hide()
+        statusView.show(title, showSpinner: true)
     }
     
     func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
         instructionsBannerView.updateDistance(for: service.routeProgress.currentLegProgress.currentStepProgress)
+    }
+    
+    func navigationService(_ service: NavigationService, willBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
+        guard reason == .manual else { return }
+        let localized = String.Localized.simulationStatus(speed: 1)
+        statusView.show(localized, showSpinner: false, interactive: true)
+    }
+    
+    func navigationService(_ service: NavigationService, willEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
+        guard reason == .manual else { return }
+        statusView.hide(delay: 0, animated: true)
     }
 }

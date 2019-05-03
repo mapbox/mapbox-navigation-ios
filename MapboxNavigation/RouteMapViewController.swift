@@ -48,11 +48,6 @@ extension RouteMapViewController: NavigationComponent {
         navigationComponents.forEach {$0.navigationService?(service, didPassVisualInstructionPoint: instruction, routeProgress: routeProgress)}
     }
     
-    func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {
-        let title = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
-        lanesView.hide()
-        statusView.show(title, showSpinner: true)
-    }
     
     func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
         navigationComponents.forEach { $0.navigationService?(service, didRerouteAlong: route, at: location, proactive: proactive) }
