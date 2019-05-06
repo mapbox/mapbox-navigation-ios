@@ -151,14 +151,14 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
         instructionCollectionView.layoutIfNeeded()
     }
     
-//    func refresh() {
-//        guard let progress = routeProgress else { return }
-//
-//        var remainingSteps = progress.remainingSteps
-//        _ = remainingSteps.popLast() // ignore last step
-//
-//        steps = [progress.currentLegProgress.currentStep] + remainingSteps
-//    }
+    func refresh() {
+        guard let progress = routeProgress else { return }
+
+        var remainingSteps = progress.remainingSteps
+        _ = remainingSteps.popLast() // ignore last step
+
+        steps = [progress.currentLegProgress.currentStep] + remainingSteps
+    }
     
     func didTap(_ source: TappableContainer) {
         
@@ -167,7 +167,8 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
     fileprivate func updateDistancesOnCards() {
         _ = distancesFromCurrentLocationToManeuver?.enumerated().map { (index, distance) in
             if let card = instructionsCardView(at: IndexPath(row: index, section: 0)) {
-                card.distanceFromCurrentLocation = distance
+                // card.distanceFromCurrentLocation = distance
+                card.updateDistanceFromCurrentLocation(distance)
                 card.isActive = distance < card.highlightDistance
             }
         }
@@ -310,8 +311,10 @@ extension InstructionsCardCollection: UICollectionViewDataSource {
         cell.layer.shadowOpacity = 0.4
         
         let instructionsCard = InstructionsCardView()
-        instructionsCard.step = step
-        instructionsCard.distanceFromCurrentLocation = distance
+        // instructionsCard.step = step
+        instructionsCard.updateInstruction(for: step)
+        instructionsCard.updateDistanceFromCurrentLocation(distance)
+        // instructionsCard.distanceFromCurrentLocation = distance
         
         if let routeProgress = routeProgress,
             routeProgress.currentLegProgress.isCurrentStep(step) {

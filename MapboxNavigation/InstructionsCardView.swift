@@ -4,17 +4,33 @@ import MapboxCoreNavigation
 
 open class InstructionsCardView: BaseInstructionsBannerView, NavigationComponent {
     
-    public var style: InstructionsCardStyle = DayInstructionsCardStyle () {
-        didSet {
-            prepareLayout()
-        }
+    public var style: InstructionsCardStyle = DayInstructionsCardStyle ()
+//    {
+//        didSet {
+//            prepareLayout()
+//        }
+//    }
+    
+    func prepareLayout(for style: InstructionsCardStyle) {
+        self.style = style
+        prepareLayout()
     }
     
-    var step: RouteStep! {
-        didSet {
-            guard let instruction = step.instructionsDisplayedAlongStep?.last else {
-                return
-            }
+    var step: RouteStep!
+//    {
+//        didSet {
+//            guard let instruction = step.instructionsDisplayedAlongStep?.last else {
+//                return
+//            }
+//            update(for: instruction)
+//        }
+//    }
+    
+    func updateInstruction(for step: RouteStep) {
+        self.step = step
+//        guard let instruction = step.instructionsDisplayedAlongStep?.last else { return }
+//        update(for: instruction)
+        if let instruction = step.instructionsDisplayedAlongStep?.last {
             update(for: instruction)
         }
     }
@@ -23,6 +39,11 @@ open class InstructionsCardView: BaseInstructionsBannerView, NavigationComponent
         didSet {
             distance = distanceFromCurrentLocation
         }
+    }
+    
+    func updateDistanceFromCurrentLocation(_ distance: CLLocationDistance) {
+        self.distanceFromCurrentLocation = distance
+        self.distance = distance
     }
     
     var gradientLayer: CAGradientLayer!
@@ -39,7 +60,8 @@ open class InstructionsCardView: BaseInstructionsBannerView, NavigationComponent
     
     required public init(style: InstructionsCardStyle? = nil) {
         defer {
-            self.style = style ?? DayInstructionsCardStyle()
+            // self.style = style ?? DayInstructionsCardStyle()
+            self.prepareLayout(for: style ?? DayInstructionsCardStyle())
         }
         
         super.init(frame: .zero)
