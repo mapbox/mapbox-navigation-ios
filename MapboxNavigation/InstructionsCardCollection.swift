@@ -2,11 +2,7 @@ import MapboxDirections
 import MapboxCoreNavigation
 
 @objc public protocol InstructionsCardCollectionDelegate {
-    /**
-     Called when the user scrolls through a series of guidance card.
-     - parameter instructionsCardCollection: <Uncompleted documentation>
-     - parameter step: <Uncompleted documentation>
-     */
+    /// :nodoc: needs documentation
     @objc(instructionsCardCollection:previewFor:)
     func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardCollection, previewFor step: RouteStep)
     
@@ -19,17 +15,14 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
     typealias InstructionsCardCollectionLayout = UICollectionViewFlowLayout
     typealias InstructionsCardCell = UICollectionViewCell
     
+    var steps: [RouteStep]? // TODO: Not needed at all!
+    var routeProgress: RouteProgress?
     var cardSize = CGSize.zero
-    
-    var dayStyle = DayInstructionsCardStyle()
+    var cardStyle = DayInstructionsCardStyle()
     
     var instructionCollectionView: UICollectionView!
     var instructionsCardLayout: InstructionsCardCollectionLayout!
     var isInPreview = false
-    
-    var steps: [RouteStep]? // TODO: Not needed at all!
-    
-    var routeProgress: RouteProgress?
     
     var cardSteps: [RouteStep]? { // TODO: Will be renamed to steps
         guard let stepIndex = routeProgress?.currentLegProgress.stepIndex, let steps = routeProgress?.currentLeg.steps else { return nil }
@@ -73,7 +66,6 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
         
         /// TODO: Card Protoype class that can be customizable
         cardSize = cardCollectionDelegate?.instructionsCardCollection?(self, cardSizeForTraitcollection: traitCollection) ?? CGSize(width: Int(floor(view.frame.size.width * 0.82)), height: 100)
-        
         
         view.backgroundColor = .clear
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -312,6 +304,7 @@ extension InstructionsCardCollection: UICollectionViewDataSource {
         
         let instructionsCard = InstructionsCardView()
         // instructionsCard.step = step
+        instructionsCard.prepareLayout(for: cardStyle)
         instructionsCard.updateInstruction(for: step)
         instructionsCard.updateDistanceFromCurrentLocation(distance)
         // instructionsCard.distanceFromCurrentLocation = distance

@@ -2,14 +2,14 @@ import UIKit
 import MapboxDirections
 import MapboxCoreNavigation
 
-open class InstructionsCardView: BaseInstructionsBannerView, NavigationComponent {
+//@objc public protocol InstructionsCardViewDelegate {
+//
+//    @objc func instructionsCardViewShouldHighlightCard(_ instructionsCardView: InstructionsCardView)
+//}
+
+public class InstructionsCardView: BaseInstructionsBannerView, NavigationComponent {
     
-    public var style: InstructionsCardStyle = DayInstructionsCardStyle ()
-//    {
-//        didSet {
-//            prepareLayout()
-//        }
-//    }
+    var style: InstructionsCardStyle = DayInstructionsCardStyle ()
     
     func prepareLayout(for style: InstructionsCardStyle) {
         self.style = style
@@ -17,29 +17,15 @@ open class InstructionsCardView: BaseInstructionsBannerView, NavigationComponent
     }
     
     var step: RouteStep!
-//    {
-//        didSet {
-//            guard let instruction = step.instructionsDisplayedAlongStep?.last else {
-//                return
-//            }
-//            update(for: instruction)
-//        }
-//    }
     
     func updateInstruction(for step: RouteStep) {
         self.step = step
-//        guard let instruction = step.instructionsDisplayedAlongStep?.last else { return }
-//        update(for: instruction)
         if let instruction = step.instructionsDisplayedAlongStep?.last {
             update(for: instruction)
         }
     }
     
-    var distanceFromCurrentLocation: CLLocationDistance! {
-        didSet {
-            distance = distanceFromCurrentLocation
-        }
-    }
+    var distanceFromCurrentLocation: CLLocationDistance!
     
     func updateDistanceFromCurrentLocation(_ distance: CLLocationDistance) {
         self.distanceFromCurrentLocation = distance
@@ -52,18 +38,16 @@ open class InstructionsCardView: BaseInstructionsBannerView, NavigationComponent
     
     var isActive: Bool = false {
         didSet {
+            /// TODO: Use a delegate in updating the highlighted cell
             if !oldValue && isActive {
                 highlight()
             }
         }
     }
+//
+//    weak public var cardViewDelegate: InstructionsCardViewDelegate?
     
     required public init(style: InstructionsCardStyle? = nil) {
-        defer {
-            // self.style = style ?? DayInstructionsCardStyle()
-            self.prepareLayout(for: style ?? DayInstructionsCardStyle())
-        }
-        
         super.init(frame: .zero)
         self.showStepIndicator = false
     }
