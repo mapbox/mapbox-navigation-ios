@@ -343,17 +343,15 @@ class RouteMapViewController: UIViewController {
         
 //        removePreviewInstructions()
     }
-
-
-//    func removePreviewInstructions() {
-//        if let view = previewInstructionsView {
-//            view.removeFromSuperview()
-//            navigationView.instructionsBannerContentView.backgroundColor = InstructionsBannerView.appearance().backgroundColor
-//            navigationView.instructionsBannerView.delegate = self
-//            navigationView.instructionsBannerView.swipeable = true
-//            previewInstructionsView = nil
-//        }
-//    }
+    
+    @objc func center(on step: RouteStep, route: Route, legIndex: Int, stepIndex: Int) {
+        mapView.enableFrameByFrameCourseViewTracking(for: 1)
+        mapView.tracksUserCourse = false
+        mapView.setCenter(step.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step.initialHeading!, animated: true, completionHandler: nil)
+        
+        guard isViewLoaded && view.window != nil else { return }
+        mapView.addArrow(route: router.routeProgress.route, legIndex: legIndex, stepIndex: stepIndex)
+    }
 
     @objc func toggleOverview(_ sender: Any) {
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
@@ -938,23 +936,7 @@ extension RouteMapViewController: NavigationViewDelegate {
 //        mapView.addArrow(route: router.routeProgress.route, legIndex: legIndex, stepIndex: stepIndex + 1)
 //    }
 //
-//    func addPreviewInstructions(step: RouteStep, maneuverStep: RouteStep, distance: CLLocationDistance?) {
-////        removePreviewInstructions()
-//
-//        guard let instructions = step.instructionsDisplayedAlongStep?.last else { return }
-//
-//        let instructionsView = StepInstructionsView(frame: navigationView.instructionsBannerView.frame)
-//        instructionsView.backgroundColor = StepInstructionsView.appearance().backgroundColor
-//        instructionsView.delegate = self
-//        instructionsView.distance = distance
-//        instructionsView.swipeable = true
-//
-//        navigationView.instructionsBannerContentView.backgroundColor = instructionsView.backgroundColor
-//
-//        view.addSubview(instructionsView)
-//        instructionsView.update(for: instructions)
-//        previewInstructionsView = instructionsView
-//    }
+
 }
 
 // MARK: StepsViewControllerDelegate

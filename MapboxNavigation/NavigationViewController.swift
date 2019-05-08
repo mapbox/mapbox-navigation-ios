@@ -587,8 +587,70 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
             locationManager.speedMultiplier = Double(displayValue)
         }
     }
+    
+    public func topBanner(_ banner: TopBannerViewController, didSwipeInDirection direction: UISwipeGestureRecognizer.Direction) {
+        let progress = navigationService.routeProgress
+        let route = progress.route
+        
+        if direction == .down {
+            banner.displayStepsTable()
+            
+            
+            if banner.isDisplayingPreviewInstructions {
+                mapViewController?.recenter(self)
+            }
+            
+        } else if direction == .right {
+            // prevent swiping when step list is visible
+            if banner.isDisplayingSteps {
+                return
+            }
+            
+            guard let currentStepIndex = banner.currentPreviewStep?.1 else { return }
+            let remainingSteps = progress.remainingSteps
+            let prevStepIndex = currentStepIndex - 1
+            guard prevStepIndex >= 0 else { return }
+            
+            let prevStep = remainingSteps[prevStepIndex]
+            preview(step: prevStep, in: banner, remaining: remainingSteps, route: route)
+        } else if direction == .left {
+            // prevent swiping when step list is visible
+            if banner.isDisplayingSteps {
+                return
+            }
+            
+            let remainingSteps = navigationService.router.routeProgress.remainingSteps
+            let currentStepIndex = banner.currentPreviewStep?.1 ?? 0
+            let nextStepIndex = currentStepIndex + 1
+            guard nextStepIndex < remainingSteps.count else { return }
+            
+            let nextStep = remainingSteps[nextStepIndex]
+            preview(step: nextStep, in: banner, remaining: remainingSteps, route: route)
+        }
+    }
+    
+    func preview(step: RouteStep, in banner: TopBannerViewController, remaining: [RouteStep], route: Route) {
+        guard let leg = route.leg(containing: step) else { return }
+        guard let legIndex = route.legs.index(of: leg) else { return }
+        guard let stepIndex = leg.steps.index(of: step) else { return }
+        let nextStepIndex = stepIndex + 1
+        
+        let legProgress = RouteLegProgress(leg: leg, stepIndex: stepIndex)
+        guard let upcomingStep = legProgress.upcomingStep else { return }
+        
+        banner.preview(step: legProgress.currentStep, maneuverStep: upcomingStep, distance: legProgress.currentStep.distance, steps: remaining)
+        
+        
+        mapViewController?.center(on: upcomingStep, route: route, legIndex: legIndex, stepIndex: nextStepIndex)
+    }
+    
 }
 
+fileprivate extension Route {
+    func leg(containing step: RouteStep) -> RouteLeg? {
+        return legs.first { $0.steps.contains(step) }
+    }
+}
 
 // MARK: - BottomBannerViewControllerDelegate
 

@@ -3,9 +3,12 @@ import MapboxCoreNavigation
 import MapboxDirections
 
 
-typealias TopBannerViewControllerDelegate = InstructionsBannerViewDelegate & StatusViewDelegate
+@objc protocol TopBannerViewControllerDelegate: StatusViewDelegate {
+    @objc optional func topBanner(_ banner: TopBannerViewController, didSwipeInDirection direction: UISwipeGestureRecognizer.Direction)
 
-class TopBannerViewController: ContainerViewController, InstructionsBannerViewDelegate, StatusViewDelegate {
+}
+
+@objc open class TopBannerViewController: ContainerViewController, StatusViewDelegate {
     
     weak var delegate: TopBannerViewControllerDelegate? = nil {
         didSet {
@@ -20,6 +23,7 @@ class TopBannerViewController: ContainerViewController, InstructionsBannerViewDe
     lazy var instructionsBannerView: InstructionsBannerView = {
         let banner: InstructionsBannerView = .forAutoLayout()
         banner.delegate = self
+        banner.swipeable = true
         return banner
     }()
     
@@ -32,9 +36,19 @@ class TopBannerViewController: ContainerViewController, InstructionsBannerViewDe
         return view
     }()
     
+    public var isDisplayingPreviewInstructions: Bool {
+        return previewInstructionsView != nil
+    }
     
+    private(set) public var isDisplayingSteps: Bool = false
     
-    required init?(coder aDecoder: NSCoder) {
+    private(set) var previewSteps: [RouteStep]?
+    private(set) var currentPreviewStep: (RouteStep, Int)?
+    
+    private(set) var previewInstructionsView: StepInstructionsView?
+
+    
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit()
     }
@@ -97,35 +111,89 @@ class TopBannerViewController: ContainerViewController, InstructionsBannerViewDe
         }
     }
     
-    func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
+    public func displayStepsTable() {
+        
+    }
+    
+    public func dismissStepsTable() {
+        
+    }
+    
+    public func preview(step stepOverride: RouteStep? = nil, maneuverStep: RouteStep, distance: CLLocationDistance, steps: [RouteStep]) {
+        guard !steps.isEmpty, let step = stepOverride ?? steps.first, let index = steps.index(of: step) else {
+            return // do nothing if there are no steps provided to us.
+        }
+        
+        previewSteps = steps
+        currentPreviewStep = (step, index)
+        
+        
+        stopPreviewing()
+        
+        guard let instructions = step.instructionsDisplayedAlongStep?.last else { return }
+        
+        let instructionsView = StepInstructionsView(frame: instructionsBannerView.frame)
+        instructionsView.backgroundColor = StepInstructionsView.appearance().backgroundColor
+        instructionsView.delegate = self
+        instructionsView.distance = distance
+        instructionsView.swipeable = true
+        informationStackView.removeArrangedSubview(instructionsBannerView)
+        informationStackView.insertArrangedSubview(instructionsView, at: 0)
+        instructionsView.update(for: instructions)
+        previewInstructionsView = instructionsView
+    }
+    
+    public func stopPreviewing() {
+        guard let view = previewInstructionsView else {
+            return
+        }
+        informationStackView.removeArrangedSubview(view)
+        informationStackView.insertArrangedSubview(instructionsBannerView, at: 0)
+        
+        instructionsBannerView.delegate = self
+        instructionsBannerView.swipeable = true
+        previewInstructionsView = nil
+    }
+}
+
+// MARK: - NavigationComponent Conformance
+extension TopBannerViewController /* NavigationComponent */ {
+    public func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         instructionsBannerView.updateDistance(for: progress.currentLegProgress.currentStepProgress)
         
     }
     
-    func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
+    public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
         instructionsBannerView.update(for: instruction)
         lanesView.update(for: instruction)
         nextBannerView.update(for: instruction)
     }
     
-    func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {
+    public func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {
         let title = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
         lanesView.hide()
         statusView.show(title, showSpinner: true)
     }
     
-    func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
+    public func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
         instructionsBannerView.updateDistance(for: service.routeProgress.currentLegProgress.currentStepProgress)
     }
     
-    func navigationService(_ service: NavigationService, willBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
+    public func navigationService(_ service: NavigationService, willBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
         guard reason == .manual else { return }
         let localized = String.Localized.simulationStatus(speed: 1)
         statusView.show(localized, showSpinner: false, interactive: true)
     }
     
-    func navigationService(_ service: NavigationService, willEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
+    public func navigationService(_ service: NavigationService, willEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
         guard reason == .manual else { return }
         statusView.hide(delay: 0, animated: true)
+    }
+}
+
+// MARK: InstructionsBannerViewDelegate Conformance
+extension TopBannerViewController: InstructionsBannerViewDelegate {
+    public func didSwipeInstructionsBanner(_ sender: BaseInstructionsBannerView, swipeDirection direction: UISwipeGestureRecognizer.Direction) {
+        delegate?.topBanner?(self, didSwipeInDirection: direction)
     }
 }
