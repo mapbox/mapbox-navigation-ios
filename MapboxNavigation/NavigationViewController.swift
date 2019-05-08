@@ -232,8 +232,8 @@ open class NavigationViewController: UIViewController {
             return viewController
         }()
         bottomViewController = bottomBanner
-
-        let topBanner = options?.topBanner ?? TopBannerViewController(nibName: nil, bundle: nil)
+        
+        let topBanner = options?.topBanner ?? TopBannerViewController(delegate: self)
         topViewController = topBanner
         
         let mapViewController = RouteMapViewController(navigationService: self.navigationService, delegate: self, topBanner: topBanner, bottomBanner: bottomBanner)
@@ -416,11 +416,14 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
         return delegate?.label?(label, willPresent: instruction, as: presented)
     }
     
-    @objc func mapViewControllerDidRecenter(_ mapViewController: RouteMapViewController) {
-        guard let instructionsCardCollection = topViewController as? InstructionsCardCollection else {
-            return
+    @objc func mapViewController(_ mapViewController: RouteMapViewController, didRecenterAt location: CLLocation) {
+        for component in navigationComponents {
+            component.navigationViewController?(self, didRecenterAt: location)
         }
-        instructionsCardCollection.stopPreview()
+        
+        if let instructionsCardCollection = topViewController as? InstructionsCardCollection {
+            instructionsCardCollection.stopPreview()
+        }
     }
 }
 
@@ -432,6 +435,11 @@ extension NavigationViewController: NavigationServiceDelegate {
     }
     
     @objc public func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {
+        
+        for component in navigationComponents {
+            component.navigationService?(service, willRerouteFrom: location)
+        }
+        
         delegate?.navigationViewController?(self, willRerouteFrom: location)
     }
     
@@ -524,21 +532,14 @@ extension NavigationViewController: NavigationServiceDelegate {
     }
 
     @objc public func navigationService(_ service: NavigationService, willBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
-        switch service.simulationMode {
-        case .always:
-            let localized = String.Localized.simulationStatus(speed: 1)
-            mapViewController?.statusView.show(localized, showSpinner: false, interactive: true)
-        default:
-            return
+        for component in navigationComponents {
+            component.navigationService?(service, willBeginSimulating: progress, becauseOf: reason)
         }
     }
     
     @objc public func navigationService(_ service: NavigationService, willEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
-        switch service.simulationMode {
-        case .always:
-            mapViewController?.statusView.hide(delay: 0, animated: true)
-        default:
-            return
+        for component in navigationComponents {
+            component.navigationService?(service, willEndSimulating: progress, becauseOf: reason)
         }
     }
     
@@ -584,6 +585,82 @@ extension NavigationViewController: StyleManagerDelegate {
     
     @objc public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
         mapView?.reloadStyle(self)
+    }
+}
+// MARK: - TopBannerViewController
+
+extension NavigationViewController: TopBannerViewControllerDelegate {
+    public func statusView(_ statusView: StatusView, valueChangedTo value: Double) {
+        let displayValue = 1+min(Int(9 * value), 8)
+        let title = String.Localized.simulationStatus(speed: displayValue)
+        statusView.showStatus(title: title, for: .infinity, interactive: true)
+        
+        if let locationManager = navigationService.locationManager as? SimulatedLocationManager {
+            locationManager.speedMultiplier = Double(displayValue)
+        }
+    }
+    
+    public func topBanner(_ banner: TopBannerViewController, didSwipeInDirection direction: UISwipeGestureRecognizer.Direction) {
+        let progress = navigationService.routeProgress
+        let route = progress.route
+        
+        if direction == .down {
+            banner.displayStepsTable()
+            
+            
+            if banner.isDisplayingPreviewInstructions {
+                mapViewController?.recenter(self)
+            }
+            
+        } else if direction == .right {
+            // prevent swiping when step list is visible
+            if banner.isDisplayingSteps {
+                return
+            }
+            
+            guard let currentStepIndex = banner.currentPreviewStep?.1 else { return }
+            let remainingSteps = progress.remainingSteps
+            let prevStepIndex = currentStepIndex - 1
+            guard prevStepIndex >= 0 else { return }
+            
+            let prevStep = remainingSteps[prevStepIndex]
+            preview(step: prevStep, in: banner, remaining: remainingSteps, route: route)
+        } else if direction == .left {
+            // prevent swiping when step list is visible
+            if banner.isDisplayingSteps {
+                return
+            }
+            
+            let remainingSteps = navigationService.router.routeProgress.remainingSteps
+            let currentStepIndex = banner.currentPreviewStep?.1 ?? 0
+            let nextStepIndex = currentStepIndex + 1
+            guard nextStepIndex < remainingSteps.count else { return }
+            
+            let nextStep = remainingSteps[nextStepIndex]
+            preview(step: nextStep, in: banner, remaining: remainingSteps, route: route)
+        }
+    }
+    
+    public func preview(step: RouteStep, in banner: TopBannerViewController, remaining: [RouteStep], route: Route) {
+        guard let leg = route.leg(containing: step) else { return }
+        guard let legIndex = route.legs.index(of: leg) else { return }
+        guard let stepIndex = leg.steps.index(of: step) else { return }
+        let nextStepIndex = stepIndex + 1
+        
+        let legProgress = RouteLegProgress(leg: leg, stepIndex: stepIndex)
+        guard let upcomingStep = legProgress.upcomingStep else { return }
+        
+        banner.preview(step: legProgress.currentStep, maneuverStep: upcomingStep, distance: legProgress.currentStep.distance, steps: remaining)
+        
+        
+        mapViewController?.center(on: upcomingStep, route: route, legIndex: legIndex, stepIndex: nextStepIndex)
+    }
+    
+}
+
+fileprivate extension Route {
+    func leg(containing step: RouteStep) -> RouteLeg? {
+        return legs.first { $0.steps.contains(step) }
     }
 }
 

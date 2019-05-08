@@ -1,5 +1,5 @@
 
 @objc public protocol NavigationInteractionDelegate: class {
     
-    @objc optional func navigationDidRecenter(_ navigationViewController: NavigationViewController)
+    @objc optional func navigationViewController(_ controller: NavigationViewController, didRecenterAt location: CLLocation)
 }

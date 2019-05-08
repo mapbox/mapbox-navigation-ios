@@ -48,11 +48,6 @@ extension RouteMapViewController: NavigationComponent {
         navigationComponents.forEach {$0.navigationService?(service, didPassVisualInstructionPoint: instruction, routeProgress: routeProgress)}
     }
     
-    func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {
-        let title = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
-        lanesView.hide()
-        statusView.show(title, showSpinner: true)
-    }
     
     func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
         navigationComponents.forEach { $0.navigationService?(service, didRerouteAlong: route, at: location, proactive: proactive) }
@@ -89,19 +84,19 @@ extension RouteMapViewController: NavigationComponent {
         
         if let locationManager = navService.locationManager as? SimulatedLocationManager {
             let localized = String.Localized.simulationStatus(speed: Int(locationManager.speedMultiplier))
-            showStatus(title: localized, for: .infinity, interactive: true)
+//            showStatus(title: localized, for: .infinity, interactive: true)
         } else {
-            statusView.hide(delay: 2, animated: true)
+//            statusView.hide(delay: 2, animated: true)
         }
         
         if proactive {
             let title = NSLocalizedString("FASTER_ROUTE_FOUND", bundle: .mapboxNavigation, value: "Faster Route Found", comment: "Indicates a faster route was found")
-            showStatus(title: title, withSpinner: true, for: 3)
+//            showStatus(title: title, withSpinner: true, for: 3)
         }
     }
     
     func navigationService(_ service: NavigationService, didFailToRerouteWith error: Error) {
-        statusView.hide()
+//        statusView.hide()
     }
 }
 
@@ -110,7 +105,7 @@ class RouteMapViewController: UIViewController {
 
     var navigationView: NavigationView { return view as! NavigationView }
     var mapView: NavigationMapView { return navigationView.mapView }
-    var statusView: StatusView { return navigationView.statusView }
+//    var statusView: StatusView { return navigationView.statusView }
     var reportButton: FloatingButton { return navigationView.reportButton }
     var lanesView: LanesView { return navigationView.lanesView }
     var nextBannerView: NextBannerView { return navigationView.nextBannerView }
@@ -176,7 +171,7 @@ class RouteMapViewController: UIViewController {
     weak var delegate: RouteMapViewControllerDelegate?
     var navService: NavigationService! {
         didSet {
-            navigationView.statusView.canChangeValue = navService.locationManager is SimulatedLocationManager
+//            navigationView.statusView.canChangeValue = navService.locationManager is SimulatedLocationManager
             guard let destination = route.legs.last?.destination else { return }
             populateName(for: destination, populated: { self.destination = $0 })
         }
@@ -346,20 +341,17 @@ class RouteMapViewController: UIViewController {
         // always remove preview index when we recenter
         currentPreviewInstructionBannerStepIndex = nil
         
-        delegate?.mapViewControllerDidRecenter(self)
-//        removePreviewInstructions()
+        delegate?.mapViewController(self, didRecenterAt: mapView.userLocationForCourseTracking!)
     }
-
-
-//    func removePreviewInstructions() {
-//        if let view = previewInstructionsView {
-//            view.removeFromSuperview()
-//            navigationView.instructionsBannerContentView.backgroundColor = InstructionsBannerView.appearance().backgroundColor
-//            navigationView.instructionsBannerView.delegate = self
-//            navigationView.instructionsBannerView.swipeable = true
-//            previewInstructionsView = nil
-//        }
-//    }
+    
+    @objc func center(on step: RouteStep, route: Route, legIndex: Int, stepIndex: Int) {
+        mapView.enableFrameByFrameCourseViewTracking(for: 1)
+        mapView.tracksUserCourse = false
+        mapView.setCenter(step.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step.initialHeading!, animated: true, completionHandler: nil)
+        
+        guard isViewLoaded && view.window != nil else { return }
+        mapView.addArrow(route: router.routeProgress.route, legIndex: legIndex, stepIndex: stepIndex)
+    }
 
     @objc func toggleOverview(_ sender: Any) {
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
@@ -409,8 +401,8 @@ class RouteMapViewController: UIViewController {
         guard AVAudioSession.sharedInstance().outputVolume <= NavigationViewMinimumVolumeForWarning else { return }
 
         let title = String.localizedStringWithFormat(NSLocalizedString("DEVICE_VOLUME_LOW", bundle: .mapboxNavigation, value: "%@ Volume Low", comment: "Format string for indicating the device volume is low; 1 = device model"), UIDevice.current.model)
-        statusView.show(title, showSpinner: false)
-        statusView.hide(delay: 3, animated: true)
+//        statusView.show(title, showSpinner: false)
+//        statusView.hide(delay: 3, animated: true)
     }
 
 
@@ -456,11 +448,7 @@ class RouteMapViewController: UIViewController {
         }
     }
 
-    private func showStatus(title: String, withSpinner spin: Bool = false, for time: TimeInterval, animated: Bool = true, interactive: Bool = false) {
-        statusView.show(title, showSpinner: spin, interactive: interactive)
-        guard time < .infinity else { return }
-        statusView.hide(delay: time, animated: animated)
-    }
+
 
     private func setCamera(altitude: Double) {
         guard mapView.altitude != altitude else { return }
@@ -948,23 +936,7 @@ extension RouteMapViewController: NavigationViewDelegate {
 //        mapView.addArrow(route: router.routeProgress.route, legIndex: legIndex, stepIndex: stepIndex + 1)
 //    }
 //
-//    func addPreviewInstructions(step: RouteStep, maneuverStep: RouteStep, distance: CLLocationDistance?) {
-////        removePreviewInstructions()
-//
-//        guard let instructions = step.instructionsDisplayedAlongStep?.last else { return }
-//
-//        let instructionsView = StepInstructionsView(frame: navigationView.instructionsBannerView.frame)
-//        instructionsView.backgroundColor = StepInstructionsView.appearance().backgroundColor
-//        instructionsView.delegate = self
-//        instructionsView.distance = distance
-//        instructionsView.swipeable = true
-//
-//        navigationView.instructionsBannerContentView.backgroundColor = instructionsView.backgroundColor
-//
-//        view.addSubview(instructionsView)
-//        instructionsView.update(for: instructions)
-//        previewInstructionsView = instructionsView
-//    }
+
 }
 
 // MARK: StepsViewControllerDelegate
@@ -999,15 +971,7 @@ extension RouteMapViewController: StepsViewControllerDelegate {
         }
     }
 
-    func statusView(_ statusView: StatusView, valueChangedTo value: Double) {
-        let displayValue = 1+min(Int(9 * value), 8)
-        let title = String.Localized.simulationStatus(speed: displayValue)
-        showStatus(title: title, for: .infinity, interactive: true)
-        
-        if let locationManager = navService.locationManager as? SimulatedLocationManager {
-            locationManager.speedMultiplier = Double(displayValue)
-        }
-    }
+
 }
 
 // MARK: - Keyboard Handling
@@ -1088,5 +1052,6 @@ internal extension UIView.AnimationOptions {
      */
     @objc func mapViewController(_ mapViewController: RouteMapViewController, roadNameAt location: CLLocation) -> String?
     
-    @objc func mapViewControllerDidRecenter(_ mapViewController: RouteMapViewController)
+    
+    @objc func mapViewController(_ mapViewController: RouteMapViewController, didRecenterAt location: CLLocation)
 }
