@@ -2,38 +2,12 @@ import UIKit
 import MapboxDirections
 import MapboxCoreNavigation
 
-//@objc public protocol InstructionsCardViewDelegate {
-//
-//    @objc func instructionsCardViewShouldHighlightCard(_ instructionsCardView: InstructionsCardView)
-//}
-
 public class InstructionsCardView: BaseInstructionsBannerView, NavigationComponent {
     
     var style: InstructionsCardStyle = DayInstructionsCardStyle ()
-    
-    func prepareLayout(for style: InstructionsCardStyle) {
-        self.style = style
-        prepareLayout()
-    }
-    
     var step: RouteStep!
-    
-    func updateInstruction(for step: RouteStep) {
-        self.step = step
-        if let instruction = step.instructionsDisplayedAlongStep?.last {
-            update(for: instruction)
-        }
-    }
-    
     var distanceFromCurrentLocation: CLLocationDistance!
-    
-    func updateDistanceFromCurrentLocation(_ distance: CLLocationDistance) {
-        self.distanceFromCurrentLocation = distance
-        self.distance = distance
-    }
-    
     var gradientLayer: CAGradientLayer!
-    
     var highlightDistance: CLLocationDistance = InstructionsCardConstants.highlightDistance
     
     var isActive: Bool = false {
@@ -44,8 +18,6 @@ public class InstructionsCardView: BaseInstructionsBannerView, NavigationCompone
             }
         }
     }
-//
-//    weak public var cardViewDelegate: InstructionsCardViewDelegate?
     
     required public init(style: InstructionsCardStyle? = nil) {
         super.init(frame: .zero)
@@ -65,6 +37,23 @@ public class InstructionsCardView: BaseInstructionsBannerView, NavigationCompone
     
     @objc public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
         update(for: instruction)
+    }
+    
+    func prepareLayout(for style: InstructionsCardStyle) {
+        self.style = style
+        prepareLayout()
+    }
+    
+    func updateInstruction(for step: RouteStep) {
+        self.step = step
+        if let instruction = step.instructionsDisplayedAlongStep?.last {
+            update(for: instruction)
+        }
+    }
+    
+    func updateDistanceFromCurrentLocation(_ distance: CLLocationDistance) {
+        self.distanceFromCurrentLocation = distance
+        self.distance = distance
     }
     
     func prepareLayout() {
