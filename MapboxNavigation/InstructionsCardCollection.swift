@@ -2,11 +2,24 @@ import MapboxDirections
 import MapboxCoreNavigation
 
 @objc public protocol InstructionsCardCollectionDelegate {
-    /// :nodoc: needs documentation
+    /**
+     Called when previewing the steps on the current route.
+     
+     Implementing this method will allow developers to move focus to the maneuver that corresponds to the step currently previewed.
+     - parameter instructionsCardCollection: The instructions card collection instance.
+     - parameter step: The step for the maneuver instruction in preview.
+     */
     @objc(instructionsCardCollection:previewFor:)
     func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardCollection, previewFor step: RouteStep)
     
-    /// :nodoc: needs documentation
+    /**
+     Offers the delegate the opportunity to customize the size of a prototype collection view cell per the associated trait collection.
+     
+     - parameter instructionsCardCollection: The instructions card collection instance.
+     - parameter cardSizeForTraitcollection: The trait collection associated to the current container view controller.
+     - returns: The preferred size of the cards for each cell in the instructions card collection.
+     
+     */
     @objc(instructionsCardCollection:cardSizeForTraitcollection:)
     optional func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardCollection, cardSizeForTraitcollection: UITraitCollection) -> CGSize
 }
@@ -15,14 +28,14 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
     typealias InstructionsCardCollectionLayout = UICollectionViewFlowLayout
     typealias InstructionsCardCell = UICollectionViewCell
     
-    var steps: [RouteStep]? // TODO: Not needed at all!
+    var steps: [RouteStep]? // TODO: should be derived from routeProgress.
     var routeProgress: RouteProgress?
-    var cardSize = CGSize.zero
-    var cardStyle = DayInstructionsCardStyle()
+    var cardSize: CGSize = .zero
+    var cardStyle: DayInstructionsCardStyle = DayInstructionsCardStyle()
     
     var instructionCollectionView: UICollectionView!
     var instructionsCardLayout: InstructionsCardCollectionLayout!
-    var isInPreview = false
+    public private(set) var isInPreview = false
     
     var cardSteps: [RouteStep]? { // TODO: Will be renamed to steps
         guard let stepIndex = routeProgress?.currentLegProgress.stepIndex, let steps = routeProgress?.currentLeg.steps else { return nil }
@@ -53,6 +66,7 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
     fileprivate var contentOffsetBeforeSwipe = CGPoint(x: 0, y: 0)
     fileprivate var indexBeforeSwipe = IndexPath(row: 0, section: 0)
     fileprivate var isSnapAndRemove = false
+    fileprivate let cardCollectionCellIdentifier = "InstructionsCardCollectionCellID"
     
     lazy open var topPaddingView: TopBannerView =  {
         let view: TopBannerView = .forAutoLayout()
@@ -75,7 +89,7 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
         instructionsCardLayout.itemSize = cardSize
         
         instructionCollectionView = UICollectionView(frame: .zero, collectionViewLayout: instructionsCardLayout)
-        instructionCollectionView.register(InstructionsCardCell.self, forCellWithReuseIdentifier: "cell")
+        instructionCollectionView.register(InstructionsCardCell.self, forCellWithReuseIdentifier: cardCollectionCellIdentifier)
         instructionCollectionView.contentInset = UIEdgeInsets(top: 0, left: 8.0, bottom: 0, right: 8.0)
         instructionCollectionView.contentOffset = CGPoint(x: -8.0, y: 0.0)
         instructionCollectionView.dataSource = self
@@ -85,21 +99,13 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
         instructionCollectionView.showsHorizontalScrollIndicator = false
         instructionCollectionView.backgroundColor = .clear
         instructionCollectionView.isPagingEnabled = true
+        instructionCollectionView.translatesAutoresizingMaskIntoConstraints = false
         
         addSubviews()
         setConstraints()
         
         view.clipsToBounds = false
         topPaddingView.backgroundColor = .clear
-        
-        instructionCollectionView.translatesAutoresizingMaskIntoConstraints = false
-        instructionCollectionView.topAnchor.constraint(equalTo: topPaddingView.bottomAnchor).isActive = true
-        instructionCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        instructionCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        instructionCollectionView.heightAnchor.constraint(equalToConstant: cardSize.height).isActive = true
-        instructionCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        
-        instructionCollectionView.isHidden = false
     }
     
     func addSubviews() {
@@ -115,16 +121,25 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
             ]
         
         NSLayoutConstraint.activate(topPaddingConstraints)
+        
+        let instructionCollectionViewContraints: [NSLayoutConstraint] = [
+            instructionCollectionView.topAnchor.constraint(equalTo: topPaddingView.bottomAnchor),
+            instructionCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            instructionCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            instructionCollectionView.heightAnchor.constraint(equalToConstant: cardSize.height),
+            instructionCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        ]
+        
+        NSLayoutConstraint.activate(instructionCollectionViewContraints)
     }
     
-    /// TODO: Use location to calculate the distance to upcoming maneuver.
+    /// TODO: Too extranous inforation and what not
     public func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         routeProgress = progress
         updateInstructionsCardDataSource(for: progress)
     }
     
     fileprivate func updateInstructionsCardDataSource(for progress: RouteProgress) {
-        // steps = progress.currentLeg.steps
         let steps = cardSteps ?? []
         update(steps: steps)
         updateDistancesOnCards()
@@ -143,7 +158,8 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
         instructionCollectionView.layoutIfNeeded()
     }
     
-    func refresh() {
+    /// TODO: The instructions card collections should not be processing this information
+    public func refresh() {
         guard let progress = routeProgress else { return }
 
         var remainingSteps = progress.remainingSteps
@@ -159,14 +175,13 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
     fileprivate func updateDistancesOnCards() {
         _ = distancesFromCurrentLocationToManeuver?.enumerated().map { (index, distance) in
             if let card = instructionsCardView(at: IndexPath(row: index, section: 0)) {
-                // card.distanceFromCurrentLocation = distance
                 card.updateDistanceFromCurrentLocation(distance)
                 card.isActive = distance < card.highlightDistance
             }
         }
     }
     
-    func updateInstruction(for progress: RouteProgress) {
+    public func updateInstruction(for progress: RouteProgress) {
         guard let activeCard = instructionsCardView(at: IndexPath(row: 0, section: 0)) else { return }
         if !progress.currentLegProgress.isCurrentStep(activeCard.step) {
             isSnapAndRemove = true
@@ -180,7 +195,7 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
         instructionsCardLayout.collectionView?.scrollToItem(at: indexPath, at: .left, animated: true)
     }
     
-    func stopPreview() {
+    public func stopPreview() {
         isInPreview = false
         
         guard let steps = routeProgress?.steps else { return }
@@ -210,7 +225,7 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
     
     fileprivate func calculateIndexToSnapTo() -> IndexPath {
         guard let collectionView = instructionsCardLayout.collectionView,
-            let itemCount      = cardSteps?.count else { return IndexPath(row: 0, section: 0) }
+              let itemCount = cardSteps?.count else { return IndexPath(row: 0, section: 0) }
         
         let collectionViewFlowLayoutMinimumSpacingDefault: CGFloat = 10.0
         let estimatedIndex = Int(round((collectionView.contentOffset.x + collectionView.contentInset.left) / (cardSize.width + collectionViewFlowLayoutMinimumSpacingDefault)))
@@ -235,11 +250,11 @@ extension InstructionsCardCollection: UICollectionViewDelegate {
     
     public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         indexBeforeSwipe = calculateIndexToSnapTo()
-        contentOffsetBeforeSwipe = scrollView.contentOffset /// TODO
+        contentOffsetBeforeSwipe = scrollView.contentOffset
     }
     
     public func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        targetContentOffset.pointee = scrollView.contentOffset /// TODO
+        targetContentOffset.pointee = scrollView.contentOffset
         
         let itemCount = cardSteps?.count ?? 0
         let velocityThreshold: CGFloat = 0.4
@@ -249,28 +264,28 @@ extension InstructionsCardCollection: UICollectionViewDelegate {
         let didSwipe = hasVelocityToSlideToNext || hasVelocityToSlidePrev
         
         let previewIndex: Int!
-        let indexToSnapToo: IndexPath!
+        let indexToSnapTo: IndexPath!
         
         if didSwipe {
             
             if hasVelocityToSlideToNext {
-                indexToSnapToo = IndexPath(row: indexBeforeSwipe.row + 1, section: 0)
+                indexToSnapTo = IndexPath(row: indexBeforeSwipe.row + 1, section: 0)
             } else {
-                indexToSnapToo = IndexPath(row: indexBeforeSwipe.row - 1, section: 0)
+                indexToSnapTo = IndexPath(row: indexBeforeSwipe.row - 1, section: 0)
             }
             
-            snapToIndex(index: indexToSnapToo)
-            previewIndex = indexToSnapToo.row
+            snapToIndex(index: indexToSnapTo)
+            previewIndex = indexToSnapTo.row
         } else {
             if scrollView.contentOffset.x - contentOffsetBeforeSwipe.x < -cardSize.width / 2 {
-                indexToSnapToo = IndexPath(row: indexBeforeSwipe.row - 1, section: 0)
+                indexToSnapTo = IndexPath(row: indexBeforeSwipe.row - 1, section: 0)
             } else if scrollView.contentOffset.x - contentOffsetBeforeSwipe.x > cardSize.width / 2 {
-                indexToSnapToo = IndexPath(row: indexBeforeSwipe.row + 1, section: 0)
+                indexToSnapTo = IndexPath(row: indexBeforeSwipe.row + 1, section: 0)
             } else {
-                indexToSnapToo = indexBeforeSwipe
+                indexToSnapTo = indexBeforeSwipe
             }
-            snapToIndex(index: indexToSnapToo)
-            previewIndex = indexToSnapToo.row
+            snapToIndex(index: indexToSnapTo)
+            previewIndex = indexToSnapTo.row
         }
         
         isInPreview = previewIndex != indexBeforeSwipe.row
@@ -287,7 +302,7 @@ extension InstructionsCardCollection: UICollectionViewDataSource {
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cardCollectionCellIdentifier, for: indexPath)
         guard let step = cardSteps?[indexPath.row], let distance = distancesFromCurrentLocationToManeuver?[indexPath.row] else { return cell }
         
         if cell.subviews.count > 0 {
@@ -303,11 +318,9 @@ extension InstructionsCardCollection: UICollectionViewDataSource {
         cell.layer.shadowOpacity = 0.4
         
         let instructionsCard = InstructionsCardView()
-        // instructionsCard.step = step
         instructionsCard.prepareLayout(for: cardStyle)
         instructionsCard.updateInstruction(for: step)
         instructionsCard.updateDistanceFromCurrentLocation(distance)
-        // instructionsCard.distanceFromCurrentLocation = distance
         
         if let routeProgress = routeProgress,
             routeProgress.currentLegProgress.isCurrentStep(step) {
@@ -341,11 +354,5 @@ extension RouteProgress {
         }
         steps += remainingLegs.flatMap { $0.steps }
         return steps
-    }
-}
-
-extension Route {
-    var steps: [RouteStep] {
-        return legs.flatMap { $0.steps }
     }
 }
