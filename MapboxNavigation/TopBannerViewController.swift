@@ -123,21 +123,23 @@ import MapboxDirections
         guard !steps.isEmpty, let step = stepOverride ?? steps.first, let index = steps.index(of: step) else {
             return // do nothing if there are no steps provided to us.
         }
+        //this must happen before the preview steps are set
+        stopPreviewing()
         
         previewSteps = steps
         currentPreviewStep = (step, index)
         
         
-        stopPreviewing()
         
         guard let instructions = step.instructionsDisplayedAlongStep?.last else { return }
         
         let instructionsView = StepInstructionsView(frame: instructionsBannerView.frame)
-        instructionsView.backgroundColor = StepInstructionsView.appearance().backgroundColor
+        topPaddingView.backgroundColor = StepInstructionsView.appearance().backgroundColor
         instructionsView.delegate = self
         instructionsView.distance = distance
         instructionsView.swipeable = true
         informationStackView.removeArrangedSubview(instructionsBannerView)
+        instructionsBannerView.removeFromSuperview()
         informationStackView.insertArrangedSubview(instructionsView, at: 0)
         instructionsView.update(for: instructions)
         previewInstructionsView = instructionsView
@@ -147,8 +149,14 @@ import MapboxDirections
         guard let view = previewInstructionsView else {
             return
         }
+        
+        previewSteps = nil
+        currentPreviewStep = nil
+        
         informationStackView.removeArrangedSubview(view)
+        view.removeFromSuperview()
         informationStackView.insertArrangedSubview(instructionsBannerView, at: 0)
+        topPaddingView.backgroundColor = InstructionsBannerView.appearance().backgroundColor
         
         instructionsBannerView.delegate = self
         instructionsBannerView.swipeable = true
@@ -188,6 +196,10 @@ extension TopBannerViewController /* NavigationComponent */ {
     public func navigationService(_ service: NavigationService, willEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
         guard reason == .manual else { return }
         statusView.hide(delay: 0, animated: true)
+    }
+    
+    public func navigationViewController(_ controller: NavigationViewController, didRecenterAt location: CLLocation) {
+        stopPreviewing()
     }
 }
 

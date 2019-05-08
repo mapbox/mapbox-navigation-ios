@@ -413,6 +413,12 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
     @objc public func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
         return delegate?.label?(label, willPresent: instruction, as: presented)
     }
+    
+    @objc func mapViewController(_ mapViewController: RouteMapViewController, didRecenterAt location: CLLocation) {
+        for component in navigationComponents {
+            component.navigationViewController?(self, didRecenterAt: location)
+        }
+    }
 }
 
 //MARK: - NavigationServiceDelegate
@@ -629,7 +635,7 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
         }
     }
     
-    func preview(step: RouteStep, in banner: TopBannerViewController, remaining: [RouteStep], route: Route) {
+    public func preview(step: RouteStep, in banner: TopBannerViewController, remaining: [RouteStep], route: Route) {
         guard let leg = route.leg(containing: step) else { return }
         guard let legIndex = route.legs.index(of: leg) else { return }
         guard let stepIndex = leg.steps.index(of: step) else { return }
