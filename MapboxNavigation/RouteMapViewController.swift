@@ -215,19 +215,25 @@ class RouteMapViewController: UIViewController {
         self.navService = navigationService
         self.delegate = delegate
         automaticallyAdjustsScrollViewInsets = false
+        let topContainer = navigationView.topBannerContainerView
         
-        embed(topBanner, in: navigationView.topBannerContainerView) { (parent, banner) -> [NSLayoutConstraint] in
+        embed(topBanner, in: topContainer) { (parent, banner) -> [NSLayoutConstraint] in
             banner.view.translatesAutoresizingMaskIntoConstraints = false
             return banner.view.constraintsForPinning(to: self.navigationView.topBannerContainerView)
         }
         
-        navigationView.topBannerContainerView.accessibilityIdentifier = "topBannerContainerView"
+        topContainer.backgroundColor = .clear
+        topContainer.accessibilityIdentifier = "topBannerContainerView"
         
-        embed(bottomBanner, in: navigationView.bottomBannerContainerView) { (parent, banner) -> [NSLayoutConstraint] in
+        
+        let bottomContainer = navigationView.bottomBannerContainerView
+        embed(bottomBanner, in: bottomContainer) { (parent, banner) -> [NSLayoutConstraint] in
             banner.view.translatesAutoresizingMaskIntoConstraints = false
             return banner.view.constraintsForPinning(to: self.navigationView.bottomBannerContainerView)
         }
-          navigationView.bottomBannerContainerView.accessibilityIdentifier = "bottomBannerContainerView"
+        
+        bottomContainer.backgroundColor = .clear
+        bottomContainer.accessibilityIdentifier = "bottomBannerContainerView"
         
         view.bringSubviewToFront(topBannerContainerView)
     }

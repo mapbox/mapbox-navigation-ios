@@ -19,6 +19,7 @@ open class NextBannerView: UIView, NavigationComponent {
             instructionLabel.instructionDelegate = instructionDelegate
         }
     }
+    public var isCurrentlyVisible: Bool = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -114,6 +115,7 @@ open class NextBannerView: UIView, NavigationComponent {
     public func show() {
         guard isHidden else { return }
         UIView.defaultAnimation(0.3, animations: {
+            self.isCurrentlyVisible = true
             self.isHidden = false
         }, completion: nil)
     }
@@ -121,6 +123,7 @@ open class NextBannerView: UIView, NavigationComponent {
     public func hide() {
         guard !isHidden else { return }
         UIView.defaultAnimation(0.3, animations: {
+            self.isCurrentlyVisible = false
             self.isHidden = true
         }, completion: nil)
     }
