@@ -255,7 +255,7 @@ open class RouteProgress: NSObject {
      Returns the SpeedLimit for the current position along the route. Returns SpeedLimit.invalid if the speed limit is unknown or missing.
      */
     public var currentSpeedLimit: SpeedLimit {
-
+        guard legIndex < positionedSpeedLimitsByStep.count, currentLegProgress.stepIndex < positionedSpeedLimitsByStep[legIndex].count else { return .invalid }
         let speedLimits = positionedSpeedLimitsByStep[legIndex][currentLegProgress.stepIndex]
         let lastSpeedLimitTuple = speedLimits.last { $0.1 <= currentLegProgress.currentStepProgress.distanceTraveled }
         if let lastSpeedLimitTuple = lastSpeedLimitTuple {
