@@ -30,6 +30,13 @@ open class NavigationOptions: NSObject, NavigationCustomizable {
     @objc open var voiceController: RouteVoiceController?
     
     /**
+     The view controller to embed into the top section of the UI.
+     
+     If this property is set to `nil`, a `TopBannerViewController` is created and embedded in the UI. This property is set to `nil` by default.
+     */
+    @objc open var topBanner: ContainerViewController?
+    
+    /**
      The view controller to embed into the bottom section of the UI.
      
      If this property is set to `nil`, a `BottomBannerViewController` is created and embedded in the UI. This property is set to `nil` by default.
@@ -41,11 +48,12 @@ open class NavigationOptions: NSObject, NavigationCustomizable {
         super.init()
     }
     
-    @objc public convenience init(styles: [Style]? = nil, navigationService: NavigationService? = nil, voiceController: RouteVoiceController? = nil, bottomBanner: ContainerViewController? = nil) {
+    @objc public convenience init(styles: [Style]? = nil, navigationService: NavigationService? = nil, voiceController: RouteVoiceController? = nil, topBanner: ContainerViewController? = nil, bottomBanner: ContainerViewController? = nil) {
         self.init()
         self.styles = styles
         self.navigationService = navigationService
         self.voiceController = voiceController
+        self.topBanner = topBanner
         self.bottomBanner = bottomBanner
     }
     

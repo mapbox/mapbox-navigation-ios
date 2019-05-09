@@ -78,7 +78,7 @@ extension BaseInstructionsBannerView {
         addGestureRecognizer(swipeDownGesture)
     }
     
-    func setupLayout() {
+    @objc func setupLayout() {
         // firstColumnWidth is the width of the left side of the banner containing the maneuver view and distance label
         let firstColumnWidth = BaseInstructionsBannerView.maneuverViewSize.width + BaseInstructionsBannerView.padding * 3
         
@@ -136,14 +136,14 @@ extension BaseInstructionsBannerView {
     }
     
     // Aligns the instruction to the center Y (used for single line primary and/or secondary instructions)
-    func centerYAlignInstructions() {
+    @objc func centerYAlignInstructions() {
         _separatorView.isHidden = false
         baselineConstraints.forEach { $0.isActive = false }
         centerYConstraints.forEach { $0.isActive = true }
     }
     
     // Aligns primary top to the top of the maneuver view and the secondary baseline to the distance baseline (used for multiline)
-    func baselineAlignInstructions() {
+    @objc func baselineAlignInstructions() {
         _separatorView.isHidden = true
         centerYConstraints.forEach { $0.isActive = false }
         baselineConstraints.forEach { $0.isActive = true }

@@ -240,6 +240,9 @@ class ViewController: UIViewController {
     func navigationViewController(navigationService: NavigationService) -> NavigationViewController {
         let route = navigationService.route
         let options = NavigationOptions( navigationService: navigationService)
+        let topBanner = InstructionsCardCollection()
+        topBanner.cardCollectionDelegate = self
+        options.topBanner = topBanner
         
         let navigationViewController = NavigationViewController(for: route, options: options)
         navigationViewController.delegate = self
@@ -504,3 +507,37 @@ extension ViewController: VisualInstructionDelegate {
         return presented
     }
 }
+
+
+extension ViewController: InstructionsCardCollectionDelegate {
+    
+    public func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardCollection, previewFor step: RouteStep) {
+        
+        guard let firstRoute = routes?.first else { return }
+        
+        let service = navigationService(route: firstRoute)
+        let route = service.route
+        
+        // find the leg that contains the step, legIndex, and stepIndex
+        guard let leg = route.legs.first(where: { $0.steps.contains(step) }),
+            let legIndex = route.legs.index(of: leg),
+            let stepIndex = leg.steps.index(of: step) else {
+                return
+        }
+        
+        // find the upcoming manuever step, and update instructions banner to show preview
+        guard stepIndex + 1 < leg.steps.endIndex, let mapView = activeNavigationViewController?.mapView else { return }
+        let maneuverStep = leg.steps[stepIndex + 1]
+        
+        // stop tracking user, and move camera to step location
+        mapView.tracksUserCourse = false
+        mapView.userTrackingMode = .none
+        mapView.enableFrameByFrameCourseViewTracking(for: 1)
+        mapView.setCenter(maneuverStep.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: maneuverStep.initialHeading!, animated: true, completionHandler: nil)
+        
+        // add arrow to map for preview instruction
+        mapView.addArrow(route: route, legIndex: legIndex, stepIndex: stepIndex + 1)
+    }
+}
+
+
