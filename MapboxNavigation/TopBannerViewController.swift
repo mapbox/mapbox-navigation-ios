@@ -134,7 +134,9 @@ import MapboxDirections
         guard let instructions = step.instructionsDisplayedAlongStep?.last else { return }
         
         let instructionsView = StepInstructionsView(frame: instructionsBannerView.frame)
-        topPaddingView.backgroundColor = StepInstructionsView.appearance().backgroundColor
+        let backgroundColor = StepInstructionsView.appearance().backgroundColor
+        topPaddingView.backgroundColor = backgroundColor
+        instructionsView.backgroundColor = backgroundColor
         instructionsView.delegate = self
         instructionsView.distance = distance
         instructionsView.swipeable = true
