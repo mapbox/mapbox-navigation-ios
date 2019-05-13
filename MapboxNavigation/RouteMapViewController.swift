@@ -477,7 +477,7 @@ class RouteMapViewController: UIViewController {
         let instructionBannerHeight = topBannerContainerView.bounds.height//instructionsBannerContentView.bounds.height
         let bottomBannerHeight = bottomBannerContainerView.bounds.height
         
-        var insets = UIEdgeInsets(top: instructionBannerHeight, left: .zero, bottom: bottomBannerHeight, right: .zero)
+        var insets = UIEdgeInsets(top: instructionBannerHeight, left: 0.0, bottom: bottomBannerHeight, right: 0.0)
         
         if overviewing {
             insets += NavigationMapView.courseViewMinimumInsets
