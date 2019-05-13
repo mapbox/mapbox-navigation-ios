@@ -298,6 +298,19 @@ extension TopBannerViewController /* NavigationComponent */ {
     
     public func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
         instructionsBannerView.updateDistance(for: service.routeProgress.currentLegProgress.currentStepProgress)
+        
+        dismissStepsTable()
+        if service.simulationMode == .always {
+            let localized = String.Localized.simulationStatus(speed: Int(service.simulationSpeedMultiplier))
+            statusView.showStatus(title: localized, for: .infinity, animated: true, interactive: true)
+        } else {
+            statusView.hide(delay: 2, animated: true)
+        }
+        
+        if (proactive) {
+            let title = NSLocalizedString("FASTER_ROUTE_FOUND", bundle: .mapboxNavigation, value: "Faster Route Found", comment: "Indicates a faster route was found")
+            statusView.showStatus(title: title, withSpinner: true, for: 3)
+        }
     }
     
     public func navigationService(_ service: NavigationService, willBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
@@ -328,6 +341,18 @@ extension TopBannerViewController /* NavigationComponent */ {
 
 // MARK: InstructionsBannerViewDelegate Conformance
 extension TopBannerViewController: InstructionsBannerViewDelegate {
+    public func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView) {
+        if isDisplayingSteps {
+            dismissStepsTable()
+        } else {
+            displayStepsTable()
+        }
+        
+        if currentPreviewStep != nil {
+            //TODO: FIX ME -- RECENTER(self)
+        }
+    }
+    
     public func didSwipeInstructionsBanner(_ sender: BaseInstructionsBannerView, swipeDirection direction: UISwipeGestureRecognizer.Direction) {
         delegate?.topBanner?(self, didSwipeInDirection: direction)
     }
