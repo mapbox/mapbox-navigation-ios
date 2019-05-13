@@ -285,10 +285,7 @@ open class NavigationViewController: UIViewController {
         _ = voiceController
         view.clipsToBounds = true
 
-        guard let coordinate = navigationService.routeProgress.currentLegProgress.currentStep.coordinates?.first else {
-            return
-        }
-
+ 
         guard let firstInstruction = navigationService.routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction else {
             return
         }

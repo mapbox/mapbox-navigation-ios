@@ -623,44 +623,6 @@ extension RouteMapViewController: NavigationViewDelegate {
             recenter(self)
         }
     }
-    
-    func didSwipeInstructionsBanner(_ sender: BaseInstructionsBannerView, swipeDirection direction: UISwipeGestureRecognizer.Direction) {
-        if direction == .down {
-            displayPreviewInstructions()
-            
-            if currentPreviewInstructionBannerStepIndex != nil {
-                recenter(self)
-            }
-        } else if direction == .right {
-            // prevent swiping when step list is visible
-            if stepsViewController != nil {
-                return
-            }
-            
-            guard let currentStepIndex = currentPreviewInstructionBannerStepIndex else { return }
-            let remainingSteps = router.routeProgress.remainingSteps
-            let prevStepIndex = currentStepIndex - 1
-            guard prevStepIndex >= 0 else { return }
-            
-            let prevStep = remainingSteps[prevStepIndex]
-//            addPreviewInstructions(for: prevStep)
-            currentPreviewInstructionBannerStepIndex = prevStepIndex
-        } else if direction == .left {
-            // prevent swiping when step list is visible
-            if stepsViewController != nil {
-                return
-            }
-            
-            let remainingSteps = router.routeProgress.remainingSteps
-            let currentStepIndex = currentPreviewInstructionBannerStepIndex ?? 0
-            let nextStepIndex = currentStepIndex + 1
-            guard nextStepIndex < remainingSteps.count else { return }
-            
-            let nextStep = remainingSteps[nextStepIndex]
-//            addPreviewInstructions(for: nextStep)
-            currentPreviewInstructionBannerStepIndex = nextStepIndex
-        }
-    }
  
 
     private func displayPreviewInstructions() {
