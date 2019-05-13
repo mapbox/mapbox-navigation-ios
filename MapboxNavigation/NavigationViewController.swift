@@ -284,6 +284,15 @@ open class NavigationViewController: UIViewController {
         // This is optional and lazy so it can be mutated by the developer after init.
         _ = voiceController
         view.clipsToBounds = true
+
+        guard let coordinate = navigationService.routeProgress.currentLegProgress.currentStep.coordinates?.first else {
+            return
+        }
+
+        guard let firstInstruction = navigationService.routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction else {
+            return
+        }
+        navigationService(navigationService, didPassVisualInstructionPoint: firstInstruction, routeProgress: navigationService.routeProgress)
     }
     
     open override func viewWillAppear(_ animated: Bool) {

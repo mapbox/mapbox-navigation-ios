@@ -271,7 +271,6 @@ class RouteMapViewController: UIViewController {
         navigationView.resumeButton.addTarget(self, action: Actions.recenter, for: .touchUpInside)
         resumeNotifications()
         notifyUserAboutLowVolume()
-//        updateInstructionBanners(visualInstructionBanner: router.routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
     }
 
     deinit {
