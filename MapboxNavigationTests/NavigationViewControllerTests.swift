@@ -234,7 +234,8 @@ class NavigationViewControllerTests: XCTestCase {
         viewController.present(navigationViewController, animated: false, completion: nil)
         
         let firstInstruction = route.legs[0].steps[0].instructionsDisplayedAlongStep!.first
-        let instructionsBannerView = navigationViewController.mapViewController!.instructionsBannerView
+        let topViewController = navigationViewController.topViewController as! TopBannerViewController
+        let instructionsBannerView = topViewController.instructionsBannerView
         
         XCTAssertNotNil(instructionsBannerView.primaryLabel.text)
         XCTAssertEqual(instructionsBannerView.primaryLabel.text, firstInstruction?.primaryInstruction.text)
