@@ -4,7 +4,6 @@ import MapboxDirections
 import MapboxCoreNavigation
 import MapboxMobileEvents
 import Turf
-import AVFoundation
 
 class ArrowFillPolyline: MGLPolylineFeature {}
 class ArrowStrokePolyline: ArrowFillPolyline {}
@@ -222,7 +221,6 @@ class RouteMapViewController: UIViewController {
         navigationView.reportButton.addTarget(self, action: Actions.feedback, for: .touchUpInside)
         navigationView.resumeButton.addTarget(self, action: Actions.recenter, for: .touchUpInside)
         resumeNotifications()
-        notifyUserAboutLowVolume()
     }
 
     deinit {
@@ -350,17 +348,6 @@ class RouteMapViewController: UIViewController {
 
     @objc func applicationWillEnterForeground(notification: NSNotification) {
         mapView.updateCourseTracking(location: router.location, animated: false)
-    }
-
-    func notifyUserAboutLowVolume() {
-        guard !(navService.locationManager is SimulatedLocationManager) else { return }
-        guard !NavigationSettings.shared.voiceMuted else { return }
-        guard AVAudioSession.sharedInstance().outputVolume <= NavigationViewMinimumVolumeForWarning else { return }
-
-        //TODO: FIX ME
-//        let title = String.localizedStringWithFormat(NSLocalizedString("DEVICE_VOLUME_LOW", bundle: .mapboxNavigation, value: "%@ Volume Low", comment: "Format string for indicating the device volume is low; 1 = device model"), UIDevice.current.model)
-//        statusView.show(title, showSpinner: false)
-//        statusView.hide(delay: 3, animated: true)
     }
 
     func updateMapOverlays(for routeProgress: RouteProgress) {

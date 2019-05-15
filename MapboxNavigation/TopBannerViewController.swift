@@ -423,4 +423,7 @@ extension TopBannerViewController: NavigationInteractionDelegate {
     public func navigationViewControllerDidDisconnectCarPlay(_ controller: NavigationViewController) {
         dismissStepsTable()
     }
+    public func showStatus(title: String, withSpinner spin: Bool, for time: TimeInterval, animated: Bool, interactive: Bool) {
+        statusView.showStatus(title: title, withSpinner: spin, for: time, animated: animated, interactive: interactive)
+    }
 }

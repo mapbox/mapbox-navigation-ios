@@ -2,6 +2,7 @@ import UIKit
 import MapboxCoreNavigation
 import MapboxDirections
 import MapboxSpeech
+import AVFoundation
 import Mapbox
 #if canImport(CarPlay)
 import CarPlay
@@ -313,6 +314,7 @@ open class NavigationViewController: UIViewController {
             UIApplication.shared.isIdleTimerDisabled = true
         }
         
+        notifyUserAboutLowVolumeIfNeeded()
     }
     
     open override func viewWillDisappear(_ animated: Bool) {
@@ -322,6 +324,17 @@ open class NavigationViewController: UIViewController {
             UIApplication.shared.isIdleTimerDisabled = false
         }
         
+    }
+    
+    func notifyUserAboutLowVolumeIfNeeded() {
+        guard !(navigationService.locationManager is SimulatedLocationManager) else { return }
+        guard !NavigationSettings.shared.voiceMuted else { return }
+        guard AVAudioSession.sharedInstance().outputVolume <= NavigationViewMinimumVolumeForWarning else { return }
+        
+        let title = String.localizedStringWithFormat(NSLocalizedString("DEVICE_VOLUME_LOW", bundle: .mapboxNavigation, value: "%@ Volume Low", comment: "Format string for indicating the device volume is low; 1 = device model"), UIDevice.current.model)
+        for component in navigationComponents {
+            component.showStatus?(title: title, withSpinner: false, for: 3, animated: true, interactive: false)
+        }
     }
     
     // MARK: Containerization
