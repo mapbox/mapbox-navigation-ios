@@ -113,7 +113,7 @@ open class NextBannerView: UIView, NavigationComponent {
     }
     
     public func show() {
-        guard isHidden else { return }
+        guard isHidden, !isCurrentlyVisible else { return }
         UIView.defaultAnimation(0.3, animations: {
             self.isCurrentlyVisible = true
             self.isHidden = false
@@ -121,7 +121,7 @@ open class NextBannerView: UIView, NavigationComponent {
     }
     
     public func hide() {
-        guard !isHidden else { return }
+        guard !isHidden, isCurrentlyVisible else { return }
         UIView.defaultAnimation(0.3, animations: {
             self.isCurrentlyVisible = false
             self.isHidden = true

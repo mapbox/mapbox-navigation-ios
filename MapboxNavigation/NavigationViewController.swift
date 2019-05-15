@@ -142,7 +142,18 @@ open class NavigationViewController: UIViewController {
      */
     @objc public var isUsedInConjunctionWithCarPlayWindow = false {
         didSet {
-            mapViewController?.isUsedInConjunctionWithCarPlayWindow = isUsedInConjunctionWithCarPlayWindow
+            guard isUsedInConjunctionWithCarPlayWindow != oldValue else {
+                return
+            }
+            if isUsedInConjunctionWithCarPlayWindow {
+                for component in navigationComponents {
+                    component.navigationViewControllerDidConnectCarPlay?(self)
+                }
+            } else {
+                for component in navigationComponents {
+                    component.navigationViewControllerDidDisconnectCarPlay?(self)
+                }
+            }
         }
     }
     

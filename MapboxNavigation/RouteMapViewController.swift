@@ -100,17 +100,6 @@ class RouteMapViewController: UIViewController {
     var lastTimeUserRerouted: Date?
     private lazy var geocoder: CLGeocoder = CLGeocoder()
     var destination: Waypoint?
-    var isUsedInConjunctionWithCarPlayWindow = false {
-        didSet {
-            if isUsedInConjunctionWithCarPlayWindow {
-                //TODO: FIX ME
-//                displayPreviewInstructions()
-            } else {
-                //TODO: FIX ME
-//                stepsViewController?.dismiss()
-            }
-        }
-    }
 
     var showsEndOfRoute: Bool = true
 

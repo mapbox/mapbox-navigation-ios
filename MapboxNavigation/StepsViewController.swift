@@ -181,36 +181,6 @@ public class StepsViewController: UIViewController {
         tableView.register(StepTableViewCell.self, forCellReuseIdentifier: cellId)
     }
 
-
-    /**
-     Shows and animates the `StepsViewController` down.
-     */
-    public func dropDownAnimation() {
-        var frame = view.frame
-        frame.origin.y -= frame.height
-        view.frame = frame
-
-        UIView.animate(withDuration: 0.35, delay: 0, options: [.beginFromCurrentState, .curveEaseOut], animations: {
-            var frame = self.view.frame
-            frame.origin.y += frame.height
-            self.view.frame = frame
-        }, completion: nil)
-    }
-
-
-    /**
-     Dismisses and animates the `StepsViewController` up.
-     */
-    public func slideUpAnimation(completion: CompletionHandler? = nil) {
-        UIView.animate(withDuration: 0.35, delay: 0, options: [.beginFromCurrentState, .curveEaseIn], animations: {
-            var frame = self.view.frame
-            frame.origin.y -= frame.height
-            self.view.frame = frame
-        }) { (completed) in
-            completion?()
-        }
-    }
-
     @IBAction func tappedDismiss(_ sender: Any) {
         delegate?.didDismissStepsViewController(self)
     }
@@ -219,12 +189,10 @@ public class StepsViewController: UIViewController {
      Dismisses the `StepsViewController`.
      */
     public func dismiss(completion: CompletionHandler? = nil) {
-        slideUpAnimation {
-            self.willMove(toParent: nil)
-            self.view.removeFromSuperview()
-            self.removeFromParent()
-            completion?()
-        }
+       willMove(toParent: nil)
+       view.removeFromSuperview()
+       removeFromParent()
+       completion?()
     }
 }
 

@@ -179,6 +179,7 @@ import MapboxDirections
             return pinningConstraints + hideConstraints + self.stepsContainerConstraints
         }
         stepsViewController = controller
+        isDisplayingSteps = true
         
         parent.view.layoutIfNeeded()
         
@@ -189,17 +190,8 @@ import MapboxDirections
             
             UIView.animate(withDuration: 0.35, delay: 0.0, options: [.curveEaseOut], animations: parent.view.layoutIfNeeded)
         }
-        UIView.animate(withDuration: 0.20, delay: 0.0, options: [.curveEaseIn], animations: {
-            for child in self.secondaryChildren {
-                child.alpha = 0.0
-            }
-        }) { _ in
-            stepsInAnimation()
-            for child in self.secondaryChildren {
-                child.isHidden = true
-            }
-        }
-        
+
+        hideSecondaryChildren(completion: stepsInAnimation)
         
     }
     
@@ -207,39 +199,58 @@ import MapboxDirections
         guard let parent = parent, let steps = stepsViewController  else { return }
         parent.view.layoutIfNeeded()
         
-        statusView.isHidden = !statusView.isCurrentlyVisible
-        lanesView.isHidden = !lanesView.isCurrentlyVisible
-        nextBannerView.isHidden = !nextBannerView.isCurrentlyVisible
-        
-        let secondaryChildrenInAnimation = {
-            UIView.animate(withDuration: 0.20, delay: 0.0, options: [.curveEaseOut], animations: {
-                for child in self.informationChildren {
-                    child.alpha = 1.0
-                }
-            }, completion: { _ in
-                completion?()
-            })
-        }
+
 
         NSLayoutConstraint.deactivate(stepsContainerShow)
         NSLayoutConstraint.activate(stepsContainerHide)
         
         UIView.animate(withDuration: 0.35, delay: 0.0, options: [.curveEaseInOut], animations: parent.view.layoutIfNeeded, completion: { _ in
-            secondaryChildrenInAnimation()
-            self.stepsViewController = nil
+            if !self.isDisplayingPreviewInstructions {
+                self.showSecondaryChildren(completion: completion)
+            } else {
+                completion?()
+            }
+            
+            self.isDisplayingSteps = false
             steps.dismiss()
+            self.stepsViewController = nil
         })
 
 
     }
+    private func showSecondaryChildren(completion: CompletionHandler? = nil) {
+        statusView.isHidden = !statusView.isCurrentlyVisible
+        lanesView.isHidden = !lanesView.isCurrentlyVisible
+        nextBannerView.isHidden = !nextBannerView.isCurrentlyVisible
+        
+        UIView.animate(withDuration: 0.20, delay: 0.0, options: [.curveEaseOut], animations: {
+            for child in self.informationChildren {
+                child.alpha = 1.0
+            }
+        }, completion: { _ in
+            completion?()
+        })
+    }
     
+    private func hideSecondaryChildren(completion: CompletionHandler? = nil) {
+        UIView.animate(withDuration: 0.20, delay: 0.0, options: [.curveEaseIn], animations: {
+            for child in self.secondaryChildren {
+                child.alpha = 0.0
+            }
+        }) { _ in
+            completion?()
+            for child in self.secondaryChildren {
+                child.isHidden = true
+            }
+        }
+    }
     
     public func preview(step stepOverride: RouteStep? = nil, maneuverStep: RouteStep, distance: CLLocationDistance, steps: [RouteStep]) {
         guard !steps.isEmpty, let step = stepOverride ?? steps.first, let index = steps.index(of: step) else {
             return // do nothing if there are no steps provided to us.
         }
         //this must happen before the preview steps are set
-        stopPreviewing()
+        stopPreviewing(showingSecondaryChildren: false)
         
         previewSteps = steps
         currentPreviewStep = (step, index)
@@ -260,9 +271,11 @@ import MapboxDirections
         informationStackView.insertArrangedSubview(instructionsView, at: 0)
         instructionsView.update(for: instructions)
         previewInstructionsView = instructionsView
+        
+        hideSecondaryChildren()
     }
     
-    public func stopPreviewing() {
+    public func stopPreviewing(showingSecondaryChildren: Bool = true) {
         guard let view = previewInstructionsView else {
             return
         }
@@ -274,6 +287,10 @@ import MapboxDirections
         view.removeFromSuperview()
         addInstructionsBanner()
         previewInstructionsView = nil
+        
+        if showingSecondaryChildren {
+            showSecondaryChildren()
+        }
     }
     
     private func refreshAppearance(view: UIView, padding: UIView?) {
@@ -383,5 +400,14 @@ extension TopBannerViewController: StepsViewControllerDelegate {
     public func didDismissStepsViewController(_ viewController: StepsViewController) {
         dismissStepsTable()
         instructionsBannerView.showStepIndicator = true
+    }
+}
+
+extension TopBannerViewController: NavigationInteractionDelegate {
+    public func navigationViewControllerDidConnectCarPlay(_ controller: NavigationViewController) {
+        displayStepsTable()
+    }
+    public func navigationViewControllerDidDisconnectCarPlay(_ controller: NavigationViewController) {
+        dismissStepsTable()
     }
 }
