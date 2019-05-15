@@ -639,7 +639,7 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
             
             guard let currentStepIndex = banner.currentPreviewStep?.1 else { return }
             let remainingSteps = progress.remainingSteps
-            let prevStepIndex = currentStepIndex - 1
+            let prevStepIndex = currentStepIndex.advanced(by: -1)
             guard prevStepIndex >= 0 else { return }
             
             let prevStep = remainingSteps[prevStepIndex]
@@ -651,8 +651,8 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
             }
             
             let remainingSteps = navigationService.router.routeProgress.remainingSteps
-            let currentStepIndex = banner.currentPreviewStep?.1 ?? 0
-            let nextStepIndex = currentStepIndex + 1
+            let currentStepIndex = banner.currentPreviewStep?.1
+            let nextStepIndex = currentStepIndex?.advanced(by: 1) ?? 0
             guard nextStepIndex < remainingSteps.count else { return }
             
             let nextStep = remainingSteps[nextStepIndex]
@@ -669,9 +669,14 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
         let legProgress = RouteLegProgress(leg: leg, stepIndex: stepIndex)
         guard let upcomingStep = legProgress.upcomingStep else { return }
         
-        banner.preview(step: legProgress.currentStep, maneuverStep: upcomingStep, distance: legProgress.currentStep.distance, steps: remaining)
+        let previewBanner: CompletionHandler = {
+            banner.preview(step: legProgress.currentStep, maneuverStep: upcomingStep, distance: legProgress.currentStep.distance, steps: remaining)
+        }
         
-        mapViewController?.center(on: upcomingStep, route: route, legIndex: legIndex, stepIndex: nextStepIndex, animated: animated)
+        mapViewController?.center(on: upcomingStep, route: route, legIndex: legIndex, stepIndex: nextStepIndex, animated: animated, completion: previewBanner)
+        
+        
+        
     }
     
     public func topBanner(_ banner: TopBannerViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell) {

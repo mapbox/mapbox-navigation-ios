@@ -92,7 +92,6 @@ class RouteMapViewController: UIViewController {
     }
 
     var route: Route { return navService.router.route }
-    var currentPreviewInstructionBannerStepIndex: Int?
     var previewInstructionsView: StepInstructionsView?
     var lastTimeUserRerouted: Date?
     private lazy var geocoder: CLGeocoder = CLGeocoder()
@@ -290,16 +289,13 @@ class RouteMapViewController: UIViewController {
                          legIndex: router.routeProgress.legIndex,
                          stepIndex: router.routeProgress.currentLegProgress.stepIndex + 1)
         
-        // always remove preview index when we recenter
-        currentPreviewInstructionBannerStepIndex = nil
-        
         delegate?.mapViewController(self, didRecenterAt: mapView.userLocationForCourseTracking!)
     }
     
-    @objc func center(on step: RouteStep, route: Route, legIndex: Int, stepIndex: Int, animated: Bool = true) {
+    @objc func center(on step: RouteStep, route: Route, legIndex: Int, stepIndex: Int, animated: Bool = true, completion: CompletionHandler? = nil) {
         mapView.enableFrameByFrameCourseViewTracking(for: 1)
         mapView.tracksUserCourse = false
-        mapView.setCenter(step.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step.initialHeading!, animated: animated, completionHandler: nil)
+        mapView.setCenter(step.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step.initialHeading!, animated: animated, completionHandler: completion)
         
         guard isViewLoaded && view.window != nil else { return }
         mapView.addArrow(route: router.routeProgress.route, legIndex: legIndex, stepIndex: stepIndex)
@@ -355,7 +351,7 @@ class RouteMapViewController: UIViewController {
         }
     }
 
-    func updateCameraAltitude(for routeProgress: RouteProgress) {
+    func updateCameraAltitude(for routeProgress: RouteProgress, completion: CompletionHandler? = nil) {
         guard mapView.tracksUserCourse else { return } //only adjust when we are actively tracking user course
 
         let zoomOutAltitude = mapView.zoomedOutMotorwayAltitude

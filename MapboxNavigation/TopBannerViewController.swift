@@ -198,8 +198,12 @@ import MapboxDirections
             NSLayoutConstraint.deactivate(self.stepsContainerHide)
             NSLayoutConstraint.activate(self.stepsContainerShow)
             
-            UIView.animate(withDuration: 0.35, delay: 0.0, options: [.curveEaseOut], animations: parent.view.layoutIfNeeded)
-            self.delegate?.topBanner?(self, didDisplayStepsController: controller)
+            
+            let finally: (Bool) -> Void = { _ in
+                self.delegate?.topBanner?(self, didDisplayStepsController: controller)
+            }
+            
+            UIView.animate(withDuration: 0.35, delay: 0.0, options: [.curveEaseOut], animations: parent.view.layoutIfNeeded, completion: finally)
         }
 
         hideSecondaryChildren(completion: stepsInAnimation)
@@ -262,7 +266,7 @@ import MapboxDirections
         }
     }
     
-    public func preview(step stepOverride: RouteStep? = nil, maneuverStep: RouteStep, distance: CLLocationDistance, steps: [RouteStep]) {
+    public func preview(step stepOverride: RouteStep? = nil, maneuverStep: RouteStep, distance: CLLocationDistance, steps: [RouteStep], completion: CompletionHandler? = nil) {
         guard !steps.isEmpty, let step = stepOverride ?? steps.first, let index = steps.index(of: step) else {
             return // do nothing if there are no steps provided to us.
         }
@@ -289,7 +293,7 @@ import MapboxDirections
         instructionsView.update(for: instructions)
         previewInstructionsView = instructionsView
         
-        hideSecondaryChildren()
+        hideSecondaryChildren(completion: completion)
     }
     
     public func stopPreviewing(showingSecondaryChildren: Bool = true) {
