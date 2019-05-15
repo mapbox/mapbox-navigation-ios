@@ -65,6 +65,7 @@ open class StyleManager: NSObject {
     internal var date: Date?
     
     var currentStyleType: StyleType?
+    private(set) var currentStyle: Style?
     
     @objc public override init() {
         super.init()
@@ -125,6 +126,7 @@ open class StyleManager: NSObject {
             if style.styleType == styleType {
                 style.apply()
                 currentStyleType = styleType
+                currentStyle = style
                 delegate?.styleManager?(self, didApply: style)
             }
         }
@@ -137,6 +139,7 @@ open class StyleManager: NSObject {
             // We can't calculate sunset or sunrise w/o a location so just apply the first style
             if let style = styles.first, currentStyleType != style.styleType {
                 currentStyleType = style.styleType
+                currentStyle = style
                 style.apply()
                 delegate?.styleManager?(self, didApply: style)
             }
@@ -147,6 +150,7 @@ open class StyleManager: NSObject {
         guard styles.count > 1 else {
             if let style = styles.first, currentStyleType != style.styleType {
                 currentStyleType = style.styleType
+                currentStyle = style
                 style.apply()
                 delegate?.styleManager?(self, didApply: style)
             }

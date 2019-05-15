@@ -312,10 +312,10 @@ class RouteMapViewController: UIViewController {
         delegate?.mapViewController(self, didRecenterAt: mapView.userLocationForCourseTracking!)
     }
     
-    @objc func center(on step: RouteStep, route: Route, legIndex: Int, stepIndex: Int) {
+    @objc func center(on step: RouteStep, route: Route, legIndex: Int, stepIndex: Int, animated: Bool = true) {
         mapView.enableFrameByFrameCourseViewTracking(for: 1)
         mapView.tracksUserCourse = false
-        mapView.setCenter(step.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step.initialHeading!, animated: true, completionHandler: nil)
+        mapView.setCenter(step.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step.initialHeading!, animated: animated, completionHandler: nil)
         
         guard isViewLoaded && view.window != nil else { return }
         mapView.addArrow(route: router.routeProgress.route, legIndex: legIndex, stepIndex: stepIndex)
