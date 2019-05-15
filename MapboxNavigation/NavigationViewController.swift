@@ -680,6 +680,10 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
         self.preview(step: step, in: banner, remaining: progress.remainingSteps, route: progress.route, animated: false)
         banner.dismissStepsTable()
     }
+    
+    public func topBanner(_ banner: TopBannerViewController, didDisplayStepsController: StepsViewController) {
+        mapViewController?.recenter(self)
+    }
 }
 
 fileprivate extension Route {

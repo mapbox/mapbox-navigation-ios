@@ -6,7 +6,15 @@ import MapboxDirections
 @objc protocol TopBannerViewControllerDelegate: StatusViewDelegate {
     @objc optional func topBanner(_ banner: TopBannerViewController, didSwipeInDirection direction: UISwipeGestureRecognizer.Direction)
 
-    @objc optional  func topBanner(_ banner: TopBannerViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell)
+    @objc optional func topBanner(_ banner: TopBannerViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell)
+    
+    @objc optional func topBanner(_ banner: TopBannerViewController, willDisplayStepsController: StepsViewController)
+    
+    @objc optional func topBanner(_ banner: TopBannerViewController, didDisplayStepsController: StepsViewController)
+    
+    @objc optional func topBanner(_ banner: TopBannerViewController, willDismissStepsController: StepsViewController)
+    
+    @objc optional func topBanner(_ banner: TopBannerViewController, didDismissStepsController: StepsViewController)
 }
 
 @objc open class TopBannerViewController: ContainerViewController, StatusViewDelegate {
@@ -168,9 +176,11 @@ import MapboxDirections
             return
         }
         
+        
         let controller = StepsViewController(routeProgress: progress)
         controller.delegate = self
         
+        delegate?.topBanner?(self, willDisplayStepsController: controller)
         embed(controller, in: stepsContainer) { (parent, child) -> [NSLayoutConstraint] in
             child.view.translatesAutoresizingMaskIntoConstraints = false
             let pinningConstraints = child.view.constraintsForPinning(to: self.stepsContainer)
@@ -189,6 +199,7 @@ import MapboxDirections
             NSLayoutConstraint.activate(self.stepsContainerShow)
             
             UIView.animate(withDuration: 0.35, delay: 0.0, options: [.curveEaseOut], animations: parent.view.layoutIfNeeded)
+            self.delegate?.topBanner?(self, didDisplayStepsController: controller)
         }
 
         hideSecondaryChildren(completion: stepsInAnimation)
@@ -199,16 +210,22 @@ import MapboxDirections
         guard let parent = parent, let steps = stepsViewController  else { return }
         parent.view.layoutIfNeeded()
         
+        delegate?.topBanner?(self, willDismissStepsController: steps)
 
 
         NSLayoutConstraint.deactivate(stepsContainerShow)
         NSLayoutConstraint.activate(stepsContainerHide)
         
+        let complete = {
+            self.delegate?.topBanner?(self, didDismissStepsController: steps)
+            completion?()
+        }
+        
         UIView.animate(withDuration: 0.35, delay: 0.0, options: [.curveEaseInOut], animations: parent.view.layoutIfNeeded, completion: { _ in
             if !self.isDisplayingPreviewInstructions {
-                self.showSecondaryChildren(completion: completion)
+                self.showSecondaryChildren(completion: complete)
             } else {
-                completion?()
+                complete()
             }
             
             self.isDisplayingSteps = false
@@ -379,10 +396,6 @@ extension TopBannerViewController: InstructionsBannerViewDelegate {
             dismissStepsTable()
         } else {
             displayStepsTable()
-        }
-        
-        if currentPreviewStep != nil {
-            //TODO: FIX ME -- RECENTER(self)
         }
     }
     
