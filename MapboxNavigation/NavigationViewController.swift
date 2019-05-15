@@ -195,12 +195,7 @@ open class NavigationViewController: UIViewController {
     
     var styleManager: StyleManager!
     
-    var currentStatusBarStyle: UIStatusBarStyle = .default {
-        didSet {
-//            mapViewController?.instructionsBannerView.backgroundColor = InstructionsBannerView.appearance().backgroundColor
-//            mapViewController?.instructionsBannerContentView.backgroundColor = InstructionsBannerContentView.appearance().backgroundColor
-        }
-    }
+    var currentStatusBarStyle: UIStatusBarStyle = .default
     
     open override var preferredStatusBarStyle: UIStatusBarStyle {
         get {
@@ -348,13 +343,6 @@ open class NavigationViewController: UIViewController {
         }
         child.didMove(toParent: self)
     }
-    
-    override open func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
-        let stacktrace = Thread.callStackSymbols
-        
-        print("Change! \(stacktrace)")
-    }
-    
     
     // MARK: Route controller notifications
     

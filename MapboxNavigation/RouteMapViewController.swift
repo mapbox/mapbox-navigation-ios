@@ -12,7 +12,6 @@ extension RouteMapViewController: NavigationComponent {
         
     func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         
-    
         let route = progress.route
         let legIndex = progress.legIndex
         let stepIndex = progress.currentLegProgress.stepIndex
@@ -67,7 +66,6 @@ extension RouteMapViewController: NavigationComponent {
         
     }
     
-
 }
 
 
@@ -203,7 +201,6 @@ class RouteMapViewController: UIViewController {
         view.layoutIfNeeded()
 
         mapView.tracksUserCourse = true
-//        instructionsBannerView.swipeable = true
         
         styleObservation = mapView.observe(\.style, options: .new) { [weak self] (mapView, change) in
             guard change.newValue != nil else {
@@ -446,8 +443,6 @@ class RouteMapViewController: UIViewController {
         navigationView.endOfRouteView?.isHidden = false
 
         view.layoutIfNeeded() //flush layout queue
-//        NSLayoutConstraint.deactivate(navigationView.bannerShowConstraints)
-//        NSLayoutConstraint.activate(navigationView.bannerHideConstraints)
         navigationView.endOfRouteHideConstraint?.isActive = false
         navigationView.endOfRouteShowConstraint?.isActive = true
 

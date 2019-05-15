@@ -44,15 +44,6 @@ open class NavigationView: UIView {
         static let buttonSpacing: CGFloat = 8.0
     }
     
-//    lazy var bannerShowConstraints: [NSLayoutConstraint] = [
-//        self.instructionsBannerView.topAnchor.constraint(equalTo: self.safeTopAnchor),
-//        self.instructionsBannerContentView.topAnchor.constraint(equalTo: self.topAnchor)]
-//
-//    lazy var bannerHideConstraints: [NSLayoutConstraint] = [
-//        self.informationStackView.bottomAnchor.constraint(equalTo: self.topAnchor),
-//        self.instructionsBannerContentView.topAnchor.constraint(equalTo: self.instructionsBannerView.topAnchor)
-//    ]
-    
     lazy var endOfRouteShowConstraint: NSLayoutConstraint? = self.endOfRouteView?.bottomAnchor.constraint(equalTo: self.safeBottomAnchor)
     
     lazy var endOfRouteHideConstraint: NSLayoutConstraint? = self.endOfRouteView?.topAnchor.constraint(equalTo: self.bottomAnchor)
