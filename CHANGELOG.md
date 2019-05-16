@@ -1,6 +1,6 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## master
+## v0.33.0
 
 * Restored the compass to `CarPlayNavigationViewController`, now displaying a digital readout of the direction of travel, represented by the `CarPlayCompassView` class. ([#2077](https://github.com/mapbox/mapbox-navigation-ios/pull/2077))
 
