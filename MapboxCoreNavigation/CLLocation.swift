@@ -146,10 +146,10 @@ extension CLLocation {
         // If the user is near the beginning of leg, allow for unsnapped more often.
         let isWithinDepatureStep = distanceToFirstCoordinateOnLeg < RouteControllerManeuverZoneRadius
 
-        if course >= 0 &&
+        if course.isQualified &&
             (speed >= RouteSnappingMinimumSpeed || isWithinDepatureStep) &&
             (horizontalAccuracy < RouteSnappingMinimumHorizontalAccuracy || isWithinDepatureStep) &&
-            course.difference(from: self.course) > RouteSnappingMaxManipulatedCourseAngle {
+            self.course.isQualified && course.difference(from: self.course) > RouteSnappingMaxManipulatedCourseAngle {
             return false
         }
         return true

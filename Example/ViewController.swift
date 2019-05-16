@@ -330,7 +330,7 @@ class ViewController: UIViewController {
     func configureMapView(_ mapView: NavigationMapView) {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.delegate = self
-        mapView.navigationMapDelegate = self
+        mapView.navigationMapViewDelegate = self
         mapView.userTrackingMode = .follow
         mapView.logoView.isHidden = true
 

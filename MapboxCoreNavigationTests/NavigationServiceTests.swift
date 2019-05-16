@@ -440,8 +440,14 @@ class NavigationServiceTests: XCTestCase {
         
         let directions = DirectionsSpy(accessToken: "pk.feedCafeDeadBeefBadeBede")
         let service = MapboxNavigationService(route: route, directions: directions)
+        service.delegate = delegate
+        let router = service.router!
         let locationManager = NavigationLocationManager()
         
+        let _ = expectation(forNotification: .routeControllerDidReroute, object: router) { (notification) -> Bool in
+            let isProactive = notification.userInfo![RouteControllerNotificationUserInfoKey.isProactiveKey] as? Bool
+            return isProactive == true
+        }
         let rerouteExpectation = expectation(description: "Proactive reroute should trigger")
         
         for location in trace {
@@ -454,6 +460,13 @@ class NavigationServiceTests: XCTestCase {
                 break
             }
         }
+        
+        let fasterRouteName = "DCA-Arboretum-dummy-faster-route"
+        let fasterRoute = Fixture.route(from: fasterRouteName)
+        let waypointsForFasterRoute = Fixture.waypoints(from: fasterRouteName)
+        directions.fireLastCalculateCompletion(with: waypointsForFasterRoute, routes: [fasterRoute], error: nil)
+        
+        XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didRerouteAlong:at:proactive:)"))
         
         waitForExpectations(timeout: 10)
     }

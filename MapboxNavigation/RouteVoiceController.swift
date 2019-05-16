@@ -71,7 +71,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     /**
      Delegate used for getting metadata information about a particular spoken instruction.
      */
-    public weak var voiceControllerDelegate: VoiceControllerDelegate?
+    @objc public weak var voiceControllerDelegate: VoiceControllerDelegate?
     
     var lastSpokenInstruction: SpokenInstruction?
     var routeProgress: RouteProgress?
