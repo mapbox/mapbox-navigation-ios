@@ -119,7 +119,7 @@ public class StatusView: UIView {
         activityIndicatorView.hidesWhenStopped = true
         if (!showSpinner) { activityIndicatorView.stopAnimating() }
 
-        guard isCurrentlyVisible == false, isHidden == true else { return }
+        guard !isCurrentlyVisible, isHidden else { return }
                 
         let show = {
             self.isHidden = false
@@ -147,7 +147,7 @@ public class StatusView: UIView {
         }
         
         let animate = {
-            guard self.isHidden == false else { return }
+            guard !self.isHidden, self.isCurrentlyVisible else { return }
             
             let fireTime = DispatchTime.now() + delay
             DispatchQueue.main.asyncAfter(deadline: fireTime, execute: {

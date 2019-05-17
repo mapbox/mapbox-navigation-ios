@@ -10,20 +10,7 @@ extension NavigationView {
         topBannerContainerView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         topBannerContainerView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         topBannerContainerView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-//        instructionsBannerContentView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-//        instructionsBannerContentView.bottomAnchor.constraint(equalTo: instructionsBannerView.bottomAnchor).isActive = true
-//        instructionsBannerContentView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-//        
-//        instructionsBannerView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-//        instructionsBannerView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-//        instructionsBannerView.heightAnchor.constraint(equalToConstant: 96).isActive = true
-        
-//        NSLayoutConstraint.activate(bannerShowConstraints)
 
-//        informationStackView.topAnchor.constraint(equalTo: instructionsBannerView.bottomAnchor).isActive = true
-//        informationStackView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-//        informationStackView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        
         floatingStackView.topAnchor.constraint(equalTo: topBannerContainerView.bottomAnchor, constant: 10).isActive = true
         floatingStackView.trailingAnchor.constraint(equalTo: safeTrailingAnchor, constant: -10).isActive = true
         

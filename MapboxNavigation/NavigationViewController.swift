@@ -2,6 +2,7 @@ import UIKit
 import MapboxCoreNavigation
 import MapboxDirections
 import MapboxSpeech
+import AVFoundation
 import Mapbox
 #if canImport(CarPlay)
 import CarPlay
@@ -142,7 +143,18 @@ open class NavigationViewController: UIViewController {
      */
     @objc public var isUsedInConjunctionWithCarPlayWindow = false {
         didSet {
-            mapViewController?.isUsedInConjunctionWithCarPlayWindow = isUsedInConjunctionWithCarPlayWindow
+            guard isUsedInConjunctionWithCarPlayWindow != oldValue else {
+                return
+            }
+            if isUsedInConjunctionWithCarPlayWindow {
+                for component in navigationComponents {
+                    component.navigationViewControllerDidConnectCarPlay?(self)
+                }
+            } else {
+                for component in navigationComponents {
+                    component.navigationViewControllerDidDisconnectCarPlay?(self)
+                }
+            }
         }
     }
     
@@ -186,12 +198,7 @@ open class NavigationViewController: UIViewController {
     
     var styleManager: StyleManager!
     
-    var currentStatusBarStyle: UIStatusBarStyle = .default {
-        didSet {
-//            mapViewController?.instructionsBannerView.backgroundColor = InstructionsBannerView.appearance().backgroundColor
-//            mapViewController?.instructionsBannerContentView.backgroundColor = InstructionsBannerContentView.appearance().backgroundColor
-        }
-    }
+    var currentStatusBarStyle: UIStatusBarStyle = .default
     
     open override var preferredStatusBarStyle: UIStatusBarStyle {
         get {
@@ -226,6 +233,10 @@ open class NavigationViewController: UIViewController {
 
         NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
         
+        styleManager = StyleManager()
+        styleManager.delegate = self
+        styleManager.styles = options?.styles ?? [DayStyle(), NightStyle()]
+        
         let bottomBanner = options?.bottomBanner ?? {
             let viewController = BottomBannerViewController()
             viewController.delegate = self
@@ -247,17 +258,16 @@ open class NavigationViewController: UIViewController {
             return map.view.constraintsForPinning(to: parent.view)
         }
         
-
+        //Manually update the map style since the RMVC missed the KVO "map style change" message
+        if let currentStyle = styleManager.currentStyle {
+            updateMapStyle(currentStyle, animated: false)
+        }
         
         //Do not start the navigation session until after you create the MapViewController, otherwise you'll miss important messages.
         self.navigationService.start()
         
         mapViewController.view.pinInSuperview()
         mapViewController.reportButton.isHidden = !showsReportFeedback
-        
-        styleManager = StyleManager()
-        styleManager.delegate = self
-        styleManager.styles = options?.styles ?? [DayStyle(), NightStyle()]
         
         if !(route.routeOptions is NavigationRouteOptions) {
             print("`Route` was created using `RouteOptions` and not `NavigationRouteOptions`. Although not required, this may lead to a suboptimal navigation experience. Without `NavigationRouteOptions`, it is not guaranteed you will get congestion along the route line, better ETAs and ETA label color dependent on congestion.")
@@ -301,6 +311,7 @@ open class NavigationViewController: UIViewController {
             UIApplication.shared.isIdleTimerDisabled = true
         }
         
+        notifyUserAboutLowVolumeIfNeeded()
     }
     
     open override func viewWillDisappear(_ animated: Bool) {
@@ -310,6 +321,17 @@ open class NavigationViewController: UIViewController {
             UIApplication.shared.isIdleTimerDisabled = false
         }
         
+    }
+    
+    func notifyUserAboutLowVolumeIfNeeded() {
+        guard !(navigationService.locationManager is SimulatedLocationManager) else { return }
+        guard !NavigationSettings.shared.voiceMuted else { return }
+        guard AVAudioSession.sharedInstance().outputVolume <= NavigationViewMinimumVolumeForWarning else { return }
+        
+        let title = String.localizedStringWithFormat(NSLocalizedString("DEVICE_VOLUME_LOW", bundle: .mapboxNavigation, value: "%@ Volume Low", comment: "Format string for indicating the device volume is low; 1 = device model"), UIDevice.current.model)
+        for component in navigationComponents {
+            component.showStatus?(title: title, withSpinner: false, for: 3, animated: true, interactive: false)
+        }
     }
     
     // MARK: Containerization
@@ -323,13 +345,6 @@ open class NavigationViewController: UIViewController {
         }
         child.didMove(toParent: self)
     }
-    
-    override open func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
-        let stacktrace = Thread.callStackSymbols
-        
-        print("Change! \(stacktrace)")
-    }
-    
     
     // MARK: Route controller notifications
     
@@ -580,8 +595,12 @@ extension NavigationViewController: StyleManagerDelegate {
     
     @objc(styleManager:didApplyStyle:)
     public func styleManager(_ styleManager: StyleManager, didApply style: Style) {
+        updateMapStyle(style)
+    }
+    
+    private func updateMapStyle(_ style: Style, animated: Bool = true) {
         if mapView?.styleURL != style.mapStyleURL {
-            mapView?.style?.transition = MGLTransition(duration: 0.5, delay: 0)
+            mapView?.style?.transition = MGLTransition(duration: animated ? 0.5 : 0, delay: 0)
             mapView?.styleURL = style.mapStyleURL
         }
         
@@ -626,7 +645,7 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
             
             guard let currentStepIndex = banner.currentPreviewStep?.1 else { return }
             let remainingSteps = progress.remainingSteps
-            let prevStepIndex = currentStepIndex - 1
+            let prevStepIndex = currentStepIndex.advanced(by: -1)
             guard prevStepIndex >= 0 else { return }
             
             let prevStep = remainingSteps[prevStepIndex]
@@ -638,8 +657,8 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
             }
             
             let remainingSteps = navigationService.router.routeProgress.remainingSteps
-            let currentStepIndex = banner.currentPreviewStep?.1 ?? 0
-            let nextStepIndex = currentStepIndex + 1
+            let currentStepIndex = banner.currentPreviewStep?.1
+            let nextStepIndex = currentStepIndex?.advanced(by: 1) ?? 0
             guard nextStepIndex < remainingSteps.count else { return }
             
             let nextStep = remainingSteps[nextStepIndex]
@@ -647,7 +666,7 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
         }
     }
     
-    public func preview(step: RouteStep, in banner: TopBannerViewController, remaining: [RouteStep], route: Route) {
+    public func preview(step: RouteStep, in banner: TopBannerViewController, remaining: [RouteStep], route: Route, animated: Bool = true) {
         guard let leg = route.leg(containing: step) else { return }
         guard let legIndex = route.legs.index(of: leg) else { return }
         guard let stepIndex = leg.steps.index(of: step) else { return }
@@ -656,12 +675,27 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
         let legProgress = RouteLegProgress(leg: leg, stepIndex: stepIndex)
         guard let upcomingStep = legProgress.upcomingStep else { return }
         
-        banner.preview(step: legProgress.currentStep, maneuverStep: upcomingStep, distance: legProgress.currentStep.distance, steps: remaining)
+        let previewBanner: CompletionHandler = {
+            banner.preview(step: legProgress.currentStep, maneuverStep: upcomingStep, distance: legProgress.currentStep.distance, steps: remaining)
+        }
+        
+        mapViewController?.center(on: upcomingStep, route: route, legIndex: legIndex, stepIndex: nextStepIndex, animated: animated, completion: previewBanner)
         
         
-        mapViewController?.center(on: upcomingStep, route: route, legIndex: legIndex, stepIndex: nextStepIndex)
+        
     }
     
+    public func topBanner(_ banner: TopBannerViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell) {
+        let progress = navigationService.routeProgress
+        let legProgress = RouteLegProgress(leg: progress.route.legs[legIndex], stepIndex: stepIndex)
+        let step = legProgress.currentStep
+        self.preview(step: step, in: banner, remaining: progress.remainingSteps, route: progress.route, animated: false)
+        banner.dismissStepsTable()
+    }
+    
+    public func topBanner(_ banner: TopBannerViewController, didDisplayStepsController: StepsViewController) {
+        mapViewController?.recenter(self)
+    }
 }
 
 fileprivate extension Route {
