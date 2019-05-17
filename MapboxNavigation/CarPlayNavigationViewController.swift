@@ -54,6 +54,15 @@ public class CarPlayNavigationViewController: UIViewController {
     var carInterfaceController: CPInterfaceController
     var styleManager: StyleManager?
     
+    
+    /**
+     A view indicating what direction the vehicle is traveling towards, snapped
+     to eight cardinal directions in steps of 45°.
+     
+     This view is hidden by default.
+     */
+    @objc weak public var compassView: CarPlayCompassView!
+    
     /**
      The interface styles available for display.
      
@@ -125,6 +134,10 @@ public class CarPlayNavigationViewController: UIViewController {
         self.mapView = mapView
         view.addSubview(mapView)
         
+        let compassView = CarPlayCompassView()
+        view.addSubview(compassView)
+        self.compassView = compassView
+        
         // These constraints don’t account for language direction, because the
         // safe area insets are nondirectional and may be affected by the side
         // on which the driver is sitting.
@@ -136,6 +149,9 @@ public class CarPlayNavigationViewController: UIViewController {
         view.addConstraint(NSLayoutConstraint(item: mapView, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1, constant: 0))
         
         mapViewOverviewRightConstraint = view.rightAnchor.constraint(equalTo: mapView.rightAnchor)
+        
+        compassView.topAnchor.constraint(equalTo: view.safeTopAnchor, constant: 8).isActive = true
+        compassView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8).isActive = true
         
         styleObservation = mapView.observe(\.style, options: .new) { [weak self] (mapView, change) in
             guard change.newValue != nil else {
@@ -310,6 +326,11 @@ public class CarPlayNavigationViewController: UIViewController {
         let stepDistance = distanceFormatter.measurement(of: stepProgress.distanceRemaining)
         let stepEstimates = CPTravelEstimates(distanceRemaining: stepDistance, timeRemaining: stepProgress.durationRemaining)
         carSession.updateEstimates(stepEstimates, for: maneuver)
+        
+        if let compassView = self.compassView,
+            !compassView.isHidden {
+            compassView.course = location.course
+        }
     }
     
     /** Modifies the gesture recognizers to also update the map’s frame rate. */
