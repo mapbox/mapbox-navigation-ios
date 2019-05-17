@@ -24,7 +24,7 @@ import MapboxCoreNavigation
     optional func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardCollection, cardSizeForTraitcollection: UITraitCollection) -> CGSize
 }
 
-open class InstructionsCardCollection: ContainerViewController, TapSensitive {
+open class InstructionsCardCollection: ContainerViewController {
     typealias InstructionsCardCollectionLayout = UICollectionViewFlowLayout
     typealias InstructionsCardCell = UICollectionViewCell
     
@@ -166,10 +166,6 @@ open class InstructionsCardCollection: ContainerViewController, TapSensitive {
         _ = remainingSteps.popLast() // ignore last step
 
         steps = [progress.currentLegProgress.currentStep] + remainingSteps
-    }
-    
-    func didTap(_ source: TappableContainer) {
-        
     }
     
     fileprivate func updateDistancesOnCards() {
