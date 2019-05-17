@@ -572,18 +572,18 @@ open class ManeuverContainerView: UIView {
     }
 }
 
-/// :nodoc:
-@objc(MBInstructionsBannerContentView)
-open class InstructionsBannerContentView: UIView { }
 
 /// :nodoc:
-@objc(MBBottomBannerContainerView)
-open class BottomBannerContainerView: UIView { }
+@objc(MBBannerContainerView)
+open class BannerContainerView: UIView { }
+
+/// :nodoc:
+@objc(MBTopBannerView)
+open class TopBannerView: UIView { }
 
 /// :nodoc:
 @objc(MBBottomBannerView)
 open class BottomBannerView: UIView { }
-
 
 /// :nodoc:
 class NavigationAnnotation: MGLPointAnnotation { }

@@ -156,6 +156,8 @@ open class NavigationViewController: UIViewController {
     
     var mapViewController: RouteMapViewController?
     
+    var topViewController: ContainerViewController?
+    
     var bottomViewController: ContainerViewController?
     
     var navigationComponents: [NavigationComponent] {
@@ -163,8 +165,16 @@ open class NavigationViewController: UIViewController {
         if let mvc = mapViewController {
             components.append(mvc)
         }
+        
+        if let topViewController = topViewController {
+            components.append(topViewController)
+        }
+        
         if let bottomViewController = bottomViewController {
             components.append(bottomViewController)
+        }
+        if let topViewController = topViewController {
+            components.append(topViewController)
         }
         return components
     }
@@ -178,8 +188,8 @@ open class NavigationViewController: UIViewController {
     
     var currentStatusBarStyle: UIStatusBarStyle = .default {
         didSet {
-            mapViewController?.instructionsBannerView.backgroundColor = InstructionsBannerView.appearance().backgroundColor
-            mapViewController?.instructionsBannerContentView.backgroundColor = InstructionsBannerContentView.appearance().backgroundColor
+//            mapViewController?.instructionsBannerView.backgroundColor = InstructionsBannerView.appearance().backgroundColor
+//            mapViewController?.instructionsBannerContentView.backgroundColor = InstructionsBannerContentView.appearance().backgroundColor
         }
     }
     
@@ -222,8 +232,12 @@ open class NavigationViewController: UIViewController {
             return viewController
         }()
         bottomViewController = bottomBanner
-
-        let mapViewController = RouteMapViewController(navigationService: self.navigationService, delegate: self, bottomBanner: bottomBanner)
+        
+        let topBanner = options?.topBanner ?? TopBannerViewController(delegate: self)
+        topViewController = topBanner
+        
+        let mapViewController = RouteMapViewController(navigationService: self.navigationService, delegate: self, topBanner: topBanner, bottomBanner: bottomBanner)
+        
         self.mapViewController = mapViewController
         mapViewController.destination = route.legs.last?.destination
         mapViewController.view.translatesAutoresizingMaskIntoConstraints = false
@@ -267,10 +281,17 @@ open class NavigationViewController: UIViewController {
     
     override open func viewDidLoad() {
         super.viewDidLoad()
+        view.accessibilityIdentifier = "NVCRootView"
         // Initialize voice controller if it hasn't been overridden.
         // This is optional and lazy so it can be mutated by the developer after init.
         _ = voiceController
         view.clipsToBounds = true
+
+ 
+        guard let firstInstruction = navigationService.routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction else {
+            return
+        }
+        navigationService(navigationService, didPassVisualInstructionPoint: firstInstruction, routeProgress: navigationService.routeProgress)
     }
     
     open override func viewWillAppear(_ animated: Bool) {
@@ -302,6 +323,13 @@ open class NavigationViewController: UIViewController {
         }
         child.didMove(toParent: self)
     }
+    
+    override open func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
+        let stacktrace = Thread.callStackSymbols
+        
+        print("Change! \(stacktrace)")
+    }
+    
     
     // MARK: Route controller notifications
     
@@ -393,6 +421,16 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
     @objc public func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
         return delegate?.label?(label, willPresent: instruction, as: presented)
     }
+    
+    @objc func mapViewController(_ mapViewController: RouteMapViewController, didRecenterAt location: CLLocation) {
+        for component in navigationComponents {
+            component.navigationViewController?(self, didRecenterAt: location)
+        }
+        
+        if let instructionsCardCollection = topViewController as? InstructionsCardCollection {
+            instructionsCardCollection.stopPreview()
+        }
+    }
 }
 
 //MARK: - NavigationServiceDelegate
@@ -403,6 +441,11 @@ extension NavigationViewController: NavigationServiceDelegate {
     }
     
     @objc public func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {
+        
+        for component in navigationComponents {
+            component.navigationService?(service, willRerouteFrom: location)
+        }
+        
         delegate?.navigationViewController?(self, willRerouteFrom: location)
     }
     
@@ -495,21 +538,14 @@ extension NavigationViewController: NavigationServiceDelegate {
     }
 
     @objc public func navigationService(_ service: NavigationService, willBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
-        switch service.simulationMode {
-        case .always:
-            let localized = String.Localized.simulationStatus(speed: 1)
-            mapViewController?.statusView.show(localized, showSpinner: false, interactive: true)
-        default:
-            return
+        for component in navigationComponents {
+            component.navigationService?(service, willBeginSimulating: progress, becauseOf: reason)
         }
     }
     
     @objc public func navigationService(_ service: NavigationService, willEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
-        switch service.simulationMode {
-        case .always:
-            mapViewController?.statusView.hide(delay: 0, animated: true)
-        default:
-            return
+        for component in navigationComponents {
+            component.navigationService?(service, willEndSimulating: progress, becauseOf: reason)
         }
     }
     
@@ -557,6 +593,82 @@ extension NavigationViewController: StyleManagerDelegate {
         mapView?.reloadStyle(self)
     }
 }
+// MARK: - TopBannerViewController
+
+extension NavigationViewController: TopBannerViewControllerDelegate {
+    public func statusView(_ statusView: StatusView, valueChangedTo value: Double) {
+        let displayValue = 1+min(Int(9 * value), 8)
+        let title = String.Localized.simulationStatus(speed: displayValue)
+        statusView.showStatus(title: title, for: .infinity, interactive: true)
+        
+        if let locationManager = navigationService.locationManager as? SimulatedLocationManager {
+            locationManager.speedMultiplier = Double(displayValue)
+        }
+    }
+    
+    public func topBanner(_ banner: TopBannerViewController, didSwipeInDirection direction: UISwipeGestureRecognizer.Direction) {
+        let progress = navigationService.routeProgress
+        let route = progress.route
+        
+        if direction == .down {
+            banner.displayStepsTable()
+            
+            
+            if banner.isDisplayingPreviewInstructions {
+                mapViewController?.recenter(self)
+            }
+            
+        } else if direction == .right {
+            // prevent swiping when step list is visible
+            if banner.isDisplayingSteps {
+                return
+            }
+            
+            guard let currentStepIndex = banner.currentPreviewStep?.1 else { return }
+            let remainingSteps = progress.remainingSteps
+            let prevStepIndex = currentStepIndex - 1
+            guard prevStepIndex >= 0 else { return }
+            
+            let prevStep = remainingSteps[prevStepIndex]
+            preview(step: prevStep, in: banner, remaining: remainingSteps, route: route)
+        } else if direction == .left {
+            // prevent swiping when step list is visible
+            if banner.isDisplayingSteps {
+                return
+            }
+            
+            let remainingSteps = navigationService.router.routeProgress.remainingSteps
+            let currentStepIndex = banner.currentPreviewStep?.1 ?? 0
+            let nextStepIndex = currentStepIndex + 1
+            guard nextStepIndex < remainingSteps.count else { return }
+            
+            let nextStep = remainingSteps[nextStepIndex]
+            preview(step: nextStep, in: banner, remaining: remainingSteps, route: route)
+        }
+    }
+    
+    public func preview(step: RouteStep, in banner: TopBannerViewController, remaining: [RouteStep], route: Route) {
+        guard let leg = route.leg(containing: step) else { return }
+        guard let legIndex = route.legs.index(of: leg) else { return }
+        guard let stepIndex = leg.steps.index(of: step) else { return }
+        let nextStepIndex = stepIndex + 1
+        
+        let legProgress = RouteLegProgress(leg: leg, stepIndex: stepIndex)
+        guard let upcomingStep = legProgress.upcomingStep else { return }
+        
+        banner.preview(step: legProgress.currentStep, maneuverStep: upcomingStep, distance: legProgress.currentStep.distance, steps: remaining)
+        
+        
+        mapViewController?.center(on: upcomingStep, route: route, legIndex: legIndex, stepIndex: nextStepIndex)
+    }
+    
+}
+
+fileprivate extension Route {
+    func leg(containing step: RouteStep) -> RouteLeg? {
+        return legs.first { $0.steps.contains(step) }
+    }
+}
 
 // MARK: - BottomBannerViewControllerDelegate
 
@@ -572,4 +684,3 @@ extension NavigationViewController: BottomBannerViewControllerDelegate {
         }
     }
 }
-

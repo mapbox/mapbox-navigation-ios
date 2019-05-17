@@ -102,6 +102,15 @@ public class StatusView: UIView {
     }
     
     /**
+     Shows the status view for a specified amount of time.
+     */
+    public func showStatus(title: String, withSpinner spin: Bool = false, for time: TimeInterval, animated: Bool = true, interactive: Bool = false) {
+        show(title, showSpinner: spin, interactive: interactive)
+        guard time < .infinity else { return }
+        hide(delay: time, animated: animated)
+    }
+    
+    /**
      Shows the status view with an optional spinner.
      */
     public func show(_ title: String, showSpinner: Bool, interactive: Bool = false) {

@@ -8,6 +8,7 @@ import MapboxDirections
 open class LanesView: UIView, NavigationComponent {
     weak var stackView: UIStackView!
     weak var separatorView: SeparatorView!
+    public var isCurrentlyVisible: Bool = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -99,6 +100,7 @@ open class LanesView: UIView, NavigationComponent {
         guard isHidden == true else { return }
         if animated {
             UIView.defaultAnimation(0.3, animations: {
+                self.isCurrentlyVisible = true
                 self.isHidden = false
             }, completion: nil)
         } else {
@@ -109,6 +111,7 @@ open class LanesView: UIView, NavigationComponent {
     public func hide() {
         guard isHidden == false else { return }
         UIView.defaultAnimation(0.3, animations: {
+            self.isCurrentlyVisible = false
             self.isHidden = true
         }, completion: nil)
     }
