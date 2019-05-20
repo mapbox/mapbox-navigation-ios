@@ -54,7 +54,7 @@ class InstructionsCardSnapshotTest: SnapshotTest {
         XCTAssertEqual(partiallyVisibleCell.frame.origin, CGPoint(x: cardWidth + collectionViewFlowLayoutMinimumSpacing, y: 0))
         
         /// Validate the currently setup instructions card's snapshot image
-        verify(host, for: Device.iPhoneX.portrait)
+        verify(host.view, overallTolerance: 0.02)
     }
     
     func constrain(_ child: UIView, to parent: UIView) {
