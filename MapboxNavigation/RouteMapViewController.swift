@@ -4,7 +4,6 @@ import MapboxDirections
 import MapboxCoreNavigation
 import MapboxMobileEvents
 import Turf
-import AVFoundation
 
 class ArrowFillPolyline: MGLPolylineFeature {}
 class ArrowStrokePolyline: ArrowFillPolyline {}
@@ -13,7 +12,6 @@ extension RouteMapViewController: NavigationComponent {
         
     func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         
-    
         let route = progress.route
         let legIndex = progress.legIndex
         let stepIndex = progress.currentLegProgress.stepIndex
@@ -68,7 +66,6 @@ extension RouteMapViewController: NavigationComponent {
         
     }
     
-
 }
 
 
@@ -95,22 +92,10 @@ class RouteMapViewController: UIViewController {
     }
 
     var route: Route { return navService.router.route }
-    var currentPreviewInstructionBannerStepIndex: Int?
     var previewInstructionsView: StepInstructionsView?
     var lastTimeUserRerouted: Date?
     private lazy var geocoder: CLGeocoder = CLGeocoder()
     var destination: Waypoint?
-    var isUsedInConjunctionWithCarPlayWindow = false {
-        didSet {
-            if isUsedInConjunctionWithCarPlayWindow {
-                //TODO: FIX ME
-//                displayPreviewInstructions()
-            } else {
-                //TODO: FIX ME
-//                stepsViewController?.dismiss()
-            }
-        }
-    }
 
     var showsEndOfRoute: Bool = true
 
@@ -215,7 +200,6 @@ class RouteMapViewController: UIViewController {
         view.layoutIfNeeded()
 
         mapView.tracksUserCourse = true
-//        instructionsBannerView.swipeable = true
         
         styleObservation = mapView.observe(\.style, options: .new) { [weak self] (mapView, change) in
             guard change.newValue != nil else {
@@ -233,7 +217,6 @@ class RouteMapViewController: UIViewController {
         navigationView.reportButton.addTarget(self, action: Actions.feedback, for: .touchUpInside)
         navigationView.resumeButton.addTarget(self, action: Actions.recenter, for: .touchUpInside)
         resumeNotifications()
-        notifyUserAboutLowVolume()
     }
 
     deinit {
@@ -306,16 +289,13 @@ class RouteMapViewController: UIViewController {
                          legIndex: router.routeProgress.legIndex,
                          stepIndex: router.routeProgress.currentLegProgress.stepIndex + 1)
         
-        // always remove preview index when we recenter
-        currentPreviewInstructionBannerStepIndex = nil
-        
         delegate?.mapViewController(self, didRecenterAt: mapView.userLocationForCourseTracking!)
     }
     
-    @objc func center(on step: RouteStep, route: Route, legIndex: Int, stepIndex: Int) {
+    @objc func center(on step: RouteStep, route: Route, legIndex: Int, stepIndex: Int, animated: Bool = true, completion: CompletionHandler? = nil) {
         mapView.enableFrameByFrameCourseViewTracking(for: 1)
         mapView.tracksUserCourse = false
-        mapView.setCenter(step.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step.initialHeading!, animated: true, completionHandler: nil)
+        mapView.setCenter(step.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step.initialHeading!, animated: animated, completionHandler: completion)
         
         guard isViewLoaded && view.window != nil else { return }
         mapView.addArrow(route: router.routeProgress.route, legIndex: legIndex, stepIndex: stepIndex)
@@ -363,17 +343,6 @@ class RouteMapViewController: UIViewController {
         mapView.updateCourseTracking(location: router.location, animated: false)
     }
 
-    func notifyUserAboutLowVolume() {
-        guard !(navService.locationManager is SimulatedLocationManager) else { return }
-        guard !NavigationSettings.shared.voiceMuted else { return }
-        guard AVAudioSession.sharedInstance().outputVolume <= NavigationViewMinimumVolumeForWarning else { return }
-
-        //TODO: FIX ME
-//        let title = String.localizedStringWithFormat(NSLocalizedString("DEVICE_VOLUME_LOW", bundle: .mapboxNavigation, value: "%@ Volume Low", comment: "Format string for indicating the device volume is low; 1 = device model"), UIDevice.current.model)
-//        statusView.show(title, showSpinner: false)
-//        statusView.hide(delay: 3, animated: true)
-    }
-
     func updateMapOverlays(for routeProgress: RouteProgress) {
         if routeProgress.currentLegProgress.followOnStep != nil {
             mapView.addArrow(route: route, legIndex: router.routeProgress.legIndex, stepIndex: router.routeProgress.currentLegProgress.stepIndex + 1)
@@ -382,7 +351,7 @@ class RouteMapViewController: UIViewController {
         }
     }
 
-    func updateCameraAltitude(for routeProgress: RouteProgress) {
+    func updateCameraAltitude(for routeProgress: RouteProgress, completion: CompletionHandler? = nil) {
         guard mapView.tracksUserCourse else { return } //only adjust when we are actively tracking user course
 
         let zoomOutAltitude = mapView.zoomedOutMotorwayAltitude
@@ -470,8 +439,6 @@ class RouteMapViewController: UIViewController {
         navigationView.endOfRouteView?.isHidden = false
 
         view.layoutIfNeeded() //flush layout queue
-//        NSLayoutConstraint.deactivate(navigationView.bannerShowConstraints)
-//        NSLayoutConstraint.activate(navigationView.bannerHideConstraints)
         navigationView.endOfRouteHideConstraint?.isActive = false
         navigationView.endOfRouteShowConstraint?.isActive = true
 
