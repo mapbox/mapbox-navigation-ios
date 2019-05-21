@@ -126,7 +126,6 @@ open class NavigationView: UIView {
     }
     
     func commonInit() {
-        accessibilityIdentifier = "NavigationViewRoot"
         setupViews()
         setupConstraints()
     }

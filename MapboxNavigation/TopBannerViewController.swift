@@ -3,7 +3,7 @@ import MapboxCoreNavigation
 import MapboxDirections
 
 
-@objc protocol TopBannerViewControllerDelegate: StatusViewDelegate {
+@objc public protocol TopBannerViewControllerDelegate: StatusViewDelegate {
     @objc optional func topBanner(_ banner: TopBannerViewController, didSwipeInDirection direction: UISwipeGestureRecognizer.Direction)
 
     @objc optional func topBanner(_ banner: TopBannerViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell)
@@ -17,7 +17,7 @@ import MapboxDirections
     @objc optional func topBanner(_ banner: TopBannerViewController, didDismissStepsController: StepsViewController)
 }
 
-@objc open class TopBannerViewController: ContainerViewController, StatusViewDelegate {
+@objc open class TopBannerViewController: UIViewController, StatusViewDelegate {
     
     weak var delegate: TopBannerViewControllerDelegate? = nil {
         didSet {
@@ -130,7 +130,6 @@ import MapboxDirections
     
     
     private func setupViews() {
-        topPaddingView.accessibilityIdentifier = "topPaddingView"
         let children = [stepsContainer, topPaddingView, informationStackView]
         children.forEach(view.addSubview(_:))
     }
@@ -331,7 +330,7 @@ import MapboxDirections
 }
 
 // MARK: - NavigationComponent Conformance
-extension TopBannerViewController /* NavigationComponent */ {
+extension TopBannerViewController: NavigationComponent {
     public func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         routeProgress = progress
         instructionsBannerView.updateDistance(for: progress.currentLegProgress.currentStepProgress)
@@ -378,7 +377,7 @@ extension TopBannerViewController /* NavigationComponent */ {
         statusView.hide(delay: 0, animated: true)
     }
     
-    public func navigationViewController(_ controller: NavigationViewController, didRecenterAt location: CLLocation) {
+    public func navigationViewController(_ controller: NavigationViewController, didCenterOn location: CLLocation) {
         stopPreviewing()
     }
     

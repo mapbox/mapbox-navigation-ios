@@ -289,7 +289,6 @@ open class NavigationViewController: UIViewController {
     
     override open func viewDidLoad() {
         super.viewDidLoad()
-        view.accessibilityIdentifier = "NVCRootView"
         // Initialize voice controller if it hasn't been overridden.
         // This is optional and lazy so it can be mutated by the developer after init.
         _ = voiceController
@@ -328,7 +327,7 @@ open class NavigationViewController: UIViewController {
         
         let title = String.localizedStringWithFormat(NSLocalizedString("DEVICE_VOLUME_LOW", bundle: .mapboxNavigation, value: "%@ Volume Low", comment: "Format string for indicating the device volume is low; 1 = device model"), UIDevice.current.model)
         for component in navigationComponents {
-            component.showStatus?(title: title, withSpinner: false, for: 3, animated: true, interactive: false)
+            component.showStatus?(title: title, spinner: false, duration: 3, animated: true, interactive: false)
         }
     }
     
@@ -435,9 +434,9 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
         return delegate?.label?(label, willPresent: instruction, as: presented)
     }
     
-    @objc func mapViewController(_ mapViewController: RouteMapViewController, didRecenterAt location: CLLocation) {
+    @objc func mapViewController(_ mapViewController: RouteMapViewController, didCenterOn location: CLLocation) {
         for component in navigationComponents {
-            component.navigationViewController?(self, didRecenterAt: location)
+            component.navigationViewController?(self, didCenterOn: location)
         }
     }
 }
