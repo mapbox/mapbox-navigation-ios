@@ -37,7 +37,6 @@ class InstructionsCardSnapshotTest: SnapshotTest {
         let routeProgress = RouteProgress(route: fakeRoute)
         let intersectionLocation = routeProgress.route.legs.first!.steps.first!.intersections!.first!.location
         let fakeLocation = CLLocation(latitude: intersectionLocation.latitude, longitude: intersectionLocation.longitude)
-        subject.steps = routeProgress.steps
         subject.routeProgress = routeProgress
         subject.navigationService(service, didUpdate: routeProgress, with: fakeLocation, rawLocation: fakeLocation)
         
