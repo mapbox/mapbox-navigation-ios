@@ -149,7 +149,7 @@ extension BaseInstructionsBannerView {
         baselineConstraints.forEach { $0.isActive = true }
     }
     
-    func setupAvailableBounds() {
+    @objc func setupAvailableBounds() {
         // Abbreviate if the instructions do not fit on one line
         primaryLabel.availableBounds = { [unowned self] in
             // Available width H:|-padding-maneuverView-padding-availableWidth-padding-|

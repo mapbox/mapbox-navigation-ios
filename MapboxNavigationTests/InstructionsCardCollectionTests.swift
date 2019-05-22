@@ -30,7 +30,6 @@ class InstructionsCardCollectionTests: XCTestCase {
         let service = MapboxNavigationService(route: initialRoute, directions: DirectionsSpy(accessToken: "adbeknut"), simulating: .never)
         let routeProgress = RouteProgress(route: fakeRoute)
         subject.routeProgress = routeProgress
-        subject.steps = routeProgress.steps
         
         return (collection: subject, progress: routeProgress, service: service, delegate: delegate)
     }()

@@ -46,4 +46,18 @@ extension InstructionsCardView {
         baselineConstraints.forEach { $0.isActive = true }
     }
     
+    override func setupAvailableBounds() {
+        // Abbreviate if the instructions do not fit on one line
+        primaryLabel.availableBounds = { [unowned self] in
+            // Available width H:|-padding-maneuverView-padding-availableWidth-padding-|
+            let availableWidth = self.bounds.width - BaseInstructionsBannerView.maneuverViewSize.width - BaseInstructionsBannerView.padding * 3
+            return CGRect(x: 0, y: 0, width: availableWidth, height: self.primaryLabel.font.lineHeight)
+        }
+        
+        secondaryLabel.availableBounds = { [unowned self] in
+            // Available width H:|-padding-maneuverView-padding-availableWidth-padding-|
+            let availableWidth = self.bounds.width - BaseInstructionsBannerView.maneuverViewSize.width - BaseInstructionsBannerView.padding * 3
+            return CGRect(x: 0, y: 0, width: availableWidth, height: self.secondaryLabel.font.lineHeight)
+        }
+    }
 }

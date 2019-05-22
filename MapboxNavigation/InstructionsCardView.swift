@@ -4,6 +4,9 @@ import MapboxCoreNavigation
 
 public class InstructionsCardView: BaseInstructionsBannerView, NavigationComponent {
     
+    @objc dynamic var cardWidthFactor: CGFloat = 0.82
+    @objc dynamic var cardHeight: CGFloat = 100.0
+    
     var style: InstructionsCardStyle = DayInstructionsCardStyle ()
     var step: RouteStep!
     var distanceFromCurrentLocation: CLLocationDistance!
@@ -19,8 +22,8 @@ public class InstructionsCardView: BaseInstructionsBannerView, NavigationCompone
         }
     }
     
-    required public init(style: InstructionsCardStyle? = nil) {
-        super.init(frame: .zero)
+    required public init(style: InstructionsCardStyle? = nil, frame: CGRect = .zero) {
+        super.init(frame: frame)
         self.showStepIndicator = false
     }
     
@@ -33,10 +36,6 @@ public class InstructionsCardView: BaseInstructionsBannerView, NavigationCompone
     override open func layoutSubviews() {
         super.layoutSubviews()
         gradientLayer.frame = bounds
-    }
-    
-    @objc public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
-        update(for: instruction)
     }
     
     func prepareLayout(for style: InstructionsCardStyle) {
