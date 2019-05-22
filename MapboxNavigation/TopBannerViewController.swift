@@ -219,12 +219,18 @@ import MapboxDirections
         NSLayoutConstraint.deactivate(stepsContainerShow)
         NSLayoutConstraint.activate(stepsContainerHide)
         
-        let complete = {
+        let complete = { [weak self] in
+            guard let self = self else {
+                return
+            }
+            
             self.delegate?.topBanner?(self, didDismissStepsController: steps)
             completion?()
         }
         
-        UIView.animate(withDuration: 0.35, delay: 0.0, options: [.curveEaseInOut], animations: parent.view.layoutIfNeeded, completion: { _ in
+        UIView.animate(withDuration: 0.35, delay: 0.0, options: [.curveEaseInOut], animations: parent.view.layoutIfNeeded) { [weak self] _ in
+            guard let self = self else { return }
+            
             if !self.isDisplayingPreviewInstructions {
                 self.showSecondaryChildren(completion: complete)
             } else {
@@ -234,7 +240,7 @@ import MapboxDirections
             self.isDisplayingSteps = false
             steps.dismiss()
             self.stepsViewController = nil
-        })
+        }
 
 
     }
@@ -243,8 +249,12 @@ import MapboxDirections
         lanesView.isHidden = !lanesView.isCurrentlyVisible
         nextBannerView.isHidden = !nextBannerView.isCurrentlyVisible
         
-        UIView.animate(withDuration: 0.20, delay: 0.0, options: [.curveEaseOut], animations: {
-            for child in self.informationChildren {
+        UIView.animate(withDuration: 0.20, delay: 0.0, options: [.curveEaseOut], animations: { [weak self] in
+            guard let children = self?.informationChildren else {
+                return
+            }
+            
+            for child in children {
                 child.alpha = 1.0
             }
         }, completion: { _ in
@@ -253,13 +263,21 @@ import MapboxDirections
     }
     
     private func hideSecondaryChildren(completion: CompletionHandler? = nil) {
-        UIView.animate(withDuration: 0.20, delay: 0.0, options: [.curveEaseIn], animations: {
-            for child in self.secondaryChildren {
+        UIView.animate(withDuration: 0.20, delay: 0.0, options: [.curveEaseIn], animations: { [weak self] in
+            guard let children = self?.secondaryChildren else {
+                return
+            }
+            
+            for child in children {
                 child.alpha = 0.0
             }
-        }) { _ in
+        }) { [weak self] _ in
             completion?()
-            for child in self.secondaryChildren {
+            guard let children = self?.secondaryChildren else {
+                return
+            }
+            
+            for child in children {
                 child.isHidden = true
             }
         }
