@@ -256,7 +256,7 @@ open class NavigationViewController: UIViewController {
             return map.view.constraintsForPinning(to: parent.view)
         }
         
-        //Manually update the map style since the RMVC missed the KVO "map style change" message
+        //Manually update the map style since the RMVC missed the "map style change" notification when the style manager was set up.
         if let currentStyle = styleManager.currentStyle {
             updateMapStyle(currentStyle, animated: false)
         }
