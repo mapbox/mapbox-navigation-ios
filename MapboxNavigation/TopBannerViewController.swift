@@ -191,14 +191,19 @@ import MapboxDirections
         isDisplayingSteps = true
         
         parent.view.layoutIfNeeded()
-        
+        view.isUserInteractionEnabled = false
         
         let stepsInAnimation = {
             NSLayoutConstraint.deactivate(self.stepsContainerHideConstraints)
             NSLayoutConstraint.activate(self.stepsContainerShowConstraints)
             
             
-            let finally: (Bool) -> Void = { _ in
+            let finally: (Bool) -> Void = { [weak self] _ in
+                guard let self = self else {
+                    return
+                }
+                
+                self.view.isUserInteractionEnabled = true
                 self.delegate?.topBanner?(self, didDisplayStepsController: controller)
             }
             
@@ -224,10 +229,12 @@ import MapboxDirections
                 return
             }
             
+            self.view.isUserInteractionEnabled = true
             self.delegate?.topBanner?(self, didDismissStepsController: steps)
             completion?()
         }
         
+        view.isUserInteractionEnabled = false
         UIView.animate(withDuration: 0.35, delay: 0.0, options: [.curveEaseInOut], animations: parent.view.layoutIfNeeded) { [weak self] _ in
             guard let self = self else {
                 return
