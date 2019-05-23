@@ -1,67 +1,69 @@
-class DayInstructionsCardStyle: InstructionsCardStyle {
-    var cornerRadius: CGFloat = 20.0
+public class DayInstructionsCardStyle: InstructionsCardStyle {
+    public var cornerRadius: CGFloat = 20.0
     
-    var backgroundColor: UIColor = .white
+    public var backgroundColor: UIColor = .white
     
-    var highlightedBackgroundColor: UIColor = .cardBlue
+    public var highlightedBackgroundColor: UIColor = .cardBlue
     
-    lazy var primaryLabelNormalFont: UIFont = {
+    public lazy var primaryLabelNormalFont: UIFont = {
         return CardFont.create(.bold, with: 24.0)!
     }()
     
-    var primaryLabelTextColor: UIColor {
+    public var primaryLabelTextColor: UIColor {
         return .cardDark
     }
     
-    var primaryLabelHighlightedTextColor: UIColor {
+    public var primaryLabelHighlightedTextColor: UIColor {
         return .cardLight
     }
     
-    lazy var secondaryLabelNormalFont: UIFont = {
+    public lazy var secondaryLabelNormalFont: UIFont = {
         return CardFont.create(.bold, with: 18.0)!
     }()
     
-    var secondaryLabelTextColor: UIColor {
+    public var secondaryLabelTextColor: UIColor {
         return .cardDark
     }
     
-    var secondaryLabelHighlightedTextColor: UIColor {
+    public var secondaryLabelHighlightedTextColor: UIColor {
         return .cardLight
     }
     
-    lazy var distanceLabelNormalFont: UIFont = {
+    public lazy var distanceLabelNormalFont: UIFont = {
         return CardFont.create(.regular, with: 16.0)!
     }()
     
-    var distanceLabelValueTextColor: UIColor {
+    public var distanceLabelValueTextColor: UIColor {
         return .cardDark
     }
     
-    var distanceLabelUnitTextColor: UIColor {
+    public var distanceLabelUnitTextColor: UIColor {
         return .cardDark
     }
     
-    lazy var distanceLabelUnitFont: UIFont = {
+    public lazy var distanceLabelUnitFont: UIFont = {
         return CardFont.create(.regular, with: 16.0)!
     }()
     
-    lazy var distanceLabelValueFont: UIFont = {
+    public lazy var distanceLabelValueFont: UIFont = {
         return CardFont.create(.bold, with: 20.0)!
     }()
     
-    var distanceLabelHighlightedTextColor: UIColor {
+    public var distanceLabelHighlightedTextColor: UIColor {
         return .cardLight
     }
     
-    var maneuverViewPrimaryColor: UIColor {
+    public var maneuverViewPrimaryColor: UIColor {
         return .cardBlue
     }
     
-    var maneuverViewSecondaryColor: UIColor {
+    public var maneuverViewSecondaryColor: UIColor {
         return .cardLight
     }
     
-    var maneuverViewHighlightedColor: UIColor {
+    public var maneuverViewHighlightedColor: UIColor {
         return .cardLight
     }
+    
+    public init() {}
 }
