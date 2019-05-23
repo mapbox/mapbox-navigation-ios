@@ -40,7 +40,7 @@ import MapboxDirections
         return constraints
     }()
     
-    lazy var stepsContainerShow: [NSLayoutConstraint] = {
+    lazy var stepsContainerShowConstraints: [NSLayoutConstraint] = {
         let constraints = [
             stepsContainer.topAnchor.constraint(equalTo: informationStackView.bottomAnchor),
             view.bottomAnchor.constraint(equalTo: self.parent!.view.bottomAnchor),
@@ -49,15 +49,15 @@ import MapboxDirections
         return constraints
     }()
     
-    lazy var stepsContainerHide: [NSLayoutConstraint] = {
+    lazy var stepsContainerHideConstraints: [NSLayoutConstraint] = {
         let constraints = [
             stepsContainer.bottomAnchor.constraint(equalTo: informationStackView.topAnchor),
-            informationStackBottomPin
+            informationStackBottomPinConstraint
         ]
         return constraints
     }()
     
-    lazy var informationStackBottomPin: NSLayoutConstraint = view.bottomAnchor.constraint(equalTo: informationStackView.bottomAnchor)
+    lazy var informationStackBottomPinConstraint: NSLayoutConstraint = view.bottomAnchor.constraint(equalTo: informationStackView.bottomAnchor)
     
     lazy var informationStackView = UIStackView(orientation: .vertical, autoLayout: true)
     
@@ -152,7 +152,7 @@ import MapboxDirections
         let top = informationStackView.topAnchor.constraint(equalTo: view.safeTopAnchor)
         let leading = informationStackView.leadingAnchor.constraint(equalTo: view.safeLeadingAnchor)
         let trailing = informationStackView.trailingAnchor.constraint(equalTo: view.safeTrailingAnchor)
-        let bottom = informationStackBottomPin
+        let bottom = informationStackBottomPinConstraint
         //bottom is taken care of as part of steps TVC show/hide
         
         NSLayoutConstraint.activate([top, leading, trailing, bottom])
@@ -183,7 +183,7 @@ import MapboxDirections
         embed(controller, in: stepsContainer) { (parent, child) -> [NSLayoutConstraint] in
             child.view.translatesAutoresizingMaskIntoConstraints = false
             let pinningConstraints = child.view.constraintsForPinning(to: self.stepsContainer)
-            let hideConstraints = self.stepsContainerHide
+            let hideConstraints = self.stepsContainerHideConstraints
             
             return pinningConstraints + hideConstraints + self.stepsContainerConstraints
         }
@@ -194,8 +194,8 @@ import MapboxDirections
         
         
         let stepsInAnimation = {
-            NSLayoutConstraint.deactivate(self.stepsContainerHide)
-            NSLayoutConstraint.activate(self.stepsContainerShow)
+            NSLayoutConstraint.deactivate(self.stepsContainerHideConstraints)
+            NSLayoutConstraint.activate(self.stepsContainerShowConstraints)
             
             
             let finally: (Bool) -> Void = { _ in
@@ -216,8 +216,8 @@ import MapboxDirections
         delegate?.topBanner?(self, willDismissStepsController: steps)
         
         
-        NSLayoutConstraint.deactivate(stepsContainerShow)
-        NSLayoutConstraint.activate(stepsContainerHide)
+        NSLayoutConstraint.deactivate(stepsContainerShowConstraints)
+        NSLayoutConstraint.activate(stepsContainerHideConstraints)
         
         let complete = { [weak self] in
             guard let self = self else {
