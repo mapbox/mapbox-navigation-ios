@@ -46,7 +46,6 @@ public class StatusView: UIView {
         
         let textLabel = UILabel()
         textLabel.contentMode = .bottom
-        textLabel.text = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
         textLabel.translatesAutoresizingMaskIntoConstraints = false
         textLabel.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
         textLabel.textColor = .white

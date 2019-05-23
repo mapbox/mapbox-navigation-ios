@@ -495,21 +495,14 @@ extension NavigationViewController: NavigationServiceDelegate {
     }
 
     @objc public func navigationService(_ service: NavigationService, willBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
-        switch service.simulationMode {
-        case .always:
-            let localized = String.Localized.simulationStatus(speed: 1)
-            mapViewController?.statusView.show(localized, showSpinner: false, interactive: true)
-        default:
-            return
+        if service.simulationMode == .always {
+            mapViewController?.showSimulationStatus(speed: 1)
         }
     }
     
     @objc public func navigationService(_ service: NavigationService, willEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
-        switch service.simulationMode {
-        case .always:
-            mapViewController?.statusView.hide(delay: 0, animated: true)
-        default:
-            return
+        if service.simulationMode == .always {
+            mapViewController?.hideStatus()
         }
     }
     
