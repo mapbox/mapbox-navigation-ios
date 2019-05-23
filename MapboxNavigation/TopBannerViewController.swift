@@ -131,7 +131,7 @@ import MapboxDirections
     
     private func setupViews() {
         let children = [stepsContainer, topPaddingView, informationStackView]
-        children.forEach(view.addSubview(_:))
+        view.addSubviews(children)
     }
     
     private func addConstraints() {

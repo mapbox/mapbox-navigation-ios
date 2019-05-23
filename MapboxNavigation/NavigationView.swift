@@ -137,7 +137,7 @@ open class NavigationView: UIView {
     func setupViews() {
         setupStackViews()
         
-        let subviews: [UIView] = [
+        let children: [UIView] = [
             mapView,
             topBannerContainerView,
             floatingStackView,
@@ -146,7 +146,7 @@ open class NavigationView: UIView {
             bottomBannerContainerView
         ]
         
-        subviews.forEach(addSubview(_:))
+        addSubviews(children)
         topBannerContainerView.backgroundColor = .black
     }
     
