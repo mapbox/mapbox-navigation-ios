@@ -38,19 +38,19 @@ public class InstructionsCardView: BaseInstructionsBannerView, NavigationCompone
         gradientLayer.frame = bounds
     }
     
-    func prepareLayout(for style: InstructionsCardStyle) {
+    public func prepareLayout(for style: InstructionsCardStyle) {
         self.style = style
         prepareLayout()
     }
     
-    func updateInstruction(for step: RouteStep) {
+    public func updateInstruction(for step: RouteStep) {
         self.step = step
         if let instruction = step.instructionsDisplayedAlongStep?.last {
             update(for: instruction)
         }
     }
     
-    func updateDistanceFromCurrentLocation(_ distance: CLLocationDistance) {
+    public func updateDistanceFromCurrentLocation(_ distance: CLLocationDistance) {
         self.distanceFromCurrentLocation = distance
         self.distance = distance
     }
