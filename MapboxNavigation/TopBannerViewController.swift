@@ -5,7 +5,7 @@ import MapboxDirections
 
 @objc public protocol TopBannerViewControllerDelegate: StatusViewDelegate {
     @objc optional func topBanner(_ banner: TopBannerViewController, didSwipeInDirection direction: UISwipeGestureRecognizer.Direction)
-
+    
     @objc optional func topBanner(_ banner: TopBannerViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell)
     
     @objc optional func topBanner(_ banner: TopBannerViewController, willDisplayStepsController: StepsViewController)
@@ -24,7 +24,7 @@ import MapboxDirections
             statusView.delegate = delegate
         }
     }
-
+    
     lazy var topPaddingView: TopBannerView = .forAutoLayout()
     
     lazy var stepsContainer: UIView = .forAutoLayout()
@@ -33,32 +33,32 @@ import MapboxDirections
     var routeProgress: RouteProgress?
     
     lazy var stepsContainerConstraints: [NSLayoutConstraint] = {
-       let constraints = [
-        stepsContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-        stepsContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        let constraints = [
+            stepsContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            stepsContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ]
         return constraints
     }()
     
     lazy var stepsContainerShow: [NSLayoutConstraint] = {
         let constraints = [
-        stepsContainer.topAnchor.constraint(equalTo: informationStackView.bottomAnchor),
-        view.bottomAnchor.constraint(equalTo: self.parent!.view.bottomAnchor),
-        view.bottomAnchor.constraint(equalTo: stepsContainer.bottomAnchor)
+            stepsContainer.topAnchor.constraint(equalTo: informationStackView.bottomAnchor),
+            view.bottomAnchor.constraint(equalTo: self.parent!.view.bottomAnchor),
+            view.bottomAnchor.constraint(equalTo: stepsContainer.bottomAnchor)
         ]
         return constraints
     }()
     
     lazy var stepsContainerHide: [NSLayoutConstraint] = {
         let constraints = [
-        stepsContainer.bottomAnchor.constraint(equalTo: informationStackView.topAnchor),
-        informationStackBottomPin
+            stepsContainer.bottomAnchor.constraint(equalTo: informationStackView.topAnchor),
+            informationStackBottomPin
         ]
         return constraints
     }()
     
     lazy var informationStackBottomPin: NSLayoutConstraint = view.bottomAnchor.constraint(equalTo: informationStackView.bottomAnchor)
-
+    
     lazy var informationStackView = UIStackView(orientation: .vertical, autoLayout: true)
     
     lazy var instructionsBannerView: InstructionsBannerView = {
@@ -116,7 +116,7 @@ import MapboxDirections
     }
     
     func commonInit() {
- 
+        
     }
     
     
@@ -166,8 +166,8 @@ import MapboxDirections
             child.trailingAnchor.constraint(equalTo: informationStackView.trailingAnchor).isActive = true
         }
     }
-
-
+    
+    
     public func displayStepsTable() {
         dismissStepsTable()
         
@@ -204,7 +204,7 @@ import MapboxDirections
             
             UIView.animate(withDuration: 0.35, delay: 0.0, options: [.curveEaseOut], animations: parent.view.layoutIfNeeded, completion: finally)
         }
-
+        
         hideSecondaryChildren(completion: stepsInAnimation)
         
     }
@@ -214,8 +214,8 @@ import MapboxDirections
         parent.view.layoutIfNeeded()
         
         delegate?.topBanner?(self, willDismissStepsController: steps)
-
-
+        
+        
         NSLayoutConstraint.deactivate(stepsContainerShow)
         NSLayoutConstraint.activate(stepsContainerHide)
         
@@ -243,8 +243,8 @@ import MapboxDirections
             steps.dismiss()
             self.stepsViewController = nil
         }
-
-
+        
+        
     }
     private func showSecondaryChildren(completion: CompletionHandler? = nil) {
         statusView.isHidden = !statusView.isCurrentlyVisible
@@ -259,8 +259,8 @@ import MapboxDirections
             for child in children {
                 child.alpha = 1.0
             }
-        }, completion: { _ in
-            completion?()
+            }, completion: { _ in
+                completion?()
         })
     }
     
@@ -428,7 +428,7 @@ extension TopBannerViewController: InstructionsBannerViewDelegate {
 }
 
 extension TopBannerViewController: StepsViewControllerDelegate {
-
+    
     public func stepsViewController(_ viewController: StepsViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell) {
         delegate?.topBanner?(self, didSelect: legIndex, stepIndex: stepIndex, cell: cell)
     }
