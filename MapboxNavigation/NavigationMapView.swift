@@ -337,10 +337,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         if tracksUserCourse {
             let newCamera = camera ?? MGLMapCamera(lookingAtCenter: location.coordinate, altitude: altitude, pitch: 45, heading: location.course)
             let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: .linear) : nil
-            let point = userAnchorPoint
-            let padding = UIEdgeInsets(top: point.y, left: point.x, bottom: bounds.height - point.y, right: bounds.width - point.x)
-            // Omit padding when https://github.com/mapbox/mapbox-gl-native/pull/14081 has landed
-            setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: padding, completionHandler: nil)
+            setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: safeArea, completionHandler: nil)
             userCourseView?.center = userAnchorPoint
         } else {
             // Animate course view updates in overview mode
@@ -426,7 +423,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     */
     public static let defaultPadding: UIEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
     
-    @objc public func showcase(_ routes: [Route], padding: UIEdgeInsets = NavigationMapView.defaultPadding, animated: Bool = false) {
+    @objc public func showcase(_ routes: [Route], animated: Bool = false) {
         guard let active = routes.first,
               let coords = active.coordinates,
               !coords.isEmpty else { return } //empty array
@@ -438,15 +435,15 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         showRoutes(routes)
         showWaypoints(active)
         
-        fit(to: active, facing: 0, padding: padding, animated: animated)
+        fit(to: active, facing: 0, animated: animated)
     }
     
-    func fit(to route: Route, facing direction:CLLocationDirection = 0, padding: UIEdgeInsets = NavigationMapView.defaultPadding, animated: Bool = false) {
+    func fit(to route: Route, facing direction:CLLocationDirection = 0, animated: Bool = false) {
         guard let coords = route.coordinates, !coords.isEmpty else { return }
       
         setUserTrackingMode(.none, animated: false)
         let line = MGLPolyline(coordinates: coords, count: UInt(coords.count))
-        let camera = cameraThatFitsShape(line, direction: direction, edgePadding: padding)
+        let camera = cameraThatFitsShape(line, direction: direction, edgePadding: .zero)
         
         setCamera(camera, animated: animated)
     }
