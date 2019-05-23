@@ -229,7 +229,9 @@ import MapboxDirections
         }
         
         UIView.animate(withDuration: 0.35, delay: 0.0, options: [.curveEaseInOut], animations: parent.view.layoutIfNeeded) { [weak self] _ in
-            guard let self = self else { return }
+            guard let self = self else {
+                return
+            }
             
             if !self.isDisplayingPreviewInstructions {
                 self.showSecondaryChildren(completion: complete)
