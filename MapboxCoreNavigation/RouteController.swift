@@ -172,16 +172,13 @@ open class RouteController: NSObject {
         
         let status = navigator.getStatusForTimestamp(location.timestamp)
         
-        let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
-        currentStepProgress.intersectionIndex = Int(status.intersectionIndex)
-        
         // Notify observers if the step’s remaining distance has changed.
         update(progress: routeProgress, with: CLLocation(status.location), rawLocation: location)
         
         let willReroute = !userIsOnRoute(location) && delegate?.router?(self, shouldRerouteFrom: location)
                           ?? DefaultBehavior.shouldRerouteFromLocation
         
-        updateRouteStepProgress(status: status)
+        updateIndexes(status: status)
         updateRouteLegProgress(status: status)
         updateSpokenInstructionProgress(status: status, willReRoute: willReroute)
         updateVisualInstructionProgress(status: status)
@@ -194,28 +191,36 @@ open class RouteController: NSObject {
         checkForFasterRoute(from: location, routeProgress: routeProgress)
     }
     
-    func updateSpokenInstructionProgress(status: MBNavigationStatus, willReRoute: Bool) {
+    func updateIndexes(status: MBNavigationStatus) {
+        routeProgress.legIndex = Int(status.legIndex)
+        routeProgress.currentLegProgress.stepIndex = Int(status.stepIndex)
+        routeProgress.currentLegProgress.currentStepProgress.intersectionIndex = Int(status.intersectionIndex)
         
-        if let voiceInstructionIndex = status.voiceInstruction?.index {
-            routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex = Int(voiceInstructionIndex)
-            
-            // Don't annouce spoken instruction if we are going to reroute
-            if !willReRoute,
-                let spokenInstruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction {
-                announcePassage(of: spokenInstruction, routeProgress: routeProgress)
-            }
+        if let spokenInstructionIndex = status.voiceInstruction?.index {
+            routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex = Int(spokenInstructionIndex)
+        }
+        
+        if let visualInstructionIndex = status.bannerInstruction?.index {
+            routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex = Int(visualInstructionIndex)
+        }
+    }
+    
+    func updateSpokenInstructionProgress(status: MBNavigationStatus, willReRoute: Bool) {
+        let didUpdate = status.voiceInstruction?.index != nil
+
+        // Announce voice instruction if it was updated and we are not going to reroute
+        if didUpdate && !willReRoute,
+            let spokenInstruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction {
+            announcePassage(of: spokenInstruction, routeProgress: routeProgress)
         }
     }
     
     func updateVisualInstructionProgress(status: MBNavigationStatus) {
+        let didUpdate = status.bannerInstruction != nil
         
-        let willChangeVisualIndex = status.bannerInstruction != nil
-        
-        if willChangeVisualIndex || isFirstLocation {
-            let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
-            currentStepProgress.visualInstructionIndex = Int(status.bannerInstruction?.index ?? 0)
-            
-            if let instruction = currentStepProgress.currentVisualInstruction {
+        // Announce visual instruction if it was updated or it is the first location being reported
+        if didUpdate || isFirstLocation {
+            if let instruction = routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction {
                 announcePassage(of: instruction, routeProgress: routeProgress)
             }
         }
@@ -251,24 +256,6 @@ open class RouteController: NSObject {
                     routeProgress.legIndex = Int(legIndex)
                 }
             }
-        }
-    }
-    
-    func updateRouteStepProgress(status: MBNavigationStatus) {
-        let stepIndex: Int = Int(status.stepIndex)
-        
-        if stepIndex != routeProgress.currentLegProgress.stepIndex {
-            advanceStepIndex(to: stepIndex)
-        }
-    }
-    
-    func advanceStepIndex(to index: Array<RouteStep>.Index? = nil) {
-        
-        if let index = index {
-            routeProgress.currentLegProgress.stepIndex = index
-        } else {
-            let status = navigator.getStatusForTimestamp(Date())
-            routeProgress.currentLegProgress.stepIndex = Int(status.stepIndex)
         }
     }
     
