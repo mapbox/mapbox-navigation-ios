@@ -147,7 +147,6 @@ open class NavigationView: UIView {
         ]
         
         addSubviews(children)
-        topBannerContainerView.backgroundColor = .black
     }
     
     open override func prepareForInterfaceBuilder() {
