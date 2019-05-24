@@ -174,7 +174,7 @@ class RouteMapViewController: UIViewController {
     weak var delegate: RouteMapViewControllerDelegate?
     var navService: NavigationService! {
         didSet {
-            navigationView.statusView.canChangeValue = navService.locationManager is SimulatedLocationManager
+            statusView.isEnabled = navService.locationManager is SimulatedLocationManager
             guard let destination = route.legs.last?.destination else { return }
             populateName(for: destination, populated: { self.destination = $0 })
         }
@@ -256,6 +256,7 @@ class RouteMapViewController: UIViewController {
         navigationView.muteButton.addTarget(self, action: Actions.mute, for: .touchUpInside)
         navigationView.reportButton.addTarget(self, action: Actions.feedback, for: .touchUpInside)
         navigationView.resumeButton.addTarget(self, action: Actions.recenter, for: .touchUpInside)
+        statusView.addTarget(self, action: #selector(didChangeSpeed(_:)), for: .valueChanged)
         resumeNotifications()
         notifyUserAboutLowVolume()
         updateInstructionBanners(visualInstructionBanner: router.routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
@@ -1001,8 +1002,8 @@ extension RouteMapViewController: StepsViewControllerDelegate {
         }
     }
 
-    func statusView(_ statusView: StatusView, valueChangedTo value: Double) {
-        let displayValue = 1+min(Int(9 * value), 8)
+    @objc func didChangeSpeed(_ sender: StatusView) {
+        let displayValue = 1+min(Int(9 * sender.value), 8)
         showSimulationStatus(speed: displayValue)
         
         if let locationManager = navService.locationManager as? SimulatedLocationManager {
