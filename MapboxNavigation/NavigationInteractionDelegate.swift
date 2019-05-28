@@ -31,5 +31,5 @@
     /**
      Shows the status view for a specified amount of time.
      */
-    @objc optional func showStatus(title: String, spinner: Bool, duration: TimeInterval, animated: Bool, interactive: Bool)
+    @objc func showStatus(title: String, spinner: Bool, duration: TimeInterval, animated: Bool, interactive: Bool)
 }

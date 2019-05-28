@@ -382,14 +382,14 @@ extension TopBannerViewController: NavigationComponent {
         dismissStepsTable()
         if service.simulationMode == .always {
             let localized = String.Localized.simulationStatus(speed: Int(service.simulationSpeedMultiplier))
-            statusView.showStatus(title: localized, for: .infinity, animated: true, interactive: true)
+            statusView.showStatus(title: localized, duration: .infinity, animated: true, interactive: true)
         } else {
             statusView.hide(delay: 2, animated: true)
         }
         
         if (proactive) {
             let title = NSLocalizedString("FASTER_ROUTE_FOUND", bundle: .mapboxNavigation, value: "Faster Route Found", comment: "Indicates a faster route was found")
-            statusView.showStatus(title: title, withSpinner: true, for: 3)
+            statusView.showStatus(title: title, spinner: true, duration: 3)
         }
     }
     
@@ -453,7 +453,10 @@ extension TopBannerViewController: NavigationInteractionDelegate {
     public func navigationViewControllerDidDisconnectCarPlay(_ controller: NavigationViewController) {
         dismissStepsTable()
     }
-    public func showStatus(title: String, withSpinner spin: Bool, for time: TimeInterval, animated: Bool, interactive: Bool) {
-        statusView.showStatus(title: title, withSpinner: spin, for: time, animated: animated, interactive: interactive)
+}
+
+extension TopBannerViewController: NavigationStatusPresenter {
+    public func showStatus(title: String, spinner spin: Bool, duration time: TimeInterval, animated: Bool, interactive: Bool) {
+        statusView.showStatus(title: title, spinner: spin, duration: time, animated: animated, interactive: interactive)
     }
 }

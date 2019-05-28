@@ -23,7 +23,7 @@ public typealias ContainerViewController = UIViewController & NavigationComponen
  */
 
 @objc(MBNavigationViewController)
-open class NavigationViewController: UIViewController {
+open class NavigationViewController: UIViewController, NavigationStatusPresenter {
     
     /** 
      A `Route` object constructed by [MapboxDirections](https://mapbox.github.io/mapbox-navigation-ios/directions/).
@@ -326,9 +326,7 @@ open class NavigationViewController: UIViewController {
         guard AVAudioSession.sharedInstance().outputVolume <= NavigationViewMinimumVolumeForWarning else { return }
         
         let title = String.localizedStringWithFormat(NSLocalizedString("DEVICE_VOLUME_LOW", bundle: .mapboxNavigation, value: "%@ Volume Low", comment: "Format string for indicating the device volume is low; 1 = device model"), UIDevice.current.model)
-        for component in navigationComponents {
-            component.showStatus?(title: title, spinner: false, duration: 3, animated: true, interactive: false)
-        }
+        showStatus(title: title, spinner: false, duration: 3, animated: true, interactive: false)
     }
     
     // MARK: Containerization
@@ -367,6 +365,12 @@ open class NavigationViewController: UIViewController {
         // This way, there is always just one notification.
         UIApplication.shared.applicationIconBadgeNumber = 1
         UIApplication.shared.applicationIconBadgeNumber = 0
+    }
+    
+    public func showStatus(title: String, spinner: Bool, duration: TimeInterval, animated: Bool, interactive: Bool) {
+        navigationComponents.compactMap({ $0 as? NavigationStatusPresenter }).forEach {
+            $0.showStatus(title: title, spinner: spinner, duration: duration, animated: animated, interactive: interactive)
+        }
     }
 }
 
@@ -611,7 +615,7 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
     public func statusView(_ statusView: StatusView, valueChangedTo value: Double) {
         let displayValue = 1+min(Int(9 * value), 8)
         let title = String.Localized.simulationStatus(speed: displayValue)
-        statusView.showStatus(title: title, for: .infinity, interactive: true)
+        statusView.showStatus(title: title, duration: .infinity, interactive: true)
         
         if let locationManager = navigationService.locationManager as? SimulatedLocationManager {
             locationManager.speedMultiplier = Double(displayValue)

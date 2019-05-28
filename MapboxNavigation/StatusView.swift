@@ -102,10 +102,10 @@ public class StatusView: UIView {
     }
     
 
-    public func showStatus(title: String, withSpinner spin: Bool = false, for time: TimeInterval, animated: Bool = true, interactive: Bool = false) {
+    public func showStatus(title: String, spinner spin: Bool = false, duration: TimeInterval, animated: Bool = true, interactive: Bool = false) {
         show(title, showSpinner: spin, interactive: interactive)
-        guard time < .infinity else { return }
-        hide(delay: time, animated: animated)
+        guard duration < .infinity else { return }
+        hide(delay: duration, animated: animated)
     }
     
     /**
