@@ -404,10 +404,6 @@ extension TopBannerViewController: NavigationComponent {
         statusView.hide(delay: 0, animated: true)
     }
     
-    public func navigationViewController(_ controller: NavigationViewController, didCenterOn location: CLLocation) {
-        stopPreviewing()
-    }
-    
     private func embed(_ child: UIViewController, in container: UIView, constrainedBy constraints: ((UIViewController, UIViewController) -> [NSLayoutConstraint])? = nil) {
         child.willMove(toParent: self)
         addChild(child)
@@ -446,11 +442,12 @@ extension TopBannerViewController: StepsViewControllerDelegate {
     }
 }
 
-extension TopBannerViewController: NavigationInteractionDelegate {
-    public func navigationViewControllerDidConnectCarPlay(_ controller: NavigationViewController) {
+extension TopBannerViewController: CarPlayConnectionObserver {
+    public func didConnectToCarPlay() {
         displayStepsTable()
     }
-    public func navigationViewControllerDidDisconnectCarPlay(_ controller: NavigationViewController) {
+    
+    public func didDisconnectFromCarPlay() {
         dismissStepsTable()
     }
 }
@@ -458,5 +455,11 @@ extension TopBannerViewController: NavigationInteractionDelegate {
 extension TopBannerViewController: NavigationStatusPresenter {
     public func showStatus(title: String, spinner spin: Bool, duration time: TimeInterval, animated: Bool, interactive: Bool) {
         statusView.showStatus(title: title, spinner: spin, duration: time, animated: animated, interactive: interactive)
+    }
+}
+
+extension TopBannerViewController: NavigationMapInteractionObserver {
+    public func navigationViewController(didCenterOn location: CLLocation) {
+        stopPreviewing()
     }
 }

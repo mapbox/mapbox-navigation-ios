@@ -138,25 +138,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      */
     @objc public var shouldManageApplicationIdleTimer = true
     
-    /**
-     Bool which should be set to true if a CarPlayNavigationView is also being used.
-     */
-    @objc public var isUsedInConjunctionWithCarPlayWindow = false {
-        didSet {
-            guard isUsedInConjunctionWithCarPlayWindow != oldValue else {
-                return
-            }
-            if isUsedInConjunctionWithCarPlayWindow {
-                for component in navigationComponents {
-                    component.navigationViewControllerDidConnectCarPlay?(self)
-                }
-            } else {
-                for component in navigationComponents {
-                    component.navigationViewControllerDidDisconnectCarPlay?(self)
-                }
-            }
-        }
-    }
     
     var isConnectedToCarPlay: Bool {
         if #available(iOS 12.0, *) {
@@ -439,8 +420,8 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
     }
     
     @objc func mapViewController(_ mapViewController: RouteMapViewController, didCenterOn location: CLLocation) {
-        for component in navigationComponents {
-            component.navigationViewController?(self, didCenterOn: location)
+        navigationComponents.compactMap({$0 as? NavigationMapInteractionObserver}).forEach {
+            $0.navigationViewController(didCenterOn: location)
         }
     }
 }
@@ -716,3 +697,17 @@ extension NavigationViewController: BottomBannerViewControllerDelegate {
     }
 }
 
+// MARK: - CarPlayConnectionObserver
+
+extension NavigationViewController: CarPlayConnectionObserver {
+    public func didConnectToCarPlay() {
+        navigationComponents.compactMap({$0 as? CarPlayConnectionObserver}).forEach {
+            $0.didConnectToCarPlay()
+        }
+    }
+    public func didDisconnectFromCarPlay() {
+        navigationComponents.compactMap({$0 as? CarPlayConnectionObserver}).forEach {
+            $0.didDisconnectFromCarPlay()
+        }
+    }
+}
