@@ -99,7 +99,6 @@ open class NavigationView: UIView {
     lazy var nextBannerView: NextBannerView = .forAutoLayout(hidden: true)
     lazy var statusView: StatusView = {
         let view: StatusView = .forAutoLayout()
-        view.delegate = delegate
         view.isHidden = true
         return view
     }()
@@ -209,10 +208,9 @@ open class NavigationView: UIView {
         instructionsBannerView.delegate = delegate
         instructionsBannerView.instructionDelegate = delegate
         nextBannerView.instructionDelegate = delegate
-        statusView.delegate = delegate
     }
 }
 
-protocol NavigationViewDelegate: NavigationMapViewDelegate, StatusViewDelegate, InstructionsBannerViewDelegate, NavigationMapViewCourseTrackingDelegate, VisualInstructionDelegate {
+protocol NavigationViewDelegate: NavigationMapViewDelegate, InstructionsBannerViewDelegate, NavigationMapViewCourseTrackingDelegate, VisualInstructionDelegate {
     func navigationView(_ view: NavigationView, didTapCancelButton: CancelButton)
 }

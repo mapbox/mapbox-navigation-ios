@@ -51,7 +51,7 @@ extension RouteMapViewController: NavigationComponent {
     func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {
         let title = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
         lanesView.hide()
-        statusView.show(title, showSpinner: true)
+        showStatus(title: title, withSpinner: true, for: .infinity)
     }
     
     func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
@@ -88,10 +88,9 @@ extension RouteMapViewController: NavigationComponent {
         }
         
         if let locationManager = navService.locationManager as? SimulatedLocationManager {
-            let localized = String.Localized.simulationStatus(speed: Int(locationManager.speedMultiplier))
-            showStatus(title: localized, for: .infinity, interactive: true)
+            showSimulationStatus(speed: Int(locationManager.speedMultiplier))
         } else {
-            statusView.hide(delay: 2, animated: true)
+            hideStatus(after: 2)
         }
         
         if proactive {
@@ -101,7 +100,7 @@ extension RouteMapViewController: NavigationComponent {
     }
     
     func navigationService(_ service: NavigationService, didFailToRerouteWith error: Error) {
-        statusView.hide()
+        hideStatus()
     }
 }
 
@@ -175,7 +174,7 @@ class RouteMapViewController: UIViewController {
     weak var delegate: RouteMapViewControllerDelegate?
     var navService: NavigationService! {
         didSet {
-            navigationView.statusView.canChangeValue = navService.locationManager is SimulatedLocationManager
+            statusView.isEnabled = navService.locationManager is SimulatedLocationManager
             guard let destination = route.legs.last?.destination else { return }
             populateName(for: destination, populated: { self.destination = $0 })
         }
@@ -257,6 +256,7 @@ class RouteMapViewController: UIViewController {
         navigationView.muteButton.addTarget(self, action: Actions.mute, for: .touchUpInside)
         navigationView.reportButton.addTarget(self, action: Actions.feedback, for: .touchUpInside)
         navigationView.resumeButton.addTarget(self, action: Actions.recenter, for: .touchUpInside)
+        statusView.addTarget(self, action: #selector(didChangeSpeed(_:)), for: .valueChanged)
         resumeNotifications()
         notifyUserAboutLowVolume()
         updateInstructionBanners(visualInstructionBanner: router.routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
@@ -397,8 +397,7 @@ class RouteMapViewController: UIViewController {
         guard AVAudioSession.sharedInstance().outputVolume <= NavigationViewMinimumVolumeForWarning else { return }
 
         let title = String.localizedStringWithFormat(NSLocalizedString("DEVICE_VOLUME_LOW", bundle: .mapboxNavigation, value: "%@ Volume Low", comment: "Format string for indicating the device volume is low; 1 = device model"), UIDevice.current.model)
-        statusView.show(title, showSpinner: false)
-        statusView.hide(delay: 3, animated: true)
+        showStatus(title: title, withSpinner: false, for: 3)
     }
 
 
@@ -448,10 +447,21 @@ class RouteMapViewController: UIViewController {
         }
     }
 
-    private func showStatus(title: String, withSpinner spin: Bool = false, for time: TimeInterval, animated: Bool = true, interactive: Bool = false) {
+    private func showStatus(title: String, withSpinner spin: Bool = false, for duration: TimeInterval, interactive: Bool = false) {
         statusView.show(title, showSpinner: spin, interactive: interactive)
-        guard time < .infinity else { return }
-        statusView.hide(delay: time, animated: animated)
+        if !duration.isInfinite {
+            hideStatus(after: duration)
+        }
+    }
+    
+    func showSimulationStatus(speed: Int) {
+        let format = NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation at %@×", comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled.")
+        let title = String.localizedStringWithFormat(format, NumberFormatter.localizedString(from: speed as NSNumber, number: .decimal))
+        showStatus(title: title, for: .infinity, interactive: true)
+    }
+    
+    func hideStatus(after delay: TimeInterval = 0) {
+        statusView.hide(delay: delay, animated: true)
     }
 
     private func setCamera(altitude: Double) {
@@ -992,10 +1002,9 @@ extension RouteMapViewController: StepsViewControllerDelegate {
         }
     }
 
-    func statusView(_ statusView: StatusView, valueChangedTo value: Double) {
-        let displayValue = 1+min(Int(9 * value), 8)
-        let title = String.Localized.simulationStatus(speed: displayValue)
-        showStatus(title: title, for: .infinity, interactive: true)
+    @objc func didChangeSpeed(_ sender: StatusView) {
+        let displayValue = 1+min(Int(9 * sender.value), 8)
+        showSimulationStatus(speed: displayValue)
         
         if let locationManager = navService.locationManager as? SimulatedLocationManager {
             locationManager.speedMultiplier = Double(displayValue)
