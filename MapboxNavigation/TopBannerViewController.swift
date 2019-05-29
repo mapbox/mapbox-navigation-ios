@@ -3,7 +3,7 @@ import MapboxCoreNavigation
 import MapboxDirections
 
 
-@objc public protocol TopBannerViewControllerDelegate: StatusViewDelegate {
+@objc public protocol TopBannerViewControllerDelegate: class {
     @objc optional func topBanner(_ banner: TopBannerViewController, didSwipeInDirection direction: UISwipeGestureRecognizer.Direction)
     
     @objc optional func topBanner(_ banner: TopBannerViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell)
@@ -17,13 +17,9 @@ import MapboxDirections
     @objc optional func topBanner(_ banner: TopBannerViewController, didDismissStepsController: StepsViewController)
 }
 
-@objc open class TopBannerViewController: UIViewController, StatusViewDelegate {
+@objc open class TopBannerViewController: UIViewController {
     
-    weak var delegate: TopBannerViewControllerDelegate? = nil {
-        didSet {
-            statusView.delegate = delegate
-        }
-    }
+    weak var delegate: TopBannerViewControllerDelegate? = nil
     
     lazy var topPaddingView: TopBannerView = .forAutoLayout()
     
@@ -73,7 +69,6 @@ import MapboxDirections
     lazy var nextBannerView: NextBannerView = .forAutoLayout(hidden: true)
     lazy var statusView: StatusView = {
         let view: StatusView = .forAutoLayout()
-        view.delegate = delegate
         view.isHidden = true
         return view
     }()
@@ -101,22 +96,10 @@ import MapboxDirections
     
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        commonInit()
     }
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        commonInit()
-    }
-    
-    convenience init(delegate: TopBannerViewControllerDelegate) {
-        self.init(nibName: nil, bundle: nil)
-        self.delegate = delegate
-        statusView.delegate = delegate
-    }
-    
-    func commonInit() {
-        
     }
     
     

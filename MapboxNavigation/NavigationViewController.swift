@@ -225,7 +225,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         if let customBanner = options?.topBanner {
             topViewController = customBanner
         } else {
-            let defaultBanner = TopBannerViewController(delegate: self)
+            let defaultBanner = TopBannerViewController(nibName: nil, bundle: nil)
+            defaultBanner.delegate = self
             defaultBanner.statusView.addTarget(self, action: #selector(NavigationViewController.didChangeSpeed(_:)), for: .valueChanged)
             topViewController = defaultBanner
         }
