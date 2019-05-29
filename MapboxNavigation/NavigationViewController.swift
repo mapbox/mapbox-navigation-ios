@@ -222,11 +222,15 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         }()
         bottomViewController = bottomBanner
 
-        let topBanner = options?.topBanner ?? TopBannerViewController(delegate: self)
+        if let customBanner = options?.topBanner {
+            topViewController = customBanner
+        } else {
+            let defaultBanner = TopBannerViewController(delegate: self)
+            defaultBanner.statusView.addTarget(self, action: #selector(NavigationViewController.didChangeSpeed(_:)), for: .valueChanged)
+            topViewController = defaultBanner
+        }
         
-        topViewController = topBanner
-        
-        let mapViewController = RouteMapViewController(navigationService: self.navigationService, delegate: self, topBanner: topBanner, bottomBanner: bottomBanner)
+        let mapViewController = RouteMapViewController(navigationService: self.navigationService, delegate: self, topBanner: topViewController!, bottomBanner: bottomBanner)
         
         self.mapViewController = mapViewController
         mapViewController.destination = route.legs.last?.destination
@@ -591,18 +595,19 @@ extension NavigationViewController: StyleManagerDelegate {
     }
 }
 // MARK: - TopBannerViewController
+// MARK: Status View Actions
+extension NavigationViewController {
+    @objc func didChangeSpeed(_ statusView: StatusView) {
+        let displayValue = 1+min(Int(9 * statusView.value), 8)
+        statusView.showSimulationStatus(speed: displayValue)
 
-extension NavigationViewController: TopBannerViewControllerDelegate {
-    public func statusView(_ statusView: StatusView, valueChangedTo value: Double) {
-        let displayValue = 1+min(Int(9 * value), 8)
-        let title = String.Localized.simulationStatus(speed: displayValue)
-        statusView.showStatus(title: title, duration: .infinity, interactive: true)
-        
         if let locationManager = navigationService.locationManager as? SimulatedLocationManager {
             locationManager.speedMultiplier = Double(displayValue)
         }
     }
-    
+}
+// MARK: TopBannerViewControllerDelegate
+extension NavigationViewController: TopBannerViewControllerDelegate {    
     public func topBanner(_ banner: TopBannerViewController, didSwipeInDirection direction: UISwipeGestureRecognizer.Direction) {
         let progress = navigationService.routeProgress
         let route = progress.route

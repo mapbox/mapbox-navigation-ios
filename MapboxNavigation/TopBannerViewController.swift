@@ -381,8 +381,7 @@ extension TopBannerViewController: NavigationComponent {
         
         dismissStepsTable()
         if service.simulationMode == .always {
-            let localized = String.Localized.simulationStatus(speed: Int(service.simulationSpeedMultiplier))
-            statusView.showStatus(title: localized, duration: .infinity, animated: true, interactive: true)
+            statusView.showSimulationStatus(speed: Int(service.simulationSpeedMultiplier))
         } else {
             statusView.hide(delay: 2, animated: true)
         }
@@ -395,8 +394,7 @@ extension TopBannerViewController: NavigationComponent {
     
     public func navigationService(_ service: NavigationService, willBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
         guard reason == .manual else { return }
-        let localized = String.Localized.simulationStatus(speed: 1)
-        statusView.show(localized, showSpinner: false, interactive: true)
+        statusView.showSimulationStatus(speed: Int(service.simulationSpeedMultiplier))
     }
     
     public func navigationService(_ service: NavigationService, willEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {

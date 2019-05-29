@@ -1,30 +1,55 @@
 import UIKit
 
+/// :nodoc:
+@objc public protocol DeprecatedStatusViewDelegate: class {}
+
 /**
- A protocol for listening in on changed mades made to a `StatusView`.
+ A protocol for listening in on changes made to a `StatusView`.
  */
-@objc public protocol StatusViewDelegate: class {
+@available(*, deprecated, message: "Add a target to StatusView for UIControl.Event.valueChanged instead.")
+@objc public protocol StatusViewDelegate: DeprecatedStatusViewDelegate {
     /**
      Indicates a value in the status view has changed by the user interacting with it.
      */
+    @available(*, deprecated, message: "Add a target to StatusView for UIControl.Event.valueChanged instead.")
     @objc optional func statusView(_ statusView: StatusView, valueChangedTo value: Double)
 }
 
 /// :nodoc:
+@objc private protocol StatusViewDelegateDeprecations {
+    @objc optional func statusView(_ statusView: StatusView, valueChangedTo value: Double)
+}
+
+/**
+ :nodoc:
+ 
+ A translucent bar that responds to tap and swipe gestures, similar to a scrubber or stepper control, and expands and collapses to maximize screen real estate.
+ */
 @IBDesignable
 @objc(MBStatusView)
-public class StatusView: UIView {
+public class StatusView: UIControl {
     
     weak var activityIndicatorView: UIActivityIndicatorView!
     weak var textLabel: UILabel!
-    @objc public weak var delegate: StatusViewDelegate?
+    @objc public weak var delegate: DeprecatedStatusViewDelegate?
     var panStartPoint: CGPoint?
     
     var isCurrentlyVisible: Bool = false
-    @objc public var canChangeValue = false
+    
+    @available(*, deprecated, renamed: "isEnabled")
+    @objc public var canChangeValue: Bool {
+        get {
+            return isEnabled
+        }
+        set {
+            isEnabled = newValue
+        }
+    }
+    
     var value: Double = 0 {
         didSet {
-            delegate?.statusView?(self, valueChangedTo: value)
+            sendActions(for: .valueChanged)
+            (delegate as? StatusViewDelegateDeprecations)?.statusView?(self, valueChangedTo: value)
         }
     }
     
@@ -46,7 +71,6 @@ public class StatusView: UIView {
         
         let textLabel = UILabel()
         textLabel.contentMode = .bottom
-        textLabel.text = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
         textLabel.translatesAutoresizingMaskIntoConstraints = false
         textLabel.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
         textLabel.textColor = .white
@@ -70,7 +94,7 @@ public class StatusView: UIView {
     }
     
     @objc func pan(_ sender: UIPanGestureRecognizer) {
-        guard canChangeValue else { return }
+        guard isEnabled else { return }
         
         let location = sender.location(in: self)
         
@@ -85,7 +109,7 @@ public class StatusView: UIView {
     }
     
     @objc func tap(_ sender: UITapGestureRecognizer) {
-        guard canChangeValue else { return }
+        guard isEnabled else { return }
         
         let location = sender.location(in: self)
         
@@ -108,11 +132,18 @@ public class StatusView: UIView {
         hide(delay: duration, animated: animated)
     }
     
+    func showSimulationStatus(speed: Int) {
+        let format = NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation at %@×", comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled.")
+        let title = String.localizedStringWithFormat(format, NumberFormatter.localizedString(from: speed as NSNumber, number: .decimal))
+        showStatus(title: title, duration: .infinity, interactive: true)
+    }
+
+    
     /**
      Shows the status view with an optional spinner.
      */
     public func show(_ title: String, showSpinner: Bool, interactive: Bool = false) {
-        canChangeValue = interactive
+        isEnabled = interactive
         textLabel.text = title
         activityIndicatorView.hidesWhenStopped = true
         if (!showSpinner) { activityIndicatorView.stopAnimating() }
