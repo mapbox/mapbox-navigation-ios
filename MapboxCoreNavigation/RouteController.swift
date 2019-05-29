@@ -253,7 +253,8 @@ open class RouteController: NSObject {
                 if advancesToNextLeg {
                     let legIndex = status.legIndex + 1
                     navigator.changeRouteLeg(forRoute: 0, leg: legIndex)
-                    routeProgress.legIndex = Int(legIndex)
+                    let newStatus = navigator.changeRouteLeg(forRoute: 0, leg: legIndex)
+                    updateIndexes(status: newStatus)
                 }
             }
         }
