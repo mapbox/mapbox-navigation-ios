@@ -1,7 +1,7 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
 ## master
-
+* Added the ability to define a custom view controller for the top banner. ([#2121](https://github.com/mapbox/mapbox-navigation-ios/pull/2121))
 * Upgraded to Mapbox Maps SDK for iOS v5.0.0. ([#2133](https://github.com/mapbox/mapbox-navigation-ios/pull/2133))
 * Deprecated `StatusViewDelegate` in favor of calling the `UIControl.addTarget(_:action:for:)` method on `StatusView` for `UIControl.Event.valueChanged`. ([#2136](https://github.com/mapbox/mapbox-navigation-ios/pull/2136))
 * Fixed an issue where the status view showed a simulated speed factor as an unformatted number. ([#2136](https://github.com/mapbox/mapbox-navigation-ios/pull/2136))
