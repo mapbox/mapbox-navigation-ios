@@ -5,6 +5,8 @@
 * Upgraded to Mapbox Maps SDK for iOS v5.0.0. ([#2133](https://github.com/mapbox/mapbox-navigation-ios/pull/2133))
 * Deprecated `StatusViewDelegate` in favor of calling the `UIControl.addTarget(_:action:for:)` method on `StatusView` for `UIControl.Event.valueChanged`. ([#2136](https://github.com/mapbox/mapbox-navigation-ios/pull/2136))
 * Fixed an issue where the status view showed a simulated speed factor as an unformatted number. ([#2136](https://github.com/mapbox/mapbox-navigation-ios/pull/2136))
+* Fixed an issue preventing the status view from appearing while rerouting. ([#2137](https://github.com/mapbox/mapbox-navigation-ios/pull/2137))
+* The `RouteOptions.alleyPriority`, `RouteOptions.walkwayPriority`, and `RouteOptions.speed` properties now work when calculating walking routes offline. ([#2142](https://github.com/mapbox/mapbox-navigation-ios/pull/2142))
 
 ## v0.33.0
 

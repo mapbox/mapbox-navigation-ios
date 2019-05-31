@@ -435,11 +435,12 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
 extension NavigationViewController: NavigationServiceDelegate {
     
     @objc public func navigationService(_ service: NavigationService, shouldRerouteFrom location: CLLocation) -> Bool {
-        return delegate?.navigationViewController?(self, shouldRerouteFrom: location) ?? true
+        let defaultBehavior = RouteController.DefaultBehavior.shouldRerouteFromLocation
+        let componentsWantReroute = navigationComponents.allSatisfy { $0.navigationService?(service, shouldRerouteFrom: location) ?? defaultBehavior }
+        return componentsWantReroute && (delegate?.navigationViewController?(self, shouldRerouteFrom: location) ?? defaultBehavior)
     }
     
     @objc public func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {
-        
         for component in navigationComponents {
             component.navigationService?(service, willRerouteFrom: location)
         }
@@ -464,7 +465,9 @@ extension NavigationViewController: NavigationServiceDelegate {
     }
     
     @objc public func navigationService(_ service: NavigationService, shouldDiscard location: CLLocation) -> Bool {
-        return delegate?.navigationViewController?(self, shouldDiscard: location) ?? true
+        let defaultBehavior = RouteController.DefaultBehavior.shouldDiscardLocation
+        let componentsWantToDiscard = navigationComponents.allSatisfy { $0.navigationService?(service, shouldDiscard: location) ?? defaultBehavior }
+        return componentsWantToDiscard && (delegate?.navigationViewController?(self, shouldDiscard: location) ?? defaultBehavior)
     }
     
     @objc public func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
@@ -500,7 +503,9 @@ extension NavigationViewController: NavigationServiceDelegate {
     }
     
     @objc public func navigationService(_ service: NavigationService, didPassSpokenInstructionPoint instruction: SpokenInstruction, routeProgress: RouteProgress) {
-        navigationComponents.forEach { $0.navigationService?(service, didPassSpokenInstructionPoint: instruction, routeProgress: routeProgress) }
+        for component in navigationComponents {
+            component.navigationService?(service, didPassSpokenInstructionPoint: instruction, routeProgress: routeProgress)
+        }
         
         clearStaleNotifications()
         
@@ -510,24 +515,28 @@ extension NavigationViewController: NavigationServiceDelegate {
     }
     
     @objc public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
-        navigationComponents.forEach { $0.navigationService?(service, didPassVisualInstructionPoint: instruction, routeProgress: routeProgress) }
+        for component in navigationComponents {
+            component.navigationService?(service, didPassVisualInstructionPoint: instruction, routeProgress: routeProgress)
+        }
     }
     
-    
-    
-    
     @objc public func navigationService(_ service: NavigationService, willArriveAt waypoint: Waypoint, after remainingTimeInterval: TimeInterval, distance: CLLocationDistance) {
+        for component in navigationComponents {
+            component.navigationService?(service, willArriveAt: waypoint, after: remainingTimeInterval, distance: distance)
+        }
+        
         delegate?.navigationViewController?(self, willArriveAt: waypoint, after: remainingTimeInterval, distance: distance)
     }
     
     @objc public func navigationService(_ service: NavigationService, didArriveAt waypoint: Waypoint) -> Bool {
-        let advancesToNextLeg = delegate?.navigationViewController?(self, didArriveAt: waypoint) ?? true
+        let defaultBehavior = RouteController.DefaultBehavior.didArriveAtWaypoint
+        let componentsWantAdvance = navigationComponents.allSatisfy { $0.navigationService?(service, didArriveAt: waypoint) ?? defaultBehavior }
+        let advancesToNextLeg = componentsWantAdvance && (delegate?.navigationViewController?(self, didArriveAt: waypoint) ?? defaultBehavior)
         
         if service.routeProgress.isFinalLeg && advancesToNextLeg && showsEndOfRouteFeedback {
             showEndOfRouteFeedback()
         }
         return advancesToNextLeg
-
     }
     
     @objc public func showEndOfRouteFeedback(duration: TimeInterval = 1.0, completionHandler: ((Bool) -> Void)? = nil) {
@@ -541,9 +550,21 @@ extension NavigationViewController: NavigationServiceDelegate {
         }
     }
     
+    public func navigationService(_ service: NavigationService, didBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
+        for component in navigationComponents {
+            component.navigationService?(service, didBeginSimulating: progress, becauseOf: reason)
+        }
+    }
+    
     @objc public func navigationService(_ service: NavigationService, willEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
         for component in navigationComponents {
             component.navigationService?(service, willEndSimulating: progress, becauseOf: reason)
+        }
+    }
+    
+    public func navigationService(_ service: NavigationService, didEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
+        for component in navigationComponents {
+            component.navigationService?(service, didEndSimulating: progress, becauseOf: reason)
         }
     }
     
@@ -559,6 +580,16 @@ extension NavigationViewController: NavigationServiceDelegate {
             traversingTunnel = false
             styleManager.timeOfDayChanged()
         }
+    }
+    
+    public func navigationService(_ service: NavigationService, shouldPreventReroutesWhenArrivingAt waypoint: Waypoint) -> Bool {
+        let defaultBehavior = RouteController.DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint
+        return navigationComponents.allSatisfy { $0.navigationService?(service, shouldPreventReroutesWhenArrivingAt: waypoint) ?? defaultBehavior }
+    }
+    
+    public func navigationServiceShouldDisableBatteryMonitoring(_ service: NavigationService) -> Bool {
+        let defaultBehavior = RouteController.DefaultBehavior.shouldDisableBatteryMonitoring
+        return navigationComponents.allSatisfy { $0.navigationServiceShouldDisableBatteryMonitoring?(service) ?? defaultBehavior }
     }
 }
 

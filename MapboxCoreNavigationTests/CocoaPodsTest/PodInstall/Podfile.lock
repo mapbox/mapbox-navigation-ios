@@ -3,7 +3,7 @@ PODS:
   - MapboxCoreNavigation (0.33.0):
     - MapboxDirections.swift (~> 0.28.0)
     - MapboxMobileEvents (~> 0.9.3)
-    - MapboxNavigationNative (~> 6.1.3)
+    - MapboxNavigationNative (~> 6.2.1)
     - Turf (~> 0.3.0)
   - MapboxDirections.swift (0.28.0):
     - Polyline (~> 4.2)
@@ -13,7 +13,7 @@ PODS:
     - MapboxCoreNavigation (= 0.33.0)
     - MapboxSpeech (~> 0.1.0)
     - Solar (~> 2.1)
-  - MapboxNavigationNative (6.1.3)
+  - MapboxNavigationNative (6.2.1)
   - MapboxSpeech (0.1.1)
   - Polyline (4.2.1)
   - Solar (2.1.0)
