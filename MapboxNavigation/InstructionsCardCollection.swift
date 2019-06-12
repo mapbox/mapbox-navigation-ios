@@ -1,7 +1,7 @@
 import MapboxDirections
 import MapboxCoreNavigation
 
-@objc public protocol InstructionsCardCollectionDelegate {
+@objc public protocol InstructionsCardCollectionDelegate: InstructionsCardContainerViewDelegate {
     /**
      Called when previewing the steps on the current route.
      
@@ -18,7 +18,6 @@ import MapboxCoreNavigation
      - parameter instructionsCardCollection: The instructions card collection instance.
      - parameter cardSizeForTraitcollection: The trait collection associated to the current container view controller.
      - returns: The preferred size of the cards for each cell in the instructions card collection.
-     
      */
     @objc(instructionsCardCollection:cardSizeForTraitcollection:)
     optional func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardCollection, cardSizeForTraitcollection: UITraitCollection) -> CGSize
@@ -26,7 +25,6 @@ import MapboxCoreNavigation
 
 open class InstructionsCardCollection: UIViewController {
     typealias InstructionsCardCollectionLayout = UICollectionViewFlowLayout
-    typealias InstructionsCardCell = UICollectionViewCell
     
     var routeProgress: RouteProgress?
     var cardSize: CGSize = .zero
@@ -36,6 +34,7 @@ open class InstructionsCardCollection: UIViewController {
     var instructionsCardLayout: InstructionsCardCollectionLayout!
     
     public private(set) var isInPreview = false
+    private var currentStepIndex: Int?
     
     var steps: [RouteStep]? {
         guard let stepIndex = routeProgress?.currentLegProgress.stepIndex, let steps = routeProgress?.currentLeg.steps else { return nil }
@@ -67,6 +66,7 @@ open class InstructionsCardCollection: UIViewController {
     
     fileprivate var contentOffsetBeforeSwipe = CGPoint(x: 0, y: 0)
     fileprivate var indexBeforeSwipe = IndexPath(row: 0, section: 0)
+    fileprivate var previewIndexPath = IndexPath(row: 0, section: 0)
     fileprivate var isSnapAndRemove = false
     fileprivate let cardCollectionCellIdentifier = "InstructionsCardCollectionCellID"
     fileprivate let collectionViewFlowLayoutMinimumSpacingDefault: CGFloat = 10.0
@@ -83,7 +83,7 @@ open class InstructionsCardCollection: UIViewController {
         if let customSize = cardCollectionDelegate?.instructionsCardCollection?(self, cardSizeForTraitcollection: traitCollection) {
             cardSize = customSize
         } else {
-            cardSize = CGSize(width: Int(floor(view.frame.size.width * 0.82)), height: 100)
+            cardSize = CGSize(width: Int(floor(view.frame.size.width * 0.82)), height: 200)
         }
         
         view.backgroundColor = .clear
@@ -131,6 +131,7 @@ open class InstructionsCardCollection: UIViewController {
             instructionCollectionView.topAnchor.constraint(equalTo: topPaddingView.bottomAnchor),
             instructionCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             instructionCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            instructionCollectionView.widthAnchor.constraint(equalToConstant: cardSize.width),
             instructionCollectionView.heightAnchor.constraint(equalToConstant: cardSize.height),
             instructionCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ]
@@ -139,50 +140,39 @@ open class InstructionsCardCollection: UIViewController {
     }
     
     fileprivate func updateInstructionsCardDataSource(for progress: RouteProgress) {
-        update(steps: steps ?? [])
-        updateDistancesOnCards()
-        updateInstruction(for: progress)
-        advanceLegIndex(for: progress)
+        updateInstructionCollectionView()
+        reloadDataSource()
     }
     
-    fileprivate func advanceLegIndex(for routeProgress: RouteProgress) {
-        guard routeProgress.currentLegProgress.userHasArrivedAtWaypoint, !routeProgress.isFinalLeg else { return }
-        routeProgress.legIndex += 1
-    }
-    
-    func update(steps: [RouteStep]) {
+    func updateInstructionCollectionView() {
+        guard let steps = steps else { return }
         instructionCollectionView.contentSize = calculateNeededSpace(count: steps.count)
-        instructionCollectionView.reloadData()
-        instructionCollectionView.layoutIfNeeded()
     }
     
-//    public func refresh() {
-//        guard let progress = routeProgress else { return }
-//
-//        var remainingSteps = progress.remainingSteps
-//        _ = remainingSteps.popLast() // ignore last step
-//
-//        cardSteps = [progress.currentLegProgress.currentStep] + remainingSteps
-//    }
-    
-    fileprivate func updateDistancesOnCards() {
-        _ = distancesFromCurrentLocationToManeuver?.enumerated().map { (index, distance) in
-            if let card = instructionsCardView(at: IndexPath(row: index, section: 0)) {
-                card.updateDistanceFromCurrentLocation(distance)
-                card.isActive = distance < card.highlightDistance
-            }
+    func reloadDataSource() {
+        precondition(steps != nil)
+        if isInPreview && previewIndexPath.row < steps!.endIndex - 1 {
+            updateVisibleInstructionCards(from: previewIndexPath.row)
+        } else {
+            instructionCollectionView.reloadData()
         }
     }
     
-    public func updateInstruction(for progress: RouteProgress) {
-        guard let activeCard = instructionsCardView(at: IndexPath(row: 0, section: 0)) else { return }
-        if !progress.currentLegProgress.isCurrentStep(activeCard.step) {
-            isSnapAndRemove = true
-            snapToIndex(index: IndexPath(row: 1, section: 0))
-        }
+    func updateVisibleInstructionCards(from start: Int, to end: Int? = nil) {
+        guard let steps = steps, steps.count > 1, start < steps.endIndex else { return }
+        let limit = end ?? steps.count
+        guard start < limit else { return }
+        let indexPaths = IndexPath(indexes: start..<limit)
+        let containers: [InstructionsCardContainerView] = indexPaths.compactMap { instructionsCardContainerView(at: IndexPath(row: $0, section: 0)) }
+        let activeCards: [InstructionsCardView] = indexPaths.compactMap { instructionsCardView(at: IndexPath(row: $0, section: 0))}
+
+        precondition(containers.count == activeCards.count)
+
+        /* TODO: Optimization goal */
+        
     }
     
-    func snapToIndex(index indexPath: IndexPath) {
+    func snapToIndexPath(_ indexPath: IndexPath) {
         let itemCount = collectionView(instructionCollectionView, numberOfItemsInSection: 0)
         guard itemCount >= 0 && indexPath.row < itemCount else { return }
         instructionsCardLayout.collectionView?.scrollToItem(at: indexPath, at: .left, animated: true)
@@ -190,25 +180,45 @@ open class InstructionsCardCollection: UIViewController {
     
     public func stopPreview() {
         isInPreview = false
-        
-        guard let steps = routeProgress?.steps else { return }
-        
-        if steps.first != routeProgress?.currentLegProgress.currentStep {
-            guard let currentStep = routeProgress?.currentLegProgress.currentStep else { return }
-            guard steps.index(of: currentStep) != nil else { return }
-            // self.steps = Array(steps.suffix(from: stepIndex))
-            instructionCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .left, animated: false)
-        } else {
-            snapToIndex(index: IndexPath(row: 0, section: 0))
+        instructionCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .left, animated: false)
+    }
+    
+    fileprivate func instructionContainerView(at indexPath: IndexPath) -> InstructionsCardContainerView? {
+        guard let cell = instructionCollectionView.cellForItem(at: indexPath),
+            cell.subviews.count > 1 else {
+                return nil
         }
+        
+        return cell.subviews[1] as? InstructionsCardContainerView
     }
     
     fileprivate func instructionsCardView(at index: IndexPath) -> InstructionsCardView? {
         guard let cell = instructionCollectionView.cellForItem(at: index),
-                  cell.subviews.count > 0 else {
+                  cell.subviews.count > 1 else {
             return nil
         }
-        return cell.subviews[0] as? InstructionsCardView
+        
+        guard let containerView = cell.subviews[1] as? InstructionsCardContainerView, let stackView = containerView.subviews[0] as? UIStackView else {
+            return nil
+        }
+        
+        return stackView.subviews[0] as? InstructionsCardView
+    }
+    
+    fileprivate func secondaryInstructionView(at index: IndexPath) -> UIView? {
+        guard let containerView = instructionContainerView(at: index), let stackView = containerView.subviews[0] as? UIStackView, stackView.subviews.count > 1 else {
+            return nil
+        }
+        
+        return stackView.subviews[1]
+    }
+    
+    fileprivate func instructionsCardContainerView(at indexPath: IndexPath) -> InstructionsCardContainerView? {
+        guard let cell = instructionCollectionView.cellForItem(at: indexPath), cell.subviews.count > 1 else {
+            return nil
+        }
+        
+        return cell.subviews[1] as? InstructionsCardContainerView
     }
     
     fileprivate func calculateNeededSpace(count: Int) -> CGSize {
@@ -217,9 +227,9 @@ open class InstructionsCardCollection: UIViewController {
     }
     
     fileprivate func calculateIndexToSnapTo() -> IndexPath {
-        guard let collectionView = instructionsCardLayout.collectionView,
-              let itemCount = steps?.count else { return IndexPath(row: 0, section: 0) }
-        
+        guard let collectionView = instructionsCardLayout.collectionView, let itemCount = steps?.count else {
+            return IndexPath(row: 0, section: 0)
+        }
         
         let estimatedIndex = Int(round((collectionView.contentOffset.x + collectionView.contentInset.left) / (cardSize.width + collectionViewFlowLayoutMinimumSpacingDefault)))
         let indexInBounds = max(0, min(itemCount - 1, estimatedIndex))
@@ -229,24 +239,26 @@ open class InstructionsCardCollection: UIViewController {
 }
 
 extension InstructionsCardCollection: UICollectionViewDelegate {
-    public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        if isSnapAndRemove {
-            isSnapAndRemove = false
-            
-            if let steps = steps {
-                var mutatedSteps = Array(steps)
-                mutatedSteps.remove(at: 0)
-                instructionCollectionView.scrollToItem(at: IndexPath(row: 1, section: 0), at: .left, animated: false)
-            }
-        }
-    }
-    
     public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         indexBeforeSwipe = calculateIndexToSnapTo()
         contentOffsetBeforeSwipe = scrollView.contentOffset
     }
     
     public func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        let indexPath = scrollTargetIndexPath(for: scrollView, with: velocity, targetContentOffset: targetContentOffset)
+        snapToIndexPath(indexPath)
+        
+        isInPreview = true
+        let previewIndex = indexPath.row
+        previewIndexPath = indexPath
+        
+        if isInPreview, let steps = steps, previewIndex < steps.endIndex {
+            let previewStep = steps[previewIndex]
+            cardCollectionDelegate?.instructionsCardCollection(self, previewFor: previewStep)
+        }
+    }
+    
+    func scrollTargetIndexPath(for scrollView: UIScrollView, with velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) -> IndexPath {
         targetContentOffset.pointee = scrollView.contentOffset
         
         let itemCount = steps?.count ?? 0
@@ -256,36 +268,25 @@ extension InstructionsCardCollection: UICollectionViewDelegate {
         let hasVelocityToSlidePrev = indexBeforeSwipe.row - 1 >= 0 && velocity.x < -velocityThreshold
         let didSwipe = hasVelocityToSlideToNext || hasVelocityToSlidePrev
         
-        let previewIndex: Int!
-        let indexToSnapTo: IndexPath!
+        let scrollTargetIndexPath: IndexPath!
         
         if didSwipe {
-            
             if hasVelocityToSlideToNext {
-                indexToSnapTo = IndexPath(row: indexBeforeSwipe.row + 1, section: 0)
+                scrollTargetIndexPath = IndexPath(row: indexBeforeSwipe.row + 1, section: 0)
             } else {
-                indexToSnapTo = IndexPath(row: indexBeforeSwipe.row - 1, section: 0)
+                scrollTargetIndexPath = IndexPath(row: indexBeforeSwipe.row - 1, section: 0)
             }
-            
-            snapToIndex(index: indexToSnapTo)
-            previewIndex = indexToSnapTo.row
         } else {
             if scrollView.contentOffset.x - contentOffsetBeforeSwipe.x < -cardSize.width / 2 {
-                indexToSnapTo = IndexPath(row: indexBeforeSwipe.row - 1, section: 0)
+                scrollTargetIndexPath = IndexPath(row: indexBeforeSwipe.row - 1, section: 0)
             } else if scrollView.contentOffset.x - contentOffsetBeforeSwipe.x > cardSize.width / 2 {
-                indexToSnapTo = IndexPath(row: indexBeforeSwipe.row + 1, section: 0)
+                scrollTargetIndexPath = IndexPath(row: indexBeforeSwipe.row + 1, section: 0)
             } else {
-                indexToSnapTo = indexBeforeSwipe
+                scrollTargetIndexPath = indexBeforeSwipe
             }
-            snapToIndex(index: indexToSnapTo)
-            previewIndex = indexToSnapTo.row
         }
         
-        isInPreview = previewIndex != indexBeforeSwipe.row
-        
-        if isInPreview, let previewStep = steps?[previewIndex] {
-            cardCollectionDelegate?.instructionsCardCollection(self, previewFor: previewStep)
-        }
+        return scrollTargetIndexPath
     }
 }
 
@@ -295,43 +296,18 @@ extension InstructionsCardCollection: UICollectionViewDataSource {
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cardCollectionCellIdentifier, for: indexPath)
-        guard let step = steps?[indexPath.row], let distance = distancesFromCurrentLocationToManeuver?[indexPath.row] else { return cell }
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cardCollectionCellIdentifier, for: indexPath) as! InstructionsCardCell
         
-        if cell.subviews.count > 0 {
-            for card in cell.subviews {
-                card.removeFromSuperview()
-            }
+        guard let steps = steps, indexPath.row < steps.endIndex, let distances = distancesFromCurrentLocationToManeuver, indexPath.row < distances.endIndex else {
+            return cell
         }
+
+        cell.style = cardStyle
+        cell.container.delegate = self
         
-        cell.backgroundColor = .clear
-        cell.layer.shadowColor = UIColor.black.cgColor
-        cell.layer.shadowOffset = CGSize(width: 1, height: 2)
-        cell.layer.shadowRadius = 1
-        cell.layer.shadowOpacity = 0.4
-        
-        let frame = CGRect(x: 0.0, y: 0.0, width: cardSize.width, height: cardSize.height)
-        let instructionsCard = InstructionsCardView(frame: frame)
-        instructionsCard.prepareLayout(for: cardStyle)
-        instructionsCard.updateInstruction(for: step)
-        instructionsCard.updateDistanceFromCurrentLocation(distance)
-        
-        if let routeProgress = routeProgress,
-            routeProgress.currentLegProgress.isCurrentStep(step) {
-            let distanceRemaining = routeProgress.currentLegProgress.currentStepProgress.distanceRemaining
-            let distance = distanceRemaining > 5 ? distanceRemaining : 0
-            instructionsCard.isActive = distance < instructionsCard.highlightDistance
-        }
-        
-        instructionsCard.accessibilityIdentifier = "InstructionsCard"
-        cell.addSubview(instructionsCard)
-        
-        // this helps us show a shadow
-        instructionsCard.translatesAutoresizingMaskIntoConstraints = false
-        instructionsCard.topAnchor.constraint(equalTo: cell.topAnchor, constant: 2).isActive = true
-        instructionsCard.leadingAnchor.constraint(equalTo: cell.leadingAnchor).isActive = true
-        instructionsCard.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -2).isActive = true
-        instructionsCard.trailingAnchor.constraint(equalTo: cell.trailingAnchor).isActive = true
+        let step = steps[indexPath.row]
+        let distance = distances[indexPath.row]
+        cell.configure(for: step, distance: distance, previewEnabled: isInPreview)
         
         return cell
     }
@@ -344,8 +320,31 @@ extension InstructionsCardCollection: NavigationComponent {
     }
     
     public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
-        guard isSnapAndRemove, let activeCard = instructionsCardView(at: IndexPath(row: 0, section: 0)) else { return }
+        guard isSnapAndRemove,
+            let containerView = instructionsCardContainerView(at: IndexPath(row: 0, section: 0)),
+            let stackView = containerView.subviews.first as? UIStackView,
+            let activeCard = stackView.subviews.first as? InstructionsCardView else { return }
         activeCard.update(for: instruction)
+        
+        // TODO: This needs to be a container view
+        guard let childView = secondaryInstructionView(at: IndexPath(row: 0, section: 0)) else { return }
+
+        if let laneView = childView as? LanesView {
+            laneView.update(for: instruction)
+        } else if let nextBannerView = childView as? NextBannerView {
+            nextBannerView.update(for: instruction)
+        }
+    }
+}
+
+extension InstructionsCardCollection: InstructionsCardContainerViewDelegate {
+    
+    public func primaryLabel(_ primaryLabel: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
+        return cardCollectionDelegate?.primaryLabel?(primaryLabel, willPresent: instruction, as: presented)
+    }
+    
+    public func secondaryLabel(_ secondaryLabel: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
+        return cardCollectionDelegate?.secondaryLabel?(secondaryLabel, willPresent: instruction, as: presented)
     }
 }
 

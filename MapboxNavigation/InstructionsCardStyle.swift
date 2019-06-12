@@ -25,4 +25,15 @@
     var maneuverViewPrimaryColor: UIColor { get }
     var maneuverViewSecondaryColor: UIColor { get }
     var maneuverViewHighlightedColor: UIColor { get }
+    
+    // MARK: Next Banner Instruction custom formats
+    var nextBannerViewPrimaryColor: UIColor { get }
+    var nextBannerViewSecondaryColor: UIColor { get }
+    var nextBannerInstructionLabelTextColor: UIColor { get }
+    var nextBannerInstructionLabelNormalFont: UIFont { get }
+    var nextBannerInstructionHighlightedColor: UIColor { get }
+    
+    // MARK: Lanes View custom formats
+    var lanesViewDefaultColor: UIColor { get }
+    var lanesViewHighlightedColor: UIColor { get }
 }

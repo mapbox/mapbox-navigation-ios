@@ -2,25 +2,20 @@ import UIKit
 import MapboxDirections
 import MapboxCoreNavigation
 
-public class InstructionsCardView: BaseInstructionsBannerView, NavigationComponent {
+public class InstructionsCardView: BaseInstructionsBannerView {
     
     @objc dynamic var cardWidthFactor: CGFloat = 0.82
     @objc dynamic var cardHeight: CGFloat = 100.0
     
-    var style: InstructionsCardStyle = DayInstructionsCardStyle ()
-    var step: RouteStep!
+    var style: InstructionsCardStyle = DayInstructionsCardStyle()
+    var step: RouteStep! {
+        didSet {
+            self.updateInstruction(for: step)
+        }
+    }
     var distanceFromCurrentLocation: CLLocationDistance!
     var gradientLayer: CAGradientLayer!
     var highlightDistance: CLLocationDistance = InstructionsCardConstants.highlightDistance
-    
-    var isActive: Bool = false {
-        didSet {
-            /// TODO: Use a delegate in updating the highlighted cell
-            if !oldValue && isActive {
-                highlight()
-            }
-        }
-    }
     
     required public init(style: InstructionsCardStyle? = nil, frame: CGRect = .zero) {
         super.init(frame: frame)
@@ -44,7 +39,6 @@ public class InstructionsCardView: BaseInstructionsBannerView, NavigationCompone
     }
     
     public func updateInstruction(for step: RouteStep) {
-        self.step = step
         if let instruction = step.instructionsDisplayedAlongStep?.last {
             update(for: instruction)
         }
@@ -87,8 +81,6 @@ public class InstructionsCardView: BaseInstructionsBannerView, NavigationCompone
     }
     
     fileprivate func prepareCardDeck(_ style: InstructionsCardStyle) {
-        layer.cornerRadius = style.cornerRadius
-        layer.masksToBounds = true
         backgroundColor = .clear
         
         if gradientLayer == nil {
@@ -101,23 +93,5 @@ public class InstructionsCardView: BaseInstructionsBannerView, NavigationCompone
             style.backgroundColor.cgColor,
             style.backgroundColor.withAlphaComponent(alphaComponent).cgColor
         ]
-    }
-    
-    func highlight() {
-        let duration = InstructionsCardConstants.highlightAnimationDuration
-        UIView.animate(withDuration: duration, animations: {
-            let alphaComponent = InstructionsCardConstants.highlightedBackgroundAlphaComponent
-            self.gradientLayer.colors = [
-                self.style.highlightedBackgroundColor.cgColor,
-                self.style.highlightedBackgroundColor.withAlphaComponent(alphaComponent).cgColor
-            ]
-            
-            self.primaryLabel.textColor = self.style.primaryLabelHighlightedTextColor
-            self.secondaryLabel.textColor = self.style.secondaryLabelHighlightedTextColor
-            self.distanceLabel.unitTextColor = self.style.distanceLabelHighlightedTextColor
-            self.distanceLabel.valueTextColor = self.style.distanceLabelHighlightedTextColor
-            self.maneuverView.primaryColor = self.style.maneuverViewHighlightedColor
-            self.maneuverView.secondaryColor = self.style.maneuverViewHighlightedColor
-        })
     }
 }
