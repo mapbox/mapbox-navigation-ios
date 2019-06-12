@@ -4,7 +4,7 @@ import UIKit
 @objc public protocol DeprecatedStatusViewDelegate: class {}
 
 /**
- A protocol for listening in on changed mades made to a `StatusView`.
+ A protocol for listening in on changes made to a `StatusView`.
  */
 @available(*, deprecated, message: "Add a target to StatusView for UIControl.Event.valueChanged instead.")
 @objc public protocol StatusViewDelegate: DeprecatedStatusViewDelegate {
@@ -125,6 +125,20 @@ public class StatusView: UIControl {
         }
     }
     
+
+    public func showStatus(title: String, spinner spin: Bool = false, duration: TimeInterval, animated: Bool = true, interactive: Bool = false) {
+        show(title, showSpinner: spin, interactive: interactive)
+        guard duration < .infinity else { return }
+        hide(delay: duration, animated: animated)
+    }
+    
+    func showSimulationStatus(speed: Int) {
+        let format = NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation at %@×", comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled.")
+        let title = String.localizedStringWithFormat(format, NumberFormatter.localizedString(from: speed as NSNumber, number: .decimal))
+        showStatus(title: title, duration: .infinity, interactive: true)
+    }
+
+    
     /**
      Shows the status view with an optional spinner.
      */
@@ -134,7 +148,7 @@ public class StatusView: UIControl {
         activityIndicatorView.hidesWhenStopped = true
         if (!showSpinner) { activityIndicatorView.stopAnimating() }
 
-        guard isCurrentlyVisible == false, isHidden == true else { return }
+        guard !isCurrentlyVisible, isHidden else { return }
                 
         let show = {
             self.isHidden = false
@@ -162,7 +176,7 @@ public class StatusView: UIControl {
         }
         
         let animate = {
-            guard self.isHidden == false else { return }
+            guard !self.isHidden, self.isCurrentlyVisible else { return }
             
             let fireTime = DispatchTime.now() + delay
             DispatchQueue.main.asyncAfter(deadline: fireTime, execute: {

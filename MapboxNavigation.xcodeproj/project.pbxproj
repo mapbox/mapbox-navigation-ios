@@ -248,6 +248,7 @@
 		8D54F14A206ECF720038736D /* InstructionPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D54F149206ECF720038736D /* InstructionPresenterTests.swift */; };
 		8D5CF3B0215054AF005592D6 /* FBSnapshotTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D5CF3AF215054AF005592D6 /* FBSnapshotTestCase.swift */; };
 		8D5DFFF1207C04840093765A /* NSAttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D5DFFF0207C04840093765A /* NSAttributedString.swift */; };
+		8D63A7D0227A580A00520167 /* TopBannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D63A7CF227A580A00520167 /* TopBannerViewController.swift */; };
 		8D75F991212B5C7F00F99CF3 /* TunnelAuthority.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D75F990212B5C7F00F99CF3 /* TunnelAuthority.swift */; };
 		8D86AE8921C31C640064A304 /* waypoint-after-turn.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D86AE8821C31C640064A304 /* waypoint-after-turn.json */; };
 		8D86AE8B21C31CC80064A304 /* ManeuverArrowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D86AE8A21C31CC80064A304 /* ManeuverArrowTests.swift */; };
@@ -811,6 +812,7 @@
 		8D54F149206ECF720038736D /* InstructionPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionPresenterTests.swift; sourceTree = "<group>"; };
 		8D5CF3AF215054AF005592D6 /* FBSnapshotTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBSnapshotTestCase.swift; sourceTree = "<group>"; };
 		8D5DFFF0207C04840093765A /* NSAttributedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSAttributedString.swift; sourceTree = "<group>"; };
+		8D63A7CF227A580A00520167 /* TopBannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBannerViewController.swift; sourceTree = "<group>"; };
 		8D75F990212B5C7F00F99CF3 /* TunnelAuthority.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelAuthority.swift; sourceTree = "<group>"; };
 		8D86AE8821C31C640064A304 /* waypoint-after-turn.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "waypoint-after-turn.json"; sourceTree = "<group>"; };
 		8D86AE8A21C31CC80064A304 /* ManeuverArrowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManeuverArrowTests.swift; sourceTree = "<group>"; };
@@ -1222,7 +1224,7 @@
 				351BEC201E5BD4DC006FE110 /* Supporting files */,
 				160A4A6521278F2D0028B070 /* Templates */,
 				C51923B51EA55CD4002AF9E1 /* Views */,
-				353610CD1FAB6A8F00FB1746 /* BottomBannerViewController.swift */,
+				8DFD94A52225AF5C00152F45 /* Banners */,
 				3EA93A10227A7DAF1861D9F5 /* Cache.swift */,
 				C54C655120336F2600D338E0 /* Constants.swift */,
 				160D8278205996DA00D278D6 /* DataCache.swift */,
@@ -1455,6 +1457,15 @@
 				8DF8E4DF2202696800B29FEF /* README.md */,
 			);
 			name = Documents;
+			sourceTree = "<group>";
+		};
+		8DFD94A52225AF5C00152F45 /* Banners */ = {
+			isa = PBXGroup;
+			children = (
+				8D63A7CF227A580A00520167 /* TopBannerViewController.swift */,
+				353610CD1FAB6A8F00FB1746 /* BottomBannerViewController.swift */,
+			);
+			name = Banners;
 			sourceTree = "<group>";
 		};
 		A9E2B43473B53369153F54C6 /* Frameworks */ = {
@@ -2310,6 +2321,7 @@
 				351BEBF11E5BCC63006FE110 /* MGLMapView.swift in Sources */,
 				DA443DDE2278C90E00ED1307 /* CPTrip.swift in Sources */,
 				35D825FC1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m in Sources */,
+				8D63A7D0227A580A00520167 /* TopBannerViewController.swift in Sources */,
 				8D3322252200E149001D44AA /* NavigationViewController+Obsolete.swift in Sources */,
 				C51511D120EAC89D00372A91 /* CPMapTemplate.swift in Sources */,
 				353280A11FA72871005175F3 /* InstructionLabel.swift in Sources */,

@@ -38,7 +38,7 @@ extension AppDelegate: CPApplicationDelegate {
         carPlayManager.application(application, didDisconnectCarInterfaceController: interfaceController, from: window)
         
         if let navigationViewController = currentAppRootViewController?.activeNavigationViewController {
-            navigationViewController.isUsedInConjunctionWithCarPlayWindow = false
+            navigationViewController.didDisconnectFromCarPlay()
         }
     }
 }

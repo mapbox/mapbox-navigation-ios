@@ -9,6 +9,10 @@ extension UIView {
         UIView.animate(withDuration: duration, delay: delay, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.6, options: [.beginFromCurrentState], animations: animations, completion: completion)
     }
     
+    func addSubviews(_ subviews: [UIView]) {
+        subviews.forEach(addSubview(_:))
+    }
+    
     func roundCorners(_ corners: UIRectCorner = [.allCorners], radius: CGFloat = 5.0) {
         let path = UIBezierPath(roundedRect: bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
         let maskLayer = CAShapeLayer()
