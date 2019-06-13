@@ -3,7 +3,7 @@
 /**
  Key used for constructing errors when spoken instructions fail.
  */
-extern const NSErrorUserInfoKey MBSpokenInstructionErrorCodeKey;
+extern const _Nonnull NSErrorUserInfoKey MBSpokenInstructionErrorCodeKey;
 
 /**
  Posted when `MBStyleManager` applies a new style triggered by change of day of time, or when entering or exiting a tunnel.
