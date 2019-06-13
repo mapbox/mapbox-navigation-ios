@@ -348,6 +348,12 @@ extension InstructionsCardCollection: InstructionsCardContainerViewDelegate {
     }
 }
 
+extension InstructionsCardCollection: NavigationMapInteractionObserver {
+    public func navigationViewController(didCenterOn location: CLLocation) {
+        stopPreview()
+    }
+}
+
 extension RouteProgress {
     var steps: [RouteStep] {
         var steps: [RouteStep] = currentLeg.steps.enumerated().compactMap { (index, step) in

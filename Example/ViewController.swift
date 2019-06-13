@@ -254,7 +254,7 @@ class ViewController: UIViewController {
         self.routes = [navigationService.route]
         
         let navigationViewController = activeNavigationViewController ?? self.navigationViewController(navigationService: navigationService)
-        navigationViewController.isUsedInConjunctionWithCarPlayWindow = true
+        navigationViewController.didConnectToCarPlay()
         
         guard activeNavigationViewController == nil else { return }
         

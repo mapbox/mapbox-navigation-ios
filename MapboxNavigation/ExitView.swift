@@ -98,7 +98,8 @@ public class ExitView: StylableView {
         layer.masksToBounds = true
 
         //build view hierarchy
-        [imageView, exitNumberLabel].forEach(addSubview(_:))
+        let children = [imageView, exitNumberLabel]
+        addSubviews(children)
         buildConstraints()
         
         setNeedsLayout()
