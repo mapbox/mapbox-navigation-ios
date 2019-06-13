@@ -128,6 +128,7 @@ open class StyleManager: NSObject {
                 currentStyleType = styleType
                 currentStyle = style
                 delegate?.styleManager?(self, didApply: style)
+                postDidApplyStyleNotification(style: style)
             }
         }
         
@@ -142,6 +143,7 @@ open class StyleManager: NSObject {
                 currentStyle = style
                 style.apply()
                 delegate?.styleManager?(self, didApply: style)
+                postDidApplyStyleNotification(style: style)
             }
             return
         }
@@ -153,6 +155,7 @@ open class StyleManager: NSObject {
                 currentStyle = style
                 style.apply()
                 delegate?.styleManager?(self, didApply: style)
+                postDidApplyStyleNotification(style: style)
             }
             return
         }
@@ -169,6 +172,13 @@ open class StyleManager: NSObject {
         }
         
         return solar.date.isNighttime(sunrise: sunrise, sunset: sunset) ? .night : .day
+    }
+    
+    private func postDidApplyStyleNotification(style: Style) {
+        NotificationCenter.default.post(name: .styleManagerDidApplyStyle, object: self, userInfo: [
+            MBStyleManagerNotificationUserInfoKey.styleKey: style,
+            MBStyleManagerNotificationUserInfoKey.styleManagerKey: self
+            ])
     }
     
     func forceRefreshAppearanceIfNeeded() {
