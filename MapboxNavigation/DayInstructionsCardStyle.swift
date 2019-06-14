@@ -65,5 +65,33 @@ public class DayInstructionsCardStyle: InstructionsCardStyle {
         return .cardLight
     }
     
+    public var nextBannerViewPrimaryColor: UIColor {
+        return .cardBlue
+    }
+    
+    public var nextBannerViewSecondaryColor: UIColor {
+        return .cardLight
+    }
+    
+    public var nextBannerInstructionLabelTextColor: UIColor {
+        return .cardDark
+    }
+    
+    public lazy var nextBannerInstructionLabelNormalFont: UIFont = {
+       return CardFont.create(.regular, with: 14.0)
+    }()
+    
+    public var nextBannerInstructionHighlightedColor: UIColor {
+        return .cardLight
+    }
+    
+    public var lanesViewDefaultColor: UIColor {
+        return .cardBlue
+    }
+    
+    public var lanesViewHighlightedColor: UIColor {
+        return .cardLight
+    }
+    
     public init() {}
 }

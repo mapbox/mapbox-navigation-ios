@@ -32,6 +32,12 @@ extension InstructionsCardView {
         baselineConstraints.append(secondaryLabel.topAnchor.constraint(greaterThanOrEqualTo: primaryLabel.bottomAnchor, constant: 0))
         centerYConstraints.append(secondaryLabel.topAnchor.constraint(greaterThanOrEqualTo: primaryLabel.bottomAnchor, constant: 0))
         
+        // Visible separator docked to the bottom
+        separatorView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale).isActive = true
+        separatorView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        separatorView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        separatorView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        
     }
     
     // Aligns the instruction to the center Y (used for single line primary and/or secondary instructions)

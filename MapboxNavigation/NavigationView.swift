@@ -126,7 +126,6 @@ open class NavigationView: UIView {
     }
     
     func commonInit() {
-        accessibilityIdentifier = "NavigationViewRoot"
         setupViews()
         setupConstraints()
     }
@@ -138,7 +137,7 @@ open class NavigationView: UIView {
     func setupViews() {
         setupStackViews()
         
-        let subviews: [UIView] = [
+        let children: [UIView] = [
             mapView,
             topBannerContainerView,
             floatingStackView,
@@ -147,8 +146,7 @@ open class NavigationView: UIView {
             bottomBannerContainerView
         ]
         
-        subviews.forEach(addSubview(_:))
-        topBannerContainerView.backgroundColor = .clear
+        addSubviews(children)
     }
     
     open override func prepareForInterfaceBuilder() {
@@ -164,6 +162,6 @@ open class NavigationView: UIView {
     }
 }
 
-protocol NavigationViewDelegate: NavigationMapViewDelegate, StatusViewDelegate, InstructionsBannerViewDelegate, NavigationMapViewCourseTrackingDelegate, VisualInstructionDelegate {
+protocol NavigationViewDelegate: NavigationMapViewDelegate, InstructionsBannerViewDelegate, NavigationMapViewCourseTrackingDelegate, VisualInstructionDelegate {
     func navigationView(_ view: NavigationView, didTapCancelButton: CancelButton)
 }

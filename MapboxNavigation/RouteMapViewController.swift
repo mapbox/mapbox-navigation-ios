@@ -171,7 +171,6 @@ class RouteMapViewController: UIViewController {
         }
         
         topContainer.backgroundColor = .clear
-        topContainer.accessibilityIdentifier = "topBannerContainerView"
         
         
         let bottomContainer = navigationView.bottomBannerContainerView
@@ -181,7 +180,6 @@ class RouteMapViewController: UIViewController {
         }
         
         bottomContainer.backgroundColor = .clear
-        bottomContainer.accessibilityIdentifier = "bottomBannerContainerView"
         
         view.bringSubviewToFront(topBannerContainerView)
     }
@@ -289,10 +287,10 @@ class RouteMapViewController: UIViewController {
                          legIndex: router.routeProgress.legIndex,
                          stepIndex: router.routeProgress.currentLegProgress.stepIndex + 1)
         
-        delegate?.mapViewController(self, didRecenterAt: mapView.userLocationForCourseTracking!)
+        delegate?.mapViewController(self, didCenterOn: mapView.userLocationForCourseTracking!)
     }
     
-    @objc func center(on step: RouteStep, route: Route, legIndex: Int, stepIndex: Int, animated: Bool = true, completion: CompletionHandler? = nil) {
+    func center(on step: RouteStep, route: Route, legIndex: Int, stepIndex: Int, animated: Bool = true, completion: CompletionHandler? = nil) {
         mapView.enableFrameByFrameCourseViewTracking(for: 1)
         mapView.tracksUserCourse = false
         mapView.setCenter(step.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step.initialHeading!, animated: animated, completionHandler: completion)
@@ -395,7 +393,7 @@ class RouteMapViewController: UIViewController {
     }
     
     func contentInset(forOverviewing overviewing: Bool) -> UIEdgeInsets {
-        let instructionBannerHeight = topBannerContainerView.bounds.height//instructionsBannerContentView.bounds.height
+        let instructionBannerHeight = topBannerContainerView.bounds.height
         let bottomBannerHeight = bottomBannerContainerView.bounds.height
         
         var insets = UIEdgeInsets(top: instructionBannerHeight, left: 0.0, bottom: bottomBannerHeight, right: 0.0)
@@ -849,5 +847,5 @@ internal extension UIView.AnimationOptions {
     @objc func mapViewController(_ mapViewController: RouteMapViewController, roadNameAt location: CLLocation) -> String?
     
     
-    @objc func mapViewController(_ mapViewController: RouteMapViewController, didRecenterAt location: CLLocation)
+    @objc func mapViewController(_ mapViewController: RouteMapViewController, didCenterOn location: CLLocation)
 }

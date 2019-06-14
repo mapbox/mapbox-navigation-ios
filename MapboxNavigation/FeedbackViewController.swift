@@ -204,7 +204,8 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     }
     
     private func setupViews() {
-        [reportIssueLabel, collectionView, progressBar].forEach(view.addSubview(_:))
+        let children = [reportIssueLabel, collectionView, progressBar]
+        view.addSubviews(children)
     }
     
     private func setupConstraints() {
