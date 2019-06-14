@@ -254,7 +254,7 @@ class ViewController: UIViewController {
         self.routes = [navigationService.route]
         
         let navigationViewController = activeNavigationViewController ?? self.navigationViewController(navigationService: navigationService)
-        navigationViewController.isUsedInConjunctionWithCarPlayWindow = true
+        navigationViewController.didConnectToCarPlay()
         
         guard activeNavigationViewController == nil else { return }
         
@@ -537,6 +537,11 @@ extension ViewController: InstructionsCardCollectionDelegate {
         
         // add arrow to map for preview instruction
         mapView.addArrow(route: route, legIndex: legIndex, stepIndex: stepIndex + 1)
+    }
+    
+    public func primaryLabel(_ primaryLabel: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
+        // Override to customize the primary label displayed on the visible instructions card.
+        return nil
     }
 }
 

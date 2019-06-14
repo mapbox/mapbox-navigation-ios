@@ -4,7 +4,8 @@ extension BottomBannerViewController {
     
     func setupRootViews() {
 
-        [bottomBannerView, bottomPaddingView].forEach(view.addSubview(_:))
+        let children = [bottomBannerView, bottomPaddingView]
+        view.addSubviews(children)
         setupRootViewConstraints()
     }
     

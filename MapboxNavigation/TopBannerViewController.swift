@@ -3,9 +3,9 @@ import MapboxCoreNavigation
 import MapboxDirections
 
 
-@objc protocol TopBannerViewControllerDelegate: StatusViewDelegate {
+@objc public protocol TopBannerViewControllerDelegate: class {
     @objc optional func topBanner(_ banner: TopBannerViewController, didSwipeInDirection direction: UISwipeGestureRecognizer.Direction)
-
+    
     @objc optional func topBanner(_ banner: TopBannerViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell)
     
     @objc optional func topBanner(_ banner: TopBannerViewController, willDisplayStepsController: StepsViewController)
@@ -17,14 +17,10 @@ import MapboxDirections
     @objc optional func topBanner(_ banner: TopBannerViewController, didDismissStepsController: StepsViewController)
 }
 
-@objc open class TopBannerViewController: ContainerViewController, StatusViewDelegate {
+@objc open class TopBannerViewController: UIViewController {
     
-    weak var delegate: TopBannerViewControllerDelegate? = nil {
-        didSet {
-            statusView.delegate = delegate
-        }
-    }
-
+    weak var delegate: TopBannerViewControllerDelegate? = nil
+    
     lazy var topPaddingView: TopBannerView = .forAutoLayout()
     
     lazy var stepsContainer: UIView = .forAutoLayout()
@@ -33,32 +29,32 @@ import MapboxDirections
     var routeProgress: RouteProgress?
     
     lazy var stepsContainerConstraints: [NSLayoutConstraint] = {
-       let constraints = [
-        stepsContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-        stepsContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ]
-        return constraints
-    }()
-    
-    lazy var stepsContainerShow: [NSLayoutConstraint] = {
         let constraints = [
-        stepsContainer.topAnchor.constraint(equalTo: informationStackView.bottomAnchor),
-        view.bottomAnchor.constraint(equalTo: self.parent!.view.bottomAnchor),
-        view.bottomAnchor.constraint(equalTo: stepsContainer.bottomAnchor)
+            stepsContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            stepsContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ]
         return constraints
     }()
     
-    lazy var stepsContainerHide: [NSLayoutConstraint] = {
+    lazy var stepsContainerShowConstraints: [NSLayoutConstraint] = {
         let constraints = [
-        stepsContainer.bottomAnchor.constraint(equalTo: informationStackView.topAnchor),
-        informationStackBottomPin
+            stepsContainer.topAnchor.constraint(equalTo: informationStackView.bottomAnchor),
+            view.bottomAnchor.constraint(equalTo: self.parent!.view.bottomAnchor),
+            view.bottomAnchor.constraint(equalTo: stepsContainer.bottomAnchor)
         ]
         return constraints
     }()
     
-    lazy var informationStackBottomPin: NSLayoutConstraint = view.bottomAnchor.constraint(equalTo: informationStackView.bottomAnchor)
-
+    lazy var stepsContainerHideConstraints: [NSLayoutConstraint] = {
+        let constraints = [
+            stepsContainer.bottomAnchor.constraint(equalTo: informationStackView.topAnchor),
+            informationStackBottomPinConstraint
+        ]
+        return constraints
+    }()
+    
+    lazy var informationStackBottomPinConstraint: NSLayoutConstraint = view.bottomAnchor.constraint(equalTo: informationStackView.bottomAnchor)
+    
     lazy var informationStackView = UIStackView(orientation: .vertical, autoLayout: true)
     
     lazy var instructionsBannerView: InstructionsBannerView = {
@@ -73,7 +69,6 @@ import MapboxDirections
     lazy var nextBannerView: NextBannerView = .forAutoLayout(hidden: true)
     lazy var statusView: StatusView = {
         let view: StatusView = .forAutoLayout()
-        view.delegate = delegate
         view.isHidden = true
         return view
     }()
@@ -101,22 +96,10 @@ import MapboxDirections
     
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        commonInit()
     }
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        commonInit()
-    }
-    
-    convenience init(delegate: TopBannerViewControllerDelegate) {
-        self.init(nibName: nil, bundle: nil)
-        self.delegate = delegate
-        statusView.delegate = delegate
-    }
-    
-    func commonInit() {
- 
     }
     
     
@@ -130,9 +113,8 @@ import MapboxDirections
     
     
     private func setupViews() {
-        topPaddingView.accessibilityIdentifier = "topPaddingView"
         let children = [stepsContainer, topPaddingView, informationStackView]
-        children.forEach(view.addSubview(_:))
+        view.addSubviews(children)
     }
     
     private func addConstraints() {
@@ -153,7 +135,7 @@ import MapboxDirections
         let top = informationStackView.topAnchor.constraint(equalTo: view.safeTopAnchor)
         let leading = informationStackView.leadingAnchor.constraint(equalTo: view.safeLeadingAnchor)
         let trailing = informationStackView.trailingAnchor.constraint(equalTo: view.safeTrailingAnchor)
-        let bottom = informationStackBottomPin
+        let bottom = informationStackBottomPinConstraint
         //bottom is taken care of as part of steps TVC show/hide
         
         NSLayoutConstraint.activate([top, leading, trailing, bottom])
@@ -167,8 +149,8 @@ import MapboxDirections
             child.trailingAnchor.constraint(equalTo: informationStackView.trailingAnchor).isActive = true
         }
     }
-
-
+    
+    
     public func displayStepsTable() {
         dismissStepsTable()
         
@@ -184,7 +166,7 @@ import MapboxDirections
         embed(controller, in: stepsContainer) { (parent, child) -> [NSLayoutConstraint] in
             child.view.translatesAutoresizingMaskIntoConstraints = false
             let pinningConstraints = child.view.constraintsForPinning(to: self.stepsContainer)
-            let hideConstraints = self.stepsContainerHide
+            let hideConstraints = self.stepsContainerHideConstraints
             
             return pinningConstraints + hideConstraints + self.stepsContainerConstraints
         }
@@ -192,20 +174,25 @@ import MapboxDirections
         isDisplayingSteps = true
         
         parent.view.layoutIfNeeded()
-        
+        view.isUserInteractionEnabled = false
         
         let stepsInAnimation = {
-            NSLayoutConstraint.deactivate(self.stepsContainerHide)
-            NSLayoutConstraint.activate(self.stepsContainerShow)
+            NSLayoutConstraint.deactivate(self.stepsContainerHideConstraints)
+            NSLayoutConstraint.activate(self.stepsContainerShowConstraints)
             
             
-            let finally: (Bool) -> Void = { _ in
+            let finally: (Bool) -> Void = { [weak self] _ in
+                guard let self = self else {
+                    return
+                }
+                
+                self.view.isUserInteractionEnabled = true
                 self.delegate?.topBanner?(self, didDisplayStepsController: controller)
             }
             
             UIView.animate(withDuration: 0.35, delay: 0.0, options: [.curveEaseOut], animations: parent.view.layoutIfNeeded, completion: finally)
         }
-
+        
         hideSecondaryChildren(completion: stepsInAnimation)
         
     }
@@ -215,17 +202,27 @@ import MapboxDirections
         parent.view.layoutIfNeeded()
         
         delegate?.topBanner?(self, willDismissStepsController: steps)
-
-
-        NSLayoutConstraint.deactivate(stepsContainerShow)
-        NSLayoutConstraint.activate(stepsContainerHide)
         
-        let complete = {
+        
+        NSLayoutConstraint.deactivate(stepsContainerShowConstraints)
+        NSLayoutConstraint.activate(stepsContainerHideConstraints)
+        
+        let complete = { [weak self] in
+            guard let self = self else {
+                return
+            }
+            
+            self.view.isUserInteractionEnabled = true
             self.delegate?.topBanner?(self, didDismissStepsController: steps)
             completion?()
         }
         
-        UIView.animate(withDuration: 0.35, delay: 0.0, options: [.curveEaseInOut], animations: parent.view.layoutIfNeeded, completion: { _ in
+        view.isUserInteractionEnabled = false
+        UIView.animate(withDuration: 0.35, delay: 0.0, options: [.curveEaseInOut], animations: parent.view.layoutIfNeeded) { [weak self] _ in
+            guard let self = self else {
+                return
+            }
+            
             if !self.isDisplayingPreviewInstructions {
                 self.showSecondaryChildren(completion: complete)
             } else {
@@ -235,32 +232,44 @@ import MapboxDirections
             self.isDisplayingSteps = false
             steps.dismiss()
             self.stepsViewController = nil
-        })
-
-
+        }
+        
+        
     }
     private func showSecondaryChildren(completion: CompletionHandler? = nil) {
         statusView.isHidden = !statusView.isCurrentlyVisible
         lanesView.isHidden = !lanesView.isCurrentlyVisible
         nextBannerView.isHidden = !nextBannerView.isCurrentlyVisible
         
-        UIView.animate(withDuration: 0.20, delay: 0.0, options: [.curveEaseOut], animations: {
-            for child in self.informationChildren {
+        UIView.animate(withDuration: 0.20, delay: 0.0, options: [.curveEaseOut], animations: { [weak self] in
+            guard let children = self?.informationChildren else {
+                return
+            }
+            
+            for child in children {
                 child.alpha = 1.0
             }
-        }, completion: { _ in
-            completion?()
+            }, completion: { _ in
+                completion?()
         })
     }
     
     private func hideSecondaryChildren(completion: CompletionHandler? = nil) {
-        UIView.animate(withDuration: 0.20, delay: 0.0, options: [.curveEaseIn], animations: {
-            for child in self.secondaryChildren {
+        UIView.animate(withDuration: 0.20, delay: 0.0, options: [.curveEaseIn], animations: { [weak self] in
+            guard let children = self?.secondaryChildren else {
+                return
+            }
+            
+            for child in children {
                 child.alpha = 0.0
             }
-        }) { _ in
+        }) { [weak self] _ in
             completion?()
-            for child in self.secondaryChildren {
+            guard let children = self?.secondaryChildren else {
+                return
+            }
+            
+            for child in children {
                 child.isHidden = true
             }
         }
@@ -331,7 +340,7 @@ import MapboxDirections
 }
 
 // MARK: - NavigationComponent Conformance
-extension TopBannerViewController /* NavigationComponent */ {
+extension TopBannerViewController: NavigationComponent {
     public func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         routeProgress = progress
         instructionsBannerView.updateDistance(for: progress.currentLegProgress.currentStepProgress)
@@ -355,31 +364,25 @@ extension TopBannerViewController /* NavigationComponent */ {
         
         dismissStepsTable()
         if service.simulationMode == .always {
-            let localized = String.Localized.simulationStatus(speed: Int(service.simulationSpeedMultiplier))
-            statusView.showStatus(title: localized, for: .infinity, animated: true, interactive: true)
+            statusView.showSimulationStatus(speed: Int(service.simulationSpeedMultiplier))
         } else {
             statusView.hide(delay: 2, animated: true)
         }
         
         if (proactive) {
             let title = NSLocalizedString("FASTER_ROUTE_FOUND", bundle: .mapboxNavigation, value: "Faster Route Found", comment: "Indicates a faster route was found")
-            statusView.showStatus(title: title, withSpinner: true, for: 3)
+            statusView.showStatus(title: title, spinner: true, duration: 3)
         }
     }
     
     public func navigationService(_ service: NavigationService, willBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
         guard reason == .manual else { return }
-        let localized = String.Localized.simulationStatus(speed: 1)
-        statusView.show(localized, showSpinner: false, interactive: true)
+        statusView.showSimulationStatus(speed: Int(service.simulationSpeedMultiplier))
     }
     
     public func navigationService(_ service: NavigationService, willEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
         guard reason == .manual else { return }
         statusView.hide(delay: 0, animated: true)
-    }
-    
-    public func navigationViewController(_ controller: NavigationViewController, didRecenterAt location: CLLocation) {
-        stopPreviewing()
     }
     
     private func embed(_ child: UIViewController, in container: UIView, constrainedBy constraints: ((UIViewController, UIViewController) -> [NSLayoutConstraint])? = nil) {
@@ -409,7 +412,7 @@ extension TopBannerViewController: InstructionsBannerViewDelegate {
 }
 
 extension TopBannerViewController: StepsViewControllerDelegate {
-
+    
     public func stepsViewController(_ viewController: StepsViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell) {
         delegate?.topBanner?(self, didSelect: legIndex, stepIndex: stepIndex, cell: cell)
     }
@@ -420,14 +423,24 @@ extension TopBannerViewController: StepsViewControllerDelegate {
     }
 }
 
-extension TopBannerViewController: NavigationInteractionDelegate {
-    public func navigationViewControllerDidConnectCarPlay(_ controller: NavigationViewController) {
+extension TopBannerViewController: CarPlayConnectionObserver {
+    public func didConnectToCarPlay() {
         displayStepsTable()
     }
-    public func navigationViewControllerDidDisconnectCarPlay(_ controller: NavigationViewController) {
+    
+    public func didDisconnectFromCarPlay() {
         dismissStepsTable()
     }
-    public func showStatus(title: String, withSpinner spin: Bool, for time: TimeInterval, animated: Bool, interactive: Bool) {
-        statusView.showStatus(title: title, withSpinner: spin, for: time, animated: animated, interactive: interactive)
+}
+
+extension TopBannerViewController: NavigationStatusPresenter {
+    public func showStatus(title: String, spinner spin: Bool, duration time: TimeInterval, animated: Bool, interactive: Bool) {
+        statusView.showStatus(title: title, spinner: spin, duration: time, animated: animated, interactive: interactive)
+    }
+}
+
+extension TopBannerViewController: NavigationMapInteractionObserver {
+    public func navigationViewController(didCenterOn location: CLLocation) {
+        stopPreviewing()
     }
 }

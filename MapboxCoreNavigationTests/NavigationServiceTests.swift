@@ -470,4 +470,18 @@ class NavigationServiceTests: XCTestCase {
         
         waitForExpectations(timeout: 10)
     }
+    
+    func testNineLeggedRouteForOutOfBounds() {
+        let route = Fixture.route(from: "9-legged-route")
+        let directions = Directions(accessToken: "foo")
+        let locationManager = DummyLocationManager()
+        let trace = Fixture.generateTrace(for: route, speedMultiplier: 4).shiftedToPresent()
+        
+        let service = MapboxNavigationService(route: route, directions: directions, locationSource: locationManager, eventsManagerType: nil)
+        service.start()
+        
+        for location in trace {
+            service.locationManager(locationManager, didUpdateLocations: [location])
+        }
+    }
 }
