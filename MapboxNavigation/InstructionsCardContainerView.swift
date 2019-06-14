@@ -39,7 +39,7 @@ public class InstructionsCardContainerView: UIView {
     
     lazy var instructionsCardView: InstructionsCardView = {
         let cardView: InstructionsCardView = InstructionsCardView()
-        cardView.translatesAutoresizingMaskIntoConstraints = true
+        cardView.translatesAutoresizingMaskIntoConstraints = false
         return cardView
     }()
     
@@ -58,7 +58,6 @@ public class InstructionsCardContainerView: UIView {
     
     private var gradientLayer: CAGradientLayer!
     private (set) var style: InstructionsCardStyle!
-    private (set) var step: RouteStep!
     
     required public init(style: InstructionsCardStyle? = DayInstructionsCardStyle()) {
         super.init(frame: .zero)
@@ -95,6 +94,7 @@ public class InstructionsCardContainerView: UIView {
     private func addStackConstraints() {
         addSubview(informationStackView)
         
+        self.translatesAutoresizingMaskIntoConstraints = false
         let top = informationStackView.topAnchor.constraint(equalTo: self.topAnchor)
         let leading = informationStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor)
         let trailing = informationStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
@@ -122,7 +122,7 @@ public class InstructionsCardContainerView: UIView {
     @discardableResult private func setGradientLayer(for view: UIView) -> UIView {
         guard !view.isHidden else { return view }
         
-        let backgroundColor = instructionsCardView.style.backgroundColor
+        let backgroundColor = style.backgroundColor
         let alphaComponent = InstructionsCardConstants.backgroundColorAlphaComponent
         let colors = [backgroundColor.cgColor, backgroundColor.withAlphaComponent(alphaComponent).cgColor]
 
@@ -139,7 +139,6 @@ public class InstructionsCardContainerView: UIView {
         }
         
         if let nextBannerView = view as? NextBannerView {
-            let style = instructionsCardView.style
             nextBannerView.maneuverView.primaryColor = style.nextBannerViewPrimaryColor
             nextBannerView.maneuverView.secondaryColor = style.nextBannerViewSecondaryColor
             nextBannerView.instructionLabel.normalTextColor = style.nextBannerInstructionLabelTextColor
@@ -148,12 +147,11 @@ public class InstructionsCardContainerView: UIView {
         }
         
         if let lanesView = view as? LanesView, let stackView = lanesView.subviews.first as? UIStackView {
-            let style = instructionsCardView.style
             let laneViews: [LaneView] = stackView.subviews.compactMap { $0 as? LaneView }
             laneViews.forEach { laneView in
                 guard laneView.isValid else { return }
-                laneView.primaryColor = style.lanesViewDefaultColor
-                laneView.secondaryColor = style.lanesViewDefaultColor
+                laneView.primaryColor = self.style.lanesViewDefaultColor
+                laneView.secondaryColor = self.style.lanesViewDefaultColor
             }
         }
         
@@ -214,7 +212,6 @@ public class InstructionsCardContainerView: UIView {
     
     func highlightContainerView() {
         let duration = InstructionsCardConstants.highlightAnimationDuration
-        let style = instructionsCardView.style
         let alphaComponent = InstructionsCardConstants.highlightedBackgroundAlphaComponent
         
         let colors = [style.highlightedBackgroundColor.cgColor,
@@ -256,7 +253,6 @@ public class InstructionsCardContainerView: UIView {
         guard let stackView = lanesView.subviews.first as? UIStackView  else {
             return
         }
-        let style = self.instructionsCardView.style
         let laneViews: [LaneView] = stackView.subviews.compactMap { $0 as? LaneView }
         laneViews.forEach { laneView in
             guard laneView.isValid else { return }
@@ -267,14 +263,12 @@ public class InstructionsCardContainerView: UIView {
     
     fileprivate func hightlightNextBannerView(_ gradientLayer: CAGradientLayer, colors: [CGColor]) {
         gradientLayer.colors = colors
-        let style = instructionsCardView.style
         nextBannerView.maneuverView.primaryColor = style.nextBannerInstructionHighlightedColor
         nextBannerView.maneuverView.secondaryColor = style.nextBannerInstructionHighlightedColor
         nextBannerView.instructionLabel.normalTextColor = style.nextBannerInstructionHighlightedColor
     }
     
     fileprivate func highlightInstructionsCardView(colors: [CGColor]) {
-        let style = instructionsCardView.style
         instructionsCardView.gradientLayer.colors = colors
         // primary & secondary labels
         instructionsCardView.primaryLabel.normalTextColor = style.primaryLabelHighlightedTextColor
@@ -298,7 +292,6 @@ extension InstructionsCardContainerView: InstructionsCardContainerViewDelegate {
             let presented = delegate?.secondaryLabel?(secondaryLabel, willPresent: instruction, as: presented) {
             return presented
         } else {
-            let style = instructionsCardView.style
             let highlighted = instructionsCardView.distanceFromCurrentLocation < InstructionsCardConstants.highlightDistance
             let textColor = highlighted ? style.primaryLabelTextColor : style.primaryLabelHighlightedTextColor
             let attributes = [NSAttributedString.Key.foregroundColor: textColor]

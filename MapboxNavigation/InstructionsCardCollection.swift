@@ -80,11 +80,14 @@ open class InstructionsCardCollection: UIViewController {
     override open func viewDidLoad() {
         super.viewDidLoad()
         
+        /* TODO: Identify the traitCollections to define the width of the cards */
         if let customSize = cardCollectionDelegate?.instructionsCardCollection?(self, cardSizeForTraitcollection: traitCollection) {
             cardSize = customSize
         } else {
             cardSize = CGSize(width: Int(floor(view.frame.size.width * 0.82)), height: 200)
         }
+        
+        /* TODO: Custom dataSource */
         
         view.backgroundColor = .clear
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -131,7 +134,6 @@ open class InstructionsCardCollection: UIViewController {
             instructionCollectionView.topAnchor.constraint(equalTo: topPaddingView.bottomAnchor),
             instructionCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             instructionCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            instructionCollectionView.widthAnchor.constraint(equalToConstant: cardSize.width),
             instructionCollectionView.heightAnchor.constraint(equalToConstant: cardSize.height),
             instructionCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ]
@@ -139,35 +141,38 @@ open class InstructionsCardCollection: UIViewController {
         NSLayoutConstraint.activate(instructionCollectionViewContraints)
     }
     
-    fileprivate func updateInstructionsCardDataSource(for progress: RouteProgress) {
-        updateInstructionCollectionView()
-        reloadDataSource()
-    }
+//    fileprivate func updateInstructionsCardDataSource(for progress: RouteProgress) {
+//        updateInstructionCollectionView()
+//        reloadDataSource()
+//    }
     
-    func updateInstructionCollectionView() {
-        guard let steps = steps else { return }
-        instructionCollectionView.contentSize = calculateNeededSpace(count: steps.count)
-    }
+//    func updateInstructionCollectionView() {
+//        guard let steps = steps else { return }
+//        instructionCollectionView.contentSize = calculateNeededSpace(count: steps.count)
+//    }
     
     func reloadDataSource() {
-        precondition(steps != nil)
         if isInPreview && previewIndexPath.row < steps!.endIndex - 1 {
             updateVisibleInstructionCards(from: previewIndexPath.row)
         } else {
-            instructionCollectionView.reloadData()
+            if let progress = routeProgress, let stepIndex = currentStepIndex, stepIndex != progress.currentLegProgress.stepIndex {
+                currentStepIndex = progress.currentLegProgress.stepIndex
+                instructionCollectionView.reloadData()
+            } else {
+                instructionCollectionView.reloadItems(at: instructionCollectionView.indexPathsForVisibleItems)
+            }
         }
     }
     
     func updateVisibleInstructionCards(from start: Int, to end: Int? = nil) {
+        /*
         guard let steps = steps, steps.count > 1, start < steps.endIndex else { return }
         let limit = end ?? steps.count
         guard start < limit else { return }
         let indexPaths = IndexPath(indexes: start..<limit)
         let containers: [InstructionsCardContainerView] = indexPaths.compactMap { instructionsCardContainerView(at: IndexPath(row: $0, section: 0)) }
         let activeCards: [InstructionsCardView] = indexPaths.compactMap { instructionsCardView(at: IndexPath(row: $0, section: 0))}
-
-        precondition(containers.count == activeCards.count)
-
+        */
         /* TODO: Optimization goal */
         
     }
@@ -313,27 +318,36 @@ extension InstructionsCardCollection: UICollectionViewDataSource {
     }
 }
 
+extension InstructionsCardCollection: UICollectionViewDelegateFlowLayout {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return cardSize
+    }
+}
+
 extension InstructionsCardCollection: NavigationComponent {
     public func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         routeProgress = progress
-        updateInstructionsCardDataSource(for: progress)
+        if currentStepIndex == nil {
+            currentStepIndex = progress.currentLegProgress.stepIndex
+        }
+        reloadDataSource()
     }
     
     public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
-        guard isSnapAndRemove,
-            let containerView = instructionsCardContainerView(at: IndexPath(row: 0, section: 0)),
-            let stackView = containerView.subviews.first as? UIStackView,
-            let activeCard = stackView.subviews.first as? InstructionsCardView else { return }
-        activeCard.update(for: instruction)
-        
-        // TODO: This needs to be a container view
-        guard let childView = secondaryInstructionView(at: IndexPath(row: 0, section: 0)) else { return }
-
-        if let laneView = childView as? LanesView {
-            laneView.update(for: instruction)
-        } else if let nextBannerView = childView as? NextBannerView {
-            nextBannerView.update(for: instruction)
-        }
+//        guard isSnapAndRemove,
+//            let containerView = instructionsCardContainerView(at: IndexPath(row: 0, section: 0)),
+//            let stackView = containerView.subviews.first as? UIStackView,
+//            let activeCard = stackView.subviews.first as? InstructionsCardView else { return }
+//        activeCard.update(for: instruction)
+//        
+//        // TODO: This needs to be a container view
+//        guard let childView = secondaryInstructionView(at: IndexPath(row: 0, section: 0)) else { return }
+//
+//        if let laneView = childView as? LanesView {
+//            laneView.update(for: instruction)
+//        } else if let nextBannerView = childView as? NextBannerView {
+//            nextBannerView.update(for: instruction)
+//        }
     }
 }
 
@@ -351,18 +365,5 @@ extension InstructionsCardCollection: InstructionsCardContainerViewDelegate {
 extension InstructionsCardCollection: NavigationMapInteractionObserver {
     public func navigationViewController(didCenterOn location: CLLocation) {
         stopPreview()
-    }
-}
-
-extension RouteProgress {
-    var steps: [RouteStep] {
-        var steps: [RouteStep] = currentLeg.steps.enumerated().compactMap { (index, step) in
-            guard index >= currentLegProgress.stepIndex && index != currentLeg.steps.count - 1 else {
-                return nil
-            }
-            return step
-        }
-        steps += remainingLegs.flatMap { $0.steps }
-        return steps
     }
 }

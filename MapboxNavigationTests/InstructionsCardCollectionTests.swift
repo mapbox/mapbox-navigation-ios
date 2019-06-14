@@ -45,10 +45,10 @@ class InstructionsCardCollectionTests: XCTestCase {
         let fakeLocation = CLLocation(latitude: intersectionLocation.latitude, longitude: intersectionLocation.longitude)
         subject.navigationService(service, didUpdate: routeProgress, with: fakeLocation, rawLocation: fakeLocation)
         
-        let activeCard = (subject.instructionCollectionView.cellForItem(at: IndexPath(row: 0, section: 0))!.subviews.first! as! InstructionsCardView)
+        let activeCard = (subject.instructionCollectionView.dataSource!.collectionView(subject.instructionCollectionView, cellForItemAt: IndexPath(row: 0, section: 0)) as! InstructionsCardCell).container!.instructionsCardView
         XCTAssertEqual(activeCard.step!.instructions, "Head north on 6th Avenue")
         
-        let nextCard = (subject.instructionCollectionView.cellForItem(at: IndexPath(row: 1, section: 0))!.subviews.first! as! InstructionsCardView)
+        let nextCard = (subject.instructionCollectionView.dataSource!.collectionView(subject.instructionCollectionView, cellForItemAt: IndexPath(row: 1, section: 0)) as! InstructionsCardCell).container!.instructionsCardView
         XCTAssertEqual(nextCard.step!.instructions, "Turn right onto Lincoln Way")
         
         /// Simulation: Scroll to the next card step instructions.
@@ -73,10 +73,10 @@ class InstructionsCardCollectionTests: XCTestCase {
         let fakeLocation = CLLocation(latitude: intersectionLocation.latitude, longitude: intersectionLocation.longitude)
         subject.navigationService(service, didUpdate: routeProgress, with: fakeLocation, rawLocation: fakeLocation)
         
-        let activeCard = (subject.instructionCollectionView.cellForItem(at: IndexPath(row: 0, section: 0))!.subviews.first! as! InstructionsCardView)
+        let activeCard = (subject.instructionCollectionView.dataSource!.collectionView(subject.instructionCollectionView, cellForItemAt: IndexPath(row: 0, section: 0)) as! InstructionsCardCell).container!.instructionsCardView
         XCTAssertEqual(activeCard.step!.instructions, "Head north on 6th Avenue")
         
-        let nextCard = (subject.instructionCollectionView.cellForItem(at: IndexPath(row: 1, section: 0))!.subviews.first! as! InstructionsCardView)
+        let nextCard = (subject.instructionCollectionView.dataSource!.collectionView(subject.instructionCollectionView, cellForItemAt: IndexPath(row: 1, section: 0)) as! InstructionsCardCell).container!.instructionsCardView
         XCTAssertEqual(nextCard.step!.instructions, "Turn right onto Lincoln Way")
         
         /// Simulation: Scroll to the previous card step instructions.
@@ -106,7 +106,7 @@ class InstructionsCardCollectionTests: XCTestCase {
         let fakeLocation = CLLocation(latitude: intersectionLocation.latitude, longitude: intersectionLocation.longitude)
         subject.navigationService(service, didUpdate: routeProgress, with: fakeLocation, rawLocation: fakeLocation)
         
-        let activeCard = (subject.instructionCollectionView.cellForItem(at: IndexPath(row: 0, section: 0))!.subviews.first! as! InstructionsCardView)
+        let activeCard = (subject.instructionCollectionView.dataSource!.collectionView(subject.instructionCollectionView, cellForItemAt: IndexPath(row: 0, section: 0)) as! InstructionsCardCell).container!.instructionsCardView
         XCTAssertEqual(activeCard.step!.instructions, "Head north on 6th Avenue")
         
         /// Simulation: Attempt to scroll to the next card step instructions.
@@ -114,8 +114,8 @@ class InstructionsCardCollectionTests: XCTestCase {
         simulatedTargetContentOffset.pointee = CGPoint(x: 0, y: 50)
         subject.scrollViewWillEndDragging(subject.instructionCollectionView, withVelocity: CGPoint(x: 0.0, y: 0.0), targetContentOffset: simulatedTargetContentOffset)
         
-        XCTAssertFalse(subject.isInPreview)
-        XCTAssertNil(instructionsCardCollectionSpy.step)
+        XCTAssertTrue(subject.isInPreview)
+        XCTAssertNotNil(instructionsCardCollectionSpy.step)
     }
     
     func testVerifyInstructionsCardCustomStyle() {
@@ -184,4 +184,14 @@ class TestInstructionsCardStyle: InstructionsCardStyle {
     var maneuverViewPrimaryColor: UIColor = .blue
     var maneuverViewSecondaryColor: UIColor = .clear
     var maneuverViewHighlightedColor: UIColor = .brown
+    
+    var nextBannerViewPrimaryColor: UIColor = .cardBlue
+    var nextBannerViewSecondaryColor: UIColor = .cardLight
+    var nextBannerInstructionLabelTextColor: UIColor = .cardDark
+    var nextBannerInstructionHighlightedColor: UIColor = .cardLight
+    var lanesViewDefaultColor: UIColor = .cardBlue
+    var lanesViewHighlightedColor: UIColor = .cardLight
+    lazy var nextBannerInstructionLabelNormalFont: UIFont = {
+        return CardFont.create(.regular, with: 14.0)
+    }()
 }
