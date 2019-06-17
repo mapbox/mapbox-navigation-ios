@@ -3,3 +3,4 @@ github "Quick/Quick" ~> 2.0
 github "Quick/Nimble" ~> 8.0
 github "CedarBDD/Cedar" ~> 1.0
 github "AndriiDoroshko/SnappyShrimp"
+github "linksmt/OHHTTPStubs" "563f48d3fab84ef04639649c770b00f4fa502cca"

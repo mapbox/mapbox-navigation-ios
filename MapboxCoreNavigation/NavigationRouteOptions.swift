@@ -1,5 +1,6 @@
 import Foundation
 import MapboxDirections
+import MapboxAccounts
 
 /**
  A `NavigationRouteOptions` object specifies turn-by-turn-optimized criteria for results returned by the Mapbox Directions API.

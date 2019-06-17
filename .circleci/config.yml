@@ -185,18 +185,18 @@ workflows:
           codecoverage: true
       - build-job:
           name: "Xcode_10.2_iOS_10.3.1"
-          xcode: "10.2.0"
+          xcode: "10.2.1"
           iOS: "10.3.1"
           test: false
       - pod-job:
           name: "Xcode_10.2_iOS_12.2_CP_install"
           update: false
-          xcode: "10.2.0"
+          xcode: "10.2.1"
           iOS: "12.2"
       - pod-job:
           name: "Xcode_10.2_iOS_12.2_CP_update"
           update: true
-          xcode: "10.2.0"
+          xcode: "10.2.1"
           iOS: "12.2"
           lint: true
       - xcode-10-examples
