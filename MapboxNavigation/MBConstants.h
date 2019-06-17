@@ -7,15 +7,11 @@ extern const _Nonnull NSErrorUserInfoKey MBSpokenInstructionErrorCodeKey;
 
 /**
  Posted when `MBStyleManager` applies a new style triggered by change of day of time, or when entering or exiting a tunnel.
- 
- :nodoc:
  */
 extern const _Nonnull NSNotificationName MBStyleManagerDidApplyStyleNotification;
 
 /**
  Keys in the user info dictionaries of various notifications posted by instances of `MBStyleManager`.
- 
- :nodoc:
  */
 typedef NSString *MBStyleManagerNotificationUserInfoKey NS_EXTENSIBLE_STRING_ENUM;
 
