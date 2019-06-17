@@ -155,7 +155,10 @@ open class InstructionsCardCollection: UIViewController {
         if isInPreview && previewIndexPath.row < steps!.endIndex - 1 {
             updateVisibleInstructionCards(from: previewIndexPath.row)
         } else {
-            if let progress = routeProgress, let stepIndex = currentStepIndex, stepIndex != progress.currentLegProgress.stepIndex {
+            if currentStepIndex == nil, let progress = routeProgress {
+                currentStepIndex = progress.currentLegProgress.stepIndex
+                instructionCollectionView.reloadData()
+            } else if let progress = routeProgress, let stepIndex = currentStepIndex, stepIndex != progress.currentLegProgress.stepIndex {
                 currentStepIndex = progress.currentLegProgress.stepIndex
                 instructionCollectionView.reloadData()
             } else {
@@ -184,8 +187,9 @@ open class InstructionsCardCollection: UIViewController {
     }
     
     public func stopPreview() {
-        isInPreview = false
+        guard isInPreview else { return }
         instructionCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .left, animated: false)
+        isInPreview = false
     }
     
     fileprivate func instructionContainerView(at indexPath: IndexPath) -> InstructionsCardContainerView? {
@@ -327,9 +331,6 @@ extension InstructionsCardCollection: UICollectionViewDelegateFlowLayout {
 extension InstructionsCardCollection: NavigationComponent {
     public func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         routeProgress = progress
-        if currentStepIndex == nil {
-            currentStepIndex = progress.currentLegProgress.stepIndex
-        }
         reloadDataSource()
     }
     
