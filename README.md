@@ -24,9 +24,9 @@ Get up and running in a few minutes with our drop-in turn-by-turn navigation `Na
 
 ## Requirements
 
-The Mapbox Navigation SDK and Core Navigation are compatible with applications written in Swift 4.2 or Objective-C in Xcode 10.0. The Mapbox Navigation and Mapbox Core Navigation frameworks run on iOS 9.0 and above.
+The Mapbox Navigation SDK and Core Navigation are compatible with applications written in Swift or Objective-C in Xcode 10.2.1. The Mapbox Navigation and Mapbox Core Navigation frameworks run on iOS 9.0 and above.
 
-The last release compatible with Swift 3.2 was v0.10.1.
+The last release compatible with Swift 4.2 and Xcode 10.0 was v0.34.0.
 
 The Mapbox Navigation SDK is also available [for Android](https://github.com/mapbox/mapbox-navigation-android/).
 
@@ -54,7 +54,7 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
 
 1. Run `carthage update --platform iOS` to build just the iOS dependencies.
 
-1. Follow the rest of [Carthage’s iOS integration instructions](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos). Your application target’s Embedded Frameworks should include `MapboxNavigation.framework`, `MapboxCoreNavigation.framework`, and `MapboxNavigationNative.framework`.
+1. Follow the rest of [Carthage’s iOS integration instructions](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos). Your application target’s Embedded Frameworks should include `MapboxNavigation.framework`, `MapboxCoreNavigation.framework`, `MapboxNavigationNative.framework`, and `MapboxAccounts.framework`.
 
 ## Configuration
 
