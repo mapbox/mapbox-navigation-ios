@@ -14,6 +14,8 @@ public protocol StyleManagerDelegate: NSObjectProtocol {
     
     /**
      Informs the delegate that a style was applied.
+     
+     This delegate method is the equivalent of `Notification.Name.styleManagerDidApplyStyle`.
      */
     @objc(styleManager:didApplyStyle:)
     optional func styleManager(_ styleManager: StyleManager, didApply style: Style)
@@ -65,7 +67,12 @@ open class StyleManager: NSObject {
     internal var date: Date?
     
     var currentStyleType: StyleType?
-    private(set) var currentStyle: Style?
+    private(set) var currentStyle: Style? {
+        didSet {
+            guard let style = currentStyle else { return }
+            postDidApplyStyleNotification(style: style)
+        }
+    }
     
     @objc public override init() {
         super.init()
@@ -138,9 +145,9 @@ open class StyleManager: NSObject {
         guard let location = delegate?.location(for: self) else {
             // We can't calculate sunset or sunrise w/o a location so just apply the first style
             if let style = styles.first, currentStyleType != style.styleType {
+                style.apply()
                 currentStyleType = style.styleType
                 currentStyle = style
-                style.apply()
                 delegate?.styleManager?(self, didApply: style)
             }
             return
@@ -149,9 +156,9 @@ open class StyleManager: NSObject {
         // Single style usage
         guard styles.count > 1 else {
             if let style = styles.first, currentStyleType != style.styleType {
+                style.apply()
                 currentStyleType = style.styleType
                 currentStyle = style
-                style.apply()
                 delegate?.styleManager?(self, didApply: style)
             }
             return
@@ -169,6 +176,13 @@ open class StyleManager: NSObject {
         }
         
         return solar.date.isNighttime(sunrise: sunrise, sunset: sunset) ? .night : .day
+    }
+    
+    private func postDidApplyStyleNotification(style: Style) {
+        NotificationCenter.default.post(name: .styleManagerDidApplyStyle, object: self, userInfo: [
+            MBStyleManagerNotificationUserInfoKey.styleKey: style,
+            MBStyleManagerNotificationUserInfoKey.styleManagerKey: self
+            ])
     }
     
     func forceRefreshAppearanceIfNeeded() {

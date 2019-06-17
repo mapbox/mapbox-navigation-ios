@@ -124,6 +124,36 @@ class StyleManagerTests: XCTestCase {
         XCTAssert(afterSunriseBeforeSunset.intervalUntilTimeOfDayChanges(sunrise: sunrise, sunset: sunset) == (7 * 3600))
         XCTAssert(afterSunsetBeforeMidnight.intervalUntilTimeOfDayChanges(sunrise: sunrise, sunset: sunset) == (10 * 3600))
     }
+    
+    func testDidChangeStyleNotification() {
+        styleManager.styles = [DayStyle(), NightStyle()]
+        location = Location.paris
+        
+        styleManager.applyStyle(type: .day)
+        
+        let dayExpectation = expectation(forNotification: .styleManagerDidApplyStyle, object: nil) { (notification) -> Bool in
+            let userInfo = notification.userInfo
+            let style = userInfo?[MBStyleManagerNotificationUserInfoKey.styleKey] as? Style
+            let styleManager = userInfo?[MBStyleManagerNotificationUserInfoKey.styleManagerKey] as? StyleManager
+            XCTAssertNotNil(style)
+            XCTAssertNotNil(styleManager)
+            return style?.styleType == StyleType.day
+        }
+        
+        let nightExpectation = expectation(forNotification: .styleManagerDidApplyStyle, object: nil) { (notification) -> Bool in
+            let userInfo = notification.userInfo
+            let style = userInfo?[MBStyleManagerNotificationUserInfoKey.styleKey] as? Style
+            let styleManager = userInfo?[MBStyleManagerNotificationUserInfoKey.styleManagerKey] as? StyleManager
+            XCTAssertNotNil(style)
+            XCTAssertNotNil(styleManager)
+            return style?.styleType == StyleType.night
+        }
+        
+        styleManager.applyStyle(type: .night)
+        styleManager.applyStyle(type: .day)
+        
+        wait(for: [dayExpectation, nightExpectation], timeout: 5)
+    }
 }
 
 extension StyleManagerTests: StyleManagerDelegate {

@@ -368,8 +368,8 @@
 		DAD17202214DB12B009C8161 /* CPMapTemplateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD17201214DB12B009C8161 /* CPMapTemplateTests.swift */; };
 		DADAD828203504C6002E25CA /* MBNavigationSettings.h in Headers */ = {isa = PBXBuildFile; fileRef = DADAD826203504C6002E25CA /* MBNavigationSettings.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DADAD829203504C6002E25CA /* MBNavigationSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = DADAD827203504C6002E25CA /* MBNavigationSettings.m */; };
-		DADAD82E20350849002E25CA /* MBRouteVoiceController.h in Headers */ = {isa = PBXBuildFile; fileRef = DADAD82C20350849002E25CA /* MBRouteVoiceController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		DADAD82F20350849002E25CA /* MBRouteVoiceController.m in Sources */ = {isa = PBXBuildFile; fileRef = DADAD82D20350849002E25CA /* MBRouteVoiceController.m */; };
+		DADAD82E20350849002E25CA /* MBConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = DADAD82C20350849002E25CA /* MBConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DADAD82F20350849002E25CA /* MBConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = DADAD82D20350849002E25CA /* MBConstants.m */; };
 		DADD82802161EC0300B8B47D /* UIViewAnimationOptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DADD827F2161EC0300B8B47D /* UIViewAnimationOptionsTests.swift */; };
 		DAE22A2921C9DEDA00CA269D /* MGLVectorTileSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE22A2821C9DEDA00CA269D /* MGLVectorTileSourceTests.swift */; };
 		DAFA92071F01735000A7FB09 /* DistanceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */; };
@@ -978,8 +978,8 @@
 		DAD88E02202AC81F00AAA536 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = da; path = Resources/da.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		DADAD826203504C6002E25CA /* MBNavigationSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MBNavigationSettings.h; sourceTree = "<group>"; };
 		DADAD827203504C6002E25CA /* MBNavigationSettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MBNavigationSettings.m; sourceTree = "<group>"; };
-		DADAD82C20350849002E25CA /* MBRouteVoiceController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MBRouteVoiceController.h; sourceTree = "<group>"; };
-		DADAD82D20350849002E25CA /* MBRouteVoiceController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MBRouteVoiceController.m; sourceTree = "<group>"; };
+		DADAD82C20350849002E25CA /* MBConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MBConstants.h; sourceTree = "<group>"; };
+		DADAD82D20350849002E25CA /* MBConstants.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MBConstants.m; sourceTree = "<group>"; };
 		DADD827F2161EC0300B8B47D /* UIViewAnimationOptionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewAnimationOptionsTests.swift; sourceTree = "<group>"; };
 		DAE22A2821C9DEDA00CA269D /* MGLVectorTileSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MGLVectorTileSourceTests.swift; sourceTree = "<group>"; };
 		DAE26B1A20644047001D6E1F /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Main.strings; sourceTree = "<group>"; };
@@ -1244,8 +1244,8 @@
 				3EA93230997B8D59E3B76C8C /* InstructionPresenter.swift */,
 				35D825FD1E6A2EC60088F83B /* MapboxNavigation.h */,
 				C565168A1FE1E23E00A0AD18 /* MapboxVoiceController.swift */,
-				DADAD82C20350849002E25CA /* MBRouteVoiceController.h */,
-				DADAD82D20350849002E25CA /* MBRouteVoiceController.m */,
+				DADAD82C20350849002E25CA /* MBConstants.h */,
+				DADAD82D20350849002E25CA /* MBConstants.m */,
 				CFD47D8F20FD85EC00BC1E49 /* MGLAccountManager.swift */,
 				C53208AA1E81FFB900910266 /* NavigationMapView.swift */,
 				8DEB4065220CE596008BAAB4 /* NavigationMapViewDelegate.swift */,
@@ -1690,7 +1690,7 @@
 			files = (
 				DA23C9611F4FC05C00BA9522 /* MGLMapView+MGLNavigationAdditions.h in Headers */,
 				35D825FE1E6A2EC60088F83B /* MapboxNavigation.h in Headers */,
-				DADAD82E20350849002E25CA /* MBRouteVoiceController.h in Headers */,
+				DADAD82E20350849002E25CA /* MBConstants.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2359,7 +2359,7 @@
 				DA0557232154FFB200A1F2AA /* Route.swift in Sources */,
 				8D24A2F62040960C0098CBF8 /* UIEdgeInsets.swift in Sources */,
 				353E3C8F20A3501C00FD1789 /* MGLStyle.swift in Sources */,
-				DADAD82F20350849002E25CA /* MBRouteVoiceController.m in Sources */,
+				DADAD82F20350849002E25CA /* MBConstants.m in Sources */,
 				C57491DF1FACC42F006F97BC /* CGPoint.swift in Sources */,
 				16C2A421211526EE00FE6E68 /* CarPlayManager.swift in Sources */,
 				8D53136B20653FA20044891E /* ExitView.swift in Sources */,
