@@ -41,6 +41,7 @@ Pod::Spec.new do |s|
   s.module_name = "MapboxCoreNavigation"
 
   s.dependency "MapboxNavigationNative", "~> 6.2.1"
+  s.dependency "MapboxAccounts", "~> 0.0.1"             # Always pin to a patch release if pre-1.0
   s.dependency "MapboxDirections.swift", "~> 0.28.0"    # Always pin to a patch release if pre-1.0
   s.dependency "MapboxMobileEvents", "~> 0.9.3"         # Always pin to a patch release if pre-1.0
   s.dependency "Turf", "~> 0.3.0"                       # Always pin to a patch release if pre-1.0
