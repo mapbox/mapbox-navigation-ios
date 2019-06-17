@@ -362,7 +362,7 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
     private func resetGPSCountdown() {
         //Sanity check: if we're not on this mode, we have no business here.
         guard simulationMode == .onPoorGPS else { return }
-        
+    
         // Immediately end simulation if it is occuring.
         if isSimulating {
             endSimulation(intent: .poorGPS)
