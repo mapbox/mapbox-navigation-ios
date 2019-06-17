@@ -1,6 +1,8 @@
 import UIKit
 import CoreLocation
 import MapboxDirections
+import MapboxAccounts
+
 
 @objc(MBNavigationSimulationIntent)
 public enum SimulationIntent: Int{
@@ -339,6 +341,8 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
     }
     
     public func stop() {
+        MBXAccounts.resetSession()
+        
         nativeLocationSource.stopUpdatingHeading()
         nativeLocationSource.stopUpdatingLocation()
         
@@ -485,6 +489,10 @@ extension MapboxNavigationService: RouterDelegate {
         
         //Notify the events manager that we've arrived at a waypoint
         eventsManager.arriveAtWaypoint()
+        
+        if router.routeProgress.isFinalLeg {
+            MBXAccounts.resetSession()
+        }
         
         return delegate?.navigationService?(self, didArriveAt: waypoint) ?? Default.didArriveAtWaypoint
     }

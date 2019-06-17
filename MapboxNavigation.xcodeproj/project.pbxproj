@@ -213,6 +213,9 @@
 		35DC9D911F4323AA001ECD64 /* LanesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DC9D901F4323AA001ECD64 /* LanesView.swift */; };
 		35E407681F5625FF00EFC814 /* StyleKitMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35E407671F5625FF00EFC814 /* StyleKitMarker.swift */; };
 		35E5B963227B4B620033A124 /* CarPlayCompassViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35E5B962227B4B620033A124 /* CarPlayCompassViewTests.swift */; };
+		35E781B022B77B5F00DBBCD5 /* MapboxAccounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35E781AF22B77B5000DBBCD5 /* MapboxAccounts.framework */; };
+		35E781B122B77B6E00DBBCD5 /* MapboxAccounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35E781AF22B77B5000DBBCD5 /* MapboxAccounts.framework */; };
+		35E781B222B77B6E00DBBCD5 /* MapboxAccounts.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 35E781AF22B77B5000DBBCD5 /* MapboxAccounts.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		35E9B0AD1F9E0F8F00BF84AB /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigation.framework */; };
 		35EB9A6A20A1AB7C00CB1225 /* turn_left.data in Resources */ = {isa = PBXBuildFile; fileRef = 35EB9A6920A1A89500CB1225 /* turn_left.data */; };
 		35ECAF2D2092275100DC3BC3 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35ECAF2C2092275100DC3BC3 /* UIImage.swift */; };
@@ -528,6 +531,7 @@
 				C549F8331F17F2C5001A0A2D /* MapboxMobileEvents.framework in Embed Frameworks */,
 				35CC14181F79A434009E872A /* Turf.framework in Embed Frameworks */,
 				492B6F85213703EE0076D2C6 /* MapboxGeocoder.framework in Embed Frameworks */,
+				35E781B222B77B6E00DBBCD5 /* MapboxAccounts.framework in Embed Frameworks */,
 				354A01D51E6626AC00D765C2 /* MapboxCoreNavigation.framework in Embed Frameworks */,
 				C57607B21F4CC9E800C27423 /* Solar.framework in Embed Frameworks */,
 				35636E04215D621E00463343 /* MapboxNavigationNative.framework in Embed Frameworks */,
@@ -780,6 +784,7 @@
 		35DC9D901F4323AA001ECD64 /* LanesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanesView.swift; sourceTree = "<group>"; };
 		35E407671F5625FF00EFC814 /* StyleKitMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleKitMarker.swift; sourceTree = "<group>"; };
 		35E5B962227B4B620033A124 /* CarPlayCompassViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayCompassViewTests.swift; sourceTree = "<group>"; };
+		35E781AF22B77B5000DBBCD5 /* MapboxAccounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxAccounts.framework; path = Carthage/Build/iOS/MapboxAccounts.framework; sourceTree = "<group>"; };
 		35EB9A6920A1A89500CB1225 /* turn_left.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = turn_left.data; sourceTree = "<group>"; };
 		35ECAF2C2092275100DC3BC3 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		35F1F5921FD57EFD00F8E502 /* StyleManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleManagerTests.swift; sourceTree = "<group>"; };
@@ -1019,6 +1024,7 @@
 			files = (
 				35E9B0AD1F9E0F8F00BF84AB /* MapboxNavigation.framework in Frameworks */,
 				35C98736212E045200808B82 /* MapboxNavigationNative.framework in Frameworks */,
+				35E781B122B77B6E00DBBCD5 /* MapboxAccounts.framework in Frameworks */,
 				354A01CF1E66266100D765C2 /* MapboxDirections.framework in Frameworks */,
 				C57607B11F4CC9E800C27423 /* Solar.framework in Frameworks */,
 				C549F8321F17F2C5001A0A2D /* MapboxMobileEvents.framework in Frameworks */,
@@ -1034,6 +1040,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				35E781B022B77B5F00DBBCD5 /* MapboxAccounts.framework in Frameworks */,
 				C5EA98721F19414C00C8AA16 /* MapboxMobileEvents.framework in Frameworks */,
 				354A01B91E66256600D765C2 /* MapboxDirections.framework in Frameworks */,
 				35C98735212E042C00808B82 /* MapboxNavigationNative.framework in Frameworks */,
@@ -1471,6 +1478,7 @@
 		A9E2B43473B53369153F54C6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				35E781AF22B77B5000DBBCD5 /* MapboxAccounts.framework */,
 				8DFD949F2224ABE900152F45 /* SnappyShrimp.framework */,
 				8D424F26215ECA5D00432491 /* CoreLocation.framework */,
 				1603C890214351EE00167D95 /* Cedar.framework */,
