@@ -30,6 +30,9 @@
 		35002D691E5F6B2F0090E733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35002D661E5F6B1B0090E733 /* Main.storyboard */; };
 		3502231A205BC94E00E1449A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35022319205BC94E00E1449A /* Constants.swift */; };
 		35025F3F1F051DD2002BA3EA /* DialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35025F3E1F051DD2002BA3EA /* DialogViewController.swift */; };
+		3504DF7522B79B1D00D2FD3C /* MapboxAccounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3504DF7322B79AF300D2FD3C /* MapboxAccounts.framework */; };
+		3504DF7622B79B1D00D2FD3C /* MapboxAccounts.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3504DF7322B79AF300D2FD3C /* MapboxAccounts.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3504DF7722B79B2E00D2FD3C /* MapboxAccounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3504DF7322B79AF300D2FD3C /* MapboxAccounts.framework */; };
 		3507F9FB2134309E0086B39E /* MapboxGeocoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3507F9F92134305C0086B39E /* MapboxGeocoder.framework */; };
 		3507F9FC2134309E0086B39E /* MapboxGeocoder.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3507F9F92134305C0086B39E /* MapboxGeocoder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		350E2C5F22707EB80014CEB3 /* UIScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 350E2C5E22707EB80014CEB3 /* UIScreen.swift */; };
@@ -92,6 +95,9 @@
 		355832AB2192F60800141922 /* PipeFittersUnion-FourSeasonsBoston.json in Resources */ = {isa = PBXBuildFile; fileRef = 355832AA2192F60800141922 /* PipeFittersUnion-FourSeasonsBoston.json */; };
 		355832AD2192F7E300141922 /* PipeFittersUnion-FourSeasonsBoston.trace.json in Resources */ = {isa = PBXBuildFile; fileRef = 355832AC2192F7E300141922 /* PipeFittersUnion-FourSeasonsBoston.trace.json */; };
 		3559FE4F21C3195700B6613F /* NavigationPlotter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3559FE4E21C3195700B6613F /* NavigationPlotter.swift */; };
+		355B469B22B902C9009CE634 /* SKUTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355B469A22B902C9009CE634 /* SKUTests.swift */; };
+		355B469D22B9031E009CE634 /* SKUTestable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355B469C22B9031E009CE634 /* SKUTestable.swift */; };
+		355B469F22B904D3009CE634 /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 355B469E22B904D2009CE634 /* OHHTTPStubs.framework */; };
 		355DB5751EFA78070091BFB7 /* GGPark-to-BernalHeights.route in Resources */ = {isa = PBXBuildFile; fileRef = 355DB5741EFA78070091BFB7 /* GGPark-to-BernalHeights.route */; };
 		355DB5771EFA780E0091BFB7 /* UnionSquare-to-GGPark.route in Resources */ = {isa = PBXBuildFile; fileRef = 355DB5761EFA780E0091BFB7 /* UnionSquare-to-GGPark.route */; };
 		355ED3701FAB724F00BCE1B8 /* BottomBannerViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355ED36F1FAB724F00BCE1B8 /* BottomBannerViewLayout.swift */; };
@@ -531,6 +537,7 @@
 				C549F8331F17F2C5001A0A2D /* MapboxMobileEvents.framework in Embed Frameworks */,
 				35CC14181F79A434009E872A /* Turf.framework in Embed Frameworks */,
 				492B6F85213703EE0076D2C6 /* MapboxGeocoder.framework in Embed Frameworks */,
+				3504DF7622B79B1D00D2FD3C /* MapboxAccounts.framework in Embed Frameworks */,
 				354A01D51E6626AC00D765C2 /* MapboxCoreNavigation.framework in Embed Frameworks */,
 				C57607B21F4CC9E800C27423 /* Solar.framework in Embed Frameworks */,
 				35636E04215D621E00463343 /* MapboxNavigationNative.framework in Embed Frameworks */,
@@ -614,6 +621,7 @@
 		35002D671E5F6B1B0090E733 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		35022319205BC94E00E1449A /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		35025F3E1F051DD2002BA3EA /* DialogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogViewController.swift; sourceTree = "<group>"; };
+		3504DF7322B79AF300D2FD3C /* MapboxAccounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxAccounts.framework; path = Carthage/Build/iOS/MapboxAccounts.framework; sourceTree = "<group>"; };
 		3506DE39216E2ADE007DA352 /* OfflineRoutingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineRoutingTests.swift; sourceTree = "<group>"; };
 		3507F9F92134305C0086B39E /* MapboxGeocoder.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxGeocoder.framework; path = Carthage/Build/iOS/MapboxGeocoder.framework; sourceTree = "<group>"; };
 		350E2C5E22707EB80014CEB3 /* UIScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIScreen.swift; sourceTree = "<group>"; };
@@ -683,6 +691,9 @@
 		355832AA2192F60800141922 /* PipeFittersUnion-FourSeasonsBoston.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "PipeFittersUnion-FourSeasonsBoston.json"; sourceTree = "<group>"; };
 		355832AC2192F7E300141922 /* PipeFittersUnion-FourSeasonsBoston.trace.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "PipeFittersUnion-FourSeasonsBoston.trace.json"; sourceTree = "<group>"; };
 		3559FE4E21C3195700B6613F /* NavigationPlotter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationPlotter.swift; sourceTree = "<group>"; };
+		355B469A22B902C9009CE634 /* SKUTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKUTests.swift; sourceTree = "<group>"; };
+		355B469C22B9031E009CE634 /* SKUTestable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKUTestable.swift; sourceTree = "<group>"; };
+		355B469E22B904D2009CE634 /* OHHTTPStubs.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OHHTTPStubs.framework; path = Carthage/Build/iOS/OHHTTPStubs.framework; sourceTree = "<group>"; };
 		355DB5741EFA78070091BFB7 /* GGPark-to-BernalHeights.route */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "GGPark-to-BernalHeights.route"; sourceTree = "<group>"; };
 		355DB5761EFA780E0091BFB7 /* UnionSquare-to-GGPark.route */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "UnionSquare-to-GGPark.route"; sourceTree = "<group>"; };
 		355ED36F1FAB724F00BCE1B8 /* BottomBannerViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomBannerViewLayout.swift; sourceTree = "<group>"; };
@@ -1027,6 +1038,7 @@
 			files = (
 				35E9B0AD1F9E0F8F00BF84AB /* MapboxNavigation.framework in Frameworks */,
 				35C98736212E045200808B82 /* MapboxNavigationNative.framework in Frameworks */,
+				3504DF7522B79B1D00D2FD3C /* MapboxAccounts.framework in Frameworks */,
 				354A01CF1E66266100D765C2 /* MapboxDirections.framework in Frameworks */,
 				C57607B11F4CC9E800C27423 /* Solar.framework in Frameworks */,
 				C549F8321F17F2C5001A0A2D /* MapboxMobileEvents.framework in Frameworks */,
@@ -1042,6 +1054,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3504DF7722B79B2E00D2FD3C /* MapboxAccounts.framework in Frameworks */,
 				C5EA98721F19414C00C8AA16 /* MapboxMobileEvents.framework in Frameworks */,
 				354A01B91E66256600D765C2 /* MapboxDirections.framework in Frameworks */,
 				35C98735212E042C00808B82 /* MapboxNavigationNative.framework in Frameworks */,
@@ -1056,6 +1069,7 @@
 			files = (
 				3595FE49219190420035B765 /* TestHelper.framework in Frameworks */,
 				3525449D1E663D32004C8F1C /* MapboxCoreNavigation.framework in Frameworks */,
+				355B469F22B904D3009CE634 /* OHHTTPStubs.framework in Frameworks */,
 				1603C891214351EE00167D95 /* Cedar.framework in Frameworks */,
 				35B711D41E5E7AD2001EDA8D /* MapboxNavigation.framework in Frameworks */,
 			);
@@ -1177,6 +1191,7 @@
 				DA0557242155040700A1F2AA /* RouteTests.swift */,
 				DADD827F2161EC0300B8B47D /* UIViewAnimationOptionsTests.swift */,
 				DAE22A2821C9DEDA00CA269D /* MGLVectorTileSourceTests.swift */,
+				355B469C22B9031E009CE634 /* SKUTestable.swift */,
 			);
 			name = "Extensions and Categories";
 			sourceTree = "<group>";
@@ -1361,6 +1376,7 @@
 				35A43F78223BD836000CB367 /* BridgingTests.m */,
 				35BC7177226F6667003BB5F1 /* CompassViewTests.swift */,
 				35E5B962227B4B620033A124 /* CarPlayCompassViewTests.swift */,
+				355B469A22B902C9009CE634 /* SKUTests.swift */,
 			);
 			path = MapboxNavigationTests;
 			sourceTree = "<group>";
@@ -1482,6 +1498,8 @@
 		A9E2B43473B53369153F54C6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				355B469E22B904D2009CE634 /* OHHTTPStubs.framework */,
+				3504DF7322B79AF300D2FD3C /* MapboxAccounts.framework */,
 				8DFD949F2224ABE900152F45 /* SnappyShrimp.framework */,
 				8D424F26215ECA5D00432491 /* CoreLocation.framework */,
 				1603C890214351EE00167D95 /* Cedar.framework */,
@@ -2250,6 +2268,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/Nimble.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Cedar.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SnappyShrimp.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/OHHTTPStubs.framework",
 			);
 			name = "Carthage copy frameworks";
 			outputPaths = (
@@ -2458,6 +2477,7 @@
 				DADD82802161EC0300B8B47D /* UIViewAnimationOptionsTests.swift in Sources */,
 				8DFD949E221F66BE00152F45 /* BottomBannerSnapshotTests.swift in Sources */,
 				35A43F79223BD836000CB367 /* BridgingTests.m in Sources */,
+				355B469B22B902C9009CE634 /* SKUTests.swift in Sources */,
 				DAD17202214DB12B009C8161 /* CPMapTemplateTests.swift in Sources */,
 				35EFD009207CA5E800BF3873 /* ManeuverViewTests.swift in Sources */,
 				16E4F97F205B05FE00531791 /* MapboxVoiceControllerTests.swift in Sources */,
@@ -2479,6 +2499,7 @@
 				35B1AEBE20AD9C7800C8544E /* LeakTest.swift in Sources */,
 				16E3625C201265D600DF0592 /* ImageDownloadOperationSpy.swift in Sources */,
 				1662244B2029059C00EA4824 /* ImageCacheTests.swift in Sources */,
+				355B469D22B9031E009CE634 /* SKUTestable.swift in Sources */,
 				3510300F1F54B67000E3B7E7 /* LaneTests.swift in Sources */,
 				160A4A712127A46C0028B070 /* CPBarButton+MBTestable.m in Sources */,
 				169A970A216440820082A6A0 /* NavigationViewControllerTestDoubles.swift in Sources */,
