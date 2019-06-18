@@ -175,28 +175,24 @@ workflows:
     jobs:
       - build-job:
           name: "Xcode_10.2_iOS_12.2"
-          xcode: "10.2.0"
+          xcode: "10.2.1"
           iOS: "12.2"
-      - build-job:
-          name: "Xcode_10.1_iOS_12.1"
-          xcode: "10.1.0"
-          iOS: "12.1"
           codecoverage: true
       - build-job:
           name: "Xcode_10.1_iOS_9.3"
-          xcode: "10.1.0"
+          xcode: "10.2.1"
           iOS: "9.3"
           delete_private_deps: true
           test: false
       - pod-job:
           name: "Xcode_10.2_iOS_12.2_CP_install"
           update: false
-          xcode: "10.2.0"
+          xcode: "10.2.1"
           iOS: "12.2"
       - pod-job:
           name: "Xcode_10.2_iOS_12.2_CP_update"
           update: true
-          xcode: "10.2.0"
+          xcode: "10.2.1"
           iOS: "12.2"
           lint: true
       - xcode-10-examples

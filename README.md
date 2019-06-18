@@ -24,7 +24,7 @@ Get up and running in a few minutes with our drop-in turn-by-turn navigation `Na
 
 ## Requirements
 
-The Mapbox Navigation SDK and Core Navigation are compatible with applications written in Swift 4.2 or Objective-C in Xcode 10.0. The Mapbox Navigation and Mapbox Core Navigation frameworks run on iOS 9.0 and above.
+The Mapbox Navigation SDK and Core Navigation are compatible with applications written in Swift 5.0 or Objective-C in Xcode 10.2.1. The Mapbox Navigation and Mapbox Core Navigation frameworks run on iOS 9.0 and above.
 
 The last release compatible with Swift 3.2 was v0.10.1.
 

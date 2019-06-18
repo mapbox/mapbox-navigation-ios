@@ -1,6 +1,8 @@
 import UIKit
 import CoreLocation
 import MapboxDirections
+import MapboxAccounts
+
 
 @objc(MBNavigationSimulationIntent)
 public enum SimulationIntent: Int{
@@ -225,6 +227,7 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
     @objc convenience init(route: Route) {
         self.init(route: route, directions: nil, locationSource: nil, eventsManagerType: nil)
     }
+    
     /**
      Intializes a new `NavigationService`.
      
@@ -339,6 +342,9 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
     }
     
     public func stop() {
+        
+        MBXAccounts.resetSession()
+        
         nativeLocationSource.stopUpdatingHeading()
         nativeLocationSource.stopUpdatingLocation()
         
