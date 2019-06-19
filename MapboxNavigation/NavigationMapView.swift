@@ -438,17 +438,24 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         showRoutes(routes)
         showWaypoints(active)
         
-        fit(to: active, facing: 0, padding: padding, animated: animated)
+        let topDownCamera = camera
+        topDownCamera.pitch = 0
+        
+        fit(to: active, for: topDownCamera, facing: 0, padding: padding, animated: animated)
     }
     
-    func fit(to route: Route, facing direction:CLLocationDirection = 0, padding: UIEdgeInsets = NavigationMapView.defaultPadding, animated: Bool = false) {
+    func fit(to route: Route, for camera: MGLMapCamera, facing direction:CLLocationDirection = 0, padding: UIEdgeInsets = NavigationMapView.defaultPadding, animated: Bool = false) {
         guard let coords = route.coordinates, !coords.isEmpty else { return }
       
         setUserTrackingMode(.none, animated: false)
         let line = MGLPolyline(coordinates: coords, count: UInt(coords.count))
-        let camera = cameraThatFitsShape(line, direction: direction, edgePadding: padding)
         
-        setCamera(camera, animated: animated)
+        let customCamera = camera
+        customCamera.heading = direction
+        
+        let fittedCamera = self.camera(customCamera, fitting: line, edgePadding: padding)
+        
+        setCamera(fittedCamera, animated: animated)
     }
     
     /**

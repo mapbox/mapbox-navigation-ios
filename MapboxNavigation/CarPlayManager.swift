@@ -447,7 +447,9 @@ extension CarPlayManager {
 
         let traitCollection = (self.carWindow?.rootViewController as! CarPlayMapViewController).traitCollection
         let previewMapTemplate = mapTemplateProvider.mapTemplate(forPreviewing: trip, traitCollection: traitCollection, mapDelegate: self)
-
+        
+        carPlayMapViewController?.mapView.routes = routes
+        
         previewMapTemplate.showTripPreviews([trip], textConfiguration: previewText)
         
         guard let interfaceController = interfaceController else {

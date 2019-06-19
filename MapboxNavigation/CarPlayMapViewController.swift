@@ -212,7 +212,7 @@ public class CarPlayMapViewController: UIViewController {
         }
         
         if isOverviewingRoutes {
-            mapView.fit(to: active, animated: false)
+            mapView.fit(to: active, for: mapView.camera, animated: false)
         }
     }
 }
