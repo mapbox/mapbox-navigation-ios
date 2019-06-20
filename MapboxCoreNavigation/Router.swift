@@ -59,7 +59,7 @@ public protocol RouterDataSource {
     /**
      If true, the `RouteController` attempts to calculate a more optimal route for the user on an interval defined by `RouteControllerProactiveReroutingInterval`.
      */
-    @objc var reroutesProactively: Bool { get }
+    @objc var reroutesProactively: Bool { get set }
     
     /**
      Advances the leg index.
