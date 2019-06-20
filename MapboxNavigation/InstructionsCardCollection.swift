@@ -141,19 +141,13 @@ open class InstructionsCardCollection: UIViewController {
         NSLayoutConstraint.activate(instructionCollectionViewContraints)
     }
     
-//    fileprivate func updateInstructionsCardDataSource(for progress: RouteProgress) {
-//        updateInstructionCollectionView()
-//        reloadDataSource()
-//    }
-    
-//    func updateInstructionCollectionView() {
-//        guard let steps = steps else { return }
-//        instructionCollectionView.contentSize = calculateNeededSpace(count: steps.count)
-//    }
-    
     func reloadDataSource() {
-        if isInPreview && previewIndexPath.row < steps!.endIndex - 1 {
-            updateVisibleInstructionCards(from: previewIndexPath.row)
+        if isInPreview {
+            if previewIndexPath.row < steps!.endIndex - 1 {
+                updateVisibleInstructionCards(at: [previewIndexPath], previewEnabled: true)
+            } else {
+                instructionCollectionView.reloadData()
+            }
         } else {
             if currentStepIndex == nil, let progress = routeProgress {
                 currentStepIndex = progress.currentLegProgress.stepIndex
@@ -162,22 +156,20 @@ open class InstructionsCardCollection: UIViewController {
                 currentStepIndex = progress.currentLegProgress.stepIndex
                 instructionCollectionView.reloadData()
             } else {
-                instructionCollectionView.reloadItems(at: instructionCollectionView.indexPathsForVisibleItems)
+                updateVisibleInstructionCards(at: instructionCollectionView.indexPathsForVisibleItems)
             }
         }
     }
     
-    func updateVisibleInstructionCards(from start: Int, to end: Int? = nil) {
-        /*
-        guard let steps = steps, steps.count > 1, start < steps.endIndex else { return }
-        let limit = end ?? steps.count
-        guard start < limit else { return }
-        let indexPaths = IndexPath(indexes: start..<limit)
-        let containers: [InstructionsCardContainerView] = indexPaths.compactMap { instructionsCardContainerView(at: IndexPath(row: $0, section: 0)) }
-        let activeCards: [InstructionsCardView] = indexPaths.compactMap { instructionsCardView(at: IndexPath(row: $0, section: 0))}
-        */
-        /* TODO: Optimization goal */
-        
+    func updateVisibleInstructionCards(at indexPaths: [IndexPath], previewEnabled: Bool = false) {
+        guard let distances = distancesFromCurrentLocationToManeuver else { return }
+        for index in indexPaths.startIndex..<indexPaths.endIndex {
+            let indexPath = indexPaths[index]
+            if let container = instructionContainerView(at: indexPath), indexPath.row < distances.endIndex {
+                let distance = distances[indexPath.row]
+                container.updateInstructionCard(distance: distance, previewEnabled: previewEnabled)
+            }
+        }
     }
     
     func snapToIndexPath(_ indexPath: IndexPath) {
@@ -201,41 +193,12 @@ open class InstructionsCardCollection: UIViewController {
         return cell.subviews[1] as? InstructionsCardContainerView
     }
     
-    fileprivate func instructionsCardView(at index: IndexPath) -> InstructionsCardView? {
-        guard let cell = instructionCollectionView.cellForItem(at: index),
-                  cell.subviews.count > 1 else {
-            return nil
-        }
-        
-        guard let containerView = cell.subviews[1] as? InstructionsCardContainerView, let stackView = containerView.subviews[0] as? UIStackView else {
-            return nil
-        }
-        
-        return stackView.subviews[0] as? InstructionsCardView
-    }
-    
-    fileprivate func secondaryInstructionView(at index: IndexPath) -> UIView? {
-        guard let containerView = instructionContainerView(at: index), let stackView = containerView.subviews[0] as? UIStackView, stackView.subviews.count > 1 else {
-            return nil
-        }
-        
-        return stackView.subviews[1]
-    }
-    
-    fileprivate func instructionsCardContainerView(at indexPath: IndexPath) -> InstructionsCardContainerView? {
-        guard let cell = instructionCollectionView.cellForItem(at: indexPath), cell.subviews.count > 1 else {
-            return nil
-        }
-        
-        return cell.subviews[1] as? InstructionsCardContainerView
-    }
-    
     fileprivate func calculateNeededSpace(count: Int) -> CGSize {
         let cardSize = instructionsCardLayout.itemSize
         return CGSize(width: (cardSize.width + 10) * CGFloat(count), height: cardSize.height)
     }
     
-    fileprivate func calculateIndexToSnapTo() -> IndexPath {
+    fileprivate func snappedIndexPath() -> IndexPath {
         guard let collectionView = instructionsCardLayout.collectionView, let itemCount = steps?.count else {
             return IndexPath(row: 0, section: 0)
         }
@@ -245,29 +208,8 @@ open class InstructionsCardCollection: UIViewController {
         
         return IndexPath(row: indexInBounds, section: 0)
     }
-}
-
-extension InstructionsCardCollection: UICollectionViewDelegate {
-    public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        indexBeforeSwipe = calculateIndexToSnapTo()
-        contentOffsetBeforeSwipe = scrollView.contentOffset
-    }
     
-    public func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        let indexPath = scrollTargetIndexPath(for: scrollView, with: velocity, targetContentOffset: targetContentOffset)
-        snapToIndexPath(indexPath)
-        
-        isInPreview = true
-        let previewIndex = indexPath.row
-        previewIndexPath = indexPath
-        
-        if isInPreview, let steps = steps, previewIndex < steps.endIndex {
-            let previewStep = steps[previewIndex]
-            cardCollectionDelegate?.instructionsCardCollection(self, previewFor: previewStep)
-        }
-    }
-    
-    func scrollTargetIndexPath(for scrollView: UIScrollView, with velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) -> IndexPath {
+    fileprivate func scrollTargetIndexPath(for scrollView: UIScrollView, with velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) -> IndexPath {
         targetContentOffset.pointee = scrollView.contentOffset
         
         let itemCount = steps?.count ?? 0
@@ -296,6 +238,27 @@ extension InstructionsCardCollection: UICollectionViewDelegate {
         }
         
         return scrollTargetIndexPath
+    }
+}
+
+extension InstructionsCardCollection: UICollectionViewDelegate {
+    public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        indexBeforeSwipe = snappedIndexPath()
+        contentOffsetBeforeSwipe = scrollView.contentOffset
+    }
+    
+    public func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        let indexPath = scrollTargetIndexPath(for: scrollView, with: velocity, targetContentOffset: targetContentOffset)
+        snapToIndexPath(indexPath)
+        
+        isInPreview = true
+        let previewIndex = indexPath.row
+        previewIndexPath = indexPath
+        
+        if isInPreview, let steps = steps, previewIndex < steps.endIndex {
+            let previewStep = steps[previewIndex]
+            cardCollectionDelegate?.instructionsCardCollection(self, previewFor: previewStep)
+        }
     }
 }
 
@@ -335,20 +298,8 @@ extension InstructionsCardCollection: NavigationComponent {
     }
     
     public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
-//        guard isSnapAndRemove,
-//            let containerView = instructionsCardContainerView(at: IndexPath(row: 0, section: 0)),
-//            let stackView = containerView.subviews.first as? UIStackView,
-//            let activeCard = stackView.subviews.first as? InstructionsCardView else { return }
-//        activeCard.update(for: instruction)
-//        
-//        // TODO: This needs to be a container view
-//        guard let childView = secondaryInstructionView(at: IndexPath(row: 0, section: 0)) else { return }
-//
-//        if let laneView = childView as? LanesView {
-//            laneView.update(for: instruction)
-//        } else if let nextBannerView = childView as? NextBannerView {
-//            nextBannerView.update(for: instruction)
-//        }
+        self.routeProgress = routeProgress
+        reloadDataSource()
     }
 }
 
