@@ -5,11 +5,7 @@ import MapboxCoreNavigation
 class InstructionsCardCell: UICollectionViewCell {
     
     var container: InstructionsCardContainerView!
-    var style: InstructionsCardStyle = DayInstructionsCardStyle() {
-        didSet {
-            container.prepareLayout(for: style)
-        }
-    }
+    var style: InstructionsCardStyle = DayInstructionsCardStyle()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -37,6 +33,8 @@ class InstructionsCardCell: UICollectionViewCell {
     func setupConstraints() {
         container.translatesAutoresizingMaskIntoConstraints = false
         container.topAnchor.constraint(equalTo: topAnchor, constant: 2).isActive = true
+        container.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
+        container.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
     }
     
     override func layoutSubviews() {
@@ -45,9 +43,10 @@ class InstructionsCardCell: UICollectionViewCell {
     }
     
     func configure(for step: RouteStep, distance: CLLocationDistance, previewEnabled: Bool) {
-        container.updateInstruction(for: step, distance: distance, previewEnabled: previewEnabled)
         addSubview(container)
         setupConstraints()
+        container.prepareLayout(for: style)
+        container.updateInstruction(for: step, distance: distance, previewEnabled: previewEnabled)
     }
 }
 

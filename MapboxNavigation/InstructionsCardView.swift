@@ -28,11 +28,6 @@ public class InstructionsCardView: BaseInstructionsBannerView {
         showStepIndicator = false
     }
     
-    override open func layoutSubviews() {
-        super.layoutSubviews()
-        gradientLayer.frame = bounds
-    }
-    
     public func prepareLayout(for style: InstructionsCardStyle) {
         self.style = style
         prepareLayout()
@@ -50,7 +45,6 @@ public class InstructionsCardView: BaseInstructionsBannerView {
     }
     
     func prepareLayout() {
-        prepareCardDeck(style)
         prepareManeuver(style)
         prepareDistance(style)
         preparePrimaryLabel(style)
@@ -78,20 +72,5 @@ public class InstructionsCardView: BaseInstructionsBannerView {
     fileprivate func prepareSecondaryLabel(_ style: InstructionsCardStyle) {
         secondaryLabel.normalFont = style.secondaryLabelNormalFont
         secondaryLabel.normalTextColor = style.secondaryLabelTextColor
-    }
-    
-    fileprivate func prepareCardDeck(_ style: InstructionsCardStyle) {
-        backgroundColor = .clear
-        
-        if gradientLayer == nil {
-            gradientLayer = CAGradientLayer()
-            layer.insertSublayer(gradientLayer, at: 0)
-        }
-        
-        let alphaComponent = InstructionsCardConstants.backgroundColorAlphaComponent
-        gradientLayer.colors = [
-            style.backgroundColor.cgColor,
-            style.backgroundColor.withAlphaComponent(alphaComponent).cgColor
-        ]
     }
 }

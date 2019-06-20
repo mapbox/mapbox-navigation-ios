@@ -70,8 +70,9 @@ public class InstructionsCardContainerView: UIView {
     }
     
     public func prepareLayout(for style: InstructionsCardStyle) {
+        self.style = style
+        self.instructionsCardView.style = style
         commonInit()
-        instructionsCardView.prepareLayout(for: style)
     }
     
     public func updateBackgroundColor(highlightEnabled: Bool) {
@@ -109,14 +110,16 @@ public class InstructionsCardContainerView: UIView {
     }
     
     private func prepareLayout() {
-        instructionsCardView.prepareLayout()
         
         setGradientLayer(for: self)
+        setGradientLayer(for: instructionsCardView)
         setGradientLayer(for: lanesView)
         setGradientLayer(for: nextBannerView)
         
         layer.cornerRadius = style.cornerRadius
         layer.masksToBounds = true
+        
+        instructionsCardView.prepareLayout()
     }
     
     @discardableResult private func setGradientLayer(for view: UIView) -> UIView {
@@ -185,10 +188,11 @@ public class InstructionsCardContainerView: UIView {
         
         // TODO: Merge Instructions Card, Lanes & Next Banner View Instructions
         guard let instruction = step.instructionsDisplayedAlongStep?.last else { return }
-        updateInstruction(instruction, previewEnabled: previewEnabled)
+        updateInstruction(instruction)
+        updateInstructionCard(distance: distance, previewEnabled: previewEnabled)
     }
     
-    public func updateInstruction(_ instruction: VisualInstructionBanner, previewEnabled: Bool = false) {
+    public func updateInstruction(_ instruction: VisualInstructionBanner) {
         if lanesView.isHidden {
             lanesView.update(for: instruction)
         } else if lanesView.isCurrentlyVisible && instruction.tertiaryInstruction == nil {
@@ -201,13 +205,17 @@ public class InstructionsCardContainerView: UIView {
         } else if nextBannerView.isCurrentlyVisible && instruction.tertiaryInstruction?.text == nil {
             nextBannerView.hide()
         }
-        
-        if !previewEnabled, let distance = instructionsCardView.distanceFromCurrentLocation {
-            let highlightEnabled = distance < InstructionsCardConstants.highlightDistance
-            updateBackgroundColor(highlightEnabled: highlightEnabled)
-        } else {
+    }
+    
+    public func updateInstructionCard(distance: CLLocationDistance, previewEnabled: Bool) {
+        let previewDisabled = !previewEnabled
+        guard previewDisabled else {
             updateBackgroundColor(highlightEnabled: false)
+            return
         }
+        instructionsCardView.updateDistanceFromCurrentLocation(distance)
+        let highlightEnabled = distance < InstructionsCardConstants.highlightDistance
+        updateBackgroundColor(highlightEnabled: highlightEnabled)
     }
     
     func highlightContainerView() {
@@ -218,6 +226,7 @@ public class InstructionsCardContainerView: UIView {
                       style.highlightedBackgroundColor.withAlphaComponent(alphaComponent).cgColor]
         
         let containerGradientLayer = gradientLayer(for: self)
+        var instructionsCardViewGradientLayer = gradientLayer(for: instructionsCardView)
         var lanesViewGradientLayer = gradientLayer(for: lanesView)
         var nextBannerGradientLayer = gradientLayer(for: nextBannerView)
         
@@ -231,6 +240,11 @@ public class InstructionsCardContainerView: UIView {
             nextBannerGradientLayer = view.layer.sublayers?.first as? CAGradientLayer
         }
         
+        if instructionsCardViewGradientLayer == nil {
+            let view = setGradientLayer(for: instructionsCardView)
+            instructionsCardViewGradientLayer = view.layer.sublayers?.first as? CAGradientLayer
+        }
+        
         UIView.animate(withDuration: duration, animations: {
             if let lanesViewGradientLayer = lanesViewGradientLayer {
                 self.highlightLanesView(lanesViewGradientLayer, colors: colors)
@@ -242,6 +256,10 @@ public class InstructionsCardContainerView: UIView {
             
             if let containerGradientLayer = containerGradientLayer {
                 containerGradientLayer.colors = colors
+            }
+            
+            if let instructionsCardViewGradientLayer = instructionsCardViewGradientLayer {
+                instructionsCardViewGradientLayer.colors = colors
             }
             
             self.highlightInstructionsCardView(colors: colors)
@@ -269,7 +287,6 @@ public class InstructionsCardContainerView: UIView {
     }
     
     fileprivate func highlightInstructionsCardView(colors: [CGColor]) {
-        instructionsCardView.gradientLayer.colors = colors
         // primary & secondary labels
         instructionsCardView.primaryLabel.normalTextColor = style.primaryLabelHighlightedTextColor
         instructionsCardView.secondaryLabel.normalTextColor = style.secondaryLabelHighlightedTextColor
