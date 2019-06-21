@@ -301,6 +301,12 @@ extension InstructionsCardCollection: NavigationComponent {
         self.routeProgress = routeProgress
         reloadDataSource()
     }
+    
+    public func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
+        self.currentStepIndex = nil
+        self.routeProgress = service.routeProgress
+        reloadDataSource()
+    }
 }
 
 extension InstructionsCardCollection: InstructionsCardContainerViewDelegate {
