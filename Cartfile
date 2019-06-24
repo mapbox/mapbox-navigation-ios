@@ -1,5 +1,5 @@
 binary "https://mapbox.s3.amazonaws.com/mapbox-accounts/ios/MapboxAccounts.json" ~> 0.0.1
-binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" ~> 5.1.0-beta.1
+binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" ~> 5.1
 binary "https://www.mapbox.com/ios-sdk/MapboxNavigationNative.json" ~> 6.2.1
 github "mapbox/MapboxDirections.swift" "maxspeedAnnotations"
 github "mapbox/turf-swift" ~> 0.3
