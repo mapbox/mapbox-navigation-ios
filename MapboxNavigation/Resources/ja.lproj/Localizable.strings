@@ -7,9 +7,6 @@
 /* Message on arrival action sheet */
 "CARPLAY_ARRIVED_MESSAGE" = "ご希望の操作を教えて下さい";
 
-/* Title on continue button in CarPlay */
-"CARPLAY_CONTINUE" = "運行を続ける";
-
 /* Name of the waypoint associated with the current location */
 "CARPLAY_CURRENT_LOCATION" = "現在地";
 
@@ -33,9 +30,6 @@
 
 /* Title for mute button */
 "CARPLAY_MUTE" = "消音";
-
-/* CPNavigationAlert OK button title */
-"CARPLAY_OK" = "OK";
 
 /* Title for overview button in CPTripPreviewTextConfiguration */
 "CARPLAY_OVERVIEW" = "全体を見る";
@@ -61,9 +55,6 @@
 /* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "閉じる";
 
-/* End Navigation Button Text */
-"END_NAVIGATION" = "ナビゲーションを終了する";
-
 /* Title used for arrival */
 "END_OF_ROUTE_ARRIVED" = "目的地に到着しました";
 
@@ -84,12 +75,6 @@
 
 /* Feedback type for Other Map Issue Issue */
 "FEEDBACK_GENERAL_ISSUE" = "その他、地図の問題";
-
-/* Feedback type for Missing Exit */
-"FEEDBACK_MISSING_EXIT" = "出口を間違えた";
-
-/* Feedback type for Missing Road */
-"FEEDBACK_MISSING_ROAD" = "道を間違えた";
 
 /* Feedback type for a maneuver that is Not Allowed */
 "FEEDBACK_NOT_ALLOWED" = "ルートが法規に反する";
@@ -131,7 +116,7 @@
 "RESUME" = "再開する";
 
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
-"USER_IN_SIMULATION_MODE" = "%dにてナビのシュミレーションを行う";
+"USER_IN_SIMULATION_MODE" = "Simulating Navigation at %@×";
 
 /* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
 "WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%2$@経由で%1$@に向かう";
