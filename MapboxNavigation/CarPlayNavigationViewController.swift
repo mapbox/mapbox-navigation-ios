@@ -11,7 +11,7 @@ import CarPlay
  */
 @available(iOS 12.0, *)
 @objc(MBCarPlayNavigationViewController)
-public class CarPlayNavigationViewController: UIViewController {
+public class CarPlayNavigationViewController: UIViewController, NavigationMapViewDelegate {
     /**
      The view controller’s delegate.
      */
