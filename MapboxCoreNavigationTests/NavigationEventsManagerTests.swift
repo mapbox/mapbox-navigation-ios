@@ -52,9 +52,9 @@ class NavigationEventsManagerTests: XCTestCase {
         let durationBetweenDepartAndReroute = rerouteEvent.created.timeIntervalSince(departEvent.startTimestamp!)
         let durationBetweenRerouteAndArrive = arriveEvent.arrivalTimestamp!.timeIntervalSince(rerouteEvent.created)
         
-        XCTAssertEqual(Int(round(durationBetweenDepartAndArrive)), 1041)
-        XCTAssertEqual(Int(round(durationBetweenDepartAndReroute)), 225)
-        XCTAssertEqual(Int(round(durationBetweenRerouteAndArrive)), 816)
+        XCTAssertEqual(durationBetweenDepartAndArrive, 1041, accuracy: 1)
+        XCTAssertEqual(durationBetweenDepartAndReroute, 225, accuracy: 1)
+        XCTAssertEqual(durationBetweenRerouteAndArrive, 816, accuracy: 1)
         XCTAssertEqual(arriveEvent.rerouteCount, 1)
     }
 }
