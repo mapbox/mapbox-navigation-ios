@@ -13,7 +13,7 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>ld</string>
 			<key>other</key>
-			<string>Ṣeto% ld-star rating</string>
+			<string>Ṣeto %ld-star rating</string>
 		</dict>
 	</dict>
 	<key>RATING_STARS_FORMAT</key>
@@ -27,7 +27,7 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>ld</string>
 			<key>other</key>
-			<string>% ld awọn irawọ ṣeto.</string>
+			<string>%ld awọn irawọ ṣeto.</string>
 		</dict>
 	</dict>
 </dict>
