@@ -670,6 +670,9 @@
 		353EC9D61FB09708002EB0AB /* StepsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepsViewController.swift; sourceTree = "<group>"; };
 		3540514C1F73F3BB00ED572D /* route-with-straight-roundabout.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "route-with-straight-roundabout.json"; sourceTree = "<group>"; };
 		3540514E1F73F3F300ED572D /* ManeuverViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManeuverViewTests.swift; sourceTree = "<group>"; };
+		354691B022C0D97000626C4F /* yo */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = yo; path = yo.lproj/Localizable.strings; sourceTree = "<group>"; };
+		354691B122C0D97000626C4F /* yo */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = yo; path = yo.lproj/Localizable.strings; sourceTree = "<group>"; };
+		354691B222C0D97000626C4F /* yo */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = yo; path = Resources/yo.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		354A01B81E66256600D765C2 /* MapboxDirections.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxDirections.framework; path = Carthage/Build/iOS/MapboxDirections.framework; sourceTree = "<group>"; };
 		354A01BC1E66259600D765C2 /* Polyline.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Polyline.framework; path = Carthage/Build/iOS/Polyline.framework; sourceTree = "<group>"; };
 		354A9BC520EA991900F03325 /* SessionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionState.swift; sourceTree = "<group>"; };
@@ -2038,6 +2041,7 @@
 				"pt-PT",
 				ko,
 				ja,
+				yo,
 			);
 			mainGroup = C5ADFBBF1DDCC7840011824B;
 			productRefGroup = C5ADFBCA1DDCC7840011824B /* Products */;
@@ -2814,6 +2818,7 @@
 				DAE26B23206441F7001D6E1F /* pt-PT */,
 				DAFEB36D2093A11F00A86A83 /* ko */,
 				DA9059B2223B1758006E8B46 /* ja */,
+				354691B022C0D97000626C4F /* yo */,
 			);
 			name = Localizable.strings;
 			path = Resources;
@@ -2860,6 +2865,7 @@
 				DA73F87820BF851B0067649B /* de */,
 				DA9059B0223B1347006E8B46 /* hu */,
 				DA9059B5223B1778006E8B46 /* ja */,
+				354691B222C0D97000626C4F /* yo */,
 			);
 			name = Localizable.stringsdict;
 			sourceTree = "<group>";
@@ -2887,6 +2893,7 @@
 				DAE26B272064742F001D6E1F /* ar */,
 				DAFEB36E2093A3E000A86A83 /* ko */,
 				DA9059B4223B1770006E8B46 /* ja */,
+				354691B122C0D97000626C4F /* yo */,
 			);
 			name = Localizable.strings;
 			path = Resources;
