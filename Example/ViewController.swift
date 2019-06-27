@@ -513,10 +513,7 @@ extension ViewController: InstructionsCardCollectionDelegate {
     
     public func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardCollection, previewFor step: RouteStep) {
         
-        guard let firstRoute = routes?.first else { return }
-        
-        let service = navigationService(route: firstRoute)
-        let route = service.route
+        guard let route = routes?.first else { return }
         
         // find the leg that contains the step, legIndex, and stepIndex
         guard let leg = route.legs.first(where: { $0.steps.contains(step) }),
