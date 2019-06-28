@@ -50,11 +50,16 @@ open class InstructionsCardCollection: UIViewController {
         guard let progress = routeProgress, let steps = steps else { return nil }
         let distanceRemaining = progress.currentLegProgress.currentStepProgress.distanceRemaining
         let distanceBetweenSteps = [distanceRemaining] + progress.remainingSteps.map {$0.distance}
+        guard let firstDistance = distanceBetweenSteps.first else { return nil }
+        var distancesFromCurrentLocationToManeuver = [CLLocationDistance](repeating: 0, count: steps.count)
+        distancesFromCurrentLocationToManeuver[0] = firstDistance
         
-        let distancesFromCurrentLocationToManeuver: [CLLocationDistance] = steps.enumerated().map { (index, _) in
+        for index in 1..<distancesFromCurrentLocationToManeuver.endIndex {
             let safeIndex = index < distanceBetweenSteps.endIndex ? index : distanceBetweenSteps.endIndex - 1
-            let cardDistance = distanceBetweenSteps[0...safeIndex].reduce(0, +)
-            return cardDistance > 5 ? cardDistance : 0
+            let previousDistance = distanceBetweenSteps[safeIndex-1]
+            let currentDistance = distanceBetweenSteps[safeIndex]
+            let cardDistance = previousDistance + currentDistance
+            distancesFromCurrentLocationToManeuver[index] = cardDistance > 5 ? cardDistance : 0
         }
         return distancesFromCurrentLocationToManeuver
     }
