@@ -292,7 +292,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        
         if shouldManageApplicationIdleTimer {
             UIApplication.shared.isIdleTimerDisabled = true
         }
