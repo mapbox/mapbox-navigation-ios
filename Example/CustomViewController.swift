@@ -151,8 +151,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
             controller.view.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
             
             controller.didMove(toParent: self)
-            controller.dropDownAnimation()
-            
+            view.layoutIfNeeded()
             stepsViewController = controller
             return
         }

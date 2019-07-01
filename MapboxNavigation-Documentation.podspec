@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
   # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.name = "MapboxNavigation-Documentation"
-  s.version = "0.33.0"
+  s.version = "0.35.0"
   s.summary = "Complete turn-by-turn navigation interface for iOS."
 
   s.description  = <<-DESC
@@ -47,7 +47,7 @@ Pod::Spec.new do |s|
 
   s.dependency "MapboxDirections.swift", "~> 0.28.0"
   s.dependency "MapboxGeocoder.swift", "~> 0.10.0"
-  s.dependency "Mapbox-iOS-SDK", "~> 4.3"
+  s.dependency "Mapbox-iOS-SDK", "~> 5.1"
   s.dependency "MapboxMobileEvents", "~> 0.8.1"
   s.dependency "Solar", "~> 2.1"
   s.dependency "Turf", "~> 0.3.0"

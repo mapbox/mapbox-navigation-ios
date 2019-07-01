@@ -35,3 +35,14 @@ public let MBCongestionAttribute = "congestion"
  The minimum volume for the device before a gentle warning is emitted when beginning navigation.
  */
 public let NavigationViewMinimumVolumeForWarning: Float = 0.3
+
+extension Notification.Name {
+    
+    /**
+     Posted when `StyleManager` applies a style that was triggered by change of time of day, or when entering or exiting a tunnel.
+     
+     This notification is the equivalent of `StyleManagerDelegate.styleManager(_:didApply:)`.
+     The user info dictionary contains the key `StyleManagerNotificationUserInfoKey.style` and `StyleManagerNotificationUserInfoKey.styleManager`.
+     */
+    public static let styleManagerDidApplyStyle = NSNotification.Name.MBStyleManagerDidApplyStyle
+}

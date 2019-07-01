@@ -60,7 +60,7 @@ public class NavigationSettings: NSObject {
         let properties = Mirror(reflecting: self).children
         return properties.filter({ (child) -> Bool in
             if let label = child.label {
-                return label != "properties.storage"
+                return label != "properties.storage" && label != "$__lazy_storage_$_properties"
             }
             return false
         })

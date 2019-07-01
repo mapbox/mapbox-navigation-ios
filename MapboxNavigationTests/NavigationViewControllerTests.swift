@@ -234,10 +234,28 @@ class NavigationViewControllerTests: XCTestCase {
         viewController.present(navigationViewController, animated: false, completion: nil)
         
         let firstInstruction = route.legs[0].steps[0].instructionsDisplayedAlongStep!.first
-        let instructionsBannerView = navigationViewController.mapViewController!.instructionsBannerView
+        let topViewController = navigationViewController.topViewController as! TopBannerViewController
+        let instructionsBannerView = topViewController.instructionsBannerView
         
         XCTAssertNotNil(instructionsBannerView.primaryLabel.text)
         XCTAssertEqual(instructionsBannerView.primaryLabel.text, firstInstruction?.primaryInstruction.text)
+    }
+    
+    func testBannerInjection() {
+        class BottomBannerFake: ContainerViewController { }
+        class TopBannerFake: ContainerViewController { }
+        
+        let top = TopBannerFake(nibName: nil, bundle: nil)
+        let bottom = BottomBannerFake(nibName: nil, bundle: nil)
+        
+        let fakeOptions = NavigationOptions(topBanner: top, bottomBanner: bottom)
+        let route = Fixture.route(from: "DCA-Arboretum")
+        
+        let subject = NavigationViewController(for: route, options: fakeOptions)
+        XCTAssert(subject.topViewController == top, "Top banner not injected properly into NVC")
+        XCTAssert(subject.bottomViewController == bottom, "Bottom banner not injected properly into NVC")
+        XCTAssert(subject.mapViewController!.children.contains(top), "Top banner not found in child VC heirarchy")
+        XCTAssert(subject.mapViewController!.children.contains(bottom), "Bottom banner not found in child VC heirarchy")
     }
     
     private func annotationFilter(matching coordinate: CLLocationCoordinate2D) -> ((MGLAnnotation) -> Bool) {

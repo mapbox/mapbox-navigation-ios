@@ -126,11 +126,12 @@ public class Fixture: NSObject {
         }
     }
     
-    public class func generateTrace(for route: Route) -> [CLLocation] {
+    public class func generateTrace(for route: Route, speedMultiplier: Double = 1) -> [CLLocation] {
         
         let traceCollector = TraceCollector()
         let locationManager = SimulatedLocationManager(route: route)
         locationManager.delegate = traceCollector
+        locationManager.speedMultiplier = speedMultiplier
         
         while locationManager.currentDistance < route.distance {
             locationManager.tick()
