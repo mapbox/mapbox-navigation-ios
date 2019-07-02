@@ -247,8 +247,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
             updateMapStyle(currentStyle, animated: false)
         }
         
-        //Do not start the navigation session until after you create the MapViewController, otherwise you'll miss important messages.
-        self.navigationService.start()
         
         mapViewController.view.pinInSuperview()
         mapViewController.reportButton.isHidden = !showsReportFeedback
@@ -278,6 +276,10 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         // Initialize voice controller if it hasn't been overridden.
         // This is optional and lazy so it can be mutated by the developer after init.
         _ = voiceController
+        
+        //start the navigation service on presentation.
+        self.navigationService.start()
+        
         view.clipsToBounds = true
 
  
