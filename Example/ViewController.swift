@@ -100,12 +100,14 @@ class ViewController: UIViewController {
         let night: ActionHandler = {_ in self.startNavigation(styles: [NightStyle()]) }
         let custom: ActionHandler = {_ in self.startCustomNavigation() }
         let styled: ActionHandler = {_ in self.startStyledNavigation() }
+        let guidanceCards: ActionHandler = {_ in self.startGuidanceCardsNavigation() }
         
         let actionPayloads: [(String, UIAlertAction.Style, ActionHandler?)] = [
             ("Default UI", .default, basic),
             ("DayStyle UI", .default, day),
             ("NightStyle UI", .default, night),
             ("Custom UI", .default, custom),
+            ("Guidance Card UI", .default, guidanceCards),
             ("Styled UI", .default, styled),
             ("Cancel", .cancel, nil)
         ]
@@ -240,9 +242,6 @@ class ViewController: UIViewController {
     func navigationViewController(navigationService: NavigationService) -> NavigationViewController {
         let route = navigationService.route
         let options = NavigationOptions( navigationService: navigationService)
-        let topBanner = InstructionsCardCollection()
-        topBanner.cardCollectionDelegate = self
-        options.topBanner = topBanner
         
         let navigationViewController = NavigationViewController(for: route, options: options)
         navigationViewController.delegate = self
@@ -289,6 +288,21 @@ class ViewController: UIViewController {
 
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
+    
+    // MARK: Guidance Cards
+    func startGuidanceCardsNavigation() {
+        guard let route = routes?.first else { return }
+        
+        let instructionsCardCollection = InstructionsCardCollection()
+        instructionsCardCollection.cardCollectionDelegate = self
+        
+        let options = NavigationOptions(navigationService: navigationService(route: route), topBanner: instructionsCardCollection)
+        let navigationViewController = NavigationViewController(for: route, options: options)
+        navigationViewController.delegate = self
+        
+        presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
+    }
+    
 
     func navigationService(route: Route) -> NavigationService {
         let simulate = simulationButton.isSelected
@@ -509,37 +523,5 @@ extension ViewController: VisualInstructionDelegate {
 }
 
 
-extension ViewController: InstructionsCardCollectionDelegate {
-    
-    public func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardCollection, previewFor step: RouteStep) {
-        
-        guard let route = routes?.first else { return }
-        
-        // find the leg that contains the step, legIndex, and stepIndex
-        guard let leg = route.legs.first(where: { $0.steps.contains(step) }),
-            let legIndex = route.legs.index(of: leg),
-            let stepIndex = leg.steps.index(of: step) else {
-                return
-        }
-        
-        // find the upcoming manuever step, and update instructions banner to show preview
-        guard stepIndex + 1 < leg.steps.endIndex, let mapView = activeNavigationViewController?.mapView else { return }
-        let maneuverStep = leg.steps[stepIndex + 1]
-        
-        // stop tracking user, and move camera to step location
-        mapView.tracksUserCourse = false
-        mapView.userTrackingMode = .none
-        mapView.enableFrameByFrameCourseViewTracking(for: 1)
-        mapView.setCenter(maneuverStep.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: maneuverStep.initialHeading!, animated: true, completionHandler: nil)
-        
-        // add arrow to map for preview instruction
-        mapView.addArrow(route: route, legIndex: legIndex, stepIndex: stepIndex + 1)
-    }
-    
-    public func primaryLabel(_ primaryLabel: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
-        // Override to customize the primary label displayed on the visible instructions card.
-        return nil
-    }
-}
 
 
