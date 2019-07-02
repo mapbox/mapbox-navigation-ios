@@ -76,11 +76,9 @@ public class InstructionsCardContainerView: UIView {
     }
     
     public func updateBackgroundColor(highlightEnabled: Bool) {
-        if highlightEnabled {
-            highlightContainerView()
-        } else {
-            prepareLayout()
-        }
+        prepareLayout()
+        guard highlightEnabled else { return }
+        highlightContainerView()
     }
     
     func commonInit() {
@@ -110,7 +108,6 @@ public class InstructionsCardContainerView: UIView {
     }
     
     private func prepareLayout() {
-        
         setGradientLayer(for: self)
         setGradientLayer(for: instructionsCardView)
         setGradientLayer(for: lanesView)
@@ -182,14 +179,14 @@ public class InstructionsCardContainerView: UIView {
         return firstLayer
     }
     
-    public func updateInstruction(for step: RouteStep, distance: CLLocationDistance, previewEnabled: Bool = false) {
+    public func updateInstruction(for step: RouteStep, distance: CLLocationDistance) {
         instructionsCardView.updateDistanceFromCurrentLocation(distance)
         instructionsCardView.step = step
         
         // TODO: Merge Instructions Card, Lanes & Next Banner View Instructions
         guard let instruction = step.instructionsDisplayedAlongStep?.last else { return }
         updateInstruction(instruction)
-        updateInstructionCard(distance: distance, previewEnabled: previewEnabled)
+        updateInstructionCard(distance: distance)
     }
     
     public func updateInstruction(_ instruction: VisualInstructionBanner) {
@@ -207,15 +204,10 @@ public class InstructionsCardContainerView: UIView {
         }
     }
     
-    public func updateInstructionCard(distance: CLLocationDistance, previewEnabled: Bool) {
-        let previewDisabled = !previewEnabled
-        guard previewDisabled else {
-            updateBackgroundColor(highlightEnabled: false)
-            return
-        }
-        instructionsCardView.updateDistanceFromCurrentLocation(distance)
+    public func updateInstructionCard(distance: CLLocationDistance) {
         let highlightEnabled = distance < InstructionsCardConstants.highlightDistance
         updateBackgroundColor(highlightEnabled: highlightEnabled)
+        instructionsCardView.updateDistanceFromCurrentLocation(distance)
     }
     
     func highlightContainerView() {

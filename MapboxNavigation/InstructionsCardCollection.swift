@@ -71,7 +71,6 @@ open class InstructionsCardCollection: UIViewController {
     
     fileprivate var contentOffsetBeforeSwipe = CGPoint(x: 0, y: 0)
     fileprivate var indexBeforeSwipe = IndexPath(row: 0, section: 0)
-    fileprivate var previewIndexPath = IndexPath(row: 0, section: 0)
     fileprivate var isSnapAndRemove = false
     fileprivate let cardCollectionCellIdentifier = "InstructionsCardCollectionCellID"
     fileprivate let collectionViewFlowLayoutMinimumSpacingDefault: CGFloat = 10.0
@@ -147,32 +146,24 @@ open class InstructionsCardCollection: UIViewController {
     }
     
     func reloadDataSource() {
-        if isInPreview {
-            if previewIndexPath.row < steps!.endIndex - 1 {
-                updateVisibleInstructionCards(at: [previewIndexPath], previewEnabled: true)
-            } else {
-                instructionCollectionView.reloadData()
-            }
+        if currentStepIndex == nil, let progress = routeProgress {
+            currentStepIndex = progress.currentLegProgress.stepIndex
+            instructionCollectionView.reloadData()
+        } else if let progress = routeProgress, let stepIndex = currentStepIndex, stepIndex != progress.currentLegProgress.stepIndex {
+            currentStepIndex = progress.currentLegProgress.stepIndex
+            instructionCollectionView.reloadData()
         } else {
-            if currentStepIndex == nil, let progress = routeProgress {
-                currentStepIndex = progress.currentLegProgress.stepIndex
-                instructionCollectionView.reloadData()
-            } else if let progress = routeProgress, let stepIndex = currentStepIndex, stepIndex != progress.currentLegProgress.stepIndex {
-                currentStepIndex = progress.currentLegProgress.stepIndex
-                instructionCollectionView.reloadData()
-            } else {
-                updateVisibleInstructionCards(at: instructionCollectionView.indexPathsForVisibleItems)
-            }
+            updateVisibleInstructionCards(at: instructionCollectionView.indexPathsForVisibleItems)
         }
     }
     
-    func updateVisibleInstructionCards(at indexPaths: [IndexPath], previewEnabled: Bool = false) {
+    func updateVisibleInstructionCards(at indexPaths: [IndexPath]) {
         guard let distances = distancesFromCurrentLocationToManeuver else { return }
         for index in indexPaths.startIndex..<indexPaths.endIndex {
             let indexPath = indexPaths[index]
             if let container = instructionContainerView(at: indexPath), indexPath.row < distances.endIndex {
                 let distance = distances[indexPath.row]
-                container.updateInstructionCard(distance: distance, previewEnabled: previewEnabled)
+                container.updateInstructionCard(distance: distance)
             }
         }
     }
@@ -258,7 +249,6 @@ extension InstructionsCardCollection: UICollectionViewDelegate {
         
         isInPreview = true
         let previewIndex = indexPath.row
-        previewIndexPath = indexPath
         
         if isInPreview, let steps = steps, previewIndex < steps.endIndex {
             let previewStep = steps[previewIndex]
@@ -284,7 +274,7 @@ extension InstructionsCardCollection: UICollectionViewDataSource {
         
         let step = steps[indexPath.row]
         let distance = distances[indexPath.row]
-        cell.configure(for: step, distance: distance, previewEnabled: isInPreview)
+        cell.configure(for: step, distance: distance)
         
         return cell
     }
