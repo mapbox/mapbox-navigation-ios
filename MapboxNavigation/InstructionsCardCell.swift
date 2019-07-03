@@ -42,11 +42,11 @@ class InstructionsCardCell: UICollectionViewCell {
         /* TODO: Smoothen animation here. */
     }
     
-    func configure(for step: RouteStep, distance: CLLocationDistance, previewEnabled: Bool) {
+    func configure(for step: RouteStep, distance: CLLocationDistance) {
         addSubview(container)
         setupConstraints()
         container.prepareLayout(for: style)
-        container.updateInstruction(for: step, distance: distance, previewEnabled: previewEnabled)
+        container.updateInstruction(for: step, distance: distance)
     }
 }
 

@@ -9,18 +9,18 @@ import MapboxCoreNavigation
      - parameter instructionsCardCollection: The instructions card collection instance.
      - parameter step: The step for the maneuver instruction in preview.
      */
-    @objc(instructionsCardCollection:previewFor:)
+    @objc(instructionsCardCollection:previewForStep:)
     func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardCollection, previewFor step: RouteStep)
     
     /**
      Offers the delegate the opportunity to customize the size of a prototype collection view cell per the associated trait collection.
      
      - parameter instructionsCardCollection: The instructions card collection instance.
-     - parameter cardSizeForTraitcollection: The trait collection associated to the current container view controller.
+     - parameter traitCollection: The traitCollection associated to the current container view controller.
      - returns: The preferred size of the cards for each cell in the instructions card collection.
      */
-    @objc(instructionsCardCollection:cardSizeForTraitcollection:)
-    optional func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardCollection, cardSizeForTraitcollection: UITraitCollection) -> CGSize
+    @objc(instructionsCardCollection:cardSizeForTraitCollection:)
+    optional func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardCollection, cardSizeFor traitCollection: UITraitCollection) -> CGSize
 }
 
 open class InstructionsCardCollection: UIViewController {
@@ -50,11 +50,16 @@ open class InstructionsCardCollection: UIViewController {
         guard let progress = routeProgress, let steps = steps else { return nil }
         let distanceRemaining = progress.currentLegProgress.currentStepProgress.distanceRemaining
         let distanceBetweenSteps = [distanceRemaining] + progress.remainingSteps.map {$0.distance}
+        guard let firstDistance = distanceBetweenSteps.first else { return nil }
+        var distancesFromCurrentLocationToManeuver = [CLLocationDistance](repeating: 0, count: steps.count)
+        distancesFromCurrentLocationToManeuver[0] = firstDistance
         
-        let distancesFromCurrentLocationToManeuver: [CLLocationDistance] = steps.enumerated().map { (index, _) in
+        for index in 1..<distancesFromCurrentLocationToManeuver.endIndex {
             let safeIndex = index < distanceBetweenSteps.endIndex ? index : distanceBetweenSteps.endIndex - 1
-            let cardDistance = distanceBetweenSteps[0...safeIndex].reduce(0, +)
-            return cardDistance > 5 ? cardDistance : 0
+            let previousDistance = distanceBetweenSteps[safeIndex-1]
+            let currentDistance = distanceBetweenSteps[safeIndex]
+            let cardDistance = previousDistance + currentDistance
+            distancesFromCurrentLocationToManeuver[index] = cardDistance > 5 ? cardDistance : 0
         }
         return distancesFromCurrentLocationToManeuver
     }
@@ -66,7 +71,6 @@ open class InstructionsCardCollection: UIViewController {
     
     fileprivate var contentOffsetBeforeSwipe = CGPoint(x: 0, y: 0)
     fileprivate var indexBeforeSwipe = IndexPath(row: 0, section: 0)
-    fileprivate var previewIndexPath = IndexPath(row: 0, section: 0)
     fileprivate var isSnapAndRemove = false
     fileprivate let cardCollectionCellIdentifier = "InstructionsCardCollectionCellID"
     fileprivate let collectionViewFlowLayoutMinimumSpacingDefault: CGFloat = 10.0
@@ -81,7 +85,7 @@ open class InstructionsCardCollection: UIViewController {
         super.viewDidLoad()
         
         /* TODO: Identify the traitCollections to define the width of the cards */
-        if let customSize = cardCollectionDelegate?.instructionsCardCollection?(self, cardSizeForTraitcollection: traitCollection) {
+        if let customSize = cardCollectionDelegate?.instructionsCardCollection?(self, cardSizeFor: traitCollection) {
             cardSize = customSize
         } else {
             cardSize = CGSize(width: Int(floor(view.frame.size.width * 0.82)), height: 200)
@@ -142,32 +146,24 @@ open class InstructionsCardCollection: UIViewController {
     }
     
     func reloadDataSource() {
-        if isInPreview {
-            if previewIndexPath.row < steps!.endIndex - 1 {
-                updateVisibleInstructionCards(at: [previewIndexPath], previewEnabled: true)
-            } else {
-                instructionCollectionView.reloadData()
-            }
+        if currentStepIndex == nil, let progress = routeProgress {
+            currentStepIndex = progress.currentLegProgress.stepIndex
+            instructionCollectionView.reloadData()
+        } else if let progress = routeProgress, let stepIndex = currentStepIndex, stepIndex != progress.currentLegProgress.stepIndex {
+            currentStepIndex = progress.currentLegProgress.stepIndex
+            instructionCollectionView.reloadData()
         } else {
-            if currentStepIndex == nil, let progress = routeProgress {
-                currentStepIndex = progress.currentLegProgress.stepIndex
-                instructionCollectionView.reloadData()
-            } else if let progress = routeProgress, let stepIndex = currentStepIndex, stepIndex != progress.currentLegProgress.stepIndex {
-                currentStepIndex = progress.currentLegProgress.stepIndex
-                instructionCollectionView.reloadData()
-            } else {
-                updateVisibleInstructionCards(at: instructionCollectionView.indexPathsForVisibleItems)
-            }
+            updateVisibleInstructionCards(at: instructionCollectionView.indexPathsForVisibleItems)
         }
     }
     
-    func updateVisibleInstructionCards(at indexPaths: [IndexPath], previewEnabled: Bool = false) {
+    func updateVisibleInstructionCards(at indexPaths: [IndexPath]) {
         guard let distances = distancesFromCurrentLocationToManeuver else { return }
         for index in indexPaths.startIndex..<indexPaths.endIndex {
             let indexPath = indexPaths[index]
             if let container = instructionContainerView(at: indexPath), indexPath.row < distances.endIndex {
                 let distance = distances[indexPath.row]
-                container.updateInstructionCard(distance: distance, previewEnabled: previewEnabled)
+                container.updateInstructionCard(distance: distance)
             }
         }
     }
@@ -253,7 +249,6 @@ extension InstructionsCardCollection: UICollectionViewDelegate {
         
         isInPreview = true
         let previewIndex = indexPath.row
-        previewIndexPath = indexPath
         
         if isInPreview, let steps = steps, previewIndex < steps.endIndex {
             let previewStep = steps[previewIndex]
@@ -279,7 +274,7 @@ extension InstructionsCardCollection: UICollectionViewDataSource {
         
         let step = steps[indexPath.row]
         let distance = distances[indexPath.row]
-        cell.configure(for: step, distance: distance, previewEnabled: isInPreview)
+        cell.configure(for: step, distance: distance)
         
         return cell
     }

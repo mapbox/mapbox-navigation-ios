@@ -3,7 +3,8 @@ enum CardFont: String {
     case bold
     
     static func create(_ type: CardFont, with size: CGFloat) -> UIFont! {
-        return type == .bold ? UIFont.boldSystemFont(ofSize: size) : UIFont.systemFont(ofSize: size)
+        let font = type == .bold ? UIFont.boldSystemFont(ofSize: size) : UIFont.systemFont(ofSize: size)
+        return font.adjustedFont
     }
 }
 
