@@ -288,6 +288,7 @@
 		AE5F8771209A082500F58FDB /* route-with-banner-instructions.json in Resources */ = {isa = PBXBuildFile; fileRef = AE5F8770209A082500F58FDB /* route-with-banner-instructions.json */; };
 		AE7DE6C421A47A03002653D1 /* CarPlaySearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7DE6C321A47A03002653D1 /* CarPlaySearchController.swift */; };
 		AE7DE6C621A47A23002653D1 /* CarPlaySearchController+ CPSearchTemplateDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7DE6C521A47A23002653D1 /* CarPlaySearchController+ CPSearchTemplateDelegate.swift */; };
+		AE87207E22CF97B900D7DAB7 /* InstructionsCardCollectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE87207D22CF97B900D7DAB7 /* InstructionsCardCollectionDelegate.swift */; };
 		AEC3AC9A2106703100A26F34 /* HighwayShield.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC3AC992106703100A26F34 /* HighwayShield.swift */; };
 		AED6285622CBE4CE00058A51 /* ViewController+GuidanceCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED6285522CBE4CE00058A51 /* ViewController+GuidanceCards.swift */; };
 		C51511D120EAC89D00372A91 /* CPMapTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51511D020EAC89D00372A91 /* CPMapTemplate.swift */; };
@@ -871,6 +872,7 @@
 		AE5F8770209A082500F58FDB /* route-with-banner-instructions.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-with-banner-instructions.json"; sourceTree = "<group>"; };
 		AE7DE6C321A47A03002653D1 /* CarPlaySearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlaySearchController.swift; sourceTree = "<group>"; };
 		AE7DE6C521A47A23002653D1 /* CarPlaySearchController+ CPSearchTemplateDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CarPlaySearchController+ CPSearchTemplateDelegate.swift"; sourceTree = "<group>"; };
+		AE87207D22CF97B900D7DAB7 /* InstructionsCardCollectionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsCardCollectionDelegate.swift; sourceTree = "<group>"; };
 		AE8B1B96207D2B2B003050F6 /* TunnelAuthorityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelAuthorityTests.swift; sourceTree = "<group>"; };
 		AEC3AC992106703100A26F34 /* HighwayShield.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighwayShield.swift; sourceTree = "<group>"; };
 		AED2156E208F7FEA009AA673 /* NavigationViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewControllerTests.swift; sourceTree = "<group>"; };
@@ -1529,6 +1531,7 @@
 				AE47A32122B1F6AD0096458C /* InstructionsCardCell.swift */,
 				AE47A32A22B1F6AE0096458C /* InstructionsCardContainerView.swift */,
 				AE47A32222B1F6AD0096458C /* InstructionsCardCollection.swift */,
+				AE87207D22CF97B900D7DAB7 /* InstructionsCardCollectionDelegate.swift */,
 				AE47A32422B1F6AD0096458C /* InstructionsCardStyle.swift */,
 				AE47A32622B1F6AE0096458C /* InstructionsCardView.swift */,
 				AE47A32722B1F6AE0096458C /* InstructionsCardViewLayout.swift */,
@@ -2431,6 +2434,7 @@
 				355ED3701FAB724F00BCE1B8 /* BottomBannerViewLayout.swift in Sources */,
 				351BEC0E1E5BCC72006FE110 /* DashedLineView.swift in Sources */,
 				35ECAF2D2092275100DC3BC3 /* UIImage.swift in Sources */,
+				AE87207E22CF97B900D7DAB7 /* InstructionsCardCollectionDelegate.swift in Sources */,
 				AE47A33022B1F6AE0096458C /* InstructionsCardView.swift in Sources */,
 				8DCB4248218A540A00D6FCAD /* NavigationComponent.swift in Sources */,
 				AE47A33222B1F6AE0096458C /* UIColor+InstructionsCard.swift in Sources */,
