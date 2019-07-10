@@ -293,7 +293,7 @@ class ViewController: UIViewController {
     func startGuidanceCardsNavigation() {
         guard let route = routes?.first else { return }
         
-        let instructionsCardCollection = InstructionsCardCollection()
+        let instructionsCardCollection = InstructionsCardViewController()
         instructionsCardCollection.cardCollectionDelegate = self
         
         let options = NavigationOptions(navigationService: navigationService(route: route), topBanner: instructionsCardCollection)
@@ -521,7 +521,3 @@ extension ViewController: VisualInstructionDelegate {
         return presented
     }
 }
-
-
-
-

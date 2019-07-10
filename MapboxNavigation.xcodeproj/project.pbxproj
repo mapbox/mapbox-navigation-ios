@@ -280,7 +280,7 @@
 		AE291FFF20975A7E00F23DFC /* NavigationViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED2156E208F7FEA009AA673 /* NavigationViewControllerTests.swift */; };
 		AE46F95520EA735B00537AC2 /* VisualInstruction.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE46F95420EA735B00537AC2 /* VisualInstruction.swift */; };
 		AE47A32B22B1F6AE0096458C /* InstructionsCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47A32122B1F6AD0096458C /* InstructionsCardCell.swift */; };
-		AE47A32C22B1F6AE0096458C /* InstructionsCardCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47A32222B1F6AD0096458C /* InstructionsCardCollection.swift */; };
+		AE47A32C22B1F6AE0096458C /* InstructionsCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47A32222B1F6AD0096458C /* InstructionsCardViewController.swift */; };
 		AE47A32D22B1F6AE0096458C /* InstructionsCard+Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47A32322B1F6AD0096458C /* InstructionsCard+Font.swift */; };
 		AE47A32E22B1F6AE0096458C /* InstructionsCardStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47A32422B1F6AD0096458C /* InstructionsCardStyle.swift */; };
 		AE47A32F22B1F6AE0096458C /* DayInstructionsCardStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47A32522B1F6AD0096458C /* DayInstructionsCardStyle.swift */; };
@@ -289,11 +289,11 @@
 		AE47A33222B1F6AE0096458C /* UIColor+InstructionsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47A32822B1F6AE0096458C /* UIColor+InstructionsCard.swift */; };
 		AE47A33322B1F6AE0096458C /* Constants+InstructionsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47A32922B1F6AE0096458C /* Constants+InstructionsCard.swift */; };
 		AE47A33422B1F6AE0096458C /* InstructionsCardContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47A32A22B1F6AE0096458C /* InstructionsCardContainerView.swift */; };
-		AE47A33722B27D8D0096458C /* InstructionsCardSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47A33522B27D8D0096458C /* InstructionsCardSnapshotTests.swift */; };
 		AE47A33822B27D8D0096458C /* InstructionsCardCollectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47A33622B27D8D0096458C /* InstructionsCardCollectionTests.swift */; };
 		AE5F8771209A082500F58FDB /* route-with-banner-instructions.json in Resources */ = {isa = PBXBuildFile; fileRef = AE5F8770209A082500F58FDB /* route-with-banner-instructions.json */; };
 		AE7DE6C421A47A03002653D1 /* CarPlaySearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7DE6C321A47A03002653D1 /* CarPlaySearchController.swift */; };
 		AE7DE6C621A47A23002653D1 /* CarPlaySearchController+ CPSearchTemplateDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7DE6C521A47A23002653D1 /* CarPlaySearchController+ CPSearchTemplateDelegate.swift */; };
+		AE87207E22CF97B900D7DAB7 /* InstructionsCardCollectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE87207D22CF97B900D7DAB7 /* InstructionsCardCollectionDelegate.swift */; };
 		AEC3AC9A2106703100A26F34 /* HighwayShield.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC3AC992106703100A26F34 /* HighwayShield.swift */; };
 		AED6285622CBE4CE00058A51 /* ViewController+GuidanceCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED6285522CBE4CE00058A51 /* ViewController+GuidanceCards.swift */; };
 		C51511D120EAC89D00372A91 /* CPMapTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51511D020EAC89D00372A91 /* CPMapTemplate.swift */; };
@@ -868,7 +868,7 @@
 		AE00A739209A2C38006A3DC7 /* StepsViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepsViewControllerTests.swift; sourceTree = "<group>"; };
 		AE46F95420EA735B00537AC2 /* VisualInstruction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualInstruction.swift; sourceTree = "<group>"; };
 		AE47A32122B1F6AD0096458C /* InstructionsCardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionsCardCell.swift; sourceTree = "<group>"; };
-		AE47A32222B1F6AD0096458C /* InstructionsCardCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionsCardCollection.swift; sourceTree = "<group>"; };
+		AE47A32222B1F6AD0096458C /* InstructionsCardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionsCardViewController.swift; sourceTree = "<group>"; };
 		AE47A32322B1F6AD0096458C /* InstructionsCard+Font.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "InstructionsCard+Font.swift"; sourceTree = "<group>"; };
 		AE47A32422B1F6AD0096458C /* InstructionsCardStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionsCardStyle.swift; sourceTree = "<group>"; };
 		AE47A32522B1F6AD0096458C /* DayInstructionsCardStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayInstructionsCardStyle.swift; sourceTree = "<group>"; };
@@ -877,11 +877,11 @@
 		AE47A32822B1F6AE0096458C /* UIColor+InstructionsCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+InstructionsCard.swift"; sourceTree = "<group>"; };
 		AE47A32922B1F6AE0096458C /* Constants+InstructionsCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Constants+InstructionsCard.swift"; sourceTree = "<group>"; };
 		AE47A32A22B1F6AE0096458C /* InstructionsCardContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionsCardContainerView.swift; sourceTree = "<group>"; };
-		AE47A33522B27D8D0096458C /* InstructionsCardSnapshotTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionsCardSnapshotTests.swift; sourceTree = "<group>"; };
 		AE47A33622B27D8D0096458C /* InstructionsCardCollectionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionsCardCollectionTests.swift; sourceTree = "<group>"; };
 		AE5F8770209A082500F58FDB /* route-with-banner-instructions.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-with-banner-instructions.json"; sourceTree = "<group>"; };
 		AE7DE6C321A47A03002653D1 /* CarPlaySearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlaySearchController.swift; sourceTree = "<group>"; };
 		AE7DE6C521A47A23002653D1 /* CarPlaySearchController+ CPSearchTemplateDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CarPlaySearchController+ CPSearchTemplateDelegate.swift"; sourceTree = "<group>"; };
+		AE87207D22CF97B900D7DAB7 /* InstructionsCardCollectionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsCardCollectionDelegate.swift; sourceTree = "<group>"; };
 		AE8B1B96207D2B2B003050F6 /* TunnelAuthorityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelAuthorityTests.swift; sourceTree = "<group>"; };
 		AEC3AC992106703100A26F34 /* HighwayShield.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighwayShield.swift; sourceTree = "<group>"; };
 		AED2156E208F7FEA009AA673 /* NavigationViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewControllerTests.swift; sourceTree = "<group>"; };
@@ -1378,7 +1378,6 @@
 				35A262B82050A5CD00AEFF6D /* InstructionsBannerViewSnapshotTests.swift */,
 				8DFD949D221F66BE00152F45 /* BottomBannerSnapshotTests.swift */,
 				AE47A33622B27D8D0096458C /* InstructionsCardCollectionTests.swift */,
-				AE47A33522B27D8D0096458C /* InstructionsCardSnapshotTests.swift */,
 				3510300E1F54B67000E3B7E7 /* LaneTests.swift */,
 				35B1AEBB20AD9B3C00C8544E /* LeaksSpec.swift */,
 				35B1AEBD20AD9C7800C8544E /* LeakTest.swift */,
@@ -1546,7 +1545,8 @@
 				AE47A32322B1F6AD0096458C /* InstructionsCard+Font.swift */,
 				AE47A32122B1F6AD0096458C /* InstructionsCardCell.swift */,
 				AE47A32A22B1F6AE0096458C /* InstructionsCardContainerView.swift */,
-				AE47A32222B1F6AD0096458C /* InstructionsCardCollection.swift */,
+				AE47A32222B1F6AD0096458C /* InstructionsCardViewController.swift */,
+				AE87207D22CF97B900D7DAB7 /* InstructionsCardCollectionDelegate.swift */,
 				AE47A32422B1F6AD0096458C /* InstructionsCardStyle.swift */,
 				AE47A32622B1F6AE0096458C /* InstructionsCardView.swift */,
 				AE47A32722B1F6AE0096458C /* InstructionsCardViewLayout.swift */,
@@ -2418,7 +2418,7 @@
 				35726EE81F0856E900AFA1B6 /* DayStyle.swift in Sources */,
 				AE47A32E22B1F6AE0096458C /* InstructionsCardStyle.swift in Sources */,
 				AE47A33122B1F6AE0096458C /* InstructionsCardViewLayout.swift in Sources */,
-				AE47A32C22B1F6AE0096458C /* InstructionsCardCollection.swift in Sources */,
+				AE47A32C22B1F6AE0096458C /* InstructionsCardViewController.swift in Sources */,
 				358E31D622562698009B3EC2 /* CarPayCompassView.swift in Sources */,
 				AE47A33322B1F6AE0096458C /* Constants+InstructionsCard.swift in Sources */,
 				8D9ADEA720A0C61A0067E845 /* GenericRouteShield.swift in Sources */,
@@ -2450,6 +2450,7 @@
 				355ED3701FAB724F00BCE1B8 /* BottomBannerViewLayout.swift in Sources */,
 				351BEC0E1E5BCC72006FE110 /* DashedLineView.swift in Sources */,
 				35ECAF2D2092275100DC3BC3 /* UIImage.swift in Sources */,
+				AE87207E22CF97B900D7DAB7 /* InstructionsCardCollectionDelegate.swift in Sources */,
 				AE47A33022B1F6AE0096458C /* InstructionsCardView.swift in Sources */,
 				8DCB4248218A540A00D6FCAD /* NavigationComponent.swift in Sources */,
 				AE47A33222B1F6AE0096458C /* UIColor+InstructionsCard.swift in Sources */,
@@ -2550,7 +2551,6 @@
 				160A4A712127A46C0028B070 /* CPBarButton+MBTestable.m in Sources */,
 				169A970A216440820082A6A0 /* NavigationViewControllerTestDoubles.swift in Sources */,
 				DAE22A2921C9DEDA00CA269D /* MGLVectorTileSourceTests.swift in Sources */,
-				AE47A33722B27D8D0096458C /* InstructionsCardSnapshotTests.swift in Sources */,
 				3573EA71215A5A9F009899D7 /* RouteControllerSnapshotTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -10,10 +10,10 @@ class InstructionsCardCollectionTests: XCTestCase {
         return Fixture.route(from: jsonFileName)
     }()
     
-    lazy var instructionsCardCollectionDataSource: (collection: InstructionsCardCollection, progress: RouteProgress, service: MapboxNavigationService, delegate: InstructionsCardCollectionDelegateSpy) = {
+    lazy var instructionsCardCollectionDataSource: (collection: InstructionsCardViewController, progress: RouteProgress, service: MapboxNavigationService, delegate: InstructionsCardCollectionDelegateSpy) = {
         let host = UIViewController(nibName: nil, bundle: nil)
         let container = UIView.forAutoLayout()
-        let subject = InstructionsCardCollection(nibName: nil, bundle: nil)
+        let subject = InstructionsCardViewController(nibName: nil, bundle: nil)
         let delegate = InstructionsCardCollectionDelegateSpy()
         subject.cardCollectionDelegate = delegate
         
@@ -150,7 +150,7 @@ class InstructionsCardCollectionDelegateSpy: NSObject, InstructionsCardCollectio
     
     var step: RouteStep? = nil
     
-    func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardCollection, previewFor step: RouteStep) {
+    func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardViewController, didPreview step: RouteStep) {
         self.step = step
     }
 }

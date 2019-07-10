@@ -4,7 +4,7 @@ import MapboxDirections
 
 extension ViewController: InstructionsCardCollectionDelegate {
     
-    public func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardCollection, previewFor step: RouteStep) {
+    public func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardViewController, didPreview step: RouteStep) {
         
         guard let route = routes?.first else { return }
         

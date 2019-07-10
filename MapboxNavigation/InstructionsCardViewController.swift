@@ -1,29 +1,7 @@
 import MapboxDirections
 import MapboxCoreNavigation
 
-@objc public protocol InstructionsCardCollectionDelegate: InstructionsCardContainerViewDelegate {
-    /**
-     Called when previewing the steps on the current route.
-     
-     Implementing this method will allow developers to move focus to the maneuver that corresponds to the step currently previewed.
-     - parameter instructionsCardCollection: The instructions card collection instance.
-     - parameter step: The step for the maneuver instruction in preview.
-     */
-    @objc(instructionsCardCollection:previewForStep:)
-    func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardCollection, previewFor step: RouteStep)
-    
-    /**
-     Offers the delegate the opportunity to customize the size of a prototype collection view cell per the associated trait collection.
-     
-     - parameter instructionsCardCollection: The instructions card collection instance.
-     - parameter traitCollection: The traitCollection associated to the current container view controller.
-     - returns: The preferred size of the cards for each cell in the instructions card collection.
-     */
-    @objc(instructionsCardCollection:cardSizeForTraitCollection:)
-    optional func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardCollection, cardSizeFor traitCollection: UITraitCollection) -> CGSize
-}
-
-open class InstructionsCardCollection: UIViewController {
+open class InstructionsCardViewController: UIViewController {
     typealias InstructionsCardCollectionLayout = UICollectionViewFlowLayout
     
     var routeProgress: RouteProgress?
@@ -51,16 +29,22 @@ open class InstructionsCardCollection: UIViewController {
         let distanceRemaining = progress.currentLegProgress.currentStepProgress.distanceRemaining
         let distanceBetweenSteps = [distanceRemaining] + progress.remainingSteps.map {$0.distance}
         guard let firstDistance = distanceBetweenSteps.first else { return nil }
-        var distancesFromCurrentLocationToManeuver = [CLLocationDistance](repeating: 0, count: steps.count)
-        distancesFromCurrentLocationToManeuver[0] = firstDistance
         
-        for index in 1..<distancesFromCurrentLocationToManeuver.endIndex {
+        var distancesFromCurrentLocationToManeuver = [CLLocationDistance]()
+        distancesFromCurrentLocationToManeuver.reserveCapacity(steps.count)
+        
+        var cumulativeDistance: CLLocationDistance = firstDistance > 5 ? firstDistance : 0
+        distancesFromCurrentLocationToManeuver.append(cumulativeDistance)
+        
+        for index in 1..<distanceBetweenSteps.endIndex {
             let safeIndex = index < distanceBetweenSteps.endIndex ? index : distanceBetweenSteps.endIndex - 1
             let previousDistance = distanceBetweenSteps[safeIndex-1]
             let currentDistance = distanceBetweenSteps[safeIndex]
             let cardDistance = previousDistance + currentDistance
-            distancesFromCurrentLocationToManeuver[index] = cardDistance > 5 ? cardDistance : 0
+            cumulativeDistance += cardDistance > 5 ? cardDistance : 0
+            distancesFromCurrentLocationToManeuver.append(cumulativeDistance)
         }
+        
         return distancesFromCurrentLocationToManeuver
     }
     
@@ -237,7 +221,7 @@ open class InstructionsCardCollection: UIViewController {
     }
 }
 
-extension InstructionsCardCollection: UICollectionViewDelegate {
+extension InstructionsCardViewController: UICollectionViewDelegate {
     public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         indexBeforeSwipe = snappedIndexPath()
         contentOffsetBeforeSwipe = scrollView.contentOffset
@@ -251,13 +235,13 @@ extension InstructionsCardCollection: UICollectionViewDelegate {
         let previewIndex = indexPath.row
         
         if isInPreview, let steps = steps, previewIndex < steps.endIndex {
-            let previewStep = steps[previewIndex]
-            cardCollectionDelegate?.instructionsCardCollection(self, previewFor: previewStep)
+            let step = steps[previewIndex]
+            cardCollectionDelegate?.instructionsCardCollection(self, didPreview: step)
         }
     }
 }
 
-extension InstructionsCardCollection: UICollectionViewDataSource {
+extension InstructionsCardViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return steps?.count ?? 0
     }
@@ -280,13 +264,13 @@ extension InstructionsCardCollection: UICollectionViewDataSource {
     }
 }
 
-extension InstructionsCardCollection: UICollectionViewDelegateFlowLayout {
+extension InstructionsCardViewController: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return cardSize
     }
 }
 
-extension InstructionsCardCollection: NavigationComponent {
+extension InstructionsCardViewController: NavigationComponent {
     public func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         routeProgress = progress
         reloadDataSource()
@@ -304,7 +288,7 @@ extension InstructionsCardCollection: NavigationComponent {
     }
 }
 
-extension InstructionsCardCollection: InstructionsCardContainerViewDelegate {
+extension InstructionsCardViewController: InstructionsCardContainerViewDelegate {
     
     public func primaryLabel(_ primaryLabel: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
         return cardCollectionDelegate?.primaryLabel?(primaryLabel, willPresent: instruction, as: presented)
@@ -315,7 +299,7 @@ extension InstructionsCardCollection: InstructionsCardContainerViewDelegate {
     }
 }
 
-extension InstructionsCardCollection: NavigationMapInteractionObserver {
+extension InstructionsCardViewController: NavigationMapInteractionObserver {
     public func navigationViewController(didCenterOn location: CLLocation) {
         stopPreview()
     }
