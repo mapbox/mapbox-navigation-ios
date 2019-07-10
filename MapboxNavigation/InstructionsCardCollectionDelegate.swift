@@ -9,8 +9,8 @@ import MapboxCoreNavigation
      - parameter instructionsCardCollection: The instructions card collection instance.
      - parameter step: The step for the maneuver instruction in preview.
      */
-    @objc(instructionsCardCollection:previewForStep:)
-    func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardCollection, previewFor step: RouteStep)
+    @objc(instructionsCardCollection:didPreviewStep:)
+    func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardViewController, didPreview step: RouteStep)
     
     /**
      Offers the delegate the opportunity to customize the size of a prototype collection view cell per the associated trait collection.
@@ -20,5 +20,5 @@ import MapboxCoreNavigation
      - returns: The preferred size of the cards for each cell in the instructions card collection.
      */
     @objc(instructionsCardCollection:cardSizeForTraitCollection:)
-    optional func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardCollection, cardSizeFor traitCollection: UITraitCollection) -> CGSize
+    optional func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardViewController, cardSizeFor traitCollection: UITraitCollection) -> CGSize
 }

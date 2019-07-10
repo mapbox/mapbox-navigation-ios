@@ -1,7 +1,7 @@
 import MapboxDirections
 import MapboxCoreNavigation
 
-open class InstructionsCardCollection: UIViewController {
+open class InstructionsCardViewController: UIViewController {
     typealias InstructionsCardCollectionLayout = UICollectionViewFlowLayout
     
     var routeProgress: RouteProgress?
@@ -29,16 +29,22 @@ open class InstructionsCardCollection: UIViewController {
         let distanceRemaining = progress.currentLegProgress.currentStepProgress.distanceRemaining
         let distanceBetweenSteps = [distanceRemaining] + progress.remainingSteps.map {$0.distance}
         guard let firstDistance = distanceBetweenSteps.first else { return nil }
-        var distancesFromCurrentLocationToManeuver = [CLLocationDistance](repeating: 0, count: steps.count)
-        distancesFromCurrentLocationToManeuver[0] = firstDistance
         
-        for index in 1..<distancesFromCurrentLocationToManeuver.endIndex {
+        var distancesFromCurrentLocationToManeuver = [CLLocationDistance]()
+        distancesFromCurrentLocationToManeuver.reserveCapacity(steps.count)
+        
+        var cumulativeDistance: CLLocationDistance = firstDistance > 5 ? firstDistance : 0
+        distancesFromCurrentLocationToManeuver.append(cumulativeDistance)
+        
+        for index in 1..<distanceBetweenSteps.endIndex {
             let safeIndex = index < distanceBetweenSteps.endIndex ? index : distanceBetweenSteps.endIndex - 1
             let previousDistance = distanceBetweenSteps[safeIndex-1]
             let currentDistance = distanceBetweenSteps[safeIndex]
             let cardDistance = previousDistance + currentDistance
-            distancesFromCurrentLocationToManeuver[index] = cardDistance > 5 ? cardDistance : 0
+            cumulativeDistance += cardDistance > 5 ? cardDistance : 0
+            distancesFromCurrentLocationToManeuver.append(cumulativeDistance)
         }
+        
         return distancesFromCurrentLocationToManeuver
     }
     
@@ -215,7 +221,7 @@ open class InstructionsCardCollection: UIViewController {
     }
 }
 
-extension InstructionsCardCollection: UICollectionViewDelegate {
+extension InstructionsCardViewController: UICollectionViewDelegate {
     public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         indexBeforeSwipe = snappedIndexPath()
         contentOffsetBeforeSwipe = scrollView.contentOffset
@@ -229,13 +235,13 @@ extension InstructionsCardCollection: UICollectionViewDelegate {
         let previewIndex = indexPath.row
         
         if isInPreview, let steps = steps, previewIndex < steps.endIndex {
-            let previewStep = steps[previewIndex]
-            cardCollectionDelegate?.instructionsCardCollection(self, previewFor: previewStep)
+            let step = steps[previewIndex]
+            cardCollectionDelegate?.instructionsCardCollection(self, didPreview: step)
         }
     }
 }
 
-extension InstructionsCardCollection: UICollectionViewDataSource {
+extension InstructionsCardViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return steps?.count ?? 0
     }
@@ -258,13 +264,13 @@ extension InstructionsCardCollection: UICollectionViewDataSource {
     }
 }
 
-extension InstructionsCardCollection: UICollectionViewDelegateFlowLayout {
+extension InstructionsCardViewController: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return cardSize
     }
 }
 
-extension InstructionsCardCollection: NavigationComponent {
+extension InstructionsCardViewController: NavigationComponent {
     public func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         routeProgress = progress
         reloadDataSource()
@@ -282,7 +288,7 @@ extension InstructionsCardCollection: NavigationComponent {
     }
 }
 
-extension InstructionsCardCollection: InstructionsCardContainerViewDelegate {
+extension InstructionsCardViewController: InstructionsCardContainerViewDelegate {
     
     public func primaryLabel(_ primaryLabel: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
         return cardCollectionDelegate?.primaryLabel?(primaryLabel, willPresent: instruction, as: presented)
@@ -293,7 +299,7 @@ extension InstructionsCardCollection: InstructionsCardContainerViewDelegate {
     }
 }
 
-extension InstructionsCardCollection: NavigationMapInteractionObserver {
+extension InstructionsCardViewController: NavigationMapInteractionObserver {
     public func navigationViewController(didCenterOn location: CLLocation) {
         stopPreview()
     }
