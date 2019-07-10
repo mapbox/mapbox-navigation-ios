@@ -1,10 +1,13 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## master
+## v0.35.0
 
+* Upgraded to [Mapbox Maps SDK for iOS v5.1.0](https://github.com/mapbox/mapbox-gl-native/releases/tag/ios-v5.1.0). ([#2134](https://github.com/mapbox/mapbox-navigation-ios/pull/2134))
 * Added the ability to define a custom view controller for the top banner via `NavigationOptions.topBanner`. ([#2121](https://github.com/mapbox/mapbox-navigation-ios/pull/2121))
 * StyleManager now posts a `StyleManagerDidApplyStyleNotification` when a style gets applied due to a change of day of time, or when entering or exiting a tunnel. ([#2148](https://github.com/mapbox/mapbox-navigation-ios/pull/2148))
-
+* Fixed a crash when presenting `NavigationViewController` on iOS 13.0. ([#2156](https://github.com/mapbox/mapbox-navigation-ios/pull/2156))
+* Added a setter to the `Router.reroutesProactively` property. ([#2157](https://github.com/mapbox/mapbox-navigation-ios/pull/2157))
+* Added a Yoruba localization. ([#2159](https://github.com/mapbox/mapbox-navigation-ios/pull/2159))
 
 ## v0.34.0
 

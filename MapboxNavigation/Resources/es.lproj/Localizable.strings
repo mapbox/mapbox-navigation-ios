@@ -1,11 +1,59 @@
+/* Delimiter between lines in an address when displayed inline */
+"ADDRESS_LINE_SEPARATOR" = ", ";
+
+/* Title on arrival action sheet */
+"CARPLAY_ARRIVED" = "Ha llegado";
+
+/* Message on arrival action sheet */
+"CARPLAY_ARRIVED_MESSAGE" = "What would you like to do?";
+
+/* Name of the waypoint associated with the current location */
+"CARPLAY_CURRENT_LOCATION" = "Ubicación actual";
+
+/* Title for dismiss button */
+"CARPLAY_DISMISS" = "Dismiss";
+
+/* Title for end navigation button */
+"CARPLAY_END" = "Terminar";
+
+/* Title on the exit button in the arrival form */
+"CARPLAY_EXIT_NAVIGATION" = "Terminar navegación";
+
+/* Title for feedback template in CarPlay */
+"CARPLAY_FEEDBACK" = "Feedback";
+
+/* Title for start button in CPTripPreviewTextConfiguration */
+"CARPLAY_GO" = "Ir";
+
+/* Title for alternative routes in CPTripPreviewTextConfiguration */
+"CARPLAY_MORE_ROUTES" = "Más rutas";
+
+/* Title for mute button */
+"CARPLAY_MUTE" = "Silenciar";
+
+/* Title for overview button in CPTripPreviewTextConfiguration */
+"CARPLAY_OVERVIEW" = "Overview";
+
+/* Title for rating template in CarPlay */
+"CARPLAY_RATE_RIDE" = "Calificar su viaje";
+
+/* Title on rate button in CarPlay */
+"CARPLAY_RATE_TRIP" = "Calificar su viaje";
+
+/* Message when search returned zero results in CarPlay */
+"CARPLAY_SEARCH_NO_RESULTS" = "No resueltos";
+
+/* Alert title that shows when feedback has been submitted */
+"CARPLAY_SUBMITTED_FEEDBACK" = "Submitted";
+
+/* Title for unmute button */
+"CARPLAY_UNMUTE" = "Unmute";
+
 /* Format string for indicating the device volume is low; 1 = device model */
 "DEVICE_VOLUME_LOW" = "Volumen de %@ está bajo";
 
 /* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "Cerrar";
-
-/* End Navigation Button Text */
-"END_NAVIGATION" = "Terminar navegación";
 
 /* Title used for arrival */
 "END_OF_ROUTE_ARRIVED" = "Ha llegado";
@@ -27,12 +75,6 @@
 
 /* Feedback type for Other Map Issue Issue */
 "FEEDBACK_GENERAL_ISSUE" = "Otra problema\nen la mapa";
-
-/* Feedback type for Missing Exit */
-"FEEDBACK_MISSING_EXIT" = "Falta\nsalida";
-
-/* Feedback type for Missing Road */
-"FEEDBACK_MISSING_ROAD" = "Falta\ncamino";
 
 /* Feedback type for a maneuver that is Not Allowed */
 "FEEDBACK_NOT_ALLOWED" = "Prohibido";
