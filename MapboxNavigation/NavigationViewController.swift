@@ -4,9 +4,6 @@ import MapboxDirections
 import MapboxSpeech
 import AVFoundation
 import Mapbox
-#if canImport(CarPlay)
-import CarPlay
-#endif
 
 /**
  A ContainerViewController is any UIViewController that conforms to the NavigationComponent messaging protocol.
