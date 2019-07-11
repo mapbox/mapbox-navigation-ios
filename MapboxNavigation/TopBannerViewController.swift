@@ -292,7 +292,6 @@ import MapboxDirections
         let instructionsView = StepInstructionsView(frame: instructionsBannerView.frame)
         instructionsView.heightAnchor.constraint(equalToConstant: instructionsBannerHeight).isActive = true
         
-        refreshAppearance(view: instructionsView, padding: topPaddingView)
         instructionsView.delegate = self
         instructionsView.distance = distance
         instructionsView.swipeable = true
@@ -323,17 +322,9 @@ import MapboxDirections
         }
     }
     
-    private func refreshAppearance(view: UIView, padding: UIView?) {
-        let viewType = type(of: view)
-        
-        let themedBackgroundColor = viewType.appearance().backgroundColor
-        view.backgroundColor = themedBackgroundColor
-        padding?.backgroundColor = themedBackgroundColor
-    }
     
     private func addInstructionsBanner() {
         informationStackView.insertArrangedSubview(instructionsBannerView, at: 0)
-        refreshAppearance(view: instructionsBannerView, padding: topPaddingView)
         instructionsBannerView.delegate = self
         instructionsBannerView.swipeable = true
     }
