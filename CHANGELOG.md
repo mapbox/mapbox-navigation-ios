@@ -1,5 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## master
+
+* Fixed an issue where InstructionsBannerView remained the same color after switching to a day or night style. ([#2178](https://github.com/mapbox/mapbox-navigation-ios/pull/2178))
+
 ## v0.35.0
 
 * Upgraded to [Mapbox Maps SDK for iOS v5.1.0](https://github.com/mapbox/mapbox-gl-native/releases/tag/ios-v5.1.0). ([#2134](https://github.com/mapbox/mapbox-navigation-ios/pull/2134))
