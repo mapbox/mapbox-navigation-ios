@@ -36,19 +36,10 @@ open class Style: NSObject {
      */
     @objc open var mapStyleURL: URL = MGLStyle.navigationGuidanceDayStyleURL
     
-    #if canImport(CarPlay)
     /**
-     URL of the style to display on the map when previewing a route, for example on CarPlay.
+     URL of the style to display on the map when previewing a route, for example on CarPlay or your own route preview map.
      */
     @objc open var previewMapStyleURL = MGLStyle.navigationPreviewDayStyleURL
-    #else
-    /**
-     URL of the style to display on the map when previewing a route.
-     
-     This property is currently unused by default, but you can use it to present your own route preview map.
-     */
-    @objc open var previewMapStyleURL = MGLStyle.navigationPreviewDayStyleURL
-    #endif
     
     /**
      Applies the style for all changed properties.
