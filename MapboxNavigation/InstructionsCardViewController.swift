@@ -114,7 +114,7 @@ open class InstructionsCardViewController: UIViewController {
             topPaddingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             topPaddingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             topPaddingView.bottomAnchor.constraint(equalTo: view.safeTopAnchor),
-            ]
+        ]
         
         NSLayoutConstraint.activate(topPaddingConstraints)
         
@@ -141,8 +141,15 @@ open class InstructionsCardViewController: UIViewController {
         }
     }
     
-    func updateVisibleInstructionCards(at indexPaths: [IndexPath]) {
-        guard let distances = distancesFromCurrentLocationToManeuver else { return }
+    @objc public func updateVisibleInstructionCards(at indexPaths: [IndexPath]) {
+        guard let legProgress = routeProgress?.currentLegProgress else { return }
+        let distances: [CLLocationDistance] = legProgress.remainingSteps.map { step in
+            guard legProgress.remainingSteps.first! == step else {
+                return step.distance
+            }
+            return legProgress.currentStepProgress.distanceRemaining
+        }
+        
         for index in indexPaths.startIndex..<indexPaths.endIndex {
             let indexPath = indexPaths[index]
             if let container = instructionContainerView(at: indexPath), indexPath.row < distances.endIndex {
@@ -248,15 +255,16 @@ extension InstructionsCardViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cardCollectionCellIdentifier, for: indexPath) as! InstructionsCardCell
         
-        guard let steps = steps, indexPath.row < steps.endIndex, let distances = distancesFromCurrentLocationToManeuver, indexPath.row < distances.endIndex else {
+        guard let steps = steps, indexPath.row < steps.endIndex, let distanceRemaining = routeProgress?.currentLegProgress.currentStepProgress.distanceRemaining else {
             return cell
         }
-
+        
         cell.style = cardStyle
         cell.container.delegate = self
         
         let step = steps[indexPath.row]
-        let distance = distances[indexPath.row]
+        let firstStep = indexPath.row == 0
+        let distance = firstStep ? distanceRemaining : step.distance
         cell.configure(for: step, distance: distance)
         
         return cell
