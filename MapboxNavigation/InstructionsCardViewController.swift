@@ -153,8 +153,7 @@ open class InstructionsCardViewController: UIViewController {
     }
     
     func snapToIndexPath(_ indexPath: IndexPath) {
-        let itemCount = collectionView(instructionCollectionView, numberOfItemsInSection: 0)
-        guard itemCount >= 0 && indexPath.row < itemCount else { return }
+        guard let itemCount = steps?.count, itemCount >= 0 && indexPath.row < itemCount else { return }
         instructionsCardLayout.collectionView?.scrollToItem(at: indexPath, at: .left, animated: true)
     }
     
