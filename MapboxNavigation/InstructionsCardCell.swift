@@ -2,17 +2,17 @@ import UIKit
 import MapboxDirections
 import MapboxCoreNavigation
 
-class InstructionsCardCell: UICollectionViewCell {
+public class InstructionsCardCell: UICollectionViewCell {
     
-    var container: InstructionsCardContainerView!
-    var style: InstructionsCardStyle = DayInstructionsCardStyle()
+    public var container: InstructionsCardContainerView!
+    public var style: InstructionsCardStyle = DayInstructionsCardStyle()
     
-    override init(frame: CGRect) {
+    override public init(frame: CGRect) {
         super.init(frame: frame)
         self.commonInit()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.commonInit()
     }
@@ -37,12 +37,12 @@ class InstructionsCardCell: UICollectionViewCell {
         container.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
     }
     
-    override func layoutSubviews() {
+    override public func layoutSubviews() {
         super.layoutSubviews()
         /* TODO: Smoothen animation here. */
     }
     
-    func configure(for step: RouteStep, distance: CLLocationDistance) {
+    public func configure(for step: RouteStep, distance: CLLocationDistance) {
         addSubview(container)
         setupConstraints()
         container.prepareLayout(for: style)
