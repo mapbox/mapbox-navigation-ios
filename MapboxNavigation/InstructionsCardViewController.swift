@@ -4,9 +4,9 @@ import MapboxCoreNavigation
 open class InstructionsCardViewController: UIViewController {
     typealias InstructionsCardCollectionLayout = UICollectionViewFlowLayout
     
-    var routeProgress: RouteProgress?
+    public var routeProgress: RouteProgress?
     var cardSize: CGSize = .zero
-    var cardStyle: DayInstructionsCardStyle = DayInstructionsCardStyle()
+    public var cardStyle: DayInstructionsCardStyle = DayInstructionsCardStyle()
     
     var instructionCollectionView: UICollectionView!
     var instructionsCardLayout: InstructionsCardCollectionLayout!
@@ -14,7 +14,7 @@ open class InstructionsCardViewController: UIViewController {
     public private(set) var isInPreview = false
     private var currentStepIndex: Int?
     
-    var steps: [RouteStep]? {
+    public var steps: [RouteStep]? {
         guard let stepIndex = routeProgress?.currentLegProgress.stepIndex, let steps = routeProgress?.currentLeg.steps else { return nil }
         var mutatedSteps = steps
         if mutatedSteps.count > 1 {
@@ -56,7 +56,7 @@ open class InstructionsCardViewController: UIViewController {
     fileprivate var contentOffsetBeforeSwipe = CGPoint(x: 0, y: 0)
     fileprivate var indexBeforeSwipe = IndexPath(row: 0, section: 0)
     fileprivate var isSnapAndRemove = false
-    fileprivate let cardCollectionCellIdentifier = "InstructionsCardCollectionCellID"
+    public let cardCollectionCellIdentifier = "InstructionsCardCollectionCellID"
     fileprivate let collectionViewFlowLayoutMinimumSpacingDefault: CGFloat = 10.0
     fileprivate let collectionViewPadding: CGFloat = 8.0
     
@@ -141,7 +141,7 @@ open class InstructionsCardViewController: UIViewController {
         }
     }
     
-    @objc public func updateVisibleInstructionCards(at indexPaths: [IndexPath]) {
+    @objc open func updateVisibleInstructionCards(at indexPaths: [IndexPath]) {
         guard let legProgress = routeProgress?.currentLegProgress else { return }
         let distances: [CLLocationDistance] = legProgress.remainingSteps.map { step in
             guard legProgress.remainingSteps.first! == step else {
@@ -170,7 +170,7 @@ open class InstructionsCardViewController: UIViewController {
         isInPreview = false
     }
     
-    fileprivate func instructionContainerView(at indexPath: IndexPath) -> InstructionsCardContainerView? {
+    public func instructionContainerView(at indexPath: IndexPath) -> InstructionsCardContainerView? {
         guard let cell = instructionCollectionView.cellForItem(at: indexPath),
             cell.subviews.count > 1 else {
                 return nil
@@ -252,7 +252,7 @@ extension InstructionsCardViewController: UICollectionViewDataSource {
         return steps?.count ?? 0
     }
     
-    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cardCollectionCellIdentifier, for: indexPath) as! InstructionsCardCell
         
         guard let steps = steps, indexPath.row < steps.endIndex, let distanceRemaining = routeProgress?.currentLegProgress.currentStepProgress.distanceRemaining else {
