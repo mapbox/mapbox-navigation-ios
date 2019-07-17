@@ -143,17 +143,14 @@ open class InstructionsCardViewController: UIViewController {
     
     @objc open func updateVisibleInstructionCards(at indexPaths: [IndexPath]) {
         guard let legProgress = routeProgress?.currentLegProgress else { return }
-        let distances: [CLLocationDistance] = legProgress.remainingSteps.map { step in
-            guard legProgress.remainingSteps.first! == step else {
-                return step.distance
-            }
-            return legProgress.currentStepProgress.distanceRemaining
-        }
+        let remainingSteps = legProgress.remainingSteps
+        guard let currentCardStep = remainingSteps.first else { return }
         
         for index in indexPaths.startIndex..<indexPaths.endIndex {
             let indexPath = indexPaths[index]
-            if let container = instructionContainerView(at: indexPath), indexPath.row < distances.endIndex {
-                let distance = distances[indexPath.row]
+            if let container = instructionContainerView(at: indexPath), indexPath.row < remainingSteps.endIndex {
+                let visibleStep = remainingSteps[indexPath.row]
+                let distance = currentCardStep == visibleStep ? legProgress.currentStepProgress.distanceRemaining : visibleStep.distance
                 container.updateInstructionCard(distance: distance)
             }
         }
