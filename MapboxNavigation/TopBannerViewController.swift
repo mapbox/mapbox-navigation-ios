@@ -161,14 +161,17 @@ import MapboxDirections
         
         let controller = StepsViewController(routeProgress: progress)
         controller.delegate = self
+        let topHeight = view.bounds.height
+        let stepsTableExtent = UIScreen.main.bounds.height - topHeight
         
         delegate?.topBanner?(self, willDisplayStepsController: controller)
         embed(controller, in: stepsContainer) { (parent, child) -> [NSLayoutConstraint] in
             child.view.translatesAutoresizingMaskIntoConstraints = false
             let pinningConstraints = child.view.constraintsForPinning(to: self.stepsContainer)
             let hideConstraints = self.stepsContainerHideConstraints
+            let stepsHeight = child.view.heightAnchor.constraint(equalToConstant: stepsTableExtent)
             
-            return pinningConstraints + hideConstraints + self.stepsContainerConstraints
+            return pinningConstraints + hideConstraints + self.stepsContainerConstraints + [stepsHeight]
         }
         stepsViewController = controller
         isDisplayingSteps = true
