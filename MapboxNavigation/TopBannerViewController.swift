@@ -158,20 +158,27 @@ import MapboxDirections
             return
         }
         
+        var stepsHeightConstraint: [NSLayoutConstraint] = []
+
         
         let controller = StepsViewController(routeProgress: progress)
         controller.delegate = self
-        let topHeight = view.bounds.height
-        let stepsTableExtent = UIScreen.main.bounds.height - topHeight
-        
+
         delegate?.topBanner?(self, willDisplayStepsController: controller)
         embed(controller, in: stepsContainer) { (parent, child) -> [NSLayoutConstraint] in
             child.view.translatesAutoresizingMaskIntoConstraints = false
+            
             let pinningConstraints = child.view.constraintsForPinning(to: self.stepsContainer)
             let hideConstraints = self.stepsContainerHideConstraints
-            let stepsHeight = child.view.heightAnchor.constraint(equalToConstant: stepsTableExtent)
+
             
-            return pinningConstraints + hideConstraints + self.stepsContainerConstraints + [stepsHeight]
+            if let bannerHostHeight = self.view.superview?.superview?.frame.height { 
+                print("Super: \(self.view.superview!.superview!)")
+                let inset = self.instructionsBannerHeight + self.view.safeArea.top
+                stepsHeightConstraint = [child.view.heightAnchor.constraint(equalToConstant: bannerHostHeight - inset)]
+            }
+            
+            return pinningConstraints + hideConstraints + self.stepsContainerConstraints + stepsHeightConstraint
         }
         stepsViewController = controller
         isDisplayingSteps = true
@@ -180,7 +187,7 @@ import MapboxDirections
         view.isUserInteractionEnabled = false
         
         let stepsInAnimation = {
-            NSLayoutConstraint.deactivate(self.stepsContainerHideConstraints)
+            NSLayoutConstraint.deactivate(self.stepsContainerHideConstraints + stepsHeightConstraint)
             NSLayoutConstraint.activate(self.stepsContainerShowConstraints)
             
             
