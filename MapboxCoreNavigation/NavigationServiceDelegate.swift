@@ -14,7 +14,7 @@ import MapboxDirections
  * Decide if the SDK should pause navigation when the user reaches an intermediate destination (for example, to show a interstitial modal UI)
  * Be informed when the SDK fails to fetch a new route
  * Be informed when the SDK is beginning or ending route-simulation
- * Be informed when the user is about to arrive, or has arrived at their destination
+ * Be informed when the user is approaching or has arrived at their destination
  */
 @objc public protocol NavigationServiceDelegate {
     /**
