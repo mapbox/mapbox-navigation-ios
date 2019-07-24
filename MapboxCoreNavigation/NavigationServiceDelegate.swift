@@ -12,9 +12,9 @@ import MapboxDirections
  * Customize visual / spoken instructions that are presented to the user
  * Decide if battery monitoring should be disabled
  * Decide if the SDK should pause navigation when the user reaches an intermediate destination (for example, to show a interstitial modal UI)
- * Be told when the SDK fails to fetch a new route
- * Be told when the SDK is beginning or ending route-simulation
- * Be told when the user is about to arrive, or has arrived at their destination
+ * Be informed when the SDK fails to fetch a new route
+ * Be informed when the SDK is beginning or ending route-simulation
+ * Be informed when the user is about to arrive, or has arrived at their destination
  */
 @objc public protocol NavigationServiceDelegate {
     /**
@@ -82,7 +82,6 @@ import MapboxDirections
      - parameter location: the guaranteed location, possibly snapped, associated with the progress update.
      - parameter rawLocation: the raw location, from the location manager, associated with the progress update.
      */
-    
     @objc(navigationService:didUpdateProgress:withLocation:rawLocation:)
     optional func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation)
     

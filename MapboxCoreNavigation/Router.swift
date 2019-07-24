@@ -4,6 +4,10 @@ import MapboxDirections
 
 @objc (MBRouterDataSource)
 public protocol RouterDataSource {
+    
+    /**
+    The location Provider for the `Router.` This class is designated as the object that will provide location updates when requested.
+    */
     var locationProvider: NavigationLocationManager.Type { get }
 }
 
