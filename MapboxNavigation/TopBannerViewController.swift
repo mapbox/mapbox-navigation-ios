@@ -158,12 +158,11 @@ import MapboxDirections
             return
         }
         
-        var stepsHeightConstraint: [NSLayoutConstraint] = []
-
-        
         let controller = StepsViewController(routeProgress: progress)
         controller.delegate = self
 
+        var stepsHeightPresizingConstraint: NSLayoutConstraint? = nil
+        
         delegate?.topBanner?(self, willDisplayStepsController: controller)
         embed(controller, in: stepsContainer) { (parent, child) -> [NSLayoutConstraint] in
             child.view.translatesAutoresizingMaskIntoConstraints = false
@@ -171,14 +170,15 @@ import MapboxDirections
             let pinningConstraints = child.view.constraintsForPinning(to: self.stepsContainer)
             let hideConstraints = self.stepsContainerHideConstraints
 
+            var constraints = pinningConstraints + hideConstraints + self.stepsContainerConstraints
             
             if let bannerHostHeight = self.view.superview?.superview?.frame.height { 
-                print("Super: \(self.view.superview!.superview!)")
                 let inset = self.instructionsBannerHeight + self.view.safeArea.top
-                stepsHeightConstraint = [child.view.heightAnchor.constraint(equalToConstant: bannerHostHeight - inset)]
+                stepsHeightPresizingConstraint = (child.view.heightAnchor.constraint(equalToConstant: bannerHostHeight - inset))
+                constraints.append(stepsHeightPresizingConstraint!)
             }
             
-            return pinningConstraints + hideConstraints + self.stepsContainerConstraints + stepsHeightConstraint
+            return constraints
         }
         stepsViewController = controller
         isDisplayingSteps = true
@@ -187,7 +187,8 @@ import MapboxDirections
         view.isUserInteractionEnabled = false
         
         let stepsInAnimation = {
-            NSLayoutConstraint.deactivate(self.stepsContainerHideConstraints + stepsHeightConstraint)
+            NSLayoutConstraint.deactivate(self.stepsContainerHideConstraints)
+            stepsHeightPresizingConstraint?.isActive = false
             NSLayoutConstraint.activate(self.stepsContainerShowConstraints)
             
             
