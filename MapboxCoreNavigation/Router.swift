@@ -6,11 +6,16 @@ import MapboxDirections
 public protocol RouterDataSource {
     
     /**
-    The location Provider for the `Router.` This class is designated as the object that will provide location updates when requested.
+    The location provider for the `Router.` This class is designated as the object that will provide location updates when requested.
     */
     var locationProvider: NavigationLocationManager.Type { get }
 }
 
+/**
+ A class conforming to the `Router` protocol tracks the user’s progress as they travel along a predetermined route. It calls methods on its `delegate`, which conforms to the `RouterDelegate` protocol, whenever significant events or decision points occur along the route. Despite its name, this protocol does not define the interface of a routing engine.
+ 
+ There are two concrete implementations of the `Router` protocol. `RouteController`, the default implementation, is capable of client-side routing and depends on the Mapbox Navigation Native framework. `LegacyRouteController` is an alternative implementation that does not have this dependency but must be used in conjunction with the Mapbox Directions API over a network connection.
+ */
 @objc public protocol Router: class, CLLocationManagerDelegate {
     
     /**

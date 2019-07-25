@@ -6,9 +6,15 @@ import MapboxCoreNavigation
 import MapboxDirections
 
 /**
- `MapboxVoiceController` extends the default `RouteVoiceController` by providing a more robust speech synthesizer via the Mapbox Speech API. `RouteVoiceController` will be used as a fallback during poor network conditions.
+ The Mapbox voice controller plays spoken instructions using the [MapboxSpeech](https://github.com/mapbox/mapbox-speech-swift/) framework.
  
- If you need text-to-speech functionality without NavigationService, use SpeechSynthesizer directly.
+ You initialize a voice controller using a `NavigationService` instance. The voice controller observes when the navigation service hints that the user has passed a _spoken instruction point_ and responds by converting the contents of a `SpokenInstruction` object into audio and playing the audio.
+ 
+ The MapboxSpeech framework requires a network connection to connect to the Mapbox Voice API, but it produces superior speech output in several languages including English. If the voice controller is unable to connect to the Voice API, it falls back to the Speech Synthesis framework as implemented by the superclass, `RouteVoiceController`. To mitigate network latency over a cell connection, `MapboxVoiceController` prefetches and caches synthesized audio.
+ 
+ If you need to supply a third-party speech synthesizer that requires a network connection, define a subclass of `MapboxVoiceController` that overrides the `speak(_:)` method. If the third-party speech synthesizer does not require a network connection, you can instead subclass `RouteVoiceController`.
+ 
+ The Mapbox Voice API is optimized for spoken instructions provided by the Mapbox Directions API via the MapboxDirections.swift framework. If you need text-to-speech functionality outside the context of a navigation service, use the Speech Synthesis framework’s `AVSpeechSynthesizer` class directly.
  */
 @objc(MBMapboxVoiceController)
 open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {

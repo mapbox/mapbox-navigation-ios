@@ -5,18 +5,11 @@ import MapboxDirections
 
 
 /**
- RouterDelegate is a mid-level delegate that defines the messaging architechture between the NavigationService and its router. Developers generally shouldn't have to concern themselves with this class unless a custom core-navigation engine (conforming to NavigationService) is being written.
+ A router delegate interacts with one or more `Router` instances, such as `RouteController` objects, during turn-by-turn navigation. This protocol is similar to `NavigationServiceDelegate`, which is the main way that your application can synchronize its state with the SDK’s location-related functionality. Normally, you should not need to make a class conform to the `RouterDelegate` protocol or call any of its methods directly, but you would need to call this protocol’s methods if you implement a custom `Router` class.
  
- You can use this protocol to:
- * Recieve navigation progress updates
- * Decide when to reroute the user
- * Decide what location updates are considered 'qualified'
- * Customize visual / spoken instructions that are presented to the user
- * Decide if battery monitoring should be disabled
- * Decide if the SDK should pause navigation when the user reaches an intermediate destination (for example, to show a interstitial modal UI)
- * Be informed when the SDK fails to fetch a new route
- * Be informed when the SDK is beginning or ending route-simulation
- * Be informed when the user is approaching or has arrived at their destination
+ `MapboxNavigationService` is the only concrete implementation of a router delegate. Implement the `NavigationServiceDelegate` protocol instead to be notified when various significant events occur along the route tracked by a `NavigationService`.
+ 
+ - seealso: MapboxNavigationService
  - seealso: NavigationServiceDelegate
  */
 @objc(MBRouterDelegate)
