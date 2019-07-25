@@ -2,6 +2,9 @@ import Foundation
 import CoreLocation
 import MapboxDirections
 
+/**
+ A router data source, also known as a location manager, supplies location data to a `Router` instance. For example, a `MapboxNavigationService` supplies location data to a `RouteController` or `LegacyRouteController`.
+ */
 @objc (MBRouterDataSource)
 public protocol RouterDataSource {
     
