@@ -443,7 +443,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     func fit(to route: Route, facing direction:CLLocationDirection = 0, animated: Bool = false) {
         guard let coords = route.coordinates, !coords.isEmpty else { return }
       
-        setUserTrackingMode(.none, animated: false)
+        setUserTrackingMode(.none, animated: false, completionHandler: nil)
         let line = MGLPolyline(coordinates: coords, count: UInt(coords.count))
         let camera = cameraThatFitsShape(line, direction: direction, edgePadding: .zero)
         

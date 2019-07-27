@@ -30,7 +30,7 @@ class OfflineViewController: UIViewController, MGLMapViewDelegate {
     }
 
     func mapViewDidFinishLoadingMap(_ mapView: MGLMapView) {
-        mapView.setUserTrackingMode(.follow, animated: false)
+        mapView.setUserTrackingMode(.follow, animated: false, completionHandler: nil)
         mapView.setZoomLevel(8, animated: false)
     }
     
