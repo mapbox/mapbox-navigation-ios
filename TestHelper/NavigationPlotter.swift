@@ -159,7 +159,7 @@ public class NavigationPlotter: UIView {
         coordinateBounds = allBoundingCoordinates.bounds
         mapView = NavigationMapView(frame: bounds)
         let padding = UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50)
-        mapView?.setVisibleCoordinateBounds(coordinateBounds!, edgePadding: padding, animated: false)
+        mapView?.setVisibleCoordinateBounds(coordinateBounds!, edgePadding: padding, animated: false, completionHandler: nil)
     }
     
     public override init(frame: CGRect) {
