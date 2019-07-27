@@ -2,6 +2,18 @@ import Foundation
 import CoreLocation
 import MapboxDirections
 
+/**
+ A navigation service delegate interacts with one or more `NavigationService` instances (such as `MapboxNavigationService` objects) during turn-by-turn navigation. This protocol is the main way that your application can synchronize its state with the SDK’s location-related functionality. Each of the protocol’s methods is optional.
+ 
+ As the user progresses along a route, a navigation service informs its delegate about significant events as they occur, and the delegate has opportunities to influence the route and its presentation. For example, when the navigation service reports that the user has arrived at the destination, your delegate implementation could present information about the destination. It could also customize individual visual or spoken instructions along the route by returning modified instruction objects.
+ 
+ Assign a `NavigationServiceDelegate` instance to the `NavigationService.delegate` property of the navigation service before you start the service.
+ 
+ The `RouterDelegate` protocol defines corresponding methods so that a `Router` instance can interact with an object that is both a router delegate and a navigation service, which in turn interacts with a navigation service delegate. Additionally, several location-related methods in this protocol have corresponding methods in the `NavigationViewControllerDelegate` protocol, which can be convenient if you are using the navigation service in conjunction with a `NavigationViewController`. Normally, you would either implement methods in `NavigationServiceDelegate` or `NavigationViewControllerDelegate` but not `RouterDelegate`.
+ 
+ - seealso: NavigationViewControllerDelegate
+ - seealso: RouterDelegate
+ */
 @objc public protocol NavigationServiceDelegate {
     /**
      Returns whether the navigation service should be allowed to calculate a new route.
@@ -68,7 +80,6 @@ import MapboxDirections
      - parameter location: the guaranteed location, possibly snapped, associated with the progress update.
      - parameter rawLocation: the raw location, from the location manager, associated with the progress update.
      */
-    
     @objc(navigationService:didUpdateProgress:withLocation:rawLocation:)
     optional func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation)
     
