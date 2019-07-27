@@ -3,6 +3,7 @@
 ## master
 
 * Fixed an issue where InstructionsBannerView remained the same color after switching to a day or night style. ([#2178](https://github.com/mapbox/mapbox-navigation-ios/pull/2178))
+* Fixed an issue where `NavigationMapView` showed routes without congestion attributes, such as `MBDirectionsProfileIdentifier.walking` routes, as translucent lines, even if the route had only one leg. ([#2193](https://github.com/mapbox/mapbox-navigation-ios/pull/2193))
 * Fixed an issue where the “iPhone Volume Low” banner would persist until replaced by another banner about simulation or rerouting. ([#2183](https://github.com/mapbox/mapbox-navigation-ios/pull/2183))
 * Designables no longer crash and fail to render in Interface Builder when the application target links to this SDK via CocoaPods. ([#2179](https://github.com/mapbox/mapbox-navigation-ios/pull/2179))
 * Fixed a crash that could occur when statically initializing a `Style` if the SDK was installed using CocoaPods. ([#2179](https://github.com/mapbox/mapbox-navigation-ios/pull/2179))
