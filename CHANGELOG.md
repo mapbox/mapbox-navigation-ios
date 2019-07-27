@@ -1,6 +1,6 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## master
+## v0.36.0
 
 * Fixed an issue where InstructionsBannerView remained the same color after switching to a day or night style. ([#2178](https://github.com/mapbox/mapbox-navigation-ios/pull/2178))
 * Fixed an issue where `NavigationMapView` showed routes without congestion attributes, such as `MBDirectionsProfileIdentifier.walking` routes, as translucent lines, even if the route had only one leg. ([#2193](https://github.com/mapbox/mapbox-navigation-ios/pull/2193))
