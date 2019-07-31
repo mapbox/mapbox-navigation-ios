@@ -638,21 +638,20 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
     public func topBanner(_ banner: TopBannerViewController, didSwipeInDirection direction: UISwipeGestureRecognizer.Direction) {
         let progress = navigationService.routeProgress
         let route = progress.route
+        switch direction {
         
-        if direction == .down {
+        case .up where banner.isDisplayingSteps:
+            banner.dismissStepsTable()
+        
+        case .down where !banner.isDisplayingSteps:
             banner.displayStepsTable()
             
             
             if banner.isDisplayingPreviewInstructions {
                 mapViewController?.recenter(self)
             }
-            
-        } else if direction == .right {
-            // prevent swiping when step list is visible
-            if banner.isDisplayingSteps {
-                return
-            }
-            
+        
+        case .right where !banner.isDisplayingSteps:
             guard let currentStepIndex = banner.currentPreviewStep?.1 else { return }
             let remainingSteps = progress.remainingSteps
             let prevStepIndex = currentStepIndex.advanced(by: -1)
@@ -660,12 +659,8 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
             
             let prevStep = remainingSteps[prevStepIndex]
             preview(step: prevStep, in: banner, remaining: remainingSteps, route: route)
-        } else if direction == .left {
-            // prevent swiping when step list is visible
-            if banner.isDisplayingSteps {
-                return
-            }
             
+        case .left where !banner.isDisplayingSteps:
             let remainingSteps = navigationService.router.routeProgress.remainingSteps
             let currentStepIndex = banner.currentPreviewStep?.1
             let nextStepIndex = currentStepIndex?.advanced(by: 1) ?? 0
@@ -673,6 +668,9 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
             
             let nextStep = remainingSteps[nextStepIndex]
             preview(step: nextStep, in: banner, remaining: remainingSteps, route: route)
+            
+        default:
+            return
         }
     }
     
