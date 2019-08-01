@@ -1,5 +1,8 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## master
+* Fixed an issue where swiping the banner down after the StepsTableViewController has already displayed could put the UI in an unstable state. ([#2197](https://github.com/mapbox/mapbox-navigation-ios/pull/2197))
+
 ## v0.36.0
 
 * Fixed an issue where InstructionsBannerView remained the same color after switching to a day or night style. ([#2178](https://github.com/mapbox/mapbox-navigation-ios/pull/2178))
