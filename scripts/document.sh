@@ -63,6 +63,7 @@ jazzy \
     --output ${OUTPUT} \
     --module_version ${RELEASE_VERSION}
 
+REPLACE_REGEXP='s/MapboxNavigation\s+(Docs|Reference)/Mapbox Navigation SDK for iOS $1/, '
 REPLACE_REGEXP+="s/<span class=\"kt\">(${DIRECTIONS_SYMBOLS})<\/span>/<span class=\"kt\"><a href=\"${BASE_URL//\//\\/}\/directions\/${DIRECTIONS_VERSION}\/Classes\/\$1.html\">\$1<\/a><\/span>/, "
 
 find ${OUTPUT} -name *.html -exec \
