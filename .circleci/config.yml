@@ -184,9 +184,9 @@ workflows:
           iOS: "12.1"
           codecoverage: true
       - build-job:
-          name: "Xcode_10.1_iOS_9.3"
+          name: "Xcode_10.1_iOS_10.3.1"
           xcode: "10.1.0"
-          iOS: "9.3"
+          iOS: "10.3.1"
           delete_private_deps: true
           test: false
       - pod-job:
