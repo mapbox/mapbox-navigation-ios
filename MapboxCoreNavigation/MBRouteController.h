@@ -1,4 +1,6 @@
 #import <Foundation/Foundation.h>
+#import <MapboxAccounts/MapboxAccounts.h>
+
 
 /**
  Posted when `MBRouteController` receives a user location update representing movement along the expected route.
@@ -93,3 +95,5 @@ extern const _Nonnull MBRouteControllerNotificationUserInfoKey MBRouteController
 - (NSString * _Nonnull)md5;
 @end
 
+@interface MBXAccounts (MBXDefault)
+@end
