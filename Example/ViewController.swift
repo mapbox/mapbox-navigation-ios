@@ -100,12 +100,14 @@ class ViewController: UIViewController {
         let night: ActionHandler = {_ in self.startNavigation(styles: [NightStyle()]) }
         let custom: ActionHandler = {_ in self.startCustomNavigation() }
         let styled: ActionHandler = {_ in self.startStyledNavigation() }
+        let guidanceCards: ActionHandler = {_ in self.startGuidanceCardsNavigation() }
         
         let actionPayloads: [(String, UIAlertAction.Style, ActionHandler?)] = [
             ("Default UI", .default, basic),
             ("DayStyle UI", .default, day),
             ("NightStyle UI", .default, night),
             ("Custom UI", .default, custom),
+            ("Guidance Card UI", .default, guidanceCards),
             ("Styled UI", .default, styled),
             ("Cancel", .cancel, nil)
         ]
@@ -286,6 +288,21 @@ class ViewController: UIViewController {
 
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
+    
+    // MARK: Guidance Cards
+    func startGuidanceCardsNavigation() {
+        guard let route = routes?.first else { return }
+        
+        let instructionsCardCollection = InstructionsCardViewController()
+        instructionsCardCollection.cardCollectionDelegate = self
+        
+        let options = NavigationOptions(navigationService: navigationService(route: route), topBanner: instructionsCardCollection)
+        let navigationViewController = NavigationViewController(for: route, options: options)
+        navigationViewController.delegate = self
+        
+        presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
+    }
+    
 
     func navigationService(route: Route) -> NavigationService {
         let simulate = simulationButton.isSelected
