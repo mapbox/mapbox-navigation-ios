@@ -190,18 +190,10 @@ public class InstructionsCardContainerView: UIView {
     }
     
     public func updateInstruction(_ instruction: VisualInstructionBanner) {
-        if lanesView.isHidden {
-            lanesView.update(for: instruction)
-        } else if lanesView.isCurrentlyVisible && instruction.tertiaryInstruction == nil {
-            lanesView.hide()
-        }
-        
-        if nextBannerView.isHidden {
-            nextBannerView.update(for: instruction)
-            nextBannerView.instructionDelegate = self
-        } else if nextBannerView.isCurrentlyVisible && instruction.tertiaryInstruction?.text == nil {
-            nextBannerView.hide()
-        }
+        lanesView.update(for: instruction)
+        nextBannerView.instructionDelegate = self
+        nextBannerView.update(for: instruction)
+
     }
     
     public func updateInstructionCard(distance: CLLocationDistance) {
