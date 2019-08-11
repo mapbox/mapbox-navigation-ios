@@ -9,7 +9,7 @@ let NavigationEventTypeRouteRetrieval = "mobile.performance_trace"
  */
 @objc public protocol EventsManagerDataSource: class {
     var routeProgress: RouteProgress { get }
-    var location: CLLocation? { get }
+    var router: Router! { get }
     var desiredAccuracy: CLLocationAccuracy { get }
     var locationProvider: NavigationLocationManager.Type { get }
 }
@@ -64,10 +64,10 @@ open class NavigationEventsManager: NSObject {
     }
     
     private func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillTerminate(_:)), name: .UIApplicationWillTerminate, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(didChangeOrientation(_:)), name: .UIDeviceOrientationDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(didChangeApplicationState(_:)), name: .UIApplicationWillEnterForeground, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(didChangeApplicationState(_:)), name: .UIApplicationDidEnterBackground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillTerminate(_:)), name: UIApplication.willTerminateNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didChangeOrientation(_:)), name: UIDevice.orientationDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didChangeApplicationState(_:)), name: UIApplication.willEnterForegroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didChangeApplicationState(_:)), name: UIApplication.didEnterBackgroundNotification, object: nil)
     }
     
     private func suspendNotifications() {
@@ -138,6 +138,8 @@ open class NavigationEventsManager: NSObject {
 
         var event = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationArrive
+        
+        event.arrivalTimestamp = dataSource.router.rawLocation?.timestamp ?? Date()
         return event
     }
     
@@ -167,9 +169,12 @@ open class NavigationEventsManager: NSObject {
     func navigationRerouteEvent(eventType: String = MMEEventTypeNavigationReroute) -> NavigationEventDetails? {
         guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
 
-        let timestamp = Date()
+        let timestamp = dataSource.router.rawLocation?.timestamp ?? Date()
+        
         var event = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = eventType
+        event.created = timestamp
+        
         if let lastRerouteDate = sessionState.lastRerouteDate {
             event.secondsSinceLastReroute = round(timestamp.timeIntervalSince(lastRerouteDate))
         } else {
@@ -245,12 +250,12 @@ open class NavigationEventsManager: NSObject {
 
     func enqueueRerouteEvent() {
         guard let eventDictionary = try? navigationRerouteEvent()?.asDictionary() else { return }
-        let timestamp = Date()
+        let timestamp = dataSource?.router.location?.timestamp ?? Date()
         
         sessionState?.lastRerouteDate = timestamp
         sessionState?.numberOfReroutes += 1
         
-        let event = RerouteEvent(timestamp: Date(), eventDictionary: eventDictionary ?? [:])
+        let event = RerouteEvent(timestamp: timestamp, eventDictionary: eventDictionary ?? [:])
         
         outstandingFeedbackEvents.append(event)
     }
@@ -263,7 +268,7 @@ open class NavigationEventsManager: NSObject {
     }
 
     func enqueueFoundFasterRouteEvent() {
-        guard let eventDictionary = try? navigationRerouteEvent()?.asDictionary() else { return }
+        guard let eventDictionary = try? navigationRerouteEvent(eventType: FasterRouteFoundEvent)?.asDictionary() else { return }
 
         let timestamp = Date()
         sessionState?.lastRerouteDate = timestamp
@@ -365,17 +370,22 @@ open class NavigationEventsManager: NSObject {
     }
     
     @objc func update(progress: RouteProgress) {
-        if sessionState?.departureTimestamp == nil {
-            sessionState?.departureTimestamp = Date()
-            sendDepartEvent()
+        defer {
+            // ensure we always flush, irrespective of how the method exits
+            sendOutstandingFeedbackEvents(forceAll: false)
         }
         
         if sessionState?.arrivalTimestamp == nil,
             progress.currentLegProgress.userHasArrivedAtWaypoint {
-            sessionState?.arrivalTimestamp = Date()
+            sessionState?.arrivalTimestamp = dataSource?.router.location?.timestamp ?? Date()
             sendArriveEvent()
+            
+            return
         }
         
-        sendOutstandingFeedbackEvents(forceAll: false)
+        if sessionState?.departureTimestamp == nil {
+            sessionState?.departureTimestamp = dataSource?.router.location?.timestamp ?? Date()
+            sendDepartEvent()
+        }
     }
 }

@@ -70,12 +70,5 @@ extension Array where Element == RecentItem {
             remove(at: index)
         }
     }
-    
-    func contains(_ geocodedPlacemark: GeocodedPlacemark) -> Bool {
-        let exists = filter { (recentItem) -> Bool in
-            return recentItem.geocodedPlacemark == geocodedPlacemark
-            }.first
-        return (exists != nil)
-    }
 }
 #endif

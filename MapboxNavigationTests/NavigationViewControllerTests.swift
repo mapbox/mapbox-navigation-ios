@@ -16,9 +16,9 @@ class NavigationViewControllerTests: XCTestCase {
     var updatedStyleNumberOfTimes = 0
     lazy var dependencies: (navigationViewController: NavigationViewController, navigationService: NavigationService, startLocation: CLLocation, poi: [CLLocation], endLocation: CLLocation, voice: RouteVoiceController) = {
 
-        let fakeVoice: RouteVoiceController = RouteVoiceControllerStub()
         let fakeDirections = DirectionsSpy(accessToken: "garbage", host: nil)
         let fakeService = MapboxNavigationService(route: initialRoute, directions: fakeDirections, locationSource: NavigationLocationManagerStub(), simulating: .never)
+        let fakeVoice: RouteVoiceController = RouteVoiceControllerStub(navigationService: fakeService)
         let options = NavigationOptions(navigationService: fakeService, voiceController: fakeVoice)
         let navigationViewController = NavigationViewController(for: initialRoute, options: options)
         
@@ -78,7 +78,7 @@ class NavigationViewControllerTests: XCTestCase {
     }
     
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceMoreThanOnceWithOneStyle() {
-        let options = NavigationOptions(styles: [DayStyle()], navigationService: dependencies.navigationService, voiceController: RouteVoiceControllerStub())
+        let options = NavigationOptions(styles: [DayStyle()], navigationService: dependencies.navigationService, voiceController: dependencies.voice)
         let navigationViewController = NavigationViewController(for: initialRoute, options: options)
         let service = dependencies.navigationService
         navigationViewController.styleManager.delegate = self
@@ -120,7 +120,7 @@ class NavigationViewControllerTests: XCTestCase {
     
     // If tunnel flags are enabled and we need to switch styles, we should not force refresh the map style because we have only 1 style.
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceWhenOnlyOneStyle() {
-        let options = NavigationOptions(styles:[NightStyle()], navigationService: dependencies.navigationService, voiceController: RouteVoiceControllerStub())
+        let options = NavigationOptions(styles:[NightStyle()], navigationService: dependencies.navigationService, voiceController: dependencies.voice)
         let navigationViewController = NavigationViewController(for: initialRoute, options: options)
         let service = dependencies.navigationService
         navigationViewController.styleManager.delegate = self
@@ -136,7 +136,7 @@ class NavigationViewControllerTests: XCTestCase {
     }
     
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceMoreThanOnceWithTwoStyles() {
-        let options = NavigationOptions(styles: [DayStyle(), NightStyle()], navigationService: dependencies.navigationService, voiceController:RouteVoiceControllerStub())
+        let options = NavigationOptions(styles: [DayStyle(), NightStyle()], navigationService: dependencies.navigationService, voiceController: dependencies.voice)
         let navigationViewController = NavigationViewController(for: initialRoute, options: options)
         let service = dependencies.navigationService
         navigationViewController.styleManager.delegate = self
@@ -222,6 +222,22 @@ class NavigationViewControllerTests: XCTestCase {
         let newDestinations = newAnnotations.filter(annotationFilter(matching: secondDestination))
         XCTAssert(!newDestinations.isEmpty, "New destination annotation does not exist on map")
         
+    }
+    
+    func testBlankBanner() {
+        let window = UIApplication.shared.keyWindow!
+        let viewController = window.rootViewController!
+        
+        let route = Fixture.route(from: "DCA-Arboretum")
+        let navigationViewController = NavigationViewController(for: route)
+        
+        viewController.present(navigationViewController, animated: false, completion: nil)
+        
+        let firstInstruction = route.legs[0].steps[0].instructionsDisplayedAlongStep!.first
+        let instructionsBannerView = navigationViewController.mapViewController!.instructionsBannerView
+        
+        XCTAssertNotNil(instructionsBannerView.primaryLabel.text)
+        XCTAssertEqual(instructionsBannerView.primaryLabel.text, firstInstruction?.primaryInstruction.text)
     }
     
     private func annotationFilter(matching coordinate: CLLocationCoordinate2D) -> ((MGLAnnotation) -> Bool) {

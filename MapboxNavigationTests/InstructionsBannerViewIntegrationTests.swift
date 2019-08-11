@@ -314,7 +314,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
 
     private func simulateDownloadingShieldForComponent(_ component: VisualInstructionComponent) {
         let operation: ImageDownloadOperationSpy = ImageDownloadOperationSpy.operationForURL(component.imageURL!)!
-        operation.fireAllCompletions(ShieldImage.i280.image, data: UIImagePNGRepresentation(ShieldImage.i280.image), error: nil)
+        operation.fireAllCompletions(ShieldImage.i280.image, data: ShieldImage.i280.image.pngData(), error: nil)
 
         XCTAssertNotNil(imageRepository.cachedImageForKey(component.cacheKey!))
     }

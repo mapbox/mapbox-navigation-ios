@@ -165,7 +165,7 @@ open class LaneView: UIView {
         
         #if TARGET_INTERFACE_BUILDER
             isValid = true
-            LanesStyleKit.drawLane_right_only(primaryColor: appropriatePrimaryColor, secondaryColor: secondaryColor)
+            LanesStyleKit.drawLaneRightOnly(primaryColor: appropriatePrimaryColor, secondaryColor: secondaryColor)
         #endif
     }
 }

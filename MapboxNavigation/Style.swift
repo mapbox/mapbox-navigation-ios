@@ -118,8 +118,6 @@ open class FloatingButton: Button {
 @objc(MBReportButton)
 public class ReportButton: Button {
     
-    static let padding: CGFloat = 10
-    static let downConstant: CGFloat = 10
     static let defaultInsets: UIEdgeInsets = 10.0
     static let defaultCornerRadius: CGFloat = 4.0
     
@@ -135,34 +133,6 @@ public class ReportButton: Button {
     private func commonInit() {
         contentEdgeInsets = ReportButton.defaultInsets
         applyDefaultCornerRadiusShadow(cornerRadius: ReportButton.defaultCornerRadius)
-    }
-    
-    var upConstant: CGFloat {
-        return -bounds.height-(ReportButton.padding * 2)
-    }
-    
-    func slideDown(constraint: NSLayoutConstraint, interval: TimeInterval) {
-        guard isHidden == true else { return }
-        
-        isHidden = false
-        constraint.constant = ReportButton.downConstant
-        setNeedsUpdateConstraints()
-        UIView.defaultAnimation(0.5, animations: {
-            self.superview?.layoutIfNeeded()
-        }) { (completed) in
-            NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(ReportButton.slideUp(constraint:)), object: nil)
-            self.perform(#selector(ReportButton.slideUp(constraint:)), with: constraint, afterDelay: interval)
-        }
-    }
-    
-    @objc func slideUp(constraint: NSLayoutConstraint) {
-        constraint.constant = upConstant
-        setNeedsUpdateConstraints()
-        UIView.defaultSpringAnimation(0.5, animations: {
-            self.superview?.layoutIfNeeded()
-        }) { (completed) in
-            self.isHidden = true
-        }
     }
 }
 
@@ -338,7 +308,7 @@ open class DistanceLabel: StylableLabel {
         emphasizedDistanceString.enumerateAttribute(.quantity, in: wholeRange, options: .longestEffectiveRangeNotRequired) { (value, range, stop) in
             let foregroundColor: UIColor
             let font: UIFont
-            if let _ = emphasizedDistanceString.attribute(NSAttributedStringKey.quantity, at: range.location, effectiveRange: nil) {
+            if let _ = emphasizedDistanceString.attribute(.quantity, at: range.location, effectiveRange: nil) {
                 foregroundColor = valueTextColor
                 font = valueFont
                 hasQuantity = true
@@ -477,8 +447,6 @@ public class ProgressBar: UIView {
     
     let bar = UIView()
     
-    var barHeight: CGFloat = 3
-    
     // Sets the color of the progress bar.
     @objc dynamic public var barColor: UIColor = #colorLiteral(red: 0.1411764771, green: 0.3960784376, blue: 0.5647059083, alpha: 1) {
         didSet {
@@ -496,12 +464,6 @@ public class ProgressBar: UIView {
     
     override open var description: String {
         return super.description + "; progress = \(progress)"
-    }
-    
-    func setProgress(_ progress: CGFloat, animated: Bool) {
-        UIView.animate(withDuration: 0.5, delay: 0, options: .curveLinear, animations: {
-            self.progress = progress
-        }, completion: nil)
     }
     
     public override func layoutSubviews() {
@@ -610,6 +572,7 @@ open class BottomBannerContainerView: UIView { }
 /// :nodoc:
 @objc(MBBottomBannerView)
 open class BottomBannerView: UIView { }
+
 
 /// :nodoc:
 class NavigationAnnotation: MGLPointAnnotation { }

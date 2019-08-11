@@ -4,7 +4,7 @@ extension Date {
     var ISO8601: String {
         return Date.ISO8601Formatter.string(from: self)
     }
-    
+
     static let ISO8601Formatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")

@@ -21,6 +21,16 @@ public protocol BottomBannerViewControllerDelegate: class {
 @objc(MBBottomBannerViewController)
 open class BottomBannerViewController: UIViewController, NavigationComponent {
     
+    /*
+     A padded spacer view that covers the bottom safe area of the device, if any.
+     */
+    lazy open var bottomPaddingView: BottomBannerView = .forAutoLayout()
+    
+    /**
+     The main bottom banner view that all UI components are added to.
+     */
+    lazy open var bottomBannerView: BottomBannerView = .forAutoLayout()
+    
     /**
      The label that displays the estimated time until the user arrives at the final destination.
      */
@@ -89,6 +99,7 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
      
      - parameter delegate: A delegate to recieve BottomBannerViewControllerDelegate messages.
      */
+    @available(*, deprecated, message: "Set the delegate property separately after initializing this object.")
     public convenience init(delegate: BottomBannerViewControllerDelegate?) {
         self.init(nibName: nil, bundle: nil)
         self.delegate = delegate
@@ -119,14 +130,6 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
         removeTimer()
     }
     
-    /**
-     This override loads a custom UIView subclass as the root view, for UIAppearance purposes.
-    */
-    override open func loadView() {
-        let root: BottomBannerView = .forAutoLayout() //Must use local var to prevent generic factory from messing up.
-        view = root
-    }
-    
     override open func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         removeTimer()
@@ -134,18 +137,19 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
     
     override open func viewDidLoad() {
         super.viewDidLoad()
-        setupViews()
+        setupRootViews()
+        setupBottomBanner()
         cancelButton.addTarget(self, action: #selector(BottomBannerViewController.cancel(_:)), for: .touchUpInside)
     }
     
     private func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(removeTimer), name: .UIApplicationDidEnterBackground, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(resetETATimer), name: .UIApplicationWillEnterForeground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(removeTimer), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(resetETATimer), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
     
     private func suspendNotifications() {
-        NotificationCenter.default.removeObserver(self, name: .UIApplicationWillEnterForeground, object: nil)
-        NotificationCenter.default.removeObserver(self, name: .UIApplicationDidEnterBackground, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
     }
     
     func commonInit() {

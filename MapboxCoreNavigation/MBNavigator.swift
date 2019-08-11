@@ -7,10 +7,10 @@ extension MBFixLocation {
     convenience init(_ location: CLLocation) {
         self.init(coordinate: location.coordinate,
                   time: location.timestamp,
-                  speed: location.speed as NSNumber,
-                  bearing: location.course as NSNumber,
+                  speed: location.speed >= 0 ? location.speed as NSNumber : nil,
+                  bearing: location.course >= 0 ? location.course as NSNumber : nil,
                   altitude: location.altitude as NSNumber,
-                  accuracyHorizontal: location.horizontalAccuracy as NSNumber,
+                  accuracyHorizontal: location.horizontalAccuracy >= 0 ? location.horizontalAccuracy as NSNumber : nil,
                   provider: nil)
     }
 }

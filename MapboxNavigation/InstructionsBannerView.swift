@@ -25,7 +25,7 @@ public protocol InstructionsBannerViewDelegate: class {
     /**
      Called when the user swipes either left, right, or down on the `InstructionsBannerView`
      */
-    @objc optional func didSwipeInstructionsBanner(_ sender: BaseInstructionsBannerView, swipeDirection direction: UISwipeGestureRecognizerDirection)
+    @objc optional func didSwipeInstructionsBanner(_ sender: BaseInstructionsBannerView, swipeDirection direction: UISwipeGestureRecognizer.Direction)
 }
 
 @objc private protocol InstructionsBannerViewDelegateDeprecations {

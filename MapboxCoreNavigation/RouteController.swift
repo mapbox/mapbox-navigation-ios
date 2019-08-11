@@ -80,7 +80,7 @@ open class RouteController: NSObject {
                 delegate?.router?(self, willRerouteFrom: location)
             }
             _routeProgress = newValue
-            announce(reroute: routeProgress.route, at: dataSource.location, proactive: didFindFasterRoute)
+            announce(reroute: routeProgress.route, at: rawLocation, proactive: didFindFasterRoute)
         }
     }
     
@@ -102,13 +102,17 @@ open class RouteController: NSObject {
      The most recently received user location.
      - note: This is a raw location received from `locationManager`. To obtain an idealized location, use the `location` property.
      */
-    var rawLocation: CLLocation? {
+    public var rawLocation: CLLocation? {
         didSet {
             if isFirstLocation == true {
                 isFirstLocation = false
             }
         }
     }
+    
+    @objc public var reroutesProactively: Bool = true
+    
+    var lastProactiveRerouteDate: Date?
     
     /**
      The route controller’s delegate.
@@ -154,29 +158,6 @@ open class RouteController: NSObject {
         navigator.setRouteForRouteResponse(jsonString, route: 0, leg: 0)
     }
     
-    func getDirections(from location: CLLocation, along progress: RouteProgress, completion: @escaping (Route?, Error?) -> Void) {
-        routeTask?.cancel()
-        let options = progress.reroutingOptions(with: location)
-        
-        self.lastRerouteLocation = location
-        
-        let complete = { [weak self] (route: Route?, error: NSError?) in
-            self?.isRerouting = false
-            completion(route, error)
-        }
-        
-        routeTask = directions.calculate(options) {(waypoints, potentialRoutes, potentialError) in
-            guard let routes = potentialRoutes else {
-                complete(nil, potentialError)
-                return
-            }
-            
-            let mostSimilar = routes.mostSimilar(to: progress.route)
-            
-            complete(mostSimilar ?? routes.first, potentialError)
-        }
-    }
-    
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         guard let location = locations.last else { return }
@@ -200,14 +181,17 @@ open class RouteController: NSObject {
         let willReroute = !userIsOnRoute(location) && delegate?.router?(self, shouldRerouteFrom: location)
                           ?? DefaultBehavior.shouldRerouteFromLocation
         
-        updateSpokenInstructionProgress(status: status, willReRoute: willReroute)
         updateRouteStepProgress(status: status)
         updateRouteLegProgress(status: status)
+        updateSpokenInstructionProgress(status: status, willReRoute: willReroute)
         updateVisualInstructionProgress(status: status)
         
         if willReroute {
             reroute(from: location, along: routeProgress)
         }
+        
+        // Check for faster route proactively (if reroutesProactively is enabled)
+        checkForFasterRoute(from: location, routeProgress: routeProgress)
     }
     
     func updateSpokenInstructionProgress(status: MBNavigationStatus, willReRoute: Bool) {
@@ -216,8 +200,9 @@ open class RouteController: NSObject {
             routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex = Int(voiceInstructionIndex)
             
             // Don't annouce spoken instruction if we are going to reroute
-            if !willReRoute {
-                announcePassage(of: routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction!, routeProgress: routeProgress)
+            if !willReRoute,
+                let spokenInstruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction {
+                announcePassage(of: spokenInstruction, routeProgress: routeProgress)
             }
         }
     }
@@ -229,8 +214,10 @@ open class RouteController: NSObject {
         if willChangeVisualIndex || isFirstLocation {
             let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
             currentStepProgress.visualInstructionIndex = Int(status.bannerInstruction?.index ?? 0)
-            let instruction = currentStepProgress.currentVisualInstruction
-            announcePassage(of: instruction!, routeProgress: routeProgress)
+            
+            if let instruction = currentStepProgress.currentVisualInstruction {
+                announcePassage(of: instruction, routeProgress: routeProgress)
+            }
         }
     }
     
@@ -258,7 +245,11 @@ open class RouteController: NSObject {
                 let advancesToNextLeg = delegate?.router?(self, didArriveAt: currentDestination) ?? DefaultBehavior.didArriveAtWaypoint
                 guard !routeProgress.isFinalLeg && advancesToNextLeg else { return }
                 
-                routeProgress.legIndex = Int(status.legIndex)
+                if advancesToNextLeg {
+                    let legIndex = status.legIndex + 1
+                    navigator.changeRouteLeg(forRoute: 0, leg: legIndex)
+                    routeProgress.legIndex = Int(legIndex)
+                }
             }
         }
     }
@@ -305,16 +296,6 @@ open class RouteController: NSObject {
         }
     }
     
-    private func announce(reroute newRoute: Route, at location: CLLocation?, proactive: Bool) {
-        var userInfo = [RouteControllerNotificationUserInfoKey: Any]()
-        if let location = location {
-            userInfo[.locationKey] = location
-        }
-        userInfo[.isProactiveKey] = didFindFasterRoute
-        NotificationCenter.default.post(name: .routeControllerDidReroute, object: self, userInfo: userInfo)
-        delegate?.router?(self, didRerouteAlong: routeProgress.route, at: dataSource.location, proactive: didFindFasterRoute)
-    }
-    
     private func announcePassage(of spokenInstructionPoint: SpokenInstruction, routeProgress: RouteProgress) {
         
         delegate?.router?(self, didPassSpokenInstructionPoint: spokenInstructionPoint, routeProgress: routeProgress)
@@ -337,6 +318,14 @@ open class RouteController: NSObject {
         ]
         
         NotificationCenter.default.post(name: .routeControllerDidPassVisualInstructionPoint, object: self, userInfo: info)
+    }
+    
+    /**
+     Returns an estimated location at a given timestamp. The timestamp must be
+     a future timestamp compared to the last location received by the location manager.
+     */
+    public func projectedLocation(for timestamp: Date) -> CLLocation {
+        return CLLocation(navigator.getStatusForTimestamp(timestamp).location)
     }
     
     public func advanceLegIndex(location: CLLocation) {
@@ -380,12 +369,6 @@ extension RouteController: Router {
             }
         }
         
-        if isRerouting {
-            return
-        }
-        
-        isRerouting = true
-        
         delegate?.router?(self, willRerouteFrom: location)
         NotificationCenter.default.post(name: .routeControllerWillReroute, object: self, userInfo: [
             RouteControllerNotificationUserInfoKey.locationKey: location
@@ -393,7 +376,13 @@ extension RouteController: Router {
         
         self.lastRerouteLocation = location
         
+        // Avoid interrupting an ongoing reroute
+        if isRerouting { return }
+        isRerouting = true
+        
         getDirections(from: location, along: progress) { [weak self] (route, error) in
+            self?.isRerouting = false
+            
             guard let strongSelf: RouteController = self else {
                 return
             }
@@ -407,10 +396,11 @@ extension RouteController: Router {
             }
             
             guard let route = route else { return }
-            strongSelf.isRerouting = false
             strongSelf._routeProgress = RouteProgress(route: route, legIndex: 0)
             strongSelf._routeProgress.currentLegProgress.stepIndex = 0
             strongSelf.announce(reroute: route, at: location, proactive: false)
         }
     }
 }
+
+extension RouteController: InternalRouter { }

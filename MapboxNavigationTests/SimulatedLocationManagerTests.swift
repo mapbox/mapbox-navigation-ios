@@ -34,26 +34,6 @@ class SimulatedLocationManagerTests: FBSnapshotTestCase {
         verify(view)
     }
     
-    func testTimerMechanism() {
-        let now: DispatchTime = .now()
-        var later: DispatchTime? = nil
-        let expectation = XCTestExpectation(description: "Timer Fire")
-        
-        let timer = DispatchTimer(countdown: .milliseconds(1000)) {
-            later = .now()
-            expectation.fulfill()
-        }
-        timer.arm()
-        wait(for: [expectation], timeout: 2)
-        
-        
-        let notTooLittle = now + .milliseconds(700) < later ?? DispatchTime(uptimeNanoseconds: 0)
-        let notTooMuch = now + .milliseconds(1400) > later ?? .distantFuture
-        XCTAssert(notTooLittle, "Not enough time elapsed")
-        XCTAssert(notTooMuch, "Too much time elapsed.")
-    }
-    
-
 }
 
 class SimulatedLocationManagerSpy: NSObject, CLLocationManagerDelegate {

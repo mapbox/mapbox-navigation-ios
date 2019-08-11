@@ -102,7 +102,7 @@ public class StepsViewController: UIViewController {
         setupViews()
         rebuildDataSourceIfNecessary()
 
-        NotificationCenter.default.addObserver(self, selector: #selector(StepsViewController.progressDidChange(_:)), name: .routeControllerProgressDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_:)), name: .routeControllerProgressDidChange, object: nil)
     }
 
     deinit {
@@ -220,9 +220,9 @@ public class StepsViewController: UIViewController {
      */
     public func dismiss(completion: CompletionHandler? = nil) {
         slideUpAnimation {
-            self.willMove(toParentViewController: nil)
+            self.willMove(toParent: nil)
             self.view.removeFromSuperview()
-            self.removeFromParentViewController()
+            self.removeFromParent()
             completion?()
         }
     }
@@ -320,7 +320,7 @@ open class StepTableViewCell: UITableViewCell {
     weak var instructionsView: StepInstructionsView!
     weak var separatorView: SeparatorView!
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         commonInit()
     }
@@ -359,20 +359,5 @@ open class StepTableViewCell: UITableViewCell {
     open override func prepareForReuse() {
         super.prepareForReuse()
         instructionsView.update(for:nil)
-    }
-}
-
-extension Array where Element == RouteStep {
-
-    fileprivate func stepBefore(_ step: RouteStep) -> RouteStep? {
-        guard let index = self.index(of: step) else {
-            return nil
-        }
-
-        if index > 0 {
-            return self[index-1]
-        }
-
-        return nil
     }
 }

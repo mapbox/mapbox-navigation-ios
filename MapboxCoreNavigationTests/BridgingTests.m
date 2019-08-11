@@ -1,5 +1,4 @@
 #import <XCTest/XCTest.h>
-#import "MapboxCoreNavigationTests-Swift.h"
 @import Mapbox;
 @import MapboxCoreNavigation;
 @import MapboxDirections;
@@ -71,7 +70,7 @@
     }];
     
     NSURL *url = [NSURL URLWithString:@""];
-    [directions configureRouterWithTilesURL:url translationsURL:url completionHandler:^(uint64_t numberOfTiles) {
+    [directions configureRouterWithTilesURL:url completionHandler:^(uint64_t numberOfTiles) {
         
     }];
 }

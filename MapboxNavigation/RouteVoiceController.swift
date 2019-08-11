@@ -4,9 +4,6 @@ import AVFoundation
 import MapboxDirections
 import MapboxCoreNavigation
 
-extension ErrorUserInfoKey {
-    static let spokenInstructionErrorCode = MBSpokenInstructionErrorCodeKey
-}
 
 extension NSAttributedString {
     @available(iOS 10.0, *)
@@ -20,7 +17,7 @@ extension NSAttributedString {
                 phoneticString.append(NSAttributedString(string: " "))
             }
             phoneticString.append(NSAttributedString(string: word, attributes: [
-                NSAttributedStringKey(rawValue: AVSpeechSynthesisIPANotationAttribute): phoneticWord
+                NSAttributedString.Key(rawValue: AVSpeechSynthesisIPANotationAttribute): phoneticWord
             ]))
         }
         return phoneticString
@@ -74,7 +71,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     /**
      Delegate used for getting metadata information about a particular spoken instruction.
      */
-    public weak var voiceControllerDelegate: VoiceControllerDelegate?
+    @objc public weak var voiceControllerDelegate: VoiceControllerDelegate?
     
     var lastSpokenInstruction: SpokenInstruction?
     var routeProgress: RouteProgress?
@@ -85,14 +82,20 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     /**
      Default initializer for `RouteVoiceController`.
      */
-    override public init() {
+    @objc
+    public init(navigationService: NavigationService) {
         super.init()
 
         verifyBackgroundAudio()
 
         speechSynth.delegate = self
         
-        resumeNotifications()
+        observeNotifications(by: navigationService)
+    }
+    
+    @available(*, unavailable, message: "Use init(navigationService:) instead.")
+    public override init() {
+        fatalError()
     }
 
     private func verifyBackgroundAudio() {
@@ -110,10 +113,10 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         speechSynth.stopSpeaking(at: .immediate)
     }
     
-    func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(didPassSpokenInstructionPoint(notification:)), name: .routeControllerDidPassSpokenInstructionPoint, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(pauseSpeechAndPlayReroutingDing(notification:)), name: .routeControllerWillReroute, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: .routeControllerDidReroute, object: nil)
+    func observeNotifications(by service: NavigationService) {
+        NotificationCenter.default.addObserver(self, selector: #selector(didPassSpokenInstructionPoint(notification:)), name: .routeControllerDidPassSpokenInstructionPoint, object: service.router)
+        NotificationCenter.default.addObserver(self, selector: #selector(pauseSpeechAndPlayReroutingDing(notification:)), name: .routeControllerWillReroute, object: service.router)
+        NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: .routeControllerDidReroute, object: service.router)
         
         muteToken = NavigationSettings.shared.observe(\.voiceMuted) { [weak self] (settings, change) in
             if settings.voiceMuted {
@@ -159,22 +162,34 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     }
     
     func duckAudio() throws {
+        let audioSession = AVAudioSession.sharedInstance()
         if #available(iOS 12.0, *) {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, mode: AVAudioSessionModeVoicePrompt, options: [.duckOthers, .mixWithOthers])
+            try audioSession.setCategory(.playback, mode: .voicePrompt, options: [.duckOthers, .mixWithOthers])
+        } else if #available(iOS 10.0, *) {
+            try audioSession.setCategory(.ambient, mode: .spokenAudio, options: [.duckOthers, .mixWithOthers])
         } else {
-            try AVAudioSession.sharedInstance().setMode(AVAudioSessionModeSpokenAudio)
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: [.duckOthers, .mixWithOthers])
+            try audioSession.setMode(.spokenAudio)
+            audioSession.perform(Selector("setCategory:withOptions:error:" as String),
+                                 with: AVAudioSession.Category.ambient.rawValue,
+                                 with: [AVAudioSession.CategoryOptions.duckOthers.rawValue,
+                                        AVAudioSession.CategoryOptions.mixWithOthers.rawValue])
         }
-        try AVAudioSession.sharedInstance().setActive(true)
+        try audioSession.setActive(true)
     }
     
     func mixAudio() throws {
-        try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryAmbient)
-        try AVAudioSession.sharedInstance().setActive(true)
+        let audioSession = AVAudioSession.sharedInstance()
+        if #available(iOS 10.0, *) {
+            try audioSession.setCategory(.ambient, mode: audioSession.mode)
+        } else {
+            audioSession.perform(Selector("setCategory:error:" as String),
+                                 with: AVAudioSession.Category.ambient.rawValue)
+        }
+        try audioSession.setActive(true)
     }
     
     func unDuckAudio() throws {
-        try AVAudioSession.sharedInstance().setActive(false, with: [.notifyOthersOnDeactivation])
+        try AVAudioSession.sharedInstance().setActive(false, options: [.notifyOthersOnDeactivation])
     }
     
     @objc open func didPassSpokenInstructionPoint(notification: NSNotification) {

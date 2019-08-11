@@ -11,7 +11,7 @@ public class DataCache: NSObject, BimodalDataCache {
 
         super.init()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(DataCache.clearMemory), name: .UIApplicationDidReceiveMemoryWarning, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(DataCache.clearMemory), name: UIApplication.didReceiveMemoryWarningNotification, object: nil)
     }
 
 

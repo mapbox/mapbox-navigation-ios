@@ -23,17 +23,3 @@ extension UIViewController {
     }
 }
 
-extension UIWindow {
-    func viewControllerInStack<T: UIViewController>(of type: T.Type? = nil) -> T? {
-
-        if let vc = rootViewController as? T {
-            return vc
-        } else if let vc = rootViewController?.presentedViewController as? T {
-            return vc
-        } else if let vc = rootViewController?.childViewControllers {
-            return vc.lazy.compactMap { $0 as? T }.first
-        }
-        
-        return nil
-    }
-}

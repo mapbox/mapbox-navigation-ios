@@ -87,10 +87,21 @@ open class RouteProgress: NSObject {
     }
 
     /**
-     Number of waypoints remaining on the current route.
+     The waypoints remaining on the current route.
+     
+     This property does not include waypoints whose `Waypoint.separatesLegs` property is set to `false`.
      */
     @objc public var remainingWaypoints: [Waypoint] {
         return route.legs.suffix(from: legIndex).map { $0.destination }
+    }
+    
+    /**
+     The waypoints remaining on the current route, including any waypoints that do not separate legs.
+     */
+    func remainingWaypointsForCalculatingRoute() -> [Waypoint] {
+        let (currentLegViaPoints, remainingWaypoints) = route.routeOptions.waypoints(fromLegAt: legIndex)
+        let currentLegRemainingViaPoints = currentLegProgress.remainingWaypoints(among: currentLegViaPoints)
+        return currentLegRemainingViaPoints + remainingWaypoints
     }
 
     /**
@@ -253,7 +264,7 @@ open class RouteProgress: NSObject {
             user.heading = current.course
             user.headingAccuracy = RouteProgress.reroutingAccuracy
         }
-        let newWaypoints = [user] + remainingWaypoints
+        let newWaypoints = [user] + remainingWaypointsForCalculatingRoute()
         let newOptions = oldOptions.copy() as! RouteOptions
         newOptions.waypoints = newWaypoints
 
@@ -420,7 +431,7 @@ open class RouteLegProgress: NSObject {
      Returns an array of `CLLocationCoordinate2D` of the prior, current and upcoming step geometry.
      */
     
-    @available(*, deprecated: 0.1, message: "Use RouteProgress.nearbyCoordinates")
+    @available(*, deprecated, message: "Use RouteProgress.nearbyCoordinates")
     @objc public var nearbyCoordinates: [CLLocationCoordinate2D] {
         let priorCoords = priorStep?.coordinates ?? []
         let upcomingCoords = upcomingStep?.coordinates ?? []
@@ -453,6 +464,33 @@ open class RouteLegProgress: NSObject {
         }
 
         return currentClosest
+    }
+    
+    /**
+     The waypoints remaining on the current leg, not including the leg’s destination.
+     */
+    func remainingWaypoints(among waypoints: [Waypoint]) -> [Waypoint] {
+        guard waypoints.count > 1 else {
+            // The leg has only a source and no via points. Save ourselves a call to RouteLeg.coordinates, which can be expensive.
+            return []
+        }
+        let legPolyline = Polyline(leg.coordinates)
+        guard let userCoordinateIndex = legPolyline.indexedCoordinateFromStart(distance: distanceTraveled)?.index else {
+            // The leg is empty, so none of the waypoints are meaningful.
+            return []
+        }
+        var slice = legPolyline
+        var accumulatedCoordinates = 0
+        return Array(waypoints.drop { (waypoint) -> Bool in
+            var newSlice = slice.sliced(from: waypoint.coordinate)
+            // Work around <https://github.com/mapbox/turf-swift/pull/79>.
+            if newSlice.coordinates.count > 2 && newSlice.coordinates.last == newSlice.coordinates.dropLast().last {
+                newSlice.coordinates.removeLast()
+            }
+            accumulatedCoordinates += slice.coordinates.count - newSlice.coordinates.count
+            slice = newSlice
+            return accumulatedCoordinates <= userCoordinateIndex
+        })
     }
 }
 

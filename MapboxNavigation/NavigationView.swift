@@ -41,8 +41,6 @@ open class NavigationView: UIView {
     
     private enum Constants {
         static let endOfRouteHeight: CGFloat = 260.0
-        static let feedbackTopConstraintPadding: CGFloat = 10.0
-        static let buttonSize: CGSize = 50.0
         static let buttonSpacing: CGFloat = 8.0
     }
     
@@ -70,7 +68,7 @@ open class NavigationView: UIView {
     
     lazy var mapView: NavigationMapView = {
         let map: NavigationMapView = .forAutoLayout(frame: self.bounds)
-        map.navigationMapDelegate = delegate
+        map.navigationMapViewDelegate = delegate
         map.courseTrackingDelegate = delegate
         map.showsUserLocation = true
         return map
@@ -206,7 +204,7 @@ open class NavigationView: UIView {
     }
     
     private func updateDelegates() {
-        mapView.navigationMapDelegate = delegate
+        mapView.navigationMapViewDelegate = delegate
         mapView.courseTrackingDelegate = delegate
         instructionsBannerView.delegate = delegate
         instructionsBannerView.instructionDelegate = delegate

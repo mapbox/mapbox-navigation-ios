@@ -1,20 +1,20 @@
 PODS:
-  - Mapbox-iOS-SDK (4.8.0)
-  - MapboxCoreNavigation (0.28.0):
-    - MapboxDirections.swift (~> 0.27.0)
+  - Mapbox-iOS-SDK (4.9.0)
+  - MapboxCoreNavigation (0.30.0):
+    - MapboxDirections.swift (~> 0.27.3)
     - MapboxMobileEvents (~> 0.8.1)
-    - MapboxNavigationNative (~> 5.0.0)
+    - MapboxNavigationNative (~> 6.1.1)
     - Turf (~> 0.3.0)
-  - MapboxDirections.swift (0.27.0):
+  - MapboxDirections.swift (0.27.3):
     - Polyline (~> 4.2)
   - MapboxMobileEvents (0.8.1)
-  - MapboxNavigation (0.28.0):
+  - MapboxNavigation (0.30.0):
     - Mapbox-iOS-SDK (~> 4.3)
-    - MapboxCoreNavigation (= 0.28.0)
+    - MapboxCoreNavigation (= 0.30.0)
     - MapboxSpeech (~> 0.1.0)
     - Solar (~> 2.1)
-  - MapboxNavigationNative (5.0.0)
-  - MapboxSpeech (0.1.0)
+  - MapboxNavigationNative (6.1.1)
+  - MapboxSpeech (0.1.1)
   - Polyline (4.2.0)
   - Solar (2.1.0)
   - Turf (0.3.0)
@@ -41,17 +41,17 @@ EXTERNAL SOURCES:
     :path: "../../../"
 
 SPEC CHECKSUMS:
-  Mapbox-iOS-SDK: 864bc732a20c183d87f04923295e988b504453d9
-  MapboxCoreNavigation: ac3a29edeae405c0679e74d4e9e71acda6244870
-  MapboxDirections.swift: 622bfe28c216eb6124331a0a03c97d7f587b286f
+  Mapbox-iOS-SDK: 225036950837cbe408e6b333e51cd6001c122499
+  MapboxCoreNavigation: bca953c7a8e5d0169d53a8478030ee17b53f3eca
+  MapboxDirections.swift: af3d8bc8cd80ed6e498dd6ed933f3c348799e1e2
   MapboxMobileEvents: 0f30fe39687f26fd8f255335053023ba039a0392
-  MapboxNavigation: e6e29545545e1c715fd23406c6c829ca9285aa02
-  MapboxNavigationNative: bb220f45f93123adae2c05dfb74080773af128f3
-  MapboxSpeech: d7569ee91dd8bdca3ef8d19b6828e8754c1073ec
+  MapboxNavigation: 31d1bd3076da438fbd7cfaaa34ea1f41b9c1723c
+  MapboxNavigationNative: 4b3c0d38c57f43ba525283dab6abdead0558b2bc
+  MapboxSpeech: 59b3984d3f433a443d24acf53097f918c5cc70f9
   Polyline: 3d69f75bb136357e27291d439d0436c6ebda57a4
   Solar: 2dc6e7cc39186cb0c8228fa08df76fb50c7d8f24
   Turf: c6bdf62d6a70c647874f295dd1cf4eefc0c3e9e6
 
 PODFILE CHECKSUM: 55ae5a7edbc3dedda5149ba3d58b992ab7327f95
 
-COCOAPODS: 1.6.0
+COCOAPODS: 1.6.1
