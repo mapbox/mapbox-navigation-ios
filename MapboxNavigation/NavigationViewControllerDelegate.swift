@@ -1,5 +1,6 @@
 import Foundation
 import MapboxDirections
+import MapboxCoreNavigation
 
 /**
  The `NavigationViewControllerDelegate` protocol provides methods for configuring the map view shown by a `NavigationViewController` and responding to the cancellation of a navigation session.
@@ -144,6 +145,14 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      */
     @objc(navigationViewController:didSelectRoute:)
     optional func navigationViewController(_ navigationViewController: NavigationViewController, didSelect route: Route)
+    
+    /**
+     Called when RouteProgress is updated from NavigationService.
+     - parameter navigationViewController: The navigation view controller presenting the route that the user selected.
+     - parameter didUpdate: The route on the map that the user selected.
+     */
+    @objc(navigationViewController:didUpdateProgress:withLocation:rawLocation:)
+    optional func navigationViewController(_ navigationViewController: NavigationViewController, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation)
     
     /**
      Returns the center point of the user course view in screen coordinates relative to the map view.
