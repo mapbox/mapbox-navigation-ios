@@ -394,13 +394,30 @@ class RouteMapViewController: UIViewController {
         let instructionBannerHeight = topBannerContainerView.bounds.height
         let bottomBannerHeight = bottomBannerContainerView.bounds.height
         
-        var insets = UIEdgeInsets(top: instructionBannerHeight, left: 0.0, bottom: bottomBannerHeight, right: 0.0)
+        // Inset by the safe area to avoid notches.
+        var insets = mapView.safeArea
+        insets.top += instructionBannerHeight
+        insets.bottom += bottomBannerHeight
         
         if overviewing {
             insets += NavigationMapView.courseViewMinimumInsets
             
             let routeLineWidths = MBRouteLineWidthByZoomLevel.compactMap { $0.value.constantValue as? Int }
             insets += UIEdgeInsets(floatLiteral: Double(routeLineWidths.max() ?? 0))
+        } else if mapView.tracksUserCourse {
+            // Puck position calculation - position it just above the bottom of the content area.
+            var contentFrame = mapView.bounds.inset(by: insets)
+
+            // Avoid letting the puck go partially off-screen, and add a comfortable padding beyond that.
+            let courseViewBounds = mapView.userCourseView?.bounds ?? .zero
+            // If it is not possible to position it right above the content area, center it at the remaining space.
+            contentFrame = contentFrame.insetBy(dx: min(NavigationMapView.courseViewMinimumInsets.left + courseViewBounds.width / 2.0, contentFrame.width / 2.0),
+                                                dy: min(NavigationMapView.courseViewMinimumInsets.top + courseViewBounds.height / 2.0, contentFrame.height / 2.0))
+            assert(!contentFrame.isInfinite)
+
+            let y = contentFrame.maxY
+            let height = mapView.bounds.height
+            insets.top = height - insets.bottom - 2 * (height - insets.bottom - y)
         }
         
         return insets
