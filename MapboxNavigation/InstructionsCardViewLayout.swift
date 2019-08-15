@@ -1,3 +1,4 @@
+/// :nodoc:
 extension InstructionsCardView {
     
     override func setupLayout() {

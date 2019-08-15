@@ -5,7 +5,7 @@ import MapboxCoreNavigation
 /**
  The `InstructionsCardContainerViewDelegate` protocol defines a method that allows an object to customize presented visual instructions within the instructions container view.
  */
-
+/// :nodoc:
 @objc(MBInstructionsCardContainerViewDelegate)
 public protocol InstructionsCardContainerViewDelegate: VisualInstructionDelegate {
     /**
@@ -183,7 +183,6 @@ public class InstructionsCardContainerView: UIView {
         instructionsCardView.updateDistanceFromCurrentLocation(distance)
         instructionsCardView.step = step
         
-        // TODO: Merge Instructions Card, Lanes & Next Banner View Instructions
         guard let instruction = step.instructionsDisplayedAlongStep?.last else { return }
         updateInstruction(instruction)
         updateInstructionCard(distance: distance)
@@ -283,6 +282,7 @@ public class InstructionsCardContainerView: UIView {
     }
 }
 
+/// :nodoc:
 extension InstructionsCardContainerView: InstructionsCardContainerViewDelegate {
     public func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
         

@@ -2,6 +2,7 @@ import MapboxCoreNavigation
 import MapboxNavigation
 import MapboxDirections
 
+/// :nodoc:
 extension ViewController: InstructionsCardCollectionDelegate {
     
     public func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardViewController, didPreview step: RouteStep) {

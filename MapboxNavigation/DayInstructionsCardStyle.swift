@@ -1,3 +1,4 @@
+/// :nodoc:
 public class DayInstructionsCardStyle: InstructionsCardStyle {
     public var cornerRadius: CGFloat = 20.0
     

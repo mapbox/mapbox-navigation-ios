@@ -1,6 +1,7 @@
 import MapboxDirections
 import MapboxCoreNavigation
 
+/// :nodoc:
 @objc public protocol InstructionsCardCollectionDelegate: InstructionsCardContainerViewDelegate {
     /**
      Called when previewing the steps on the current route.

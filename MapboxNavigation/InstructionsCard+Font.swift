@@ -1,3 +1,4 @@
+/// :nodoc:
 enum CardFont: String {
     case regular
     case bold
@@ -8,6 +9,7 @@ enum CardFont: String {
     }
 }
 
+/// :nodoc:
 struct CardFontType {
     static let regular: String = "FontSystem-Regular"
     static let bold: String =  "FontSystem-Bold"

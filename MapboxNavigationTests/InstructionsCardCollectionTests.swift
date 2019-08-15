@@ -4,6 +4,7 @@ import MapboxDirections
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
+/// :nodoc:
 class InstructionsCardCollectionTests: XCTestCase {
     
     lazy var initialRoute: Route = {
@@ -146,6 +147,7 @@ class InstructionsCardCollectionTests: XCTestCase {
     }
 }
 
+/// :nodoc:
 class InstructionsCardCollectionDelegateSpy: NSObject, InstructionsCardCollectionDelegate {
     
     var step: RouteStep? = nil
@@ -155,6 +157,7 @@ class InstructionsCardCollectionDelegateSpy: NSObject, InstructionsCardCollectio
     }
 }
 
+/// :nodoc:
 class TestInstructionsCardStyle: InstructionsCardStyle {
     var cornerRadius: CGFloat = 10.0
     var backgroundColor: UIColor = .purple

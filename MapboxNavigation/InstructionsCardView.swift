@@ -2,6 +2,7 @@ import UIKit
 import MapboxDirections
 import MapboxCoreNavigation
 
+/// :nodoc:
 public class InstructionsCardView: BaseInstructionsBannerView {
     
     @objc dynamic var cardWidthFactor: CGFloat = 0.82
