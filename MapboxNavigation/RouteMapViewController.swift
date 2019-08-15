@@ -331,6 +331,10 @@ class RouteMapViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        if (mapView.showsUserLocation && !mapView.tracksUserCourse) {
+            // Don't move mapView content on rotation or when e.g. top banner expands.
+            return;
+        }
         mapView.setContentInset(contentInset(forOverviewing: isInOverviewMode), animated: true, completionHandler: nil)
         mapView.setNeedsUpdateConstraints()
     }
