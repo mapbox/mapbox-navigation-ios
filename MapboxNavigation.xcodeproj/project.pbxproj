@@ -231,6 +231,8 @@
 		3EA9371104016CD402547F1A /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA938479CF48D7AD1B6369B /* ImageCache.swift */; };
 		3EA937B1F4DF73EB004BA6BE /* InstructionPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA93230997B8D59E3B76C8C /* InstructionPresenter.swift */; };
 		3EA93A1FEFDDB709DE84BED9 /* ImageRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA938BE5468824787100228 /* ImageRepository.swift */; };
+		4341758223060A17004264A9 /* route-with-tertiary.json in Resources */ = {isa = PBXBuildFile; fileRef = 439FFC222304BC23004C20AA /* route-with-tertiary.json */; };
+		439FFC252304BF54004C20AA /* GuidanceCardsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 439FFC242304BF54004C20AA /* GuidanceCardsSnapshotTests.swift */; };
 		492B6F84213703D10076D2C6 /* MapboxGeocoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3507F9F92134305C0086B39E /* MapboxGeocoder.framework */; };
 		492B6F85213703EE0076D2C6 /* MapboxGeocoder.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3507F9F92134305C0086B39E /* MapboxGeocoder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */; };
@@ -815,6 +817,8 @@
 		3EA938BE5468824787100228 /* ImageRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageRepository.swift; sourceTree = "<group>"; };
 		3EA93A10227A7DAF1861D9F5 /* Cache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
 		3EA93EBD6E6BEC966BBE51D6 /* NavigationServiceTestDoubles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationServiceTestDoubles.swift; sourceTree = "<group>"; };
+		439FFC222304BC23004C20AA /* route-with-tertiary.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "route-with-tertiary.json"; sourceTree = "<group>"; };
+		439FFC242304BF54004C20AA /* GuidanceCardsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuidanceCardsSnapshotTests.swift; sourceTree = "<group>"; };
 		6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WaypointConfirmationViewController.swift; path = Example/WaypointConfirmationViewController.swift; sourceTree = "<group>"; };
 		64847A031F04629D003F3A69 /* Feedback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Feedback.swift; sourceTree = "<group>"; };
 		7C12F2D7225B7C310010A931 /* DCA-Arboretum-dummy-faster-route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "DCA-Arboretum-dummy-faster-route.json"; sourceTree = "<group>"; };
@@ -1168,6 +1172,7 @@
 		165F91502204D50B0036CB9E /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
+				439FFC222304BC23004C20AA /* route-with-tertiary.json */,
 				35CDA8862190F50C0072B675 /* DCA-Arboretum.json */,
 				35C8DC0E2191DE940053328C /* DCA-Arboretum.trace.json */,
 				7C12F2D7225B7C310010A931 /* DCA-Arboretum-dummy-faster-route.json */,
@@ -1370,6 +1375,7 @@
 				8D54F149206ECF720038736D /* InstructionPresenterTests.swift */,
 				35DC585C1FABC61100B5A956 /* InstructionsBannerViewIntegrationTests.swift */,
 				35A262B82050A5CD00AEFF6D /* InstructionsBannerViewSnapshotTests.swift */,
+				439FFC242304BF54004C20AA /* GuidanceCardsSnapshotTests.swift */,
 				8DFD949D221F66BE00152F45 /* BottomBannerSnapshotTests.swift */,
 				AE47A33622B27D8D0096458C /* InstructionsCardCollectionTests.swift */,
 				3510300E1F54B67000E3B7E7 /* LaneTests.swift */,
@@ -2202,6 +2208,7 @@
 				35C8DBF6219194380053328C /* routeWithTunnels_9thStreetDC.json in Resources */,
 				35C8DBF52191940C0053328C /* straight-line.json in Resources */,
 				7C12F2D8225B7C320010A931 /* DCA-Arboretum-dummy-faster-route.json in Resources */,
+				4341758223060A17004264A9 /* route-with-tertiary.json in Resources */,
 				35C8DC0F2191DE940053328C /* DCA-Arboretum.trace.json in Resources */,
 				35CDA8932190F6980072B675 /* route-with-instructions.json in Resources */,
 				35C8DBF8219198320053328C /* route.json in Resources */,
@@ -2526,6 +2533,7 @@
 				35BC7178226F6667003BB5F1 /* CompassViewTests.swift in Sources */,
 				3597ABD021553B6F00C12785 /* SimulatedLocationManagerTests.swift in Sources */,
 				35F1F5931FD57EFD00F8E502 /* StyleManagerTests.swift in Sources */,
+				439FFC252304BF54004C20AA /* GuidanceCardsSnapshotTests.swift in Sources */,
 				35E5B963227B4B620033A124 /* CarPlayCompassViewTests.swift in Sources */,
 				AE00A73A209A2C38006A3DC7 /* StepsViewControllerTests.swift in Sources */,
 				8DEDBCA9222F442900DA2618 /* CarPlayNavigationViewControllerTests.swift in Sources */,
