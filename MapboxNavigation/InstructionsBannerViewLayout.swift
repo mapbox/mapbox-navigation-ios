@@ -7,7 +7,6 @@ extension BaseInstructionsBannerView {
     static let stepListIndicatorViewSize = CGSize(width: 30, height: 5)
     
     func setupViews() {
-        backgroundColor = .clear
         
         let maneuverView = ManeuverView()
         maneuverView.backgroundColor = .clear

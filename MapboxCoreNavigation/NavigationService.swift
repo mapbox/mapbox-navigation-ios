@@ -38,10 +38,13 @@ public protocol DefaultInterfaceFlag {
 }
 
 /**
- A `NavigationService` is the entry-point protocol for MapboxCoreNavigation.
-    It contains all the dependencies needed by the `MapboxNavigation` UI SDK, as well as dependencies for its child objects.
-    `MapboxNavigationService` is the default implementation.
-    If you would like to implement your own core-navigation stack, be sure to conform to this protocol.
+ A navigation service coordinates various nonvisual components that track the user as they navigate along a predetermined route. You use `MapboxNavigationService`, which conforms to this protocol, either as part of `NavigationViewController` or by itself as part of a custom user interface. A navigation service calls methods on its `delegate`, which conforms to the `NavigationServiceDelegate` protocol, whenever significant events or decision points occur along the route.
+ 
+ A navigation service controls a `NavigationLocationManager` for determining the user’s location, a `Router` that tracks the user’s progress along the route, a `Directions` service for calculating new routes (only used when rerouting), and a `NavigationEventsManager` for sending telemetry events related to navigation or user feedback.
+ 
+ `NavigationViewController` comes with a `MapboxNavigationService` by default. You may override it to customize the `Directions` service or simulation mode. After creating the navigation service, pass it into `NavigationOptions(styles:navigationService:voiceController:topBanner:bottomBanner:)`, then pass that object into `NavigationViewController(for:options:)`.
+ 
+ If you use a navigation service by itself, outside of `NavigationViewController`, call `start()` when the user is ready to begin navigating along the route.
  */
 @objc(MBNavigationService)
 public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, EventsManagerDataSource, DefaultInterfaceFlag {
@@ -56,7 +59,7 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
     var directions: Directions { get }
     
     /**
-     The active router, responsible for all route-following.
+     The router object that tracks the user’s progress as they travel along a predetermined route.
      */
     var router: Router! { get }
     
@@ -86,7 +89,9 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
     var poorGPSPatience: Double { get set }
     
     /**
-     The `NavigationService` delegate. Wraps `RouterDelegate` messages.
+     The navigation service’s delegate, which is informed of significant events and decision points along the route.
+     
+     To synchronize your application’s state with the turn-by-turn navigation experience, set this property before starting the navigation session.
      */
     weak var delegate: NavigationServiceDelegate? { get set }
 
@@ -113,7 +118,11 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
 }
 
 /**
- A `NavigationService` is the entry-point interface into MapboxCoreNavigation. This service manages a `locationManager` (which feeds it location updates), a `Directions` service (for rerouting), a `Router` (for route-following), a `NavigationEventsManager` (for telemetry), and a simulation engine for use during poor GPS conditions.
+ A concrete implementation of the `NavigationService` protocol.
+ 
+ `NavigationViewController` comes with a `MapboxNavigationService` by default. You may override it to customize the `Directions` service or simulation mode. After creating the navigation service, pass it into `NavigationOptions(styles:navigationService:voiceController:topBanner:bottomBanner:)`, then pass that object into `NavigationViewController(for:options:)`.
+ 
+ If you use a navigation service by itself, outside of `NavigationViewController`, call `start()` when the user is ready to begin navigating along the route.
  */
 @objc(MBNavigationService)
 public class MapboxNavigationService: NSObject, NavigationService, DefaultInterfaceFlag {

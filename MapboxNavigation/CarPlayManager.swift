@@ -356,7 +356,7 @@ extension CarPlayManager: CPInterfaceControllerDelegate {
             let mapView = mapViewController.mapView
             mapView.removeRoutes()
             mapView.removeWaypoints()
-            mapView.setUserTrackingMode(.followWithCourse, animated: true)
+            mapView.setUserTrackingMode(.followWithCourse, animated: true, completionHandler: nil)
         }
     }
     public func templateWillDisappear(_ template: CPTemplate, animated: Bool) {
@@ -561,8 +561,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         topDownCamera.pitch = 0
         mapView.setCamera(topDownCamera, animated: false)
 
-        let padding = NavigationMapView.defaultPadding + mapView.safeArea
-        mapView.showcase([route], padding: padding)
+        mapView.showcase([route])
         
         delegate?.carPlayManager?(self, selectedPreviewFor: trip, using: routeChoice)
     }
@@ -631,7 +630,8 @@ extension CarPlayManager: CPMapTemplateDelegate {
             return
         }
         
-        mapView.setContentInset(mapView.safeArea, animated: false) //make sure this is always up to date in-case safe area changes during gesture
+        // Make sure the content inset is always up to date in case the safe area changes during a gesture.
+        mapView.setContentInset(mapView.safeArea, animated: false, completionHandler: nil)
         updatePan(by: translation, mapTemplate: mapTemplate, animated: false)
     }
     

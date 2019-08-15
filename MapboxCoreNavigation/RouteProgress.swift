@@ -1,9 +1,6 @@
 import Foundation
 import MapboxDirections
 import Turf
-#if canImport(CarPlay)
-import CarPlay
-#endif
 
 /**
  `RouteProgress` stores the user’s progress along a route.

@@ -1,10 +1,25 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
 ## master
+* Fixed an issue where swiping the banner down after the StepsTableViewController has already displayed could put the UI in an unstable state. ([#2197](https://github.com/mapbox/mapbox-navigation-ios/pull/2197))
 
+## v0.36.0
+
+* Fixed an issue where InstructionsBannerView remained the same color after switching to a day or night style. ([#2178](https://github.com/mapbox/mapbox-navigation-ios/pull/2178))
+* Fixed an issue where `NavigationMapView` showed routes without congestion attributes, such as `MBDirectionsProfileIdentifier.walking` routes, as translucent lines, even if the route had only one leg. ([#2193](https://github.com/mapbox/mapbox-navigation-ios/pull/2193))
+* Fixed an issue where the “iPhone Volume Low” banner would persist until replaced by another banner about simulation or rerouting. ([#2183](https://github.com/mapbox/mapbox-navigation-ios/pull/2183))
+* Designables no longer crash and fail to render in Interface Builder when the application target links to this SDK via CocoaPods. ([#2179](https://github.com/mapbox/mapbox-navigation-ios/pull/2179))
+* Fixed a crash that could occur when statically initializing a `Style` if the SDK was installed using CocoaPods. ([#2179](https://github.com/mapbox/mapbox-navigation-ios/pull/2179))
+* Fixed incorrect animation of instruction labels when presenting the step list. ([#2185](https://github.com/mapbox/mapbox-navigation-ios/pull/2185))
+
+## v0.35.0
+
+* Upgraded to [Mapbox Maps SDK for iOS v5.1.0](https://github.com/mapbox/mapbox-gl-native/releases/tag/ios-v5.1.0). ([#2134](https://github.com/mapbox/mapbox-navigation-ios/pull/2134))
 * Added the ability to define a custom view controller for the top banner via `NavigationOptions.topBanner`. ([#2121](https://github.com/mapbox/mapbox-navigation-ios/pull/2121))
 * StyleManager now posts a `StyleManagerDidApplyStyleNotification` when a style gets applied due to a change of day of time, or when entering or exiting a tunnel. ([#2148](https://github.com/mapbox/mapbox-navigation-ios/pull/2148))
-
+* Fixed a crash when presenting `NavigationViewController` on iOS 13.0. ([#2156](https://github.com/mapbox/mapbox-navigation-ios/pull/2156))
+* Added a setter to the `Router.reroutesProactively` property. ([#2157](https://github.com/mapbox/mapbox-navigation-ios/pull/2157))
+* Added a Yoruba localization. ([#2159](https://github.com/mapbox/mapbox-navigation-ios/pull/2159))
 
 ## v0.34.0
 

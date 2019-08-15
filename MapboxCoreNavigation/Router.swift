@@ -2,11 +2,23 @@ import Foundation
 import CoreLocation
 import MapboxDirections
 
+/**
+ A router data source, also known as a location manager, supplies location data to a `Router` instance. For example, a `MapboxNavigationService` supplies location data to a `RouteController` or `LegacyRouteController`.
+ */
 @objc (MBRouterDataSource)
 public protocol RouterDataSource {
+    
+    /**
+    The location provider for the `Router.` This class is designated as the object that will provide location updates when requested.
+    */
     var locationProvider: NavigationLocationManager.Type { get }
 }
 
+/**
+ A class conforming to the `Router` protocol tracks the user’s progress as they travel along a predetermined route. It calls methods on its `delegate`, which conforms to the `RouterDelegate` protocol, whenever significant events or decision points occur along the route. Despite its name, this protocol does not define the interface of a routing engine.
+ 
+ There are two concrete implementations of the `Router` protocol. `RouteController`, the default implementation, is capable of client-side routing and depends on the Mapbox Navigation Native framework. `LegacyRouteController` is an alternative implementation that does not have this dependency but must be used in conjunction with the Mapbox Directions API over a network connection.
+ */
 @objc public protocol Router: class, CLLocationManagerDelegate {
     
     /**
@@ -59,7 +71,7 @@ public protocol RouterDataSource {
     /**
      If true, the `RouteController` attempts to calculate a more optimal route for the user on an interval defined by `RouteControllerProactiveReroutingInterval`.
      */
-    @objc var reroutesProactively: Bool { get }
+    @objc var reroutesProactively: Bool { get set }
     
     /**
      Advances the leg index.

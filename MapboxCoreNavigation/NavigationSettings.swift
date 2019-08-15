@@ -10,9 +10,11 @@ extension Notification.Name {
 }
 
 /**
- `NavigationSettings` provides a wrapper for UserDefaults.
+ A wrapper for the `UserDefaults` class for navigation-specific settings.
  
- Properties are prefixed and before they are stored in UserDefaults.standard.
+ Properties are prefixed before they are stored in `UserDefaults.standard`.
+ 
+ To specify criteria when calculating routes, use the `NavigationRouteOptions` class. To customize the user experience during a particular turn-by-turn navigation session, use the `NavigationOptions` class when initializing a `NavigationViewController`.
  */
 @objc(MBNavigationSettings)
 public class NavigationSettings: NSObject {
@@ -60,7 +62,7 @@ public class NavigationSettings: NSObject {
         let properties = Mirror(reflecting: self).children
         return properties.filter({ (child) -> Bool in
             if let label = child.label {
-                return label != "properties.storage"
+                return label != "properties.storage" && label != "$__lazy_storage_$_properties"
             }
             return false
         })

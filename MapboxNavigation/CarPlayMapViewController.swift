@@ -43,7 +43,7 @@ public class CarPlayMapViewController: UIViewController {
     @objc public lazy var recenterButton: CPMapButton = {
         let recenter = CPMapButton { [weak self] button in
             
-            self?.mapView.setUserTrackingMode(.followWithCourse, animated: true)
+            self?.mapView.setUserTrackingMode(.followWithCourse, animated: true, completionHandler: nil)
             button.isHidden = true
         }
         let bundle = Bundle.mapboxNavigation
@@ -204,14 +204,19 @@ public class CarPlayMapViewController: UIViewController {
             edgePadding += UIEdgeInsets(top: midY, left: midX, bottom: midY, right: midX)
         }
         
-        mapView.setContentInset(edgePadding, animated: false)
+        mapView.setContentInset(edgePadding, animated: false, completionHandler: nil)
         
         guard let active = mapView.routes?.first else {
-            mapView.setUserTrackingMode(.followWithCourse, animated: true)
+            mapView.setUserTrackingMode(.followWithCourse, animated: true, completionHandler: nil)
             return
         }
         
         if isOverviewingRoutes {
+            //FIXME: Unable to tilt map during route selection -- https://github.com/mapbox/mapbox-gl-native/issues/2259
+            let topDownCamera = mapView.camera
+            topDownCamera.pitch = 0
+            mapView.setCamera(topDownCamera, animated: false)
+            
             mapView.fit(to: active, animated: false)
         }
     }

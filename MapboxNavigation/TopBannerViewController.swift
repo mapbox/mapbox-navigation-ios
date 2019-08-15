@@ -158,17 +158,27 @@ import MapboxDirections
             return
         }
         
-        
         let controller = StepsViewController(routeProgress: progress)
         controller.delegate = self
+
+        var stepsHeightPresizingConstraint: NSLayoutConstraint? = nil
         
         delegate?.topBanner?(self, willDisplayStepsController: controller)
         embed(controller, in: stepsContainer) { (parent, child) -> [NSLayoutConstraint] in
             child.view.translatesAutoresizingMaskIntoConstraints = false
+            
             let pinningConstraints = child.view.constraintsForPinning(to: self.stepsContainer)
             let hideConstraints = self.stepsContainerHideConstraints
+
+            var constraints = pinningConstraints + hideConstraints + self.stepsContainerConstraints
             
-            return pinningConstraints + hideConstraints + self.stepsContainerConstraints
+            if let bannerHostHeight = self.view.superview?.superview?.frame.height { 
+                let inset = self.instructionsBannerHeight + self.view.safeArea.top
+                stepsHeightPresizingConstraint = (child.view.heightAnchor.constraint(equalToConstant: bannerHostHeight - inset))
+                constraints.append(stepsHeightPresizingConstraint!)
+            }
+            
+            return constraints
         }
         stepsViewController = controller
         isDisplayingSteps = true
@@ -178,6 +188,7 @@ import MapboxDirections
         
         let stepsInAnimation = {
             NSLayoutConstraint.deactivate(self.stepsContainerHideConstraints)
+            stepsHeightPresizingConstraint?.isActive = false
             NSLayoutConstraint.activate(self.stepsContainerShowConstraints)
             
             
@@ -292,7 +303,6 @@ import MapboxDirections
         let instructionsView = StepInstructionsView(frame: instructionsBannerView.frame)
         instructionsView.heightAnchor.constraint(equalToConstant: instructionsBannerHeight).isActive = true
         
-        refreshAppearance(view: instructionsView, padding: topPaddingView)
         instructionsView.delegate = self
         instructionsView.distance = distance
         instructionsView.swipeable = true
@@ -323,17 +333,9 @@ import MapboxDirections
         }
     }
     
-    private func refreshAppearance(view: UIView, padding: UIView?) {
-        let viewType = type(of: view)
-        
-        let themedBackgroundColor = viewType.appearance().backgroundColor
-        view.backgroundColor = themedBackgroundColor
-        padding?.backgroundColor = themedBackgroundColor
-    }
     
     private func addInstructionsBanner() {
         informationStackView.insertArrangedSubview(instructionsBannerView, at: 0)
-        refreshAppearance(view: instructionsBannerView, padding: topPaddingView)
         instructionsBannerView.delegate = self
         instructionsBannerView.swipeable = true
     }

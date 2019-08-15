@@ -2,6 +2,7 @@ import Foundation
 import MapboxMobileEvents
 @testable import MapboxCoreNavigation
 import MapboxDirections
+import TestHelper
 
 public class NavigationEventsManagerSpy: NavigationEventsManager {
 
@@ -18,7 +19,7 @@ public class NavigationEventsManagerSpy: NavigationEventsManager {
     var debuggableEvents = [NavigationEventDetails]()
 
     required public init() {
-        mobileEventsManagerSpy = MMEEventsManagerSpy()
+        mobileEventsManagerSpy = MMEEventsManagerSpy.testableInstance()
         super.init(dataSource: nil, accessToken: "fake token", mobileEventsManager: mobileEventsManagerSpy)
     }
 
