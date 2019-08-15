@@ -232,6 +232,7 @@
 		3EA937B1F4DF73EB004BA6BE /* InstructionPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA93230997B8D59E3B76C8C /* InstructionPresenter.swift */; };
 		3EA93A1FEFDDB709DE84BED9 /* ImageRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA938BE5468824787100228 /* ImageRepository.swift */; };
 		4341758223060A17004264A9 /* route-with-tertiary.json in Resources */ = {isa = PBXBuildFile; fileRef = 439FFC222304BC23004C20AA /* route-with-tertiary.json */; };
+		4341758423061666004264A9 /* SnapshotTest+Mapbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4341758323061666004264A9 /* SnapshotTest+Mapbox.swift */; };
 		439FFC252304BF54004C20AA /* GuidanceCardsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 439FFC242304BF54004C20AA /* GuidanceCardsSnapshotTests.swift */; };
 		492B6F84213703D10076D2C6 /* MapboxGeocoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3507F9F92134305C0086B39E /* MapboxGeocoder.framework */; };
 		492B6F85213703EE0076D2C6 /* MapboxGeocoder.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3507F9F92134305C0086B39E /* MapboxGeocoder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -817,6 +818,7 @@
 		3EA938BE5468824787100228 /* ImageRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageRepository.swift; sourceTree = "<group>"; };
 		3EA93A10227A7DAF1861D9F5 /* Cache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
 		3EA93EBD6E6BEC966BBE51D6 /* NavigationServiceTestDoubles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationServiceTestDoubles.swift; sourceTree = "<group>"; };
+		4341758323061666004264A9 /* SnapshotTest+Mapbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SnapshotTest+Mapbox.swift"; sourceTree = "<group>"; };
 		439FFC222304BC23004C20AA /* route-with-tertiary.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "route-with-tertiary.json"; sourceTree = "<group>"; };
 		439FFC242304BF54004C20AA /* GuidanceCardsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuidanceCardsSnapshotTests.swift; sourceTree = "<group>"; };
 		6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WaypointConfirmationViewController.swift; path = Example/WaypointConfirmationViewController.swift; sourceTree = "<group>"; };
@@ -1202,6 +1204,7 @@
 			children = (
 				160A4A68212791010028B070 /* CPBarButton+MBTestable.h */,
 				160A4A69212791010028B070 /* CPBarButton+MBTestable.m */,
+				4341758323061666004264A9 /* SnapshotTest+Mapbox.swift */,
 				16AC9D0F212E356200CECE44 /* CPMapTemplate+MBTestable.h */,
 				16AC9D10212E356200CECE44 /* CPMapTemplate+MBTestable.mm */,
 				DAD17201214DB12B009C8161 /* CPMapTemplateTests.swift */,
@@ -2518,6 +2521,7 @@
 				3502231A205BC94E00E1449A /* Constants.swift in Sources */,
 				DA0557252155040700A1F2AA /* RouteTests.swift in Sources */,
 				C55C299920D2E2F600B0406C /* NavigationMapViewTests.swift in Sources */,
+				4341758423061666004264A9 /* SnapshotTest+Mapbox.swift in Sources */,
 				1662244720256C0700EA4824 /* ImageLoadingURLProtocolSpy.swift in Sources */,
 				AE291FFF20975A7E00F23DFC /* NavigationViewControllerTests.swift in Sources */,
 				16EF6C1E21193A9600AA580B /* CarPlayManagerTests.swift in Sources */,
