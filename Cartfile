@@ -1,4 +1,4 @@
-binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" ~> 5.1
+binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" ~> 5.2
 binary "https://www.mapbox.com/ios-sdk/MapboxNavigationNative.json" ~> 6.2.1
 github "mapbox/MapboxDirections.swift" "maxspeeds"
 github "mapbox/turf-swift" ~> 0.3
