@@ -49,9 +49,6 @@
 /* Title for unmute button */
 "CARPLAY_UNMUTE" = "Ṣi i";
 
-/* Format string for indicating the device volume is low; 1 = device model */
-"DEVICE_VOLUME_LOW" = "%@ didun kekere";
-
 /* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "Pa";
 

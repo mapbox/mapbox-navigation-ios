@@ -49,9 +49,6 @@
 /* Title for unmute button */
 "CARPLAY_UNMUTE" = "Unmute";
 
-/* Format string for indicating the device volume is low; 1 = device model */
-"DEVICE_VOLUME_LOW" = "%@ Volume Low";
-
 /* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "Close";
 
@@ -90,6 +87,9 @@
 
 /* Title of view controller for sending feedback */
 "FEEDBACK_TITLE" = "Report Problem";
+
+/* Label indicating the device volume is too low to hear spoken instructions and needs to be manually increased */
+"INAUDIBLE_INSTRUCTIONS_CTA" = "Adjust Volume to Hear Instructions";
 
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@ and %2$@";
