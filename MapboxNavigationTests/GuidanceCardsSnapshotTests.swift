@@ -11,7 +11,7 @@ class GuidanceCardsSnapshotTests: SnapshotTest {
     
     override func setUp() {
         super.setUp()
-        recordMode = false
+        recordMode = true
     }
     
     func testRegularManeuver() {
@@ -33,7 +33,7 @@ class GuidanceCardsSnapshotTests: SnapshotTest {
         
         subject.routeProgress = progress
         
-        verify(host, for: Device.iPhoneX.portrait)
+        verify(host, for: Device.iPhone6Plus.portrait)
     }
     
     func testLanesManeuver() {
@@ -56,7 +56,7 @@ class GuidanceCardsSnapshotTests: SnapshotTest {
         
         subject.routeProgress = progress
         
-        verify(host, for: Device.iPhoneX.portrait)
+        verify(host, for: Device.iPhone6Plus.portrait)
     }
     
     func testTertiaryManeuver() {
@@ -80,6 +80,6 @@ class GuidanceCardsSnapshotTests: SnapshotTest {
         subject.routeProgress = progress
         subject.view.setNeedsDisplay()
         
-        verify(host, for: Device.iPhoneX.portrait)
+        verify(host, for: Device.iPhone6Plus.portrait)
     }
 }
