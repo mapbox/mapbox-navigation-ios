@@ -11,7 +11,7 @@ class GuidanceCardsSnapshotTests: SnapshotTest {
     
     override func setUp() {
         super.setUp()
-        recordMode = true
+        recordMode = false
     }
     
     func testRegularManeuver() {
