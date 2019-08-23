@@ -1,6 +1,3 @@
-/* Format string for indicating the device volume is low; 1 = device model */
-"DEVICE_VOLUME_LOW" = "%@ Низька гучність";
-
 /* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "Закрити";
 
