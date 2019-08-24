@@ -192,9 +192,8 @@ extension InternalRouter where Self: Router {
     
     func announce(reroute newRoute: Route, at location: CLLocation?, proactive: Bool) {
         var userInfo = [RouteControllerNotificationUserInfoKey: Any]()
-        if let location = location {
-            userInfo[.locationKey] = location
-        }
+        userInfo[.locationKey] = location
+        userInfo[.headingKey] = heading
         userInfo[.isProactiveKey] = proactive
         NotificationCenter.default.post(name: .routeControllerDidReroute, object: self, userInfo: userInfo)
         delegate?.router?(self, didRerouteAlong: routeProgress.route, at: location, proactive: proactive)

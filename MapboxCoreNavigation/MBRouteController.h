@@ -80,6 +80,16 @@ extern const _Nonnull MBRouteControllerNotificationUserInfoKey MBRouteController
 extern const _Nonnull MBRouteControllerNotificationUserInfoKey MBRouteControllerRawLocationKey;
 
 /**
+ A key in the user info dictionary of a `MBRouteControllerProgressDidChangeNotification` or `MBRouteControllerWillRerouteNotification` notification. The corresponding value is a `CLHeading` object representing the current idealized user heading. The value may be `nil`.
+ */
+extern const _Nonnull MBRouteControllerNotificationUserInfoKey MBRouteControllerHeadingKey;
+
+/**
+ A key in the user info dictionary of a `MBRouteControllerProgressDidChangeNotification` or `MBRouteControllerWillRerouteNotification` notification. The corresponding value is a `CLHeading` object representing the current raw user heading. The value may be `nil`.
+ */
+extern const _Nonnull MBRouteControllerNotificationUserInfoKey MBRouteControllerRawHeadingKey;
+
+/**
  A key in the user info dictionary of a `MBRouteControllerDidFailToRerouteNotification` notification. The corresponding value is an `NSError` object indicating why `RouteController` was unable to calculate a new route.
  */
 extern const _Nonnull MBRouteControllerNotificationUserInfoKey MBRouteControllerRoutingErrorKey;

@@ -301,11 +301,14 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
             delegate?.router?(self, didUpdate: progress, with: location, rawLocation: rawLocation)
             
             //Fire the notification (for now)
-            NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: [
-                RouteControllerNotificationUserInfoKey.routeProgressKey: progress,
-                RouteControllerNotificationUserInfoKey.locationKey: location, //guaranteed value
-                RouteControllerNotificationUserInfoKey.rawLocationKey: rawLocation //raw
-                ])
+            var userInfo: [RouteControllerNotificationUserInfoKey: Any] = [
+                .routeProgressKey: progress,
+                .locationKey: location, //guaranteed value
+                .rawLocationKey: rawLocation, //raw
+            ]
+            userInfo[.headingKey] = heading
+            userInfo[.rawHeadingKey] = heading // heading snapping not yet implemented (an unnecessary?)
+            NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: userInfo)
         }
     }
         
@@ -354,9 +357,11 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         isRerouting = true
 
         delegate?.router?(self, willRerouteFrom: location)
-        NotificationCenter.default.post(name: .routeControllerWillReroute, object: self, userInfo: [
-            RouteControllerNotificationUserInfoKey.locationKey: location
-        ])
+        var userInfo: [RouteControllerNotificationUserInfoKey: Any] = [
+            .locationKey: location,
+        ]
+        userInfo[.headingKey] = heading
+        NotificationCenter.default.post(name: .routeControllerWillReroute, object: self, userInfo: userInfo)
 
         self.lastRerouteLocation = location
 

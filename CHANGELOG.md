@@ -3,6 +3,7 @@
 ## master
 * Fixed an issue where swiping the banner down after the StepsTableViewController has already displayed could put the UI in an unstable state. ([#2197](https://github.com/mapbox/mapbox-navigation-ios/pull/2197))
 * If the user walks away from the route, they may be rerouted onto a route that initially travels in the opposite direction. This is only the case along steps that require walking on foot. ([#2215](https://github.com/mapbox/mapbox-navigation-ios/pull/2215))
+* Added `RouteControllerNotificationUserInfoKey.headingKey` to the user info dictionary of `Notification.Name.routeControllerWillReroute`, `Notification.Name.routeControllerDidReroute`, and `Notification.Name.routeControllerProgressDidChange` notifications. ([#2215](https://github.com/mapbox/mapbox-navigation-ios/pull/2215))
 * Added a `Router.heading` property that may contain a heading from the location manager. ([#2215](https://github.com/mapbox/mapbox-navigation-ios/pull/2215))
 
 ## v0.36.0

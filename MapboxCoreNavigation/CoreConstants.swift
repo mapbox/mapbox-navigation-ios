@@ -136,21 +136,21 @@ extension Notification.Name {
     /**
      Posted after the user diverges from the expected route, just before `RouteController` attempts to calculate a new route.
      
-     The user info dictionary contains the key `RouteControllerNotificationUserInfoKey.locationKey`.
+     The user info dictionary contains the keys `RouteControllerNotificationUserInfoKey.locationKey` and `RouteControllerNotificationUserInfoKey.headingKey`.
      */
     public static let routeControllerWillReroute = MBRouteControllerWillReroute
     
     /**
      Posted when `RouteController` obtains a new route in response to the user diverging from a previous route.
      
-     The user info dictionary contains the keys `RouteControllerNotificationUserInfoKey.locationKey` and `RouteControllerNotificationUserInfoKey.isProactiveKey`.
+     The user info dictionary contains the keys `RouteControllerNotificationUserInfoKey.locationKey`, `RouteControllerNotificationUserInfoKey.headingKey`, and `RouteControllerNotificationUserInfoKey.isProactiveKey`.
      */
     public static let routeControllerDidReroute = MBRouteControllerDidReroute
     
     /**
      Posted when `RouteController` receives a user location update representing movement along the expected route.
      
-     The user info dictionary contains the keys `RouteControllerNotificationUserInfoKey.routeProgressKey`, `RouteControllerNotificationUserInfoKey.locationKey`, and `RouteControllerNotificationUserInfoKey.rawLocationKey`.
+     The user info dictionary contains the keys `RouteControllerNotificationUserInfoKey.routeProgressKey`, `RouteControllerNotificationUserInfoKey.locationKey`, `RouteControllerNotificationUserInfoKey.headingKey`, and `RouteControllerNotificationUserInfoKey.rawLocationKey`.
      */
     public static let routeControllerProgressDidChange = MBRouteControllerProgressDidChange
     
