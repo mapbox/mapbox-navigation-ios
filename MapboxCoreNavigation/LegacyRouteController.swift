@@ -123,7 +123,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         return rawLocation?.snapped(to: routeProgress)
     }
 
-    var heading: CLHeading?
+    public var heading: CLHeading?
 
     /**
      The most recently received user location.
@@ -224,6 +224,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     
     @objc public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
         heading = newHeading
+        // TODO: Cause a map view to update its camera.
     }
 
     @objc public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {

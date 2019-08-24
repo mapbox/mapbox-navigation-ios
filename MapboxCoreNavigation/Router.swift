@@ -67,6 +67,10 @@ public protocol RouterDataSource {
      */
     @objc var rawLocation: CLLocation? { get }
     
+    /**
+     The most recently received user heading, if any.
+     */
+    @objc var heading: CLHeading? { get }
     
     /**
      If true, the `RouteController` attempts to calculate a more optimal route for the user on an interval defined by `RouteControllerProactiveReroutingInterval`.

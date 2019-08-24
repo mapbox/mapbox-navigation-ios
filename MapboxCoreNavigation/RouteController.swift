@@ -96,7 +96,7 @@ open class RouteController: NSObject {
         return CLLocation(status.location)
     }
     
-    var heading: CLHeading?
+    public var heading: CLHeading?
     
     /**
      The most recently received user location.
@@ -156,6 +156,11 @@ open class RouteController: NSObject {
         
         // TODO: Add support for alternative route
         navigator.setRouteForRouteResponse(jsonString, route: 0, leg: 0)
+    }
+    
+    @objc public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+        heading = newHeading
+        // TODO: Cause a map view to update its camera.
     }
     
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
