@@ -359,7 +359,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
 
         self.lastRerouteLocation = location
 
-        getDirections(from: location, along: progress) { [weak self] (route, error) in
+        getDirections(from: location, routeProgress: progress) { [weak self] (route, error) in
             guard let strongSelf = self else {
                 return
             }

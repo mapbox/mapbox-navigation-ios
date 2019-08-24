@@ -135,7 +135,7 @@ extension InternalRouter where Self: Router {
         if isRerouting { return }
         isRerouting = true
         
-        getDirections(from: location, along: routeProgress) { [weak self] (route, error) in
+        getDirections(from: location, routeProgress: routeProgress) { [weak self] (route, error) in
             self?.isRerouting = false
             
             guard let route = route else { return }
@@ -156,9 +156,9 @@ extension InternalRouter where Self: Router {
         }
     }
     
-    func getDirections(from location: CLLocation, along progress: RouteProgress, completion: @escaping (_ route: Route?, _ error: Error?)->Void) {
+    func getDirections(from location: CLLocation, routeProgress: RouteProgress, completion: @escaping (_ route: Route?, _ error: Error?)->Void) {
         routeTask?.cancel()
-        let options = progress.reroutingOptions(with: location)
+        let options = routeProgress.reroutingOptions(from: location)
         
         lastRerouteLocation = location
         
@@ -168,7 +168,7 @@ extension InternalRouter where Self: Router {
                 return completion(nil, error)
             }
             
-            let mostSimilar = routes.mostSimilar(to: progress.route)
+            let mostSimilar = routes.mostSimilar(to: routeProgress.route)
             return completion(mostSimilar ?? routes.first, error)
         }
     }

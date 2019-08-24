@@ -368,7 +368,7 @@ extension RouteController: Router {
         if isRerouting { return }
         isRerouting = true
         
-        getDirections(from: location, along: progress) { [weak self] (route, error) in
+        getDirections(from: location, routeProgress: progress) { [weak self] (route, error) in
             self?.isRerouting = false
             
             guard let strongSelf: RouteController = self else {
