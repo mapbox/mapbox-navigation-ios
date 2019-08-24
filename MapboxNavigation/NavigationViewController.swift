@@ -493,7 +493,9 @@ extension NavigationViewController: NavigationServiceDelegate {
         
         if snapsUserLocationAnnotationToRoute,
             userHasArrivedAndShouldPreventRerouting {
-            mapViewController?.mapView.updateCourseTracking(location: location, animated: true)
+            let isWalking = progress.currentLegProgress.currentStep.transportType == .walking
+            let heading = isWalking ? navigationService.locationManager.heading : nil
+            mapViewController?.mapView.updateCourseTracking(location: location, heading: heading, animated: true)
         }
     }
     

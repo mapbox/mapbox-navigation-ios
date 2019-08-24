@@ -91,6 +91,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
         
         let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
         let location = notification.userInfo![RouteControllerNotificationUserInfoKey.locationKey] as! CLLocation
+        let heading = notification.userInfo![RouteControllerNotificationUserInfoKey.headingKey] as? CLHeading
         
         // Add maneuver arrow
         if routeProgress.currentLegProgress.followOnStep != nil {
@@ -104,7 +105,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
         instructionsBannerView.isHidden = false
         
         // Update the user puck
-        mapView.updateCourseTracking(location: location, animated: true)
+        mapView.updateCourseTracking(location: location, heading: heading, animated: true)
     }
     
     @objc func updateInstructionsBanner(notification: NSNotification) {
