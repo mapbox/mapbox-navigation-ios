@@ -92,6 +92,9 @@ open class LanesView: UIView, NavigationComponent {
         }
         
         let subviews = lanes.map { LaneView(component: $0) }
+        
+        guard subviews.contains(where: { !$0.isValid }) else { return }
+        
         stackView.addArrangedSubviews(subviews)
         show()
     }

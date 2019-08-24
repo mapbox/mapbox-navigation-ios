@@ -20,7 +20,7 @@ class BottomBannerSnapshotTests: SnapshotTest {
         let subject = BottomBannerViewController(nibName: nil, bundle: nil)
         
         host.view.addSubview(container)
-        constrain(container, to: host.view)
+        constrain(container, to: host.view, side: .bottom)
         
         embed(parent: host, child: subject, in: container) { (parent, banner) -> [NSLayoutConstraint] in
             banner.view.translatesAutoresizingMaskIntoConstraints = false
@@ -40,7 +40,7 @@ class BottomBannerSnapshotTests: SnapshotTest {
         let subject = BottomBannerViewController(nibName: nil, bundle: nil)
         
         host.view.addSubview(container)
-        constrain(container, to: host.view)
+        constrain(container, to: host.view, side: .bottom)
         
         embed(parent: host, child: subject, in: container) { (parent, banner) -> [NSLayoutConstraint] in
             banner.view.translatesAutoresizingMaskIntoConstraints = false
@@ -52,28 +52,10 @@ class BottomBannerSnapshotTests: SnapshotTest {
         
         verify(host, for: Device.iPhone8.portrait)
     }
-    
-    func constrain(_ child: UIView, to parent: UIView) {
-        let constraints = [
-            child.leadingAnchor.constraint(equalTo: parent.leadingAnchor),
-            child.trailingAnchor.constraint(equalTo: parent.trailingAnchor),
-            child.bottomAnchor.constraint(equalTo: parent.bottomAnchor)
-        ]
-        NSLayoutConstraint.activate(constraints)
-    }
+
     
     func applyStyling(to subject: BottomBannerViewController) {
         subject.bottomBannerView.backgroundColor = .white
         subject.bottomPaddingView.backgroundColor = .orange
-    }
-    
-    func embed(parent:UIViewController, child: UIViewController, in container: UIView, constrainedBy constraints: ((UIViewController, UIViewController) -> [NSLayoutConstraint])?) {
-        child.willMove(toParent: parent)
-        parent.addChild(child)
-        container.addSubview(child.view)
-        if let childConstraints: [NSLayoutConstraint] = constraints?(parent, child) {
-            parent.view.addConstraints(childConstraints)
-        }
-        child.didMove(toParent: parent)
     }
 }

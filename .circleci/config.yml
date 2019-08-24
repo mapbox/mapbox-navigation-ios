@@ -175,12 +175,12 @@ workflows:
   workflow:
     jobs:
       - build-job:
-          name: "Xcode_10.2_iOS_12.2"
-          xcode: "10.2.0"
+          name: "Xcode_10.3_iOS_12.2"
+          xcode: "10.3.0"
           iOS: "12.2"
       - build-job:
-          name: "Xcode_10.1_iOS_12.1"
-          xcode: "10.1.0"
+          name: "Xcode_10.3_iOS_12.1"
+          xcode: "10.3.0"
           iOS: "12.1"
           codecoverage: true
       - build-job:
