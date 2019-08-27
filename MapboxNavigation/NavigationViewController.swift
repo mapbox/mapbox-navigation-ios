@@ -476,6 +476,8 @@ extension NavigationViewController: NavigationServiceDelegate {
             component.navigationService?(service, didUpdate: progress, with: location, rawLocation: rawLocation)
         }
 
+        delegate?.navigationViewController?(self, didUpdate: progress, with: location, rawLocation: rawLocation)
+
         // If the user has arrived, don't snap the user puck.
         // In the case the user drives beyond the waypoint,
         // we should accurately depict this.
