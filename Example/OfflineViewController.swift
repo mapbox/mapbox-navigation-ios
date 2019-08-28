@@ -30,7 +30,7 @@ class OfflineViewController: UIViewController, MGLMapViewDelegate {
     }
 
     func mapViewDidFinishLoadingMap(_ mapView: MGLMapView) {
-        mapView.setUserTrackingMode(.follow, animated: false)
+        mapView.setUserTrackingMode(.follow, animated: false, completionHandler: nil)
         mapView.setZoomLevel(8, animated: false)
     }
     
@@ -53,7 +53,7 @@ class OfflineViewController: UIViewController, MGLMapViewDelegate {
         
         disableUserInterface()
         
-        Directions.shared.fetchAvailableOfflineVersions { [weak self] (versions, error) in
+        _ = Directions.shared.fetchAvailableOfflineVersions { [weak self] (versions, error) in
             
             guard let version = versions?.first(where: { !$0.isEmpty } ) else {
                 let title = NSLocalizedString("OFFLINE_TITLE_VERSION_FETCHING_FAILED", value:"Unable to fetch available routing tile versions", comment: "Error title to display when no routing tile versions are available")
@@ -64,7 +64,7 @@ class OfflineViewController: UIViewController, MGLMapViewDelegate {
             
             self?.updateTitle(NSLocalizedString("OFFLINE_TITLE_DOWNLOADING_TILES", value: "Downloading Tiles…", comment: "Status item while downloading an offline region"))
             
-            Directions.shared.downloadTiles(in: coordinateBounds, version: version, completionHandler: { (url, response, error) in
+            _ = Directions.shared.downloadTiles(in: coordinateBounds, version: version) { (url, response, error) in
                 guard let url = url else { return assert(false, "Unable to locate temporary file") }
                 
                 if let response = response as? HTTPURLResponse {
@@ -105,8 +105,8 @@ class OfflineViewController: UIViewController, MGLMapViewDelegate {
 
                     self?.navigationController?.popViewController(animated: true)
                 })
-            }).resume()
-        }.resume()
+            }
+        }
     }
     
     func updateTitle(_ string: String) {

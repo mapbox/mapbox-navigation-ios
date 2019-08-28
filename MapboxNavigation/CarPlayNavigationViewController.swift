@@ -187,13 +187,9 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
         
         mapView.enableFrameByFrameCourseViewTracking(for: 1)
         
-        mapView.setContentInset(view.safeArea, animated: true)
-        
-        if !tracksUserCourse {
-            // TODO: chain mapView.fit(to:facing:animated:) to the completion of
-            // setContentInset(_:animated:completion) when
-            // https://github.com/mapbox/mapbox-gl-native/pull/14381 lands
-            mapView.fit(to: navigationService.route, facing: 0, animated: false)
+        mapView.setContentInset(view.safeArea, animated: true) { [weak self] in
+            guard let self = self, self.tracksUserCourse else { return }
+            mapView.fit(to: self.navigationService.route, facing: 0, animated: true)
         }
     }
     

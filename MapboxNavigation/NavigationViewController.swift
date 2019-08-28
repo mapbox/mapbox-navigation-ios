@@ -6,19 +6,19 @@ import AVFoundation
 import Mapbox
 
 /**
- A ContainerViewController is any UIViewController that conforms to the NavigationComponent messaging protocol.
- - seealso: NavigationComponent
+ A container view controller is a view controller that behaves as a navigation component; that is, it responds as the user progresses along a route according to the `NavigationServiceDelegate` protocol.
  */
 public typealias ContainerViewController = UIViewController & NavigationComponent
 
 /**
- `NavigationViewController` is a fully-featured turn-by-turn navigation UI.
+ `NavigationViewController` is a fully-featured user interface for turn-by-turn navigation. Do not confuse it with the `NavigationController` class in UIKit.
  
- It provides step by step instructions, an overview of all steps for the given route and support for basic styling.
+ You initialize a navigation view controller based on a predefined `Route` and `NavigationOptions`. As the user progresses along the route, the navigation view controller shows their surroundings and the route line on a map. Banners above and below the map display key information pertaining to the route. A list of steps and a feedback mechanism are accessible via the navigation view controller.
  
- - seealso: CarPlayNavigationViewController
+ To be informed of significant events and decision points as the user progresses along the route, set the `NavigationService.delegate` property of the `NavigationService` that you provide when creating the navigation options.
+ 
+ `CarPlayNavigationViewController` manages the corresponding user interface on a CarPlay screen.
  */
-
 @objc(MBNavigationViewController)
 open class NavigationViewController: UIViewController, NavigationStatusPresenter {
     
@@ -62,16 +62,12 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     @objc public weak var delegate: NavigationViewControllerDelegate?
     
     /**
-     Provides access to various speech synthesizer options.
-     
-     See `RouteVoiceController` for more information.
+     The voice controller that vocalizes spoken instructions along the route at the appropriate times.
      */
     @objc public var voiceController: RouteVoiceController!
     
     /**
-     Provides all routing logic for the user.
-
-     See `NavigationService` for more information.
+     The navigation service that coordinates the view controller’s nonvisual components, tracking the user’s location as they proceed along the route.
      */
     @objc private(set) public var navigationService: NavigationService! {
         didSet {
@@ -188,12 +184,12 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     private var traversingTunnel = false
     
     /**
-     Initializes a `NavigationViewController` that provides turn by turn navigation for the given route. A optional `direction` object is needed for  potential rerouting.
+     Initializes a navigation view controller that presents the user interface for following a predefined route based on the given options.
 
-     See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
+     The route may come directly from the completion handler of the [MapboxDirections.swift](https://mapbox.github.io/mapbox-navigation-ios/directions/) framework’s `Directions.calculate(_:completionHandler:)` method, or it may be unarchived or created from a JSON object.
      
      - parameter route: The route to navigate along.
-     - parameter options: The navigation options to use for the navigation session. See `NavigationOptions`.
+     - parameter options: The navigation options to use for the navigation session.
      */
     @objc(initWithRoute:options:)
     required public init(for route: Route,
@@ -642,21 +638,20 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
     public func topBanner(_ banner: TopBannerViewController, didSwipeInDirection direction: UISwipeGestureRecognizer.Direction) {
         let progress = navigationService.routeProgress
         let route = progress.route
+        switch direction {
         
-        if direction == .down {
+        case .up where banner.isDisplayingSteps:
+            banner.dismissStepsTable()
+        
+        case .down where !banner.isDisplayingSteps:
             banner.displayStepsTable()
             
             
             if banner.isDisplayingPreviewInstructions {
                 mapViewController?.recenter(self)
             }
-            
-        } else if direction == .right {
-            // prevent swiping when step list is visible
-            if banner.isDisplayingSteps {
-                return
-            }
-            
+        
+        case .right where !banner.isDisplayingSteps:
             guard let currentStepIndex = banner.currentPreviewStep?.1 else { return }
             let remainingSteps = progress.remainingSteps
             let prevStepIndex = currentStepIndex.advanced(by: -1)
@@ -664,12 +659,8 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
             
             let prevStep = remainingSteps[prevStepIndex]
             preview(step: prevStep, in: banner, remaining: remainingSteps, route: route)
-        } else if direction == .left {
-            // prevent swiping when step list is visible
-            if banner.isDisplayingSteps {
-                return
-            }
             
+        case .left where !banner.isDisplayingSteps:
             let remainingSteps = navigationService.router.routeProgress.remainingSteps
             let currentStepIndex = banner.currentPreviewStep?.1
             let nextStepIndex = currentStepIndex?.advanced(by: 1) ?? 0
@@ -677,6 +668,9 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
             
             let nextStep = remainingSteps[nextStepIndex]
             preview(step: nextStep, in: banner, remaining: remainingSteps, route: route)
+            
+        default:
+            return
         }
     }
     

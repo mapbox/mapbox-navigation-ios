@@ -44,12 +44,11 @@
 
 // This test is excluded from the test suite. We are just verifying that offline routing bridges to Obj-C at compile time.
 - (void)testOfflineRouting {
-    [[[MBDirections sharedDirections] fetchAvailableOfflineVersionsWithCompletionHandler:^(NSArray<NSString *> * _Nullable versions, NSError * _Nullable error) {
+    (void)[[MBDirections sharedDirections] fetchAvailableOfflineVersionsWithCompletionHandler:^(NSArray<NSString *> * _Nullable versions, NSError * _Nullable error) {
         
         MBCoordinateBounds *bounds = [[MBCoordinateBounds alloc] initWithNorthWest:CLLocationCoordinate2DMake(0, 0) southEast:CLLocationCoordinate2DMake(1, 1)];
         
-        [[[MBDirections sharedDirections] downloadTilesIn:bounds version:versions.firstObject session:nil completionHandler:^(NSURL * _Nullable url, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-            
+        (void)[[MBDirections sharedDirections] downloadTilesInCoordinateBounds:bounds version:versions.firstObject completionHandler:^(NSURL * _Nullable url, NSURLResponse * _Nullable response, NSError * _Nullable error) {
             NSURL *outputDirectoryURL = [[NSBundle mapboxCoreNavigation] suggestedTileURLWithVersion:versions.firstObject];
             
             [MBNavigationDirections unpackTilePackAtURL:url outputDirectoryURL:outputDirectoryURL progressHandler:^(uint64_t totalBytes, uint64_t bytesRemaining) {
@@ -57,9 +56,8 @@
             } completionHandler:^(uint64_t numberOfTiles, NSError * _Nullable error) {
                 // Dismiss UI
             }];
-            
-        }] resume];
-    }] resume];
+        }];
+    }];
     
     MBNavigationRouteOptions *options = [[MBNavigationRouteOptions alloc] initWithLocations:@[] profileIdentifier:MBDirectionsProfileIdentifierCycling];
     

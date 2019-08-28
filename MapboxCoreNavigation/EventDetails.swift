@@ -62,7 +62,7 @@ struct NavigationEventDetails: EventDetails {
     let device: String = UIDevice.current.machine
     let distance: CLLocationDistance?
     let distanceCompleted: CLLocationDistance
-    let distanceRemaining: TimeInterval
+    let distanceRemaining: CLLocationDistance
     let durationRemaining: TimeInterval
     let estimatedDuration: TimeInterval?
     let geometry: Polyline?
