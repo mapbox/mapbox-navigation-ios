@@ -45,17 +45,16 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Mapbox-iOS-SDK: 3e095b305126d52ba166fe215d847b15b6fbee63
-  MapboxAccounts: b550ec981529016d28d9eaefae9c11034f3b8685
-  MapboxCoreNavigation: 41fb5d8018609ae2c548dfba9725a84f331962eb
+  MapboxCoreNavigation: 308aa3187b0e7425952162955f3d5ac70dc73879
   MapboxDirections.swift: 1c6df988c24b753888ebd9976d7c98632501a413
   MapboxMobileEvents: f6c21b2e59066c5c7093585de7c15adae3b63da0
-  MapboxNavigation: 488e43af129706fcecdc32be74a8d0205ec6957b
+  MapboxNavigation: 50574816ad45645aefca3ddc5a2459cabc6081fc
   MapboxNavigationNative: 11dc22140f4698d3f26989f2b6379dc81ef0d4c1
   MapboxSpeech: 836e3eaa9cebde17af65a1764687c7a93501b131
   Polyline: 0e9890790292741c8186201a536b6bb6a78d02dd
   Solar: 2dc6e7cc39186cb0c8228fa08df76fb50c7d8f24
   Turf: c6bdf62d6a70c647874f295dd1cf4eefc0c3e9e6
 
-PODFILE CHECKSUM: 55ae5a7edbc3dedda5149ba3d58b992ab7327f95
+PODFILE CHECKSUM: d4084fe664fbacd0cffd88ab45eaed1ad907ad1d
 
 COCOAPODS: 1.7.5
