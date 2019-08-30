@@ -178,7 +178,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 courseTrackingDelegate?.navigationMapViewDidStopTrackingCourse?(self)
             }
             if let location = userLocationForCourseTracking {
-                updateCourseTracking(location: location, animated: true)
+                // TODO: Is it OK to use the course until the next location update?
+                updateCourseTracking(location: location, heading: nil, animated: true)
             }
         }
     }
@@ -193,7 +194,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             oldValue?.removeFromSuperview()
             if let userCourseView = userCourseView {
                 if let location = userLocationForCourseTracking {
-                    updateCourseTracking(location: location, animated: false)
+                    // TODO: Is it OK to use the course until the next location update?
+                    updateCourseTracking(location: location, heading: nil, animated: false)
                 } else {
                     userCourseView.center = userAnchorPoint
                 }
@@ -256,8 +258,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         super.layoutSubviews()
         
         //If the map is in tracking mode, make sure we update the camera after the layout pass.
-        if (tracksUserCourse) {
-            updateCourseTracking(location: userLocationForCourseTracking, camera:self.camera, animated: false)
+        if tracksUserCourse {
+            // TODO: Is it OK to use course until the next location update?
+            updateCourseTracking(location: userLocationForCourseTracking, heading: nil, camera: camera, animated: false)
         }
     }
     
@@ -325,7 +328,22 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         tracksUserCourse = false
     }
     
+    @available(*, deprecated, message: "Use updateCourseTracking(location:heading:camera:animated:) instead.")
     @objc public func updateCourseTracking(location: CLLocation?, camera: MGLMapCamera? = nil, animated: Bool = false) {
+        updateCourseTracking(location: location, heading: nil, camera: camera, animated: animated)
+    }
+    
+    /**
+     Transitions the map view’s camera and user course view to reflect the given user location.
+     
+     If `tracksUserCourse` is set to `false`, this method does not reflect the user location; it only synchronizes the user course view with the map.
+     
+     - parameter location: The location that the map view will focus on.
+     - parameter heading: The direction the map view will face. If this parameter is `nil`, the `location` parameter’s `CLLocation.course` property is used instead. Only set this parameter to `CLLocationManager.heading` if the user is walking or using a vehicle with a very small turning radius.
+     - parameter camera: The camera to transition to. If this parameter is `nil`, the default camera looks out from `location`.
+     - parameter animated: True to animate the transition; false to transition instantaneously.
+     */
+    @objc public func updateCourseTracking(location: CLLocation?, heading: CLHeading?, camera: MGLMapCamera? = nil, animated: Bool = false) {
         // While animating to overhead mode, don't animate the puck.
         let duration: TimeInterval = animated && !isAnimatingToOverheadMode ? 1 : 0
         animatesUserLocation = animated
@@ -335,7 +353,16 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
         
         if tracksUserCourse {
-            let newCamera = camera ?? MGLMapCamera(lookingAtCenter: location.coordinate, altitude: altitude, pitch: 45, heading: location.course)
+            var direction: CLLocationDirection?
+            if let trueHeading = heading?.trueHeading, trueHeading >= 0 {
+                direction = trueHeading
+            } else if let magneticHeading = heading?.magneticHeading, magneticHeading >= 0 {
+                direction = magneticHeading
+            } else if location.course >= 0 {
+                direction = location.course
+            }
+            
+            let newCamera = camera ?? MGLMapCamera(lookingAtCenter: location.coordinate, altitude: altitude, pitch: 45, heading: direction ?? -1)
             let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: .linear) : nil
             let point = userAnchorPoint
             let padding = UIEdgeInsets(top: point.y, left: point.x, bottom: bounds.height - point.y, right: bounds.width - point.x)

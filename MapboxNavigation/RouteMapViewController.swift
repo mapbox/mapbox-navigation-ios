@@ -229,15 +229,18 @@ class RouteMapViewController: UIViewController {
 
         mapView.tracksUserCourse = true
 
+        let isWalking = navService.routeProgress.currentLegProgress.currentStep.transportType == .walking
+        let heading = isWalking ? navService.locationManager.heading : nil
+        
         if let camera = pendingCamera {
             mapView.camera = camera
-        } else if let location = router.location, location.course > 0 {
-            mapView.updateCourseTracking(location: location, animated: false)
+        } else if let location = router.location, location.course >= 0 {
+            mapView.updateCourseTracking(location: location, heading: heading, animated: false)
         } else if let coordinates = router.routeProgress.currentLegProgress.currentStep.coordinates, let firstCoordinate = coordinates.first, coordinates.count > 1 {
             let secondCoordinate = coordinates[1]
             let course = firstCoordinate.direction(to: secondCoordinate)
             let newLocation = CLLocation(coordinate: router.location?.coordinate ?? firstCoordinate, altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: course, speed: 0, timestamp: Date())
-            mapView.updateCourseTracking(location: newLocation, animated: false)
+            mapView.updateCourseTracking(location: newLocation, heading: heading, animated: false)
         } else {
             mapView.setCamera(tiltedCamera, animated: false)
         }
@@ -338,7 +341,9 @@ class RouteMapViewController: UIViewController {
     }
 
     @objc func applicationWillEnterForeground(notification: NSNotification) {
-        mapView.updateCourseTracking(location: router.location, animated: false)
+        let isWalking = navService.routeProgress.currentLegProgress.currentStep.transportType == .walking
+        let heading = isWalking ? navService.locationManager.heading : nil
+        mapView.updateCourseTracking(location: router.location, heading: heading, animated: false)
     }
 
     func updateMapOverlays(for routeProgress: RouteProgress) {
