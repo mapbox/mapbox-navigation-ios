@@ -198,7 +198,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         super.init(nibName: nil, bundle: nil)
         
         self.navigationService = options?.navigationService ?? MapboxNavigationService(route: route)
-        self.navigationService.usesDefaultUserInterface = true
         self.navigationService.delegate = self
         self.voiceController = options?.voiceController ?? MapboxVoiceController(navigationService: navigationService, speechClient: SpeechSynthesizer(accessToken: navigationService?.directions.accessToken))
 

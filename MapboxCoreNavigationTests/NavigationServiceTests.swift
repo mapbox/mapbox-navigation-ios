@@ -47,6 +47,11 @@ class NavigationServiceTests: XCTestCase {
         delegate.reset()
     }
     
+    func testDefaultUserInterfaceUsage() {
+        let service = dependencies.navigationService as? NavigationEventsManager
+        XCTAssertFalse(service?.usesDefaultUserInterface ?? true)
+    }
+    
     func testUserIsOnRoute() {
         let navigation = dependencies.navigationService
         let firstLocation = dependencies.routeLocations.firstLocation

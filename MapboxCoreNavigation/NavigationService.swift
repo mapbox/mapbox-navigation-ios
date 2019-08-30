@@ -30,13 +30,6 @@ public enum SimulationMode: Int {
     case never
 }
 
-/// :nodoc: Internal "using default interaface" flag. Used for telemetry.
-@objc(MBDefaultInterfaceFlag)
-public protocol DefaultInterfaceFlag {
-    /// :nodoc: Internal "using default interaface" flag. Used for telemetry.
-    var usesDefaultUserInterface: Bool { get set }
-}
-
 /**
  A navigation service coordinates various nonvisual components that track the user as they navigate along a predetermined route. You use `MapboxNavigationService`, which conforms to this protocol, either as part of `NavigationViewController` or by itself as part of a custom user interface. A navigation service calls methods on its `delegate`, which conforms to the `NavigationServiceDelegate` protocol, whenever significant events or decision points occur along the route.
  
@@ -47,7 +40,7 @@ public protocol DefaultInterfaceFlag {
  If you use a navigation service by itself, outside of `NavigationViewController`, call `start()` when the user is ready to begin navigating along the route.
  */
 @objc(MBNavigationService)
-public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, EventsManagerDataSource, DefaultInterfaceFlag {
+public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, EventsManagerDataSource {
     /**
      The location manager for the service. This will be the object responsible for notifying the service of GPS updates.
      */
@@ -125,7 +118,7 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
  If you use a navigation service by itself, outside of `NavigationViewController`, call `start()` when the user is ready to begin navigating along the route.
  */
 @objc(MBNavigationService)
-public class MapboxNavigationService: NSObject, NavigationService, DefaultInterfaceFlag {
+public class MapboxNavigationService: NSObject, NavigationService {
     
     typealias DefaultRouter = RouteController
     
@@ -215,16 +208,6 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
     var poorGPSTimer: DispatchTimer!
     private var isSimulating: Bool { return simulatedLocationSource != nil }
     private var _simulationSpeedMultiplier: Double = 1.0
-    
-    /// :nodoc: Internal Telemetry flag.
-    public var usesDefaultUserInterface: Bool {
-        get {
-            return eventsManager.usesDefaultUserInterface
-        }
-        set {
-            eventsManager.usesDefaultUserInterface = newValue
-        }
-    }
     
     /**
      Intializes a new `NavigationService`. Useful convienence initalizer for OBJ-C users, for when you just want to set up a service without customizing anything.
