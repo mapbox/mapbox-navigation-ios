@@ -576,6 +576,9 @@ open class TopBannerView: UIView { }
 @objc(MBBottomBannerView)
 open class BottomBannerView: UIView { }
 
+@objc(MBBottomPaddingView)
+open class BottomPaddingView: BottomBannerView { }
+
 /// :nodoc:
 class NavigationAnnotation: MGLPointAnnotation { }
 
