@@ -47,6 +47,10 @@ class NavigationServiceTests: XCTestCase {
         delegate.reset()
     }
     
+    func testDefaultUserInterfaceUsage() {
+        XCTAssertTrue(dependencies.navigationService.eventsManager.usesDefaultUserInterface, "MapboxCoreNavigationTests should have an implicit dependency on MapboxNavigation due to running inside the Example application target.")
+    }
+    
     func testUserIsOnRoute() {
         let navigation = dependencies.navigationService
         let firstLocation = dependencies.routeLocations.firstLocation

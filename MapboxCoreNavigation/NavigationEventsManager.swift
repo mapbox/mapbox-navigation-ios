@@ -29,8 +29,13 @@ open class NavigationEventsManager: NSObject {
     
     weak var dataSource: EventsManagerDataSource?
     
-    /// :nodoc: This is used internally when the navigation UI is being used
-    var usesDefaultUserInterface = false
+    /**
+     Indicates whether the application depends on MapboxNavigation in addition to MapboxCoreNavigation.
+     */
+    var usesDefaultUserInterface = {
+        // Assumption: MapboxNavigation.framework includes NavigationViewController and exposes it to the Objective-C runtime as MBNavigationViewController.
+        return NSClassFromString("MBNavigationViewController") != nil
+    }()
 
     /// :nodoc: the internal lower-level mobile events manager is an implementation detail which should not be manipulated directly
     private var mobileEventsManager: MMEEventsManager!
