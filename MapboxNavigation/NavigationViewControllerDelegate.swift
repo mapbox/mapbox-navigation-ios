@@ -1,5 +1,6 @@
 import Foundation
 import MapboxDirections
+import MapboxCoreNavigation
 
 /**
  The `NavigationViewControllerDelegate` protocol provides methods for configuring the map view shown by a `NavigationViewController` and responding to the cancellation of a navigation session.
@@ -15,6 +16,17 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      - parameter canceled: True if the user dismissed the navigation view controller by tapping the Cancel button; false if the navigation view controller dismissed by some other means.
      */
     @objc optional func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool)
+    
+    /**
+     Called when movement of the user updates the route progress model.
+     
+     - parameter navigationViewController: The ViewController that received the new locations.
+     - parameter progress: the RouteProgress model that was updated.
+     - parameter location: the guaranteed location, possibly snapped, associated with the progress update.
+     - parameter rawLocation: the raw location, from the location manager, associated with the progress update.
+     */
+    @objc(navigationViewController:didUpdateProgress:withLocation:rawLocation:)
+    optional func navigationViewController(_ navigationViewController: NavigationViewController, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation)
     
     /**
      Called as the user approaches a waypoint.
