@@ -125,9 +125,11 @@ class ViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-        self.mapView = NavigationMapView(frame: view.bounds)
-
+        
+        if mapView == nil {
+            mapView = NavigationMapView(frame: view.bounds)
+        }
+        
         // Reset the navigation styling to the defaults if we are returning from a presentation.
         if (presentedViewController != nil) {
             DayStyle().apply()
@@ -505,6 +507,9 @@ extension ViewController: NavigationViewControllerDelegate {
     func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool) {
         endCarPlayNavigation(canceled: canceled)
         dismissActiveNavigationViewController()
+        if mapView == nil {
+            mapView = NavigationMapView(frame: view.bounds)
+        }
     }
 }
 
