@@ -494,6 +494,9 @@ extension NavigationViewController: NavigationServiceDelegate {
             userHasArrivedAndShouldPreventRerouting {
             mapViewController?.mapView.updateCourseTracking(location: location, animated: true)
         }
+        
+        // Finally, pass the message onto the NVC delegate.
+        delegate?.navigationViewController?(self, didUpdate: progress, with: location, rawLocation: rawLocation)
     }
     
     @objc public func navigationService(_ service: NavigationService, didPassSpokenInstructionPoint instruction: SpokenInstruction, routeProgress: RouteProgress) {
