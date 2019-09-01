@@ -1,8 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
 ## master
-* Fixed an issue where swiping the banner down after the StepsTableViewController has already displayed could put the UI in an unstable state. ([#2197](https://github.com/mapbox/mapbox-navigation-ios/pull/2197))
-* Added `NavigationViewControllerDelegate.navigationViewController(_:didUpdate:location:rawLocation)` method that allows you to capture progress updates without having to inject a class between the `NavigationViewController` and the `NavigationService`.  ([#2224](https://github.com/mapbox/mapbox-navigation-ios/pull/2224))
+
+* Fixed an issue where a second swipe down on the top banner causes an open `StepsTableViewController` to animate incorrectly. ([#2197](https://github.com/mapbox/mapbox-navigation-ios/pull/2197))
+* Added the `NavigationViewControllerDelegate.navigationViewController(_:didUpdate:location:rawLocation)` method for capturing progress updates without having to inject a class between the `NavigationViewController` and the `NavigationService`. ([#2224](https://github.com/mapbox/mapbox-navigation-ios/pull/2224))
 
 ## v0.36.0
 
