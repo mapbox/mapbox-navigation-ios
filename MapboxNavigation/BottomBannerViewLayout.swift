@@ -66,6 +66,7 @@ extension BottomBannerViewController {
     fileprivate func setupConstraints() {
         setupVerticalCompactLayout(&verticalCompactConstraints)
         setupVerticalRegularLayout(&verticalRegularConstraints)
+        reinstallConstraints()
     }
     
     fileprivate func setupVerticalCompactLayout(_ c: inout [NSLayoutConstraint]) {
@@ -97,7 +98,8 @@ extension BottomBannerViewController {
     }
     
     fileprivate func setupVerticalRegularLayout(_ c: inout [NSLayoutConstraint]) {
-        c.append(bottomBannerView.heightAnchor.constraint(equalToConstant: 80))
+        let size = bottomBannerView.heightAnchor.constraint(equalToConstant: 80)
+        c.append(size)
         
         c.append(timeRemainingLabel.leadingAnchor.constraint(equalTo: bottomBannerView.leadingAnchor, constant: 10))
         c.append(timeRemainingLabel.lastBaselineAnchor.constraint(equalTo: bottomBannerView.centerYAnchor, constant: 0))
@@ -124,9 +126,13 @@ extension BottomBannerViewController {
         c.append(arrivalTimeLabel.trailingAnchor.constraint(equalTo: verticalDividerView.leadingAnchor, constant: -10))
     }
     
-    open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
+    open func reinstallConstraints() {
         verticalCompactConstraints.forEach { $0.isActive = traitCollection.verticalSizeClass == .compact }
         verticalRegularConstraints.forEach { $0.isActive = traitCollection.verticalSizeClass != .compact }
+    }
+    
+    open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        reinstallConstraints()
     }
 }
