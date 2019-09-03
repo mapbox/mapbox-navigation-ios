@@ -1,6 +1,7 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## master
+## v0.37.0
+
 * Fixed an issue where a second swipe down on the top banner causes an open `StepsTableViewController` to animate incorrectly. ([#2197](https://github.com/mapbox/mapbox-navigation-ios/pull/2197))
 * Added the `NavigationViewControllerDelegate.navigationViewController(_:didUpdate:location:rawLocation:)` method for capturing progress updates without having to inject a class between the `NavigationViewController` and the `NavigationService`. ([#2224](https://github.com/mapbox/mapbox-navigation-ios/pull/2224))
 * Fixed an issue where the bottom banner can disappear when presenting in `UIModalPresentationStyle.fullScreen` in iOS 13.  ([#2182](https://github.com/mapbox/mapbox-navigation-ios/pull/2182))
