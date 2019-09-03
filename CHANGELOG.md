@@ -2,6 +2,7 @@
 
 ## master
 * Fixed an issue where swiping the banner down after the StepsTableViewController has already displayed could put the UI in an unstable state. ([#2197](https://github.com/mapbox/mapbox-navigation-ios/pull/2197))
+* Fixed an issue where the bottom banner can disappear when presenting in `.fullScreen` in iOS 13.  ([#2182](https://github.com/mapbox/mapbox-navigation-ios/pull/2182))
 
 ## v0.36.0
 
