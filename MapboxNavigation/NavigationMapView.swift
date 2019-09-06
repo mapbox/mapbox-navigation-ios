@@ -429,8 +429,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
       
         setUserTrackingMode(.none, animated: false, completionHandler: nil)
         let line = MGLPolyline(coordinates: coords, count: UInt(coords.count))
-        let camera = cameraThatFitsShape(line, direction: direction, edgePadding: .zero)
         
+        // Workaround for https://github.com/mapbox/mapbox-gl-native/issues/15574
+        // Set content insets .zero, before cameraThatFitsShape + setCamera.
+        contentInset = .zero
+        let camera = cameraThatFitsShape(line, direction: direction, edgePadding: safeArea + NavigationMapView.defaultPadding)
         setCamera(camera, animated: animated)
     }
     
@@ -1085,7 +1088,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         let currentCamera = self.camera
         currentCamera.pitch = 0
         currentCamera.heading = 0
-        
+
+        // Workaround for https://github.com/mapbox/mapbox-gl-native/issues/15574
+        // Set content insets .zero, before cameraThatFitsShape + setCamera.
+        contentInset = .zero
         let newCamera = camera(currentCamera, fitting: line, edgePadding: padding)
         
         setCamera(newCamera, withDuration: 1, animationTimingFunction: nil) { [weak self] in

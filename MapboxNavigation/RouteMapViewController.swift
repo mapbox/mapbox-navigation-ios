@@ -302,7 +302,7 @@ class RouteMapViewController: UIViewController {
         if let coordinates = router.route.coordinates,
             let userLocation = router.location?.coordinate {
             mapView.contentInset = contentInset(forOverviewing: true)
-            mapView.setOverheadCameraView(from: userLocation, along: coordinates, for: .zero)
+            mapView.setOverheadCameraView(from: userLocation, along: coordinates, for: contentInset(forOverviewing: true))
         }
         isInOverviewMode = true
     }

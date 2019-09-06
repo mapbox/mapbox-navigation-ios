@@ -620,17 +620,6 @@ extension CarPlayManager: CPMapTemplateDelegate {
     }
 
     public func mapTemplate(_ mapTemplate: CPMapTemplate, didUpdatePanGestureWithTranslation translation: CGPoint, velocity: CGPoint) {
-        let mapView: NavigationMapView
-        if let navigationViewController = currentNavigator, mapTemplate == navigationViewController.mapTemplate {
-            mapView = navigationViewController.mapView!
-        } else if let carPlayMapViewController = carPlayMapViewController {
-            mapView = carPlayMapViewController.mapView
-        } else {
-            return
-        }
-        
-        // Make sure the content inset is always up to date in case the safe area changes during a gesture.
-        mapView.setContentInset(mapView.safeArea, animated: false, completionHandler: nil)
         updatePan(by: translation, mapTemplate: mapTemplate, animated: false)
     }
     
@@ -649,7 +638,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
     }
 
     func coordinate(of offset: CGPoint, in mapView: NavigationMapView) -> CLLocationCoordinate2D {
-        let contentFrame = mapView.bounds.inset(by: mapView.safeArea)
+        let contentFrame = mapView.bounds.inset(by: mapView.contentInset)
         let centerPoint = CGPoint(x: contentFrame.midX, y: contentFrame.midY)
         let endCameraPoint = CGPoint(x: centerPoint.x - offset.x, y: centerPoint.y - offset.y)
 
@@ -663,7 +652,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
 
         // Determine the screen distance to pan by based on the distance from the visual center to the closest side.
         let mapView = carPlayMapViewController.mapView
-        let contentFrame = mapView.bounds.inset(by: mapView.safeArea)
+        let contentFrame = mapView.bounds.inset(by: mapView.contentInset)
         let increment = min(mapView.bounds.width, mapView.bounds.height) / 2.0
         
         // Calculate the distance in physical units from the visual center to where it would be after panning downwards.

@@ -184,11 +184,34 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
         guard let mapView = mapView else { return }
         
         mapView.enableFrameByFrameCourseViewTracking(for: 1)
-        
-        mapView.setContentInset(view.safeArea, animated: true) { [weak self] in
-            guard let self = self, self.tracksUserCourse else { return }
-            mapView.fit(to: self.navigationService.route, facing: 0, animated: true)
+    }
+
+    public override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if (isOverviewingRoutes) { return } // Don't move content when overlays change.
+        guard let mapView = mapView else { return }
+        mapView.contentInset = contentInset(forOverviewing: false)
+    }
+
+    func contentInset(forOverviewing overviewing: Bool) -> UIEdgeInsets {
+        guard let mapView = mapView else { return .zero }
+        var insets = mapView.safeArea
+        if !overviewing {
+            // Puck position calculation - position it just above the bottom of the content area.
+            var contentFrame = mapView.bounds.inset(by: insets)
+
+            // Avoid letting the puck go partially off-screen, and add a comfortable padding beyond that.
+            let courseViewBounds = mapView.userCourseView?.bounds ?? .zero
+            // If it is not possible to position it right above the content area, center it at the remaining space.
+            contentFrame = contentFrame.insetBy(dx: min(NavigationMapView.courseViewMinimumInsets.left + courseViewBounds.width / 2.0, contentFrame.width / 2.0),
+                                                dy: min(NavigationMapView.courseViewMinimumInsets.top + courseViewBounds.height / 2.0, contentFrame.height / 2.0))
+            assert(!contentFrame.isInfinite)
+
+            let y = contentFrame.maxY
+            let height = mapView.bounds.height
+            insets.top = height - insets.bottom - 2 * (height - insets.bottom - y)
         }
+        return insets;
     }
     
     /**
@@ -233,27 +256,38 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
         set {
             let progress = navigationService.routeProgress
             if !tracksUserCourse && newValue {
-                
+                isOverviewingRoutes = false;
                 mapView?.recenterMap()
                 mapView?.addArrow(route: progress.route,
                                  legIndex: progress.legIndex,
                                  stepIndex: progress.currentLegProgress.stepIndex + 1)
+                mapView?.setContentInset(contentInset(forOverviewing: false), animated: true, completionHandler: nil)
             } else if tracksUserCourse && !newValue {
-                
+                isOverviewingRoutes = !isPanningAway;
                 guard let userLocation = self.navigationService.router.location?.coordinate,
                 let coordinates = navigationService.route.coordinates else {
                     return
                 }
                 mapView?.enableFrameByFrameCourseViewTracking(for: 1)
-                mapView?.setOverheadCameraView(from: userLocation, along: coordinates, for: .zero)
+                mapView?.contentInset = contentInset(forOverviewing: isOverviewingRoutes)
+                if (isOverviewingRoutes) {
+                    mapView?.setOverheadCameraView(from: userLocation, along: coordinates, for: contentInset(forOverviewing: true))
+                }
             }
         }
     }
+
+    // Tracks if tracksUserCourse was set to false from overview button
+    // or panned away.
+    var isPanningAway = false;
+    var isOverviewingRoutes = false;
     
     public func beginPanGesture() {
+        isPanningAway = true;
         tracksUserCourse = false
         mapView?.tracksUserCourse = false
         mapView?.enableFrameByFrameCourseViewTracking(for: 1)
+        isPanningAway = false;
     }
     
     @objc func visualInstructionDidChange(_ notification: NSNotification) {
