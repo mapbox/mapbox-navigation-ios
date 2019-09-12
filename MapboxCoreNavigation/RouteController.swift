@@ -161,7 +161,8 @@ open class RouteController: NSObject {
         })
     }
     
-    func updateNavigator(with progress: RouteProgress) {
+    // updateNavigator is used to pass the new progress model onto nav-native.
+    private func updateNavigator(with progress: RouteProgress) {
         assert(route.json != nil, "route.json missing, please verify the version of MapboxDirections.swift")
         
         let data = try! JSONSerialization.data(withJSONObject: route.json!, options: [])
@@ -169,6 +170,14 @@ open class RouteController: NSObject {
         
         // TODO: Add support for alternative route
         navigator.setRouteForRouteResponse(jsonString, route: 0, leg: UInt32(routeProgress.legIndex))
+    }
+    
+    // updateRouteLeg is used to notify nav-native of the developer changing the active route-leg.
+    private func updateRouteLeg(to value: Int) {
+        let legIndex = UInt32(value)
+        navigator.changeRouteLeg(forRoute: 0, leg: legIndex)
+        let newStatus = navigator.changeRouteLeg(forRoute: 0, leg: legIndex)
+        updateIndexes(status: newStatus, progress: routeProgress)
     }
     
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -280,14 +289,6 @@ open class RouteController: NSObject {
                 updateRouteLeg(to: legIndex)
             }
         }
-    }
-    
-    
-    private func updateRouteLeg(to value: Int) {
-        let legIndex = UInt32(value)
-        navigator.changeRouteLeg(forRoute: 0, leg: legIndex)
-        let newStatus = navigator.changeRouteLeg(forRoute: 0, leg: legIndex)
-        updateIndexes(status: newStatus, progress: routeProgress)
     }
     
     private func update(progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
