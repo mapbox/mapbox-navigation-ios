@@ -153,11 +153,11 @@ open class RouteController: NSObject {
     }
     
     func updateObservation(for progress: RouteProgress) {
-        progressObservation = progress.observe(\.legIndex, options: [.old, .new]) { (progress, change) in
+        progressObservation = progress.observe(\.legIndex, options: [.old, .new]) { [weak self] (progress, change) in
             guard change.newValue != change.oldValue, let legIndex = change.newValue else {
                 return
             }
-            self.updateRouteLeg(to: legIndex)
+            self?.updateRouteLeg(to: legIndex)
         }
     }
     
