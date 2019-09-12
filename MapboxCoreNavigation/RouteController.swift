@@ -161,7 +161,7 @@ open class RouteController: NSObject {
         }
     }
     
-    // updateNavigator is used to pass the new progress model onto nav-native.
+    /// updateNavigator is used to pass the new progress model onto nav-native.
     private func updateNavigator(with progress: RouteProgress) {
         assert(route.json != nil, "route.json missing, please verify the version of MapboxDirections.swift")
         
@@ -172,7 +172,7 @@ open class RouteController: NSObject {
         navigator.setRouteForRouteResponse(jsonString, route: 0, leg: UInt32(routeProgress.legIndex))
     }
     
-    // updateRouteLeg is used to notify nav-native of the developer changing the active route-leg.
+    /// updateRouteLeg is used to notify nav-native of the developer changing the active route-leg.
     private func updateRouteLeg(to value: Int) {
         let legIndex = UInt32(value)
         navigator.changeRouteLeg(forRoute: 0, leg: legIndex)
