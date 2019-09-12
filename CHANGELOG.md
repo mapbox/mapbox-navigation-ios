@@ -1,5 +1,8 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## master
+* Fixed an issue where manually incrementing the route progress leg index could lead to undefined behavior. ([#2229](https://github.com/mapbox/mapbox-navigation-ios/pull/2229))
+
 ## v0.37.0
 
 * Fixed an issue where a second swipe down on the top banner causes an open `StepsTableViewController` to animate incorrectly. ([#2197](https://github.com/mapbox/mapbox-navigation-ios/pull/2197))
