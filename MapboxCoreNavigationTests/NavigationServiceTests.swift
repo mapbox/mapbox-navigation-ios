@@ -385,7 +385,7 @@ class NavigationServiceTests: XCTestCase {
                subject = routeController
            }
            
-           XCTAssertNil(subject, "Expected RouteController not to live beyond autorelease pool")
+           XCTAssertNil(subject, "Expected LegacyRouteController not to live beyond autorelease pool")
        }
        
     func testRouteControllerDoesNotRetainDataSource() {
