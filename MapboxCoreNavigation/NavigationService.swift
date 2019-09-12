@@ -478,7 +478,11 @@ extension MapboxNavigationService: RouterDelegate {
         //Notify the events manager that we've arrived at a waypoint
         eventsManager.arriveAtWaypoint()
         
-        return delegate?.navigationService?(self, didArriveAt: waypoint) ?? Default.didArriveAtWaypoint
+        let shouldAutomaticallyAdvance =  delegate?.navigationService?(self, didArriveAt: waypoint) ?? Default.didArriveAtWaypoint
+        if !shouldAutomaticallyAdvance {
+            stop()
+        }
+        return shouldAutomaticallyAdvance
     }
     
     public func router(_ router: Router, shouldPreventReroutesWhenArrivingAt waypoint: Waypoint) -> Bool {
