@@ -153,12 +153,12 @@ open class RouteController: NSObject {
     }
     
     func updateObservation(for progress: RouteProgress) {
-        progressObservation = progress.observe(\.legIndex, options: [.old, .new], changeHandler: { (progress, change) in
+        progressObservation = progress.observe(\.legIndex, options: [.old, .new]) { (progress, change) in
             guard change.newValue != change.oldValue, let legIndex = change.newValue else {
                 return
             }
             self.updateRouteLeg(to: legIndex)
-        })
+        }
     }
     
     // updateNavigator is used to pass the new progress model onto nav-native.
