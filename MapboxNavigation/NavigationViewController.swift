@@ -249,6 +249,19 @@ open class NavigationViewController: UIViewController {
             print("`Route` was created using `RouteOptions` and not `NavigationRouteOptions`. Although not required, this may lead to a suboptimal navigation experience. Without `NavigationRouteOptions`, it is not guaranteed you will get congestion along the route line, better ETAs and ETA label color dependent on congestion.")
         }
     }
+
+    /**
+     * Calls .recenter() on the mapViewController to recenter the map
+     */
+    public func recenterMap() {
+        self.mapViewController?.recenter(self)
+    }
+    /**
+     * Calls .toggleOverview() on the mapViewController to show the overhead view of the map
+     */
+    public func overviewMap() {
+        self.mapViewController?.toggleOverview(self)
+    }
     
     /**
     Initializes a navigation view controller with the given route and navigation service.
