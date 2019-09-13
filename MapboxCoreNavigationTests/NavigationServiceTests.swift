@@ -375,18 +375,19 @@ class NavigationServiceTests: XCTestCase {
         XCTAssertNil(subject, "Expected RouteController not to live beyond autorelease pool")
     }
     
-    func testPortableRouteControllerDoesNotHaveRetainCycle() {
-        weak var subject: RouteController? = nil
-        
-        autoreleasepool {
-            let fakeDataSource = RouteControllerDataSourceFake()
-            let routeController = RouteController(along: initialRoute, directions: directionsClientSpy, dataSource: fakeDataSource)
-            subject = routeController
-        }
-        
-        XCTAssertNil(subject, "Expected PortableRouteController not to live beyond autorelease pool")
-    }
-
+    func testLegacyRouteControllerDoesNotHaveRetainCycle() {
+           
+           weak var subject: LegacyRouteController? = nil
+           
+           autoreleasepool {
+               let fakeDataSource = RouteControllerDataSourceFake()
+               let routeController = LegacyRouteController(along: initialRoute, directions: directionsClientSpy, dataSource: fakeDataSource)
+               subject = routeController
+           }
+           
+           XCTAssertNil(subject, "Expected LegacyRouteController not to live beyond autorelease pool")
+       }
+       
     func testRouteControllerDoesNotRetainDataSource() {
 
         weak var subject: RouterDataSource? = nil

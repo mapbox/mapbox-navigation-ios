@@ -18,7 +18,7 @@ open class RouteProgress: NSObject {
     /**
      Index representing current `RouteLeg`.
      */
-    @objc public var legIndex: Int {
+    @objc dynamic public var legIndex: Int {
         didSet {
             assert(legIndex >= 0 && legIndex < route.legs.endIndex)
             // TODO: Set stepIndex to 0 or last index based on whether leg index was incremented or decremented.
