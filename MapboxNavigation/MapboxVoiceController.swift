@@ -16,23 +16,23 @@ import MapboxDirections
  
  The Mapbox Voice API is optimized for spoken instructions provided by the Mapbox Directions API via the MapboxDirections.swift framework. If you need text-to-speech functionality outside the context of a navigation service, use the Speech Synthesis framework’s `AVSpeechSynthesizer` class directly.
  */
-@objc(MBMapboxVoiceController)
+
 open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
     
     /**
      Number of seconds a request can wait before it is canceled and the default speech synthesizer speaks the instruction.
      */
-    @objc public var timeoutIntervalForRequest: TimeInterval = 5
+    public var timeoutIntervalForRequest: TimeInterval = 5
     
     /**
      Number of steps ahead of the current step to cache spoken instructions.
      */
-    @objc public var stepsAheadToCache: Int = 3
+    public var stepsAheadToCache: Int = 3
     
     /**
      An `AVAudioPlayer` through which spoken instructions are played.
      */
-    @objc public var audioPlayer: AVAudioPlayer?
+    public var audioPlayer: AVAudioPlayer?
     
     var audioTask: URLSessionDataTask?
     var cache: BimodalDataCache
@@ -43,7 +43,7 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
     
     let localizedErrorMessage = NSLocalizedString("FAILED_INSTRUCTION", bundle: .mapboxNavigation, value: "Unable to read instruction aloud.", comment: "Error message when the SDK is unable to read a spoken instruction.")
 
-    @objc public init(navigationService: NavigationService, speechClient: SpeechSynthesizer = SpeechSynthesizer(accessToken: nil), dataCache: BimodalDataCache = DataCache(), audioPlayerType: AVAudioPlayer.Type? = nil) {
+    public init(navigationService: NavigationService, speechClient: SpeechSynthesizer = SpeechSynthesizer(accessToken: nil), dataCache: BimodalDataCache = DataCache(), audioPlayerType: AVAudioPlayer.Type? = nil) {
         speech = speechClient
         cache = dataCache
         self.audioPlayerType = audioPlayerType ?? AVAudioPlayer.self
@@ -79,7 +79,7 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
         audioPlayer?.delegate = nil
     }
     
-    @objc public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+    public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         do {
             try unDuckAudio()
         } catch {
@@ -87,7 +87,7 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
         }
     }
 
-    @objc open override func didPassSpokenInstructionPoint(notification: NSNotification) {
+    open override func didPassSpokenInstructionPoint(notification: NSNotification) {
         let routeProgresss = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
         locale = routeProgresss.route.routeOptions.locale
         let currentLegProgress: RouteLegProgress = routeProgresss.currentLegProgress
@@ -106,7 +106,7 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
      
      The cache is first checked to see if we have already downloaded the speech file. If not, the instruction is fetched and played. If there is an error anywhere along the way, the instruction will be spoken with the default speech synthesizer.
      */
-    @objc open override func speak(_ instruction: SpokenInstruction) {
+    open override func speak(_ instruction: SpokenInstruction) {
         if let audioPlayer = audioPlayer, audioPlayer.isPlaying, let lastSpokenInstruction = lastSpokenInstruction {
             voiceControllerDelegate?.voiceController?(self, didInterrupt: lastSpokenInstruction, with: instruction)
         }
@@ -137,7 +137,7 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
      
      This method should be used in cases where `fetch(instruction:)` or `play(_:)` fails.
      */
-    @objc open func speakWithDefaultSpeechSynthesizer(_ instruction: SpokenInstruction, error: Error?) {
+    open func speakWithDefaultSpeechSynthesizer(_ instruction: SpokenInstruction, error: Error?) {
         audioTask?.cancel()
         
         if let error = error {
@@ -157,7 +157,7 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
     /**
      Fetches and plays an instruction.
      */
-    @objc open func fetchAndSpeak(instruction: SpokenInstruction) {
+    open func fetchAndSpeak(instruction: SpokenInstruction) {
         audioTask?.cancel()
         let ssmlText = instruction.ssmlText
         let options = SpeechOptions(ssml: ssmlText)
@@ -188,7 +188,7 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
     /**
      Caches an instruction in an in-memory cache.
      */
-    @objc open func downloadAndCacheSpokenInstruction(instruction: SpokenInstruction) {
+    open func downloadAndCacheSpokenInstruction(instruction: SpokenInstruction) {
         let ssmlText = instruction.ssmlText
         let options = SpeechOptions(ssml: ssmlText)
         if let locale = locale {
@@ -222,7 +222,7 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
     /**
      Plays an audio file.
      */
-    @objc open func play(_ data: Data) {
+    open func play(_ data: Data) {
 
         super.speechSynth.stopSpeaking(at: .immediate)
         

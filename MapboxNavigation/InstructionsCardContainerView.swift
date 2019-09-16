@@ -6,7 +6,7 @@ import MapboxCoreNavigation
  The `InstructionsCardContainerViewDelegate` protocol defines a method that allows an object to customize presented visual instructions within the instructions container view.
  */
 /// :nodoc:
-@objc(MBInstructionsCardContainerViewDelegate)
+
 public protocol InstructionsCardContainerViewDelegate: VisualInstructionDelegate {
     /**
      Called when the Primary Label will present a visual instruction.
@@ -16,7 +16,7 @@ public protocol InstructionsCardContainerViewDelegate: VisualInstructionDelegate
      - parameter presented: the formatted string that is provided by the instruction presenter
      - returns: optionally, a customized NSAttributedString that will be presented instead of the default, or if nil, the default behavior will be used.
      */
-    @objc(primaryLabel:willPresentVisualInstruction:asAttributedString:)
+    
     optional func primaryLabel(_ primaryLabel: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString?
     
     /**
@@ -27,12 +27,12 @@ public protocol InstructionsCardContainerViewDelegate: VisualInstructionDelegate
      - parameter presented: the formatted string that is provided by the instruction presenter
      - returns: optionally, a customized NSAttributedString that will be presented instead of the default, or if nil, the default behavior will be used.
      */
-    @objc(secondaryLabel:willPresentVisualInstruction:asAttributedString:)
+    
     optional func secondaryLabel(_ secondaryLabel: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString?
 }
 
 /// :nodoc:
-@objc(MBInstructionsCardContainerView)
+
 public class InstructionsCardContainerView: UIView {
     
     lazy var informationStackView = UIStackView(orientation: .vertical, autoLayout: true)

@@ -18,7 +18,7 @@ public protocol BottomBannerViewControllerDelegate: class {
  A user interface element designed to display the estimated arrival time, distance, and time remaining, as well as give the user a control the cancel the navigation session.
  */
 @IBDesignable
-@objc(MBBottomBannerViewController)
+
 open class BottomBannerViewController: UIViewController, NavigationComponent {
     
     /*
@@ -169,22 +169,22 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
         arrivalTimeLabel.text = "10:09"
     }
     
-    @objc public func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
+    public func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
         refreshETA()
     }
     
-    @objc public func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
+    public func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         resetETATimer()
         updateETA(routeProgress: progress)
         previousProgress = progress
     }
     
-    @objc func removeTimer() {
+    func removeTimer() {
         timer?.disarm()
         timer = nil
     }
     
-    @objc func resetETATimer() {
+    func resetETATimer() {
         removeTimer()
         timer = MapboxCoreNavigation.DispatchTimer(countdown: .seconds(30), repeating: .seconds(30)) { [weak self] in
             self?.refreshETA()
@@ -192,7 +192,7 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
         timer?.arm()
     }
     
-    @objc func refreshETA() {
+    func refreshETA() {
         guard let progress = previousProgress else { return }
         updateETA(routeProgress: progress)
     }

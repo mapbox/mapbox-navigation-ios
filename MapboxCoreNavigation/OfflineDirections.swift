@@ -56,10 +56,10 @@ public typealias UnpackCompletionHandler = (_ numberOfTiles: UInt64, _ error: Er
  
  Each result produced by the directions object is stored in a `Route` object. Depending on the `RouteOptions` object you provide, each route may include detailed information suitable for turn-by-turn directions, or it may include only high-level information such as the distance, estimated travel time, and name of each leg of the trip. The waypoints that form the request may be conflated with nearby locations, as appropriate; the resulting waypoints are provided to the closure.
  */
-@objc(MBNavigationDirections)
+
 public class NavigationDirections: Directions {
     
-    @objc public override init(accessToken: String? = nil, host: String? = nil) {
+    public override init(accessToken: String? = nil, host: String? = nil) {
         super.init(accessToken: accessToken, host: host)
     }
     
@@ -69,7 +69,7 @@ public class NavigationDirections: Directions {
      - parameter tilesURL: The location where the tiles has been sideloaded to.
      - parameter completionHandler: A block that is called when the router is completely configured.
      */
-    @objc public func configureRouter(tilesURL: URL, completionHandler: @escaping NavigationDirectionsCompletionHandler) {
+    public func configureRouter(tilesURL: URL, completionHandler: @escaping NavigationDirectionsCompletionHandler) {
         NavigationDirectionsConstants.offlineSerialQueue.sync {
             let tileCount = self.navigator.configureRouter(forTilesPath: tilesURL.path)
             DispatchQueue.main.async {
@@ -79,7 +79,7 @@ public class NavigationDirections: Directions {
     }
     
     @available(*, deprecated, renamed: "NavigationDirections.configureRouter(tilesURL:completionHandler:)")
-    @objc public func configureRouter(tilesURL: URL, translationsURL: URL? = nil, completionHandler: @escaping NavigationDirectionsCompletionHandler) {
+    public func configureRouter(tilesURL: URL, translationsURL: URL? = nil, completionHandler: @escaping NavigationDirectionsCompletionHandler) {
         configureRouter(tilesURL: tilesURL, completionHandler: completionHandler)
     }
     
@@ -92,7 +92,7 @@ public class NavigationDirections: Directions {
      - parameter progressHandler: Unpacking reports progress every 500ms.
      - parameter completionHandler: Called when unpacking completed.
      */
-    @objc(unpackTilePackAtURL:outputDirectoryURL:progressHandler:completionHandler:)
+    
     public class func unpackTilePack(at filePathURL: URL, outputDirectoryURL: URL, progressHandler: UnpackProgressHandler?, completionHandler: UnpackCompletionHandler?) {
         
         NavigationDirectionsConstants.offlineSerialQueue.sync {
@@ -138,7 +138,7 @@ public class NavigationDirections: Directions {
      - parameter offline: Determines whether to calculate the route offline or online.
      - parameter completionHandler: The closure (block) to call with the resulting routes. This closure is executed on the application’s main thread.
      */
-    @objc(calculateDirectionsWithOptions:offline:completionHandler:)
+    
     public func calculate(_ options: RouteOptions, offline: Bool = true, completionHandler: @escaping Directions.RouteCompletionHandler) {
         
         guard offline == true else {

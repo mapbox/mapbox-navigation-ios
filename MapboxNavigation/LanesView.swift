@@ -4,7 +4,7 @@ import MapboxDirections
 
 /// :nodoc:
 @IBDesignable
-@objc(MBLanesView)
+
 open class LanesView: UIView, NavigationComponent {
     weak var stackView: UIStackView!
     weak var separatorView: SeparatorView!
@@ -67,14 +67,14 @@ open class LanesView: UIView, NavigationComponent {
         separatorView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
     }
     
-    @objc public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
+    public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
         update(for: instruction)
     }
     
     /**
      Updates the tertiary instructions banner info with a given `VisualInstructionBanner`.
      */
-    @objc(updateForVisualInstructionBanner:)
+    
     public func update(for visualInstruction: VisualInstructionBanner?) {
         clearLaneViews()
         

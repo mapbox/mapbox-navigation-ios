@@ -22,24 +22,24 @@ class RatingControl: UIStackView {
         }
     }
     
-    @objc dynamic public var selectedColor: UIColor = #colorLiteral(red: 0.1205472574, green: 0.2422055006, blue: 0.3489340544, alpha: 1) {
+    dynamic public var selectedColor: UIColor = #colorLiteral(red: 0.1205472574, green: 0.2422055006, blue: 0.3489340544, alpha: 1) {
         didSet {
             updateSelectionStates()
         }
     }
-    @objc dynamic public var normalColor: UIColor = #colorLiteral(red: 0.8508961797, green: 0.8510394692, blue: 0.850877285, alpha: 1) {
+    dynamic public var normalColor: UIColor = #colorLiteral(red: 0.8508961797, green: 0.8510394692, blue: 0.850877285, alpha: 1) {
         didSet {
             updateSelectionStates()
         }
     }
     
-    @objc dynamic public var starSize: CGSize = defaultSize {
+    dynamic public var starSize: CGSize = defaultSize {
         didSet {
             configureStars()
         }
     }
     
-    @objc dynamic public var starCount: Int = 5 {
+    dynamic public var starCount: Int = 5 {
         didSet {
             configureStars()
         }
@@ -125,7 +125,7 @@ class RatingControl: UIStackView {
         view.heightAnchor.constraint(equalToConstant: starSize.height).isActive = true
     }
     
-    @objc private func ratingButtonTapped(button sender: UIButton) {
+    private func ratingButtonTapped(button sender: UIButton) {
         guard let index = stars.firstIndex(of: sender) else { return assertionFailure("RatingControl.swift: The Star button that was tapped was not found in the RatingControl.stars array. This should never happen.") }
         let selectedRating = index + 1
         

@@ -3,21 +3,21 @@ import MapboxCoreNavigation
 import MapboxDirections
 
 
-@objc public protocol TopBannerViewControllerDelegate: class {
-    @objc optional func topBanner(_ banner: TopBannerViewController, didSwipeInDirection direction: UISwipeGestureRecognizer.Direction)
+public protocol TopBannerViewControllerDelegate: class {
+    optional func topBanner(_ banner: TopBannerViewController, didSwipeInDirection direction: UISwipeGestureRecognizer.Direction)
     
-    @objc optional func topBanner(_ banner: TopBannerViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell)
+    optional func topBanner(_ banner: TopBannerViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell)
     
-    @objc optional func topBanner(_ banner: TopBannerViewController, willDisplayStepsController: StepsViewController)
+    optional func topBanner(_ banner: TopBannerViewController, willDisplayStepsController: StepsViewController)
     
-    @objc optional func topBanner(_ banner: TopBannerViewController, didDisplayStepsController: StepsViewController)
+    optional func topBanner(_ banner: TopBannerViewController, didDisplayStepsController: StepsViewController)
     
-    @objc optional func topBanner(_ banner: TopBannerViewController, willDismissStepsController: StepsViewController)
+    optional func topBanner(_ banner: TopBannerViewController, willDismissStepsController: StepsViewController)
     
-    @objc optional func topBanner(_ banner: TopBannerViewController, didDismissStepsController: StepsViewController)
+    optional func topBanner(_ banner: TopBannerViewController, didDismissStepsController: StepsViewController)
 }
 
-@objc open class TopBannerViewController: UIViewController {
+open class TopBannerViewController: UIViewController {
     
     weak var delegate: TopBannerViewControllerDelegate? = nil
     

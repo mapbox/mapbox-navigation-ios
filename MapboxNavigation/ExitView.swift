@@ -14,7 +14,7 @@ public class ExitView: StylableView {
     
     static let labelFontSizeScaleFactor: CGFloat = 2.0/3.0
     
-    @objc public dynamic var foregroundColor: UIColor? {
+    public dynamic var foregroundColor: UIColor? {
         didSet {
             layer.borderColor = foregroundColor?.cgColor
             imageView.tintColor = foregroundColor

@@ -1,23 +1,23 @@
 import UIKit
 
 /// :nodoc:
-@objc public protocol DeprecatedStatusViewDelegate: class {}
+public protocol DeprecatedStatusViewDelegate: class {}
 
 /**
  A protocol for listening in on changes made to a `StatusView`.
  */
 @available(*, deprecated, message: "Add a target to StatusView for UIControl.Event.valueChanged instead.")
-@objc public protocol StatusViewDelegate: DeprecatedStatusViewDelegate {
+public protocol StatusViewDelegate: DeprecatedStatusViewDelegate {
     /**
      Indicates a value in the status view has changed by the user interacting with it.
      */
     @available(*, deprecated, message: "Add a target to StatusView for UIControl.Event.valueChanged instead.")
-    @objc optional func statusView(_ statusView: StatusView, valueChangedTo value: Double)
+    optional func statusView(_ statusView: StatusView, valueChangedTo value: Double)
 }
 
 /// :nodoc:
-@objc private protocol StatusViewDelegateDeprecations {
-    @objc optional func statusView(_ statusView: StatusView, valueChangedTo value: Double)
+private protocol StatusViewDelegateDeprecations {
+    optional func statusView(_ statusView: StatusView, valueChangedTo value: Double)
 }
 
 /**
@@ -26,18 +26,18 @@ import UIKit
  A translucent bar that responds to tap and swipe gestures, similar to a scrubber or stepper control, and expands and collapses to maximize screen real estate.
  */
 @IBDesignable
-@objc(MBStatusView)
+
 public class StatusView: UIControl {
     
     weak var activityIndicatorView: UIActivityIndicatorView!
     weak var textLabel: UILabel!
-    @objc public weak var delegate: DeprecatedStatusViewDelegate?
+    public weak var delegate: DeprecatedStatusViewDelegate?
     var panStartPoint: CGPoint?
     
     var isCurrentlyVisible: Bool = false
     
     @available(*, deprecated, renamed: "isEnabled")
-    @objc public var canChangeValue: Bool {
+    public var canChangeValue: Bool {
         get {
             return isEnabled
         }
@@ -53,12 +53,12 @@ public class StatusView: UIControl {
         }
     }
     
-    @objc public override init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
     }
     
-    @objc public required init?(coder aDecoder: NSCoder) {
+    public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit()
     }
@@ -93,7 +93,7 @@ public class StatusView: UIControl {
         addGestureRecognizer(tapRecognizer)
     }
     
-    @objc func pan(_ sender: UIPanGestureRecognizer) {
+    func pan(_ sender: UIPanGestureRecognizer) {
         guard isEnabled else { return }
         
         let location = sender.location(in: self)
@@ -108,7 +108,7 @@ public class StatusView: UIControl {
         }
     }
     
-    @objc func tap(_ sender: UITapGestureRecognizer) {
+    func tap(_ sender: UITapGestureRecognizer) {
         guard isEnabled else { return }
         
         let location = sender.location(in: self)

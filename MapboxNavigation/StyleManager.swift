@@ -4,12 +4,12 @@ import Solar
 /**
  The `StyleManagerDelegate` protocol defines a set of methods used for controlling the style.
  */
-@objc(MBStyleManagerDelegate)
+
 public protocol StyleManagerDelegate: NSObjectProtocol {
     /**
      Asks the delegate for a location to use when calculating sunset and sunrise.
      */
-    @objc(locationForStyleManager:)
+    
     func location(for styleManager: StyleManager) -> CLLocation?
     
     /**
@@ -17,33 +17,33 @@ public protocol StyleManagerDelegate: NSObjectProtocol {
      
      This delegate method is the equivalent of `Notification.Name.styleManagerDidApplyStyle`.
      */
-    @objc(styleManager:didApplyStyle:)
+    
     optional func styleManager(_ styleManager: StyleManager, didApply style: Style)
     
     /**
      Informs the delegate that the manager forcefully refreshed UIAppearance.
      */
-    @objc optional func styleManagerDidRefreshAppearance(_ styleManager: StyleManager)
+    optional func styleManagerDidRefreshAppearance(_ styleManager: StyleManager)
 }
 
 /**
  A manager that handles `Style` objects. The manager listens for significant time changes
  and changes to the content size to apply an approriate style for the given condition.
  */
-@objc(MBStyleManager)
+
 open class StyleManager: NSObject {
     
     /**
      The receiver of the delegate. See `StyleManagerDelegate` for more information.
      */
-    @objc public weak var delegate: StyleManagerDelegate?
+    public weak var delegate: StyleManagerDelegate?
     
     /**
      Determines whether the style manager should apply a new style given the time of day.
      
      - precondition: Two styles must be provided for this property to have any effect.
      */
-    @objc public var automaticallyAdjustsStyleForTimeOfDay = true {
+    public var automaticallyAdjustsStyleForTimeOfDay = true {
         didSet {
             resetTimeOfDayTimer()
         }
@@ -57,7 +57,7 @@ open class StyleManager: NSObject {
      - precondition: Two styles must be provided for
      `StyleManager.automaticallyAdjustsStyleForTimeOfDay` to have any effect.
      */
-    @objc public var styles = [Style]() {
+    public var styles = [Style]() {
         didSet {
             applyStyle()
             resetTimeOfDayTimer()
@@ -74,7 +74,7 @@ open class StyleManager: NSObject {
         }
     }
     
-    @objc public override init() {
+    public override init() {
         super.init()
         resumeNotifications()
         resetTimeOfDayTimer()
@@ -115,11 +115,11 @@ open class StyleManager: NSObject {
         perform(#selector(timeOfDayChanged), with: nil, afterDelay: interval+1)
     }
     
-    @objc func preferredContentSizeChanged(_ notification: Notification) {
+    func preferredContentSizeChanged(_ notification: Notification) {
         applyStyle()
     }
     
-    @objc func timeOfDayChanged() {
+    func timeOfDayChanged() {
         forceRefreshAppearanceIfNeeded()
         resetTimeOfDayTimer()
     }

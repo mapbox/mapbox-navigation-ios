@@ -36,7 +36,7 @@ import MapboxDirections
  ```
 */
 @IBDesignable
-@objc(MBNavigationView)
+
 open class NavigationView: UIView {
     
     private enum Constants {

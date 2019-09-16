@@ -25,7 +25,7 @@ extension UIFont {
     /**
      Returns an adjusted font for the `preferredContentSizeCategory`.
      */
-    @objc public var adjustedFont: UIFont {
+    public var adjustedFont: UIFont {
         let font = with(multiplier: fontSizeMultiplier)
         return font
     }

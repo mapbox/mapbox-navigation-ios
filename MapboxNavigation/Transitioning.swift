@@ -72,10 +72,10 @@ extension PresentAnimator: UIViewControllerAnimatedTransitioning {
     }
 }
 
-@objc protocol DismissDraggable: UIViewControllerTransitioningDelegate {
+protocol DismissDraggable: UIViewControllerTransitioningDelegate {
     var interactor: Interactor { get }
     var draggableHeight: CGFloat { get }
-    @objc optional func handleDismissPan(_ sender: UIPanGestureRecognizer)
+    optional func handleDismissPan(_ sender: UIPanGestureRecognizer)
 }
 
 fileprivate extension Selector {
@@ -91,7 +91,7 @@ extension DismissDraggable where Self: UIViewController {
 
 fileprivate extension UIViewController {
     
-    @objc func handleDismissPan(_ sender: UIPanGestureRecognizer) {
+    func handleDismissPan(_ sender: UIPanGestureRecognizer) {
         self.handlePan(sender)
     }
     

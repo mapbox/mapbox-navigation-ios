@@ -12,7 +12,7 @@ import MapboxDirections
  - seealso: MapboxNavigationService
  - seealso: NavigationServiceDelegate
  */
-@objc(MBRouterDelegate)
+
 public protocol RouterDelegate: class {
     
     /**
@@ -24,7 +24,7 @@ public protocol RouterDelegate: class {
      - parameter location: The user’s current location.
      - returns: True to allow the router to calculate a new route; false to keep tracking the current route.
      */
-    @objc(router:shouldRerouteFromLocation:)
+    
     optional func router(_ router: Router, shouldRerouteFrom location: CLLocation) -> Bool
 
     /**
@@ -35,7 +35,7 @@ public protocol RouterDelegate: class {
      - parameter router: The router that will calculate a new route.
      - parameter location: The user’s current location.
      */
-    @objc(router:willRerouteFromLocation:)
+    
     optional func router(_ router: Router, willRerouteFrom location: CLLocation)
     
     /**
@@ -47,7 +47,7 @@ public protocol RouterDelegate: class {
      - parameter location: The location that will be discarded.
      - return: If `true`, the location is discarded and the `Router` will not consider it. If `false`, the location will not be thrown out.
      */
-    @objc(router:shouldDiscardLocation:)
+    
     optional func router(_ router: Router, shouldDiscard location: CLLocation) -> Bool
 
     /**
@@ -58,7 +58,7 @@ public protocol RouterDelegate: class {
      - parameter router: The router that has calculated a new route.
      - parameter route: The new route.
      */
-    @objc(router:didRerouteAlongRoute:at:proactive:)
+    
     optional func router(_ router: Router, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool)
 
     /**
@@ -69,7 +69,7 @@ public protocol RouterDelegate: class {
      - parameter router: The router that has calculated a new route.
      - parameter error: An error raised during the process of obtaining a new route.
      */
-    @objc(router:didFailToRerouteWithError:)
+    
     optional func router(_ router: Router, didFailToRerouteWith error: Error)
     
     /**
@@ -80,7 +80,7 @@ public protocol RouterDelegate: class {
      - parameter location: the guaranteed location, possibly snapped, associated with the progress update.
      - parameter rawLocation: the raw location, from the location manager, associated with the progress update.
      */
-    @objc(router:didUpdateProgress:withLocation:rawLocation:)
+    
     optional func router(_ router: Router, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation)
     
     /**
@@ -89,7 +89,7 @@ public protocol RouterDelegate: class {
      - parameter instruction: The instruction to be presented.
      - parameter routeProgress: The route progress object that the router is updating.
      */
-    @objc(router:didPassVisualInstructionPoint:routeProgress:)
+    
     optional func router(_ router: Router, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress)
     
     /**
@@ -98,7 +98,7 @@ public protocol RouterDelegate: class {
      - parameter instruction: The instruction to be spoken.
      - parameter routeProgress: The route progress object that the router is updating.
      */
-    @objc(router:didPassSpokenInstructionPoint:routeProgress:)
+    
     optional func router(_ router: Router, didPassSpokenInstructionPoint instruction: SpokenInstruction, routeProgress: RouteProgress)
     
     /**
@@ -111,7 +111,7 @@ public protocol RouterDelegate: class {
      - parameter distance: The current distance from the waypoint, in meters.
      - important: This method will likely be called several times as you approach a destination. If only one consumption of this method is desired, then usage of an internal flag is recommended.
      */
-    @objc(router:willArriveAtWaypoint:in:distance:)
+    
     optional func router(_ router: Router, willArriveAt waypoint: Waypoint, after remainingTimeInterval:TimeInterval, distance: CLLocationDistance)
     
     /**
@@ -124,7 +124,7 @@ public protocol RouterDelegate: class {
      - parameter waypoint: The waypoint that the controller has arrived at.
      - returns: True to advance to the next leg, if any, or false to remain on the completed leg.
      */
-    @objc(router:didArriveAtWaypoint:)
+    
     optional func router(_ router: Router, didArriveAt waypoint: Waypoint) -> Bool
     
     /**
@@ -136,7 +136,7 @@ public protocol RouterDelegate: class {
      - parameter waypoint: The waypoint that the controller has arrived at.
      - returns: True to prevent the router from checking if the user should be rerouted.
      */
-    @objc(router:shouldPreventReroutesWhenArrivingAtWaypoint:)
+    
     optional func router(_ router: Router, shouldPreventReroutesWhenArrivingAt waypoint: Waypoint) -> Bool
 
     /**
@@ -147,7 +147,7 @@ public protocol RouterDelegate: class {
      - parameter router: The router that will change the state of battery monitoring.
      - returns: A bool indicating whether to disable battery monitoring when the RouteController is deinited.
      */
-    @objc(routerShouldDisableBatteryMonitoring:)
+    
     optional func routerShouldDisableBatteryMonitoring(_ router: Router) -> Bool
 }
 

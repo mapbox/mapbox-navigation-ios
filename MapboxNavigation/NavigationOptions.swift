@@ -9,7 +9,7 @@ import MapboxCoreNavigation
  - note: `NavigationOptions` is designed to be used with the `NavigationViewController` class to customize the user experience. To specify criteria when calculating routes, use the `NavigationRouteOptions` class. To modify user preferences that persist across navigation sessions, use the `NavigationSettings` class.
  */
 
-@objc(MBNavigationOptions)
+
 open class NavigationOptions: NSObject, NavigationCustomizable {
     
     /**
@@ -17,31 +17,31 @@ open class NavigationOptions: NSObject, NavigationCustomizable {
      
      If this property is set to `nil`, a `DayStyle` and a `NightStyle` are created to be used as the view controller’s styles. This property is set to `nil` by default.
      */
-    @objc open var styles: [Style]? = nil
+    open var styles: [Style]? = nil
     
     /**
      The navigation service that manages navigation along the route.
      */
-    @objc open var navigationService: NavigationService?
+    open var navigationService: NavigationService?
     
     /**
      The voice controller that manages the delivery of voice instructions during navigation.
     */
-    @objc open var voiceController: RouteVoiceController?
+    open var voiceController: RouteVoiceController?
     
     /**
      The view controller to embed into the top section of the UI.
      
      If this property is set to `nil`, a `TopBannerViewController` is created and embedded in the UI. This property is set to `nil` by default.
      */
-    @objc open var topBanner: ContainerViewController?
+    open var topBanner: ContainerViewController?
     
     /**
      The view controller to embed into the bottom section of the UI.
      
      If this property is set to `nil`, a `BottomBannerViewController` is created and embedded in the UI. This property is set to `nil` by default.
      */
-    @objc open var bottomBanner: ContainerViewController?
+    open var bottomBanner: ContainerViewController?
     
     // This makes the compiler happy.
     required public override init() {
@@ -57,7 +57,7 @@ open class NavigationOptions: NSObject, NavigationCustomizable {
      - parameter topBanner: The container view controller that presents the top banner.
      - parameter bottomBanner: The container view controller that presents the bottom banner.
      */
-    @objc public convenience init(styles: [Style]? = nil, navigationService: NavigationService? = nil, voiceController: RouteVoiceController? = nil, topBanner: ContainerViewController? = nil, bottomBanner: ContainerViewController? = nil) {
+    public convenience init(styles: [Style]? = nil, navigationService: NavigationService? = nil, voiceController: RouteVoiceController? = nil, topBanner: ContainerViewController? = nil, bottomBanner: ContainerViewController? = nil) {
         self.init()
         self.styles = styles
         self.navigationService = navigationService
@@ -69,7 +69,7 @@ open class NavigationOptions: NSObject, NavigationCustomizable {
     /**
      Convienence factory-method for convenient bridging to Objective-C.
      */
-    @objc public class func navigationOptions() -> Self {
+    public class func navigationOptions() -> Self {
         return self.init()
     }
 }

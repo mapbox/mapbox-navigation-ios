@@ -4,7 +4,7 @@ import MapboxDirections
 @testable import MapboxCoreNavigation
 
 
-@objc(MBFixture)
+
 public class Fixture: NSObject {
     public class func stringFromFileNamed(name: String) -> String {
         guard let path = Bundle(for: self).path(forResource: name, ofType: "json") else {
@@ -19,8 +19,7 @@ public class Fixture: NSObject {
         }
     }
     
-    @objc
-    public class func JSONFromFileNamed(name: String) -> [String: Any] {
+        public class func JSONFromFileNamed(name: String) -> [String: Any] {
         guard let path = Bundle(for: Fixture.self).path(forResource: name, ofType: "json") else {
             assert(false, "Fixture \(name) not found.")
             return [:]
@@ -73,7 +72,7 @@ public class Fixture: NSObject {
         return locations.map { CLLocation($0) }
     }
     
-    @objc(routeFromJSONFileName:)
+    
     public class func route(from jsonFile: String) -> Route {
         let response = JSONFromFileNamed(name: jsonFile)
         let waypoints = Fixture.waypoints(from: jsonFile)

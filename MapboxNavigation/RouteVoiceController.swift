@@ -55,7 +55,7 @@ extension SpokenInstruction {
  
  If you need to supply a third-party speech synthesizer, define a subclass of `RouteVoiceController` that overrides the `speak(_:)` method. If the third-party speech synthesizer requires a network connection, you can instead subclass `MapboxVoiceController` to take advantage of its prefetching functionality.
  */
-@objc(MBRouteVoiceController)
+
 open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     
     lazy var speechSynth = AVSpeechSynthesizer()
@@ -65,17 +65,17 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     /**
      If true, a noise indicating the user is going to be rerouted will play prior to rerouting.
      */
-    @objc public var playRerouteSound = true
+    public var playRerouteSound = true
     
     /**
      Sound to play prior to reroute. Inherits volume level from `volume`.
      */
-    @objc public var rerouteSoundPlayer: AVAudioPlayer = try! AVAudioPlayer(data: NSDataAsset(name: "reroute-sound", bundle: .mapboxNavigation)!.data, fileTypeHint: AVFileType.mp3.rawValue)
+    public var rerouteSoundPlayer: AVAudioPlayer = try! AVAudioPlayer(data: NSDataAsset(name: "reroute-sound", bundle: .mapboxNavigation)!.data, fileTypeHint: AVFileType.mp3.rawValue)
     
     /**
      Delegate used for getting metadata information about a particular spoken instruction.
      */
-    @objc public weak var voiceControllerDelegate: VoiceControllerDelegate?
+    public weak var voiceControllerDelegate: VoiceControllerDelegate?
     
     var lastSpokenInstruction: SpokenInstruction?
     var routeProgress: RouteProgress?
@@ -86,8 +86,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     /**
      Default initializer for `RouteVoiceController`.
      */
-    @objc
-    public init(navigationService: NavigationService) {
+        public init(navigationService: NavigationService) {
         super.init()
 
         verifyBackgroundAudio()
@@ -135,14 +134,14 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         NotificationCenter.default.removeObserver(self, name: .routeControllerDidReroute, object: nil)
     }
     
-    @objc func didReroute(notification: NSNotification) {
+    func didReroute(notification: NSNotification) {
         // Play reroute sound when a faster route is found
         if notification.userInfo?[RouteControllerNotificationUserInfoKey.isProactiveKey] as! Bool {
             pauseSpeechAndPlayReroutingDing(notification: notification)
         }
     }
     
-    @objc func pauseSpeechAndPlayReroutingDing(notification: NSNotification) {
+    func pauseSpeechAndPlayReroutingDing(notification: NSNotification) {
         guard playRerouteSound && !NavigationSettings.shared.voiceMuted else {
             return
         }
@@ -157,7 +156,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         rerouteSoundPlayer.play()
     }
     
-    @objc public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+    public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
         do {
             try unDuckAudio()
         } catch {
@@ -185,7 +184,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         try AVAudioSession.sharedInstance().setActive(false, options: [.notifyOthersOnDeactivation])
     }
     
-    @objc open func didPassSpokenInstructionPoint(notification: NSNotification) {
+    open func didPassSpokenInstructionPoint(notification: NSNotification) {
         guard !NavigationSettings.shared.voiceMuted else { return }
         
         routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as? RouteProgress
@@ -241,7 +240,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
 /**
  The `VoiceControllerDelegate` protocol defines methods that allow an object to respond to significant events related to spoken instructions.
  */
-@objc(MBVoiceControllerDelegate)
+
 public protocol VoiceControllerDelegate {
     
     /**
@@ -250,7 +249,7 @@ public protocol VoiceControllerDelegate {
      - parameter voiceController: The voice controller that experienced the failure.
      - parameter error: An error explaining the failure and its cause. The `MBSpokenInstructionErrorCodeKey` key of the error’s user info dictionary is a `SpokenInstructionErrorCode` indicating the cause of the failure.
      */
-    @objc(voiceController:spokenInstrucionsDidFailWithError:)
+    
     optional func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: Error)
     
     /**
@@ -260,7 +259,7 @@ public protocol VoiceControllerDelegate {
      - parameter interruptedInstruction: The spoken instruction currently in progress that has been interrupted.
      - parameter interruptingInstruction: The spoken instruction that is interrupting the current instruction.
      */
-    @objc(voiceController:didInterruptSpokenInstruction:withInstruction:)
+    
     optional func voiceController(_ voiceController: RouteVoiceController, didInterrupt interruptedInstruction: SpokenInstruction, with interruptingInstruction: SpokenInstruction)
     
     /** Called when a spoken is about to speak. Useful if it is necessary to give a custom instruction instead. Noting, changing the `distanceAlongStep` property on `SpokenInstruction` will have no impact on when the instruction will be said.
@@ -269,6 +268,6 @@ public protocol VoiceControllerDelegate {
      - parameter instruction: The spoken instruction that will be said.
      - parameter routeProgress: The `RouteProgress` just before when the instruction is scheduled to be spoken.
      **/
-    @objc(voiceController:willSpeakSpokenInstruction:routeProgress:)
+    
     optional func voiceController(_ voiceController: RouteVoiceController, willSpeak instruction: SpokenInstruction, routeProgress: RouteProgress) -> SpokenInstruction?
 }

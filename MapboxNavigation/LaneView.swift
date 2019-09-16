@@ -2,7 +2,7 @@ import UIKit
 import MapboxDirections
 
 /// :nodoc:
-@objc(MBLaneView)
+
 open class LaneView: UIView {
     
     let invalidAlpha: CGFloat = 0.4
@@ -35,13 +35,13 @@ open class LaneView: UIView {
         return bounds.size
     }
     
-    @objc public dynamic var primaryColor: UIColor = .defaultLaneArrowPrimary {
+    public dynamic var primaryColor: UIColor = .defaultLaneArrowPrimary {
         didSet {
             setNeedsDisplay()
         }
     }
     
-    @objc public dynamic var secondaryColor: UIColor = .defaultLaneArrowSecondary {
+    public dynamic var secondaryColor: UIColor = .defaultLaneArrowSecondary {
         didSet {
             setNeedsDisplay()
         }

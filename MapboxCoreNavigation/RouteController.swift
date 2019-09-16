@@ -13,7 +13,7 @@ import Turf
  `RouteController` is responsible for the core navigation logic whereas
  `NavigationViewController` is responsible for displaying a default drop-in navigation UI.
  */
-@objc(MBRouteController)
+
 open class RouteController: NSObject {
     
     public enum DefaultBehavior {
@@ -62,7 +62,7 @@ open class RouteController: NSObject {
     
     var isFirstLocation: Bool = true
     
-    @objc public var config: MBNavigatorConfig? {
+    public var config: MBNavigatorConfig? {
         get {
             return navigator.getConfig()
         }
@@ -74,7 +74,7 @@ open class RouteController: NSObject {
     /**
      Details about the user’s progress along the current route, leg, and step.
      */
-    @objc public var routeProgress: RouteProgress {
+    public var routeProgress: RouteProgress {
         get {
             return _routeProgress
         }
@@ -113,30 +113,30 @@ open class RouteController: NSObject {
         }
     }
     
-    @objc public var reroutesProactively: Bool = true
+    public var reroutesProactively: Bool = true
     
     var lastProactiveRerouteDate: Date?
     
     /**
      The route controller’s delegate.
      */
-    @objc public weak var delegate: RouterDelegate?
+    public weak var delegate: RouterDelegate?
     
     /**
      The route controller’s associated location manager.
      */
-    @objc public unowned var dataSource: RouterDataSource
+    public unowned var dataSource: RouterDataSource
     
     /**
      The Directions object used to create the route.
      */
-    @objc public var directions: Directions
+    public var directions: Directions
     
     /**
      The idealized user location. Snapped to the route line, if applicable, otherwise raw.
      - seeAlso: snappedLocation, rawLocation
      */
-    @objc public var location: CLLocation? {
+    public var location: CLLocation? {
         return snappedLocation ?? rawLocation
     }
     

@@ -1,6 +1,6 @@
 import Foundation
 
-@objc(MBDataCache)
+
 public class DataCache: NSObject, BimodalDataCache {
     let memoryCache: NSCache<NSString, NSData>
     let fileCache = FileCache()

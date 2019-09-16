@@ -5,28 +5,28 @@ import Turf
 
 /// :nodoc:
 @IBDesignable
-@objc(MBManeuverView)
+
 open class ManeuverView: UIView {
 
-    @objc public dynamic var primaryColor: UIColor = .defaultTurnArrowPrimary {
+    public dynamic var primaryColor: UIColor = .defaultTurnArrowPrimary {
         didSet {
             setNeedsDisplay()
         }
     }
 
-    @objc public dynamic var secondaryColor: UIColor = .defaultTurnArrowSecondary {
+    public dynamic var secondaryColor: UIColor = .defaultTurnArrowSecondary {
         didSet {
             setNeedsDisplay()
         }
     }
 
-    @objc public var isStart = false {
+    public var isStart = false {
         didSet {
             setNeedsDisplay()
         }
     }
 
-    @objc public var isEnd = false {
+    public var isEnd = false {
         didSet {
             setNeedsDisplay()
         }
@@ -42,7 +42,7 @@ open class ManeuverView: UIView {
     /**
      The current instruction displayed in the maneuver view.
      */
-    @objc public var visualInstruction: VisualInstruction? {
+    public var visualInstruction: VisualInstruction? {
         didSet {
             setNeedsDisplay()
         }
@@ -51,7 +51,7 @@ open class ManeuverView: UIView {
     /**
      This indicates the side of the road currently driven on.
      */
-    @objc public var drivingSide: DrivingSide = .right {
+    public var drivingSide: DrivingSide = .right {
         didSet {
             setNeedsDisplay()
         }

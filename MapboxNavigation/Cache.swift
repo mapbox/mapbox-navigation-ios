@@ -5,7 +5,7 @@ public typealias CompletionHandler = () -> Void
 /**
  A cache consists of both in-memory and on-disk components, both of which can be reset.
  */
-@objc(MBBimodalCache)
+
 public protocol BimodalCache {
     func clearMemory()
     func clearDisk(completion: CompletionHandler?)
@@ -14,7 +14,7 @@ public protocol BimodalCache {
 /**
  A cache which supports storing images
  */
-@objc(MBBimodalImageCache)
+
 public protocol BimodalImageCache: BimodalCache {
     func store(_ image: UIImage, forKey key: String, toDisk: Bool, completion completionBlock: CompletionHandler?)
     func image(forKey: String?) -> UIImage?
@@ -23,7 +23,7 @@ public protocol BimodalImageCache: BimodalCache {
 /**
  A cache which supports storing data
  */
-@objc(MBBimodalDataCache)
+
 public protocol BimodalDataCache: BimodalCache {
     func store(_ data: Data, forKey key: String, toDisk: Bool, completion completionBlock: CompletionHandler?)
     func data(forKey: String?) -> Data?

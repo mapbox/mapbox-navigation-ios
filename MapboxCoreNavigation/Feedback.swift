@@ -3,7 +3,7 @@ import Foundation
 /**
  Feedback type is used to specify the type of feedback being recorded with `NavigationEventsManager.recordFeedback(type:description:)`.
  */
-@objc(MBFeedbackType)
+
 public enum FeedbackType: Int, CustomStringConvertible {
     /**
      Indicates general feedback. You should provide a `description` string to `NavigationEventsManager.recordFeedback(type:description:)` to elaborate on the feedback if possible.
@@ -88,7 +88,7 @@ public enum FeedbackType: Int, CustomStringConvertible {
     }
 }
 
-@objc(MBFeedbackSource)
+
 public enum FeedbackSource: Int, CustomStringConvertible {
     case user
     case reroute

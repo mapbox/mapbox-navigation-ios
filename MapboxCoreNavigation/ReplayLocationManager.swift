@@ -6,13 +6,13 @@ import CoreLocation
  recorded with the single exception of the location’s timestamp which will be
  adjusted by interval between locations.
  */
-@objc(MBReplayLocationManager)
+
 open class ReplayLocationManager: NavigationLocationManager {
     
     /**
      `speedMultiplier` adjusts the speed of the replay.
      */
-    @objc public var speedMultiplier: TimeInterval = 1
+    public var speedMultiplier: TimeInterval = 1
     
     var currentIndex: Int = 0
     
@@ -21,14 +21,14 @@ open class ReplayLocationManager: NavigationLocationManager {
     /**
      `locations` to be replayed.
      */
-    @objc public var locations: [CLLocation]! {
+    public var locations: [CLLocation]! {
         didSet {
             currentIndex = 0
         }
     }
     private var synthesizedLocation: CLLocation?
 
-    @objc override open var location: CLLocation? {
+    override open var location: CLLocation? {
         get {
             return synthesizedLocation
         }
@@ -56,7 +56,7 @@ open class ReplayLocationManager: NavigationLocationManager {
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(tick), object: nil)
     }
     
-    @objc internal func tick() {
+    internal func tick() {
         guard let startDate = startDate else { return }
         let location = locations[currentIndex]
         synthesizedLocation = location

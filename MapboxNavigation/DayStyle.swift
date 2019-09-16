@@ -40,7 +40,7 @@ extension UIFont {
 /**
  `DefaultStyle` is default style for Mapbox Navigation SDK.
  */
-@objc(MBDayStyle)
+
 open class DayStyle: Style {
     
     public required init() {
@@ -169,7 +169,7 @@ open class DayStyle: Style {
 /**
  `NightStyle` is the default night style for Mapbox Navigation SDK. Only will be applied when necessary and if `automaticallyAdjustStyleForSunPosition`.
  */
-@objc(MBNightStyle)
+
 open class NightStyle: DayStyle {
     
     public required init() {

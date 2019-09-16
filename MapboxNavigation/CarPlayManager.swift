@@ -7,7 +7,7 @@ import MapboxDirections
  The activity during which a `CPTemplate` is displayed. This enumeration is used to distinguish between different templates during different phases of user interaction.
  */
 @available(iOS 12.0, *)
-@objc(MBCarPlayActivity)
+
 public enum CarPlayActivity: Int {
     /// The user is browsing the map or searching for a destination.
     case browsing
@@ -27,7 +27,7 @@ public enum CarPlayActivity: Int {
  - note: It is very important you have a single `CarPlayManager` instance at any given time. This should be managed by your `UIApplicationDelegate` class if you choose to supply your `accessToken` to the `CarPlayManager.eventsManager` via `NavigationEventsManager.init(dataSource:accessToken:mobileEventsManager)`, instead of the Info.plist.
  */
 @available(iOS 12.0, *)
-@objc(MBCarPlayManager)
+
 public class CarPlayManager: NSObject {
 
     public fileprivate(set) var interfaceController: CPInterfaceController?
@@ -36,19 +36,19 @@ public class CarPlayManager: NSObject {
     /**
      Developers should assign their own object as a delegate implementing the CarPlayManagerDelegate protocol for customization.
      */
-    @objc public weak var delegate: CarPlayManagerDelegate?
+    public weak var delegate: CarPlayManagerDelegate?
 
     /**
      If set to `true`, turn-by-turn directions will simulate the user traveling along the selected route when initiated from CarPlay.
      */
-    @objc public var simulatesLocations = false
+    public var simulatesLocations = false
 
     private weak var navigationService: NavigationService?
 
     /**
      A multiplier to be applied to the user's speed in simulation mode.
      */
-    @objc public var simulatedSpeedMultiplier = 1.0 {
+    public var simulatedSpeedMultiplier = 1.0 {
         didSet {
             navigationService?.simulationSpeedMultiplier = simulatedSpeedMultiplier
         }
@@ -77,26 +77,26 @@ public class CarPlayManager: NSObject {
     /**
      A Boolean value indicating whether the phone is connected to CarPlay.
      */
-    @objc public static var isConnected = false
+    public static var isConnected = false
 
     /**
      The events manager used during turn-by-turn navigation while connected to
      CarPlay.
      */
-    @objc public let eventsManager: NavigationEventsManager
+    public let eventsManager: NavigationEventsManager
     
     /**
      The object that calculates routes when the user interacts with the CarPlay
      interface.
      */
-    @objc public let directions: Directions
+    public let directions: Directions
     
-    @objc public let navigationViewControllerType: CarPlayNavigationViewController.Type
+    public let navigationViewControllerType: CarPlayNavigationViewController.Type
 
     /**
      The styles displayed in the CarPlay interface.
      */
-    @objc public var styles: [Style] {
+    public var styles: [Style] {
         didSet {
             if let mapViewController = carPlayMapViewController {
                 mapViewController.styles = styles
@@ -108,7 +108,7 @@ public class CarPlayManager: NSObject {
     /**
      The view controller for orchestrating the Mapbox map, the interface styles and the map template buttons on CarPlay.
      */
-    @objc public var carPlayMapViewController: CarPlayMapViewController? {
+    public var carPlayMapViewController: CarPlayMapViewController? {
         if let mapViewController = carWindow?.rootViewController as? CarPlayMapViewController {
             return mapViewController
         }
@@ -118,7 +118,7 @@ public class CarPlayManager: NSObject {
     /**
      The bar button that exits the navigation session.
      */
-    @objc public lazy var exitButton: CPBarButton = {
+    public lazy var exitButton: CPBarButton = {
         let exitButton = CPBarButton(type: .text) { [weak self] (button: CPBarButton) in
             self?.currentNavigator?.exitNavigation(byCanceling: true)
         }
@@ -129,7 +129,7 @@ public class CarPlayManager: NSObject {
     /**
      The bar button that mutes the voice turn-by-turn instruction announcements during navigation.
      */
-    @objc public lazy var muteButton: CPBarButton = {
+    public lazy var muteButton: CPBarButton = {
         let muteTitle = NSLocalizedString("CARPLAY_MUTE", bundle: .mapboxNavigation, value: "Mute", comment: "Title for mute button")
         let unmuteTitle = NSLocalizedString("CARPLAY_UNMUTE", bundle: .mapboxNavigation, value: "Unmute", comment: "Title for unmute button")
         
@@ -144,7 +144,7 @@ public class CarPlayManager: NSObject {
     /**
      The bar button that prompts the presented navigation view controller to display the feedback screen.
      */
-    @objc public lazy var showFeedbackButton: CPMapButton = {
+    public lazy var showFeedbackButton: CPMapButton = {
         let showFeedbackButton = CPMapButton { button in
             self.currentNavigator?.showFeedback()
         }
@@ -156,7 +156,7 @@ public class CarPlayManager: NSObject {
     /**
      The bar button that shows the selected route overview on the map.
      */
-    @objc public lazy var userTrackingButton: CPMapButton = {
+    public lazy var userTrackingButton: CPMapButton = {
         let userTrackingButton = CPMapButton { button in
             guard let navigationViewController = self.currentNavigator else {
                 return
@@ -170,14 +170,14 @@ public class CarPlayManager: NSObject {
     }()
     
     @available(*, deprecated, renamed: "trackingStateButton")
-    @objc public var overviewButton: CPMapButton {
+    public var overviewButton: CPMapButton {
         get { return userTrackingButton }
     }
     
     /**
      The main map view displayed inside CarPlay.
      */
-    @objc public var mapView: NavigationMapView? {
+    public var mapView: NavigationMapView? {
         let mapViewController = carPlayMapViewController
         return mapViewController?.mapView
     }
@@ -197,7 +197,7 @@ public class CarPlayManager: NSObject {
         omitted, a standard `NavigationEventsManager` object is used by default.
 
      */
-    @objc public convenience init(styles: [Style]? = nil,
+    public convenience init(styles: [Style]? = nil,
                       directions: Directions? = nil,
                       eventsManager: NavigationEventsManager? = nil) {
         
@@ -208,7 +208,7 @@ public class CarPlayManager: NSObject {
     }
     
     
-    @objc internal init(styles: [Style]? = nil,
+    internal init(styles: [Style]? = nil,
                       directions: Directions? = nil,
                       eventsManager: NavigationEventsManager? = nil,
                       navigationViewControllerClass: CarPlayNavigationViewController.Type? = nil) {
@@ -695,11 +695,11 @@ extension CarPlayManager: MapTemplateProviderDelegate {
 }
 
 @available(iOS 12.0, *)
-@objc(MBMapTemplateProviderDelegate)
+
 internal protocol MapTemplateProviderDelegate {
-    @objc optional func mapTemplateProvider(_ provider: MapTemplateProvider, mapTemplate: CPMapTemplate, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, for activity: CarPlayActivity) -> [CPBarButton]?
+    optional func mapTemplateProvider(_ provider: MapTemplateProvider, mapTemplate: CPMapTemplate, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, for activity: CarPlayActivity) -> [CPBarButton]?
     
-    @objc optional func mapTemplateProvider(_ provider: MapTemplateProvider, mapTemplate: CPMapTemplate, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, for activity: CarPlayActivity) -> [CPBarButton]?
+    optional func mapTemplateProvider(_ provider: MapTemplateProvider, mapTemplate: CPMapTemplate, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, for activity: CarPlayActivity) -> [CPBarButton]?
 }
 
 @available(iOS 12.0, *)
@@ -732,11 +732,11 @@ internal class MapTemplateProvider: NSObject {
 /**
  CarPlay support requires iOS 12.0 or above and the CarPlay framework.
  */
-@objc(MBCarPlayManager)
+
 public class CarPlayManager: NSObject {
     /**
      A Boolean value indicating whether the phone is connected to CarPlay.
      */
-    @objc public static var isConnected = false
+    public static var isConnected = false
 }
 #endif

@@ -8,7 +8,7 @@ public class GenericRouteShield: StylableView {
     static let labelFontSizeScaleFactor: CGFloat = 2.0/3.0
     
     //The color to use for the text and border.
-    @objc public dynamic var foregroundColor: UIColor? {
+    public dynamic var foregroundColor: UIColor? {
         didSet {
             layer.borderColor = foregroundColor?.cgColor
             routeLabel.textColor = foregroundColor

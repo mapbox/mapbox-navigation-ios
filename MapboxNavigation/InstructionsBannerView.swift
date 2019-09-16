@@ -5,13 +5,13 @@ import MapboxDirections
 /**
  `InstructionsBannerViewDelegate` provides methods for reacting to user interactions in `InstructionsBannerView`.
  */
-@objc(MBInstructionsBannerViewDelegate)
+
 public protocol InstructionsBannerViewDelegate: class {
     
     /**
      Called when the user taps the `InstructionsBannerView`.
      */
-    @objc(didTapInstructionsBanner:)
+    
     optional func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView)
     
     
@@ -19,25 +19,25 @@ public protocol InstructionsBannerViewDelegate: class {
      Called when the user drags either up or down on the `InstructionsBannerView`.
      */
     @available(*, deprecated, message: "Please use didSwipeInstructionsBanner instead.")
-    @objc(didDragInstructionsBanner:)
+    
     optional func didDragInstructionsBanner(_ sender: BaseInstructionsBannerView)
     
     /**
      Called when the user swipes either left, right, or down on the `InstructionsBannerView`
      */
-    @objc optional func didSwipeInstructionsBanner(_ sender: BaseInstructionsBannerView, swipeDirection direction: UISwipeGestureRecognizer.Direction)
+    optional func didSwipeInstructionsBanner(_ sender: BaseInstructionsBannerView, swipeDirection direction: UISwipeGestureRecognizer.Direction)
 }
 
-@objc private protocol InstructionsBannerViewDelegateDeprecations {
-    @objc(didDragInstructionsBanner:)
+private protocol InstructionsBannerViewDelegateDeprecations {
+    
     optional func didDragInstructionsBanner(_ sender: BaseInstructionsBannerView)
 }
 
 /// :nodoc:
 @IBDesignable
-@objc(MBInstructionsBannerView)
+
 open class InstructionsBannerView: BaseInstructionsBannerView, NavigationComponent {
-    @objc public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
+    public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
         update(for: instruction)
     }
 }
@@ -114,7 +114,7 @@ open class BaseInstructionsBannerView: UIControl {
         stepListIndicatorView.isHidden = !showStepIndicator
     }
     
-    @objc func swipedInstructionBannerLeft(_ sender: Any) {
+    func swipedInstructionBannerLeft(_ sender: Any) {
         if !swipeable {
             return
         }
@@ -126,7 +126,7 @@ open class BaseInstructionsBannerView: UIControl {
         }
     }
     
-    @objc func swipedInstructionBannerRight(_ sender: Any) {
+    func swipedInstructionBannerRight(_ sender: Any) {
         if !swipeable {
             return
         }
@@ -138,7 +138,7 @@ open class BaseInstructionsBannerView: UIControl {
         }
     }
     
-    @objc func swipedInstructionBannerDown(_ sender: Any) {
+    func swipedInstructionBannerDown(_ sender: Any) {
         if let gestureRecognizer = sender as? UISwipeGestureRecognizer, gestureRecognizer.state == .ended {
             if showStepIndicator {
                stepListIndicatorView.isHidden = !stepListIndicatorView.isHidden
@@ -151,7 +151,7 @@ open class BaseInstructionsBannerView: UIControl {
         }
     }
         
-    @objc func tappedInstructionsBanner(_ sender: Any) {
+    func tappedInstructionsBanner(_ sender: Any) {
         if let delegate = delegate {
             if showStepIndicator {
                 stepListIndicatorView.isHidden = !stepListIndicatorView.isHidden
@@ -163,7 +163,7 @@ open class BaseInstructionsBannerView: UIControl {
     /**
      Updates the instructions banner info with a given `VisualInstructionBanner`.
      */
-    @objc(updateForVisualInstructionBanner:)
+    
     public func update(for instruction: VisualInstructionBanner?) {
         let secondaryInstruction = instruction?.secondaryInstruction
         primaryLabel.numberOfLines = secondaryInstruction == nil ? 2 : 1

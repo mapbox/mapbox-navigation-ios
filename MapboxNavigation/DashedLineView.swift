@@ -2,7 +2,7 @@ import UIKit
 
 /// :nodoc:
 @IBDesignable
-@objc(MBDashedLineView)
+
 public class DashedLineView: LineView {
 
     @IBInspectable public var dashedLength: CGFloat = 4 { didSet { updateProperties() } }

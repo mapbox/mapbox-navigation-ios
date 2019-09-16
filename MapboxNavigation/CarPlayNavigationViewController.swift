@@ -10,12 +10,12 @@ import CarPlay
  - seealso: NavigationViewController
  */
 @available(iOS 12.0, *)
-@objc(MBCarPlayNavigationViewController)
+
 public class CarPlayNavigationViewController: UIViewController, NavigationMapViewDelegate {
     /**
      The view controller’s delegate.
      */
-    @objc public weak var carPlayNavigationDelegate: CarPlayNavigationDelegate? {
+    public weak var carPlayNavigationDelegate: CarPlayNavigationDelegate? {
         didSet {
             if let carPlayNavigationDelegate = carPlayNavigationDelegate as? NSObjectProtocol {
                 // This rigamarole avoids a compiler error when using a #selector literal, as well as a compiler warning when calling the Selector(_:) initializer with a string literal.
@@ -27,7 +27,7 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
     
     public var carPlayManager: CarPlayManager
     
-    @objc public var drivingSide: DrivingSide = .right
+    public var drivingSide: DrivingSide = .right
     
     
     /**
@@ -35,12 +35,12 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
      
      See `NavigationService` for more information.
      */
-    @objc public var navigationService: NavigationService
+    public var navigationService: NavigationService
     
     /**
      The map view showing the route and the user’s location.
      */
-    @objc public fileprivate(set) var mapView: NavigationMapView?
+    public fileprivate(set) var mapView: NavigationMapView?
     
     let shieldHeight: CGFloat = 16
     
@@ -59,14 +59,14 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
      
      This view is hidden by default.
      */
-    @objc weak public var compassView: CarPlayCompassView!
+    weak public var compassView: CarPlayCompassView!
     
     /**
      The interface styles available for display.
      
      These are the styles available to the view controller’s internal `StyleManager` object. In CarPlay, `Style` objects primarily affect the appearance of the map, not guidance-related overlay views.
      */
-    @objc public var styles: [Style] {
+    public var styles: [Style] {
         didSet {
             styleManager?.styles = styles
         }
@@ -93,7 +93,7 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
      
      - postcondition: Call `startNavigationSession(for:)` after initializing this object to begin navigation.
      */
-    @objc required public init(navigationService: NavigationService,
+    required public init(navigationService: NavigationService,
                       mapTemplate: CPMapTemplate,
                       interfaceController: CPInterfaceController,
                       manager: CarPlayManager,
@@ -219,7 +219,7 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
      
      - parameter trip: The trip to begin navigating along.
      */
-    @objc(startNavigationSessionForTrip:)
+    
     public func startNavigationSession(for trip: CPTrip) {
         carSession = mapTemplate.startNavigationSession(for: trip)
     }
@@ -229,7 +229,7 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
      
      - parameter canceled: A Boolean value indicating whether this method is being called because the user intends to cancel the trip, as opposed to letting it run to completion.
      */
-    @objc(exitNavigationByCanceling:)
+    
     public func exitNavigation(byCanceling canceled: Bool = false) {
         carSession.finishTrip()
         dismiss(animated: true) {
@@ -240,7 +240,7 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
     /**
      Shows the interface for providing feedback about the route.
      */
-    @objc public func showFeedback() {
+    public func showFeedback() {
         carInterfaceController.pushTemplate(self.carFeedbackTemplate, animated: true)
     }
     
@@ -249,7 +249,7 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
      
      When this property is true, the map follows the user’s location and rotates when their course changes. Otherwise, the map shows an overview of the route.
      */
-    @objc public dynamic var tracksUserCourse: Bool {
+    public dynamic var tracksUserCourse: Bool {
         get {
             return mapView?.tracksUserCourse ?? false
         }
@@ -290,14 +290,14 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
         isPanningAway = false
     }
     
-    @objc func visualInstructionDidChange(_ notification: NSNotification) {
+    func visualInstructionDidChange(_ notification: NSNotification) {
         let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
         updateManeuvers(for: routeProgress)
         mapView?.showWaypoints(routeProgress.route)
         mapView?.addArrow(route: routeProgress.route, legIndex: routeProgress.legIndex, stepIndex: routeProgress.currentLegProgress.stepIndex + 1)
     }
     
-    @objc func progressDidChange(_ notification: NSNotification) {
+    func progressDidChange(_ notification: NSNotification) {
         let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
         let location = notification.userInfo![RouteControllerNotificationUserInfoKey.locationKey] as! CLLocation
         
@@ -331,11 +331,11 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
         }
     }
     
-    @objc func resetFrameRate(_ sender: UIGestureRecognizer) {
+    func resetFrameRate(_ sender: UIGestureRecognizer) {
         mapView?.preferredFramesPerSecond = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
     }
     
-    @objc func rerouted(_ notification: NSNotification) {
+    func rerouted(_ notification: NSNotification) {
         updateRouteOnMap()
         self.mapView?.recenterMap()
     }
@@ -496,7 +496,7 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
 
 @available(iOS 12.0, *)
 extension CarPlayNavigationViewController: StyleManagerDelegate {
-    @objc(locationForStyleManager:)
+    
     public func location(for styleManager: StyleManager) -> CLLocation? {
         if let location = navigationService.router.location {
             return location
@@ -507,7 +507,7 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
         }
     }
     
-    @objc(styleManager:didApplyStyle:)
+    
     public func styleManager(_ styleManager: StyleManager, didApply style: Style) {
         if mapView?.styleURL != style.mapStyleURL {
             mapView?.style?.transition = MGLTransition(duration: 0.5, delay: 0)
@@ -515,7 +515,7 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
         }
     }
     
-    @objc public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
+    public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
         mapView?.reloadStyle(self)
     }
 }
@@ -524,7 +524,7 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
  The `CarPlayNavigationDelegate` protocol provides methods for reacting to significant events during turn-by-turn navigation with `CarPlayNavigationViewController`.
  */
 @available(iOS 12.0, *)
-@objc(MBNavigationCarPlayDelegate)
+
 public protocol CarPlayNavigationDelegate {
     /**
      Called when the CarPlay navigation view controller is dismissed, such as when the user ends a trip.
@@ -532,12 +532,12 @@ public protocol CarPlayNavigationDelegate {
      - parameter carPlayNavigationViewController: The CarPlay navigation view controller that was dismissed.
      - parameter canceled: True if the user dismissed the CarPlay navigation view controller by tapping the Cancel button; false if the navigation view controller dismissed by some other means.
      */
-    @objc(carPlayNavigationViewControllerDidDismiss:byCanceling:)
+    
     optional func carPlayNavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool)
     
     //MARK: - Deprecated.
     
     @available(*, deprecated, message: "Use NavigationViewControllerDelegate.navigationViewController(_:didArriveAt:) or  NavigationServiceDelegate.navigationService(_:didArriveAt:) instead.")
-    @objc optional func carPlayNavigationViewControllerDidArrive(_ carPlayNavigationViewController: CarPlayNavigationViewController)
+    optional func carPlayNavigationViewControllerDidArrive(_ carPlayNavigationViewController: CarPlayNavigationViewController)
 }
 #endif

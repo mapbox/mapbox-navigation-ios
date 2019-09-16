@@ -1,6 +1,6 @@
 import Foundation
 
-@objc(MBStyleType)
+
 public enum StyleType: Int, CustomStringConvertible {
     
     case day

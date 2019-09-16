@@ -16,7 +16,7 @@ extension Notification.Name {
  
  To specify criteria when calculating routes, use the `NavigationRouteOptions` class. To customize the user experience during a particular turn-by-turn navigation session, use the `NavigationOptions` class when initializing a `NavigationViewController`.
  */
-@objc(MBNavigationSettings)
+
 public class NavigationSettings: NSObject {
     
     /**
@@ -24,19 +24,19 @@ public class NavigationSettings: NSObject {
      
      This volume is relative to the system’s volume where 1.0 is same volume as the system.
     */
-    @objc public dynamic var voiceVolume: Float = 1.0
+    public dynamic var voiceVolume: Float = 1.0
     
     /**
      Specifies whether to mute the voice controller or not.
      */
-    @objc public dynamic var voiceMuted : Bool = false
+    public dynamic var voiceMuted : Bool = false
     
     /**
      Specifies the preferred distance measurement unit.
      - note: Anything but `kilometer` and `mile` will fall back to the default measurement for the current locale.
         Meters and feets will be used when the presented distances are small enough. See `DistanceFormatter` for more information.
      */
-    @objc public dynamic var distanceUnit : LengthFormatter.Unit = Locale.current.usesMetric ? .kilometer : .mile
+    public dynamic var distanceUnit : LengthFormatter.Unit = Locale.current.usesMetric ? .kilometer : .mile
     
     var usesMetric: Bool {
         get {
@@ -54,7 +54,7 @@ public class NavigationSettings: NSObject {
     /*
      The shared navigation settings object that affects the entire application.
      */
-    @objc(sharedSettings)
+    
     public static let shared = NavigationSettings()
     
     /// Returns a reflection of this class excluding the `properties` variable.

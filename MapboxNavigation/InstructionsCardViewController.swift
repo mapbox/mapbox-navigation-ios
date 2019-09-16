@@ -52,7 +52,7 @@ open class InstructionsCardViewController: UIViewController {
     /**
      The InstructionsCardCollection delegate.
      */
-    @objc public weak var cardCollectionDelegate: InstructionsCardCollectionDelegate?
+    public weak var cardCollectionDelegate: InstructionsCardCollectionDelegate?
     
     fileprivate var contentOffsetBeforeSwipe = CGPoint(x: 0, y: 0)
     fileprivate var indexBeforeSwipe = IndexPath(row: 0, section: 0)
@@ -142,7 +142,7 @@ open class InstructionsCardViewController: UIViewController {
         }
     }
     
-    @objc open func updateVisibleInstructionCards(at indexPaths: [IndexPath]) {
+    open func updateVisibleInstructionCards(at indexPaths: [IndexPath]) {
         guard let legProgress = routeProgress?.currentLegProgress else { return }
         let remainingSteps = legProgress.remainingSteps
         guard let currentCardStep = remainingSteps.first else { return }

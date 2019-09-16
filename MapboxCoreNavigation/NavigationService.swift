@@ -2,7 +2,7 @@ import UIKit
 import CoreLocation
 import MapboxDirections
 
-@objc(MBNavigationSimulationIntent)
+
 public enum SimulationIntent: Int{
     case manual, poorGPS
 }
@@ -11,7 +11,7 @@ public enum SimulationIntent: Int{
 /**
  The simulation mode type. Used for setting the simulation mode of the navigation service.
  */
-@objc(MBNavigationSimulationOptions)
+
 public enum SimulationMode: Int {
    
     /**
@@ -39,7 +39,7 @@ public enum SimulationMode: Int {
  
  If you use a navigation service by itself, outside of `NavigationViewController`, call `start()` when the user is ready to begin navigating along the route.
  */
-@objc(MBNavigationService)
+
 public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, EventsManagerDataSource {
     /**
      The location manager for the service. This will be the object responsible for notifying the service of GPS updates.
@@ -117,7 +117,7 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
  
  If you use a navigation service by itself, outside of `NavigationViewController`, call `start()` when the user is ready to begin navigating along the route.
  */
-@objc(MBNavigationService)
+
 public class MapboxNavigationService: NSObject, NavigationService {
     
     typealias DefaultRouter = RouteController
@@ -214,7 +214,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
      
      - parameter route: The route to follow.
      */
-    @objc convenience init(route: Route) {
+    convenience init(route: Route) {
         self.init(route: route, directions: nil, locationSource: nil, eventsManagerType: nil)
     }
     /**
@@ -227,7 +227,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
      - parameter simulationMode: The simulation mode desired.
      - parameter routerType: An optional router type to use for traversing the route.
      */
-    @objc required public init(route: Route,
+    required public init(route: Route,
                                directions: Directions? = nil,
                                locationSource: NavigationLocationManager? = nil,
                                eventsManagerType: NavigationEventsManager.Type? = nil,
@@ -372,7 +372,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         NotificationCenter.default.removeObserver(self)
     }
     
-    @objc private func applicationWillTerminate(_ notification: NSNotification) {
+    private func applicationWillTerminate(_ notification: NSNotification) {
         endNavigation()
     }
 }

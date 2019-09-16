@@ -12,33 +12,33 @@ protocol RouteControllerDataSource: class {
 }
 
 
-@objc(MBLegacyRouteController)
+
 @available(*, deprecated, renamed: "RouteController")
 open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationManagerDelegate {
     
-    @objc public weak var delegate: RouterDelegate?
+    public weak var delegate: RouterDelegate?
 
-    @objc public unowned var dataSource: RouterDataSource
+    public unowned var dataSource: RouterDataSource
     
     /**
      The Directions object used to create the route.
      */
-    @objc public var directions: Directions
+    public var directions: Directions
 
 
     /**
      The threshold used when we determine when the user has arrived at the waypoint.
      By default, we claim arrival 5 seconds before the user is physically estimated to arrive.
     */
-    @objc public var waypointArrivalThreshold: TimeInterval = 5.0
+    public var waypointArrivalThreshold: TimeInterval = 5.0
     
-    @objc public var reroutesProactively = true
+    public var reroutesProactively = true
 
     var didFindFasterRoute = false
     
     var lastProactiveRerouteDate: Date?
 
-    @objc public var routeProgress: RouteProgress {
+    public var routeProgress: RouteProgress {
         get {
             return _routeProgress
         }
@@ -101,7 +101,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
   
     }
     
-    @objc public var location: CLLocation? {
+    public var location: CLLocation? {
 
         // If there is no snapped location, and the rawLocation course is unqualified, use the user's heading as long as it is accurate.
         if snappedLocation == nil,
@@ -146,7 +146,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         userSnapToStepDistanceFromManeuver = Polyline(coordinates).distance(from: coordinate)
     }
 
-    @objc public var reroutingTolerance: CLLocationDistance {
+    public var reroutingTolerance: CLLocationDistance {
         guard let intersections = routeProgress.currentLegProgress.currentStepProgress.intersectionsIncludingUpcomingManeuverIntersection else { return RouteControllerMaximumDistanceBeforeRecalculating }
         guard let userLocation = rawLocation else { return RouteControllerMaximumDistanceBeforeRecalculating }
 
@@ -180,7 +180,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         return true
     }
     
-    @objc public func userIsOnRoute(_ location: CLLocation) -> Bool {
+    public func userIsOnRoute(_ location: CLLocation) -> Bool {
         
         // If the user has arrived, do not continue monitor reroutes, step progress, etc
         if routeProgress.currentLegProgress.userHasArrivedAtWaypoint &&
@@ -222,11 +222,11 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     
     // MARK: CLLocationManagerDelegate methods
     
-    @objc public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+    public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
         heading = newHeading
     }
 
-    @objc public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let filteredLocations = locations.filter {
             return $0.isQualified
         }
@@ -532,14 +532,14 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     
     @available(*, deprecated, message: "MapboxNavigationService is now the point-of-entry to MapboxCoreNavigation. Direct use of RouteController is no longer reccomended. See MapboxNavigationService for more information.")
     /// :nodoc: Obsoleted method.
-    @objc(initWithRoute:directions:dataSource:eventsManager:)
+    
     public convenience init(along route: Route, directions: Directions = Directions.shared, dataSource: NavigationLocationManager = NavigationLocationManager(), eventsManager: NavigationEventsManager) {
         fatalError()
     }
     
     @available(*, deprecated, message: "RouteController no longer manages a location manager directly. Instead, the Router protocol conforms to CLLocationManagerDelegate, and RouteControllerDataSource provides access to synchronous location requests.")
     /// :nodoc: obsoleted
-    @objc public final var locationManager: NavigationLocationManager! {
+    public final var locationManager: NavigationLocationManager! {
         get {
             fatalError()
         }
@@ -549,7 +549,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     }
     @available(*, deprecated, renamed: "NavigationService.locationManager", message: "NavigationViewController no longer directly manages an NavigationLocationManager. See MapboxNavigationService, which contains a reference to the locationManager, for more information.")
     /// :nodoc: obsoleted
-    @objc public final var tunnelIntersectionManager: Any! {
+    public final var tunnelIntersectionManager: Any! {
         get {
             fatalError()
         }
@@ -559,7 +559,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     }
     @available(*, deprecated, renamed: "navigationService.eventsManager", message: "NavigationViewController no longer directly manages a NavigationEventsManager. See MapboxNavigationService, which contains a reference to the eventsManager, for more information.")
     /// :nodoc: obsoleted
-    @objc public final var eventsManager: NavigationEventsManager! {
+    public final var eventsManager: NavigationEventsManager! {
         get {
             fatalError()
         }

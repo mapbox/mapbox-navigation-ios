@@ -153,7 +153,7 @@ class ViewController: UIViewController {
 
     // MARK: Gesture Recognizer Handlers
 
-    @objc func didLongPress(tap: UILongPressGestureRecognizer) {
+    func didLongPress(tap: UILongPressGestureRecognizer) {
         guard let mapView = mapView, tap.state == .began else { return }
 
         if let annotation = mapView.annotations?.last, waypoints.count > 2 {

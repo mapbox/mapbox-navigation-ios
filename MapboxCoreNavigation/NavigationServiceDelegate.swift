@@ -14,7 +14,7 @@ import MapboxDirections
  - seealso: NavigationViewControllerDelegate
  - seealso: RouterDelegate
  */
-@objc public protocol NavigationServiceDelegate {
+public protocol NavigationServiceDelegate {
     /**
      Returns whether the navigation service should be allowed to calculate a new route.
      
@@ -24,7 +24,7 @@ import MapboxDirections
      - parameter location: The user’s current location.
      - returns: True to allow the navigation service to calculate a new route; false to keep tracking the current route.
      */
-    @objc(navigationService:shouldRerouteFromLocation:)
+    
     optional func navigationService(_ service: NavigationService, shouldRerouteFrom location: CLLocation) -> Bool
     
     /**
@@ -35,7 +35,7 @@ import MapboxDirections
      - parameter service: The navigation service that will calculate a new route.
      - parameter location: The user’s current location.
      */
-    @objc(navigationService:willRerouteFromLocation:)
+    
     optional func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation)
     
     /**
@@ -47,7 +47,7 @@ import MapboxDirections
      - parameter location: The location that will be discarded.
      - return: If `true`, the location is discarded and the `NavigationService` will not consider it. If `false`, the location will not be thrown out.
      */
-    @objc(navigationService:shouldDiscardLocation:)
+    
     optional func navigationService(_ service: NavigationService, shouldDiscard location: CLLocation) -> Bool
     
     /**
@@ -58,7 +58,7 @@ import MapboxDirections
      - parameter service: The navigation service that has calculated a new route.
      - parameter route: The new route.
      */
-    @objc(navigationService:didRerouteAlongRoute:at:proactive:)
+    
     optional func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool)
     
     /**
@@ -69,7 +69,7 @@ import MapboxDirections
      - parameter service: The navigation service that has calculated a new route.
      - parameter error: An error raised during the process of obtaining a new route.
      */
-    @objc(navigationService:didFailToRerouteWithError:)
+    
     optional func navigationService(_ service: NavigationService, didFailToRerouteWith error: Error)
     
     /**
@@ -80,7 +80,7 @@ import MapboxDirections
      - parameter location: the guaranteed location, possibly snapped, associated with the progress update.
      - parameter rawLocation: the raw location, from the location manager, associated with the progress update.
      */
-    @objc(navigationService:didUpdateProgress:withLocation:rawLocation:)
+    
     optional func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation)
     
     /**
@@ -89,7 +89,7 @@ import MapboxDirections
      - parameter instruction: The instruction to be presented.
      - parameter routeProgress: The route progress object that the navigation service is updating.
     */
-    @objc(navigationService:didPassVisualInstructionPoint:routeProgress:)
+    
     optional func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress)
     
     
@@ -99,7 +99,7 @@ import MapboxDirections
      - parameter instruction: The instruction to be spoken.
      - parameter routeProgress: The route progress object that the navigation service is updating.
      */
-    @objc(navigationService:didPassSpokenInstructionPoint:routeProgress:)
+    
     optional func navigationService(_ service: NavigationService, didPassSpokenInstructionPoint instruction: SpokenInstruction, routeProgress: RouteProgress)
     
     /**
@@ -113,7 +113,7 @@ import MapboxDirections
      - important: This method will likely be called several times as you approach a destination. If only one consumption of this method is desired, then usage of an internal flag is recommended.
      */
     
-    @objc(navigationService:willArriveAtWaypoint:after:distance:)
+    
     optional func navigationService(_ service: NavigationService, willArriveAt waypoint: Waypoint, after remainingTimeInterval:TimeInterval, distance: CLLocationDistance)
     
     /**
@@ -126,7 +126,7 @@ import MapboxDirections
      - parameter waypoint: The waypoint that the controller has arrived at.
      - returns: True to advance to the next leg, if any, or false to remain on the completed leg.
      */
-    @objc(navigationService:didArriveAtWaypoint:)
+    
     optional func navigationService(_ service: NavigationService, didArriveAt waypoint: Waypoint) -> Bool
     
     /**
@@ -138,7 +138,7 @@ import MapboxDirections
      - parameter waypoint: The waypoint that the controller has arrived at.
      - returns: True to prevent the navigation service from checking if the user should be rerouted.
      */
-    @objc(navigationService:shouldPreventReroutesWhenArrivingAtWaypoint:)
+    
     optional func navigationService(_ service: NavigationService, shouldPreventReroutesWhenArrivingAt waypoint: Waypoint) -> Bool
     
     
@@ -150,7 +150,7 @@ import MapboxDirections
      - parameter service: The navigation service that will change the state of battery monitoring.
      - returns: A bool indicating whether to disable battery monitoring when the RouteController is deinited.
      */
-    @objc(navigationServiceShouldDisableBatteryMonitoring:)
+    
     optional func navigationServiceShouldDisableBatteryMonitoring(_ service: NavigationService) -> Bool
     
     
@@ -163,7 +163,7 @@ import MapboxDirections
      - parameter progress: the current RouteProgress model.
      - parameter reason: The reason the simulation will be initiated. Either manual or poorGPS.
      */
-    @objc optional func navigationService(_ service: NavigationService, willBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent)
+    optional func navigationService(_ service: NavigationService, willBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent)
     
     /**
      Called after the navigation service begins location simulation.
@@ -174,7 +174,7 @@ import MapboxDirections
      - parameter progress: the current RouteProgress model.
      - parameter reason: The reason the simulation has been initiated. Either manual or poorGPS.
      */
-    @objc optional func navigationService(_ service: NavigationService, didBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent)
+    optional func navigationService(_ service: NavigationService, didBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent)
     
     /**
      Called when the navigation service is about to end location simulation.
@@ -185,7 +185,7 @@ import MapboxDirections
      - parameter progress: the current RouteProgress model.
      - parameter reason: The reason the simulation was initiated. Either manual or poorGPS.
      */
-    @objc optional func navigationService(_ service: NavigationService, willEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent)
+    optional func navigationService(_ service: NavigationService, willEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent)
     
     /**
      Called after the navigation service ends location simulation.
@@ -196,5 +196,5 @@ import MapboxDirections
      - parameter progress: the current RouteProgress model.
      - parameter reason: The reason the simulation was initiated. Either manual or poorGPS.
      */
-    @objc optional func navigationService(_ service: NavigationService, didEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent)
+    optional func navigationService(_ service: NavigationService, didEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent)
 }

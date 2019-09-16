@@ -10,7 +10,7 @@ extension MGLAccountManager{
     /**
      Returns true if the map's endpoint is China.
      */
-    @objc public class var hasChinaBaseURL : Bool{
+    public class var hasChinaBaseURL : Bool{
         let apiBaseURL = Bundle.main.object(forInfoDictionaryKey:"MGLMapboxAPIBaseURL") as? String
         return apiBaseURL == mapboxChinaBaseAPIURL
     }

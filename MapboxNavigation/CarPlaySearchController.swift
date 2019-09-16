@@ -18,7 +18,7 @@ public protocol CarPlaySearchControllerDelegate: class {
  - note: It is very important you have a single `CarPlaySearchController` instance at any given time. 
  */
 @available(iOS 12.0, *)
-@objc(MBCarPlaySearchController)
+
 public class CarPlaySearchController: NSObject {
     
     /**
@@ -46,7 +46,7 @@ public class CarPlaySearchController: NSObject {
 /**
  CarPlay support requires iOS 12.0 or above and the CarPlay framework.
  */
-@objc(MBCarPlaySearchController)
+
 public class CarPlaySearchController: NSObject {
     
 }

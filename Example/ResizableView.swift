@@ -52,7 +52,7 @@ class ResizableView: UIControl {
         fatalError("init(coder:) has not been implemented")
     }
     
-    @objc func pan(_ sender: UIPanGestureRecognizer) {
+    func pan(_ sender: UIPanGestureRecognizer) {
         if sender.state == .began || sender.state == .changed {
             center = sender.location(in: superview)
             
@@ -60,7 +60,7 @@ class ResizableView: UIControl {
         }
     }
     
-    @objc func resizePan(_ sender: UIPanGestureRecognizer) {
+    func resizePan(_ sender: UIPanGestureRecognizer) {
         
         let location = sender.location(in: superview)
         

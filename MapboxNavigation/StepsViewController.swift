@@ -4,28 +4,28 @@ import MapboxCoreNavigation
 import Turf
 
 /// :nodoc:
-@objc(MBStepsBackgroundView)
+
 open class StepsBackgroundView: UIView { }
 
 
 /**
  `StepsViewControllerDelegate` provides methods for user interactions in a `StepsViewController`.
  */
-@objc public protocol StepsViewControllerDelegate: class {
+public protocol StepsViewControllerDelegate: class {
 
     /**
      Called when the user selects a step in a `StepsViewController`.
      */
-    @objc optional func stepsViewController(_ viewController: StepsViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell)
+    optional func stepsViewController(_ viewController: StepsViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell)
 
     /**
      Called when the user dismisses the `StepsViewController`.
      */
-    @objc func didDismissStepsViewController(_ viewController: StepsViewController)
+    func didDismissStepsViewController(_ viewController: StepsViewController)
 }
 
 /// :nodoc:
-@objc(MBStepsViewController)
+
 public class StepsViewController: UIViewController {
 
     weak var tableView: UITableView!
@@ -109,7 +109,7 @@ public class StepsViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: .routeControllerProgressDidChange, object: nil)
     }
 
-    @objc func progressDidChange(_ notification: Notification) {
+    func progressDidChange(_ notification: Notification) {
 
         if rebuildDataSourceIfNecessary() {
             tableView.reloadData()
@@ -278,11 +278,11 @@ extension StepsViewController: UITableViewDataSource {
 }
 
 /// :nodoc:
-@objc(MBStepInstructionsView)
+
 open class StepInstructionsView: BaseInstructionsBannerView { }
 
 /// :nodoc:
-@objc(MBStepTableViewCell)
+
 open class StepTableViewCell: UITableViewCell {
 
     weak var instructionsView: StepInstructionsView!

@@ -34,7 +34,7 @@ extension RouteMapViewController: NavigationComponent {
         }
     }
     
-    @objc public func navigationService(_ service: NavigationService, didPassSpokenInstructionPoint instruction: SpokenInstruction, routeProgress: RouteProgress) {
+    public func navigationService(_ service: NavigationService, didPassSpokenInstructionPoint instruction: SpokenInstruction, routeProgress: RouteProgress) {
         updateCameraAltitude(for: routeProgress)
     }
     
@@ -274,7 +274,7 @@ class RouteMapViewController: UIViewController {
         child.didMove(toParent: self)
     }
     
-    @objc func recenter(_ sender: AnyObject) {
+    func recenter(_ sender: AnyObject) {
         mapView.tracksUserCourse = true
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
         isInOverviewMode = false
@@ -297,7 +297,7 @@ class RouteMapViewController: UIViewController {
         mapView.addArrow(route: router.routeProgress.route, legIndex: legIndex, stepIndex: stepIndex)
     }
 
-    @objc func toggleOverview(_ sender: Any) {
+    func toggleOverview(_ sender: Any) {
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
         if let coordinates = router.route.coordinates,
             let userLocation = router.location?.coordinate {
@@ -307,14 +307,14 @@ class RouteMapViewController: UIViewController {
         isInOverviewMode = true
     }
 
-    @objc func toggleMute(_ sender: UIButton) {
+    func toggleMute(_ sender: UIButton) {
         sender.isSelected = !sender.isSelected
 
         let muted = sender.isSelected
         NavigationSettings.shared.voiceMuted = muted
     }
 
-    @objc func feedback(_ sender: Any) {
+    func feedback(_ sender: Any) {
         showFeedback()
     }
 
@@ -339,7 +339,7 @@ class RouteMapViewController: UIViewController {
         mapView.setNeedsUpdateConstraints()
     }
 
-    @objc func applicationWillEnterForeground(notification: NSNotification) {
+    func applicationWillEnterForeground(notification: NSNotification) {
         mapView.updateCourseTracking(location: router.location, animated: false)
     }
 
@@ -390,7 +390,7 @@ class RouteMapViewController: UIViewController {
         }
     }
     
-    @objc func resetFrameRate(_ sender: UIGestureRecognizer) {
+    func resetFrameRate(_ sender: UIGestureRecognizer) {
         mapView.preferredFramesPerSecond = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
     }
     
@@ -799,7 +799,7 @@ extension RouteMapViewController {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
-    @objc fileprivate func keyboardWillShow(notification: NSNotification) {
+    fileprivate func keyboardWillShow(notification: NSNotification) {
         guard navigationView.endOfRouteView != nil else { return }
         guard let userInfo = notification.userInfo else { return }
         guard let curveValue = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? Int else { return }
@@ -819,7 +819,7 @@ extension RouteMapViewController {
         UIView.animate(withDuration: duration, delay: 0, options: options, animations: view.layoutIfNeeded, completion: nil)
     }
 
-    @objc fileprivate func keyboardWillHide(notification: NSNotification) {
+    fileprivate func keyboardWillHide(notification: NSNotification) {
         guard navigationView.endOfRouteView != nil else { return }
         guard let userInfo = notification.userInfo else { return }
         guard let curveValue = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? Int else { return }
@@ -850,7 +850,7 @@ internal extension UIView.AnimationOptions {
         }
     }
 }
-@objc protocol RouteMapViewControllerDelegate: NavigationMapViewDelegate, VisualInstructionDelegate {
+protocol RouteMapViewControllerDelegate: NavigationMapViewDelegate, VisualInstructionDelegate {
     func mapViewControllerDidDismiss(_ mapViewController: RouteMapViewController, byCanceling canceled: Bool)
     func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool
 
@@ -863,8 +863,8 @@ internal extension UIView.AnimationOptions {
      - parameter location: The user’s current location.
      - return: The road name to display in the label, or the empty string to hide the label, or nil to query the map’s vector tiles for the road name.
      */
-    @objc func mapViewController(_ mapViewController: RouteMapViewController, roadNameAt location: CLLocation) -> String?
+    func mapViewController(_ mapViewController: RouteMapViewController, roadNameAt location: CLLocation) -> String?
     
     
-    @objc func mapViewController(_ mapViewController: RouteMapViewController, didCenterOn location: CLLocation)
+    func mapViewController(_ mapViewController: RouteMapViewController, didCenterOn location: CLLocation)
 }
