@@ -126,7 +126,7 @@ class RatingControl: UIStackView {
     }
     
     @objc private func ratingButtonTapped(button sender: UIButton) {
-        guard let index = stars.index(of: sender) else { return assertionFailure("RatingControl.swift: The Star button that was tapped was not found in the RatingControl.stars array. This should never happen.") }
+        guard let index = stars.firstIndex(of: sender) else { return assertionFailure("RatingControl.swift: The Star button that was tapped was not found in the RatingControl.stars array. This should never happen.") }
         let selectedRating = index + 1
         
         rating = (selectedRating == rating) ? 0 : selectedRating

@@ -330,7 +330,7 @@ open class RouteLegProgress: NSObject {
      Returns the `RouteStep` before a given step. Returns `nil` if there is no step prior.
      */
     @objc public func stepBefore(_ step: RouteStep) -> RouteStep? {
-        guard let index = leg.steps.index(of: step) else {
+        guard let index = leg.steps.firstIndex(of: step) else {
             return nil
         }
         if index > 0 {
@@ -343,7 +343,7 @@ open class RouteLegProgress: NSObject {
      Returns the `RouteStep` after a given step. Returns `nil` if there is not a step after.
      */
     @objc public func stepAfter(_ step: RouteStep) -> RouteStep? {
-        guard let index = leg.steps.index(of: step) else {
+        guard let index = leg.steps.firstIndex(of: step) else {
             return nil
         }
         if index+1 < leg.steps.endIndex {
