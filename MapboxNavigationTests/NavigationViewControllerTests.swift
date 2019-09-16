@@ -282,9 +282,9 @@ extension NavigationViewControllerTests: NavigationViewControllerDelegate, Style
 }
 
 extension CLLocationCoordinate2D: Hashable {
-    // Hash value property multiplied by a prime constant.
-    public var hashValue: Int {
-        return latitude.hashValue ^ longitude.hashValue &* 16777619
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(latitude)
+        hasher.combine(longitude)
     }
     
     static func == (lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool {

@@ -30,14 +30,14 @@ class DistanceFormatterTests: XCTestCase {
         }
         
         var effectiveQuantityRange = NSRange(location: NSNotFound, length: 0)
-        let quantityAttrs = checkedAttributedString.attributes(at: checkedQuantityRange.lowerBound.encodedOffset, effectiveRange: &effectiveQuantityRange)
+        let quantityAttrs = checkedAttributedString.attributes(at: checkedQuantityRange.lowerBound.utf16Offset(in: checkedAttributedString.string), effectiveRange: &effectiveQuantityRange)
         XCTAssertEqual(quantityAttrs[.quantity] as? NSNumber, value as NSNumber, "'\(quantity)' should have quantity \(measurement.distance)")
         XCTAssertEqual(effectiveQuantityRange.length, quantity.count)
         
-        guard checkedQuantityRange.upperBound.encodedOffset < checkedAttributedString.length else {
+        guard checkedQuantityRange.upperBound.utf16Offset(in: checkedAttributedString.string) < checkedAttributedString.length else {
             return
         }
-        let unitAttrs = checkedAttributedString.attributes(at: checkedQuantityRange.upperBound.encodedOffset, effectiveRange: nil)
+        let unitAttrs = checkedAttributedString.attributes(at: checkedQuantityRange.upperBound.utf16Offset(in: checkedAttributedString.string), effectiveRange: nil)
         XCTAssertNil(unitAttrs[.quantity], "Unit should not be emphasized like a quantity")
     }
     
