@@ -16,10 +16,47 @@ struct RoundingTable {
     
     let thresholds: [Threshold]
     
+    /**
+     Returns the most applicable threshold for the given distance, falling back to the last threshold.
+     */
     func threshold(for distance: CLLocationDistance) -> Threshold {
         return thresholds.first {
             distance < $0.maximumDistance.converted(to: .meters).value
         } ?? thresholds.last!
+    }
+    
+    static var metric: RoundingTable = RoundingTable(thresholds: [
+        .init(maximumDistance: Measurement(value: 25, unit: .meters), roundingIncrement: 5, maximumFractionDigits: 0),
+        .init(maximumDistance: Measurement(value: 100, unit: .meters), roundingIncrement: 25, maximumFractionDigits: 0),
+        .init(maximumDistance: Measurement(value: 999, unit: .meters), roundingIncrement: 50, maximumFractionDigits: 0),
+        .init(maximumDistance: Measurement(value: 3, unit: .kilometers), roundingIncrement: 0, maximumFractionDigits: 1),
+        .init(maximumDistance: Measurement(value: 5, unit: .kilometers), roundingIncrement: 0, maximumFractionDigits: 0)
+    ])
+    
+    static var uk: RoundingTable = RoundingTable(thresholds: [
+        .init(maximumDistance: Measurement(value: 20, unit: .yards), roundingIncrement: 10, maximumFractionDigits: 0),
+        .init(maximumDistance: Measurement(value: 100, unit: .yards), roundingIncrement: 25, maximumFractionDigits: 0),
+        .init(maximumDistance: Measurement(value: 0.1, unit: .miles).converted(to: .yards), roundingIncrement: 50, maximumFractionDigits: 1),
+        .init(maximumDistance: Measurement(value: 3, unit: .miles), roundingIncrement: 0.1, maximumFractionDigits: 1),
+        .init(maximumDistance: Measurement(value: 5, unit: .miles), roundingIncrement: 0, maximumFractionDigits: 0)
+    ])
+    
+    static var us: RoundingTable = RoundingTable(thresholds: [
+        .init(maximumDistance: Measurement(value: 0.1, unit: .miles).converted(to: .feet), roundingIncrement: 50, maximumFractionDigits: 0),
+        .init(maximumDistance: Measurement(value: 3, unit: .miles), roundingIncrement: 0.1, maximumFractionDigits: 1),
+        .init(maximumDistance: Measurement(value: 5, unit: .miles), roundingIncrement: 0, maximumFractionDigits: 0)
+    ])
+}
+
+extension Locale {
+    func threshold(for distance: CLLocationDistance) -> RoundingTable.Threshold {
+        if NavigationSettings.shared.usesMetric {
+            return RoundingTable.metric.threshold(for: distance)
+        } else if languageCode == "en" && regionCode == "GB" {
+            return RoundingTable.uk.threshold(for: distance)
+        } else {
+            return RoundingTable.us.threshold(for: distance)
+        }
     }
 }
 
@@ -47,35 +84,6 @@ open class DistanceFormatter: LengthFormatter {
             numberFormatter.locale = newValue
         }
     }
-
-    // Rounding tables for metric, imperial, and UK measurement systems. The last threshold is used as a default.
-    lazy var roundingTableMetric: RoundingTable = {
-        return RoundingTable(thresholds: [
-            .init(maximumDistance: Measurement(value: 25, unit: .meters), roundingIncrement: 5, maximumFractionDigits: 0),
-            .init(maximumDistance: Measurement(value: 100, unit: .meters), roundingIncrement: 25, maximumFractionDigits: 0),
-            .init(maximumDistance: Measurement(value: 999, unit: .meters), roundingIncrement: 50, maximumFractionDigits: 0),
-            .init(maximumDistance: Measurement(value: 3, unit: .kilometers), roundingIncrement: 0, maximumFractionDigits: 1),
-            .init(maximumDistance: Measurement(value: 5, unit: .kilometers), roundingIncrement: 0, maximumFractionDigits: 0)
-        ])
-    }()
-    
-    lazy var roundingTableUK: RoundingTable = {
-        return RoundingTable(thresholds: [
-            .init(maximumDistance: Measurement(value: 20, unit: .yards), roundingIncrement: 10, maximumFractionDigits: 0),
-            .init(maximumDistance: Measurement(value: 100, unit: .yards), roundingIncrement: 25, maximumFractionDigits: 0),
-            .init(maximumDistance: Measurement(value: 0.1, unit: .miles).converted(to: .yards), roundingIncrement: 50, maximumFractionDigits: 1),
-            .init(maximumDistance: Measurement(value: 3, unit: .miles), roundingIncrement: 0.1, maximumFractionDigits: 1),
-            .init(maximumDistance: Measurement(value: 5, unit: .miles), roundingIncrement: 0, maximumFractionDigits: 0)
-        ])
-    }()
-    
-    lazy var roundingTableUS: RoundingTable = {
-        return RoundingTable(thresholds: [
-            .init(maximumDistance: Measurement(value: 0.1, unit: .miles).converted(to: .feet), roundingIncrement: 50, maximumFractionDigits: 0),
-            .init(maximumDistance: Measurement(value: 3, unit: .miles), roundingIncrement: 0.1, maximumFractionDigits: 1),
-            .init(maximumDistance: Measurement(value: 5, unit: .miles), roundingIncrement: 0, maximumFractionDigits: 0)
-        ])
-    }()
     
     /**
      Intializes a new distance formatter.
@@ -102,23 +110,13 @@ open class DistanceFormatter: LengthFormatter {
         super.encode(with: aCoder)
     }
     
-    func threshold(for distance: CLLocationDistance) -> RoundingTable.Threshold {
-        if NavigationSettings.shared.usesMetric {
-            return roundingTableMetric.threshold(for: distance)
-        } else if measurementFormatter.numberFormatter.locale.identifier == "en-GB" {
-            return roundingTableUK.threshold(for: distance)
-        } else {
-            return roundingTableUS.threshold(for: distance)
-        }
-    }
-    
     /**
      Returns a more human readable `String` from a given `CLLocationDistance`.
      
      The user’s `Locale` is used here to set the units.
     */
     @objc public func string(from distance: CLLocationDistance) -> String {
-        let threshold = self.threshold(for: distance)
+        let threshold = locale.threshold(for: distance)
         let measurement = threshold.measurement(of: distance)
         measurementFormatter.numberFormatter.maximumFractionDigits = threshold.maximumFractionDigits
         measurementFormatter.numberFormatter.roundingIncrement = threshold.roundingIncrement as NSNumber
@@ -132,7 +130,7 @@ open class DistanceFormatter: LengthFormatter {
     
     @objc(measurementOfDistance:)
     public func measurement(of distance: CLLocationDistance) -> Measurement<UnitLength> {
-        let threshold = self.threshold(for: distance)
+        let threshold = locale.threshold(for: distance)
         return threshold.measurement(of: distance)
     }
     
