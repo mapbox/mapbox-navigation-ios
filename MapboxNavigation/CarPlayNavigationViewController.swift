@@ -72,7 +72,7 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
         }
     }
     
-    let distanceFormatter = DistanceFormatter(approximate: true)
+    let distanceFormatter = DistanceFormatter()
     
     var edgePadding: UIEdgeInsets {
         let padding:CGFloat = 15

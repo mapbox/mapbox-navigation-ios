@@ -6,7 +6,6 @@ import MapboxCoreNavigation
 
 
 extension NSAttributedString {
-    @available(iOS 10.0, *)
     public func pronounced(_ pronunciation: String) -> NSAttributedString {
         let phoneticWords = pronunciation.components(separatedBy: " ")
         let phoneticString = NSMutableAttributedString()
@@ -25,7 +24,6 @@ extension NSAttributedString {
 }
 
 extension SpokenInstruction {
-    @available(iOS 10.0, *)
     func attributedText(for legProgress: RouteLegProgress) -> NSAttributedString {
         let attributedText = NSMutableAttributedString(string: text)
         if let step = legProgress.upcomingStep,
@@ -171,26 +169,15 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         let audioSession = AVAudioSession.sharedInstance()
         if #available(iOS 12.0, *) {
             try audioSession.setCategory(.playback, mode: .voicePrompt, options: [.duckOthers, .mixWithOthers])
-        } else if #available(iOS 10.0, *) {
-            try audioSession.setCategory(.ambient, mode: .spokenAudio, options: [.duckOthers, .mixWithOthers])
         } else {
-            try audioSession.setMode(.spokenAudio)
-            audioSession.perform(Selector("setCategory:withOptions:error:" as String),
-                                 with: AVAudioSession.Category.ambient.rawValue,
-                                 with: [AVAudioSession.CategoryOptions.duckOthers.rawValue,
-                                        AVAudioSession.CategoryOptions.mixWithOthers.rawValue])
+            try audioSession.setCategory(.ambient, mode: .spokenAudio, options: [.duckOthers, .mixWithOthers])
         }
         try audioSession.setActive(true)
     }
     
     func mixAudio() throws {
         let audioSession = AVAudioSession.sharedInstance()
-        if #available(iOS 10.0, *) {
-            try audioSession.setCategory(.ambient, mode: audioSession.mode)
-        } else {
-            audioSession.perform(Selector("setCategory:error:" as String),
-                                 with: AVAudioSession.Category.ambient.rawValue)
-        }
+        try audioSession.setCategory(.ambient, mode: audioSession.mode)
         try audioSession.setActive(true)
     }
     
@@ -236,10 +223,8 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         
         let modifiedInstruction = voiceControllerDelegate?.voiceController?(self, willSpeak: instruction, routeProgress: routeProgress!) ?? instruction
         
-        if #available(iOS 10.0, *), utterance?.voice == nil {
+        if utterance?.voice == nil {
             utterance = AVSpeechUtterance(attributedString: modifiedInstruction.attributedText(for: routeProgress!.currentLegProgress))
-        } else {
-            utterance = AVSpeechUtterance(string: modifiedInstruction.text)
         }
         
         // Only localized languages will have a proper fallback voice

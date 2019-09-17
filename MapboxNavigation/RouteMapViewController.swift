@@ -125,7 +125,7 @@ class RouteMapViewController: UIViewController {
         }
     }
     var router: Router { return navService.router }
-    let distanceFormatter = DistanceFormatter(approximate: true)
+    let distanceFormatter = DistanceFormatter()
     var arrowCurrentStep: RouteStep?
     var isInOverviewMode = false {
         didSet {

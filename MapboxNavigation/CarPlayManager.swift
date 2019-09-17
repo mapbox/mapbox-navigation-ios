@@ -551,7 +551,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let mapView = carPlayMapViewController.mapView
         let route = routeChoice.userInfo as! Route
         
-        let distanceFormatter = DistanceFormatter(approximate: true)
+        let distanceFormatter = DistanceFormatter()
         let estimates = CPTravelEstimates(distanceRemaining: distanceFormatter.measurement(of: route.distance),
                                           timeRemaining: route.expectedTravelTime)
         mapTemplate.updateEstimates(estimates, for: trip)

@@ -2,14 +2,14 @@ import XCTest
 import CoreLocation
 @testable import MapboxCoreNavigation
 
-let oneMile: CLLocationDistance = .metersPerMile
+let oneMile: CLLocationDistance = 1_609.344
 let oneYard: CLLocationDistance = 0.9144
 let oneFeet: CLLocationDistance = 0.3048
 
 
 class DistanceFormatterTests: XCTestCase {
     
-    var distanceFormatter = DistanceFormatter(approximate: true)
+    var distanceFormatter = DistanceFormatter()
     
     override func setUp() {
         super.setUp()
@@ -19,10 +19,8 @@ class DistanceFormatterTests: XCTestCase {
         let displayedString = distanceFormatter.string(from: distance)
         XCTAssertEqual(displayedString, displayed, "Displayed: '\(displayedString)' should be equal to \(displayed)")
         
-        if #available(iOS 10.0, *) {
-            let value = distanceFormatter.measurement(of: distance).value
-            XCTAssertEqual(distanceFormatter.numberFormatter.string(from: value as NSNumber), quantity)
-        }
+        let value = distanceFormatter.measurement(of: distance).value
+        XCTAssertEqual(distanceFormatter.measurementFormatter.numberFormatter.string(from: value as NSNumber), quantity)
         
         let attributedString = distanceFormatter.attributedString(for: distance as NSNumber)
         XCTAssertEqual(attributedString?.string, displayed, "Displayed: '\(attributedString?.string ?? "")' should be equal to \(displayed)")
@@ -50,7 +48,7 @@ class DistanceFormatterTests: XCTestCase {
     
     func testDistanceFormatters_US() {
         NavigationSettings.shared.distanceUnit = .mile
-        distanceFormatter.numberFormatter.locale = Locale(identifier: "en-US")
+        distanceFormatter.locale = Locale(identifier: "en-US")
 
         assertDistance(0,               displayed: "0 ft",      quantity: "0")
         assertDistance(oneFeet*50,      displayed: "50 ft",     quantity: "50")
@@ -71,7 +69,7 @@ class DistanceFormatterTests: XCTestCase {
     
     func testDistanceFormatters_DE() {
         NavigationSettings.shared.distanceUnit = .kilometer
-        distanceFormatter.numberFormatter.locale = Locale(identifier: "de-DE")
+        distanceFormatter.locale = Locale(identifier: "de-DE")
 
         assertDistance(0,       displayed: "0 m",       quantity: "0")
         assertDistance(4,       displayed: "5 m",       quantity: "5")
@@ -87,15 +85,15 @@ class DistanceFormatterTests: XCTestCase {
         assertDistance(999,     displayed: "1 km",      quantity: "1")
         assertDistance(1000,    displayed: "1 km",      quantity: "1")
         assertDistance(1001,    displayed: "1 km",      quantity: "1")
-        assertDistance(2_500,   displayed: "2.5 km",    quantity: "2.5")
-        assertDistance(2_900,   displayed: "2.9 km",    quantity: "2.9")
+        assertDistance(2_500,   displayed: "2,5 km",    quantity: "2,5")
+        assertDistance(2_900,   displayed: "2,9 km",    quantity: "2,9")
         assertDistance(3_000,   displayed: "3 km",      quantity: "3")
         assertDistance(3_500,   displayed: "4 km",      quantity: "4")
     }
     
     func testDistanceFormatters_GB() {
         NavigationSettings.shared.distanceUnit = .mile
-        distanceFormatter.numberFormatter.locale = Locale(identifier: "en-GB")
+        distanceFormatter.locale = Locale(identifier: "en-GB")
 
         assertDistance(0,               displayed: "0 yd",      quantity: "0")
         assertDistance(oneYard*4,       displayed: "0 yd",      quantity: "0")
@@ -117,7 +115,7 @@ class DistanceFormatterTests: XCTestCase {
     
     func testDistanceFormatters_he_IL() {
         NavigationSettings.shared.distanceUnit = .kilometer
-        distanceFormatter.numberFormatter.locale = Locale(identifier: "he-IL")
+        distanceFormatter.locale = Locale(identifier: "he-IL")
 
         assertDistance(0,       displayed: "0 מ׳",       quantity: "0")
         assertDistance(4,       displayed: "5 מ׳",       quantity: "5")
@@ -140,7 +138,7 @@ class DistanceFormatterTests: XCTestCase {
     
     func testDistanceFormatters_hi_IN() {
         NavigationSettings.shared.distanceUnit = .kilometer
-        distanceFormatter.numberFormatter.locale = Locale(identifier: "hi-IN")
+        distanceFormatter.locale = Locale(identifier: "hi-IN")
 
         assertDistance(0,       displayed: "० मी॰",       quantity: "०")
         assertDistance(4,       displayed: "५ मी॰",       quantity: "५")
@@ -160,11 +158,5 @@ class DistanceFormatterTests: XCTestCase {
         assertDistance(3_000,   displayed: "३ कि॰मी॰",      quantity: "३")
         assertDistance(3_500,   displayed: "४ कि॰मी॰",      quantity: "४")
         assertDistance(384_400_000, displayed: "३,८४,४०० कि॰मी॰", quantity: "३,८४,४००")
-    }
-    
-    func testInches() {
-        let oneMeter: CLLocationDistance = 1
-        let oneMeterInInches = oneMeter.converted(to: .inch)
-        XCTAssertEqual(oneMeterInInches, 39.3700787, accuracy: 0.00001)
     }
 }

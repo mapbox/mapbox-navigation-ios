@@ -10,7 +10,6 @@ extension NSAttributedString {
 }
 
 extension NSMutableAttributedString {
-    @available(iOS 10.0, *)
     func canonicalizeAttachments(maximumImageSize: CGSize, imageRendererFormat: UIGraphicsImageRendererFormat) {
         enumerateAttribute(.attachment, in: NSRange(location: 0, length: length), options: []) { (value, range, stop) in
             guard let attachment = value as? NSTextAttachment, type(of: attachment) != NSTextAttachment.self else {
