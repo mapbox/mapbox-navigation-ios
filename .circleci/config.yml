@@ -187,7 +187,6 @@ workflows:
           name: "Xcode_10.1_iOS_10.3.1"
           xcode: "10.1.0"
           iOS: "10.3.1"
-          delete_private_deps: true
           test: false
       - pod-job:
           name: "Xcode_10.2_iOS_12.2_CP_install"
