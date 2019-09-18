@@ -207,8 +207,6 @@ class RouteMapViewController: UIViewController {
             mapView.localizeLabels()
         }
         
-        distanceFormatter.numberFormatter.locale = .nationalizedCurrent
-
         makeGestureRecognizersResetFrameRate()
         navigationView.overviewButton.addTarget(self, action: Actions.overview, for: .touchUpInside)
         navigationView.muteButton.addTarget(self, action: Actions.mute, for: .touchUpInside)

@@ -5,6 +5,8 @@
 * This library now requires a minimum deployment target of iOS 10.0 or above. iOS 9._x_ is no longer supported. ([#2206](https://github.com/mapbox/mapbox-navigation-ios/pull/2206))
 * Lock screen notifications are presented more reliably and more closely resemble instruction banners. ([#2206](https://github.com/mapbox/mapbox-navigation-ios/pull/2206))
 * Fixed an issue where manually incrementing `RouteProgress.legIndex` could lead to undefined behavior. ([#2229](https://github.com/mapbox/mapbox-navigation-ios/pull/2229))
+* `DistanceFormatter` now inherits directly from `Formatter` rather than `LengthFormatter`. ([#2206](https://github.com/mapbox/mapbox-navigation-ios/pull/2206))
+* Fixed an issue where `DistanceFormatter.attributedString(for:withDefaultAttributes:)` set `NSAttributedString.Key.quantity` to the original distance value rather than the potentially rounded value represented by the attributed string. ([#2206](https://github.com/mapbox/mapbox-navigation-ios/pull/2206))
 
 ## v0.37.0
 

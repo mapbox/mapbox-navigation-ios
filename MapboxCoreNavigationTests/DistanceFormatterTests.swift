@@ -19,7 +19,7 @@ class DistanceFormatterTests: XCTestCase {
         let displayedString = distanceFormatter.string(from: distance)
         XCTAssertEqual(displayedString, displayed, "Displayed: '\(displayedString)' should be equal to \(displayed)")
         
-        let value = distanceFormatter.measurement(of: distance).value
+        let value = Measurement(distance: distance).localized(into: distanceFormatter.locale).value
         XCTAssertEqual(distanceFormatter.measurementFormatter.numberFormatter.string(from: value as NSNumber), quantity)
         
         let attributedString = distanceFormatter.attributedString(for: distance as NSNumber)
@@ -36,7 +36,7 @@ class DistanceFormatterTests: XCTestCase {
         
         var effectiveQuantityRange = NSRange(location: NSNotFound, length: 0)
         let quantityAttrs = checkedAttributedString.attributes(at: checkedQuantityRange.lowerBound.encodedOffset, effectiveRange: &effectiveQuantityRange)
-        XCTAssertEqual(quantityAttrs[.quantity] as? NSNumber, distance as NSNumber, "'\(quantity)' should have quantity \(distance)")
+        XCTAssertEqual(quantityAttrs[.quantity] as? NSNumber, value as NSNumber, "'\(quantity)' should have quantity \(distance)")
         XCTAssertEqual(effectiveQuantityRange.length, quantity.count)
         
         guard checkedQuantityRange.upperBound.encodedOffset < checkedAttributedString.length else {

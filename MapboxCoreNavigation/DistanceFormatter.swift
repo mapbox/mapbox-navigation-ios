@@ -21,7 +21,7 @@ struct RoundingTable {
      */
     func threshold(for distance: CLLocationDistance) -> Threshold {
         return thresholds.first {
-            distance < $0.maximumDistance.converted(to: .meters).value
+            distance < $0.maximumDistance.distance
         } ?? thresholds.last!
     }
     
@@ -48,113 +48,192 @@ struct RoundingTable {
     ])
 }
 
-extension Locale {
-    func threshold(for distance: CLLocationDistance) -> RoundingTable.Threshold {
+extension Measurement where UnitType == UnitLength {
+    /**
+     Initializes a measurement from the given distance.
+     
+     - parameter distance: The distance being measured.
+     */
+    public init(distance: CLLocationDistance) {
+        self.init(value: distance, unit: .meters)
+    }
+    
+    /**
+     The distance in meters.
+     */
+    public var distance: CLLocationDistance {
+        return converted(to: .meters).value
+    }
+    
+    /**
+     Returns a length measurement equivalent to the receiver but converted to the most appropriate unit based on the given locale and rounded based on the unit.
+     
+     - parameter locale: The locale that determines the chosen unit.
+     */
+    public func localized(into locale: Locale = .nationalizedCurrent) -> Measurement<UnitLength> {
+        let threshold: RoundingTable
         if NavigationSettings.shared.usesMetric {
-            return RoundingTable.metric.threshold(for: distance)
-        } else if languageCode == "en" && regionCode == "GB" {
-            return RoundingTable.uk.threshold(for: distance)
+            threshold = .metric
+        } else if locale.languageCode == "en" && locale.regionCode == "GB" {
+            threshold = .uk
         } else {
-            return RoundingTable.us.threshold(for: distance)
+            threshold = .us
         }
+        return threshold.threshold(for: distance).measurement(of: distance)
     }
 }
 
 extension NSAttributedString.Key {
+    /**
+     An `NSNumber` containing the numeric quantity represented by the localized substring.
+     */
     public static let quantity = NSAttributedString.Key(rawValue: "MBQuantity")
 }
 
-/// Provides appropriately formatted, localized descriptions of linear distances.
-@objc(MBDistanceFormatter)
-open class DistanceFormatter: LengthFormatter {
-    let measurementFormatter: MeasurementFormatter = {
-        let formatter = MeasurementFormatter()
-        formatter.locale = .nationalizedCurrent
-        formatter.unitOptions = .providedUnit
-        return formatter
-    }()
+/**
+ A formatter that provides localized representations of distance units and measurements.
+ 
+ This class is limited to `UnitLength` and its behavior is more specific to distances than `MeasurementFormatter`. By default, the class automatically localizes and rounds the measurement using `Measurement.localized(into:)` and `Locale.nationalizedCurrent`. Measurements can be formatted into either strings or attributed strings.
+ */
+open class DistanceFormatter: Formatter, NSSecureCoding {
+    public static var supportsSecureCoding = true
     
-    var locale: Locale {
+    /**
+     Options for choosing and formatting the unit.
+     
+     - seealso: `MeasurementFormatter.unitOptions`
+     */
+    open var unitOptions: MeasurementFormatter.UnitOptions {
+        get {
+            return measurementFormatter.unitOptions
+        }
+        set {
+            measurementFormatter.unitOptions = newValue
+        }
+    }
+    
+    /**
+     The unit style.
+     
+     - seealso: `MeasurementFormatter.unitStyle`
+     */
+    open var unitStyle: Formatter.UnitStyle {
+        get {
+            return measurementFormatter.unitStyle
+        }
+        set {
+            measurementFormatter.unitStyle = newValue
+        }
+    }
+    
+    /**
+     The locale that determines the chosen unit, name of the unit, and number formatting.
+     
+     - seealso: `MeasurementFormatter.locale`
+     */
+    open var locale: Locale {
         get {
             return measurementFormatter.locale
         }
         set {
             measurementFormatter.locale = newValue
-            measurementFormatter.numberFormatter.locale = newValue
-            numberFormatter.locale = newValue
         }
     }
     
     /**
-     Intializes a new distance formatter.
+     The underlying measurement formatter.
      */
-    @objc public override init() {
-        super.init()
-    }
+    @NSCopying open var measurementFormatter = MeasurementFormatter()
     
-    /**
-     Intializes a new distance formatter.
-     
-     - parameter approximate: approximates the distances.
-     */
-    @available(*, deprecated, message: "The approximate argument is deprecated. Use init() instead.")
-    @objc public init(approximate: Bool) {
+    public override init() {
         super.init()
+        unitOptions = .providedUnit
+        locale = .nationalizedCurrent
     }
     
     public required init?(coder decoder: NSCoder) {
         super.init(coder: decoder)
     }
     
-    open override func encode(with aCoder: NSCoder) {
-        super.encode(with: aCoder)
-    }
-    
     /**
-     Returns a more human readable `String` from a given `CLLocationDistance`.
+     Creates and returns a localized, formatted string representation of the given distance in meters.
      
-     The user’s `Locale` is used here to set the units.
-    */
-    @objc public func string(from distance: CLLocationDistance) -> String {
-        let threshold = locale.threshold(for: distance)
-        let measurement = threshold.measurement(of: distance)
-        measurementFormatter.numberFormatter.maximumFractionDigits = threshold.maximumFractionDigits
-        measurementFormatter.numberFormatter.roundingIncrement = threshold.roundingIncrement as NSNumber
-        measurementFormatter.numberFormatter.locale = locale
-        return measurementFormatter.string(from: measurement)
-    }
-    
-    @objc open override func string(fromMeters numberInMeters: Double) -> String {
-        return self.string(from: numberInMeters)
-    }
-    
-    @objc(measurementOfDistance:)
-    public func measurement(of distance: CLLocationDistance) -> Measurement<UnitLength> {
-        let threshold = locale.threshold(for: distance)
-        return threshold.measurement(of: distance)
-    }
-    
-    /**
-     Returns an attributed string containing the formatted, converted distance.
+     The distance is converted from meters to the most appropriate unit based on the locale and quantity.
      
-     `NSAttributedStringKey.quantity` is applied to the numeric quantity.
+     - parameter distance: The distance, measured in meters, to localize and format.
+     - returns: A localized, formatted representation of the distance.
+     - seealso: `MeasurementFormatter.string(from:)`
      */
-    @objc open override func attributedString(for obj: Any, withDefaultAttributes attrs: [NSAttributedString.Key : Any]? = nil) -> NSAttributedString? {
-        guard let distance = obj as? CLLocationDistance else {
-            return nil
-        }
+    open func string(from distance: CLLocationDistance) -> String {
+        return string(from: Measurement(distance: distance))
+    }
+    
+    /**
+     Creates and returns a localized, formatted attributed string representation of the given distance in meters.
+     
+     The distance is converted from meters to the most appropriate unit based on the locale and quantity. `NSAttributedString.Key.quantity` is applied to the range representing the quantity. For example, the “5” in “5 km” has a quantity attribute set to 5.
+     
+     - parameter distance: The distance, measured in meters, to localize and format.
+     - parameter defaultAttributes: The default attributes to apply to the resulting attributed string.
+     - returns: A localized, formatted representation of the distance.
+     */
+    open func attributedString(from distance: CLLocationDistance, defaultAttributes attributes: [NSAttributedString.Key: Any]? = nil) -> NSAttributedString {
+        return attributedString(from: Measurement(distance: distance), defaultAttributes: attributes)
+    }
+    
+    /**
+     Creates and returns a localized, formatted string representation of the given measurement.
+     
+     - parameter measurement: The measurement to localize and format.
+     - returns: A localized, formatted representation of the measurement.
+     - seealso: `MeasurementFormatter.string(from:)`
+     */
+    open func string(from measurement: Measurement<UnitLength>) -> String {
+        return measurementFormatter.string(from: measurement.localized(into: locale))
+    }
+    
+    /**
+     Creates and returns a localized, formatted attributed string representation of the given measurement.
+     
+     `NSAttributedString.Key.quantity` is applied to the range representing the quantity. For example, the “5” in “5 km” has a quantity attribute set to 5.
+     
+     - parameter measurement: The measurement to localize and format.
+     - parameter defaultAttributes: The default attributes to apply to the resulting attributed string.
+     - returns: A localized, formatted representation of the measurement.
+     */
+    open func attributedString(from measurement: Measurement<UnitLength>, defaultAttributes attributes: [NSAttributedString.Key: Any]? = nil) -> NSAttributedString {
+        let string = self.string(from: measurement)
+        let localizedMeasurement = measurement.localized(into: locale)
         
-        let string = self.string(from: distance)
-        let attributedString = NSMutableAttributedString(string: string, attributes: attrs)
-        let convertedDistance = measurement(of: distance).value
-        if let quantityString = measurementFormatter.numberFormatter.string(from: convertedDistance as NSNumber) {
+        let attributedString = NSMutableAttributedString(string: string, attributes: attributes)
+        if let quantityString = measurementFormatter.numberFormatter.string(from: localizedMeasurement.value as NSNumber) {
             // NSMutableAttributedString methods accept NSRange, not Range.
             let quantityRange = (string as NSString).range(of: quantityString)
             if quantityRange.location != NSNotFound {
-                attributedString.addAttribute(.quantity, value: distance as NSNumber, range: quantityRange)
+                attributedString.addAttribute(.quantity, value: localizedMeasurement.value as NSNumber, range: quantityRange)
             }
         }
         return attributedString
+    }
+    
+    open override func string(for obj: Any?) -> String? {
+        if let distanceFromObj = obj as? CLLocationDistance {
+            return self.string(from: distanceFromObj)
+        } else if let measurementFromObj = obj as? Measurement<UnitLength> {
+            return self.string(from: measurementFromObj)
+        } else {
+            return nil
+        }
+    }
+    
+    open override func attributedString(for obj: Any, withDefaultAttributes attrs: [NSAttributedString.Key : Any]? = nil) -> NSAttributedString? {
+        if let distanceFromObj = obj as? CLLocationDistance {
+            return self.attributedString(from: distanceFromObj, defaultAttributes: attrs)
+        } else if let measurementFromObj = obj as? Measurement<UnitLength> {
+            return self.attributedString(from: measurementFromObj, defaultAttributes: attrs)
+        } else {
+            return nil
+        }
     }
 }
 
