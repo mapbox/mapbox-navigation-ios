@@ -61,10 +61,6 @@ public class DispatchTimer {
         timer.schedule(deadline: deadline, repeating: repetitionInterval, leeway: accuracy)
     }
     
-    private func fire() {
-        executionQueue.async(execute: payload)
-    }
-    
     /**
      Arm the timer. Countdown will begin after this function returns.
     */
@@ -72,7 +68,12 @@ public class DispatchTimer {
         guard state == .disarmed, !timer.isCancelled else { return }
         state = .armed
         scheduleTimer()
-        timer.setEventHandler(handler: fire)
+        timer.setEventHandler { [weak self] in
+            if let strongSelf = self {
+                strongSelf.executionQueue.async(execute: strongSelf.payload)
+            }
+            
+        }
         timer.resume()
     }
     
