@@ -69,8 +69,8 @@ public class DispatchTimer {
         state = .armed
         scheduleTimer()
         timer.setEventHandler { [weak self] in
-            if let strongSelf = self {
-                strongSelf.executionQueue.async(execute: strongSelf.payload)
+            if let unwrappedSelf = self {
+                unwrappedSelf.executionQueue.async(execute: unwrappedSelf.payload)
             }
             
         }
