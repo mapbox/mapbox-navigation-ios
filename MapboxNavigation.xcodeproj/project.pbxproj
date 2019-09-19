@@ -30,8 +30,6 @@
 		35002D691E5F6B2F0090E733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35002D661E5F6B1B0090E733 /* Main.storyboard */; };
 		3502231A205BC94E00E1449A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35022319205BC94E00E1449A /* Constants.swift */; };
 		35025F3F1F051DD2002BA3EA /* DialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35025F3E1F051DD2002BA3EA /* DialogViewController.swift */; };
-		3504DF7522B79B1D00D2FD3C /* MapboxAccounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3504DF7322B79AF300D2FD3C /* MapboxAccounts.framework */; };
-		3504DF7622B79B1D00D2FD3C /* MapboxAccounts.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3504DF7322B79AF300D2FD3C /* MapboxAccounts.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3504DF7722B79B2E00D2FD3C /* MapboxAccounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3504DF7322B79AF300D2FD3C /* MapboxAccounts.framework */; };
 		3507F9FB2134309E0086B39E /* MapboxGeocoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3507F9F92134305C0086B39E /* MapboxGeocoder.framework */; };
 		3507F9FC2134309E0086B39E /* MapboxGeocoder.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3507F9F92134305C0086B39E /* MapboxGeocoder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -550,7 +548,6 @@
 				C549F8331F17F2C5001A0A2D /* MapboxMobileEvents.framework in Embed Frameworks */,
 				35CC14181F79A434009E872A /* Turf.framework in Embed Frameworks */,
 				492B6F85213703EE0076D2C6 /* MapboxGeocoder.framework in Embed Frameworks */,
-				3504DF7622B79B1D00D2FD3C /* MapboxAccounts.framework in Embed Frameworks */,
 				354A01D51E6626AC00D765C2 /* MapboxCoreNavigation.framework in Embed Frameworks */,
 				C57607B21F4CC9E800C27423 /* Solar.framework in Embed Frameworks */,
 				35636E04215D621E00463343 /* MapboxNavigationNative.framework in Embed Frameworks */,
@@ -1064,7 +1061,6 @@
 			files = (
 				35E9B0AD1F9E0F8F00BF84AB /* MapboxNavigation.framework in Frameworks */,
 				35C98736212E045200808B82 /* MapboxNavigationNative.framework in Frameworks */,
-				3504DF7522B79B1D00D2FD3C /* MapboxAccounts.framework in Frameworks */,
 				354A01CF1E66266100D765C2 /* MapboxDirections.framework in Frameworks */,
 				C57607B11F4CC9E800C27423 /* Solar.framework in Frameworks */,
 				C549F8321F17F2C5001A0A2D /* MapboxMobileEvents.framework in Frameworks */,
