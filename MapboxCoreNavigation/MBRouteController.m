@@ -36,10 +36,10 @@ NSString *const MBErrorDomain = @"ErrorDomain";
 
 @end
 
-//@implementation MBXAccounts (MBXDefault)
-//
-//+ (void)load {
-//    [MBXAccounts activateSKUID:MBXAccountsSKUIDNavigationSession];
-//}
-//
-//@end
+@implementation MBXAccounts (MBXDefault)
+
++ (void)load {
+    [MBXAccounts activateSKUID:MBXAccountsSKUIDNavigationSession];
+}
+
+@end

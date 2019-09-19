@@ -352,7 +352,7 @@ public class MapboxNavigationService: NSObject, NavigationService, DefaultInterf
     
     public func stop() {
         
-//        MBXAccounts.resetSession()
+        MBXAccounts.resetSession()
         
         nativeLocationSource.stopUpdatingHeading()
         nativeLocationSource.stopUpdatingLocation()
