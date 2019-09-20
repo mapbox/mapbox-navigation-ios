@@ -49,7 +49,7 @@ public class DataCache: NSObject, BimodalDataCache {
     /*
      Clears out the memory cache.
      */
-    public func clearMemory() {
+    @objc public func clearMemory() {
         memoryCache.removeAllObjects()
     }
 

@@ -19,8 +19,8 @@ public protocol BottomBannerViewControllerDelegate: class {
  */
 @IBDesignable
 
-open class BottomBannerViewController: UIViewController, NavigationComponent {
-    
+open class BottomBannerViewController: UIViewController, NavigationServiceDelegate {
+
     /*
      A padded spacer view that covers the bottom safe area of the device, if any.
      */
@@ -179,12 +179,12 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
         previousProgress = progress
     }
     
-    func removeTimer() {
+    @objc func removeTimer() {
         timer?.disarm()
         timer = nil
     }
     
-    func resetETATimer() {
+    @objc func resetETATimer() {
         removeTimer()
         timer = MapboxCoreNavigation.DispatchTimer(countdown: .seconds(30), repeating: .seconds(30)) { [weak self] in
             self?.refreshETA()

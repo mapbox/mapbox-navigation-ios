@@ -63,7 +63,7 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
                 do {
                     try strongSelf.unDuckAudio()
                 } catch {
-                    strongSelf.voiceControllerDelegate?.voiceController?(strongSelf, spokenInstructionsDidFailWith: error)
+                    strongSelf.voiceControllerDelegate?.voiceController(strongSelf, spokenInstructionsDidFailWith: error)
                 }
             }
         }
@@ -74,7 +74,7 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
         do {
             try unDuckAudio()
         } catch {
-            voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
+            voiceControllerDelegate?.voiceController(self, spokenInstructionsDidFailWith: error)
         }
         audioPlayer?.delegate = nil
     }
@@ -83,7 +83,7 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
         do {
             try unDuckAudio()
         } catch {
-            voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
+            voiceControllerDelegate?.voiceController(self, spokenInstructionsDidFailWith: error)
         }
     }
 
@@ -108,7 +108,7 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
      */
     open override func speak(_ instruction: SpokenInstruction) {
         if let audioPlayer = audioPlayer, audioPlayer.isPlaying, let lastSpokenInstruction = lastSpokenInstruction {
-            voiceControllerDelegate?.voiceController?(self, didInterrupt: lastSpokenInstruction, with: instruction)
+            voiceControllerDelegate?.voiceController(self, didInterrupt: lastSpokenInstruction, with: instruction)
         }
         
         audioTask?.cancel()
@@ -121,7 +121,7 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
             return
         }
         
-        let modifiedInstruction = voiceControllerDelegate?.voiceController?(self, willSpeak: instruction, routeProgress: routeProgress!) ?? instruction
+        let modifiedInstruction = voiceControllerDelegate?.voiceController(self, willSpeak: instruction, routeProgress: routeProgress!) ?? instruction
         lastSpokenInstruction = modifiedInstruction
 
         if let data = cachedDataForKey(modifiedInstruction.ssmlText) {
@@ -141,7 +141,7 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
         audioTask?.cancel()
         
         if let error = error {
-            voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
+            voiceControllerDelegate?.voiceController(self, spokenInstructionsDidFailWith: error)
         }
         
         guard let audioPlayer = audioPlayer else {

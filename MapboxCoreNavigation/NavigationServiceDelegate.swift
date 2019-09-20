@@ -201,8 +201,8 @@ public protocol NavigationServiceDelegate: class, UnimplementedLogging {
 }
 
 
-extension NavigationServiceDelegate{
-    public var delegateIdentifier: String {
+public extension NavigationServiceDelegate {
+    var delegateIdentifier: String {
         return "navigationServiceDelegate"
     }
     

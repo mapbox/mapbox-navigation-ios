@@ -9,9 +9,9 @@ let PuckSize: CGFloat = 45
  */
 
 public protocol UserCourseView where Self: UIView {
-    optional var location: CLLocation { get set }
-    optional var direction: CLLocationDegrees { get set }
-    optional var pitch: CLLocationDegrees { get set }
+//    var location: CLLocation { get set }
+//    var direction: CLLocationDegrees { get set }
+//    var pitch: CLLocationDegrees { get set }
     
     /**
      Updates the view to reflect the given location and other camera properties.

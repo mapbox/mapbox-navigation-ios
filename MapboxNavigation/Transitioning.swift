@@ -91,7 +91,7 @@ extension DismissDraggable where Self: UIViewController {
 
 fileprivate extension UIViewController {
     
-    func handleDismissPan(_ sender: UIPanGestureRecognizer) {
+    @objc func handleDismissPan(_ sender: UIPanGestureRecognizer) {
         self.handlePan(sender)
     }
     

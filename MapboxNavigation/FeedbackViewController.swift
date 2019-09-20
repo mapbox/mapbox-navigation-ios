@@ -20,7 +20,7 @@ extension FeedbackViewController: UIViewControllerTransitioningDelegate {
 /**
  The `FeedbackViewControllerDelegate` protocol provides methods for responding to feedback events.
  */
-public protocol FeedbackViewControllerDelegate {
+public protocol FeedbackViewControllerDelegate: class, UnimplementedLogging {
     
     /**
      Called when the user opens the feedback form.
@@ -37,6 +37,28 @@ public protocol FeedbackViewControllerDelegate {
      Called when a `FeedbackViewController` is dismissed for any reason without giving explicit feedback.
      */
     func feedbackViewControllerDidCancel(_ feedbackViewController: FeedbackViewController)
+}
+
+extension FeedbackViewControllerDelegate {
+    func feedbackViewControllerDidOpen(_ feedbackViewController: FeedbackViewController) {
+        logUnimplemented(level: .debug)
+    }
+    
+    func feedbackViewController(_ feedbackViewController: FeedbackViewController, didSend feedbackItem: FeedbackItem, uuid: UUID) {
+        logUnimplemented(level: .debug)
+
+    }
+    
+    func feedbackViewControllerDidCancel(_ feedbackViewController: FeedbackViewController) {
+        logUnimplemented(level: .debug)
+
+    }
+    
+    var delegateIdentifier: String {
+        return "feedbackViewControllerDelegate"
+    }
+    
+    
 }
 
 /**
@@ -199,7 +221,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
         return !isDescendant
     }
     
-    func handleDismissTap(sender: UITapGestureRecognizer) {
+    @objc func handleDismissTap(sender: UITapGestureRecognizer) {
         dismissFeedback()
     }
     

@@ -349,7 +349,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Fired when NavigationMapView detects a tap not handled elsewhere by other gesture recognizers.
      */
-    func didRecieveTap(sender: UITapGestureRecognizer) {
+    @objc func didRecieveTap(sender: UITapGestureRecognizer) {
         guard let routes = routes, let tapPoint = sender.point else { return }
         
         let waypointTest = waypoints(on: routes, closeTo: tapPoint) //are there waypoints near the tapped location?

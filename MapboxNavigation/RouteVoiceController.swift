@@ -134,14 +134,14 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         NotificationCenter.default.removeObserver(self, name: .routeControllerDidReroute, object: nil)
     }
     
-    func didReroute(notification: NSNotification) {
+    @objc func didReroute(notification: NSNotification) {
         // Play reroute sound when a faster route is found
         if notification.userInfo?[RouteControllerNotificationUserInfoKey.isProactiveKey] as! Bool {
             pauseSpeechAndPlayReroutingDing(notification: notification)
         }
     }
     
-    func pauseSpeechAndPlayReroutingDing(notification: NSNotification) {
+    @objc func pauseSpeechAndPlayReroutingDing(notification: NSNotification) {
         guard playRerouteSound && !NavigationSettings.shared.voiceMuted else {
             return
         }
@@ -151,7 +151,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         do {
             try mixAudio()
         } catch {
-            voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
+            voiceControllerDelegate?.voiceController(self, spokenInstructionsDidFailWith: error)
         }
         rerouteSoundPlayer.play()
     }
@@ -160,7 +160,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         do {
             try unDuckAudio()
         } catch {
-            voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
+            voiceControllerDelegate?.voiceController(self, spokenInstructionsDidFailWith: error)
         }
     }
     
@@ -184,7 +184,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         try AVAudioSession.sharedInstance().setActive(false, options: [.notifyOthersOnDeactivation])
     }
     
-    open func didPassSpokenInstructionPoint(notification: NSNotification) {
+    @objc open func didPassSpokenInstructionPoint(notification: NSNotification) {
         guard !NavigationSettings.shared.voiceMuted else { return }
         
         routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as? RouteProgress
@@ -204,13 +204,13 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         assert(routeProgress != nil, "routeProgress should not be nil.")
         
         if speechSynth.isSpeaking, let lastSpokenInstruction = lastSpokenInstruction {
-            voiceControllerDelegate?.voiceController?(self, didInterrupt: lastSpokenInstruction, with: instruction)
+            voiceControllerDelegate?.voiceController(self, didInterrupt: lastSpokenInstruction, with: instruction)
         }
         
         do {
             try duckAudio()
         } catch {
-            voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
+            voiceControllerDelegate?.voiceController(self, spokenInstructionsDidFailWith: error)
         }
         
         var utterance: AVSpeechUtterance?
@@ -220,7 +220,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
             utterance!.voice = AVSpeechSynthesisVoice(identifier: AVSpeechSynthesisVoiceIdentifierAlex)
         }
         
-        let modifiedInstruction = voiceControllerDelegate?.voiceController?(self, willSpeak: instruction, routeProgress: routeProgress!) ?? instruction
+        let modifiedInstruction = voiceControllerDelegate?.voiceController(self, willSpeak: instruction, routeProgress: routeProgress!) ?? instruction
         
         if utterance?.voice == nil {
             utterance = AVSpeechUtterance(attributedString: modifiedInstruction.attributedText(for: routeProgress!.currentLegProgress))
@@ -241,7 +241,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
  The `VoiceControllerDelegate` protocol defines methods that allow an object to respond to significant events related to spoken instructions.
  */
 
-public protocol VoiceControllerDelegate {
+public protocol VoiceControllerDelegate: class, UnimplementedLogging {
     
     /**
      Called when the voice controller failed to speak an instruction.
@@ -270,4 +270,23 @@ public protocol VoiceControllerDelegate {
      **/
     
     func voiceController(_ voiceController: RouteVoiceController, willSpeak instruction: SpokenInstruction, routeProgress: RouteProgress) -> SpokenInstruction?
+}
+
+extension VoiceControllerDelegate {
+    func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: Error) {
+        logUnimplemented(level: .debug)
+    }
+    
+    func voiceController(_ voiceController: RouteVoiceController, didInterrupt interruptedInstruction: SpokenInstruction, with interruptingInstruction: SpokenInstruction) {
+        logUnimplemented(level: .debug)
+    }
+    
+    func voiceController(_ voiceController: RouteVoiceController, willSpeak instruction: SpokenInstruction, routeProgress: RouteProgress) -> SpokenInstruction? {
+        logUnimplemented(level: .debug)
+        return nil
+    }
+    
+    var delegateIdentifier: String {
+        return "voiceControllerDelegate"
+    }
 }
