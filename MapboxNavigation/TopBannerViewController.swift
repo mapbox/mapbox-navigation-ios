@@ -3,7 +3,7 @@ import MapboxCoreNavigation
 import MapboxDirections
 
 
-public protocol TopBannerViewControllerDelegate: class {
+public protocol TopBannerViewControllerDelegate: class, UnimplementedLogging {
     func topBanner(_ banner: TopBannerViewController, didSwipeInDirection direction: UISwipeGestureRecognizer.Direction)
     
     func topBanner(_ banner: TopBannerViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell)
@@ -15,6 +15,43 @@ public protocol TopBannerViewControllerDelegate: class {
     func topBanner(_ banner: TopBannerViewController, willDismissStepsController: StepsViewController)
     
     func topBanner(_ banner: TopBannerViewController, didDismissStepsController: StepsViewController)
+}
+
+public extension TopBannerViewControllerDelegate {
+    func topBanner(_ banner: TopBannerViewController, didSwipeInDirection direction: UISwipeGestureRecognizer.Direction) {
+        logUnimplemented(level: .debug)
+    }
+    
+    func topBanner(_ banner: TopBannerViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell) {
+        logUnimplemented(level: .debug)
+
+    }
+    
+    func topBanner(_ banner: TopBannerViewController, willDisplayStepsController: StepsViewController) {
+        logUnimplemented(level: .debug)
+
+    }
+    
+    func topBanner(_ banner: TopBannerViewController, didDisplayStepsController: StepsViewController) {
+        logUnimplemented(level: .debug)
+
+    }
+    
+    func topBanner(_ banner: TopBannerViewController, willDismissStepsController: StepsViewController) {
+        logUnimplemented(level: .debug)
+
+    }
+    
+    func topBanner(_ banner: TopBannerViewController, didDismissStepsController: StepsViewController) {
+        logUnimplemented(level: .debug)
+
+    }
+    
+    var delegateIdentifier: String {
+        return "topBannerViewControllerDelegate"
+    }
+    
+    
 }
 
 open class TopBannerViewController: UIViewController {
