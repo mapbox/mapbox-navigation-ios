@@ -169,7 +169,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        delegate?.feedbackViewControllerDidOpen?(self)
+        delegate?.feedbackViewControllerDidOpen(self)
         
         UIView.animate(withDuration: FeedbackViewController.autoDismissInterval) {
             self.progressBar.progress = 0
@@ -210,7 +210,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     /**
      Instantly dismisses the FeedbackViewController if it is currently presented.
      */
-    public func dismissFeedback() {
+    @objc public func dismissFeedback() {
         abortAutodismiss()
         dismissFeedbackItem()
     }
@@ -253,7 +253,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     
     func send(_ item: FeedbackItem) {
         if let uuid = self.uuid {
-            delegate?.feedbackViewController?(self, didSend: item, uuid: uuid)
+            delegate?.feedbackViewController(self, didSend: item, uuid: uuid)
             eventsManager?.updateFeedback(uuid: uuid, type: item.feedbackType, source: .user, description: nil)
         }
         
@@ -268,7 +268,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     }
     
     func dismissFeedbackItem() {
-        delegate?.feedbackViewControllerDidCancel?(self)
+        delegate?.feedbackViewControllerDidCancel(self)
         if let uuid = self.uuid {
             eventsManager?.cancelFeedback(uuid: uuid)
         }

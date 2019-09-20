@@ -274,7 +274,7 @@ class RouteMapViewController: UIViewController {
         child.didMove(toParent: self)
     }
     
-    func recenter(_ sender: AnyObject) {
+    @objc func recenter(_ sender: AnyObject) {
         mapView.tracksUserCourse = true
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
         isInOverviewMode = false
@@ -297,7 +297,7 @@ class RouteMapViewController: UIViewController {
         mapView.addArrow(route: router.routeProgress.route, legIndex: legIndex, stepIndex: stepIndex)
     }
 
-    func toggleOverview(_ sender: Any) {
+    @objc func toggleOverview(_ sender: Any) {
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
         if let coordinates = router.route.coordinates,
             let userLocation = router.location?.coordinate {
@@ -307,14 +307,14 @@ class RouteMapViewController: UIViewController {
         isInOverviewMode = true
     }
 
-    func toggleMute(_ sender: UIButton) {
+    @objc func toggleMute(_ sender: UIButton) {
         sender.isSelected = !sender.isSelected
 
         let muted = sender.isSelected
         NavigationSettings.shared.voiceMuted = muted
     }
 
-    func feedback(_ sender: Any) {
+    @objc func feedback(_ sender: Any) {
         showFeedback()
     }
 
@@ -339,7 +339,7 @@ class RouteMapViewController: UIViewController {
         mapView.setNeedsUpdateConstraints()
     }
 
-    func applicationWillEnterForeground(notification: NSNotification) {
+    @objc func applicationWillEnterForeground(notification: NSNotification) {
         mapView.updateCourseTracking(location: router.location, animated: false)
     }
 
@@ -390,7 +390,7 @@ class RouteMapViewController: UIViewController {
         }
     }
     
-    func resetFrameRate(_ sender: UIGestureRecognizer) {
+    @objc func resetFrameRate(_ sender: UIGestureRecognizer) {
         mapView.preferredFramesPerSecond = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
     }
     
@@ -530,7 +530,7 @@ extension RouteMapViewController: NavigationViewDelegate {
     // MARK: VisualInstructionDelegate
     
     func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
-        return delegate?.label?(label, willPresent: instruction, as: presented)
+        return delegate?.label(label, willPresent: instruction, as: presented)
     }
 
     // MARK: NavigationMapViewCourseTrackingDelegate
@@ -548,35 +548,35 @@ extension RouteMapViewController: NavigationViewDelegate {
 
     //MARK: NavigationMapViewDelegate
     func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        return delegate?.navigationMapView?(mapView, routeStyleLayerWithIdentifier: identifier, source: source)
+        return delegate?.navigationMapView(mapView, routeStyleLayerWithIdentifier: identifier, source: source)
     }
 
     func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        return delegate?.navigationMapView?(mapView, routeCasingStyleLayerWithIdentifier: identifier, source: source)
+        return delegate?.navigationMapView(mapView, routeCasingStyleLayerWithIdentifier: identifier, source: source)
     }
 
     func navigationMapView(_ mapView: NavigationMapView, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        return delegate?.navigationMapView?(mapView, waypointStyleLayerWithIdentifier: identifier, source: source)
+        return delegate?.navigationMapView(mapView, waypointStyleLayerWithIdentifier: identifier, source: source)
     }
 
     func navigationMapView(_ mapView: NavigationMapView, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        return delegate?.navigationMapView?(mapView, waypointSymbolStyleLayerWithIdentifier: identifier, source: source)
+        return delegate?.navigationMapView(mapView, waypointSymbolStyleLayerWithIdentifier: identifier, source: source)
     }
 
     func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint], legIndex: Int) -> MGLShape? {
-        return delegate?.navigationMapView?(mapView, shapeFor: waypoints, legIndex: legIndex)
+        return delegate?.navigationMapView(mapView, shapeFor: waypoints, legIndex: legIndex)
     }
 
     func navigationMapView(_ mapView: NavigationMapView, shapeFor routes: [Route]) -> MGLShape? {
-        return delegate?.navigationMapView?(mapView, shapeFor: routes)
+        return delegate?.navigationMapView(mapView, shapeFor: routes)
     }
 
     func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route) {
-        delegate?.navigationMapView?(mapView, didSelect: route)
+        delegate?.navigationMapView(mapView, didSelect: route)
     }
 
     func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeFor route: Route) -> MGLShape? {
-        return delegate?.navigationMapView?(mapView, simplifiedShapeFor: route)
+        return delegate?.navigationMapView(mapView, simplifiedShapeFor: route)
     }
 
     func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint {
@@ -586,7 +586,7 @@ extension RouteMapViewController: NavigationViewDelegate {
         }
 
         //otherwise, ask the delegate or return .zero
-        return delegate?.navigationMapViewUserAnchorPoint?(mapView) ?? .zero
+        return delegate?.navigationMapViewUserAnchorPoint(mapView) ?? .zero
     }
 
     /**
@@ -799,7 +799,7 @@ extension RouteMapViewController {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
-    fileprivate func keyboardWillShow(notification: NSNotification) {
+    @objc fileprivate func keyboardWillShow(notification: NSNotification) {
         guard navigationView.endOfRouteView != nil else { return }
         guard let userInfo = notification.userInfo else { return }
         guard let curveValue = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? Int else { return }
@@ -819,7 +819,7 @@ extension RouteMapViewController {
         UIView.animate(withDuration: duration, delay: 0, options: options, animations: view.layoutIfNeeded, completion: nil)
     }
 
-    fileprivate func keyboardWillHide(notification: NSNotification) {
+    @objc fileprivate func keyboardWillHide(notification: NSNotification) {
         guard navigationView.endOfRouteView != nil else { return }
         guard let userInfo = notification.userInfo else { return }
         guard let curveValue = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? Int else { return }

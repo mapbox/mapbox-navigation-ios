@@ -5,7 +5,7 @@ import CoreLocation
 /*
  A navigation component is a member of the navigation UI view hierarchy that responds as the user progresses along a route according to the `NavigationServiceDelegate` protocol.
  */
-typealias NavigationComponent = NavigationServiceDelegate
+public typealias NavigationComponent = NavigationServiceDelegate
 
 
 /**

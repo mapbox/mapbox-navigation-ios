@@ -82,6 +82,9 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
     
     var styleObservation: NSKeyValueObservation?
     
+    ///:nodoc: Used for logging.
+    public var delegateIdentifier: String = "styleManagerDelegate+navigationMapViewDelegate"
+    
     /**
      Creates a new CarPlay navigation view controller for the given route controller and user interface.
      
@@ -233,7 +236,7 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
     public func exitNavigation(byCanceling canceled: Bool = false) {
         carSession.finishTrip()
         dismiss(animated: true) {
-            self.carPlayNavigationDelegate?.carPlayNavigationViewControllerDidDismiss?(self, byCanceling: canceled)
+            self.carPlayNavigationDelegate?.carPlayNavigationViewControllerDidDismiss(self, byCanceling: canceled)
         }
     }
     
@@ -290,14 +293,14 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
         isPanningAway = false
     }
     
-    func visualInstructionDidChange(_ notification: NSNotification) {
+    @objc func visualInstructionDidChange(_ notification: NSNotification) {
         let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
         updateManeuvers(for: routeProgress)
         mapView?.showWaypoints(routeProgress.route)
         mapView?.addArrow(route: routeProgress.route, legIndex: routeProgress.legIndex, stepIndex: routeProgress.currentLegProgress.stepIndex + 1)
     }
     
-    func progressDidChange(_ notification: NSNotification) {
+    @objc func progressDidChange(_ notification: NSNotification) {
         let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
         let location = notification.userInfo![RouteControllerNotificationUserInfoKey.locationKey] as! CLLocation
         
@@ -331,11 +334,11 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
         }
     }
     
-    func resetFrameRate(_ sender: UIGestureRecognizer) {
+    @objc func resetFrameRate(_ sender: UIGestureRecognizer) {
         mapView?.preferredFramesPerSecond = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
     }
     
-    func rerouted(_ notification: NSNotification) {
+    @objc func rerouted(_ notification: NSNotification) {
         updateRouteOnMap()
         self.mapView?.recenterMap()
     }

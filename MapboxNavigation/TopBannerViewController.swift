@@ -163,7 +163,7 @@ open class TopBannerViewController: UIViewController {
 
         var stepsHeightPresizingConstraint: NSLayoutConstraint? = nil
         
-        delegate?.topBanner?(self, willDisplayStepsController: controller)
+        delegate?.topBanner(self, willDisplayStepsController: controller)
         embed(controller, in: stepsContainer) { (parent, child) -> [NSLayoutConstraint] in
             child.view.translatesAutoresizingMaskIntoConstraints = false
             
@@ -198,7 +198,7 @@ open class TopBannerViewController: UIViewController {
                 }
                 
                 self.view.isUserInteractionEnabled = true
-                self.delegate?.topBanner?(self, didDisplayStepsController: controller)
+                self.delegate?.topBanner(self, didDisplayStepsController: controller)
             }
             
             UIView.animate(withDuration: 0.35, delay: 0.0, options: [.curveEaseOut], animations: parent.view.layoutIfNeeded, completion: finally)
@@ -212,7 +212,7 @@ open class TopBannerViewController: UIViewController {
         guard let parent = parent, let steps = stepsViewController  else { return }
         parent.view.layoutIfNeeded()
         
-        delegate?.topBanner?(self, willDismissStepsController: steps)
+        delegate?.topBanner(self, willDismissStepsController: steps)
         
         
         NSLayoutConstraint.deactivate(stepsContainerShowConstraints)
@@ -224,7 +224,7 @@ open class TopBannerViewController: UIViewController {
             }
             
             self.view.isUserInteractionEnabled = true
-            self.delegate?.topBanner?(self, didDismissStepsController: steps)
+            self.delegate?.topBanner(self, didDismissStepsController: steps)
             completion?()
         }
         
@@ -413,14 +413,14 @@ extension TopBannerViewController: InstructionsBannerViewDelegate {
     }
     
     public func didSwipeInstructionsBanner(_ sender: BaseInstructionsBannerView, swipeDirection direction: UISwipeGestureRecognizer.Direction) {
-        delegate?.topBanner?(self, didSwipeInDirection: direction)
+        delegate?.topBanner(self, didSwipeInDirection: direction)
     }
 }
 
 extension TopBannerViewController: StepsViewControllerDelegate {
     
     public func stepsViewController(_ viewController: StepsViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell) {
-        delegate?.topBanner?(self, didSelect: legIndex, stepIndex: stepIndex, cell: cell)
+        delegate?.topBanner(self, didSelect: legIndex, stepIndex: stepIndex, cell: cell)
     }
     
     public func didDismissStepsViewController(_ viewController: StepsViewController) {

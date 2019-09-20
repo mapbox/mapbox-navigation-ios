@@ -70,7 +70,7 @@ open class InstructionsCardViewController: UIViewController {
         super.viewDidLoad()
         
         /* TODO: Identify the traitCollections to define the width of the cards */
-        if let customSize = cardCollectionDelegate?.instructionsCardCollection?(self, cardSizeFor: traitCollection) {
+        if let customSize = cardCollectionDelegate?.instructionsCardCollection(self, cardSizeFor: traitCollection) {
             cardSize = customSize
         } else {
             cardSize = CGSize(width: Int(floor(view.frame.size.width * 0.82)), height: 200)
@@ -278,8 +278,17 @@ extension InstructionsCardViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
+extension InstructionsCardViewController: UnimplementedLogging {
+    public var delegateIdentifier: String {
+        return "visualInstructionDelegate+instructionsCardContainerViewDelegate"
+    }
+}
+
 /// :nodoc:
 extension InstructionsCardViewController: NavigationComponent {
+    
+    
+    
     public func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         routeProgress = progress
         reloadDataSource()
