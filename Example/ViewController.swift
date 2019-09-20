@@ -153,7 +153,7 @@ class ViewController: UIViewController {
 
     // MARK: Gesture Recognizer Handlers
 
-    func didLongPress(tap: UILongPressGestureRecognizer) {
+    @objc func didLongPress(tap: UILongPressGestureRecognizer) {
         guard let mapView = mapView, tap.state == .began else { return }
 
         if let annotation = mapView.annotations?.last, waypoints.count > 2 {
@@ -355,6 +355,12 @@ class ViewController: UIViewController {
         let singleTap = UILongPressGestureRecognizer(target: self, action: #selector(didLongPress(tap:)))
         mapView.gestureRecognizers?.filter({ $0 is UILongPressGestureRecognizer }).forEach(singleTap.require(toFail:))
         mapView.addGestureRecognizer(singleTap)
+    }
+}
+
+extension ViewController: UnimplementedLogging {
+    var delegateIdentifier: String {
+        return "navigationMapViewDelegate+navigationViewControllerDelegate+voiceControllerDelegate+waypointConfirmationViewControllerDelegate"
     }
 }
 

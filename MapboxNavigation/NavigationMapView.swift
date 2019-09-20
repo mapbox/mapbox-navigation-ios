@@ -177,7 +177,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      
      If the view conforms to `UserCourseView`, its `UserCourseView.update(location:pitch:direction:animated:)` method is frequently called to ensure that its visual appearance matches the map’s camera.
      */
-    public var userCourseView: UIView? {
+    public var userCourseView: UserCourseView? {
         didSet {
             oldValue?.removeFromSuperview()
             if let userCourseView = userCourseView {
@@ -333,16 +333,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             })
         }
         
-//        if let userCourseView = userCourseView as? UserCourseView {
-            #error("FIXME")
-//            if let customTransformation = userCourseView.update(location: location, pitch: self.camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse) {
-//                customTransformation()
-//            } else {
-//                self.userCourseView?.applyDefaultUserPuckTransformation(location: location, pitch: self.camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse)
-//            }
-//        } else {
-//            userCourseView?.applyDefaultUserPuckTransformation(location: location, pitch: self.camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse)
-//        }
+        userCourseView?.update(location: location, pitch: self.camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse)
     }
     
     //MARK: -  Gesture Recognizers
@@ -363,8 +354,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
         
     }
-    
-    typealias CompositeCourseView = UIView & UserCourseView
     
     @objc func updateCourseView(_ sender: UIGestureRecognizer) {
         if sender.state == .ended {
@@ -392,7 +381,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         if sender.state == .changed {
             guard let location = userLocationForCourseTracking else { return }
             
-            if let userCourseView = userCourseView as? CompositeCourseView {
+            if let userCourseView = userCourseView {
                 userCourseView.update(location: location,
                                        pitch: camera.pitch,
                                        direction: direction,

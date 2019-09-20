@@ -85,7 +85,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
     }
 
     // Notifications sent on all location updates
-    func progressDidChange(_ notification: NSNotification) {
+    @objc func progressDidChange(_ notification: NSNotification) {
         // do not update if we are previewing instruction steps
         guard previewInstructionsView == nil else { return }
         
@@ -107,14 +107,14 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
         mapView.updateCourseTracking(location: location, animated: true)
     }
     
-    func updateInstructionsBanner(notification: NSNotification) {
+    @objc func updateInstructionsBanner(notification: NSNotification) {
         guard let routeProgress = notification.userInfo?[RouteControllerNotificationUserInfoKey.routeProgressKey] as? RouteProgress else { return }
         instructionsBannerView.update(for: routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
     }
 
     // Fired when the user is no longer on the route.
     // Update the route on the map.
-    func rerouted(_ notification: NSNotification) {
+    @objc func rerouted(_ notification: NSNotification) {
         self.mapView.showRoutes([navigationService.route])
     }
 

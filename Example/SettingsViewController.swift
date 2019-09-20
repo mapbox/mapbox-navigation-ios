@@ -93,7 +93,7 @@ class SettingsViewController: UITableViewController {
         }
     }
     
-    func switchValueChanged(_ toggle: OfflineSwitch) {
+    @objc func switchValueChanged(_ toggle: OfflineSwitch) {
         Settings.selectedOfflineVersion = toggle.isOn ? toggle.item?.title : nil
         
         if let selectedOfflineVersion = Settings.selectedOfflineVersion {

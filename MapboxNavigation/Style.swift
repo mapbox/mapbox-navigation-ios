@@ -5,7 +5,7 @@ import UIKit
  
  Styles are applied globally using `UIAppearance`. You should call `Style.apply()` to apply the style to the `NavigationViewController`.
  */
-
+@objc(MBStyle)
 open class Style: NSObject {
     
     ///  General styling

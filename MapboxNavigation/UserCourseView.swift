@@ -19,7 +19,11 @@ public protocol UserCourseView where Self: UIView {
     func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, tracksUserCourse: Bool)
 }
 
-extension UIView {
+public extension UserCourseView {
+    func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, tracksUserCourse: Bool) {
+        applyDefaultUserPuckTransformation(location: location, pitch: pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse)
+    }
+    
     func applyDefaultUserPuckTransformation(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, tracksUserCourse: Bool) {
         let duration: TimeInterval = animated ? 1 : 0
         UIView.animate(withDuration: duration, delay: 0, options: [.beginFromCurrentState, .curveLinear], animations: {

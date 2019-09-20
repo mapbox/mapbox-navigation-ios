@@ -46,7 +46,7 @@ class OfflineViewController: UIViewController, MGLMapViewDelegate {
         view.isUserInteractionEnabled = true
     }
     
-    func downloadRegion() {
+    @objc func downloadRegion() {
         
         let mapCoordinateBounds = mapView.convert(resizableView.frame, toCoordinateBoundsFrom: nil)
         let coordinateBounds = CoordinateBounds(coordinates: [mapCoordinateBounds.sw, mapCoordinateBounds.ne])
