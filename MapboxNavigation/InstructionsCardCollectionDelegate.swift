@@ -21,5 +21,5 @@ public protocol InstructionsCardCollectionDelegate: InstructionsCardContainerVie
      - returns: The preferred size of the cards for each cell in the instructions card collection.
      */
     
-    optional func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardViewController, cardSizeFor traitCollection: UITraitCollection) -> CGSize
+    func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardViewController, cardSizeFor traitCollection: UITraitCollection) -> CGSize
 }

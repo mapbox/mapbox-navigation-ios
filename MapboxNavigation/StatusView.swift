@@ -12,12 +12,12 @@ public protocol StatusViewDelegate: DeprecatedStatusViewDelegate {
      Indicates a value in the status view has changed by the user interacting with it.
      */
     @available(*, deprecated, message: "Add a target to StatusView for UIControl.Event.valueChanged instead.")
-    optional func statusView(_ statusView: StatusView, valueChangedTo value: Double)
+    func statusView(_ statusView: StatusView, valueChangedTo value: Double)
 }
 
 /// :nodoc:
 private protocol StatusViewDelegateDeprecations {
-    optional func statusView(_ statusView: StatusView, valueChangedTo value: Double)
+    func statusView(_ statusView: StatusView, valueChangedTo value: Double)
 }
 
 /**

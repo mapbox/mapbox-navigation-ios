@@ -15,7 +15,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      - parameter navigationViewController: The navigation view controller that was dismissed.
      - parameter canceled: True if the user dismissed the navigation view controller by tapping the Cancel button; false if the navigation view controller dismissed by some other means.
      */
-    optional func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool)
+    func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool)
     
     /**
      Called when movement of the user updates the route progress model.
@@ -26,7 +26,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      - parameter rawLocation: the raw location, from the location manager, associated with the progress update.
      */
     
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation)
+    func navigationViewController(_ navigationViewController: NavigationViewController, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation)
     
     /**
      Called as the user approaches a waypoint.
@@ -39,7 +39,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      - note: This method will likely be called several times as you approach a destination. To respond to the user’s arrival only once, your delegate can define a property that keeps track of whether this method has already been called for the given waypoint.
      */
     
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, willArriveAt waypoint: Waypoint, after remainingTimeInterval: TimeInterval, distance: CLLocationDistance)
+    func navigationViewController(_ navigationViewController: NavigationViewController, willArriveAt waypoint: Waypoint, after remainingTimeInterval: TimeInterval, distance: CLLocationDistance)
     
     /**
      Called when the user arrives at the destination waypoint for a route leg.
@@ -52,7 +52,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      - returns: True to automatically advance to the next leg, or false to remain on the now completed leg.
      */
     
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool
+    func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool
     
     /**
      Returns whether the navigation view controller should be allowed to calculate a new route.
@@ -64,7 +64,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      - returns: True to allow the navigation view controller to calculate a new route; false to keep tracking the current route.
      */
     
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool
+    func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool
     
     /**
      Called immediately before the navigation view controller calculates a new route.
@@ -75,7 +75,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      - parameter location: The user’s current location.
      */
     
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, willRerouteFrom location: CLLocation?)
+    func navigationViewController(_ navigationViewController: NavigationViewController, willRerouteFrom location: CLLocation?)
     
     /**
      Called immediately after the navigation view controller receives a new route.
@@ -86,7 +86,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      - parameter route: The new route.
      */
     
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, didRerouteAlong route: Route)
+    func navigationViewController(_ navigationViewController: NavigationViewController, didRerouteAlong route: Route)
     
     /**
      Called when the navigation view controller fails to receive a new route.
@@ -97,21 +97,21 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      - parameter error: An error raised during the process of obtaining a new route.
      */
     
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, didFailToRerouteWith error: Error)
+    func navigationViewController(_ navigationViewController: NavigationViewController, didFailToRerouteWith error: Error)
     
     /**
      Returns an `MGLStyleLayer` that determines the appearance of the route line.
      
      If this method is unimplemented, the navigation view controller’s map view draws the route line using an `MGLLineStyleLayer`.
      */
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+    func navigationViewController(_ navigationViewController: NavigationViewController, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
     /**
      Returns an `MGLStyleLayer` that determines the appearance of the route line’s casing.
      
      If this method is unimplemented, the navigation view controller’s map view draws the route line’s casing using an `MGLLineStyleLayer` whose width is greater than that of the style layer returned by `navigationViewController(_:routeStyleLayerWithIdentifier:source:)`.
      */
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+    func navigationViewController(_ navigationViewController: NavigationViewController, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
     /**
      Returns an `MGLShape` that represents the path of the route line.
@@ -119,7 +119,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      If this method is unimplemented, the navigation view controller’s map view represents the route line using an `MGLPolylineFeature` based on `route`’s `coordinates` property.
      */
     
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, shapeFor routes: [Route]) -> MGLShape?
+    func navigationViewController(_ navigationViewController: NavigationViewController, shapeFor routes: [Route]) -> MGLShape?
     
     /**
      Returns an `MGLShape` that represents the path of the route line’s casing.
@@ -127,21 +127,21 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      If this method is unimplemented, the navigation view controller’s map view represents the route line’s casing using an `MGLPolylineFeature` identical to the one returned by `navigationViewController(_:shapeFor:)`.
      */
     
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, simplifiedShapeFor route: Route) -> MGLShape?
+    func navigationViewController(_ navigationViewController: NavigationViewController, simplifiedShapeFor route: Route) -> MGLShape?
     
     /*
      Returns an `MGLStyleLayer` that marks the location of each destination along the route when there are multiple destinations. The returned layer is added to the map below the layer returned by `navigationViewController(_:waypointSymbolStyleLayerWithIdentifier:source:)`.
      
      If this method is unimplemented, the navigation view controller’s map view marks each destination waypoint with a circle.
      */
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+    func navigationViewController(_ navigationViewController: NavigationViewController, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
     /*
      Returns an `MGLStyleLayer` that places an identifying symbol on each destination along the route when there are multiple destinations. The returned layer is added to the map above the layer returned by `navigationViewController(_:waypointStyleLayerWithIdentifier:source:)`.
      
      If this method is unimplemented, the navigation view controller’s map view labels each destination waypoint with a number, starting with 1 at the first destination, 2 at the second destination, and so on.
      */
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+    func navigationViewController(_ navigationViewController: NavigationViewController, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
     /**
      Returns an `MGLShape` that represents the destination waypoints along the route (that is, excluding the origin).
@@ -149,7 +149,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      If this method is unimplemented, the navigation map view represents the route waypoints using `navigationViewController(_:shapeFor:legIndex:)`.
      */
     
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, shapeFor waypoints: [Waypoint], legIndex: Int) -> MGLShape?
+    func navigationViewController(_ navigationViewController: NavigationViewController, shapeFor waypoints: [Waypoint], legIndex: Int) -> MGLShape?
     
     /**
      Called when the user taps to select a route on the navigation view controller’s map view.
@@ -157,12 +157,12 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      - parameter route: The route on the map that the user selected.
      */
     
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, didSelect route: Route)
+    func navigationViewController(_ navigationViewController: NavigationViewController, didSelect route: Route)
     
     /**
      Returns the center point of the user course view in screen coordinates relative to the map view.
      */
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint
+    func navigationViewController(_ navigationViewController: NavigationViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint
     
     /**
      Allows the delegate to decide whether to ignore a location update.
@@ -174,7 +174,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      - returns: If `true`, the location is discarded and the `NavigationViewController` will not consider it. If `false`, the location will not be thrown out.
      */
     
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, shouldDiscard location: CLLocation) -> Bool
+    func navigationViewController(_ navigationViewController: NavigationViewController, shouldDiscard location: CLLocation) -> Bool
     
     /**
      Called to allow the delegate to customize the contents of the road name label that is displayed towards the bottom of the map view.
@@ -186,17 +186,17 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      - returns: The road name to display in the label, or nil to hide the label.
      */
     
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, roadNameAt location: CLLocation) -> String?
+    func navigationViewController(_ navigationViewController: NavigationViewController, roadNameAt location: CLLocation) -> String?
     
     
     //MARK: Obsolete
     
     @available(*, deprecated, message: "Use MGLMapViewDelegate.mapView(_:imageFor:) instead.")
     
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage?
+    func navigationViewController(_ navigationViewController: NavigationViewController, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage?
     
     @available(*, deprecated, message: "Use MGLMapViewDelegate.mapView(_:viewFor:) instead.")
     
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, viewFor annotation: MGLAnnotation) -> MGLAnnotationView?
+    func navigationViewController(_ navigationViewController: NavigationViewController, viewFor annotation: MGLAnnotation) -> MGLAnnotationView?
 }
 

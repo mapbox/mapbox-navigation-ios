@@ -14,7 +14,7 @@ protocol RouteControllerDataSource: class {
 
 
 @available(*, deprecated, renamed: "RouteController")
-open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationManagerDelegate {
+open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationManagerDelegate {    
     
     public weak var delegate: RouterDelegate?
 
@@ -44,7 +44,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         }
         set {
             if let location = self.location {
-                delegate?.router?(self, willRerouteFrom: location)
+                delegate?.router(self, willRerouteFrom: location)
             }
             _routeProgress = newValue
             announce(reroute: routeProgress.route, at: location, proactive: didFindFasterRoute)
@@ -95,7 +95,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     }
 
     deinit {
-        if delegate?.routerShouldDisableBatteryMonitoring?(self) ?? RouteController.DefaultBehavior.shouldDisableBatteryMonitoring {
+        if let del = delegate, del.routerShouldDisableBatteryMonitoring(self) {
             UIDevice.current.isBatteryMonitoringEnabled = false
         }
   
@@ -184,7 +184,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         
         // If the user has arrived, do not continue monitor reroutes, step progress, etc
         if routeProgress.currentLegProgress.userHasArrivedAtWaypoint &&
-            (delegate?.router?(self, shouldPreventReroutesWhenArrivingAt: routeProgress.currentLeg.destination) ??
+            (delegate?.router(self, shouldPreventReroutesWhenArrivingAt: routeProgress.currentLeg.destination) ??
              RouteController.DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint) {
             return true
         }
@@ -244,7 +244,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
             potentialLocation = lastFiltered
         // `filteredLocations` does not contain good locations and we have found at least one good location previously.
         } else if hasFoundOneQualifiedLocation {
-            if let lastLocation = locations.last, delegate?.router?(self, shouldDiscard: lastLocation) ?? RouteController.DefaultBehavior.shouldDiscardLocation {
+            if let lastLocation = locations.last, delegate?.router(self, shouldDiscard: lastLocation) ?? RouteController.DefaultBehavior.shouldDiscardLocation {
                 
                 // Allow the user puck to advance. A stationary puck is not great.
                 self.rawLocation = lastLocation
@@ -273,7 +273,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         updateRouteLegProgress(for: location)
         updateVisualInstructionProgress()
 
-        if !userIsOnRoute(location) && delegate?.router?(self, shouldRerouteFrom: location) ?? RouteController.DefaultBehavior.shouldRerouteFromLocation {
+        if !userIsOnRoute(location) && delegate?.router(self, shouldRerouteFrom: location) ?? RouteController.DefaultBehavior.shouldRerouteFromLocation {
             reroute(from: location, along: routeProgress)
             return
         }
@@ -297,7 +297,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
             stepProgress.distanceTraveled = distanceTraveled
             
             //Fire the delegate method
-            delegate?.router?(self, didUpdate: progress, with: location, rawLocation: rawLocation)
+            delegate?.router(self, didUpdate: progress, with: location, rawLocation: rawLocation)
             
             //Fire the notification (for now)
             NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: [
@@ -327,14 +327,14 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
                 previousArrivalWaypoint = currentDestination
                 legProgress.userHasArrivedAtWaypoint = true
                 
-                let advancesToNextLeg = delegate?.router?(self, didArriveAt: currentDestination) ?? RouteController.DefaultBehavior.didArriveAtWaypoint
+                let advancesToNextLeg = delegate?.router(self, didArriveAt: currentDestination) ?? RouteController.DefaultBehavior.didArriveAtWaypoint
                 
                 guard !routeProgress.isFinalLeg && advancesToNextLeg else { return }
                 advanceLegIndex(location: location)
                 updateDistanceToManeuver()
                 
             } else { //we are approaching the destination
-                delegate?.router?(self, willArriveAt: currentDestination, after: legProgress.durationRemaining, distance: legProgress.distanceRemaining)
+                delegate?.router(self, willArriveAt: currentDestination, after: legProgress.durationRemaining, distance: legProgress.distanceRemaining)
             }
         }
     }
@@ -352,7 +352,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
 
         isRerouting = true
 
-        delegate?.router?(self, willRerouteFrom: location)
+        delegate?.router(self, willRerouteFrom: location)
         NotificationCenter.default.post(name: .routeControllerWillReroute, object: self, userInfo: [
             RouteControllerNotificationUserInfoKey.locationKey: location
         ])
@@ -366,7 +366,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
 
 			strongSelf.isRerouting = false
             if let error = error {
-                strongSelf.delegate?.router?(strongSelf, didFailToRerouteWith: error)
+                strongSelf.delegate?.router(strongSelf, didFailToRerouteWith: error)
                 NotificationCenter.default.post(name: .routeControllerDidFailToReroute, object: self, userInfo: [
                     RouteControllerNotificationUserInfoKey.routingErrorKey: error
                 ])
@@ -478,7 +478,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         for spokenInstruction in spokenInstructions {
             if userSnapToStepDistanceFromManeuver <= spokenInstruction.distanceAlongStep || firstInstructionOnFirstStep {
 
-                delegate?.router?(self, didPassSpokenInstructionPoint: spokenInstruction, routeProgress: routeProgress)
+                delegate?.router(self, didPassSpokenInstructionPoint: spokenInstruction, routeProgress: routeProgress)
                 NotificationCenter.default.post(name: .routeControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
                     RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress,
                     RouteControllerNotificationUserInfoKey.spokenInstructionKey: spokenInstruction
@@ -497,7 +497,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         
         for visualInstruction in visualInstructions {
             if userSnapToStepDistanceFromManeuver <= visualInstruction.distanceAlongStep || isFirstLocation {
-                delegate?.router?(self, didPassVisualInstructionPoint: visualInstruction, routeProgress: routeProgress)
+                delegate?.router(self, didPassVisualInstructionPoint: visualInstruction, routeProgress: routeProgress)
                 NotificationCenter.default.post(name: .routeControllerDidPassVisualInstructionPoint, object: self, userInfo: [
                     RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress,
                     RouteControllerNotificationUserInfoKey.visualInstructionKey: visualInstruction,

@@ -250,7 +250,7 @@ public protocol VoiceControllerDelegate {
      - parameter error: An error explaining the failure and its cause. The `MBSpokenInstructionErrorCodeKey` key of the error’s user info dictionary is a `SpokenInstructionErrorCode` indicating the cause of the failure.
      */
     
-    optional func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: Error)
+    func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: Error)
     
     /**
      Called when one spoken instruction interrupts another instruction currently being spoken.
@@ -260,7 +260,7 @@ public protocol VoiceControllerDelegate {
      - parameter interruptingInstruction: The spoken instruction that is interrupting the current instruction.
      */
     
-    optional func voiceController(_ voiceController: RouteVoiceController, didInterrupt interruptedInstruction: SpokenInstruction, with interruptingInstruction: SpokenInstruction)
+    func voiceController(_ voiceController: RouteVoiceController, didInterrupt interruptedInstruction: SpokenInstruction, with interruptingInstruction: SpokenInstruction)
     
     /** Called when a spoken is about to speak. Useful if it is necessary to give a custom instruction instead. Noting, changing the `distanceAlongStep` property on `SpokenInstruction` will have no impact on when the instruction will be said.
      
@@ -269,5 +269,5 @@ public protocol VoiceControllerDelegate {
      - parameter routeProgress: The `RouteProgress` just before when the instruction is scheduled to be spoken.
      **/
     
-    optional func voiceController(_ voiceController: RouteVoiceController, willSpeak instruction: SpokenInstruction, routeProgress: RouteProgress) -> SpokenInstruction?
+    func voiceController(_ voiceController: RouteVoiceController, willSpeak instruction: SpokenInstruction, routeProgress: RouteProgress) -> SpokenInstruction?
 }

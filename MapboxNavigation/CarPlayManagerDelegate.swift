@@ -27,7 +27,7 @@ public protocol CarPlayManagerDelegate {
      - returns: An array of bar buttons to display on the leading side of the navigation bar while `template` is visible.
      */
     
-    optional func carPlayManager(_ carPlayManager: CarPlayManager, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in carPlayTemplate: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]?
+    func carPlayManager(_ carPlayManager: CarPlayManager, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in carPlayTemplate: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]?
     
     /**
      Offers the delegate an opportunity to provide a customized list of trailing bar buttons at the root of the template stack for the given activity.
@@ -41,7 +41,7 @@ public protocol CarPlayManagerDelegate {
      - returns: An array of bar buttons to display on the trailing side of the navigation bar while `template` is visible.
      */
     
-    optional func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in carPlayTemplate: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]?
+    func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in carPlayTemplate: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]?
    
     /**
      Offers the delegate an opportunity to provide a customized list of buttons displayed on the map.
@@ -56,7 +56,7 @@ public protocol CarPlayManagerDelegate {
      - returns: An array of map buttons to display on the map while `template` is visible.
      */
     
-    optional func carPlayManager(_ carPlayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in carPlayTemplate: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]?
+    func carPlayManager(_ carPlayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in carPlayTemplate: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]?
     
     /**
      Asks the delegate to provide a navigation service. In multi-screen applications this should be the same instance used to guide the user along the route on the phone.
@@ -81,7 +81,7 @@ public protocol CarPlayManagerDelegate {
      - postcondition: You must call `completionHandler` within this method.
      */
     
-    optional func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void)
+    func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void)
     
     /**
      Offers the delegate an opportunity to react to selection of a search result.
@@ -94,7 +94,7 @@ public protocol CarPlayManagerDelegate {
      - postcondition: You must call `completionHandler` within this method.
      */
     
-    optional func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void)
+    func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void)
     
     /**
      Called when the CarPlay manager fails to fetch a route.
@@ -106,7 +106,7 @@ public protocol CarPlayManagerDelegate {
      - returns Optionally, a CPNavigationAlert to present to the user. If an alert is returned, Carplay will transition back to the map template and display the alert. If `nil` is returned, nothing is done.
      */
     
-    optional func carPlayManager(_ carPlayManager: CarPlayManager, didFailToFetchRouteBetween waypoints: [Waypoint]?, options: RouteOptions, error: NSError) -> CPNavigationAlert?
+    func carPlayManager(_ carPlayManager: CarPlayManager, didFailToFetchRouteBetween waypoints: [Waypoint]?, options: RouteOptions, error: NSError) -> CPNavigationAlert?
     
     /**
      Offers the delegate the opportunity to customize a trip before it is presented to the user to preview.
@@ -118,7 +118,7 @@ public protocol CarPlayManagerDelegate {
      - returns: The actual trip to be previewed. This can be the same trip or a new/alternate trip if desired.
      */
     
-    optional func carPlayManager(_ carPlayManager: CarPlayManager, willPreview trip: CPTrip) -> (CPTrip)
+    func carPlayManager(_ carPlayManager: CarPlayManager, willPreview trip: CPTrip) -> (CPTrip)
 
     /**
      Offers the delegate the opportunity to customize a trip preview text configuration for a given trip.
@@ -129,7 +129,7 @@ public protocol CarPlayManagerDelegate {
      - returns: The actual preview text configuration to be presented alongside the trip.
     */
     
-    optional func carPlayManager(_ carPlayManager: CarPlayManager, willPreview trip: CPTrip, with previewTextConfiguration: CPTripPreviewTextConfiguration) -> (CPTripPreviewTextConfiguration)
+    func carPlayManager(_ carPlayManager: CarPlayManager, willPreview trip: CPTrip, with previewTextConfiguration: CPTripPreviewTextConfiguration) -> (CPTripPreviewTextConfiguration)
 
     /**
      Offers the delegate the opportunity to react to selection of a trip. Certain trips may have alternate route(s).
@@ -139,7 +139,7 @@ public protocol CarPlayManagerDelegate {
      - parameter routeChoice: The possible route for the chosen trip.
      */
     
-    optional func carPlayManager(_ carPlayManager: CarPlayManager, selectedPreviewFor trip: CPTrip, using routeChoice: CPRouteChoice) -> ()
+    func carPlayManager(_ carPlayManager: CarPlayManager, selectedPreviewFor trip: CPTrip, using routeChoice: CPRouteChoice) -> ()
     
     /**
      Called when navigation begins so that the containing app can update accordingly.
@@ -165,6 +165,6 @@ public protocol CarPlayManagerDelegate {
      - parameter carPlayManager: The CarPlay manager instance.
      - returns: A Boolean value indicating whether to disable idle timer when carplay is connected and enable when disconnected.
      */
-    optional func carplayManagerShouldDisableIdleTimer(_ carPlayManager: CarPlayManager) -> Bool
+    func carplayManagerShouldDisableIdleTimer(_ carPlayManager: CarPlayManager) -> Bool
 }
 #endif

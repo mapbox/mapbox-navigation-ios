@@ -56,7 +56,7 @@ open class ReplayLocationManager: NavigationLocationManager {
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(tick), object: nil)
     }
     
-    internal func tick() {
+    @objc internal func tick() {
         guard let startDate = startDate else { return }
         let location = locations[currentIndex]
         synthesizedLocation = location

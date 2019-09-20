@@ -231,6 +231,7 @@
 		3EA9371104016CD402547F1A /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA938479CF48D7AD1B6369B /* ImageCache.swift */; };
 		3EA937B1F4DF73EB004BA6BE /* InstructionPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA93230997B8D59E3B76C8C /* InstructionPresenter.swift */; };
 		3EA93A1FEFDDB709DE84BED9 /* ImageRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA938BE5468824787100228 /* ImageRepository.swift */; };
+		4303A3992332CD6200B5737D /* UnimplementedLogging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4303A3982332CD6200B5737D /* UnimplementedLogging.swift */; };
 		4341758223060A17004264A9 /* route-with-tertiary.json in Resources */ = {isa = PBXBuildFile; fileRef = 439FFC222304BC23004C20AA /* route-with-tertiary.json */; };
 		4341758423061666004264A9 /* SnapshotTest+Mapbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4341758323061666004264A9 /* SnapshotTest+Mapbox.swift */; };
 		439FFC252304BF54004C20AA /* GuidanceCardsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 439FFC242304BF54004C20AA /* GuidanceCardsSnapshotTests.swift */; };
@@ -819,6 +820,7 @@
 		3EA938BE5468824787100228 /* ImageRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageRepository.swift; sourceTree = "<group>"; };
 		3EA93A10227A7DAF1861D9F5 /* Cache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
 		3EA93EBD6E6BEC966BBE51D6 /* NavigationServiceTestDoubles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationServiceTestDoubles.swift; sourceTree = "<group>"; };
+		4303A3982332CD6200B5737D /* UnimplementedLogging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnimplementedLogging.swift; sourceTree = "<group>"; };
 		4341758323061666004264A9 /* SnapshotTest+Mapbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SnapshotTest+Mapbox.swift"; sourceTree = "<group>"; };
 		439FFC222304BC23004C20AA /* route-with-tertiary.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "route-with-tertiary.json"; sourceTree = "<group>"; };
 		439FFC242304BF54004C20AA /* GuidanceCardsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuidanceCardsSnapshotTests.swift; sourceTree = "<group>"; };
@@ -1712,6 +1714,7 @@
 				C5ADFBF91DDCC9580011824B /* LegacyRouteController.swift */,
 				8D2AA744211CDD4000EB7F72 /* NavigationService.swift */,
 				8D4CF9C521349FFB009C3FEE /* NavigationServiceDelegate.swift */,
+				4303A3982332CD6200B5737D /* UnimplementedLogging.swift */,
 				8D1A5CD1212DDFCD0059BA4A /* DispatchTimer.swift */,
 				8D75F990212B5C7F00F99CF3 /* TunnelAuthority.swift */,
 				3582A25120EFA9680029C5DE /* RouterDelegate.swift */,
@@ -2654,6 +2657,7 @@
 				C5D9800F1EFBCDAD006DBF2E /* Date.swift in Sources */,
 				35A43F77223BD632000CB367 /* RouteLeg.swift in Sources */,
 				35B839491E2E3D5D0045A868 /* MBRouteController.m in Sources */,
+				4303A3992332CD6200B5737D /* UnimplementedLogging.swift in Sources */,
 				8D2AA745211CDD4000EB7F72 /* NavigationService.swift in Sources */,
 				DADAD829203504C6002E25CA /* MBNavigationSettings.m in Sources */,
 				35A5413B1EFC052700E49846 /* RouteOptions.swift in Sources */,

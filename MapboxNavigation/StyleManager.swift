@@ -18,12 +18,12 @@ public protocol StyleManagerDelegate: NSObjectProtocol {
      This delegate method is the equivalent of `Notification.Name.styleManagerDidApplyStyle`.
      */
     
-    optional func styleManager(_ styleManager: StyleManager, didApply style: Style)
+    func styleManager(_ styleManager: StyleManager, didApply style: Style)
     
     /**
      Informs the delegate that the manager forcefully refreshed UIAppearance.
      */
-    optional func styleManagerDidRefreshAppearance(_ styleManager: StyleManager)
+    func styleManagerDidRefreshAppearance(_ styleManager: StyleManager)
 }
 
 /**

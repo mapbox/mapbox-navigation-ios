@@ -16,7 +16,7 @@ public protocol StepsViewControllerDelegate: class {
     /**
      Called when the user selects a step in a `StepsViewController`.
      */
-    optional func stepsViewController(_ viewController: StepsViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell)
+    func stepsViewController(_ viewController: StepsViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell)
 
     /**
      Called when the user dismisses the `StepsViewController`.

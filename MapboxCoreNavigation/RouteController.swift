@@ -80,7 +80,7 @@ open class RouteController: NSObject {
         }
         set {
             if let location = self.location {
-                delegate?.router?(self, willRerouteFrom: location)
+                delegate?.router(self, willRerouteFrom: location)
             }
             _routeProgress = newValue
             announce(reroute: routeProgress.route, at: rawLocation, proactive: didFindFasterRoute)
@@ -184,7 +184,7 @@ open class RouteController: NSObject {
         
         guard let location = locations.last else { return }
         
-        guard delegate?.router?(self, shouldDiscard: location) ?? DefaultBehavior.shouldDiscardLocation else {
+        guard delegate?.router(self, shouldDiscard: location) ?? DefaultBehavior.shouldDiscardLocation else {
             return
         }
         
@@ -197,7 +197,7 @@ open class RouteController: NSObject {
         // Notify observers if the step’s remaining distance has changed.
         update(progress: routeProgress, with: CLLocation(status.location), rawLocation: location)
         
-        let willReroute = !userIsOnRoute(location) && delegate?.router?(self, shouldRerouteFrom: location)
+        let willReroute = !userIsOnRoute(location) && delegate?.router(self, shouldRerouteFrom: location)
                           ?? DefaultBehavior.shouldRerouteFromLocation
         
         updateIndexes(status: status, progress: routeProgress)
@@ -274,14 +274,14 @@ open class RouteController: NSObject {
             
             if willArrive {
                 
-                delegate?.router?(self, willArriveAt: currentDestination, after: legProgress.durationRemaining, distance: legProgress.distanceRemaining)
+                delegate?.router(self, willArriveAt: currentDestination, after: legProgress.durationRemaining, distance: legProgress.distanceRemaining)
                 
             } else if didArrive {
                 
                 previousArrivalWaypoint = currentDestination
                 legProgress.userHasArrivedAtWaypoint = true
                 
-                let advancesToNextLeg = delegate?.router?(self, didArriveAt: currentDestination) ?? DefaultBehavior.didArriveAtWaypoint
+                let advancesToNextLeg = delegate?.router(self, didArriveAt: currentDestination) ?? DefaultBehavior.didArriveAtWaypoint
                 guard !routeProgress.isFinalLeg && advancesToNextLeg else {
                     return
                 }
@@ -304,7 +304,7 @@ open class RouteController: NSObject {
             stepProgress.distanceTraveled = distanceTraveled
             
             //Fire the delegate method
-            delegate?.router?(self, didUpdate: progress, with: location, rawLocation: rawLocation)
+            delegate?.router(self, didUpdate: progress, with: location, rawLocation: rawLocation)
             
             //Fire the notification (for now)
             NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: [
@@ -317,7 +317,7 @@ open class RouteController: NSObject {
     
     private func announcePassage(of spokenInstructionPoint: SpokenInstruction, routeProgress: RouteProgress) {
         
-        delegate?.router?(self, didPassSpokenInstructionPoint: spokenInstructionPoint, routeProgress: routeProgress)
+        delegate?.router(self, didPassSpokenInstructionPoint: spokenInstructionPoint, routeProgress: routeProgress)
         
         let info: [RouteControllerNotificationUserInfoKey: Any] = [
             .routeProgressKey: routeProgress,
@@ -329,7 +329,7 @@ open class RouteController: NSObject {
     
     private func announcePassage(of visualInstructionPoint: VisualInstructionBanner, routeProgress: RouteProgress) {
         
-        delegate?.router?(self, didPassVisualInstructionPoint: visualInstructionPoint, routeProgress: routeProgress)
+        delegate?.router(self, didPassVisualInstructionPoint: visualInstructionPoint, routeProgress: routeProgress)
         
         let info: [RouteControllerNotificationUserInfoKey: Any] = [
             .routeProgressKey: routeProgress,
@@ -360,7 +360,7 @@ open class RouteController: NSObject {
         navigator.toggleHistoryFor(onOff: false)
     }
     
-    public func locationHistory() -> String {
+    public func locationHistory() -> String? {
         return navigator.getHistory()
     }
 }
@@ -371,7 +371,7 @@ extension RouteController: Router {
         
         // If the user has arrived, do not continue monitor reroutes, step progress, etc
         if routeProgress.currentLegProgress.userHasArrivedAtWaypoint &&
-            (delegate?.router?(self, shouldPreventReroutesWhenArrivingAt: routeProgress.currentLeg.destination) ??
+            (delegate?.router(self, shouldPreventReroutesWhenArrivingAt: routeProgress.currentLeg.destination) ??
                 DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint) {
             return true
         }
@@ -388,7 +388,7 @@ extension RouteController: Router {
             }
         }
         
-        delegate?.router?(self, willRerouteFrom: location)
+        delegate?.router(self, willRerouteFrom: location)
         NotificationCenter.default.post(name: .routeControllerWillReroute, object: self, userInfo: [
             RouteControllerNotificationUserInfoKey.locationKey: location
             ])
@@ -407,7 +407,7 @@ extension RouteController: Router {
             }
             
             if let error = error {
-                strongSelf.delegate?.router?(strongSelf, didFailToRerouteWith: error)
+                strongSelf.delegate?.router(strongSelf, didFailToRerouteWith: error)
                 NotificationCenter.default.post(name: .routeControllerDidFailToReroute, object: self, userInfo: [
                     RouteControllerNotificationUserInfoKey.routingErrorKey: error
                     ])

@@ -17,7 +17,7 @@ public protocol InstructionsCardContainerViewDelegate: VisualInstructionDelegate
      - returns: optionally, a customized NSAttributedString that will be presented instead of the default, or if nil, the default behavior will be used.
      */
     
-    optional func primaryLabel(_ primaryLabel: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString?
+    func primaryLabel(_ primaryLabel: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString?
     
     /**
      Called when the Secondary Label will present a visual instruction.
@@ -28,7 +28,7 @@ public protocol InstructionsCardContainerViewDelegate: VisualInstructionDelegate
      - returns: optionally, a customized NSAttributedString that will be presented instead of the default, or if nil, the default behavior will be used.
      */
     
-    optional func secondaryLabel(_ secondaryLabel: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString?
+    func secondaryLabel(_ secondaryLabel: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString?
 }
 
 /// :nodoc:

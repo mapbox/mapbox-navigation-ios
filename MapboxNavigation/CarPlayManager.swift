@@ -697,9 +697,9 @@ extension CarPlayManager: MapTemplateProviderDelegate {
 @available(iOS 12.0, *)
 
 internal protocol MapTemplateProviderDelegate {
-    optional func mapTemplateProvider(_ provider: MapTemplateProvider, mapTemplate: CPMapTemplate, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, for activity: CarPlayActivity) -> [CPBarButton]?
+    func mapTemplateProvider(_ provider: MapTemplateProvider, mapTemplate: CPMapTemplate, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, for activity: CarPlayActivity) -> [CPBarButton]?
     
-    optional func mapTemplateProvider(_ provider: MapTemplateProvider, mapTemplate: CPMapTemplate, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, for activity: CarPlayActivity) -> [CPBarButton]?
+    func mapTemplateProvider(_ provider: MapTemplateProvider, mapTemplate: CPMapTemplate, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, for activity: CarPlayActivity) -> [CPBarButton]?
 }
 
 @available(iOS 12.0, *)

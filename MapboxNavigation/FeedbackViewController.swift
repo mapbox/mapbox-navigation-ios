@@ -25,18 +25,18 @@ public protocol FeedbackViewControllerDelegate {
     /**
      Called when the user opens the feedback form.
      */
-    optional func  feedbackViewControllerDidOpen(_ feedbackViewController: FeedbackViewController)
+    func  feedbackViewControllerDidOpen(_ feedbackViewController: FeedbackViewController)
     
     /**
      Called when the user submits a feedback event.
      */
     
-    optional func feedbackViewController(_ feedbackViewController: FeedbackViewController, didSend feedbackItem: FeedbackItem, uuid: UUID)
+    func feedbackViewController(_ feedbackViewController: FeedbackViewController, didSend feedbackItem: FeedbackItem, uuid: UUID)
     
     /**
      Called when a `FeedbackViewController` is dismissed for any reason without giving explicit feedback.
      */
-    optional func feedbackViewControllerDidCancel(_ feedbackViewController: FeedbackViewController)
+    func feedbackViewControllerDidCancel(_ feedbackViewController: FeedbackViewController)
 }
 
 /**

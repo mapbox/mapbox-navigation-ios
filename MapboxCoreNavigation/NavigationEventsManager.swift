@@ -340,15 +340,15 @@ open class NavigationEventsManager: NSObject {
     }
     
     //MARK: - Session State Management
-    private func didChangeOrientation(_ notification: NSNotification) {
+    @objc private func didChangeOrientation(_ notification: NSNotification) {
         sessionState?.reportChange(to: UIDevice.current.orientation)
     }
     
-    private func didChangeApplicationState(_ notification: NSNotification) {
+    @objc private func didChangeApplicationState(_ notification: NSNotification) {
         sessionState?.reportChange(to: UIApplication.shared.applicationState)
     }
     
-    private func applicationWillTerminate(_ notification: NSNotification) {
+    @objc private func applicationWillTerminate(_ notification: NSNotification) {
         if sessionState?.terminated == false {
             sendCancelEvent(rating: nil, comment: nil)
             sessionState?.terminated = true

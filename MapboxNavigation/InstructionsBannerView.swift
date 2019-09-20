@@ -12,7 +12,7 @@ public protocol InstructionsBannerViewDelegate: class {
      Called when the user taps the `InstructionsBannerView`.
      */
     
-    optional func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView)
+    func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView)
     
     
     /**
@@ -20,17 +20,17 @@ public protocol InstructionsBannerViewDelegate: class {
      */
     @available(*, deprecated, message: "Please use didSwipeInstructionsBanner instead.")
     
-    optional func didDragInstructionsBanner(_ sender: BaseInstructionsBannerView)
+    func didDragInstructionsBanner(_ sender: BaseInstructionsBannerView)
     
     /**
      Called when the user swipes either left, right, or down on the `InstructionsBannerView`
      */
-    optional func didSwipeInstructionsBanner(_ sender: BaseInstructionsBannerView, swipeDirection direction: UISwipeGestureRecognizer.Direction)
+    func didSwipeInstructionsBanner(_ sender: BaseInstructionsBannerView, swipeDirection direction: UISwipeGestureRecognizer.Direction)
 }
 
 private protocol InstructionsBannerViewDelegateDeprecations {
     
-    optional func didDragInstructionsBanner(_ sender: BaseInstructionsBannerView)
+    func didDragInstructionsBanner(_ sender: BaseInstructionsBannerView)
 }
 
 /// :nodoc:

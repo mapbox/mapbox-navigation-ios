@@ -75,7 +75,7 @@ extension PresentAnimator: UIViewControllerAnimatedTransitioning {
 protocol DismissDraggable: UIViewControllerTransitioningDelegate {
     var interactor: Interactor { get }
     var draggableHeight: CGFloat { get }
-    optional func handleDismissPan(_ sender: UIPanGestureRecognizer)
+    func handleDismissPan(_ sender: UIPanGestureRecognizer)
 }
 
 fileprivate extension Selector {

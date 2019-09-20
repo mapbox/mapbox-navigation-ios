@@ -120,11 +120,11 @@ open class SimulatedLocationManager: NavigationLocationManager {
         return distance + (currentSpeed * speedMultiplier)
     }
     
-    private func progressDidChange(_ notification: Notification) {
+    @objc private func progressDidChange(_ notification: Notification) {
         routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as? RouteProgress
     }
     
-    private func didReroute(_ notification: Notification) {
+    @objc private func didReroute(_ notification: Notification) {
         guard let router = notification.object as? Router else {
             return
         }

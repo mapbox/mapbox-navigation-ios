@@ -533,11 +533,11 @@ public protocol CarPlayNavigationDelegate {
      - parameter canceled: True if the user dismissed the CarPlay navigation view controller by tapping the Cancel button; false if the navigation view controller dismissed by some other means.
      */
     
-    optional func carPlayNavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool)
+    func carPlayNavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool)
     
     //MARK: - Deprecated.
     
     @available(*, deprecated, message: "Use NavigationViewControllerDelegate.navigationViewController(_:didArriveAt:) or  NavigationServiceDelegate.navigationService(_:didArriveAt:) instead.")
-    optional func carPlayNavigationViewControllerDidArrive(_ carPlayNavigationViewController: CarPlayNavigationViewController)
+    func carPlayNavigationViewControllerDidArrive(_ carPlayNavigationViewController: CarPlayNavigationViewController)
 }
 #endif

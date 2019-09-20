@@ -16,7 +16,7 @@ public protocol UserCourseView where Self: UIView {
     /**
      Updates the view to reflect the given location and other camera properties.
      */
-    optional func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, tracksUserCourse: Bool)
+    func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, tracksUserCourse: Bool)
 }
 
 extension UIView {

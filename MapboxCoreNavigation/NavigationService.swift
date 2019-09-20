@@ -282,24 +282,24 @@ public class MapboxNavigationService: NSObject, NavigationService {
     private func simulate(intent: SimulationIntent = .manual) {
         guard !isSimulating else { return }
         let progress = router.routeProgress
-        delegate?.navigationService?(self, willBeginSimulating: progress, becauseOf: intent)
+        delegate?.navigationService(self, willBeginSimulating: progress, becauseOf: intent)
         simulatedLocationSource = SimulatedLocationManager(routeProgress: progress)
         simulatedLocationSource?.delegate = self
         simulatedLocationSource?.speedMultiplier = _simulationSpeedMultiplier
         simulatedLocationSource?.startUpdatingLocation()
         simulatedLocationSource?.startUpdatingHeading()
-        delegate?.navigationService?(self, didBeginSimulating: progress, becauseOf: intent)
+        delegate?.navigationService(self, didBeginSimulating: progress, becauseOf: intent)
     }
     
     private func endSimulation(intent: SimulationIntent = .manual) {
         guard isSimulating else { return }
         let progress = router.routeProgress
-        delegate?.navigationService?(self, willEndSimulating: progress, becauseOf: intent)
+        delegate?.navigationService(self, willEndSimulating: progress, becauseOf: intent)
         simulatedLocationSource?.stopUpdatingLocation()
         simulatedLocationSource?.stopUpdatingHeading()
         simulatedLocationSource?.delegate = nil
         simulatedLocationSource = nil
-        delegate?.navigationService?(self, didEndSimulating: progress, becauseOf: intent)
+        delegate?.navigationService(self, didEndSimulating: progress, becauseOf: intent)
     }
     
     public var route: Route {
@@ -372,7 +372,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         NotificationCenter.default.removeObserver(self)
     }
     
-    private func applicationWillTerminate(_ notification: NSNotification) {
+    @objc private func applicationWillTerminate(_ notification: NSNotification) {
         endNavigation()
     }
 }
@@ -424,7 +424,7 @@ extension MapboxNavigationService: RouterDelegate {
         eventsManager.incrementDistanceTraveled(by: router.routeProgress.distanceTraveled)
         
         //notify our consumer
-        delegate?.navigationService?(self, willRerouteFrom: location)
+        delegate?.navigationService(self, willRerouteFrom: location)
     }
     
     public func router(_ router: Router, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
@@ -436,11 +436,11 @@ extension MapboxNavigationService: RouterDelegate {
         simulatedLocationSource?.route = router.route
         
         //notify our consumer
-        delegate?.navigationService?(self, didRerouteAlong: route, at: location, proactive: proactive)
+        delegate?.navigationService(self, didRerouteAlong: route, at: location, proactive: proactive)
     }
     
     public func router(_ router: Router, didFailToRerouteWith error: Error) {
-        delegate?.navigationService?(self, didFailToRerouteWith: error)
+        delegate?.navigationService(self, didFailToRerouteWith: error)
     }
     
     public func router(_ router: Router, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
@@ -449,28 +449,28 @@ extension MapboxNavigationService: RouterDelegate {
         eventsManager.update(progress: progress)
         
         //pass the update on to consumers
-        delegate?.navigationService?(self, didUpdate: progress, with: location, rawLocation: rawLocation)
+        delegate?.navigationService(self, didUpdate: progress, with: location, rawLocation: rawLocation)
     }
     
     public func router(_ router: Router, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
-        delegate?.navigationService?(self, didPassVisualInstructionPoint: instruction, routeProgress: routeProgress)
+        delegate?.navigationService(self, didPassVisualInstructionPoint: instruction, routeProgress: routeProgress)
     }
     
     public func router(_ router: Router, didPassSpokenInstructionPoint instruction: SpokenInstruction, routeProgress: RouteProgress) {
-        delegate?.navigationService?(self, didPassSpokenInstructionPoint: instruction, routeProgress: routeProgress)
+        delegate?.navigationService(self, didPassSpokenInstructionPoint: instruction, routeProgress: routeProgress)
     }
     
     //MARK: Questions
     public func router(_ router: Router, shouldRerouteFrom location: CLLocation) -> Bool {
-        return delegate?.navigationService?(self, shouldRerouteFrom: location) ?? Default.shouldRerouteFromLocation
+        return delegate?.navigationService(self, shouldRerouteFrom: location) ?? Default.shouldRerouteFromLocation
     }
     
     public func router(_ router: Router, shouldDiscard location: CLLocation) -> Bool {
-        return delegate?.navigationService?(self, shouldDiscard: location) ?? Default.shouldDiscardLocation
+        return delegate?.navigationService(self, shouldDiscard: location) ?? Default.shouldDiscardLocation
     }
     
     public func router(_ router: Router, willArriveAt waypoint: Waypoint, after remainingTimeInterval: TimeInterval, distance: CLLocationDistance) {
-        delegate?.navigationService?(self, willArriveAt: waypoint, after: remainingTimeInterval, distance: distance)
+        delegate?.navigationService(self, willArriveAt: waypoint, after: remainingTimeInterval, distance: distance)
     }
     
     public func router(_ router: Router, didArriveAt waypoint: Waypoint) -> Bool {
@@ -478,7 +478,7 @@ extension MapboxNavigationService: RouterDelegate {
         //Notify the events manager that we've arrived at a waypoint
         eventsManager.arriveAtWaypoint()
         
-        let shouldAutomaticallyAdvance =  delegate?.navigationService?(self, didArriveAt: waypoint) ?? Default.didArriveAtWaypoint
+        let shouldAutomaticallyAdvance =  delegate?.navigationService(self, didArriveAt: waypoint) ?? Default.didArriveAtWaypoint
         if !shouldAutomaticallyAdvance {
             stop()
         }
@@ -486,11 +486,11 @@ extension MapboxNavigationService: RouterDelegate {
     }
     
     public func router(_ router: Router, shouldPreventReroutesWhenArrivingAt waypoint: Waypoint) -> Bool {
-        return delegate?.navigationService?(self, shouldPreventReroutesWhenArrivingAt: waypoint) ?? Default.shouldPreventReroutesWhenArrivingAtWaypoint
+        return delegate?.navigationService(self, shouldPreventReroutesWhenArrivingAt: waypoint) ?? Default.shouldPreventReroutesWhenArrivingAtWaypoint
     }
     
     public func routerShouldDisableBatteryMonitoring(_ router: Router) -> Bool {
-        return delegate?.navigationServiceShouldDisableBatteryMonitoring?(self) ?? Default.shouldDisableBatteryMonitoring
+        return delegate?.navigationServiceShouldDisableBatteryMonitoring(self) ?? Default.shouldDisableBatteryMonitoring
     }
 }
 

@@ -4,17 +4,17 @@ import MapboxDirections
 
 
 public protocol TopBannerViewControllerDelegate: class {
-    optional func topBanner(_ banner: TopBannerViewController, didSwipeInDirection direction: UISwipeGestureRecognizer.Direction)
+    func topBanner(_ banner: TopBannerViewController, didSwipeInDirection direction: UISwipeGestureRecognizer.Direction)
     
-    optional func topBanner(_ banner: TopBannerViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell)
+    func topBanner(_ banner: TopBannerViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell)
     
-    optional func topBanner(_ banner: TopBannerViewController, willDisplayStepsController: StepsViewController)
+    func topBanner(_ banner: TopBannerViewController, willDisplayStepsController: StepsViewController)
     
-    optional func topBanner(_ banner: TopBannerViewController, didDisplayStepsController: StepsViewController)
+    func topBanner(_ banner: TopBannerViewController, didDisplayStepsController: StepsViewController)
     
-    optional func topBanner(_ banner: TopBannerViewController, willDismissStepsController: StepsViewController)
+    func topBanner(_ banner: TopBannerViewController, willDismissStepsController: StepsViewController)
     
-    optional func topBanner(_ banner: TopBannerViewController, didDismissStepsController: StepsViewController)
+    func topBanner(_ banner: TopBannerViewController, didDismissStepsController: StepsViewController)
 }
 
 open class TopBannerViewController: UIViewController {

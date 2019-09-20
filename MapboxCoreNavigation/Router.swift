@@ -5,8 +5,7 @@ import MapboxDirections
 /**
  A router data source, also known as a location manager, supplies location data to a `Router` instance. For example, a `MapboxNavigationService` supplies location data to a `RouteController` or `LegacyRouteController`.
  */
-(MBRouterDataSource)
-public protocol RouterDataSource {
+public protocol RouterDataSource: class {
     
     /**
     The location provider for the `Router.` This class is designated as the object that will provide location updates when requested.
@@ -24,7 +23,7 @@ public protocol Router: class, CLLocationManagerDelegate {
     /**
      The route controller’s associated location manager.
      */
-    unowned var dataSource: RouterDataSource { get }
+    var dataSource: RouterDataSource { get }
     
     /**
      The route controller’s delegate.
@@ -81,9 +80,9 @@ public protocol Router: class, CLLocationManagerDelegate {
     
     func advanceLegIndex(location: CLLocation)
     
-    optional func enableLocationRecording()
-    optional func disableLocationRecording()
-    optional func locationHistory() -> String
+    func enableLocationRecording()
+    func disableLocationRecording()
+    func locationHistory() -> String?
 }
 
 protocol InternalRouter: class {
@@ -193,7 +192,7 @@ extension InternalRouter where Self: Router {
         }
         userInfo[.isProactiveKey] = proactive
         NotificationCenter.default.post(name: .routeControllerDidReroute, object: self, userInfo: userInfo)
-        delegate?.router?(self, didRerouteAlong: routeProgress.route, at: location, proactive: proactive)
+        delegate?.router(self, didRerouteAlong: routeProgress.route, at: location, proactive: proactive)
     }
 }
 
