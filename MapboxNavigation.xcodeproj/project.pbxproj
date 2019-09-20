@@ -205,7 +205,6 @@
 		35CDA8982190F6980072B675 /* turn_left.data in Resources */ = {isa = PBXBuildFile; fileRef = 35CDA8812190F5080072B675 /* turn_left.data */; };
 		35CDA8992190F6980072B675 /* UnionSquare-to-GGPark.route in Resources */ = {isa = PBXBuildFile; fileRef = 35CDA88B2190F5130072B675 /* UnionSquare-to-GGPark.route */; };
 		35CF34B11F0A733200C2692E /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CF34B01F0A733200C2692E /* UIFont.swift */; };
-		35D428291FA0B61F00176028 /* InstructionsBannerViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D428281FA0B61F00176028 /* InstructionsBannerViewLayout.swift */; };
 		35D4282B1FA0DF1D00176028 /* MapboxNavigation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		35D457A71E2D253100A89946 /* MBRouteController.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D457A61E2D253100A89946 /* MBRouteController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		35D825FC1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 35D825FA1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m */; };
@@ -286,7 +285,6 @@
 		AE47A32E22B1F6AE0096458C /* InstructionsCardStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47A32422B1F6AD0096458C /* InstructionsCardStyle.swift */; };
 		AE47A32F22B1F6AE0096458C /* DayInstructionsCardStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47A32522B1F6AD0096458C /* DayInstructionsCardStyle.swift */; };
 		AE47A33022B1F6AE0096458C /* InstructionsCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47A32622B1F6AE0096458C /* InstructionsCardView.swift */; };
-		AE47A33122B1F6AE0096458C /* InstructionsCardViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47A32722B1F6AE0096458C /* InstructionsCardViewLayout.swift */; };
 		AE47A33222B1F6AE0096458C /* UIColor+InstructionsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47A32822B1F6AE0096458C /* UIColor+InstructionsCard.swift */; };
 		AE47A33322B1F6AE0096458C /* Constants+InstructionsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47A32922B1F6AE0096458C /* Constants+InstructionsCard.swift */; };
 		AE47A33422B1F6AE0096458C /* InstructionsCardContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47A32A22B1F6AE0096458C /* InstructionsCardContainerView.swift */; };
@@ -795,7 +793,6 @@
 		35CDA88B2190F5130072B675 /* UnionSquare-to-GGPark.route */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "UnionSquare-to-GGPark.route"; sourceTree = "<group>"; };
 		35CDA88C2190F5140072B675 /* route-with-banner-instructions.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "route-with-banner-instructions.json"; sourceTree = "<group>"; };
 		35CF34B01F0A733200C2692E /* UIFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFont.swift; sourceTree = "<group>"; };
-		35D428281FA0B61F00176028 /* InstructionsBannerViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsBannerViewLayout.swift; sourceTree = "<group>"; };
 		35D457A61E2D253100A89946 /* MBRouteController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBRouteController.h; sourceTree = "<group>"; };
 		35D825F91E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MGLMapView+MGLNavigationAdditions.h"; sourceTree = "<group>"; };
 		35D825FA1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MGLMapView+MGLNavigationAdditions.m"; sourceTree = "<group>"; };
@@ -879,7 +876,6 @@
 		AE47A32422B1F6AD0096458C /* InstructionsCardStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionsCardStyle.swift; sourceTree = "<group>"; };
 		AE47A32522B1F6AD0096458C /* DayInstructionsCardStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayInstructionsCardStyle.swift; sourceTree = "<group>"; };
 		AE47A32622B1F6AE0096458C /* InstructionsCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionsCardView.swift; sourceTree = "<group>"; };
-		AE47A32722B1F6AE0096458C /* InstructionsCardViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionsCardViewLayout.swift; sourceTree = "<group>"; };
 		AE47A32822B1F6AE0096458C /* UIColor+InstructionsCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+InstructionsCard.swift"; sourceTree = "<group>"; };
 		AE47A32922B1F6AE0096458C /* Constants+InstructionsCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Constants+InstructionsCard.swift"; sourceTree = "<group>"; };
 		AE47A32A22B1F6AE0096458C /* InstructionsCardContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionsCardContainerView.swift; sourceTree = "<group>"; };
@@ -1554,7 +1550,6 @@
 				AE87207D22CF97B900D7DAB7 /* InstructionsCardCollectionDelegate.swift */,
 				AE47A32422B1F6AD0096458C /* InstructionsCardStyle.swift */,
 				AE47A32622B1F6AE0096458C /* InstructionsCardView.swift */,
-				AE47A32722B1F6AE0096458C /* InstructionsCardViewLayout.swift */,
 				AE47A32822B1F6AE0096458C /* UIColor+InstructionsCard.swift */,
 			);
 			name = "Guidance Cards";
@@ -1608,7 +1603,6 @@
 				35DC9D901F4323AA001ECD64 /* LanesView.swift */,
 				35E407671F5625FF00EFC814 /* StyleKitMarker.swift */,
 				3531C26F1F9E095400D92F9A /* InstructionsBannerView.swift */,
-				35D428281FA0B61F00176028 /* InstructionsBannerViewLayout.swift */,
 				353280A01FA72871005175F3 /* InstructionLabel.swift */,
 				355ED36F1FAB724F00BCE1B8 /* BottomBannerViewLayout.swift */,
 				35F520BF1FB482A200FC9C37 /* NextBannerView.swift */,
@@ -2400,7 +2394,6 @@
 				C51511D120EAC89D00372A91 /* CPMapTemplate.swift in Sources */,
 				353280A11FA72871005175F3 /* InstructionLabel.swift in Sources */,
 				351BEBFF1E5BCC63006FE110 /* ManeuversStyleKit.swift in Sources */,
-				35D428291FA0B61F00176028 /* InstructionsBannerViewLayout.swift in Sources */,
 				C54C655220336F2600D338E0 /* Constants.swift in Sources */,
 				353610CE1FAB6A8F00FB1746 /* BottomBannerViewController.swift in Sources */,
 				AEC3AC9A2106703100A26F34 /* HighwayShield.swift in Sources */,
@@ -2425,7 +2418,6 @@
 				353EC9D71FB09708002EB0AB /* StepsViewController.swift in Sources */,
 				35726EE81F0856E900AFA1B6 /* DayStyle.swift in Sources */,
 				AE47A32E22B1F6AE0096458C /* InstructionsCardStyle.swift in Sources */,
-				AE47A33122B1F6AE0096458C /* InstructionsCardViewLayout.swift in Sources */,
 				AE47A32C22B1F6AE0096458C /* InstructionsCardViewController.swift in Sources */,
 				358E31D622562698009B3EC2 /* CarPayCompassView.swift in Sources */,
 				AE47A33322B1F6AE0096458C /* Constants+InstructionsCard.swift in Sources */,
