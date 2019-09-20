@@ -31,6 +31,24 @@ public protocol InstructionsCardContainerViewDelegate: VisualInstructionDelegate
     func secondaryLabel(_ secondaryLabel: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString?
 }
 
+public extension InstructionsCardContainerViewDelegate {
+    public var delegateIdentifier: String {
+        return "instructionsCardContainerViewDelegate"
+    }
+    
+    func primaryLabel(_ primaryLabel: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
+        logUnimplemented(level: .debug)
+        return nil
+    }
+    
+    func secondaryLabel(_ secondaryLabel: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
+        logUnimplemented(level: .debug)
+        return nil
+    }
+    
+    
+}
+
 /// :nodoc:
 
 public class InstructionsCardContainerView: UIView {
@@ -287,10 +305,10 @@ extension InstructionsCardContainerView: InstructionsCardContainerViewDelegate {
     public func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
         
         if let primaryLabel = label as? PrimaryLabel,
-           let presented = delegate?.primaryLabel?(primaryLabel, willPresent: instruction, as: presented) {
+           let presented = delegate?.primaryLabel(primaryLabel, willPresent: instruction, as: presented) {
             return presented
         } else if let secondaryLabel = label as? SecondaryLabel,
-            let presented = delegate?.secondaryLabel?(secondaryLabel, willPresent: instruction, as: presented) {
+            let presented = delegate?.secondaryLabel(secondaryLabel, willPresent: instruction, as: presented) {
             return presented
         } else {
             let highlighted = instructionsCardView.distanceFromCurrentLocation < InstructionsCardConstants.highlightDistance

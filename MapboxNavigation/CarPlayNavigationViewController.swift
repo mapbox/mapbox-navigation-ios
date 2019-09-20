@@ -525,7 +525,7 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
  */
 @available(iOS 12.0, *)
 
-public protocol CarPlayNavigationDelegate {
+public protocol CarPlayNavigationDelegate: class, UnimplementedLogging {
     /**
      Called when the CarPlay navigation view controller is dismissed, such as when the user ends a trip.
      
@@ -539,5 +539,23 @@ public protocol CarPlayNavigationDelegate {
     
     @available(*, deprecated, message: "Use NavigationViewControllerDelegate.navigationViewController(_:didArriveAt:) or  NavigationServiceDelegate.navigationService(_:didArriveAt:) instead.")
     func carPlayNavigationViewControllerDidArrive(_ carPlayNavigationViewController: CarPlayNavigationViewController)
+}
+
+@available(iOS 12.0, *)
+public extension CarPlayNavigationDelegate {
+    var delegateIdentifier: String {
+        return "carPlayNavigationDelegate"
+    }
+    
+    func carPlayNavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool) {
+        logUnimplemented(level: .debug)
+        
+    }
+    
+    func carPlayNavigationViewControllerDidArrive(_ carPlayNavigationViewController: CarPlayNavigationViewController) {
+        //no-op, deprecated method
+    }
+    
+    
 }
 #endif

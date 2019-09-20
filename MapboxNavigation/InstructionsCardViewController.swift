@@ -301,11 +301,11 @@ extension InstructionsCardViewController: NavigationComponent {
 extension InstructionsCardViewController: InstructionsCardContainerViewDelegate {
     
     public func primaryLabel(_ primaryLabel: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
-        return cardCollectionDelegate?.primaryLabel?(primaryLabel, willPresent: instruction, as: presented)
+        return cardCollectionDelegate?.primaryLabel(primaryLabel, willPresent: instruction, as: presented)
     }
     
     public func secondaryLabel(_ secondaryLabel: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
-        return cardCollectionDelegate?.secondaryLabel?(secondaryLabel, willPresent: instruction, as: presented)
+        return cardCollectionDelegate?.secondaryLabel(secondaryLabel, willPresent: instruction, as: presented)
     }
 }
 

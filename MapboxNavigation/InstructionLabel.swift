@@ -30,7 +30,7 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
             let presenter = InstructionPresenter(instruction, dataSource: self, imageRepository: imageRepository, downloadCompletion: update)
             
             let attributed = presenter.attributedText()
-            attributedText = instructionDelegate?.label?(self, willPresent: instruction, as: attributed) ?? attributed
+            attributedText = instructionDelegate?.label(self, willPresent: instruction, as: attributed) ?? attributed
             instructionPresenter = presenter
         }
     }
@@ -42,7 +42,7 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
  The `VisualInstructionDelegate` protocol defines a method that allows an object to customize presented visual instructions.
  */
 
-public protocol VisualInstructionDelegate: class {
+public protocol VisualInstructionDelegate: class, UnimplementedLogging {
     
     /**
      Called when an InstructionLabel will present a visual instruction.
@@ -54,4 +54,15 @@ public protocol VisualInstructionDelegate: class {
      */
     
     func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString?
+}
+
+public extension VisualInstructionDelegate {
+    var delegateIdentifier: String {
+        return "visualInstructionDelegate"
+    }
+    
+    func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
+        logUnimplemented(level: .debug)
+        return nil
+    }
 }

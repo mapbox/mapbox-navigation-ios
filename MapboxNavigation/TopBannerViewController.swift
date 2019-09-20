@@ -343,6 +343,10 @@ open class TopBannerViewController: UIViewController {
 
 // MARK: - NavigationComponent Conformance
 extension TopBannerViewController: NavigationComponent {
+    public var delegateIdentifier: String {
+        return "navigationComponent"
+    }
+    
     public func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         routeProgress = progress
         instructionsBannerView.updateDistance(for: progress.currentLegProgress.currentStepProgress)

@@ -125,7 +125,7 @@ class RatingControl: UIStackView {
         view.heightAnchor.constraint(equalToConstant: starSize.height).isActive = true
     }
     
-    private func ratingButtonTapped(button sender: UIButton) {
+    @objc private func ratingButtonTapped(button sender: UIButton) {
         guard let index = stars.firstIndex(of: sender) else { return assertionFailure("RatingControl.swift: The Star button that was tapped was not found in the RatingControl.stars array. This should never happen.") }
         let selectedRating = index + 1
         

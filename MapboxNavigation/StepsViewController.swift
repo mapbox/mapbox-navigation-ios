@@ -109,7 +109,7 @@ public class StepsViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: .routeControllerProgressDidChange, object: nil)
     }
 
-    func progressDidChange(_ notification: Notification) {
+    @objc func progressDidChange(_ notification: Notification) {
 
         if rebuildDataSourceIfNecessary() {
             tableView.reloadData()
@@ -210,7 +210,7 @@ extension StepsViewController: UITableViewDelegate {
             // For the current leg, we need to know the upcoming step.
             stepIndex += indexPath.row + 1 > sections[indexPath.section].count ? 0 : 1
         }
-        delegate?.stepsViewController?(self, didSelect: indexPath.section, stepIndex: stepIndex, cell: cell)
+        delegate?.stepsViewController(self, didSelect: indexPath.section, stepIndex: stepIndex, cell: cell)
     }
 }
 

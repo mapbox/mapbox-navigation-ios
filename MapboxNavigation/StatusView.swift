@@ -49,7 +49,7 @@ public class StatusView: UIControl {
     var value: Double = 0 {
         didSet {
             sendActions(for: .valueChanged)
-            (delegate as? StatusViewDelegateDeprecations)?.statusView?(self, valueChangedTo: value)
+            (delegate as? StatusViewDelegateDeprecations)?.statusView(self, valueChangedTo: value)
         }
     }
     
@@ -93,7 +93,7 @@ public class StatusView: UIControl {
         addGestureRecognizer(tapRecognizer)
     }
     
-    func pan(_ sender: UIPanGestureRecognizer) {
+    @objc func pan(_ sender: UIPanGestureRecognizer) {
         guard isEnabled else { return }
         
         let location = sender.location(in: self)
@@ -108,7 +108,7 @@ public class StatusView: UIControl {
         }
     }
     
-    func tap(_ sender: UITapGestureRecognizer) {
+    @objc func tap(_ sender: UITapGestureRecognizer) {
         guard isEnabled else { return }
         
         let location = sender.location(in: self)

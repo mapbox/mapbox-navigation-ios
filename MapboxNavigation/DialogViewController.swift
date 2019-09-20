@@ -81,7 +81,7 @@ class DialogViewController: UIViewController {
         perform(#selector(dismissAnimated), with: nil, afterDelay: 0.5)
     }
     
-    func dismissAnimated() {
+    @objc func dismissAnimated() {
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(dismissAnimated), object: nil)
         dismiss(animated: true, completion: nil)
     }

@@ -1,11 +1,12 @@
 import UIKit
 import Solar
+import MapboxCoreNavigation
 
 /**
  The `StyleManagerDelegate` protocol defines a set of methods used for controlling the style.
  */
 
-public protocol StyleManagerDelegate: NSObjectProtocol {
+public protocol StyleManagerDelegate: class, UnimplementedLogging {
     /**
      Asks the delegate for a location to use when calculating sunset and sunrise.
      */
@@ -25,6 +26,28 @@ public protocol StyleManagerDelegate: NSObjectProtocol {
      */
     func styleManagerDidRefreshAppearance(_ styleManager: StyleManager)
 }
+
+public extension StyleManagerDelegate {
+    func location(for styleManager: StyleManager) -> CLLocation? {
+        logUnimplemented(level: .debug)
+        return nil
+    }
+    
+    func styleManager(_ styleManager: StyleManager, didApply style: Style) {
+        logUnimplemented(level: .debug)
+
+    }
+    
+    func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
+        logUnimplemented(level: .debug)
+    }
+    
+    var delegateIdentifier: String {
+        return "styleManagerDelegate"
+    }
+}
+
+
 
 /**
  A manager that handles `Style` objects. The manager listens for significant time changes
@@ -115,11 +138,11 @@ open class StyleManager: NSObject {
         perform(#selector(timeOfDayChanged), with: nil, afterDelay: interval+1)
     }
     
-    func preferredContentSizeChanged(_ notification: Notification) {
+    @objc func preferredContentSizeChanged(_ notification: Notification) {
         applyStyle()
     }
     
-    func timeOfDayChanged() {
+    @objc func timeOfDayChanged() {
         forceRefreshAppearanceIfNeeded()
         resetTimeOfDayTimer()
     }
@@ -134,7 +157,7 @@ open class StyleManager: NSObject {
                 style.apply()
                 currentStyleType = styleType
                 currentStyle = style
-                delegate?.styleManager?(self, didApply: style)
+                delegate?.styleManager(self, didApply: style)
             }
         }
         
@@ -148,7 +171,7 @@ open class StyleManager: NSObject {
                 style.apply()
                 currentStyleType = style.styleType
                 currentStyle = style
-                delegate?.styleManager?(self, didApply: style)
+                delegate?.styleManager(self, didApply: style)
             }
             return
         }
@@ -159,7 +182,7 @@ open class StyleManager: NSObject {
                 style.apply()
                 currentStyleType = style.styleType
                 currentStyle = style
-                delegate?.styleManager?(self, didApply: style)
+                delegate?.styleManager(self, didApply: style)
             }
             return
         }
@@ -210,7 +233,7 @@ open class StyleManager: NSObject {
             }
         }
         
-        delegate?.styleManagerDidRefreshAppearance?(self)
+        delegate?.styleManagerDidRefreshAppearance(self)
     }
 }
 
