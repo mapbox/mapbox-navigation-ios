@@ -416,6 +416,9 @@ extension MapboxNavigationService: CLLocationManagerDelegate {
 //MARK: - RouteControllerDelegate
 extension MapboxNavigationService: RouterDelegate {
     typealias Default = RouteController.DefaultBehavior
+    public var delegateIdentifier: String {
+        return "routerDelegate"
+    }
     
     public func router(_ router: Router, willRerouteFrom location: CLLocation) {
     

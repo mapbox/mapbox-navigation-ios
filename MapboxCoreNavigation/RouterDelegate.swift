@@ -13,7 +13,7 @@ import MapboxDirections
  - seealso: NavigationServiceDelegate
  */
 
-public protocol RouterDelegate: UnimplementedLogging {
+public protocol RouterDelegate: class, UnimplementedLogging {
     
     /**
      Returns whether the router should be allowed to calculate a new route.

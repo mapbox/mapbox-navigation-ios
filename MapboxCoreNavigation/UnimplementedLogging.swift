@@ -1,11 +1,11 @@
 import Foundation
 import Logging
 
-public protocol UnimplementedLogging: class {
+public protocol UnimplementedLogging {
         
     var delegateIdentifier: String { get }
     
-    func logUnimplemented(level: OSLog, function: String)
+    func logUnimplemented(level: OSLogType, function: String)
 }
 
 public extension UnimplementedLogging {
