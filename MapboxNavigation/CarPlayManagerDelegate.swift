@@ -13,7 +13,7 @@ import MapboxDirections
  */
 @available(iOS 12.0, *)
 
-public protocol CarPlayManagerDelegate {
+public protocol CarPlayManagerDelegate: class, UnimplementedLogging {
     
     /**
      Offers the delegate an opportunity to provide a customized list of leading bar buttons at the root of the template stack for the given activity.
@@ -166,5 +166,70 @@ public protocol CarPlayManagerDelegate {
      - returns: A Boolean value indicating whether to disable idle timer when carplay is connected and enable when disconnected.
      */
     func carplayManagerShouldDisableIdleTimer(_ carPlayManager: CarPlayManager) -> Bool
+}
+
+@available(iOS 12.0, *)
+extension CarPlayManagerDelegate {
+    var delegateIdentifier: String {
+        return "carPlayManagerDelegate"
+    }
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in carPlayTemplate: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]? {
+        logUnimplemented(level: .debug)
+        return nil
+    }
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in carPlayTemplate: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]? {
+        logUnimplemented(level: .debug)
+        return nil
+
+    }
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in carPlayTemplate: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]? {
+        logUnimplemented(level: .debug)
+        return nil
+    }
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void) {
+        logUnimplemented(level: .debug)
+    }
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void) {
+        logUnimplemented(level: .debug)
+    }
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager, didFailToFetchRouteBetween waypoints: [Waypoint]?, options: RouteOptions, error: NSError) -> CPNavigationAlert? {
+        logUnimplemented(level: .debug)
+        return nil
+    }
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager, willPreview trip: CPTrip) -> (CPTrip) {
+        logUnimplemented(level: .debug)
+        return trip
+    }
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager, willPreview trip: CPTrip, with previewTextConfiguration: CPTripPreviewTextConfiguration) -> (CPTripPreviewTextConfiguration) {
+        logUnimplemented(level: .debug)
+        return previewTextConfiguration
+    }
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager, selectedPreviewFor trip: CPTrip, using routeChoice: CPRouteChoice) {
+        logUnimplemented(level: .debug)
+    }
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith service: NavigationService) {
+        logUnimplemented(level: .debug)
+    }
+    
+    func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
+        logUnimplemented(level: .debug)
+    }
+    
+    func carplayManagerShouldDisableIdleTimer(_ carPlayManager: CarPlayManager) -> Bool {
+        logUnimplemented(level: .debug)
+        return false
+    }
+
+    
 }
 #endif
