@@ -8,65 +8,7 @@ import Turf
 class ArrowFillPolyline: MGLPolylineFeature {}
 class ArrowStrokePolyline: ArrowFillPolyline {}
 
-extension RouteMapViewController: NavigationComponent {
-        
-    func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
-        
-        let route = progress.route
-        let legIndex = progress.legIndex
-        let stepIndex = progress.currentLegProgress.stepIndex
-        
-        mapView.updatePreferredFrameRate(for: progress)
-        if currentLegIndexMapped != legIndex {
-            mapView.showWaypoints(route, legIndex: legIndex)
-            mapView.showRoutes([route], legIndex: legIndex)
-            
-            currentLegIndexMapped = legIndex
-        }
-        
-        if currentStepIndexMapped != stepIndex {
-            updateMapOverlays(for: progress)
-            currentStepIndexMapped = stepIndex
-        }
-        
-        if annotatesSpokenInstructions {
-            mapView.showVoiceInstructionsOnMap(route: route)
-        }
-    }
-    
-    public func navigationService(_ service: NavigationService, didPassSpokenInstructionPoint instruction: SpokenInstruction, routeProgress: RouteProgress) {
-        updateCameraAltitude(for: routeProgress)
-    }
-    
-    
-    func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
-        currentStepIndexMapped = 0
-        let route = router.route
-        let stepIndex = router.routeProgress.currentLegProgress.stepIndex
-        let legIndex = router.routeProgress.legIndex
-        
-        
-        mapView.addArrow(route: route, legIndex: legIndex, stepIndex: stepIndex + 1)
-        mapView.showRoutes([route], legIndex: legIndex)
-        mapView.showWaypoints(route)
-        
-        if annotatesSpokenInstructions {
-            mapView.showVoiceInstructionsOnMap(route: route)
-        }
-        
-        if isInOverviewMode {
-            if let coordinates = route.coordinates, let userLocation = router.location?.coordinate {
-                mapView.contentInset = contentInset(forOverviewing: true)
-                mapView.setOverheadCameraView(from: userLocation, along: coordinates, for: contentInset(forOverviewing: true))
-            }
-        } else {
-            mapView.tracksUserCourse = true
-            navigationView.wayNameView.isHidden = true
-        }
-        
-    }
-    
-}
+
 
 
 class RouteMapViewController: UIViewController {
@@ -507,6 +449,73 @@ class RouteMapViewController: UIViewController {
     fileprivate func leg(containing step: RouteStep) -> RouteLeg? {
         return route.legs.first { $0.steps.contains(step) }
     }
+}
+
+// MARK: - UnimplementedLogging
+extension RouteMapViewController: UnimplementedLogging {
+    var delegateIdentifier: String {
+          return "visualInstructionDelegate+navigationMapViewCourseTrackingDelegate+instructionsBannerViewDelegate+navigationMapViewDelegate"
+    }
+}
+// MARK: - NavigationComponent
+extension RouteMapViewController: NavigationComponent {
+        
+    func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
+        
+        let route = progress.route
+        let legIndex = progress.legIndex
+        let stepIndex = progress.currentLegProgress.stepIndex
+        
+        mapView.updatePreferredFrameRate(for: progress)
+        if currentLegIndexMapped != legIndex {
+            mapView.showWaypoints(route, legIndex: legIndex)
+            mapView.showRoutes([route], legIndex: legIndex)
+            
+            currentLegIndexMapped = legIndex
+        }
+        
+        if currentStepIndexMapped != stepIndex {
+            updateMapOverlays(for: progress)
+            currentStepIndexMapped = stepIndex
+        }
+        
+        if annotatesSpokenInstructions {
+            mapView.showVoiceInstructionsOnMap(route: route)
+        }
+    }
+    
+    public func navigationService(_ service: NavigationService, didPassSpokenInstructionPoint instruction: SpokenInstruction, routeProgress: RouteProgress) {
+        updateCameraAltitude(for: routeProgress)
+    }
+    
+    
+    func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
+        currentStepIndexMapped = 0
+        let route = router.route
+        let stepIndex = router.routeProgress.currentLegProgress.stepIndex
+        let legIndex = router.routeProgress.legIndex
+        
+        
+        mapView.addArrow(route: route, legIndex: legIndex, stepIndex: stepIndex + 1)
+        mapView.showRoutes([route], legIndex: legIndex)
+        mapView.showWaypoints(route)
+        
+        if annotatesSpokenInstructions {
+            mapView.showVoiceInstructionsOnMap(route: route)
+        }
+        
+        if isInOverviewMode {
+            if let coordinates = route.coordinates, let userLocation = router.location?.coordinate {
+                mapView.contentInset = contentInset(forOverviewing: true)
+                mapView.setOverheadCameraView(from: userLocation, along: coordinates, for: contentInset(forOverviewing: true))
+            }
+        } else {
+            mapView.tracksUserCourse = true
+            navigationView.wayNameView.isHidden = true
+        }
+        
+    }
+    
 }
 
 // MARK: - UIContentContainer
