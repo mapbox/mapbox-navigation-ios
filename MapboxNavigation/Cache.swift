@@ -5,7 +5,7 @@ public typealias CompletionHandler = () -> Void
 /**
  A cache consists of both in-memory and on-disk components, both of which can be reset.
  */
-
+@objc(MBBimodalCache)        
 public protocol BimodalCache {
     func clearMemory()
     func clearDisk(completion: CompletionHandler?)

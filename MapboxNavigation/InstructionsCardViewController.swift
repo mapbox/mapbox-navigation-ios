@@ -239,7 +239,8 @@ extension InstructionsCardViewController: UICollectionViewDelegate {
         isInPreview = true
         let previewIndex = indexPath.row
         
-        if isInPreview, let steps = steps, previewIndex < steps.endIndex {
+        assert(previewIndex >= 0, "Preview Index should not be negative")
+        if isInPreview, let steps = steps, previewIndex > 0, previewIndex < steps.endIndex {
             let step = steps[previewIndex]
             cardCollectionDelegate?.instructionsCardCollection(self, didPreview: step)
         }

@@ -8,13 +8,13 @@ import Turf
 
 open class ManeuverView: UIView {
 
-    public dynamic var primaryColor: UIColor = .defaultTurnArrowPrimary {
+    @objc public dynamic var primaryColor: UIColor = .defaultTurnArrowPrimary {
         didSet {
             setNeedsDisplay()
         }
     }
 
-    public dynamic var secondaryColor: UIColor = .defaultTurnArrowSecondary {
+    @objc public dynamic var secondaryColor: UIColor = .defaultTurnArrowSecondary {
         didSet {
             setNeedsDisplay()
         }

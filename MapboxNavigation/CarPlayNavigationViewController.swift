@@ -252,7 +252,7 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
      
      When this property is true, the map follows the user’s location and rotates when their course changes. Otherwise, the map shows an overview of the route.
      */
-    public dynamic var tracksUserCourse: Bool {
+    @objc public dynamic var tracksUserCourse: Bool {
         get {
             return mapView?.tracksUserCourse ?? false
         }

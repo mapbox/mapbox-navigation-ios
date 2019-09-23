@@ -1,7 +1,7 @@
 import Foundation
 
 
-public enum StyleType: Int, CustomStringConvertible {
+@objc public enum StyleType: Int, CustomStringConvertible {
     
     case day
     case night

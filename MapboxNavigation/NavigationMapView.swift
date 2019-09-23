@@ -82,16 +82,16 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     let instructionLabel = "instructionLabel"
     let instructionCircle = "instructionCircle"
     
-    dynamic public var trafficUnknownColor: UIColor = .trafficUnknown
-    dynamic public var trafficLowColor: UIColor = .trafficLow
-    dynamic public var trafficModerateColor: UIColor = .trafficModerate
-    dynamic public var trafficHeavyColor: UIColor = .trafficHeavy
-    dynamic public var trafficSevereColor: UIColor = .trafficSevere
-    dynamic public var routeCasingColor: UIColor = .defaultRouteCasing
-    dynamic public var routeAlternateColor: UIColor = .defaultAlternateLine
-    dynamic public var routeAlternateCasingColor: UIColor = .defaultAlternateLineCasing
-    dynamic public var maneuverArrowColor: UIColor = .defaultManeuverArrow
-    dynamic public var maneuverArrowStrokeColor: UIColor = .defaultManeuverArrowStroke
+    @objc dynamic public var trafficUnknownColor: UIColor = .trafficUnknown
+    @objc dynamic public var trafficLowColor: UIColor = .trafficLow
+    @objc dynamic public var trafficModerateColor: UIColor = .trafficModerate
+    @objc dynamic public var trafficHeavyColor: UIColor = .trafficHeavy
+    @objc dynamic public var trafficSevereColor: UIColor = .trafficSevere
+    @objc dynamic public var routeCasingColor: UIColor = .defaultRouteCasing
+    @objc dynamic public var routeAlternateColor: UIColor = .defaultAlternateLine
+    @objc dynamic public var routeAlternateCasingColor: UIColor = .defaultAlternateLineCasing
+    @objc dynamic public var maneuverArrowColor: UIColor = .defaultManeuverArrow
+    @objc dynamic public var maneuverArrowStrokeColor: UIColor = .defaultManeuverArrowStroke
     
     var userLocationForCourseTracking: CLLocation?
     var animatesUserLocation: Bool = false

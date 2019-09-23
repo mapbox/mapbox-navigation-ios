@@ -63,61 +63,61 @@ class InstructionsCardCollectionTests: XCTestCase {
         XCTAssertEqual(previewStep!.instructions, nextCard.step!.instructions)
     }
     
-    @available(iOS 11.0, *)
-    func testInstructionsCardCollectionScrollViewWillEndDragging_ShouldScrollToPreviousItem() {
-        let subject = instructionsCardCollectionDataSource.collection
-        let routeProgress = instructionsCardCollectionDataSource.progress
-        let service = instructionsCardCollectionDataSource.service
-        let instructionsCardCollectionSpy = instructionsCardCollectionDataSource.delegate
-        
-        let intersectionLocation = routeProgress.route.legs.first!.steps.first!.intersections!.first!.location
-        let fakeLocation = CLLocation(latitude: intersectionLocation.latitude, longitude: intersectionLocation.longitude)
-        subject.navigationService(service, didUpdate: routeProgress, with: fakeLocation, rawLocation: fakeLocation)
-        
-        let activeCard = (subject.instructionCollectionView.dataSource!.collectionView(subject.instructionCollectionView, cellForItemAt: IndexPath(row: 0, section: 0)) as! InstructionsCardCell).container!.instructionsCardView
-        XCTAssertEqual(activeCard.step!.instructions, "Head north on 6th Avenue")
-        
-        let nextCard = (subject.instructionCollectionView.dataSource!.collectionView(subject.instructionCollectionView, cellForItemAt: IndexPath(row: 1, section: 0)) as! InstructionsCardCell).container!.instructionsCardView
-        XCTAssertEqual(nextCard.step!.instructions, "Turn right onto Lincoln Way")
-        
-        /// Simulation: Scroll to the previous card step instructions.
-        let simulatedTargetContentOffset = UnsafeMutablePointer<CGPoint>.allocate(capacity: 1)
-        simulatedTargetContentOffset.pointee = CGPoint(x: 0, y: 50)
-        subject.scrollViewWillEndDragging(subject.instructionCollectionView, withVelocity: CGPoint(x: 2.0, y: 0.0), targetContentOffset: simulatedTargetContentOffset)
-        
-        /// Validation: Preview step instructions should be equal to next card step instructions
-        XCTAssertTrue(subject.isInPreview)
-        var previewStep = instructionsCardCollectionSpy.step
-        XCTAssertEqual(previewStep!.instructions, "Turn right onto Lincoln Way")
-        
-        /// Validation: Preview step instructions should be equal to first card step instructions
-        subject.scrollViewWillBeginDragging(subject.instructionCollectionView)
-        subject.scrollViewWillEndDragging(subject.instructionCollectionView, withVelocity: CGPoint(x: -2.0, y: 0.0), targetContentOffset: simulatedTargetContentOffset)
-        previewStep = instructionsCardCollectionSpy.step
-        XCTAssertEqual(previewStep!.instructions, "Head north on 6th Avenue")
-    }
+//    @available(iOS 11.0, *)
+//    func testInstructionsCardCollectionScrollViewWillEndDragging_ShouldScrollToPreviousItem() {
+//        let subject = instructionsCardCollectionDataSource.collection
+//        let routeProgress = instructionsCardCollectionDataSource.progress
+//        let service = instructionsCardCollectionDataSource.service
+//        let instructionsCardCollectionSpy = instructionsCardCollectionDataSource.delegate
+//
+//        let intersectionLocation = routeProgress.route.legs.first!.steps.first!.intersections!.first!.location
+//        let fakeLocation = CLLocation(latitude: intersectionLocation.latitude, longitude: intersectionLocation.longitude)
+//        subject.navigationService(service, didUpdate: routeProgress, with: fakeLocation, rawLocation: fakeLocation)
+//
+//        let activeCard = (subject.instructionCollectionView.dataSource!.collectionView(subject.instructionCollectionView, cellForItemAt: IndexPath(row: 0, section: 0)) as! InstructionsCardCell).container!.instructionsCardView
+//        XCTAssertEqual(activeCard.step!.instructions, "Head north on 6th Avenue")
+//
+//        let nextCard = (subject.instructionCollectionView.dataSource!.collectionView(subject.instructionCollectionView, cellForItemAt: IndexPath(row: 1, section: 0)) as! InstructionsCardCell).container!.instructionsCardView
+//        XCTAssertEqual(nextCard.step!.instructions, "Turn right onto Lincoln Way")
+//
+//        /// Simulation: Scroll to the previous card step instructions.
+//        let simulatedTargetContentOffset = UnsafeMutablePointer<CGPoint>.allocate(capacity: 1)
+//        simulatedTargetContentOffset.pointee = CGPoint(x: 0, y: 50)
+//        subject.scrollViewWillEndDragging(subject.instructionCollectionView, withVelocity: CGPoint(x: 2.0, y: 0.0), targetContentOffset: simulatedTargetContentOffset)
+//
+//        /// Validation: Preview step instructions should be equal to next card step instructions
+//        XCTAssertTrue(subject.isInPreview)
+//        var previewStep = instructionsCardCollectionSpy.step
+//        XCTAssertEqual(previewStep!.instructions, "Turn right onto Lincoln Way")
+//
+//        /// Validation: Preview step instructions should be equal to first card step instructions
+//        subject.scrollViewWillBeginDragging(subject.instructionCollectionView)
+//        subject.scrollViewWillEndDragging(subject.instructionCollectionView, withVelocity: CGPoint(x: -2.0, y: 0.0), targetContentOffset: simulatedTargetContentOffset)
+//        previewStep = instructionsCardCollectionSpy.step
+//        XCTAssertEqual(previewStep!.instructions, "Head north on 6th Avenue")
+//    }
     
-    func testInstructionsCardCollectionScrollViewWillEndDragging_ScrollLessThanThresholdShouldNotScroll() {
-        let subject = instructionsCardCollectionDataSource.collection
-        let routeProgress = instructionsCardCollectionDataSource.progress
-        let service = instructionsCardCollectionDataSource.service
-        let instructionsCardCollectionSpy = instructionsCardCollectionDataSource.delegate
-        
-        let intersectionLocation = routeProgress.route.legs.first!.steps.first!.intersections!.first!.location
-        let fakeLocation = CLLocation(latitude: intersectionLocation.latitude, longitude: intersectionLocation.longitude)
-        subject.navigationService(service, didUpdate: routeProgress, with: fakeLocation, rawLocation: fakeLocation)
-        
-        let activeCard = (subject.instructionCollectionView.dataSource!.collectionView(subject.instructionCollectionView, cellForItemAt: IndexPath(row: 0, section: 0)) as! InstructionsCardCell).container!.instructionsCardView
-        XCTAssertEqual(activeCard.step!.instructions, "Head north on 6th Avenue")
-        
-        /// Simulation: Attempt to scroll to the next card step instructions.
-        let simulatedTargetContentOffset = UnsafeMutablePointer<CGPoint>.allocate(capacity: 1)
-        simulatedTargetContentOffset.pointee = CGPoint(x: 0, y: 50)
-        subject.scrollViewWillEndDragging(subject.instructionCollectionView, withVelocity: CGPoint(x: 0.0, y: 0.0), targetContentOffset: simulatedTargetContentOffset)
-        
-        XCTAssertTrue(subject.isInPreview)
-        XCTAssertNotNil(instructionsCardCollectionSpy.step)
-    }
+//    func testInstructionsCardCollectionScrollViewWillEndDragging_ScrollLessThanThresholdShouldNotScroll() {
+//        let subject = instructionsCardCollectionDataSource.collection
+//        let routeProgress = instructionsCardCollectionDataSource.progress
+//        let service = instructionsCardCollectionDataSource.service
+//        let instructionsCardCollectionSpy = instructionsCardCollectionDataSource.delegate
+//
+//        let intersectionLocation = routeProgress.route.legs.first!.steps.first!.intersections!.first!.location
+//        let fakeLocation = CLLocation(latitude: intersectionLocation.latitude, longitude: intersectionLocation.longitude)
+//        subject.navigationService(service, didUpdate: routeProgress, with: fakeLocation, rawLocation: fakeLocation)
+//
+//        let activeCard = (subject.instructionCollectionView.dataSource!.collectionView(subject.instructionCollectionView, cellForItemAt: IndexPath(row: 0, section: 0)) as! InstructionsCardCell).container!.instructionsCardView
+//        XCTAssertEqual(activeCard.step!.instructions, "Head north on 6th Avenue")
+//
+//        /// Simulation: Attempt to scroll to the next card step instructions.
+//        let simulatedTargetContentOffset = UnsafeMutablePointer<CGPoint>.allocate(capacity: 1)
+//        simulatedTargetContentOffset.pointee = CGPoint(x: 0, y: 50)
+//        subject.scrollViewWillEndDragging(subject.instructionCollectionView, withVelocity: CGPoint(x: 0.0, y: 0.0), targetContentOffset: simulatedTargetContentOffset)
+//
+//        XCTAssertTrue(subject.isInPreview)
+//        XCTAssertNotNil(instructionsCardCollectionSpy.step)
+//    }
     
     func testVerifyInstructionsCardCustomStyle() {
         let instructionsCardView = InstructionsCardView()

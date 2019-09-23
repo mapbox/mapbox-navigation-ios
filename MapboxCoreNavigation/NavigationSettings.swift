@@ -24,19 +24,19 @@ public class NavigationSettings: NSObject {
      
      This volume is relative to the system’s volume where 1.0 is same volume as the system.
     */
-    public dynamic var voiceVolume: Float = 1.0
+    @objc public dynamic var voiceVolume: Float = 1.0
     
     /**
      Specifies whether to mute the voice controller or not.
      */
-    public dynamic var voiceMuted : Bool = false
+    @objc public dynamic var voiceMuted : Bool = false
     
     /**
      Specifies the preferred distance measurement unit.
      - note: Anything but `kilometer` and `mile` will fall back to the default measurement for the current locale.
         Meters and feets will be used when the presented distances are small enough. See `DistanceFormatter` for more information.
      */
-    public dynamic var distanceUnit : LengthFormatter.Unit = Locale.current.usesMetric ? .kilometer : .mile
+    @objc public dynamic var distanceUnit : LengthFormatter.Unit = Locale.current.usesMetric ? .kilometer : .mile
     
     var usesMetric: Bool {
         get {
