@@ -1,5 +1,5 @@
 import Foundation
-import Logging
+import os.log
 
 public protocol UnimplementedLogging {
         

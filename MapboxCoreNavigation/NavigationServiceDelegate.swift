@@ -1,7 +1,6 @@
 import Foundation
 import CoreLocation
 import MapboxDirections
-import Logging
 
 /**
  A navigation service delegate interacts with one or more `NavigationService` instances (such as `MapboxNavigationService` objects) during turn-by-turn navigation. This protocol is the main way that your application can synchronize its state with the SDK’s location-related functionality. Each of the protocol’s methods is optional.
