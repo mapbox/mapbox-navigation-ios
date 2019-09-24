@@ -21,7 +21,7 @@ public protocol InstructionsCardCollectionDelegate: InstructionsCardContainerVie
      - returns: The preferred size of the cards for each cell in the instructions card collection.
      */
     
-    func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardViewController, cardSizeFor traitCollection: UITraitCollection) -> CGSize
+    func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardViewController, cardSizeFor traitCollection: UITraitCollection) -> CGSize?
 }
 public extension InstructionsCardCollectionDelegate {
     var delegateIdentifier: String {
@@ -32,9 +32,9 @@ public extension InstructionsCardCollectionDelegate {
         logUnimplemented(level: .debug)
     }
     
-    func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardViewController, cardSizeFor traitCollection: UITraitCollection) -> CGSize {
+    func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardViewController, cardSizeFor traitCollection: UITraitCollection) -> CGSize? {
         logUnimplemented(level: .info)
-        return .zero
+        return nil
     }
     
     
