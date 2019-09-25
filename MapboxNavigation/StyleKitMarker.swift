@@ -5,7 +5,7 @@ public class StyleKitMarker: NSObject {
 
     //// Drawing Methods
 
-    dynamic public class func drawMarker(frame: CGRect = CGRect(x: 57, y: 27, width: 50, height: 50), innerColor: UIColor = UIColor(red: 1.000, green: 1.000, blue: 1.000, alpha: 1.000), shadowColor: UIColor = UIColor(red: 0.000, green: 0.000, blue: 0.000, alpha: 1.000), pinColor: UIColor = UIColor(red: 0.290, green: 0.565, blue: 0.886, alpha: 1.000), strokeColor: UIColor = UIColor(red: 1.000, green: 1.000, blue: 1.000, alpha: 1.000)) {
+    @objc dynamic public class func drawMarker(frame: CGRect = CGRect(x: 57, y: 27, width: 50, height: 50), innerColor: UIColor = UIColor(red: 1.000, green: 1.000, blue: 1.000, alpha: 1.000), shadowColor: UIColor = UIColor(red: 0.000, green: 0.000, blue: 0.000, alpha: 1.000), pinColor: UIColor = UIColor(red: 0.290, green: 0.565, blue: 0.886, alpha: 1.000), strokeColor: UIColor = UIColor(red: 1.000, green: 1.000, blue: 1.000, alpha: 1.000)) {
         //// General Declarations
         let context = UIGraphicsGetCurrentContext()!
 

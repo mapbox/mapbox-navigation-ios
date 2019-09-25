@@ -5,13 +5,10 @@ import Mapbox
 let PuckSize: CGFloat = 45
 
 /**
- A view that represents the user’s location and course on a `NavigationMapView`.
+ A protocol that represents a `UIView` which tracks the user’s location and course on a `NavigationMapView`.
  */
+public protocol CourseUpdatable where Self: UIView {
 
-public protocol UserCourseView where Self: UIView {
-//    var location: CLLocation { get set }
-//    var direction: CLLocationDegrees { get set }
-//    var pitch: CLLocationDegrees { get set }
     
     /**
      Updates the view to reflect the given location and other camera properties.
@@ -19,7 +16,7 @@ public protocol UserCourseView where Self: UIView {
     func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, tracksUserCourse: Bool)
 }
 
-public extension UserCourseView {
+public extension CourseUpdatable {
     func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, tracksUserCourse: Bool) {
         applyDefaultUserPuckTransformation(location: location, pitch: pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse)
     }
@@ -41,7 +38,7 @@ public extension UserCourseView {
  A view representing the user’s location on screen.
  */
 
-public class UserPuckCourseView: UIView, UserCourseView {
+public class UserPuckCourseView: UIView, CourseUpdatable {
     
     /**
      Transforms the location of the user puck.

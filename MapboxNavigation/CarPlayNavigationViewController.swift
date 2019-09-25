@@ -204,7 +204,7 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
             var contentFrame = mapView.bounds.inset(by: insets)
 
             // Avoid letting the puck go partially off-screen, and add a comfortable padding beyond that.
-            let courseViewBounds = mapView.userCourseView?.bounds ?? .zero
+            let courseViewBounds = mapView.userCourseView.bounds
             // If it is not possible to position it right above the content area, center it at the remaining space.
             contentFrame = contentFrame.insetBy(dx: min(NavigationMapView.courseViewMinimumInsets.left + courseViewBounds.width / 2.0, contentFrame.width / 2.0),
                                                 dy: min(NavigationMapView.courseViewMinimumInsets.top + courseViewBounds.height / 2.0, contentFrame.height / 2.0))
