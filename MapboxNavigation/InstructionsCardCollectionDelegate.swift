@@ -24,16 +24,13 @@ public protocol InstructionsCardCollectionDelegate: InstructionsCardContainerVie
     func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardViewController, cardSizeFor traitCollection: UITraitCollection) -> CGSize?
 }
 public extension InstructionsCardCollectionDelegate {
-    var delegateIdentifier: String {
-        return "instructionsCardCollectionDelegate"
-    }
     
     func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardViewController, didPreview step: RouteStep) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: InstructionsCardCollectionDelegate.self, level: .debug)
     }
     
     func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardViewController, cardSizeFor traitCollection: UITraitCollection) -> CGSize? {
-        logUnimplemented(level: .info)
+        logUnimplemented(protocolType: InstructionsCardCollectionDelegate.self, level: .info)
         return nil
     }
     

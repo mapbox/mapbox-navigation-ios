@@ -269,10 +269,6 @@ class NavigationViewControllerTests: XCTestCase {
 
 extension NavigationViewControllerTests: NavigationViewControllerDelegate, StyleManagerDelegate {
     
-    var delegateIdentifier: String {
-        return "navigationViewControllerTests"
-    }
-    
     func location(for styleManager: StyleManager) -> CLLocation? {
         return dependencies.poi.first!
     }

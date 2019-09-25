@@ -57,12 +57,9 @@ public protocol VisualInstructionDelegate: class, UnimplementedLogging {
 }
 
 public extension VisualInstructionDelegate {
-    var delegateIdentifier: String {
-        return "visualInstructionDelegate"
-    }
     
     func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: InstructionLabel.self, level: .debug)
         return nil
     }
 }

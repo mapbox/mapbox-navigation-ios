@@ -41,24 +41,18 @@ public protocol FeedbackViewControllerDelegate: class, UnimplementedLogging {
 
 extension FeedbackViewControllerDelegate {
     func feedbackViewControllerDidOpen(_ feedbackViewController: FeedbackViewController) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: FeedbackViewControllerDelegate.self, level: .debug)
     }
     
     func feedbackViewController(_ feedbackViewController: FeedbackViewController, didSend feedbackItem: FeedbackItem, uuid: UUID) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: FeedbackViewControllerDelegate.self, level: .debug)
 
     }
     
     func feedbackViewControllerDidCancel(_ feedbackViewController: FeedbackViewController) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: FeedbackViewControllerDelegate.self, level: .debug)
 
-    }
-    
-    var delegateIdentifier: String {
-        return "feedbackViewControllerDelegate"
-    }
-    
-    
+    } 
 }
 
 /**

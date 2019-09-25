@@ -32,17 +32,14 @@ public protocol InstructionsCardContainerViewDelegate: VisualInstructionDelegate
 }
 
 public extension InstructionsCardContainerViewDelegate {
-    public var delegateIdentifier: String {
-        return "instructionsCardContainerViewDelegate"
-    }
     
     func primaryLabel(_ primaryLabel: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: InstructionsCardContainerViewDelegate.self, level: .debug)
         return nil
     }
     
     func secondaryLabel(_ secondaryLabel: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: InstructionsCardContainerViewDelegate.self,level: .debug)
         return nil
     }
     

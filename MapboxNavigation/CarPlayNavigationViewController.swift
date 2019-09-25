@@ -82,9 +82,6 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
     
     var styleObservation: NSKeyValueObservation?
     
-    ///:nodoc: Used for logging.
-    public var delegateIdentifier: String = "styleManagerDelegate+navigationMapViewDelegate"
-    
     /**
      Creates a new CarPlay navigation view controller for the given route controller and user interface.
      
@@ -546,12 +543,9 @@ public protocol CarPlayNavigationDelegate: class, UnimplementedLogging {
 
 @available(iOS 12.0, *)
 public extension CarPlayNavigationDelegate {
-    var delegateIdentifier: String {
-        return "carPlayNavigationDelegate"
-    }
-    
+
     func carPlayNavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: CarPlayNavigationDelegate.self, level: .debug)
         
     }
     

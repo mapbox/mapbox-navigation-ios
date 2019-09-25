@@ -116,50 +116,50 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
 
 public extension NavigationMapViewDelegate {
     func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
         return nil
     }
     
     func navigationMapView(_ mapView: NavigationMapView, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
         return nil
     }
     
     func navigationMapView(_ mapView: NavigationMapView, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
         return nil
     }
     
     func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
         return nil
     }
     
     func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
     }
     
     func navigationMapView(_ mapView: NavigationMapView, didSelect waypoint: Waypoint) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
     }
     
     func navigationMapView(_ mapView: NavigationMapView, shapeFor routes: [Route]) -> MGLShape? {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
         return nil
     }
     
     func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeFor route: Route) -> MGLShape? {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
         return nil
     }
     
     func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint], legIndex: Int) -> MGLShape? {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
         return nil
     }
     
     func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
         return .zero
     }
     
@@ -172,12 +172,6 @@ public extension NavigationMapViewDelegate {
         //no-op, deprecated
         return nil
     }
-    
-    var delegateIdentifier: String {
-        return "navigationMapViewDelegate"
-    }
-    
-    
 }
 
 // MARK: NavigationMapViewCourseTrackingDelegate
@@ -205,16 +199,10 @@ public protocol NavigationMapViewCourseTrackingDelegate: class, UnimplementedLog
 
 public extension NavigationMapViewCourseTrackingDelegate {
     func navigationMapViewDidStartTrackingCourse(_ mapView: NavigationMapView) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
     }
     
     func navigationMapViewDidStopTrackingCourse(_ mapView: NavigationMapView) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
     }
-    
-    var delegateIdentifier: String {
-        return "navigationMapViewCourseTrackingDelegate"
-    }
-    
-    
 }

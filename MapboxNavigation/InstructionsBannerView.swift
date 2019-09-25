@@ -30,7 +30,7 @@ public protocol InstructionsBannerViewDelegate: class, UnimplementedLogging {
 
 public extension InstructionsBannerViewDelegate {
     func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: InstructionsBannerViewDelegate.self, level: .debug)
     }
     
     func didDragInstructionsBanner(_ sender: BaseInstructionsBannerView) {
@@ -38,11 +38,7 @@ public extension InstructionsBannerViewDelegate {
     }
     
     func didSwipeInstructionsBanner(_ sender: BaseInstructionsBannerView, swipeDirection direction: UISwipeGestureRecognizer.Direction) {
-        logUnimplemented(level: .debug)
-    }
-    
-    var delegateIdentifier: String {
-        return "instructionsBannerViewDelegate"
+        logUnimplemented(protocolType: InstructionsBannerViewDelegate.self, level: .debug)
     }
     
     

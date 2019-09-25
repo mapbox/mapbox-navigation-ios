@@ -201,76 +201,74 @@ public protocol NavigationServiceDelegate: class, UnimplementedLogging {
 
 
 public extension NavigationServiceDelegate {
-    var delegateIdentifier: String {
-        return "navigationServiceDelegate"
-    }
+
     
     func navigationService(_ service: NavigationService, shouldRerouteFrom location: CLLocation) -> Bool {
-        logUnimplemented(level: .debug)
+        logUnimplemented( protocolType: NavigationServiceDelegate.self, level: .debug)
         return MapboxNavigationService.Default.shouldRerouteFromLocation
     }
     
     func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
     }
     
     func navigationService(_ service: NavigationService, shouldDiscard location: CLLocation) -> Bool {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
         return MapboxNavigationService.Default.shouldDiscardLocation
     }
     
     func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
-        logUnimplemented(level: .info)
+        logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .info)
     }
     
     func navigationService(_ service: NavigationService, didFailToRerouteWith error: Error) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
     }
     
     func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
-        logUnimplemented(level: .info)
+        logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .info)
 
     }
     
     func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
     }
     
     func navigationService(_ service: NavigationService, didPassSpokenInstructionPoint instruction: SpokenInstruction, routeProgress: RouteProgress) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
     }
     
     func navigationService(_ service: NavigationService, willArriveAt waypoint: Waypoint, after remainingTimeInterval: TimeInterval, distance: CLLocationDistance) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
     }
     
     func navigationService(_ service: NavigationService, didArriveAt waypoint: Waypoint) -> Bool {
-        logUnimplemented(level: .info)
+        logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .info)
         return MapboxNavigationService.Default.didArriveAtWaypoint
     }
     
     func navigationService(_ service: NavigationService, shouldPreventReroutesWhenArrivingAt waypoint: Waypoint) -> Bool {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
         return MapboxNavigationService.Default.shouldPreventReroutesWhenArrivingAtWaypoint
     }
     
     func navigationServiceShouldDisableBatteryMonitoring(_ service: NavigationService) -> Bool {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
         return MapboxNavigationService.Default.shouldDisableBatteryMonitoring
     }
     func navigationService(_ service: NavigationService, willBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
     }
     
     func navigationService(_ service: NavigationService, didBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
     }
     
     func navigationService(_ service: NavigationService, willEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
     }
     
     func navigationService(_ service: NavigationService, didEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
     }
 }

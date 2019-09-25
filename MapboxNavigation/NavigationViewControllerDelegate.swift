@@ -8,7 +8,7 @@ import MapboxCoreNavigation
  For convenience, several location-related methods in the `NavigationServiceDelegate` protocol have corresponding methods in this protocol.
  */
 
-public protocol NavigationViewControllerDelegate: VisualInstructionDelegate, UnimplementedLogging {
+public protocol NavigationViewControllerDelegate: VisualInstructionDelegate{
     /**
      Called when the navigation view controller is dismissed, such as when the user ends a trip.
      
@@ -201,109 +201,105 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate, Uni
 }
 
 public extension NavigationViewControllerDelegate {
-    
-    var delegateIdentifier: String {
-        return "navigationViewControllerDelegate"
-    }
-    
+
     func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
     }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
-        logUnimplemented(level: .info)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .info)
 
     }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, willArriveAt waypoint: Waypoint, after remainingTimeInterval: TimeInterval, distance: CLLocationDistance) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
     }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
         return RouteController.DefaultBehavior.didArriveAtWaypoint
         
     }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
         return RouteController.DefaultBehavior.shouldRerouteFromLocation
     }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, willRerouteFrom location: CLLocation?) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
     }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, didRerouteAlong route: Route) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
     }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, didFailToRerouteWith error: Error) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
     }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
         return nil
     }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
         return nil
     }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, shapeFor routes: [Route]) -> MGLShape? {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
         return nil
     }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, simplifiedShapeFor route: Route) -> MGLShape? {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
         return nil
     }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
         return nil
     }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
         return nil
     }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, shapeFor waypoints: [Waypoint], legIndex: Int) -> MGLShape? {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
         return nil
     }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, didSelect route: Route) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
     }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint {
-        logUnimplemented(level: .info)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .info)
         return .zero
     }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, shouldDiscard location: CLLocation) -> Bool {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
         return RouteController.DefaultBehavior.shouldDiscardLocation
         
     }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, roadNameAt location: CLLocation) -> String? {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
         return nil
     }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
         return nil
     }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
         return nil
     }
     

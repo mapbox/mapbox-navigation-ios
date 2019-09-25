@@ -29,21 +29,17 @@ public protocol StyleManagerDelegate: class, UnimplementedLogging {
 
 public extension StyleManagerDelegate {
     func location(for styleManager: StyleManager) -> CLLocation? {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: StyleManagerDelegate.self, level: .debug)
         return nil
     }
     
     func styleManager(_ styleManager: StyleManager, didApply style: Style) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: StyleManagerDelegate.self, level: .debug)
 
     }
     
     func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
-        logUnimplemented(level: .debug)
-    }
-    
-    var delegateIdentifier: String {
-        return "styleManagerDelegate"
+        logUnimplemented(protocolType: StyleManagerDelegate.self, level: .debug)
     }
 }
 

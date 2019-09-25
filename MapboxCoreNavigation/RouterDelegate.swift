@@ -15,6 +15,7 @@ import MapboxDirections
 
 public protocol RouterDelegate: class, UnimplementedLogging {
     
+    
     /**
      Returns whether the router should be allowed to calculate a new route.
      
@@ -152,61 +153,58 @@ public protocol RouterDelegate: class, UnimplementedLogging {
 }
 
 extension RouterDelegate {
-    
-    public var delegateIdentifier: String {
-        return "routerDelegate"
-    }
+
     
     func router(_ router: Router, shouldRerouteFrom location: CLLocation) -> Bool {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
         return RouteController.DefaultBehavior.shouldRerouteFromLocation
     }
     
     func router(_ router: Router, willRerouteFrom location: CLLocation) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
     }
     
     func router(_ router: Router, shouldDiscard location: CLLocation) -> Bool {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
         return RouteController.DefaultBehavior.shouldDiscardLocation
     }
     
     func router(_ router: Router, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
-        logUnimplemented(level: .info)
+        logUnimplemented(protocolType: RouterDelegate.self, level: .info)
     }
     
     func router(_ router: Router, didFailToRerouteWith error: Error) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
     }
     
     func router(_ router: Router, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
-        logUnimplemented(level: .info)
+        logUnimplemented(protocolType: RouterDelegate.self, level: .info)
     }
     
     func router(_ router: Router, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
     }
     
     func router(_ router: Router, didPassSpokenInstructionPoint instruction: SpokenInstruction, routeProgress: RouteProgress) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
     }
     
     func router(_ router: Router, willArriveAt waypoint: Waypoint, after remainingTimeInterval: TimeInterval, distance: CLLocationDistance) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
     }
     
     func router(_ router: Router, didArriveAt waypoint: Waypoint) -> Bool {
-        logUnimplemented(level: .info)
+        logUnimplemented(protocolType: RouterDelegate.self, level: .info)
         return RouteController.DefaultBehavior.didArriveAtWaypoint
     }
     
     func router(_ router: Router, shouldPreventReroutesWhenArrivingAt waypoint: Waypoint) -> Bool {
-        logUnimplemented(level: .info)
+        logUnimplemented(protocolType: RouterDelegate.self, level: .info)
         return RouteController.DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint
     }
     
     func routerShouldDisableBatteryMonitoring(_ router: Router) -> Bool {
-        logUnimplemented(level: .info)
+        logUnimplemented(protocolType: RouterDelegate.self, level: .info)
         return RouteController.DefaultBehavior.shouldDisableBatteryMonitoring
     }
     

@@ -19,36 +19,32 @@ public protocol TopBannerViewControllerDelegate: class, UnimplementedLogging {
 
 public extension TopBannerViewControllerDelegate {
     func topBanner(_ banner: TopBannerViewController, didSwipeInDirection direction: UISwipeGestureRecognizer.Direction) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: TopBannerViewControllerDelegate.self,  level: .debug)
     }
     
     func topBanner(_ banner: TopBannerViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: TopBannerViewControllerDelegate.self,  level: .debug)
 
     }
     
     func topBanner(_ banner: TopBannerViewController, willDisplayStepsController: StepsViewController) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: TopBannerViewControllerDelegate.self,  level: .debug)
 
     }
     
     func topBanner(_ banner: TopBannerViewController, didDisplayStepsController: StepsViewController) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: TopBannerViewControllerDelegate.self,  level: .debug)
 
     }
     
     func topBanner(_ banner: TopBannerViewController, willDismissStepsController: StepsViewController) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: TopBannerViewControllerDelegate.self,  level: .debug)
 
     }
     
     func topBanner(_ banner: TopBannerViewController, didDismissStepsController: StepsViewController) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: TopBannerViewControllerDelegate.self,  level: .debug)
 
-    }
-    
-    var delegateIdentifier: String {
-        return "topBannerViewControllerDelegate"
     }
     
     
@@ -380,9 +376,6 @@ open class TopBannerViewController: UIViewController {
 
 // MARK: - NavigationComponent Conformance
 extension TopBannerViewController: NavigationComponent {
-    public var delegateIdentifier: String {
-        return "navigationComponent"
-    }
     
     public func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         routeProgress = progress

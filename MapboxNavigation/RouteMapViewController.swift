@@ -451,12 +451,6 @@ class RouteMapViewController: UIViewController {
     }
 }
 
-// MARK: - UnimplementedLogging
-extension RouteMapViewController: UnimplementedLogging {
-    var delegateIdentifier: String {
-          return "visualInstructionDelegate+navigationMapViewCourseTrackingDelegate+instructionsBannerViewDelegate+navigationMapViewDelegate"
-    }
-}
 // MARK: - NavigationComponent
 extension RouteMapViewController: NavigationComponent {
         

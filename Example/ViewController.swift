@@ -358,13 +358,8 @@ class ViewController: UIViewController {
     }
 }
 
-extension ViewController: UnimplementedLogging {
-    var delegateIdentifier: String {
-        return "navigationMapViewDelegate+navigationViewControllerDelegate+voiceControllerDelegate+waypointConfirmationViewControllerDelegate"
-    }
-}
-
 extension ViewController: MGLMapViewDelegate {
+    
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
         guard mapView == self.mapView else {
             return

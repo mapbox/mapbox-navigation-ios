@@ -359,12 +359,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     }
 }
 
-extension NavigationViewController: UnimplementedLogging {
-    public var delegateIdentifier: String {
-        return "visualInstructionDelegate+instructionsBannerViewDelegate+navigationMapViewDelegate"
-    }
-}
-
 //MARK: - RouteMapViewControllerDelegate
 extension NavigationViewController: RouteMapViewControllerDelegate {
     public func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {

@@ -279,12 +279,6 @@ extension InstructionsCardViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-extension InstructionsCardViewController: UnimplementedLogging {
-    public var delegateIdentifier: String {
-        return "visualInstructionDelegate+instructionsCardContainerViewDelegate"
-    }
-}
-
 /// :nodoc:
 extension InstructionsCardViewController: NavigationComponent {
     

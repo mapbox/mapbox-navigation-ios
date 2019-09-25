@@ -274,19 +274,15 @@ public protocol VoiceControllerDelegate: class, UnimplementedLogging {
 
 extension VoiceControllerDelegate {
     func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: Error) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: VoiceControllerDelegate.self, level: .debug)
     }
     
     func voiceController(_ voiceController: RouteVoiceController, didInterrupt interruptedInstruction: SpokenInstruction, with interruptingInstruction: SpokenInstruction) {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: VoiceControllerDelegate.self, level: .debug)
     }
     
     func voiceController(_ voiceController: RouteVoiceController, willSpeak instruction: SpokenInstruction, routeProgress: RouteProgress) -> SpokenInstruction? {
-        logUnimplemented(level: .debug)
+        logUnimplemented(protocolType: VoiceControllerDelegate.self, level: .debug)
         return nil
-    }
-    
-    var delegateIdentifier: String {
-        return "voiceControllerDelegate"
     }
 }
