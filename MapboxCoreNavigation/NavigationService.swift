@@ -86,7 +86,7 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
      
      To synchronize your application’s state with the turn-by-turn navigation experience, set this property before starting the navigation session.
      */
-    weak var delegate: NavigationServiceDelegate? { get set }
+    var delegate: NavigationServiceDelegate? { get set }
 
     /**
      Starts the navigation service.
