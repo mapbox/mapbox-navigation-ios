@@ -10,7 +10,7 @@ extension NSError {
             NSLocalizedFailureReasonErrorKey: localizedFailureReason
         ]
         if let spokenInstructionCode = spokenInstructionCode {
-            userInfo[MBSpokenInstructionErrorCodeKey] = String(spokenInstructionCode.rawValue)
+            userInfo[SpokenInstructionErrorCodeKey] = String(spokenInstructionCode.rawValue)
         }
         self.init(domain: MBErrorDomain, code: code.rawValue, userInfo: userInfo)
     }

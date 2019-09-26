@@ -1,14 +1,5 @@
 import Foundation
 
-extension Notification.Name {
-    /**
-     Posted when something changes in the shared `NavigationSettings` object.
-     
-     The user info dictionary indicates which keys and values changed.
-     */
-    public static let navigationSettingsDidChange = MBNavigationSettingsDidChange
-}
-
 /**
  A wrapper for the `UserDefaults` class for navigation-specific settings.
  
@@ -95,7 +86,7 @@ public class NavigationSettings: NSObject {
                 guard let val = change?[.newKey] else { continue }
                 
                 UserDefaults.standard.set(val, forKey: key.prefixed)
-                NotificationCenter.default.post(name: .navigationSettingsDidChange, object: nil, userInfo: [key: val])
+                NotificationCenter.default.post(name: .navigationSettingsDidChangeNotification, object: nil, userInfo: [key: val])
                 
                 found = true
                 break

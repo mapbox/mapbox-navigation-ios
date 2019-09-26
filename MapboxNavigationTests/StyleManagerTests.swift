@@ -133,8 +133,8 @@ class StyleManagerTests: XCTestCase {
         
         let dayExpectation = expectation(forNotification: .styleManagerDidApplyStyle, object: nil) { (notification) -> Bool in
             let userInfo = notification.userInfo
-            let style = userInfo?[MBStyleManagerNotificationUserInfoKey.styleKey] as? Style
-            let styleManager = userInfo?[MBStyleManagerNotificationUserInfoKey.styleManagerKey] as? StyleManager
+            let style = userInfo?[StyleManagerNotificationUserInfoKey.styleKey] as? Style
+            let styleManager = userInfo?[StyleManagerNotificationUserInfoKey.styleManagerKey] as? StyleManager
             XCTAssertNotNil(style)
             XCTAssertNotNil(styleManager)
             return style?.styleType == StyleType.day
@@ -142,8 +142,8 @@ class StyleManagerTests: XCTestCase {
         
         let nightExpectation = expectation(forNotification: .styleManagerDidApplyStyle, object: nil) { (notification) -> Bool in
             let userInfo = notification.userInfo
-            let style = userInfo?[MBStyleManagerNotificationUserInfoKey.styleKey] as? Style
-            let styleManager = userInfo?[MBStyleManagerNotificationUserInfoKey.styleManagerKey] as? StyleManager
+            let style = userInfo?[StyleManagerNotificationUserInfoKey.styleKey] as? Style
+            let styleManager = userInfo?[StyleManagerNotificationUserInfoKey.styleManagerKey] as? StyleManager
             XCTAssertNotNil(style)
             XCTAssertNotNil(styleManager)
             return style?.styleType == StyleType.night

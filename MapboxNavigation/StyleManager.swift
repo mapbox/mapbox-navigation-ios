@@ -199,8 +199,8 @@ open class StyleManager: NSObject {
     
     private func postDidApplyStyleNotification(style: Style) {
         NotificationCenter.default.post(name: .styleManagerDidApplyStyle, object: self, userInfo: [
-            MBStyleManagerNotificationUserInfoKey.styleKey: style,
-            MBStyleManagerNotificationUserInfoKey.styleManagerKey: self
+            StyleManagerNotificationUserInfoKey.styleKey: style,
+            StyleManagerNotificationUserInfoKey.styleManagerKey: self
             ])
     }
     

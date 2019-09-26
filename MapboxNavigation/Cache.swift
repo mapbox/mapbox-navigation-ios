@@ -115,7 +115,7 @@ internal class FileCache {
     }
 
     func cacheKeyForKey(_ key: String) -> String {
-        return key.md5()
+        return key.md5
     }
 
     private func createCacheDirIfNeeded(_ url: URL, fileManager: FileManager) {

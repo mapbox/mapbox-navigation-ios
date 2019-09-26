@@ -119,52 +119,100 @@ public var RouteControllerIncorrectCourseMultiplier: Int = 4
  */
 public var RouteControllerMaximumSpeedForUsingCurrentStep: CLLocationSpeed = 1
 
-/**
- Keys in the user info dictionaries of various notifications posted by instances
- of `RouteController`.
- */
-public typealias RouteControllerNotificationUserInfoKey = MBRouteControllerNotificationUserInfoKey
 
-extension Notification.Name {
+
+
+
+public extension Notification.Name {
     /**
-     Posted when `RouteController` fails to reroute the user after the user diverges from the expected route.
+     Posted when `RouteController` receives a user location update representing movement along the expected route.
      
-     The user info dictionary contains the key `RouteControllerNotificationUserInfoKey.errorKey`.
+     The user info dictionary contains the keys `MBRouteControllerRouteProgressKey` and `MBRouteControllerLocationKey`.
+     
+     :nodoc:
      */
-    public static let routeControllerDidFailToReroute = MBRouteControllerDidFailToReroute
+    static let routeControllerProgressDidChange: Notification.Name = "RouteControllerProgressDidChange"
     
     /**
      Posted after the user diverges from the expected route, just before `RouteController` attempts to calculate a new route.
      
-     The user info dictionary contains the key `RouteControllerNotificationUserInfoKey.locationKey`.
+     The user info dictionary contains the key `MBRouteControllerLocationKey`.
+     
+     :nodoc:
      */
-    public static let routeControllerWillReroute = MBRouteControllerWillReroute
+    static let routeControllerWillReroute: Notification.Name = "RouteControllerWillReroute"
     
     /**
      Posted when `RouteController` obtains a new route in response to the user diverging from a previous route.
      
-     The user info dictionary contains the keys `RouteControllerNotificationUserInfoKey.locationKey` and `RouteControllerNotificationUserInfoKey.isProactiveKey`.
+     The user info dictionary contains the keys `MBRouteControllerLocationKey` and `MBRouteControllerIsProactiveKey`.
+     
+     :nodoc:
      */
-    public static let routeControllerDidReroute = MBRouteControllerDidReroute
+    static let routeControllerDidReroute: Notification.Name = "RouteControllerDidReroute"
     
     /**
-     Posted when `RouteController` receives a user location update representing movement along the expected route.
+     Posted when `RouteController` fails to reroute the user after the user diverges from the expected route.
      
-     The user info dictionary contains the keys `RouteControllerNotificationUserInfoKey.routeProgressKey`, `RouteControllerNotificationUserInfoKey.locationKey`, and `RouteControllerNotificationUserInfoKey.rawLocationKey`.
+     The user info dictionary contains the key `MBRouteControllerRoutingErrorKey`.
+     
+     :nodoc:
      */
-    public static let routeControllerProgressDidChange = MBRouteControllerProgressDidChange
+    static let routeControllerDidFailToReroute: Notification.Name = "RouteControllerDidFailToReroute"
     
     /**
      Posted when `RouteController` detects that the user has passed an ideal point for saying an instruction aloud.
      
-     The user info dictionary contains the key `RouteControllerNotificationUserInfoKey.routeProgressKey`.
+     The user info dictionary contains the key `MBRouteControllerRouteProgressKey`.
+     
+     :nodoc:
      */
-    public static let routeControllerDidPassSpokenInstructionPoint = MBRouteControllerDidPassSpokenInstructionPoint
+    static let routeControllerDidPassSpokenInstructionPoint: Notification.Name =  "RouteControllerDidPassSpokenInstructionPoint"
     
     /**
-     Posted when `RouteController` detects that the user has passed an ideal point for displaying an instruction.
+     Posted when `RouteController` detects that the user has passed an ideal point for display an instruction visually.
      
-     The user info dictionary contains the key `RouteControllerNotificationUserInfoKey.routeProgressKey`.
+     The user info dictionary contains the key `MBRouteControllerRouteProgressKey`.
+     
+     :nodoc:
      */
-    public static let routeControllerDidPassVisualInstructionPoint = MBRouteControllerDidPassVisualInstructionPoint
+    static let routeControllerDidPassVisualInstructionPoint: Notification.Name = "MBRouteControllerDidPassVisualInstructionPoint"
+    
+    /**
+    Posted when something changes in the shared `MBNavigationSettings` object.
+    
+    The user info dictionary indicates which keys and values changed.
+    
+    :nodoc:
+    */
+    static let navigationSettingsDidChangeNotification: Notification.Name = "MBNavigationSettingsDidChange"
+}
+
+/**
+Keys in the user info dictionaries of various notifications posted by instances
+of `RouteController`.
+*/
+public enum RouteControllerNotificationUserInfoKey: String {
+    case routeProgressKey = "progress"
+    case locationKey = "location"
+    case rawLocationKey = "rawLocation"
+    case routingErrorKey = "error"
+    case visualInstructionKey = "visualInstruction"
+    case spokenInstructionKey = "spokenInstruction"
+    case isProactiveKey = "RouteControllerDidFindFasterRoute"
+    
+}
+
+/**
+Constant representing the domain in which errors created in this library will live under.
+*/
+public let MBErrorDomain = "MBErrorDomain"
+
+extension Notification.Name: ExpressibleByStringLiteral {
+    public typealias StringLiteralType = String
+    
+    public init(stringLiteral value: Self.StringLiteralType) {
+        self.init(rawValue: value)
+    }
+    
 }

@@ -44,5 +44,26 @@ extension Notification.Name {
      This notification is the equivalent of `StyleManagerDelegate.styleManager(_:didApply:)`.
      The user info dictionary contains the key `StyleManagerNotificationUserInfoKey.style` and `StyleManagerNotificationUserInfoKey.styleManager`.
      */
-    public static let styleManagerDidApplyStyle = NSNotification.Name.MBStyleManagerDidApplyStyle
+    public static let styleManagerDidApplyStyle: Notification.Name = "MBStyleManagerDidApplyStyle"
 }
+
+/**
+Keys in the user info dictionaries of various notifications posted by instances of `StyleManager`.
+*/
+enum StyleManagerNotificationUserInfoKey: String {
+    
+    /**
+    A key in the user info dictionary of `StyleManagerDidApplyStyleNotification` notification. The corresponding value is an `Style` instance that was applied.
+    */
+    case styleKey = "style"
+    
+    /**
+    A key in the user info dictionary of `StyleManagerDidApplyStyleNotification` notification. The corresponding value is an `StyleManager` instance that applied the style.
+    */
+    case styleManagerKey = "styleManager"
+}
+
+/**
+Key used for constructing errors when spoken instructions fail.
+*/
+let SpokenInstructionErrorCodeKey: String = "MBSpokenInstructionErrorCode"
