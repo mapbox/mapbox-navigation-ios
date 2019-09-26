@@ -92,7 +92,7 @@ Consult the [API reference](https://docs.mapbox.com/ios/api/navigation/) for fur
 
 The [API reference](https://docs.mapbox.com/ios/api/navigation/) includes example code for accomplishing common tasks. You can run these examples as part of the [navigation-ios-examples](https://github.com/mapbox/navigation-ios-examples) project.
 
-This repository also contains [Swift and Objective-C testbeds](https://github.com/mapbox/mapbox-navigation-ios/tree/master/Example) that exercise a variety of navigation SDK features:
+This repository also contains [testbeds](https://github.com/mapbox/mapbox-navigation-ios/tree/master/Example) that exercise a variety of navigation SDK features:
 
 1. Clone the repository or download the [.zip file](https://github.com/mapbox/mapbox-navigation-ios/archive/master.zip)
 1. Run `carthage update --platform ios` to build just the iOS dependencies.
