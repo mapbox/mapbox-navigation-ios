@@ -174,9 +174,10 @@ workflows:
   workflow:
     jobs:
       - build-job:
-          name: "Xcode_10.3_iOS_12.2"
-          xcode: "10.3.0"
-          iOS: "12.2"
+          name: "Xcode_11.1_iOS_13.1"
+          xcode: "11.1.0"
+          iOS: "13.1"
+          device: "iPhone 8 Plus"
       - build-job:
           name: "Xcode_10.3_iOS_12.1"
           xcode: "10.3.0"
