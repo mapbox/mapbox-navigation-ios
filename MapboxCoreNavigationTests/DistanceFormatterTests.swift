@@ -133,7 +133,8 @@ class DistanceFormatterTests: XCTestCase {
 
     func testDistanceFormatters_hi_IN() {
         NavigationSettings.shared.distanceUnit = .kilometer
-        distanceFormatter.locale = Locale(identifier: "hi-IN")
+        // Hindi as written in India in Devanagari script with Devanagari numbers.
+        distanceFormatter.locale = Locale(identifier: "hi-Deva-IN-u-nu-deva")
 
         assertDistance(Measurement(value:   0,      unit: .meters),     displayed: "० मी॰",       quantity: "०")
         assertDistance(Measurement(value:   4,      unit: .meters),     displayed: "५ मी॰",       quantity: "५")
