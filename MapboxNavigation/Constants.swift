@@ -48,22 +48,36 @@ extension Notification.Name {
 }
 
 /**
-Keys in the user info dictionaries of various notifications posted by instances of `StyleManager`.
-*/
-enum StyleManagerNotificationUserInfoKey: String {
+ Keys in the user info dictionaries of various notifications posted by instances of `StyleManager`.
+ */
+public struct StyleManagerNotificationUserInfoKey: Hashable, Equatable, RawRepresentable, ExpressibleByStringLiteral {
+    public typealias StringLiteralType = String
+    public typealias RawValue = String
+    
+    public var rawValue: String
+    
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+    
+    public init(stringLiteral value: Self.StringLiteralType) {
+        self.init(rawValue: value)
+    }
+    
+    
     
     /**
-    A key in the user info dictionary of `StyleManagerDidApplyStyleNotification` notification. The corresponding value is an `Style` instance that was applied.
-    */
-    case styleKey = "style"
+     A key in the user info dictionary of `StyleManagerDidApplyStyleNotification` notification. The corresponding value is an `Style` instance that was applied.
+     */
+    static let styleKey: StyleManagerNotificationUserInfoKey = "style"
     
     /**
-    A key in the user info dictionary of `StyleManagerDidApplyStyleNotification` notification. The corresponding value is an `StyleManager` instance that applied the style.
-    */
-    case styleManagerKey = "styleManager"
+     A key in the user info dictionary of `StyleManagerDidApplyStyleNotification` notification. The corresponding value is an `StyleManager` instance that applied the style.
+     */
+    static let styleManagerKey: StyleManagerNotificationUserInfoKey = "styleManager"
 }
 
 /**
-Key used for constructing errors when spoken instructions fail.
-*/
+ Key used for constructing errors when spoken instructions fail.
+ */
 let SpokenInstructionErrorCodeKey: String = "MBSpokenInstructionErrorCode"

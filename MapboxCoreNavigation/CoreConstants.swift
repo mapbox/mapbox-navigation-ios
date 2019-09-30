@@ -192,14 +192,26 @@ public extension Notification.Name {
 Keys in the user info dictionaries of various notifications posted by instances
 of `RouteController`.
 */
-public enum RouteControllerNotificationUserInfoKey: String {
-    case routeProgressKey = "progress"
-    case locationKey = "location"
-    case rawLocationKey = "rawLocation"
-    case routingErrorKey = "error"
-    case visualInstructionKey = "visualInstruction"
-    case spokenInstructionKey = "spokenInstruction"
-    case isProactiveKey = "RouteControllerDidFindFasterRoute"
+public struct RouteControllerNotificationUserInfoKey: Hashable, Equatable, RawRepresentable, ExpressibleByStringLiteral {
+    public typealias StringLiteralType = String
+    public typealias RawValue = String
+
+    public var rawValue: String
+
+    public init(rawValue: String) {
+    self.rawValue = rawValue
+}
+    public init(stringLiteral value: Self.StringLiteralType) {
+        self.init(rawValue: value)
+    }
+    
+    public static let routeProgressKey: RouteControllerNotificationUserInfoKey = "progress"
+    public static let locationKey: RouteControllerNotificationUserInfoKey = "location"
+    public static let rawLocationKey: RouteControllerNotificationUserInfoKey = "rawLocation"
+    public static let routingErrorKey: RouteControllerNotificationUserInfoKey = "error"
+    public static let visualInstructionKey: RouteControllerNotificationUserInfoKey = "visualInstruction"
+    public static let spokenInstructionKey: RouteControllerNotificationUserInfoKey = "spokenInstruction"
+    public static let isProactiveKey: RouteControllerNotificationUserInfoKey = "RouteControllerDidFindFasterRoute"
     
 }
 
