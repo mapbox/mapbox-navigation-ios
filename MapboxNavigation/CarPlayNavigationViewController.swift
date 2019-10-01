@@ -72,8 +72,6 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
         }
     }
     
-    let distanceFormatter = DistanceFormatter(approximate: true)
-    
     var edgePadding: UIEdgeInsets {
         let padding:CGFloat = 15
         return UIEdgeInsets(top: view.safeAreaInsets.top + padding,
@@ -277,12 +275,12 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
         let congestionLevel = routeProgress.averageCongestionLevelRemainingOnLeg ?? .unknown
         guard let maneuver = carSession.upcomingManeuvers.first else { return }
         
-        let routeDistance = distanceFormatter.measurement(of: routeProgress.distanceRemaining)
+        let routeDistance = Measurement(distance: routeProgress.distanceRemaining).localized()
         let routeEstimates = CPTravelEstimates(distanceRemaining: routeDistance, timeRemaining: routeProgress.durationRemaining)
         mapTemplate.update(routeEstimates, for: carSession.trip, with: congestionLevel.asCPTimeRemainingColor)
         
         let stepProgress = routeProgress.currentLegProgress.currentStepProgress
-        let stepDistance = distanceFormatter.measurement(of: stepProgress.distanceRemaining)
+        let stepDistance = Measurement(distance: stepProgress.distanceRemaining).localized()
         let stepEstimates = CPTravelEstimates(distanceRemaining: stepDistance, timeRemaining: stepProgress.durationRemaining)
         carSession.updateEstimates(stepEstimates, for: maneuver)
         
@@ -324,7 +322,7 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
         let step = navigationService.routeProgress.currentLegProgress.currentStep
         
         let primaryManeuver = CPManeuver()
-        let distance = distanceFormatter.measurement(of: step.distance)
+        let distance = Measurement(distance: step.distance).localized()
         primaryManeuver.initialTravelEstimates = CPTravelEstimates(distanceRemaining: distance, timeRemaining: step.expectedTravelTime)
         
         // Just incase, set some default text
@@ -379,7 +377,7 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
             }
             
             if let upcomingStep = navigationService.routeProgress.currentLegProgress.upcomingStep {
-                let distance = distanceFormatter.measurement(of: upcomingStep.distance)
+                let distance = Measurement(distance: upcomingStep.distance).localized()
                 tertiaryManeuver.initialTravelEstimates = CPTravelEstimates(distanceRemaining: distance, timeRemaining: upcomingStep.expectedTravelTime)
             }
             

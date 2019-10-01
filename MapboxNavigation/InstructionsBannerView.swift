@@ -82,7 +82,7 @@ open class BaseInstructionsBannerView: UIControl {
     var centerYConstraints = [NSLayoutConstraint]()
     var baselineConstraints = [NSLayoutConstraint]()
     
-    let distanceFormatter = DistanceFormatter(approximate: true)
+    let distanceFormatter = DistanceFormatter()
     
     public var distance: CLLocationDistance? {
         didSet {

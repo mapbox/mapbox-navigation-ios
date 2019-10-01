@@ -1,247 +1,240 @@
 import CoreLocation
 
-extension CLLocationDistance {
-    
-    static let metersPerMile: CLLocationDistance = 1_609.344
-    static let feetPerMeter: CLLocationDistance = 3.28084
-    
-    // Returns the distance converted to miles
-    var miles: Double {
-        return self / .metersPerMile
-    }
-    
-    // Returns the distance converted to feet
-    var feet: Double {
-        return self * .feetPerMeter
-    }
-    
-    // Returns the distance converted to yards
-    var yards: Double {
-        return feet / 3
-    }
-    
-    // Returns the distance converted to kilometers
-    var kilometers: Double {
-        return self / 1000
-    }
-    
-    // Returns the distance in meters converted from miles
-    func inMiles() -> Double {
-        return self * .metersPerMile
-    }
-    
-    // Returns the distance in meters converted from yards
-    func inYards() -> Double {
-        return self * .feetPerMeter / 3
-    }
-    
-    func converted(to unit: LengthFormatter.Unit) -> Double {
-        switch unit {
-        case .millimeter:
-            return self / 1_000
-        case .centimeter:
-            return self / 100
-        case .meter:
-            return self
-        case .kilometer:
-            return kilometers
-        case .inch:
-            return feet * 12
-        case .foot:
-            return feet
-        case .yard:
-            return yards
-        case .mile:
-            return miles
-        }
-    }
-}
-
 struct RoundingTable {
     struct Threshold {
-        let maximumDistance: CLLocationDistance
+        let maximumDistance: Measurement<UnitLength>
         let roundingIncrement: Double
-        let unit: LengthFormatter.Unit
         let maximumFractionDigits: Int
         
-        @available(iOS 10.0, *)
         func measurement(of distance: CLLocationDistance) -> Measurement<UnitLength> {
-            let unitLength: UnitLength
-            switch unit {
-            case .millimeter:
-                unitLength = .millimeters
-            case .centimeter:
-                unitLength = .centimeters
-            case .meter:
-                unitLength = .meters
-            case .kilometer:
-                unitLength = .kilometers
-            case .inch:
-                unitLength = .inches
-            case .foot:
-                unitLength = .feet
-            case .yard:
-                unitLength = .yards
-            case .mile:
-                unitLength = .miles
-            }
-            var measurement = Measurement(value: distance, unit: .meters).converted(to: unitLength)
+            var measurement = Measurement(value: distance, unit: .meters).converted(to: maximumDistance.unit)
             measurement.value.round(roundingIncrement: roundingIncrement)
             measurement.value.round(precision: pow(10, Double(maximumFractionDigits)))
             return measurement
-        }
-        
-        func localizedDistanceString(for distance: CLLocationDistance, using formatter: DistanceFormatter) -> String {
-            switch unit {
-            case .mile:
-                return formatter.string(fromValue: distance.miles, unit: unit)
-            case .foot:
-                return formatter.string(fromValue: distance.feet, unit: unit)
-            case .yard:
-                return formatter.string(fromValue: distance.yards, unit: unit)
-            case .kilometer:
-                return formatter.string(fromValue: distance.kilometers, unit: unit)
-            default:
-                return formatter.string(fromValue: distance, unit: unit)
-            }
         }
     }
     
     let thresholds: [Threshold]
     
+    /**
+     Returns the most applicable threshold for the given distance, falling back to the last threshold.
+     */
     func threshold(for distance: CLLocationDistance) -> Threshold {
-        for threshold in thresholds {
-            if distance < threshold.maximumDistance {
-                return threshold
-            }
+        return thresholds.first {
+            distance < $0.maximumDistance.distance
+        } ?? thresholds.last!
+    }
+    
+    static var metric: RoundingTable = RoundingTable(thresholds: [
+        .init(maximumDistance: Measurement(value: 25, unit: .meters), roundingIncrement: 5, maximumFractionDigits: 0),
+        .init(maximumDistance: Measurement(value: 100, unit: .meters), roundingIncrement: 25, maximumFractionDigits: 0),
+        .init(maximumDistance: Measurement(value: 999, unit: .meters), roundingIncrement: 50, maximumFractionDigits: 0),
+        // The rounding increment is a small value rather than 0 because of floating-point imprecision that causes 0.5 to round down.
+        .init(maximumDistance: Measurement(value: 3, unit: .kilometers), roundingIncrement: 0.0001, maximumFractionDigits: 1),
+        .init(maximumDistance: Measurement(value: 5, unit: .kilometers), roundingIncrement: 0.0001, maximumFractionDigits: 0)
+    ])
+    
+    static var uk: RoundingTable = RoundingTable(thresholds: [
+        .init(maximumDistance: Measurement(value: 20, unit: .yards), roundingIncrement: 10, maximumFractionDigits: 0),
+        .init(maximumDistance: Measurement(value: 100, unit: .yards), roundingIncrement: 25, maximumFractionDigits: 0),
+        .init(maximumDistance: Measurement(value: 0.1, unit: .miles).converted(to: .yards), roundingIncrement: 50, maximumFractionDigits: 1),
+        .init(maximumDistance: Measurement(value: 3, unit: .miles), roundingIncrement: 0.1, maximumFractionDigits: 1),
+        .init(maximumDistance: Measurement(value: 5, unit: .miles), roundingIncrement: 0.0001, maximumFractionDigits: 0)
+    ])
+    
+    static var us: RoundingTable = RoundingTable(thresholds: [
+        .init(maximumDistance: Measurement(value: 0.1, unit: .miles).converted(to: .feet), roundingIncrement: 50, maximumFractionDigits: 0),
+        .init(maximumDistance: Measurement(value: 3, unit: .miles), roundingIncrement: 0.1, maximumFractionDigits: 1),
+        .init(maximumDistance: Measurement(value: 5, unit: .miles), roundingIncrement: 0.0001, maximumFractionDigits: 0)
+    ])
+}
+
+extension Measurement where UnitType == UnitLength {
+    /**
+     Initializes a measurement from the given distance.
+     
+     - parameter distance: The distance being measured.
+     */
+    public init(distance: CLLocationDistance) {
+        self.init(value: distance, unit: .meters)
+    }
+    
+    /**
+     The distance in meters.
+     */
+    public var distance: CLLocationDistance {
+        return converted(to: .meters).value
+    }
+    
+    /**
+     Returns a length measurement equivalent to the receiver but converted to the most appropriate unit based on the given locale and rounded based on the unit.
+     
+     - parameter locale: The locale that determines the chosen unit.
+     */
+    public func localized(into locale: Locale = .nationalizedCurrent) -> Measurement<UnitLength> {
+        let threshold: RoundingTable
+        if NavigationSettings.shared.usesMetric {
+            threshold = .metric
+        } else if locale.languageCode == "en" && locale.regionCode == "GB" {
+            threshold = .uk
+        } else {
+            threshold = .us
         }
-        return thresholds.last!
+        return threshold.threshold(for: distance).measurement(of: distance)
     }
 }
 
 extension NSAttributedString.Key {
+    /**
+     An `NSNumber` containing the numeric quantity represented by the localized substring.
+     */
     public static let quantity = NSAttributedString.Key(rawValue: "MBQuantity")
 }
 
-/// Provides appropriately formatted, localized descriptions of linear distances.
-@objc(MBDistanceFormatter)
-open class DistanceFormatter: LengthFormatter {
-    /// True to favor brevity over precision.
-    var approx: Bool
-    
-    let nonFractionalLengthFormatter = LengthFormatter()
-    
-    /// Indicates the most recently used unit
-    public private(set) var unit: LengthFormatter.Unit = .millimeter
-
-    // Rounding tables for metric, imperial, and UK measurement systems. The last threshold is used as a default.
-    lazy var roundingTableMetric: RoundingTable = {
-        return RoundingTable(thresholds: [.init(maximumDistance: 25, roundingIncrement: 5, unit: .meter, maximumFractionDigits: 0),
-                                          .init(maximumDistance: 100, roundingIncrement: 25, unit: .meter, maximumFractionDigits: 0),
-                                          .init(maximumDistance: 999, roundingIncrement: 50, unit: .meter, maximumFractionDigits: 0),
-                                          .init(maximumDistance: 3_000, roundingIncrement: 0, unit: .kilometer, maximumFractionDigits: 1),
-                                          .init(maximumDistance: 5_000, roundingIncrement: 0, unit: .kilometer, maximumFractionDigits: 0)])
-    }()
-    
-    lazy var roundingTableUK: RoundingTable = {
-        return RoundingTable(thresholds: [.init(maximumDistance: 20.inYards(), roundingIncrement: 10, unit: .yard, maximumFractionDigits: 0),
-                                          .init(maximumDistance: 100.inYards(), roundingIncrement: 25, unit: .yard, maximumFractionDigits: 0),
-                                          .init(maximumDistance: 0.1.inMiles(), roundingIncrement: 50, unit: .yard, maximumFractionDigits: 1),
-                                          .init(maximumDistance: 3.inMiles(), roundingIncrement: 0.1, unit: .mile, maximumFractionDigits: 1),
-                                          .init(maximumDistance: 5.inMiles(), roundingIncrement: 0, unit: .mile, maximumFractionDigits: 0)])
-    }()
-    
-    lazy var roundingTableImperial: RoundingTable = {
-        return RoundingTable(thresholds: [.init(maximumDistance: 0.1.inMiles(), roundingIncrement: 50, unit: .foot, maximumFractionDigits: 0),
-                                          .init(maximumDistance: 3.inMiles(), roundingIncrement: 0.1, unit: .mile, maximumFractionDigits: 1),
-                                          .init(maximumDistance: 5.inMiles(), roundingIncrement: 0, unit: .mile, maximumFractionDigits: 0)])
-    }()
+/**
+ A formatter that provides localized representations of distance units and measurements.
+ 
+ This class is limited to `UnitLength` and its behavior is more specific to distances than `MeasurementFormatter`. By default, the class automatically localizes and rounds the measurement using `Measurement.localized(into:)` and `Locale.nationalizedCurrent`. Measurements can be formatted into either strings or attributed strings.
+ */
+open class DistanceFormatter: Formatter, NSSecureCoding {
+    public static var supportsSecureCoding = true
     
     /**
-     Intializes a new `DistanceFormatter`.
+     Options for choosing and formatting the unit.
      
-     - parameter approximate: approximates the distances.
+     - seealso: `MeasurementFormatter.unitOptions`
      */
-    @objc public init(approximate: Bool = false) {
-        self.approx = approximate
+    open var unitOptions: MeasurementFormatter.UnitOptions {
+        get {
+            return measurementFormatter.unitOptions
+        }
+        set {
+            measurementFormatter.unitOptions = newValue
+        }
+    }
+    
+    /**
+     The unit style.
+     
+     - seealso: `MeasurementFormatter.unitStyle`
+     */
+    open var unitStyle: Formatter.UnitStyle {
+        get {
+            return measurementFormatter.unitStyle
+        }
+        set {
+            measurementFormatter.unitStyle = newValue
+        }
+    }
+    
+    /**
+     The locale that determines the chosen unit, name of the unit, and number formatting.
+     
+     - seealso: `MeasurementFormatter.locale`
+     */
+    open var locale: Locale {
+        get {
+            return measurementFormatter.locale
+        }
+        set {
+            measurementFormatter.locale = newValue
+        }
+    }
+    
+    /**
+     The underlying measurement formatter.
+     */
+    @NSCopying open var measurementFormatter = MeasurementFormatter()
+    
+    public override init() {
         super.init()
-        self.numberFormatter.locale = .nationalizedCurrent
+        unitOptions = .providedUnit
+        locale = .nationalizedCurrent
     }
     
     public required init?(coder decoder: NSCoder) {
-        approx = decoder.decodeBool(forKey: "approximate")
         super.init(coder: decoder)
     }
     
-    open override func encode(with aCoder: NSCoder) {
-        super.encode(with: aCoder)
-        aCoder.encode(approx, forKey: "approximate")
-    }
-    
-    func threshold(for distance: CLLocationDistance) -> RoundingTable.Threshold {
-        if NavigationSettings.shared.usesMetric {
-            return roundingTableMetric.threshold(for: distance)
-        } else if numberFormatter.locale.identifier == "en-GB" {
-            return roundingTableUK.threshold(for: distance)
-        } else {
-            return roundingTableImperial.threshold(for: distance)
-        }
-    }
-    
     /**
-     Returns a more human readable `String` from a given `CLLocationDistance`.
+     Creates and returns a localized, formatted string representation of the given distance in meters.
      
-     The user’s `Locale` is used here to set the units.
-    */
-    @objc public func string(from distance: CLLocationDistance) -> String {
-        numberFormatter.positivePrefix = ""
-        numberFormatter.positiveSuffix = ""
-        numberFormatter.decimalSeparator = nonFractionalLengthFormatter.numberFormatter.decimalSeparator
-        numberFormatter.alwaysShowsDecimalSeparator = nonFractionalLengthFormatter.numberFormatter.alwaysShowsDecimalSeparator
-        numberFormatter.usesSignificantDigits = false
-        return formattedDistance(distance)
-    }
-    
-    @objc open override func string(fromMeters numberInMeters: Double) -> String {
-        return self.string(from: numberInMeters)
-    }
-    
-    func formattedDistance(_ distance: CLLocationDistance) -> String {
-        let threshold = self.threshold(for: distance)
-        numberFormatter.maximumFractionDigits = threshold.maximumFractionDigits
-        numberFormatter.roundingIncrement = threshold.roundingIncrement as NSNumber
-        unit = threshold.unit
-        return threshold.localizedDistanceString(for: distance, using: self)
-    }
-    
-    @available(iOS 10.0, *)
-    @objc(measurementOfDistance:)
-    public func measurement(of distance: CLLocationDistance) -> Measurement<UnitLength> {
-        let threshold = self.threshold(for: distance)
-        return threshold.measurement(of: distance)
-    }
-    
-    /**
-     Returns an attributed string containing the formatted, converted distance.
+     The distance is converted from meters to the most appropriate unit based on the locale and quantity.
      
-     `NSAttributedStringKey.quantity` is applied to the numeric quantity.
+     - parameter distance: The distance, measured in meters, to localize and format.
+     - returns: A localized, formatted representation of the distance.
+     - seealso: `MeasurementFormatter.string(from:)`
      */
-    @objc open override func attributedString(for obj: Any, withDefaultAttributes attrs: [NSAttributedString.Key : Any]? = nil) -> NSAttributedString? {
-        guard let distance = obj as? CLLocationDistance else {
-            return nil
-        }
+    open func string(from distance: CLLocationDistance) -> String {
+        return string(from: Measurement(distance: distance))
+    }
+    
+    /**
+     Creates and returns a localized, formatted attributed string representation of the given distance in meters.
+     
+     The distance is converted from meters to the most appropriate unit based on the locale and quantity. `NSAttributedString.Key.quantity` is applied to the range representing the quantity. For example, the “5” in “5 km” has a quantity attribute set to 5.
+     
+     - parameter distance: The distance, measured in meters, to localize and format.
+     - parameter defaultAttributes: The default attributes to apply to the resulting attributed string.
+     - returns: A localized, formatted representation of the distance.
+     */
+    open func attributedString(from distance: CLLocationDistance, defaultAttributes attributes: [NSAttributedString.Key: Any]? = nil) -> NSAttributedString {
+        return attributedString(from: Measurement(distance: distance), defaultAttributes: attributes)
+    }
+    
+    /**
+     Creates and returns a localized, formatted string representation of the given measurement.
+     
+     - parameter measurement: The measurement to localize and format.
+     - returns: A localized, formatted representation of the measurement.
+     - seealso: `MeasurementFormatter.string(from:)`
+     */
+    open func string(from measurement: Measurement<UnitLength>) -> String {
+        return measurementFormatter.string(from: measurement.localized(into: locale))
+    }
+    
+    /**
+     Creates and returns a localized, formatted attributed string representation of the given measurement.
+     
+     `NSAttributedString.Key.quantity` is applied to the range representing the quantity. For example, the “5” in “5 km” has a quantity attribute set to 5.
+     
+     - parameter measurement: The measurement to localize and format.
+     - parameter defaultAttributes: The default attributes to apply to the resulting attributed string.
+     - returns: A localized, formatted representation of the measurement.
+     */
+    open func attributedString(from measurement: Measurement<UnitLength>, defaultAttributes attributes: [NSAttributedString.Key: Any]? = nil) -> NSAttributedString {
+        let string = self.string(from: measurement)
+        let localizedMeasurement = measurement.localized(into: locale)
         
-        let string = self.string(from: distance)
-        let attributedString = NSMutableAttributedString(string: string, attributes: attrs)
-        let convertedDistance = distance.converted(to: threshold(for: distance).unit)
-        if let quantityString = numberFormatter.string(from: convertedDistance as NSNumber) {
+        let attributedString = NSMutableAttributedString(string: string, attributes: attributes)
+        if let quantityString = measurementFormatter.numberFormatter.string(from: localizedMeasurement.value as NSNumber) {
             // NSMutableAttributedString methods accept NSRange, not Range.
             let quantityRange = (string as NSString).range(of: quantityString)
             if quantityRange.location != NSNotFound {
-                attributedString.addAttribute(.quantity, value: distance as NSNumber, range: quantityRange)
+                attributedString.addAttribute(.quantity, value: localizedMeasurement.value as NSNumber, range: quantityRange)
             }
         }
         return attributedString
+    }
+    
+    open override func string(for obj: Any?) -> String? {
+        if let distanceFromObj = obj as? CLLocationDistance {
+            return self.string(from: distanceFromObj)
+        } else if let measurementFromObj = obj as? Measurement<UnitLength> {
+            return self.string(from: measurementFromObj)
+        } else {
+            return nil
+        }
+    }
+    
+    open override func attributedString(for obj: Any, withDefaultAttributes attrs: [NSAttributedString.Key : Any]? = nil) -> NSAttributedString? {
+        if let distanceFromObj = obj as? CLLocationDistance {
+            return self.attributedString(from: distanceFromObj, defaultAttributes: attrs)
+        } else if let measurementFromObj = obj as? Measurement<UnitLength> {
+            return self.attributedString(from: measurementFromObj, defaultAttributes: attrs)
+        } else {
+            return nil
+        }
     }
 }
 

@@ -125,7 +125,7 @@ class RouteMapViewController: UIViewController {
         }
     }
     var router: Router { return navService.router }
-    let distanceFormatter = DistanceFormatter(approximate: true)
+    let distanceFormatter = DistanceFormatter()
     var arrowCurrentStep: RouteStep?
     var isInOverviewMode = false {
         didSet {
@@ -207,8 +207,6 @@ class RouteMapViewController: UIViewController {
             mapView.localizeLabels()
         }
         
-        distanceFormatter.numberFormatter.locale = .nationalizedCurrent
-
         makeGestureRecognizersResetFrameRate()
         navigationView.overviewButton.addTarget(self, action: Actions.overview, for: .touchUpInside)
         navigationView.muteButton.addTarget(self, action: Actions.mute, for: .touchUpInside)

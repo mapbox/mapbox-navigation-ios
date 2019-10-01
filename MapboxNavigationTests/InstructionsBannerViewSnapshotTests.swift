@@ -219,7 +219,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
 
         view.maneuverView.isStart = true
         NavigationSettings.shared.distanceUnit = .kilometer
-        view.distanceFormatter.numberFormatter.locale = Locale(identifier: "zh-Hans")
+        view.distanceFormatter.locale = Locale(identifier: "zh-Hans")
         view.distance = 1000 * 999
 
         let primary = [VisualInstructionComponent(type: .text, text: "中国 安徽省 宣城市 郎溪县", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)]
@@ -233,7 +233,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         styleInstructionsView(view)
 
         NavigationSettings.shared.distanceUnit = .mile
-        view.distanceFormatter.numberFormatter.locale = Locale(identifier: "sv-se")
+        view.distanceFormatter.locale = Locale(identifier: "sv-se")
         view.distance = 1000 * 999
 
         let primary = [VisualInstructionComponent(type: .text, text: "Lorem Ipsum / Dolor Sit Amet", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)]
@@ -247,7 +247,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         styleInstructionsView(view)
 
         NavigationSettings.shared.distanceUnit = .mile
-        view.distanceFormatter.numberFormatter.locale = Locale(identifier: "uk-UA")
+        view.distanceFormatter.locale = Locale(identifier: "uk-UA")
         view.distance = 1000 * 999
 
         let primary = [VisualInstructionComponent(type: .text, text: "Lorem Ipsum / Dolor Sit Amet", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)]

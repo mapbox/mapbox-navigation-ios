@@ -3,6 +3,8 @@ import MapboxCoreNavigation
 import MapboxDirections
 import MapboxSpeech
 import AVFoundation
+import UserNotifications
+import MobileCoreServices
 import Mapbox
 
 /**
@@ -323,28 +325,31 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     
     // MARK: Route controller notifications
     
-    func scheduleLocalNotification(about step: RouteStep) {
+    func scheduleLocalNotification(about step: RouteStep, identifier: String) {
         guard sendsNotifications else { return }
         guard UIApplication.shared.applicationState == .background else { return }
-        guard let text = step.instructionsSpokenAlongStep?.last?.text else { return }
+        guard let instruction = step.instructionsDisplayedAlongStep?.last else { return }
         
-        let notification = UILocalNotification()
-        notification.alertBody = text
-        notification.fireDate = Date()
+        let content = UNMutableNotificationContent()
+        if let primaryText = instruction.primaryInstruction.text {
+            content.title = primaryText
+        }
+        if let secondaryText = instruction.secondaryInstruction?.text {
+            content.subtitle = secondaryText
+        }
         
-        clearStaleNotifications()
+        if let image = instruction.primaryInstruction.maneuverImage(side: instruction.drivingSide, color: .black, size: CGSize(width: 72, height: 72)),
+            let imageData = image.pngData() {
+            let temporaryURL = FileManager.default.temporaryDirectory.appendingPathComponent("com.mapbox.navigation.notification-icon.png")
+            do {
+                try imageData.write(to: temporaryURL)
+                let iconAttachment = try UNNotificationAttachment(identifier: "maneuver", url: temporaryURL, options: [UNNotificationAttachmentOptionsTypeHintKey: kUTTypePNG])
+                content.attachments = [iconAttachment]
+            } catch {}
+        }
         
-        UIApplication.shared.cancelAllLocalNotifications()
-        UIApplication.shared.scheduleLocalNotification(notification)
-    }
-    
-    func clearStaleNotifications() {
-        guard sendsNotifications else { return }
-        // Remove all outstanding notifications from notification center.
-        // This will only work if it's set to 1 and then back to 0.
-        // This way, there is always just one notification.
-        UIApplication.shared.applicationIconBadgeNumber = 1
-        UIApplication.shared.applicationIconBadgeNumber = 0
+        let notificationRequest = UNNotificationRequest(identifier: identifier, content: content, trigger: nil)
+        UNUserNotificationCenter.current().add(notificationRequest, withCompletionHandler: nil)
     }
     
     public func showStatus(title: String, spinner: Bool, duration: TimeInterval, animated: Bool, interactive: Bool) {
@@ -504,10 +509,14 @@ extension NavigationViewController: NavigationServiceDelegate {
             component.navigationService?(service, didPassSpokenInstructionPoint: instruction, routeProgress: routeProgress)
         }
         
-        clearStaleNotifications()
+        // Remove any notification about an already complete maneuver, even if there isn’t another notification to replace it with yet.
+        let notificationIdentifier = "instruction"
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [notificationIdentifier])
+        UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [notificationIdentifier])
         
-        if routeProgress.currentLegProgress.currentStepProgress.durationRemaining <= RouteControllerHighAlertInterval {
-            scheduleLocalNotification(about: routeProgress.currentLegProgress.currentStep)
+        let legProgress = routeProgress.currentLegProgress
+        if legProgress.currentStepProgress.currentSpokenInstruction == legProgress.currentStep.instructionsSpokenAlongStep?.last {
+            scheduleLocalNotification(about: legProgress.currentStep, identifier: notificationIdentifier)
         }
     }
     

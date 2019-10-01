@@ -81,7 +81,7 @@ fileprivate class CarPlayNavigationViewControllerTests: XCTestCase {
         }
         
         // establish a point of truth and fetch the answer from the update
-        let distanceTruth = subject.distanceFormatter.measurement(of: progress.distanceRemaining)
+        let distanceTruth = Measurement(distance: progress.distanceRemaining).localized()
         let estimateTruth = CPTravelEstimates(distanceRemaining: distanceTruth, timeRemaining: progress.durationRemaining)
         let answer = update.0
         

@@ -98,7 +98,6 @@ jobs:
           steps:
             - run: find . -path '*.podspec' -exec perl -pi -e 's/.+\.social_media_url.+//' {} \;
             - run: pod lib lint MapboxCoreNavigation.podspec
-            - run: pod lib lint MapboxNavigation.podspec
       - *save-cache-podmaster
       - *save-cache-cocoapods
 
@@ -175,19 +174,19 @@ workflows:
   workflow:
     jobs:
       - build-job:
-          name: "Xcode_10.3_iOS_12.2"
-          xcode: "10.3.0"
-          iOS: "12.2"
+          name: "Xcode_11.1_iOS_13.1"
+          xcode: "11.1.0"
+          iOS: "13.1"
+          device: "iPhone 8 Plus"
       - build-job:
           name: "Xcode_10.3_iOS_12.1"
           xcode: "10.3.0"
           iOS: "12.1"
           codecoverage: true
       - build-job:
-          name: "Xcode_10.1_iOS_9.3"
+          name: "Xcode_10.1_iOS_10.3.1"
           xcode: "10.1.0"
-          iOS: "9.3"
-          delete_private_deps: true
+          iOS: "10.3.1"
           test: false
       - pod-job:
           name: "Xcode_10.2_iOS_12.2_CP_install"
