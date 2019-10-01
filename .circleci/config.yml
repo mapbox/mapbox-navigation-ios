@@ -184,8 +184,8 @@ workflows:
           iOS: "12.1"
           codecoverage: true
       - build-job:
-          name: "Xcode_10.1_iOS_10.3.1"
-          xcode: "10.1.0"
+          name: "Xcode_10.2_iOS_10.3.1"
+          xcode: "10.2.0"
           iOS: "10.3.1"
           test: false
       - pod-job:
