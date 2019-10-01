@@ -358,6 +358,8 @@ extension UIApplication.State: Encodable {
             stringRepresentation = "Inactive"
         case .background:
             stringRepresentation = "Background"
+        @unknown default:
+            fatalError("Indescribable application state \(rawValue)")
         }
         try container.encode(stringRepresentation)
     }

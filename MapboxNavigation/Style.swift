@@ -481,11 +481,10 @@ public class ProgressBar: UIView {
     func updateProgressBar() {
         if let superview = superview {
             let origin: CGPoint
-            switch UIApplication.shared.userInterfaceLayoutDirection {
-            case .leftToRight:
-                origin = .zero
-            case .rightToLeft:
+            if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
                 origin = CGPoint(x: superview.bounds.width * (1 - progress), y: 0)
+            } else {
+                origin = .zero
             }
             bar.frame = CGRect(origin: origin, size: CGSize(width: superview.bounds.width * progress, height: bounds.height))
         }
