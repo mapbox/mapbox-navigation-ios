@@ -29,7 +29,13 @@ public class CarPlayMapViewController: UIViewController {
         return coarseLocationManager
     }()
     
-    var isOverviewingRoutes: Bool = false
+    var isOverviewingRoutes: Bool = false {
+        didSet {
+            // Workaround for https://github.com/mapbox/mapbox-gl-native/issues/15574
+            // In overview mode, content insets are set to .zero, avoid getting them changed.
+            automaticallyAdjustsScrollViewInsets = !isOverviewingRoutes
+        }
+    }
     
     var mapView: NavigationMapView {
         get {
@@ -194,18 +200,6 @@ public class CarPlayMapViewController: UIViewController {
     
     override public func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
-        
-        var edgePadding = view.safeArea
-        edgePadding += NavigationMapView.defaultPadding
-        
-        if let userCourseView = mapView.userCourseView {
-            let midX = userCourseView.bounds.midX
-            let midY = userCourseView.bounds.midY
-            edgePadding += UIEdgeInsets(top: midY, left: midX, bottom: midY, right: midX)
-        }
-        
-        mapView.setContentInset(edgePadding, animated: false, completionHandler: nil)
-        
         guard let active = mapView.routes?.first else {
             mapView.setUserTrackingMode(.followWithCourse, animated: true, completionHandler: nil)
             return

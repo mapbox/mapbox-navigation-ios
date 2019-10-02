@@ -148,19 +148,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         if let anchorPoint = navigationMapViewDelegate?.navigationMapViewUserAnchorPoint?(self), anchorPoint != .zero {
             return anchorPoint
         }
-        
-        // Inset by the safe area to avoid notches.
-        // Inset by the content inset to avoid application-defined content.
-        var contentFrame = bounds.inset(by: safeArea).inset(by: contentInset)
-        
-        // Avoid letting the puck go partially off-screen, and add a comfortable padding beyond that.
-        let courseViewBounds = userCourseView?.bounds ?? .zero
-        contentFrame = contentFrame.insetBy(dx: min(NavigationMapView.courseViewMinimumInsets.left + courseViewBounds.width / 2.0, contentFrame.width / 2.0),
-                                            dy: min(NavigationMapView.courseViewMinimumInsets.top + courseViewBounds.height / 2.0, contentFrame.height / 2.0))
-        
-        // Get the bottom-center of the remaining frame.
-        assert(!contentFrame.isInfinite)
-        return CGPoint(x: contentFrame.midX, y: contentFrame.maxY)
+        let contentFrame = bounds.inset(by: contentInset)
+        return CGPoint(x: contentFrame.midX, y: contentFrame.midY)
     }
     
     /**
@@ -194,8 +183,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             if let userCourseView = userCourseView {
                 if let location = userLocationForCourseTracking {
                     updateCourseTracking(location: location, animated: false)
-                } else {
-                    userCourseView.center = userAnchorPoint
                 }
                 addSubview(userCourseView)
             }
@@ -337,10 +324,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         if tracksUserCourse {
             let newCamera = camera ?? MGLMapCamera(lookingAtCenter: location.coordinate, altitude: altitude, pitch: 45, heading: location.course)
             let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: .linear) : nil
-            let point = userAnchorPoint
-            let padding = UIEdgeInsets(top: point.y, left: point.x, bottom: bounds.height - point.y, right: bounds.width - point.x)
-            setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: padding, completionHandler: nil)
-            userCourseView?.center = userAnchorPoint
+            setCamera(newCamera, withDuration: duration, animationTimingFunction: function, completionHandler: nil)
         } else {
             // Animate course view updates in overview mode
             UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear], animations: { [weak self] in
@@ -445,8 +429,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
       
         setUserTrackingMode(.none, animated: false, completionHandler: nil)
         let line = MGLPolyline(coordinates: coords, count: UInt(coords.count))
-        let camera = cameraThatFitsShape(line, direction: direction, edgePadding: .zero)
         
+        // Workaround for https://github.com/mapbox/mapbox-gl-native/issues/15574
+        // Set content insets .zero, before cameraThatFitsShape + setCamera.
+        contentInset = .zero
+        let camera = cameraThatFitsShape(line, direction: direction, edgePadding: safeArea + NavigationMapView.defaultPadding)
         setCamera(camera, animated: animated)
     }
     
@@ -1101,7 +1088,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         let currentCamera = self.camera
         currentCamera.pitch = 0
         currentCamera.heading = 0
-        
+
+        // Workaround for https://github.com/mapbox/mapbox-gl-native/issues/15574
+        // Set content insets .zero, before cameraThatFitsShape + setCamera.
+        contentInset = .zero
         let newCamera = camera(currentCamera, fitting: line, edgePadding: padding)
         
         setCamera(newCamera, withDuration: 1, animationTimingFunction: nil) { [weak self] in
