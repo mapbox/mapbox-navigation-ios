@@ -105,7 +105,7 @@ extension SettingsViewController {
 
 extension URL {
     var directorySize: Int? {
-        guard ((try? resourceValues(forKeys: [.isDirectoryKey]).isDirectory) != nil) else { return nil }
+        guard (try? resourceValues(forKeys: [.isDirectoryKey]).isDirectory) as Bool?? != nil else { return nil }
         var directorySize = 0
         
         (FileManager.default.enumerator(at: self, includingPropertiesForKeys: nil)?.allObjects as? [URL])?.lazy.forEach {

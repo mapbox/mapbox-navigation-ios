@@ -235,7 +235,7 @@ extension Array where Element : Hashable {
 
 extension Array where Element : Equatable {
     fileprivate func after(element: Element) -> Element? {
-        if let index = self.index(of: element), index + 1 <= self.count {
+        if let index = self.firstIndex(of: element), index + 1 <= self.count {
             return index + 1 == self.count ? self[0] : self[index + 1]
         }
         return nil

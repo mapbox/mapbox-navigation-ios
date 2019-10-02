@@ -115,11 +115,10 @@ public class StatusView: UIControl {
         
         if sender.state == .ended {
             let incrementer: Double
-            switch UIApplication.shared.userInterfaceLayoutDirection {
-            case .leftToRight:
-                incrementer = location.x > bounds.midX ? 0.1 : -0.1
-            case .rightToLeft:
+            if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
                 incrementer = location.x < bounds.midX ? 0.1 : -0.1
+            } else {
+                incrementer = location.x > bounds.midX ? 0.1 : -0.1
             }
             value = min(max(value + incrementer, 0), 1)
         }

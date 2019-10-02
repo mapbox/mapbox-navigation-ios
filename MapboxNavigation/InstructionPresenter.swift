@@ -313,7 +313,7 @@ fileprivate struct IndexedVisualInstructionComponent {
 
 extension Array where Element == VisualInstructionComponent {
     fileprivate func component(before component: VisualInstructionComponent) -> VisualInstructionComponent? {
-        guard let index = self.index(of: component) else {
+        guard let index = self.firstIndex(of: component) else {
             return nil
         }
         if index > 0 {
@@ -323,7 +323,7 @@ extension Array where Element == VisualInstructionComponent {
     }
     
     fileprivate func component(after component: VisualInstructionComponent) -> VisualInstructionComponent? {
-        guard let index = self.index(of: component) else {
+        guard let index = self.firstIndex(of: component) else {
             return nil
         }
         if index+1 < self.endIndex {

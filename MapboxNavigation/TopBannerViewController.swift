@@ -287,7 +287,7 @@ import MapboxDirections
     }
     
     public func preview(step stepOverride: RouteStep? = nil, maneuverStep: RouteStep, distance: CLLocationDistance, steps: [RouteStep], completion: CompletionHandler? = nil) {
-        guard !steps.isEmpty, let step = stepOverride ?? steps.first, let index = steps.index(of: step) else {
+        guard !steps.isEmpty, let step = stepOverride ?? steps.first, let index = steps.firstIndex(of: step) else {
             return // do nothing if there are no steps provided to us.
         }
         //this must happen before the preview steps are set

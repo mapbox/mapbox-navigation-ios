@@ -687,8 +687,8 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
     
     public func preview(step: RouteStep, in banner: TopBannerViewController, remaining: [RouteStep], route: Route, animated: Bool = true) {
         guard let leg = route.leg(containing: step) else { return }
-        guard let legIndex = route.legs.index(of: leg) else { return }
-        guard let stepIndex = leg.steps.index(of: step) else { return }
+        guard let legIndex = route.legs.firstIndex(of: leg) else { return }
+        guard let stepIndex = leg.steps.firstIndex(of: step) else { return }
         let nextStepIndex = stepIndex + 1
         
         let legProgress = RouteLegProgress(leg: leg, stepIndex: stepIndex)

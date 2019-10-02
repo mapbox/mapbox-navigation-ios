@@ -2003,19 +2003,19 @@
 					351BEBD61E5BCC28006FE110 = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = GJZR2MEM28;
-						LastSwiftMigration = 1010;
+						LastSwiftMigration = 1030;
 						ProvisioningStyle = Automatic;
 					};
 					358D14621E5E3B7700ADE590 = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = GJZR2MEM28;
-						LastSwiftMigration = 1010;
+						LastSwiftMigration = 1030;
 						ProvisioningStyle = Automatic;
 					};
 					35B711CE1E5E7AD2001EDA8D = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = GJZR2MEM28;
-						LastSwiftMigration = 0910;
+						LastSwiftMigration = 1030;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 358D14621E5E3B7700ADE590;
 					};
@@ -2044,18 +2044,18 @@
 					35CDA85D2190F2A30072B675 = {
 						CreatedOnToolsVersion = 10.1;
 						DevelopmentTeam = GJZR2MEM28;
-						LastSwiftMigration = 1020;
+						LastSwiftMigration = 1030;
 						ProvisioningStyle = Automatic;
 					};
 					C53F2EDE20EBC95600D9798F = {
 						DevelopmentTeam = GJZR2MEM28;
-						LastSwiftMigration = 1010;
+						LastSwiftMigration = 1030;
 						ProvisioningStyle = Manual;
 					};
 					C5ADFBC81DDCC7840011824B = {
 						CreatedOnToolsVersion = 8.1;
 						DevelopmentTeam = GJZR2MEM28;
-						LastSwiftMigration = 1010;
+						LastSwiftMigration = 1030;
 						ProvisioningStyle = Automatic;
 					};
 					C5ADFBD11DDCC7840011824B = {
@@ -3078,7 +3078,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxNavigationTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "MapboxNavigationTests/MapboxNavigationTests-Bridging.h";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Example.app/Example";
 			};
 			name = Debug;
@@ -3097,7 +3096,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxNavigationTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "MapboxNavigationTests/MapboxNavigationTests-Bridging.h";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Example.app/Example";
 			};
 			name = Release;
@@ -3445,7 +3443,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -3501,7 +3499,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";

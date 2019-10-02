@@ -40,14 +40,11 @@ class LaneTests: FBSnapshotTestCase {
                 laneView.drivingSide = lane.drivingSide
                 
                 laneView.backgroundColor = .white
-                laneView.widthAnchor.constraint(equalToConstant: size.width)
-                laneView.heightAnchor.constraint(equalToConstant: size.height)
                 laneView.bounds = CGRect(origin: .zero, size: size)
                 
                 let label = UILabel(frame: .zero)
                 label.textColor = .white
                 label.text = "\(lane.description) (\(lane.drivingSide == .left ? "L" : "R"))"
-                label.widthAnchor.constraint(equalTo: laneView.widthAnchor)
                 
                 groupView.addArrangedSubview(label)
                 groupView.addArrangedSubview(laneView)

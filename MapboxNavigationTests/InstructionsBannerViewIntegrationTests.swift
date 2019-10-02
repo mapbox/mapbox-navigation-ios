@@ -102,7 +102,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
 
         view.update(for: makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
 
-        XCTAssertNotNil(view.primaryLabel.text!.index(of: "/"))
+        XCTAssertNotNil(view.primaryLabel.text!.firstIndex(of: "/"))
     }
 
     func testDelimiterIsHiddenWhenAllShieldsAreAlreadyLoaded() {
@@ -117,7 +117,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         view.update(for: makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
 
         //the delimiter should NOT be present since both shields are already in the cache
-        XCTAssertNil(view.primaryLabel.text!.index(of: "/"))
+        XCTAssertNil(view.primaryLabel.text!.firstIndex(of: "/"))
 
         //explicitly reset the cache
         resetImageCache()
@@ -139,7 +139,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         view.update(for: makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
 
         //Slash should be present until an adjacent shield is downloaded
-        XCTAssertNotNil(view.primaryLabel.text!.index(of: "/"))
+        XCTAssertNotNil(view.primaryLabel.text!.firstIndex(of: "/"))
 
         //simulate the downloads
         let firstDestinationComponent: VisualInstructionComponent = instructions[0]
@@ -158,7 +158,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         wait(for: [secondExpectation], timeout: 1)
  
         //Slash should no longer be present
-        XCTAssertNil(view.primaryLabel.text!.index(of: "/"), "Expected instruction text not to contain a slash: \(view.primaryLabel.text!)")
+        XCTAssertNil(view.primaryLabel.text!.firstIndex(of: "/"), "Expected instruction text not to contain a slash: \(view.primaryLabel.text!)")
     }
     
     func testGenericRouteShieldInstructionsArePresentedProperly() {

@@ -48,7 +48,7 @@ class RouteProgressTests: XCTestCase {
     }
     
     func testRemainingWaypointsAlongRoute() {
-        var coordinates = [
+        let coordinates = [
             CLLocationCoordinate2D(latitude: 0, longitude: 0),
             CLLocationCoordinate2D(latitude: 2, longitude: 3),
             CLLocationCoordinate2D(latitude: 4, longitude: 6),

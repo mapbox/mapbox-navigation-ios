@@ -31,6 +31,8 @@ extension MBRouteState: CustomStringConvertible {
             return "offRoute"
         case .stale:
             return "stale"
+        @unknown default:
+            fatalError("Indescribable route state \(rawValue)")
         }
     }
 }
