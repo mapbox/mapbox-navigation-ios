@@ -211,7 +211,7 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
             let height = mapView.bounds.height
             insets.top = height - insets.bottom - 2 * (height - insets.bottom - y)
         }
-        return insets;
+        return insets
     }
     
     /**
@@ -256,14 +256,14 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
         set {
             let progress = navigationService.routeProgress
             if !tracksUserCourse && newValue {
-                isOverviewingRoutes = false;
+                isOverviewingRoutes = false
                 mapView?.recenterMap()
                 mapView?.addArrow(route: progress.route,
                                  legIndex: progress.legIndex,
                                  stepIndex: progress.currentLegProgress.stepIndex + 1)
                 mapView?.setContentInset(contentInset(forOverviewing: false), animated: true, completionHandler: nil)
             } else if tracksUserCourse && !newValue {
-                isOverviewingRoutes = !isPanningAway;
+                isOverviewingRoutes = !isPanningAway
                 guard let userLocation = self.navigationService.router.location?.coordinate,
                 let coordinates = navigationService.route.coordinates else {
                     return
@@ -279,15 +279,15 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
 
     // Tracks if tracksUserCourse was set to false from overview button
     // or panned away.
-    var isPanningAway = false;
-    var isOverviewingRoutes = false;
+    var isPanningAway = false
+    var isOverviewingRoutes = false
     
     public func beginPanGesture() {
-        isPanningAway = true;
+        isPanningAway = true
         tracksUserCourse = false
         mapView?.tracksUserCourse = false
         mapView?.enableFrameByFrameCourseViewTracking(for: 1)
-        isPanningAway = false;
+        isPanningAway = false
     }
     
     @objc func visualInstructionDidChange(_ notification: NSNotification) {
