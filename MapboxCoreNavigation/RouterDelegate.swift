@@ -152,7 +152,7 @@ public protocol RouterDelegate: class, UnimplementedLogging {
     func routerShouldDisableBatteryMonitoring(_ router: Router) -> Bool
 }
 
-extension RouterDelegate {
+public extension RouterDelegate {
 
     
     func router(_ router: Router, shouldRerouteFrom location: CLLocation) -> Bool {

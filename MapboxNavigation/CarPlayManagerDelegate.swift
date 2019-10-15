@@ -169,9 +169,7 @@ public protocol CarPlayManagerDelegate: class, UnimplementedLogging {
 }
 
 @available(iOS 12.0, *)
-extension CarPlayManagerDelegate {
-
-    
+public extension CarPlayManagerDelegate {
     func carPlayManager(_ carPlayManager: CarPlayManager, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in carPlayTemplate: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]? {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self,  level: .debug)
         return nil
@@ -227,7 +225,5 @@ extension CarPlayManagerDelegate {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self,  level: .debug)
         return false
     }
-
-    
 }
 #endif

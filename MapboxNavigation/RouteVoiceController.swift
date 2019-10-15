@@ -272,7 +272,7 @@ public protocol VoiceControllerDelegate: class, UnimplementedLogging {
     func voiceController(_ voiceController: RouteVoiceController, willSpeak instruction: SpokenInstruction, routeProgress: RouteProgress) -> SpokenInstruction?
 }
 
-extension VoiceControllerDelegate {
+public extension VoiceControllerDelegate {
     func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: Error) {
         logUnimplemented(protocolType: VoiceControllerDelegate.self, level: .debug)
     }

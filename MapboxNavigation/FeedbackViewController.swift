@@ -39,7 +39,7 @@ public protocol FeedbackViewControllerDelegate: class, UnimplementedLogging {
     func feedbackViewControllerDidCancel(_ feedbackViewController: FeedbackViewController)
 }
 
-extension FeedbackViewControllerDelegate {
+public extension FeedbackViewControllerDelegate {
     func feedbackViewControllerDidOpen(_ feedbackViewController: FeedbackViewController) {
         logUnimplemented(protocolType: FeedbackViewControllerDelegate.self, level: .debug)
     }
