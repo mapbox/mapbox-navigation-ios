@@ -201,7 +201,7 @@ public struct RouteControllerNotificationUserInfoKey: Hashable, Equatable, RawRe
     public init(rawValue: String) {
     self.rawValue = rawValue
 }
-    public init(stringLiteral value: Self.StringLiteralType) {
+    public init(stringLiteral value: StringLiteralType) {
         self.init(rawValue: value)
     }
     
@@ -223,7 +223,7 @@ public let MBErrorDomain = "MBErrorDomain"
 extension Notification.Name: ExpressibleByStringLiteral {
     public typealias StringLiteralType = String
     
-    public init(stringLiteral value: Self.StringLiteralType) {
+    public init(stringLiteral value: StringLiteralType) {
         self.init(rawValue: value)
     }
     
