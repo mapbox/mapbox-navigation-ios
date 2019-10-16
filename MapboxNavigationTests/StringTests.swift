@@ -1,7 +1,7 @@
 import XCTest
-@testable import MapboxCoreNavigation
+@testable import MapboxNavigation
 
-class Tests: XCTestCase {
+class StringTests: XCTestCase {
     
     func testMD5() {
         XCTAssertEqual("hello".md5,
@@ -49,7 +49,7 @@ class Tests: XCTestCase {
     }
     
     func testNaughtyStrings() {
-        let path = Bundle(for: Tests.self).path(forResource: "md5_crazy_strings", ofType: "txt")!
+        let path = Bundle(for: StringTests.self).path(forResource: "md5_crazy_strings", ofType: "txt")!
         let content = try! String(contentsOfFile: path, encoding: .utf8)
         let lines = content.components(separatedBy: .newlines)
         
