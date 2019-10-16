@@ -60,7 +60,7 @@ public struct StyleManagerNotificationUserInfoKey: Hashable, Equatable, RawRepre
         self.rawValue = rawValue
     }
     
-    public init(stringLiteral value: Self.StringLiteralType) {
+    public init(stringLiteral value: StringLiteralType) {
         self.init(rawValue: value)
     }
     
