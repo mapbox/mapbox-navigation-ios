@@ -183,10 +183,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     public var userCourseView: UserCourseView = UserPuckCourseView(frame: CGRect(origin: .zero, size: 75.0)) {
         didSet {
             oldValue.removeFromSuperview()
-            if let location = userLocationForCourseTracking {
-                updateCourseTracking(location: location, animated: false)
-            }
-            addSubview(userCourseView)
+            installUserCourseView()
         }
     }
     
@@ -220,6 +217,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         let mapTapGesture = self.mapTapGesture
         mapTapGesture.requireFailure(of: gestures)
         addGestureRecognizer(mapTapGesture)
+        
+        installUserCourseView()
     }
     
     open override func layoutMarginsDidChange() {
@@ -307,6 +306,13 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     //MARK: - User Tracking
+    
+    func installUserCourseView() {
+        if let location = userLocationForCourseTracking {
+            updateCourseTracking(location: location, animated: false)
+        }
+        addSubview(userCourseView)
+    }
     
     @objc private func disableUserCourseTracking() {
         guard tracksUserCourse else { return }
