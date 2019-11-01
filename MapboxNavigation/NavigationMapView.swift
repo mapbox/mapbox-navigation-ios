@@ -413,8 +413,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         removeRoutes()
         removeWaypoints()
         
-        showRoutes(routes)
-        showWaypoints(active)
+        show(routes)
+        showWaypoints(on: active)
         
         fit(to: active, facing: 0, animated: animated)
     }
@@ -435,7 +435,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Adds or updates both the route line and the route line casing
      */
-    public func showRoutes(_ routes: [Route], legIndex: Int = 0) {
+    public func show(_ routes: [Route], legIndex: Int = 0) {
         guard let style = style else { return }
         guard let mainRoute = routes.first else { return }
         self.routes = routes
@@ -495,7 +495,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Adds the route waypoints to the map given the current leg index. Previous waypoints for completed legs will be omitted.
      */
-    public func showWaypoints(_ route: Route, legIndex: Int = 0) {
+    public func showWaypoints(on route: Route, legIndex: Int = 0) {
         guard let style = style else {
             return
         }

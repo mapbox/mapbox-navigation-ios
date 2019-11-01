@@ -86,7 +86,7 @@ public class NavigationSettings: NSObject {
                 guard let val = change?[.newKey] else { continue }
                 
                 UserDefaults.standard.set(val, forKey: key.prefixed)
-                NotificationCenter.default.post(name: .navigationSettingsDidChangeNotification, object: nil, userInfo: [key: val])
+                NotificationCenter.default.post(name: .navigationSettingsDidChange, object: nil, userInfo: [key: val])
                 
                 found = true
                 break

@@ -129,71 +129,63 @@ public extension Notification.Name {
      
      The user info dictionary contains the keys `MBRouteControllerRouteProgressKey` and `MBRouteControllerLocationKey`.
      
-     :nodoc:
      */
-    static let routeControllerProgressDidChange: Notification.Name = "RouteControllerProgressDidChange"
+    static let routeControllerProgressDidChange: Notification.Name = .init(rawValue: "RouteControllerProgressDidChange")
     
     /**
      Posted after the user diverges from the expected route, just before `RouteController` attempts to calculate a new route.
      
      The user info dictionary contains the key `MBRouteControllerLocationKey`.
      
-     :nodoc:
      */
-    static let routeControllerWillReroute: Notification.Name = "RouteControllerWillReroute"
+    static let routeControllerWillReroute: Notification.Name = .init(rawValue: "RouteControllerWillReroute")
     
     /**
      Posted when `RouteController` obtains a new route in response to the user diverging from a previous route.
      
      The user info dictionary contains the keys `MBRouteControllerLocationKey` and `MBRouteControllerIsProactiveKey`.
      
-     :nodoc:
      */
-    static let routeControllerDidReroute: Notification.Name = "RouteControllerDidReroute"
+    static let routeControllerDidReroute: Notification.Name = .init(rawValue: "RouteControllerDidReroute")
     
     /**
      Posted when `RouteController` fails to reroute the user after the user diverges from the expected route.
      
      The user info dictionary contains the key `MBRouteControllerRoutingErrorKey`.
      
-     :nodoc:
      */
-    static let routeControllerDidFailToReroute: Notification.Name = "RouteControllerDidFailToReroute"
+    static let routeControllerDidFailToReroute: Notification.Name = .init(rawValue: "RouteControllerDidFailToReroute")
     
     /**
      Posted when `RouteController` detects that the user has passed an ideal point for saying an instruction aloud.
      
      The user info dictionary contains the key `MBRouteControllerRouteProgressKey`.
      
-     :nodoc:
      */
-    static let routeControllerDidPassSpokenInstructionPoint: Notification.Name =  "RouteControllerDidPassSpokenInstructionPoint"
+    static let routeControllerDidPassSpokenInstructionPoint: Notification.Name =  .init(rawValue: "RouteControllerDidPassSpokenInstructionPoint")
     
     /**
      Posted when `RouteController` detects that the user has passed an ideal point for display an instruction visually.
      
      The user info dictionary contains the key `MBRouteControllerRouteProgressKey`.
      
-     :nodoc:
      */
-    static let routeControllerDidPassVisualInstructionPoint: Notification.Name = "MBRouteControllerDidPassVisualInstructionPoint"
+    static let routeControllerDidPassVisualInstructionPoint: Notification.Name = .init(rawValue: "MBRouteControllerDidPassVisualInstructionPoint")
     
     /**
     Posted when something changes in the shared `MBNavigationSettings` object.
     
     The user info dictionary indicates which keys and values changed.
     
-    :nodoc:
     */
-    static let navigationSettingsDidChangeNotification: Notification.Name = "MBNavigationSettingsDidChange"
+    static let navigationSettingsDidChange: Notification.Name = .init(rawValue: "MBNavigationSettingsDidChange")
 }
 
 /**
 Keys in the user info dictionaries of various notifications posted by instances
 of `RouteController`.
 */
-public struct RouteControllerNotificationUserInfoKey: Hashable, Equatable, RawRepresentable, ExpressibleByStringLiteral {
-    public typealias StringLiteralType = String
+public struct RouteControllerNotificationUserInfoKey: Hashable, Equatable, RawRepresentable {
     public typealias RawValue = String
 
     public var rawValue: String
@@ -201,17 +193,15 @@ public struct RouteControllerNotificationUserInfoKey: Hashable, Equatable, RawRe
     public init(rawValue: String) {
         self.rawValue = rawValue
     }
-    public init(stringLiteral value: StringLiteralType) {
-        self.init(rawValue: value)
-    }
+
     
-    public static let routeProgressKey: RouteControllerNotificationUserInfoKey = "progress"
-    public static let locationKey: RouteControllerNotificationUserInfoKey = "location"
-    public static let rawLocationKey: RouteControllerNotificationUserInfoKey = "rawLocation"
-    public static let routingErrorKey: RouteControllerNotificationUserInfoKey = "error"
-    public static let visualInstructionKey: RouteControllerNotificationUserInfoKey = "visualInstruction"
-    public static let spokenInstructionKey: RouteControllerNotificationUserInfoKey = "spokenInstruction"
-    public static let isProactiveKey: RouteControllerNotificationUserInfoKey = "RouteControllerDidFindFasterRoute"
+    public static let routeProgressKey: RouteControllerNotificationUserInfoKey = .init(rawValue: "progress")
+    public static let locationKey: RouteControllerNotificationUserInfoKey = .init(rawValue: "location")
+    public static let rawLocationKey: RouteControllerNotificationUserInfoKey = .init(rawValue: "rawLocation")
+    public static let routingErrorKey: RouteControllerNotificationUserInfoKey = .init(rawValue: "error")
+    public static let visualInstructionKey: RouteControllerNotificationUserInfoKey = .init(rawValue: "visualInstruction")
+    public static let spokenInstructionKey: RouteControllerNotificationUserInfoKey = .init(rawValue: "spokenInstruction")
+    public static let isProactiveKey: RouteControllerNotificationUserInfoKey = .init(rawValue: "RouteControllerDidFindFasterRoute")
     
 }
 
@@ -220,11 +210,3 @@ Constant representing the domain in which errors created in this library will li
 */
 public let MBErrorDomain = "MBErrorDomain"
 
-extension Notification.Name: ExpressibleByStringLiteral {
-    public typealias StringLiteralType = String
-    
-    public init(stringLiteral value: StringLiteralType) {
-        self.init(rawValue: value)
-    }
-    
-}

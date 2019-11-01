@@ -19,7 +19,7 @@ public protocol BottomBannerViewControllerDelegate: class {
  */
 @IBDesignable
 
-open class BottomBannerViewController: UIViewController, NavigationServiceDelegate {
+open class BottomBannerViewController: UIViewController, NavigationComponent {
 
     /*
      A padded spacer view that covers the bottom safe area of the device, if any.

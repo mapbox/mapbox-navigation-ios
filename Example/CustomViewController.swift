@@ -81,7 +81,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
     }
 
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
-        self.mapView.showRoutes([navigationService.route])
+        self.mapView.show([navigationService.route])
     }
 
     // Notifications sent on all location updates
@@ -115,7 +115,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
     // Fired when the user is no longer on the route.
     // Update the route on the map.
     @objc func rerouted(_ notification: NSNotification) {
-        self.mapView.showRoutes([navigationService.route])
+        self.mapView.show([navigationService.route])
     }
 
     @IBAction func cancelButtonPressed(_ sender: Any) {

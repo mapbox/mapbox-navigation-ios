@@ -210,7 +210,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         styleManager.styles = options?.styles ?? [DayStyle(), NightStyle()]
         
         let bottomBanner = options?.bottomBanner ?? {
-            let viewController = BottomBannerViewController()
+            let viewController: BottomBannerViewController = .init()
             viewController.delegate = self
             return viewController
         }()

@@ -24,7 +24,7 @@ Get up and running in a few minutes with our drop-in turn-by-turn navigation `Na
 
 ## Requirements
 
-The Mapbox Navigation SDK and Core Navigation are compatible with applications written in Swift or Objective-C in Xcode 10.2 and above. The Mapbox Navigation and Mapbox Core Navigation frameworks run on iOS 10.0 and above.
+The Mapbox Navigation SDK and Core Navigation are compatible with applications written in Swift 5 in Xcode 10.2 and above. The Mapbox Navigation and Mapbox Core Navigation frameworks run on iOS 10.0 and above.
 
 The Mapbox Navigation SDK is also available [for Android](https://github.com/mapbox/mapbox-navigation-android/).
 
@@ -92,7 +92,7 @@ Consult the [API reference](https://docs.mapbox.com/ios/api/navigation/) for fur
 
 The [API reference](https://docs.mapbox.com/ios/api/navigation/) includes example code for accomplishing common tasks. You can run these examples as part of the [navigation-ios-examples](https://github.com/mapbox/navigation-ios-examples) project.
 
-This repository also contains [testbeds](https://github.com/mapbox/mapbox-navigation-ios/tree/master/Example) that exercise a variety of navigation SDK features:
+This repository also contains [a testbed](https://github.com/mapbox/mapbox-navigation-ios/tree/master/Example) that exercises a variety of navigation SDK features:
 
 1. Clone the repository or download the [.zip file](https://github.com/mapbox/mapbox-navigation-ios/archive/master.zip)
 1. Run `carthage update --platform ios` to build just the iOS dependencies.

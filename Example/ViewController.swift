@@ -42,8 +42,8 @@ class ViewController: UIViewController {
             guard let routes = routes,
                   let current = routes.first else { mapView?.removeRoutes(); return }
 
-            mapView?.showRoutes(routes)
-            mapView?.showWaypoints(current)
+            mapView?.show(routes)
+            mapView?.showWaypoints(on: current)
         }
     }
     
@@ -369,8 +369,8 @@ extension ViewController: MGLMapViewDelegate {
         
         if let routes = routes, let currentRoute = routes.first, let coords = currentRoute.coordinates {
             mapView.setVisibleCoordinateBounds(MGLPolygon(coordinates: coords, count: currentRoute.coordinateCount).overlayBounds, animated: false)
-            self.mapView?.showRoutes(routes)
-            self.mapView?.showWaypoints(currentRoute)
+            self.mapView?.show(routes)
+            self.mapView?.showWaypoints(on: currentRoute)
         }
     }
 }

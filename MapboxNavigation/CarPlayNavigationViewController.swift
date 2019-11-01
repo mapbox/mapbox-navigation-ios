@@ -293,7 +293,7 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
     @objc func visualInstructionDidChange(_ notification: NSNotification) {
         let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
         updateManeuvers(for: routeProgress)
-        mapView?.showWaypoints(routeProgress.route)
+        mapView?.showWaypoints(on: routeProgress.route)
         mapView?.addArrow(route: routeProgress.route, legIndex: routeProgress.legIndex, stepIndex: routeProgress.currentLegProgress.stepIndex + 1)
     }
     
@@ -347,8 +347,8 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
         let nextStep = progress.currentLegProgress.stepIndex + 1 // look forward twoards the next step
         
         map.addArrow(route: progress.route, legIndex: legIndex, stepIndex: nextStep)
-        map.showRoutes([progress.route], legIndex: legIndex)
-        map.showWaypoints(progress.route, legIndex: legIndex)
+        map.show([progress.route], legIndex: legIndex)
+        map.showWaypoints(on: progress.route, legIndex: legIndex)
     }
     
     func updateManeuvers(for routeProgress: RouteProgress) {

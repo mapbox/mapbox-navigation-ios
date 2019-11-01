@@ -95,7 +95,7 @@ class NavigationMapViewTests: XCTestCase, MGLMapViewDelegate {
         mapView!.addAnnotation(PersistentAnnotation())
         XCTAssertEqual(mapView!.annotations!.count, 2)
         
-        mapView!.showWaypoints(route)
+        mapView!.showWaypoints(on: route)
         XCTAssertEqual(mapView!.annotations!.count, 3)
         
         mapView!.removeWaypoints()

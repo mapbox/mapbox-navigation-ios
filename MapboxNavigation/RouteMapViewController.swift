@@ -462,8 +462,8 @@ extension RouteMapViewController: NavigationComponent {
         
         mapView.updatePreferredFrameRate(for: progress)
         if currentLegIndexMapped != legIndex {
-            mapView.showWaypoints(route, legIndex: legIndex)
-            mapView.showRoutes([route], legIndex: legIndex)
+            mapView.showWaypoints(on: route, legIndex: legIndex)
+            mapView.show([route], legIndex: legIndex)
             
             currentLegIndexMapped = legIndex
         }
@@ -491,8 +491,8 @@ extension RouteMapViewController: NavigationComponent {
         
         
         mapView.addArrow(route: route, legIndex: legIndex, stepIndex: stepIndex + 1)
-        mapView.showRoutes([route], legIndex: legIndex)
-        mapView.showWaypoints(route)
+        mapView.show([route], legIndex: legIndex)
+        mapView.showWaypoints(on: route)
         
         if annotatesSpokenInstructions {
             mapView.showVoiceInstructionsOnMap(route: route)
@@ -771,8 +771,8 @@ extension RouteMapViewController: NavigationViewDelegate {
     func showRouteIfNeeded() {
         guard isViewLoaded && view.window != nil else { return }
         guard !mapView.showsRoute else { return }
-        mapView.showRoutes([router.route], legIndex: router.routeProgress.legIndex)
-        mapView.showWaypoints(router.route, legIndex: router.routeProgress.legIndex)
+        mapView.show([router.route], legIndex: router.routeProgress.legIndex)
+        mapView.showWaypoints(on: router.route, legIndex: router.routeProgress.legIndex)
         
         let currentLegProgress = router.routeProgress.currentLegProgress
         let nextStepIndex = currentLegProgress.stepIndex + 1

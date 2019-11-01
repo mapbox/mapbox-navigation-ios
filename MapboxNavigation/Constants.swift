@@ -44,14 +44,13 @@ extension Notification.Name {
      This notification is the equivalent of `StyleManagerDelegate.styleManager(_:didApply:)`.
      The user info dictionary contains the key `StyleManagerNotificationUserInfoKey.style` and `StyleManagerNotificationUserInfoKey.styleManager`.
      */
-    public static let styleManagerDidApplyStyle: Notification.Name = "MBStyleManagerDidApplyStyle"
+    public static let styleManagerDidApplyStyle: Notification.Name = .init(rawValue: "MBStyleManagerDidApplyStyle")
 }
 
 /**
  Keys in the user info dictionaries of various notifications posted by instances of `StyleManager`.
  */
-public struct StyleManagerNotificationUserInfoKey: Hashable, Equatable, RawRepresentable, ExpressibleByStringLiteral {
-    public typealias StringLiteralType = String
+public struct StyleManagerNotificationUserInfoKey: Hashable, Equatable, RawRepresentable {
     public typealias RawValue = String
     
     public var rawValue: String
@@ -59,22 +58,19 @@ public struct StyleManagerNotificationUserInfoKey: Hashable, Equatable, RawRepre
     public init(rawValue: String) {
         self.rawValue = rawValue
     }
-    
-    public init(stringLiteral value: StringLiteralType) {
-        self.init(rawValue: value)
-    }
+
     
     
     
     /**
      A key in the user info dictionary of `StyleManagerDidApplyStyleNotification` notification. The corresponding value is an `Style` instance that was applied.
      */
-    static let styleKey: StyleManagerNotificationUserInfoKey = "style"
+    static let styleKey: StyleManagerNotificationUserInfoKey = .init(rawValue: "style")
     
     /**
      A key in the user info dictionary of `StyleManagerDidApplyStyleNotification` notification. The corresponding value is an `StyleManager` instance that applied the style.
      */
-    static let styleManagerKey: StyleManagerNotificationUserInfoKey = "styleManager"
+    static let styleManagerKey: StyleManagerNotificationUserInfoKey = .init(rawValue: "styleManager")
 }
 
 /**
