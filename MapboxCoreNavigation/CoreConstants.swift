@@ -195,12 +195,39 @@ public struct RouteControllerNotificationUserInfoKey: Hashable, Equatable, RawRe
     }
 
     
+    /**
+    A key in the user info dictionary of a `routeControllerProgressDidChange`, `routeControllerDidPassVisualInstructionPoint`, or `routeControllerDidPassSpokenInstructionPoint` notification. The corresponding value is a `RouteProgress` object representing the current route progress.
+    */
     public static let routeProgressKey: RouteControllerNotificationUserInfoKey = .init(rawValue: "progress")
+    
+    /**
+    A key in the user info dictionary of a `routeControllerProgressDidChange` or `routeControllerWillReroute` notification. The corresponding value is a `CLLocation` object representing the current idealized user location.
+    */
     public static let locationKey: RouteControllerNotificationUserInfoKey = .init(rawValue: "location")
+    
+    /**
+    A key in the user info dictionary of a `routeControllerProgressDidChange` or `routeControllerWillReroute` notification. The corresponding value is a `CLLocation` object representing the current raw user location.
+    */
     public static let rawLocationKey: RouteControllerNotificationUserInfoKey = .init(rawValue: "rawLocation")
+    
+    /**
+    A key in the user info dictionary of a `routeControllerDidFailToReroute` notification. The corresponding value is an `NSError` object indicating why `RouteController` was unable to calculate a new route.
+    */
     public static let routingErrorKey: RouteControllerNotificationUserInfoKey = .init(rawValue: "error")
+    
+    /**
+    A key in the user info dictionary of an `routeControllerDidPassVisualInstructionPoint`. The corresponding value is an `MBVisualInstruction` object representing the current visual instruction.
+    */
     public static let visualInstructionKey: RouteControllerNotificationUserInfoKey = .init(rawValue: "visualInstruction")
+    
+    /**
+    A key in the user info dictionary of a `routeControllerDidPassSpokenInstructionPoint` notification. The corresponding value is an `MBSpokenInstruction` object representing the current visual instruction.
+    */
     public static let spokenInstructionKey: RouteControllerNotificationUserInfoKey = .init(rawValue: "spokenInstruction")
+    
+    /**
+    A key in the user info dictionary of a `routeControllerDidReroute` notification. The corresponding value is an `NSNumber` instance containing a Boolean value indicating whether `RouteController` proactively rerouted the user onto a faster route.
+    */
     public static let isProactiveKey: RouteControllerNotificationUserInfoKey = .init(rawValue: "RouteControllerDidFindFasterRoute")
     
 }
