@@ -232,8 +232,8 @@ public struct RouteControllerNotificationUserInfoKey: Hashable, Equatable, RawRe
     
 }
 
-/**
-Constant representing the domain in which errors created in this library will live under.
-*/
-public let MBErrorDomain = "MBErrorDomain"
+///**
+//Constant representing the domain in which errors created in this library will live under.
+//*/
+//public let MBErrorDomain = "MBErrorDomain"
 
