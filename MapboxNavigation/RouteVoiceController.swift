@@ -3,7 +3,7 @@ import Foundation
 import AVFoundation
 import MapboxDirections
 import MapboxCoreNavigation
-
+import MapboxSpeech
 
 extension NSAttributedString {
     public func pronounced(_ pronunciation: String) -> NSAttributedString {
@@ -148,23 +148,52 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         
         speechSynth.stopSpeaking(at: .word)
         
-        do {
-            try mixAudio()
-        } catch {
-            voiceControllerDelegate?.voiceController(self, spokenInstructionsDidFailWith: error)
+        safeMixAudio(instruction: nil, engine: .native(speechSynth)) {
+            voiceControllerDelegate?.voiceController(self, spokenInstructionsDidFailWith: $0)
         }
+        
         rerouteSoundPlayer.play()
     }
     
     public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-        do {
-            try unDuckAudio()
-        } catch {
-            voiceControllerDelegate?.voiceController(self, spokenInstructionsDidFailWith: error)
+        safeUnduckAudio(instruction: nil, engine: .native(synthesizer)) {
+            voiceControllerDelegate?.voiceController(self, spokenInstructionsDidFailWith: $0)
+
         }
     }
     
-    func duckAudio() throws {
+    typealias AudioControlFailureHandler = (SpeechError) -> Void
+    func safeDuckAudio(instruction: SpokenInstruction?, engine: SpeechEngine, failure: AudioControlFailureHandler) {
+        do {
+            try tryDuckAudio()
+        } catch {
+            let wrapped = SpeechError.unableToControlAudio(instruction: instruction, action: .duck, engine: engine, underlying: error)
+            failure(wrapped)
+            return
+        }
+    }
+    
+    func safeUnduckAudio(instruction: SpokenInstruction?, engine: SpeechEngine, failure: AudioControlFailureHandler) {
+        do {
+            try tryUnduckAudio()
+        } catch {
+            let wrapped = SpeechError.unableToControlAudio(instruction: instruction, action: .duck, engine: engine, underlying: error)
+            failure(wrapped)
+            return
+        }
+    }
+    
+    func safeMixAudio(instruction: SpokenInstruction?, engine: SpeechEngine, failure: AudioControlFailureHandler) {
+        do {
+            try tryMixAudio()
+        } catch {
+            let wrapped = SpeechError.unableToControlAudio(instruction: instruction, action: .mix, engine: engine, underlying: error)
+            failure(wrapped)
+            return
+        }
+    }
+    
+    func tryDuckAudio() throws {
         let audioSession = AVAudioSession.sharedInstance()
         if #available(iOS 12.0, *) {
             try audioSession.setCategory(.playback, mode: .voicePrompt, options: [.duckOthers, .mixWithOthers])
@@ -174,13 +203,13 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         try audioSession.setActive(true)
     }
     
-    func mixAudio() throws {
+    func tryMixAudio() throws {
         let audioSession = AVAudioSession.sharedInstance()
         try audioSession.setCategory(.ambient, mode: audioSession.mode)
         try audioSession.setActive(true)
     }
     
-    func unDuckAudio() throws {
+    func tryUnduckAudio() throws {
         try AVAudioSession.sharedInstance().setActive(false, options: [.notifyOthersOnDeactivation])
     }
     
@@ -207,12 +236,10 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
             voiceControllerDelegate?.voiceController(self, didInterrupt: lastSpokenInstruction, with: instruction)
         }
         
-        do {
-            try duckAudio()
-        } catch {
-            voiceControllerDelegate?.voiceController(self, spokenInstructionsDidFailWith: error)
+        safeDuckAudio(instruction: instruction, engine: .native(speechSynth)) {
+            voiceControllerDelegate?.voiceController(self, spokenInstructionsDidFailWith: $0)
         }
-        
+ 
         var utterance: AVSpeechUtterance?
         if Locale.preferredLocalLanguageCountryCode == "en-US" {
             // Alex can’t handle attributed text.
@@ -244,13 +271,23 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
 public protocol VoiceControllerDelegate: class, UnimplementedLogging {
     
     /**
+     Called when the voice controller falls back to a backup speech syntehsizer, but is still able to speak the instruction.
+     
+     - parameter voiceController: The voice controller that experienced the failure.
+     - parameter engine: the Speech engine that was used as the fallback.
+     - parameter error: An error explaining the failure and its cause.
+     */
+    
+    func voiceController(_ voiceController: RouteVoiceController, didFallBackToEngine speech: AVSpeechSynthesizer, becauseOf error: SpeechError)
+   
+    /**
      Called when the voice controller failed to speak an instruction.
      
      - parameter voiceController: The voice controller that experienced the failure.
-     - parameter error: An error explaining the failure and its cause. The `MBSpokenInstructionErrorCodeKey` key of the error’s user info dictionary is a `SpokenInstructionErrorCode` indicating the cause of the failure.
+     - parameter error: An error explaining the failure and its cause.
      */
     
-    func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: Error)
+    func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: SpeechError)
     
     /**
      Called when one spoken instruction interrupts another instruction currently being spoken.
@@ -273,6 +310,11 @@ public protocol VoiceControllerDelegate: class, UnimplementedLogging {
 }
 
 public extension VoiceControllerDelegate {
+    
+    func voiceController(_ voiceController: RouteVoiceController, didFallBackToEngine speech: AVSpeechSynthesizer, becauseOf error: SpeechError) {
+        logUnimplemented(protocolType: VoiceControllerDelegate.self, level: .debug)
+    }
+    
     func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: Error) {
         logUnimplemented(protocolType: VoiceControllerDelegate.self, level: .debug)
     }

@@ -411,6 +411,10 @@ extension ViewController: NavigationMapViewDelegate {
 // MARK: VoiceControllerDelegate methods
 // To use these delegate methods, set the `VoiceControllerDelegate` on your `VoiceController`.
 extension ViewController: VoiceControllerDelegate {
+    func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: SpeechError) {
+        print(error.localizedDescription)
+    }
+    
     // Called when there is an error with speaking a voice instruction.
     func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: Error) {
         print(error.localizedDescription)
