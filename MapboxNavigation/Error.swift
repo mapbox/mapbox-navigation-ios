@@ -23,5 +23,4 @@ public enum SpeechError: LocalizedError {
     case unableToControlAudio(instruction: SpokenInstruction?, action: SpeechFailureAction, engine: SpeechEngine, underlying: Error?)
     case unableToInitalizePlayer(playerType: AVAudioPlayer.Type, instruction: SpokenInstruction, engine: SpeechEngine, underlying: Error)
     case undefinedSpeechLocale(instruction: SpokenInstruction, progress: RouteProgress)
-    case unknown(instruction: SpokenInstruction, underlying: Error?)
 }
