@@ -141,7 +141,7 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
         audioTask?.cancel()
         
         if let error = error {
-            voiceControllerDelegate?.voiceController(self, didFallBackToEngine: speechSynth, becauseOf: error)
+            voiceControllerDelegate?.voiceController(self, didFallBackTo: speechSynth, becauseOf: error)
         }
         
         guard !(audioPlayer?.isPlaying ?? false) else {
