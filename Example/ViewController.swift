@@ -3,7 +3,7 @@ import MapboxCoreNavigation
 import MapboxNavigation
 import MapboxDirections
 import UserNotifications
-
+import AVKit
 
 private typealias RouteRequestSuccess = (([Route]) -> Void)
 private typealias RouteRequestFailure = ((NSError) -> Void)
@@ -411,14 +411,14 @@ extension ViewController: NavigationMapViewDelegate {
 // MARK: VoiceControllerDelegate methods
 // To use these delegate methods, set the `VoiceControllerDelegate` on your `VoiceController`.
 extension ViewController: VoiceControllerDelegate {
-    func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: SpeechError) {
-        print(error.localizedDescription)
+    // called when there is an error that requires the speech controller to fall back to a native engine.
+    func voiceController(_ voiceController: RouteVoiceController, didFallBackTo engine: AVSpeechSynthesizer, becauseOf error: SpeechError) {
+        print(error)
     }
-    
     // Called when there is an error with speaking a voice instruction.
-    func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: Error) {
-        print(error.localizedDescription)
-    }
+     func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: SpeechError) {
+         print(error)
+     }
     // Called when an instruction is interrupted by a new voice instruction.
     func voiceController(_ voiceController: RouteVoiceController, didInterrupt interruptedInstruction: SpokenInstruction, with interruptingInstruction: SpokenInstruction) {
         print(interruptedInstruction.text, interruptingInstruction.text)

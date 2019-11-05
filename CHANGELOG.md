@@ -1,5 +1,12 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## master
+### Error Handling
+* The `MapboxVoiceController` and `RouteVoiceController` now emit `SpeechError`s instead of an `NSError` object. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
+* There is a new `VoiceController(_:didFallBackTo:becauseOf:)` method that informs the client that the speech engine was forced to fall-back to a native speech engine. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
+### Messaging
+* Replicated OBJ-C's "optional protocol" feature in swift by moving optionality to runtime. All messaging protocols have default implementations that call `UnimplementedLogging.logUnimplemented`, which warns you in-console about delegate implementations you may have missed. Alerts are sent through Apple Unified Logging and can be disabled globally through [Unifed Logging](https://developer.apple.com/documentation/os/logging#2878594), through overriding `UnimplementedLogging.logUnimplemented` with a no-op implementation, or by overriding the delegate function with a no-op implementation. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
+
 ## v0.38.0
 
 * This library now requires a minimum deployment target of iOS 10.0 or above. iOS 9._x_ is no longer supported. ([#2206](https://github.com/mapbox/mapbox-navigation-ios/pull/2206))
