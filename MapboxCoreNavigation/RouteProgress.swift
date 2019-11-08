@@ -510,7 +510,7 @@ open class RouteStepProgress: NSObject {
     /**
      Returns distance from user to end of step.
      */
-    public var userDistanceToManeuverLocation: CLLocationDistance = Double.infinity
+    public var userDistanceToManeuverLocation: CLLocationDistance
 
     /**
      Total distance in meters remaining on current step.
@@ -541,6 +541,7 @@ open class RouteStepProgress: NSObject {
      */
     public init(step: RouteStep, spokenInstructionIndex: Int = 0) {
         self.step = step
+        self.userDistanceToManeuverLocation = step.distance
         self.intersectionIndex = 0
         self.spokenInstructionIndex = spokenInstructionIndex
     }
