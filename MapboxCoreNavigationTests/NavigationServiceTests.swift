@@ -2,6 +2,7 @@ import XCTest
 import MapboxDirections
 import Turf
 import MapboxMobileEvents
+import os.log
 @testable import TestHelper
 @testable import MapboxCoreNavigation
 
@@ -489,4 +490,35 @@ class NavigationServiceTests: XCTestCase {
             service.locationManager(locationManager, didUpdateLocations: [location])
         }
     }
+    
+    func testUnimplementedLogging() {
+        unimplementedTestLogs = []
+        
+        let route = Fixture.route(from: "DCA-Arboretum")
+        let directions = Directions(accessToken: "foo")
+        let locationManager = DummyLocationManager()
+        let trace = Fixture.generateTrace(for: route, speedMultiplier: 4).shiftedToPresent()
+        
+        let service = MapboxNavigationService(route: route, directions: directions, locationSource: locationManager, eventsManagerType: nil)
+        
+        let spy = EmptyNavigationServiceDelegate()
+        service.delegate = spy
+        service.start()
+                
+        for location in trace {
+            service.locationManager(locationManager, didUpdateLocations: [location])
+        }
+        
+        guard let logs = unimplementedTestLogs else {
+            XCTFail("Unable to fetch logs")
+            return
+        }
+        
+        let ourLogs = logs.filter { $0.0 == "EmptyNavigationServiceDelegate" }
+        
+        XCTAssertEqual(ourLogs.count, 520, "Expected logs to be populated and expected number of messages sent")
+        unimplementedTestLogs = nil
+    }
 }
+
+class EmptyNavigationServiceDelegate: NavigationServiceDelegate {}
