@@ -531,6 +531,7 @@ public protocol CarPlayNavigationDelegate: class, UnimplementedLogging {
      
      - parameter carPlayNavigationViewController: The CarPlay navigation view controller that was dismissed.
      - parameter canceled: True if the user dismissed the CarPlay navigation view controller by tapping the Cancel button; false if the navigation view controller dismissed by some other means.
+     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.     
      */
     
     func carPlayNavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool)

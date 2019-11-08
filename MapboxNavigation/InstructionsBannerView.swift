@@ -10,6 +10,7 @@ public protocol InstructionsBannerViewDelegate: class, UnimplementedLogging {
     
     /**
      Called when the user taps the `InstructionsBannerView`.
+     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     
     func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView)
@@ -17,6 +18,7 @@ public protocol InstructionsBannerViewDelegate: class, UnimplementedLogging {
     
     /**
      Called when the user drags either up or down on the `InstructionsBannerView`.
+     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     @available(*, deprecated, message: "Please use didSwipeInstructionsBanner instead.")
     
@@ -24,6 +26,7 @@ public protocol InstructionsBannerViewDelegate: class, UnimplementedLogging {
     
     /**
      Called when the user swipes either left, right, or down on the `InstructionsBannerView`
+     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.     
      */
     func didSwipeInstructionsBanner(_ sender: BaseInstructionsBannerView, swipeDirection direction: UISwipeGestureRecognizer.Direction)
 }

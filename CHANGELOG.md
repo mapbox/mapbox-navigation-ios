@@ -2,7 +2,12 @@
 
 ## master
 
+### Architechture
+* This library can no longer be used in applications written in pure Objective-C. If you need to use this library’s public API from Objective-C code, you will need to implement a wrapper in Swift that bridges the subset of the API you need from Swift to Objective-C. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
+
+
 ### UI
+* `UserCourseView` is now a type alias of the `UIView` class and the `CourseUpdatable` protocol rather than a protocol in its own right. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
 * `NavigationMapview.showRoutes(_:legIndex:)` has been renaamed to `NavigationMapView.show(_:legIndex:)`. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
 * `NavigationMapview.showWayoints(_:legIndex:)` has been renaamed to `NavigationMapView.showWaypoints(on:legIndex:)`. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
 * `MapboxVoiceController.play(_:)` has been renaamed to `MapboxVoiceController.play(instruction:data:)`. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
@@ -13,7 +18,7 @@
 * There is a new `VoiceControllerDelegate.voiceController(_:didFallBackTo:becauseOf:)` method that informs the client that the speech engine was forced to fall-back to a native speech engine. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
 
 ### Messaging
-* Replicated OBJ-C's "optional protocol" feature in swift by moving optionality to runtime. All messaging protocols have default implementations that call `UnimplementedLogging.logUnimplemented`, which warns you in-console about delegate implementations you may have missed. Alerts are sent through Apple Unified Logging and can be disabled globally through [Unifed Logging](https://developer.apple.com/documentation/os/logging#2878594), through overriding `UnimplementedLogging.logUnimplemented` with a no-op implementation, or by overriding the delegate function with a no-op implementation. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
+* Since pure Swift protocols cannot have optional methods, various delegate protocols now provide default no-op implementations for all their methods and conform to the `UnimplementedLogging` protocol, which can inform you at runtime when a delegate method is called but has not been implemented. Messages are sent through Apple Unified Logging and can be disabled globally through [Unifed Logging](https://developer.apple.com/documentation/os/logging#2878594), or by overriding the delegate function with a no-op implementation. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
 
 ## v0.38.0
 

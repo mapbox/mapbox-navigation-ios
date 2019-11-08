@@ -276,6 +276,7 @@ public protocol VoiceControllerDelegate: class, UnimplementedLogging {
      - parameter voiceController: The voice controller that experienced the failure.
      - parameter engine: the Speech engine that was used as the fallback.
      - parameter error: An error explaining the failure and its cause.
+     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     
     func voiceController(_ voiceController: RouteVoiceController, didFallBackTo engine: AVSpeechSynthesizer, becauseOf error: SpeechError)
@@ -285,6 +286,7 @@ public protocol VoiceControllerDelegate: class, UnimplementedLogging {
      
      - parameter voiceController: The voice controller that experienced the failure.
      - parameter error: An error explaining the failure and its cause.
+     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     
     func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: SpeechError)
@@ -295,15 +297,18 @@ public protocol VoiceControllerDelegate: class, UnimplementedLogging {
      - parameter voiceController: The voice controller that experienced the interruption.
      - parameter interruptedInstruction: The spoken instruction currently in progress that has been interrupted.
      - parameter interruptingInstruction: The spoken instruction that is interrupting the current instruction.
+     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     
     func voiceController(_ voiceController: RouteVoiceController, didInterrupt interruptedInstruction: SpokenInstruction, with interruptingInstruction: SpokenInstruction)
     
-    /** Called when a spoken is about to speak. Useful if it is necessary to give a custom instruction instead. Noting, changing the `distanceAlongStep` property on `SpokenInstruction` will have no impact on when the instruction will be said.
+    /**
+     Called when a spoken is about to speak. Useful if it is necessary to give a custom instruction instead. Noting, changing the `distanceAlongStep` property on `SpokenInstruction` will have no impact on when the instruction will be said.
      
      - parameter voiceController: The voice controller that will speak an instruction.
      - parameter instruction: The spoken instruction that will be said.
      - parameter routeProgress: The `RouteProgress` just before when the instruction is scheduled to be spoken.
+     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      **/
     
     func voiceController(_ voiceController: RouteVoiceController, willSpeak instruction: SpokenInstruction, routeProgress: RouteProgress) -> SpokenInstruction?

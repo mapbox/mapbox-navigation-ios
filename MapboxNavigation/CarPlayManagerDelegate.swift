@@ -39,6 +39,7 @@ public protocol CarPlayManagerDelegate: class, UnimplementedLogging {
      - parameter carPlayTemplate: The template into which the returned bar buttons will be inserted.
      - parameter activity: What the user is currently doing on the CarPlay screen. Use this parameter to distinguish between multiple templates of the same kind, such as multiple `CPMapTemplate`s.
      - returns: An array of bar buttons to display on the trailing side of the navigation bar while `template` is visible.
+     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     
     func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in carPlayTemplate: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]?
@@ -54,6 +55,7 @@ public protocol CarPlayManagerDelegate: class, UnimplementedLogging {
      - parameter carPlayTemplate: The template into which the returned map buttons will be inserted.
      - parameter activity: What the user is currently doing on the CarPlay screen. Use this parameter to distinguish between multiple templates of the same kind, such as multiple `CPMapTemplate`s.
      - returns: An array of map buttons to display on the map while `template` is visible.
+     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     
     func carPlayManager(_ carPlayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in carPlayTemplate: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]?
@@ -65,6 +67,7 @@ public protocol CarPlayManagerDelegate: class, UnimplementedLogging {
      - parameter route: The route for which the returned route controller will manage location updates.
      - parameter desiredSimulationMode: The desired simulation mode to use.
      - returns: A navigation service that manages location updates along `route`.
+     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     
     
@@ -77,6 +80,7 @@ public protocol CarPlayManagerDelegate: class, UnimplementedLogging {
      - parameter searchTemplate: The search template currently accepting user input.
      - parameter searchText: The updated search text in `searchTemplate`.
      - parameter completionHandler: Called when the search is complete. Accepts a list of search results.
+     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      
      - postcondition: You must call `completionHandler` within this method.
      */
@@ -90,6 +94,7 @@ public protocol CarPlayManagerDelegate: class, UnimplementedLogging {
      - parameter searchTemplate: The search template currently accepting user input.
      - parameter item: The search result the user has selected.
      - parameter completionHandler: Called when the delegate is done responding to the selection.
+     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      
      - postcondition: You must call `completionHandler` within this method.
      */
@@ -102,8 +107,8 @@ public protocol CarPlayManagerDelegate: class, UnimplementedLogging {
      - parameter waypoints: the waypoints for which a route could not be retrieved.
      - parameter options: The route options that were attached to the route request.
      - parameter error: The error returned from the directions API.
-     
-     - returns Optionally, a CPNavigationAlert to present to the user. If an alert is returned, Carplay will transition back to the map template and display the alert. If `nil` is returned, nothing is done.
+     - returns: Optionally, a CPNavigationAlert to present to the user. If an alert is returned, Carplay will transition back to the map template and display the alert. If `nil` is returned, nothing is done.
+     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     
     func carPlayManager(_ carPlayManager: CarPlayManager, didFailToFetchRouteBetween waypoints: [Waypoint]?, options: RouteOptions, error: NSError) -> CPNavigationAlert?
@@ -116,6 +121,7 @@ public protocol CarPlayManagerDelegate: class, UnimplementedLogging {
      - parameter carPlayManager: The CarPlay manager instance.
      - parameter trip: The trip that will be previewed.
      - returns: The actual trip to be previewed. This can be the same trip or a new/alternate trip if desired.
+     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     
     func carPlayManager(_ carPlayManager: CarPlayManager, willPreview trip: CPTrip) -> (CPTrip)
@@ -127,6 +133,7 @@ public protocol CarPlayManagerDelegate: class, UnimplementedLogging {
      - parameter trip: The trip that will be previewed.
      - parameter previewTextConfiguration: The trip preview text configuration that will be presented alongside the trip.
      - returns: The actual preview text configuration to be presented alongside the trip.
+     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
     */
     
     func carPlayManager(_ carPlayManager: CarPlayManager, willPreview trip: CPTrip, with previewTextConfiguration: CPTripPreviewTextConfiguration) -> (CPTripPreviewTextConfiguration)
@@ -137,6 +144,7 @@ public protocol CarPlayManagerDelegate: class, UnimplementedLogging {
      - parameter carPlayManager: The CarPlay manager instance.
      - parameter trip: The trip to begin navigating along.
      - parameter routeChoice: The possible route for the chosen trip.
+     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     
     func carPlayManager(_ carPlayManager: CarPlayManager, selectedPreviewFor trip: CPTrip, using routeChoice: CPRouteChoice) -> ()
@@ -146,6 +154,7 @@ public protocol CarPlayManagerDelegate: class, UnimplementedLogging {
      
      - parameter carPlayManager: The CarPlay manager instance.
      - parameter service: The navigation service that has begun managing location updates for a navigation session.
+     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     
     func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith service: NavigationService) -> ()
@@ -154,6 +163,7 @@ public protocol CarPlayManagerDelegate: class, UnimplementedLogging {
      Called when navigation ends so that the containing app can update accordingly.
      
      - parameter carPlayManager: The CarPlay manager instance.
+     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) -> ()
     
@@ -164,6 +174,7 @@ public protocol CarPlayManagerDelegate: class, UnimplementedLogging {
      
      - parameter carPlayManager: The CarPlay manager instance.
      - returns: A Boolean value indicating whether to disable idle timer when carplay is connected and enable when disconnected.
+     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     func carplayManagerShouldDisableIdleTimer(_ carPlayManager: CarPlayManager) -> Bool
 }

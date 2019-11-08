@@ -8,21 +8,24 @@ import MapboxCoreNavigation
 
 public protocol StyleManagerDelegate: class, UnimplementedLogging {
     /**
-     Asks the delegate for a location to use when calculating sunset and sunrise.
+     Asks the delegate for a location to use when calculating sunset and sunrise
+     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.     .
      */
     
     func location(for styleManager: StyleManager) -> CLLocation?
     
     /**
      Informs the delegate that a style was applied.
+     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      
-     This delegate method is the equivalent of `Notification.Name.styleManagerDidApplyStyle`.
+     - note: This delegate method is the equivalent of `Notification.Name.styleManagerDidApplyStyle`.
      */
     
     func styleManager(_ styleManager: StyleManager, didApply style: Style)
     
     /**
      Informs the delegate that the manager forcefully refreshed UIAppearance.
+     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     func styleManagerDidRefreshAppearance(_ styleManager: StyleManager)
 }

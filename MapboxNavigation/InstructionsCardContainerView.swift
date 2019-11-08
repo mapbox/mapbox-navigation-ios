@@ -15,6 +15,7 @@ public protocol InstructionsCardContainerViewDelegate: VisualInstructionDelegate
      - parameter instruction: the `VisualInstruction` that will be presented.
      - parameter presented: the formatted string that is provided by the instruction presenter
      - returns: optionally, a customized NSAttributedString that will be presented instead of the default, or if nil, the default behavior will be used.
+     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     
     func primaryLabel(_ primaryLabel: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString?
@@ -26,6 +27,7 @@ public protocol InstructionsCardContainerViewDelegate: VisualInstructionDelegate
      - parameter instruction: the `VisualInstruction` that will be presented.
      - parameter presented: the formatted string that is provided by the instruction presenter
      - returns: optionally, a customized NSAttributedString that will be presented instead of the default, or if nil, the default behavior will be used.
+     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.     
      */
     
     func secondaryLabel(_ secondaryLabel: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString?
