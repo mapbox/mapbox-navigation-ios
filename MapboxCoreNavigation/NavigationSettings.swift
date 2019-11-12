@@ -40,7 +40,7 @@ public class NavigationSettings: NSObject {
         }
     }
     
-    /*
+    /**
      The shared navigation settings object that affects the entire application.
      */
     public static let shared = NavigationSettings()

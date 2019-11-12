@@ -1,10 +1,11 @@
 import Foundation
 import MapboxNavigation
 
+// MARK: CustomDayStyle
+
 /**
  To find more pieces of the UI to customize, checkout DayStyle.swift.
  */
-// MARK: CustomDayStyle
 class CustomDayStyle: DayStyle {
     required init() {
         super.init()

@@ -131,7 +131,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate{
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, simplifiedShapeFor route: Route) -> MGLShape?
     
-    /*
+    /**
      Returns an `MGLStyleLayer` that marks the location of each destination along the route when there are multiple destinations. The returned layer is added to the map below the layer returned by `navigationViewController(_:waypointSymbolStyleLayerWithIdentifier:source:)`.
      
      If this method is unimplemented, the navigation view controller’s map view marks each destination waypoint with a circle.
@@ -139,7 +139,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate{
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
-    /*
+    /**
      Returns an `MGLStyleLayer` that places an identifying symbol on each destination along the route when there are multiple destinations. The returned layer is added to the map above the layer returned by `navigationViewController(_:waypointStyleLayerWithIdentifier:source:)`.
      
      If this method is unimplemented, the navigation view controller’s map view labels each destination waypoint with a number, starting with 1 at the first destination, 2 at the second destination, and so on.
