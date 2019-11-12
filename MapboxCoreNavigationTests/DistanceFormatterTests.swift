@@ -3,7 +3,6 @@ import CoreLocation
 @testable import MapboxCoreNavigation
 
 class DistanceFormatterTests: XCTestCase {
-    
     var distanceFormatter = DistanceFormatter()
     
     override func setUp() {

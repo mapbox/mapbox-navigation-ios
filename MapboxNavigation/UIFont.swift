@@ -1,7 +1,6 @@
 import UIKit
 
 extension UIFont {
-    
     var fontSizeMultiplier: CGFloat {
         get {
             switch UIApplication.shared.preferredContentSizeCategory {

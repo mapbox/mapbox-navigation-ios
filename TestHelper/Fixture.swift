@@ -3,8 +3,6 @@ import CoreLocation
 import MapboxDirections
 @testable import MapboxCoreNavigation
 
-
-
 public class Fixture: NSObject {
     public class func stringFromFileNamed(name: String) -> String {
         guard let path = Bundle(for: self).path(forResource: name, ofType: "json") else {
@@ -19,7 +17,7 @@ public class Fixture: NSObject {
         }
     }
     
-        public class func JSONFromFileNamed(name: String) -> [String: Any] {
+    public class func JSONFromFileNamed(name: String) -> [String: Any] {
         guard let path = Bundle(for: Fixture.self).path(forResource: name, ofType: "json") else {
             assert(false, "Fixture \(name) not found.")
             return [:]
@@ -71,7 +69,6 @@ public class Fixture: NSObject {
         
         return locations.map { CLLocation($0) }
     }
-    
     
     public class func route(from jsonFile: String) -> Route {
         let response = JSONFromFileNamed(name: jsonFile)
@@ -126,7 +123,6 @@ public class Fixture: NSObject {
     }
     
     public class func generateTrace(for route: Route, speedMultiplier: Double = 1) -> [CLLocation] {
-        
         let traceCollector = TraceCollector()
         let locationManager = SimulatedLocationManager(route: route)
         locationManager.delegate = traceCollector
@@ -141,7 +137,6 @@ public class Fixture: NSObject {
 }
 
 class TraceCollector: NSObject, CLLocationManagerDelegate {
-    
     var locations = [CLLocation]()
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {

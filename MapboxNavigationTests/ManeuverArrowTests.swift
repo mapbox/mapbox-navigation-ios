@@ -6,14 +6,12 @@ import TestHelper
 @testable import MapboxCoreNavigation
 
 class ManeuverArrowTests: FBSnapshotTestCase {
-    
     let waypointRoute = Fixture.route(from: "waypoint-after-turn")
 
     override func setUp() {
         super.setUp()
         recordMode = false
     }
-
     
     func testManeuverArrowHandlesWaypointsCorrectly() {
         let plotter = NavigationPlotter(frame: CGRect(origin: .zero, size: CGSize(width: 1000, height: 1000)))

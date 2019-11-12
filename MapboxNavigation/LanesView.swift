@@ -4,7 +4,6 @@ import MapboxDirections
 
 /// :nodoc:
 @IBDesignable
-
 open class LanesView: UIView, NavigationComponent {
     weak var stackView: UIStackView!
     weak var separatorView: SeparatorView!
@@ -74,14 +73,12 @@ open class LanesView: UIView, NavigationComponent {
     /**
      Updates the tertiary instructions banner info with a given `VisualInstructionBanner`.
      */
-    
     public func update(for visualInstruction: VisualInstructionBanner?) {
         clearLaneViews()
         
-        guard let tertiaryInstruction = visualInstruction?.tertiaryInstruction,
-                  tertiaryInstruction.containsLaneIndications else {
-                    hide()
-                    return
+        guard let tertiaryInstruction = visualInstruction?.tertiaryInstruction, tertiaryInstruction.containsLaneIndications else {
+            hide()
+            return
         }
         
         let laneIndications: [LaneIndicationComponent]? = tertiaryInstruction.components.compactMap({ $0 as? LaneIndicationComponent })
@@ -125,5 +122,4 @@ open class LanesView: UIView, NavigationComponent {
             $0.removeFromSuperview()
         }
     }
-    
 }

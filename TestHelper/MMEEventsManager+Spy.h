@@ -1,7 +1,6 @@
 #import <Foundation/Foundation.h>
 @import MapboxMobileEvents;
 
-
 NS_ASSUME_NONNULL_BEGIN
 
 @interface MMEEventsManager (Spy)

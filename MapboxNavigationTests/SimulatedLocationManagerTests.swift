@@ -5,9 +5,7 @@ import MapboxDirections
 @testable import MapboxCoreNavigation
 @testable import MapboxNavigation
 
-
 class SimulatedLocationManagerTests: FBSnapshotTestCase {
-
     override func setUp() {
         super.setUp()
         recordMode = false
@@ -33,7 +31,6 @@ class SimulatedLocationManagerTests: FBSnapshotTestCase {
         
         verify(view)
     }
-    
 }
 
 class SimulatedLocationManagerSpy: NSObject, CLLocationManagerDelegate {

@@ -115,5 +115,4 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
             self.operations[url] = nil
         }
     }
-
 }

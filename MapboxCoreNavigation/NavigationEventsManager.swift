@@ -4,7 +4,7 @@ import MapboxDirections
 
 let NavigationEventTypeRouteRetrieval = "mobile.performance_trace"
 
- /**
+/**
  The `EventsManagerDataSource` protocol declares values required for recording route following events.
  */
 public protocol EventsManagerDataSource: class {
@@ -20,9 +20,7 @@ public typealias EventsManager = NavigationEventsManager
 /**
  The `NavigationEventsManager` is responsible for being the liaison between MapboxCoreNavigation and the Mapbox telemetry framework.
  */
-
 open class NavigationEventsManager: NSObject {
-
     var sessionState: SessionState?
     
     var outstandingFeedbackEvents = [CoreFeedbackEvent]()

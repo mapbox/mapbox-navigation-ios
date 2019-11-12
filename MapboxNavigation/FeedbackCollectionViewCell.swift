@@ -1,7 +1,6 @@
 import Foundation
 import UIKit
 
-
 class FeedbackCollectionViewCell: UICollectionViewCell {
     static let defaultIdentifier = "MapboxFeedbackCell"
     

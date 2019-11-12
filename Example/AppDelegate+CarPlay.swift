@@ -19,7 +19,6 @@ let CarPlayWaypointKey: String = "MBCarPlayWaypoint"
  */
 @available(iOS 12.0, *)
 extension AppDelegate: CPApplicationDelegate {
-    
     // MARK: CPApplicationDelegate
     
     func application(_ application: UIApplication, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPWindow) {
@@ -46,14 +45,12 @@ extension AppDelegate: CPApplicationDelegate {
 @available(iOS 12.0, *)
 extension AppDelegate: CarPlayManagerDelegate {
     func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, desiredSimulationMode: SimulationMode) -> NavigationService {
-
         if let nvc = self.window?.rootViewController?.presentedViewController as? NavigationViewController, let service = nvc.navigationService {
             //Do not set simulation mode if we already have an active navigation session.
             return service
         }
         return MapboxNavigationService(route: route, simulating: desiredSimulationMode)
     }
-    
     
     // MARK: CarPlayManagerDelegate
     func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith service: NavigationService) {
@@ -78,7 +75,6 @@ extension AppDelegate: CarPlayManagerDelegate {
     }
     
     func carPlayManager(_ carPlayManager: CarPlayManager, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]? {
-        
         guard let interfaceController = self.carPlayManager.interfaceController else {
             return nil
         }
@@ -107,7 +103,6 @@ extension AppDelegate: CarPlayManagerDelegate {
     }
     
     func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]? {
-        
         switch activity {
         case .previewing:
             let disableSimulateText = "Disable Simulation"
@@ -133,11 +128,10 @@ extension AppDelegate: CarPlayManagerDelegate {
     }
     
     func carPlayManager(_ carPlayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]? {
-        
         switch activity {
         case .browsing:
             guard let mapViewController = carPlayManager.carPlayMapViewController,
-                  let mapTemplate = template as? CPMapTemplate else {
+                let mapTemplate = template as? CPMapTemplate else {
                 return nil
             }
             var mapButtons = [mapViewController.recenterButton,
@@ -175,7 +169,6 @@ extension AppDelegate: CarPlaySearchControllerDelegate {
 
 @available(iOS 12.0, *)
 extension AppDelegate: CPListTemplateDelegate {
-    
     func listTemplate(_ listTemplate: CPListTemplate, didSelect item: CPListItem, completionHandler: @escaping () -> Void) {
         // Selected a favorite
         if let userInfo = item.userInfo as? [String: Any],

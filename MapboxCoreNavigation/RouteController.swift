@@ -6,16 +6,13 @@ import MapboxDirections
 import Polyline
 import Turf
 
-
 /**
  A `RouteController` tracks the user’s progress along a route, posting notifications as the user reaches significant points along the route. On every location update, the route controller evaluates the user’s location, determining whether the user remains on the route. If not, the route controller calculates a new route.
  
  `RouteController` is responsible for the core navigation logic whereas
  `NavigationViewController` is responsible for displaying a default drop-in navigation UI.
  */
-
 open class RouteController: NSObject {
-    
     public enum DefaultBehavior {
         public static let shouldRerouteFromLocation: Bool = true
         public static let shouldDiscardLocation: Bool = true
@@ -181,7 +178,6 @@ open class RouteController: NSObject {
     }
     
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
         guard let location = locations.last else { return }
         
         guard delegate?.router(self, shouldDiscard: location) ?? DefaultBehavior.shouldDiscardLocation else {
@@ -198,7 +194,7 @@ open class RouteController: NSObject {
         update(progress: routeProgress, with: CLLocation(status.location), rawLocation: location)
         
         let willReroute = !userIsOnRoute(location) && delegate?.router(self, shouldRerouteFrom: location)
-                          ?? DefaultBehavior.shouldRerouteFromLocation
+            ?? DefaultBehavior.shouldRerouteFromLocation
         
         updateIndexes(status: status, progress: routeProgress)
         updateRouteLegProgress(status: status)
@@ -261,23 +257,18 @@ open class RouteController: NSObject {
     }
     
     func updateRouteLegProgress(status: MBNavigationStatus) {
-        
         let legProgress = routeProgress.currentLegProgress
         let currentDestination = routeProgress.currentLeg.destination
         guard let remainingVoiceInstructions = legProgress.currentStepProgress.remainingSpokenInstructions else { return }
         
         // We are at least at the "You will arrive" instruction
         if legProgress.remainingSteps.count <= 2 && remainingVoiceInstructions.count <= 2 {
-            
             let willArrive = status.routeState == .tracking
             let didArrive = status.routeState == .complete && currentDestination != previousArrivalWaypoint
             
             if willArrive {
-                
                 delegate?.router(self, willArriveAt: currentDestination, after: legProgress.durationRemaining, distance: legProgress.distanceRemaining)
-                
             } else if didArrive {
-                
                 previousArrivalWaypoint = currentDestination
                 legProgress.userHasArrivedAtWaypoint = true
                 
@@ -292,7 +283,6 @@ open class RouteController: NSObject {
     }
     
     private func update(progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
-        
         let stepProgress = progress.currentLegProgress.currentStepProgress
         let step = stepProgress.step
         
@@ -316,7 +306,6 @@ open class RouteController: NSObject {
     }
     
     private func announcePassage(of spokenInstructionPoint: SpokenInstruction, routeProgress: RouteProgress) {
-        
         delegate?.router(self, didPassSpokenInstructionPoint: spokenInstructionPoint, routeProgress: routeProgress)
         
         let info: [RouteControllerNotificationUserInfoKey: Any] = [
@@ -328,7 +317,6 @@ open class RouteController: NSObject {
     }
     
     private func announcePassage(of visualInstructionPoint: VisualInstructionBanner, routeProgress: RouteProgress) {
-        
         delegate?.router(self, didPassVisualInstructionPoint: visualInstructionPoint, routeProgress: routeProgress)
         
         let info: [RouteControllerNotificationUserInfoKey: Any] = [
@@ -366,9 +354,7 @@ open class RouteController: NSObject {
 }
 
 extension RouteController: Router {
-    
     public func userIsOnRoute(_ location: CLLocation) -> Bool {
-        
         // If the user has arrived, do not continue monitor reroutes, step progress, etc
         if routeProgress.currentLegProgress.userHasArrivedAtWaypoint &&
             (delegate?.router(self, shouldPreventReroutesWhenArrivingAt: routeProgress.currentLeg.destination) ??

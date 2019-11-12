@@ -5,8 +5,8 @@ extension SnapshotTest {
     enum Side {
         case top, bottom
     }
+    
     func constrain(_ child: UIView, to parent: UIView, side: Side = .top) {
-        
         let childSideAnchor = side == .top ? child.topAnchor : child.bottomAnchor
         let parentSideAnchor = side == .top ? parent.topAnchor : parent.bottomAnchor
         let constraints = [

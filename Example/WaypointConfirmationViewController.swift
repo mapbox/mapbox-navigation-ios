@@ -5,7 +5,6 @@ protocol WaypointConfirmationViewControllerDelegate: NSObjectProtocol {
 }
 
 class WaypointConfirmationViewController: UIViewController {
-
     weak var delegate: WaypointConfirmationViewControllerDelegate?
 
     @IBAction func continueButtonPressed(_ sender: Any) {

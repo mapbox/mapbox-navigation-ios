@@ -26,9 +26,7 @@ private protocol StatusViewDelegateDeprecations {
  A translucent bar that responds to tap and swipe gestures, similar to a scrubber or stepper control, and expands and collapses to maximize screen real estate.
  */
 @IBDesignable
-
 public class StatusView: UIControl {
-    
     weak var activityIndicatorView: UIActivityIndicatorView!
     weak var textLabel: UILabel!
     public weak var delegate: DeprecatedStatusViewDelegate?
@@ -124,7 +122,6 @@ public class StatusView: UIControl {
         }
     }
     
-
     public func showStatus(title: String, spinner spin: Bool = false, duration: TimeInterval, animated: Bool = true, interactive: Bool = false) {
         show(title, showSpinner: spin, interactive: interactive)
         guard duration < .infinity else { return }
@@ -136,7 +133,6 @@ public class StatusView: UIControl {
         let title = String.localizedStringWithFormat(format, NumberFormatter.localizedString(from: speed as NSNumber, number: .decimal))
         showStatus(title: title, duration: .infinity, interactive: true)
     }
-
     
     /**
      Shows the status view with an optional spinner.
@@ -167,7 +163,6 @@ public class StatusView: UIControl {
      Hides the status view.
      */
     public func hide(delay: TimeInterval = 0, animated: Bool = true) {
-        
         let hide = {
             self.isHidden = true
             self.textLabel.alpha = 0

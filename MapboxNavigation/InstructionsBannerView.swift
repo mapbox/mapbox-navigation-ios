@@ -5,16 +5,12 @@ import MapboxDirections
 /**
  `InstructionsBannerViewDelegate` provides methods for reacting to user interactions in `InstructionsBannerView`.
  */
-
 public protocol InstructionsBannerViewDelegate: class, UnimplementedLogging {
-    
     /**
      Called when the user taps the `InstructionsBannerView`.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView)
-    
     
     /**
      Called when the user drags either up or down on the `InstructionsBannerView`.
@@ -43,18 +39,14 @@ public extension InstructionsBannerViewDelegate {
     func didSwipeInstructionsBanner(_ sender: BaseInstructionsBannerView, swipeDirection direction: UISwipeGestureRecognizer.Direction) {
         logUnimplemented(protocolType: InstructionsBannerViewDelegate.self, level: .debug)
     }
-    
-    
 }
 
 private protocol InstructionsBannerViewDelegateDeprecations {
-    
     func didDragInstructionsBanner(_ sender: BaseInstructionsBannerView)
 }
 
 /// :nodoc:
 @IBDesignable
-
 open class InstructionsBannerView: BaseInstructionsBannerView, NavigationComponent {
     public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
         update(for: instruction)
@@ -63,7 +55,6 @@ open class InstructionsBannerView: BaseInstructionsBannerView, NavigationCompone
 
 /// :nodoc:
 open class BaseInstructionsBannerView: UIControl {
-    
     public weak var maneuverView: ManeuverView!
     public weak var primaryLabel: PrimaryLabel!
     public weak var secondaryLabel: SecondaryLabel!
@@ -86,7 +77,7 @@ open class BaseInstructionsBannerView: UIControl {
     public weak var delegate: InstructionsBannerViewDelegate? {
         didSet {
             if showStepIndicator {
-               stepListIndicatorView.isHidden = false
+                stepListIndicatorView.isHidden = false
             }
         }
     }
@@ -159,7 +150,7 @@ open class BaseInstructionsBannerView: UIControl {
     @objc func swipedInstructionBannerDown(_ sender: Any) {
         if let gestureRecognizer = sender as? UISwipeGestureRecognizer, gestureRecognizer.state == .ended {
             if showStepIndicator {
-               stepListIndicatorView.isHidden = !stepListIndicatorView.isHidden
+                stepListIndicatorView.isHidden = !stepListIndicatorView.isHidden
             }
             
             if let delegate = delegate {
@@ -181,7 +172,6 @@ open class BaseInstructionsBannerView: UIControl {
     /**
      Updates the instructions banner info with a given `VisualInstructionBanner`.
      */
-    
     public func update(for instruction: VisualInstructionBanner?) {
         let secondaryInstruction = instruction?.secondaryInstruction
         primaryLabel.numberOfLines = secondaryInstruction == nil ? 2 : 1
@@ -222,7 +212,6 @@ open class BaseInstructionsBannerView: UIControl {
     static let stepListIndicatorViewSize = CGSize(width: 30, height: 5)
     
     func setupViews() {
-        
         let maneuverView = ManeuverView()
         maneuverView.backgroundColor = .clear
         maneuverView.translatesAutoresizingMaskIntoConstraints = false

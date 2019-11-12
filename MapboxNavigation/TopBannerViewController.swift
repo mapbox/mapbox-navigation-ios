@@ -2,7 +2,6 @@ import Foundation
 import MapboxCoreNavigation
 import MapboxDirections
 
-
 public protocol TopBannerViewControllerDelegate: class, UnimplementedLogging {
     func topBanner(_ banner: TopBannerViewController, didSwipeInDirection direction: UISwipeGestureRecognizer.Direction)
     
@@ -24,34 +23,26 @@ public extension TopBannerViewControllerDelegate {
     
     func topBanner(_ banner: TopBannerViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell) {
         logUnimplemented(protocolType: TopBannerViewControllerDelegate.self,  level: .debug)
-
     }
     
     func topBanner(_ banner: TopBannerViewController, willDisplayStepsController: StepsViewController) {
         logUnimplemented(protocolType: TopBannerViewControllerDelegate.self,  level: .debug)
-
     }
     
     func topBanner(_ banner: TopBannerViewController, didDisplayStepsController: StepsViewController) {
         logUnimplemented(protocolType: TopBannerViewControllerDelegate.self,  level: .debug)
-
     }
     
     func topBanner(_ banner: TopBannerViewController, willDismissStepsController: StepsViewController) {
         logUnimplemented(protocolType: TopBannerViewControllerDelegate.self,  level: .debug)
-
     }
     
     func topBanner(_ banner: TopBannerViewController, didDismissStepsController: StepsViewController) {
         logUnimplemented(protocolType: TopBannerViewControllerDelegate.self,  level: .debug)
-
     }
-    
-    
 }
 
 open class TopBannerViewController: UIViewController {
-    
     weak var delegate: TopBannerViewControllerDelegate? = nil
     
     lazy var topPaddingView: TopBannerView = .forAutoLayout()
@@ -112,7 +103,7 @@ open class TopBannerViewController: UIViewController {
         return [instructionsBannerView] + secondaryChildren
     }
     private var secondaryChildren: [UIView] {
-        return  [lanesView, nextBannerView, statusView]
+        return [lanesView, nextBannerView, statusView]
     }
     
     public var isDisplayingPreviewInstructions: Bool {
@@ -120,7 +111,6 @@ open class TopBannerViewController: UIViewController {
     }
     
     private(set) public var isDisplayingSteps: Bool = false
-    
     
     private(set) var previewSteps: [RouteStep]?
     private(set) var currentPreviewStep: (RouteStep, Int)?
@@ -135,7 +125,6 @@ open class TopBannerViewController: UIViewController {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
-    
     override open func viewDidLoad() {
         view.backgroundColor = .clear
         super.viewDidLoad()
@@ -143,7 +132,6 @@ open class TopBannerViewController: UIViewController {
         addConstraints()
         setupInformationStackView()
     }
-    
     
     private func setupViews() {
         let children = [stepsContainer, topPaddingView, informationStackView]
@@ -182,7 +170,6 @@ open class TopBannerViewController: UIViewController {
             child.trailingAnchor.constraint(equalTo: informationStackView.trailingAnchor).isActive = true
         }
     }
-    
     
     public func displayStepsTable() {
         dismissStepsTable()
@@ -224,7 +211,6 @@ open class TopBannerViewController: UIViewController {
             stepsHeightPresizingConstraint?.isActive = false
             NSLayoutConstraint.activate(self.stepsContainerShowConstraints)
             
-            
             let finally: (Bool) -> Void = { [weak self] _ in
                 guard let self = self else {
                     return
@@ -238,15 +224,13 @@ open class TopBannerViewController: UIViewController {
         }
         
         hideSecondaryChildren(completion: stepsInAnimation)
-        
     }
     
     public func dismissStepsTable(completion: CompletionHandler? = nil) {
-        guard let parent = parent, let steps = stepsViewController  else { return }
+        guard let parent = parent, let steps = stepsViewController else { return }
         parent.view.layoutIfNeeded()
         
         delegate?.topBanner(self, willDismissStepsController: steps)
-        
         
         NSLayoutConstraint.deactivate(stepsContainerShowConstraints)
         NSLayoutConstraint.activate(stepsContainerHideConstraints)
@@ -277,8 +261,6 @@ open class TopBannerViewController: UIViewController {
             steps.dismiss()
             self.stepsViewController = nil
         }
-        
-        
     }
     private func showSecondaryChildren(completion: CompletionHandler? = nil) {
         statusView.isHidden = !statusView.isCurrentlyVisible
@@ -329,8 +311,6 @@ open class TopBannerViewController: UIViewController {
         previewSteps = steps
         currentPreviewStep = (step, index)
         
-        
-        
         guard let instructions = step.instructionsDisplayedAlongStep?.last else { return }
         
         let instructionsView = StepInstructionsView(frame: instructionsBannerView.frame)
@@ -366,7 +346,6 @@ open class TopBannerViewController: UIViewController {
         }
     }
     
-    
     private func addInstructionsBanner() {
         informationStackView.insertArrangedSubview(instructionsBannerView, at: 0)
         instructionsBannerView.delegate = self
@@ -376,11 +355,9 @@ open class TopBannerViewController: UIViewController {
 
 // MARK: - NavigationComponent Conformance
 extension TopBannerViewController: NavigationComponent {
-    
     public func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         routeProgress = progress
         instructionsBannerView.updateDistance(for: progress.currentLegProgress.currentStepProgress)
-        
     }
     
     public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
@@ -448,7 +425,6 @@ extension TopBannerViewController: InstructionsBannerViewDelegate {
 }
 
 extension TopBannerViewController: StepsViewControllerDelegate {
-    
     public func stepsViewController(_ viewController: StepsViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell) {
         delegate?.topBanner(self, didSelect: legIndex, stepIndex: stepIndex, cell: cell)
     }

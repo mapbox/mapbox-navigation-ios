@@ -4,7 +4,6 @@ import MapboxCoreNavigation
 
 /// :nodoc:
 public class InstructionsCardView: BaseInstructionsBannerView {
-    
     @objc dynamic var cardWidthFactor: CGFloat = 0.82
     @objc dynamic var cardHeight: CGFloat = 100.0
     
@@ -113,7 +112,6 @@ public class InstructionsCardView: BaseInstructionsBannerView {
         separatorView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         separatorView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         separatorView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        
     }
     
     // Aligns the instruction to the center Y (used for single line primary and/or secondary instructions)

@@ -4,7 +4,6 @@ import MapboxMobileEvents
 import MapboxDirections
 
 public class NavigationEventsManagerSpy: NavigationEventsManager {
-
     var mobileEventsManagerSpy: MMEEventsManagerSpy!
     
     var _enqueuedEvents: [FakeTelemetryEvent] {
@@ -74,7 +73,6 @@ public class NavigationEventsManagerSpy: NavigationEventsManager {
 typealias FakeTelemetryEvent = (name: String, attributes: [String: Any])
 
 class MMEEventsManagerSpy: MMEEventsManager {
-
     var enqueuedEvents = [FakeTelemetryEvent]()
     var flushedEvents = [FakeTelemetryEvent]()
 

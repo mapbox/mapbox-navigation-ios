@@ -5,7 +5,6 @@ import XCTest
 import Foundation
 import TestHelper
 
-
 @available(iOS 12.0, *)
 fileprivate class CarPlayNavigationDelegateSpy: NSObject, CarPlayNavigationDelegate {
     var didArriveExpectation: XCTestExpectation!
@@ -28,9 +27,8 @@ fileprivate class CPManeuverFake: CPManeuver {
 
 @available(iOS 12.0, *)
 fileprivate class CPNavigationSessionFake: CPNavigationSession {
-     init(maneuvers: [CPManeuver]) {
+    init(maneuvers: [CPManeuver]) {
         fakeManeuvers = maneuvers
-        
     }
     
     override var upcomingManeuvers: [CPManeuver] {
@@ -48,7 +46,6 @@ fileprivate class CPNavigationSessionFake: CPNavigationSession {
 @available(iOS 12.0, *)
 fileprivate class CarPlayNavigationViewControllerTests: XCTestCase {
     func testCarplayDisplaysCorrectEstimates() {
-        
         //set up the litany of dependancies
         let directions = Directions(accessToken: "fafedeadbeef")
         let manager = CarPlayManager(directions: directions)
@@ -68,7 +65,7 @@ fileprivate class CarPlayNavigationViewControllerTests: XCTestCase {
         let subject = CarPlayNavigationViewController(navigationService: navService, mapTemplate: mapSpy, interfaceController: interface, manager: manager)
         subject.startNavigationSession(for: trip)
         let payload: [RouteControllerNotificationUserInfoKey:Any] = [.routeProgressKey : navService.routeProgress,
-             .locationKey: location]
+                                                                     .locationKey: location]
         let fakeNotication = NSNotification(name: .routeControllerProgressDidChange, object: navService.router, userInfo: payload)
         
         //fire the fake notification

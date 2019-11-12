@@ -3,7 +3,6 @@ import MapboxCoreNavigation
 import MapboxDirections
 
 public class RouteControllerDataSourceFake: RouterDataSource {
-
     let manager = NavigationLocationManager()
 
     public var location: CLLocation? {

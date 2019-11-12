@@ -21,7 +21,6 @@ extension NavigationView {
         bottomBannerContainerView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         bottomBannerContainerView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         
-        
         wayNameView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         wayNameView.bottomAnchor.constraint(equalTo: bottomBannerContainerView.topAnchor, constant: -10).isActive = true
     }
@@ -33,6 +32,5 @@ extension NavigationView {
         endOfRouteView?.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         
         self.endOfRouteHeightConstraint?.isActive = true
-        
     }
 }

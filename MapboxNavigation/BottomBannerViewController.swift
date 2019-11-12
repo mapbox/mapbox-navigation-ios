@@ -6,7 +6,6 @@ import MapboxDirections
  `BottomBannerViewControllerDelegate` provides a method for reacting to the user tapping on the "cancel" button in the `BottomBannerViewController`.
  */
 public protocol BottomBannerViewControllerDelegate: class {
-    
     /**
      A method that is invoked when the user taps on the cancel button.
      - parameter sender: The button that originated the tap event.
@@ -18,9 +17,7 @@ public protocol BottomBannerViewControllerDelegate: class {
  A user interface element designed to display the estimated arrival time, distance, and time remaining, as well as give the user a control the cancel the navigation session.
  */
 @IBDesignable
-
 open class BottomBannerViewController: UIViewController, NavigationComponent {
-
     /*
      A padded spacer view that covers the bottom safe area of the device, if any.
      */
@@ -38,7 +35,7 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
     
     /**
      The label that represents the user's remaining distance.
-    */
+     */
     open var distanceRemainingLabel: DistanceRemainingLabel!
     
     /**
@@ -48,28 +45,27 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
     
     /**
      The button that, by default, allows the user to cancel the navigation session.
-    */
+     */
     open var cancelButton: CancelButton!
     
     /**
      A vertical divider that seperates the cancel button and informative labels.
-    */
+     */
     open var verticalDividerView: SeparatorView!
     
     /**
      A horizontal divider that adds visual separation between the bottom banner and its superview.
-    */
+     */
     open var horizontalDividerView: SeparatorView!
     
     /**
      The delegate for the view controller.
      - seealso: BottomBannerViewControllerDelegate
-    */
+     */
     open weak var delegate: BottomBannerViewControllerDelegate?
     
     var previousProgress: RouteProgress?
     var timer: DispatchTimer?
-    
     
     let dateFormatter = DateFormatter()
     let dateComponentsFormatter = DateComponentsFormatter()

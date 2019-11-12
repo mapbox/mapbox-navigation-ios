@@ -46,7 +46,6 @@ extension Bundle {
      A file URL representing a directory in which the application can place downloaded tile files.
      */
     public var suggestedTileURL: URL? {
-        
         guard let cachesDirectory = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first else {
             return nil
         }
@@ -60,7 +59,6 @@ extension Bundle {
     /**
      A file URL at which the application can place a downloaded tile file with the given version identifier.
      */
-    
     public func suggestedTileURL(version: String) -> URL? {
         return suggestedTileURL?.appendingPathComponent(version)
     }

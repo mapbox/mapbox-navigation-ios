@@ -79,7 +79,7 @@ public class DayInstructionsCardStyle: InstructionsCardStyle {
     }
     
     public lazy var nextBannerInstructionLabelNormalFont: UIFont = {
-       return CardFont.create(.regular, with: 14.0)
+        return CardFont.create(.regular, with: 14.0)
     }()
     
     public var nextBannerInstructionHighlightedColor: UIColor {

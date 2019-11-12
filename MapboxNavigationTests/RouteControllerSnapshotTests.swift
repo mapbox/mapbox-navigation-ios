@@ -6,9 +6,7 @@ import TestHelper
 @testable import MapboxCoreNavigation
 @testable import MapboxNavigation
 
-
 class RouteControllerSnapshotTests: FBSnapshotTestCase {
-
     var replayManager: ReplayLocationManager?
 
     override func setUp() {

@@ -6,11 +6,8 @@ import MapboxDirections
 
  `NavigationRouteOptions` is a subclass of `RouteOptions` that has been optimized for navigation. Pass an instance of this class into the `Directions.calculate(_:completionHandler:)` method.
  - note: `NavigationRouteOptions` is designed to be used with the `Directions` and `NavigationDirections` classes for specifying routing criteria. To customize the user experience in a `NavigationViewController`, use the `NavigationOptions` class.
-
  */
-
 open class NavigationRouteOptions: RouteOptions {
-
     /**
      Initializes a navigation route options object for routes between the given waypoints and an optional profile identifier optimized for navigation.
 
@@ -63,9 +60,7 @@ open class NavigationRouteOptions: RouteOptions {
  
  Note: it is very important you specify the `waypoints` for the route. Usually the only two values for this `IndexSet` will be 0 and the length of the coordinates. Otherwise, all coordinates passed through will be considered waypoints.
  */
-
 open class NavigationMatchOptions: MatchOptions {
-    
     /**
      Initializes a navigation route options object for routes between the given waypoints and an optional profile identifier optimized for navigation.
      

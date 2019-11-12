@@ -1,7 +1,6 @@
 import Foundation
 import Mapbox
 
-
 extension UIColor {
     class var defaultRouteCasing: UIColor { get { return .defaultTintStroke } }
     class var defaultRouteLayer: UIColor { get { return #colorLiteral(red: 0.337254902, green: 0.6588235294, blue: 0.9843137255, alpha: 1) } }
@@ -40,9 +39,7 @@ extension UIFont {
 /**
  `DefaultStyle` is default style for Mapbox Navigation SDK.
  */
-
 open class DayStyle: Style {
-    
     public required init() {
         super.init()
         mapStyleURL = MGLStyle.navigationGuidanceDayStyleURL
@@ -169,9 +166,7 @@ open class DayStyle: Style {
 /**
  `NightStyle` is the default night style for Mapbox Navigation SDK. Only will be applied when necessary and if `automaticallyAdjustStyleForSunPosition`.
  */
-
 open class NightStyle: DayStyle {
-    
     public required init() {
         super.init()
         mapStyleURL = MGLStyle.navigationGuidanceNightStyleURL

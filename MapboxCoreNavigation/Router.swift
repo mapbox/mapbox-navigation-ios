@@ -6,7 +6,6 @@ import MapboxDirections
  A router data source, also known as a location manager, supplies location data to a `Router` instance. For example, a `MapboxNavigationService` supplies location data to a `RouteController` or `LegacyRouteController`.
  */
 public protocol RouterDataSource: class {
-    
     /**
     The location provider for the `Router.` This class is designated as the object that will provide location updates when requested.
     */
@@ -19,7 +18,6 @@ public protocol RouterDataSource: class {
  There are two concrete implementations of the `Router` protocol. `RouteController`, the default implementation, is capable of client-side routing and depends on the Mapbox Navigation Native framework. `LegacyRouteController` is an alternative implementation that does not have this dependency but must be used in conjunction with the Mapbox Directions API over a network connection.
  */
 public protocol Router: class, CLLocationManagerDelegate {
-    
     /**
      The route controller’s associated location manager.
      */
@@ -37,7 +35,6 @@ public protocol Router: class, CLLocationManagerDelegate {
      - parameter directions: The Directions object that created `route`.
      - parameter source: The data source for the RouteController.
      */
-    
     init(along route: Route, directions: Directions, dataSource source: RouterDataSource)
     
     /**
@@ -66,7 +63,6 @@ public protocol Router: class, CLLocationManagerDelegate {
      */
     var rawLocation: CLLocation? { get }
     
-    
     /**
      If true, the `RouteController` attempts to calculate a more optimal route for the user on an interval defined by `RouteControllerProactiveReroutingInterval`.
      */
@@ -77,7 +73,6 @@ public protocol Router: class, CLLocationManagerDelegate {
      
      This is a convienence method provided to advance the leg index of any given router without having to worry about the internal data structure of the router.
      */
-    
     func advanceLegIndex(location: CLLocation)
     
     func enableLocationRecording()
@@ -104,7 +99,6 @@ protocol InternalRouter: class {
 }
 
 extension InternalRouter where Self: Router {
-    
     func checkForFasterRoute(from location: CLLocation, routeProgress: RouteProgress) {
         // Check for faster route given users current location
         guard reroutesProactively else { return }
@@ -150,7 +144,6 @@ extension InternalRouter where Self: Router {
             
             if routeIsFaster {
                 self?.setRoute(route: route, proactive: true)
-                
             }
         }
     }
@@ -162,7 +155,6 @@ extension InternalRouter where Self: Router {
         lastRerouteLocation = location
         
         routeTask = directions.calculate(options) {(waypoints, routes, error) in
-            
             guard let routes = routes else {
                 return completion(nil, error)
             }

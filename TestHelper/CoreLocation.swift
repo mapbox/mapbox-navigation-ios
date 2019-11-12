@@ -2,7 +2,6 @@ import Foundation
 import CoreLocation
 import Turf
 
-
 enum DecodingError: Error {
     case missingData
 }
@@ -20,7 +19,6 @@ enum DecodingError: Error {
  "timestamp": (Int or String as ISO8601)
  */
 public struct Location: Codable {
-    
     enum CodingKeys: String, CodingKey {
         // coordinate can be represented as GeoJSON [lon, lat]
         case coordinate
@@ -44,7 +42,6 @@ public struct Location: Codable {
     let speed: CLLocationSpeed
     let timestamp: Date
     
-    
     public init(_ location: CLLocation) {
         self.coordinate = location.coordinate
         self.altitude = location.altitude
@@ -56,7 +53,6 @@ public struct Location: Codable {
     }
     
     public init(from decoder: Decoder) throws {
-        
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         if let coordinate = try? container.decode(CLLocationCoordinate2D.self, forKey: .coordinate) {
@@ -91,7 +87,6 @@ public struct Location: Codable {
     }
     
     public func encode(to encoder: Encoder) throws {
-        
         var container = encoder.container(keyedBy: CodingKeys.self)
         
         try container.encode(coordinate.latitude, forKey: .lat)
@@ -106,7 +101,6 @@ public struct Location: Codable {
 }
 
 extension CLLocation {
-    
     public convenience init(_ location: Location) {
         self.init(coordinate: location.coordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: location.course, speed: location.speed, timestamp: location.timestamp)
     }
@@ -133,13 +127,12 @@ extension Date {
 }
 
 extension Array where Element == CLLocation {
-    
     // Shifts the [CLLocation]’s first location to now and offsets the remaining locations by one second after the prior.
     public func shiftedToPresent() -> [CLLocation] {
         return shifted(to: Date())
     }
     
-    // Shifts the [CLLocation]’s first location to the given timestamp and offsets the  remaining locations by one second after the prior.
+    // Shifts the [CLLocation]’s first location to the given timestamp and offsets the remaining locations by one second after the prior.
     public func shifted(to timestamp: Date) -> [CLLocation] {
         return enumerated().map { CLLocation(coordinate: $0.element.coordinate,
                                              altitude: $0.element.altitude,

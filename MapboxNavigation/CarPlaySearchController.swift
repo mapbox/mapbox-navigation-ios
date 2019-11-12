@@ -18,9 +18,7 @@ public protocol CarPlaySearchControllerDelegate: class {
  - note: It is very important you have a single `CarPlaySearchController` instance at any given time. 
  */
 @available(iOS 12.0, *)
-
 public class CarPlaySearchController: NSObject {
-    
     /**
      The completion handler that will process the list of search results initiated on CarPlay.
      */
@@ -40,14 +38,10 @@ public class CarPlaySearchController: NSObject {
      The `CarPlaySearchController` delegate.
      */
     public weak var delegate: CarPlaySearchControllerDelegate?
-
 }
 #else
 /**
  CarPlay support requires iOS 12.0 or above and the CarPlay framework.
  */
-
-public class CarPlaySearchController: NSObject {
-    
-}
+public class CarPlaySearchController: NSObject {}
 #endif

@@ -12,9 +12,7 @@ import MapboxDirections
  If no delegate is set, a default built-in MapboxNavigationService will be created and used when a trip begins.
  */
 @available(iOS 12.0, *)
-
 public protocol CarPlayManagerDelegate: class, UnimplementedLogging {
-    
     /**
      Offers the delegate an opportunity to provide a customized list of leading bar buttons at the root of the template stack for the given activity.
      
@@ -26,7 +24,6 @@ public protocol CarPlayManagerDelegate: class, UnimplementedLogging {
      - parameter activity: What the user is currently doing on the CarPlay screen. Use this parameter to distinguish between multiple templates of the same kind, such as multiple `CPMapTemplate`s.
      - returns: An array of bar buttons to display on the leading side of the navigation bar while `template` is visible.
      */
-    
     func carPlayManager(_ carPlayManager: CarPlayManager, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in carPlayTemplate: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]?
     
     /**
@@ -41,7 +38,6 @@ public protocol CarPlayManagerDelegate: class, UnimplementedLogging {
      - returns: An array of bar buttons to display on the trailing side of the navigation bar while `template` is visible.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in carPlayTemplate: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]?
    
     /**
@@ -57,7 +53,6 @@ public protocol CarPlayManagerDelegate: class, UnimplementedLogging {
      - returns: An array of map buttons to display on the map while `template` is visible.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func carPlayManager(_ carPlayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in carPlayTemplate: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]?
     
     /**
@@ -69,8 +64,6 @@ public protocol CarPlayManagerDelegate: class, UnimplementedLogging {
      - returns: A navigation service that manages location updates along `route`.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
-    
     func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, desiredSimulationMode: SimulationMode) -> NavigationService
     
     /**
@@ -84,7 +77,6 @@ public protocol CarPlayManagerDelegate: class, UnimplementedLogging {
      
      - postcondition: You must call `completionHandler` within this method.
      */
-    
     func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void)
     
     /**
@@ -98,7 +90,6 @@ public protocol CarPlayManagerDelegate: class, UnimplementedLogging {
      
      - postcondition: You must call `completionHandler` within this method.
      */
-    
     func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void)
     
     /**
@@ -110,7 +101,6 @@ public protocol CarPlayManagerDelegate: class, UnimplementedLogging {
      - returns: Optionally, a CPNavigationAlert to present to the user. If an alert is returned, Carplay will transition back to the map template and display the alert. If `nil` is returned, nothing is done.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func carPlayManager(_ carPlayManager: CarPlayManager, didFailToFetchRouteBetween waypoints: [Waypoint]?, options: RouteOptions, error: NSError) -> CPNavigationAlert?
     
     /**
@@ -123,7 +113,6 @@ public protocol CarPlayManagerDelegate: class, UnimplementedLogging {
      - returns: The actual trip to be previewed. This can be the same trip or a new/alternate trip if desired.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func carPlayManager(_ carPlayManager: CarPlayManager, willPreview trip: CPTrip) -> (CPTrip)
 
     /**
@@ -134,8 +123,7 @@ public protocol CarPlayManagerDelegate: class, UnimplementedLogging {
      - parameter previewTextConfiguration: The trip preview text configuration that will be presented alongside the trip.
      - returns: The actual preview text configuration to be presented alongside the trip.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
-    */
-    
+     */
     func carPlayManager(_ carPlayManager: CarPlayManager, willPreview trip: CPTrip, with previewTextConfiguration: CPTripPreviewTextConfiguration) -> (CPTripPreviewTextConfiguration)
 
     /**
@@ -146,7 +134,6 @@ public protocol CarPlayManagerDelegate: class, UnimplementedLogging {
      - parameter routeChoice: The possible route for the chosen trip.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func carPlayManager(_ carPlayManager: CarPlayManager, selectedPreviewFor trip: CPTrip, using routeChoice: CPRouteChoice) -> ()
     
     /**
@@ -156,7 +143,6 @@ public protocol CarPlayManagerDelegate: class, UnimplementedLogging {
      - parameter service: The navigation service that has begun managing location updates for a navigation session.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith service: NavigationService) -> ()
     
     /**
@@ -189,7 +175,6 @@ public extension CarPlayManagerDelegate {
     func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in carPlayTemplate: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]? {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self,  level: .debug)
         return nil
-
     }
     
     func carPlayManager(_ carPlayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in carPlayTemplate: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]? {

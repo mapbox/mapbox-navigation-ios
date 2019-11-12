@@ -4,7 +4,6 @@ import MapboxDirections
 import MapboxSpeech
 import AVKit
 
-
 /**
  A enum representing the reason why the speech API request failed.
  - seealso: SpeechError

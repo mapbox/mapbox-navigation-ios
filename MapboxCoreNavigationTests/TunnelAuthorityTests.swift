@@ -6,7 +6,6 @@ import MapboxDirections
 import TestHelper
 @testable import MapboxCoreNavigation
 
-
 let tunnelRoute = Fixture.route(from: "routeWithTunnels_9thStreetDC")
 
 class TunnelAuthorityTests: XCTestCase {

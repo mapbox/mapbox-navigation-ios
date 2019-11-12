@@ -1,7 +1,6 @@
 import Foundation
 
 extension String {
-    
     // Adapted from https://github.com/raywenderlich/swift-algorithm-club/blob/master/Minimum%20Edit%20Distance/MinimumEditDistance.playground/Contents.swift
     func minimumEditDistance(to word: String) -> Int {
         let fromWordCount = count

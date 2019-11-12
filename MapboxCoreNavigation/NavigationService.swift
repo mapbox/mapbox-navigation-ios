@@ -2,18 +2,14 @@ import UIKit
 import CoreLocation
 import MapboxDirections
 
-
 public enum SimulationIntent: Int{
     case manual, poorGPS
 }
 
-
 /**
  The simulation mode type. Used for setting the simulation mode of the navigation service.
  */
-
 public enum SimulationMode: Int {
-   
     /**
      A setting of `.onPoorGPS` will enable simulation when we do not recieve a location update after the `poorGPSPatience` threshold has elapsed.
      */
@@ -39,7 +35,6 @@ public enum SimulationMode: Int {
  
  If you use a navigation service by itself, outside of `NavigationViewController`, call `start()` when the user is ready to begin navigating along the route.
  */
-
 public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, EventsManagerDataSource {
     /**
      The location manager for the service. This will be the object responsible for notifying the service of GPS updates.
@@ -107,7 +102,6 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
      Interrogates the navigationService as to whether or not the passed-in location is in a tunnel.
      */
     func isInTunnel(at location: CLLocation, along progress: RouteProgress) -> Bool 
-
 }
 
 /**
@@ -117,9 +111,7 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
  
  If you use a navigation service by itself, outside of `NavigationViewController`, call `start()` when the user is ready to begin navigating along the route.
  */
-
 public class MapboxNavigationService: NSObject, NavigationService {
-    
     typealias DefaultRouter = RouteController
     
     /**
@@ -138,7 +130,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
     
     /**
      The active location manager. Returns the location simulator if we're actively simulating, otherwise it returns the native location manager.
-    */
+     */
     public var locationManager: NavigationLocationManager {
         return simulatedLocationSource ?? nativeLocationSource
     }
@@ -150,12 +142,12 @@ public class MapboxNavigationService: NSObject, NavigationService {
     
     /**
      The active router. By default, a `PortableRouteController`.
-    */
+     */
     public var router: Router!
     
     /**
      The events manager. Sends telemetry back to the Mapbox platform.
-    */
+     */
     public var eventsManager: NavigationEventsManager!
     
     /**
@@ -165,12 +157,12 @@ public class MapboxNavigationService: NSObject, NavigationService {
     
     /**
      The native location source. This is a `NavigationLocationManager` by default, but can be overridden with a custom location manager at initalization.
-    */
+     */
     private var nativeLocationSource: NavigationLocationManager
     
     /**
      The active location simulator. Only used during `SimulationOption.always` and `SimluatedLocationManager.onPoorGPS`. If there is no simulation active, this property is `nil`.
-    */
+     */
     private var simulatedLocationSource: SimulatedLocationManager?
 
     /**
@@ -228,12 +220,11 @@ public class MapboxNavigationService: NSObject, NavigationService {
      - parameter routerType: An optional router type to use for traversing the route.
      */
     required public init(route: Route,
-                               directions: Directions? = nil,
-                               locationSource: NavigationLocationManager? = nil,
-                               eventsManagerType: NavigationEventsManager.Type? = nil,
-                               simulating simulationMode: SimulationMode = .onPoorGPS,
-                               routerType: Router.Type? = nil)
-    {
+                         directions: Directions? = nil,
+                         locationSource: NavigationLocationManager? = nil,
+                         eventsManagerType: NavigationEventsManager.Type? = nil,
+                         simulating simulationMode: SimulationMode = .onPoorGPS,
+                         routerType: Router.Type? = nil) {
         nativeLocationSource = locationSource ?? NavigationLocationManager()
         self.directions = directions ?? Directions.shared
         self.simulationMode = simulationMode
@@ -277,7 +268,6 @@ public class MapboxNavigationService: NSObject, NavigationService {
     public func isInTunnel(at location: CLLocation, along progress: RouteProgress) -> Bool {
         return TunnelAuthority.isInTunnel(at: location, along: progress)
     }
-
     
     private func simulate(intent: SimulationIntent = .manual) {
         guard !isSimulating else { return }
@@ -354,7 +344,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
     private func resetGPSCountdown() {
         //Sanity check: if we're not on this mode, we have no business here.
         guard simulationMode == .onPoorGPS else { return }
-    
+        
         // Immediately end simulation if it is occuring.
         if isSimulating {
             endSimulation(intent: .poorGPS)
@@ -383,7 +373,6 @@ extension MapboxNavigationService: CLLocationManagerDelegate {
     }
     
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-
         //If we're always simulating, make sure this is a simulated update.
         if simulationMode == .always, manager != simulatedLocationSource { return }
         
@@ -397,7 +386,6 @@ extension MapboxNavigationService: CLLocationManagerDelegate {
         if simulationMode == .onPoorGPS,
             manager == nativeLocationSource,
             location.isQualified {
-            
             //If the timer is disarmed, arm it. This is a good update.
             if poorGPSTimer.state == .disarmed, location.isQualifiedForStartingRoute {
                 poorGPSTimer.arm()
@@ -405,7 +393,6 @@ extension MapboxNavigationService: CLLocationManagerDelegate {
             
             //pass this good update onto the poor GPS timer mechanism.
             resetGPSCountdown()
-            
         }
         
         //Finally, pass the update onto the router.
@@ -415,12 +402,9 @@ extension MapboxNavigationService: CLLocationManagerDelegate {
 
 //MARK: - RouteControllerDelegate
 extension MapboxNavigationService: RouterDelegate {
-    
     typealias Default = RouteController.DefaultBehavior
-
     
     public func router(_ router: Router, willRerouteFrom location: CLLocation) {
-    
         //save any progress made by the router until now
         eventsManager.enqueueRerouteEvent()
         eventsManager.incrementDistanceTraveled(by: router.routeProgress.distanceTraveled)
@@ -430,7 +414,6 @@ extension MapboxNavigationService: RouterDelegate {
     }
     
     public func router(_ router: Router, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
-        
         //notify the events manager that the route has changed
         eventsManager.reportReroute(progress: router.routeProgress, proactive: proactive)
         
@@ -446,7 +429,6 @@ extension MapboxNavigationService: RouterDelegate {
     }
     
     public func router(_ router: Router, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
-        
         //notify the events manager of the progress update
         eventsManager.update(progress: progress)
         
@@ -476,7 +458,6 @@ extension MapboxNavigationService: RouterDelegate {
     }
     
     public func router(_ router: Router, didArriveAt waypoint: Waypoint) -> Bool {
-        
         //Notify the events manager that we've arrived at a waypoint
         eventsManager.arriveAtWaypoint()
         
@@ -505,7 +486,6 @@ extension MapboxNavigationService {
     public var desiredAccuracy: CLLocationAccuracy {
         return self.locationManager.desiredAccuracy
     }
-    
 }
 
 //MARK: RouterDataSource
@@ -517,7 +497,7 @@ extension MapboxNavigationService {
 
 fileprivate extension NavigationEventsManager {
     func incrementDistanceTraveled(by distance: CLLocationDistance) {
-       sessionState?.totalDistanceCompleted += distance
+        sessionState?.totalDistanceCompleted += distance
     }
     
     func arriveAtWaypoint() {
@@ -538,7 +518,6 @@ private extension Double {
         return .milliseconds(intMilliseconds)
     }
 }
-
 
 private func checkForUpdates() {
     #if TARGET_IPHONE_SIMULATOR

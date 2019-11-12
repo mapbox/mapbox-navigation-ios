@@ -5,13 +5,11 @@
 ### Architechture
 * This library can no longer be used in applications written in pure Objective-C. If you need to use this library’s public API from Objective-C code, you will need to implement a wrapper in Swift that bridges the subset of the API you need from Swift to Objective-C. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
 
-
 ### UI
 * `UserCourseView` is now a type alias of the `UIView` class and the `CourseUpdatable` protocol rather than a protocol in its own right. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
 * `NavigationMapview.showRoutes(_:legIndex:)` has been renaamed to `NavigationMapView.show(_:legIndex:)`. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
 * `NavigationMapview.showWayoints(_:legIndex:)` has been renaamed to `NavigationMapView.showWaypoints(on:legIndex:)`. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
 * `MapboxVoiceController.play(_:)` has been renaamed to `MapboxVoiceController.play(instruction:data:)`. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
-
 
 ### Error Handling
 * The `MapboxVoiceController` and `RouteVoiceController` now emit `SpeechError`s instead of an `NSError` object. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
@@ -161,7 +159,6 @@
 
 * You can now customize the control layer of the map template comprising of the navigation bar's leading and trailing buttons and the map buttons. ([#1962](https://github.com/mapbox/mapbox-navigation-ios/pull/1962))
 * Added new map buttons in the `CarPlayManager` and the `CarPlayMapViewController`. You can now access map buttons that perform built-in actions on the map by accessing read-only properties such as: `CarPlayManager.exitButton`, `CarPlayManager.muteButton`, `CarPlayManager.showFeedbackButton`, `CarPlayManager.overviewButton`, `CarPlayMapViewController.recenterButton`, `CarPlayMapViewController.zoomInButton`, `CarPlayMapViewController.zoomOutButton`, `CarPlayMapViewController.panningInterfaceDisplayButton(for:)`, `CarPlayMapViewController.panningInterfaceDismissalButton(for:)`. ([#1962](https://github.com/mapbox/mapbox-navigation-ios/pull/1962))
-
 
 ### Other changes
 
@@ -645,7 +642,6 @@
 ## Voice guidance
 
 * Exposes `RouteVoiceController.speak(_:)` which would allow custom subclass of MapboxVoiceController to override this method and pass a modified SpokenInstruction to our superclass implementation.
-
 
 ## v0.13.1 (February 7, 2018)
 

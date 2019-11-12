@@ -21,10 +21,8 @@ public typealias ContainerViewController = UIViewController & NavigationComponen
  
  `CarPlayNavigationViewController` manages the corresponding user interface on a CarPlay screen.
  */
-
 open class NavigationViewController: UIViewController, NavigationStatusPresenter {
-    
-    /** 
+    /**
      A `Route` object constructed by [MapboxDirections](https://mapbox.github.io/mapbox-navigation-ios/directions/).
      
      In cases where you need to update the route after navigation has started you can set a new `route` here and `NavigationViewController` will update its UI accordingly.
@@ -133,7 +131,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      */
     public var shouldManageApplicationIdleTimer = true
     
-    
     var isConnectedToCarPlay: Bool {
         if #available(iOS 12.0, *) {
             return CarPlayManager.isConnected
@@ -193,10 +190,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      - parameter route: The route to navigate along.
      - parameter options: The navigation options to use for the navigation session.
      */
-    
     required public init(for route: Route,
                          options: NavigationOptions? = nil) {
-        
         super.init(nibName: nil, bundle: nil)
         
         self.navigationService = options?.navigationService ?? MapboxNavigationService(route: route)
@@ -230,7 +225,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         self.mapViewController = mapViewController
         mapViewController.destination = route.legs.last?.destination
         mapViewController.view.translatesAutoresizingMaskIntoConstraints = false
-
         
         embed(mapViewController, in: view) { (parent, map) -> [NSLayoutConstraint] in
             return map.view.constraintsForPinning(to: parent.view)
@@ -240,7 +234,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         if let currentStyle = styleManager.currentStyle {
             updateMapStyle(currentStyle, animated: false)
         }
-        
         
         mapViewController.view.pinInSuperview()
         mapViewController.reportButton.isHidden = !showsReportFeedback
@@ -275,8 +268,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         self.navigationService.start()
         
         view.clipsToBounds = true
-
- 
+        
         guard let firstInstruction = navigationService.routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction else {
             return
         }
@@ -299,7 +291,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         if shouldManageApplicationIdleTimer {
             UIApplication.shared.isIdleTimerDisabled = false
         }
-        
     }
     
     func notifyUserAboutLowVolumeIfNeeded() {
@@ -393,7 +384,6 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
         return delegate?.navigationViewController(self, shapeFor: waypoints, legIndex: legIndex)
     }
     
-    
     //Still Kept around for the EORVC. On it's way out.
     func mapViewControllerDidDismiss(_ mapViewController: RouteMapViewController, byCanceling canceled: Bool) {
         if delegate?.navigationViewControllerDidDismiss(self, byCanceling: canceled) != nil {
@@ -402,7 +392,6 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
             dismiss(animated: true, completion: nil)
         }
     }
-
     
     public func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint {
         return delegate?.navigationViewController(self, mapViewUserAnchorPoint: mapView) ?? .zero
@@ -432,7 +421,6 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
 
 //MARK: - NavigationServiceDelegate
 extension NavigationViewController: NavigationServiceDelegate {
-    
     public func navigationService(_ service: NavigationService, shouldRerouteFrom location: CLLocation) -> Bool {
         let defaultBehavior = RouteController.DefaultBehavior.shouldRerouteFromLocation
         let componentsWantReroute = navigationComponents.allSatisfy { $0.navigationService(service, shouldRerouteFrom: location) }
@@ -470,10 +458,8 @@ extension NavigationViewController: NavigationServiceDelegate {
     }
     
     public func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
-        
         //Check to see if we're in a tunnel.
         checkTunnelState(at: location, along: progress)
-        
         
         //Pass the message onto our navigation components
         for component in navigationComponents {
@@ -600,7 +586,6 @@ extension NavigationViewController: NavigationServiceDelegate {
 // MARK: - StyleManagerDelegate
 
 extension NavigationViewController: StyleManagerDelegate {
-    
     public func location(for styleManager: StyleManager) -> CLLocation? {
         if let location = navigationService.router.location {
             return location
@@ -610,7 +595,6 @@ extension NavigationViewController: StyleManagerDelegate {
             return nil
         }
     }
-    
     
     public func styleManager(_ styleManager: StyleManager, didApply style: Style) {
         updateMapStyle(style)
@@ -648,13 +632,11 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
         let progress = navigationService.routeProgress
         let route = progress.route
         switch direction {
-        
         case .up where banner.isDisplayingSteps:
             banner.dismissStepsTable()
         
         case .down where !banner.isDisplayingSteps:
             banner.displayStepsTable()
-            
             
             if banner.isDisplayingPreviewInstructions {
                 mapViewController?.recenter(self)
@@ -697,9 +679,6 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
         }
         
         mapViewController?.center(on: upcomingStep, route: route, legIndex: legIndex, stepIndex: nextStepIndex, animated: animated, completion: previewBanner)
-        
-        
-        
     }
     
     public func topBanner(_ banner: TopBannerViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell) {

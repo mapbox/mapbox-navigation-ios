@@ -9,7 +9,6 @@ struct Location {
 }
 
 class StyleManagerTests: XCTestCase {
-    
     var location = Location.london
     var styleManager: StyleManager!
     
@@ -160,7 +159,6 @@ extension StyleManagerTests: StyleManagerDelegate {
     public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) { }
     
     public func styleManager(_ styleManager: StyleManager, didApply style: Style) { }
-    
     
     public func location(for styleManager: StyleManager) -> CLLocation? {
         return location

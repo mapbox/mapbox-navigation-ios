@@ -1,6 +1,5 @@
 import Foundation
 
-
 public class DataCache: NSObject, BimodalDataCache {
     let memoryCache: NSCache<NSString, NSData>
     let fileCache = FileCache()
@@ -14,12 +13,11 @@ public class DataCache: NSObject, BimodalDataCache {
         NotificationCenter.default.addObserver(self, selector: #selector(DataCache.clearMemory), name: UIApplication.didReceiveMemoryWarningNotification, object: nil)
     }
 
-
     // MARK: Data cache
 
     /*
      Stores data in the cache for the given key. If `toDisk` is set to `true`, the completion handler is called following writing the data to disk, otherwise it is called immediately upon storing the data in the memory cache.
-    */
+     */
     public func store(_ data: Data, forKey key: String, toDisk: Bool, completion: CompletionHandler?) {
         storeDataInMemoryCache(data, forKey: key)
 
@@ -70,5 +68,4 @@ public class DataCache: NSObject, BimodalDataCache {
         }
         return nil
     }
-
 }

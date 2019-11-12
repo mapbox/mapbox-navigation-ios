@@ -3,10 +3,8 @@ import Foundation
 import UIKit
 
 extension UIWindow {
-    
     /// Returns a screenshot of the current window
     public func capture() -> UIImage? {
-        
         UIGraphicsBeginImageContextWithOptions(frame.size, isOpaque, UIScreen.main.scale)
         
         drawHierarchy(in: bounds, afterScreenUpdates: false)
@@ -20,9 +18,7 @@ extension UIWindow {
 }
 
 extension UIImage {
-    
     func scaled(toFit newWidth: CGFloat) -> UIImage? {
-        
         let factor = newWidth / size.width
         let newSize = CGSize(width: size.width * factor, height: size.height * factor)
         

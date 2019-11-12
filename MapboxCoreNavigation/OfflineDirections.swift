@@ -56,9 +56,7 @@ public typealias UnpackCompletionHandler = (_ numberOfTiles: UInt64, _ error: Er
  
  Each result produced by the directions object is stored in a `Route` object. Depending on the `RouteOptions` object you provide, each route may include detailed information suitable for turn-by-turn directions, or it may include only high-level information such as the distance, estimated travel time, and name of each leg of the trip. The waypoints that form the request may be conflated with nearby locations, as appropriate; the resulting waypoints are provided to the closure.
  */
-
 public class NavigationDirections: Directions {
-    
     public override init(accessToken: String? = nil, host: String? = nil) {
         super.init(accessToken: accessToken, host: host)
     }
@@ -92,11 +90,8 @@ public class NavigationDirections: Directions {
      - parameter progressHandler: Unpacking reports progress every 500ms.
      - parameter completionHandler: Called when unpacking completed.
      */
-    
     public class func unpackTilePack(at filePathURL: URL, outputDirectoryURL: URL, progressHandler: UnpackProgressHandler?, completionHandler: UnpackCompletionHandler?) {
-        
         NavigationDirectionsConstants.offlineSerialQueue.sync {
-            
             let totalPackedBytes = filePathURL.fileSize!
             
             // Report 0% progress
@@ -138,9 +133,7 @@ public class NavigationDirections: Directions {
      - parameter offline: Determines whether to calculate the route offline or online.
      - parameter completionHandler: The closure (block) to call with the resulting routes. This closure is executed on the application’s main thread.
      */
-    
     public func calculate(_ options: RouteOptions, offline: Bool = true, completionHandler: @escaping Directions.RouteCompletionHandler) {
-        
         guard offline == true else {
             super.calculate(options, completionHandler: completionHandler)
             return
@@ -149,7 +142,6 @@ public class NavigationDirections: Directions {
         let url = self.url(forCalculating: options)
         
         NavigationDirectionsConstants.offlineSerialQueue.async { [weak self] in
-            
             guard let result = self?.navigator.getRouteForDirectionsUri(url.absoluteString) else {
                 let message = NSLocalizedString("OFFLINE_NO_RESULT", bundle: .mapboxCoreNavigation, value: "Unable to calculate the requested route while offline.", comment: "Error description when an offline route request returns no result")
                 let error = OfflineRoutingError.unexpectedRouteResult(message)
@@ -170,13 +162,11 @@ public class NavigationDirections: Directions {
                         return completionHandler(nil, nil, error as NSError)
                     }
                 } else {
-                    
                     DispatchQueue.main.async {
                         let response = options.response(from: json)
                         return completionHandler(response.0, response.1, nil)
                     }
                 }
-                
             } catch {
                 DispatchQueue.main.async {
                     return completionHandler(nil, nil, error as NSError)
@@ -187,7 +177,6 @@ public class NavigationDirections: Directions {
     
     var _navigator: MBNavigator!
     var navigator: MBNavigator {
-        
         assert(currentQueueName() == NavigationDirectionsConstants.offlineSerialQueueLabel,
                "The offline navigator must be accessed from the dedicated serial queue")
         
@@ -205,7 +194,6 @@ fileprivate func currentQueueName() -> String? {
 }
 
 extension URL {
-    
     fileprivate var fileSize: UInt64? {
         do {
             let attributes = try FileManager.default.attributesOfItem(atPath: self.path)

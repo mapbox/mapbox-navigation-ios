@@ -1,7 +1,6 @@
 import Foundation
 
 extension Locale {
-    
     /**
      Given the app's localized language setting, returns a string representing the user's localization.
      */

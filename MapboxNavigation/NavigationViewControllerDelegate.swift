@@ -7,7 +7,6 @@ import MapboxCoreNavigation
  
  For convenience, several location-related methods in the `NavigationServiceDelegate` protocol have corresponding methods in this protocol.
  */
-
 public protocol NavigationViewControllerDelegate: VisualInstructionDelegate{
     /**
      Called when the navigation view controller is dismissed, such as when the user ends a trip.
@@ -27,7 +26,6 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate{
      - parameter rawLocation: the raw location, from the location manager, associated with the progress update.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func navigationViewController(_ navigationViewController: NavigationViewController, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation)
     
     /**
@@ -41,7 +39,6 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate{
      - note: This method will likely be called several times as you approach a destination. To respond to the user’s arrival only once, your delegate can define a property that keeps track of whether this method has already been called for the given waypoint.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func navigationViewController(_ navigationViewController: NavigationViewController, willArriveAt waypoint: Waypoint, after remainingTimeInterval: TimeInterval, distance: CLLocationDistance)
     
     /**
@@ -55,7 +52,6 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate{
      - returns: True to automatically advance to the next leg, or false to remain on the now completed leg.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool
     
     /**
@@ -68,7 +64,6 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate{
      - returns: True to allow the navigation view controller to calculate a new route; false to keep tracking the current route.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool
     
     /**
@@ -80,7 +75,6 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate{
      - parameter location: The user’s current location.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func navigationViewController(_ navigationViewController: NavigationViewController, willRerouteFrom location: CLLocation?)
     
     /**
@@ -92,7 +86,6 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate{
      - parameter route: The new route.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func navigationViewController(_ navigationViewController: NavigationViewController, didRerouteAlong route: Route)
     
     /**
@@ -104,7 +97,6 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate{
      - parameter error: An error raised during the process of obtaining a new route.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func navigationViewController(_ navigationViewController: NavigationViewController, didFailToRerouteWith error: Error)
     
     /**
@@ -129,7 +121,6 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate{
      If this method is unimplemented, the navigation view controller’s map view represents the route line using an `MGLPolylineFeature` based on `route`’s `coordinates` property.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func navigationViewController(_ navigationViewController: NavigationViewController, shapeFor routes: [Route]) -> MGLShape?
     
     /**
@@ -138,7 +129,6 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate{
      If this method is unimplemented, the navigation view controller’s map view represents the route line’s casing using an `MGLPolylineFeature` identical to the one returned by `navigationViewController(_:shapeFor:)`.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func navigationViewController(_ navigationViewController: NavigationViewController, simplifiedShapeFor route: Route) -> MGLShape?
     
     /*
@@ -163,7 +153,6 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate{
      If this method is unimplemented, the navigation map view represents the route waypoints using `navigationViewController(_:shapeFor:legIndex:)`.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func navigationViewController(_ navigationViewController: NavigationViewController, shapeFor waypoints: [Waypoint], legIndex: Int) -> MGLShape?
     
     /**
@@ -172,7 +161,6 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate{
      - parameter route: The route on the map that the user selected.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func navigationViewController(_ navigationViewController: NavigationViewController, didSelect route: Route)
     
     /**
@@ -190,7 +178,6 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate{
      - returns: If `true`, the location is discarded and the `NavigationViewController` will not consider it. If `false`, the location will not be thrown out.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func navigationViewController(_ navigationViewController: NavigationViewController, shouldDiscard location: CLLocation) -> Bool
     
     /**
@@ -203,9 +190,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate{
      - returns: The road name to display in the label, or nil to hide the label.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.     
      */
-    
     func navigationViewController(_ navigationViewController: NavigationViewController, roadNameAt location: CLLocation) -> String?
-    
     
     //MARK: Obsolete
     
@@ -219,14 +204,12 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate{
 }
 
 public extension NavigationViewControllerDelegate {
-
     func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool) {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
     }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .info)
-
     }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, willArriveAt waypoint: Waypoint, after remainingTimeInterval: TimeInterval, distance: CLLocationDistance) {
@@ -236,7 +219,6 @@ public extension NavigationViewControllerDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
         return RouteController.DefaultBehavior.didArriveAtWaypoint
-        
     }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool {
@@ -303,7 +285,6 @@ public extension NavigationViewControllerDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, shouldDiscard location: CLLocation) -> Bool {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
         return RouteController.DefaultBehavior.shouldDiscardLocation
-        
     }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, roadNameAt location: CLLocation) -> String? {
@@ -320,6 +301,4 @@ public extension NavigationViewControllerDelegate {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
         return nil
     }
-    
-    
 }

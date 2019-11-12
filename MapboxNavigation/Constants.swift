@@ -37,7 +37,6 @@ public let MBCongestionAttribute = "congestion"
 public let NavigationViewMinimumVolumeForWarning: Float = 0.3
 
 extension Notification.Name {
-    
     /**
      Posted when `StyleManager` applies a style that was triggered by change of time of day, or when entering or exiting a tunnel.
      
@@ -58,9 +57,6 @@ public struct StyleManagerNotificationUserInfoKey: Hashable, Equatable, RawRepre
     public init(rawValue: String) {
         self.rawValue = rawValue
     }
-
-    
-    
     
     /**
      A key in the user info dictionary of `StyleManagerDidApplyStyleNotification` notification. The corresponding value is an `Style` instance that was applied.

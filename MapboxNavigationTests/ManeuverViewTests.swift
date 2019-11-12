@@ -4,9 +4,7 @@ import MapboxDirections
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
-
 class ManeuverViewTests: FBSnapshotTestCase {
-
     let maneuverView = ManeuverView(frame: CGRect(origin: .zero, size: CGSize(width: 50, height: 50)))
 
     override func setUp() {
@@ -98,7 +96,6 @@ class ManeuverViewTests: FBSnapshotTestCase {
 }
 
 extension UIImage {
-    
     convenience init?(view: UIView) {
         UIGraphicsBeginImageContextWithOptions(view.bounds.size, view.isOpaque, 0)
         defer { UIGraphicsEndImageContext() }

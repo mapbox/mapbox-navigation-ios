@@ -8,7 +8,6 @@ import Foundation
 @available(iOS 11.0, *)
 /// :nodoc:
 class GuidanceCardsSnapshotTests: SnapshotTest {
-    
     override func setUp() {
         super.setUp()
         recordMode = false

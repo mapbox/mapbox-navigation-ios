@@ -8,7 +8,6 @@ import MapboxDirections
 import Turf
 
 class CustomViewController: UIViewController, MGLMapViewDelegate {
-
     var destination: MGLPointAnnotation!
     let directions = Directions.shared
     var navigationService: NavigationService!
@@ -161,9 +160,9 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
         let route = navigationService.route
         
         // find the leg that contains the step, legIndex, and stepIndex
-        guard let leg       = route.legs.first(where: { $0.steps.contains(step) }),
-              let legIndex  = route.legs.firstIndex(of: leg),
-              let stepIndex = leg.steps.firstIndex(of: step) else {
+        guard let leg = route.legs.first(where: { $0.steps.contains(step) }),
+            let legIndex = route.legs.firstIndex(of: leg),
+            let stepIndex = leg.steps.firstIndex(of: step) else {
             return
         }
         
@@ -207,7 +206,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
         guard let view = previewInstructionsView else { return }
         view.removeFromSuperview()
         
-         // reclaim the delegate, from the preview banner
+        // reclaim the delegate, from the preview banner
         instructionsBannerView.delegate = self
         
         // nil out both the view and index

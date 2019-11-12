@@ -1,9 +1,7 @@
 import Foundation
 import Mapbox
 
-
 extension MGLStyle {
-    
     // The Mapbox China Day Style URL.
     static let mapboxChinaDayStyleURL = URL(string:"mapbox://styles/mapbox/streets-zh-v1")!
     
@@ -45,7 +43,6 @@ extension MGLStyle {
         }
         return URL(string:"mapbox://styles/mapbox/navigation-guidance-day-v\(version)")!
     }
-    
     
     /**
      Returns the URL to the given version of the navigation guidance style. Available version are 2, 3, and 4.
@@ -94,7 +91,6 @@ extension MGLStyle {
         }
         return URL(string:"mapbox://styles/mapbox/navigation-guidance-day-v\(version)")!
     }
-    
     
     /**
      Returns the URL to the given version of the Mapbox Navigation Preview Night style. Available versions are 2, 3, and 4.

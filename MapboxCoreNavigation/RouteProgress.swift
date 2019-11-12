@@ -5,9 +5,7 @@ import Turf
 /**
  `RouteProgress` stores the user’s progress along a route.
  */
-
 open class RouteProgress: NSObject {
-
     private static let reroutingAccuracy: CLLocationAccuracy = 90
 
     /**
@@ -115,7 +113,6 @@ open class RouteProgress: NSObject {
      
      The prior step may be part of a different RouteLeg than the current step. If the current step is the first step along the route, this property is set to nil.
      */
-    
     public var priorStep: RouteStep? {
         return currentLegProgress.priorStep ?? priorLeg?.steps.last
     }
@@ -124,8 +121,7 @@ open class RouteProgress: NSObject {
      The leg following the current leg along this route.
      
      If this leg is the last leg of the route, this property is set to nil.
-    */
-    
+     */
     public var upcomingLeg: RouteLeg? {
         return legIndex + 1 < route.legs.endIndex ? route.legs[legIndex + 1] : nil
     }
@@ -135,7 +131,6 @@ open class RouteProgress: NSObject {
      
      The upcoming step may be part of a different RouteLeg than the current step. If it is the last step along the route, this property is set to nil.
      */
-    
     public var upcomingStep: RouteStep? {
         return currentLegProgress.upcomingStep ?? upcomingLeg?.steps.first
     }
@@ -145,7 +140,6 @@ open class RouteProgress: NSObject {
      
      - important: The adjacent steps may be part of legs other than the current leg.
      */
-
     public var nearbyCoordinates: [CLLocationCoordinate2D] {
         let priorCoordinates = priorStep?.coordinates?.dropLast() ?? []
         let currentCoordinates = currentLegProgress.currentStep.coordinates ?? []
@@ -189,7 +183,6 @@ open class RouteProgress: NSObject {
             var congestionTravelTimesSegmentsByLeg: [[TimedCongestionLevel]] = []
 
             if let segmentCongestionLevels = leg.segmentCongestionLevels, let expectedSegmentTravelTimes = leg.expectedSegmentTravelTimes {
-
                 for step in leg.steps {
                     guard let coordinates = step.coordinates else { continue }
                     let stepCoordinateCount = step.maneuverType == .arrive ? Int(step.coordinateCount) : coordinates.dropLast().count
@@ -272,7 +265,6 @@ open class RouteProgress: NSObject {
 /**
  `RouteLegProgress` stores the user’s progress along a route leg.
  */
-
 open class RouteLegProgress: NSObject {
     /**
      Returns the current `RouteLeg`.
@@ -427,7 +419,6 @@ open class RouteLegProgress: NSObject {
     /**
      Returns an array of `CLLocationCoordinate2D` of the prior, current and upcoming step geometry.
      */
-    
     @available(*, deprecated, message: "Use RouteProgress.nearbyCoordinates")
     public var nearbyCoordinates: [CLLocationCoordinate2D] {
         let priorCoords = priorStep?.coordinates ?? []
@@ -494,9 +485,7 @@ open class RouteLegProgress: NSObject {
 /**
  `RouteStepProgress` stores the user’s progress along a route step.
  */
-
 open class RouteStepProgress: NSObject {
-
     /**
      Returns the current `RouteStep`.
      */
@@ -645,5 +634,4 @@ open class RouteStepProgress: NSObject {
     public var keyPathsAffectingValueForRemainingSpokenInstructions: Set<String> {
         return ["step.instructionsDisplayedAlongStep", "spokenInstructionIndex"]
     }
-
 }

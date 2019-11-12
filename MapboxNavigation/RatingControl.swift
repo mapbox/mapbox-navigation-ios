@@ -3,9 +3,7 @@ import CoreGraphics
 
 typealias RatingClosure = (Int) -> Void //rating
 
-/*@IBDesignable*/
 class RatingControl: UIStackView {
-    
     // MARK: Constants
     static let defaultSize = CGSize(width: 32.0, height: 32.0)
     private let starTemplate = UIImage(named: "star", in: .mapboxNavigation, compatibleWith: nil)
@@ -92,7 +90,6 @@ class RatingControl: UIStackView {
     
     private func updateSelectionStates() {
         for (index, button) in stars.enumerated() {
-            
             let selected = index < rating
             button.tintColor = selected  ? selectedColor : normalColor
             button.isSelected = selected

@@ -109,7 +109,6 @@ You can customize the appearance in order to blend in with the rest of your app.
 
 ```swift
 class CustomStyle: DayStyle {
-
     required init() {
         super.init()
         mapStyleURL = URL(string: "mapbox://styles/mapbox/satellite-streets-v9")!

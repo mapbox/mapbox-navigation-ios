@@ -5,13 +5,11 @@ import MapboxCoreNavigation
 /**
  The `StyleManagerDelegate` protocol defines a set of methods used for controlling the style.
  */
-
 public protocol StyleManagerDelegate: class, UnimplementedLogging {
     /**
      Asks the delegate for a location to use when calculating sunset and sunrise
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.     .
      */
-    
     func location(for styleManager: StyleManager) -> CLLocation?
     
     /**
@@ -20,7 +18,6 @@ public protocol StyleManagerDelegate: class, UnimplementedLogging {
      
      - note: This delegate method is the equivalent of `Notification.Name.styleManagerDidApplyStyle`.
      */
-    
     func styleManager(_ styleManager: StyleManager, didApply style: Style)
     
     /**
@@ -38,7 +35,6 @@ public extension StyleManagerDelegate {
     
     func styleManager(_ styleManager: StyleManager, didApply style: Style) {
         logUnimplemented(protocolType: StyleManagerDelegate.self, level: .debug)
-
     }
     
     func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
@@ -46,15 +42,11 @@ public extension StyleManagerDelegate {
     }
 }
 
-
-
 /**
  A manager that handles `Style` objects. The manager listens for significant time changes
  and changes to the content size to apply an approriate style for the given condition.
  */
-
 open class StyleManager: NSObject {
-    
     /**
      The receiver of the delegate. See `StyleManagerDelegate` for more information.
      */

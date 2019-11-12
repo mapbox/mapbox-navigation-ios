@@ -21,18 +21,16 @@ extension FeedbackViewController: UIViewControllerTransitioningDelegate {
  The `FeedbackViewControllerDelegate` protocol provides methods for responding to feedback events.
  */
 public protocol FeedbackViewControllerDelegate: class, UnimplementedLogging {
-    
     /**
      Called when the user opens the feedback form.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    func  feedbackViewControllerDidOpen(_ feedbackViewController: FeedbackViewController)
+    func feedbackViewControllerDidOpen(_ feedbackViewController: FeedbackViewController)
     
     /**
      Called when the user submits a feedback event.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func feedbackViewController(_ feedbackViewController: FeedbackViewController, didSend feedbackItem: FeedbackItem, uuid: UUID)
     
     /**
@@ -49,19 +47,16 @@ public extension FeedbackViewControllerDelegate {
     
     func feedbackViewController(_ feedbackViewController: FeedbackViewController, didSend feedbackItem: FeedbackItem, uuid: UUID) {
         logUnimplemented(protocolType: FeedbackViewControllerDelegate.self, level: .debug)
-
     }
     
     func feedbackViewControllerDidCancel(_ feedbackViewController: FeedbackViewController) {
         logUnimplemented(protocolType: FeedbackViewControllerDelegate.self, level: .debug)
-
     } 
 }
 
 /**
  A view controller containing a grid of buttons the user can use to denote an issue their current navigation experience.
  */
-
 public class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecognizerDelegate {
     var activeFeedbackItem: FeedbackItem?
     
@@ -320,9 +315,9 @@ extension FeedbackViewController: UICollectionViewDelegateFlowLayout {
         let item = sections[indexPath.row]
         let titleHeight = item.title.height(constrainedTo: width, font: FeedbackCollectionViewCell.Constants.titleFont)
         let cellHeight: CGFloat = FeedbackCollectionViewCell.Constants.imageSize.height
-                                  + FeedbackCollectionViewCell.Constants.padding
-                                  + titleHeight
-                                  + FeedbackViewController.verticalCellPadding
+            + FeedbackCollectionViewCell.Constants.padding
+            + titleHeight
+            + FeedbackViewController.verticalCellPadding
         return CGSize(width: width, height: cellHeight )
     }
 }

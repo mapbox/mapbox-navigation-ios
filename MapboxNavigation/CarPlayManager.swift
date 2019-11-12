@@ -7,7 +7,6 @@ import MapboxDirections
  The activity during which a `CPTemplate` is displayed. This enumeration is used to distinguish between different templates during different phases of user interaction.
  */
 @available(iOS 12.0, *)
-
 public enum CarPlayActivity: Int {
     /// The user is browsing the map or searching for a destination.
     case browsing
@@ -27,9 +26,7 @@ public enum CarPlayActivity: Int {
  - note: It is very important you have a single `CarPlayManager` instance at any given time. This should be managed by your `UIApplicationDelegate` class if you choose to supply your `accessToken` to the `CarPlayManager.eventsManager` via `NavigationEventsManager.init(dataSource:accessToken:mobileEventsManager)`, instead of the Info.plist.
  */
 @available(iOS 12.0, *)
-
 public class CarPlayManager: NSObject {
-
     public fileprivate(set) var interfaceController: CPInterfaceController?
     public fileprivate(set) var carWindow: UIWindow?
 
@@ -198,20 +195,18 @@ public class CarPlayManager: NSObject {
 
      */
     public convenience init(styles: [Style]? = nil,
-                      directions: Directions? = nil,
-                      eventsManager: NavigationEventsManager? = nil) {
-        
+                            directions: Directions? = nil,
+                            eventsManager: NavigationEventsManager? = nil) {
         self.init(styles: styles,
-                          directions: directions,
-                          eventsManager: eventsManager,
-                          navigationViewControllerClass: nil)
+                  directions: directions,
+                  eventsManager: eventsManager,
+                  navigationViewControllerClass: nil)
     }
     
-    
     internal init(styles: [Style]? = nil,
-                      directions: Directions? = nil,
-                      eventsManager: NavigationEventsManager? = nil,
-                      navigationViewControllerClass: CarPlayNavigationViewController.Type? = nil) {
+                  directions: Directions? = nil,
+                  eventsManager: NavigationEventsManager? = nil,
+                  navigationViewControllerClass: CarPlayNavigationViewController.Type? = nil) {
         self.styles = styles ?? [DayStyle(), NightStyle()]
         self.directions = directions ?? .shared
         self.eventsManager = eventsManager ?? NavigationEventsManager(dataSource: nil)
@@ -247,9 +242,7 @@ public class CarPlayManager: NSObject {
 // MARK: CPApplicationDelegate
 @available(iOS 12.0, *)
 extension CarPlayManager: CPApplicationDelegate {
-
     public func application(_ application: UIApplication, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPWindow) {
-
         CarPlayManager.isConnected = true
         interfaceController.delegate = self
         self.interfaceController = interfaceController
@@ -316,7 +309,7 @@ extension CarPlayManager: CPApplicationDelegate {
     public func resetPanButtons(_ mapTemplate: CPMapTemplate) {
         if mapTemplate.isPanningInterfaceVisible, let mapViewController = carPlayMapViewController {
             if let mapButtons = delegate?.carPlayManager(self, mapButtonsCompatibleWith: mapViewController.traitCollection, in: mapTemplate, for: .browsing) {
-               mapTemplate.mapButtons = mapButtons
+                mapTemplate.mapButtons = mapButtons
             } else if let mapButtons = self.browsingMapButtons(for: mapTemplate) {
                 mapTemplate.mapButtons = mapButtons
             }
@@ -352,7 +345,6 @@ extension CarPlayManager: CPInterfaceControllerDelegate {
     public func templateDidAppear(_ template: CPTemplate, animated: Bool) {
         guard interfaceController?.topTemplate == mainMapTemplate else { return }
         if template == interfaceController?.rootTemplate, let mapViewController = carPlayMapViewController {
-            
             let mapView = mapViewController.mapView
             mapView.removeRoutes()
             mapView.removeWaypoints()
@@ -372,14 +364,12 @@ extension CarPlayManager: CPInterfaceControllerDelegate {
         }
         
         carPlayMapViewController?.resetCamera(animated: false)
-        
     }
 }
 
 @available(iOS 12.0, *)
 extension CarPlayManager {
     public func previewRoutes(to destination: Waypoint, completionHandler: @escaping CompletionHandler) {
-        
         guard let rootViewController = carPlayMapViewController,
             let userLocation = rootViewController.mapView.userLocation,
             let location = userLocation.location else {
@@ -412,18 +402,15 @@ extension CarPlayManager {
         directions.calculate(options, completionHandler: completionHandler)
     }
     
-    
     internal func didCalculate(_ routes: [Route]?, for routeOptions: RouteOptions, between waypoints: [Waypoint]?, error: NSError?, completionHandler: CompletionHandler) {
         defer {
             completionHandler()
         }
         
-
-        
         if let error = error {
             guard let delegate = delegate,
-                  let alert = delegate.carPlayManager(self, didFailToFetchRouteBetween: waypoints, options: routeOptions, error: error) else {
-                    return
+                let alert = delegate.carPlayManager(self, didFailToFetchRouteBetween: waypoints, options: routeOptions, error: error) else {
+                return
             }
 
             let mapTemplate = interfaceController?.rootTemplate as? CPMapTemplate
@@ -469,7 +456,6 @@ extension CarPlayManager {
 // MARK: CPMapTemplateDelegate
 @available(iOS 12.0, *)
 extension CarPlayManager: CPMapTemplateDelegate {
-
     public func mapTemplate(_ mapTemplate: CPMapTemplate, startedTrip trip: CPTrip, using routeChoice: CPRouteChoice) {
         guard let interfaceController = interfaceController,
             let carPlayMapViewController = carPlayMapViewController else {
@@ -668,7 +654,6 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let shiftedCenterCoordinate = mapView.centerCoordinate.coordinate(at: distance, facing: shiftedDirection)
         mapView.setCenter(shiftedCenterCoordinate, animated: true)
     }
-
 }
 
 // MARK: CarPlayNavigationDelegate
@@ -695,7 +680,6 @@ extension CarPlayManager: MapTemplateProviderDelegate {
 }
 
 @available(iOS 12.0, *)
-
 internal protocol MapTemplateProviderDelegate: class {
     func mapTemplateProvider(_ provider: MapTemplateProvider, mapTemplate: CPMapTemplate, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, for activity: CarPlayActivity) -> [CPBarButton]?
     
@@ -704,11 +688,9 @@ internal protocol MapTemplateProviderDelegate: class {
 
 @available(iOS 12.0, *)
 internal class MapTemplateProvider: NSObject {
-
     weak var delegate: MapTemplateProviderDelegate?
 
     func mapTemplate(forPreviewing trip: CPTrip, traitCollection: UITraitCollection, mapDelegate: CPMapTemplateDelegate) -> CPMapTemplate {
-        
         let mapTemplate = createMapTemplate()
         mapTemplate.mapDelegate = mapDelegate
         
@@ -732,7 +714,6 @@ internal class MapTemplateProvider: NSObject {
 /**
  CarPlay support requires iOS 12.0 or above and the CarPlay framework.
  */
-
 public class CarPlayManager: NSObject {
     /**
      A Boolean value indicating whether the phone is connected to CarPlay.

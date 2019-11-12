@@ -16,9 +16,7 @@ import MapboxDirections
  
  The Mapbox Voice API is optimized for spoken instructions provided by the Mapbox Directions API via the MapboxDirections.swift framework. If you need text-to-speech functionality outside the context of a navigation service, use the Speech Synthesis framework’s `AVSpeechSynthesizer` class directly.
  */
-
 open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
-    
     /**
      Number of seconds a request can wait before it is canceled and the default speech synthesizer speaks the instruction.
      */
@@ -233,7 +231,6 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
      Plays an audio file.
      */
     open func play(instruction: SpokenInstruction, data: Data) {
-        
         let fallback: (SpeechError) -> Void = { [weak self] (error) in
             self?.speakWithDefaultSpeechSynthesizer(instruction, error: error)
         }
@@ -254,7 +251,6 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
                 strongSelf.safeUnduckAudio(instruction: instruction, engine: .api(strongSelf.speech), failure: fallback)
                 return
             }
-            
         }
     }
 }

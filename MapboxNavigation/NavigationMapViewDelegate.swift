@@ -5,7 +5,6 @@ import MapboxCoreNavigation
 /**
  The `NavigationMapViewDelegate` provides methods for configuring the NavigationMapView, as well as responding to events triggered by the NavigationMapView.
  */
-
 public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
     /**
      Asks the receiver to return an MGLStyleLayer for routes, given an identifier and source.
@@ -58,7 +57,6 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
      - parameter route: The route that was selected.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route)
     
     /**
@@ -67,7 +65,6 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
      - parameter waypoint: The waypoint that was selected.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func navigationMapView(_ mapView: NavigationMapView, didSelect waypoint: Waypoint)
     
     /**
@@ -78,7 +75,6 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
      - returns: Optionally, a `MGLShape` that defines the shape of the route, or `nil` to use default behavior.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func navigationMapView(_ mapView: NavigationMapView, shapeFor routes: [Route]) -> MGLShape?
     
     /**
@@ -89,7 +85,6 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
      - returns: Optionally, a `MGLShape` that defines the shape of the route at lower zoomlevels, or `nil` to use default behavior.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeFor route: Route) -> MGLShape?
     
     /**
@@ -99,7 +94,6 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
      - returns: Optionally, a `MGLShape` that defines the shape of the waypoint, or `nil` to use default behavior.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint], legIndex: Int) -> MGLShape?
     
     /**
@@ -109,9 +103,7 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
      - returns: A CGPoint (in regular coordinate-space) that represents the point on-screen where the user location icon should be drawn.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.     
      */
-    
     func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint
-    
     
     //MARK: Obsolete
     
@@ -188,14 +180,12 @@ public extension NavigationMapViewDelegate {
 /**
  The `NavigationMapViewCourseTrackingDelegate` provides methods for responding to the `NavigationMapView` starting or stopping course tracking.
  */
-
 public protocol NavigationMapViewCourseTrackingDelegate: class, UnimplementedLogging {
     /**
      Tells the receiver that the map is now tracking the user course.
      - seealso: NavigationMapView.tracksUserCourse
      - parameter mapView: The NavigationMapView.
      */
-    
     func navigationMapViewDidStartTrackingCourse(_ mapView: NavigationMapView)
     
     /**
@@ -203,7 +193,6 @@ public protocol NavigationMapViewCourseTrackingDelegate: class, UnimplementedLog
      - seealso: NavigationMapView.tracksUserCourse
      - parameter mapView: The NavigationMapView.
      */
-    
     func navigationMapViewDidStopTrackingCourse(_ mapView: NavigationMapView)
 }
 

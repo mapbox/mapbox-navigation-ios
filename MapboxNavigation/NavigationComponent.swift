@@ -5,10 +5,7 @@ import CoreLocation
 /*
  A navigation component is a member of the navigation UI view hierarchy that responds as the user progresses along a route according to the `NavigationServiceDelegate` protocol.
  */
-public protocol NavigationComponent: NavigationServiceDelegate {
-    
-}
-
+public protocol NavigationComponent: NavigationServiceDelegate {}
 
 /**
  The NavigationInteractionDelegate protocol is used to define interaction events that the top banner may need to know about.
@@ -17,7 +14,6 @@ public protocol NavigationMapInteractionObserver: class {
     /**
      Called when the NavigationMapView centers on a location.
      */
-    
     func navigationViewController(didCenterOn location: CLLocation)
 }
 
@@ -25,7 +21,6 @@ public protocol NavigationMapInteractionObserver: class {
  The CarPlayConnectionObserver protocol provides notification of a carplay unit connecting two the NavigationViewController.
  */
 public protocol CarPlayConnectionObserver: class {
-    
     /**
      Called when the NavigationViewController detects that a CarPlay device has been connected.
      */
@@ -36,7 +31,6 @@ public protocol CarPlayConnectionObserver: class {
      */
     func didDisconnectFromCarPlay()
 }
-
 
 /**
  This protocol defines a UI Component that is capable of presenting a status message.

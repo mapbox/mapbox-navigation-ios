@@ -27,7 +27,6 @@ class TunnelAuthority {
         if let upcomingIntersection = currentStepProgress.upcomingIntersection,
             let outletRoadClasses = upcomingIntersection.outletRoadClasses,
             outletRoadClasses.contains(.tunnel) {
-            
             // If we are entering sufficiently fast and we are either within the
             // tunnel entrance radius or the location is not qualified
             if location.speed >= Constants.minimumTunnelEntranceSpeed,
@@ -47,5 +46,3 @@ class TunnelAuthority {
         return false
     }
 }
-
-

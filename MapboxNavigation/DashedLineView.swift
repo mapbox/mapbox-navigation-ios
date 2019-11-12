@@ -2,9 +2,7 @@ import UIKit
 
 /// :nodoc:
 @IBDesignable
-
 public class DashedLineView: LineView {
-
     @IBInspectable public var dashedLength: CGFloat = 4 { didSet { updateProperties() } }
     @IBInspectable public var dashedGap: CGFloat = 4 { didSet { updateProperties() } }
 

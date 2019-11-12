@@ -2,9 +2,7 @@ import XCTest
 import TestHelper
 @testable import MapboxNavigation
 
-
 class DataCacheTests: XCTestCase {
-
     let cache: DataCache = DataCache()
 
     private func clearDisk() {

@@ -1,7 +1,6 @@
 import UIKit
 
 extension UICollectionView {
-    
     func numberOfRows(using delegate: UIViewController & UICollectionViewDelegateFlowLayout) -> Int {
         let layout = (collectionViewLayout as? UICollectionViewFlowLayout)!
         

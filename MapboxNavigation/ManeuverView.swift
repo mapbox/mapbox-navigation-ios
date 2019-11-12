@@ -5,9 +5,7 @@ import Turf
 
 /// :nodoc:
 @IBDesignable
-
 open class ManeuverView: UIView {
-
     @objc public dynamic var primaryColor: UIColor = .defaultTurnArrowPrimary {
         didSet {
             setNeedsDisplay()

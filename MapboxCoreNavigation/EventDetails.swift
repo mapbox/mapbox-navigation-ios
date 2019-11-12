@@ -53,7 +53,6 @@ struct PerformanceEventDetails: EventDetails {
 }
 
 struct NavigationEventDetails: EventDetails {
-    
     let audioType: String = AVAudioSession.sharedInstance().audioType
     let applicationState = UIApplication.shared.applicationState
     let batteryLevel: Int = UIDevice.current.batteryLevel >= 0 ? Int(UIDevice.current.batteryLevel * 100) : -1
@@ -121,8 +120,8 @@ struct NavigationEventDetails: EventDetails {
         requestIdentifier = dataSource.routeProgress.route.routeIdentifier
                 
         if let location = dataSource.router.rawLocation,
-           let coordinates = dataSource.routeProgress.route.coordinates,
-           let lastCoord = coordinates.last {
+            let coordinates = dataSource.routeProgress.route.coordinates,
+            let lastCoord = coordinates.last {
             userAbsoluteDistanceToDestination = location.distance(from: CLLocation(latitude: lastCoord.latitude, longitude: lastCoord.longitude))
         } else {
             userAbsoluteDistanceToDestination = nil
@@ -159,7 +158,6 @@ struct NavigationEventDetails: EventDetails {
         locationEngine = String(describing: dataSource.locationProvider)
         locationManagerDesiredAccuracy = dataSource.desiredAccuracy
         
-        
         var totalTimeInPortrait = session.timeSpentInPortrait
         var totalTimeInLandscape = session.timeSpentInLandscape
         if UIDevice.current.orientation.isPortrait {
@@ -177,7 +175,6 @@ struct NavigationEventDetails: EventDetails {
             totalTimeInBackground += abs(session.lastTimeInBackground.timeIntervalSinceNow)
         }
         percentTimeInForeground = totalTimeInPortrait + totalTimeInLandscape == 0 ? 100 : Int((totalTimeInPortrait / (totalTimeInPortrait + totalTimeInLandscape) * 100))
-        
         
         stepIndex = dataSource.routeProgress.currentLegProgress.stepIndex
         stepCount = dataSource.routeProgress.currentLeg.steps.count
@@ -299,7 +296,6 @@ struct NavigationEventDetails: EventDetails {
 }
 
 extension RouteLegProgress: Encodable {
-    
     private enum CodingKeys: String, CodingKey {
         case upcomingInstruction
         case upcomingType

@@ -61,13 +61,11 @@ public class ExitView: StylableView {
         }
     }
     
-    
     func spacing(for side: ExitSide, direction: UIUserInterfaceLayoutDirection = UIApplication.shared.userInterfaceLayoutDirection) -> CGFloat {
         let space: (less: CGFloat, more: CGFloat) = (4.0, 6.0)
         let lessSide: ExitSide = (direction == .rightToLeft) ? .left : .right
         return side == lessSide ? space.less : space.more
     }
-    
     
     convenience init(pointSize: CGFloat, side: ExitSide = .right, text: String) {
         self.init(frame: .zero)

@@ -1,7 +1,6 @@
 import Foundation
 
 extension Bundle {
-    
     class var mapboxNavigation: Bundle {
         get { return Bundle(for: NavigationViewController.self) }
     }

@@ -14,7 +14,6 @@ public protocol BimodalCache {
 /**
  A cache which supports storing images
  */
-
 public protocol BimodalImageCache: BimodalCache {
     func store(_ image: UIImage, forKey key: String, toDisk: Bool, completion completionBlock: CompletionHandler?)
     func image(forKey: String?) -> UIImage?
@@ -23,14 +22,13 @@ public protocol BimodalImageCache: BimodalCache {
 /**
  A cache which supports storing data
  */
-
 public protocol BimodalDataCache: BimodalCache {
     func store(_ data: Data, forKey key: String, toDisk: Bool, completion completionBlock: CompletionHandler?)
     func data(forKey: String?) -> Data?
 }
 
- /**
-  A general purpose on-disk cache used by both the ImageCache and DataCache implementations
+/**
+ A general purpose on-disk cache used by both the ImageCache and DataCache implementations
  */
 internal class FileCache {
     let diskCacheURL: URL = {
@@ -69,7 +67,6 @@ internal class FileCache {
             }
             completion?()
         }
-
     }
 
     /*

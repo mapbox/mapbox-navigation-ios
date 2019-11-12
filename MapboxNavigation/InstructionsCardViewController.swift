@@ -281,9 +281,6 @@ extension InstructionsCardViewController: UICollectionViewDelegateFlowLayout {
 
 /// :nodoc:
 extension InstructionsCardViewController: NavigationComponent {
-    
-    
-    
     public func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         routeProgress = progress
         reloadDataSource()
@@ -303,7 +300,6 @@ extension InstructionsCardViewController: NavigationComponent {
 
 /// :nodoc:
 extension InstructionsCardViewController: InstructionsCardContainerViewDelegate {
-    
     public func primaryLabel(_ primaryLabel: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
         return cardCollectionDelegate?.primaryLabel(primaryLabel, willPresent: instruction, as: presented)
     }

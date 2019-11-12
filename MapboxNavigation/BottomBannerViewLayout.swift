@@ -1,9 +1,7 @@
 import UIKit
 
 extension BottomBannerViewController {
-    
     func setupRootViews() {
-
         let children = [bottomBannerView, bottomPaddingView]
         view.addSubviews(children)
         setupRootViewConstraints()
@@ -26,7 +24,6 @@ extension BottomBannerViewController {
     }
     
     func setupBottomBanner() {
-        
         let timeRemainingLabel = TimeRemainingLabel()
         timeRemainingLabel.translatesAutoresizingMaskIntoConstraints = false
         timeRemainingLabel.font = .systemFont(ofSize: 28, weight: .medium)

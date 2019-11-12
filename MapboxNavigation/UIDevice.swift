@@ -5,7 +5,6 @@ import CoreLocation
 #endif
 
 extension UIDevice {
-    
     /**
      Returns a `Bool` whether the device is plugged in. Returns false if not an iOS device.
      */

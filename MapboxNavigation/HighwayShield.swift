@@ -1,5 +1,4 @@
 struct HighwayShield {
-    
     enum RoadClass: String {
         case alternate, duplex, business, truck, bypass, b
         case oneB = "1b", twoA = "2a", twoB = "2b"
@@ -69,7 +68,7 @@ struct HighwayShield {
                 self = roadType(locale, nil)
             case 3:
                 guard let roadType = RoadType.type(for: fields[1]),
-                      let locale = Locale(rawValue: fields[0]), let roadClass = RoadClass(rawValue: fields[2]) else {
+                    let locale = Locale(rawValue: fields[0]), let roadClass = RoadClass(rawValue: fields[2]) else {
                     return nil
                 }
                 self = roadType(locale, roadClass)

@@ -4,7 +4,6 @@ import MapboxDirections
 import MapboxCoreNavigation
 
 class OfflineViewController: UIViewController, MGLMapViewDelegate {
-    
     var mapView: MGLMapView!
     var resizableView: ResizableView!
     var backgroundLayer = CAShapeLayer()
@@ -47,14 +46,12 @@ class OfflineViewController: UIViewController, MGLMapViewDelegate {
     }
     
     @objc func downloadRegion() {
-        
         let mapCoordinateBounds = mapView.convert(resizableView.frame, toCoordinateBoundsFrom: nil)
         let coordinateBounds = CoordinateBounds(coordinates: [mapCoordinateBounds.sw, mapCoordinateBounds.ne])
         
         disableUserInterface()
         
         _ = Directions.shared.fetchAvailableOfflineVersions { [weak self] (versions, error) in
-            
             guard let version = versions?.first(where: { !$0.isEmpty } ) else {
                 let title = NSLocalizedString("OFFLINE_TITLE_VERSION_FETCHING_FAILED", value:"Unable to fetch available routing tile versions", comment: "Error title to display when no routing tile versions are available")
                 let message = NSLocalizedString("OFFLINE_MESSAGE_VERSION_FETCHING_FAILED", value:"No routing tile versions are available for download. Please try again later.", comment: "Error message to display when no routing tile versions are available")
@@ -95,14 +92,11 @@ class OfflineViewController: UIViewController, MGLMapViewDelegate {
                 outputDirectoryURL?.ensureDirectoryExists()
                 
                 NavigationDirections.unpackTilePack(at: url, outputDirectoryURL: outputDirectoryURL!, progressHandler: { (totalBytes, bytesRemaining) in
-
                     let progress = Float(bytesRemaining) / Float(totalBytes)
                     let formattedProgress = NumberFormatter.localizedString(from: progress as NSNumber, number: .percent)
                     let title = String.localizedStringWithFormat(NSLocalizedString("OFFLINE_TITLE_UNPACKING_FMT", value: "Unpacking… (%@)", comment: "Status item while downloading an offline region; 1 = percentage complete"), formattedProgress)
                     self?.updateTitle(title)
-
                 }, completionHandler: { (result, error) in
-
                     self?.navigationController?.popViewController(animated: true)
                 })
             }
@@ -117,7 +111,6 @@ class OfflineViewController: UIViewController, MGLMapViewDelegate {
 }
 
 extension CGRect {
-    
     var minXY: CGPoint {
         return CGPoint(x: minX, y: minY)
     }
@@ -128,7 +121,6 @@ extension CGRect {
 }
 
 extension URL {
-    
     func ensureDirectoryExists() {
         try? FileManager.default.createDirectory(at: self, withIntermediateDirectories: true, attributes: nil)
     }

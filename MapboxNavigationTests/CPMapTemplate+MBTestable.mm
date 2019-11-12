@@ -12,7 +12,6 @@ using namespace Cedar::Doubles;
 
 @end
 
-
 @implementation CPMapTemplate (MBTestable)
 
 #pragma clang diagnostic push

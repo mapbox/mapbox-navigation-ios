@@ -75,7 +75,6 @@ extension UIView {
         pinTo(parentView: superview, respectingMargins: margins)
     }
     
-
     class func forAutoLayout<ViewType: UIView>(frame: CGRect = .zero, hidden: Bool = false) -> ViewType {
         let view = ViewType.init(frame: frame)
         view.isHidden = hidden

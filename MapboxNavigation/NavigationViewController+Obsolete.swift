@@ -8,9 +8,9 @@ extension NavigationViewController {
     @available(*, deprecated, message: "Use the new init(route:options:) initalizer.")
     
     public convenience init(for route: Route,
-                         styles: [Style]? = nil,
-                         navigationService: NavigationService? = nil,
-                         voiceController: RouteVoiceController? = nil) {
+                            styles: [Style]? = nil,
+                            navigationService: NavigationService? = nil,
+                            voiceController: RouteVoiceController? = nil) {
         let bridge = NavigationOptions()
         bridge.styles = styles
         bridge.navigationService = navigationService
@@ -74,5 +74,4 @@ extension NavigationViewController {
     public class func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager, window: UIWindow) {
         fatalError()
     }
-
 }

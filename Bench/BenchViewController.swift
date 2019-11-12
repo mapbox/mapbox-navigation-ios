@@ -26,12 +26,10 @@ struct Item {
 }
 
 class BenchViewController: UITableViewController {
-
     var dataSource = [Section]()
     let cellIdentifier = "cellId"
     
     override func viewDidLoad() {
-        
         super.viewDidLoad()
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
@@ -66,7 +64,6 @@ class BenchViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
         let item = dataSource[indexPath.section].items[indexPath.row]
         
@@ -76,7 +73,6 @@ class BenchViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         tableView.deselectRow(at: indexPath, animated: true)
         
         let item = dataSource[indexPath.section].items[indexPath.row]
@@ -90,7 +86,6 @@ class BenchViewController: UITableViewController {
 }
 
 extension BenchViewController: NavigationViewControllerDelegate {
-    
     func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool) {
         navigationController?.popViewController(animated: true)
     }

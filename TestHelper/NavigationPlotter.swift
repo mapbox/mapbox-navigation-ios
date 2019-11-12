@@ -146,7 +146,6 @@ extension LinePlotter {
 }
 
 public class NavigationPlotter: UIView {
-    
     var mapView: NavigationMapView?
     var coordinateBounds: MGLCoordinateBounds?
     public var routePlotters: [RoutePlotter]? { didSet { setNeedsDisplay() } }
@@ -286,7 +285,7 @@ extension UIView {
         ]
         
         let boundingRect = text.boundingRect(with: CGSize(width: textRect.width, height: CGFloat.infinity),
-                                     options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
+                                             options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
         
         context.saveGState()
         let rect = CGRect(x: point.x - boundingRect.midX + Constants.dotSize.width / 2,
@@ -329,7 +328,6 @@ extension UIView {
 }
 
 extension Array where Element == CLLocationCoordinate2D {
-    
     fileprivate var bounds: MGLCoordinateBounds {
         var maximumLatitude: CLLocationDegrees = -80
         var minimumLatitude: CLLocationDegrees = 80

@@ -3,7 +3,6 @@ import MapboxDirections
 import AVFoundation
 import MapboxMobileEvents
 
-
 let SecondsBeforeCollectionAfterFeedbackEvent: TimeInterval = 20
 let EventVersion = 8
 

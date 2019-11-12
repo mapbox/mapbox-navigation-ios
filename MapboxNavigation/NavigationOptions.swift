@@ -8,10 +8,7 @@ import MapboxCoreNavigation
  
  - note: `NavigationOptions` is designed to be used with the `NavigationViewController` class to customize the user experience. To specify criteria when calculating routes, use the `NavigationRouteOptions` class. To modify user preferences that persist across navigation sessions, use the `NavigationSettings` class.
  */
-
-
 open class NavigationOptions: NSObject, NavigationCustomizable {
-    
     /**
      The styles that the view controller’s internal `StyleManager` object can select from for display.
      
@@ -26,7 +23,7 @@ open class NavigationOptions: NSObject, NavigationCustomizable {
     
     /**
      The voice controller that manages the delivery of voice instructions during navigation.
-    */
+     */
     open var voiceController: RouteVoiceController?
     
     /**

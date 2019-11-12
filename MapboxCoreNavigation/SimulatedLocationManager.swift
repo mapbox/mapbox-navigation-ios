@@ -27,8 +27,6 @@ fileprivate class SimulatedLocation: CLLocation {
  
  The route will be replaced upon a `RouteControllerDidReroute` notification.
  */
-
-
 open class SimulatedLocationManager: NavigationLocationManager {
     internal var currentDistance: CLLocationDistance = 0
     fileprivate var currentSpeed: CLLocationSpeed = 30
@@ -96,7 +94,6 @@ open class SimulatedLocationManager: NavigationLocationManager {
     }
 
     private func commonInit(for route: Route, currentDistance: CLLocationDistance, currentSpeed: CLLocationSpeed) {
-        
         self.currentSpeed = currentSpeed
         self.currentDistance = currentDistance
         self.route = route
@@ -191,7 +188,6 @@ open class SimulatedLocationManager: NavigationLocationManager {
     }
     
     private func calculateCurrentSpeed(distance: CLLocationDistance, coordinatesNearby: [CLLocationCoordinate2D]? = nil, closestLocation: SimulatedLocation) -> CLLocationSpeed {
-
         // More than 10 nearby coordinates indicates that we are in a roundabout or similar complex shape.
         if let coordinatesNearby = coordinatesNearby, coordinatesNearby.count >= 10 {
             return minimumSpeed
@@ -243,7 +239,6 @@ extension Array where Element : Equatable {
 }
 
 extension Array where Element == CLLocationCoordinate2D {
-    
     // Calculate turn penalty for each coordinate.
     fileprivate func simulatedLocationsWithTurnPenalties() -> [SimulatedLocation] {
         var locations = [SimulatedLocation]()

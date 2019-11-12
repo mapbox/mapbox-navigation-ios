@@ -5,13 +5,10 @@ import Polyline
 import MapboxMobileEvents
 import Turf
 
-
 protocol RouteControllerDataSource: class {
     var location: CLLocation? { get }
     var locationProvider: NavigationLocationManager.Type { get }
 }
-
-
 
 @available(*, deprecated, renamed: "RouteController")
 open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationManagerDelegate {    
@@ -25,11 +22,10 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
      */
     public var directions: Directions
 
-
     /**
      The threshold used when we determine when the user has arrived at the waypoint.
      By default, we claim arrival 5 seconds before the user is physically estimated to arrive.
-    */
+     */
     public var waypointArrivalThreshold: TimeInterval = 5.0
     
     public var reroutesProactively = true
@@ -98,11 +94,9 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         if let del = delegate, del.routerShouldDisableBatteryMonitoring(self) {
             UIDevice.current.isBatteryMonitoringEnabled = false
         }
-  
     }
     
     public var location: CLLocation? {
-
         // If there is no snapped location, and the rawLocation course is unqualified, use the user's heading as long as it is accurate.
         if snappedLocation == nil,
             let heading = heading,
@@ -181,11 +175,10 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     }
     
     public func userIsOnRoute(_ location: CLLocation) -> Bool {
-        
         // If the user has arrived, do not continue monitor reroutes, step progress, etc
         if routeProgress.currentLegProgress.userHasArrivedAtWaypoint &&
             (delegate?.router(self, shouldPreventReroutesWhenArrivingAt: routeProgress.currentLeg.destination) ??
-             RouteController.DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint) {
+                RouteController.DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint) {
             return true
         }
         
@@ -245,7 +238,6 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         // `filteredLocations` does not contain good locations and we have found at least one good location previously.
         } else if hasFoundOneQualifiedLocation {
             if let lastLocation = locations.last, delegate?.router(self, shouldDiscard: lastLocation) ?? RouteController.DefaultBehavior.shouldDiscardLocation {
-                
                 // Allow the user puck to advance. A stationary puck is not great.
                 self.rawLocation = lastLocation
                 
@@ -262,7 +254,6 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         }
 
         self.rawLocation = location
-
 
         updateIntersectionIndex(for: currentStepProgress)
         // Notify observers if the step’s remaining distance has changed.
@@ -285,7 +276,6 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     }
     
     private func update(progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
-        
         let stepProgress = progress.currentLegProgress.currentStepProgress
         let step = stepProgress.step
         
@@ -321,7 +311,6 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
 
         // We are at least at the "You will arrive" instruction
         if legProgress.remainingSteps.count <= 1 && remainingVoiceInstructions.count <= 1 && currentDestination != previousArrivalWaypoint {
-
             //Have we actually arrived? Last instruction is "You have arrived"
             if remainingVoiceInstructions.count == 0, legProgress.durationRemaining <= waypointArrivalThreshold {
                 previousArrivalWaypoint = currentDestination
@@ -332,7 +321,6 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
                 guard !routeProgress.isFinalLeg && advancesToNextLeg else { return }
                 advanceLegIndex(location: location)
                 updateDistanceToManeuver()
-                
             } else { //we are approaching the destination
                 delegate?.router(self, willArriveAt: currentDestination, after: legProgress.durationRemaining, distance: legProgress.distanceRemaining)
             }
@@ -477,7 +465,6 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
 
         for spokenInstruction in spokenInstructions {
             if userSnapToStepDistanceFromManeuver <= spokenInstruction.distanceAlongStep || firstInstructionOnFirstStep {
-
                 delegate?.router(self, didPassSpokenInstructionPoint: spokenInstruction, routeProgress: routeProgress)
                 NotificationCenter.default.post(name: .routeControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
                     RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress,

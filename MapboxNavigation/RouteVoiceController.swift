@@ -55,9 +55,7 @@ extension SpokenInstruction {
  
  If you need to supply a third-party speech synthesizer, define a subclass of `RouteVoiceController` that overrides the `speak(_:)` method. If the third-party speech synthesizer requires a network connection, you can instead subclass `MapboxVoiceController` to take advantage of its prefetching functionality.
  */
-
 open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
-    
     lazy var speechSynth = AVSpeechSynthesizer()
     
     let audioQueue = DispatchQueue(label: Bundle.mapboxNavigation.bundleIdentifier! + ".audio")
@@ -158,7 +156,6 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
         safeUnduckAudio(instruction: nil, engine: .native(synthesizer)) {
             voiceControllerDelegate?.voiceController(self, spokenInstructionsDidFailWith: $0)
-
         }
     }
     
@@ -239,7 +236,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         safeDuckAudio(instruction: instruction, engine: .native(speechSynth)) {
             voiceControllerDelegate?.voiceController(self, spokenInstructionsDidFailWith: $0)
         }
- 
+        
         var utterance: AVSpeechUtterance?
         if Locale.preferredLocalLanguageCountryCode == "en-US" {
             // Alex can’t handle attributed text.
@@ -267,9 +264,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
 /**
  The `VoiceControllerDelegate` protocol defines methods that allow an object to respond to significant events related to spoken instructions.
  */
-
 public protocol VoiceControllerDelegate: class, UnimplementedLogging {
-    
     /**
      Called when the voice controller falls back to a backup speech syntehsizer, but is still able to speak the instruction.
      
@@ -278,7 +273,6 @@ public protocol VoiceControllerDelegate: class, UnimplementedLogging {
      - parameter error: An error explaining the failure and its cause.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func voiceController(_ voiceController: RouteVoiceController, didFallBackTo engine: AVSpeechSynthesizer, becauseOf error: SpeechError)
    
     /**
@@ -288,7 +282,6 @@ public protocol VoiceControllerDelegate: class, UnimplementedLogging {
      - parameter error: An error explaining the failure and its cause.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: SpeechError)
     
     /**
@@ -299,7 +292,6 @@ public protocol VoiceControllerDelegate: class, UnimplementedLogging {
      - parameter interruptingInstruction: The spoken instruction that is interrupting the current instruction.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func voiceController(_ voiceController: RouteVoiceController, didInterrupt interruptedInstruction: SpokenInstruction, with interruptingInstruction: SpokenInstruction)
     
     /**
@@ -315,7 +307,6 @@ public protocol VoiceControllerDelegate: class, UnimplementedLogging {
 }
 
 public extension VoiceControllerDelegate {
-    
     func voiceController(_ voiceController: RouteVoiceController, didFallBackTo speech: AVSpeechSynthesizer, becauseOf error: SpeechError) {
         logUnimplemented(protocolType: VoiceControllerDelegate.self, level: .debug)
     }

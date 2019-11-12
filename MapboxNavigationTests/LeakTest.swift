@@ -15,7 +15,6 @@ public struct LeakTest {
         weak var leaked : AnyObject? = nil
         
         autoreleasepool {
-            
             var evaluated : AnyObject? = self.constructor()
             
             if let vc = evaluated as? UIViewController{
@@ -36,7 +35,6 @@ public struct LeakTest {
         var actionResult : Any? = nil
         
         autoreleasepool {
-            
             var evaluated : P? = self.constructor() as? P
             
             if evaluated == nil {
@@ -63,9 +61,7 @@ public struct LeakTest {
 }
 
 public func leak() -> Predicate<LeakTest> {
-    
     return Predicate.simple("leak") { expression in
-        
         guard let leakTest = try expression.evaluate() else{
             return PredicateStatus.fail
         }
@@ -75,9 +71,7 @@ public func leak() -> Predicate<LeakTest> {
 }
 
 public func leakWhen<P>(_ action : @escaping (P) -> Any) -> Predicate<LeakTest> where P:AnyObject {
-    
     return Predicate.simple("leak when") { expression in
-        
         guard let leakTest = try expression.evaluate() else{
             return PredicateStatus.fail
         }

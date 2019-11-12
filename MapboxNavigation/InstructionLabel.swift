@@ -3,7 +3,6 @@ import MapboxCoreNavigation
 import MapboxDirections
 
 /// :nodoc:
-
 open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
     typealias AvailableBoundsHandler = () -> (CGRect)
     var availableBounds: AvailableBoundsHandler!
@@ -26,7 +25,6 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
                 self?.imageDownloadCompletion?()
             }
             
-            
             let presenter = InstructionPresenter(instruction, dataSource: self, imageRepository: imageRepository, downloadCompletion: update)
             
             let attributed = presenter.attributedText()
@@ -41,9 +39,7 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
 /**
  The `VisualInstructionDelegate` protocol defines a method that allows an object to customize presented visual instructions.
  */
-
 public protocol VisualInstructionDelegate: class, UnimplementedLogging {
-    
     /**
      Called when an InstructionLabel will present a visual instruction.
      
@@ -53,12 +49,10 @@ public protocol VisualInstructionDelegate: class, UnimplementedLogging {
      - returns: optionally, a customized NSAttributedString that will be presented instead of the default, or if nil, the default behavior will be used.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.     
      */
-    
     func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString?
 }
 
 public extension VisualInstructionDelegate {
-    
     func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
         logUnimplemented(protocolType: InstructionLabel.self, level: .debug)
         return nil

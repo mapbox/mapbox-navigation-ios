@@ -6,9 +6,7 @@ import CarPlay
  `CarPlayMapViewController` is responsible for administering the Mapbox map, the interface styles and the map template buttons to display on CarPlay.
  */
 @available(iOS 12.0, *)
-
 public class CarPlayMapViewController: UIViewController {
-    
     static let defaultAltitude: CLLocationDistance = 850
     
     var styleManager: StyleManager?
@@ -48,7 +46,6 @@ public class CarPlayMapViewController: UIViewController {
      */
     public lazy var recenterButton: CPMapButton = {
         let recenter = CPMapButton { [weak self] button in
-            
             self?.mapView.setUserTrackingMode(.followWithCourse, animated: true, completionHandler: nil)
             button.isHidden = true
         }
@@ -218,11 +215,9 @@ public class CarPlayMapViewController: UIViewController {
 
 @available(iOS 12.0, *)
 extension CarPlayMapViewController: StyleManagerDelegate {
-    
     public func location(for styleManager: StyleManager) -> CLLocation? {
         return mapView.userLocationForCourseTracking ?? mapView.userLocation?.location ?? coarseLocationManager.location
     }
-    
     
     public func styleManager(_ styleManager: StyleManager, didApply style: Style) {
         let styleURL = style.previewMapStyleURL

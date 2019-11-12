@@ -6,7 +6,6 @@ import MapboxDirections
 
 /// :nodoc:
 class InstructionsCardCollectionTests: XCTestCase {
-    
     lazy var initialRoute: Route = {
         return Fixture.route(from: jsonFileName)
     }()
@@ -152,7 +151,6 @@ class InstructionsCardCollectionTests: XCTestCase {
 
 /// :nodoc:
 class InstructionsCardCollectionDelegateSpy: NSObject, InstructionsCardCollectionDelegate {
-    
     var step: RouteStep? = nil
     
     func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardViewController, didPreview step: RouteStep) {
@@ -176,15 +174,15 @@ class TestInstructionsCardStyle: InstructionsCardStyle {
     var secondaryLabelTextColor: UIColor = .darkGray
     var secondaryLabelHighlightedTextColor: UIColor = .gray
     lazy var distanceLabelNormalFont: UIFont = {
-       return UIFont.systemFont(ofSize: 16.0)
+        return UIFont.systemFont(ofSize: 16.0)
     }()
     var distanceLabelValueTextColor: UIColor = .yellow
     var distanceLabelUnitTextColor: UIColor = .orange
     lazy var distanceLabelUnitFont: UIFont = {
-       return UIFont.systemFont(ofSize: 20.0)
+        return UIFont.systemFont(ofSize: 20.0)
     }()
     lazy var distanceLabelValueFont: UIFont = {
-       return UIFont.systemFont(ofSize: 12.0)
+        return UIFont.systemFont(ofSize: 12.0)
     }()
     var distanceLabelHighlightedTextColor: UIColor = .red
     var maneuverViewPrimaryColor: UIColor = .blue

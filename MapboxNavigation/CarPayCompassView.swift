@@ -6,9 +6,7 @@ import MapboxCoreNavigation
 /**
  A control indicating the direction that the vehicle is traveling towards.
  */
-
 open class CarPlayCompassView: StylableView {
-    
     weak var label: StylableLabel!
     
     // Round to closest 45° to only show main winds ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]

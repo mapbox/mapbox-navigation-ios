@@ -7,9 +7,7 @@ import Turf
 /**
  `NavigationMapView` is a subclass of `MGLMapView` with convenience functions for adding `Route` lines to a map.
  */
-
 open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
-    
     // MARK: Class Constants
     
     struct FrameIntervalOptions {
@@ -33,7 +31,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     
     /**
      Returns the altitude the map conditionally zooms out to when user is on a motorway, and the maneuver length is sufficently long.
-    */
+     */
     public var zoomedOutMotorwayAltitude: CLLocationDistance = 2000.0
     
     /**
@@ -169,10 +167,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
 
-
     /**
      A type that represents a `UIView` that is `CourseUpdatable`.
-    */
+     */
     public typealias UserCourseView = UIView & CourseUpdatable
     
     /**
@@ -270,7 +267,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      
      This method accounts for the proximity to a maneuver and the current power source. It has no effect if `tracksUserCourse` is set to `true`.
      */
-    
     open func updatePreferredFrameRate(for routeProgress: RouteProgress) {
         guard tracksUserCourse else { return }
         
@@ -359,7 +355,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             guard let selectedRoute = routes.first else { return }
             navigationMapViewDelegate?.navigationMapView(self, didSelect: selectedRoute)
         }
-        
     }
     
     @objc func updateCourseView(_ sender: UIGestureRecognizer) {
@@ -401,13 +396,13 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     // MARK: Feature Addition/Removal
     /**
      Showcases route array. Adds routes and waypoints to map, and sets camera to point encompassing the route.
-    */
+     */
     public static let defaultPadding: UIEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
     
     public func showcase(_ routes: [Route], animated: Bool = false) {
         guard let active = routes.first,
-              let coords = active.coordinates,
-              !coords.isEmpty else { return } //empty array
+            let coords = active.coordinates,
+            !coords.isEmpty else { return } //empty array
         
         removeArrow()
         removeRoutes()
@@ -622,7 +617,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             if let source = style.source(withIdentifier: arrowSourceStrokeIdentifier) as? MGLShapeSource {
                 source.shape = arrowStrokeShape
             } else {
-                
                 arrowStroke.minimumZoomLevel = arrow.minimumZoomLevel
                 arrowStroke.lineCap = arrow.lineCap
                 arrowStroke.lineJoin = arrow.lineJoin
@@ -669,7 +663,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 style.insertLayer(arrowSymbolLayer, above: arrow)
                 style.insertLayer(arrowSymbolLayerCasing, below: arrow)
             }
-            
         }
     }
     
@@ -757,7 +750,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         //Sort routes by closest distance to tap gesture.
         let closest = routes.sorted { (left, right) -> Bool in
-            
             //existance has been assured through use of filter.
             let leftLine = Polyline(left.coordinates!)
             let rightLine = Polyline(right.coordinates!)
@@ -840,7 +832,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         var segments: [CongestionSegment] = []
         segments.reserveCapacity(congestions.count)
         for (index, congestion) in congestions.enumerated() {
-            
             let congestionSegment: ([CLLocationCoordinate2D], CongestionLevel) = ([coordinates[index], coordinates[index + 1]], congestion)
             let coordinates = congestionSegment.0
             let congestionLevel = congestionSegment.1
@@ -917,7 +908,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     func routeStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
-        
         let line = MGLLineStyleLayer(identifier: identifier, source: source)
         line.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel)
         line.lineOpacity = NSExpression(forConditional:
@@ -933,15 +923,14 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     func routeCasingStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
-        
         let lineCasing = MGLLineStyleLayer(identifier: identifier, source: source)
         
         // Take the default line width and make it wider for the casing
         lineCasing.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 1.5))
         
         lineCasing.lineColor = NSExpression(forConditional: NSPredicate(format: "isAlternateRoute == true"),
-                     trueExpression: NSExpression(forConstantValue: routeAlternateCasingColor),
-                     falseExpression: NSExpression(forConstantValue: routeCasingColor))
+                                            trueExpression: NSExpression(forConstantValue: routeAlternateCasingColor),
+                                            falseExpression: NSExpression(forConstantValue: routeCasingColor))
         
         lineCasing.lineCap = NSExpression(forConstantValue: "round")
         lineCasing.lineJoin = NSExpression(forConstantValue: "round")
@@ -1055,7 +1044,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
     
-    
     /**
      Sets the camera directly over a series of coordinates.
      */
@@ -1102,7 +1090,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         enableFrameByFrameCourseViewTracking(for: 3)
     }
 }
-
 
 // MARK: - Deprecated
 

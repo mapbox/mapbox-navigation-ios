@@ -4,15 +4,12 @@ import MapboxCoreNavigation
 import Turf
 
 /// :nodoc:
-
 open class StepsBackgroundView: UIView { }
-
 
 /**
  `StepsViewControllerDelegate` provides methods for user interactions in a `StepsViewController`.
  */
 public protocol StepsViewControllerDelegate: class {
-
     /**
      Called when the user selects a step in a `StepsViewController`.
      */
@@ -25,9 +22,7 @@ public protocol StepsViewControllerDelegate: class {
 }
 
 /// :nodoc:
-
 public class StepsViewController: UIViewController {
-
     weak var tableView: UITableView!
     weak var backgroundView: UIView!
     weak var bottomView: UIView!
@@ -57,7 +52,6 @@ public class StepsViewController: UIViewController {
 
     @discardableResult
     func rebuildDataSourceIfNecessary() -> Bool {
-
         let legIndex = routeProgress.legIndex
         let stepIndex = routeProgress.currentLegProgress.stepIndex
         let didProcessCurrentStep = previousLegIndex == legIndex && previousStepIndex == stepIndex
@@ -110,7 +104,6 @@ public class StepsViewController: UIViewController {
     }
 
     @objc func progressDidChange(_ notification: Notification) {
-
         if rebuildDataSourceIfNecessary() {
             tableView.reloadData()
         }
@@ -189,10 +182,10 @@ public class StepsViewController: UIViewController {
      Dismisses the `StepsViewController`.
      */
     public func dismiss(completion: CompletionHandler? = nil) {
-       willMove(toParent: nil)
-       view.removeFromSuperview()
-       removeFromParent()
-       completion?()
+        willMove(toParent: nil)
+        view.removeFromSuperview()
+        removeFromParent()
+        completion?()
     }
 }
 
@@ -278,13 +271,10 @@ extension StepsViewController: UITableViewDataSource {
 }
 
 /// :nodoc:
-
 open class StepInstructionsView: BaseInstructionsBannerView { }
 
 /// :nodoc:
-
 open class StepTableViewCell: UITableViewCell {
-
     weak var instructionsView: StepInstructionsView!
     weak var separatorView: SeparatorView!
 

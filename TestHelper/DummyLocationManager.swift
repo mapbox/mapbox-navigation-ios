@@ -1,9 +1,7 @@
 import CoreLocation
 import MapboxCoreNavigation
 
-
 public class DummyLocationManager: NavigationLocationManager {
-    
     override public func startUpdatingLocation() {
         // Do nothing
     }

@@ -5,7 +5,6 @@ import MapboxDirections
 @testable import MapboxCoreNavigation
 
 class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
-
     let imageRepository: ImageRepository = ImageRepository.shared
 
     let asyncTimeout: TimeInterval = 2.0
@@ -301,7 +300,6 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
 }
 
 extension InstructionsBannerViewSnapshotTests {
-
     // UIAppearance proxy do not work in unit test environment so we have to style manually
     func styleInstructionsView(_ view: InstructionsBannerView) {
         view.backgroundColor = .white

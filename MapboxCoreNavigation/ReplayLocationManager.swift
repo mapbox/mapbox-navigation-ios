@@ -6,9 +6,7 @@ import CoreLocation
  recorded with the single exception of the location’s timestamp which will be
  adjusted by interval between locations.
  */
-
 open class ReplayLocationManager: NavigationLocationManager {
-    
     /**
      `speedMultiplier` adjusts the speed of the replay.
      */

@@ -10,12 +10,10 @@ let response = Fixture.JSONFromFileNamed(name: jsonFileName)
 let otherResponse = Fixture.JSONFromFileNamed(name: "route-for-lane-testing")
 
 class NavigationViewControllerTests: XCTestCase {
-    
     var customRoadName = [CLLocationCoordinate2D: String?]()
     
     var updatedStyleNumberOfTimes = 0
     lazy var dependencies: (navigationViewController: NavigationViewController, navigationService: NavigationService, startLocation: CLLocation, poi: [CLLocation], endLocation: CLLocation, voice: RouteVoiceController) = {
-
         let fakeDirections = DirectionsSpy(accessToken: "garbage", host: nil)
         let fakeService = MapboxNavigationService(route: initialRoute, directions: fakeDirections, locationSource: NavigationLocationManagerStub(), simulating: .never)
         let fakeVoice: RouteVoiceController = RouteVoiceControllerStub(navigationService: fakeService)
@@ -60,7 +58,6 @@ class NavigationViewControllerTests: XCTestCase {
     // Brief: navigationViewController(_:roadNameAt:) delegate method is implemented,
     //        with a road name provided and wayNameView label is visible.
     func testNavigationViewControllerDelegateRoadNameAtLocationImplemented() {
-        
         let navigationViewController = dependencies.navigationViewController
         let service = dependencies.navigationService
         
@@ -154,7 +151,6 @@ class NavigationViewControllerTests: XCTestCase {
     // Brief: navigationViewController(_:roadNameAt:) delegate method is implemented,
     //        with a blank road name (empty string) provided and wayNameView label is hidden.
     func testNavigationViewControllerDelegateRoadNameAtLocationEmptyString() {
-        
         let navigationViewController = dependencies.navigationViewController
         let service = dependencies.navigationService
         
@@ -175,7 +171,6 @@ class NavigationViewControllerTests: XCTestCase {
     }
     
     func testNavigationViewControllerDelegateRoadNameAtLocationUmimplemented() {
-        
         let navigationViewController = dependencies.navigationViewController
         UIApplication.shared.delegate!.window!!.addSubview(navigationViewController.view)
         
@@ -183,7 +178,6 @@ class NavigationViewControllerTests: XCTestCase {
         
         // Identify a location without a custom road name.
         let fultonStreetLocation = dependencies.poi[2]
-
         
         navigationViewController.mapViewController!.labelRoadNameCompletionHandler = { (defaultRoadNameAssigned) in
             XCTAssertTrue(defaultRoadNameAssigned, "label road name was not successfully set")
@@ -211,7 +205,7 @@ class NavigationViewControllerTests: XCTestCase {
         let firstDestination = initialRoute.routeOptions.waypoints.last!.coordinate
         let destinations = annotations.filter(annotationFilter(matching: firstDestination))
         XCTAssert(!destinations.isEmpty, "Destination annotation does not exist on map")
-    
+        
         //lets set the second route
         navigationViewController.route = newRoute
         
@@ -221,7 +215,6 @@ class NavigationViewControllerTests: XCTestCase {
         //do we have a destination on the second route?
         let newDestinations = newAnnotations.filter(annotationFilter(matching: secondDestination))
         XCTAssert(!newDestinations.isEmpty, "New destination annotation does not exist on map")
-        
     }
     
     func testBlankBanner() {
@@ -268,7 +261,6 @@ class NavigationViewControllerTests: XCTestCase {
 }
 
 extension NavigationViewControllerTests: NavigationViewControllerDelegate, StyleManagerDelegate {
-    
     func location(for styleManager: StyleManager) -> CLLocation? {
         return dependencies.poi.first!
     }

@@ -239,7 +239,6 @@ open class DistanceFormatter: Formatter, NSSecureCoding {
 }
 
 extension Double {
-    
     func rounded(precision: Double) -> Double {
         if precision == 0 {
             return Double(Int(rounded()))

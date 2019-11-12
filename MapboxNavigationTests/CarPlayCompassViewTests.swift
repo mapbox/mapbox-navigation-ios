@@ -4,7 +4,6 @@ import Mapbox
 @testable import MapboxNavigation
 
 class CarPlayCompassViewTests: SnapshotTest {
-    
     var window: UIWindow!
     let styles = [DayStyle(), NightStyle()]
     

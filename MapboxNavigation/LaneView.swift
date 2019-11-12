@@ -2,9 +2,7 @@ import UIKit
 import MapboxDirections
 
 /// :nodoc:
-
 open class LaneView: UIView {
-    
     let invalidAlpha: CGFloat = 0.4
     
     var lane: Lane? {
@@ -68,7 +66,6 @@ open class LaneView: UIView {
         
         if let lane = lane {
             if lane.indications.isSuperset(of: [.straightAhead, .sharpRight]) || lane.indications.isSuperset(of: [.straightAhead, .right]) || lane.indications.isSuperset(of: [.straightAhead, .slightRight]) {
-                
                 if !isValid {
                     if lane.indications == .slightRight {
                         LanesStyleKit.drawLaneSlightRight(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor)

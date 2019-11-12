@@ -4,9 +4,7 @@ import TestHelper
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
-
 class NavigationMapViewTests: XCTestCase, MGLMapViewDelegate {
-    
     let response = Fixture.JSONFromFileNamed(name: "route-with-instructions")
     var styleLoadingExpectation: XCTestExpectation?
     var mapView: NavigationMapView?
@@ -67,14 +65,13 @@ class NavigationMapViewTests: XCTestCase, MGLMapViewDelegate {
     }
     
     func testNavigationMapViewCombineWithDissimilarCongestions() {
-        
         let congestionSegmentsSevere = mapView!.combine(coordinates, with: [
             .low,
             .low,
             .severe,
             .low,
             .low
-            ])
+        ])
         
         // The severe breaks the trend of .low.
         // Any time the current congestion level is different than the previous segment, we have to create a new congestion segment.

@@ -26,7 +26,6 @@ public protocol NavigationServiceDelegate: class, UnimplementedLogging {
      - returns: True to allow the navigation service to calculate a new route; false to keep tracking the current route.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func navigationService(_ service: NavigationService, shouldRerouteFrom location: CLLocation) -> Bool
     
     /**
@@ -38,7 +37,6 @@ public protocol NavigationServiceDelegate: class, UnimplementedLogging {
      - parameter location: The user’s current location.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation)
     
     /**
@@ -51,7 +49,6 @@ public protocol NavigationServiceDelegate: class, UnimplementedLogging {
      - returns: If `true`, the location is discarded and the `NavigationService` will not consider it. If `false`, the location will not be thrown out.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func navigationService(_ service: NavigationService, shouldDiscard location: CLLocation) -> Bool
     
     /**
@@ -63,7 +60,6 @@ public protocol NavigationServiceDelegate: class, UnimplementedLogging {
      - parameter route: The new route.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool)
     
     /**
@@ -75,7 +71,6 @@ public protocol NavigationServiceDelegate: class, UnimplementedLogging {
      - parameter error: An error raised during the process of obtaining a new route.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func navigationService(_ service: NavigationService, didFailToRerouteWith error: Error)
     
     /**
@@ -87,7 +82,6 @@ public protocol NavigationServiceDelegate: class, UnimplementedLogging {
      - parameter rawLocation: the raw location, from the location manager, associated with the progress update.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation)
     
     /**
@@ -96,10 +90,8 @@ public protocol NavigationServiceDelegate: class, UnimplementedLogging {
      - parameter instruction: The instruction to be presented.
      - parameter routeProgress: The route progress object that the navigation service is updating.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
-    */
-    
+     */
     func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress)
-    
     
     /**
      Called when the navigation service detects that the user has passed a point at which an instruction should be spoken.
@@ -108,9 +100,7 @@ public protocol NavigationServiceDelegate: class, UnimplementedLogging {
      - parameter routeProgress: The route progress object that the navigation service is updating.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func navigationService(_ service: NavigationService, didPassSpokenInstructionPoint instruction: SpokenInstruction, routeProgress: RouteProgress)
-
     
     /**
      Called as the navigation service approaches a waypoint.
@@ -123,8 +113,6 @@ public protocol NavigationServiceDelegate: class, UnimplementedLogging {
      - important: This method will likely be called several times as you approach a destination. If only one consumption of this method is desired, then usage of an internal flag is recommended.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
-    
     func navigationService(_ service: NavigationService, willArriveAt waypoint: Waypoint, after remainingTimeInterval:TimeInterval, distance: CLLocationDistance)
     
     /**
@@ -138,7 +126,6 @@ public protocol NavigationServiceDelegate: class, UnimplementedLogging {
      - returns: True to advance to the next leg, if any, or false to remain on the completed leg.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func navigationService(_ service: NavigationService, didArriveAt waypoint: Waypoint) -> Bool
     
     /**
@@ -151,9 +138,7 @@ public protocol NavigationServiceDelegate: class, UnimplementedLogging {
      - returns: True to prevent the navigation service from checking if the user should be rerouted.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func navigationService(_ service: NavigationService, shouldPreventReroutesWhenArrivingAt waypoint: Waypoint) -> Bool
-    
     
     /**
      Called when the navigation service will disable battery monitoring.
@@ -164,9 +149,7 @@ public protocol NavigationServiceDelegate: class, UnimplementedLogging {
      - returns: A bool indicating whether to disable battery monitoring when the RouteController is deinited.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func navigationServiceShouldDisableBatteryMonitoring(_ service: NavigationService) -> Bool
-    
     
     /**
      Called when the navigation service is about to begin location simulation.
@@ -218,8 +201,6 @@ public protocol NavigationServiceDelegate: class, UnimplementedLogging {
 }
 
 public extension NavigationServiceDelegate {
-
-    
     func navigationService(_ service: NavigationService, shouldRerouteFrom location: CLLocation) -> Bool {
         logUnimplemented( protocolType: NavigationServiceDelegate.self, level: .debug)
         return MapboxNavigationService.Default.shouldRerouteFromLocation
@@ -244,7 +225,6 @@ public extension NavigationServiceDelegate {
     
     func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .info)
-
     }
     
     func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
