@@ -46,8 +46,8 @@ open class RouteProgress: NSObject {
     }
     
     /**
-    Returns true if `currentLeg` is the last leg.
-    */
+     Returns true if `currentLeg` is the last leg.
+     */
     public var isFinalLeg: Bool {
         guard let lastLeg = route.legs.last else { return false }
         return currentLeg == lastLeg

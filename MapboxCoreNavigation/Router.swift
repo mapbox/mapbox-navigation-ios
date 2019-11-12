@@ -7,8 +7,8 @@ import MapboxDirections
  */
 public protocol RouterDataSource: class {
     /**
-    The location provider for the `Router.` This class is designated as the object that will provide location updates when requested.
-    */
+     The location provider for the `Router.` This class is designated as the object that will provide location updates when requested.
+     */
     var locationProvider: NavigationLocationManager.Type { get }
 }
 

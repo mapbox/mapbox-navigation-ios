@@ -109,8 +109,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     }
     
     /**
-    Shows End of route Feedback UI when the route controller arrives at the final destination. Defaults to `true.`
-    */
+     Shows End of route Feedback UI when the route controller arrives at the final destination. Defaults to `true.`
+     */
     public var showsEndOfRouteFeedback: Bool = true {
         didSet {
             mapViewController?.showsEndOfRoute = showsEndOfRouteFeedback
