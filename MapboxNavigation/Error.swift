@@ -5,22 +5,22 @@ import MapboxSpeech
 import AVKit
 
 /**
- A enum representing the reason why the speech API request failed.
+ A enum representing the reason why the Mapbox Voice API request failed.
  - seealso: SpeechError
  */
 public enum SpeechRequestFailureReason: String {
     /**
-     No data was returned from the service.
+     The Mapbox Voice API returned an empty response.
      */
     case noData
     /**
-     An erroneous response was returned from the server.
+     The Mapbox Voice API responded with an error.
      */
     case apiError
 }
 
 /**
- An enum representing the action that failed to complete successfully.
+ The speech-related action that failed.
  - seealso: SpeechError
  */
 public enum SpeechFailureAction: String {
