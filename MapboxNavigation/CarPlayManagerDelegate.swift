@@ -98,7 +98,7 @@ public protocol CarPlayManagerDelegate: class, UnimplementedLogging {
      - parameter waypoints: the waypoints for which a route could not be retrieved.
      - parameter options: The route options that were attached to the route request.
      - parameter error: The error returned from the directions API.
-     - returns: Optionally, a CPNavigationAlert to present to the user. If an alert is returned, Carplay will transition back to the map template and display the alert. If `nil` is returned, nothing is done.
+     - returns: Optionally, a `CPNavigationAlert` to present to the user. If this method returns an alert, the CarPlay manager will transition back to the map template and display the alert. If it returns `nil`, the CarPlay manager will do nothing.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     func carPlayManager(_ carPlayManager: CarPlayManager, didFailToFetchRouteBetween waypoints: [Waypoint]?, options: RouteOptions, error: NSError) -> CPNavigationAlert?
