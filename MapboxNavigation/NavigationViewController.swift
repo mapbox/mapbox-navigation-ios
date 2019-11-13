@@ -338,8 +338,11 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
             content.subtitle = secondaryText
         }
         
-        if let image = instruction.primaryInstruction.maneuverImage(side: instruction.drivingSide, color: .black, size: CGSize(width: 72, height: 72)),
-            let imageData = image.pngData() {
+        if let image = instruction.primaryInstruction.maneuverImage(side: instruction.drivingSide, color: .black, size: CGSize(width: 72, height: 72)) {
+            // Bake in any transform required for left turn arrows etc.
+            let imageData = UIGraphicsImageRenderer(size: image.size).pngData { (context) in
+                image.draw(at: .zero)
+            }
             let temporaryURL = FileManager.default.temporaryDirectory.appendingPathComponent("com.mapbox.navigation.notification-icon.png")
             do {
                 try imageData.write(to: temporaryURL)

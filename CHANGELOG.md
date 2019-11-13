@@ -1,5 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## master
+
+* Fixed an issue where user notifications displayed right turn arrows for left turn maneuvers. ([#2270](https://github.com/mapbox/mapbox-navigation-ios/pull/2270))
+
 ## v0.38.0
 
 * This library now requires a minimum deployment target of iOS 10.0 or above. iOS 9._x_ is no longer supported. ([#2206](https://github.com/mapbox/mapbox-navigation-ios/pull/2206))
