@@ -146,7 +146,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         
         speechSynth.stopSpeaking(at: .word)
         
-        safeMixAudio(instruction: nil, engine: .native(speechSynth)) {
+        safeMixAudio(instruction: nil, engine: speechSynth) {
             voiceControllerDelegate?.voiceController(self, spokenInstructionsDidFailWith: $0)
         }
         
@@ -154,13 +154,13 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     }
     
     public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-        safeUnduckAudio(instruction: nil, engine: .native(synthesizer)) {
+        safeUnduckAudio(instruction: nil, engine: synthesizer) {
             voiceControllerDelegate?.voiceController(self, spokenInstructionsDidFailWith: $0)
         }
     }
     
     typealias AudioControlFailureHandler = (SpeechError) -> Void
-    func safeDuckAudio(instruction: SpokenInstruction?, engine: SpeechEngine, failure: AudioControlFailureHandler) {
+    func safeDuckAudio(instruction: SpokenInstruction?, engine: Any?, failure: AudioControlFailureHandler) {
         do {
             try tryDuckAudio()
         } catch {
@@ -170,7 +170,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         }
     }
     
-    func safeUnduckAudio(instruction: SpokenInstruction?, engine: SpeechEngine, failure: AudioControlFailureHandler) {
+    func safeUnduckAudio(instruction: SpokenInstruction?, engine: Any?, failure: AudioControlFailureHandler) {
         do {
             try tryUnduckAudio()
         } catch {
@@ -180,7 +180,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         }
     }
     
-    func safeMixAudio(instruction: SpokenInstruction?, engine: SpeechEngine, failure: AudioControlFailureHandler) {
+    func safeMixAudio(instruction: SpokenInstruction?, engine: Any?, failure: AudioControlFailureHandler) {
         do {
             try tryMixAudio()
         } catch {
@@ -233,7 +233,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
             voiceControllerDelegate?.voiceController(self, didInterrupt: lastSpokenInstruction, with: instruction)
         }
         
-        safeDuckAudio(instruction: instruction, engine: .native(speechSynth)) {
+        safeDuckAudio(instruction: instruction, engine: speechSynth) {
             voiceControllerDelegate?.voiceController(self, spokenInstructionsDidFailWith: $0)
         }
         

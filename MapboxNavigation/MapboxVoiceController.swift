@@ -58,7 +58,7 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
                 self?.audioPlayer?.stop()
                 
                 guard let strongSelf = self else { return }
-                strongSelf.safeUnduckAudio(instruction: nil, engine: .api(self?.speech)) {
+                strongSelf.safeUnduckAudio(instruction: nil, engine: self?.speech) {
                     strongSelf.voiceControllerDelegate?.voiceController(strongSelf, spokenInstructionsDidFailWith: $0)
                 }
             }
@@ -68,7 +68,7 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
     deinit {
         audioPlayer?.stop()
         
-        safeUnduckAudio(instruction: nil, engine: .api(speech)) {
+        safeUnduckAudio(instruction: nil, engine: speech) {
             voiceControllerDelegate?.voiceController(self, spokenInstructionsDidFailWith: $0)
         }
         
@@ -76,7 +76,7 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
     }
     
     public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        safeUnduckAudio(instruction: nil, engine: .api(speech)) {
+        safeUnduckAudio(instruction: nil, engine: speech) {
             voiceControllerDelegate?.voiceController(self, spokenInstructionsDidFailWith: $0)
         }
     }
@@ -216,7 +216,7 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
         return cachedDataForKey(key) != nil
     }
     
-    func safeInitalizeAudioPlayer(playerType: AVAudioPlayer.Type, data: Data, instruction: SpokenInstruction, engine: SpeechEngine, failure: AudioControlFailureHandler) -> AVAudioPlayer? {
+    func safeInitalizeAudioPlayer(playerType: AVAudioPlayer.Type, data: Data, instruction: SpokenInstruction, engine: Any?, failure: AudioControlFailureHandler) -> AVAudioPlayer? {
         do {
             let player = try playerType.init(data: data)
             return player
@@ -239,16 +239,16 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
         
         audioQueue.async { [weak self] in
             guard let strongSelf = self else { return }
-            strongSelf.audioPlayer = strongSelf.safeInitalizeAudioPlayer(playerType: strongSelf.audioPlayerType, data: data, instruction: instruction, engine: .api(strongSelf.speech), failure: fallback)
+            strongSelf.audioPlayer = strongSelf.safeInitalizeAudioPlayer(playerType: strongSelf.audioPlayerType, data: data, instruction: instruction, engine: strongSelf.speech, failure: fallback)
             strongSelf.audioPlayer?.prepareToPlay()
             strongSelf.audioPlayer?.delegate = strongSelf
             
-            strongSelf.safeDuckAudio(instruction: instruction, engine: .api(strongSelf.speech), failure: fallback)
+            strongSelf.safeDuckAudio(instruction: instruction, engine: strongSelf.speech, failure: fallback)
             
             let played = strongSelf.audioPlayer?.play() ?? false
             
             guard played else {
-                strongSelf.safeUnduckAudio(instruction: instruction, engine: .api(strongSelf.speech), failure: fallback)
+                strongSelf.safeUnduckAudio(instruction: instruction, engine: strongSelf.speech, failure: fallback)
                 return
             }
         }

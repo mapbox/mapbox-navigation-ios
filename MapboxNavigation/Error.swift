@@ -28,26 +28,6 @@ public enum SpeechFailureAction: String {
 }
 
 /**
- The speech engine that encountered issues with audio control.
- - seealso: SpeechError
- */
-public enum SpeechEngine {
-    /**
-     An API Audio Engine. Associated with a `SpeechSynthesizer`.
-     */
-    case api(_: SpeechSynthesizer?)
-    /**
-     A native speech engine. Associated with an `AVSpeechSynthesizer`.
-     */
-    case native(_: AVSpeechSynthesizer)
-
-    /**
-     An unkown speech engine. Associated with an unknown object.
-     */
-    case unknown(_: AnyObject)
-}
-
-/**
     A error type returned when encountering errors in the speech engine.
  */
 public enum SpeechError: LocalizedError {
@@ -70,19 +50,19 @@ public enum SpeechError: LocalizedError {
      The speech engine was unable to perform an action on the system audio service.
      - parameter instruction: The instruction that failed.
      - parameter action: a `SpeechFailureAction` that describes the action attempted
-     - parameter engine: the `SpeechEngine` that tried to perform the action.
+     - parameter engine: the speech engine  that tried to perform the action.
      - parameter underlying: the `Error` that was optrionally returned by the audio service.
      */
-    case unableToControlAudio(instruction: SpokenInstruction?, action: SpeechFailureAction, engine: SpeechEngine, underlying: Error?)
+    case unableToControlAudio(instruction: SpokenInstruction?, action: SpeechFailureAction, engine: Any?, underlying: Error?)
     
     /**
      The speech engine was unable to initalize an audio player.
      - parameter playerType: the type of `AVAudioPlayer` that failed to initalize.
      - parameter instruction: The instruction that failed.
-     - parameter engine: The `SpeechEngine` that attempted the initalization.
+     - parameter engine: The speech engine that attempted the initalization.
      - parameter underlying: the `Error` that was returned by the system audio service.
      */
-    case unableToInitializePlayer(playerType: AVAudioPlayer.Type, instruction: SpokenInstruction, engine: SpeechEngine, underlying: Error)
+    case unableToInitializePlayer(playerType: AVAudioPlayer.Type, instruction: SpokenInstruction, engine: Any?, underlying: Error)
     
     /**
      The active `RouteProgress` did not contain a speech locale.
