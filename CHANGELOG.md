@@ -7,6 +7,7 @@
 
 ### User interface
 * `UserCourseView` is now a type alias of the `UIView` class and the `CourseUpdatable` protocol rather than a protocol in its own right. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
+* Fixed an issue where user notifications displayed right turn arrows for left turn maneuvers. ([#2270](https://github.com/mapbox/mapbox-navigation-ios/pull/2270))
 * Renamed `NavigationMapView.showRoutes(_:legIndex:)` to `NavigationMapView.show(_:legIndex:)`. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
 * Renamed `NavigationMapView.showWaypoints(_:legIndex:)` to `NavigationMapView.showWaypoints(on:legIndex:)`. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
 * Renamed `MapboxVoiceController.play(_:)` to `MapboxVoiceController.play(instruction:data:)`. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
