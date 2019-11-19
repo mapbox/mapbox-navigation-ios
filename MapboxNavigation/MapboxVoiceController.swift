@@ -139,7 +139,7 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
         audioTask?.cancel()
         
         if let error = error {
-            voiceControllerDelegate?.voiceController(self, didFallBackTo: speechSynth, becauseOf: error)
+            voiceControllerDelegate?.voiceController(self, didFallBackTo: speechSynth, error: error)
         }
         
         guard !(audioPlayer?.isPlaying ?? false) else {
@@ -165,13 +165,13 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
             if let error = error as? URLError, error.code == .cancelled {
                 return
             } else if let error = error {
-                let wrapped = SpeechError.apiRequestFailed(instruction: instruction, options: options, reason: .apiError, underlying: error)
+                let wrapped = SpeechError.apiError(instruction: instruction, options: options, underlying: error)
                 strongSelf.speakWithDefaultSpeechSynthesizer(instruction, error: wrapped)
                 return
             }
             
             guard let data = data else {
-                let wrapped = SpeechError.apiRequestFailed(instruction: instruction, options: options, reason: .noData, underlying: nil)
+                let wrapped = SpeechError.noData(instruction: instruction, options: options)
                 strongSelf.speakWithDefaultSpeechSynthesizer(instruction, error: wrapped)
                 return
             }
@@ -221,7 +221,7 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
             let player = try playerType.init(data: data)
             return player
         } catch {
-            let wrapped = SpeechError.unableToInitalizePlayer(playerType: playerType, instruction: instruction, engine: engine, underlying: error)
+            let wrapped = SpeechError.unableToInitializePlayer(playerType: playerType, instruction: instruction, engine: engine, underlying: error)
             failure(wrapped)
             return nil
         }

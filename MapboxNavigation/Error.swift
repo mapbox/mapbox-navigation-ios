@@ -5,39 +5,24 @@ import MapboxSpeech
 import AVKit
 
 /**
- A enum representing the reason why the Mapbox Voice API request failed.
- - seealso: SpeechError
- */
-public enum SpeechRequestFailureReason: String {
-    /**
-     The Mapbox Voice API returned an empty response.
-     */
-    case noData
-    /**
-     The Mapbox Voice API responded with an error.
-     */
-    case apiError
-}
-
-/**
  The speech-related action that failed.
  - seealso: SpeechError
  */
 public enum SpeechFailureAction: String {
     /**
-    A failure was encountered while attempting to mix audio.
+    A failure occurred while attempting to mix audio.
      */
     case mix
     /**
-    A failure was encountered while attempting to duck audio.
+    A failure occurred while attempting to duck audio.
      */
     case duck
     /**
-    A failure was encountered while attempting to unduck audio.
+    A failure occurred while attempting to unduck audio.
      */
     case unduck
     /**
-    A failure was encountered while attempting to play audio.
+    A failure occurred while attempting to play audio.
      */
     case play
 }
@@ -70,10 +55,16 @@ public enum SpeechError: LocalizedError {
      The Speech API Did not successfully return a response.
      - parameter instruction: the instruction that failed.
      - parameter options: the SpeechOptions that were used to make the API request.
-     - parameter reason: a `SpeechRequestFailureReason` describing why the request failed.
      - parameter underlying: the underlying `Error` returned by the API.
      */
-    case apiRequestFailed(instruction: SpokenInstruction, options: SpeechOptions, reason: SpeechRequestFailureReason, underlying: Error?)
+    case apiError(instruction: SpokenInstruction, options: SpeechOptions, underlying: Error?)
+    
+    /**
+     The Speech API Did not return any data.
+     - parameter instruction: the instruction that failed.
+     - parameter options: the SpeechOptions that were used to make the API request.
+     */
+    case noData(instruction: SpokenInstruction, options: SpeechOptions)
     
     /**
      The speech engine was unable to perform an action on the system audio service.
@@ -91,7 +82,7 @@ public enum SpeechError: LocalizedError {
      - parameter engine: The `SpeechEngine` that attempted the initalization.
      - parameter underlying: the `Error` that was returned by the system audio service.
      */
-    case unableToInitalizePlayer(playerType: AVAudioPlayer.Type, instruction: SpokenInstruction, engine: SpeechEngine, underlying: Error)
+    case unableToInitializePlayer(playerType: AVAudioPlayer.Type, instruction: SpokenInstruction, engine: SpeechEngine, underlying: Error)
     
     /**
      The active `RouteProgress` did not contain a speech locale.

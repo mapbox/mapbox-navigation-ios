@@ -1,5 +1,6 @@
 import Foundation
 import os.log
+import Dispatch
 
 /**
  Protocols that provide no-op default method implementations can use this protocol to log a message to the console whenever an unimplemented delegate method is called.
@@ -13,14 +14,31 @@ public protocol UnimplementedLogging {
 }
 
 public extension UnimplementedLogging {
+        
     func logUnimplemented(protocolType: Any, level: OSLogType, function: String = #function) {
+        
         let protocolDescription = String(describing: protocolType)
         let selfDescription = String(describing: type(of: self))
+        
+        let description = (selfDescription, function)
+
+        let alreadyWarned = warned.contains { elem -> Bool in
+            elem == description
+        }
+        
+        guard !alreadyWarned else {
+            return
+        }
+        
         let log = OSLog(subsystem: "com.mapbox.navigation", category: "delegation.\(selfDescription)")
-        let formatted: StaticString = "Unimplemented Delegate Method in %@: %@.%@"
-        os_log(formatted, log: log, type: level, selfDescription, protocolDescription, function)
+           let formatted: StaticString = "Unimplemented Delegate Method in %@: %@.%@. This message will only be logged once."
+           os_log(formatted, log: log, type: level, selfDescription, protocolDescription, function)
         unimplementedTestLogs?.append((selfDescription, function))
+        warned.append(description)
     }
 }
+
+fileprivate var warned: [(String, String)] = []
+
 
 var unimplementedTestLogs: [(String, String)]? = nil

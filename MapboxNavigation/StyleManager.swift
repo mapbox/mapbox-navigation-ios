@@ -14,9 +14,10 @@ public protocol StyleManagerDelegate: class, UnimplementedLogging {
     
     /**
      Informs the delegate that a style was applied.
+     This delegate method is the equivalent of `Notification.Name.styleManagerDidApplyStyle`.
+
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      
-     - note: This delegate method is the equivalent of `Notification.Name.styleManagerDidApplyStyle`.
      */
     func styleManager(_ styleManager: StyleManager, didApply style: Style)
     

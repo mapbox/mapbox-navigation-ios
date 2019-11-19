@@ -240,7 +240,7 @@ public extension NavigationServiceDelegate {
     }
     
     func navigationService(_ service: NavigationService, didArriveAt waypoint: Waypoint) -> Bool {
-        logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .info)
+        logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
         return MapboxNavigationService.Default.didArriveAtWaypoint
     }
     

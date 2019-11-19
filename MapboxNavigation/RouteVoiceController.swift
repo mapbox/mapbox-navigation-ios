@@ -273,7 +273,8 @@ public protocol VoiceControllerDelegate: class, UnimplementedLogging {
      - parameter error: An error explaining the failure and its cause.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    func voiceController(_ voiceController: RouteVoiceController, didFallBackTo engine: AVSpeechSynthesizer, becauseOf error: SpeechError)
+    
+    func voiceController(_ voiceController: RouteVoiceController, didFallBackTo engine: AVSpeechSynthesizer, error: SpeechError)
    
     /**
      Called when the voice controller failed to speak an instruction.
@@ -307,7 +308,8 @@ public protocol VoiceControllerDelegate: class, UnimplementedLogging {
 }
 
 public extension VoiceControllerDelegate {
-    func voiceController(_ voiceController: RouteVoiceController, didFallBackTo speech: AVSpeechSynthesizer, becauseOf error: SpeechError) {
+    
+    func voiceController(_ voiceController: RouteVoiceController, didFallBackTo speech: AVSpeechSynthesizer, error: SpeechError) {
         logUnimplemented(protocolType: VoiceControllerDelegate.self, level: .debug)
     }
     
