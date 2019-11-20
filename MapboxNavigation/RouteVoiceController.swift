@@ -164,7 +164,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         do {
             try tryDuckAudio()
         } catch {
-            let wrapped = SpeechError.unableToControlAudio(instruction: instruction, action: .duck, engine: engine, underlying: error)
+            let wrapped = SpeechError.unableToControlAudio(instruction: instruction, action: .duck, synthesizer: engine, underlying: error)
             failure(wrapped)
             return
         }
@@ -174,7 +174,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         do {
             try tryUnduckAudio()
         } catch {
-            let wrapped = SpeechError.unableToControlAudio(instruction: instruction, action: .duck, engine: engine, underlying: error)
+            let wrapped = SpeechError.unableToControlAudio(instruction: instruction, action: .duck, synthesizer: engine, underlying: error)
             failure(wrapped)
             return
         }
@@ -184,7 +184,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         do {
             try tryMixAudio()
         } catch {
-            let wrapped = SpeechError.unableToControlAudio(instruction: instruction, action: .mix, engine: engine, underlying: error)
+            let wrapped = SpeechError.unableToControlAudio(instruction: instruction, action: .mix, synthesizer: engine, underlying: error)
             failure(wrapped)
             return
         }
@@ -269,12 +269,12 @@ public protocol VoiceControllerDelegate: class, UnimplementedLogging {
      Called when the voice controller falls back to a backup speech syntehsizer, but is still able to speak the instruction.
      
      - parameter voiceController: The voice controller that experienced the failure.
-     - parameter engine: the Speech engine that was used as the fallback.
+     - parameter synthesizer: the Speech engine that was used as the fallback.
      - parameter error: An error explaining the failure and its cause.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     
-    func voiceController(_ voiceController: RouteVoiceController, didFallBackTo engine: AVSpeechSynthesizer, error: SpeechError)
+    func voiceController(_ voiceController: RouteVoiceController, didFallBackTo synthesizer: AVSpeechSynthesizer, error: SpeechError)
    
     /**
      Called when the voice controller failed to speak an instruction.
@@ -309,7 +309,7 @@ public protocol VoiceControllerDelegate: class, UnimplementedLogging {
 
 public extension VoiceControllerDelegate {
     
-    func voiceController(_ voiceController: RouteVoiceController, didFallBackTo speech: AVSpeechSynthesizer, error: SpeechError) {
+    func voiceController(_ voiceController: RouteVoiceController, didFallBackTo synthesizer: AVSpeechSynthesizer, error: SpeechError) {
         logUnimplemented(protocolType: VoiceControllerDelegate.self, level: .debug)
     }
     

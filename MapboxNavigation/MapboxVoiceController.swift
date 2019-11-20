@@ -221,7 +221,7 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
             let player = try playerType.init(data: data)
             return player
         } catch {
-            let wrapped = SpeechError.unableToInitializePlayer(playerType: playerType, instruction: instruction, engine: engine, underlying: error)
+            let wrapped = SpeechError.unableToInitializePlayer(playerType: playerType, instruction: instruction, synthesizer: engine, underlying: error)
             failure(wrapped)
             return nil
         }
