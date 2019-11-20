@@ -1,5 +1,5 @@
 /// :nodoc:
-@objc public protocol InstructionsCardStyle: class {
+public protocol InstructionsCardStyle: class {
     var cornerRadius: CGFloat { get set }
     var backgroundColor: UIColor { get set }
     var highlightedBackgroundColor: UIColor { get set }

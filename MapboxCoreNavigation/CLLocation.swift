@@ -4,7 +4,6 @@ import MapboxNavigationNative
 import Turf
 
 extension CLLocation {
-    
     var isQualified: Bool {
         return 0...100 ~= horizontalAccuracy
     }
@@ -78,12 +77,10 @@ extension CLLocation {
         if let upcomingStep = legProgress.upcomingStep,
             let initialHeading = upcomingStep.initialHeading,
             let finalHeading = upcomingStep.finalHeading {
-            
             // The max here is 180. The closer it is to 180, the sharper the turn.
             if initialHeading.clockwiseDifference(from: finalHeading) > 180 - RouteSnappingMaxManipulatedCourseAngle {
                 return stepCoordinates
             }
-            
             
             if finalHeading.difference(from: course) > RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion {
                 return stepCoordinates
@@ -96,7 +93,6 @@ extension CLLocation {
         
         return nearbyCoordinates
     }
-    
     
     /**
      Given a location and a series of coordinates, compute what the course should be for a the location.
@@ -142,7 +138,6 @@ extension CLLocation {
      Determines if the a location is qualified enough to allow the user puck to become unsnapped.
      */
     func shouldSnap(toRouteWith course: CLLocationDirection, distanceToFirstCoordinateOnLeg: CLLocationDistance = CLLocationDistanceMax) -> Bool {
-        
         // If the user is near the beginning of leg, allow for unsnapped more often.
         let isWithinDepatureStep = distanceToFirstCoordinateOnLeg < RouteControllerManeuverZoneRadius
 

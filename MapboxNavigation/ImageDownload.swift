@@ -106,7 +106,6 @@ class ImageDownloadOperation: Operation, ImageDownload {
         } else {
             //fail and bail; connection failed or bad URL (client-side error)
         }
-
     }
 
     // MARK: URLSessionDataDelegate

@@ -1,8 +1,6 @@
 import UIKit
 
-
 class ResizableView: UIControl {
-    
     let lineLayer = CAShapeLayer()
     // Associated background layer will be masked by the frame of the resizable view
     weak var backgroundLayer: CAShapeLayer?
@@ -17,7 +15,6 @@ class ResizableView: UIControl {
     }
     
     override init(frame: CGRect) {
-        
         super.init(frame: frame)
         
         clipsToBounds = false
@@ -61,11 +58,9 @@ class ResizableView: UIControl {
     }
     
     @objc func resizePan(_ sender: UIPanGestureRecognizer) {
-        
         let location = sender.location(in: superview)
         
         if sender.state == .began || sender.state == .changed {
-            
             let origin = CGPoint(x: frame.minX, y: frame.minY)
             frame = CGRect(origin: origin,
                            size: CGSize(width: location.x - origin.x,
@@ -108,18 +103,15 @@ class ResizableView: UIControl {
         
         bringSubviewToFront(imageView)
     }
-    
 }
 
 fileprivate extension CGFloat {
-    
     var mid: CGFloat {
         return self / 2
     }
 }
 
 extension UIImage {
-    
     func withPadding(x: CGFloat, y: CGFloat) -> UIImage? {
         let width: CGFloat = size.width + x
         let height: CGFloat = size.height + y

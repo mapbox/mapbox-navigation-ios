@@ -24,7 +24,7 @@ Get up and running in a few minutes with our drop-in turn-by-turn navigation `Na
 
 ## Requirements
 
-The Mapbox Navigation SDK and Core Navigation are compatible with applications written in Swift or Objective-C in Xcode 10.2 and above. The Mapbox Navigation and Mapbox Core Navigation frameworks run on iOS 10.0 and above.
+The Mapbox Navigation SDK and Core Navigation are compatible with applications written in Swift 5 in Xcode 10.2 and above. The Mapbox Navigation and Mapbox Core Navigation frameworks run on iOS 10.0 and above.
 
 The Mapbox Navigation SDK is also available [for Android](https://github.com/mapbox/mapbox-navigation-android/).
 
@@ -92,7 +92,7 @@ Consult the [API reference](https://docs.mapbox.com/ios/api/navigation/) for fur
 
 The [API reference](https://docs.mapbox.com/ios/api/navigation/) includes example code for accomplishing common tasks. You can run these examples as part of the [navigation-ios-examples](https://github.com/mapbox/navigation-ios-examples) project.
 
-This repository also contains [Swift and Objective-C testbeds](https://github.com/mapbox/mapbox-navigation-ios/tree/master/Example) that exercise a variety of navigation SDK features:
+This repository also contains [a testbed](https://github.com/mapbox/mapbox-navigation-ios/tree/master/Example) that exercises a variety of navigation SDK features:
 
 1. Clone the repository or download the [.zip file](https://github.com/mapbox/mapbox-navigation-ios/archive/master.zip)
 1. Run `carthage update --platform ios` to build just the iOS dependencies.
@@ -109,7 +109,6 @@ You can customize the appearance in order to blend in with the rest of your app.
 
 ```swift
 class CustomStyle: DayStyle {
-
     required init() {
         super.init()
         mapStyleURL = URL(string: "mapbox://styles/mapbox/satellite-streets-v9")!
@@ -143,3 +142,4 @@ We welcome feedback and code contributions! Please see [CONTRIBUTING.md](./CONTR
 Mapbox Navigation SDK for iOS is released under the ISC License. See [LICENSE.md](https://github.com/mapbox/mapbox-navigation-ios/blob/master/LICENSE.md) for details.
 
 Mapbox Navigation SDK uses [Mapbox Navigator](https://github.com/mapbox/mapbox-navigation-ios/blob/master/Cartfile#L2), a private binary, as a dependency. The Mapbox Navigator binary may be used with a Mapbox account and under the [Mapbox TOS](https://www.mapbox.com/tos/). If you do not wish to use this binary, make sure you swap out this dependency in the [Cartfile](https://github.com/mapbox/mapbox-navigation-ios/blob/master/Cartfile#L2). Code in this repository is released under the [MIT license](./LICENSE.md).
+

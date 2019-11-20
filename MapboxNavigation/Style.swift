@@ -7,8 +7,7 @@ import UIKit
  */
 @objc(MBStyle)
 open class Style: NSObject {
-    
-    ///  General styling
+    // MARK: General styling
     
     /**
      Sets the tint color for guidance arrow, highlighted text, progress bar and more.
@@ -67,7 +66,6 @@ open class DismissButton: Button { }
 /// :nodoc:
 @objc(MBFloatingButton)
 open class FloatingButton: Button {
-    
     static let buttonSize = CGSize(width: 50, height: 50)
     static let sizeConstraintPriority = UILayoutPriority(999.0) //Don't fight with the stack view (superview) when it tries to hide buttons.
     
@@ -108,7 +106,6 @@ open class FloatingButton: Button {
 /// :nodoc:
 @objc(MBReportButton)
 public class ReportButton: Button {
-    
     static let defaultInsets: UIEdgeInsets = 10.0
     static let defaultCornerRadius: CGFloat = 4.0
     
@@ -187,7 +184,6 @@ public class ResumeButton: UIControl {
 /// :nodoc:
 @objc(MBDraggableView)
 open class StepListIndicatorView: UIView {
-    
     // Workaround the fact that UIView properties are not marked with UI_APPEARANCE_SELECTOR
     @objc dynamic open var gradientColors: [UIColor] = [.gray, .lightGray, .gray] {
         didSet {
@@ -213,7 +209,6 @@ open class StepListIndicatorView: UIView {
         view.frame = parentView.bounds
         parentView.addSubview(view)
     }
-    
 }
 
 /// :nodoc:
@@ -347,7 +342,6 @@ open class SecondaryLabel: InstructionLabel { }
 /// :nodoc:
 @objc(MBTimeRemainingLabel)
 open class TimeRemainingLabel: StylableLabel {
-    
     // Sets the text color for no or unknown traffic
     @objc dynamic public var trafficUnknownColor: UIColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1) {
         didSet {
@@ -383,7 +377,6 @@ open class SubtitleLabel: StylableLabel { }
 /// :nodoc:
 @objc(MBWayNameView)
 open class WayNameView: UIView {
-    
     private static let textInsets = UIEdgeInsets(top: 6, left: 14, bottom: 6, right: 14)
     
     lazy var label: WayNameLabel = .forAutoLayout()
@@ -426,7 +419,6 @@ open class WayNameView: UIView {
         commonInit()
     }
     
-    
     func commonInit() {
         addSubview(label)
         layoutMargins = WayNameView.textInsets
@@ -446,7 +438,6 @@ open class WayNameLabel: StylableLabel {}
 /// :nodoc:
 @objc(MBProgressBar)
 public class ProgressBar: UIView {
-    
     let bar = UIView()
     
     // Sets the color of the progress bar.
@@ -494,7 +485,6 @@ public class ProgressBar: UIView {
 /// :nodoc:
 @objc(MBLineView)
 public class LineView: UIView {
-    
     // Set the line color on all line views.
     @objc dynamic public var lineColor: UIColor = .black {
         didSet {
@@ -506,13 +496,11 @@ public class LineView: UIView {
 
 /// :nodoc:
 @objc(MBSeparatorView)
-public class SeparatorView: UIView { }
+public class SeparatorView: UIView {}
 
 /// :nodoc:
 @objc(MBStylableButton)
 open class StylableButton: UIButton {
-    
-
     // Sets the font on the button’s titleLabel
     @objc dynamic open var textFont: UIFont = UIFont.systemFont(ofSize: 20, weight: .medium) {
         didSet {
@@ -562,7 +550,6 @@ open class ManeuverContainerView: UIView {
     }
 }
 
-
 /// :nodoc:
 @objc(MBBannerContainerView)
 open class BannerContainerView: UIView { }
@@ -575,7 +562,6 @@ open class TopBannerView: UIView { }
 @objc(MBBottomBannerView)
 open class BottomBannerView: UIView { }
 
-@objc(MBBottomPaddingView)
 open class BottomPaddingView: BottomBannerView { }
 
 /// :nodoc:
@@ -584,7 +570,6 @@ class NavigationAnnotation: MGLPointAnnotation { }
 /// :nodoc:
 @objc(MBMarkerView)
 public class MarkerView: UIView {
-    
     // Sets the inner color on the pin.
     @objc public dynamic var innerColor: UIColor = .white {
         didSet {

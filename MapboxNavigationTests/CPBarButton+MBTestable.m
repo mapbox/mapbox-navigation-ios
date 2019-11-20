@@ -9,7 +9,6 @@
 
 @end
 
-
 static char *HandlerKey;
 
 @implementation CPBarButton (MBTestable)
@@ -20,7 +19,6 @@ static char *HandlerKey;
 
     Method newMethod = class_getInstanceMethod(self, @selector(initWithType:handlerToKeep:));
     class_replaceMethod(self, @selector(initWithType:handler:), method_getImplementation(newMethod), method_getTypeEncoding(newMethod));
-
 }
 
 - (instancetype)initWithType:(CPBarButtonType)type handlerToKeep:(void (^ _Nullable)(CPBarButton *barButton))handler {

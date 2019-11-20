@@ -4,30 +4,25 @@ import MapboxCoreNavigation
 import Turf
 
 /// :nodoc:
-@objc(MBStepsBackgroundView)
 open class StepsBackgroundView: UIView { }
-
 
 /**
  `StepsViewControllerDelegate` provides methods for user interactions in a `StepsViewController`.
  */
-@objc public protocol StepsViewControllerDelegate: class {
-
+public protocol StepsViewControllerDelegate: class {
     /**
      Called when the user selects a step in a `StepsViewController`.
      */
-    @objc optional func stepsViewController(_ viewController: StepsViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell)
+    func stepsViewController(_ viewController: StepsViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell)
 
     /**
      Called when the user dismisses the `StepsViewController`.
      */
-    @objc func didDismissStepsViewController(_ viewController: StepsViewController)
+    func didDismissStepsViewController(_ viewController: StepsViewController)
 }
 
 /// :nodoc:
-@objc(MBStepsViewController)
 public class StepsViewController: UIViewController {
-
     weak var tableView: UITableView!
     weak var backgroundView: UIView!
     weak var bottomView: UIView!
@@ -57,7 +52,6 @@ public class StepsViewController: UIViewController {
 
     @discardableResult
     func rebuildDataSourceIfNecessary() -> Bool {
-
         let legIndex = routeProgress.legIndex
         let stepIndex = routeProgress.currentLegProgress.stepIndex
         let didProcessCurrentStep = previousLegIndex == legIndex && previousStepIndex == stepIndex
@@ -110,7 +104,6 @@ public class StepsViewController: UIViewController {
     }
 
     @objc func progressDidChange(_ notification: Notification) {
-
         if rebuildDataSourceIfNecessary() {
             tableView.reloadData()
         }
@@ -189,10 +182,10 @@ public class StepsViewController: UIViewController {
      Dismisses the `StepsViewController`.
      */
     public func dismiss(completion: CompletionHandler? = nil) {
-       willMove(toParent: nil)
-       view.removeFromSuperview()
-       removeFromParent()
-       completion?()
+        willMove(toParent: nil)
+        view.removeFromSuperview()
+        removeFromParent()
+        completion?()
     }
 }
 
@@ -210,7 +203,7 @@ extension StepsViewController: UITableViewDelegate {
             // For the current leg, we need to know the upcoming step.
             stepIndex += indexPath.row + 1 > sections[indexPath.section].count ? 0 : 1
         }
-        delegate?.stepsViewController?(self, didSelect: indexPath.section, stepIndex: stepIndex, cell: cell)
+        delegate?.stepsViewController(self, didSelect: indexPath.section, stepIndex: stepIndex, cell: cell)
     }
 }
 
@@ -278,13 +271,10 @@ extension StepsViewController: UITableViewDataSource {
 }
 
 /// :nodoc:
-@objc(MBStepInstructionsView)
 open class StepInstructionsView: BaseInstructionsBannerView { }
 
 /// :nodoc:
-@objc(MBStepTableViewCell)
 open class StepTableViewCell: UITableViewCell {
-
     weak var instructionsView: StepInstructionsView!
     weak var separatorView: SeparatorView!
 

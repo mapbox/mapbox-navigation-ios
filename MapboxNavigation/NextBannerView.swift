@@ -3,14 +3,11 @@ import MapboxDirections
 import MapboxCoreNavigation
 
 /// :nodoc:
-@objc(MBNextInstructionLabel)
-open class NextInstructionLabel: InstructionLabel { }
+open class NextInstructionLabel: InstructionLabel {}
 
 /// :nodoc:
 @IBDesignable
-@objc(MBNextBannerView)
 open class NextBannerView: UIView, NavigationComponent {
-    
     weak var maneuverView: ManeuverView!
     weak var instructionLabel: NextInstructionLabel!
     weak var bottomSeparatorView: SeparatorView!
@@ -92,14 +89,13 @@ open class NextBannerView: UIView, NavigationComponent {
         bottomSeparatorView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale).isActive = true
     }
     
-    @objc public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
+    public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
         update(for: instruction)
     }
     
     /**
      Updates the instructions banner info with a given `VisualInstructionBanner`.
      */
-    @objc(updateForVisualInstructionBanner:)
     public func update(for visualInstruction: VisualInstructionBanner?) {
         guard let tertiaryInstruction = visualInstruction?.tertiaryInstruction, !tertiaryInstruction.containsLaneIndications else {
             hide()
@@ -127,5 +123,4 @@ open class NextBannerView: UIView, NavigationComponent {
             self.isHidden = true
         }, completion: nil)
     }
-    
 }

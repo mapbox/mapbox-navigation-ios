@@ -1,6 +1,6 @@
 import UIKit
 
-@objc(MBManeuversStyleKit)
+
 public class ManeuversStyleKit: NSObject {
 
     //// Drawing Methods
@@ -933,7 +933,7 @@ public class ManeuversStyleKit: NSObject {
 
     }
 
-    @objc(ManeuversStyleKitResizingBehavior)
+    @objc(MBManeuversStyleKitResizingBehavior)
     public enum ResizingBehavior: Int {
         case aspectFit /// The content is proportionally resized to fit into the target rectangle.
         case aspectFill /// The content is proportionally resized to completely fill the target rectangle.

@@ -4,7 +4,6 @@ import TestHelper
 import Turf
 @testable import MapboxNavigation
 
-
 class RouteTests: XCTestCase {
     func testPolylineAroundManeuver() {
         // Convert the match from https://github.com/mapbox/navigation-ios-examples/pull/28 into a route.

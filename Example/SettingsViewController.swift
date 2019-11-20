@@ -2,9 +2,7 @@ import UIKit
 import MapboxDirections
 import MapboxCoreNavigation
 
-
 class SettingsViewController: UITableViewController {
-    
     let cellIdentifier = "cellId"
     var dataSource: [Section]!
     
@@ -26,7 +24,6 @@ class SettingsViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         var cell: UITableViewCell! = tableView.dequeueReusableCell(withIdentifier: cellIdentifier)
         if cell == nil {
             cell = UITableViewCell(style: .subtitle, reuseIdentifier: cellIdentifier)
@@ -79,7 +76,6 @@ class SettingsViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         tableView.deselectRow(at: indexPath, animated: true)
         
         let item = dataSource[indexPath.section].items[indexPath.row]

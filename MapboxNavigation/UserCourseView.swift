@@ -5,21 +5,20 @@ import Mapbox
 let PuckSize: CGFloat = 45
 
 /**
- A view that represents the user’s location and course on a `NavigationMapView`.
+ A protocol that represents a `UIView` which tracks the user’s location and course on a `NavigationMapView`.
  */
-@objc(MBUserCourseView)
-public protocol UserCourseView where Self: UIView {
-    @objc optional var location: CLLocation { get set }
-    @objc optional var direction: CLLocationDegrees { get set }
-    @objc optional var pitch: CLLocationDegrees { get set }
-    
+public protocol CourseUpdatable where Self: UIView {
     /**
      Updates the view to reflect the given location and other camera properties.
      */
-    @objc optional func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, tracksUserCourse: Bool)
+    func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, tracksUserCourse: Bool)
 }
 
-extension UIView {
+public extension CourseUpdatable {
+    func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, tracksUserCourse: Bool) {
+        applyDefaultUserPuckTransformation(location: location, pitch: pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse)
+    }
+    
     func applyDefaultUserPuckTransformation(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, tracksUserCourse: Bool) {
         let duration: TimeInterval = animated ? 1 : 0
         UIView.animate(withDuration: duration, delay: 0, options: [.beginFromCurrentState, .curveLinear], animations: {
@@ -36,16 +35,13 @@ extension UIView {
 /**
  A view representing the user’s location on screen.
  */
-@objc(MBUserPuckCourseView)
-public class UserPuckCourseView: UIView, UserCourseView {
-    
+public class UserPuckCourseView: UIView, CourseUpdatable {
     /**
      Transforms the location of the user puck.
      */
     public func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, tracksUserCourse: Bool) {
         let duration: TimeInterval = animated ? 1 : 0
         UIView.animate(withDuration: duration, delay: 0, options: [.beginFromCurrentState, .curveLinear], animations: {
-            
             let angle = tracksUserCourse ? 0 : CLLocationDegrees(direction - location.course)
             self.puckView.layer.setAffineTransform(CGAffineTransform.identity.rotated(by: -CGFloat(angle.toRadians())))
             
@@ -53,7 +49,6 @@ public class UserPuckCourseView: UIView, UserCourseView {
             transform = CATransform3DScale(transform, tracksUserCourse ? 1 : 0.5, tracksUserCourse ? 1 : 0.5, 1)
             transform.m34 = -1.0 / 1000 // (-1 / distance to projection plane)
             self.layer.sublayerTransform = transform
-            
         }, completion: nil)
     }
     

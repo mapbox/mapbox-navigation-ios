@@ -2,7 +2,6 @@ import XCTest
 @testable import MapboxNavigation
 
 class ImageRepositoryTests: XCTestCase {
-
     lazy var repository: ImageRepository = {
         let repo = ImageRepository.shared
         let config = URLSessionConfiguration.default
@@ -27,7 +26,6 @@ class ImageRepositoryTests: XCTestCase {
     }
 
     override func tearDown() {
-
         super.tearDown()
     }
 

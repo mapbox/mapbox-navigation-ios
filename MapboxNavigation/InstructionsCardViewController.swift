@@ -52,7 +52,7 @@ open class InstructionsCardViewController: UIViewController {
     /**
      The InstructionsCardCollection delegate.
      */
-    @objc public weak var cardCollectionDelegate: InstructionsCardCollectionDelegate?
+    public weak var cardCollectionDelegate: InstructionsCardCollectionDelegate?
     
     fileprivate var contentOffsetBeforeSwipe = CGPoint(x: 0, y: 0)
     fileprivate var indexBeforeSwipe = IndexPath(row: 0, section: 0)
@@ -70,7 +70,7 @@ open class InstructionsCardViewController: UIViewController {
         super.viewDidLoad()
         
         /* TODO: Identify the traitCollections to define the width of the cards */
-        if let customSize = cardCollectionDelegate?.instructionsCardCollection?(self, cardSizeFor: traitCollection) {
+        if let customSize = cardCollectionDelegate?.instructionsCardCollection(self, cardSizeFor: traitCollection) {
             cardSize = customSize
         } else {
             cardSize = CGSize(width: Int(floor(view.frame.size.width * 0.82)), height: 200)
@@ -142,7 +142,7 @@ open class InstructionsCardViewController: UIViewController {
         }
     }
     
-    @objc open func updateVisibleInstructionCards(at indexPaths: [IndexPath]) {
+    open func updateVisibleInstructionCards(at indexPaths: [IndexPath]) {
         guard let legProgress = routeProgress?.currentLegProgress else { return }
         let remainingSteps = legProgress.remainingSteps
         guard let currentCardStep = remainingSteps.first else { return }
@@ -239,7 +239,8 @@ extension InstructionsCardViewController: UICollectionViewDelegate {
         isInPreview = true
         let previewIndex = indexPath.row
         
-        if isInPreview, let steps = steps, previewIndex < steps.endIndex {
+        assert(previewIndex >= 0, "Preview Index should not be negative")
+        if isInPreview, let steps = steps, previewIndex >= 0, previewIndex < steps.endIndex {
             let step = steps[previewIndex]
             cardCollectionDelegate?.instructionsCardCollection(self, didPreview: step)
         }
@@ -299,13 +300,12 @@ extension InstructionsCardViewController: NavigationComponent {
 
 /// :nodoc:
 extension InstructionsCardViewController: InstructionsCardContainerViewDelegate {
-    
     public func primaryLabel(_ primaryLabel: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
-        return cardCollectionDelegate?.primaryLabel?(primaryLabel, willPresent: instruction, as: presented)
+        return cardCollectionDelegate?.primaryLabel(primaryLabel, willPresent: instruction, as: presented)
     }
     
     public func secondaryLabel(_ secondaryLabel: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
-        return cardCollectionDelegate?.secondaryLabel?(secondaryLabel, willPresent: instruction, as: presented)
+        return cardCollectionDelegate?.secondaryLabel(secondaryLabel, willPresent: instruction, as: presented)
     }
 }
 

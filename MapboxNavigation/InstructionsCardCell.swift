@@ -4,7 +4,6 @@ import MapboxCoreNavigation
 
 /// :nodoc:
 public class InstructionsCardCell: UICollectionViewCell {
-    
     public var container: InstructionsCardContainerView!
     public var style: InstructionsCardStyle = DayInstructionsCardStyle()
     

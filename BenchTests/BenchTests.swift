@@ -5,9 +5,7 @@ import MapboxDirections
 @testable import MapboxNavigation
 @testable import Bench
 
-
 class BenchTests: XCTestCase, CLLocationManagerDelegate {
-    
     let token = "deadbeef"
     
     override func setUp() {
@@ -16,7 +14,6 @@ class BenchTests: XCTestCase, CLLocationManagerDelegate {
     }
     
     func testControlRoute1() {
-        
         let route = Fixture.route(from: "PipeFittersUnion-FourSeasonsBoston")
         let trace = Fixture.locations(from: "PipeFittersUnion-FourSeasonsBoston.trace")
         
@@ -33,7 +30,6 @@ class BenchTests: XCTestCase, CLLocationManagerDelegate {
     }
     
     func testControlRoute2() {
-        
         let route = Fixture.route(from: "DCA-Arboretum")
         let trace = Fixture.locations(from: "DCA-Arboretum.trace")
         
@@ -50,7 +46,6 @@ class BenchTests: XCTestCase, CLLocationManagerDelegate {
     }
     
     func navigationViewController(route: Route, locationManager: ReplayLocationManager) -> NavigationViewController {
-        
         let speechAPI = SpeechAPISpy(accessToken: token)
         let directions = DirectionsSpy(accessToken: token)
         let service = MapboxNavigationService(route: route,
@@ -66,5 +61,3 @@ class BenchTests: XCTestCase, CLLocationManagerDelegate {
         return NavigationViewController(for: route, options: options)
     }
 }
-
-

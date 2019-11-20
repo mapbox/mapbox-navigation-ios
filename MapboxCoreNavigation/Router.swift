@@ -5,12 +5,10 @@ import MapboxDirections
 /**
  A router data source, also known as a location manager, supplies location data to a `Router` instance. For example, a `MapboxNavigationService` supplies location data to a `RouteController` or `LegacyRouteController`.
  */
-@objc (MBRouterDataSource)
-public protocol RouterDataSource {
-    
+public protocol RouterDataSource: class {
     /**
-    The location provider for the `Router.` This class is designated as the object that will provide location updates when requested.
-    */
+     The location provider for the `Router.` This class is designated as the object that will provide location updates when requested.
+     */
     var locationProvider: NavigationLocationManager.Type { get }
 }
 
@@ -19,17 +17,16 @@ public protocol RouterDataSource {
  
  There are two concrete implementations of the `Router` protocol. `RouteController`, the default implementation, is capable of client-side routing and depends on the Mapbox Navigation Native framework. `LegacyRouteController` is an alternative implementation that does not have this dependency but must be used in conjunction with the Mapbox Directions API over a network connection.
  */
-@objc public protocol Router: class, CLLocationManagerDelegate {
-    
+public protocol Router: class, CLLocationManagerDelegate {
     /**
      The route controller’s associated location manager.
      */
-    @objc unowned var dataSource: RouterDataSource { get }
+    var dataSource: RouterDataSource { get }
     
     /**
      The route controller’s delegate.
      */
-    @objc var delegate: RouterDelegate? { get set }
+    var delegate: RouterDelegate? { get set }
     
     /**
      Intializes a new `RouteController`.
@@ -38,52 +35,49 @@ public protocol RouterDataSource {
      - parameter directions: The Directions object that created `route`.
      - parameter source: The data source for the RouteController.
      */
-    @objc(initWithRoute:directions:dataSource:)
     init(along route: Route, directions: Directions, dataSource source: RouterDataSource)
     
     /**
      Details about the user’s progress along the current route, leg, and step.
      */
-    @objc var routeProgress: RouteProgress { get }
+    var routeProgress: RouteProgress { get }
     
-    @objc var route: Route { get set }
+    var route: Route { get set }
     
     /**
      Given a users current location, returns a Boolean whether they are currently on the route.
      
      If the user is not on the route, they should be rerouted.
      */
-    @objc func userIsOnRoute(_ location: CLLocation) -> Bool
-    @objc func reroute(from: CLLocation, along: RouteProgress)
+    func userIsOnRoute(_ location: CLLocation) -> Bool
+    func reroute(from: CLLocation, along: RouteProgress)
     
     /**
      The idealized user location. Snapped to the route line, if applicable, otherwise raw or nil.
      */
-    @objc var location: CLLocation? { get }
+    var location: CLLocation? { get }
     
     /**
      The most recently received user location.
      - note: This is a raw location received from `locationManager`. To obtain an idealized location, use the `location` property.
      */
-    @objc var rawLocation: CLLocation? { get }
-    
+    var rawLocation: CLLocation? { get }
     
     /**
      If true, the `RouteController` attempts to calculate a more optimal route for the user on an interval defined by `RouteControllerProactiveReroutingInterval`.
      */
-    @objc var reroutesProactively: Bool { get set }
+    var reroutesProactively: Bool { get set }
     
     /**
      Advances the leg index.
      
      This is a convienence method provided to advance the leg index of any given router without having to worry about the internal data structure of the router.
      */
-    @objc(advanceLegIndexWithLocation:)
     func advanceLegIndex(location: CLLocation)
     
-    @objc optional func enableLocationRecording()
-    @objc optional func disableLocationRecording()
-    @objc optional func locationHistory() -> String
+    func enableLocationRecording()
+    func disableLocationRecording()
+    func locationHistory() -> String?
 }
 
 protocol InternalRouter: class {
@@ -105,7 +99,6 @@ protocol InternalRouter: class {
 }
 
 extension InternalRouter where Self: Router {
-    
     func checkForFasterRoute(from location: CLLocation, routeProgress: RouteProgress) {
         // Check for faster route given users current location
         guard reroutesProactively else { return }
@@ -151,7 +144,6 @@ extension InternalRouter where Self: Router {
             
             if routeIsFaster {
                 self?.setRoute(route: route, proactive: true)
-                
             }
         }
     }
@@ -163,7 +155,6 @@ extension InternalRouter where Self: Router {
         lastRerouteLocation = location
         
         routeTask = directions.calculate(options) {(waypoints, routes, error) in
-            
             guard let routes = routes else {
                 return completion(nil, error)
             }
@@ -193,7 +184,7 @@ extension InternalRouter where Self: Router {
         }
         userInfo[.isProactiveKey] = proactive
         NotificationCenter.default.post(name: .routeControllerDidReroute, object: self, userInfo: userInfo)
-        delegate?.router?(self, didRerouteAlong: routeProgress.route, at: location, proactive: proactive)
+        delegate?.router(self, didRerouteAlong: routeProgress.route, at: location, proactive: proactive)
     }
 }
 

@@ -6,7 +6,6 @@ import MapboxDirections
 
 @available(iOS 12.0, *)
 extension CarPlaySearchController: CPSearchTemplateDelegate {
-    
     static var recentItems = RecentItem.loadDefaults()
     public static let CarPlayGeocodedPlacemarkKey: String = "MBGecodedPlacemark"
     
@@ -20,7 +19,6 @@ extension CarPlaySearchController: CPSearchTemplateDelegate {
     }()
     
     public func searchTemplate(_ searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void) {
-        
         recentSearchText = searchText
         
         // Append recent searches
@@ -29,7 +27,6 @@ extension CarPlaySearchController: CPSearchTemplateDelegate {
         // Search for placemarks using MapboxGeocoder.swift
         let shouldSearch = searchText.count > 2
         if shouldSearch {
-            
             let options = CarPlaySearchController.forwardGeocodeOptions(searchText)
             Geocoder.shared.geocode(options, completionHandler: { [weak self] (placemarks, attribution, error) in
                 guard let strongSelf = self else { return }
@@ -42,7 +39,6 @@ extension CarPlaySearchController: CPSearchTemplateDelegate {
                 items.append(contentsOf: results)
                 completionHandler(strongSelf.resultsOrNoResults(results, limit: CarPlaySearchController.MaximumInitialSearchResults))
             })
-            
         } else {
             completionHandler(resultsOrNoResults(items, limit: CarPlaySearchController.MaximumInitialSearchResults))
         }
@@ -74,7 +70,6 @@ extension CarPlaySearchController: CPSearchTemplateDelegate {
     }
     
     public func searchTemplateButton(searchTemplate: CPSearchTemplate, interfaceController: CPInterfaceController, traitCollection: UITraitCollection) -> CPBarButton {
-        
         let searchTemplateButton = CPBarButton(type: .image) { [weak self] button in
             guard let strongSelf = self else {
                 return
@@ -84,7 +79,6 @@ extension CarPlaySearchController: CPSearchTemplateDelegate {
                 strongSelf.delegate?.resetPanButtons(mapTemplate)
             }
             
-
             self?.delegate?.pushTemplate(searchTemplate, animated: false)
         }
         
@@ -109,7 +103,6 @@ extension CarPlaySearchController: CPSearchTemplateDelegate {
     
     @available(iOS 12.0, *)
     public func selectResult(item: CPListItem, completionHandler: @escaping () -> Void) {
-        
         guard let userInfo = item.userInfo as? [String: Any],
             let placemark = userInfo[CarPlaySearchController.CarPlayGeocodedPlacemarkKey] as? GeocodedPlacemark,
             let location = placemark.routableLocations?.first ?? placemark.location else {
@@ -166,7 +159,6 @@ extension CarPlaySearchController: CPListTemplateDelegate {
 }
 
 extension GeocodedPlacemark {
-    
     @available(iOS 12.0, *)
     func listItem() -> CPListItem {
         let item = CPListItem(text: formattedName, detailText: subtitle, image: nil, showsDisclosureIndicator: true)

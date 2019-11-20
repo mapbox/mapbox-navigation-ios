@@ -1,7 +1,6 @@
 import UIKit
 import MapboxDirections
 
-
 /**
  A view that represents the root view of the MapboxNavigation drop-in UI.
  
@@ -34,11 +33,9 @@ import MapboxDirections
  |         3          |
  +--------------------+
  ```
-*/
+ */
 @IBDesignable
-@objc(MBNavigationView)
 open class NavigationView: UIView {
-    
     private enum Constants {
         static let endOfRouteHeight: CGFloat = 260.0
         static let buttonSpacing: CGFloat = 8.0

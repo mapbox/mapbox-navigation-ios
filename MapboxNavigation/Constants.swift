@@ -37,12 +37,39 @@ public let MBCongestionAttribute = "congestion"
 public let NavigationViewMinimumVolumeForWarning: Float = 0.3
 
 extension Notification.Name {
-    
     /**
      Posted when `StyleManager` applies a style that was triggered by change of time of day, or when entering or exiting a tunnel.
      
      This notification is the equivalent of `StyleManagerDelegate.styleManager(_:didApply:)`.
      The user info dictionary contains the key `StyleManagerNotificationUserInfoKey.style` and `StyleManagerNotificationUserInfoKey.styleManager`.
      */
-    public static let styleManagerDidApplyStyle = NSNotification.Name.MBStyleManagerDidApplyStyle
+    public static let styleManagerDidApplyStyle: Notification.Name = .init(rawValue: "MBStyleManagerDidApplyStyle")
 }
+
+/**
+ Keys in the user info dictionaries of various notifications posted by instances of `StyleManager`.
+ */
+public struct StyleManagerNotificationUserInfoKey: Hashable, Equatable, RawRepresentable {
+    public typealias RawValue = String
+    
+    public var rawValue: String
+    
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+    
+    /**
+     A key in the user info dictionary of `StyleManagerDidApplyStyleNotification` notification. The corresponding value is an `Style` instance that was applied.
+     */
+    static let styleKey: StyleManagerNotificationUserInfoKey = .init(rawValue: "style")
+    
+    /**
+     A key in the user info dictionary of `StyleManagerDidApplyStyleNotification` notification. The corresponding value is an `StyleManager` instance that applied the style.
+     */
+    static let styleManagerKey: StyleManagerNotificationUserInfoKey = .init(rawValue: "styleManager")
+}
+
+/**
+ Key used for constructing errors when spoken instructions fail.
+ */
+let SpokenInstructionErrorCodeKey: String = "MBSpokenInstructionErrorCode"

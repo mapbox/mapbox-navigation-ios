@@ -5,7 +5,7 @@ public typealias CompletionHandler = () -> Void
 /**
  A cache consists of both in-memory and on-disk components, both of which can be reset.
  */
-@objc(MBBimodalCache)
+@objc(MBBimodalCache)        
 public protocol BimodalCache {
     func clearMemory()
     func clearDisk(completion: CompletionHandler?)
@@ -14,7 +14,6 @@ public protocol BimodalCache {
 /**
  A cache which supports storing images
  */
-@objc(MBBimodalImageCache)
 public protocol BimodalImageCache: BimodalCache {
     func store(_ image: UIImage, forKey key: String, toDisk: Bool, completion completionBlock: CompletionHandler?)
     func image(forKey: String?) -> UIImage?
@@ -23,14 +22,13 @@ public protocol BimodalImageCache: BimodalCache {
 /**
  A cache which supports storing data
  */
-@objc(MBBimodalDataCache)
 public protocol BimodalDataCache: BimodalCache {
     func store(_ data: Data, forKey key: String, toDisk: Bool, completion completionBlock: CompletionHandler?)
     func data(forKey: String?) -> Data?
 }
 
- /**
-  A general purpose on-disk cache used by both the ImageCache and DataCache implementations
+/**
+ A general purpose on-disk cache used by both the ImageCache and DataCache implementations
  */
 internal class FileCache {
     let diskCacheURL: URL = {
@@ -49,7 +47,7 @@ internal class FileCache {
         }
     }
 
-    /*
+    /**
      Stores data in the file cache for the given key, and calls the completion handler when finished.
      */
     public func store(_ data: Data, forKey key: String, completion: CompletionHandler?) {
@@ -69,10 +67,9 @@ internal class FileCache {
             }
             completion?()
         }
-
     }
 
-    /*
+    /**
      Returns data from the file cache for the given key, if any.
      */
     public func dataFromFileCache(forKey key: String?) -> Data? {
@@ -87,7 +84,7 @@ internal class FileCache {
         }
     }
 
-    /*
+    /**
      Clears the disk cache by removing and recreating the cache directory, and calls the completion handler when finished.
      */
     public func clearDisk(completion: CompletionHandler?) {
@@ -115,7 +112,7 @@ internal class FileCache {
     }
 
     func cacheKeyForKey(_ key: String) -> String {
-        return key.md5()
+        return key.md5
     }
 
     private func createCacheDirIfNeeded(_ url: URL, fileManager: FileManager) {

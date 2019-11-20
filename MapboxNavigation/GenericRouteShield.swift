@@ -15,7 +15,7 @@ public class GenericRouteShield: StylableView {
             setNeedsDisplay()
         }
     }
-     
+    
     //The label that contains the route code.
     lazy var routeLabel: UILabel = {
         let label: UILabel = .forAutoLayout()

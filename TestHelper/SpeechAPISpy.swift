@@ -3,10 +3,8 @@ import MapboxSpeech
 import AVKit
 @testable import MapboxNavigation
 /**
- * This class can be used as a substitute for SpeechSynthesizer under test, in order to verify whether expected calls were made.
+ This class can be used as a substitute for SpeechSynthesizer under test, in order to verify whether expected calls were made.
  */
-
-
 public class SpeechAPISpy: SpeechSynthesizer {
     public struct AudioDataCall {
         public static let sound = NSDataAsset(name: "reroute-sound", bundle: .mapboxNavigation)!

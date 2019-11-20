@@ -3,11 +3,8 @@ import MapboxDirections
 import TestHelper
 @testable import MapboxCoreNavigation
 
-
 class OfflineRoutingTests: XCTestCase {
-    
     func testOfflineDirections() {
-        
         let bundle = Bundle(for: Fixture.self)
         let tilesURL = URL(fileURLWithPath: bundle.bundlePath.appending("/tiles/liechtenstein"))
 
@@ -45,7 +42,6 @@ class OfflineRoutingTests: XCTestCase {
     }
     
     func testOfflineDirectionsError() {
-        
         let bundle = Bundle(for: Fixture.self)
         let tilesURL = URL(fileURLWithPath: bundle.bundlePath).appendingPathComponent("/tiles/liechtenstein")
         
@@ -80,7 +76,6 @@ class OfflineRoutingTests: XCTestCase {
     }
     
     func testUnpackTilePack() {
-        
         let bundle = Bundle(for: Fixture.self)
         let readonlyPackURL = URL(fileURLWithPath: bundle.path(forResource: "li", ofType: "tar")!)
         
@@ -99,9 +94,7 @@ class OfflineRoutingTests: XCTestCase {
         progressExpectation.expectedFulfillmentCount = 2
         
         NavigationDirections.unpackTilePack(at: packURL, outputDirectoryURL: outputDirectoryURL, progressHandler: { (totalBytes, unpackedBytes) in
-            
             progressExpectation.fulfill()
-            
         }) { (result, error) in
             XCTAssertEqual(result, 5)
             XCTAssertNil(error)

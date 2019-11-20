@@ -5,7 +5,6 @@ import Foundation
  * This class can be used as a replacement for the `ImageDownloader`'s default download operation class, for spying on url download requests as well as returning canned responses ad hoc.
  */
 class ImageDownloadOperationSpy: Operation, ImageDownload {
-
     private static var operations: [URL: ImageDownloadOperationSpy] = [:]
 
     private(set) var request: URLRequest?

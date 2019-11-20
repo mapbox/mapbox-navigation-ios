@@ -1,9 +1,7 @@
 import Foundation
 import MapboxDirections
 
-@objc(MBDirectionsSpy)
 public class DirectionsSpy: Directions {
-    
     public var lastCalculateOptionsCompletion: RouteCompletionHandler?
     
     override public func calculate(_ options: MatchOptions, completionHandler: @escaping Directions.MatchCompletionHandler) -> URLSessionDataTask {

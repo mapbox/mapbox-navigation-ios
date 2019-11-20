@@ -12,28 +12,21 @@ fileprivate enum ContainerHeight: CGFloat {
 }
 
 /// :nodoc:
-@objc(MBEndOfRouteContentView)
 open class EndOfRouteContentView: UIView {}
 
 /// :nodoc:
-@objc(MBEndOfRouteTitleLabel)
 open class EndOfRouteTitleLabel: StylableLabel {}
 
 /// :nodoc:
-@objc(MBEndOfRouteStaticLabel)
 open class EndOfRouteStaticLabel: StylableLabel {}
 
 /// :nodoc:
-@objc(MBEndOfRouteCommentView)
 open class EndOfRouteCommentView: StylableTextView {}
 
 /// :nodoc:
-@objc(MBEndOfRouteButton)
 open class EndOfRouteButton: StylableButton {}
 
-@objc(MBEndOfRouteViewController)
 class EndOfRouteViewController: UIViewController {
-
     // MARK: - IBOutlets
     @IBOutlet weak var labelContainer: UIView!
     @IBOutlet weak var staticYouHaveArrived: EndOfRouteStaticLabel!

@@ -6,7 +6,6 @@ import TestHelper
 @testable import MapboxCoreNavigation
 
 class MapboxNavigationServiceSpec: QuickSpec {
-    
     lazy var initialRoute: Route = {
         let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String: Any]
         let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))

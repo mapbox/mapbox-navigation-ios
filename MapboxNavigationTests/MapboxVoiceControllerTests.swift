@@ -6,9 +6,7 @@ import AVKit
 @testable import TestHelper
 @testable import MapboxNavigation
 
-
 class MapboxVoiceControllerTests: XCTestCase {
-
     var speechAPISpy: SpeechAPISpy!
 
     var route: Route {
@@ -73,7 +71,6 @@ class MapboxVoiceControllerTests: XCTestCase {
         
         let instruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction
         
-        
         let handler: XCTNSNotificationExpectation.Handler = { note in
             return true
         }
@@ -85,7 +82,6 @@ class MapboxVoiceControllerTests: XCTestCase {
         subject.speak(instruction!)
         let firstCall = speechAPISpy.audioDataCalls.first!
         firstCall.fulfill()
-        
         
         wait(for: [play, prepare], timeout: 4)
     }

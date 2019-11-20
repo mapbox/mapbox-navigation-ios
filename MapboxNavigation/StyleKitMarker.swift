@@ -1,6 +1,6 @@
 import UIKit
 
-@objc(MBStyleKitMarker)
+
 public class StyleKitMarker: NSObject {
 
     //// Drawing Methods

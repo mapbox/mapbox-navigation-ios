@@ -11,7 +11,6 @@ protocol InstructionPresenterDataSource: class {
 typealias DataSource = InstructionPresenterDataSource
 
 class InstructionPresenter {
-    
     private let instruction: VisualInstruction
     private weak var dataSource: DataSource?
 
@@ -70,7 +69,6 @@ class InstructionPresenter {
         let components = instruction.components.compactMap { $0 as? VisualInstructionComponent }
         var strings: [NSAttributedString] = []
         var processedComponents: [VisualInstructionComponent] = []
-        
         
         for (index, component) in components.enumerated() {
             let isFirst = index == 0
@@ -201,7 +199,6 @@ class InstructionPresenter {
     private func exitShield(side: ExitSide = .right, text: String, component: VisualInstructionComponent, dataSource: DataSource) -> NSAttributedString? {
         guard let cacheKey = component.cacheKey else { return nil }
         
-
         let additionalKey = ExitView.criticalHash(side: side, dataSource: dataSource)
         let attachment = ExitAttachment()
 
@@ -242,7 +239,6 @@ class InstructionPresenter {
         view.removeFromSuperview()
         return image
     }
-
 }
 
 protocol ImagePresenter: TextPresenter {
@@ -300,7 +296,6 @@ class RoadNameLabelAttachment: TextInstruction {
 }
 
 extension CGSize {
-    
     fileprivate static func +(lhs: CGSize, rhs: CGSize) -> CGSize {
         return CGSize(width: lhs.width + rhs.width, height: lhs.height +  rhs.height)
     }

@@ -12,7 +12,6 @@ class TestableDayStyle: DayStyle {
 }
 
 class RouteVoiceControllerStub: RouteVoiceController {
-
     override func speak(_ instruction: SpokenInstruction) {
         //no-op
     }
@@ -23,7 +22,6 @@ class RouteVoiceControllerStub: RouteVoiceController {
 }
 
 class NavigationLocationManagerStub: NavigationLocationManager {
-
     override func startUpdatingLocation() {
         return
     }

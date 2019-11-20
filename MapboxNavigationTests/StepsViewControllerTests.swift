@@ -4,16 +4,13 @@ import MapboxDirections
 @testable import MapboxCoreNavigation
 @testable import MapboxNavigation
 
-
 class StepsViewControllerTests: XCTestCase {
-    
     struct Constants {
         static let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String: Any]
         static let accessToken = "nonsense"
     }
     
     lazy var dependencies: (stepsViewController: StepsViewController, routeController: RouteController, firstLocation: CLLocation, lastLocation: CLLocation) = {
-        
         let bogusToken = "pk.feedCafeDeadBeefBadeBede"
         let directions = Directions(accessToken: bogusToken)
         let dataSource = RouteControllerDataSourceFake()
@@ -40,7 +37,6 @@ class StepsViewControllerTests: XCTestCase {
     }()
     
     func testRebuildStepsInstructionsViewDataSource() {
-        
         let stepsViewController = dependencies.stepsViewController
 
         XCTAssertNotNil(stepsViewController.view, "StepsViewController not initiated properly")
@@ -55,7 +51,6 @@ class StepsViewControllerTests: XCTestCase {
 
     /// NOTE: This test is disabled pending https://github.com/mapbox/mapbox-navigation-ios/issues/1468
     func x_testUpdateCellPerformance() {
-        
         let stepsViewController = dependencies.stepsViewController
         
         // Test that Steps ViewController viewLoads
@@ -72,17 +67,16 @@ class StepsViewControllerTests: XCTestCase {
             }
         }
     }
-
 }
 
 extension StepsViewControllerTests {
     fileprivate func location(at coordinate: CLLocationCoordinate2D) -> CLLocation {
-                return CLLocation(coordinate: coordinate,
-                                    altitude: 5,
+        return CLLocation(coordinate: coordinate,
+                          altitude: 5,
                           horizontalAccuracy: 10,
-                            verticalAccuracy: 5,
-                                      course: 20,
-                                       speed: 15,
-                                   timestamp: Date())
+                          verticalAccuracy: 5,
+                          course: 20,
+                          speed: 15,
+                          timestamp: Date())
     }
 }

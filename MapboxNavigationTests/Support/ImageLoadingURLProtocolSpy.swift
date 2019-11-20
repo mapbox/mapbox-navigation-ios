@@ -5,7 +5,6 @@ import XCTest
  * This class stubs out the URL loading for any request url registered in `registerData(_, forURL:)` and records requests for a given URL for inspection. Note that unstubbed URLs will continue to load as normal.
  */
 class ImageLoadingURLProtocolSpy: URLProtocol {
-
     private static var responseData: [URL: Data] = [:]
     private static var activeRequests: [URL: URLRequest] = [:]
     private static var pastRequests: [URL: URLRequest] = [:]
@@ -118,5 +117,4 @@ class ImageLoadingURLProtocolSpy: URLProtocol {
     class func resumeImageLoading() {
         ImageLoadingURLProtocolSpy.imageLoadingSemaphore.signal()
     }
-
 }

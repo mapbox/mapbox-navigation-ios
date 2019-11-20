@@ -7,7 +7,6 @@ class Interactor: UIPercentDrivenInteractiveTransition {
 
 class DismissAnimator: NSObject { }
 extension DismissAnimator: UIViewControllerAnimatedTransitioning {
-    
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.5
     }
@@ -72,10 +71,9 @@ extension PresentAnimator: UIViewControllerAnimatedTransitioning {
     }
 }
 
-@objc protocol DismissDraggable: UIViewControllerTransitioningDelegate {
+protocol DismissDraggable: UIViewControllerTransitioningDelegate {
     var interactor: Interactor { get }
     var draggableHeight: CGFloat { get }
-    @objc optional func handleDismissPan(_ sender: UIPanGestureRecognizer)
 }
 
 fileprivate extension Selector {
@@ -90,7 +88,6 @@ extension DismissDraggable where Self: UIViewController {
 }
 
 fileprivate extension UIViewController {
-    
     @objc func handleDismissPan(_ sender: UIPanGestureRecognizer) {
         self.handlePan(sender)
     }

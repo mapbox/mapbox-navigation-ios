@@ -4,7 +4,6 @@ import CoreLocation
 @testable import MapboxNavigationNative
 
 class CLLocationTests: XCTestCase {
-    
     func testFixLocationToCLLocation() {
         let coordinate = CLLocationCoordinate2D(latitude: 0, longitude: 1)
         let timestamp = Date()

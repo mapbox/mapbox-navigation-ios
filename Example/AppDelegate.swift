@@ -1,10 +1,8 @@
 import UIKit
 import MapboxNavigation
 
-
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
     weak var currentAppRootViewController: ViewController?
     
     var window: UIWindow?
@@ -15,7 +13,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     lazy var carPlaySearchController: CarPlaySearchController = CarPlaySearchController()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-
         if isRunningTests() {
             window!.rootViewController = UIViewController()
         }

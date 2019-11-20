@@ -4,7 +4,6 @@ import CarPlay
 #endif
 
 extension VisualInstruction {
-    
     /// Returns true if `VisualInstruction.components` contains any `LaneIndicationComponent`.
     public var containsLaneIndications: Bool {
         return components.contains(where: { $0 is LaneIndicationComponent })

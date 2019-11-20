@@ -1,14 +1,5 @@
 import Foundation
 
-extension Notification.Name {
-    /**
-     Posted when something changes in the shared `NavigationSettings` object.
-     
-     The user info dictionary indicates which keys and values changed.
-     */
-    public static let navigationSettingsDidChange = MBNavigationSettingsDidChange
-}
-
 /**
  A wrapper for the `UserDefaults` class for navigation-specific settings.
  
@@ -16,14 +7,12 @@ extension Notification.Name {
  
  To specify criteria when calculating routes, use the `NavigationRouteOptions` class. To customize the user experience during a particular turn-by-turn navigation session, use the `NavigationOptions` class when initializing a `NavigationViewController`.
  */
-@objc(MBNavigationSettings)
 public class NavigationSettings: NSObject {
-    
     /**
      The volume that the voice controller will use.
      
      This volume is relative to the system’s volume where 1.0 is same volume as the system.
-    */
+     */
     @objc public dynamic var voiceVolume: Float = 1.0
     
     /**
@@ -51,10 +40,9 @@ public class NavigationSettings: NSObject {
         }
     }
     
-    /*
+    /**
      The shared navigation settings object that affects the entire application.
      */
-    @objc(sharedSettings)
     public static let shared = NavigationSettings()
     
     /// Returns a reflection of this class excluding the `properties` variable.

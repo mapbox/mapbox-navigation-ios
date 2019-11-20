@@ -7,7 +7,6 @@ import UIKit.UIDevice
  `SessionState` is a struct which stores information needed to send to the Mapbox telemetry platform.
  */
 struct SessionState {
-
     let identifier = UUID()
     var departureTimestamp: Date?
     var arrivalTimestamp: Date?

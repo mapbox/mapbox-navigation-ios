@@ -2,13 +2,13 @@ import XCTest
 import MapboxDirections
 import Turf
 import MapboxMobileEvents
+import os.log
 @testable import TestHelper
 @testable import MapboxCoreNavigation
 
 fileprivate let mbTestHeading: CLLocationDirection = 50
 
 class NavigationServiceTests: XCTestCase {
-    
     var eventsManagerSpy: NavigationEventsManagerSpy!
     let directionsClientSpy = DirectionsSpy(accessToken: "garbage", host: nil)
     let delegate = NavigationServiceDelegateSpy()
@@ -115,7 +115,6 @@ class NavigationServiceTests: XCTestCase {
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocation])
         XCTAssertEqual(navigation.router.location!.coordinate.latitude, firstLocation.coordinate.latitude, accuracy: 0.0005, "Check snapped location is working")
         XCTAssertEqual(navigation.router.location!.coordinate.longitude, firstLocation.coordinate.longitude, accuracy: 0.0005, "Check snapped location is working")
-        
     }
     
     func testSnappedAtEndOfStepLocationWhenMovingSlowly() {
@@ -171,7 +170,6 @@ class NavigationServiceTests: XCTestCase {
         
         XCTAssertEqual(navigation.router.location!.coordinate.latitude, futureInaccurateLocation.coordinate.latitude, accuracy: 0.0005, "Inaccurate location is still snapped")
         XCTAssertEqual(navigation.router.location!.coordinate.longitude, futureInaccurateLocation.coordinate.longitude, accuracy: 0.0005, "Inaccurate location is still snapped")
-        
     }
     
     func testUserPuckShouldFaceBackwards() {
@@ -202,7 +200,6 @@ class NavigationServiceTests: XCTestCase {
     
     //TODO: Broken by PortableRoutecontroller & MBNavigator -- needs team discussion.
     func x_testLocationShouldUseHeading() {
-        
         let navigation = dependencies.navigationService
         let firstLocation = dependencies.routeLocations.firstLocation
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocation])
@@ -246,7 +243,6 @@ class NavigationServiceTests: XCTestCase {
         
         XCTAssert(simulatedLocationManager.route == alternateRoute, "Simulated Location Manager should be updated with new route progress model")
     }
-    
     
     func testReroutingFromALocationSendsEvents() {
         let navigationService = dependencies.navigationService
@@ -363,7 +359,6 @@ class NavigationServiceTests: XCTestCase {
     }
     
     func testRouteControllerDoesNotHaveRetainCycle() {
-        
         weak var subject: RouteController? = nil
         
         autoreleasepool {
@@ -376,20 +371,18 @@ class NavigationServiceTests: XCTestCase {
     }
     
     func testLegacyRouteControllerDoesNotHaveRetainCycle() {
-           
-           weak var subject: LegacyRouteController? = nil
-           
-           autoreleasepool {
-               let fakeDataSource = RouteControllerDataSourceFake()
-               let routeController = LegacyRouteController(along: initialRoute, directions: directionsClientSpy, dataSource: fakeDataSource)
-               subject = routeController
-           }
-           
-           XCTAssertNil(subject, "Expected LegacyRouteController not to live beyond autorelease pool")
-       }
+        weak var subject: LegacyRouteController? = nil
+        
+        autoreleasepool {
+            let fakeDataSource = RouteControllerDataSourceFake()
+            let routeController = LegacyRouteController(along: initialRoute, directions: directionsClientSpy, dataSource: fakeDataSource)
+            subject = routeController
+        }
+        
+        XCTAssertNil(subject, "Expected LegacyRouteController not to live beyond autorelease pool")
+    }
        
     func testRouteControllerDoesNotRetainDataSource() {
-
         weak var subject: RouterDataSource? = nil
 
         autoreleasepool {
@@ -420,7 +413,6 @@ class NavigationServiceTests: XCTestCase {
         routeController.route = route
         
         for (index, location) in trace.enumerated() {
-            
             service.locationManager!(service.locationManager, didUpdateLocations: [location])
             
             if index < 33 {
@@ -489,4 +481,35 @@ class NavigationServiceTests: XCTestCase {
             service.locationManager(locationManager, didUpdateLocations: [location])
         }
     }
+    
+    func testUnimplementedLogging() {
+        unimplementedTestLogs = []
+        
+        let route = Fixture.route(from: "DCA-Arboretum")
+        let directions = Directions(accessToken: "foo")
+        let locationManager = DummyLocationManager()
+        let trace = Fixture.generateTrace(for: route, speedMultiplier: 4).shiftedToPresent()
+        
+        let service = MapboxNavigationService(route: route, directions: directions, locationSource: locationManager, eventsManagerType: nil)
+        
+        let spy = EmptyNavigationServiceDelegate()
+        service.delegate = spy
+        service.start()
+                
+        for location in trace {
+            service.locationManager(locationManager, didUpdateLocations: [location])
+        }
+        
+        guard let logs = unimplementedTestLogs else {
+            XCTFail("Unable to fetch logs")
+            return
+        }
+        
+        let ourLogs = logs.filter { $0.0 == "EmptyNavigationServiceDelegate" }
+        
+        XCTAssertEqual(ourLogs.count, 4, "Expected logs to be populated and expected number of messages sent")
+        unimplementedTestLogs = nil
+    }
 }
+
+class EmptyNavigationServiceDelegate: NavigationServiceDelegate {}

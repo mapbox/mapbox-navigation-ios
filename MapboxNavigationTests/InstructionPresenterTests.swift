@@ -4,11 +4,8 @@ import MapboxDirections
 import TestHelper
 @testable import MapboxNavigation
 
-
 class InstructionPresenterTests: XCTestCase {
-    
     func testExitInstructionProvidesExit() {
-        
         let exitAttribute = VisualInstructionComponent(type: .exit, text: "Exit", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)
         let exitCodeAttribute = VisualInstructionComponent(type: .exitCode, text: "123A", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)
         let exitInstruction = VisualInstruction(text: nil, maneuverType: .takeOffRamp, maneuverDirection: .right, components: [exitAttribute, exitCodeAttribute])

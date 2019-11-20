@@ -3,7 +3,6 @@ import MapboxDirections
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
-
 func instructionsView(size: CGSize = .iPhone6Plus) -> InstructionsBannerView {
     let bannerHeight: CGFloat = 96
     return InstructionsBannerView(frame: CGRect(origin: .zero, size: CGSize(width: size.width, height: bannerHeight)))
@@ -13,18 +12,16 @@ func makeVisualInstruction(_ maneuverType: ManeuverType = .arrive,
                            _ maneuverDirection: ManeuverDirection = .left,
                            primaryInstruction: [VisualInstructionComponent],
                            secondaryInstruction: [VisualInstructionComponent]?) -> VisualInstructionBanner {
-    
     let primary = VisualInstruction(text: "Instruction", maneuverType: maneuverType, maneuverDirection: maneuverDirection, components: primaryInstruction)
     var secondary: VisualInstruction? = nil
     if let secondaryInstruction = secondaryInstruction {
         secondary = VisualInstruction(text: "Instruction", maneuverType: maneuverType, maneuverDirection: maneuverDirection, components: secondaryInstruction)
     }
     
-    return  VisualInstructionBanner(distanceAlongStep: 482.803, primaryInstruction: primary, secondaryInstruction: secondary, tertiaryInstruction: nil, drivingSide: .right)
+    return VisualInstructionBanner(distanceAlongStep: 482.803, primaryInstruction: primary, secondaryInstruction: secondary, tertiaryInstruction: nil, drivingSide: .right)
 }
 
 class InstructionsBannerViewIntegrationTests: XCTestCase {
-
     private lazy var reverseDelegate = TextReversingDelegate()
     private lazy var silentDelegate = DefaultBehaviorDelegate()
     
@@ -35,7 +32,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
     }()
 
     lazy var instructions: [VisualInstructionComponent] = {
-         let components =  [
+        let components =  [
             VisualInstructionComponent(type: .image, text: "US 101", imageURL: ShieldImage.us101.url, abbreviation: nil, abbreviationPriority: 0),
             VisualInstructionComponent(type: .delimiter, text: "/", imageURL: nil, abbreviation: nil, abbreviationPriority: 0),
             VisualInstructionComponent(type: .image, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
@@ -47,7 +44,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         VisualInstructionComponent(type: .image, text: "ANK 1", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound),
         VisualInstructionComponent(type: .text, text: "Ankh-Morpork Highway 1", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)
     ]
- 
+    
     lazy var typicalInstruction: VisualInstructionBanner = makeVisualInstruction(primaryInstruction: [VisualInstructionComponent(type: .text, text: "Main Street", imageURL: nil, abbreviation: "Main St", abbreviationPriority: 0)], secondaryInstruction: nil)
     
     private func resetImageCache() {
@@ -83,7 +80,6 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         view.update(for: typicalInstruction)
         
         XCTAssert(view.primaryLabel.attributedText?.string == "teertS niaM")
-        
     }
     
     func testCustomDelegateReturningNilTriggersDefaultBehavior() {
@@ -93,10 +89,8 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         view.update(for: typicalInstruction)
         
         XCTAssert(view.primaryLabel.attributedText?.string == "Main Street")
-        
     }
     
-
     func testDelimiterIsShownWhenShieldsNotLoaded() {
         let view = instructionsView()
 
@@ -156,7 +150,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
 
         //ensure that second callback fires
         wait(for: [secondExpectation], timeout: 1)
- 
+        
         //Slash should no longer be present
         XCTAssertNil(view.primaryLabel.text!.firstIndex(of: "/"), "Expected instruction text not to contain a slash: \(view.primaryLabel.text!)")
     }
@@ -177,7 +171,6 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
             XCTAssert(type(of: attachment) == GenericShieldAttachment.self, "Unexpected Attachment type:" + String(describing: attachment))
         }
         wait(for: [foundAttachment], timeout: 0)
-        
     }
     
     func testRouteShieldsAreGenericUntilTheyLoad() {
@@ -318,7 +311,6 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
 
         XCTAssertNotNil(imageRepository.cachedImageForKey(component.cacheKey!))
     }
-
 }
 
 private class TextReversingDelegate: VisualInstructionDelegate {

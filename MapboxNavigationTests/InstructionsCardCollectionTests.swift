@@ -6,7 +6,6 @@ import MapboxDirections
 
 /// :nodoc:
 class InstructionsCardCollectionTests: XCTestCase {
-    
     lazy var initialRoute: Route = {
         return Fixture.route(from: jsonFileName)
     }()
@@ -55,6 +54,7 @@ class InstructionsCardCollectionTests: XCTestCase {
         /// Simulation: Scroll to the next card step instructions.
         let simulatedTargetContentOffset = UnsafeMutablePointer<CGPoint>.allocate(capacity: 1)
         simulatedTargetContentOffset.pointee = CGPoint(x: 0, y: 50)
+        subject.scrollViewWillBeginDragging(subject.instructionCollectionView)
         subject.scrollViewWillEndDragging(subject.instructionCollectionView, withVelocity: CGPoint(x: 2.0, y: 0.0), targetContentOffset: simulatedTargetContentOffset)
         
         /// Validation: Preview step instructions should be equal to next card step instructions
@@ -69,27 +69,28 @@ class InstructionsCardCollectionTests: XCTestCase {
         let routeProgress = instructionsCardCollectionDataSource.progress
         let service = instructionsCardCollectionDataSource.service
         let instructionsCardCollectionSpy = instructionsCardCollectionDataSource.delegate
-        
+
         let intersectionLocation = routeProgress.route.legs.first!.steps.first!.intersections!.first!.location
         let fakeLocation = CLLocation(latitude: intersectionLocation.latitude, longitude: intersectionLocation.longitude)
         subject.navigationService(service, didUpdate: routeProgress, with: fakeLocation, rawLocation: fakeLocation)
-        
+
         let activeCard = (subject.instructionCollectionView.dataSource!.collectionView(subject.instructionCollectionView, cellForItemAt: IndexPath(row: 0, section: 0)) as! InstructionsCardCell).container!.instructionsCardView
         XCTAssertEqual(activeCard.step!.instructions, "Head north on 6th Avenue")
-        
+
         let nextCard = (subject.instructionCollectionView.dataSource!.collectionView(subject.instructionCollectionView, cellForItemAt: IndexPath(row: 1, section: 0)) as! InstructionsCardCell).container!.instructionsCardView
         XCTAssertEqual(nextCard.step!.instructions, "Turn right onto Lincoln Way")
-        
+
         /// Simulation: Scroll to the previous card step instructions.
         let simulatedTargetContentOffset = UnsafeMutablePointer<CGPoint>.allocate(capacity: 1)
         simulatedTargetContentOffset.pointee = CGPoint(x: 0, y: 50)
+        subject.scrollViewWillBeginDragging(subject.instructionCollectionView)
         subject.scrollViewWillEndDragging(subject.instructionCollectionView, withVelocity: CGPoint(x: 2.0, y: 0.0), targetContentOffset: simulatedTargetContentOffset)
-        
+
         /// Validation: Preview step instructions should be equal to next card step instructions
         XCTAssertTrue(subject.isInPreview)
         var previewStep = instructionsCardCollectionSpy.step
         XCTAssertEqual(previewStep!.instructions, "Turn right onto Lincoln Way")
-        
+
         /// Validation: Preview step instructions should be equal to first card step instructions
         subject.scrollViewWillBeginDragging(subject.instructionCollectionView)
         subject.scrollViewWillEndDragging(subject.instructionCollectionView, withVelocity: CGPoint(x: -2.0, y: 0.0), targetContentOffset: simulatedTargetContentOffset)
@@ -102,19 +103,20 @@ class InstructionsCardCollectionTests: XCTestCase {
         let routeProgress = instructionsCardCollectionDataSource.progress
         let service = instructionsCardCollectionDataSource.service
         let instructionsCardCollectionSpy = instructionsCardCollectionDataSource.delegate
-        
+
         let intersectionLocation = routeProgress.route.legs.first!.steps.first!.intersections!.first!.location
         let fakeLocation = CLLocation(latitude: intersectionLocation.latitude, longitude: intersectionLocation.longitude)
         subject.navigationService(service, didUpdate: routeProgress, with: fakeLocation, rawLocation: fakeLocation)
-        
+
         let activeCard = (subject.instructionCollectionView.dataSource!.collectionView(subject.instructionCollectionView, cellForItemAt: IndexPath(row: 0, section: 0)) as! InstructionsCardCell).container!.instructionsCardView
         XCTAssertEqual(activeCard.step!.instructions, "Head north on 6th Avenue")
-        
+
         /// Simulation: Attempt to scroll to the next card step instructions.
         let simulatedTargetContentOffset = UnsafeMutablePointer<CGPoint>.allocate(capacity: 1)
         simulatedTargetContentOffset.pointee = CGPoint(x: 0, y: 50)
+        subject.scrollViewWillBeginDragging(subject.instructionCollectionView)
         subject.scrollViewWillEndDragging(subject.instructionCollectionView, withVelocity: CGPoint(x: 0.0, y: 0.0), targetContentOffset: simulatedTargetContentOffset)
-        
+
         XCTAssertTrue(subject.isInPreview)
         XCTAssertNotNil(instructionsCardCollectionSpy.step)
     }
@@ -149,7 +151,6 @@ class InstructionsCardCollectionTests: XCTestCase {
 
 /// :nodoc:
 class InstructionsCardCollectionDelegateSpy: NSObject, InstructionsCardCollectionDelegate {
-    
     var step: RouteStep? = nil
     
     func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardViewController, didPreview step: RouteStep) {
@@ -173,15 +174,15 @@ class TestInstructionsCardStyle: InstructionsCardStyle {
     var secondaryLabelTextColor: UIColor = .darkGray
     var secondaryLabelHighlightedTextColor: UIColor = .gray
     lazy var distanceLabelNormalFont: UIFont = {
-       return UIFont.systemFont(ofSize: 16.0)
+        return UIFont.systemFont(ofSize: 16.0)
     }()
     var distanceLabelValueTextColor: UIColor = .yellow
     var distanceLabelUnitTextColor: UIColor = .orange
     lazy var distanceLabelUnitFont: UIFont = {
-       return UIFont.systemFont(ofSize: 20.0)
+        return UIFont.systemFont(ofSize: 20.0)
     }()
     lazy var distanceLabelValueFont: UIFont = {
-       return UIFont.systemFont(ofSize: 12.0)
+        return UIFont.systemFont(ofSize: 12.0)
     }()
     var distanceLabelHighlightedTextColor: UIColor = .red
     var maneuverViewPrimaryColor: UIColor = .blue

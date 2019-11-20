@@ -1,8 +1,6 @@
 import UIKit
 
-
 extension UIViewController {
-
     func topMostViewController() -> UIViewController? {
         return topViewController(controller: self)
     }

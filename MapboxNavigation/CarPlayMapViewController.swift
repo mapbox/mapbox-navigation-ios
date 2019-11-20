@@ -6,9 +6,7 @@ import CarPlay
  `CarPlayMapViewController` is responsible for administering the Mapbox map, the interface styles and the map template buttons to display on CarPlay.
  */
 @available(iOS 12.0, *)
-@objc(MBCarPlayMapViewController)
 public class CarPlayMapViewController: UIViewController {
-    
     static let defaultAltitude: CLLocationDistance = 850
     
     var styleManager: StyleManager?
@@ -46,9 +44,8 @@ public class CarPlayMapViewController: UIViewController {
     /**
      The map button for recentering the map view if a user action causes it to stop following the user.
      */
-    @objc public lazy var recenterButton: CPMapButton = {
+    public lazy var recenterButton: CPMapButton = {
         let recenter = CPMapButton { [weak self] button in
-            
             self?.mapView.setUserTrackingMode(.followWithCourse, animated: true, completionHandler: nil)
             button.isHidden = true
         }
@@ -60,7 +57,7 @@ public class CarPlayMapViewController: UIViewController {
     /**
      The map button for zooming in the current map view.
      */
-    @objc public lazy var zoomInButton: CPMapButton = {
+    public lazy var zoomInButton: CPMapButton = {
         let zoomInButton = CPMapButton { [weak self] (button) in
             let zoomLevel = self?.mapView.zoomLevel ?? 0
             self?.mapView.setZoomLevel(zoomLevel + 1, animated: true)
@@ -73,7 +70,7 @@ public class CarPlayMapViewController: UIViewController {
     /**
      The map button for zooming out the current map view.
      */
-    @objc public lazy var zoomOutButton: CPMapButton = {
+    public lazy var zoomOutButton: CPMapButton = {
         let zoomOutButton = CPMapButton { [weak self] (button) in
             guard let strongSelf = self else {
                 return
@@ -88,12 +85,12 @@ public class CarPlayMapViewController: UIViewController {
     /**
      The map button property for hiding or showing the pan map button.
      */
-    @objc internal(set) public var panMapButton: CPMapButton?
+    internal(set) public var panMapButton: CPMapButton?
     
     /**
      The map button property for exiting the pan map mode.
      */
-    @objc internal(set) public var dismissPanningButton: CPMapButton?
+    internal(set) public var dismissPanningButton: CPMapButton?
     
     var styleObservation: NSKeyValueObservation?
     
@@ -218,12 +215,10 @@ public class CarPlayMapViewController: UIViewController {
 
 @available(iOS 12.0, *)
 extension CarPlayMapViewController: StyleManagerDelegate {
-    @objc(locationForStyleManager:)
     public func location(for styleManager: StyleManager) -> CLLocation? {
         return mapView.userLocationForCourseTracking ?? mapView.userLocation?.location ?? coarseLocationManager.location
     }
     
-    @objc(styleManager:didApplyStyle:)
     public func styleManager(_ styleManager: StyleManager, didApply style: Style) {
         let styleURL = style.previewMapStyleURL
         if mapView.styleURL != styleURL {
@@ -232,7 +227,7 @@ extension CarPlayMapViewController: StyleManagerDelegate {
         }
     }
     
-    @objc public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
+    public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
         mapView.reloadStyle(self)
     }
 }

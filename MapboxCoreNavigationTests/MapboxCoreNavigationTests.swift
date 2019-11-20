@@ -13,9 +13,7 @@ let route: Route = {
 
 let waitForInterval: TimeInterval = 5
 
-
 class MapboxCoreNavigationTests: XCTestCase {
-    
     var navigation: MapboxNavigationService!
     
     func testNavigationNotificationsInfoDict() {
@@ -29,7 +27,6 @@ class MapboxCoreNavigationTests: XCTestCase {
                                                                   altitude: -1, horizontalAccuracy: 10,
                                                                   verticalAccuracy: -1, course: -1, speed: 10,
                                                                   timestamp: now + $0.offset) }
-        
         
         let spokenTest = expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: navigation.router) { (note) -> Bool in
             return note.userInfo!.count == 2
@@ -46,10 +43,7 @@ class MapboxCoreNavigationTests: XCTestCase {
         
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [location])
         
-        
-        
         wait(for: [spokenTest], timeout: waitForInterval)
-        
     }
     
     func testDepart() {

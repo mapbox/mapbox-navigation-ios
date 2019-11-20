@@ -13,7 +13,6 @@ import CarPlay
 
 @available(iOS 12.0, *)
 class CarPlayManagerTests: XCTestCase {
-
     var manager: CarPlayManager?
     var searchController: CarPlaySearchController?
     var eventsManagerSpy: NavigationEventsManagerSpy?
@@ -214,7 +213,6 @@ class CarPlayManagerTests: XCTestCase {
     }
     
     func testRouteFailure() {
-        
         let manager = CarPlayManager()
         
         let spy = CarPlayManagerFailureDelegateSpy()
@@ -224,12 +222,9 @@ class CarPlayManagerTests: XCTestCase {
         manager.delegate = spy
         manager.didCalculate(nil, for: fakeOptions, between: nil, error: testError, completionHandler: { })
         XCTAssert(spy.recievedError == testError, "Delegate should have receieved error")
-        
     }
     
-    
     func testDirectionsOverride() {
-        
         class DirectionsInvocationSpy: Directions {
             typealias VoidClosure = () -> Void
             var payload: VoidClosure?
@@ -362,7 +357,6 @@ class CarPlayManagerSpec: QuickSpec {
                     expect(mapTemplateSpy.currentTripPreviews).toNot(beEmpty())
                     expect(mapTemplateSpy.currentPreviewTextConfiguration?.startButtonTitle).to(equal(customStartButtonTitleText))
                 }
-
             })
         })
         
@@ -414,7 +408,6 @@ class CarPlayManagerSpec: QuickSpec {
     }
 
     private class CustomTripPreviewDelegate: CarPlayManagerDelegate {
-        
         var customTripPreviewTextConfiguration: CPTripPreviewTextConfiguration?
         var customTrip: CPTrip?
 
@@ -479,7 +472,6 @@ class CarPlayManagerFailureDelegateSpy: CarPlayManagerDelegate {
 
 @available(iOS 12.0, *)
 class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
-
     public fileprivate(set) var navigationInitiated = false
     public fileprivate(set) var currentService: NavigationService?
     public fileprivate(set) var navigationEnded = false
@@ -541,7 +533,6 @@ class CarPlayNavigationViewControllerTestable: CarPlayNavigationViewController {
 
 @available(iOS 12.0, *)
 class TestCarPlaySearchControllerDelegate: CarPlaySearchControllerDelegate {
-    
     public fileprivate(set) var interfaceController: CPInterfaceController?
     public fileprivate(set) var carPlayManager: CarPlayManager?
     
@@ -603,7 +594,6 @@ public class MapTemplateSpyProvider: MapTemplateProvider {
 
 @available(iOS 12.0, *)
 class FakeCPInterfaceController: CPInterfaceController {
-
     /**
      A simple stub which allows for instantiation of a CPInterfaceController for testing.
 

@@ -2,7 +2,6 @@ import UIKit
 import MapboxDirections
 
 extension VisualInstructionComponent {
-    
     static let scale = UIScreen.main.scale
     
     var cacheKey: String? {

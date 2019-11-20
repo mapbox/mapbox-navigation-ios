@@ -4,7 +4,6 @@ import CoreLocation
 @testable import TestHelper
 
 class LocationTests: XCTestCase {
-    
     var setup: (progress: RouteProgress, firstLocation: CLLocation) {
         let progress = RouteProgress(route: route)
         let firstCoord = progress.nearbyCoordinates.first!
@@ -59,7 +58,6 @@ class LocationTests: XCTestCase {
         let initialHeadingOnFirstStep = progress.currentLegProgress.currentStepProgress.step.finalHeading!
         XCTAssertTrue(calculatedCourse - initialHeadingOnFirstStep < 1, "At the beginning of the route, the final heading of the departure step should be very similar to the caclulated course of the first location update.")
     }
-
     
     func testShouldSnap() {
         let progress = setup.progress
@@ -73,5 +71,4 @@ class LocationTests: XCTestCase {
         
         XCTAssertFalse(differentCourseAndAccurateLocation.shouldSnap(toRouteWith: initialHeadingOnFirstStep), "Should not snap when user course is different, the location is accurate and moving")
     }
-    
 }

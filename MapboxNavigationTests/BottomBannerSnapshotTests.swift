@@ -52,7 +52,6 @@ class BottomBannerSnapshotTests: SnapshotTest {
         
         verify(host, for: Device.iPhone8.portrait)
     }
-
     
     func applyStyling(to subject: BottomBannerViewController) {
         subject.bottomBannerView.backgroundColor = .white

@@ -3,16 +3,16 @@ import MapboxCoreNavigation
 import AVFoundation
 
 extension FeedbackViewController: UIViewControllerTransitioningDelegate {
-    @objc public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         abortAutodismiss()
         return DismissAnimator()
     }
     
-    @objc public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return PresentAnimator()
     }
     
-    @objc public func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+    public func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
         return interactor.hasStarted ? interactor : nil
     }
 }
@@ -20,29 +20,43 @@ extension FeedbackViewController: UIViewControllerTransitioningDelegate {
 /**
  The `FeedbackViewControllerDelegate` protocol provides methods for responding to feedback events.
  */
-@objc public protocol FeedbackViewControllerDelegate {
-    
+public protocol FeedbackViewControllerDelegate: class, UnimplementedLogging {
     /**
      Called when the user opens the feedback form.
+     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    @objc optional func  feedbackViewControllerDidOpen(_ feedbackViewController: FeedbackViewController)
+    func feedbackViewControllerDidOpen(_ feedbackViewController: FeedbackViewController)
     
     /**
      Called when the user submits a feedback event.
+     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    @objc(feedbackViewController:didSendFeedbackItem:UUID:)
-    optional func feedbackViewController(_ feedbackViewController: FeedbackViewController, didSend feedbackItem: FeedbackItem, uuid: UUID)
+    func feedbackViewController(_ feedbackViewController: FeedbackViewController, didSend feedbackItem: FeedbackItem, uuid: UUID)
     
     /**
      Called when a `FeedbackViewController` is dismissed for any reason without giving explicit feedback.
+     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.     
      */
-    @objc optional func feedbackViewControllerDidCancel(_ feedbackViewController: FeedbackViewController)
+    func feedbackViewControllerDidCancel(_ feedbackViewController: FeedbackViewController)
+}
+
+public extension FeedbackViewControllerDelegate {
+    func feedbackViewControllerDidOpen(_ feedbackViewController: FeedbackViewController) {
+        logUnimplemented(protocolType: FeedbackViewControllerDelegate.self, level: .debug)
+    }
+    
+    func feedbackViewController(_ feedbackViewController: FeedbackViewController, didSend feedbackItem: FeedbackItem, uuid: UUID) {
+        logUnimplemented(protocolType: FeedbackViewControllerDelegate.self, level: .debug)
+    }
+    
+    func feedbackViewControllerDidCancel(_ feedbackViewController: FeedbackViewController) {
+        logUnimplemented(protocolType: FeedbackViewControllerDelegate.self, level: .debug)
+    } 
 }
 
 /**
  A view controller containing a grid of buttons the user can use to denote an issue their current navigation experience.
  */
-@objc(MBFeedbackViewController)
 public class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecognizerDelegate {
     var activeFeedbackItem: FeedbackItem?
     
@@ -58,7 +72,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
      */
     public var sections: [FeedbackItem] = [.turnNotAllowed, .closure, .reportTraffic, .confusingInstructions, .generalMapError, .badRoute]
     
-    @objc public weak var delegate: FeedbackViewControllerDelegate?
+    public weak var delegate: FeedbackViewControllerDelegate?
     
     lazy var collectionView: UICollectionView = {
         let view: UICollectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
@@ -108,7 +122,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     /**
      Initialize a new FeedbackViewController from a `NavigationEventsManager`.
      */
-    @objc public init(eventsManager: NavigationEventsManager) {
+    public init(eventsManager: NavigationEventsManager) {
         self.eventsManager = eventsManager
         super.init(nibName: nil, bundle: nil)
         commonInit()
@@ -147,7 +161,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        delegate?.feedbackViewControllerDidOpen?(self)
+        delegate?.feedbackViewControllerDidOpen(self)
         
         UIView.animate(withDuration: FeedbackViewController.autoDismissInterval) {
             self.progressBar.progress = 0
@@ -231,7 +245,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     
     func send(_ item: FeedbackItem) {
         if let uuid = self.uuid {
-            delegate?.feedbackViewController?(self, didSend: item, uuid: uuid)
+            delegate?.feedbackViewController(self, didSend: item, uuid: uuid)
             eventsManager?.updateFeedback(uuid: uuid, type: item.feedbackType, source: .user, description: nil)
         }
         
@@ -246,7 +260,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     }
     
     func dismissFeedbackItem() {
-        delegate?.feedbackViewControllerDidCancel?(self)
+        delegate?.feedbackViewControllerDidCancel(self)
         if let uuid = self.uuid {
             eventsManager?.cancelFeedback(uuid: uuid)
         }
@@ -255,7 +269,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
 }
 
 extension FeedbackViewController: UICollectionViewDataSource {
-    @objc public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedbackCollectionViewCell.defaultIdentifier, for: indexPath) as! FeedbackCollectionViewCell
         let item = sections[indexPath.row]
         
@@ -266,15 +280,15 @@ extension FeedbackViewController: UICollectionViewDataSource {
         return cell
     }
     
-    @objc public func numberOfSections(in collectionView: UICollectionView) -> Int {
+    public func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
     
-    @objc public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return sections.count
     }
     
-    @objc public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         // In case the view is scrolled, dismiss the feedback window immediately
         // and reset the `progressBar` back to a full progress.
         abortAutodismiss()
@@ -283,7 +297,7 @@ extension FeedbackViewController: UICollectionViewDataSource {
 }
 
 extension FeedbackViewController: UICollectionViewDelegate {
-    @objc public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         abortAutodismiss()
         let item = sections[indexPath.row]
         send(item)
@@ -291,7 +305,7 @@ extension FeedbackViewController: UICollectionViewDelegate {
 }
 
 extension FeedbackViewController: UICollectionViewDelegateFlowLayout {
-    @objc public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let availableWidth = collectionView.bounds.width
         // 3 columns and 2 rows in portrait mode.
         // 6 columns and 1 row in landscape mode.
@@ -301,9 +315,9 @@ extension FeedbackViewController: UICollectionViewDelegateFlowLayout {
         let item = sections[indexPath.row]
         let titleHeight = item.title.height(constrainedTo: width, font: FeedbackCollectionViewCell.Constants.titleFont)
         let cellHeight: CGFloat = FeedbackCollectionViewCell.Constants.imageSize.height
-                                  + FeedbackCollectionViewCell.Constants.padding
-                                  + titleHeight
-                                  + FeedbackViewController.verticalCellPadding
+            + FeedbackCollectionViewCell.Constants.padding
+            + titleHeight
+            + FeedbackViewController.verticalCellPadding
         return CGSize(width: width, height: cellHeight )
     }
 }

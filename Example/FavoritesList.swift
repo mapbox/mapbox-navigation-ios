@@ -4,7 +4,6 @@ import CarPlay
 import CoreLocation
 
 public enum FavoritesList {
-    
     enum POI: RawRepresentable {
         typealias RawValue = String
         case mapboxSF, timesSquare

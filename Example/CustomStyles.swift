@@ -1,12 +1,12 @@
 import Foundation
 import MapboxNavigation
 
+// MARK: CustomDayStyle
+
 /**
  To find more pieces of the UI to customize, checkout DayStyle.swift.
  */
-// MARK: CustomDayStyle
 class CustomDayStyle: DayStyle {
-    
     required init() {
         super.init()
         mapStyleURL = URL(string: "mapbox://styles/mapbox/satellite-streets-v9")!
@@ -22,7 +22,6 @@ class CustomDayStyle: DayStyle {
 
 // MARK: CustomNightStyle
 class CustomNightStyle: NightStyle {
-    
     required init() {
         super.init()
         mapStyleURL = URL(string: "mapbox://styles/mapbox/satellite-streets-v9")!

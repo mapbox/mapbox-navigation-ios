@@ -1,7 +1,6 @@
 import Foundation
 
 class ImageRepository {
-
     public var sessionConfiguration: URLSessionConfiguration = URLSessionConfiguration.default {
         didSet {
             imageDownloader = ImageDownloader(sessionConfiguration: sessionConfiguration)
