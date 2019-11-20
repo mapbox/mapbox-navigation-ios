@@ -31,8 +31,8 @@ public extension UnimplementedLogging {
         }
         
         let log = OSLog(subsystem: "com.mapbox.navigation", category: "delegation.\(selfDescription)")
-           let formatted: StaticString = "Unimplemented Delegate Method in %@: %@.%@. This message will only be logged once."
-           os_log(formatted, log: log, type: level, selfDescription, protocolDescription, function)
+        let formatted: StaticString = "Unimplemented Delegate Method in %@: %@.%@. This message will only be logged once."
+        os_log(formatted, log: log, type: level, selfDescription, protocolDescription, function)
         unimplementedTestLogs?.append((selfDescription, function))
         warned.append(description)
     }
