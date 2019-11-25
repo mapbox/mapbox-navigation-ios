@@ -24,6 +24,11 @@ extension RouteOptions {
         return copy
     }
     
+//    init(options: RouteOptions) {
+//        
+//    }
+
+    
     /**
      Returns a tuple containing the waypoints along the leg at the given index and the waypoints that separate subsequent legs.
      

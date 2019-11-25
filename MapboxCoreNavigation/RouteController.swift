@@ -258,8 +258,9 @@ open class RouteController: NSObject {
     
     func updateRouteLegProgress(status: MBNavigationStatus) {
         let legProgress = routeProgress.currentLegProgress
-        let currentDestination = routeProgress.currentLeg.destination
-        guard let remainingVoiceInstructions = legProgress.currentStepProgress.remainingSpokenInstructions else { return }
+        
+        guard let currentDestination = legProgress.leg.destination, let remainingVoiceInstructions = legProgress.currentStepProgress.remainingSpokenInstructions else { return
+        }
         
         // We are at least at the "You will arrive" instruction
         if legProgress.remainingSteps.count <= 2 && remainingVoiceInstructions.count <= 2 {
@@ -287,7 +288,7 @@ open class RouteController: NSObject {
         let step = stepProgress.step
         
         //Increment the progress model
-        let polyline = Polyline(step.coordinates!)
+        let polyline = Polyline(step.shape!.coordinates)
         if let closestCoordinate = polyline.closestCoordinate(to: rawLocation.coordinate) {
             let remainingDistance = polyline.distance(from: closestCoordinate.coordinate)
             let distanceTraveled = step.distance - remainingDistance
@@ -355,9 +356,14 @@ open class RouteController: NSObject {
 
 extension RouteController: Router {
     public func userIsOnRoute(_ location: CLLocation) -> Bool {
+        
+        guard let destination = routeProgress.currentLeg.destination else {
+            return true
+        }
+        
         // If the user has arrived, do not continue monitor reroutes, step progress, etc
         if routeProgress.currentLegProgress.userHasArrivedAtWaypoint &&
-            (delegate?.router(self, shouldPreventReroutesWhenArrivingAt: routeProgress.currentLeg.destination) ??
+            (delegate?.router(self, shouldPreventReroutesWhenArrivingAt: destination) ??
                 DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint) {
             return true
         }

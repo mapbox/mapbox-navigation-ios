@@ -305,7 +305,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         // Jump to the first coordinate on the route if the location source does
         // not yet have a fixed location.
         if router.location == nil,
-            let coordinate = route.coordinates?.first {
+            let coordinate = route.shape?.coordinates.first {
             let location = CLLocation(coordinate: coordinate, altitude: -1, horizontalAccuracy: -1, verticalAccuracy: -1, course: -1, speed: 0, timestamp: Date())
             router.locationManager?(nativeLocationSource, didUpdateLocations: [location])
         }

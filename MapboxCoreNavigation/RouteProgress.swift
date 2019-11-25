@@ -87,7 +87,7 @@ open class RouteProgress: NSObject {
      This property does not include waypoints whose `Waypoint.separatesLegs` property is set to `false`.
      */
     public var remainingWaypoints: [Waypoint] {
-        return route.legs.suffix(from: legIndex).map { $0.destination }
+        return route.legs.suffix(from: legIndex).compactMap { $0.destination }
     }
     
     /**
@@ -141,9 +141,9 @@ open class RouteProgress: NSObject {
      - important: The adjacent steps may be part of legs other than the current leg.
      */
     public var nearbyCoordinates: [CLLocationCoordinate2D] {
-        let priorCoordinates = priorStep?.coordinates?.dropLast() ?? []
-        let currentCoordinates = currentLegProgress.currentStep.coordinates ?? []
-        let upcomingCoordinates = upcomingStep?.coordinates?.dropFirst() ?? []
+        let priorCoordinates = priorStep?.shape?.coordinates.dropLast() ?? []
+        let currentCoordinates = currentLegProgress.currentStep.shape?.coordinates ?? []
+        let upcomingCoordinates = upcomingStep?.shape?.coordinates.dropFirst() ?? []
         return priorCoordinates + currentCoordinates + upcomingCoordinates
     }
     
@@ -184,8 +184,8 @@ open class RouteProgress: NSObject {
 
             if let segmentCongestionLevels = leg.segmentCongestionLevels, let expectedSegmentTravelTimes = leg.expectedSegmentTravelTimes {
                 for step in leg.steps {
-                    guard let coordinates = step.coordinates else { continue }
-                    let stepCoordinateCount = step.maneuverType == .arrive ? Int(step.coordinateCount) : coordinates.dropLast().count
+                    guard let coordinates = step.shape?.coordinates else { continue }
+                    let stepCoordinateCount = step.maneuverType == .arrive ? Int(coordinates.count) : coordinates.dropLast().count
                     let nextManeuverCoordinateIndex = maneuverCoordinateIndex + stepCoordinateCount - 1
 
                     guard nextManeuverCoordinateIndex < segmentCongestionLevels.count else { continue }
@@ -211,7 +211,11 @@ open class RouteProgress: NSObject {
     }
 
     public var averageCongestionLevelRemainingOnLeg: CongestionLevel? {
-        let coordinatesLeftOnStepCount = Int(floor((Double(currentLegProgress.currentStepProgress.step.coordinateCount)) * currentLegProgress.currentStepProgress.fractionTraveled))
+        guard let coordinates = currentLegProgress.currentStepProgress.step.shape?.coordinates else {
+            return .unknown
+        }
+        
+        let coordinatesLeftOnStepCount = Int(floor((Double(coordinates.count)) * currentLegProgress.currentStepProgress.fractionTraveled))
 
         guard coordinatesLeftOnStepCount >= 0 else { return .unknown }
 
@@ -421,9 +425,9 @@ open class RouteLegProgress: NSObject {
      */
     @available(*, deprecated, message: "Use RouteProgress.nearbyCoordinates")
     public var nearbyCoordinates: [CLLocationCoordinate2D] {
-        let priorCoords = priorStep?.coordinates ?? []
-        let upcomingCoords = upcomingStep?.coordinates ?? []
-        let currentCoords = currentStep.coordinates ?? []
+        let priorCoords = priorStep?.shape?.coordinates ?? []
+        let upcomingCoords = upcomingStep?.shape?.coordinates ?? []
+        let currentCoords = currentStep.shape?.coordinates ?? []
         let nearby = priorCoords + currentCoords + upcomingCoords
         assert(!nearby.isEmpty, "Step must have coordinates")
         return nearby
@@ -436,7 +440,7 @@ open class RouteLegProgress: NSObject {
         let remainingSteps = leg.steps.suffix(from: stepIndex)
 
         for (currentStepIndex, step) in remainingSteps.enumerated() {
-            guard let coords = step.coordinates else { continue }
+            guard let coords = step.shape?.coordinates else { continue }
             guard let closestCoordOnStep = Polyline(coords).closestCoordinate(to: coordinate) else { continue }
             let foundIndex = currentStepIndex + stepIndex
 

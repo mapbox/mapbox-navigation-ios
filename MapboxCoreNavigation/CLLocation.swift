@@ -40,7 +40,7 @@ extension CLLocation {
      Returns a Boolean value indicating whether the receiver is within a given distance of a route step.
      */
     func isWithin(_ maximumDistance: CLLocationDistance, of routeStep: RouteStep) -> Bool {
-        guard let closestCoordinate = Polyline(routeStep.coordinates!).closestCoordinate(to: coordinate) else {
+        guard let coords = routeStep.shape?.coordinates, let closestCoordinate = Polyline(coords).closestCoordinate(to: coordinate) else {
             return false
         }
         return closestCoordinate.distance < maximumDistance
@@ -57,7 +57,7 @@ extension CLLocation {
         
         let userCourse = calculatedCourseForLocationOnStep
         let userCoordinate = closest.coordinate
-        guard let firstCoordinate = legProgress.leg.steps.first?.coordinates?.first else { return nil }
+        guard let firstCoordinate = legProgress.leg.steps.first?.shape?.coordinates.first else { return nil }
         
         guard shouldSnap(toRouteWith: calculatedCourseForLocationOnStep, distanceToFirstCoordinateOnLeg: self.coordinate.distance(to: firstCoordinate)) else { return nil }
         
@@ -70,7 +70,7 @@ extension CLLocation {
     func coordinates(for routeProgress: RouteProgress) -> [CLLocationCoordinate2D] {
         let legProgress = routeProgress.currentLegProgress
         let nearbyCoordinates = routeProgress.nearbyCoordinates
-        let stepCoordinates = legProgress.currentStep.coordinates!
+        let stepCoordinates = legProgress.currentStep.shape!.coordinates
         
         // If the upcoming maneuver a sharp turn, only look at the current step for snapping.
         // Otherwise, we may get false positives from nearby step coordinates
