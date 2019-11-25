@@ -1,8 +1,56 @@
+/* Delimiter between lines in an address when displayed inline */
+"ADDRESS_LINE_SEPARATOR" = ", ";
+
+/* Title on arrival action sheet */
+"CARPLAY_ARRIVED" = "Ви прибули";
+
+/* Message on arrival action sheet */
+"CARPLAY_ARRIVED_MESSAGE" = "Що бажаєте зробити далі?";
+
+/* Name of the waypoint associated with the current location */
+"CARPLAY_CURRENT_LOCATION" = "Поточне місце розташування";
+
+/* Title for dismiss button */
+"CARPLAY_DISMISS" = "Відхилити";
+
+/* Title for end navigation button */
+"CARPLAY_END" = "Завершити";
+
+/* Title on the exit button in the arrival form */
+"CARPLAY_EXIT_NAVIGATION" = "Вийти з навігації";
+
+/* Title for feedback template in CarPlay */
+"CARPLAY_FEEDBACK" = "Відгук";
+
+/* Title for start button in CPTripPreviewTextConfiguration */
+"CARPLAY_GO" = "Go";
+
+/* Title for alternative routes in CPTripPreviewTextConfiguration */
+"CARPLAY_MORE_ROUTES" = "Ще маршрути";
+
+/* Title for mute button */
+"CARPLAY_MUTE" = "Mute";
+
+/* Title for overview button in CPTripPreviewTextConfiguration */
+"CARPLAY_OVERVIEW" = "Overview";
+
+/* Title for rating template in CarPlay */
+"CARPLAY_RATE_RIDE" = "Rate your ride";
+
+/* Title on rate button in CarPlay */
+"CARPLAY_RATE_TRIP" = "Оцінити вашу подорож";
+
+/* Message when search returned zero results in CarPlay */
+"CARPLAY_SEARCH_NO_RESULTS" = "Немає результатів";
+
+/* Alert title that shows when feedback has been submitted */
+"CARPLAY_SUBMITTED_FEEDBACK" = "Надіслано";
+
+/* Title for unmute button */
+"CARPLAY_UNMUTE" = "Unmute";
+
 /* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "Закрити";
-
-/* End Navigation Button Text */
-"END_NAVIGATION" = "Завершити навігацію";
 
 /* Title used for arrival */
 "END_OF_ROUTE_ARRIVED" = "Ви прибули";
@@ -25,12 +73,6 @@
 /* Feedback type for Other Map Issue Issue */
 "FEEDBACK_GENERAL_ISSUE" = "Інші\nпомилки мапи";
 
-/* Feedback type for Missing Exit */
-"FEEDBACK_MISSING_EXIT" = "Відсутній\nз'їзд";
-
-/* Feedback type for Missing Road */
-"FEEDBACK_MISSING_ROAD" = "Відсутня\nдорога";
-
 /* Feedback type for a maneuver that is Not Allowed */
 "FEEDBACK_NOT_ALLOWED" = "Заборонено";
 
@@ -45,6 +87,9 @@
 
 /* Title of view controller for sending feedback */
 "FEEDBACK_TITLE" = "Повідомлення про проблему";
+
+/* Label indicating the device volume is too low to hear spoken instructions and needs to be manually increased */
+"INAUDIBLE_INSTRUCTIONS_CTA" = "Adjust Volume to Hear Instructions";
 
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@ та %2$@";
@@ -71,7 +116,7 @@
 "RESUME" = "Продовжити";
 
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
-"USER_IN_SIMULATION_MODE" = "Імітація навігації %@×";
+"USER_IN_SIMULATION_MODE" = "Simulating Navigation at %@×";
 
 /* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
 "WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%1$@, через %2$@";
