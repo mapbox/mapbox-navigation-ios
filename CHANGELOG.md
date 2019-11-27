@@ -5,7 +5,7 @@
 * This library now requires a minimum deployment target of iOS 10.0 or above. iOS 9._x_ is no longer supported. ([#2206](https://github.com/mapbox/mapbox-navigation-ios/pull/2206))
 * Lock screen notifications are presented more reliably and more closely resemble instruction banners. ([#2206](https://github.com/mapbox/mapbox-navigation-ios/pull/2206))
 * Fixed an issue where swiping the banner down after the StepsTableViewController has already displayed could put the UI in an unstable state. ([#2197](https://github.com/mapbox/mapbox-navigation-ios/pull/2197))
-* Fixed an issue where a black background could be rendered in a ManeuverView arrow regardless of the backgroundColor set on the view. ([#2278](https://github.com/mapbox/mapbox-navigation-ios/pull/2278))
+* Fixed an issue where a black background could be rendered in a ManeuverView under the arrow regardless of the backgroundColor set on the view. ([#2278](https://github.com/mapbox/mapbox-navigation-ios/pull/2278))
 
 ## v0.36.0
 
