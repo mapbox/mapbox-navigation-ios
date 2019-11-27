@@ -27,6 +27,7 @@
 * Fixed an issue where manually incrementing `RouteProgress.legIndex` could lead to undefined behavior. ([#2229](https://github.com/mapbox/mapbox-navigation-ios/pull/2229))
 * `DistanceFormatter` now inherits directly from `Formatter` rather than `LengthFormatter`. ([#2206](https://github.com/mapbox/mapbox-navigation-ios/pull/2206))
 * Fixed an issue where `DistanceFormatter.attributedString(for:withDefaultAttributes:)` set `NSAttributedString.Key.quantity` to the original distance value rather than the potentially rounded value represented by the attributed string. ([#2206](https://github.com/mapbox/mapbox-navigation-ios/pull/2206))
+* Fixed an issue where a black background could be rendered in a ManeuverView under the arrow regardless of the backgroundColor set on the view. ([#2279](https://github.com/mapbox/mapbox-navigation-ios/pull/2279))
 
 ## v0.37.0
 
