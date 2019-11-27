@@ -7,6 +7,21 @@ import Turf
 @IBDesignable
 @objc(MBManeuverView)
 open class ManeuverView: UIView {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        commonInit()
+    }
+
+    @objc public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        commonInit()
+    }
+
+    func commonInit() {
+        // Explicitly mark the view as non-opaque.
+        // This is needed to obtain correct compositing since we implement our own draw function that includes transparency.
+        isOpaque = false
+    }
 
     @objc public dynamic var primaryColor: UIColor = .defaultTurnArrowPrimary {
         didSet {
