@@ -146,7 +146,13 @@ public class ExitView: StylableView {
      */
     static func criticalHash(side: ExitSide, dataSource: DataSource) -> String {
         let proxy = ExitView.appearance()
-        let criticalProperties: [AnyHashable?] = [side, dataSource.font.pointSize, proxy.backgroundColor, proxy.foregroundColor, proxy.borderWidth, proxy.cornerRadius]
+        var backgroundColor = proxy.backgroundColor
+        var foregroundColor = proxy.foregroundColor
+        if #available(iOS 13.0, *), let currentTraitCollection = UIApplication.shared.keyWindow?.traitCollection {
+            backgroundColor = proxy.backgroundColor?.resolvedColor(with: currentTraitCollection)
+            foregroundColor = proxy.foregroundColor?.resolvedColor(with: currentTraitCollection)
+        }
+        let criticalProperties: [AnyHashable?] = [side, dataSource.font.pointSize, backgroundColor, foregroundColor, proxy.borderWidth, proxy.cornerRadius]
         return String(describing: criticalProperties.reduce(0, { $0 ^ ($1?.hashValue ?? 0)}))
     }
 }
