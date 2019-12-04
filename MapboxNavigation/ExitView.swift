@@ -153,8 +153,10 @@ public class ExitView: StylableView {
             let bgColor = backgroundColor, bgColor.responds(to: resolvedColorSelector),
             let fgColor = foregroundColor, fgColor.responds(to: resolvedColorSelector),
             let currentTraitCollection = UIApplication.shared.keyWindow?.traitCollection {
-            backgroundColor = bgColor.resolvedColor(with: currentTraitCollection)
-            foregroundColor = fgColor.resolvedColor(with: currentTraitCollection)
+            if let backgroundColorInstance = bgColor.perform(resolvedColorSelector, with: currentTraitCollection), let foregroundColorInstance = fgColor.perform(resolvedColorSelector, with: currentTraitCollection) {
+                backgroundColor = backgroundColorInstance.takeRetainedValue() as? UIColor
+                foregroundColor = foregroundColorInstance.takeRetainedValue() as? UIColor
+            }
         }
         let criticalProperties: [AnyHashable?] = [side, dataSource.font.pointSize, backgroundColor, foregroundColor, proxy.borderWidth, proxy.cornerRadius]
         return String(describing: criticalProperties.reduce(0, { $0 ^ ($1?.hashValue ?? 0)}))
