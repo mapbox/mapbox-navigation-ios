@@ -72,7 +72,7 @@ jobs:
         default: "12.2"
       xcode:
         type: string
-        default: "10.2.0"
+        default: "11.0.0"
       lint:
         type: boolean
         default: false
@@ -105,7 +105,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "10.1.0"
+        default: "11.0.0"
       device:
         type: string
         default: "iPhone 6 Plus"
@@ -157,9 +157,9 @@ jobs:
           steps:
             - run: bash <(curl -s https://codecov.io/bash)
 
-  xcode-10-examples:
+  xcode-11-examples:
     macos:
-      xcode: "10.2.0"
+      xcode: "11.0.0"
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
@@ -179,24 +179,24 @@ workflows:
           iOS: "13.1"
           device: "iPhone 8 Plus"
       - build-job:
-          name: "Xcode_10.3_iOS_12.1"
-          xcode: "10.3.0"
+          name: "Xcode_11_iOS_12.1"
+          xcode: "11.0.0"
           iOS: "12.1"
           codecoverage: true
       - build-job:
-          name: "Xcode_10.2_iOS_10.3.1"
-          xcode: "10.2.0"
+          name: "Xcode_11_iOS_10.3.1"
+          xcode: "11.0.0"
           iOS: "10.3.1"
           test: false
       - pod-job:
-          name: "Xcode_10.2_iOS_12.2_CP_install"
+          name: "Xcode_11_iOS_12.2_CP_install"
           update: false
-          xcode: "10.2.0"
+          xcode: "11.0.0"
           iOS: "12.2"
       - pod-job:
-          name: "Xcode_10.2_iOS_12.2_CP_update"
+          name: "Xcode_11_iOS_12.2_CP_update"
           update: true
-          xcode: "10.2.0"
+          xcode: "11.0.0"
           iOS: "12.2"
           lint: true
-      - xcode-10-examples
+      - xcode-11-examples
