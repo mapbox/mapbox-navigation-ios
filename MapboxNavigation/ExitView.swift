@@ -150,9 +150,10 @@ public class ExitView: StylableView {
         let proxy = ExitView.appearance()
         var backgroundColor = proxy.backgroundColor
         var foregroundColor = proxy.foregroundColor
+        let resolvedColorSelector = Selector(("resolvedColorWithTraitCollection:" as NSString) as String)
         if #available(iOS 13.0, *),
-            let bgColor = backgroundColor, bgColor.responds(to: #selector(UIColor.resolvedColor(with:))),
-            let fgColor = foregroundColor, fgColor.responds(to: #selector(UIColor.resolvedColor(with:))),
+            let bgColor = backgroundColor, bgColor.responds(to: resolvedColorSelector),
+            let fgColor = foregroundColor, fgColor.responds(to: resolvedColorSelector),
             let currentTraitCollection = UIApplication.shared.keyWindow?.traitCollection {
             backgroundColor = bgColor.resolvedColor(with: currentTraitCollection)
             foregroundColor = fgColor.resolvedColor(with: currentTraitCollection)
