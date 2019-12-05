@@ -4,6 +4,7 @@
 
 * Fixed a crash on launch if this SDK is installed using Carthage. ([#2317](https://github.com/mapbox/mapbox-navigation-ios/pull/2317))
 * Fixed an issue where a black background could be rendered in a ManeuverView under the arrow regardless of the backgroundColor set on the view. ([#2279](https://github.com/mapbox/mapbox-navigation-ios/pull/2279))
+* Fixed an issue where the wrong style was applied to exit numbers in the top banner and for subsequent maneuver banners in CarPlay, resulting in poor contrast. ([#2280](https://github.com/mapbox/mapbox-navigation-ios/pull/2280))
 
 ## v0.38.2
 

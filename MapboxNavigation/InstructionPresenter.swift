@@ -188,6 +188,7 @@ class InstructionPresenter {
             attachment.image = image
         } else {
             let view = GenericRouteShield(pointSize: dataSource.font.pointSize, text: text)
+            view.foregroundColor = dataSource.textColor
             guard let image = takeSnapshot(on: view) else { return nil }
             imageRepository.storeImage(image, forKey: key, toDisk: false)
             attachment.image = image
@@ -210,6 +211,7 @@ class InstructionPresenter {
             attachment.image = image
         } else {
             let view = ExitView(pointSize: dataSource.font.pointSize, side: side, text: text)
+            view.foregroundColor = dataSource.textColor
             guard let image = takeSnapshot(on: view) else { return nil }
             imageRepository.storeImage(image, forKey: key, toDisk: false)
             attachment.image = image
