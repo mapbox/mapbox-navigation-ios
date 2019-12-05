@@ -11,7 +11,7 @@
 * Renamed `NavigationMapView.showWaypoints(_:legIndex:)` to `NavigationMapView.showWaypoints(on:legIndex:)`. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
 * Renamed `MapboxVoiceController.play(_:)` to `MapboxVoiceController.play(instruction:data:)`. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
 * Fixed an issue where a black background could be rendered in a `ManeuverView` under the arrow regardless of the `backgroundColor` set on the view. ([#2279](https://github.com/mapbox/mapbox-navigation-ios/pull/2279))
-* Fixed an issue where the foregroundColor property of the `ExitView` and `GenericShieldView` were not being properly set to match the text color of the `InstructionPresenter` datasource. ([#2161](https://github.com/mapbox/mapbox-navigation-ios/issues/2161))
+* Fixed an issue where the wrong style was applied to exit numbers in the top banner and for subsequent maneuver banners in CarPlay, resulting in poor contrast. ([#2161](https://github.com/mapbox/mapbox-navigation-ios/issues/2161))
 
 ### Error handling
 * The `MapboxVoiceController` and `RouteVoiceController` now emit `SpeechError`s instead of an `NSError` object. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
