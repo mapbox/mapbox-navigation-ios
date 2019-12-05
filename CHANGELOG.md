@@ -7,6 +7,7 @@
 * Fixed an issue where swiping the banner down after the StepsTableViewController has already displayed could put the UI in an unstable state. ([#2197](https://github.com/mapbox/mapbox-navigation-ios/pull/2197))
 * Fixed an issue where a black background could be rendered in a `ManeuverView` under the arrow regardless of the `backgroundColor` set on the view. ([#2279](https://github.com/mapbox/mapbox-navigation-ios/pull/2279))
 * Fixed an issue where the foregroundColor property of the `ExitView` and `GenericShieldView` were not being properly set to match the text color of the `InstructionPresenter` datasource. ([#2161](https://github.com/mapbox/mapbox-navigation-ios/issues/2161))
+* Fixed an issue where the wrong style was applied to exit numbers in the top banner and for subsequent maneuver banners in CarPlay, resulting in poor contrast. ([#2161](https://github.com/mapbox/mapbox-navigation-ios/issues/2161))
 
 ## v0.36.0
 
