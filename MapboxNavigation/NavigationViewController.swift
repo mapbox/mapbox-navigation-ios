@@ -329,7 +329,20 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
             content.subtitle = secondaryText
         }
         
-        if let image = instruction.primaryInstruction.maneuverImage(side: instruction.drivingSide, color: .black, size: CGSize(width: 72, height: 72)) {
+        let imageColor: UIColor
+        if #available(iOS 12.0, *) {
+            switch traitCollection.userInterfaceStyle {
+            case .dark:
+                imageColor = .white
+            case .light, .unspecified:
+                imageColor = .black
+            @unknown default:
+                imageColor = .black
+            }
+        } else {
+            imageColor = .black
+        }
+        if let image = instruction.primaryInstruction.maneuverImage(side: instruction.drivingSide, color: imageColor, size: CGSize(width: 72, height: 72)) {
             // Bake in any transform required for left turn arrows etc.
             let imageData = UIGraphicsImageRenderer(size: image.size).pngData { (context) in
                 image.draw(at: .zero)
