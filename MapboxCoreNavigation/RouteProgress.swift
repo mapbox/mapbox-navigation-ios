@@ -440,8 +440,8 @@ open class RouteLegProgress: NSObject {
         let remainingSteps = leg.steps.suffix(from: stepIndex)
 
         for (currentStepIndex, step) in remainingSteps.enumerated() {
-            guard let coords = step.shape?.coordinates else { continue }
-            guard let closestCoordOnStep = Polyline(coords).closestCoordinate(to: coordinate) else { continue }
+            guard let coords = step.shape else { continue }
+            guard let closestCoordOnStep = shape.closestCoordinate(to: coordinate) else { continue }
             let foundIndex = currentStepIndex + stepIndex
 
             // First time around, currentClosest will be `nil`.

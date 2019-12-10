@@ -761,7 +761,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         //filter closest coordinates by which ones are under threshold.
         let candidates = closest.filter {
-            let closestCoordinate = Polyline($0.coordinates!).closestCoordinate(to: tapCoordinate)!.coordinate
+            let closestCoordinate = $0.shape!.closestCoordinate(to: tapCoordinate)!.coordinate
             let closestPoint = self.convert(closestCoordinate, toPointTo: self)
             
             return closestPoint.distance(to: point) < tapGestureDistanceThreshold
@@ -776,7 +776,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         var altRoutes: [MGLPolylineFeature] = []
         
         for route in routes.suffix(from: 1) {
-            let polyline = MGLPolylineFeature(coordinates: route.coordinates!, count: UInt(route.coordinates!.count))
+            let polyline = MGLPolylineFeature(coordinates: route.shape!.coordinates, count: UInt(route.shape!.coordinates.count))
             polyline.attributes["isAlternateRoute"] = true
             altRoutes.append(polyline)
         }
@@ -1010,7 +1010,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             for (stepIndex, step) in leg.steps.enumerated() {
                 for instruction in step.instructionsSpokenAlongStep! {
                     let feature = MGLPointFeature()
-                    feature.coordinate = Polyline(route.legs[legIndex].steps[stepIndex].coordinates!.reversed()).coordinateFromStart(distance: instruction.distanceAlongStep)!
+                    feature.coordinate = Polyline(route.legs[legIndex].steps[stepIndex].shape!.coordinates.reversed()).coordinateFromStart(distance: instruction.distanceAlongStep)!
                     feature.attributes = [ "instruction": instruction.text ]
                     features.append(feature)
                 }

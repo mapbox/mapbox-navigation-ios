@@ -609,7 +609,7 @@ extension RouteMapViewController: NavigationViewDelegate {
     }
 
     func labelCurrentRoadFeature(at location: CLLocation) {
-        guard let style = mapView.style, let stepCoordinates = router.routeProgress.currentLegProgress.currentStep.coordinates else {
+        guard let style = mapView.style, let stepShape = router.routeProgress.currentLegProgress.currentStep.shape else {
                 return
         }
 
@@ -655,7 +655,7 @@ extension RouteMapViewController: NavigationViewDelegate {
             for line in allLines {
                 let featureCoordinates =  Array(UnsafeBufferPointer(start: line.coordinates, count: Int(line.pointCount)))
                 let featurePolyline = Polyline(featureCoordinates)
-                let slicedLine = Polyline(stepCoordinates).sliced(from: closestCoordinate)
+                let slicedLine = stepShape.sliced(from: closestCoordinate)
 
                 let lookAheadDistance: CLLocationDistance = 10
                 guard let pointAheadFeature = featurePolyline.sliced(from: closestCoordinate).coordinateFromStart(distance: lookAheadDistance) else { continue }

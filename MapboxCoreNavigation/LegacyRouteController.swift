@@ -133,11 +133,11 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     }
 
     func updateDistanceToManeuver() {
-        guard let coordinates = routeProgress.currentLegProgress.currentStep.shape?.coordinates, let coordinate = rawLocation?.coordinate else {
+        guard let shape = routeProgress.currentLegProgress.currentStep.shape, let coordinate = rawLocation?.coordinate else {
             userSnapToStepDistanceFromManeuver = nil
             return
         }
-        userSnapToStepDistanceFromManeuver = Polyline(coordinates).distance(from: coordinate)
+        userSnapToStepDistanceFromManeuver = shape.distance(from: coordinate)
     }
 
     public var reroutingTolerance: CLLocationDistance {
@@ -284,7 +284,10 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         let step = stepProgress.step
         
         //Increment the progress model
-        let polyline = Polyline(step.shape!.coordinates)
+        guard let polyline = step.shape else {
+            return
+        }
+        
         if let closestCoordinate = polyline.closestCoordinate(to: rawLocation.coordinate) {
             let remainingDistance = polyline.distance(from: closestCoordinate.coordinate)
             let distanceTraveled = step.distance - remainingDistance
@@ -413,8 +416,12 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
 
         routeProgress.currentLegProgress.currentStepProgress.intersectionsIncludingUpcomingManeuverIntersection = intersections
 
+        guard let shape = currentStepProgress.step.shape else {
+            return
+        }
+        
         if let upcomingIntersection = routeProgress.currentLegProgress.currentStepProgress.upcomingIntersection {
-            routeProgress.currentLegProgress.currentStepProgress.userDistanceToUpcomingIntersection = Polyline(currentStepProgress.step.shape!.coordinates).distance(from: location.coordinate, to: upcomingIntersection.location)
+            routeProgress.currentLegProgress.currentStepProgress.userDistanceToUpcomingIntersection = shape.distance(from: location.coordinate, to: upcomingIntersection.location)
         }
         
         if routeProgress.currentLegProgress.currentStepProgress.intersectionDistances == nil {
@@ -514,9 +521,8 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     }
 
     func updateIntersectionDistances() {
-        if let coordinates = routeProgress.currentLegProgress.currentStep.shape?.coordinates, let intersections = routeProgress.currentLegProgress.currentStep.intersections {
-            let polyline = Polyline(coordinates)
-            let distances: [CLLocationDistance] = intersections.map { polyline.distance(from: coordinates.first, to: $0.location) }
+        if let shape = routeProgress.currentLegProgress.currentStep.shape, let intersections = routeProgress.currentLegProgress.currentStep.intersections {
+            let distances: [CLLocationDistance] = intersections.map { shape.distance(from: shape.coordinates.first, to: $0.location) }
             routeProgress.currentLegProgress.currentStepProgress.intersectionDistances = distances
         }
     }
