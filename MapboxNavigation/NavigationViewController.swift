@@ -605,7 +605,7 @@ extension NavigationViewController: StyleManagerDelegate {
     public func location(for styleManager: StyleManager) -> CLLocation? {
         if let location = navigationService.router.location {
             return location
-        } else if let firstCoord = route.coordinates?.first {
+        } else if let firstCoord = route.shape?.coordinates.first {
             return CLLocation(latitude: firstCoord.latitude, longitude: firstCoord.longitude)
         } else {
             return nil

@@ -10,6 +10,17 @@ extension RouteOptions {
         }
     }
     
+    convenience init(options: RouteOptions) {
+        self.init(waypoints: options.waypoints, profileIdentifier: options.profileIdentifier)
+        allowsUTurnAtWaypoint = options.allowsUTurnAtWaypoint
+        roadClassesToAvoid = options.roadClassesToAvoid
+        alleyPriority = options.alleyPriority
+        walkwayPriority = options.walkwayPriority
+        speed = options.speed
+        includesAlternativeRoutes = options.includesAlternativeRoutes
+        includesExitRoundaboutManeuver = options.includesExitRoundaboutManeuver
+    }
+    
     /**
      Returns a copy of RouteOptions without the specified waypoint.
      
@@ -18,15 +29,12 @@ extension RouteOptions {
      */
     public func without(waypoint: Waypoint) -> RouteOptions {
         let waypointsWithoutSpecified = waypoints.filter { $0 != waypoint }
-        let copy = self.copy() as! RouteOptions
+        let copy = RouteOptions(options: self)
         copy.waypoints = waypointsWithoutSpecified
         
         return copy
     }
     
-//    init(options: RouteOptions) {
-//        
-//    }
 
     
     /**

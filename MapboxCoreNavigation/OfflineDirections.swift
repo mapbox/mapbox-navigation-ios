@@ -15,6 +15,12 @@ public enum OfflineRoutingError: DirectionsError, LocalizedError {
         return "Unimplemented"
     }
     
+    /**
+     No route could be found between the specified locations.
+     
+     Make sure it is possible to travel between the locations with the mode of transportation implied by the profileIdentifier option. For example, it is impossible to travel by car from one continent to another without either a land bridge or a ferry connection.
+     */
+    case unableToRoute
     case unexpectedRouteResult(String)
     case corruptRouteData(String)
     case responseError(String)
@@ -22,6 +28,8 @@ public enum OfflineRoutingError: DirectionsError, LocalizedError {
     
     public var localizedDescription: String {
         switch self {
+        case .unableToRoute:
+            return "Unable to route between speficied waypoints."
         case .corruptRouteData(let value):
             return value
         case .unexpectedRouteResult(let value):
@@ -170,29 +178,24 @@ public class NavigationDirections: Directions {
                 return complete(nil, nil, error)
             }
             
-            guard let data = result.json.data(using: .utf8) else {
+            guard let data = result.json .data(using: .utf8) else {
                 let message = NSLocalizedString("OFFLINE_CORRUPT_DATA", bundle: .mapboxCoreNavigation, value: "Found an invalid route while offline.", comment: "Error message when an offline route request returns a response that can’t be deserialized")
                 let error = OfflineRoutingError.corruptRouteData(message)
                 return complete(nil, nil, error)
             }
-            
-            do {
-                let json = try JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
-                if let errorValue = json["error"] as? String {
-                    DispatchQueue.main.async {
-                        let error = OfflineRoutingError.responseError(errorValue)
-                        return complete(nil, nil, error)
+            DispatchQueue.main.async {
+                
+                do {
+                    let response = try JSONDecoder().decode(RouteResponse.self, from: data)
+                    guard let routes = response.routes else {
+                        return complete(response.waypoints, nil, .unableToRoute)
                     }
-                } else {
-                    DispatchQueue.main.async {
-                        let response = options.response(from: json)
-                        return complete(response.0, response.1, nil)
-                    }
+                    return complete(response.waypoints, routes, nil)
                 }
-            } catch {
-                DispatchQueue.main.async {
+                catch {
                     return complete(nil, nil, .unknown(underlying: error))
                 }
+                
             }
         }
     }

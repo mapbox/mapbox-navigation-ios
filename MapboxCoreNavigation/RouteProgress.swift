@@ -259,7 +259,7 @@ open class RouteProgress: NSObject {
             user.headingAccuracy = RouteProgress.reroutingAccuracy
         }
         let newWaypoints = [user] + remainingWaypointsForCalculatingRoute()
-        let newOptions = oldOptions.copy() as! RouteOptions
+        let newOptions = RouteOptions(options: oldOptions)
         newOptions.waypoints = newWaypoints
 
         return newOptions
@@ -440,7 +440,7 @@ open class RouteLegProgress: NSObject {
         let remainingSteps = leg.steps.suffix(from: stepIndex)
 
         for (currentStepIndex, step) in remainingSteps.enumerated() {
-            guard let coords = step.shape else { continue }
+            guard let shape = step.shape else { continue }
             guard let closestCoordOnStep = shape.closestCoordinate(to: coordinate) else { continue }
             let foundIndex = currentStepIndex + stepIndex
 

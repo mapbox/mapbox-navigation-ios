@@ -35,7 +35,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
     fileprivate var timer: DispatchTimer!
     
     fileprivate var locations: [SimulatedLocation]!
-    fileprivate var routeShape: Polyline
+    fileprivate var routeShape: Polyline!
     
     /**
      Specify the multiplier to use when calculating speed based on the RouteLeg’s `expectedSegmentTravelTimes`.
@@ -145,9 +145,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
     }
     
     internal func tick() {
-        let polyline = routeShape
-        
-        guard let newCoordinate = polyline.coordinateFromStart(distance: currentDistance) else {
+        guard let polyline = routeShape, let newCoordinate = polyline.coordinateFromStart(distance: currentDistance) else {
             return
         }
         
