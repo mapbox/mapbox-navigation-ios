@@ -255,8 +255,8 @@ extension StepsViewController: UITableViewDataSource {
         }
 
         let leg = routeProgress.route.legs[section]
-        let sourceName = leg.source.name
-        let destinationName = leg.destination.name
+        let sourceName = leg.source?.name
+        let destinationName = leg.destination?.name
         let majorWays = leg.name.components(separatedBy: ", ")
 
         if let destinationName = destinationName?.nonEmptyString, majorWays.count > 1 {
