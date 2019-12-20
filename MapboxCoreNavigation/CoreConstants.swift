@@ -156,14 +156,14 @@ public extension Notification.Name {
      
      The user info dictionary contains the keys `RouteControllerNotificationUserInfoKey.routeProgressKey` and `RouteControllerNotificationUserInfoKey.visualInstructionKey`.
      */
-    static let routeControllerDidPassVisualInstructionPoint: Notification.Name = .init(rawValue: "MBRouteControllerDidPassVisualInstructionPoint")
+    static let routeControllerDidPassVisualInstructionPoint: Notification.Name = .init(rawValue: "RouteControllerDidPassVisualInstructionPoint")
     
     /**
      Posted when something changes in the shared `NavigationSettings` object.
      
      The user info dictionary indicates which keys and values changed.
      */
-    static let navigationSettingsDidChange: Notification.Name = .init(rawValue: "MBNavigationSettingsDidChange")
+    static let navigationSettingsDidChange: Notification.Name = .init(rawValue: "NavigationSettingsDidChange")
 }
 
 /**
