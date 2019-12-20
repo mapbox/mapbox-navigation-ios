@@ -43,16 +43,27 @@ class InstructionPresenter {
         
         guard !stringFits else { return attributedPairs.attributedStrings }
         
-        let indexedComponents: [IndexedVisualInstruction.Component] = attributedPairs.components.enumerated().map { IndexedVisualInstructionComponent(component: $1, index: $0) }
-        let filtered = indexedComponents.filter { $0.component.abbreviation != nil }
-        let sorted = filtered.sorted { $0.component.abbreviationPriority < $1.component.abbreviationPriority }
-        for component in sorted {
-            let isFirst = component.index == 0
-            let joinChar = isFirst ? "" : " "
-            guard component.component.type == .text else { continue }
-            guard let abbreviation = component.component.abbreviation else { continue }
+        typealias IndexedTextRepresentation = (Array<VisualInstruction.Component>.Index, VisualInstruction.Component.TextRepresentation)
+        let textRepresentations: [IndexedTextRepresentation]  = attributedPairs.components.enumerated().compactMap { (idx, elem) in
+            if case let VisualInstruction.Component.text(representation) = elem {
+                return (idx, representation)
+            }
+            return nil
+        }
+        
+        let sorted = textRepresentations.sorted { first, second in
+            let firstPriority = first.1.abbreviationPriority ?? Int.max
+            let secondPriority = second.1.abbreviationPriority ?? Int.max
             
-            attributedPairs.attributedStrings[component.index] = NSAttributedString(string: joinChar + abbreviation, attributes: attributes(for: source))
+            return firstPriority < secondPriority
+        }
+
+        for (index, representation) in sorted {
+            let isFirst = index == 0
+            let joinChar = isFirst ? "" : " "
+            guard let abbreviation = representation.abbreviation else { continue }
+            
+            attributedPairs.attributedStrings[index] = NSAttributedString(string: joinChar + abbreviation, attributes: attributes(for: source))
             let newWidth: CGFloat = attributedPairs.attributedStrings.map { $0.size() }.reduce(.zero, +).width
             
             if newWidth <= availableBounds.width {
@@ -87,6 +98,7 @@ class InstructionPresenter {
                 guard let key = component?.cacheKey else { return false }
                 return imageRepository.cachedImageForKey(key) != nil
             }
+            
             let componentBefore = components.component(before: component)
             let componentAfter  = components.component(after: component)
             
@@ -119,7 +131,8 @@ class InstructionPresenter {
                 let componentString = NSAttributedString(string: textRepresentation.text, attributes: attributes(for: dataSource))
                 build(component, [joinString, componentString])
             
-            }
+            default:
+            continue
         }
         
         assert(processedComponents.count == strings.count, "The number of processed components must match the number of attributed strings")
@@ -294,13 +307,12 @@ extension CGSize {
     }
 }
 
-fileprivate struct IndexedVisualInstructionComponent {
-    let component: Array<VisualInstructionComponent>.Element
-    let index: Array<VisualInstructionComponent>.Index
-}
+typealias IndexedVisualInstructionComponent = (Array<VisualInstruction.Component>.Element,
+                                        Array<VisualInstruction.Component>.Index)
 
-extension Array where Element == VisualInstructionComponent {
-    fileprivate func component(before component: VisualInstructionComponent) -> VisualInstructionComponent? {
+
+extension Array where Element == VisualInstruction.Component {
+    fileprivate func component(before component: VisualInstruction.Component) -> VisualInstruction.Component? {
         guard let index = self.firstIndex(of: component) else {
             return nil
         }
@@ -310,7 +322,7 @@ extension Array where Element == VisualInstructionComponent {
         return nil
     }
     
-    fileprivate func component(after component: VisualInstructionComponent) -> VisualInstructionComponent? {
+    fileprivate func component(after component: VisualInstruction.Component) -> VisualInstruction.Component? {
         guard let index = self.firstIndex(of: component) else {
             return nil
         }

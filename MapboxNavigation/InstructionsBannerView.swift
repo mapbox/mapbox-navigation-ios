@@ -191,7 +191,8 @@ open class BaseInstructionsBannerView: UIControl {
     override open func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         maneuverView.isStart = true
-        let component = VisualInstructionComponent(type: .text, text: "Primary text label", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)
+        let representation = VisualInstruction.Component.TextRepresentation(text: "Primary text label", abbreviation: nil, abbreviationPriority: nil)
+        let component = VisualInstruction.Component.text(text: representation)
         let instruction = VisualInstruction(text: nil, maneuverType: .none, maneuverDirection: .none, components: [component])
         primaryLabel.instruction = instruction
         
