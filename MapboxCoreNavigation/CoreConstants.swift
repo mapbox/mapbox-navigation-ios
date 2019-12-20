@@ -119,47 +119,47 @@ public extension Notification.Name {
     /**
      Posted when `RouteController` receives a user location update representing movement along the expected route.
      
-     The user info dictionary contains the keys `MBRouteControllerRouteProgressKey` and `MBRouteControllerLocationKey`.
+     The user info dictionary contains the keys `RouteControllerNotificationUserInfoKey.routeProgressKey` and `RouteControllerNotificationUserInfoKey.locationKey`.
      */
     static let routeControllerProgressDidChange: Notification.Name = .init(rawValue: "RouteControllerProgressDidChange")
     
     /**
      Posted after the user diverges from the expected route, just before `RouteController` attempts to calculate a new route.
      
-     The user info dictionary contains the key `MBRouteControllerLocationKey`.
+     The user info dictionary contains the key `RouteControllerNotificationUserInfoKey.locationKey`.
      */
     static let routeControllerWillReroute: Notification.Name = .init(rawValue: "RouteControllerWillReroute")
     
     /**
      Posted when `RouteController` obtains a new route in response to the user diverging from a previous route.
      
-     The user info dictionary contains the keys `MBRouteControllerLocationKey` and `MBRouteControllerIsProactiveKey`.
+     The user info dictionary contains the keys `RouteControllerNotificationUserInfoKey.locationKey` and `RouteControllerNotificationUserInfoKey.isProactiveKey`.
      */
     static let routeControllerDidReroute: Notification.Name = .init(rawValue: "RouteControllerDidReroute")
     
     /**
      Posted when `RouteController` fails to reroute the user after the user diverges from the expected route.
      
-     The user info dictionary contains the key `MBRouteControllerRoutingErrorKey`.
+     The user info dictionary contains the key `RouteControllerNotificationUserInfoKey.routingErrorKey`.
      */
     static let routeControllerDidFailToReroute: Notification.Name = .init(rawValue: "RouteControllerDidFailToReroute")
     
     /**
      Posted when `RouteController` detects that the user has passed an ideal point for saying an instruction aloud.
      
-     The user info dictionary contains the key `MBRouteControllerRouteProgressKey`.
+     The user info dictionary contains the key `RouteControllerNotificationUserInfoKey.routeProgressKey`.
      */
     static let routeControllerDidPassSpokenInstructionPoint: Notification.Name =  .init(rawValue: "RouteControllerDidPassSpokenInstructionPoint")
     
     /**
      Posted when `RouteController` detects that the user has passed an ideal point for display an instruction visually.
      
-     The user info dictionary contains the key `MBRouteControllerRouteProgressKey`.
+     The user info dictionary contains the key `RouteControllerNotificationUserInfoKey.routeProgressKey`.
      */
     static let routeControllerDidPassVisualInstructionPoint: Notification.Name = .init(rawValue: "MBRouteControllerDidPassVisualInstructionPoint")
     
     /**
-     Posted when something changes in the shared `MBNavigationSettings` object.
+     Posted when something changes in the shared `NavigationSettings` object.
      
      The user info dictionary indicates which keys and values changed.
      
@@ -201,12 +201,12 @@ public struct RouteControllerNotificationUserInfoKey: Hashable, Equatable, RawRe
     public static let routingErrorKey: RouteControllerNotificationUserInfoKey = .init(rawValue: "error")
     
     /**
-     A key in the user info dictionary of an `routeControllerDidPassVisualInstructionPoint`. The corresponding value is an `MBVisualInstruction` object representing the current visual instruction.
+     A key in the user info dictionary of an `routeControllerDidPassVisualInstructionPoint`. The corresponding value is an `VisualInstruction` object representing the current visual instruction.
      */
     public static let visualInstructionKey: RouteControllerNotificationUserInfoKey = .init(rawValue: "visualInstruction")
     
     /**
-     A key in the user info dictionary of a `routeControllerDidPassSpokenInstructionPoint` notification. The corresponding value is an `MBSpokenInstruction` object representing the current visual instruction.
+     A key in the user info dictionary of a `routeControllerDidPassSpokenInstructionPoint` notification. The corresponding value is an `SpokenInstruction` object representing the current visual instruction.
      */
     public static let spokenInstructionKey: RouteControllerNotificationUserInfoKey = .init(rawValue: "spokenInstruction")
     
