@@ -6,7 +6,7 @@ import CoreLocation
 class LocationTests: XCTestCase {
     var setup: (progress: RouteProgress, firstLocation: CLLocation) {
         let progress = RouteProgress(route: route)
-        let firstCoord = progress.nearbyCoordinates.first!
+        let firstCoord = progress.nearbyShape.coordinates.first!
         let firstLocation = CLLocation(latitude: firstCoord.latitude, longitude: firstCoord.longitude)
         
         return (progress, firstLocation)
@@ -54,7 +54,7 @@ class LocationTests: XCTestCase {
         let progress = setup.progress
         let firstLocation = setup.firstLocation
         
-        let calculatedCourse = firstLocation.interpolatedCourse(along: progress.currentLegProgress.currentStepProgress.step.coordinates!)!
+        let calculatedCourse = firstLocation.interpolatedCourse(along: progress.currentLegProgress.currentStepProgress.step.shape!)!
         let initialHeadingOnFirstStep = progress.currentLegProgress.currentStepProgress.step.finalHeading!
         XCTAssertTrue(calculatedCourse - initialHeadingOnFirstStep < 1, "At the beginning of the route, the final heading of the departure step should be very similar to the caclulated course of the first location update.")
     }

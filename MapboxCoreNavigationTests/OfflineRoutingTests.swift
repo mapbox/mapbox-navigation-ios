@@ -38,7 +38,7 @@ class OfflineRoutingTests: XCTestCase {
         wait(for: [calculateRouteExpectation], timeout: 2)
 
         XCTAssertNotNil(route)
-        XCTAssertEqual(route!.coordinates!.count, 47)
+        XCTAssertEqual(route!.shape!.coordinates.count, 47)
     }
     
     func testOfflineDirectionsError() {

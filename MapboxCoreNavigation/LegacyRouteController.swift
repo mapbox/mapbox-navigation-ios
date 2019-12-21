@@ -158,8 +158,8 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
      Monitors the user's course to see if it is consistantly moving away from what we expect the course to be at a given point.
      */
     func userCourseIsOnRoute(_ location: CLLocation) -> Bool {
-        let nearbyCoordinates = routeProgress.nearbyCoordinates
-        guard let calculatedCourseForLocationOnStep = location.interpolatedCourse(along: nearbyCoordinates) else { return true }
+        let nearbyPolyline = routeProgress.nearbyShape
+        guard let calculatedCourseForLocationOnStep = location.interpolatedCourse(along: nearbyPolyline) else { return true }
         
         let maxUpdatesAwayFromRouteGivenAccuracy = Int(location.horizontalAccuracy / Double(RouteControllerIncorrectCourseMultiplier))
         

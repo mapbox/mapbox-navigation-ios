@@ -140,11 +140,14 @@ open class RouteProgress: NSObject {
      
      - important: The adjacent steps may be part of legs other than the current leg.
      */
-    public var nearbyCoordinates: [CLLocationCoordinate2D] {
+    public var nearbyShape: LineString {
         let priorCoordinates = priorStep?.shape?.coordinates.dropLast() ?? []
-        let currentCoordinates = currentLegProgress.currentStep.shape?.coordinates ?? []
+        let currentShape = currentLegProgress.currentStep.shape
         let upcomingCoordinates = upcomingStep?.shape?.coordinates.dropFirst() ?? []
-        return priorCoordinates + currentCoordinates + upcomingCoordinates
+        if let currentShape = currentShape, priorCoordinates.isEmpty && upcomingCoordinates.isEmpty {
+            return currentShape
+        }
+        return LineString(priorCoordinates + (currentShape?.coordinates ?? []) + upcomingCoordinates)
     }
     
     /**
@@ -418,19 +421,6 @@ open class RouteLegProgress: NSObject {
         self.leg = leg
         self.stepIndex = stepIndex
         currentStepProgress = RouteStepProgress(step: leg.steps[stepIndex], spokenInstructionIndex: spokenInstructionIndex)
-    }
-
-    /**
-     Returns an array of `CLLocationCoordinate2D` of the prior, current and upcoming step geometry.
-     */
-    @available(*, deprecated, message: "Use RouteProgress.nearbyCoordinates")
-    public var nearbyCoordinates: [CLLocationCoordinate2D] {
-        let priorCoords = priorStep?.shape?.coordinates ?? []
-        let upcomingCoords = upcomingStep?.shape?.coordinates ?? []
-        let currentCoords = currentStep.shape?.coordinates ?? []
-        let nearby = priorCoords + currentCoords + upcomingCoords
-        assert(!nearby.isEmpty, "Step must have coordinates")
-        return nearby
     }
 
     typealias StepIndexDistance = (index: Int, distance: CLLocationDistance)

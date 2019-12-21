@@ -21,14 +21,14 @@ class NavigationServiceTests: XCTestCase {
         
         let legProgress: RouteLegProgress = navigationService.router.routeProgress.currentLegProgress
         
-        let firstCoord = navigationService.router.routeProgress.nearbyCoordinates.first!
+        let firstCoord = navigationService.router.routeProgress.nearbyShape.coordinates.first!
         let firstLocation = CLLocation(coordinate: firstCoord, altitude: 5, horizontalAccuracy: 10, verticalAccuracy: 5, course: 20, speed: 4, timestamp: Date())
         
         let remainingSteps = legProgress.remainingSteps
-        let penultimateCoord = legProgress.remainingSteps[4].coordinates!.first!
+        let penultimateCoord = legProgress.remainingSteps[4].shape!.coordinates.first!
         let penultimateLocation = CLLocation(coordinate: penultimateCoord, altitude: 5, horizontalAccuracy: 10, verticalAccuracy: 5, course: 20, speed: 4, timestamp: Date())
         
-        let lastCoord = legProgress.remainingSteps.last!.coordinates!.first!
+        let lastCoord = legProgress.remainingSteps.last!.shape!.coordinates.first!
         let lastLocation = CLLocation(coordinate: lastCoord, altitude: 5, horizontalAccuracy: 10, verticalAccuracy: 5, course: 20, speed: 4, timestamp: Date())
         
         let routeLocations = RouteLocations(firstLocation, penultimateLocation, lastLocation)
@@ -63,7 +63,7 @@ class NavigationServiceTests: XCTestCase {
         let navigation = dependencies.navigationService
         let route = navigation.route
         
-        let coordinates = route.coordinates!.prefix(3)
+        let coordinates = route.shape!.coordinates.prefix(3)
         let now = Date()
         let locations = coordinates.enumerated().map { CLLocation(coordinate: $0.element,
                                                                   altitude: -1, horizontalAccuracy: 10, verticalAccuracy: -1, course: -1, speed: 10, timestamp: now + $0.offset) }
@@ -88,7 +88,7 @@ class NavigationServiceTests: XCTestCase {
         let navigation = dependencies.navigationService
         let route = navigation.route
         
-        let firstStepCoordinates = route.legs[0].steps[0].coordinates!
+        let firstStepCoordinates = route.legs[0].steps[0].shape!.coordinates
         let now = Date()
         let firstStepLocations = firstStepCoordinates.enumerated().map {
             CLLocation(coordinate: $0.element, altitude: -1, horizontalAccuracy: 10, verticalAccuracy: -1, course: -1, speed: 10, timestamp: now + $0.offset)
@@ -98,7 +98,7 @@ class NavigationServiceTests: XCTestCase {
         XCTAssertTrue(navigation.router.userIsOnRoute(firstStepLocations.last!), "User should be on route")
         XCTAssertEqual(navigation.router.routeProgress.currentLegProgress.stepIndex, 1, "User is on first step")
         
-        let thirdStepCoordinates = route.legs[0].steps[2].coordinates!
+        let thirdStepCoordinates = route.legs[0].steps[2].shape!.coordinates
         let thirdStepLocations = thirdStepCoordinates.enumerated().map {
             CLLocation(coordinate: $0.element, altitude: -1, horizontalAccuracy: 10, verticalAccuracy: -1, course: -1, speed: 10, timestamp: now + firstStepCoordinates.count + $0.offset)
         }
@@ -124,11 +124,11 @@ class NavigationServiceTests: XCTestCase {
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocation])
         XCTAssertEqual(navigation.router.location!.coordinate, firstLocation.coordinate, "Check snapped location is working")
         
-        let firstCoordinateOnUpcomingStep = navigation.router.routeProgress.currentLegProgress.upcomingStep!.coordinates!.first!
+        let firstCoordinateOnUpcomingStep = navigation.router.routeProgress.currentLegProgress.upcomingStep!.shape!.coordinates.first!
         let firstLocationOnNextStepWithNoSpeed = CLLocation(coordinate: firstCoordinateOnUpcomingStep, altitude: 0, horizontalAccuracy: 10, verticalAccuracy: 10, course: 10, speed: 0, timestamp: Date())
         
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocationOnNextStepWithNoSpeed])
-        XCTAssertEqual(navigation.router.location!.coordinate, navigation.router.routeProgress.currentLegProgress.currentStep.coordinates!.last!, "When user is not moving, snap to current leg only")
+        XCTAssertEqual(navigation.router.location!.coordinate, navigation.router.routeProgress.currentLegProgress.currentStep.shape!.coordinates.last!, "When user is not moving, snap to current leg only")
         
         let firstLocationOnNextStepWithSpeed = CLLocation(coordinate: firstCoordinateOnUpcomingStep, altitude: 0, horizontalAccuracy: 10, verticalAccuracy: 10, course: 10, speed: 5, timestamp: Date())
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocationOnNextStepWithSpeed])
@@ -144,13 +144,13 @@ class NavigationServiceTests: XCTestCase {
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocation])
         XCTAssertEqual(navigation.router.location!.coordinate, firstLocation.coordinate, "Check snapped location is working")
         
-        let firstCoordinateOnUpcomingStep = navigation.router.routeProgress.currentLegProgress.upcomingStep!.coordinates!.first!
+        let firstCoordinateOnUpcomingStep = navigation.router.routeProgress.currentLegProgress.upcomingStep!.shape!.coordinates.first!
         
         let finalHeading = navigation.router.routeProgress.currentLegProgress.upcomingStep!.finalHeading!
         let firstLocationOnNextStepWithDifferentCourse = CLLocation(coordinate: firstCoordinateOnUpcomingStep, altitude: 0, horizontalAccuracy: 30, verticalAccuracy: 10, course: -finalHeading, speed: 5, timestamp: Date())
         
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocationOnNextStepWithDifferentCourse])
-        XCTAssertEqual(navigation.router.location!.coordinate, navigation.router.routeProgress.currentLegProgress.currentStep.coordinates!.last!, "When user's course is dissimilar from the finalHeading, they should not snap to upcoming step")
+        XCTAssertEqual(navigation.router.location!.coordinate, navigation.router.routeProgress.currentLegProgress.currentStep.shape!.coordinates.last!, "When user's course is dissimilar from the finalHeading, they should not snap to upcoming step")
         
         let firstLocationOnNextStepWithCorrectCourse = CLLocation(coordinate: firstCoordinateOnUpcomingStep, altitude: 0, horizontalAccuracy: 30, verticalAccuracy: 10, course: finalHeading, speed: 0, timestamp: Date())
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocationOnNextStepWithCorrectCourse])
@@ -163,7 +163,7 @@ class NavigationServiceTests: XCTestCase {
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocation])
         XCTAssertEqual(navigation.router.location!.coordinate, firstLocation.coordinate, "Check snapped location is working")
         
-        let futureCoord = Polyline(navigation.router.routeProgress.nearbyCoordinates).coordinateFromStart(distance: 100)!
+        let futureCoord = navigation.router.routeProgress.nearbyShape.coordinateFromStart(distance: 100)!
         let futureInaccurateLocation = CLLocation(coordinate: futureCoord, altitude: 0, horizontalAccuracy: 1, verticalAccuracy: 200, course: 0, speed: 5, timestamp: Date())
         
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [futureInaccurateLocation])
@@ -180,9 +180,9 @@ class NavigationServiceTests: XCTestCase {
         route.accessToken = "foo"
         let navigation = MapboxNavigationService(route: route, directions: directions)
         let router = navigation.router!
-        let firstCoord = router.routeProgress.nearbyCoordinates.first!
+        let firstCoord = router.routeProgress.nearbyShape.coordinates.first!
         let firstLocation = CLLocation(latitude: firstCoord.latitude, longitude: firstCoord.longitude)
-        let coordNearStart = Polyline(router.routeProgress.nearbyCoordinates).coordinateFromStart(distance: 10)!
+        let coordNearStart = router.routeProgress.nearbyShape.coordinateFromStart(distance: 10)!
         
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [firstLocation])
         
@@ -195,7 +195,7 @@ class NavigationServiceTests: XCTestCase {
         
         // The course should not be the interpolated course, rather the raw course.
         XCTAssertEqual(directionToStart, router.location!.course, "The course should be the raw course and not an interpolated course")
-        XCTAssertFalse(facingTowardsStartLocation.shouldSnap(toRouteWith: facingTowardsStartLocation.interpolatedCourse(along: router.routeProgress.nearbyCoordinates)!, distanceToFirstCoordinateOnLeg: facingTowardsStartLocation.distance(from: firstLocation)), "Should not snap")
+        XCTAssertFalse(facingTowardsStartLocation.shouldSnap(toRouteWith: facingTowardsStartLocation.interpolatedCourse(along: router.routeProgress.nearbyShape)!, distanceToFirstCoordinateOnLeg: facingTowardsStartLocation.distance(from: firstLocation)), "Should not snap")
     }
     
     //TODO: Broken by PortableRoutecontroller & MBNavigator -- needs team discussion.

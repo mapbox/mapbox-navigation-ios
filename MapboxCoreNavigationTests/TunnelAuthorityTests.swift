@@ -15,7 +15,7 @@ class TunnelAuthorityTests: XCTestCase {
         let routeProgress = RouteProgress(route: tunnelRoute)
         
         // Mock location move to first coordinate on tunnel route
-        let firstCoordinate = tunnelRoute.coordinates!.first!
+        let firstCoordinate = tunnelRoute.shape!.coordinates.first!
         let firstLocation = CLLocation(latitude: firstCoordinate.latitude, longitude: firstCoordinate.longitude)
         
         // Test outside tunnel

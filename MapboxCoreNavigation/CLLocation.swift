@@ -50,10 +50,10 @@ extension CLLocation {
     
     func snapped(to routeProgress: RouteProgress) -> CLLocation? {
         let legProgress = routeProgress.currentLegProgress
-        let coords = coordinates(for: routeProgress)
+        let polyline = snappingPolyline(for: routeProgress)
         
-        guard let closest = Polyline(coords).closestCoordinate(to: coordinate) else { return nil }
-        guard let calculatedCourseForLocationOnStep = interpolatedCourse(along: coords) else { return nil }
+        guard let closest = polyline.closestCoordinate(to: coordinate) else { return nil }
+        guard let calculatedCourseForLocationOnStep = interpolatedCourse(along: polyline) else { return nil }
         
         let userCourse = calculatedCourseForLocationOnStep
         let userCoordinate = closest.coordinate
@@ -67,10 +67,10 @@ extension CLLocation {
     /**
      Calculates the proper coordinates to use when calculating a snapped location.
      */
-    func coordinates(for routeProgress: RouteProgress) -> [CLLocationCoordinate2D] {
+    func snappingPolyline(for routeProgress: RouteProgress) -> Polyline {
         let legProgress = routeProgress.currentLegProgress
-        let nearbyCoordinates = routeProgress.nearbyCoordinates
-        let stepCoordinates = legProgress.currentStep.shape!.coordinates
+        let nearbyPolyline = routeProgress.nearbyShape
+        let stepPolyline = legProgress.currentStep.shape!
         
         // If the upcoming maneuver a sharp turn, only look at the current step for snapping.
         // Otherwise, we may get false positives from nearby step coordinates
@@ -79,37 +79,36 @@ extension CLLocation {
             let finalHeading = upcomingStep.finalHeading {
             // The max here is 180. The closer it is to 180, the sharper the turn.
             if initialHeading.clockwiseDifference(from: finalHeading) > 180 - RouteSnappingMaxManipulatedCourseAngle {
-                return stepCoordinates
+                return stepPolyline
             }
             
             if finalHeading.difference(from: course) > RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion {
-                return stepCoordinates
+                return stepPolyline
             }
         }
         
         if speed <= RouteControllerMaximumSpeedForUsingCurrentStep {
-            return stepCoordinates
+            return stepPolyline
         }
         
-        return nearbyCoordinates
+        return nearbyPolyline
     }
     
     /**
      Given a location and a series of coordinates, compute what the course should be for a the location.
      */
-    func interpolatedCourse(along coordinates: [CLLocationCoordinate2D]) -> CLLocationDirection? {
-        let nearByPolyline = Polyline(coordinates)
+    func interpolatedCourse(along polyline: Polyline) -> CLLocationDirection? {
+        guard let closest = polyline.closestCoordinate(to: coordinate) else { return nil }
         
-        guard let closest = nearByPolyline.closestCoordinate(to: coordinate) else { return nil }
-        
-        let slicedLineBehind = Polyline(coordinates.reversed()).sliced(from: closest.coordinate, to: coordinates.reversed().last)
-        let slicedLineInFront = nearByPolyline.sliced(from: closest.coordinate, to: coordinates.last)
+        let reversedPolyline = Polyline(polyline.coordinates.reversed())
+        let slicedLineBehind = reversedPolyline.sliced(from: closest.coordinate, to: reversedPolyline.coordinates.last)
+        let slicedLineInFront = polyline.sliced(from: closest.coordinate, to: polyline.coordinates.last)
         let userDistanceBuffer: CLLocationDistance = max(speed * RouteControllerDeadReckoningTimeInterval / 2, RouteControllerUserLocationSnappingDistance / 2)
         
         guard let pointBehind = slicedLineBehind.coordinateFromStart(distance: userDistanceBuffer) else { return nil }
-        guard let pointBehindClosest = nearByPolyline.closestCoordinate(to: pointBehind) else { return nil }
+        guard let pointBehindClosest = polyline.closestCoordinate(to: pointBehind) else { return nil }
         guard let pointAhead = slicedLineInFront.coordinateFromStart(distance: userDistanceBuffer) else { return nil }
-        guard let pointAheadClosest = nearByPolyline.closestCoordinate(to: pointAhead) else { return nil }
+        guard let pointAheadClosest = polyline.closestCoordinate(to: pointAhead) else { return nil }
         
         // Get direction of these points
         let pointBehindDirection = pointBehindClosest.coordinate.direction(to: closest.coordinate)

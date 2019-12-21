@@ -15,7 +15,7 @@ class NavigationEventsManagerTests: XCTestCase {
         let firstRoute = Fixture.route(from: "DCA-Arboretum")
         let secondRoute = Fixture.route(from: "PipeFittersUnion-FourSeasonsBoston")
         
-        let firstTrace = Array<CLLocation>(Fixture.generateTrace(for: firstRoute).prefix(upTo: firstRoute.coordinates!.count / 2)).shiftedToPresent().qualified()
+        let firstTrace = Array<CLLocation>(Fixture.generateTrace(for: firstRoute).prefix(upTo: firstRoute.shape!.coordinates.count / 2)).shiftedToPresent().qualified()
         let secondTrace = Fixture.generateTrace(for: secondRoute).shifted(to: firstTrace.last!.timestamp + 1).qualified()
         
         let locationManager = NavigationLocationManager()
