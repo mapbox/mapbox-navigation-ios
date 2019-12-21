@@ -285,7 +285,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         
         //Increment the progress model
         guard let polyline = step.shape else {
-            return
+            preconditionFailure("Route steps used for navigation must have shape data")
         }
         
         if let closestCoordinate = polyline.closestCoordinate(to: rawLocation.coordinate) {

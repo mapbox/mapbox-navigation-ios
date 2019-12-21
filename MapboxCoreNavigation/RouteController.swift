@@ -291,8 +291,10 @@ open class RouteController: NSObject {
         let step = stepProgress.step
         
         //Increment the progress model
-        if let polyline = step.shape,
-            let closestCoordinate = polyline.closestCoordinate(to: rawLocation.coordinate) {
+        guard let polyline = step.shape else {
+            preconditionFailure("Route steps used for navigation must have shape data")
+        }
+        if let closestCoordinate = polyline.closestCoordinate(to: rawLocation.coordinate) {
             let remainingDistance = polyline.distance(from: closestCoordinate.coordinate)
             let distanceTraveled = step.distance - remainingDistance
             stepProgress.distanceTraveled = distanceTraveled
