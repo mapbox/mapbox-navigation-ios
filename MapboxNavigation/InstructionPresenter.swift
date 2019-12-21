@@ -132,7 +132,8 @@ class InstructionPresenter {
                 build(component, [joinString, componentString])
             
             default:
-            continue
+                continue
+            }
         }
         
         assert(processedComponents.count == strings.count, "The number of processed components must match the number of attributed strings")
