@@ -195,7 +195,10 @@ class CarPlayManagerTests: XCTestCase {
         // given the user is previewing route choices
         // when a trip is started using one of the route choices
         let choice = CPRouteChoice(summaryVariants: ["summary1"], additionalInformationVariants: ["addl1"], selectionSummaryVariants: ["selection1"])
-        choice.userInfo = Fixture.route(from: "route-with-banner-instructions")
+        choice.userInfo = Fixture.route(from: "route-with-banner-instructions", options: NavigationRouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 37.764793, longitude: -122.463161),
+            CLLocationCoordinate2D(latitude: 34.054081, longitude: -118.243412),
+        ]))
 
         manager.mapTemplate(mapTemplate, startedTrip: CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [choice]), using: choice)
 
@@ -292,7 +295,10 @@ class CarPlayManagerSpec: QuickSpec {
             }
 
             let previewRoutesAction = {
-                let route = Fixture.route(from: "route-with-banner-instructions")
+                let route = Fixture.route(from: "route-with-banner-instructions", options: NavigationRouteOptions(coordinates: [
+                    CLLocationCoordinate2D(latitude: 37.764793, longitude: -122.463161),
+                    CLLocationCoordinate2D(latitude: 34.054081, longitude: -118.243412),
+                ]))
                 let waypoints = route.routeOptions.waypoints
 
                 let directionsSpy = manager!.directions as! DirectionsSpy
@@ -365,7 +371,10 @@ class CarPlayManagerSpec: QuickSpec {
             let action = {
                 let fakeTemplate = CPMapTemplate()
                 let fakeRouteChoice = CPRouteChoice(summaryVariants: ["summary1"], additionalInformationVariants: ["addl1"], selectionSummaryVariants: ["selection1"])
-                fakeRouteChoice.userInfo = Fixture.route(from: "route-with-banner-instructions")
+                fakeRouteChoice.userInfo = Fixture.route(from: "route-with-banner-instructions", options: NavigationRouteOptions(coordinates: [
+                    CLLocationCoordinate2D(latitude: 37.764793, longitude: -122.463161),
+                    CLLocationCoordinate2D(latitude: 34.054081, longitude: -118.243412),
+                ]))
                 let fakeTrip = CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [fakeRouteChoice])
 
                 //simulate starting a fake trip
@@ -483,7 +492,7 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
     public var mapButtons: [CPMapButton]?
 
     func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, desiredSimulationMode: SimulationMode) -> NavigationService {
-        let response = Fixture.routeResponse(from: jsonFileName)
+        let response = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
         let initialRoute = response.routes!.first!
         initialRoute.accessToken = "deadbeef"
         let directionsClientSpy = DirectionsSpy(accessToken: "garbage", host: nil)

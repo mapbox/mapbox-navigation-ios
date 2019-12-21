@@ -2,13 +2,19 @@ import XCTest
 import MapboxDirections
 import TestHelper
 import Turf
+import MapboxCoreNavigation
 @testable import MapboxNavigation
 
 class RouteTests: XCTestCase {
     func testPolylineAroundManeuver() {
         // Convert the match from https://github.com/mapbox/navigation-ios-examples/pull/28 into a route.
         // The details of the route are unimportant; what matters is the geometry.
-        let response = Fixture.mapMatchingResponse(from: "route-doubling-back")
+        let response = Fixture.mapMatchingResponse(from: "route-doubling-back", options: NavigationMatchOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 59.337928, longitude: 18.076841),
+            CLLocationCoordinate2D(latitude: 59.337661, longitude: 18.075897),
+            CLLocationCoordinate2D(latitude: 59.337129, longitude: 18.075478),
+            // …
+        ]))
         let routes = response.routes
         let route = routes!.first!
         let leg = route.legs.first!

@@ -6,7 +6,11 @@ import MapboxDirections
 import TestHelper
 @testable import MapboxCoreNavigation
 
-let tunnelRoute = Fixture.route(from: "routeWithTunnels_9thStreetDC")
+let tunnelRoute = Fixture.route(from: "routeWithTunnels_9thStreetDC", options: {
+    let from = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 38.892134, longitude: -77.023975))
+    let to = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 38.880594, longitude: -77.024705))
+    return NavigationRouteOptions(waypoints: [from, to])
+}())
 
 class TunnelAuthorityTests: XCTestCase {
     lazy var locationManager = NavigationLocationManager()

@@ -6,7 +6,12 @@ import Turf
 @testable import MapboxNavigation
 
 let jsonFileName = "routeWithInstructions"
-let response = Fixture.routeResponse(from: jsonFileName)
+var routeOptions: NavigationRouteOptions {
+    let from = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
+    let to = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
+    return NavigationRouteOptions(waypoints: [from, to])
+}
+let response = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
 let otherResponse = Fixture.JSONFromFileNamed(name: "route-for-lane-testing")
 
 class NavigationViewControllerTests: XCTestCase {
@@ -24,7 +29,7 @@ class NavigationViewControllerTests: XCTestCase {
         
         let navigationService = navigationViewController.navigationService!
         let router = navigationService.router!
-        let firstCoord      = router.routeProgress.nearbyCoordinates.first!
+        let firstCoord      = router.routeProgress.nearbyShape.coordinates.first!
         let firstLocation   = location(at: firstCoord)
         
         var poi = [CLLocation]()
@@ -43,11 +48,11 @@ class NavigationViewControllerTests: XCTestCase {
     }()
     
     lazy var initialRoute: Route = {
-        return Fixture.route(from: jsonFileName)
+        return Fixture.route(from: jsonFileName, options: routeOptions)
     }()
     
     lazy var newRoute: Route = {
-        return Fixture.route(from: jsonFileName)
+        return Fixture.route(from: jsonFileName, options: routeOptions)
     }()
     
     override func setUp() {
@@ -221,7 +226,10 @@ class NavigationViewControllerTests: XCTestCase {
         let window = UIApplication.shared.keyWindow!
         let viewController = window.rootViewController!
         
-        let route = Fixture.route(from: "DCA-Arboretum")
+        let route = Fixture.route(from: "DCA-Arboretum", options: NavigationRouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 38.853108, longitude: -77.043331),
+            CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
+        ]))
         let navigationViewController = NavigationViewController(for: route)
         
         viewController.present(navigationViewController, animated: false, completion: nil)
@@ -242,7 +250,10 @@ class NavigationViewControllerTests: XCTestCase {
         let bottom = BottomBannerFake(nibName: nil, bundle: nil)
         
         let fakeOptions = NavigationOptions(topBanner: top, bottomBanner: bottom)
-        let route = Fixture.route(from: "DCA-Arboretum")
+        let route = Fixture.route(from: "DCA-Arboretum", options: NavigationRouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 38.853108, longitude: -77.043331),
+            CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
+        ]))
         
         let subject = NavigationViewController(for: route, options: fakeOptions)
         XCTAssert(subject.topViewController == top, "Top banner not injected properly into NVC")

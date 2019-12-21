@@ -63,26 +63,30 @@ public class Fixture: NSObject {
         return locations.map { CLLocation($0) }
     }
     
-    public class func routeResponse(from jsonFile: String) -> RouteResponse {
+    public class func routeResponse(from jsonFile: String, options: RouteOptions) -> RouteResponse {
         let responseData = JSONFromFileNamed(name: jsonFile)
         do {
-            return try JSONDecoder().decode(RouteResponse.self, from: responseData)
+            let decoder = JSONDecoder()
+            decoder.userInfo[.options] = options
+            return try decoder.decode(RouteResponse.self, from: responseData)
         } catch {
             preconditionFailure("Unable to decode JSON fixture: \(error)")
         }
     }
     
-    public class func mapMatchingResponse(from jsonFile: String) -> MapMatchingResponse {
+    public class func mapMatchingResponse(from jsonFile: String, options: MatchOptions) -> MapMatchingResponse {
         let responseData = JSONFromFileNamed(name: jsonFile)
         do {
-            return try JSONDecoder().decode(MapMatchingResponse.self, from: responseData)
+            let decoder = JSONDecoder()
+            decoder.userInfo[.options] = options
+            return try decoder.decode(MapMatchingResponse.self, from: responseData)
         } catch {
             preconditionFailure("Unable to decode JSON fixture: \(error)")
         }
     }
     
-    public class func route(from jsonFile: String) -> Route {
-        let response = routeResponse(from: jsonFile)
+    public class func route(from jsonFile: String, options: RouteOptions) -> Route {
+        let response = routeResponse(from: jsonFile, options: options)
         guard let route = response.routes?.first else {
             preconditionFailure("No routes")
         }
@@ -96,8 +100,8 @@ public class Fixture: NSObject {
         return route
     }
     
-    public class func waypoints(from jsonFile: String) -> [Waypoint] {
-        let response = routeResponse(from: jsonFile)
+    public class func waypoints(from jsonFile: String, options: RouteOptions) -> [Waypoint] {
+        let response = routeResponse(from: jsonFile, options: options)
         guard let waypoints = response.waypoints else {
             preconditionFailure("No waypoints")
         }

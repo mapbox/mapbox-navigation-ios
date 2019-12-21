@@ -49,7 +49,11 @@ fileprivate class CarPlayNavigationViewControllerTests: XCTestCase {
         //set up the litany of dependancies
         let directions = Directions(accessToken: "fafedeadbeef")
         let manager = CarPlayManager(directions: directions)
-        let route = Fixture.route(from: "multileg-route")
+        let route = Fixture.route(from: "multileg-route", options: NavigationRouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 9.519172, longitude: 47.210823),
+            CLLocationCoordinate2D(latitude: 9.52222, longitude: 47.214268),
+            CLLocationCoordinate2D(latitude: 47.212326, longitude: 9.512569),
+        ]))
         let navService = MapboxNavigationService(route: route)
         let interface = FakeCPInterfaceController("test estimates display")
         let mapSpy = MapTemplateSpy()

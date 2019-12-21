@@ -36,9 +36,9 @@ class NavigationServiceTests: XCTestCase {
         return (navigationService: navigationService, routeLocations: routeLocations)
     }()
     
-    let initialRoute = Fixture.route(from: jsonFileName)
+    let initialRoute = Fixture.route(from: jsonFileName, options: routeOptions)
     
-    let alternateRoute = Fixture.route(from: jsonFileName)
+    let alternateRoute = Fixture.route(from: jsonFileName, options: routeOptions)
     
     override func setUp() {
         super.setUp()
@@ -175,7 +175,10 @@ class NavigationServiceTests: XCTestCase {
     func testUserPuckShouldFaceBackwards() {
         // This route is a simple straight line: http://geojson.io/#id=gist:anonymous/64cfb27881afba26e3969d06bacc707c&map=17/37.77717/-122.46484
         let directions = DirectionsSpy(accessToken: "pk.feedCafeDeadBeefBadeBede")
-        let route = Fixture.route(from: "straight-line")
+        let route = Fixture.route(from: "straight-line", options: NavigationRouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 37.77735, longitude: -122.461465),
+            CLLocationCoordinate2D(latitude: 37.777016, longitude: -122.468832),
+        ]))
         
         route.accessToken = "foo"
         let navigation = MapboxNavigationService(route: route, directions: directions)
@@ -405,7 +408,11 @@ class NavigationServiceTests: XCTestCase {
     }
     
     func testMultiLegRoute() {
-        let route = Fixture.route(from: "multileg-route")
+        let route = Fixture.route(from: "multileg-route", options: NavigationRouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 9.519172, longitude: 47.210823),
+            CLLocationCoordinate2D(latitude: 9.52222, longitude: 47.214268),
+            CLLocationCoordinate2D(latitude: 47.212326, longitude: 9.512569),
+        ]))
         let trace = Fixture.generateTrace(for: route).shiftedToPresent().qualified()
         let service = dependencies.navigationService
         
@@ -428,7 +435,10 @@ class NavigationServiceTests: XCTestCase {
     func testProactiveRerouting() {
         typealias RouterComposition = Router & InternalRouter
         
-        let route = Fixture.route(from: "DCA-Arboretum")
+        let route = Fixture.route(from: "DCA-Arboretum", options: NavigationRouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 38.853108, longitude: -77.043331),
+            CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
+        ]))
         let trace = Fixture.generateTrace(for: route).shiftedToPresent()
         let duration = trace.last!.timestamp.timeIntervalSince(trace.first!.timestamp)
         
@@ -459,8 +469,12 @@ class NavigationServiceTests: XCTestCase {
         }
         
         let fasterRouteName = "DCA-Arboretum-dummy-faster-route"
-        let fasterRoute = Fixture.route(from: fasterRouteName)
-        let waypointsForFasterRoute = Fixture.waypoints(from: fasterRouteName)
+        let options = NavigationRouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 38.878206, longitude: -77.037265),
+            CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
+        ])
+        let fasterRoute = Fixture.route(from: fasterRouteName, options: options)
+        let waypointsForFasterRoute = Fixture.waypoints(from: fasterRouteName, options: options)
         directions.fireLastCalculateCompletion(with: waypointsForFasterRoute, routes: [fasterRoute], error: nil)
         
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didRerouteAlong:at:proactive:)"))
@@ -469,7 +483,18 @@ class NavigationServiceTests: XCTestCase {
     }
     
     func testNineLeggedRouteForOutOfBounds() {
-        let route = Fixture.route(from: "9-legged-route")
+        let route = Fixture.route(from: "9-legged-route", options: NavigationRouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 46.423728, longitude: 13.593578),
+            CLLocationCoordinate2D(latitude: 46.339747, longitude: 13.574151),
+            CLLocationCoordinate2D(latitude: 46.34447, longitude: 13.57594),
+            CLLocationCoordinate2D(latitude: 46.37798, longitude: 13.58583),
+            CLLocationCoordinate2D(latitude: 46.408308, longitude: 13.605585),
+            CLLocationCoordinate2D(latitude: 46.420338, longitude: 13.602128),
+            CLLocationCoordinate2D(latitude: 46.429376, longitude: 13.614679),
+            CLLocationCoordinate2D(latitude: 46.435762, longitude: 13.626714),
+            CLLocationCoordinate2D(latitude: 46.436658, longitude: 13.639499),
+            CLLocationCoordinate2D(latitude: 46.43878, longitude: 13.64052),
+        ]))
         let directions = Directions(accessToken: "foo")
         let locationManager = DummyLocationManager()
         let trace = Fixture.generateTrace(for: route, speedMultiplier: 4).shiftedToPresent()
@@ -485,7 +510,10 @@ class NavigationServiceTests: XCTestCase {
     func testUnimplementedLogging() {
         unimplementedTestLogs = []
         
-        let route = Fixture.route(from: "DCA-Arboretum")
+        let route = Fixture.route(from: "DCA-Arboretum", options: NavigationRouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 38.853108, longitude: -77.043331),
+            CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
+        ]))
         let directions = Directions(accessToken: "foo")
         let locationManager = DummyLocationManager()
         let trace = Fixture.generateTrace(for: route, speedMultiplier: 4).shiftedToPresent()

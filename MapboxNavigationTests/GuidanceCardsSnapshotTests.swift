@@ -8,13 +8,18 @@ import Foundation
 @available(iOS 11.0, *)
 /// :nodoc:
 class GuidanceCardsSnapshotTests: SnapshotTest {
+    let tertiaryRouteOptions = NavigationRouteOptions(coordinates: [
+        CLLocationCoordinate2D(latitude: 39.749216, longitude: -105.008272),
+        CLLocationCoordinate2D(latitude: 39.694833, longitude: -104.976949),
+    ])
+    
     override func setUp() {
         super.setUp()
         recordMode = false
     }
     
     func testRegularManeuver() {
-        let route = Fixture.route(from: "route-with-tertiary")
+        let route = Fixture.route(from: "route-with-tertiary", options: tertiaryRouteOptions)
         
         let host = UIViewController(nibName: nil, bundle: nil)
         let container = UIView.forAutoLayout()
@@ -36,7 +41,7 @@ class GuidanceCardsSnapshotTests: SnapshotTest {
     }
     
     func testLanesManeuver() {
-        let route = Fixture.route(from: "route-with-tertiary")
+        let route = Fixture.route(from: "route-with-tertiary", options: tertiaryRouteOptions)
         
         let host = UIViewController(nibName: nil, bundle: nil)
         let container = UIView.forAutoLayout()
@@ -59,7 +64,7 @@ class GuidanceCardsSnapshotTests: SnapshotTest {
     }
     
     func testTertiaryManeuver() {
-        let route = Fixture.route(from: "route-with-tertiary")
+        let route = Fixture.route(from: "route-with-tertiary", options: tertiaryRouteOptions)
         
         let host = UIViewController(nibName: nil, bundle: nil)
         let container = UIView.forAutoLayout()
