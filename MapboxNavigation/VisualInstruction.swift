@@ -4,9 +4,13 @@ import CarPlay
 #endif
 
 extension VisualInstruction {
-    /// Returns true if `VisualInstruction.components` contains any `LaneIndicationComponent`.
-    public var containsLaneIndications: Bool {
-        return components.contains(where: { $0 is LaneIndicationComponent })
+    var laneComponents: [Component] {
+        return components.filter { component -> Bool in
+            if case VisualInstruction.Component.lane(indications: _, isUsable: _) = component {
+                return true
+            }
+            return false
+        }
     }
     
     func maneuverImage(side: DrivingSide, color: UIColor, size: CGSize) -> UIImage? {

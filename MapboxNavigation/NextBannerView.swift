@@ -63,8 +63,8 @@ open class NextBannerView: UIView, NavigationComponent {
     override open func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         maneuverView.isEnd = true
-        let component = VisualInstructionComponent(type: .text, text: "Next step", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)
-        let instruction = VisualInstruction(text: nil, maneuverType: .none, maneuverDirection: .none, components: [component])
+        let component = VisualInstruction.Component.text(text: .init(text: "Next step", abbreviation: nil, abbreviationPriority: nil))
+        let instruction = VisualInstruction(text: nil, maneuverType: .turn, maneuverDirection: .right, components: [component])
         instructionLabel.instruction = instruction
     }
     
@@ -97,7 +97,7 @@ open class NextBannerView: UIView, NavigationComponent {
      Updates the instructions banner info with a given `VisualInstructionBanner`.
      */
     public func update(for visualInstruction: VisualInstructionBanner?) {
-        guard let tertiaryInstruction = visualInstruction?.tertiaryInstruction, !tertiaryInstruction.containsLaneIndications else {
+        guard let tertiaryInstruction = visualInstruction?.tertiaryInstruction, tertiaryInstruction.laneComponents.isEmpty else {
             hide()
             return
         }

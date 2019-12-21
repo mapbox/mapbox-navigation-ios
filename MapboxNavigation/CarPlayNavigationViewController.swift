@@ -392,7 +392,7 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
         var maneuvers: [CPManeuver] = [primaryManeuver]
         
         // Add tertiary text if available. TODO: handle lanes.
-        if let tertiaryInstruction = visualInstruction.tertiaryInstruction, !tertiaryInstruction.containsLaneIndications {
+        if let tertiaryInstruction = visualInstruction.tertiaryInstruction, tertiaryInstruction.laneComponents.isEmpty {
             let tertiaryManeuver = CPManeuver()
             tertiaryManeuver.symbolSet = tertiaryInstruction.maneuverImageSet(side: visualInstruction.drivingSide)
             

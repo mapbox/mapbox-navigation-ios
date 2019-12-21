@@ -76,21 +76,23 @@ open class LanesView: UIView, NavigationComponent {
     public func update(for visualInstruction: VisualInstructionBanner?) {
         clearLaneViews()
         
-        guard let tertiaryInstruction = visualInstruction?.tertiaryInstruction, tertiaryInstruction.containsLaneIndications else {
+        guard let tertiaryInstruction = visualInstruction?.tertiaryInstruction else {
             hide()
             return
         }
         
-        let laneIndications: [LaneIndicationComponent]? = tertiaryInstruction.components.compactMap({ $0 as? LaneIndicationComponent })
+        let subviews = tertiaryInstruction.components.compactMap { (component) -> LaneView? in
+            if case let .lane(indications: indications, isUsable: isUsable) = component {
+                return LaneView(indications: indications, isUsable: isUsable)
+            } else {
+                return nil
+            }
+        }
         
-        guard let lanes = laneIndications, !lanes.isEmpty else {
+        guard !subviews.isEmpty && subviews.contains(where: { !$0.isValid }) else {
             hide()
             return
         }
-        
-        let subviews = lanes.map { LaneView(component: $0) }
-        
-        guard subviews.contains(where: { !$0.isValid }) else { return }
         
         stackView.addArrangedSubviews(subviews)
         show()
