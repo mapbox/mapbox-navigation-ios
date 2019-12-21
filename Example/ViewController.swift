@@ -265,7 +265,7 @@ class ViewController: UIViewController {
         customViewController.userRoute = route
 
         let destination = MGLPointAnnotation()
-        destination.coordinate = route.coordinates!.last!
+        destination.coordinate = route.shape!.coordinates.last!
         customViewController.destination = destination
         customViewController.simulateLocation = simulationButton.isSelected
 
@@ -361,8 +361,8 @@ extension ViewController: MGLMapViewDelegate {
         
         self.mapView?.localizeLabels()
         
-        if let routes = routes, let currentRoute = routes.first, let coords = currentRoute.coordinates {
-            mapView.setVisibleCoordinateBounds(MGLPolygon(coordinates: coords, count: currentRoute.coordinateCount).overlayBounds, animated: false)
+        if let routes = routes, let currentRoute = routes.first, let coords = currentRoute.shape?.coordinates {
+            mapView.setVisibleCoordinateBounds(MGLPolygon(coordinates: coords, count: UInt(coords.count)).overlayBounds, animated: false)
             self.mapView?.show(routes)
             self.mapView?.showWaypoints(on: currentRoute)
         }
@@ -382,7 +382,7 @@ extension ViewController: NavigationMapViewDelegate {
 
     func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route) {
         guard let routes = routes else { return }
-        guard let index = routes.firstIndex(where: { $0 == route }) else { return }
+        guard let index = routes.firstIndex(where: { $0 === route }) else { return }
         self.routes!.remove(at: index)
         self.routes!.insert(route, at: 0)
     }

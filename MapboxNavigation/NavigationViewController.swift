@@ -486,7 +486,9 @@ extension NavigationViewController: NavigationServiceDelegate {
         // In the case the user drives beyond the waypoint,
         // we should accurately depict this.
         
-        let destination = progress.currentLeg.destination
+        guard let destination = progress.currentLeg.destination else {
+            preconditionFailure("Current leg has no destination")
+        }
         let shouldPrevent = navigationService.delegate?.navigationService(navigationService, shouldPreventReroutesWhenArrivingAt: destination) ?? RouteController.DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint
         let userHasArrivedAndShouldPreventRerouting = shouldPrevent && !progress.currentLegProgress.userHasArrivedAtWaypoint
         
