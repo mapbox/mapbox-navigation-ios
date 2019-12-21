@@ -7,46 +7,60 @@ import MapboxNavigationNative
  */
 public typealias NavigationDirectionsCompletionHandler = (_ numberOfTiles: UInt64) -> Void
 
+/**
+ An error that occurs when calculating directions potentially offline using the `NavigationDirections.calculate(_:offline:completionHandler:)` method.
+*/
 public enum OfflineRoutingError: LocalizedError {
-    public typealias RawValue = String
-    
-    case onlineError(DirectionsError)
     /**
-     No route could be found between the specified locations.
-     
-     Make sure it is possible to travel between the locations with the mode of transportation implied by the profileIdentifier option. For example, it is impossible to travel by car from one continent to another without either a land bridge or a ferry connection.
+     The enclosed error occurred when attempting to calculate directions online.
      */
-    case unableToRoute
-    case unexpectedRouteResult(String)
-    case corruptRouteData(String)
-    case responseError(String)
+    case online(DirectionsError)
+    
+    /**
+     The router returned an empty response.
+     */
+    case noData
+    
+    /**
+     The router returned a response that isn’t correctly formatted.
+    */
+    case invalidResponse
+    
     case unknown(underlying: Error)
     
     public var localizedDescription: String {
         switch self {
-        case .onlineError(let error):
+        case .online(let error):
             return error.localizedDescription
-        case .unableToRoute:
-            return "Unable to route between specified waypoints."
-        case .corruptRouteData(let value):
-            return value
-        case .unexpectedRouteResult(let value):
-            return value
-        case .responseError(let value):
-            return value
+        case .noData:
+            return NSLocalizedString("OFFLINE_NO_RESULT", bundle: .mapboxCoreNavigation, value: "Unable to calculate the requested route while offline.", comment: "Error description when an offline route request returns no result")
+        case .invalidResponse:
+            return NSLocalizedString("OFFLINE_CORRUPT_DATA", bundle: .mapboxCoreNavigation, value: "Found an invalid route while offline.", comment: "Error message when an offline route request returns a response that can’t be deserialized")
         case .unknown(let underlying):
             return "Unknown Error: \(underlying.localizedDescription)"
         }
     }
     
-    var failureReason: String {
-        #warning("unimplemented")
-        return "Unimplemented"
+    public var failureReason: String? {
+        switch self {
+        case .online(let error):
+            return error.failureReason
+        case .unknown(let underlying):
+            return (underlying as? LocalizedError)?.failureReason
+        default:
+            return nil
+        }
     }
     
     public var recoverySuggestion: String? {
-        #warning("unimplemented")
-        return nil
+        switch self {
+        case .online(let error):
+            return error.recoverySuggestion
+        case .unknown(let underlying):
+            return (underlying as? LocalizedError)?.recoverySuggestion
+        default:
+            return nil
+        }
     }
 }
 
@@ -174,7 +188,7 @@ public class NavigationDirections: Directions {
             super.calculate(options) { (waypoints, routes, error) in
                 let offlineError: OfflineRoutingError?
                 if let error = error {
-                    offlineError = .onlineError(error)
+                    offlineError = .online(error)
                 } else {
                     offlineError = nil
                 }
@@ -187,19 +201,15 @@ public class NavigationDirections: Directions {
         
         NavigationDirectionsConstants.offlineSerialQueue.async { [weak self] in
             guard let result = self?.navigator.getRouteForDirectionsUri(url.absoluteString) else {
-                let message = NSLocalizedString("OFFLINE_NO_RESULT", bundle: .mapboxCoreNavigation, value: "Unable to calculate the requested route while offline.", comment: "Error description when an offline route request returns no result")
-                let error = OfflineRoutingError.unexpectedRouteResult(message)
                 DispatchQueue.main.async {
-                    completionHandler(nil, nil, error)
+                    completionHandler(nil, nil, .noData)
                 }
                 return
             }
             
-            guard let data = result.json .data(using: .utf8) else {
-                let message = NSLocalizedString("OFFLINE_CORRUPT_DATA", bundle: .mapboxCoreNavigation, value: "Found an invalid route while offline.", comment: "Error message when an offline route request returns a response that can’t be deserialized")
-                let error = OfflineRoutingError.corruptRouteData(message)
+            guard let data = result.json.data(using: .utf8) else {
                 DispatchQueue.main.async {
-                    completionHandler(nil, nil, error)
+                    completionHandler(nil, nil, .invalidResponse)
                 }
                 return
             }
@@ -208,7 +218,7 @@ public class NavigationDirections: Directions {
                 do {
                     let response = try JSONDecoder().decode(RouteResponse.self, from: data)
                     guard let routes = response.routes else {
-                        return completionHandler(response.waypoints, nil, .unableToRoute)
+                        return completionHandler(response.waypoints, nil, .online(.unableToRoute))
                     }
                     return completionHandler(response.waypoints, routes, nil)
                 }
