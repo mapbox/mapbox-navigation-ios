@@ -96,8 +96,8 @@ open class ManeuverView: UIView {
         let maneuverType = visualInstruction.maneuverType
         let maneuverDirection = visualInstruction.maneuverDirection
         
-        let type = maneuverType != .none ? maneuverType : .turn
-        let direction = maneuverDirection != .none ? maneuverDirection : .straightAhead
+        let type = maneuverType ?? .turn
+        let direction = maneuverDirection ?? .straightAhead
 
         switch type {
         case .merge:

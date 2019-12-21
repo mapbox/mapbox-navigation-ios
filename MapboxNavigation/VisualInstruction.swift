@@ -38,16 +38,14 @@ extension VisualInstruction {
     
     /// Returns whether the `VisualInstruction`’s maneuver image should be flipped according to the driving side.
     public func shouldFlipImage(side: DrivingSide) -> Bool {
-        let leftDirection = [.left, .slightLeft, .sharpLeft].contains(maneuverDirection)
-        
-        switch maneuverType {
+        switch maneuverType ?? .turn {
         case .takeRoundabout,
              .turnAtRoundabout,
              .takeRotary,
              _ where maneuverDirection == .uTurn:
             return side == .left
         default:
-            return leftDirection
+            return [.left, .slightLeft, .sharpLeft].contains(maneuverDirection ?? .straightAhead)
         }
     }
 
