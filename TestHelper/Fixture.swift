@@ -63,14 +63,26 @@ public class Fixture: NSObject {
         return locations.map { CLLocation($0) }
     }
     
-    public class func route(from jsonFile: String) -> Route {
+    public class func routeResponse(from jsonFile: String) -> RouteResponse {
         let responseData = JSONFromFileNamed(name: jsonFile)
-        let response: RouteResponse!
         do {
-            response = try JSONDecoder().decode(RouteResponse.self, from: responseData)
+            return try JSONDecoder().decode(RouteResponse.self, from: responseData)
         } catch {
             preconditionFailure("Unable to decode JSON fixture: \(error)")
         }
+    }
+    
+    public class func mapMatchingResponse(from jsonFile: String) -> MapMatchingResponse {
+        let responseData = JSONFromFileNamed(name: jsonFile)
+        do {
+            return try JSONDecoder().decode(MapMatchingResponse.self, from: responseData)
+        } catch {
+            preconditionFailure("Unable to decode JSON fixture: \(error)")
+        }
+    }
+    
+    public class func route(from jsonFile: String) -> Route {
+        let response = routeResponse(from: jsonFile)
         guard let route = response.routes?.first else {
             preconditionFailure("No routes")
         }
@@ -85,13 +97,7 @@ public class Fixture: NSObject {
     }
     
     public class func waypoints(from jsonFile: String) -> [Waypoint] {
-        let responseData = JSONFromFileNamed(name: jsonFile)
-        let response: RouteResponse!
-        do {
-            response = try JSONDecoder().decode(RouteResponse.self, from: responseData)
-        } catch {
-            preconditionFailure("Unable to decode JSON fixture: \(error)")
-        }
+        let response = routeResponse(from: jsonFile)
         guard let waypoints = response.waypoints else {
             preconditionFailure("No waypoints")
         }

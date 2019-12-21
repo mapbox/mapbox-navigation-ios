@@ -6,7 +6,7 @@ import Turf
 @testable import MapboxNavigation
 
 let jsonFileName = "routeWithInstructions"
-let response = Fixture.JSONFromFileNamed(name: jsonFileName)
+let response = Fixture.routeResponse(from: jsonFileName)
 let otherResponse = Fixture.JSONFromFileNamed(name: "route-for-lane-testing")
 
 class NavigationViewControllerTests: XCTestCase {
@@ -36,7 +36,7 @@ class NavigationViewControllerTests: XCTestCase {
         poi.append(location(at: turkStreetIntersection.location))
         poi.append(location(at: fultonStreetIntersection.location))
         
-        let lastCoord    = router.routeProgress.currentLegProgress.remainingSteps.last!.coordinates!.first!
+        let lastCoord    = router.routeProgress.currentLegProgress.remainingSteps.last!.shape!.coordinates.first!
         let lastLocation = location(at: lastCoord)
         
         return (navigationViewController: navigationViewController, navigationService: navigationService, startLocation: firstLocation, poi: poi, endLocation: lastLocation, voice: fakeVoice)

@@ -8,19 +8,8 @@ class RouteTests: XCTestCase {
     func testPolylineAroundManeuver() {
         // Convert the match from https://github.com/mapbox/navigation-ios-examples/pull/28 into a route.
         // The details of the route are unimportant; what matters is the geometry.
-        let json = Fixture.JSONFromFileNamed(name: "route-doubling-back")
-        let namedWaypoints = (json["tracepoints"] as! [[String: Any]?]).compactMap { jsonTracepoint -> Waypoint? in
-            guard let jsonTracepoint = jsonTracepoint else {
-                return nil
-            }
-            let location = jsonTracepoint["location"] as! [Double]
-            let coordinate = CLLocationCoordinate2D(latitude: location[1], longitude: location[0])
-            return Waypoint(coordinate: coordinate, name: jsonTracepoint["name"] as? String ?? "")
-        }
-        let fakeOptions = RouteOptions(coordinates: [namedWaypoints.first!.coordinate, namedWaypoints.last!.coordinate])
-        let routes = (json["matchings"] as? [[String: Any]])?.map {
-            Route(json: $0, waypoints: namedWaypoints, options: fakeOptions)
-        }
+        let response = Fixture.mapMatchingResponse(from: "route-doubling-back")
+        let routes = response.routes
         let route = routes!.first!
         let leg = route.legs.first!
         
@@ -28,9 +17,9 @@ class RouteTests: XCTestCase {
         let traversals = [1, 8, 13, 20]
         for stepIndex in traversals {
             let precedingStep = leg.steps[stepIndex - 1]
-            let precedingStepPolyline = Polyline(precedingStep.coordinates!)
+            let precedingStepPolyline = precedingStep.shape!
             let followingStep = leg.steps[stepIndex]
-            let stepPolyline = Polyline(followingStep.coordinates!)
+            let stepPolyline = followingStep.shape!
             let maneuverPolyline = route.polylineAroundManeuver(legIndex: 0, stepIndex: stepIndex, distance: 30)
             
             let firstIndexedCoordinate = precedingStepPolyline.closestCoordinate(to: maneuverPolyline.coordinates[0])

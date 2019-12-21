@@ -6,8 +6,8 @@ import TestHelper
 
 class InstructionPresenterTests: XCTestCase {
     func testExitInstructionProvidesExit() {
-        let exitAttribute = VisualInstructionComponent(type: .exit, text: "Exit", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)
-        let exitCodeAttribute = VisualInstructionComponent(type: .exitCode, text: "123A", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)
+        let exitAttribute = VisualInstruction.Component.exit(text: .init(text: "Exit", abbreviation: nil, abbreviationPriority: nil))
+        let exitCodeAttribute = VisualInstruction.Component.exitCode(text: .init(text: "123A", abbreviation: nil, abbreviationPriority: nil))
         let exitInstruction = VisualInstruction(text: nil, maneuverType: .takeOffRamp, maneuverDirection: .right, components: [exitAttribute, exitCodeAttribute])
         
         let label = InstructionLabel(frame: CGRect(origin: .zero, size:CGSize(width: 50, height: 50)))

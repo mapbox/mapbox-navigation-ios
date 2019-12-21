@@ -216,7 +216,7 @@ class CarPlayManagerTests: XCTestCase {
         let manager = CarPlayManager()
         
         let spy = CarPlayManagerFailureDelegateSpy()
-        let testError = NSError(domain: "com.mapbox.test", code: 42, userInfo: nil)
+        let testError = DirectionsError.requestTooLarge
         let locOne = CLLocationCoordinate2D(latitude: 0, longitude: 0)
         let fakeOptions = RouteOptions(coordinates: [locOne])
         manager.delegate = spy
@@ -447,7 +447,7 @@ func simulateCarPlayConnection(_ manager: CarPlayManager) {
 
 @available(iOS 12.0, *)
 class CarPlayManagerFailureDelegateSpy: CarPlayManagerDelegate {
-    private(set) var recievedError: NSError?
+    private(set) var recievedError: DirectionsError?
     
     @available(iOS 12.0, *)
     func carPlayManager(_ carPlayManager: CarPlayManager, didFailToFetchRouteBetween waypoints: [Waypoint]?, options: RouteOptions, error: DirectionsError) -> CPNavigationAlert? {
@@ -483,17 +483,9 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
     public var mapButtons: [CPMapButton]?
 
     func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, desiredSimulationMode: SimulationMode) -> NavigationService {
-        let response = Fixture.JSONFromFileNamed(name: jsonFileName)
-        let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String: Any]
-        let initialRoute: Route = {
-            let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
-            let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
-            let options = NavigationRouteOptions(waypoints: [waypoint1, waypoint2])
-            options.shapeFormat = .polyline
-            let route = Route(json: jsonRoute, waypoints: [waypoint1, waypoint2], options: options)
-            route.accessToken = "deadbeef"
-            return route
-        }()
+        let response = Fixture.routeResponse(from: jsonFileName)
+        let initialRoute = response.routes!.first!
+        initialRoute.accessToken = "deadbeef"
         let directionsClientSpy = DirectionsSpy(accessToken: "garbage", host: nil)
         let service = MapboxNavigationService(route: initialRoute, directions: directionsClientSpy, locationSource: NavigationLocationManager(), eventsManagerType: NavigationEventsManagerSpy.self, simulating: desiredSimulationMode)
         return service

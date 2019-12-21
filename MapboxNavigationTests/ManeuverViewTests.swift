@@ -18,8 +18,8 @@ class ManeuverViewTests: FBSnapshotTestCase {
         window.addSubview(maneuverView)
     }
     
-    func maneuverInstruction(_ maneuverType: ManeuverType, _ maneuverDirection: ManeuverDirection, _ degrees: CLLocationDegrees = 180) -> VisualInstruction {
-        let component = VisualInstructionComponent(type: .delimiter, text: "", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)
+    func maneuverInstruction(_ maneuverType: ManeuverType?, _ maneuverDirection: ManeuverDirection?, _ degrees: CLLocationDegrees = 180) -> VisualInstruction {
+        let component = VisualInstruction.Component.delimiter(text: .init(text: "", abbreviation: nil, abbreviationPriority: nil))
         return VisualInstruction(text: "", maneuverType: maneuverType, maneuverDirection: maneuverDirection, components: [component], degrees: degrees)
     }
 
@@ -54,7 +54,7 @@ class ManeuverViewTests: FBSnapshotTestCase {
     }
     
     func testArriveNone() {
-        maneuverView.visualInstruction = maneuverInstruction(.arrive, .none)
+        maneuverView.visualInstruction = maneuverInstruction(.arrive, nil)
         verify(maneuverView.layer)
     }
     
