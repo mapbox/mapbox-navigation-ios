@@ -88,8 +88,8 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
         // do not update if we are previewing instruction steps
         guard previewInstructionsView == nil else { return }
         
-        let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
-        let location = notification.userInfo![RouteControllerNotificationUserInfoKey.locationKey] as! CLLocation
+        let routeProgress = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as! RouteProgress
+        let location = notification.userInfo![RouteController.NotificationUserInfoKey.locationKey] as! CLLocation
         
         // Add maneuver arrow
         if routeProgress.currentLegProgress.followOnStep != nil {
@@ -107,7 +107,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
     }
     
     @objc func updateInstructionsBanner(notification: NSNotification) {
-        guard let routeProgress = notification.userInfo?[RouteControllerNotificationUserInfoKey.routeProgressKey] as? RouteProgress else { return }
+        guard let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress else { return }
         instructionsBannerView.update(for: routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
     }
 

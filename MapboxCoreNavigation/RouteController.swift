@@ -298,9 +298,9 @@ open class RouteController: NSObject {
             
             //Fire the notification (for now)
             NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: [
-                RouteControllerNotificationUserInfoKey.routeProgressKey: progress,
-                RouteControllerNotificationUserInfoKey.locationKey: location, //guaranteed value
-                RouteControllerNotificationUserInfoKey.rawLocationKey: rawLocation //raw
+                NotificationUserInfoKey.routeProgressKey: progress,
+                NotificationUserInfoKey.locationKey: location, //guaranteed value
+                NotificationUserInfoKey.rawLocationKey: rawLocation, //raw
                 ])
         }
     }
@@ -308,9 +308,9 @@ open class RouteController: NSObject {
     private func announcePassage(of spokenInstructionPoint: SpokenInstruction, routeProgress: RouteProgress) {
         delegate?.router(self, didPassSpokenInstructionPoint: spokenInstructionPoint, routeProgress: routeProgress)
         
-        let info: [RouteControllerNotificationUserInfoKey: Any] = [
+        let info: [NotificationUserInfoKey: Any] = [
             .routeProgressKey: routeProgress,
-            .spokenInstructionKey: spokenInstructionPoint
+            .spokenInstructionKey: spokenInstructionPoint,
         ]
         
         NotificationCenter.default.post(name: .routeControllerDidPassSpokenInstructionPoint, object: self, userInfo: info)
@@ -319,9 +319,9 @@ open class RouteController: NSObject {
     private func announcePassage(of visualInstructionPoint: VisualInstructionBanner, routeProgress: RouteProgress) {
         delegate?.router(self, didPassVisualInstructionPoint: visualInstructionPoint, routeProgress: routeProgress)
         
-        let info: [RouteControllerNotificationUserInfoKey: Any] = [
+        let info: [NotificationUserInfoKey: Any] = [
             .routeProgressKey: routeProgress,
-            .visualInstructionKey: visualInstructionPoint
+            .visualInstructionKey: visualInstructionPoint,
         ]
         
         NotificationCenter.default.post(name: .routeControllerDidPassVisualInstructionPoint, object: self, userInfo: info)
@@ -376,8 +376,8 @@ extension RouteController: Router {
         
         delegate?.router(self, willRerouteFrom: location)
         NotificationCenter.default.post(name: .routeControllerWillReroute, object: self, userInfo: [
-            RouteControllerNotificationUserInfoKey.locationKey: location
-            ])
+            NotificationUserInfoKey.locationKey: location,
+        ])
         
         self.lastRerouteLocation = location
         
@@ -395,8 +395,8 @@ extension RouteController: Router {
             if let error = error {
                 strongSelf.delegate?.router(strongSelf, didFailToRerouteWith: error)
                 NotificationCenter.default.post(name: .routeControllerDidFailToReroute, object: self, userInfo: [
-                    RouteControllerNotificationUserInfoKey.routingErrorKey: error
-                    ])
+                    NotificationUserInfoKey.routingErrorKey: error,
+                ])
                 return
             }
             

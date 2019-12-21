@@ -82,7 +82,7 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
     }
     
     open override func didPassSpokenInstructionPoint(notification: NSNotification) {
-        let routeProgresss = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
+        let routeProgresss = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as! RouteProgress
         locale = routeProgresss.route.routeOptions.locale
         let currentLegProgress: RouteLegProgress = routeProgresss.currentLegProgress
         

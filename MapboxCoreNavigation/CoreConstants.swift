@@ -119,42 +119,42 @@ public extension Notification.Name {
     /**
      Posted when `RouteController` receives a user location update representing movement along the expected route.
      
-     The user info dictionary contains the keys `RouteControllerNotificationUserInfoKey.routeProgressKey`, `RouteControllerNotificationUserInfoKey.locationKey`, and `RouteControllerNotificationUserInfoKey.rawLocationKey`.
+     The user info dictionary contains the keys `RouteController.NotificationUserInfoKey.routeProgressKey`, `RouteController.NotificationUserInfoKey.locationKey`, and `RouteController.NotificationUserInfoKey.rawLocationKey`.
      */
     static let routeControllerProgressDidChange: Notification.Name = .init(rawValue: "RouteControllerProgressDidChange")
     
     /**
      Posted after the user diverges from the expected route, just before `RouteController` attempts to calculate a new route.
      
-     The user info dictionary contains the key `RouteControllerNotificationUserInfoKey.locationKey`.
+     The user info dictionary contains the key `RouteController.NotificationUserInfoKey.locationKey`.
      */
     static let routeControllerWillReroute: Notification.Name = .init(rawValue: "RouteControllerWillReroute")
     
     /**
      Posted when `RouteController` obtains a new route in response to the user diverging from a previous route.
      
-     The user info dictionary contains the keys `RouteControllerNotificationUserInfoKey.locationKey` and `RouteControllerNotificationUserInfoKey.isProactiveKey`.
+     The user info dictionary contains the keys `RouteController.NotificationUserInfoKey.locationKey` and `RouteController.NotificationUserInfoKey.isProactiveKey`.
      */
     static let routeControllerDidReroute: Notification.Name = .init(rawValue: "RouteControllerDidReroute")
     
     /**
      Posted when `RouteController` fails to reroute the user after the user diverges from the expected route.
      
-     The user info dictionary contains the key `RouteControllerNotificationUserInfoKey.routingErrorKey`.
+     The user info dictionary contains the key `RouteController.NotificationUserInfoKey.routingErrorKey`.
      */
     static let routeControllerDidFailToReroute: Notification.Name = .init(rawValue: "RouteControllerDidFailToReroute")
     
     /**
      Posted when `RouteController` detects that the user has passed an ideal point for saying an instruction aloud.
      
-     The user info dictionary contains the keys `RouteControllerNotificationUserInfoKey.routeProgressKey` and `RouteControllerNotificationUserInfoKey.spokenInstructionKey`.
+     The user info dictionary contains the keys `RouteController.NotificationUserInfoKey.routeProgressKey` and `RouteController.NotificationUserInfoKey.spokenInstructionKey`.
      */
     static let routeControllerDidPassSpokenInstructionPoint: Notification.Name =  .init(rawValue: "RouteControllerDidPassSpokenInstructionPoint")
     
     /**
      Posted when `RouteController` detects that the user has passed an ideal point for display an instruction visually.
      
-     The user info dictionary contains the keys `RouteControllerNotificationUserInfoKey.routeProgressKey` and `RouteControllerNotificationUserInfoKey.visualInstructionKey`.
+     The user info dictionary contains the keys `RouteController.NotificationUserInfoKey.routeProgressKey` and `RouteController.NotificationUserInfoKey.visualInstructionKey`.
      */
     static let routeControllerDidPassVisualInstructionPoint: Notification.Name = .init(rawValue: "RouteControllerDidPassVisualInstructionPoint")
     
@@ -166,52 +166,54 @@ public extension Notification.Name {
     static let navigationSettingsDidChange: Notification.Name = .init(rawValue: "NavigationSettingsDidChange")
 }
 
-/**
- Keys in the user info dictionaries of various notifications posted by instances
- of `RouteController`.
- */
-public struct RouteControllerNotificationUserInfoKey: Hashable, Equatable, RawRepresentable {
-    public typealias RawValue = String
+extension RouteController {
+    /**
+     Keys in the user info dictionaries of various notifications posted by instances
+     of `RouteController`.
+     */
+    public struct NotificationUserInfoKey: Hashable, Equatable, RawRepresentable {
+        public typealias RawValue = String
 
-    public var rawValue: String
+        public var rawValue: String
 
-    public init(rawValue: String) {
-        self.rawValue = rawValue
+        public init(rawValue: String) {
+            self.rawValue = rawValue
+        }
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.routeControllerProgressDidChange`, `Notification.Name.routeControllerDidPassVisualInstructionPoint`, or `Notification.Name.routeControllerDidPassSpokenInstructionPoint` notification. The corresponding value is a `RouteProgress` object representing the current route progress.
+         */
+        public static let routeProgressKey: NotificationUserInfoKey = .init(rawValue: "progress")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.routeControllerProgressDidChange`, `Notification.Name.routeControllerWillReroute`, or `Notification.Name.routeControllerDidReroute` notification. The corresponding value is a `CLLocation` object representing the current idealized user location.
+         */
+        public static let locationKey: NotificationUserInfoKey = .init(rawValue: "location")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.routeControllerProgressDidChange` notification. The corresponding value is a `CLLocation` object representing the current raw user location.
+         */
+        public static let rawLocationKey: NotificationUserInfoKey = .init(rawValue: "rawLocation")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.routeControllerDidFailToReroute` notification. The corresponding value is an `NSError` object indicating why `RouteController` was unable to calculate a new route.
+         */
+        public static let routingErrorKey: NotificationUserInfoKey = .init(rawValue: "error")
+        
+        /**
+         A key in the user info dictionary of an `Notification.Name.routeControllerDidPassVisualInstructionPoint`. The corresponding value is an `VisualInstruction` object representing the current visual instruction.
+         */
+        public static let visualInstructionKey: NotificationUserInfoKey = .init(rawValue: "visualInstruction")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.routeControllerDidPassSpokenInstructionPoint` notification. The corresponding value is an `SpokenInstruction` object representing the current visual instruction.
+         */
+        public static let spokenInstructionKey: NotificationUserInfoKey = .init(rawValue: "spokenInstruction")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.routeControllerDidReroute` notification. The corresponding value is an `NSNumber` instance containing a Boolean value indicating whether `RouteController` proactively rerouted the user onto a faster route.
+         */
+        public static let isProactiveKey: NotificationUserInfoKey = .init(rawValue: "RouteControllerDidFindFasterRoute")
     }
-    
-    /**
-     A key in the user info dictionary of a `Notification.Name.routeControllerProgressDidChange`, `Notification.Name.routeControllerDidPassVisualInstructionPoint`, or `Notification.Name.routeControllerDidPassSpokenInstructionPoint` notification. The corresponding value is a `RouteProgress` object representing the current route progress.
-     */
-    public static let routeProgressKey: RouteControllerNotificationUserInfoKey = .init(rawValue: "progress")
-    
-    /**
-     A key in the user info dictionary of a `Notification.Name.routeControllerProgressDidChange`, `Notification.Name.routeControllerWillReroute`, or `Notification.Name.routeControllerDidReroute` notification. The corresponding value is a `CLLocation` object representing the current idealized user location.
-     */
-    public static let locationKey: RouteControllerNotificationUserInfoKey = .init(rawValue: "location")
-    
-    /**
-     A key in the user info dictionary of a `Notification.Name.routeControllerProgressDidChange` notification. The corresponding value is a `CLLocation` object representing the current raw user location.
-     */
-    public static let rawLocationKey: RouteControllerNotificationUserInfoKey = .init(rawValue: "rawLocation")
-    
-    /**
-     A key in the user info dictionary of a `Notification.Name.routeControllerDidFailToReroute` notification. The corresponding value is an `NSError` object indicating why `RouteController` was unable to calculate a new route.
-     */
-    public static let routingErrorKey: RouteControllerNotificationUserInfoKey = .init(rawValue: "error")
-    
-    /**
-     A key in the user info dictionary of an `Notification.Name.routeControllerDidPassVisualInstructionPoint`. The corresponding value is an `VisualInstruction` object representing the current visual instruction.
-     */
-    public static let visualInstructionKey: RouteControllerNotificationUserInfoKey = .init(rawValue: "visualInstruction")
-    
-    /**
-     A key in the user info dictionary of a `Notification.Name.routeControllerDidPassSpokenInstructionPoint` notification. The corresponding value is an `SpokenInstruction` object representing the current visual instruction.
-     */
-    public static let spokenInstructionKey: RouteControllerNotificationUserInfoKey = .init(rawValue: "spokenInstruction")
-    
-    /**
-     A key in the user info dictionary of a `Notification.Name.routeControllerDidReroute` notification. The corresponding value is an `NSNumber` instance containing a Boolean value indicating whether `RouteController` proactively rerouted the user onto a faster route.
-     */
-    public static let isProactiveKey: RouteControllerNotificationUserInfoKey = .init(rawValue: "RouteControllerDidFindFasterRoute")
 }
 

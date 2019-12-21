@@ -178,7 +178,7 @@ extension InternalRouter where Self: Router {
     }
     
     func announce(reroute newRoute: Route, at location: CLLocation?, proactive: Bool) {
-        var userInfo = [RouteControllerNotificationUserInfoKey: Any]()
+        var userInfo = [RouteController.NotificationUserInfoKey: Any]()
         if let location = location {
             userInfo[.locationKey] = location
         }
