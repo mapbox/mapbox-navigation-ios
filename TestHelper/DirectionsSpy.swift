@@ -19,7 +19,7 @@ public class DirectionsSpy: Directions {
         return DummyURLSessionDataTask()
     }
     
-    public func fireLastCalculateCompletion(with waypoints: [Waypoint]?, routes: [Route]?, error: NSError?) {
+    public func fireLastCalculateCompletion(with waypoints: [Waypoint]?, routes: [Route]?, error: DirectionsError?) {
         guard let lastCalculateOptionsCompletion = lastCalculateOptionsCompletion else {
             assert(false, "Can't fire a completion handler which doesn't exist!")
             return

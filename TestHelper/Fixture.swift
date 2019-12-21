@@ -17,21 +17,14 @@ public class Fixture: NSObject {
         }
     }
     
-    public class func JSONFromFileNamed(name: String) -> [String: Any] {
+    public class func JSONFromFileNamed(name: String) -> Data {
         guard let path = Bundle(for: Fixture.self).path(forResource: name, ofType: "json") else {
-            assert(false, "Fixture \(name) not found.")
-            return [:]
+            preconditionFailure("Fixture \(name) not found.")
         }
         guard let data = NSData(contentsOfFile: path) as Data? else {
-            assert(false, "No data found at \(path).")
-            return [:]
+            preconditionFailure("No data found at \(path).")
         }
-        do {
-            return try JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
-        } catch {
-            assert(false, "Unable to decode JSON fixture at \(path): \(error).")
-            return [:]
-        }
+        return data
     }
     
     public class func downloadRouteFixture(coordinates: [CLLocationCoordinate2D], fileName: String, completion: @escaping () -> Void) {
@@ -71,13 +64,19 @@ public class Fixture: NSObject {
     }
     
     public class func route(from jsonFile: String) -> Route {
-        let response = JSONFromFileNamed(name: jsonFile)
-        let waypoints = Fixture.waypoints(from: jsonFile)
-        let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String : Any]
-        let route = Route(json: jsonRoute, waypoints: waypoints, options: NavigationRouteOptions(waypoints: waypoints))
+        let responseData = JSONFromFileNamed(name: jsonFile)
+        let response: RouteResponse!
+        do {
+            response = try JSONDecoder().decode(RouteResponse.self, from: responseData)
+        } catch {
+            preconditionFailure("Unable to decode JSON fixture: \(error)")
+        }
+        guard let route = response.routes?.first else {
+            preconditionFailure("No routes")
+        }
         
         // Like `Directions.postprocess(_:fetchStartDate:uuid:)`
-        route.routeIdentifier = response["uuid"] as? String
+        route.routeIdentifier = response.uuid
         let fetchStartDate = Date(timeIntervalSince1970: 3600)
         route.fetchStartDate = fetchStartDate
         route.responseEndDate = Date(timeInterval: 1, since: fetchStartDate)
@@ -86,40 +85,32 @@ public class Fixture: NSObject {
     }
     
     public class func waypoints(from jsonFile: String) -> [Waypoint] {
-        let response = JSONFromFileNamed(name: jsonFile)
-        let waypointsArray = response["waypoints"] as! [[String: Any]]
-        let waypoints = waypointsArray.map { (waypointDict) -> Waypoint in
-            let location = waypointDict["location"] as! [CLLocationDegrees]
-            let longitude = location[0]
-            let latitude = location[1]
-            return Waypoint(coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude))
+        let responseData = JSONFromFileNamed(name: jsonFile)
+        let response: RouteResponse!
+        do {
+            response = try JSONDecoder().decode(RouteResponse.self, from: responseData)
+        } catch {
+            preconditionFailure("Unable to decode JSON fixture: \(error)")
+        }
+        guard let waypoints = response.waypoints else {
+            preconditionFailure("No waypoints")
         }
         return waypoints
     }
     
     // Returns `Route` objects from a match response
     public class func routesFromMatches(at filePath: String) -> [Route]? {
-        let path = Bundle(for: Fixture.self).path(forResource: filePath, ofType: "json")
-        let url = URL(fileURLWithPath: path!)
-        let data = try! Data(contentsOf: url)
-        let json = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
-        let tracepoints = json["tracepoints"] as! [Any]
-        let coordinates = Array(repeating: CLLocationCoordinate2D(latitude: 0, longitude: 0), count: tracepoints.count)
-        
-        // Adapted from MatchOptions.response(containingRoutesFrom:) in MapboxDirections.
-        let jsonWaypoints = json["tracepoints"] as! [Any]
-        // Assume MatchOptions.waypointIndices contains the first and last indices only.
-        let waypoints = [jsonWaypoints.first!, jsonWaypoints.last!].map { jsonWaypoint -> Waypoint in
-            let jsonWaypoint = jsonWaypoint as! [String: Any]
-            let location = jsonWaypoint["location"] as! [Double]
-            let coordinate = CLLocationCoordinate2D(latitude: location[1], longitude: location[0])
-            return Waypoint(coordinate: coordinate, name: jsonWaypoint["name"] as? String)
+        let responseData = JSONFromFileNamed(name: filePath)
+        let response: MapMatchingResponse!
+        do {
+            response = try JSONDecoder().decode(MapMatchingResponse.self, from: responseData)
+        } catch {
+            preconditionFailure("Unable to decode JSON fixture: \(error)")
         }
-        let opts = RouteOptions(coordinates: coordinates, profileIdentifier: .automobile)
-        
-        return (json["matchings"] as? [[String: Any]])?.map {
-            Route(json: $0, waypoints: waypoints, options: opts)
+        guard let routes = response.routes else {
+            preconditionFailure("No routes")
         }
+        return routes
     }
     
     public class func generateTrace(for route: Route, speedMultiplier: Double = 1) -> [CLLocation] {
