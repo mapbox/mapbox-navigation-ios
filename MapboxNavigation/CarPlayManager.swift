@@ -402,7 +402,7 @@ extension CarPlayManager {
         directions.calculate(options, completionHandler: completionHandler)
     }
     
-    internal func didCalculate(_ routes: [Route]?, for routeOptions: RouteOptions, between waypoints: [Waypoint]?, error: NSError?, completionHandler: CompletionHandler) {
+    internal func didCalculate(_ routes: [Route]?, for routeOptions: RouteOptions, between waypoints: [Waypoint]?, error: DirectionsError?, completionHandler: CompletionHandler) {
         defer {
             completionHandler()
         }

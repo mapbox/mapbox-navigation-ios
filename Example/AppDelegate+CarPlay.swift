@@ -90,11 +90,11 @@ extension AppDelegate: CarPlayManagerDelegate {
         }
     }
     
-    func carPlayManager(_ carPlayManager: CarPlayManager, didFailToFetchRouteBetween waypoints: [Waypoint]?, options: RouteOptions, error: NSError) -> CPNavigationAlert? {
+    func carPlayManager(_ carPlayManager: CarPlayManager, didFailToFetchRouteBetween waypoints: [Waypoint]?, options: RouteOptions, error: DirectionsError) -> CPNavigationAlert? {
         let okTitle = NSLocalizedString("CARPLAY_OK", bundle: .main, value: "OK", comment: "CPAlertTemplate OK button title")
         let action = CPAlertAction(title: okTitle, style: .default, handler: {_ in })
         let alert = CPNavigationAlert(titleVariants: [error.localizedDescription],
-                                      subtitleVariants: [error.localizedFailureReason ?? ""],
+                                      subtitleVariants: [error.failureReason ?? ""],
                                       imageSet: nil,
                                       primaryAction: action,
                                       secondaryAction: nil,

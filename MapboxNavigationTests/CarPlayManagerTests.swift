@@ -450,7 +450,7 @@ class CarPlayManagerFailureDelegateSpy: CarPlayManagerDelegate {
     private(set) var recievedError: NSError?
     
     @available(iOS 12.0, *)
-    func carPlayManager(_ carPlayManager: CarPlayManager, didFailToFetchRouteBetween waypoints: [Waypoint]?, options: RouteOptions, error: NSError) -> CPNavigationAlert? {
+    func carPlayManager(_ carPlayManager: CarPlayManager, didFailToFetchRouteBetween waypoints: [Waypoint]?, options: RouteOptions, error: DirectionsError) -> CPNavigationAlert? {
         recievedError = error
         return nil
     }

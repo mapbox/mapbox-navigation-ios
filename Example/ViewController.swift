@@ -6,7 +6,7 @@ import UserNotifications
 import AVKit
 
 private typealias RouteRequestSuccess = (([Route]) -> Void)
-private typealias RouteRequestFailure = ((NSError) -> Void)
+private typealias RouteRequestFailure = ((Error) -> Void)
 
 class ViewController: UIViewController {
     // MARK: - IBOutlets
@@ -205,15 +205,13 @@ class ViewController: UIViewController {
     }
 
     fileprivate func requestRoute(with options: RouteOptions, success: @escaping RouteRequestSuccess, failure: RouteRequestFailure?) {
-        let handler: Directions.RouteCompletionHandler = { (waypoints, routes, error) in
+        // Calculate route offline if an offline version is selected
+        let shouldUseOfflineRouting = Settings.selectedOfflineVersion != nil
+        Settings.directions.calculate(options, offline: shouldUseOfflineRouting) { (waypoints, routes, error) in
             if let error = error { failure?(error) }
             guard let routes = routes else { return }
             return success(routes)
         }
-
-        // Calculate route offline if an offline version is selected
-        let shouldUseOfflineRouting = Settings.selectedOfflineVersion != nil
-        Settings.directions.calculate(options, offline: shouldUseOfflineRouting, completionHandler: handler)
     }
 
     // MARK: Basic Navigation

@@ -7,14 +7,10 @@ import MapboxNavigationNative
  */
 public typealias NavigationDirectionsCompletionHandler = (_ numberOfTiles: UInt64) -> Void
 
-public enum OfflineRoutingError: DirectionsError, LocalizedError {
+public enum OfflineRoutingError: LocalizedError {
     public typealias RawValue = String
     
-    var failureReason: String {
-        #warning("unimplemented")
-        return "Unimplemented"
-    }
-    
+    case onlineError(DirectionsError)
     /**
      No route could be found between the specified locations.
      
@@ -28,8 +24,10 @@ public enum OfflineRoutingError: DirectionsError, LocalizedError {
     
     public var localizedDescription: String {
         switch self {
+        case .onlineError(let error):
+            return error.localizedDescription
         case .unableToRoute:
-            return "Unable to route between speficied waypoints."
+            return "Unable to route between specified waypoints."
         case .corruptRouteData(let value):
             return value
         case .unexpectedRouteResult(let value):
@@ -39,6 +37,16 @@ public enum OfflineRoutingError: DirectionsError, LocalizedError {
         case .unknown(let underlying):
             return "Unknown Error: \(underlying.localizedDescription)"
         }
+    }
+    
+    var failureReason: String {
+        #warning("unimplemented")
+        return "Unimplemented"
+    }
+    
+    public var recoverySuggestion: String? {
+        #warning("unimplemented")
+        return nil
     }
 }
 
@@ -160,12 +168,18 @@ public class NavigationDirections: Directions {
      - parameter offline: Determines whether to calculate the route offline or online.
      - parameter completionHandler: The closure (block) to call with the resulting routes. This closure is executed on the application’s main thread.
      */
-    public func calculate(_ options: RouteOptions, offline: Bool = true, completionHandler: @escaping Directions.RouteCompletionHandler) {
+    public func calculate(_ options: RouteOptions, offline: Bool = true, completionHandler: @escaping OfflineRouteCompletionHandler) {
         
-        let complete = completionHandler as OfflineRouteCompletionHandler
-        
-        guard offline == true else {
-            super.calculate(options, completionHandler: completionHandler)
+        guard offline else {
+            super.calculate(options) { (waypoints, routes, error) in
+                let offlineError: OfflineRoutingError?
+                if let error = error {
+                    offlineError = .onlineError(error)
+                } else {
+                    offlineError = nil
+                }
+                completionHandler(waypoints, routes, offlineError)
+            }
             return
         }
         
@@ -175,25 +189,25 @@ public class NavigationDirections: Directions {
             guard let result = self?.navigator.getRouteForDirectionsUri(url.absoluteString) else {
                 let message = NSLocalizedString("OFFLINE_NO_RESULT", bundle: .mapboxCoreNavigation, value: "Unable to calculate the requested route while offline.", comment: "Error description when an offline route request returns no result")
                 let error = OfflineRoutingError.unexpectedRouteResult(message)
-                return complete(nil, nil, error)
+                return completionHandler(nil, nil, error)
             }
             
             guard let data = result.json .data(using: .utf8) else {
                 let message = NSLocalizedString("OFFLINE_CORRUPT_DATA", bundle: .mapboxCoreNavigation, value: "Found an invalid route while offline.", comment: "Error message when an offline route request returns a response that can’t be deserialized")
                 let error = OfflineRoutingError.corruptRouteData(message)
-                return complete(nil, nil, error)
+                return completionHandler(nil, nil, error)
             }
             DispatchQueue.main.async {
                 
                 do {
                     let response = try JSONDecoder().decode(RouteResponse.self, from: data)
                     guard let routes = response.routes else {
-                        return complete(response.waypoints, nil, .unableToRoute)
+                        return completionHandler(response.waypoints, nil, .unableToRoute)
                     }
-                    return complete(response.waypoints, routes, nil)
+                    return completionHandler(response.waypoints, routes, nil)
                 }
                 catch {
-                    return complete(nil, nil, .unknown(underlying: error))
+                    return completionHandler(nil, nil, .unknown(underlying: error))
                 }
                 
             }
