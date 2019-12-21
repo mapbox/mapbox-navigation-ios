@@ -177,7 +177,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     public func userIsOnRoute(_ location: CLLocation) -> Bool {
         
         guard let destination = routeProgress.currentLeg.destination else {
-            return true
+            preconditionFailure("Route legs used for navigation must have destinations")
         }
         // If the user has arrived, do not continue monitor reroutes, step progress, etc
         if routeProgress.currentLegProgress.userHasArrivedAtWaypoint &&
@@ -314,7 +314,10 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     func updateRouteLegProgress(for location: CLLocation) {
         
         let legProgress = routeProgress.currentLegProgress
-        guard let currentDestination = legProgress.leg.destination, let remainingVoiceInstructions = legProgress.currentStepProgress.remainingSpokenInstructions else {
+        guard let currentDestination = legProgress.leg.destination else {
+            preconditionFailure("Route legs used for navigation must have destinations")
+        }
+        guard let remainingVoiceInstructions = legProgress.currentStepProgress.remainingSpokenInstructions else {
             return
         }
 
