@@ -10,33 +10,6 @@ extension RouteOptions {
         }
     }
     
-    convenience init(options: RouteOptions) {
-        self.init(waypoints: options.waypoints, profileIdentifier: options.profileIdentifier)
-        allowsUTurnAtWaypoint = options.allowsUTurnAtWaypoint
-        roadClassesToAvoid = options.roadClassesToAvoid
-        alleyPriority = options.alleyPriority
-        walkwayPriority = options.walkwayPriority
-        speed = options.speed
-        includesAlternativeRoutes = options.includesAlternativeRoutes
-        includesExitRoundaboutManeuver = options.includesExitRoundaboutManeuver
-    }
-    
-    /**
-     Returns a copy of RouteOptions without the specified waypoint.
-     
-     - parameter waypoint: the Waypoint to exclude.
-     - returns: a copy of self excluding the specified waypoint.
-     */
-    public func without(waypoint: Waypoint) -> RouteOptions {
-        let waypointsWithoutSpecified = waypoints.filter { $0 != waypoint }
-        let copy = RouteOptions(options: self)
-        copy.waypoints = waypointsWithoutSpecified
-        
-        return copy
-    }
-    
-
-    
     /**
      Returns a tuple containing the waypoints along the leg at the given index and the waypoints that separate subsequent legs.
      
@@ -52,6 +25,31 @@ extension RouteOptions {
         let legWaypoints = reconstitutedWaypoints.first ?? []
         let subsequentWaypoints = reconstitutedWaypoints.dropFirst()
         return (legWaypoints, subsequentWaypoints.flatMap { $0 })
+    }
+}
+
+extension RouteOptions: NSCopying {
+    public func copy(with zone: NSZone? = nil) -> Any {
+        do {
+            let encodedOptions = try JSONEncoder().encode(self)
+            return try JSONDecoder().decode(RouteOptions.self, from: encodedOptions)
+        } catch {
+            preconditionFailure("Unable to copy RouteOptions by round-tripping it through JSON")
+        }
+    }
+    
+    /**
+     Returns a copy of RouteOptions without the specified waypoint.
+     
+     - parameter waypoint: the Waypoint to exclude.
+     - returns: a copy of self excluding the specified waypoint.
+     */
+    public func without(waypoint: Waypoint) -> RouteOptions {
+        let waypointsWithoutSpecified = waypoints.filter { $0 != waypoint }
+        let copy = self.copy() as! RouteOptions
+        copy.waypoints = waypointsWithoutSpecified
+        
+        return copy
     }
 }
 
