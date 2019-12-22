@@ -193,7 +193,7 @@ open class RouteController: NSObject {
         // Notify observers if the step’s remaining distance has changed.
         update(progress: routeProgress, with: CLLocation(status.location), rawLocation: location)
         
-        let willReroute = !userIsOnRoute(location) && delegate?.router(self, shouldRerouteFrom: location)
+        let willReroute = !userIsOnRoute(location, status: status) && delegate?.router(self, shouldRerouteFrom: location)
             ?? DefaultBehavior.shouldRerouteFromLocation
         
         updateIndexes(status: status, progress: routeProgress)
@@ -361,6 +361,10 @@ open class RouteController: NSObject {
 
 extension RouteController: Router {
     public func userIsOnRoute(_ location: CLLocation) -> Bool {
+        return userIsOnRoute(location, status: nil)
+    }
+    
+    public func userIsOnRoute(_ location: CLLocation, status: MBNavigationStatus?) -> Bool {
         
         guard let destination = routeProgress.currentLeg.destination else {
             preconditionFailure("Route legs used for navigation must have destinations")
@@ -373,7 +377,7 @@ extension RouteController: Router {
             return true
         }
         
-        let status = navigator.getStatusForTimestamp(location.timestamp)
+        let status = status ?? navigator.getStatusForTimestamp(location.timestamp)
         let offRoute = status.routeState == .offRoute
         return !offRoute
     }
