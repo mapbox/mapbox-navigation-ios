@@ -62,7 +62,7 @@ fileprivate class CarPlayNavigationViewControllerTests: XCTestCase {
         let fakeSession = CPNavigationSessionFake(maneuvers: [fakeManeuver])
         mapSpy.fakeSession = fakeSession
         let progress = navService.routeProgress
-        let firstCoordinate = progress.currentLeg.coordinates.first!
+        let firstCoordinate = progress.currentLeg.shape.coordinates.first!
         let location = CLLocation(latitude: firstCoordinate.latitude, longitude: firstCoordinate.longitude)
         
         //create the subject and notification

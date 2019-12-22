@@ -456,7 +456,7 @@ open class RouteLegProgress: NSObject {
             // The leg has only a source and no via points. Save ourselves a call to RouteLeg.coordinates, which can be expensive.
             return []
         }
-        let legPolyline = Polyline(leg.coordinates)
+        let legPolyline = leg.shape
         guard let userCoordinateIndex = legPolyline.indexedCoordinateFromStart(distance: distanceTraveled)?.index else {
             // The leg is empty, so none of the waypoints are meaningful.
             return []
