@@ -96,6 +96,7 @@ class RouteProgressTests: XCTestCase {
             RouteStep(transportType: .automobile, maneuverLocation: source.coordinate, maneuverType: .depart, maneuverDirection: nil, instructions: "", initialHeading: nil, finalHeading: nil, drivingSide: .right, exitCodes: nil, exitNames: nil, phoneticExitNames: nil, distance: 0, expectedTravelTime: 0, names: nil, phoneticNames: nil, codes: nil, destinationCodes: nil, destinations: nil, intersections: nil, instructionsSpokenAlongStep: nil, instructionsDisplayedAlongStep: nil),
             RouteStep(transportType: .automobile, maneuverLocation: destination.coordinate, maneuverType: .arrive, maneuverDirection: nil, instructions: "", initialHeading: nil, finalHeading: nil, drivingSide: .right, exitCodes: nil, exitNames: nil, phoneticExitNames: nil, distance: 0, expectedTravelTime: 0, names: nil, phoneticNames: nil, codes: nil, destinationCodes: nil, destinations: nil, intersections: nil, instructionsSpokenAlongStep: nil, instructionsDisplayedAlongStep: nil),
         ]
+        steps[0].shape = LineString(routeCoordinates)
         let leg = RouteLeg(steps: steps, name: "", distance: 0, expectedTravelTime: 0, profileIdentifier: .automobile)
         return RouteLegProgress(leg: leg)
     }
