@@ -4,6 +4,7 @@ extension Route {
     
     var json: String? {
         let encoder = JSONEncoder()
+        encoder.userInfo[.options] = routeOptions
         guard let encoded = try? encoder.encode(self) else {
             return nil
         }
