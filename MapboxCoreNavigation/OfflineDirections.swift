@@ -12,9 +12,11 @@ public typealias NavigationDirectionsCompletionHandler = (_ numberOfTiles: UInt6
 */
 public enum OfflineRoutingError: LocalizedError {
     /**
-     The enclosed error occurred when attempting to calculate directions online.
+     A standard Directions API error occurred.
+     
+     A Directions API error can occur whether directions are calculated online or offline.
      */
-    case online(DirectionsError)
+    case standard(DirectionsError)
     
     /**
      The router returned an empty response.
@@ -30,7 +32,7 @@ public enum OfflineRoutingError: LocalizedError {
     
     public var localizedDescription: String {
         switch self {
-        case .online(let error):
+        case .standard(let error):
             return error.localizedDescription
         case .noData:
             return NSLocalizedString("OFFLINE_NO_RESULT", bundle: .mapboxCoreNavigation, value: "Unable to calculate the requested route while offline.", comment: "Error description when an offline route request returns no result")
@@ -43,7 +45,7 @@ public enum OfflineRoutingError: LocalizedError {
     
     public var failureReason: String? {
         switch self {
-        case .online(let error):
+        case .standard(let error):
             return error.failureReason
         case .unknown(let underlying):
             return (underlying as? LocalizedError)?.failureReason
@@ -54,7 +56,7 @@ public enum OfflineRoutingError: LocalizedError {
     
     public var recoverySuggestion: String? {
         switch self {
-        case .online(let error):
+        case .standard(let error):
             return error.recoverySuggestion
         case .unknown(let underlying):
             return (underlying as? LocalizedError)?.recoverySuggestion
@@ -188,7 +190,7 @@ public class NavigationDirections: Directions {
             super.calculate(options) { (waypoints, routes, error) in
                 let offlineError: OfflineRoutingError?
                 if let error = error {
-                    offlineError = .online(error)
+                    offlineError = .standard(error)
                 } else {
                     offlineError = nil
                 }
@@ -220,7 +222,7 @@ public class NavigationDirections: Directions {
                     decoder.userInfo[.options] = options
                     let response = try decoder.decode(RouteResponse.self, from: data)
                     guard let routes = response.routes else {
-                        return completionHandler(response.waypoints, nil, .online(.unableToRoute))
+                        return completionHandler(response.waypoints, nil, .standard(.unableToRoute))
                     }
                     return completionHandler(response.waypoints, routes, nil)
                 }
