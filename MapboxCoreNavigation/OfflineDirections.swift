@@ -216,7 +216,9 @@ public class NavigationDirections: Directions {
             DispatchQueue.main.async {
                 
                 do {
-                    let response = try JSONDecoder().decode(RouteResponse.self, from: data)
+                    let decoder = JSONDecoder()
+                    decoder.userInfo[.options] = options
+                    let response = try decoder.decode(RouteResponse.self, from: data)
                     guard let routes = response.routes else {
                         return completionHandler(response.waypoints, nil, .online(.unableToRoute))
                     }
