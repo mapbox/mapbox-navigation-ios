@@ -7,13 +7,14 @@ extension CGSize {
 }
 
 struct ShieldImage {
+    /// PNG at 3×
     let image: UIImage
-    let url: URL
+    let baseURL: URL
 }
 
 extension ShieldImage {
     static let i280 = ShieldImage(image: UIImage(named: "i-280", in: Bundle(for: InstructionsBannerViewIntegrationTests.self), compatibleWith: nil)!,
-                                  url: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@3x.png")!)
+                                  baseURL: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280")!)
     static let us101 = ShieldImage(image: UIImage(named: "us-101", in: Bundle(for: InstructionsBannerViewIntegrationTests.self), compatibleWith: nil)!,
-                                   url: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/us-101@3x.png")!)
+                                   baseURL: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/us-101")!)
 }

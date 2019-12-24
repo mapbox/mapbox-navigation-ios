@@ -14,8 +14,8 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         recordMode = false
         agnosticOptions = [.OS, .device]
 
-        let i280Instruction = VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.i280.url), alternativeText: .init(text: "I-280", abbreviation: nil, abbreviationPriority: 0))
-        let us101Instruction = VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.us101.url), alternativeText: .init(text: "US 101", abbreviation: nil, abbreviationPriority: 0))
+        let i280Instruction = VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.i280.baseURL), alternativeText: .init(text: "I-280", abbreviation: nil, abbreviationPriority: 0))
+        let us101Instruction = VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.us101.baseURL), alternativeText: .init(text: "US 101", abbreviation: nil, abbreviationPriority: 0))
 
         imageRepository.storeImage(ShieldImage.i280.image, forKey: i280Instruction.cacheKey!, toDisk: false)
         imageRepository.storeImage(ShieldImage.us101.image, forKey: us101Instruction.cacheKey!, toDisk: false)
@@ -60,7 +60,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.distance = 482
 
         let instructions: [VisualInstruction.Component] = [
-            .image(image: .init(imageBaseURL: ShieldImage.i280.url), alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: 0)),
+            .image(image: .init(imageBaseURL: ShieldImage.i280.baseURL), alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: 0)),
             .text(text: .init(text: "US 45 / Chicago / US 45 / Chicago", abbreviation: nil, abbreviationPriority: 0)),
         ]
 
@@ -77,7 +77,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.distance = 482
 
         let primary: [VisualInstruction.Component] = [
-            .image(image: .init(imageBaseURL: ShieldImage.i280.url), alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: 0)),
+            .image(image: .init(imageBaseURL: ShieldImage.i280.baseURL), alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: 0)),
             .text(text: .init(text: "South", abbreviation: nil, abbreviationPriority: 0)),
         ]
         let secondary = [VisualInstruction.Component.text(text: .init(text: "US 45 / Chicago", abbreviation: nil, abbreviationPriority: 0))]
@@ -95,7 +95,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.distance = 482
 
         let primary: [VisualInstruction.Component] = [
-            .image(image: .init(imageBaseURL: ShieldImage.i280.url), alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: 0)),
+            .image(image: .init(imageBaseURL: ShieldImage.i280.baseURL), alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: 0)),
         ]
         let secondary = [VisualInstruction.Component.text(text: .init(text: "Mountain View Test", abbreviation: nil, abbreviationPriority: 0))]
 
@@ -112,7 +112,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.distance = 482
 
         let primary: [VisualInstruction.Component] = [
-            .image(image: .init(imageBaseURL: ShieldImage.i280.url), alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: 0)),
+            .image(image: .init(imageBaseURL: ShieldImage.i280.baseURL), alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: 0)),
             .text(text: .init(text: "Drive", abbreviation: "Dr", abbreviationPriority: 0)),
             .text(text: .init(text: "Avenue", abbreviation: "Ave", abbreviationPriority: 5)),
             .text(text: .init(text: "West", abbreviation: "W", abbreviationPriority: 4)),
@@ -134,7 +134,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.distance = 482
 
         let primary: [VisualInstruction.Component] = [
-            .image(image: .init(imageBaseURL: ShieldImage.i280.url), alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: nil)),
+            .image(image: .init(imageBaseURL: ShieldImage.i280.baseURL), alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: nil)),
             .delimiter(text: .init(text: "/", abbreviation: nil, abbreviationPriority: nil)),
             .text(text: .init(text: "10", abbreviation: nil, abbreviationPriority: nil)),
             .delimiter(text: .init(text: "/", abbreviation: nil, abbreviationPriority: nil)),
@@ -173,9 +173,9 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.distance = 482
 
         let primary: [VisualInstruction.Component] = [
-            .image(image: .init(imageBaseURL: ShieldImage.i280.url), alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: nil)),
+            .image(image: .init(imageBaseURL: ShieldImage.i280.baseURL), alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: nil)),
             .delimiter(text: .init(text: "/", abbreviation: nil, abbreviationPriority: nil)),
-            .image(image: .init(imageBaseURL: ShieldImage.us101.url), alternativeText: .init(text: "US-101", abbreviation: nil, abbreviationPriority: nil)),
+            .image(image: .init(imageBaseURL: ShieldImage.us101.baseURL), alternativeText: .init(text: "US-101", abbreviation: nil, abbreviationPriority: nil)),
         ]
 
         view.update(for: makeVisualInstruction(.continue, .straightAhead, primaryInstruction: primary, secondaryInstruction: nil))
@@ -198,14 +198,14 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         instructionsBannerView.distance = 482
 
         let primary = [
-            VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.i280.url), alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: 0)),
+            VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.i280.baseURL), alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: 0)),
         ]
         let secondary = [VisualInstruction.Component.text(text: .init(text: "US 45 / Chicago", abbreviation: nil, abbreviationPriority: 0))]
 
         instructionsBannerView.update(for: makeVisualInstruction(.turn, .right, primaryInstruction: primary, secondaryInstruction: secondary))
 
         let primaryThen = [
-            VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.i280.url), alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: 0)),
+            VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.i280.baseURL), alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: 0)),
         ]
         let primaryThenInstruction = VisualInstruction(text: nil, maneuverType: .none, maneuverDirection: .none, components: primaryThen)
 

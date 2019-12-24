@@ -33,9 +33,9 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
 
     lazy var instructions: [VisualInstruction.Component] = {
         let components: [VisualInstruction.Component] =  [
-            .image(image: .init(imageBaseURL: ShieldImage.us101.url), alternativeText: .init(text: "US 101", abbreviation: nil, abbreviationPriority: 0)),
+            .image(image: .init(imageBaseURL: ShieldImage.us101.baseURL), alternativeText: .init(text: "US 101", abbreviation: nil, abbreviationPriority: 0)),
             .delimiter(text: .init(text: "/", abbreviation: nil, abbreviationPriority: 0)),
-            .image(image: .init(imageBaseURL: ShieldImage.i280.url), alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: 0)),
+            .image(image: .init(imageBaseURL: ShieldImage.i280.baseURL), alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: 0)),
         ]
         return components
     }()
@@ -101,8 +101,8 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
 
     func testDelimiterIsHiddenWhenAllShieldsAreAlreadyLoaded() {
         //prime the cache to simulate images having already been loaded
-        let instruction1 = VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.i280.url), alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: 0))
-        let instruction2 = VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.us101.url), alternativeText: .init(text: "US 101", abbreviation: nil, abbreviationPriority: 0))
+        let instruction1 = VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.i280.baseURL), alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: 0))
+        let instruction2 = VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.us101.baseURL), alternativeText: .init(text: "US 101", abbreviation: nil, abbreviationPriority: 0))
 
         imageRepository.storeImage(ShieldImage.i280.image, forKey: instruction1.cacheKey!, toDisk: false)
         imageRepository.storeImage(ShieldImage.us101.image, forKey: instruction2.cacheKey!, toDisk: false)
@@ -307,7 +307,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
 
     private func simulateDownloadingShieldForComponent(_ component: VisualInstruction.Component) {
         var imageURL: URL!
-        if case let VisualInstruction.Component.image(image: imageRepresentation, alternativeText: _) = component, let imageBaseURL = imageRepresentation.imageBaseURL {
+        if case let VisualInstruction.Component.image(image: imageRepresentation, alternativeText: _) = component, let imageBaseURL = imageRepresentation.imageURL(format: .png) {
             imageURL = imageBaseURL
         }
         let operation: ImageDownloadOperationSpy = ImageDownloadOperationSpy.operationForURL(imageURL)!
