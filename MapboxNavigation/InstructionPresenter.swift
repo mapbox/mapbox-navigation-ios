@@ -308,10 +308,6 @@ extension CGSize {
     }
 }
 
-typealias IndexedVisualInstructionComponent = (Array<VisualInstruction.Component>.Element,
-                                        Array<VisualInstruction.Component>.Index)
-
-
 extension Array where Element == VisualInstruction.Component {
     fileprivate func component(before component: VisualInstruction.Component) -> VisualInstruction.Component? {
         guard let index = self.firstIndex(of: component) else {
