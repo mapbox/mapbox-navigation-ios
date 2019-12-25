@@ -109,14 +109,8 @@ public class Fixture: NSObject {
     }
     
     // Returns `Route` objects from a match response
-    public class func routesFromMatches(at filePath: String) -> [Route]? {
-        let responseData = JSONFromFileNamed(name: filePath)
-        let response: MapMatchingResponse!
-        do {
-            response = try JSONDecoder().decode(MapMatchingResponse.self, from: responseData)
-        } catch {
-            preconditionFailure("Unable to decode JSON fixture: \(error)")
-        }
+    public class func routesFromMatches(at filePath: String, options: MatchOptions) -> [Route]? {
+        let response = mapMatchingResponse(from: filePath, options: options)
         guard let routes = response.routes else {
             preconditionFailure("No routes")
         }
