@@ -205,11 +205,12 @@ class NavigationViewControllerTests: XCTestCase {
             return !navigationViewController.mapView!.annotations!.isEmpty
         })
         
-        guard let annotations = navigationViewController.mapView?.annotations else { return XCTFail("Annotations not found.")}
-
+        guard let annotations = navigationViewController.mapView?.annotations?.compactMap({ $0 as? MGLPointAnnotation }) else {
+            return XCTFail("No point annotations found.")
+        }
+        
         let firstDestination = initialRoute.routeOptions.waypoints.last!.coordinate
-        let destinations = annotations.filter(annotationFilter(matching: firstDestination))
-        XCTAssert(!destinations.isEmpty, "Destination annotation does not exist on map")
+        XCTAssert(annotations.contains { $0.coordinate.distance(to: firstDestination) < 1 }, "Destination annotation does not exist on map")
         
         //lets set the second route
         navigationViewController.route = newRoute
@@ -218,8 +219,7 @@ class NavigationViewControllerTests: XCTestCase {
         let secondDestination = newRoute.routeOptions.waypoints.last!.coordinate
 
         //do we have a destination on the second route?
-        let newDestinations = newAnnotations.filter(annotationFilter(matching: secondDestination))
-        XCTAssert(!newDestinations.isEmpty, "New destination annotation does not exist on map")
+        XCTAssert(newAnnotations.contains { $0.coordinate.distance(to: secondDestination) < 1 }, "New destination annotation does not exist on map")
     }
     
     func testBlankBanner() {
@@ -260,14 +260,6 @@ class NavigationViewControllerTests: XCTestCase {
         XCTAssert(subject.bottomViewController == bottom, "Bottom banner not injected properly into NVC")
         XCTAssert(subject.mapViewController!.children.contains(top), "Top banner not found in child VC heirarchy")
         XCTAssert(subject.mapViewController!.children.contains(bottom), "Bottom banner not found in child VC heirarchy")
-    }
-    
-    private func annotationFilter(matching coordinate: CLLocationCoordinate2D) -> ((MGLAnnotation) -> Bool) {
-        let filter = { (annotation: MGLAnnotation) -> Bool in
-            guard let pointAnno = annotation as? MGLPointAnnotation else { return false }
-            return pointAnno.coordinate == coordinate
-        }
-        return filter
     }
 }
 
