@@ -10,6 +10,20 @@ protocol InstructionPresenterDataSource: class {
 
 typealias DataSource = InstructionPresenterDataSource
 
+extension NSAttributedString.Key {
+    /**
+     A string containing an abbreviation that can be substituted for the substring when there is not enough room to display the original substring.
+     */
+    static let abbreviation = NSAttributedString.Key(rawValue: "MBVisualInstructionComponentAbbreviation")
+    
+    /**
+     A number indicating the priority for which the substring should be substituted with the abbreviation specified by the `NSAttributedString.Key.abbreviation` key.
+     
+     A substring with a lower abbreviation priority value should be abbreviated before a substring with a higher abbreviation priority value.
+     */
+    static let abbreviationPriority = NSAttributedString.Key(rawValue: "MBVisualInstructionComponentAbbreviationPriority")
+}
+
 class InstructionPresenter {
     private let instruction: VisualInstruction
     private weak var dataSource: DataSource?
@@ -32,50 +46,42 @@ class InstructionPresenter {
         guard let source = self.dataSource else {
             return NSAttributedString()
         }
-        var attributedPairs = self.attributedPairs(for: instruction, dataSource: source, imageRepository: imageRepository, onImageDownload: completeShieldDownload)
-        let defaultAttributes = attributes(for: source)
-        let separator = NSAttributedString(string: " ", attributes: defaultAttributes)
-        let totalWidth = attributedPairs.attributedStrings.joined(separator: separator).size().width
         
-        let availableBounds = source.availableBounds()
-        let stringFits = totalWidth <= availableBounds.width
+        let attributedTextRepresentation = self.attributedTextRepresentation(of: instruction, dataSource: source, imageRepository: imageRepository, onImageDownload: completeShieldDownload).mutableCopy() as! NSMutableAttributedString
         
-        guard !stringFits else {
-            return attributedPairs.attributedStrings.joined(separator: separator)
-        }
-        
-        typealias IndexedTextRepresentation = (Array<VisualInstruction.Component>.Index, VisualInstruction.Component.TextRepresentation)
-        let textRepresentations: [IndexedTextRepresentation]  = attributedPairs.components.enumerated().compactMap { (idx, elem) in
-            if case let VisualInstruction.Component.text(representation) = elem {
-                return (idx, representation)
+        // Collect abbreviation priorities embedded in the attributed text representation.
+        let wholeRange = NSRange(location: 0, length: attributedTextRepresentation.length)
+        var priorities = IndexSet()
+        attributedTextRepresentation.enumerateAttribute(.abbreviationPriority, in: wholeRange, options: .longestEffectiveRangeNotRequired) { (priority, range, stop) in
+            if let priority = priority as? Int {
+                priorities.insert(priority)
             }
-            return nil
         }
         
-        let sorted = textRepresentations.sorted { first, second in
-            let firstPriority = first.1.abbreviationPriority ?? Int.max
-            let secondPriority = second.1.abbreviationPriority ?? Int.max
-            
-            return firstPriority < secondPriority
-        }
-
-        for (index, representation) in sorted {
-            guard let abbreviation = representation.abbreviation else { continue }
-            
-            attributedPairs.attributedStrings[index] = NSAttributedString(string: abbreviation, attributes: defaultAttributes)
-            let newWidth = attributedPairs.attributedStrings.joined(separator: separator).size().width
-            
-            if newWidth <= availableBounds.width {
+        // Progressively abbreviate the attributed text representation, starting with the highest-priority abbreviations.
+        let availableBounds = source.availableBounds()
+        for currentPriority in priorities.sorted(by: <) {
+            // If the attributed text representation already fits, we’re done.
+            if attributedTextRepresentation.size().width <= availableBounds.width {
                 break
             }
+            
+            // Look for substrings with the current abbreviation priority and replace them with the embedded abbreviations.
+            let wholeRange = NSRange(location: 0, length: attributedTextRepresentation.length)
+            attributedTextRepresentation.enumerateAttribute(.abbreviationPriority, in: wholeRange, options: []) { (priority, range, stop) in
+                var abbreviationRange = range
+                if priority as? Int == currentPriority,
+                    let abbreviation = attributedTextRepresentation.attribute(.abbreviation, at: range.location, effectiveRange: &abbreviationRange) as? String {
+                    assert(abbreviationRange == range, "Abbreviation and abbreviation priority should be applied to the same effective range.")
+                    attributedTextRepresentation.replaceCharacters(in: abbreviationRange, with: abbreviation)
+                }
+            }
         }
         
-        return attributedPairs.attributedStrings.joined(separator: separator)
+        return attributedTextRepresentation
     }
     
-    typealias AttributedInstructionComponents = (components: [VisualInstruction.Component], attributedStrings: [NSAttributedString])
-    
-    func attributedPairs(for instruction: VisualInstruction, dataSource: DataSource, imageRepository: ImageRepository, onImageDownload: @escaping ImageDownloadCompletion) -> AttributedInstructionComponents {
+    func attributedTextRepresentation(of instruction: VisualInstruction, dataSource: DataSource, imageRepository: ImageRepository, onImageDownload: @escaping ImageDownloadCompletion) -> NSAttributedString {
         var components = instruction.components
         
         let isShield: (_ key: VisualInstruction.Component?) -> Bool = { (component) in
@@ -95,25 +101,44 @@ class InstructionPresenter {
             }
         }
         
+        let defaultAttributes: [NSAttributedString.Key: Any] = [
+            .font: dataSource.font as Any,
+            .foregroundColor: dataSource.textColor as Any
+        ]
         let attributedTextRepresentations = components.map { (component) -> NSAttributedString in
             switch component {
-            case .delimiter(let text), .text(let text):
-                return NSAttributedString(string: text.text, attributes: attributes(for: dataSource))
+            case .delimiter(let text):
+                return NSAttributedString(string: text.text, attributes: defaultAttributes)
+            case .text(let text):
+                let attributedString = NSMutableAttributedString(string: text.text, attributes: defaultAttributes)
+                // Annotate the attributed text representation with an abbreviation.
+                if let abbreviation = text.abbreviation, let abbreviationPriority = text.abbreviationPriority {
+                    let wholeRange = NSRange(location: 0, length: attributedString.length)
+                    attributedString.addAttributes([
+                        .abbreviation: abbreviation,
+                        .abbreviationPriority: abbreviationPriority,
+                    ], range: wholeRange)
+                }
+                return attributedString
             case .image(let image, let alternativeText):
-                return attributedString(forShieldComponent: image, repository: imageRepository, dataSource: dataSource, cacheKey: component.cacheKey!, onImageDownload: onImageDownload)
+                // Ideally represent the image component as a shield image.
+                return self.attributedString(forShieldComponent: image, repository: imageRepository, dataSource: dataSource, cacheKey: component.cacheKey!, onImageDownload: onImageDownload)
+                    // Fall back to a generic shield if no shield image is available.
                     ?? genericShield(text: alternativeText.text, dataSource: dataSource, cacheKey: component.cacheKey!)
-                    ?? NSAttributedString(string: alternativeText.text, attributes: attributes(for: dataSource))
+                    // Finally, fall back to a plain text representation if the generic shield couldn’t be rendered.
+                    ?? NSAttributedString(string: alternativeText.text, attributes: defaultAttributes)
             case .exit(_):
                 preconditionFailure("Exit components should have been removed above")
             case .exitCode(let text):
                 let exitSide: ExitSide = instruction.maneuverDirection == .left ? .left : .right
                 return exitShield(side: exitSide, text: text.text, dataSource: dataSource, cacheKey: component.cacheKey!)
-                    ?? NSAttributedString(string: text.text, attributes: attributes(for: dataSource))
+                    ?? NSAttributedString(string: text.text, attributes: defaultAttributes)
             case .lane(_, _):
                 preconditionFailure("Lane component has no attributed string representation.")
             }
         }
-        return (components, attributedTextRepresentations)
+        let separator = NSAttributedString(string: " ", attributes: defaultAttributes)
+        return attributedTextRepresentations.joined(separator: separator)
     }
     
     func attributedString(forShieldComponent shield: VisualInstruction.Component.ImageRepresentation, repository:ImageRepository, dataSource: DataSource, cacheKey: String, onImageDownload: @escaping ImageDownloadCompletion) -> NSAttributedString? {
@@ -135,10 +160,6 @@ class InstructionPresenter {
         
 
         repository.imageWithURL(imageURL, cacheKey: cacheKey, completion: completion )
-    }
-
-    private func attributes(for dataSource: InstructionPresenterDataSource) -> [NSAttributedString.Key: Any] {
-        return [.font: dataSource.font as Any, .foregroundColor: dataSource.textColor as Any]
     }
 
     private func attributedString(withFont font: UIFont, shieldImage: UIImage) -> NSAttributedString {
