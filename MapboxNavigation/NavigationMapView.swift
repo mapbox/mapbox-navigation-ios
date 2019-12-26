@@ -401,7 +401,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     
     public func showcase(_ routes: [Route], animated: Bool = false) {
         guard let active = routes.first,
-            let coords = active.coordinates,
+            let coords = active.shape?.coordinates,
             !coords.isEmpty else { return } //empty array
         
         removeArrow()
@@ -415,7 +415,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     func fit(to route: Route, facing direction:CLLocationDirection = 0, animated: Bool = false) {
-        guard let coords = route.coordinates, !coords.isEmpty else { return }
+        guard let coords = route.shape?.coordinates, !coords.isEmpty else { return }
       
         setUserTrackingMode(.none, animated: false, completionHandler: nil)
         let line = MGLPolyline(coordinates: coords, count: UInt(coords.count))
@@ -495,7 +495,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return
         }
 
-        let waypoints: [Waypoint] = Array(route.legs.map { $0.destination }.dropLast())
+        let waypoints: [Waypoint] = Array(route.legs.dropLast().compactMap { $0.destination })
         
         let source = navigationMapViewDelegate?.navigationMapView(self, shapeFor: waypoints, legIndex: legIndex) ?? shape(for: waypoints, legIndex: legIndex)
         if route.routeOptions.waypoints.count > 2 { //are we on a multipoint route?
@@ -520,10 +520,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             }
         }
         
-        if let lastLeg =  route.legs.last {
+        if let lastLeg =  route.legs.last, let destinationCoordinate = lastLeg.destination?.coordinate {
             removeAnnotations(annotationsToRemove() ?? [])
             let destination = NavigationAnnotation()
-            destination.coordinate = lastLeg.destination.coordinate
+            destination.coordinate = destinationCoordinate
             addAnnotation(destination)
         }
     }
@@ -746,13 +746,13 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         let tapCoordinate = convert(point, toCoordinateFrom: self)
         
         //do we have routes? If so, filter routes with at least 2 coordinates.
-        guard let routes = routes?.filter({ $0.coordinates?.count ?? 0 > 1 }) else { return nil }
+        guard let routes = routes?.filter({ $0.shape?.coordinates.count ?? 0 > 1 }) else { return nil }
         
         //Sort routes by closest distance to tap gesture.
         let closest = routes.sorted { (left, right) -> Bool in
             //existance has been assured through use of filter.
-            let leftLine = Polyline(left.coordinates!)
-            let rightLine = Polyline(right.coordinates!)
+            let leftLine = left.shape!
+            let rightLine = right.shape!
             let leftDistance = leftLine.closestCoordinate(to: tapCoordinate)!.distance
             let rightDistance = rightLine.closestCoordinate(to: tapCoordinate)!.distance
             
@@ -761,7 +761,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         //filter closest coordinates by which ones are under threshold.
         let candidates = closest.filter {
-            let closestCoordinate = Polyline($0.coordinates!).closestCoordinate(to: tapCoordinate)!.coordinate
+            let closestCoordinate = $0.shape!.closestCoordinate(to: tapCoordinate)!.coordinate
             let closestPoint = self.convert(closestCoordinate, toPointTo: self)
             
             return closestPoint.distance(to: point) < tapGestureDistanceThreshold
@@ -776,7 +776,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         var altRoutes: [MGLPolylineFeature] = []
         
         for route in routes.suffix(from: 1) {
-            let polyline = MGLPolylineFeature(coordinates: route.coordinates!, count: UInt(route.coordinates!.count))
+            let polyline = MGLPolylineFeature(coordinates: route.shape!.coordinates, count: UInt(route.shape!.coordinates.count))
             polyline.attributes["isAlternateRoute"] = true
             altRoutes.append(polyline)
         }
@@ -785,7 +785,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     func addCongestion(to route: Route, legIndex: Int?) -> [MGLPolylineFeature]? {
-        guard let coordinates = route.coordinates else { return nil }
+        guard let coordinates = route.shape?.coordinates else { return nil }
         
         var linesPerLeg: [MGLPolylineFeature] = []
         
@@ -797,7 +797,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 let legCoordinates: [CLLocationCoordinate2D] = leg.steps.enumerated().reduce([]) { allCoordinates, current in
                     let index = current.offset
                     let step = current.element
-                    let stepCoordinates = step.coordinates!
+                    let stepCoordinates = step.shape!.coordinates
                     
                     return index == 0 ? stepCoordinates : allCoordinates + stepCoordinates.suffix(from: 1)
                 }
@@ -810,7 +810,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                     return polyline
                 }
             } else {
-                lines = [MGLPolylineFeature(coordinates: route.coordinates!, count: UInt(route.coordinates!.count))]
+                lines = [MGLPolylineFeature(coordinates: route.shape!.coordinates, count: UInt(route.shape!.coordinates.count))]
             }
             
             for line in lines {
@@ -850,7 +850,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         for (index, leg) in route.legs.enumerated() {
             let legCoordinates: [CLLocationCoordinate2D] = Array(leg.steps.compactMap {
-                $0.coordinates
+                $0.shape?.coordinates
             }.joined())
             
             let polyline = MGLPolylineFeature(coordinates: legCoordinates, count: UInt(legCoordinates.count))
@@ -1010,7 +1010,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             for (stepIndex, step) in leg.steps.enumerated() {
                 for instruction in step.instructionsSpokenAlongStep! {
                     let feature = MGLPointFeature()
-                    feature.coordinate = Polyline(route.legs[legIndex].steps[stepIndex].coordinates!.reversed()).coordinateFromStart(distance: instruction.distanceAlongStep)!
+                    feature.coordinate = Polyline(route.legs[legIndex].steps[stepIndex].shape!.coordinates.reversed()).coordinateFromStart(distance: instruction.distanceAlongStep)!
                     feature.attributes = [ "instruction": instruction.text ]
                     features.append(feature)
                 }

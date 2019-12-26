@@ -20,6 +20,8 @@
 
 ### Other changes
 * Since pure Swift protocols cannot have optional methods, various delegate protocols now provide default no-op implementations for all their methods and conform to the `UnimplementedLogging` protocol, which can inform you at runtime when a delegate method is called but has not been implemented. Messages are sent through Apple Unified Logging and can be disabled globally through [Unifed Logging](https://developer.apple.com/documentation/os/logging#2878594), or by overriding the delegate function with a no-op implementation. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
+* Renamed `RouteProgress.nearbyCoordinates` to `RouteProgress.nearbyShape`. ([#2275](https://github.com/mapbox/mapbox-navigation-ios/pull/2275))
+* Removed `RouteLegProgress.nearbyCoordinates`. ([#2275](https://github.com/mapbox/mapbox-navigation-ios/pull/2275))
 
 ## v0.38.1
 

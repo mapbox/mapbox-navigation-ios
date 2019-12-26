@@ -5,10 +5,15 @@ import TestHelper
 @testable import MapboxCoreNavigation
 
 let jsonFileName = "routeWithInstructions"
-let response = Fixture.JSONFromFileNamed(name: jsonFileName)
+var routeOptions: NavigationRouteOptions {
+    let from = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
+    let to = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
+    return NavigationRouteOptions(waypoints: [from, to])
+}
+let response = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
 let directions = DirectionsSpy(accessToken: "pk.feedCafeDeadBeefBadeBede")
 let route: Route = {
-    return Fixture.route(from: jsonFileName)
+    return Fixture.route(from: jsonFileName, options: routeOptions)
 }()
 
 let waitForInterval: TimeInterval = 5
@@ -21,7 +26,7 @@ class MapboxCoreNavigationTests: XCTestCase {
         navigation = MapboxNavigationService(route: route, directions: directions, simulating: .never)
         let now = Date()
         let steps = route.legs.first!.steps
-        let coordinates = steps[2].coordinates! + steps[3].coordinates!
+        let coordinates = steps[2].shape!.coordinates + steps[3].shape!.coordinates
         
         let locations = coordinates.enumerated().map { CLLocation(coordinate: $0.element,
                                                                   altitude: -1, horizontalAccuracy: 10,
@@ -51,7 +56,7 @@ class MapboxCoreNavigationTests: XCTestCase {
         navigation = MapboxNavigationService(route: route, directions: directions, simulating: .never)
         
         // Coordinates from first step
-        let coordinates = route.legs[0].steps[0].coordinates!
+        let coordinates = route.legs[0].steps[0].shape!.coordinates
         let now = Date()
         let locations = coordinates.enumerated().map { CLLocation(coordinate: $0.element,
                                                                   altitude: -1, horizontalAccuracy: 10,
@@ -79,7 +84,7 @@ class MapboxCoreNavigationTests: XCTestCase {
         route.accessToken = "foo"
         
         // Coordinates from beginning of step[1] to end of step[2]
-        let coordinates = route.legs[0].steps[1].coordinates! + route.legs[0].steps[2].coordinates!
+        let coordinates = route.legs[0].steps[1].shape!.coordinates + route.legs[0].steps[2].shape!.coordinates
         let locations: [CLLocation]
         let now = Date()
         locations = coordinates.enumerated().map { CLLocation(coordinate: $0.element,
@@ -105,7 +110,7 @@ class MapboxCoreNavigationTests: XCTestCase {
     func testJumpAheadToLastStep() {
         route.accessToken = "foo"
         
-        let coordinates = route.legs[0].steps.map { $0.coordinates! }.flatMap { $0 }
+        let coordinates = route.legs[0].steps.map { $0.shape!.coordinates }.flatMap { $0 }
         
         let now = Date()
         let locations = coordinates.enumerated().map { CLLocation(coordinate: $0.element, altitude: -1, horizontalAccuracy: -1, verticalAccuracy: -1, timestamp: now + $0.offset) }
@@ -130,7 +135,7 @@ class MapboxCoreNavigationTests: XCTestCase {
     func testShouldReroute() {
         route.accessToken = "foo"
         
-        let coordinates = route.legs[0].steps[1].coordinates!
+        let coordinates = route.legs[0].steps[1].shape!.coordinates
         let now = Date()
         let locations = coordinates.enumerated().map { CLLocation(coordinate: $0.element,
                                                                   altitude: -1, horizontalAccuracy: 10, verticalAccuracy: -1, course: -1, speed: 10, timestamp: now + $0.offset) }
@@ -316,9 +321,6 @@ class MapboxCoreNavigationTests: XCTestCase {
     }
     
     func testFailToReroute() {
-        enum TestError: Error {
-            case test
-        }
         route.accessToken = "foo"
         let directionsClientSpy = DirectionsSpy(accessToken: "garbage", host: nil)
         navigation = MapboxNavigationService(route: route, directions: directionsClientSpy,  simulating: .never)
@@ -332,7 +334,7 @@ class MapboxCoreNavigationTests: XCTestCase {
         }
         
         navigation.router.reroute(from: CLLocation(latitude: 0, longitude: 0), along: navigation.router.routeProgress)
-        directionsClientSpy.fireLastCalculateCompletion(with: nil, routes: nil, error: TestError.test as NSError)
+        directionsClientSpy.fireLastCalculateCompletion(with: nil, routes: nil, error: .profileNotFound)
         
         waitForExpectations(timeout: 2) { (error) in
             XCTAssertNil(error)

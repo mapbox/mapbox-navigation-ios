@@ -11,7 +11,10 @@ class MapboxVoiceControllerTests: XCTestCase {
 
     var route: Route {
         get {
-            return Fixture.route(from: "route-with-instructions")
+            return Fixture.route(from: "route-with-instructions", options: NavigationRouteOptions(coordinates: [
+                CLLocationCoordinate2D(latitude: 40.311012, longitude: -112.47926),
+                CLLocationCoordinate2D(latitude: 29.99908, longitude: -102.828197),
+            ]))
         }
     }
 

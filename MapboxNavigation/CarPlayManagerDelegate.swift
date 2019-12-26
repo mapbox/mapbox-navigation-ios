@@ -101,7 +101,7 @@ public protocol CarPlayManagerDelegate: class, UnimplementedLogging {
      - returns: Optionally, a `CPNavigationAlert` to present to the user. If this method returns an alert, the CarPlay manager will transition back to the map template and display the alert. If it returns `nil`, the CarPlay manager will do nothing.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    func carPlayManager(_ carPlayManager: CarPlayManager, didFailToFetchRouteBetween waypoints: [Waypoint]?, options: RouteOptions, error: NSError) -> CPNavigationAlert?
+    func carPlayManager(_ carPlayManager: CarPlayManager, didFailToFetchRouteBetween waypoints: [Waypoint]?, options: RouteOptions, error: DirectionsError) -> CPNavigationAlert?
     
     /**
      Offers the delegate the opportunity to customize a trip before it is presented to the user to preview.
@@ -190,7 +190,7 @@ public extension CarPlayManagerDelegate {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self,  level: .debug)
     }
     
-    func carPlayManager(_ carPlayManager: CarPlayManager, didFailToFetchRouteBetween waypoints: [Waypoint]?, options: RouteOptions, error: NSError) -> CPNavigationAlert? {
+    func carPlayManager(_ carPlayManager: CarPlayManager, didFailToFetchRouteBetween waypoints: [Waypoint]?, options: RouteOptions, error: DirectionsError) -> CPNavigationAlert? {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self,  level: .debug)
         return nil
     }

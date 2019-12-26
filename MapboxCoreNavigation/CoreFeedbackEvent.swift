@@ -33,7 +33,7 @@ class FeedbackEvent: CoreFeedbackEvent {
 
 class RerouteEvent: CoreFeedbackEvent {
     func update(newRoute: Route) {
-        if let geometry = newRoute.coordinates {
+        if let geometry = newRoute.shape?.coordinates {
             eventDictionary["newGeometry"] = Polyline(coordinates: geometry).encodedPolyline
             eventDictionary["newDistanceRemaining"] = round(newRoute.distance)
             eventDictionary["newDurationRemaining"] = round(newRoute.expectedTravelTime)

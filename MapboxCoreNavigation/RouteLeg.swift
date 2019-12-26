@@ -2,7 +2,9 @@ import MapboxDirections
 import Turf
 
 extension RouteLeg {
-    var coordinates: [CLLocationCoordinate2D] {
-        return (steps.first?.coordinates ?? []) + steps.dropFirst().flatMap { ($0.coordinates ?? []).dropFirst() }
+    var shape: LineString {
+        return steps.dropFirst().reduce(into: steps.first?.shape ?? LineString([])) { (result, step) in
+            result.coordinates += (step.shape?.coordinates ?? []).dropFirst()
+        }
     }
 }

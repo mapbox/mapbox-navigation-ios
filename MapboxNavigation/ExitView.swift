@@ -1,7 +1,7 @@
 import UIKit
 
 enum ExitSide: String{
-    case left, right, other
+    case left, right
     
     var exitImage: UIImage {
         return self == .left ? ExitView.leftExitImage : ExitView.rightExitImage

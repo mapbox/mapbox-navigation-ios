@@ -2,25 +2,58 @@ import XCTest
 import MapboxDirections
 import TestHelper
 import Turf
+import MapboxCoreNavigation
 @testable import MapboxNavigation
 
 class RouteTests: XCTestCase {
     func testPolylineAroundManeuver() {
         // Convert the match from https://github.com/mapbox/navigation-ios-examples/pull/28 into a route.
         // The details of the route are unimportant; what matters is the geometry.
-        let json = Fixture.JSONFromFileNamed(name: "route-doubling-back")
-        let namedWaypoints = (json["tracepoints"] as! [[String: Any]?]).compactMap { jsonTracepoint -> Waypoint? in
-            guard let jsonTracepoint = jsonTracepoint else {
-                return nil
-            }
-            let location = jsonTracepoint["location"] as! [Double]
-            let coordinate = CLLocationCoordinate2D(latitude: location[1], longitude: location[0])
-            return Waypoint(coordinate: coordinate, name: jsonTracepoint["name"] as? String ?? "")
-        }
-        let fakeOptions = RouteOptions(coordinates: [namedWaypoints.first!.coordinate, namedWaypoints.last!.coordinate])
-        let routes = (json["matchings"] as? [[String: Any]])?.map {
-            Route(json: $0, waypoints: namedWaypoints, options: fakeOptions)
-        }
+        let options = NavigationMatchOptions(coordinates: [
+            .init(latitude: 59.3379254707993, longitude: 18.0768391763866),
+            .init(latitude: 59.3376613543215, longitude: 18.0758977499228),
+            .init(latitude: 59.3371292341531, longitude: 18.0754779388695),
+            .init(latitude: 59.3368658096911, longitude: 18.0752713263541),
+            .init(latitude: 59.3366161271274, longitude: 18.0758013323718),
+            .init(latitude: 59.3363847683606, longitude: 18.0769377012062),
+            .init(latitude: 59.3369299420601, longitude: 18.0779707637829),
+            .init(latitude: 59.3374784940673, longitude: 18.0789771102838),
+            .init(latitude: 59.3376624022706, longitude: 18.0796752015449),
+            .init(latitude: 59.3382345065107, longitude: 18.0801207199294),
+            .init(latitude: 59.338728497517,  longitude: 18.0793407846583),
+            .init(latitude: 59.3390538588298, longitude: 18.0777368583247),
+            .init(latitude: 59.3389021418961, longitude: 18.0769242264769),
+            .init(latitude: 59.3383325439362, longitude: 18.0764655674924),
+            .init(latitude: 59.3381526945276, longitude: 18.0757203959448),
+            .init(latitude: 59.3383085323927, longitude: 18.0749662844197),
+            .init(latitude: 59.3386507394432, longitude: 18.0749292910378),
+            .init(latitude: 59.3396600470949, longitude: 18.0757133256584),
+            .init(latitude: 59.3402031271014, longitude: 18.0770724776848),
+            .init(latitude: 59.3399246668736, longitude: 18.0784376357593),
+            .init(latitude: 59.3393711961939, longitude: 18.0786765675365),
+            .init(latitude: 59.3383675368975, longitude: 18.0778982052741),
+            .init(latitude: 59.3379254707993, longitude: 18.0768391763866),
+            .init(latitude: 59.3376613543215, longitude: 18.0758977499228),
+            .init(latitude: 59.3371292341531, longitude: 18.0754779388695),
+            .init(latitude: 59.3368658096911, longitude: 18.0752713263541),
+            .init(latitude: 59.3366161271274, longitude: 18.0758013323718),
+            .init(latitude: 59.3363847683606, longitude: 18.0769377012062),
+            .init(latitude: 59.3369299420601, longitude: 18.0779707637829),
+            .init(latitude: 59.3374784940673, longitude: 18.0789771102838),
+            .init(latitude: 59.3376624022706, longitude: 18.0796752015449),
+            .init(latitude: 59.3382345065107, longitude: 18.0801207199294),
+            .init(latitude: 59.338728497517,  longitude: 18.0793407846583),
+            .init(latitude: 59.3390538588298, longitude: 18.0777368583247),
+            .init(latitude: 59.3389021418961, longitude: 18.0769242264769),
+            .init(latitude: 59.3383325439362, longitude: 18.0764655674924),
+            .init(latitude: 59.3381526945276, longitude: 18.0757203959448),
+            .init(latitude: 59.3383085323927, longitude: 18.0749662844197),
+            .init(latitude: 59.3386507394432, longitude: 18.0749292910378),
+            .init(latitude: 59.3396600470949, longitude: 18.0757133256584),
+        ], profileIdentifier: .automobile)
+        options.shapeFormat = .polyline
+        let response = Fixture.mapMatchingResponse(from: "route-doubling-back", options: options)
+        let routes = response.routes
         let route = routes!.first!
         let leg = route.legs.first!
         
@@ -28,9 +61,9 @@ class RouteTests: XCTestCase {
         let traversals = [1, 8, 13, 20]
         for stepIndex in traversals {
             let precedingStep = leg.steps[stepIndex - 1]
-            let precedingStepPolyline = Polyline(precedingStep.coordinates!)
+            let precedingStepPolyline = precedingStep.shape!
             let followingStep = leg.steps[stepIndex]
-            let stepPolyline = Polyline(followingStep.coordinates!)
+            let stepPolyline = followingStep.shape!
             let maneuverPolyline = route.polylineAroundManeuver(legIndex: 0, stepIndex: stepIndex, distance: 30)
             
             let firstIndexedCoordinate = precedingStepPolyline.closestCoordinate(to: maneuverPolyline.coordinates[0])

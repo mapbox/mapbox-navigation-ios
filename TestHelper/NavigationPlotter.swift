@@ -98,13 +98,13 @@ public struct MatchPlotter: Plotter {
 
 extension RoutePlotter {
     public func draw(on plotter: NavigationPlotter) {
-        plotter.drawLines(between: route.coordinates!, color: color, lineWidth: lineWidth, drawDotIndicator: drawDotIndicator, drawTextIndicator: drawTextIndicator)
+        plotter.drawLines(between: route.shape!.coordinates, color: color, lineWidth: lineWidth, drawDotIndicator: drawDotIndicator, drawTextIndicator: drawTextIndicator)
     }
 }
 
 extension MatchPlotter {
     public func draw(on plotter: NavigationPlotter) {
-        plotter.drawLines(between: match.coordinates!, color: color, lineWidth: lineWidth, drawDotIndicator: drawDotIndicator, drawTextIndicator: drawTextIndicator)
+        plotter.drawLines(between: match.shape!.coordinates, color: color, lineWidth: lineWidth, drawDotIndicator: drawDotIndicator, drawTextIndicator: drawTextIndicator)
     }
 }
 
@@ -173,11 +173,11 @@ public class NavigationPlotter: UIView {
         var coordinates = [CLLocationCoordinate2D]()
         
         routePlotters?.forEach({ (plotter) in
-            coordinates += plotter.route.coordinates!
+            coordinates += plotter.route.shape!.coordinates
         })
         
         matchPlotters?.forEach({ (plotter) in
-            coordinates += plotter.match.coordinates!
+            coordinates += plotter.match.shape!.coordinates
         })
         
         coordinatePlotters?.forEach({ (plotter) in

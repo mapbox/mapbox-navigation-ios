@@ -1,13 +1,14 @@
 import Foundation
 import XCTest
 import MapboxDirections
+import MapboxCoreNavigation
 import TestHelper
 @testable import MapboxNavigation
 
 class InstructionPresenterTests: XCTestCase {
     func testExitInstructionProvidesExit() {
-        let exitAttribute = VisualInstructionComponent(type: .exit, text: "Exit", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)
-        let exitCodeAttribute = VisualInstructionComponent(type: .exitCode, text: "123A", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)
+        let exitAttribute = VisualInstruction.Component.exit(text: .init(text: "Exit", abbreviation: nil, abbreviationPriority: nil))
+        let exitCodeAttribute = VisualInstruction.Component.exitCode(text: .init(text: "123A", abbreviation: nil, abbreviationPriority: nil))
         let exitInstruction = VisualInstruction(text: nil, maneuverType: .takeOffRamp, maneuverDirection: .right, components: [exitAttribute, exitCodeAttribute])
         
         let label = InstructionLabel(frame: CGRect(origin: .zero, size:CGSize(width: 50, height: 50)))
@@ -25,7 +26,10 @@ class InstructionPresenterTests: XCTestCase {
 
     /// NOTE: This test is disabled pending https://github.com/mapbox/mapbox-navigation-ios/issues/1468
     func x_testAbbreviationPerformance() {
-        let route = Fixture.route(from: "route-with-banner-instructions")
+        let route = Fixture.route(from: "route-with-banner-instructions", options: NavigationRouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 37.764793, longitude: -122.463161),
+            CLLocationCoordinate2D(latitude: 34.054081, longitude: -118.243412),
+        ]))
         
         let steps = route.legs.flatMap { $0.steps }
         let instructions = steps.compactMap { $0.instructionsDisplayedAlongStep?.first?.primaryInstruction }

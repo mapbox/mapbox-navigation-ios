@@ -191,8 +191,8 @@ open class BaseInstructionsBannerView: UIControl {
     override open func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         maneuverView.isStart = true
-        let component = VisualInstructionComponent(type: .text, text: "Primary text label", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)
-        let instruction = VisualInstruction(text: nil, maneuverType: .none, maneuverDirection: .none, components: [component])
+        let component = VisualInstruction.Component.text(text: .init(text: "Primary text label", abbreviation: nil, abbreviationPriority: nil))
+        let instruction = VisualInstruction(text: nil, maneuverType: .turn, maneuverDirection: .left, components: [component])
         primaryLabel.instruction = instruction
         
         distance = 100

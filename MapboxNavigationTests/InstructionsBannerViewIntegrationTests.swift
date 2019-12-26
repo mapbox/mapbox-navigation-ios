@@ -10,15 +10,15 @@ func instructionsView(size: CGSize = .iPhone6Plus) -> InstructionsBannerView {
 
 func makeVisualInstruction(_ maneuverType: ManeuverType = .arrive,
                            _ maneuverDirection: ManeuverDirection = .left,
-                           primaryInstruction: [VisualInstructionComponent],
-                           secondaryInstruction: [VisualInstructionComponent]?) -> VisualInstructionBanner {
+                           primaryInstruction: [VisualInstruction.Component],
+                           secondaryInstruction: [VisualInstruction.Component]?) -> VisualInstructionBanner {
     let primary = VisualInstruction(text: "Instruction", maneuverType: maneuverType, maneuverDirection: maneuverDirection, components: primaryInstruction)
     var secondary: VisualInstruction? = nil
     if let secondaryInstruction = secondaryInstruction {
         secondary = VisualInstruction(text: "Instruction", maneuverType: maneuverType, maneuverDirection: maneuverDirection, components: secondaryInstruction)
     }
     
-    return VisualInstructionBanner(distanceAlongStep: 482.803, primaryInstruction: primary, secondaryInstruction: secondary, tertiaryInstruction: nil, drivingSide: .right)
+    return VisualInstructionBanner(distanceAlongStep: 482.803, primary: primary, secondary: secondary, tertiary: nil, drivingSide: .right)
 }
 
 class InstructionsBannerViewIntegrationTests: XCTestCase {
@@ -31,21 +31,21 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         return repo
     }()
 
-    lazy var instructions: [VisualInstructionComponent] = {
-        let components =  [
-            VisualInstructionComponent(type: .image, text: "US 101", imageURL: ShieldImage.us101.url, abbreviation: nil, abbreviationPriority: 0),
-            VisualInstructionComponent(type: .delimiter, text: "/", imageURL: nil, abbreviation: nil, abbreviationPriority: 0),
-            VisualInstructionComponent(type: .image, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
+    lazy var instructions: [VisualInstruction.Component] = {
+        let components: [VisualInstruction.Component] =  [
+            .image(image: .init(imageBaseURL: ShieldImage.us101.baseURL), alternativeText: .init(text: "US 101", abbreviation: nil, abbreviationPriority: 0)),
+            .delimiter(text: .init(text: "/", abbreviation: nil, abbreviationPriority: 0)),
+            .image(image: .init(imageBaseURL: ShieldImage.i280.baseURL), alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: 0)),
         ]
         return components
     }()
     
-    lazy var genericInstructions: [VisualInstructionComponent] = [
-        VisualInstructionComponent(type: .image, text: "ANK 1", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound),
-        VisualInstructionComponent(type: .text, text: "Ankh-Morpork Highway 1", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)
+    lazy var genericInstructions: [VisualInstruction.Component] = [
+        .image(image: .init(imageBaseURL: nil), alternativeText: .init(text: "ANK 1", abbreviation: nil, abbreviationPriority: nil)),
+        .text(text: .init(text: "Ankh-Morpork Highway 1", abbreviation: nil, abbreviationPriority: nil)),
     ]
     
-    lazy var typicalInstruction: VisualInstructionBanner = makeVisualInstruction(primaryInstruction: [VisualInstructionComponent(type: .text, text: "Main Street", imageURL: nil, abbreviation: "Main St", abbreviationPriority: 0)], secondaryInstruction: nil)
+    lazy var typicalInstruction: VisualInstructionBanner = makeVisualInstruction(primaryInstruction: [.text(text: .init(text: "Main Street", abbreviation: "Main St", abbreviationPriority: 0))], secondaryInstruction: nil)
     
     private func resetImageCache() {
         let semaphore = DispatchSemaphore(value: 0)
@@ -101,8 +101,8 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
 
     func testDelimiterIsHiddenWhenAllShieldsAreAlreadyLoaded() {
         //prime the cache to simulate images having already been loaded
-        let instruction1 = VisualInstructionComponent(type: .image, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
-        let instruction2 = VisualInstructionComponent(type: .image, text: "US 101", imageURL: ShieldImage.us101.url, abbreviation: nil, abbreviationPriority: 0)
+        let instruction1 = VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.i280.baseURL), alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: 0))
+        let instruction2 = VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.us101.baseURL), alternativeText: .init(text: "US 101", abbreviation: nil, abbreviationPriority: 0))
 
         imageRepository.storeImage(ShieldImage.i280.image, forKey: instruction1.cacheKey!, toDisk: false)
         imageRepository.storeImage(ShieldImage.us101.image, forKey: instruction2.cacheKey!, toDisk: false)
@@ -136,7 +136,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         XCTAssertNotNil(view.primaryLabel.text!.firstIndex(of: "/"))
 
         //simulate the downloads
-        let firstDestinationComponent: VisualInstructionComponent = instructions[0]
+        let firstDestinationComponent: VisualInstruction.Component = instructions[0]
         simulateDownloadingShieldForComponent(firstDestinationComponent)
 
         //ensure that first callback fires
@@ -220,7 +220,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         })
         
         //simulate the downloads
-        let firstDestinationComponent: VisualInstructionComponent = instructions[0]
+        let firstDestinationComponent: VisualInstruction.Component = instructions[0]
         simulateDownloadingShieldForComponent(firstDestinationComponent)
         
         //ensure that first callback fires
@@ -277,9 +277,9 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
     }
     
     func testExitBannerIntegration() {
-        let exitAttribute = VisualInstructionComponent(type: .exit, text: "Exit", imageURL: nil,  abbreviation: nil, abbreviationPriority: 0)
-        let exitCodeAttribute = VisualInstructionComponent(type: .exitCode, text: "123A", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)
-        let mainStreetString = VisualInstructionComponent(type: .text, text: "Main Street", imageURL: nil, abbreviation: "Main St", abbreviationPriority: 0)
+        let exitAttribute = VisualInstruction.Component.exit(text: .init(text: "Exit", abbreviation: nil, abbreviationPriority: 0))
+        let exitCodeAttribute = VisualInstruction.Component.exitCode(text: .init(text: "123A", abbreviation: nil, abbreviationPriority: 0))
+        let mainStreetString = VisualInstruction.Component.text(text: .init(text: "Main Street", abbreviation: "Main St", abbreviationPriority: 0))
         let exitInstruction = VisualInstruction(text: nil, maneuverType: .takeOffRamp, maneuverDirection: .right, components: [exitAttribute, exitCodeAttribute, mainStreetString])
         
         let label = InstructionLabel(frame: CGRect(origin: .zero, size:CGSize(width: 375, height: 100)))
@@ -305,8 +305,12 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         XCTAssert(roadName.string == "Main Street", "Banner not populating road name correctly")
     }
 
-    private func simulateDownloadingShieldForComponent(_ component: VisualInstructionComponent) {
-        let operation: ImageDownloadOperationSpy = ImageDownloadOperationSpy.operationForURL(component.imageURL!)!
+    private func simulateDownloadingShieldForComponent(_ component: VisualInstruction.Component) {
+        var imageURL: URL!
+        if case let VisualInstruction.Component.image(image: imageRepresentation, alternativeText: _) = component, let imageBaseURL = imageRepresentation.imageURL(format: .png) {
+            imageURL = imageBaseURL
+        }
+        let operation: ImageDownloadOperationSpy = ImageDownloadOperationSpy.operationForURL(imageURL)!
         operation.fireAllCompletions(ShieldImage.i280.image, data: ShieldImage.i280.image.pngData(), error: nil)
 
         XCTAssertNotNil(imageRepository.cachedImageForKey(component.cacheKey!))

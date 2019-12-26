@@ -96,8 +96,8 @@ open class ManeuverView: UIView {
         let maneuverType = visualInstruction.maneuverType
         let maneuverDirection = visualInstruction.maneuverDirection
         
-        let type = maneuverType != .none ? maneuverType : .turn
-        let direction = maneuverDirection != .none ? maneuverDirection : .straightAhead
+        let type = maneuverType ?? .turn
+        let direction = maneuverDirection ?? .straightAhead
 
         switch type {
         case .merge:
@@ -110,7 +110,7 @@ open class ManeuverView: UIView {
             ManeuversStyleKit.drawFork(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor)
             flip = [.left, .slightLeft, .sharpLeft].contains(direction)
         case .takeRoundabout, .turnAtRoundabout, .takeRotary:
-            ManeuversStyleKit.drawRoundabout(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor, roundabout_angle: CGFloat(visualInstruction.finalHeading))
+            ManeuversStyleKit.drawRoundabout(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor, roundabout_angle: CGFloat(visualInstruction.finalHeading ?? 180))
             flip = drivingSide == .left
             
         case .arrive:

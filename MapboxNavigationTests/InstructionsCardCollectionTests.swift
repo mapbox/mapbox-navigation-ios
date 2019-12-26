@@ -7,7 +7,7 @@ import MapboxDirections
 /// :nodoc:
 class InstructionsCardCollectionTests: XCTestCase {
     lazy var initialRoute: Route = {
-        return Fixture.route(from: jsonFileName)
+        return Fixture.route(from: jsonFileName, options: routeOptions)
     }()
     
     lazy var instructionsCardCollectionDataSource: (collection: InstructionsCardViewController, progress: RouteProgress, service: MapboxNavigationService, delegate: InstructionsCardCollectionDelegateSpy) = {
@@ -25,7 +25,10 @@ class InstructionsCardCollectionTests: XCTestCase {
             return guidanceCard.view.constraintsForPinning(to: container)
         }
         
-        let fakeRoute = Fixture.route(from: "route-with-banner-instructions")
+        let fakeRoute = Fixture.route(from: "route-with-banner-instructions", options: NavigationRouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 37.764793, longitude: -122.463161),
+            CLLocationCoordinate2D(latitude: 34.054081, longitude: -118.243412),
+        ]))
         
         let service = MapboxNavigationService(route: initialRoute, directions: DirectionsSpy(accessToken: "adbeknut"), simulating: .never)
         let routeProgress = RouteProgress(route: fakeRoute)

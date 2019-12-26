@@ -35,7 +35,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
     fileprivate var timer: DispatchTimer!
     
     fileprivate var locations: [SimulatedLocation]!
-    fileprivate var routeLine = [CLLocationCoordinate2D]()
+    fileprivate var routeShape: Polyline!
     
     /**
      Specify the multiplier to use when calculating speed based on the RouteLeg’s `expectedSegmentTravelTimes`.
@@ -63,7 +63,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
         copy.simulatedLocation = simulatedLocation
         copy.currentSpeed = currentSpeed
         copy.locations = locations
-        copy.routeLine = routeLine
+        copy.routeShape = routeShape
         copy.speedMultiplier = speedMultiplier
         return copy
     }
@@ -107,9 +107,9 @@ open class SimulatedLocationManager: NavigationLocationManager {
     }
     
     private func reset() {
-        if let coordinates = route?.coordinates {
-            routeLine = coordinates
-            locations = coordinates.simulatedLocationsWithTurnPenalties()
+        if let shape = route?.shape {
+            routeShape = shape
+            locations = shape.coordinates.simulatedLocationsWithTurnPenalties()
         }
     }
     
@@ -145,9 +145,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
     }
     
     internal func tick() {
-        let polyline = Polyline(routeLine)
-        
-        guard let newCoordinate = polyline.coordinateFromStart(distance: currentDistance) else {
+        guard let polyline = routeShape, let newCoordinate = polyline.coordinateFromStart(distance: currentDistance) else {
             return
         }
         
@@ -163,11 +161,11 @@ open class SimulatedLocationManager: NavigationLocationManager {
         
         // Simulate speed based on expected segment travel time
         if let expectedSegmentTravelTimes = routeProgress?.currentLeg.expectedSegmentTravelTimes,
-            let coordinates = routeProgress?.route.coordinates,
-            let closestCoordinateOnRoute = Polyline(routeProgress!.route.coordinates!).closestCoordinate(to: newCoordinate),
-            let nextCoordinateOnRoute = coordinates.after(element: coordinates[closestCoordinateOnRoute.index]),
+            let shape = routeProgress?.route.shape,
+            let closestCoordinateOnRoute = shape.closestCoordinate(to: newCoordinate),
+            let nextCoordinateOnRoute = shape.coordinates.after(element: shape.coordinates[closestCoordinateOnRoute.index]),
             let time = expectedSegmentTravelTimes.optional[closestCoordinateOnRoute.index] {
-            let distance = coordinates[closestCoordinateOnRoute.index].distance(to: nextCoordinateOnRoute)
+            let distance = shape.coordinates[closestCoordinateOnRoute.index].distance(to: nextCoordinateOnRoute)
             currentSpeed =  max(distance / time, 2)
         } else {
             currentSpeed = calculateCurrentSpeed(distance: distance, coordinatesNearby: coordinatesNearby, closestLocation: closestLocation)

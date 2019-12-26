@@ -160,13 +160,13 @@ open class RouteController: NSObject {
     
     /// updateNavigator is used to pass the new progress model onto nav-native.
     private func updateNavigator(with progress: RouteProgress) {
-        assert(route.json != nil, "route.json missing, please verify the version of MapboxDirections.swift")
-        
-        let data = try! JSONSerialization.data(withJSONObject: route.json!, options: [])
-        let jsonString = String(data: data, encoding: .utf8)!
-        
+
+        guard let json = progress.route.json else {
+            return
+        }
         // TODO: Add support for alternative route
-        navigator.setRouteForRouteResponse(jsonString, route: 0, leg: UInt32(routeProgress.legIndex))
+        navigator.setRouteForRouteResponse(json, route: 0, leg: UInt32(routeProgress.legIndex))
+
     }
     
     /// updateRouteLeg is used to notify nav-native of the developer changing the active route-leg.
@@ -193,7 +193,7 @@ open class RouteController: NSObject {
         // Notify observers if the step’s remaining distance has changed.
         update(progress: routeProgress, with: CLLocation(status.location), rawLocation: location)
         
-        let willReroute = !userIsOnRoute(location) && delegate?.router(self, shouldRerouteFrom: location)
+        let willReroute = !userIsOnRoute(location, status: status) && delegate?.router(self, shouldRerouteFrom: location)
             ?? DefaultBehavior.shouldRerouteFromLocation
         
         updateIndexes(status: status, progress: routeProgress)
@@ -258,8 +258,12 @@ open class RouteController: NSObject {
     
     func updateRouteLegProgress(status: MBNavigationStatus) {
         let legProgress = routeProgress.currentLegProgress
-        let currentDestination = routeProgress.currentLeg.destination
-        guard let remainingVoiceInstructions = legProgress.currentStepProgress.remainingSpokenInstructions else { return }
+        
+        guard let currentDestination = legProgress.leg.destination else {
+            preconditionFailure("Route legs used for navigation must have destinations")
+        }
+        guard let remainingVoiceInstructions = legProgress.currentStepProgress.remainingSpokenInstructions else { return
+        }
         
         // We are at least at the "You will arrive" instruction
         if legProgress.remainingSteps.count <= 2 && remainingVoiceInstructions.count <= 2 {
@@ -287,7 +291,9 @@ open class RouteController: NSObject {
         let step = stepProgress.step
         
         //Increment the progress model
-        let polyline = Polyline(step.coordinates!)
+        guard let polyline = step.shape else {
+            preconditionFailure("Route steps used for navigation must have shape data")
+        }
         if let closestCoordinate = polyline.closestCoordinate(to: rawLocation.coordinate) {
             let remainingDistance = polyline.distance(from: closestCoordinate.coordinate)
             let distanceTraveled = step.distance - remainingDistance
@@ -355,14 +361,23 @@ open class RouteController: NSObject {
 
 extension RouteController: Router {
     public func userIsOnRoute(_ location: CLLocation) -> Bool {
+        return userIsOnRoute(location, status: nil)
+    }
+    
+    public func userIsOnRoute(_ location: CLLocation, status: MBNavigationStatus?) -> Bool {
+        
+        guard let destination = routeProgress.currentLeg.destination else {
+            preconditionFailure("Route legs used for navigation must have destinations")
+        }
+        
         // If the user has arrived, do not continue monitor reroutes, step progress, etc
         if routeProgress.currentLegProgress.userHasArrivedAtWaypoint &&
-            (delegate?.router(self, shouldPreventReroutesWhenArrivingAt: routeProgress.currentLeg.destination) ??
+            (delegate?.router(self, shouldPreventReroutesWhenArrivingAt: destination) ??
                 DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint) {
             return true
         }
         
-        let status = navigator.getStatusForTimestamp(location.timestamp)
+        let status = status ?? navigator.getStatusForTimestamp(location.timestamp)
         let offRoute = status.routeState == .offRoute
         return !offRoute
     }

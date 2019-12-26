@@ -1,23 +1,22 @@
 import UIKit
 import MapboxDirections
 
-extension VisualInstructionComponent {
+extension VisualInstruction.Component {
     static let scale = UIScreen.main.scale
     
     var cacheKey: String? {
-        switch type {
-        case .exit, .exitCode:
-            guard let exitCode = self.text else { return nil }
-            return "exit-" + exitCode + "-\(VisualInstructionComponent.scale)"
-        case .image:
-            guard let imageURL = imageURL else { return genericCacheKey }
-            return "\(imageURL.absoluteString)-\(VisualInstructionComponent.scale)"
-        case .text, .delimiter:
+        switch self {
+        case let .exit(representation), let .exitCode(representation):
+            let exitCode = representation.text
+            return "exit-" + exitCode + "-\(VisualInstruction.Component.scale)"
+        case let .image(representation):
+            guard let imageURL = representation.image.imageBaseURL else {
+                return "generic-" + representation.alternativeText.text
+            }
+            
+            return "\(imageURL.absoluteString)-\(VisualInstruction.Component.scale)"
+        case .text, .delimiter, .lane:
             return nil
         }
-    }
-    
-    var genericCacheKey: String {
-        return "generic-" + (text ?? "nil")
     }
 }

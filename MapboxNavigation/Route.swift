@@ -14,17 +14,17 @@ extension Route {
      */
     func polylineAroundManeuver(legIndex: Int, stepIndex: Int, distance: CLLocationDistance) -> Polyline {
         let precedingLegs = legs.prefix(upTo: legIndex)
-        let precedingLegCoordinates = precedingLegs.flatMap { $0.steps }.flatMap { $0.coordinates ?? [] }
+        let precedingLegCoordinates = precedingLegs.flatMap { $0.steps }.flatMap { $0.shape?.coordinates ?? [] }
         
         let precedingSteps = legs[legIndex].steps.prefix(upTo: stepIndex)
-        let precedingStepCoordinates = precedingSteps.compactMap { $0.coordinates }.reduce([], +)
+        let precedingStepCoordinates = precedingSteps.compactMap { $0.shape?.coordinates }.reduce([], +)
         let precedingPolyline = Polyline((precedingLegCoordinates + precedingStepCoordinates).reversed())
 
         let followingLegs = legs.suffix(from: legIndex).dropFirst()
-        let followingLegCoordinates = followingLegs.flatMap { $0.steps }.flatMap { $0.coordinates ?? [] }
+        let followingLegCoordinates = followingLegs.flatMap { $0.steps }.flatMap { $0.shape?.coordinates ?? [] }
         
         let followingSteps = legs[legIndex].steps.suffix(from: stepIndex)
-        let followingStepCoordinates = followingSteps.compactMap { $0.coordinates }.reduce([], +)
+        let followingStepCoordinates = followingSteps.compactMap { $0.shape?.coordinates }.reduce([], +)
         let followingPolyline = Polyline(followingStepCoordinates + followingLegCoordinates)
         
         // After trimming, reverse the array so that the resulting polyline proceeds in a forward direction throughout.

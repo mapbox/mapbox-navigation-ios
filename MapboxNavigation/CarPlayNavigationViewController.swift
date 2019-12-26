@@ -260,7 +260,7 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
             } else if tracksUserCourse && !newValue {
                 isOverviewingRoutes = !isPanningAway
                 guard let userLocation = self.navigationService.router.location?.coordinate,
-                let coordinates = navigationService.route.coordinates else {
+                    let coordinates = navigationService.route.shape?.coordinates else {
                     return
                 }
                 mapView?.enableFrameByFrameCourseViewTracking(for: 1)
@@ -392,7 +392,7 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
         var maneuvers: [CPManeuver] = [primaryManeuver]
         
         // Add tertiary text if available. TODO: handle lanes.
-        if let tertiaryInstruction = visualInstruction.tertiaryInstruction, !tertiaryInstruction.containsLaneIndications {
+        if let tertiaryInstruction = visualInstruction.tertiaryInstruction, tertiaryInstruction.laneComponents.isEmpty {
             let tertiaryManeuver = CPManeuver()
             tertiaryManeuver.symbolSet = tertiaryInstruction.maneuverImageSet(side: visualInstruction.drivingSide)
             
@@ -493,7 +493,7 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
     public func location(for styleManager: StyleManager) -> CLLocation? {
         if let location = navigationService.router.location {
             return location
-        } else if let origin = navigationService.route.coordinates?.first {
+        } else if let origin = navigationService.route.shape?.coordinates.first {
             return CLLocation(latitude: origin.latitude, longitude: origin.longitude)
         } else {
             return nil

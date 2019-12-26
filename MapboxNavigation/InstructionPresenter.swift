@@ -10,6 +10,20 @@ protocol InstructionPresenterDataSource: class {
 
 typealias DataSource = InstructionPresenterDataSource
 
+extension NSAttributedString.Key {
+    /**
+     A string containing an abbreviation that can be substituted for the substring when there is not enough room to display the original substring.
+     */
+    static let abbreviation = NSAttributedString.Key(rawValue: "MBVisualInstructionComponentAbbreviation")
+    
+    /**
+     A number indicating the priority for which the substring should be substituted with the abbreviation specified by the `NSAttributedString.Key.abbreviation` key.
+     
+     A substring with a lower abbreviation priority value should be abbreviated before a substring with a higher abbreviation priority value.
+     */
+    static let abbreviationPriority = NSAttributedString.Key(rawValue: "MBVisualInstructionComponentAbbreviationPriority")
+}
+
 class InstructionPresenter {
     private let instruction: VisualInstruction
     private weak var dataSource: DataSource?
@@ -29,143 +43,123 @@ class InstructionPresenter {
     private let imageRepository: ImageRepository
     
     func attributedText() -> NSAttributedString {
-        let string = NSMutableAttributedString()
-        fittedAttributedComponents().forEach { string.append($0) }
-        return string
-    }
-    
-    func fittedAttributedComponents() -> [NSAttributedString] {
-        guard let source = self.dataSource else { return [] }
-        var attributedPairs = self.attributedPairs(for: instruction, dataSource: source, imageRepository: imageRepository, onImageDownload: completeShieldDownload)
+        guard let source = self.dataSource else {
+            return NSAttributedString()
+        }
+        
+        let attributedTextRepresentation = self.attributedTextRepresentation(of: instruction, dataSource: source, imageRepository: imageRepository, onImageDownload: completeShieldDownload).mutableCopy() as! NSMutableAttributedString
+        
+        // Collect abbreviation priorities embedded in the attributed text representation.
+        let wholeRange = NSRange(location: 0, length: attributedTextRepresentation.length)
+        var priorities = IndexSet()
+        attributedTextRepresentation.enumerateAttribute(.abbreviationPriority, in: wholeRange, options: .longestEffectiveRangeNotRequired) { (priority, range, stop) in
+            if let priority = priority as? Int {
+                priorities.insert(priority)
+            }
+        }
+        
+        // Progressively abbreviate the attributed text representation, starting with the highest-priority abbreviations.
         let availableBounds = source.availableBounds()
-        let totalWidth: CGFloat = attributedPairs.attributedStrings.map { $0.size() }.reduce(.zero, +).width
-        let stringFits = totalWidth <= availableBounds.width
-        
-        guard !stringFits else { return attributedPairs.attributedStrings }
-        
-        let indexedComponents: [IndexedVisualInstructionComponent] = attributedPairs.components.enumerated().map { IndexedVisualInstructionComponent(component: $1, index: $0) }
-        let filtered = indexedComponents.filter { $0.component.abbreviation != nil }
-        let sorted = filtered.sorted { $0.component.abbreviationPriority < $1.component.abbreviationPriority }
-        for component in sorted {
-            let isFirst = component.index == 0
-            let joinChar = isFirst ? "" : " "
-            guard component.component.type == .text else { continue }
-            guard let abbreviation = component.component.abbreviation else { continue }
-            
-            attributedPairs.attributedStrings[component.index] = NSAttributedString(string: joinChar + abbreviation, attributes: attributes(for: source))
-            let newWidth: CGFloat = attributedPairs.attributedStrings.map { $0.size() }.reduce(.zero, +).width
-            
-            if newWidth <= availableBounds.width {
+        for currentPriority in priorities.sorted(by: <) {
+            // If the attributed text representation already fits, we’re done.
+            if attributedTextRepresentation.size().width <= availableBounds.width {
                 break
             }
-        }
-        
-        return attributedPairs.attributedStrings
-    }
-    
-    typealias AttributedInstructionComponents = (components: [VisualInstructionComponent], attributedStrings: [NSAttributedString])
-    
-    func attributedPairs(for instruction: VisualInstruction, dataSource: DataSource, imageRepository: ImageRepository, onImageDownload: @escaping ImageDownloadCompletion) -> AttributedInstructionComponents {
-        let components = instruction.components.compactMap { $0 as? VisualInstructionComponent }
-        var strings: [NSAttributedString] = []
-        var processedComponents: [VisualInstructionComponent] = []
-        
-        for (index, component) in components.enumerated() {
-            let isFirst = index == 0
-            let joinChar = isFirst ? "" : " "
-            let joinString = NSAttributedString(string: joinChar, attributes: attributes(for: dataSource))
-            let initial = NSAttributedString()
             
-            //This is the closure that builds the string.
-            let build: (_: VisualInstructionComponent, _: [NSAttributedString]) -> Void = { (component, attributedStrings) in
-                processedComponents.append(component)
-                strings.append(attributedStrings.reduce(initial, +))
-            }
-            let isShield: (_: VisualInstructionComponent?) -> Bool = { (component) in
-                guard let key = component?.cacheKey else { return false }
-                return imageRepository.cachedImageForKey(key) != nil
-            }
-            let componentBefore = components.component(before: component)
-            let componentAfter  = components.component(after: component)
-            
-            switch component.type {
-            //Throw away exit components. We know this is safe because we know that if there is an exit component,
-            //  there is an exit code component, and the latter contains the information we care about.
-            case .exit:
-                continue
-                
-            //If we have a exit, in the first two components, lets handle that.
-            case .exitCode where 0...1 ~= index:
-                guard let exitString = self.attributedString(forExitComponent: component, maneuverDirection: instruction.maneuverDirection, dataSource: dataSource) else { fallthrough }
-                build(component, [exitString])
-                
-            //if it's a delimiter, skip it if it's between two shields.
-            case .delimiter where isShield(componentBefore) && isShield(componentAfter):
-                continue
-                
-            //If we have an icon component, lets turn it into a shield.
-            case .image:
-                if let shieldString = attributedString(forShieldComponent: component, repository: imageRepository, dataSource: dataSource, onImageDownload: onImageDownload) {
-                    build(component, [joinString, shieldString])
-                } else if let genericShieldString = attributedString(forGenericShield: component, dataSource: dataSource) {
-                    build(component, [joinString, genericShieldString])
-                } else {
-                    fallthrough
+            // Look for substrings with the current abbreviation priority and replace them with the embedded abbreviations.
+            let wholeRange = NSRange(location: 0, length: attributedTextRepresentation.length)
+            attributedTextRepresentation.enumerateAttribute(.abbreviationPriority, in: wholeRange, options: []) { (priority, range, stop) in
+                var abbreviationRange = range
+                if priority as? Int == currentPriority,
+                    let abbreviation = attributedTextRepresentation.attribute(.abbreviation, at: range.location, effectiveRange: &abbreviationRange) as? String {
+                    assert(abbreviationRange == range, "Abbreviation and abbreviation priority should be applied to the same effective range.")
+                    attributedTextRepresentation.replaceCharacters(in: abbreviationRange, with: abbreviation)
                 }
-                
-            //Otherwise, process as text component.
-            default:
-                guard let componentString = attributedString(forTextComponent: component, dataSource: dataSource) else { continue }
-                build(component, [joinString, componentString])
             }
         }
         
-        assert(processedComponents.count == strings.count, "The number of processed components must match the number of attributed strings")
-        return (components: processedComponents, attributedStrings: strings)
-    }
-
-    func attributedString(forExitComponent component: VisualInstructionComponent, maneuverDirection: ManeuverDirection, dataSource: DataSource) -> NSAttributedString? {
-        guard component.type == .exitCode, let exitCode = component.text else { return nil }
-        let side: ExitSide = maneuverDirection == .left ? .left : .right
-        guard let exitString = exitShield(side: side, text: exitCode, component: component, dataSource: dataSource) else { return nil }
-        return exitString
+        return attributedTextRepresentation
     }
     
-    func attributedString(forGenericShield component: VisualInstructionComponent, dataSource: DataSource) -> NSAttributedString? {
-        guard component.type == .image, let text = component.text else { return nil }
-        return genericShield(text: text, component: component, dataSource: dataSource)
-    }
-    
-    func attributedString(forShieldComponent shield: VisualInstructionComponent, repository:ImageRepository, dataSource: DataSource, onImageDownload: @escaping ImageDownloadCompletion) -> NSAttributedString? {
-        guard shield.imageURL != nil, let shieldKey = shield.cacheKey else { return nil }
+    func attributedTextRepresentation(of instruction: VisualInstruction, dataSource: DataSource, imageRepository: ImageRepository, onImageDownload: @escaping ImageDownloadCompletion) -> NSAttributedString {
+        var components = instruction.components
         
+        let isShield: (_ key: VisualInstruction.Component?) -> Bool = { (component) in
+            guard let key = component?.cacheKey else { return false }
+            return imageRepository.cachedImageForKey(key) != nil
+        }
+        
+        components.removeSeparators { (precedingComponent, component, followingComponent) -> Bool in
+            if case .exit(_) = component {
+                // Remove exit components, which appear next to exit code components. Exit code components can be styled unambiguously, making the exit component redundant.
+                return true
+            } else if isShield(precedingComponent), case .delimiter(_) = component, isShield(followingComponent) {
+                // Remove delimiter components flanked by image components, which the response includes only for backwards compatibility with text-only clients.
+                return true
+            } else {
+                return false
+            }
+        }
+        
+        let defaultAttributes: [NSAttributedString.Key: Any] = [
+            .font: dataSource.font as Any,
+            .foregroundColor: dataSource.textColor as Any
+        ]
+        let attributedTextRepresentations = components.map { (component) -> NSAttributedString in
+            switch component {
+            case .delimiter(let text):
+                return NSAttributedString(string: text.text, attributes: defaultAttributes)
+            case .text(let text):
+                let attributedString = NSMutableAttributedString(string: text.text, attributes: defaultAttributes)
+                // Annotate the attributed text representation with an abbreviation.
+                if let abbreviation = text.abbreviation, let abbreviationPriority = text.abbreviationPriority {
+                    let wholeRange = NSRange(location: 0, length: attributedString.length)
+                    attributedString.addAttributes([
+                        .abbreviation: abbreviation,
+                        .abbreviationPriority: abbreviationPriority,
+                    ], range: wholeRange)
+                }
+                return attributedString
+            case .image(let image, let alternativeText):
+                // Ideally represent the image component as a shield image.
+                return self.attributedString(forShieldComponent: image, repository: imageRepository, dataSource: dataSource, cacheKey: component.cacheKey!, onImageDownload: onImageDownload)
+                    // Fall back to a generic shield if no shield image is available.
+                    ?? genericShield(text: alternativeText.text, dataSource: dataSource, cacheKey: component.cacheKey!)
+                    // Finally, fall back to a plain text representation if the generic shield couldn’t be rendered.
+                    ?? NSAttributedString(string: alternativeText.text, attributes: defaultAttributes)
+            case .exit(_):
+                preconditionFailure("Exit components should have been removed above")
+            case .exitCode(let text):
+                let exitSide: ExitSide = instruction.maneuverDirection == .left ? .left : .right
+                return exitShield(side: exitSide, text: text.text, dataSource: dataSource, cacheKey: component.cacheKey!)
+                    ?? NSAttributedString(string: text.text, attributes: defaultAttributes)
+            case .lane(_, _):
+                preconditionFailure("Lane component has no attributed string representation.")
+            }
+        }
+        let separator = NSAttributedString(string: " ", attributes: defaultAttributes)
+        return attributedTextRepresentations.joined(separator: separator)
+    }
+    
+    func attributedString(forShieldComponent shield: VisualInstruction.Component.ImageRepresentation, repository:ImageRepository, dataSource: DataSource, cacheKey: String, onImageDownload: @escaping ImageDownloadCompletion) -> NSAttributedString? {
         //If we have the shield already cached, use that.
-        if let cachedImage = repository.cachedImageForKey(shieldKey) {
+        if let cachedImage = repository.cachedImageForKey(cacheKey) {
             return attributedString(withFont: dataSource.font, shieldImage: cachedImage)
         }
         
         // Let's download the shield
-        shieldImageForComponent(shield, in: repository, completion: onImageDownload)
+        shieldImageForComponent(representation: shield, in: repository, cacheKey: cacheKey, completion: onImageDownload)
         
         //Return nothing in the meantime, triggering downstream behavior (generic shield or text)
         return nil
     }
     
-    func attributedString(forTextComponent component: VisualInstructionComponent, dataSource: DataSource) -> NSAttributedString? {
-        guard let text = component.text else { return nil }
-        return NSAttributedString(string: text, attributes: attributes(for: dataSource))
-    }
     
-    private func shieldImageForComponent(_ component: VisualInstructionComponent, in repository: ImageRepository, completion: @escaping ImageDownloadCompletion) {
-        guard let imageURL = component.imageURL, let shieldKey = component.cacheKey else {
-            return
-        }
+    private func shieldImageForComponent(representation: VisualInstruction.Component.ImageRepresentation, in repository: ImageRepository, cacheKey: String, completion: @escaping ImageDownloadCompletion) {
+        guard let imageURL = representation.imageURL(scale: VisualInstruction.Component.scale, format: .png) else { return }
+        
 
-        repository.imageWithURL(imageURL, cacheKey: shieldKey, completion: completion )
-    }
-
-    private func attributes(for dataSource: InstructionPresenterDataSource) -> [NSAttributedString.Key: Any] {
-        return [.font: dataSource.font as Any, .foregroundColor: dataSource.textColor as Any]
+        repository.imageWithURL(imageURL, cacheKey: cacheKey, completion: completion )
     }
 
     private func attributedString(withFont font: UIFont, shieldImage: UIImage) -> NSAttributedString {
@@ -175,9 +169,7 @@ class InstructionPresenter {
         return NSAttributedString(attachment: attachment)
     }
     
-    private func genericShield(text: String, component: VisualInstructionComponent, dataSource: DataSource) -> NSAttributedString? {
-        guard let cacheKey = component.cacheKey else { return nil }
-
+    private func genericShield(text: String, dataSource: DataSource, cacheKey: String) -> NSAttributedString? {
         let additionalKey = GenericRouteShield.criticalHash(dataSource: dataSource)
         let attachment = GenericShieldAttachment()
         
@@ -197,9 +189,7 @@ class InstructionPresenter {
         return NSAttributedString(attachment: attachment)
     }
     
-    private func exitShield(side: ExitSide = .right, text: String, component: VisualInstructionComponent, dataSource: DataSource) -> NSAttributedString? {
-        guard let cacheKey = component.cacheKey else { return nil }
-        
+    private func exitShield(side: ExitSide = .right, text: String, dataSource: DataSource, cacheKey: String) -> NSAttributedString? {
         let additionalKey = ExitView.criticalHash(side: side, dataSource: dataSource)
         let attachment = ExitAttachment()
 
@@ -300,32 +290,5 @@ class RoadNameLabelAttachment: TextInstruction {
 extension CGSize {
     fileprivate static func +(lhs: CGSize, rhs: CGSize) -> CGSize {
         return CGSize(width: lhs.width + rhs.width, height: lhs.height +  rhs.height)
-    }
-}
-
-fileprivate struct IndexedVisualInstructionComponent {
-    let component: Array<VisualInstructionComponent>.Element
-    let index: Array<VisualInstructionComponent>.Index
-}
-
-extension Array where Element == VisualInstructionComponent {
-    fileprivate func component(before component: VisualInstructionComponent) -> VisualInstructionComponent? {
-        guard let index = self.firstIndex(of: component) else {
-            return nil
-        }
-        if index > 0 {
-            return self[index-1]
-        }
-        return nil
-    }
-    
-    fileprivate func component(after component: VisualInstructionComponent) -> VisualInstructionComponent? {
-        guard let index = self.firstIndex(of: component) else {
-            return nil
-        }
-        if index+1 < self.endIndex {
-            return self[index+1]
-        }
-        return nil
     }
 }

@@ -7,24 +7,62 @@ import MapboxNavigationNative
  */
 public typealias NavigationDirectionsCompletionHandler = (_ numberOfTiles: UInt64) -> Void
 
-enum OfflineRoutingError: Error, LocalizedError {
-    case unexpectedRouteResult(String)
-    case corruptRouteData(String)
-    case responseError(String)
+/**
+ An error that occurs when calculating directions potentially offline using the `NavigationDirections.calculate(_:offline:completionHandler:)` method.
+*/
+public enum OfflineRoutingError: LocalizedError {
+    /**
+     A standard Directions API error occurred.
+     
+     A Directions API error can occur whether directions are calculated online or offline.
+     */
+    case standard(DirectionsError)
+    
+    /**
+     The router returned an empty response.
+     */
+    case noData
+    
+    /**
+     The router returned a response that isn’t correctly formatted.
+    */
+    case invalidResponse
+    
+    case unknown(underlying: Error)
     
     public var localizedDescription: String {
         switch self {
-        case .corruptRouteData(let value):
-            return value
-        case .unexpectedRouteResult(let value):
-            return value
-        case .responseError(let value):
-            return value
+        case .standard(let error):
+            return error.localizedDescription
+        case .noData:
+            return NSLocalizedString("OFFLINE_NO_RESULT", bundle: .mapboxCoreNavigation, value: "Unable to calculate the requested route while offline.", comment: "Error description when an offline route request returns no result")
+        case .invalidResponse:
+            return NSLocalizedString("OFFLINE_CORRUPT_DATA", bundle: .mapboxCoreNavigation, value: "Found an invalid route while offline.", comment: "Error message when an offline route request returns a response that can’t be deserialized")
+        case .unknown(let underlying):
+            return "Unknown Error: \(underlying.localizedDescription)"
         }
     }
     
-    var errorDescription: String? {
-        return localizedDescription
+    public var failureReason: String? {
+        switch self {
+        case .standard(let error):
+            return error.failureReason
+        case .unknown(let underlying):
+            return (underlying as? LocalizedError)?.failureReason
+        default:
+            return nil
+        }
+    }
+    
+    public var recoverySuggestion: String? {
+        switch self {
+        case .standard(let error):
+            return error.recoverySuggestion
+        case .unknown(let underlying):
+            return (underlying as? LocalizedError)?.recoverySuggestion
+        default:
+            return nil
+        }
     }
 }
 
@@ -50,6 +88,19 @@ public typealias UnpackProgressHandler = (_ totalBytes: UInt64, _ remainingBytes
  - parameter error: Potential error that occured when trying to unpack.
  */
 public typealias UnpackCompletionHandler = (_ numberOfTiles: UInt64, _ error: Error?) -> ()
+
+/**
+ A closure (block) to be called when a directions request is complete.
+ 
+ - parameter waypoints: An array of `Waypoint` objects. Each waypoint object corresponds to a `Waypoint` object in the original `RouteOptions` object. The locations and names of these waypoints are the result of conflating the original waypoints to known roads. The waypoints may include additional information that was not specified in the original waypoints.
+ 
+ If the request was canceled or there was an error obtaining the routes, this argument may be `nil`.
+ - parameter routes: An array of `Route` objects. The preferred route is first; any alternative routes come next if the `RouteOptions` object’s `includesAlternativeRoutes` property was set to `true`. The preferred route depends on the route options object’s `profileIdentifier` property.
+ 
+ If the request was canceled or there was an error obtaining the routes, this argument is `nil`. This is not to be confused with the situation in which no results were found, in which case the array is present but empty.
+ - parameter error: The error that occurred, or `nil` if the placemarks were obtained successfully.
+ */
+public typealias OfflineRouteCompletionHandler = ([MapboxDirections.Waypoint]?, [MapboxDirections.Route]?, OfflineRoutingError?) -> Void
 
 /**
  A `NavigationDirections` object provides you with optimal directions between different locations, or waypoints. The directions object passes your request to a built-in routing engine and returns the requested information to a closure (block) that you provide. A directions object can handle multiple simultaneous requests. A `RouteOptions` object specifies criteria for the results, such as intermediate waypoints, a mode of transportation, or the level of detail to be returned. In addition to `Directions`, `NavigationDirections` provides support for offline routing.
@@ -133,9 +184,18 @@ public class NavigationDirections: Directions {
      - parameter offline: Determines whether to calculate the route offline or online.
      - parameter completionHandler: The closure (block) to call with the resulting routes. This closure is executed on the application’s main thread.
      */
-    public func calculate(_ options: RouteOptions, offline: Bool = true, completionHandler: @escaping Directions.RouteCompletionHandler) {
-        guard offline == true else {
-            super.calculate(options, completionHandler: completionHandler)
+    public func calculate(_ options: RouteOptions, offline: Bool = true, completionHandler: @escaping OfflineRouteCompletionHandler) {
+        
+        guard offline else {
+            super.calculate(options) { (waypoints, routes, error) in
+                let offlineError: OfflineRoutingError?
+                if let error = error {
+                    offlineError = .standard(error)
+                } else {
+                    offlineError = nil
+                }
+                completionHandler(waypoints, routes, offlineError)
+            }
             return
         }
         
@@ -143,34 +203,33 @@ public class NavigationDirections: Directions {
         
         NavigationDirectionsConstants.offlineSerialQueue.async { [weak self] in
             guard let result = self?.navigator.getRouteForDirectionsUri(url.absoluteString) else {
-                let message = NSLocalizedString("OFFLINE_NO_RESULT", bundle: .mapboxCoreNavigation, value: "Unable to calculate the requested route while offline.", comment: "Error description when an offline route request returns no result")
-                let error = OfflineRoutingError.unexpectedRouteResult(message)
-                return completionHandler(nil, nil, error as NSError)
+                DispatchQueue.main.async {
+                    completionHandler(nil, nil, .noData)
+                }
+                return
             }
             
             guard let data = result.json.data(using: .utf8) else {
-                let message = NSLocalizedString("OFFLINE_CORRUPT_DATA", bundle: .mapboxCoreNavigation, value: "Found an invalid route while offline.", comment: "Error message when an offline route request returns a response that can’t be deserialized")
-                let error = OfflineRoutingError.corruptRouteData(message)
-                return completionHandler(nil, nil, error as NSError)
-            }
-            
-            do {
-                let json = try JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
-                if let errorValue = json["error"] as? String {
-                    DispatchQueue.main.async {
-                        let error = OfflineRoutingError.responseError(errorValue)
-                        return completionHandler(nil, nil, error as NSError)
-                    }
-                } else {
-                    DispatchQueue.main.async {
-                        let response = options.response(from: json)
-                        return completionHandler(response.0, response.1, nil)
-                    }
-                }
-            } catch {
                 DispatchQueue.main.async {
-                    return completionHandler(nil, nil, error as NSError)
+                    completionHandler(nil, nil, .invalidResponse)
                 }
+                return
+            }
+            DispatchQueue.main.async {
+                
+                do {
+                    let decoder = JSONDecoder()
+                    decoder.userInfo[.options] = options
+                    let response = try decoder.decode(RouteResponse.self, from: data)
+                    guard let routes = response.routes else {
+                        return completionHandler(response.waypoints, nil, .standard(.unableToRoute))
+                    }
+                    return completionHandler(response.waypoints, routes, nil)
+                }
+                catch {
+                    return completionHandler(nil, nil, .unknown(underlying: error))
+                }
+                
             }
         }
     }

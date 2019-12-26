@@ -14,8 +14,8 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         recordMode = false
         agnosticOptions = [.OS, .device]
 
-        let i280Instruction = VisualInstructionComponent(type: .image, text: nil, imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
-        let us101Instruction = VisualInstructionComponent(type: .image, text: nil, imageURL: ShieldImage.us101.url, abbreviation: nil, abbreviationPriority: 0)
+        let i280Instruction = VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.i280.baseURL), alternativeText: .init(text: "I-280", abbreviation: nil, abbreviationPriority: 0))
+        let us101Instruction = VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.us101.baseURL), alternativeText: .init(text: "US 101", abbreviation: nil, abbreviationPriority: 0))
 
         imageRepository.storeImage(ShieldImage.i280.image, forKey: i280Instruction.cacheKey!, toDisk: false)
         imageRepository.storeImage(ShieldImage.us101.image, forKey: us101Instruction.cacheKey!, toDisk: false)
@@ -41,10 +41,10 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.maneuverView.isStart = true
         view.distance = 482
 
-        let instructions = [
-            VisualInstructionComponent(type: .text, text: "US 45", imageURL: nil, abbreviation: nil, abbreviationPriority: 0),
-            VisualInstructionComponent(type: .text, text: "/", imageURL: nil, abbreviation: nil, abbreviationPriority: 0),
-            VisualInstructionComponent(type: .text, text: "Chicago", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)
+        let instructions: [VisualInstruction.Component] = [
+            .text(text: .init(text: "US 45", abbreviation: nil, abbreviationPriority: 0)),
+            .text(text: .init(text: "/", abbreviation: nil, abbreviationPriority: 0)),
+            .text(text: .init(text: "Chicago", abbreviation: nil, abbreviationPriority: 0)),
         ]
 
         view.update(for: makeVisualInstruction(.turn, .right, primaryInstruction: instructions, secondaryInstruction: nil))
@@ -59,9 +59,9 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.maneuverView.isStart = true
         view.distance = 482
 
-        let instructions = [
-            VisualInstructionComponent(type: .image, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0),
-            VisualInstructionComponent(type: .text, text: "US 45 / Chicago / US 45 / Chicago", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)
+        let instructions: [VisualInstruction.Component] = [
+            .image(image: .init(imageBaseURL: ShieldImage.i280.baseURL), alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: 0)),
+            .text(text: .init(text: "US 45 / Chicago / US 45 / Chicago", abbreviation: nil, abbreviationPriority: 0)),
         ]
 
         view.update(for: makeVisualInstruction(.turn, .right, primaryInstruction: instructions, secondaryInstruction: nil))
@@ -76,11 +76,11 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.maneuverView.isStart = true
         view.distance = 482
 
-        let primary = [
-            VisualInstructionComponent(type: .image, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0),
-            VisualInstructionComponent(type: .text, text: "South", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)
+        let primary: [VisualInstruction.Component] = [
+            .image(image: .init(imageBaseURL: ShieldImage.i280.baseURL), alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: 0)),
+            .text(text: .init(text: "South", abbreviation: nil, abbreviationPriority: 0)),
         ]
-        let secondary = [VisualInstructionComponent(type: .text, text: "US 45 / Chicago", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)]
+        let secondary = [VisualInstruction.Component.text(text: .init(text: "US 45 / Chicago", abbreviation: nil, abbreviationPriority: 0))]
 
         view.update(for: makeVisualInstruction(.turn, .right, primaryInstruction: primary, secondaryInstruction: secondary))
 
@@ -94,10 +94,10 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.maneuverView.isStart = true
         view.distance = 482
 
-        let primary = [
-            VisualInstructionComponent(type: .image, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
+        let primary: [VisualInstruction.Component] = [
+            .image(image: .init(imageBaseURL: ShieldImage.i280.baseURL), alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: 0)),
         ]
-        let secondary = [VisualInstructionComponent(type: .text, text: "Mountain View Test", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)]
+        let secondary = [VisualInstruction.Component.text(text: .init(text: "Mountain View Test", abbreviation: nil, abbreviationPriority: 0))]
 
         view.update(for: makeVisualInstruction(.turn, .right, primaryInstruction: primary, secondaryInstruction: secondary))
 
@@ -111,13 +111,15 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.maneuverView.isStart = true
         view.distance = 482
 
-        let primary = [VisualInstructionComponent(type: .image, text: "I-280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: NSNotFound),
-                       VisualInstructionComponent(type: .text, text: "Drive", imageURL: nil, abbreviation: "Dr", abbreviationPriority: 0),
-                       VisualInstructionComponent(type: .text, text: "Avenue", imageURL: nil, abbreviation: "Ave", abbreviationPriority: 5),
-                       VisualInstructionComponent(type: .text, text: "West", imageURL: nil, abbreviation: "W", abbreviationPriority: 4),
-                       VisualInstructionComponent(type: .text, text: "South", imageURL: nil, abbreviation: "S", abbreviationPriority: 3),
-                       VisualInstructionComponent(type: .text, text: "East", imageURL: nil, abbreviation: "E", abbreviationPriority: 2),
-                       VisualInstructionComponent(type: .text, text: "North", imageURL: nil, abbreviation: "N", abbreviationPriority: 1)]
+        let primary: [VisualInstruction.Component] = [
+            .image(image: .init(imageBaseURL: ShieldImage.i280.baseURL), alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: 0)),
+            .text(text: .init(text: "Drive", abbreviation: "Dr", abbreviationPriority: 0)),
+            .text(text: .init(text: "Avenue", abbreviation: "Ave", abbreviationPriority: 5)),
+            .text(text: .init(text: "West", abbreviation: "W", abbreviationPriority: 4)),
+            .text(text: .init(text: "South", abbreviation: "S", abbreviationPriority: 3)),
+            .text(text: .init(text: "East", abbreviation: "E", abbreviationPriority: 2)),
+            .text(text: .init(text: "North", abbreviation: "N", abbreviationPriority: 1)),
+        ]
 
         view.update(for: makeVisualInstruction(.continue, .straightAhead, primaryInstruction: primary, secondaryInstruction: nil))
 
@@ -131,13 +133,15 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.maneuverView.isStart = true
         view.distance = 482
 
-        let primary = [VisualInstructionComponent(type: .image, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: NSNotFound),
-                       VisualInstructionComponent(type: .delimiter, text: "/", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound),
-                       VisualInstructionComponent(type: .text, text: "10", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound),
-                       VisualInstructionComponent(type: .delimiter, text: "/", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound),
-                       VisualInstructionComponent(type: .text, text: "15 North", imageURL: nil, abbreviation: "15 N", abbreviationPriority: 0),
-                       VisualInstructionComponent(type: .delimiter, text: "/", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound),
-                       VisualInstructionComponent(type: .text, text: "20 West", imageURL: nil, abbreviation: "20 W", abbreviationPriority: 1)]
+        let primary: [VisualInstruction.Component] = [
+            .image(image: .init(imageBaseURL: ShieldImage.i280.baseURL), alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: nil)),
+            .delimiter(text: .init(text: "/", abbreviation: nil, abbreviationPriority: nil)),
+            .text(text: .init(text: "10", abbreviation: nil, abbreviationPriority: nil)),
+            .delimiter(text: .init(text: "/", abbreviation: nil, abbreviationPriority: nil)),
+            .text(text: .init(text: "15 North", abbreviation: "15 N", abbreviationPriority: 0)),
+            .delimiter(text: .init(text: "/", abbreviation: nil, abbreviationPriority: nil)),
+            .text(text: .init(text: "20 West", abbreviation: "20 W", abbreviationPriority: 1)),
+        ]
 
         imageRepository.storeImage(ShieldImage.i280.image, forKey: primary.first!.cacheKey!)
         view.update(for: makeVisualInstruction(.continue, .straightAhead, primaryInstruction: primary, secondaryInstruction: nil))
@@ -151,10 +155,10 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
 
         view.distance = 482
 
-        let primary = [
-            VisualInstructionComponent(type: .text, text: "West", imageURL: nil, abbreviation: "W", abbreviationPriority: 0),
-            VisualInstructionComponent(type: .text, text: "Fremont", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound),
-            VisualInstructionComponent(type: .text, text: "Avenue", imageURL: nil, abbreviation: "Ave", abbreviationPriority: 1)
+        let primary: [VisualInstruction.Component] = [
+            .text(text: .init(text: "West", abbreviation: "W", abbreviationPriority: 0)),
+            .text(text: .init(text: "Fremont", abbreviation: nil, abbreviationPriority: nil)),
+            .text(text: .init(text: "Avenue", abbreviation: "Ave", abbreviationPriority: 1)),
         ]
 
         view.update(for: makeVisualInstruction(.continue, .straightAhead, primaryInstruction: primary, secondaryInstruction: nil))
@@ -168,10 +172,10 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.maneuverView.isStart = true
         view.distance = 482
 
-        let primary = [
-            VisualInstructionComponent(type: .image, text: "I-280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: NSNotFound),
-            VisualInstructionComponent(type: .delimiter, text: "/", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound),
-            VisualInstructionComponent(type: .image, text: "US-101", imageURL: ShieldImage.us101.url, abbreviation: nil, abbreviationPriority: NSNotFound)
+        let primary: [VisualInstruction.Component] = [
+            .image(image: .init(imageBaseURL: ShieldImage.i280.baseURL), alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: nil)),
+            .delimiter(text: .init(text: "/", abbreviation: nil, abbreviationPriority: nil)),
+            .image(image: .init(imageBaseURL: ShieldImage.us101.baseURL), alternativeText: .init(text: "US-101", abbreviation: nil, abbreviationPriority: nil)),
         ]
 
         view.update(for: makeVisualInstruction(.continue, .straightAhead, primaryInstruction: primary, secondaryInstruction: nil))
@@ -194,14 +198,14 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         instructionsBannerView.distance = 482
 
         let primary = [
-            VisualInstructionComponent(type: .image, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
+            VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.i280.baseURL), alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: 0)),
         ]
-        let secondary = [VisualInstructionComponent(type: .text, text: "US 45 / Chicago", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)]
+        let secondary = [VisualInstruction.Component.text(text: .init(text: "US 45 / Chicago", abbreviation: nil, abbreviationPriority: 0))]
 
         instructionsBannerView.update(for: makeVisualInstruction(.turn, .right, primaryInstruction: primary, secondaryInstruction: secondary))
 
         let primaryThen = [
-            VisualInstructionComponent(type: .image, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
+            VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.i280.baseURL), alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: 0)),
         ]
         let primaryThenInstruction = VisualInstruction(text: nil, maneuverType: .none, maneuverDirection: .none, components: primaryThen)
 
@@ -221,7 +225,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.distanceFormatter.locale = Locale(identifier: "zh-Hans")
         view.distance = 1000 * 999
 
-        let primary = [VisualInstructionComponent(type: .text, text: "中国 安徽省 宣城市 郎溪县", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)]
+        let primary = [VisualInstruction.Component.text(text: .init(text: "中国 安徽省 宣城市 郎溪县", abbreviation: nil, abbreviationPriority: nil))]
         view.update(for: makeVisualInstruction(.continue, .straightAhead, primaryInstruction: primary, secondaryInstruction: nil))
 
         verify(view)
@@ -235,7 +239,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.distanceFormatter.locale = Locale(identifier: "sv-se")
         view.distance = 1000 * 999
 
-        let primary = [VisualInstructionComponent(type: .text, text: "Lorem Ipsum / Dolor Sit Amet", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)]
+        let primary = [VisualInstruction.Component.text(text: .init(text: "Lorem Ipsum / Dolor Sit Amet", abbreviation: nil, abbreviationPriority: nil))]
         view.update(for: makeVisualInstruction(primaryInstruction: primary, secondaryInstruction: nil))
 
         verify(view)
@@ -249,7 +253,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.distanceFormatter.locale = Locale(identifier: "uk-UA")
         view.distance = 1000 * 999
 
-        let primary = [VisualInstructionComponent(type: .text, text: "Lorem Ipsum / Dolor Sit Amet", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)]
+        let primary = [VisualInstruction.Component.text(text: .init(text: "Lorem Ipsum / Dolor Sit Amet", abbreviation: nil, abbreviationPriority: nil))]
         view.update(for: makeVisualInstruction(primaryInstruction: primary, secondaryInstruction: nil))
 
         verify(view)
@@ -262,13 +266,13 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.maneuverView.isStart = true
         view.distance = 482
 
-        let primary = [
-            VisualInstructionComponent(type: .exit, text: "Exit", imageURL: nil, abbreviation: nil, abbreviationPriority: 0),
-            VisualInstructionComponent(type: .exitCode, text: "123A", imageURL: nil, abbreviation: nil, abbreviationPriority: 0),
-            VisualInstructionComponent(type: .text, text: "Main Street", imageURL: nil, abbreviation: "Main St", abbreviationPriority: 0)
+        let primary: [VisualInstruction.Component] = [
+            .exit(text: .init(text: "Exit", abbreviation: nil, abbreviationPriority: 0)),
+            .exitCode(text: .init(text: "123A", abbreviation: nil, abbreviationPriority: 0)),
+            .text(text: .init(text: "Main Street", abbreviation: "Main St", abbreviationPriority: 0)),
         ]
 
-        let secondary = VisualInstructionComponent(type: .text, text: "Anytown Avenue", imageURL: nil, abbreviation: "Anytown Ave", abbreviationPriority: 0)
+        let secondary = VisualInstruction.Component.text(text: .init(text: "Anytown Avenue", abbreviation: "Anytown Ave", abbreviationPriority: 0))
 
         DayStyle().apply()
         window.addSubview(view)
@@ -284,12 +288,12 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.maneuverView.isStart = true
         view.distance = 482
 
-        let primary = [
-            VisualInstructionComponent(type: .image, text: "ANK 1", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound),
-            VisualInstructionComponent(type: .text, text: "Ankh-Morpork 1", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)
+        let primary: [VisualInstruction.Component] = [
+            .image(image: .init(imageBaseURL: nil), alternativeText: .init(text: "ANK 1", abbreviation: nil, abbreviationPriority: nil)),
+            .text(text: .init(text: "Ankh-Morpork 1", abbreviation: nil, abbreviationPriority: nil)),
         ]
 
-        let secondary = [VisualInstructionComponent(type: .text, text: "Vetinari Way", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)]
+        let secondary = [VisualInstruction.Component.text(text: .init(text: "Vetinari Way", abbreviation: nil, abbreviationPriority: nil))]
 
         window.addSubview(view)
         DayStyle().apply()

@@ -165,7 +165,7 @@ class RouteMapViewController: UIViewController {
             mapView.camera = camera
         } else if let location = router.location, location.course > 0 {
             mapView.updateCourseTracking(location: location, animated: false)
-        } else if let coordinates = router.routeProgress.currentLegProgress.currentStep.coordinates, let firstCoordinate = coordinates.first, coordinates.count > 1 {
+        } else if let coordinates = router.routeProgress.currentLegProgress.currentStep.shape?.coordinates, let firstCoordinate = coordinates.first, coordinates.count > 1 {
             let secondCoordinate = coordinates[1]
             let course = firstCoordinate.direction(to: secondCoordinate)
             let newLocation = CLLocation(coordinate: router.location?.coordinate ?? firstCoordinate, altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: course, speed: 0, timestamp: Date())
@@ -233,7 +233,7 @@ class RouteMapViewController: UIViewController {
 
     @objc func toggleOverview(_ sender: Any) {
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
-        if let coordinates = router.route.coordinates,
+        if let coordinates = router.route.shape?.coordinates,
             let userLocation = router.location?.coordinate {
             mapView.contentInset = contentInset(forOverviewing: true)
             mapView.setOverheadCameraView(from: userLocation, along: coordinates, for: contentInset(forOverviewing: true))
@@ -407,7 +407,7 @@ class RouteMapViewController: UIViewController {
         guard let height = navigationView.endOfRouteHeightConstraint?.constant else { return }
         let insets = UIEdgeInsets(top: topBannerContainerView.bounds.height, left: 20, bottom: height + 20, right: 20)
         
-        if let coordinates = route.coordinates, let userLocation = navService.router.location?.coordinate {
+        if let coordinates = route.shape?.coordinates, let userLocation = navService.router.location?.coordinate {
             let slicedLine = Polyline(coordinates).sliced(from: userLocation).coordinates
             let line = MGLPolyline(coordinates: slicedLine, count: UInt(slicedLine.count))
 
@@ -483,7 +483,7 @@ extension RouteMapViewController: NavigationComponent {
         }
         
         if isInOverviewMode {
-            if let coordinates = route.coordinates, let userLocation = router.location?.coordinate {
+            if let coordinates = route.shape?.coordinates, let userLocation = router.location?.coordinate {
                 mapView.contentInset = contentInset(forOverviewing: true)
                 mapView.setOverheadCameraView(from: userLocation, along: coordinates, for: contentInset(forOverviewing: true))
             }
@@ -609,7 +609,7 @@ extension RouteMapViewController: NavigationViewDelegate {
     }
 
     func labelCurrentRoadFeature(at location: CLLocation) {
-        guard let style = mapView.style, let stepCoordinates = router.routeProgress.currentLegProgress.currentStep.coordinates else {
+        guard let style = mapView.style, let stepShape = router.routeProgress.currentLegProgress.currentStep.shape else {
                 return
         }
 
@@ -655,7 +655,7 @@ extension RouteMapViewController: NavigationViewDelegate {
             for line in allLines {
                 let featureCoordinates =  Array(UnsafeBufferPointer(start: line.coordinates, count: Int(line.pointCount)))
                 let featurePolyline = Polyline(featureCoordinates)
-                let slicedLine = Polyline(stepCoordinates).sliced(from: closestCoordinate)
+                let slicedLine = stepShape.sliced(from: closestCoordinate)
 
                 let lookAheadDistance: CLLocationDistance = 10
                 guard let pointAheadFeature = featurePolyline.sliced(from: closestCoordinate).coordinateFromStart(distance: lookAheadDistance) else { continue }

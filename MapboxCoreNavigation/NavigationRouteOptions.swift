@@ -13,7 +13,7 @@ open class NavigationRouteOptions: RouteOptions {
 
      - seealso: `RouteOptions`
      */
-    public required init(waypoints: [Waypoint], profileIdentifier: MBDirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
+    public required init(waypoints: [Waypoint], profileIdentifier: DirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
         super.init(waypoints: waypoints.map {
             $0.coordinateAccuracy = -1
             return $0
@@ -35,7 +35,7 @@ open class NavigationRouteOptions: RouteOptions {
 
      - seealso: `RouteOptions`
      */
-    public convenience init(locations: [CLLocation], profileIdentifier: MBDirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
+    public convenience init(locations: [CLLocation], profileIdentifier: DirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
         self.init(waypoints: locations.map { Waypoint(location: $0) }, profileIdentifier: profileIdentifier)
     }
 
@@ -44,12 +44,12 @@ open class NavigationRouteOptions: RouteOptions {
 
      - seealso: `RouteOptions`
      */
-    public convenience init(coordinates: [CLLocationCoordinate2D], profileIdentifier: MBDirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
+    public convenience init(coordinates: [CLLocationCoordinate2D], profileIdentifier: DirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
         self.init(waypoints: coordinates.map { Waypoint(coordinate: $0) }, profileIdentifier: profileIdentifier)
     }
-
-    public required init?(coder decoder: NSCoder) {
-        super.init(coder: decoder)
+    
+    required public init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
     }
 }
 
@@ -66,7 +66,7 @@ open class NavigationMatchOptions: MatchOptions {
      
      - seealso: `MatchOptions`
      */
-    public required init(waypoints: [Waypoint], profileIdentifier: MBDirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
+    public required init(waypoints: [Waypoint], profileIdentifier: DirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
         super.init(waypoints: waypoints.map {
             $0.coordinateAccuracy = -1
             return $0
@@ -86,7 +86,7 @@ open class NavigationMatchOptions: MatchOptions {
      
      - seealso: `MatchOptions`
      */
-    public convenience init(locations: [CLLocation], profileIdentifier: MBDirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
+    public convenience init(locations: [CLLocation], profileIdentifier: DirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
         self.init(waypoints: locations.map { Waypoint(location: $0) }, profileIdentifier: profileIdentifier)
     }
     
@@ -95,11 +95,11 @@ open class NavigationMatchOptions: MatchOptions {
      
      - seealso: `MatchOptions`
      */
-    public convenience init(coordinates: [CLLocationCoordinate2D], profileIdentifier: MBDirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
+    public convenience init(coordinates: [CLLocationCoordinate2D], profileIdentifier: DirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
         self.init(waypoints: coordinates.map { Waypoint(coordinate: $0) }, profileIdentifier: profileIdentifier)
     }
     
-    public required init?(coder decoder: NSCoder) {
-        super.init(coder: decoder)
+    required public init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
     }
 }

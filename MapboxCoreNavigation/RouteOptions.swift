@@ -3,25 +3,11 @@ import MapboxDirections
 extension RouteOptions {
     internal var activityType: CLActivityType {
         switch self.profileIdentifier {
-        case MBDirectionsProfileIdentifier.cycling, MBDirectionsProfileIdentifier.walking:
+        case .cycling, .walking:
             return .fitness
         default:
             return .automotiveNavigation
         }
-    }
-    
-    /**
-     Returns a copy of RouteOptions without the specified waypoint.
-     
-     - parameter waypoint: the Waypoint to exclude.
-     - returns: a copy of self excluding the specified waypoint.
-     */
-    public func without(waypoint: Waypoint) -> RouteOptions {
-        let waypointsWithoutSpecified = waypoints.filter { $0 != waypoint }
-        let copy = self.copy() as! RouteOptions
-        copy.waypoints = waypointsWithoutSpecified
-        
-        return copy
     }
     
     /**
@@ -39,6 +25,31 @@ extension RouteOptions {
         let legWaypoints = reconstitutedWaypoints.first ?? []
         let subsequentWaypoints = reconstitutedWaypoints.dropFirst()
         return (legWaypoints, subsequentWaypoints.flatMap { $0 })
+    }
+}
+
+extension RouteOptions: NSCopying {
+    public func copy(with zone: NSZone? = nil) -> Any {
+        do {
+            let encodedOptions = try JSONEncoder().encode(self)
+            return try JSONDecoder().decode(RouteOptions.self, from: encodedOptions)
+        } catch {
+            preconditionFailure("Unable to copy RouteOptions by round-tripping it through JSON")
+        }
+    }
+    
+    /**
+     Returns a copy of RouteOptions without the specified waypoint.
+     
+     - parameter waypoint: the Waypoint to exclude.
+     - returns: a copy of self excluding the specified waypoint.
+     */
+    public func without(waypoint: Waypoint) -> RouteOptions {
+        let waypointsWithoutSpecified = waypoints.filter { $0 != waypoint }
+        let copy = self.copy() as! RouteOptions
+        copy.waypoints = waypointsWithoutSpecified
+        
+        return copy
     }
 }
 
