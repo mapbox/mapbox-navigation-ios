@@ -474,6 +474,27 @@ open class RouteLegProgress: NSObject {
             return accumulatedCoordinates <= userCoordinateIndex
         })
     }
+
+    /**
+     Returns the SpeedLimit for the current position along the route. Returns SpeedLimit.invalid if the speed limit is unknown or missing.
+     
+     The maximum speed may be an advisory speed limit for segments where legal limits are not posted, such as highway entrance and exit ramps. If the speed limit along a particular segment is unknown, it is set to `nil`. If the speed is unregulated along the segment, such as on the German _Autobahn_ system, it is represented by a measurement whose value is `Double.infinity`.
+     
+     Speed limit data is available in [a number of countries and territories worldwide](https://docs.mapbox.com/help/how-mapbox-works/directions/).
+     */
+    public var currentSpeedLimit: Measurement<UnitSpeed>? {
+        let distanceTraveled = currentStepProgress.distanceTraveled
+        guard let index = currentStep.shape?.indexedCoordinateFromStart(distance: distanceTraveled)?.index else {
+            return nil
+        }
+        let range = leg.segmentRangesByStep[stepIndex]
+        let speedLimit = leg.segmentMaximumSpeedLimits?[range][index]
+        if let speedUnit = currentStep.speedLimitUnit {
+            return speedLimit?.converted(to: speedUnit)
+        } else {
+            return speedLimit
+        }
+    }
 }
 
 /**

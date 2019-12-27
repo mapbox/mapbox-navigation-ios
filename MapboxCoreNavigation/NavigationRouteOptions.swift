@@ -22,7 +22,11 @@ open class NavigationRouteOptions: RouteOptions {
         shapeFormat = .polyline6
         includesSteps = true
         routeShapeResolution = .full
-        attributeOptions = [.congestionLevel, .expectedTravelTime]
+        if profileIdentifier == .walking {
+            attributeOptions = [.congestionLevel, .expectedTravelTime]
+        } else {
+            attributeOptions = [.congestionLevel, .expectedTravelTime, .maximumSpeedLimit]
+        }
         includesSpokenInstructions = true
         locale = Locale.nationalizedCurrent
         distanceMeasurementSystem = Locale.current.usesMetricSystem ? .metric : .imperial
@@ -75,6 +79,9 @@ open class NavigationMatchOptions: MatchOptions {
         routeShapeResolution = .full
         shapeFormat = .polyline6
         attributeOptions = [.congestionLevel, .expectedTravelTime]
+        if profileIdentifier == .automobile || profileIdentifier == .automobileAvoidingTraffic {
+            attributeOptions.insert(.maximumSpeedLimit)
+        }
         includesSpokenInstructions = true
         locale = Locale.nationalizedCurrent
         distanceMeasurementSystem = Locale.current.usesMetricSystem ? .metric : .imperial
