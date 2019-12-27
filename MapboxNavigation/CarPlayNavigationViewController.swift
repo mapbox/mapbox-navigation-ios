@@ -333,8 +333,10 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
             compassView.course = location.course
         }
         
-        speedLimitView.signStandard = routeProgress.currentLegProgress.currentStep.speedLimitSignStandard
-        speedLimitView.speedLimit = routeProgress.currentLegProgress.currentSpeedLimit
+        if let speedLimitView = speedLimitView {
+            speedLimitView.signStandard = routeProgress.currentLegProgress.currentStep.speedLimitSignStandard
+            speedLimitView.speedLimit = routeProgress.currentLegProgress.currentSpeedLimit
+        }
     }
     
     /** Modifies the gesture recognizers to also update the map’s frame rate. */
