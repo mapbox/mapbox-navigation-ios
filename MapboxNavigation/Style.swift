@@ -50,7 +50,7 @@ open class Style: NSObject {
 
 /**
  :nodoc:
- `MBButton` sets the tintColor according to the style.
+ `Button` sets the tintColor according to the style.
  */
 @objc(MBButton)
 open class Button: StylableButton { }

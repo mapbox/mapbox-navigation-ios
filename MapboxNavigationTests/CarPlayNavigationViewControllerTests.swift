@@ -68,8 +68,10 @@ fileprivate class CarPlayNavigationViewControllerTests: XCTestCase {
         //create the subject and notification
         let subject = CarPlayNavigationViewController(navigationService: navService, mapTemplate: mapSpy, interfaceController: interface, manager: manager)
         subject.startNavigationSession(for: trip)
-        let payload: [RouteControllerNotificationUserInfoKey:Any] = [.routeProgressKey : navService.routeProgress,
-                                                                     .locationKey: location]
+        let payload: [RouteController.NotificationUserInfoKey: Any] = [
+            .routeProgressKey: navService.routeProgress,
+            .locationKey: location,
+        ]
         let fakeNotication = NSNotification(name: .routeControllerProgressDidChange, object: navService.router, userInfo: payload)
         
         //fire the fake notification

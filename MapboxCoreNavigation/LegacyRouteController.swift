@@ -298,10 +298,10 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
             
             //Fire the notification (for now)
             NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: [
-                RouteControllerNotificationUserInfoKey.routeProgressKey: progress,
-                RouteControllerNotificationUserInfoKey.locationKey: location, //guaranteed value
-                RouteControllerNotificationUserInfoKey.rawLocationKey: rawLocation //raw
-                ])
+                RouteController.NotificationUserInfoKey.routeProgressKey: progress,
+                RouteController.NotificationUserInfoKey.locationKey: location, //guaranteed value
+                RouteController.NotificationUserInfoKey.rawLocationKey: rawLocation, //raw
+            ])
         }
     }
         
@@ -354,7 +354,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
 
         delegate?.router(self, willRerouteFrom: location)
         NotificationCenter.default.post(name: .routeControllerWillReroute, object: self, userInfo: [
-            RouteControllerNotificationUserInfoKey.locationKey: location
+            RouteController.NotificationUserInfoKey.locationKey: location,
         ])
 
         self.lastRerouteLocation = location
@@ -368,7 +368,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
             if let error = error {
                 strongSelf.delegate?.router(strongSelf, didFailToRerouteWith: error)
                 NotificationCenter.default.post(name: .routeControllerDidFailToReroute, object: self, userInfo: [
-                    RouteControllerNotificationUserInfoKey.routingErrorKey: error
+                    RouteController.NotificationUserInfoKey.routingErrorKey: error,
                 ])
                 return
             }
@@ -483,8 +483,8 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
             if userSnapToStepDistanceFromManeuver <= spokenInstruction.distanceAlongStep || firstInstructionOnFirstStep {
                 delegate?.router(self, didPassSpokenInstructionPoint: spokenInstruction, routeProgress: routeProgress)
                 NotificationCenter.default.post(name: .routeControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
-                    RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress,
-                    RouteControllerNotificationUserInfoKey.spokenInstructionKey: spokenInstruction
+                    RouteController.NotificationUserInfoKey.routeProgressKey: routeProgress,
+                    RouteController.NotificationUserInfoKey.spokenInstructionKey: spokenInstruction,
                 ])
 
                 routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex += 1
@@ -502,8 +502,8 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
             if userSnapToStepDistanceFromManeuver <= visualInstruction.distanceAlongStep || isFirstLocation {
                 delegate?.router(self, didPassVisualInstructionPoint: visualInstruction, routeProgress: routeProgress)
                 NotificationCenter.default.post(name: .routeControllerDidPassVisualInstructionPoint, object: self, userInfo: [
-                    RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress,
-                    RouteControllerNotificationUserInfoKey.visualInstructionKey: visualInstruction,
+                    RouteController.NotificationUserInfoKey.routeProgressKey: routeProgress,
+                    RouteController.NotificationUserInfoKey.visualInstructionKey: visualInstruction,
                 ])
                 currentStepProgress.visualInstructionIndex += 1
                 return

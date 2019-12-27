@@ -255,16 +255,16 @@ class NavigationServiceTests: XCTestCase {
         navigationService.eventsManager.delaysEventFlushing = false
         
         let willRerouteNotificationExpectation = expectation(forNotification: .routeControllerWillReroute, object: router) { (notification) -> Bool in
-            let fromLocation = notification.userInfo![RouteControllerNotificationUserInfoKey.locationKey] as? CLLocation
+            let fromLocation = notification.userInfo![RouteController.NotificationUserInfoKey.locationKey] as? CLLocation
             return fromLocation == testLocation
         }
         
         let didRerouteNotificationExpectation = expectation(forNotification: .routeControllerDidReroute, object: router, handler: nil)
         
         let routeProgressDidChangeNotificationExpectation = expectation(forNotification: .routeControllerProgressDidChange, object: router) { (notification) -> Bool in
-            let location = notification.userInfo![RouteControllerNotificationUserInfoKey.locationKey] as? CLLocation
-            let rawLocation = notification.userInfo![RouteControllerNotificationUserInfoKey.rawLocationKey] as? CLLocation
-            let _ = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
+            let location = notification.userInfo![RouteController.NotificationUserInfoKey.locationKey] as? CLLocation
+            let rawLocation = notification.userInfo![RouteController.NotificationUserInfoKey.rawLocationKey] as? CLLocation
+            let _ = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as! RouteProgress
             
             return location!.distance(from: rawLocation!) <= 0.0005
         }
@@ -452,7 +452,7 @@ class NavigationServiceTests: XCTestCase {
         let locationManager = NavigationLocationManager()
         
         let _ = expectation(forNotification: .routeControllerDidReroute, object: router) { (notification) -> Bool in
-            let isProactive = notification.userInfo![RouteControllerNotificationUserInfoKey.isProactiveKey] as? Bool
+            let isProactive = notification.userInfo![RouteController.NotificationUserInfoKey.isProactiveKey] as? Bool
             return isProactive == true
         }
         let rerouteExpectation = expectation(description: "Proactive reroute should trigger")
