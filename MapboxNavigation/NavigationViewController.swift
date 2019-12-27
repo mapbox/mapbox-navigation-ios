@@ -118,6 +118,17 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     }
     
     /**
+     Shows the current speed limit on the map view.
+     
+     The default value of this property is `true`.
+     */
+    public var showsSpeedLimits: Bool = true {
+        didSet {
+            mapViewController?.showsSpeedLimits = showsSpeedLimits
+        }
+    }
+    
+    /**
      If true, the map style and UI will automatically be updated given the time of day.
      */
     public var automaticallyAdjustsStyleForTimeOfDay = true {
