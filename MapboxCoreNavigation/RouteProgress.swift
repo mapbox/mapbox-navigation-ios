@@ -484,11 +484,22 @@ open class RouteLegProgress: NSObject {
      */
     public var currentSpeedLimit: Measurement<UnitSpeed>? {
         let distanceTraveled = currentStepProgress.distanceTraveled
-        guard let index = currentStep.shape?.indexedCoordinateFromStart(distance: distanceTraveled)?.index else {
+        guard var index = currentStep.shape?.indexedCoordinateFromStart(distance: distanceTraveled)?.index else {
             return nil
         }
-        let range = leg.segmentRangesByStep[stepIndex]
-        let speedLimit = leg.segmentMaximumSpeedLimits?[range][index]
+        
+        var range = leg.segmentRangesByStep[stepIndex]
+        
+        // indexedCoordinateFromStart(distance:) can return a coordinate indexed to the last coordinate of the step, which is past any segment on the current step.
+        if index == range.count && upcomingStep != nil {
+            range = leg.segmentRangesByStep[stepIndex.advanced(by: 1)]
+            index = 0
+        }
+        if index >= range.count {
+            return nil
+        }
+        
+        let speedLimit = leg.segmentMaximumSpeedLimits?[range][range.lowerBound.advanced(by: index)]
         if let speedUnit = currentStep.speedLimitUnit {
             return speedLimit?.converted(to: speedUnit)
         } else {
