@@ -93,8 +93,12 @@ public class SpeedLimitView: UIView {
     }
     
     func update() {
+        let wasHidden = isHidden
         isHidden = !canDraw
         setNeedsDisplay()
+        if canDraw && !wasHidden {
+            blinkIn()
+        }
     }
     
     override public func draw(_ rect: CGRect) {
@@ -117,6 +121,16 @@ public class SpeedLimitView: UIView {
             SpeedLimitStyleKit.drawMUTCD(frame: bounds, resizing: .aspectFit, signBackColor: signBackColor, strokeColor: textColor, limit: formattedSpeedLimit, legend: legend)
         case .viennaConvention:
             SpeedLimitStyleKit.drawVienna(frame: bounds, resizing: .aspectFit, signBackColor: signBackColor, strokeColor: textColor, regulatoryColor: regulatoryBorderColor, limit: formattedSpeedLimit)
+        }
+    }
+    
+    func blinkIn() {
+        UIView.animate(withDuration: 0.1, delay: 0.1, options: [.beginFromCurrentState, .curveEaseOut], animations: { [weak self] in
+            UIView.setAnimationRepeatCount(1)
+            UIView.setAnimationRepeatAutoreverses(true)
+            self?.layer.opacity = 0
+        }) { [weak self] (done) in
+            self?.layer.opacity = 1
         }
     }
 }
