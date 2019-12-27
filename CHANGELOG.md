@@ -10,6 +10,7 @@
 * Renamed `NavigationMapView.showRoutes(_:legIndex:)` to `NavigationMapView.show(_:legIndex:)`. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
 * Renamed `NavigationMapView.showWaypoints(_:legIndex:)` to `NavigationMapView.showWaypoints(on:legIndex:)`. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
 * Renamed `MapboxVoiceController.play(_:)` to `MapboxVoiceController.play(instruction:data:)`. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
+* Added a speed limit indicator to the upper-left corner of the map view during turn-by-turn navigation (upper-right corner in CarPlay). To hide the speed limit indicator, set the `NavigationViewController.showsSpeedLimits` property to `false`. To customize the indicator’s colors, configure `SpeedLimitView`’s appearance proxy inside a `Style` subclass. ([#2291](https://github.com/mapbox/mapbox-navigation-ios/pull/2291))
 * When Dark Mode is enabled, user notifications now draw maneuver icons in white instead of black for better contrast. ([#2283](https://github.com/mapbox/mapbox-navigation-ios/pull/2283))
 * Fixed an issue where a black background could be rendered in a `ManeuverView` under the arrow regardless of the `backgroundColor` set on the view. ([#2279](https://github.com/mapbox/mapbox-navigation-ios/pull/2279))
 * Fixed an issue where the wrong style was applied to exit numbers in the top banner and for subsequent maneuver banners in CarPlay, resulting in poor contrast. ([#2161](https://github.com/mapbox/mapbox-navigation-ios/issues/2161))
