@@ -27,7 +27,7 @@ THEME=${JAZZY_THEME:-$DEFAULT_THEME}
 BASE_URL="https://docs.mapbox.com/ios/api"
 
 # Link to directions documentation
-DIRECTIONS_VERSION=$(grep 'MapboxDirections.swift' Cartfile.resolved | grep -oE '"v.+?"' | grep -oE '[^"v]+')
+DIRECTIONS_VERSION=$(grep 'mapbox-directions-swift' Cartfile.resolved | grep -oE '"v.+?"' | grep -oE '[^"v]+')
 DIRECTIONS_SYMBOLS="AttributeOptions|CoordinateBounds|Directions|DirectionsOptions|DirectionsPriority|DirectionsProfileIdentifier|DirectionsResult|Intersection|Lane|LaneIndication|Match|MatchOptions|RoadClasses|Route|RouteLeg|RouteOptions|RouteStep|SpokenInstruction|Tracepoint|VisualInstruction|VisualInstruction.Component|VisualInstruction.Component.ImageRepresentation|VisualInstruction.Component.TextRepresentation|VisualInstructionBanner|Waypoint"
 
 rm -rf ${OUTPUT}
