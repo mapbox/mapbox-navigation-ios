@@ -4,4 +4,4 @@ github "mapbox/MapboxDirections.swift" "master"
 github "mapbox/turf-swift" ~> 0.3
 github "mapbox/mapbox-events-ios" ~> 0.10
 github "ceeK/Solar" ~> 2.1.0
-github "mapbox/mapbox-speech-swift" ~> 0.1.0
+github "mapbox/mapbox-speech-swift" ~> 0.3.0
