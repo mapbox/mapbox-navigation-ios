@@ -2,7 +2,7 @@ import MapboxDirections
 
 extension Route {
     
-    public var json: String? {
+    public func jsonRepresentation() -> String? {
         let encoder = JSONEncoder()
         encoder.userInfo[.options] = routeOptions
         guard let encoded = try? encoder.encode(self) else {
