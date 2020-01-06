@@ -19,7 +19,7 @@ extension NavigationViewController {
         self.init(for: route, options: bridge)
     }
     
-    @available(*, deprecated, renamed: "navigationService", message: "NavigationViewController no longer directly manages a RouteController. See MapboxNavigationService, which contains a protocol-bound reference to the RouteController, for more information.")
+    @available(*, deprecated, renamed: "navigationService.router", message: "NavigationViewController no longer directly manages a RouteController. See MapboxNavigationService, which contains a protocol-bound reference to the RouteController, for more information.")
     /// :nodoc: obsoleted
     public final var routeController: RouteController! {
         get {
@@ -41,7 +41,7 @@ extension NavigationViewController {
         }
     }
     
-    @available(*, deprecated, renamed: "navigationService.locationManager", message: "NavigationViewController no-longer directly manages an NavigationLocationManager. See MapboxNavigationService, which contains a reference to the locationManager, for more information.")
+    @available(*, deprecated, renamed: "navigationService.locationManager", message: "NavigationViewController no-longer directly manages an NavigationLocationManager. See `TunnelAuthority.isInTunnel(at:along:)`, for a current implementation.")
     /// :nodoc: obsoleted
     public final var locationManager: NavigationLocationManager! {
         get {
@@ -52,7 +52,7 @@ extension NavigationViewController {
         }
     }
     
-    @available(*, deprecated, renamed: "init(for:styles:navigationService:voiceController:)", message: "Intializing a NavigationViewController directly with a RouteController is no longer supported. Use a NavigationService instead.")
+    @available(*, deprecated, message: "Intializing a NavigationViewController directly with a RouteController is no longer supported. Pass in a NavigationService instead, using `NavigationViewController.init(for:styles:navigationService:voiceController:)`")
     /// :nodoc: Obsoleted method.
     
     public convenience init(for route: Route,

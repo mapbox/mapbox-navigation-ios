@@ -20,7 +20,7 @@ public typealias EventsManager = NavigationEventsManager
 /**
  The `NavigationEventsManager` is responsible for being the liaison between MapboxCoreNavigation and the Mapbox telemetry framework.
  */
-open class NavigationEventsManager: NSObject {
+open class NavigationEventsManager {
     var sessionState: SessionState?
     
     var outstandingFeedbackEvents = [CoreFeedbackEvent]()
@@ -52,7 +52,7 @@ open class NavigationEventsManager: NSObject {
     
     public required init(dataSource source: EventsManagerDataSource?, accessToken possibleToken: String? = nil, mobileEventsManager: MMEEventsManager = .shared()) {
         dataSource = source
-        super.init()
+//        super.init()
         if let tokenOverride = possibleToken {
             accessToken = tokenOverride
         }

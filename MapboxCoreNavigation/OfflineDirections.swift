@@ -127,7 +127,7 @@ public class NavigationDirections: Directions {
         }
     }
     
-    @available(*, deprecated, renamed: "NavigationDirections.configureRouter(tilesURL:completionHandler:)")
+    @available(*, deprecated, message: "`translationsURL` is no-longer a supported argument. Please use NavigationDirections.configureRouter(tilesURL:completionHandler:)")
     public func configureRouter(tilesURL: URL, translationsURL: URL? = nil, completionHandler: @escaping NavigationDirectionsCompletionHandler) {
         configureRouter(tilesURL: tilesURL, completionHandler: completionHandler)
     }
