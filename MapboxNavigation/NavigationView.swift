@@ -13,15 +13,16 @@ import MapboxDirections
  5. WayNameLabel
  6. FloatingStackView
  7. NavigationMapView
+ 8. SpeedLimitView
  
  ```
  +--------------------+
  |         1          |
  +--------------------+
  |         2          |
- +----------------+---+
- |                |   |
- |                | 6 |
+ +---+------------+---+
+ | 8 |            |   |
+ +---+            | 6 |
  |                |   |
  |         7      +---+
  |                    |
@@ -82,6 +83,8 @@ open class NavigationView: UIView {
         return view
     }()
     
+    lazy var speedLimitView: SpeedLimitView = .forAutoLayout(hidden: true)
+    
     lazy var topBannerContainerView: BannerContainerView = .forAutoLayout()
     
     lazy var bottomBannerContainerView: BannerContainerView = .forAutoLayout()
@@ -140,6 +143,7 @@ open class NavigationView: UIView {
             floatingStackView,
             resumeButton,
             wayNameView,
+            speedLimitView,
             bottomBannerContainerView
         ]
         

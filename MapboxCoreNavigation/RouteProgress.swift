@@ -483,12 +483,27 @@ open class RouteLegProgress: NSObject {
      Speed limit data is available in [a number of countries and territories worldwide](https://docs.mapbox.com/help/how-mapbox-works/directions/).
      */
     public var currentSpeedLimit: Measurement<UnitSpeed>? {
-        let distanceTraveled = currentStepProgress.distanceTraveled
-        guard let index = currentStep.shape?.indexedCoordinateFromStart(distance: distanceTraveled)?.index else {
+        guard let segmentMaximumSpeedLimits = leg.segmentMaximumSpeedLimits else {
             return nil
         }
-        let range = leg.segmentRangesByStep[stepIndex]
-        let speedLimit = leg.segmentMaximumSpeedLimits?[range][index]
+        
+        let distanceTraveled = currentStepProgress.distanceTraveled
+        guard var index = currentStep.shape?.indexedCoordinateFromStart(distance: distanceTraveled)?.index else {
+            return nil
+        }
+        
+        var range = leg.segmentRangesByStep[stepIndex]
+        
+        // indexedCoordinateFromStart(distance:) can return a coordinate indexed to the last coordinate of the step, which is past any segment on the current step.
+        if index == range.count && upcomingStep != nil {
+            range = leg.segmentRangesByStep[stepIndex.advanced(by: 1)]
+            index = 0
+        }
+        guard index < range.count && range.upperBound <= segmentMaximumSpeedLimits.endIndex else {
+            return nil
+        }
+        
+        let speedLimit = segmentMaximumSpeedLimits[range][range.lowerBound.advanced(by: index)]
         if let speedUnit = currentStep.speedLimitUnit {
             return speedLimit?.converted(to: speedUnit)
         } else {

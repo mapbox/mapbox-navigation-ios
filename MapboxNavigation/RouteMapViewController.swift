@@ -35,6 +35,11 @@ class RouteMapViewController: UIViewController {
     var destination: Waypoint?
 
     var showsEndOfRoute: Bool = true
+    var showsSpeedLimits: Bool = true {
+        didSet {
+            navigationView.speedLimitView.isAlwaysHidden = !showsSpeedLimits
+        }
+    }
 
     var pendingCamera: MGLMapCamera? {
         guard let parent = parent as? NavigationViewController else {
@@ -462,6 +467,9 @@ extension RouteMapViewController: NavigationComponent {
         if annotatesSpokenInstructions {
             mapView.showVoiceInstructionsOnMap(route: route)
         }
+        
+        navigationView.speedLimitView.signStandard = progress.currentLegProgress.currentStep.speedLimitSignStandard
+        navigationView.speedLimitView.speedLimit = progress.currentLegProgress.currentSpeedLimit
     }
     
     public func navigationService(_ service: NavigationService, didPassSpokenInstructionPoint instruction: SpokenInstruction, routeProgress: RouteProgress) {

@@ -59,6 +59,11 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
     weak public var compassView: CarPlayCompassView!
     
     /**
+     A view that displays the current speed limit.
+     */
+    public weak var speedLimitView: SpeedLimitView!
+    
+    /**
      The interface styles available for display.
      
      These are the styles available to the view controller’s internal `StyleManager` object. In CarPlay, `Style` objects primarily affect the appearance of the map, not guidance-related overlay views.
@@ -132,10 +137,20 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
         view.addSubview(compassView)
         self.compassView = compassView
         
+        let speedLimitView = SpeedLimitView()
+        view.addSubview(speedLimitView)
+        self.speedLimitView = speedLimitView
+        
         mapViewOverviewRightConstraint = view.rightAnchor.constraint(equalTo: mapView.rightAnchor)
         
         compassView.topAnchor.constraint(equalTo: view.safeTopAnchor, constant: 8).isActive = true
         compassView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8).isActive = true
+        
+        speedLimitView.topAnchor.constraint(equalTo: compassView.bottomAnchor, constant: 8).isActive = true
+        speedLimitView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8).isActive = true
+        speedLimitView.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        speedLimitView.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        speedLimitView.translatesAutoresizingMaskIntoConstraints = false
         
         styleObservation = mapView.observe(\.style, options: .new) { [weak self] (mapView, change) in
             guard change.newValue != nil else {
@@ -316,6 +331,11 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
         if let compassView = self.compassView,
             !compassView.isHidden {
             compassView.course = location.course
+        }
+        
+        if let speedLimitView = speedLimitView {
+            speedLimitView.signStandard = routeProgress.currentLegProgress.currentStep.speedLimitSignStandard
+            speedLimitView.speedLimit = routeProgress.currentLegProgress.currentSpeedLimit
         }
     }
     
