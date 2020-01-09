@@ -183,6 +183,14 @@ open class BaseInstructionsBannerView: UIControl {
         maneuverView.visualInstruction = instruction?.primaryInstruction
         maneuverView.drivingSide = instruction?.drivingSide ?? .right
         secondaryLabel.instruction = secondaryInstruction
+
+        if let junctionViewInstruction = instruction?.quaternaryInstruction {
+            if let guidanceComponent = junctionViewInstruction.components.first {
+                if case let .guidanceView(imageURL, _) = guidanceComponent {
+                    print("found one - should download: \(imageURL)")
+                }
+            }
+        }
     }
     
     override open func prepareForInterfaceBuilder() {

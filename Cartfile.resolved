@@ -1,5 +1,6 @@
 binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" "5.6.1"
 binary "https://www.mapbox.com/ios-sdk/MapboxNavigationNative.json" "6.2.1"
+git "file:///Users/avicieplinski/Documents/Work/MapboxDirections.swift" "9d7e8d7e3b91a63f2e6a174445d71e9feca32550"
 github "AndriiDoroshko/SnappyShrimp" "1.6.4"
 github "CedarBDD/Cedar" "v1.0"
 github "Quick/Nimble" "v8.0.5"
