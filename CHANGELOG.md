@@ -1,5 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v0.38.2
+
+* Fixed a crash on launch if this SDK is installed using Carthage. ([#2301](https://github.com/mapbox/mapbox-navigation-ios/pull/2301))
+
 ## v0.38.1
 
 * Fixed an issue where user notifications displayed right turn arrows for left turn maneuvers. ([#2270](https://github.com/mapbox/mapbox-navigation-ios/pull/2270))
@@ -12,6 +16,10 @@
 * Fixed an issue where manually incrementing `RouteProgress.legIndex` could lead to undefined behavior. ([#2229](https://github.com/mapbox/mapbox-navigation-ios/pull/2229))
 * `DistanceFormatter` now inherits directly from `Formatter` rather than `LengthFormatter`. ([#2206](https://github.com/mapbox/mapbox-navigation-ios/pull/2206))
 * Fixed an issue where `DistanceFormatter.attributedString(for:withDefaultAttributes:)` set `NSAttributedString.Key.quantity` to the original distance value rather than the potentially rounded value represented by the attributed string. ([#2206](https://github.com/mapbox/mapbox-navigation-ios/pull/2206))
+
+## v0.37.1
+
+* Fixed a crash on launch if this SDK is installed using Carthage. ([#2301](https://github.com/mapbox/mapbox-navigation-ios/pull/2301))
 
 ## v0.37.0
 
