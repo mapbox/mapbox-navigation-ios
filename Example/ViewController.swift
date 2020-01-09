@@ -200,17 +200,7 @@ class ViewController: UIViewController {
         let userWaypoint = Waypoint(location: mapView.userLocation!.location!, heading: mapView.userLocation?.heading, name: "User location")
         waypoints.insert(userWaypoint, at: 0)
 
-//        let options = NavigationRouteOptions(waypoints: waypoints)
-        let wp1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 35.68181766072263, longitude: 139.777119511207), name: "Directions 1")
-        let wp2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 35.68145223555706, longitude: 139.78575944169057), name: "Directions 2")
-        let options = RouteOptions(waypoints: [wp1, wp2])
-        options.includesSteps = true
-        options.routeShapeResolution = .full
-        options.attributeOptions = [.congestionLevel, .maximumSpeedLimit]
-        options.shapeFormat = .polyline6
-        options.includesExitRoundaboutManeuver = true
-        options.includesSpokenInstructions = true
-        options.includesVisualInstructions = true
+        let options = NavigationRouteOptions(waypoints: waypoints)
 
         requestRoute(with: options, success: defaultSuccess, failure: defaultFailure)
     }
