@@ -17,6 +17,10 @@ extension VisualInstruction.Component {
             return "\(imageURL.absoluteString)-\(VisualInstruction.Component.scale)"
         case .text, .delimiter, .lane:
             return nil
+        case .guidanceView(let guidanceViewRepresentation, let alternativeText):
+            print("hello")
+            guard let imageURL = guidanceViewRepresentation.imageURL else { return nil }
+            return "guidance-" + imageURL.absoluteString
         }
     }
 }
