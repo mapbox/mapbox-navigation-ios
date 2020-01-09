@@ -87,7 +87,6 @@ open class NavigationEventsManager: NSObject {
         
         
         UserDefaults.standard.mme_isCollectionEnabled = eventLoggingEnabled
-        UserDefaults.standard.set(true, forKey: "MMECollectionEnabledInSimulator")
         let userAgent = usesDefaultUserInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
         mobileEventsManager.initialize(withAccessToken: accessToken, userAgentBase: userAgent, hostSDKVersion: String(describing: Bundle.mapboxCoreNavigation.object(forInfoDictionaryKey: "CFBundleShortVersionString")!))
         mobileEventsManager.disableLocationMetrics()
