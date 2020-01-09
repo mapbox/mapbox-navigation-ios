@@ -48,10 +48,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      The object that acts as the navigation delegate of the map view.
      */
     public weak var navigationMapViewDelegate: NavigationMapViewDelegate?
-    @available(*, deprecated, renamed: "navigationMapViewDelegate")
+    @available(swift, obsoleted: 0.1, renamed: "navigationMapViewDelegate")
     public weak var navigationMapDelegate: NavigationMapViewDelegate? {
-        get { return navigationMapViewDelegate }
-        set { navigationMapViewDelegate = newValue}
+        fatalError()
     }
     
     /**

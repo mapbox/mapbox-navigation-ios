@@ -34,14 +34,9 @@ public class StatusView: UIControl {
     
     var isCurrentlyVisible: Bool = false
     
-    @available(*, deprecated, renamed: "isEnabled")
+    @available(swift, obsoleted: 0.1, renamed: "isEnabled")
     public var canChangeValue: Bool {
-        get {
-            return isEnabled
-        }
-        set {
-            isEnabled = newValue
-        }
+        fatalError()
     }
     
     var value: Double = 0 {
