@@ -8,7 +8,9 @@ class NavigationEventsManagerTests: XCTestCase {
         let mobileEventsManagerSpy = MMEEventsManagerSpy()
         let _ = NavigationEventsManager(dataSource: nil, accessToken: "example token", mobileEventsManager: mobileEventsManagerSpy)
 
-        XCTAssertEqual(mobileEventsManagerSpy.accessToken, "example token")
+        let config = UserDefaults.mme_configuration()
+        let token = config.mme_accessToken
+        XCTAssertEqual(token, "example token")
     }
     
     func testDepartRerouteArrive() {
