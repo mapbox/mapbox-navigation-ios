@@ -13,7 +13,7 @@ open class InstructionsCardViewController: UIViewController {
     var instructionsCardLayout: InstructionsCardCollectionLayout!
     
     public private(set) var isInPreview = false
-    private var currentStepIndex: Int?
+    public var currentStepIndex: Int?
     
     public var steps: [RouteStep]? {
         guard let stepIndex = routeProgress?.currentLegProgress.stepIndex, let steps = routeProgress?.currentLeg.steps else { return nil }
@@ -130,7 +130,7 @@ open class InstructionsCardViewController: UIViewController {
         NSLayoutConstraint.activate(instructionCollectionViewContraints)
     }
     
-    func reloadDataSource() {
+    open func reloadDataSource() {
         if currentStepIndex == nil, let progress = routeProgress {
             currentStepIndex = progress.currentLegProgress.stepIndex
             instructionCollectionView.reloadData()
