@@ -83,10 +83,6 @@ open class NavigationEventsManager: NSObject {
     public var delaysEventFlushing = true
 
     func start() {
-        let eventLoggingEnabled = UserDefaults.standard.bool(forKey: NavigationMetricsDebugLoggingEnabled)
-        
-        
-        UserDefaults.standard.mme_isCollectionEnabled = eventLoggingEnabled
         let userAgent = usesDefaultUserInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
         mobileEventsManager.initialize(withAccessToken: accessToken, userAgentBase: userAgent, hostSDKVersion: String(describing: Bundle.mapboxCoreNavigation.object(forInfoDictionaryKey: "CFBundleShortVersionString")!))
         mobileEventsManager.disableLocationMetrics()

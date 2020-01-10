@@ -35,10 +35,6 @@ public var RouteControllerManeuverZoneRadius: CLLocationDistance = 40
  */
 public var RouteControllerDeadReckoningTimeInterval: TimeInterval = 1.0
 
-/**
- :nodoc This is used internally for debugging metrics
- */
-public var NavigationMetricsDebugLoggingEnabled = "MBNavigationMetricsDebugLoggingEnabled"
 
 /**
  For shorter upcoming steps, we link the `AlertLevel.high` instruction. If the upcoming step duration is near the duration of `RouteControllerHighAlertInterval`, we need to apply a bit of a buffer to prevent back to back notifications.
