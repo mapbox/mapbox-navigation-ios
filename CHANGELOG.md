@@ -26,7 +26,7 @@
 * Obsoleted `BottomBannerViewController.init(delegate:)`. ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
 * Obsoleted `NavigationMapView.navigationMapDelegate`. ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
 * Obsoleted `StatusView.canChangeValue`. ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
-* Removed NavigationViewController+Obsolete.swift, which included many already-obsoleted methods and properties. This includes:  ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
+* Removed `NavigationViewController+Obsolete.swift`, which included many already-obsoleted methods and properties. This includes:  ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
     - `NavigationViewController.init(for:styles:navigationService:voiceController:)`
     - `NavigationViewController.routeController`
     - `NavigationViewController.eventsManager`
