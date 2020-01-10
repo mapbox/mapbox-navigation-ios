@@ -549,7 +549,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
             fatalError()
         }
     }
-    @available(*, deprecated, message: "NavigationViewController no longer directly manages an TunnelIntersectionManager. See MapboxNavigationService, which contains a reference to the locationManager, for more information.")
+    @available(*, deprecated, message: "NavigationViewController no longer directly manages a TunnelIntersectionManager. See MapboxNavigationService, which contains a reference to the locationManager, for more information.")
     /// :nodoc: obsoleted
     public final var tunnelIntersectionManager: Any! {
         get {
