@@ -532,14 +532,13 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     
     // MARK: Obsolete methods
     
-    @available(*, deprecated, message: "MapboxNavigationService is now the point-of-entry to MapboxCoreNavigation. Direct use of RouteController is no longer reccomended. See MapboxNavigationService for more information.")
+    @available(swift, obsoleted: 0.1, message: "MapboxNavigationService is now the point-of-entry to MapboxCoreNavigation. Direct use of RouteController is no longer reccomended. See MapboxNavigationService for more information.")
     /// :nodoc: Obsoleted method.
-    
     public convenience init(along route: Route, directions: Directions = Directions.shared, dataSource: NavigationLocationManager = NavigationLocationManager(), eventsManager: NavigationEventsManager) {
         fatalError()
     }
     
-    @available(*, deprecated, message: "RouteController no longer manages a location manager directly. Instead, the Router protocol conforms to CLLocationManagerDelegate, and RouteControllerDataSource provides access to synchronous location requests.")
+    @available(swift, obsoleted: 0.1, message: "RouteController no longer manages a location manager directly. Instead, the Router protocol conforms to CLLocationManagerDelegate, and RouteControllerDataSource provides access to synchronous location requests.")
     /// :nodoc: obsoleted
     public final var locationManager: NavigationLocationManager! {
         get {
