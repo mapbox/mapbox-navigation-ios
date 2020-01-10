@@ -20,6 +20,22 @@
 * The `MapboxVoiceController` and `RouteVoiceController` now emit `SpeechError`s instead of an `NSError` object. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
 * Added the `VoiceControllerDelegate.voiceController(_:didFallBackTo:becauseOf:)` method for detecting when the voice controller falls back to `AVSpeechSynthesizer`. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
 
+### Obsoletion & Removal
+* Obsoleted `EventManager` type. ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
+* Obsoleted `RouteProgress.upComingStep`. ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
+* Obsoleted `BottomBannerViewController.init(delegate:)`. ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
+* Obsoleted `NavigationMapView.navigationMapDelegate`. ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
+* Obsoleted `StatusView.canChangeValue`. ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
+* Removed NavigationViewController+Obsolete.swift, which included many already-obsoleted methods and properties. This includes:  ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
+    - `NavigationViewController.init(for:styles:navigationService:voiceController:)`
+    - `NavigationViewController.routeController`
+    - `NavigationViewController.eventsManager`
+    - `NavigationService.locationManager`
+    - `NavigationViewController.init(for:directions:styles:routeController:locationManager:voiceController:eventsManager:)`
+    - `NavigationViewController.carPlayMangaer(_:didBeginNavigationWith:window:delegate:)`
+    - `NavigationViewController.carPlayManagerDidEndNavigation(_:window:)`
+
+
 ### Other changes
 * Since pure Swift protocols cannot have optional methods, various delegate protocols now provide default no-op implementations for all their methods and conform to the `UnimplementedLogging` protocol, which can inform you at runtime when a delegate method is called but has not been implemented. Messages are sent through Apple Unified Logging and can be disabled globally through [Unifed Logging](https://developer.apple.com/documentation/os/logging#2878594), or by overriding the delegate function with a no-op implementation. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
 * Renamed `RouteProgress.nearbyCoordinates` to `RouteProgress.nearbyShape`. ([#2275](https://github.com/mapbox/mapbox-navigation-ios/pull/2275))
