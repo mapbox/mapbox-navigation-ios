@@ -6,7 +6,7 @@
 * This library can no longer be used in applications written in pure Objective-C. If you need to use this library’s public API from Objective-C code, you will need to implement a wrapper in Swift that bridges the subset of the API you need from Swift to Objective-C. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
 * Upgraded to [Mapbox Maps SDK for iOS v5.6._x_](https://github.com/mapbox/mapbox-gl-native-ios/releases/tag/ios-v5.6.0). ([#2302](https://github.com/mapbox/mapbox-navigation-ios/pull/2302))
 
-### User interface
+### User Interface
 * `UserCourseView` is now a type alias of the `UIView` class and the `CourseUpdatable` protocol rather than a protocol in its own right. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
 * Renamed `NavigationMapView.showRoutes(_:legIndex:)` to `NavigationMapView.show(_:legIndex:)`. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
 * Renamed `NavigationMapView.showWaypoints(_:legIndex:)` to `NavigationMapView.showWaypoints(on:legIndex:)`. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
@@ -15,21 +15,9 @@
 * When Dark Mode is enabled, user notifications now draw maneuver icons in white instead of black for better contrast. ([#2283](https://github.com/mapbox/mapbox-navigation-ios/pull/2283))
 * Fixed an issue where a black background could be rendered in a `ManeuverView` under the arrow regardless of the `backgroundColor` set on the view. ([#2279](https://github.com/mapbox/mapbox-navigation-ios/pull/2279))
 * Fixed an issue where the wrong style was applied to exit numbers in the top banner and for subsequent maneuver banners in CarPlay, resulting in poor contrast. ([#2161](https://github.com/mapbox/mapbox-navigation-ios/issues/2161))
-
-### Error handling
-* The `MapboxVoiceController` and `RouteVoiceController` now emit `SpeechError`s instead of an `NSError` object. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
-* Added the `VoiceControllerDelegate.voiceController(_:didFallBackTo:becauseOf:)` method for detecting when the voice controller falls back to `AVSpeechSynthesizer`. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
-
-### Obsoletion & Removal
-* Obsoleted `EventManager` type. ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
-* Obsoleted `RouteProgress.upComingStep`. ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
 * Obsoleted `BottomBannerViewController.init(delegate:)`. ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
 * Obsoleted `NavigationMapView.navigationMapDelegate`. ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
 * Obsoleted `StatusView.canChangeValue`. ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
-* Obsoleted `LegacyRouteController.init(along:directions:dataSource:eventsManager:)`. ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
-* Obsoleted `LegacyRouteController.locationManager`.  ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
-* Obsoleted `LegacyRouteController.tunnelIntersectionManager`.  ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
-* Obsoleted `LegacyRouteController.eventsManager`.  ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
 * Obsoleted `MapboxVoiceController.play(_:)`.  ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
 * Removed `NavigationViewController+Obsolete.swift`, which included many already-obsoleted methods and properties. This includes:  ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
     - `NavigationViewController.init(for:styles:navigationService:voiceController:)`
@@ -39,6 +27,19 @@
     - `NavigationViewController.init(for:directions:styles:routeController:locationManager:voiceController:eventsManager:)`
     - `NavigationViewController.carPlayMangaer(_:didBeginNavigationWith:window:delegate:)`
     - `NavigationViewController.carPlayManagerDidEndNavigation(_:window:)`
+
+### Error Handling
+* The `MapboxVoiceController` and `RouteVoiceController` now emit `SpeechError`s instead of an `NSError` object. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
+* Added the `VoiceControllerDelegate.voiceController(_:didFallBackTo:becauseOf:)` method for detecting when the voice controller falls back to `AVSpeechSynthesizer`. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
+
+### Core Navigation
+* Obsoleted `EventManager` type. ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
+* Obsoleted `RouteProgress.upComingStep`. ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
+* Obsoleted `LegacyRouteController.init(along:directions:dataSource:eventsManager:)`. ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
+* Obsoleted `LegacyRouteController.locationManager`.  ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
+* Obsoleted `LegacyRouteController.tunnelIntersectionManager`.  ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
+* Obsoleted `LegacyRouteController.eventsManager`.  ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
+
 
 
 ### Other changes
