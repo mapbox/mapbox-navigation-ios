@@ -52,7 +52,6 @@ open class NavigationEventsManager {
     
     public required init(dataSource source: EventsManagerDataSource?, accessToken possibleToken: String? = nil, mobileEventsManager: MMEEventsManager = .shared()) {
         dataSource = source
-//        super.init()
         if let tokenOverride = possibleToken {
             accessToken = tokenOverride
         }
