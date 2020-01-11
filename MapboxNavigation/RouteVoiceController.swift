@@ -302,8 +302,7 @@ public protocol VoiceControllerDelegate: class, UnimplementedLogging {
      - parameter instruction: The spoken instruction that will be said.
      - parameter routeProgress: The `RouteProgress` just before when the instruction is scheduled to be spoken.
      - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
-     **/
-    
+     */
     func voiceController(_ voiceController: RouteVoiceController, willSpeak instruction: SpokenInstruction, routeProgress: RouteProgress) -> SpokenInstruction?
 }
 
