@@ -162,7 +162,9 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
         
         audioTask = speech.audioData(with: options) { [weak self] (data, error) in
             guard let strongSelf = self else { return }
-            if let error = error as? URLError, error.code == .cancelled {
+            if let error = error,
+                case let .unknown(response: _, underlying: underlyingError, code: _, message: _) = error,
+                let urlError = underlyingError as? URLError, urlError.code == .cancelled {
                 return
             } else if let error = error {
                 let wrapped = SpeechError.apiError(instruction: instruction, options: options, underlying: error)
