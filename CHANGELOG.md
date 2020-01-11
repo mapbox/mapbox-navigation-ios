@@ -1,6 +1,6 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## master
+## v1.0.0
 
 ### Packaging
 * This SDK can no longer be used in applications written in pure Objective-C. If you need to use this SDK’s public API from Objective-C code, you will need to implement a wrapper in Swift that bridges the subset of the API you need from Swift to Objective-C. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
@@ -24,9 +24,6 @@
 * The `MapboxVoiceController.speakWithDefaultSpeechSynthesizer(_:error:)` and `VoiceControllerDelegate.voiceController(_:spokenInstructionsDidFailWith:)` methods now accept a `SpeechError` instance instead of an `NSError` object. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
 * Added the `VoiceControllerDelegate.voiceController(_:didFallBackTo:becauseOf:)` method for detecting when the voice controller falls back to `AVSpeechSynthesizer`. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
 
-### CarPlay
-* Removed the `NavigationViewController.carPlayManager(_:didBeginNavigationWith:window:delegate:)` and `NavigationViewController.carPlayManagerDidEndNavigation(_:window:)` methods. To mirror CarPlay navigation on the main device, present and dismiss a `NavigationViewController` in the `CarPlayManagerDelegate.carPlayManager(_:didBeginNavigationWith:)` and `CarPlayManagerDelegate.carPlayManagerDidEndNavigation(_:)` methods, respectively. ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
-
 ### User location
 * Removed the `NavigationViewController.routeController` property and `LegacyRouteController(along:directions:dataSource:eventsManager:)`. To use `LegacyRouteController` instead of the default `RouteController` class, pass that type into `MapboxNavigationService(route:directions:locationSource:eventsManagerType:simulating:routerType:)`, pass the `MapboxNavigationService` object into `NavigationOptions(styles:navigationService:voiceController:topBanner:bottomBanner:)`, and pass the `NavigationOptions` object into `NavigationViewController(route:navigationService:)`. To access `LegacyRouteController`, use the `NavigationViewController.navigationService` and `NavigationService.router` properties and cast the value of `NavigationService.router` to a `LegacyRouteController`. ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
 * Removed the `NavigationViewController.locationManager` and `LegacyRouteController.locationManager` properties in favor of `NavigationService.locationManager`. ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
@@ -39,6 +36,7 @@
 * Removed `NavigationViewController(for:styles:navigationService:voiceController:)` and `NavigationViewController(for:directions:styles:routeController:locationManager:voiceController:eventsManager:)` in favor of `NavigationViewController(route:options:)`. ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
 * Removed the `EventsManager` type alias in favor of the `NavigationEventsManager` class. ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
 * Removed the `NavigationViewController.eventsManager` and `LegacyRouteController.eventsManager` properties in favor of `NavigationService.eventsManager`. ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
+* Removed the `NavigationViewController.carPlayManager(_:didBeginNavigationWith:window:delegate:)` and `NavigationViewController.carPlayManagerDidEndNavigation(_:window:)` methods. To mirror CarPlay navigation on the main device, present and dismiss a `NavigationViewController` in the `CarPlayManagerDelegate.carPlayManager(_:didBeginNavigationWith:)` and `CarPlayManagerDelegate.carPlayManagerDidEndNavigation(_:)` methods, respectively. ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
 * When Dark Mode is enabled, user notifications now draw maneuver icons in white instead of black for better contrast. ([#2283](https://github.com/mapbox/mapbox-navigation-ios/pull/2283))
 * Added the `RouteLegProgress.currentSpeedLimit` property. ([#2114](https://github.com/mapbox/mapbox-navigation-ios/pull/2114))
 
