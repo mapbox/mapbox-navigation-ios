@@ -257,11 +257,8 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
 
 //MARK: - Obsolete
 extension MapboxVoiceController {
-    @available(*, deprecated, renamed: "MapboxVoiceController.play(instruction:data:)")
+    @available(swift, obsoleted: 0.1, message: "It is now required that the maneuver's `SpokenInstruction` is passed into `play` when calling. Please use MapboxVoiceController.play(instruction:data:).")
     open func play(_ data: Data) {
-        guard let instruction = routeProgress?.currentLegProgress.currentStepProgress.currentSpokenInstruction else {
-            return
-        }
-        self.play(instruction: instruction, data: data)
+        fatalError()
     }
 }

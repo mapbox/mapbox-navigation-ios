@@ -375,9 +375,9 @@ open class RouteLegProgress: NSObject {
 
      If there is no `upcomingStep`, nil is returned.
      */
-    @available(*, deprecated, renamed: "upcomingStep")
+    @available(swift, obsoleted: 0.1, renamed: "upcomingStep")
     public var upComingStep: RouteStep? {
-        return upcomingStep
+        fatalError()
     }
     
     public var upcomingStep: RouteStep? {

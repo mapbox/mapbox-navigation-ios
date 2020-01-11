@@ -12,13 +12,6 @@ public protocol InstructionsBannerViewDelegate: class, UnimplementedLogging {
      */
     func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView)
     
-    /**
-     Called when the user drags either up or down on the `InstructionsBannerView`.
-     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
-     */
-    @available(*, deprecated, message: "Please use didSwipeInstructionsBanner instead.")
-    
-    func didDragInstructionsBanner(_ sender: BaseInstructionsBannerView)
     
     /**
      Called when the user swipes either left, right, or down on the `InstructionsBannerView`

@@ -532,14 +532,13 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     
     // MARK: Obsolete methods
     
-    @available(*, deprecated, message: "MapboxNavigationService is now the point-of-entry to MapboxCoreNavigation. Direct use of RouteController is no longer reccomended. See MapboxNavigationService for more information.")
+    @available(swift, obsoleted: 0.1, message: "MapboxNavigationService is now the point-of-entry to MapboxCoreNavigation. Direct use of RouteController is no longer reccomended. See MapboxNavigationService for more information.")
     /// :nodoc: Obsoleted method.
-    
     public convenience init(along route: Route, directions: Directions = Directions.shared, dataSource: NavigationLocationManager = NavigationLocationManager(), eventsManager: NavigationEventsManager) {
         fatalError()
     }
     
-    @available(*, deprecated, message: "RouteController no longer manages a location manager directly. Instead, the Router protocol conforms to CLLocationManagerDelegate, and RouteControllerDataSource provides access to synchronous location requests.")
+    @available(swift, obsoleted: 0.1, message: "RouteController no longer manages a location manager directly. Instead, the Router protocol conforms to CLLocationManagerDelegate, and RouteControllerDataSource provides access to synchronous location requests.")
     /// :nodoc: obsoleted
     public final var locationManager: NavigationLocationManager! {
         get {
@@ -549,7 +548,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
             fatalError()
         }
     }
-    @available(*, deprecated, renamed: "NavigationService.locationManager", message: "NavigationViewController no longer directly manages an NavigationLocationManager. See MapboxNavigationService, which contains a reference to the locationManager, for more information.")
+    @available(swift, obsoleted: 0.1, message: "NavigationViewController no longer directly manages a TunnelIntersectionManager. See MapboxNavigationService, which contains a reference to the locationManager, for more information.")
     /// :nodoc: obsoleted
     public final var tunnelIntersectionManager: Any! {
         get {
@@ -559,7 +558,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
             fatalError()
         }
     }
-    @available(*, deprecated, renamed: "navigationService.eventsManager", message: "NavigationViewController no longer directly manages a NavigationEventsManager. See MapboxNavigationService, which contains a reference to the eventsManager, for more information.")
+    @available(swift, obsoleted: 0.1, renamed: "navigationService.eventsManager", message: "NavigationViewController no longer directly manages a NavigationEventsManager. See MapboxNavigationService, which contains a reference to the eventsManager, for more information.")
     /// :nodoc: obsoleted
     public final var eventsManager: NavigationEventsManager! {
         get {

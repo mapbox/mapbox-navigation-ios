@@ -14,13 +14,13 @@ public protocol EventsManagerDataSource: class {
     var locationProvider: NavigationLocationManager.Type { get }
 }
 
-@available(*, deprecated, renamed: "NavigationEventsManager")
-public typealias EventsManager = NavigationEventsManager
+@available(swift, obsoleted: 0.1, renamed: "NavigationEventsManager")
+public typealias EventsManager = NSObject
 
 /**
  The `NavigationEventsManager` is responsible for being the liaison between MapboxCoreNavigation and the Mapbox telemetry framework.
  */
-open class NavigationEventsManager: NSObject {
+open class NavigationEventsManager {
     var sessionState: SessionState?
     
     var outstandingFeedbackEvents = [CoreFeedbackEvent]()
@@ -52,7 +52,6 @@ open class NavigationEventsManager: NSObject {
     
     public required init(dataSource source: EventsManagerDataSource?, accessToken possibleToken: String? = nil, mobileEventsManager: MMEEventsManager = .shared()) {
         dataSource = source
-        super.init()
         if let tokenOverride = possibleToken {
             accessToken = tokenOverride
         }

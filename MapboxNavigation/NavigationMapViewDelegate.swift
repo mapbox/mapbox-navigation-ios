@@ -105,15 +105,6 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
      */
     func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint
     
-    //MARK: Obsolete
-    
-    @available(*, deprecated, message: "The NavigationMapView no longer forwards MGLMapViewDelegate messages. Use MGLMapViewDelegate.mapView(_:imageFor:) instead.")
-    
-    func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage?
-    
-    @available(*, deprecated, message: "The NavigationMapView no longer forwards MGLMapViewDelegate messages. Use MGLMapViewDelegate.mapView(_:viewFor:) instead.")
-    
-    func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView?
 }
 
 public extension NavigationMapViewDelegate {
@@ -163,16 +154,6 @@ public extension NavigationMapViewDelegate {
     func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint {
         logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
         return .zero
-    }
-    
-    func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
-        //no-op, deprecated
-        return nil
-    }
-    
-    func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
-        //no-op, deprecated
-        return nil
     }
 }
 

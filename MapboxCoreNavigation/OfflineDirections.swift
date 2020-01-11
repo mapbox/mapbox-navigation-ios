@@ -127,10 +127,6 @@ public class NavigationDirections: Directions {
         }
     }
     
-    @available(*, deprecated, renamed: "NavigationDirections.configureRouter(tilesURL:completionHandler:)")
-    public func configureRouter(tilesURL: URL, translationsURL: URL? = nil, completionHandler: @escaping NavigationDirectionsCompletionHandler) {
-        configureRouter(tilesURL: tilesURL, completionHandler: completionHandler)
-    }
     
     /**
      Unpacks a .tar-file at the given filePathURL to a writeable output directory.
