@@ -238,10 +238,10 @@ class RouteMapViewController: UIViewController {
 
     @objc func toggleOverview(_ sender: Any) {
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
-        if let coordinates = router.route.shape?.coordinates,
+        if let shape = router.route.shape,
             let userLocation = router.location?.coordinate {
             mapView.contentInset = contentInset(forOverviewing: true)
-            mapView.setOverheadCameraView(from: userLocation, along: coordinates, for: contentInset(forOverviewing: true))
+            mapView.setOverheadCameraView(from: userLocation, along: shape, for: contentInset(forOverviewing: true))
         }
         isInOverviewMode = true
     }
@@ -412,9 +412,9 @@ class RouteMapViewController: UIViewController {
         guard let height = navigationView.endOfRouteHeightConstraint?.constant else { return }
         let insets = UIEdgeInsets(top: topBannerContainerView.bounds.height, left: 20, bottom: height + 20, right: 20)
         
-        if let coordinates = route.shape?.coordinates, let userLocation = navService.router.location?.coordinate {
-            let slicedLine = Polyline(coordinates).sliced(from: userLocation).coordinates
-            let line = MGLPolyline(coordinates: slicedLine, count: UInt(slicedLine.count))
+        if let shape = route.shape, let userLocation = navService.router.location?.coordinate {
+            let slicedLineString = shape.sliced(from: userLocation)
+            let line = MGLPolyline(slicedLineString)
 
             let camera = navigationView.mapView.cameraThatFitsShape(line, direction: navigationView.mapView.camera.heading, edgePadding: insets)
             camera.pitch = 0
@@ -491,9 +491,9 @@ extension RouteMapViewController: NavigationComponent {
         }
         
         if isInOverviewMode {
-            if let coordinates = route.shape?.coordinates, let userLocation = router.location?.coordinate {
+            if let shape = route.shape, let userLocation = router.location?.coordinate {
                 mapView.contentInset = contentInset(forOverviewing: true)
-                mapView.setOverheadCameraView(from: userLocation, along: coordinates, for: contentInset(forOverviewing: true))
+                mapView.setOverheadCameraView(from: userLocation, along: shape, for: contentInset(forOverviewing: true))
             }
         } else {
             mapView.tracksUserCourse = true
