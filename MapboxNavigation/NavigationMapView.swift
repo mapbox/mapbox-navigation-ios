@@ -414,10 +414,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     func fit(to route: Route, facing direction:CLLocationDirection = 0, animated: Bool = false) {
-        guard let coords = route.shape?.coordinates, !coords.isEmpty else { return }
+        guard let shape = route.shape, !shape.coordinates.isEmpty else { return }
       
         setUserTrackingMode(.none, animated: false, completionHandler: nil)
-        let line = MGLPolyline(coordinates: coords, count: UInt(coords.count))
+        let line = MGLPolyline(shape)
         
         // Workaround for https://github.com/mapbox/mapbox-gl-native/issues/15574
         // Set content insets .zero, before cameraThatFitsShape + setCamera.
@@ -775,7 +775,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         var altRoutes: [MGLPolylineFeature] = []
         
         for route in routes.suffix(from: 1) {
-            let polyline = MGLPolylineFeature(coordinates: route.shape!.coordinates, count: UInt(route.shape!.coordinates.count))
+            let polyline = MGLPolylineFeature(route.shape!)
             polyline.attributes["isAlternateRoute"] = true
             altRoutes.append(polyline)
         }
@@ -809,7 +809,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                     return polyline
                 }
             } else {
-                lines = [MGLPolylineFeature(coordinates: route.shape!.coordinates, count: UInt(route.shape!.coordinates.count))]
+                lines = [MGLPolylineFeature(route.shape!)]
             }
             
             for line in lines {
@@ -848,11 +848,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         var linesPerLeg: [MGLPolylineFeature] = []
         
         for (index, leg) in route.legs.enumerated() {
-            let legCoordinates: [CLLocationCoordinate2D] = Array(leg.steps.compactMap {
-                $0.shape?.coordinates
-            }.joined())
-            
-            let polyline = MGLPolylineFeature(coordinates: legCoordinates, count: UInt(legCoordinates.count))
+            let polyline = MGLPolylineFeature(leg.shape)
             if let legIndex = legIndex {
                 polyline.attributes[MBCurrentLegAttribute] = index == legIndex
             } else {
@@ -1046,10 +1042,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Sets the camera directly over a series of coordinates.
      */
-    public func setOverheadCameraView(from userLocation: CLLocationCoordinate2D, along coordinates: [CLLocationCoordinate2D], for padding: UIEdgeInsets) {
+    public func setOverheadCameraView(from userLocation: CLLocationCoordinate2D, along lineString: LineString, for padding: UIEdgeInsets) {
         isAnimatingToOverheadMode = true
         
-        let line = MGLPolyline(coordinates: coordinates, count: UInt(coordinates.count))
+        let line = MGLPolyline(lineString)
         
         tracksUserCourse = false
         

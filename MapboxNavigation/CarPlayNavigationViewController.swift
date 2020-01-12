@@ -275,13 +275,13 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
             } else if tracksUserCourse && !newValue {
                 isOverviewingRoutes = !isPanningAway
                 guard let userLocation = self.navigationService.router.location?.coordinate,
-                    let coordinates = navigationService.route.shape?.coordinates else {
+                    let shape = navigationService.route.shape else {
                     return
                 }
                 mapView?.enableFrameByFrameCourseViewTracking(for: 1)
                 mapView?.contentInset = contentInset(forOverviewing: isOverviewingRoutes)
                 if (isOverviewingRoutes) {
-                    mapView?.setOverheadCameraView(from: userLocation, along: coordinates, for: contentInset(forOverviewing: true))
+                    mapView?.setOverheadCameraView(from: userLocation, along: shape, for: contentInset(forOverviewing: true))
                 }
             }
         }
