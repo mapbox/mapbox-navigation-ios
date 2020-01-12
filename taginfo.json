@@ -174,17 +174,17 @@
     {
       "key": "turn:lanes",
       "object_types": ["way"],
-      "description": "📱🔨 🚗 Shown in top banner. In OSRM-powered profiles, values that conflict with OSRM turn angle heuristics are ignored unless overridden by manoeuvre relations. In code, use the Lane.indications property and the indications argument of VisualInstruction.Component.lane(indications:isUsable:)."
+      "description": "📱🔨 🚗 Shown in top banner. None values may cause entire tag to be ignored. In OSRM-powered profiles, values that conflict with OSRM turn angle heuristics are ignored unless overridden by manoeuvre relations. In code, use the Lane.indications property and the indications argument of VisualInstruction.Component.lane(indications:isUsable:)."
     },
     {
       "key": "turn:lanes:forward",
       "object_types": ["way"],
-      "description": "📱🔨 🚗 Shown in top banner. In OSRM-powered profiles, values that conflict with OSRM turn angle heuristics are ignored unless overridden by manoeuvre relations. In code, use the Lane.indications property and the indications argument of VisualInstruction.Component.lane(indications:isUsable:)."
+      "description": "📱🔨 🚗 Shown in top banner. None values may cause entire tag to be ignored. In OSRM-powered profiles, values that conflict with OSRM turn angle heuristics are ignored unless overridden by manoeuvre relations. In code, use the Lane.indications property and the indications argument of VisualInstruction.Component.lane(indications:isUsable:)."
     },
     {
       "key": "turn:lanes:backward",
       "object_types": ["way"],
-      "description": "📱🔨 🚗 Shown in top banner. In OSRM-powered profiles, values that conflict with OSRM turn angle heuristics are ignored unless overridden by manoeuvre relations. In code, use the Lane.indications property and the indications argument of VisualInstruction.Component.lane(indications:isUsable:)."
+      "description": "📱🔨 🚗 Shown in top banner. None values may cause entire tag to be ignored. In OSRM-powered profiles, values that conflict with OSRM turn angle heuristics are ignored unless overridden by manoeuvre relations. In code, use the Lane.indications property and the indications argument of VisualInstruction.Component.lane(indications:isUsable:)."
     },
     {
       "key": "type",
