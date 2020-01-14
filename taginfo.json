@@ -169,7 +169,7 @@
     {
       "key": "tunnel",
       "object_types": ["way"],
-      "description": "📱🔨 All UI elements, including the map, switch to night/dark style, even during the day. In code, the Intersection.outletRoadClasses property is set to RoadClasses.tunnel. Set the RouteOptions.roadClassesToAvoid property to RoadClasses.tunnel to avoid the way."
+      "description": "📱🔨 All UI elements (including map) temporarily switch to night/dark style. Simulates passing through tunnel in lieu of GPS updates. In code, the Intersection.outletRoadClasses property is set to RoadClasses.tunnel. Set the RouteOptions.roadClassesToAvoid property to RoadClasses.tunnel to avoid the way."
     },
     {
       "key": "turn:lanes",
