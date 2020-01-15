@@ -160,13 +160,14 @@ open class RouteController: NSObject {
     
     /// updateNavigator is used to pass the new progress model onto nav-native.
     private func updateNavigator(with progress: RouteProgress) {
-
-        guard let json = progress.route.json else {
+        let encoder = JSONEncoder()
+        encoder.userInfo[.options] = progress.route.routeOptions
+        guard let routeData = try? encoder.encode(progress.route),
+            let routeJSONString = String(data: routeData, encoding: .utf8) else {
             return
         }
         // TODO: Add support for alternative route
-        navigator.setRouteForRouteResponse(json, route: 0, leg: UInt32(routeProgress.legIndex))
-
+        navigator.setRouteForRouteResponse(routeJSONString, route: 0, leg: UInt32(routeProgress.legIndex))
     }
     
     /// updateRouteLeg is used to notify nav-native of the developer changing the active route-leg.
