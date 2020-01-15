@@ -103,4 +103,24 @@ extension MGLStyle {
         }
         return URL(string: "mapbox://styles/mapbox/navigation-guidance-night-v\(version)")!
     }
+    
+    /**
+     Remove the given style layers from the style in order.
+     */
+    func remove(_ layers: [MGLStyleLayer]) {
+        for layer in layers {
+            removeLayer(layer)
+        }
+    }
+    
+    /**
+     Remove the given sources from the style.
+     
+     Only remove a source after removing all the style layers that use it.
+     */
+    func remove(_ sources: Set<MGLSource>) {
+        for source in sources {
+            removeSource(source)
+        }
+    }
 }

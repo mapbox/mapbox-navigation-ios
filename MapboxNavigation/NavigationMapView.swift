@@ -486,21 +486,14 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return
         }
         
-        if let line = style.layer(withIdentifier: StyleLayerIdentifier.route) {
-            style.removeLayer(line)
-        }
-        
-        if let lineCasing = style.layer(withIdentifier: StyleLayerIdentifier.routeCasing) {
-            style.removeLayer(lineCasing)
-        }
-        
-        if let lineSource = style.source(withIdentifier: SourceIdentifier.route) {
-            style.removeSource(lineSource)
-        }
-        
-        if let lineCasingSource = style.source(withIdentifier: SourceIdentifier.routeCasing) {
-            style.removeSource(lineCasingSource)
-        }
+        style.remove([
+            StyleLayerIdentifier.route,
+            StyleLayerIdentifier.routeCasing,
+        ].compactMap { style.layer(withIdentifier: $0) })
+        style.remove(Set([
+            SourceIdentifier.route,
+            SourceIdentifier.routeCasing,
+        ].compactMap { style.source(withIdentifier: $0) }))
     }
     
     /**
@@ -556,21 +549,15 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         removeAnnotations(annotationsToRemove() ?? [])
         
-        if let circleLayer = style.layer(withIdentifier: StyleLayerIdentifier.waypointCircle) {
-            style.removeLayer(circleLayer)
-        }
-        if let symbolLayer = style.layer(withIdentifier: StyleLayerIdentifier.waypointSymbol) {
-            style.removeLayer(symbolLayer)
-        }
-        if let waypointSource = style.source(withIdentifier: SourceIdentifier.waypoint) {
-            style.removeSource(waypointSource)
-        }
-        if let circleSource = style.source(withIdentifier: SourceIdentifier.waypointCircle) {
-            style.removeSource(circleSource)
-        }
-        if let symbolSource = style.source(withIdentifier: SourceIdentifier.waypointSymbol) {
-            style.removeSource(symbolSource)
-        }
+        style.remove([
+            StyleLayerIdentifier.waypointCircle,
+            StyleLayerIdentifier.waypointSymbol,
+        ].compactMap { style.layer(withIdentifier: $0) })
+        style.remove(Set([
+            SourceIdentifier.waypoint,
+            SourceIdentifier.waypointCircle,
+            SourceIdentifier.waypointSymbol,
+        ].compactMap { style.source(withIdentifier: $0) }))
     }
     
     /**
@@ -690,33 +677,17 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return
         }
         
-        if let arrowLayer = style.layer(withIdentifier: StyleLayerIdentifier.arrow) {
-            style.removeLayer(arrowLayer)
-        }
-        
-        if let arrowLayerStroke = style.layer(withIdentifier: StyleLayerIdentifier.arrowStroke) {
-            style.removeLayer(arrowLayerStroke)
-        }
-        
-        if let arrowSymbolLayer = style.layer(withIdentifier: StyleLayerIdentifier.arrowSymbol) {
-            style.removeLayer(arrowSymbolLayer)
-        }
-        
-        if let arrowCasingSymbolLayer = style.layer(withIdentifier: StyleLayerIdentifier.arrowCasingSymbol) {
-            style.removeLayer(arrowCasingSymbolLayer)
-        }
-        
-        if let arrowSource = style.source(withIdentifier: SourceIdentifier.arrow) {
-            style.removeSource(arrowSource)
-        }
-        
-        if let arrowStrokeSource = style.source(withIdentifier: SourceIdentifier.arrowStroke) {
-            style.removeSource(arrowStrokeSource)
-        }
-        
-        if let arrowSymboleSource = style.source(withIdentifier: SourceIdentifier.arrowSymbol) {
-            style.removeSource(arrowSymboleSource)
-        }
+        style.remove([
+            StyleLayerIdentifier.arrow,
+            StyleLayerIdentifier.arrowStroke,
+            StyleLayerIdentifier.arrowSymbol,
+            StyleLayerIdentifier.arrowCasingSymbol,
+        ].compactMap { style.layer(withIdentifier: $0) })
+        style.remove(Set([
+            SourceIdentifier.arrow,
+            SourceIdentifier.arrowStroke,
+            SourceIdentifier.arrowSymbol,
+        ].compactMap { style.source(withIdentifier: $0) }))
     }
     
     // MARK: Utility Methods
