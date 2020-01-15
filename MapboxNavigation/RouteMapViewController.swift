@@ -622,7 +622,7 @@ extension RouteMapViewController: NavigationViewDelegate {
         }
 
         let closestCoordinate = location.coordinate
-        let roadLabelLayerIdentifier = "roadLabelLayer"
+        let roadLabelStyleLayerIdentifier = "\(identifierNamespace).roadLabels"
         var streetsSources: [MGLVectorTileSource] = style.sources.compactMap {
             $0 as? MGLVectorTileSource
             }.filter {
@@ -636,8 +636,8 @@ extension RouteMapViewController: NavigationViewDelegate {
             streetsSources.append(source)
         }
 
-        if let mapboxStreetsSource = streetsSources.first, style.layer(withIdentifier: roadLabelLayerIdentifier) == nil {
-            let streetLabelLayer = MGLLineStyleLayer(identifier: roadLabelLayerIdentifier, source: mapboxStreetsSource)
+        if let mapboxStreetsSource = streetsSources.first, style.layer(withIdentifier: roadLabelStyleLayerIdentifier) == nil {
+            let streetLabelLayer = MGLLineStyleLayer(identifier: roadLabelStyleLayerIdentifier, source: mapboxStreetsSource)
             streetLabelLayer.sourceLayerIdentifier = mapboxStreetsSource.roadLabelLayerIdentifier
             streetLabelLayer.lineOpacity = NSExpression(forConstantValue: 1)
             streetLabelLayer.lineWidth = NSExpression(forConstantValue: 20)
@@ -646,7 +646,7 @@ extension RouteMapViewController: NavigationViewDelegate {
         }
 
         let userPuck = mapView.convert(closestCoordinate, toPointTo: mapView)
-        let features = mapView.visibleFeatures(at: userPuck, styleLayerIdentifiers: Set([roadLabelLayerIdentifier]))
+        let features = mapView.visibleFeatures(at: userPuck, styleLayerIdentifiers: Set([roadLabelStyleLayerIdentifier]))
         var smallestLabelDistance = Double.infinity
         var currentName: String?
         var currentShieldName: NSAttributedString?
