@@ -8,36 +8,41 @@ import MapboxCoreNavigation
 public protocol StyleManagerDelegate: class, UnimplementedLogging {
     /**
      Asks the delegate for a location to use when calculating sunset and sunrise
-     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.     .
      */
     func location(for styleManager: StyleManager) -> CLLocation?
     
     /**
      Informs the delegate that a style was applied.
-     This delegate method is the equivalent of `Notification.Name.styleManagerDidApplyStyle`.
-
-     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      
+     This delegate method is the equivalent of `Notification.Name.styleManagerDidApplyStyle`.
      */
     func styleManager(_ styleManager: StyleManager, didApply style: Style)
     
     /**
      Informs the delegate that the manager forcefully refreshed UIAppearance.
-     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     func styleManagerDidRefreshAppearance(_ styleManager: StyleManager)
 }
 
 public extension StyleManagerDelegate {
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func location(for styleManager: StyleManager) -> CLLocation? {
         logUnimplemented(protocolType: StyleManagerDelegate.self, level: .debug)
         return nil
     }
     
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func styleManager(_ styleManager: StyleManager, didApply style: Style) {
         logUnimplemented(protocolType: StyleManagerDelegate.self, level: .debug)
     }
     
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
         logUnimplemented(protocolType: StyleManagerDelegate.self, level: .debug)
     }

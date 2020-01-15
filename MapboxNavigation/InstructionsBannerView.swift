@@ -8,19 +8,20 @@ import MapboxDirections
 public protocol InstructionsBannerViewDelegate: class, UnimplementedLogging {
     /**
      Called when the user taps the `InstructionsBannerView`.
-     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView)
     
     
     /**
      Called when the user swipes either left, right, or down on the `InstructionsBannerView`
-     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.     
      */
     func didSwipeInstructionsBanner(_ sender: BaseInstructionsBannerView, swipeDirection direction: UISwipeGestureRecognizer.Direction)
 }
 
 public extension InstructionsBannerViewDelegate {
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView) {
         logUnimplemented(protocolType: InstructionsBannerViewDelegate.self, level: .debug)
     }
@@ -29,6 +30,9 @@ public extension InstructionsBannerViewDelegate {
         //no-op, deprecated.
     }
     
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func didSwipeInstructionsBanner(_ sender: BaseInstructionsBannerView, swipeDirection direction: UISwipeGestureRecognizer.Direction) {
         logUnimplemented(protocolType: InstructionsBannerViewDelegate.self, level: .debug)
     }

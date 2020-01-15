@@ -271,9 +271,7 @@ public protocol VoiceControllerDelegate: class, UnimplementedLogging {
      - parameter voiceController: The voice controller that experienced the failure.
      - parameter synthesizer: the Speech engine that was used as the fallback.
      - parameter error: An error explaining the failure and its cause.
-     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
-    
     func voiceController(_ voiceController: RouteVoiceController, didFallBackTo synthesizer: AVSpeechSynthesizer, error: SpeechError)
    
     /**
@@ -281,7 +279,6 @@ public protocol VoiceControllerDelegate: class, UnimplementedLogging {
      
      - parameter voiceController: The voice controller that experienced the failure.
      - parameter error: An error explaining the failure and its cause.
-     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: SpeechError)
     
@@ -291,7 +288,6 @@ public protocol VoiceControllerDelegate: class, UnimplementedLogging {
      - parameter voiceController: The voice controller that experienced the interruption.
      - parameter interruptedInstruction: The spoken instruction currently in progress that has been interrupted.
      - parameter interruptingInstruction: The spoken instruction that is interrupting the current instruction.
-     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     func voiceController(_ voiceController: RouteVoiceController, didInterrupt interruptedInstruction: SpokenInstruction, with interruptingInstruction: SpokenInstruction)
     
@@ -301,25 +297,35 @@ public protocol VoiceControllerDelegate: class, UnimplementedLogging {
      - parameter voiceController: The voice controller that will speak an instruction.
      - parameter instruction: The spoken instruction that will be said.
      - parameter routeProgress: The `RouteProgress` just before when the instruction is scheduled to be spoken.
-     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     func voiceController(_ voiceController: RouteVoiceController, willSpeak instruction: SpokenInstruction, routeProgress: RouteProgress) -> SpokenInstruction?
 }
 
 public extension VoiceControllerDelegate {
-    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func voiceController(_ voiceController: RouteVoiceController, didFallBackTo synthesizer: AVSpeechSynthesizer, error: SpeechError) {
         logUnimplemented(protocolType: VoiceControllerDelegate.self, level: .debug)
     }
     
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: Error) {
         logUnimplemented(protocolType: VoiceControllerDelegate.self, level: .debug)
     }
     
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func voiceController(_ voiceController: RouteVoiceController, didInterrupt interruptedInstruction: SpokenInstruction, with interruptingInstruction: SpokenInstruction) {
         logUnimplemented(protocolType: VoiceControllerDelegate.self, level: .debug)
     }
     
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func voiceController(_ voiceController: RouteVoiceController, willSpeak instruction: SpokenInstruction, routeProgress: RouteProgress) -> SpokenInstruction? {
         logUnimplemented(protocolType: VoiceControllerDelegate.self, level: .debug)
         return nil

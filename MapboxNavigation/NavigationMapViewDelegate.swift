@@ -13,7 +13,6 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
      - parameter identifier: The style identifier.
      - parameter source: The Layer source containing the route data that this method would style.
      - returns: An MGLStyleLayer that the map applies to all routes.
-     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
@@ -24,7 +23,6 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
      - parameter identifier: The style identifier.
      - parameter source: The Layer source containing the waypoint data that this method would style.
      - returns: An MGLStyleLayer that the map applies to all waypoints.
-     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     func navigationMapView(_ mapView: NavigationMapView, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
@@ -35,7 +33,6 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
      - parameter identifier: The style identifier.
      - parameter source: The Layer source containing the waypoint data that this method would style.
      - returns: An MGLStyleLayer that the map applies to all waypoint symbols.
-     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     func navigationMapView(_ mapView: NavigationMapView, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
@@ -47,7 +44,6 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
      - parameter identifier: The style identifier.
      - parameter source: The Layer source containing the route data that this method would style.
      - returns: An MGLStyleLayer that the map applies to the route.
-     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
@@ -55,7 +51,6 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
      Tells the receiver that the user has selected a route by interacting with the map view.
      - parameter mapView: The NavigationMapView.
      - parameter route: The route that was selected.
-     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route)
     
@@ -63,7 +58,6 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
      Tells the receiver that a waypoint was selected.
      - parameter mapView: The NavigationMapView.
      - parameter waypoint: The waypoint that was selected.
-     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     func navigationMapView(_ mapView: NavigationMapView, didSelect waypoint: Waypoint)
     
@@ -73,7 +67,6 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
      - parameter mapView: The NavigationMapView.
      - parameter routes: The routes that the sender is asking about. The first route will always be rendered as the main route, while all subsequent routes will be rendered as alternate routes.
      - returns: Optionally, a `MGLShape` that defines the shape of the route, or `nil` to use default behavior.
-     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     func navigationMapView(_ mapView: NavigationMapView, shapeFor routes: [Route]) -> MGLShape?
     
@@ -83,7 +76,6 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
      - parameter mapView: The NavigationMapView.
      - parameter route: The route that the sender is asking about.
      - returns: Optionally, a `MGLShape` that defines the shape of the route at lower zoomlevels, or `nil` to use default behavior.
-     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeFor route: Route) -> MGLShape?
     
@@ -92,7 +84,6 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
      - parameter mapView: The NavigationMapView.
      - parameter waypoints: The waypoints to be displayed on the map.
      - returns: Optionally, a `MGLShape` that defines the shape of the waypoint, or `nil` to use default behavior.
-     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint], legIndex: Int) -> MGLShape?
     
@@ -101,56 +92,85 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
      - important: The return value should be returned in the normal UIKit coordinate-space, NOT CoreAnimation's unit coordinate-space.
      - parameter mapView: The NavigationMapView.
      - returns: A CGPoint (in regular coordinate-space) that represents the point on-screen where the user location icon should be drawn.
-     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.     
      */
     func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint
     
 }
 
 public extension NavigationMapViewDelegate {
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
         return nil
     }
     
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func navigationMapView(_ mapView: NavigationMapView, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
         return nil
     }
     
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func navigationMapView(_ mapView: NavigationMapView, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
         return nil
     }
     
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
         return nil
     }
     
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route) {
         logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
     }
     
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func navigationMapView(_ mapView: NavigationMapView, didSelect waypoint: Waypoint) {
         logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
     }
     
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func navigationMapView(_ mapView: NavigationMapView, shapeFor routes: [Route]) -> MGLShape? {
         logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
         return nil
     }
     
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeFor route: Route) -> MGLShape? {
         logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
         return nil
     }
     
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint], legIndex: Int) -> MGLShape? {
         logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
         return nil
     }
     
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint {
         logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
         return .zero
