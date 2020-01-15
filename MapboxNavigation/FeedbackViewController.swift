@@ -23,32 +23,38 @@ extension FeedbackViewController: UIViewControllerTransitioningDelegate {
 public protocol FeedbackViewControllerDelegate: class, UnimplementedLogging {
     /**
      Called when the user opens the feedback form.
-     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     func feedbackViewControllerDidOpen(_ feedbackViewController: FeedbackViewController)
     
     /**
      Called when the user submits a feedback event.
-     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.
      */
     func feedbackViewController(_ feedbackViewController: FeedbackViewController, didSend feedbackItem: FeedbackItem, uuid: UUID)
     
     /**
      Called when a `FeedbackViewController` is dismissed for any reason without giving explicit feedback.
-     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.     
      */
     func feedbackViewControllerDidCancel(_ feedbackViewController: FeedbackViewController)
 }
 
 public extension FeedbackViewControllerDelegate {
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func feedbackViewControllerDidOpen(_ feedbackViewController: FeedbackViewController) {
         logUnimplemented(protocolType: FeedbackViewControllerDelegate.self, level: .debug)
     }
     
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func feedbackViewController(_ feedbackViewController: FeedbackViewController, didSend feedbackItem: FeedbackItem, uuid: UUID) {
         logUnimplemented(protocolType: FeedbackViewControllerDelegate.self, level: .debug)
     }
     
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func feedbackViewControllerDidCancel(_ feedbackViewController: FeedbackViewController) {
         logUnimplemented(protocolType: FeedbackViewControllerDelegate.self, level: .debug)
     } 

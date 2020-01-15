@@ -47,12 +47,14 @@ public protocol VisualInstructionDelegate: class, UnimplementedLogging {
      - parameter instruction: the `VisualInstruction` that will be presented.
      - parameter presented: the formatted string that is provided by the instruction presenter
      - returns: optionally, a customized NSAttributedString that will be presented instead of the default, or if nil, the default behavior will be used.
-     - note: This delegate method includes a default implementation that prints a warning to the console when this method is called. See `UnimplementedLogging` for details.     
      */
     func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString?
 }
 
 public extension VisualInstructionDelegate {
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
         logUnimplemented(protocolType: InstructionLabel.self, level: .debug)
         return nil
