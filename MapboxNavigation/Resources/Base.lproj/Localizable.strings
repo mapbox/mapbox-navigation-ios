@@ -115,6 +115,9 @@
 /* Button title for resume tracking */
 "RESUME" = "Resume";
 
+/* Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible. */
+"SPEED_LIMIT_LEGEND" = "Max";
+
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
 "USER_IN_SIMULATION_MODE" = "Simulating Navigation at %@×";
 
