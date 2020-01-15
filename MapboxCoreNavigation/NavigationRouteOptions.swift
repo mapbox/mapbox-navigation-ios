@@ -13,12 +13,12 @@ open class NavigationRouteOptions: RouteOptions {
 
      - seealso: `RouteOptions`
      */
-    public required init(waypoints: [Waypoint], profileIdentifier: DirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
+    public required init(waypoints: [Waypoint], profileIdentifier: DirectionsProfileIdentifier? = .cycling) {
         super.init(waypoints: waypoints.map {
             $0.coordinateAccuracy = -1
             return $0
         }, profileIdentifier: profileIdentifier)
-        includesAlternativeRoutes = true
+        includesAlternativeRoutes = false
         shapeFormat = .polyline6
         includesSteps = true
         routeShapeResolution = .full
@@ -27,7 +27,7 @@ open class NavigationRouteOptions: RouteOptions {
         } else {
             attributeOptions = [.congestionLevel, .expectedTravelTime, .maximumSpeedLimit]
         }
-        includesSpokenInstructions = true
+        includesSpokenInstructions = false
         locale = Locale.nationalizedCurrent
         distanceMeasurementSystem = Locale.current.usesMetricSystem ? .metric : .imperial
         includesVisualInstructions = true
