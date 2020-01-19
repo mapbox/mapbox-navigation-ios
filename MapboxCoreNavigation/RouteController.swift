@@ -21,7 +21,7 @@ open class RouteController: NSObject {
         public static let shouldDisableBatteryMonitoring: Bool = true
     }
     
-    let navigator = MBNavigator()
+    let navigator = Navigator()
     
     public var route: Route {
         get {
@@ -59,7 +59,7 @@ open class RouteController: NSObject {
     
     var isFirstLocation: Bool = true
     
-    public var config: MBNavigatorConfig? {
+    public var config: NavigatorConfig? {
         get {
             return navigator.getConfig()
         }
@@ -187,7 +187,7 @@ open class RouteController: NSObject {
         
         rawLocation = locations.last
         
-        locations.forEach { navigator.updateLocation(for: MBFixLocation($0)) }
+        locations.forEach { navigator.updateLocation(for: FixLocation($0)) }
         
         let status = navigator.getStatusForTimestamp(location.timestamp)
         
@@ -210,7 +210,7 @@ open class RouteController: NSObject {
         checkForFasterRoute(from: location, routeProgress: routeProgress)
     }
     
-    func updateIndexes(status: MBNavigationStatus, progress: RouteProgress) {
+    func updateIndexes(status: NavigationStatus, progress: RouteProgress) {
         let newLegIndex = Int(status.legIndex)
         let newStepIndex = Int(status.stepIndex)
         let newIntersectionIndex = Int(status.intersectionIndex)
@@ -236,7 +236,7 @@ open class RouteController: NSObject {
         }
     }
     
-    func updateSpokenInstructionProgress(status: MBNavigationStatus, willReRoute: Bool) {
+    func updateSpokenInstructionProgress(status: NavigationStatus, willReRoute: Bool) {
         let didUpdate = status.voiceInstruction?.index != nil
 
         // Announce voice instruction if it was updated and we are not going to reroute
@@ -246,7 +246,7 @@ open class RouteController: NSObject {
         }
     }
     
-    func updateVisualInstructionProgress(status: MBNavigationStatus) {
+    func updateVisualInstructionProgress(status: NavigationStatus) {
         let didUpdate = status.bannerInstruction != nil
         
         // Announce visual instruction if it was updated or it is the first location being reported
@@ -257,7 +257,7 @@ open class RouteController: NSObject {
         }
     }
     
-    func updateRouteLegProgress(status: MBNavigationStatus) {
+    func updateRouteLegProgress(status: NavigationStatus) {
         let legProgress = routeProgress.currentLegProgress
         
         guard let currentDestination = legProgress.leg.destination else {
@@ -365,7 +365,7 @@ extension RouteController: Router {
         return userIsOnRoute(location, status: nil)
     }
     
-    public func userIsOnRoute(_ location: CLLocation, status: MBNavigationStatus?) -> Bool {
+    public func userIsOnRoute(_ location: CLLocation, status: NavigationStatus?) -> Bool {
         
         guard let destination = routeProgress.currentLeg.destination else {
             preconditionFailure("Route legs used for navigation must have destinations")
