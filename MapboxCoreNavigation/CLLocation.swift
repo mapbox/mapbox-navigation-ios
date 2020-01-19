@@ -26,7 +26,7 @@ extension CLLocation {
         return locationDictionary
     }
     
-    convenience init(_ location: MBFixLocation) {
+    convenience init(_ location: FixLocation) {
         self.init(coordinate: location.coordinate,
                   altitude: location.altitude?.doubleValue ?? 0,
                   horizontalAccuracy: location.accuracyHorizontal?.doubleValue ?? -1,

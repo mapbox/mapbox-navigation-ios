@@ -12,7 +12,7 @@ class CLLocationTests: XCTestCase {
         let altitude: CLLocationDistance = 10
         let horizontalAccuracy: CLLocationAccuracy = 50
         
-        let fixLocation = MBFixLocation(coordinate: coordinate, time: timestamp,
+        let fixLocation = FixLocation(coordinate: coordinate, time: timestamp,
                                         speed: speed as NSNumber, bearing: bearing as NSNumber,
                                         altitude: altitude as NSNumber, accuracyHorizontal: horizontalAccuracy as NSNumber, provider: nil)
         
@@ -48,7 +48,7 @@ class CLLocationTests: XCTestCase {
                                   speed: -1,
                                   timestamp: now)
         
-        let fixLocation = MBFixLocation(location)
+        let fixLocation = FixLocation(location)
         
         XCTAssertEqual(fixLocation.coordinate.latitude, coordinate.latitude)
         XCTAssertEqual(fixLocation.coordinate.longitude, coordinate.longitude)
@@ -62,7 +62,7 @@ class CLLocationTests: XCTestCase {
     func testMBFixLocationToCLLocation() {
         let coordinate = CLLocationCoordinate2D(latitude: 1, longitude: 2)
         let now = Date()
-        let fixLocation = MBFixLocation(coordinate: coordinate,
+        let fixLocation = FixLocation(coordinate: coordinate,
                                         time: now,
                                         speed: nil,
                                         bearing: nil,
