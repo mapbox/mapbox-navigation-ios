@@ -1,5 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v0.37.2
+
+* Fixed a crash on launch if this SDK is installed using Carthage. ([#2317](https://github.com/mapbox/mapbox-navigation-ios/pull/2317))
+
 ## v0.37.1
 
 * Fixed a crash on launch if this SDK is installed using Carthage. ([#2301](https://github.com/mapbox/mapbox-navigation-ios/pull/2301))
