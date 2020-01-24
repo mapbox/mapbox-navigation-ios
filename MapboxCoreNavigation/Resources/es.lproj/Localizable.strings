@@ -1,3 +1,9 @@
+/* Error message when an offline route request returns a response that can’t be deserialized */
+"OFFLINE_CORRUPT_DATA" = "Ha encontrado una ruta no válida en modo offline.";
+
+/* Error description when an offline route request returns no result */
+"OFFLINE_NO_RESULT" = "No se puede calcular la ruta peticionada en modo offline.";
+
 /* Inform developer an update is available */
 "UPDATE_AVAILABLE" = "La versión %@ de Mapbox Navigation SDK para iOS está disponible.";
 
