@@ -9,6 +9,7 @@
 ### Top and bottom banners
 * Removed `BottomBannerViewController(delegate:)` in favor of `BottomBannerViewController()` and the `BottomBannerViewController.delegate` property’s setter. ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
 * Removed the `StatusView.canChangeValue` property in favor of `StatusView.isEnabled`. ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
+* Fixed a crash when the first visual instruction contained a route shield or exit number and the application’s user interface was written in SwiftUI. ([#2323](https://github.com/mapbox/mapbox-navigation-ios/pull/2323))
 * Fixed an issue where the wrong style was applied to exit numbers in the top banner and for subsequent maneuver banners in CarPlay, resulting in poor contrast. ([#2280](https://github.com/mapbox/mapbox-navigation-ios/pull/2280))
 * Fixed an issue where a black background could appear under the arrow in a `ManeuverView` regardless of the view’s `backgroundColor` property. ([#2279](https://github.com/mapbox/mapbox-navigation-ios/pull/2279))
 
