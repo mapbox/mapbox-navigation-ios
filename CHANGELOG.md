@@ -9,9 +9,6 @@
 ### Top and bottom banners
 * Removed `BottomBannerViewController(delegate:)` in favor of `BottomBannerViewController()` and the `BottomBannerViewController.delegate` property’s setter. ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
 * Removed the `StatusView.canChangeValue` property in favor of `StatusView.isEnabled`. ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
-* Fixed a crash when the first visual instruction contained a route shield or exit number and the application’s user interface was written in SwiftUI. ([#2323](https://github.com/mapbox/mapbox-navigation-ios/pull/2323))
-* Fixed an issue where the wrong style was applied to exit numbers in the top banner and for subsequent maneuver banners in CarPlay, resulting in poor contrast. ([#2280](https://github.com/mapbox/mapbox-navigation-ios/pull/2280))
-* Fixed an issue where a black background could appear under the arrow in a `ManeuverView` regardless of the view’s `backgroundColor` property. ([#2279](https://github.com/mapbox/mapbox-navigation-ios/pull/2279))
 
 ### Map
 * `UserCourseView` is now a type alias of the `UIView` class and the `CourseUpdatable` protocol rather than a protocol in its own right. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
@@ -42,6 +39,13 @@
 * Added the `RouteLegProgress.currentSpeedLimit` property. ([#2114](https://github.com/mapbox/mapbox-navigation-ios/pull/2114))
 * Added convenience initializers for converting Turf geometry structures into `MGLShape` and `MGLFeature` objects such as `MGLPolyline` and `MGLPolygonFeature`. ([#2308](https://github.com/mapbox/mapbox-navigation-ios/pull/2308))
 * Fixed an issue where the “End Navigation” button in the end-of-route feedback panel appeared in English regardless of the current localization. ([#2315](https://github.com/mapbox/mapbox-navigation-ios/pull/2315))
+
+## v0.38.3
+
+* Fixed a crash on launch if this SDK is installed using Carthage. ([#2317](https://github.com/mapbox/mapbox-navigation-ios/pull/2317))
+* Fixed a crash when the first visual instruction contained a route shield or exit number and the application’s user interface was written in SwiftUI. ([#2323](https://github.com/mapbox/mapbox-navigation-ios/pull/2323))
+* Fixed an issue where a black background could appear under the arrow in a `ManeuverView` regardless of the view’s `backgroundColor` property. ([#2279](https://github.com/mapbox/mapbox-navigation-ios/pull/2279))
+* Fixed an issue where the wrong style was applied to exit numbers in the top banner and for subsequent maneuver banners in CarPlay, resulting in poor contrast. ([#2280](https://github.com/mapbox/mapbox-navigation-ios/pull/2280))
 
 ## v0.38.2
 
