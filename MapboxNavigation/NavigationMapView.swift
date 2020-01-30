@@ -77,7 +77,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         static let instruction = "\(identifierNamespace).instruction"
     }
     
-    struct StyleLayerIdentifier {
+    public struct StyleLayerIdentifier {
         static let namespace = Bundle.mapboxNavigation.bundleIdentifier ?? ""
         
         static let route = "\(identifierNamespace).route"
