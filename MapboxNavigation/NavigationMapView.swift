@@ -62,7 +62,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     
     let sourceOptions: [MGLShapeSourceOption: Any] = [.maximumZoomLevel: 16]
 
-    struct SourceIdentifier {
+    public struct SourceIdentifier {
         static let route = "\(identifierNamespace).route"
         static let routeCasing = "\(identifierNamespace).routeCasing"
 
