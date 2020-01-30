@@ -63,36 +63,36 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     let sourceOptions: [MGLShapeSourceOption: Any] = [.maximumZoomLevel: 16]
 
     public struct SourceIdentifier {
-        static let route = "\(identifierNamespace).route"
-        static let routeCasing = "\(identifierNamespace).routeCasing"
+        public static let route = "\(identifierNamespace).route"
+        public static let routeCasing = "\(identifierNamespace).routeCasing"
 
-        static let waypoint = "\(identifierNamespace).waypoints"
-        static let waypointCircle = "\(identifierNamespace).waypointsCircle"
-        static let waypointSymbol = "\(identifierNamespace).waypointsSymbol"
+        public static let waypoint = "\(identifierNamespace).waypoints"
+        public static let waypointCircle = "\(identifierNamespace).waypointsCircle"
+        public static let waypointSymbol = "\(identifierNamespace).waypointsSymbol"
 
-        static let arrow = "\(identifierNamespace).arrow"
-        static let arrowSymbol = "\(identifierNamespace).arrowSymbol"
-        static let arrowStroke = "\(identifierNamespace).arrowStroke"
+        public static let arrow = "\(identifierNamespace).arrow"
+        public static let arrowSymbol = "\(identifierNamespace).arrowSymbol"
+        public static let arrowStroke = "\(identifierNamespace).arrowStroke"
         
-        static let instruction = "\(identifierNamespace).instruction"
+        public static let instruction = "\(identifierNamespace).instruction"
     }
     
     public struct StyleLayerIdentifier {
-        static let namespace = Bundle.mapboxNavigation.bundleIdentifier ?? ""
+        public static let namespace = Bundle.mapboxNavigation.bundleIdentifier ?? ""
         
-        static let route = "\(identifierNamespace).route"
-        static let routeCasing = "\(identifierNamespace).routeCasing"
+        public static let route = "\(identifierNamespace).route"
+        public static let routeCasing = "\(identifierNamespace).routeCasing"
 
-        static let waypointCircle = "\(identifierNamespace).waypointsCircle"
-        static let waypointSymbol = "\(identifierNamespace).waypointsSymbol"
+        public static let waypointCircle = "\(identifierNamespace).waypointsCircle"
+        public static let waypointSymbol = "\(identifierNamespace).waypointsSymbol"
 
-        static let arrow = "\(identifierNamespace).arrow"
-        static let arrowSymbol = "\(identifierNamespace).arrowSymbol"
-        static let arrowStroke = "\(identifierNamespace).arrowStroke"
-        static let arrowCasingSymbol = "\(identifierNamespace).arrowCasingSymbol"
+        public static let arrow = "\(identifierNamespace).arrow"
+        public static let arrowSymbol = "\(identifierNamespace).arrowSymbol"
+        public static let arrowStroke = "\(identifierNamespace).arrowStroke"
+        public static let arrowCasingSymbol = "\(identifierNamespace).arrowCasingSymbol"
 
-        static let instructionLabel = "\(identifierNamespace).instructionLabel"
-        static let instructionCircle = "\(identifierNamespace).instructionCircle"
+        public static let instructionLabel = "\(identifierNamespace).instructionLabel"
+        public static let instructionCircle = "\(identifierNamespace).instructionCircle"
     }
 
     // MARK: - Instance Properties
