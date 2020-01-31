@@ -36,7 +36,7 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
 
 1. Mapbox APIs and vector tiles require a Mapbox account and API access token. In the project editor, select the application target, then go to the Info tab. Under the “Custom iOS Target Properties” section, set `MGLMapboxAccessToken` to your access token. You can obtain an access token from the [Mapbox account page](https://account.mapbox.com/access-tokens/).
 
-1. _(Optional)_ By default, Mapbox charges you based on the number of [trips](https://www.mapbox.com/pricing/#navigationtrips) your users make using the navigation SDK. If you prefer to be charged based on the number of [monthly active users](https://docs.mapbox.com/help/glossary/monthly-active-users/) (MAU), set `MBXNavigationBillingMethod` to `mau`.
+1. _(Optional)_ By default, Mapbox charges you based on the number of [monthly active users](https://docs.mapbox.com/help/glossary/monthly-active-users/) who are using the navigation SDK. If you prefer to be charged based on the number of requests to individual Mapbox HTTP APIs (Directions API or Map Matching API, Voice API, etc.), set `MBXNavigationBillingMethod` to `request`.
 
 1. In order for the SDK to track the user’s location as they move along the route, set `NSLocationWhenInUseUsageDescription` to:
    > Shows your location on the map and helps improve the map.
