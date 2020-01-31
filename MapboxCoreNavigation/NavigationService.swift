@@ -368,6 +368,10 @@ public class MapboxNavigationService: NSObject, NavigationService {
 }
 
 extension MapboxNavigationService: CLLocationManagerDelegate {
+	
+	public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+		//
+	}
     public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
         router.locationManager?(manager, didUpdateHeading: newHeading)
     }
