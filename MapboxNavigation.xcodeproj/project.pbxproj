@@ -380,6 +380,10 @@
 		DA303CAA21B7A93400F921DC /* ResizableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCF121A5C5B300AEA9AA /* ResizableView.swift */; };
 		DA303CAB21B7A93B00F921DC /* OfflineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCF921A5C63A00AEA9AA /* OfflineViewController.swift */; };
 		DA3525702010A5210048DDFC /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = DA35256E2010A5200048DDFC /* Localizable.stringsdict */; };
+		DA3DA6D823E4D78E004B7B5B /* MapboxAccounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3504DF7322B79AF300D2FD3C /* MapboxAccounts.framework */; };
+		DA3DA6D923E4D78E004B7B5B /* MapboxAccounts.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3504DF7322B79AF300D2FD3C /* MapboxAccounts.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		DA3DA6DA23E4D7B5004B7B5B /* MapboxAccounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3504DF7322B79AF300D2FD3C /* MapboxAccounts.framework */; };
+		DA3DA6DB23E4D7B5004B7B5B /* MapboxAccounts.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3504DF7322B79AF300D2FD3C /* MapboxAccounts.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DA443DDE2278C90E00ED1307 /* CPTrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA443DDD2278C90E00ED1307 /* CPTrip.swift */; };
 		DA66063023B32F99007832E5 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA66062F23B32F99007832E5 /* Array.swift */; };
 		DA67EA5623CAF345001686EA /* MGLShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA67EA5523CAF345001686EA /* MGLShape.swift */; };
@@ -571,6 +575,7 @@
 			files = (
 				35CDA84E2190EFDA0072B675 /* Polyline.framework in Embed Frameworks */,
 				35CDA84A2190EFDA0072B675 /* Solar.framework in Embed Frameworks */,
+				DA3DA6DB23E4D7B5004B7B5B /* MapboxAccounts.framework in Embed Frameworks */,
 				35CDA87E2190F3AC0072B675 /* TestHelper.framework in Embed Frameworks */,
 				35CDA8502190EFDA0072B675 /* MapboxDirections.framework in Embed Frameworks */,
 				35CDA8522190EFDA0072B675 /* Mapbox.framework in Embed Frameworks */,
@@ -592,6 +597,7 @@
 				C53F2EFA20EBC95600D9798F /* MapboxMobileEvents.framework in Embed Frameworks */,
 				C53F2EFB20EBC95600D9798F /* Turf.framework in Embed Frameworks */,
 				C53F2EFC20EBC95600D9798F /* MapboxCoreNavigation.framework in Embed Frameworks */,
+				DA3DA6D923E4D78E004B7B5B /* MapboxAccounts.framework in Embed Frameworks */,
 				C53F2EFD20EBC95600D9798F /* Solar.framework in Embed Frameworks */,
 				C53F2EFE20EBC95600D9798F /* MapboxDirections.framework in Embed Frameworks */,
 				3507F9FC2134309E0086B39E /* MapboxGeocoder.framework in Embed Frameworks */,
@@ -1108,6 +1114,7 @@
 				35CDA8572190F0670072B675 /* MapboxGeocoder.framework in Frameworks */,
 				35CDA84F2190EFDA0072B675 /* MapboxDirections.framework in Frameworks */,
 				35CDA84B2190EFDA0072B675 /* MapboxMobileEvents.framework in Frameworks */,
+				DA3DA6DA23E4D7B5004B7B5B /* MapboxAccounts.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1147,6 +1154,7 @@
 			files = (
 				C53F2EEA20EBC95600D9798F /* MapboxNavigation.framework in Frameworks */,
 				C53F2EEB20EBC95600D9798F /* MapboxDirections.framework in Frameworks */,
+				DA3DA6D823E4D78E004B7B5B /* MapboxAccounts.framework in Frameworks */,
 				1622E882215D776C006A2E5F /* MapboxNavigationNative.framework in Frameworks */,
 				C53F2EEC20EBC95600D9798F /* Solar.framework in Frameworks */,
 				C53F2EED20EBC95600D9798F /* MapboxMobileEvents.framework in Frameworks */,
