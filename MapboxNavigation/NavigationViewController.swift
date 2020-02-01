@@ -207,7 +207,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         
         self.navigationService = options?.navigationService ?? MapboxNavigationService(route: route)
         self.navigationService.delegate = self
-        self.voiceController = options?.voiceController ?? MapboxVoiceController(navigationService: navigationService, speechClient: SpeechSynthesizer(accessToken: navigationService?.directions.accessToken))
+        self.voiceController = options?.voiceController ?? MapboxVoiceController(navigationService: navigationService, speechClient: SpeechSynthesizer(accessToken: navigationService?.directions.accessToken, host: navigationService?.directions.apiEndpoint.host))
 
         NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
         

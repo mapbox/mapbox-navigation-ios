@@ -20,6 +20,7 @@
 ### Spoken instructions
 * Removed `MapboxVoiceController.play(_:)` in favor of `MapboxVoiceController.play(instruction:data:)`. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230), [#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
 * The `MapboxVoiceController.speakWithDefaultSpeechSynthesizer(_:error:)` and `VoiceControllerDelegate.voiceController(_:spokenInstructionsDidFailWith:)` methods now accept a `SpeechError` instance instead of an `NSError` object. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
+* Fixed an issue where the spoken instructions always fell back to VoiceOver when the `MGLMapboxAPIBaseURL` key was set in the Info.plist file. ([#2329](https://github.com/mapbox/mapbox-navigation-ios/pull/2329))
 * Added the `VoiceControllerDelegate.voiceController(_:didFallBackTo:becauseOf:)` method for detecting when the voice controller falls back to `AVSpeechSynthesizer`. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
 
 ### User location
