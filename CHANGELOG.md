@@ -1,5 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v0.39.0
+
+* Fixed an issue where the spoken instructions always fell back to VoiceOver when the `MGLMapboxAPIBaseURL` key was set in the Info.plist file. ([#2329](https://github.com/mapbox/mapbox-navigation-ios/pull/2329))
+
 ## v0.38.3
 
 * Fixed a crash on launch if this SDK is installed using Carthage. ([#2317](https://github.com/mapbox/mapbox-navigation-ios/pull/2317))
