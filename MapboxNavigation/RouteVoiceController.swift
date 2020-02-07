@@ -152,15 +152,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         }
         rerouteSoundPlayer.play()
     }
-    
-    @objc public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-        do {
-            try unDuckAudio()
-        } catch {
-            voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
-        }
-    }
-    
+        
     func duckAudio() throws {
         let audioSession = AVAudioSession.sharedInstance()
         if #available(iOS 12.0, *) {

@@ -73,13 +73,7 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
         audioPlayer?.delegate = nil
     }
     
-    @objc public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        do {
-            try unDuckAudio()
-        } catch {
-            voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
-        }
-    }
+
 
     @objc open override func didPassSpokenInstructionPoint(notification: NSNotification) {
         let routeProgresss = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
