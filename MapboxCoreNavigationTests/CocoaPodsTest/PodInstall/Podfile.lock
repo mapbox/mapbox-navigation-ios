@@ -24,7 +24,7 @@ DEPENDENCIES:
   - MapboxNavigation (from `../../../`)
 
 SPEC REPOS:
-  trunk:
+  https://github.com/cocoapods/specs.git:
     - Mapbox-iOS-SDK
     - MapboxDirections.swift
     - MapboxMobileEvents
@@ -54,4 +54,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: d4084fe664fbacd0cffd88ab45eaed1ad907ad1d
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.7.5

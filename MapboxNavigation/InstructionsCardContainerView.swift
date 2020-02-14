@@ -207,7 +207,7 @@ public class InstructionsCardContainerView: UIView {
         
         let colors = [style.highlightedBackgroundColor.cgColor,
                       style.highlightedBackgroundColor.withAlphaComponent(alphaComponent).cgColor]
-        
+
         let containerGradientLayer = gradientLayer(for: self)
         var instructionsCardViewGradientLayer = gradientLayer(for: instructionsCardView)
         var lanesViewGradientLayer = gradientLayer(for: lanesView)

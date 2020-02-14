@@ -3,6 +3,7 @@
 ## v0.39.0
 
 * Fixed an issue where the spoken instructions always fell back to VoiceOver when the `MGLMapboxAPIBaseURL` key was set in the Info.plist file. ([#2329](https://github.com/mapbox/mapbox-navigation-ios/pull/2329))
+* Fixed a crash when setting certain properties of a `Style` subclass to a dynamic color. ([#2338](https://github.com/mapbox/mapbox-navigation-ios/pull/2338))
 
 ## v0.38.3
 
