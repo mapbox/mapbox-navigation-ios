@@ -148,12 +148,16 @@ public class ExitView: StylableView {
         let proxy = ExitView.appearance()
         var backgroundColor = proxy.backgroundColor
         var foregroundColor = proxy.foregroundColor
+        let performAsCurrentSelector = Selector(("performAsCurrentTraitCollection:" as NSString) as String)
         if #available(iOS 13.0, *) {
-            if let currentTraitCollection = UIApplication.shared.keyWindow?.traitCollection, let backgroundCGColor = backgroundColor?.cgColor, let foregroundCGColor = foregroundColor?.cgColor {
-                currentTraitCollection.performAsCurrent {
+            if let currentTraitCollection = UIApplication.shared.keyWindow?.traitCollection, currentTraitCollection.responds(to: performAsCurrentSelector), let backgroundCGColor = backgroundColor?.cgColor, let foregroundCGColor = foregroundColor?.cgColor {
+
+                let colorCopyingClosure = {
                     backgroundColor = UIColor(cgColor: backgroundCGColor)
                     foregroundColor = UIColor(cgColor: foregroundCGColor)
                 }
+                let colorCopyingBlock: @convention(block) () -> Void = colorCopyingClosure
+                currentTraitCollection.perform(performAsCurrentSelector, with: colorCopyingBlock)
             }
         }
         let criticalProperties: [AnyHashable?] = [side, dataSource.font.pointSize, backgroundColor, foregroundColor, proxy.borderWidth, proxy.cornerRadius]
