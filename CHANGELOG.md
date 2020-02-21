@@ -42,6 +42,7 @@
 
 ## v0.39.0
 
+* Upgraded to [Mapbox Maps SDK for iOS v5.5.1](https://github.com/mapbox/mapbox-gl-native-ios/releases/tag/ios-v5.5.1). (#2341)
 * Fixed an issue where the spoken instructions always fell back to VoiceOver when the `MGLMapboxAPIBaseURL` key was set in the Info.plist file. ([#2329](https://github.com/mapbox/mapbox-navigation-ios/pull/2329))
 * Fixed a crash when setting certain properties of a `Style` subclass to a dynamic color. ([#2338](https://github.com/mapbox/mapbox-navigation-ios/pull/2338))
 
