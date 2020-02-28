@@ -65,6 +65,10 @@ public class DayInstructionsCardStyle: InstructionsCardStyle {
     public var maneuverViewHighlightedColor: UIColor {
         return .cardLight
     }
+
+    public var maneuverViewSecondaryHighlightedColor: UIColor {
+        return UIColor.cardLight.withAlphaComponent(0.4)
+    }
     
     public var nextBannerViewPrimaryColor: UIColor {
         return .cardBlue
@@ -84,6 +88,10 @@ public class DayInstructionsCardStyle: InstructionsCardStyle {
     
     public var nextBannerInstructionHighlightedColor: UIColor {
         return .cardLight
+    }
+
+    public var nextBannerInstructionSecondaryHighlightedColor: UIColor {
+        return UIColor.cardLight.withAlphaComponent(0.4)
     }
     
     public var lanesViewDefaultColor: UIColor {
