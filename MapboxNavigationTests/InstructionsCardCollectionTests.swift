@@ -191,11 +191,13 @@ class TestInstructionsCardStyle: InstructionsCardStyle {
     var maneuverViewPrimaryColor: UIColor = .blue
     var maneuverViewSecondaryColor: UIColor = .clear
     var maneuverViewHighlightedColor: UIColor = .brown
+    var maneuverViewSecondaryHighlightedColor: UIColor = .orange
     
     var nextBannerViewPrimaryColor: UIColor = .cardBlue
     var nextBannerViewSecondaryColor: UIColor = .cardLight
     var nextBannerInstructionLabelTextColor: UIColor = .cardDark
     var nextBannerInstructionHighlightedColor: UIColor = .cardLight
+    var nextBannerInstructionSecondaryHighlightedColor: UIColor = .orange
     var lanesViewDefaultColor: UIColor = .cardBlue
     var lanesViewHighlightedColor: UIColor = .cardLight
     lazy var nextBannerInstructionLabelNormalFont: UIFont = {
