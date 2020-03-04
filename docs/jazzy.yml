@@ -22,15 +22,31 @@ custom_categories:
       - NavigationViewController
       - NavigationViewControllerDelegate
       - RouteVoiceController
+      - VoiceControllerDelegate
+      - MapboxVoiceController
+      - NavigationOptions
+      - NavigationView
   - name: Core Navigation Logic
     children:
       - NavigationService
+      - NavigationServiceDelegate
       - MapboxNavigationService
+      - Router
+      - RouterDataSource
       - RouteController
       - RouterDelegate
       - RouteProgress
       - RouteLegProgress
       - RouteStepProgress
+      - NavigationEventsManager
+      - EventsManagerDataSource
+      - NavigationLocationManager
+      - ReplayLocationManager
+      - SimulatedLocationManager
+      - NavigationRouteOptions
+      - NavigationMatchOptions
+      - NavigationDirections
+      - SimulationMode
   - name: Maps
     children:
       - NavigationMapView
@@ -45,6 +61,11 @@ custom_categories:
       - StylableView
       - StylableTextView
       - StylableButton
+      - StyleManager
+      - StyleManagerNotificationUserInfoKey
+      - StyleManagerDelegate
+      - DayStyle
+      - NightStyle
   - name: Formatters
     children:
       - DistanceFormatter
@@ -60,6 +81,13 @@ custom_categories:
       - TitleLabel
       - ManeuverView
       - WayNameLabel
+      - BottomBannerViewController
+      - BottomBannerViewControllerDelegate
+      - SpeedLimitView
+      - UserPuckCourseView
+      - CourseUpdatable
+      - GenericRouteShield
+      - NavigationComponent
   - name: CarPlay
     children:
       - CarPlayManager
@@ -67,6 +95,10 @@ custom_categories:
       - CarPlayNavigationViewController
       - CarPlayNavigationDelegate
       - CarPlayActivity
+      - CarPlayCompassView
+      - CarPlayMapViewController
+      - CarPlaySearchController
+      - CarPlayConnectionObserver
   - name: Configuration
     children:
       - RouteControllerDeadReckoningTimeInterval
@@ -77,3 +109,21 @@ custom_categories:
       - RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion
       - RouteControllerMaximumDistanceBeforeRecalculating
       - RouteControllerUserLocationSnappingDistance
+      - MBCongestionAttribute
+      - MBCurrentLegAttribute
+      - MBRouteLineWidthByZoomLevel
+      - NavigationMapViewMinimumDistanceForOverheadZooming
+      - NavigationViewMinimumVolumeForWarning
+      - RouteControllerIncorrectCourseMultiplier
+      - RouteControllerLinkedInstructionBufferMultiplier
+      - RouteControllerMaximumSpeedForUsingCurrentStep
+      - RouteControllerMinNumberOfInCorrectCourses
+      - RouteControllerMinimumBacktrackingDistanceForRerouting
+      - RouteControllerMinimumDistanceForContinueInstruction
+      - RouteControllerMinimumDurationRemainingForProactiveRerouting
+      - RouteControllerMinimumNumberLocationUpdatesBackwards
+      - RouteControllerNumberOfSecondsForRerouteFeedback
+      - RouteControllerProactiveReroutingInterval
+      - RouteSnappingMinimumHorizontalAccuracy
+      - RouteSnappingMinimumSpeed
+      - NavigationSettings
