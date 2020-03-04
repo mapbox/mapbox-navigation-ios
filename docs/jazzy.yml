@@ -27,11 +27,10 @@ custom_categories:
       - NavigationService
       - MapboxNavigationService
       - RouteController
-      - RouteControllerDelegate
+      - RouterDelegate
       - RouteProgress
       - RouteLegProgress
       - RouteStepProgress
-      - RouteControllerNotificationUserInfoKey
   - name: Maps
     children:
       - NavigationMapView
@@ -39,21 +38,19 @@ custom_categories:
       - MGLMapView
   - name: Styling
     children:
+      - LanesStyleKit
+      - ManeuversStyleKit
       - Style
-      - StyleKitArrows
-      - StylableButton
       - StylableLabel
+      - StylableView
+      - StylableTextView
+      - StylableButton
   - name: Formatters
     children:
       - DistanceFormatter
-      - RouteStepFormatter
   - name: UI Components
     children:
-      - RouteTableViewController
-      - NavigationPulleyViewController
       - Button
-      - CellSubtitleLabel
-      - CellTitleLabel
       - DashedLineView
       - HighlightedButton
       - LineView
@@ -61,7 +58,7 @@ custom_categories:
       - SeparatorView
       - SubtitleLabel
       - TitleLabel
-      - TurnArrowView
+      - ManeuverView
       - WayNameLabel
   - name: CarPlay
     children:
@@ -72,18 +69,11 @@ custom_categories:
       - CarPlayActivity
   - name: Configuration
     children:
-      - MaxSecondsSpentTravelingAwayFromStartOfRoute
       - RouteControllerDeadReckoningTimeInterval
+      - RouteControllerMediumAlertInterval
       - RouteControllerHighAlertInterval
       - RouteControllerManeuverZoneRadius
-      - RouteControllerMaxManipulatedCourseAngle
+      - RouteSnappingMaxManipulatedCourseAngle
       - RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion
       - RouteControllerMaximumDistanceBeforeRecalculating
-      - RouteControllerMediumAlertInterval
-      - RouteControllerMinimumDistanceForHighAlertCycling
-      - RouteControllerMinimumDistanceForHighAlertDriving
-      - RouteControllerMinimumDistanceForHighAlertWalking
-      - RouteControllerMinimumDistanceForMediumAlertCycling
-      - RouteControllerMinimumDistanceForMediumAlertDriving
-      - RouteControllerMinimumDistanceForMediumAlertWalking
       - RouteControllerUserLocationSnappingDistance
