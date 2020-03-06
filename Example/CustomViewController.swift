@@ -16,7 +16,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
     var userRoute: Route?
 
     // Start voice instructions
-    var voiceController: MapboxVoiceController!
+//    var voiceController: MapboxVoiceController!
     
     var stepsViewController: StepsViewController?
 
@@ -39,7 +39,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
         
         let locationManager = simulateLocation ? SimulatedLocationManager(route: userRoute!) : NavigationLocationManager()
         navigationService = MapboxNavigationService(route: userRoute!, locationSource: locationManager, simulating: simulateLocation ? .always : .onPoorGPS)
-        voiceController = MapboxVoiceController(navigationService: navigationService)
+//        voiceController = MapboxVoiceController(navigationService: navigationService)
         
         mapView.delegate = self
         mapView.compassView.isHidden = true
