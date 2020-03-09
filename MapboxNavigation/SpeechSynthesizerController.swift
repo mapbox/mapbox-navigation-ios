@@ -6,7 +6,7 @@ import MapboxCoreNavigation
 public protocol SpeechSynthesizerController: class {
     
 //    var delegate: SpeechSynthesizerDelegate?
-    // typealias AudioControlFailureHandler = (SpeechError) -> Void
+    typealias SpeechSynthesizerCompletion = (Error?) -> Void
     
     ///
     var muted: Bool { get set }
@@ -20,8 +20,7 @@ public protocol SpeechSynthesizerController: class {
     ///
     func changedIncomingSpokenInstructions(_ instructions: [SpokenInstruction])
     ///
-    @discardableResult
-    func speak(_ instruction: SpokenInstruction) -> Error? // or String?
+    func speak(_ instruction: SpokenInstruction, completion: SpeechSynthesizerCompletion?)
     
     ///
     func stopSpeaking()

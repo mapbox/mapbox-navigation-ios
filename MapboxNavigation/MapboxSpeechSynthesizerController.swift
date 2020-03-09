@@ -46,13 +46,34 @@ open class MapboxSpeechSynthesizerController: NSObject, SpeechSynthesizerControl
     }
     
     ///
-    @discardableResult
-    public func speak(_ instruction: SpokenInstruction) -> Error? {
+    public func speak(_ instruction: SpokenInstruction, completion: SpeechSynthesizerCompletion?) {
         print(instruction.text)
         
-        _ = speechSynthesizers.first(where: { $0.speak(instruction) == nil })
+        guard let synthesizer = speechSynthesizers.first else { return }
         
-        return nil
+        var i = 0
+        var recursiveCompletion: SpeechSynthesizerCompletion?
+        recursiveCompletion = { [weak self] in
+            guard let self = self else {
+                completion?(nil)
+                return
+            }
+            
+            if let error = $0 {
+                print(error.localizedDescription)
+                i += 1
+                if i < self.speechSynthesizers.count {
+                    self.speechSynthesizers[i].speak(instruction, completion: recursiveCompletion)
+                }
+                else {
+                    completion?(error)
+                }
+            }
+            
+            completion?(nil)
+        }
+        
+        synthesizer.speak(instruction, completion: recursiveCompletion)
     }
     
     ///

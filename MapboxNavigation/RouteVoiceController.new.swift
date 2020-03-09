@@ -176,7 +176,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         speechSynthesizer.changedIncomingSpokenInstructions(routeProgress.currentLegProgress.currentStepProgress.remainingSpokenInstructions ?? [])
         
         guard let instruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction else { return }
-        speechSynthesizer.speak(instruction)
+        speechSynthesizer.speak(instruction, completion: nil)
     }
 }
 

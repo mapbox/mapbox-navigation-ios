@@ -36,7 +36,9 @@ class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizerController {
     
     private var cache: BimodalDataCache
     private var speech: SpeechSynthesizer
-    var audioTask: URLSessionDataTask?
+    private var audioTask: URLSessionDataTask?
+    
+    private var completion: SpeechSynthesizerCompletion?
     
     // MARK: - Lifecycle
     
@@ -57,14 +59,15 @@ class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizerController {
         }
     }
     
-    func speak(_ instruction: SpokenInstruction) -> Error? {
+    func speak(_ instruction: SpokenInstruction, completion: SpeechSynthesizerCompletion?) {
         if let data = cachedDataForKey(instruction.ssmlText) {
             safeDuckAudio(instruction: instruction)
-            return speakWithMapboxSynthesizer(instruction: instruction,
-                                              instructionData: data)
+            completion?(speakWithMapboxSynthesizer(instruction: instruction,
+                                              instructionData: data))
         }
         else {
-            return fetchAndSpeak(instruction: instruction)
+            self.completion = completion
+            fetchAndSpeak(instruction: instruction)
         }
     }
     
@@ -81,52 +84,41 @@ class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizerController {
     /**
      Fetches and plays an instruction.
      */
-    @discardableResult
-    private func fetchAndSpeak(instruction: SpokenInstruction) -> Error? {
+    private func fetchAndSpeak(instruction: SpokenInstruction){
         audioTask?.cancel()
         let ssmlText = instruction.ssmlText
         let options = SpeechOptions(ssml: ssmlText)
         options.locale = locale
-        
-        let semaphore = DispatchSemaphore(value: 0)
-        var audioError: Error?
-                
+                        
         audioTask = speech.audioData(with: options) { [weak self] (data, error) in
-            defer { semaphore.signal() }
+            defer { self?.completion = nil }
             
             guard let self = self else { return }
             if let error = error,
                 case let .unknown(response: _, underlying: underlyingError, code: _, message: _) = error,
                 let urlError = underlyingError as? URLError, urlError.code == .cancelled {
-                audioError = error
+                self.completion?(error)
                 return
             } else if let error = error {
-                audioError = SpeechError.apiError(instruction: instruction,
+                self.completion?(SpeechError.apiError(instruction: instruction,
                                                   options: options,
-                                                  underlying: error)
+                                                  underlying: error))
                 return
             }
             
             guard let data = data else {
-                audioError = SpeechError.noData(instruction: instruction,
-                                                options: options)
+                self.completion?(SpeechError.noData(instruction: instruction,
+                                                    options: options))
                 return
             }
             
             self.cache(data, forKey: ssmlText)
             self.safeDuckAudio(instruction: instruction)
-            audioError = self.speakWithMapboxSynthesizer(instruction: instruction,
-                                                         instructionData: data)
+            self.completion?(self.speakWithMapboxSynthesizer(instruction: instruction,
+                                                             instructionData: data))
         }
         
         audioTask?.resume()
-        if semaphore.wait(timeout: DispatchTime(uptimeNanoseconds: 1500 * USEC_PER_SEC)) == .timedOut {
-            audioTask?.cancel()
-            return SpeechError.noData(instruction: instruction,
-                                      options: options)
-        }
-        
-        return audioError
     }
     
     private func speakWithMapboxSynthesizer(instruction: SpokenInstruction, instructionData: Data) -> Error? {

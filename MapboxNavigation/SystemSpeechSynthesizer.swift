@@ -26,13 +26,15 @@ class SystemSpeechSynthesizer: NSObject, SpeechSynthesizerController {
         return synth
     } ()
     
+    private var completion: SpeechSynthesizerCompletion?
+    
     // MARK: - Public methods
     
     func changedIncomingSpokenInstructions(_ instructions: [SpokenInstruction]) {
         // Do nothing
     }
     
-    func speak(_ instruction: SpokenInstruction) -> Error? {
+    func speak(_ instruction: SpokenInstruction, completion: SpeechSynthesizerCompletion?) {
         print("iOS SPEAKS!")
         
         var utterance: AVSpeechUtterance?
@@ -57,11 +59,12 @@ class SystemSpeechSynthesizer: NSObject, SpeechSynthesizerController {
             // !?!?!?!!??!
             let options = SpeechOptions(ssml: instruction.ssmlText)
             options.locale = Locale.current
-            return SpeechError.noData(instruction: instruction,
-                                      options: options)
+            completion?(SpeechError.noData(instruction: instruction,
+                                           options: options))
+            return
         }
+        self.completion = completion
         speechSynth.speak(utteranceToSpeak)
-        return nil
     }
     
     func stopSpeaking() {
@@ -119,7 +122,8 @@ extension SystemSpeechSynthesizer: AVSpeechSynthesizerDelegate {
     }
     
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-        safeUnduckAudio(instruction: nil)
+        completion?(safeUnduckAudio(instruction: nil))
+        completion = nil
     }
     
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didPause utterance: AVSpeechUtterance) {
@@ -127,6 +131,7 @@ extension SystemSpeechSynthesizer: AVSpeechSynthesizerDelegate {
     }
     
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
-        safeUnduckAudio(instruction: nil)
+        completion?(safeUnduckAudio(instruction: nil))
+        completion = nil
     }
 }
