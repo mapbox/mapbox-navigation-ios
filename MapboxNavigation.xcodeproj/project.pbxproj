@@ -27,8 +27,10 @@
 		16EF6C1E21193A9600AA580B /* CarPlayManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EF6C1D21193A9600AA580B /* CarPlayManagerTests.swift */; };
 		16EF6C22211BA4B300AA580B /* CarPlayMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EF6C21211BA4B300AA580B /* CarPlayMapViewController.swift */; };
 		2B72EC5E241276D10003B370 /* RouteVoiceController.new.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B72EC5D241276D10003B370 /* RouteVoiceController.new.swift */; };
+		2B72EC602412AA800003B370 /* SystemSpeechSynthesizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B72EC5F2412AA800003B370 /* SystemSpeechSynthesizer.swift */; };
 		2B8098412411375700FED452 /* SpeechSynthesizerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8098402411375700FED452 /* SpeechSynthesizerController.swift */; };
-		2B8098432411447E00FED452 /* MapboxSpeechSynthesizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8098422411447E00FED452 /* MapboxSpeechSynthesizer.swift */; };
+		2B8098432411447E00FED452 /* MapboxSpeechSynthesizerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8098422411447E00FED452 /* MapboxSpeechSynthesizerController.swift */; };
+		2B91C9B12416357700E532A5 /* MapboxSpeechSynthesizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B91C9B02416357700E532A5 /* MapboxSpeechSynthesizer.swift */; };
 		35002D611E5F6ADB0090E733 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35002D5F1E5F6ADB0090E733 /* Assets.xcassets */; };
 		35002D691E5F6B2F0090E733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35002D661E5F6B1B0090E733 /* Main.storyboard */; };
 		3502231A205BC94E00E1449A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35022319205BC94E00E1449A /* Constants.swift */; };
@@ -622,9 +624,10 @@
 		16EF6C1D21193A9600AA580B /* CarPlayManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayManagerTests.swift; sourceTree = "<group>"; };
 		16EF6C21211BA4B300AA580B /* CarPlayMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayMapViewController.swift; sourceTree = "<group>"; };
 		2B72EC5D241276D10003B370 /* RouteVoiceController.new.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteVoiceController.new.swift; sourceTree = "<group>"; };
-		2B80983E24110C8000FED452 /* SpeechSynthesizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechSynthesizer.swift; sourceTree = "<group>"; };
+		2B72EC5F2412AA800003B370 /* SystemSpeechSynthesizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemSpeechSynthesizer.swift; sourceTree = "<group>"; };
 		2B8098402411375700FED452 /* SpeechSynthesizerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechSynthesizerController.swift; sourceTree = "<group>"; };
-		2B8098422411447E00FED452 /* MapboxSpeechSynthesizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxSpeechSynthesizer.swift; sourceTree = "<group>"; };
+		2B8098422411447E00FED452 /* MapboxSpeechSynthesizerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxSpeechSynthesizerController.swift; sourceTree = "<group>"; };
+		2B91C9B02416357700E532A5 /* MapboxSpeechSynthesizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxSpeechSynthesizer.swift; sourceTree = "<group>"; };
 		35002D5D1E5F6ABB0090E733 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		35002D5F1E5F6ADB0090E733 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		35002D671E5F6B1B0090E733 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -1283,9 +1286,10 @@
 				3EA93230997B8D59E3B76C8C /* InstructionPresenter.swift */,
 				35D825FD1E6A2EC60088F83B /* MapboxNavigation.h */,
 				C565168A1FE1E23E00A0AD18 /* MapboxVoiceController.swift */,
-				2B80983E24110C8000FED452 /* SpeechSynthesizer.swift */,
 				2B8098402411375700FED452 /* SpeechSynthesizerController.swift */,
-				2B8098422411447E00FED452 /* MapboxSpeechSynthesizer.swift */,
+				2B8098422411447E00FED452 /* MapboxSpeechSynthesizerController.swift */,
+				2B72EC5F2412AA800003B370 /* SystemSpeechSynthesizer.swift */,
+				2B91C9B02416357700E532A5 /* MapboxSpeechSynthesizer.swift */,
 				CFD47D8F20FD85EC00BC1E49 /* MGLAccountManager.swift */,
 				C53208AA1E81FFB900910266 /* NavigationMapView.swift */,
 				8DEB4065220CE596008BAAB4 /* NavigationMapViewDelegate.swift */,
@@ -2380,6 +2384,7 @@
 				351BEBF11E5BCC63006FE110 /* MGLMapView.swift in Sources */,
 				DA443DDE2278C90E00ED1307 /* CPTrip.swift in Sources */,
 				2B72EC5E241276D10003B370 /* RouteVoiceController.new.swift in Sources */,
+				2B72EC602412AA800003B370 /* SystemSpeechSynthesizer.swift in Sources */,
 				35D825FC1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m in Sources */,
 				8D63A7D0227A580A00520167 /* TopBannerViewController.swift in Sources */,
 				C51511D120EAC89D00372A91 /* CPMapTemplate.swift in Sources */,
@@ -2407,6 +2412,7 @@
 				8DB63A3A1FBBCA2200928389 /* RatingControl.swift in Sources */,
 				353EC9D71FB09708002EB0AB /* StepsViewController.swift in Sources */,
 				35726EE81F0856E900AFA1B6 /* DayStyle.swift in Sources */,
+				2B91C9B12416357700E532A5 /* MapboxSpeechSynthesizer.swift in Sources */,
 				AE47A32E22B1F6AE0096458C /* InstructionsCardStyle.swift in Sources */,
 				AE47A32C22B1F6AE0096458C /* InstructionsCardViewController.swift in Sources */,
 				358E31D622562698009B3EC2 /* CarPayCompassView.swift in Sources */,
@@ -2433,7 +2439,7 @@
 				35B5A47E1FFFDCE5000A3C8D /* NavigationViewLayout.swift in Sources */,
 				8DDBFCA32205016E0064DEBB /* NavigationCustomizable.swift in Sources */,
 				3531C2701F9E095400D92F9A /* InstructionsBannerView.swift in Sources */,
-				2B8098432411447E00FED452 /* MapboxSpeechSynthesizer.swift in Sources */,
+				2B8098432411447E00FED452 /* MapboxSpeechSynthesizerController.swift in Sources */,
 				35DA85791FC45787004092EC /* StatusView.swift in Sources */,
 				AE46F95520EA735B00537AC2 /* VisualInstruction.swift in Sources */,
 				35025F3F1F051DD2002BA3EA /* DialogViewController.swift in Sources */,

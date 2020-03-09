@@ -20,12 +20,13 @@ public protocol SpeechSynthesizerController: class {
     ///
     func changedIncomingSpokenInstructions(_ instructions: [SpokenInstruction])
     ///
-    func speak(_ instruction: SpokenInstruction, with currentLegProgress: RouteLegProgress) // or String?
+    @discardableResult
+    func speak(_ instruction: SpokenInstruction) -> Error? // or String?
     
     ///
     func stopSpeaking()
     ///
-    func interrupt() // ??
+    func interruptSpeaking() // ??
 }
 
 public protocol SpeechSynthesizerDelegate {

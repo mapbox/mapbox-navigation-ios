@@ -75,7 +75,6 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     public weak var voiceControllerDelegate: VoiceControllerDelegate?
     
     var lastSpokenInstruction: SpokenInstruction?
-//    var routeProgress: RouteProgress?
     
     var volumeToken: NSKeyValueObservation?
     var muteToken: NSKeyValueObservation?
@@ -83,8 +82,8 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     /**
      Default initializer for `RouteVoiceController`.
      */
-    public init(navigationService: NavigationService) {
-        speechSynthesizer = MapboxSpeechSynthesizer()
+    public init(navigationService: NavigationService, speechSynthesizer: SpeechSynthesizerController? = nil) {
+        self.speechSynthesizer = speechSynthesizer ?? MapboxSpeechSynthesizerController()
         
         super.init()
 
@@ -146,20 +145,12 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         
         speechSynthesizer.stopSpeaking()
         
-//        speechSynth.stopSpeaking(at: .word)
-        
         safeMixAudio(instruction: nil, engine: nil) {
             voiceControllerDelegate?.voiceController(self, spokenInstructionsDidFailWith: $0)
         }
         
         rerouteSoundPlayer.play()
     }
-//
-//    public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-//        safeUnduckAudio(instruction: nil, engine: synthesizer) {
-//            voiceControllerDelegate?.voiceController(self, spokenInstructionsDidFailWith: $0)
-//        }
-//    }
     
     func safeMixAudio(instruction: SpokenInstruction?, engine: Any?, failure: AudioControlFailureHandler) {
         do {
@@ -185,23 +176,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         speechSynthesizer.changedIncomingSpokenInstructions(routeProgress.currentLegProgress.currentStepProgress.remainingSpokenInstructions ?? [])
         
         guard let instruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction else { return }
-        speechSynthesizer.speak(instruction, with: routeProgress.currentLegProgress)
-//        let currentLegProgress: RouteLegProgress = routeProgresss.currentLegProgress
-//
-//        let instructionSets = currentLegProgress.remainingSteps.prefix(stepsAheadToCache).compactMap { $0.instructionsSpokenAlongStep }
-//        let instructions = instructionSets.flatMap { $0 }
-//        let unfetchedInstructions = instructions.filter { !hasCachedSpokenInstructionForKey($0.ssmlText) }
-//
-//        unfetchedInstructions.forEach( downloadAndCacheSpokenInstruction(instruction:) )
-        
-//        guard !NavigationSettings.shared.voiceMuted else { return }
-//
-//        routeProgress = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
-//        assert(routeProgress != nil, "routeProgress should not be nil.")
-//
-//        guard let instruction = routeProgress!.currentLegProgress.currentStepProgress.currentSpokenInstruction else { return }
-//        lastSpokenInstruction = instruction
-//        speak(instruction)
+        speechSynthesizer.speak(instruction)
     }
 }
 
