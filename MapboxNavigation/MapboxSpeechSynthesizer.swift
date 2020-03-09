@@ -3,10 +3,11 @@ import AVFoundation
 import MapboxDirections
 import MapboxSpeech
 
-class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizerController {
+open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizerController {
     
     // MARK: - Properties
     
+    public var delegate: SpeechSynthesizerDelegate?
     public var muted: Bool = false {
         didSet {
             if muted {
@@ -39,6 +40,7 @@ class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizerController {
     private var audioTask: URLSessionDataTask?
     
     private var completion: SpeechSynthesizerCompletion?
+    private var previousInstrcution: SpokenInstruction?
     
     // MARK: - Lifecycle
     
@@ -47,9 +49,13 @@ class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizerController {
         self.speech = SpeechSynthesizer(accessToken: accessToken)
     }
     
+    deinit {
+        // stop talking and unduck
+    }
+    
     // MARK: - Methods
     
-    func changedIncomingSpokenInstructions(_ instructions: [SpokenInstruction]) {
+    public func changedIncomingSpokenInstructions(_ instructions: [SpokenInstruction]) {
         instructions
             .prefix(stepsAheadToCache)
             .forEach {
@@ -59,7 +65,7 @@ class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizerController {
         }
     }
     
-    func speak(_ instruction: SpokenInstruction, completion: SpeechSynthesizerCompletion?) {
+    public func speak(_ instruction: SpokenInstruction, completion: SpeechSynthesizerCompletion?) {
         if let data = cachedDataForKey(instruction.ssmlText) {
             safeDuckAudio(instruction: instruction)
             completion?(speakWithMapboxSynthesizer(instruction: instruction,
@@ -71,11 +77,11 @@ class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizerController {
         }
     }
     
-    func stopSpeaking() {
+    public func stopSpeaking() {
         audioPlayer?.stop()
     }
     
-    func interruptSpeaking() {
+    public func interruptSpeaking() {
         audioPlayer?.stop()
     }
     
@@ -86,7 +92,9 @@ class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizerController {
      */
     private func fetchAndSpeak(instruction: SpokenInstruction){
         audioTask?.cancel()
-        let ssmlText = instruction.ssmlText
+        
+        let modifiedInstruction = delegate?.voiceController(self, willSpeak: instruction) ?? instruction
+        let ssmlText = modifiedInstruction.ssmlText
         let options = SpeechOptions(ssml: ssmlText)
         options.locale = locale
                         
@@ -100,31 +108,47 @@ class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizerController {
                 self.completion?(error)
                 return
             } else if let error = error {
-                self.completion?(SpeechError.apiError(instruction: instruction,
-                                                  options: options,
-                                                  underlying: error))
+                self.delegate?.voiceController(self, spokenInstructionsDidFailWith: SpeechError.apiError(instruction: modifiedInstruction,
+                                                                                                    options: options,
+                                                                                                    underlying: error))
+                self.completion?(SpeechError.apiError(instruction: modifiedInstruction,
+                                                      options: options,
+                                                      underlying: error))
                 return
             }
             
             guard let data = data else {
-                self.completion?(SpeechError.noData(instruction: instruction,
+                self.delegate?.voiceController(self, spokenInstructionsDidFailWith: SpeechError.noData(instruction: modifiedInstruction,
+                                                                                                  options: options))
+                self.completion?(SpeechError.noData(instruction: modifiedInstruction,
                                                     options: options))
                 return
             }
             
             self.cache(data, forKey: ssmlText)
-            self.safeDuckAudio(instruction: instruction)
-            self.completion?(self.speakWithMapboxSynthesizer(instruction: instruction,
-                                                             instructionData: data))
+            self.safeDuckAudio(instruction: modifiedInstruction)
+            if let error = self.speakWithMapboxSynthesizer(instruction: modifiedInstruction,
+                                                           instructionData: data) {
+                self.delegate?.voiceController(self, spokenInstructionsDidFailWith: error)
+                self.completion?(error)
+            }
+            else {
+                self.completion?(nil)
+            }
         }
         
         audioTask?.resume()
     }
     
-    private func speakWithMapboxSynthesizer(instruction: SpokenInstruction, instructionData: Data) -> Error? {
+    private func speakWithMapboxSynthesizer(instruction: SpokenInstruction, instructionData: Data) -> SpeechError? {
         
-        if audioPlayer != nil {
-            interruptSpeaking()
+        if let audioPlayer = audioPlayer {
+            if let previousInstrcution = previousInstrcution, audioPlayer.isPlaying{
+                delegate?.voiceController(self,
+                                          didInterrupt: previousInstrcution,
+                                          with: instruction)
+            }
+            
             deinitAudioPlayer()
         }
         
@@ -133,16 +157,19 @@ class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizerController {
         case .success(let player):
             audioPlayer = player
             print("Mapbox SPEAKS!")
-            audioPlayer?.play() // do we need to retain audio player at all?
+            audioPlayer?.play()
+            previousInstrcution = instruction
             return nil
         case .failure(let error):
-            self.safeUnduckAudio(instruction: instruction)
+            safeUnduckAudio(instruction: instruction)
+            delegate?.voiceController(self, spokenInstructionsDidFailWith: error)
             return error
         }
     }
     
     private func downloadAndCacheSpokenInstruction(instruction: SpokenInstruction) {
-        let ssmlText = instruction.ssmlText
+        let modifiedInstruction = delegate?.voiceController(self, willSpeak: instruction) ?? instruction
+        let ssmlText = modifiedInstruction.ssmlText
         let options = SpeechOptions(ssml: ssmlText)
         options.locale = locale
         
@@ -167,7 +194,6 @@ class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizerController {
         } catch {
             return SpeechError.unableToControlAudio(instruction: instruction,
                                                     action: .duck,
-                                                    synthesizer: speech,
                                                     underlying: error)
         }
         return nil
@@ -181,7 +207,6 @@ class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizerController {
         } catch {
             return SpeechError.unableToControlAudio(instruction: instruction,
                                                     action: .duck,
-                                                    synthesizer: speech,
                                                     underlying: error)
         }
         return nil
@@ -198,7 +223,7 @@ class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizerController {
         return cachedDataForKey(key) != nil
     }
 
-    private func safeInitializeAudioPlayer(data: Data, instruction: SpokenInstruction) -> Result<AVAudioPlayer, Error> {
+    private func safeInitializeAudioPlayer(data: Data, instruction: SpokenInstruction) -> Result<AVAudioPlayer, SpeechError> {
         do {
             let player = try AVAudioPlayer(data: data)
             player.delegate = self

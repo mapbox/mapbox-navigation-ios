@@ -50,10 +50,9 @@ public enum SpeechError: LocalizedError {
      The speech engine was unable to perform an action on the system audio service.
      - parameter instruction: The instruction that failed.
      - parameter action: a `SpeechFailureAction` that describes the action attempted
-     - parameter synthesizer: the speech engine  that tried to perform the action.
      - parameter underlying: the `Error` that was optrionally returned by the audio service.
      */
-    case unableToControlAudio(instruction: SpokenInstruction?, action: SpeechFailureAction, synthesizer: Any?, underlying: Error?)
+    case unableToControlAudio(instruction: SpokenInstruction?, action: SpeechFailureAction, underlying: Error?)
     
     /**
      The speech engine was unable to initalize an audio player.

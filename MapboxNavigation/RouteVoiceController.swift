@@ -56,10 +56,9 @@ extension SpokenInstruction {
  If you need to supply a third-party speech synthesizer, define a subclass of `RouteVoiceController` that overrides the `speak(_:)` method. If the third-party speech synthesizer requires a network connection, you can instead subclass `MapboxVoiceController` to take advantage of its prefetching functionality.
  */
 open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
-    lazy var speechSynth = AVSpeechSynthesizer()
+    typealias AudioControlFailureHandler = (SpeechError) -> Void
     
-    let audioQueue = DispatchQueue(label: Bundle.mapboxNavigation.bundleIdentifier! + ".audio")
-    
+    public let speechSynthesizer: SpeechSynthesizerController
     /**
      If true, a noise indicating the user is going to be rerouted will play prior to rerouting.
      */
@@ -76,7 +75,6 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     public weak var voiceControllerDelegate: VoiceControllerDelegate?
     
     var lastSpokenInstruction: SpokenInstruction?
-    var routeProgress: RouteProgress?
     
     var volumeToken: NSKeyValueObservation?
     var muteToken: NSKeyValueObservation?
@@ -84,12 +82,13 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     /**
      Default initializer for `RouteVoiceController`.
      */
-        public init(navigationService: NavigationService) {
+    public init(navigationService: NavigationService, speechSynthesizer: SpeechSynthesizerController? = nil) {
+        self.speechSynthesizer = speechSynthesizer ?? MapboxSpeechSynthesizerController()
+        
         super.init()
 
         verifyBackgroundAudio()
 
-        speechSynth.delegate = self
         
         observeNotifications(by: navigationService)
     }
@@ -111,7 +110,6 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
 
     deinit {
         suspendNotifications()
-        speechSynth.stopSpeaking(at: .immediate)
     }
     
     func observeNotifications(by service: NavigationService) {
@@ -120,9 +118,10 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: .routeControllerDidReroute, object: service.router)
         
         muteToken = NavigationSettings.shared.observe(\.voiceMuted) { [weak self] (settings, change) in
-            if settings.voiceMuted {
-                self?.speechSynth.stopSpeaking(at: .immediate)
-            }
+            self?.speechSynthesizer.muted = settings.voiceMuted
+        }
+        volumeToken = NavigationSettings.shared.observe(\.voiceVolume) { [weak self] (settings, change) in
+            self?.speechSynthesizer.volume = settings.voiceVolume
         }
     }
     
@@ -144,60 +143,23 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
             return
         }
         
-        speechSynth.stopSpeaking(at: .word)
+        speechSynthesizer.stopSpeaking()
         
-        safeMixAudio(instruction: nil, engine: speechSynth) {
+        safeMixAudio(instruction: nil) {
             voiceControllerDelegate?.voiceController(self, spokenInstructionsDidFailWith: $0)
         }
         
         rerouteSoundPlayer.play()
     }
     
-    public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-        safeUnduckAudio(instruction: nil, engine: synthesizer) {
-            voiceControllerDelegate?.voiceController(self, spokenInstructionsDidFailWith: $0)
-        }
-    }
-    
-    typealias AudioControlFailureHandler = (SpeechError) -> Void
-    func safeDuckAudio(instruction: SpokenInstruction?, engine: Any?, failure: AudioControlFailureHandler) {
-        do {
-            try tryDuckAudio()
-        } catch {
-            let wrapped = SpeechError.unableToControlAudio(instruction: instruction, action: .duck, synthesizer: engine, underlying: error)
-            failure(wrapped)
-            return
-        }
-    }
-    
-    func safeUnduckAudio(instruction: SpokenInstruction?, engine: Any?, failure: AudioControlFailureHandler) {
-        do {
-            try tryUnduckAudio()
-        } catch {
-            let wrapped = SpeechError.unableToControlAudio(instruction: instruction, action: .duck, synthesizer: engine, underlying: error)
-            failure(wrapped)
-            return
-        }
-    }
-    
-    func safeMixAudio(instruction: SpokenInstruction?, engine: Any?, failure: AudioControlFailureHandler) {
+    func safeMixAudio(instruction: SpokenInstruction?, failure: AudioControlFailureHandler) {
         do {
             try tryMixAudio()
         } catch {
-            let wrapped = SpeechError.unableToControlAudio(instruction: instruction, action: .mix, synthesizer: engine, underlying: error)
+            let wrapped = SpeechError.unableToControlAudio(instruction: instruction, action: .mix, underlying: error)
             failure(wrapped)
             return
         }
-    }
-    
-    func tryDuckAudio() throws {
-        let audioSession = AVAudioSession.sharedInstance()
-        if #available(iOS 12.0, *) {
-            try audioSession.setCategory(.playback, mode: .voicePrompt, options: [.duckOthers, .mixWithOthers])
-        } else {
-            try audioSession.setCategory(.ambient, mode: .spokenAudio, options: [.duckOthers, .mixWithOthers])
-        }
-        try audioSession.setActive(true)
     }
     
     func tryMixAudio() throws {
@@ -205,59 +167,16 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         try audioSession.setCategory(.ambient, mode: audioSession.mode)
         try audioSession.setActive(true)
     }
-    
-    func tryUnduckAudio() throws {
-        try AVAudioSession.sharedInstance().setActive(false, options: [.notifyOthersOnDeactivation])
-    }
-    
+        
     @objc open func didPassSpokenInstructionPoint(notification: NSNotification) {
-        guard !NavigationSettings.shared.voiceMuted else { return }
+        let routeProgress = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as! RouteProgress
         
-        routeProgress = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
-        assert(routeProgress != nil, "routeProgress should not be nil.")
+        speechSynthesizer.locale = routeProgress.route.routeOptions.locale
 
-        guard let instruction = routeProgress!.currentLegProgress.currentStepProgress.currentSpokenInstruction else { return }
-        lastSpokenInstruction = instruction
-        speak(instruction)
-    }
-    
-    /**
-     Reads aloud the given instruction.
-     
-     - parameter instruction: The instruction to read aloud.
-     */
-    open func speak(_ instruction: SpokenInstruction) {
-        assert(routeProgress != nil, "routeProgress should not be nil.")
+        speechSynthesizer.changedIncomingSpokenInstructions(routeProgress.currentLegProgress.currentStepProgress.remainingSpokenInstructions ?? [])
         
-        if speechSynth.isSpeaking, let lastSpokenInstruction = lastSpokenInstruction {
-            voiceControllerDelegate?.voiceController(self, didInterrupt: lastSpokenInstruction, with: instruction)
-        }
-        
-        safeDuckAudio(instruction: instruction, engine: speechSynth) {
-            voiceControllerDelegate?.voiceController(self, spokenInstructionsDidFailWith: $0)
-        }
-        
-        var utterance: AVSpeechUtterance?
-        if Locale.preferredLocalLanguageCountryCode == "en-US" {
-            // Alex can’t handle attributed text.
-            utterance = AVSpeechUtterance(string: instruction.text)
-            utterance!.voice = AVSpeechSynthesisVoice(identifier: AVSpeechSynthesisVoiceIdentifierAlex)
-        }
-        
-        let modifiedInstruction = voiceControllerDelegate?.voiceController(self, willSpeak: instruction, routeProgress: routeProgress!) ?? instruction
-        
-        if utterance?.voice == nil {
-            utterance = AVSpeechUtterance(attributedString: modifiedInstruction.attributedText(for: routeProgress!.currentLegProgress))
-        }
-        
-        // Only localized languages will have a proper fallback voice
-        if utterance?.voice == nil {
-            utterance?.voice = AVSpeechSynthesisVoice(language: Locale.preferredLocalLanguageCountryCode)
-        }
-        
-        if let utterance = utterance {
-            speechSynth.speak(utterance)
-        }
+        guard let instruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction else { return }
+        speechSynthesizer.speak(instruction, completion: nil)
     }
 }
 
@@ -272,7 +191,7 @@ public protocol VoiceControllerDelegate: class, UnimplementedLogging {
      - parameter synthesizer: the Speech engine that was used as the fallback.
      - parameter error: An error explaining the failure and its cause.
      */
-    func voiceController(_ voiceController: RouteVoiceController, didFallBackTo synthesizer: AVSpeechSynthesizer, error: SpeechError)
+    func voiceController(_ voiceController: RouteVoiceController, didFallBackTo synthesizer: SpeechSynthesizerController, error: SpeechError)
    
     /**
      Called when the voice controller failed to speak an instruction.
@@ -305,7 +224,7 @@ public extension VoiceControllerDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
-    func voiceController(_ voiceController: RouteVoiceController, didFallBackTo synthesizer: AVSpeechSynthesizer, error: SpeechError) {
+    func voiceController(_ voiceController: RouteVoiceController, didFallBackTo synthesizer: SpeechSynthesizerController, error: SpeechError) {
         logUnimplemented(protocolType: VoiceControllerDelegate.self, level: .debug)
     }
     

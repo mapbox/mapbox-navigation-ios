@@ -8,6 +8,7 @@ import MapboxSpeech
 open class MapboxSpeechSynthesizerController: NSObject, SpeechSynthesizerController {
     
     // MARK: - Properties
+    public var delegate: SpeechSynthesizerDelegate?
     
     public var muted: Bool = false {
         didSet {
@@ -37,6 +38,9 @@ open class MapboxSpeechSynthesizerController: NSObject, SpeechSynthesizerControl
             MapboxSpeechSynthesizer(accessToken),
             SystemSpeechSynthesizer()
         ]
+        
+        super.init()
+        self.speechSynthesizers.forEach { $0.delegate = self }
     }
         
     // MARK: - Public Methods
@@ -84,5 +88,22 @@ open class MapboxSpeechSynthesizerController: NSObject, SpeechSynthesizerControl
     ///
     public func interruptSpeaking() {
         speechSynthesizers.forEach { $0.interruptSpeaking() }
+    }
+}
+
+extension MapboxSpeechSynthesizerController: SpeechSynthesizerDelegate {
+    
+    // Just forward delegate calls
+    
+    public func voiceController(_ voiceController: SpeechSynthesizerController, spokenInstructionsDidFailWith error: SpeechError) {
+        delegate?.voiceController(voiceController, spokenInstructionsDidFailWith: error)
+    }
+    
+    public func voiceController(_ voiceController: SpeechSynthesizerController, didInterrupt interruptedInstruction: SpokenInstruction, with interruptingInstruction: SpokenInstruction) {
+        delegate?.voiceController(voiceController, didInterrupt: interruptedInstruction, with: interruptingInstruction)
+    }
+    
+    public func voiceController(_ voiceController: SpeechSynthesizerController, willSpeak instruction: SpokenInstruction) -> SpokenInstruction? {
+        return delegate?.voiceController(voiceController, willSpeak: instruction)
     }
 }
