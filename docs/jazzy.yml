@@ -54,13 +54,7 @@ custom_categories:
       - MGLMapView
   - name: Styling
     children:
-      - LanesStyleKit
-      - ManeuversStyleKit
       - Style
-      - StylableLabel
-      - StylableView
-      - StylableTextView
-      - StylableButton
       - StyleManager
       - StyleManagerNotificationUserInfoKey
       - StyleManagerDelegate
@@ -71,16 +65,7 @@ custom_categories:
       - DistanceFormatter
   - name: UI Components
     children:
-      - Button
-      - DashedLineView
-      - HighlightedButton
-      - LineView
-      - ProgressBar
-      - SeparatorView
-      - SubtitleLabel
-      - TitleLabel
       - ManeuverView
-      - WayNameLabel
       - BottomBannerViewController
       - BottomBannerViewControllerDelegate
       - SpeedLimitView

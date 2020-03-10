@@ -3,7 +3,7 @@ import MapboxDirections
 import MapboxCoreNavigation
 import Turf
 
-/// :nodoc:
+/// A view that contains a simple image indicating a type of maneuver.
 @IBDesignable
 open class ManeuverView: UIView {
 
