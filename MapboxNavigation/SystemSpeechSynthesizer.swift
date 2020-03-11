@@ -9,13 +9,20 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizerController {
     // MARK: - Properties
     
     public var delegate: SpeechSynthesizerDelegate?
-    public var muted: Bool = false // ???
+    public var muted: Bool = false {
+        didSet {
+            if isSpeaking {
+                interruptSpeaking()
+            }
+        }
+    }
     public var volume: Float {
         get {
             return NavigationSettings.shared.voiceVolume
         }
         set {
-            // ?!?!?!
+            // Do Nothing
+            // AVSpeechSynthesizer uses 'AVAudioSession.sharedInstance().outputVolume' by default
         }
     }
     public var isSpeaking: Bool { return speechSynth.isSpeaking }
@@ -32,8 +39,19 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizerController {
     
     // MARK: - Lifecycle
     
+    override init() {
+        super.init()
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(processAudioSessionInterrupt(_:)),
+                                               name: AVAudioSession.interruptionNotification,
+                                               object: AVAudioSession.sharedInstance())
+    }
+    
     deinit {
-        // stop talking and unduck
+        NotificationCenter.default.removeObserver(self)
+        
+        interruptSpeaking()
     }
     
     // MARK: - Public methods
@@ -42,8 +60,12 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizerController {
         // Do nothing
     }
     
-    public func speak(_ instruction: SpokenInstruction, completion: SpeechSynthesizerCompletion?) {
+    public func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress, completion: SpeechSynthesizerCompletion?) {
         print("iOS SPEAKS!")
+        guard !muted else {
+            completion?(nil)
+            return
+        }
         
         var utterance: AVSpeechUtterance?
         if Locale.preferredLocalLanguageCountryCode == "en-US" {
@@ -55,7 +77,7 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizerController {
         let modifiedInstruction = delegate?.voiceController(self, willSpeak: instruction) ?? instruction
         
         if utterance?.voice == nil {
-            utterance = AVSpeechUtterance(string: modifiedInstruction.text)
+            utterance = AVSpeechUtterance(attributedString: modifiedInstruction.attributedText(for: legProgress))
         }
         
         // Only localized languages will have a proper fallback voice
@@ -64,13 +86,7 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizerController {
         }
         
         guard let utteranceToSpeak = utterance else {
-            // !?!?!?!!??!
-            let options = SpeechOptions(ssml: instruction.ssmlText)
-            options.locale = Locale.current
-            delegate?.voiceController(self, spokenInstructionsDidFailWith: SpeechError.noData(instruction: instruction,
-                                                                                              options: options))
-            completion?(SpeechError.noData(instruction: instruction,
-                                           options: options))
+            completion?(SpeechError.unsupportedLocale(languageCode: Locale.preferredLocalLanguageCountryCode))
             return
         }
         if let previousInstrcution = previousInstrcution, speechSynth.isSpeaking {
@@ -166,5 +182,9 @@ extension SystemSpeechSynthesizer: AVSpeechSynthesizerDelegate {
             completion?(nil)
         }
         completion = nil
+    }
+    
+    @objc func processAudioSessionInterrupt(_ notification: NSNotification) {
+        safeUnduckAudio() // run a completion?
     }
 }

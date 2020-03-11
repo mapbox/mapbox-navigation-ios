@@ -21,7 +21,7 @@ public protocol SpeechSynthesizerController: class {
     ///
     func changedIncomingSpokenInstructions(_ instructions: [SpokenInstruction])
     ///
-    func speak(_ instruction: SpokenInstruction, completion: SpeechSynthesizerCompletion?)
+    func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress, completion: SpeechSynthesizerCompletion?)
     
     ///
     func stopSpeaking()

@@ -1,5 +1,6 @@
 
 import AVFoundation
+import MapboxCoreNavigation
 import MapboxDirections
 import MapboxSpeech
 
@@ -10,17 +11,12 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizerController {
     public var delegate: SpeechSynthesizerDelegate?
     public var muted: Bool = false {
         didSet {
-            if muted {
-                audioPlayer?.stop()
-            }
+            updatePlayerVolume()
         }
     }
-    public var volume: Float {
-        get {
-            return audioPlayer?.volume ?? 1.0
-        }
-        set {
-            audioPlayer?.volume = newValue
+    public var volume: Float = 1.0 {
+        didSet {
+            audioPlayer?.volume = volume
         }
     }
     public var isSpeaking: Bool {
@@ -47,10 +43,20 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizerController {
     init(_ accessToken: String? = nil) {
         self.cache = DataCache()
         self.speech = SpeechSynthesizer(accessToken: accessToken)
+        
+        super.init()
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(processAudioSessionInterrupt(_:)),
+                                               name: AVAudioSession.interruptionNotification,
+                                               object: AVAudioSession.sharedInstance())
+        
     }
     
     deinit {
-        // stop talking and unduck
+        NotificationCenter.default.removeObserver(self)
+        
+        deinitAudioPlayer()
     }
     
     // MARK: - Methods
@@ -65,7 +71,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizerController {
         }
     }
     
-    public func speak(_ instruction: SpokenInstruction, completion: SpeechSynthesizerCompletion?) {
+    public func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress, completion: SpeechSynthesizerCompletion?) {
         if let data = cachedDataForKey(instruction.ssmlText) {
             safeDuckAudio(instruction: instruction)
             completion?(speakWithMapboxSynthesizer(instruction: instruction,
@@ -223,11 +229,15 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizerController {
         return cachedDataForKey(key) != nil
     }
 
+    private func updatePlayerVolume() {
+        audioPlayer?.volume = muted ? 0.0 : volume
+    }
+    
     private func safeInitializeAudioPlayer(data: Data, instruction: SpokenInstruction) -> Result<AVAudioPlayer, SpeechError> {
         do {
             let player = try AVAudioPlayer(data: data)
             player.delegate = self
-            player.volume = volume
+            updatePlayerVolume()
             
             return .success(player)
         } catch {
@@ -245,8 +255,11 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizerController {
 }
 
 extension MapboxSpeechSynthesizer: AVAudioPlayerDelegate {
-    // AVAudioSessionInterruptionNotification ?
     public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        safeUnduckAudio(instruction: nil)
+        safeUnduckAudio(instruction: previousInstrcution)
+    }
+    
+    @objc func processAudioSessionInterrupt(_ notification: NSNotification) {
+        safeUnduckAudio(instruction: previousInstrcution)
     }
 }

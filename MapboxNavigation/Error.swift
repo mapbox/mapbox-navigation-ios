@@ -32,7 +32,7 @@ public enum SpeechFailureAction: String {
  */
 public enum SpeechError: LocalizedError {
     /**
-     The Speech API Did not successfully return a response.
+     The speech engine API request resulted with internal error.
      - parameter instruction: the instruction that failed.
      - parameter options: the SpeechOptions that were used to make the API request.
      - parameter underlying: the underlying `Error` returned by the API.
@@ -40,7 +40,7 @@ public enum SpeechError: LocalizedError {
     case apiError(instruction: SpokenInstruction, options: SpeechOptions, underlying: Error?)
     
     /**
-     The Speech API Did not return any data.
+     The speech engine did not fail with the error itself, but did not provide actual data to vocalize.
      - parameter instruction: the instruction that failed.
      - parameter options: the SpeechOptions that were used to make the API request.
      */
@@ -68,5 +68,12 @@ public enum SpeechError: LocalizedError {
      - parameter instruction: The instruction that failed.
      - parameter progress: the offending `RouteProgress` that omits the expected `SpeechLocale`.
      */
-    case undefinedSpeechLocale(instruction: SpokenInstruction, progress: RouteProgress)
+    case undefinedSpeechLocale(instruction: SpokenInstruction, progress: RouteProgress) // to be removed?
+    
+    /**
+     The speech engine does not support current locale
+     - parameter languageCode: Language Code, which represents the adressed locale
+     */
+    case unsupportedLocale(languageCode: String)
+    
 }

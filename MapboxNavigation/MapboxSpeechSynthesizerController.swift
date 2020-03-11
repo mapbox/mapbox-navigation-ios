@@ -50,7 +50,7 @@ open class MapboxSpeechSynthesizerController: NSObject, SpeechSynthesizerControl
     }
     
     ///
-    public func speak(_ instruction: SpokenInstruction, completion: SpeechSynthesizerCompletion?) {
+    public func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress, completion: SpeechSynthesizerCompletion?) {
         print(instruction.text)
         
         guard let synthesizer = speechSynthesizers.first else { return }
@@ -67,7 +67,7 @@ open class MapboxSpeechSynthesizerController: NSObject, SpeechSynthesizerControl
                 print(error.localizedDescription)
                 i += 1
                 if i < self.speechSynthesizers.count {
-                    self.speechSynthesizers[i].speak(instruction, completion: recursiveCompletion)
+                    self.speechSynthesizers[i].speak(instruction, during: legProgress, completion: recursiveCompletion)
                 }
                 else {
                     completion?(error)
@@ -77,7 +77,7 @@ open class MapboxSpeechSynthesizerController: NSObject, SpeechSynthesizerControl
             completion?(nil)
         }
         
-        synthesizer.speak(instruction, completion: recursiveCompletion)
+        synthesizer.speak(instruction, during: legProgress, completion: recursiveCompletion)
     }
     
     ///
