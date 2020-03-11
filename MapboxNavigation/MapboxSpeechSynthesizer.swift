@@ -43,19 +43,9 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizerController {
     init(_ accessToken: String? = nil) {
         self.cache = DataCache()
         self.speech = SpeechSynthesizer(accessToken: accessToken)
-        
-        super.init()
-        
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(processAudioSessionInterrupt(_:)),
-                                               name: AVAudioSession.interruptionNotification,
-                                               object: AVAudioSession.sharedInstance())
-        
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-        
+    deinit {        
         deinitAudioPlayer()
     }
     
@@ -256,10 +246,6 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizerController {
 
 extension MapboxSpeechSynthesizer: AVAudioPlayerDelegate {
     public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        safeUnduckAudio(instruction: previousInstrcution)
-    }
-    
-    @objc func processAudioSessionInterrupt(_ notification: NSNotification) {
         safeUnduckAudio(instruction: previousInstrcution)
     }
 }

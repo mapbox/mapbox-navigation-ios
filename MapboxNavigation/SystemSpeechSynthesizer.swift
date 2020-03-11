@@ -38,19 +38,8 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizerController {
     private var previousInstrcution: SpokenInstruction?
     
     // MARK: - Lifecycle
-    
-    override init() {
-        super.init()
         
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(processAudioSessionInterrupt(_:)),
-                                               name: AVAudioSession.interruptionNotification,
-                                               object: AVAudioSession.sharedInstance())
-    }
-    
     deinit {
-        NotificationCenter.default.removeObserver(self)
-        
         interruptSpeaking()
     }
     
@@ -182,9 +171,5 @@ extension SystemSpeechSynthesizer: AVSpeechSynthesizerDelegate {
             completion?(nil)
         }
         completion = nil
-    }
-    
-    @objc func processAudioSessionInterrupt(_ notification: NSNotification) {
-        safeUnduckAudio() // run a completion?
     }
 }
