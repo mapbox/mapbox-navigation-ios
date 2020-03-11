@@ -34,7 +34,6 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizerController {
         return synth
     } ()
     
-    private var completion: SpeechSynthesizerCompletion?
     private var previousInstrcution: SpokenInstruction?
     
     // MARK: - Lifecycle
@@ -49,10 +48,12 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizerController {
         // Do nothing
     }
     
-    public func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress, completion: SpeechSynthesizerCompletion?) {
+    public func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress) {
         print("iOS SPEAKS!")
         guard !muted else {
-            completion?(nil)
+            delegate?.voiceController(self,
+                                      didSpeak: instruction,
+                                      with: nil)
             return
         }
         
@@ -75,7 +76,9 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizerController {
         }
         
         guard let utteranceToSpeak = utterance else {
-            completion?(SpeechError.unsupportedLocale(languageCode: Locale.preferredLocalLanguageCountryCode))
+            delegate?.voiceController(self,
+                                      didSpeak: instruction,
+                                      with: SpeechError.unsupportedLocale(languageCode: Locale.preferredLocalLanguageCountryCode))
             return
         }
         if let previousInstrcution = previousInstrcution, speechSynth.isSpeaking {
@@ -84,7 +87,6 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizerController {
                                       with: modifiedInstruction)
         }
         
-        self.completion = completion
         previousInstrcution = modifiedInstruction
         speechSynth.speak(utteranceToSpeak)
     }
@@ -99,8 +101,7 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizerController {
     
     // MARK: - Methods
     
-    @discardableResult
-    private func safeDuckAudio() -> SpeechError? {
+    private func safeDuckAudio() {
         do {
             let audioSession = AVAudioSession.sharedInstance()
             if #available(iOS 12.0, *) {
@@ -110,66 +111,69 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizerController {
             }
             try audioSession.setActive(true)
         } catch {
-            return SpeechError.unableToControlAudio(instruction: previousInstrcution,
-                                                    action: .duck,
-                                                    underlying: error)
+            guard let instruction = previousInstrcution else {
+                assert(false, "Speech Synthesizer finished speaking 'nil' instruction")
+                return
+            }
+            
+            delegate?.voiceController(self,
+                                      encounteredError: SpeechError.unableToControlAudio(instruction: instruction,
+                                                                                         action: .duck,
+                                                                                         underlying: error))
         }
-        return nil
     }
     
-    @discardableResult
-    private func safeUnduckAudio() -> SpeechError? {
+    private func safeUnduckAudio() {
         do {
             try AVAudioSession.sharedInstance().setActive(false,
                                                           options: [.notifyOthersOnDeactivation])
         } catch {
-            return SpeechError.unableToControlAudio(instruction: previousInstrcution,
-                                                    action: .duck,
-                                                    underlying: error)
+            guard let instruction = previousInstrcution else {
+                assert(false, "Speech Synthesizer finished speaking 'nil' instruction")
+                return
+            }
+            
+            delegate?.voiceController(self,
+                                      encounteredError: SpeechError.unableToControlAudio(instruction: instruction,
+                                                                                         action: .unduck,
+                                                                                         underlying: error))
         }
-        return nil
     }
 }
 
 extension SystemSpeechSynthesizer: AVSpeechSynthesizerDelegate {
     
     public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didStart utterance: AVSpeechUtterance) {
-        if let error = safeDuckAudio() {
-            delegate?.voiceController(self, spokenInstructionsDidFailWith: error)
-        }
+        safeDuckAudio()
     }
     
     public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didContinue utterance: AVSpeechUtterance) {
-        if let error = safeDuckAudio() {
-            delegate?.voiceController(self, spokenInstructionsDidFailWith: error)
-        }
+        safeDuckAudio()
     }
     
     public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-        if let error = safeUnduckAudio() {
-            delegate?.voiceController(self, spokenInstructionsDidFailWith: error)
-            completion?(error)
+        safeUnduckAudio()
+        guard let instruction = previousInstrcution else {
+            assert(false, "Speech Synthesizer finished speaking 'nil' instruction")
+            return
         }
-        else {
-            completion?(nil)
-        }
-        completion = nil
+        delegate?.voiceController(self,
+                                  didSpeak: instruction,
+                                  with: nil)
     }
     
     public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didPause utterance: AVSpeechUtterance) {
-        if let error = safeUnduckAudio() {
-            delegate?.voiceController(self, spokenInstructionsDidFailWith: error)
-        }
+        safeUnduckAudio()
     }
     
     public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
-        if let error = safeUnduckAudio() {
-            delegate?.voiceController(self, spokenInstructionsDidFailWith: error)
-            completion?(error)
+        safeUnduckAudio()
+        guard let instruction = previousInstrcution else {
+            assert(false, "Speech Synthesizer finished speaking 'nil' instruction")
+            return
         }
-        else {
-            completion?(nil)
-        }
-        completion = nil
+        delegate?.voiceController(self,
+                                  didSpeak: instruction,
+                                  with: nil)
     }
 }

@@ -30,6 +30,7 @@ open class MapboxSpeechSynthesizerController: NSObject, SpeechSynthesizerControl
     }
     
     private var speechSynthesizers: [SpeechSynthesizerController]
+    private var currentLegProgress: RouteLegProgress?
         
     // MARK: - Lifecycle
     
@@ -50,34 +51,19 @@ open class MapboxSpeechSynthesizerController: NSObject, SpeechSynthesizerControl
     }
     
     ///
-    public func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress, completion: SpeechSynthesizerCompletion?) {
+    public func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress) {
         print(instruction.text)
         
-        guard let synthesizer = speechSynthesizers.first else { return }
-        
-        var i = 0
-        var recursiveCompletion: SpeechSynthesizerCompletion?
-        recursiveCompletion = { [weak self] in
-            guard let self = self else {
-                completion?(nil)
-                return
-            }
-            
-            if let error = $0 {
-                print(error.localizedDescription)
-                i += 1
-                if i < self.speechSynthesizers.count {
-                    self.speechSynthesizers[i].speak(instruction, during: legProgress, completion: recursiveCompletion)
-                }
-                else {
-                    completion?(error)
-                }
-            }
-            
-            completion?(nil)
+        guard let synthesizer = speechSynthesizers.first else {
+            assert(false, "MapboxSpeechSynthesizerController has 0 speechSynthesizers")
+            delegate?.voiceController(self,
+                                      didSpeak: instruction,
+                                      with: nil)
+            return
         }
-        
-        synthesizer.speak(instruction, during: legProgress, completion: recursiveCompletion)
+                
+        currentLegProgress = legProgress
+        synthesizer.speak(instruction, during: legProgress)
     }
     
     ///
@@ -93,10 +79,34 @@ open class MapboxSpeechSynthesizerController: NSObject, SpeechSynthesizerControl
 
 extension MapboxSpeechSynthesizerController: SpeechSynthesizerDelegate {
     
+    public func voiceController(_ voiceController: SpeechSynthesizerController, didSpeak instruction: SpokenInstruction, with error: SpeechError?) {
+        if let error = error {
+            
+            
+            if let index = speechSynthesizers.firstIndex(where: { $0 === voiceController }),
+                let legProgress = currentLegProgress,
+                index + 1 < speechSynthesizers.count {
+                delegate?.voiceController(self,
+                                          encounteredError: error)
+                speechSynthesizers[index + 1].speak(instruction, during: legProgress)
+            }
+            else {
+                delegate?.voiceController(self,
+                                          didSpeak: instruction,
+                                          with: error)
+            }
+        }
+        else {
+            delegate?.voiceController(voiceController,
+                                      didSpeak: instruction,
+                                      with: nil)
+        }
+    }
+    
     // Just forward delegate calls
     
-    public func voiceController(_ voiceController: SpeechSynthesizerController, spokenInstructionsDidFailWith error: SpeechError) {
-        delegate?.voiceController(voiceController, spokenInstructionsDidFailWith: error)
+    public func voiceController(_ voiceController: SpeechSynthesizerController, encounteredError error: SpeechError) {
+        delegate?.voiceController(voiceController, encounteredError: error)
     }
     
     public func voiceController(_ voiceController: SpeechSynthesizerController, didInterrupt interruptedInstruction: SpokenInstruction, with interruptingInstruction: SpokenInstruction) {

@@ -21,7 +21,7 @@ public protocol SpeechSynthesizerController: class {
     ///
     func changedIncomingSpokenInstructions(_ instructions: [SpokenInstruction])
     ///
-    func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress, completion: SpeechSynthesizerCompletion?)
+    func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress)
     
     ///
     func stopSpeaking()
@@ -34,12 +34,19 @@ The `SpeechSynthesizerDelegate` protocol defines methods that allow an object to
  */
 public protocol SpeechSynthesizerDelegate: class, UnimplementedLogging {
     /**
-     Called when the voice controller failed to speak an instruction.
-     
+     Called when the voice controller encountered an error during processing, but may still be able to speak the instuction.
      - parameter voiceController: The voice controller that experienced the failure.
      - parameter error: An error explaining the failure and its cause.
      */
-    func voiceController(_ voiceController: SpeechSynthesizerController, spokenInstructionsDidFailWith error: SpeechError)
+    func voiceController(_ voiceController: SpeechSynthesizerController, encounteredError error: SpeechError)
+    
+    /**
+    Called when the voice controller finished pronouncing the instruction or encountered an error, which it cannot recover from.
+    - parameter voiceController: The voice controller performing the action.
+    - parameter instruction: The spoken instruction pronounced or attempted to pronounce
+    - parameter error: An error explaining the failure and its cause if any
+    */
+    func voiceController(_ voiceController: SpeechSynthesizerController, didSpeak instruction: SpokenInstruction, with error: SpeechError?)
     
     /**
      Called when one spoken instruction interrupts another instruction currently being spoken.
@@ -61,10 +68,18 @@ public protocol SpeechSynthesizerDelegate: class, UnimplementedLogging {
 }
 
 public extension VoiceControllerDelegate {
+    
     /**
-     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
-     */
-    func voiceController(_ voiceController: SpeechSynthesizerController, spokenInstructionsDidFailWith error: Error) {
+    `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+    */
+    func voiceController(_ voiceController: SpeechSynthesizerController, encounteredError error: SpeechError) {
+        logUnimplemented(protocolType: VoiceControllerDelegate.self, level: .debug)
+    }
+    
+    /**
+    `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+    */
+    func voiceController(_ voiceController: SpeechSynthesizerController, didSpeak instruction: SpokenInstruction, with error: SpeechError?) {
         logUnimplemented(protocolType: VoiceControllerDelegate.self, level: .debug)
     }
     

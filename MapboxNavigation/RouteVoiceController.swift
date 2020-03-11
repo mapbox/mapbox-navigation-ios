@@ -177,8 +177,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         
         guard let instruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction else { return }
         speechSynthesizer.speak(instruction,
-                                during: routeProgress.currentLegProgress,
-                                completion: nil)
+                                during: routeProgress.currentLegProgress)
     }
 }
 
