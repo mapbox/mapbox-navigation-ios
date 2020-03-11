@@ -22,7 +22,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizerController {
     public var isSpeaking: Bool {
         return audioPlayer?.isPlaying ?? false
     }
-    public var locale: Locale = Locale.autoupdatingCurrent // deware locale update. or make it immutable?
+    public var locale: Locale = Locale.autoupdatingCurrent
     
     public let stepsAheadToCache: Int = 3
     
@@ -65,14 +65,14 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizerController {
         instructions
             .prefix(stepsAheadToCache)
             .forEach {
-                if !hasCachedSpokenInstructionForKey($0.ssmlText) {
+                if !hasCachedSpokenInstructionForKey($0.ssmlText, with: locale) {
                     downloadAndCacheSpokenInstruction(instruction: $0)
                 }
         }
     }
     
     public func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress, completion: SpeechSynthesizerCompletion?) {
-        if let data = cachedDataForKey(instruction.ssmlText) {
+        if let data = cachedDataForKey(instruction.ssmlText, with: locale) {
             safeDuckAudio(instruction: instruction)
             completion?(speakWithMapboxSynthesizer(instruction: instruction,
                                               instructionData: data))
@@ -131,7 +131,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizerController {
                 return
             }
             
-            self.cache(data, forKey: ssmlText)
+            self.cache(data, forKey: ssmlText, with: self.locale)
             self.safeDuckAudio(instruction: modifiedInstruction)
             if let error = self.speakWithMapboxSynthesizer(instruction: modifiedInstruction,
                                                            instructionData: data) {
@@ -180,10 +180,10 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizerController {
         options.locale = locale
         
         speech.audioData(with: options) { [weak self] (data, error) in
-            guard let data = data else {
+            guard let data = data, let self = self else {
                 return
             }
-            self?.cache(data, forKey: ssmlText)
+            self.cache(data, forKey: ssmlText, with: self.locale)
         }.resume()
     }
     
@@ -218,15 +218,15 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizerController {
         return nil
     }
     
-    private func cache(_ data: Data, forKey key: String) {
-        cache.store(data, forKey: key, toDisk: true, completion: nil)
+    private func cache(_ data: Data, forKey key: String, with locale: Locale) {
+        cache.store(data, forKey: locale.identifier + key, toDisk: true, completion: nil)
     }
-    private func cachedDataForKey(_ key: String) -> Data? {
-        return cache.data(forKey: key)
+    private func cachedDataForKey(_ key: String, with locale: Locale) -> Data? {
+        return cache.data(forKey: locale.identifier + key)
     }
     
-    private func hasCachedSpokenInstructionForKey(_ key: String) -> Bool {
-        return cachedDataForKey(key) != nil
+    private func hasCachedSpokenInstructionForKey(_ key: String, with locale: Locale) -> Bool {
+        return cachedDataForKey(key, with: locale) != nil
     }
 
     private func updatePlayerVolume() {
