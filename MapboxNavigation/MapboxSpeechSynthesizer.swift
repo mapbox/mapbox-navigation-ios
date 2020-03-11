@@ -4,11 +4,14 @@ import MapboxCoreNavigation
 import MapboxDirections
 import MapboxSpeech
 
-open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizerController {
+/**
+ `SpeechSynthesizing` implementation, using `MapboxSpeech` framework. Uses pre-caching mechanism for upcoming instructions.
+ */
+open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     
     // MARK: - Properties
     
-    public var delegate: SpeechSynthesizerDelegate?
+    public var delegate: SpeechSynthesizingDelegate?
     public var muted: Bool = false {
         didSet {
             updatePlayerVolume()
@@ -116,7 +119,6 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizerController {
                 self.delegate?.voiceController(self,
                                                didSpeak: modifiedInstruction,
                                                with: SpeechError.noData(instruction: modifiedInstruction,
-                                                                        
                                                                         options: options))
                 return
             }

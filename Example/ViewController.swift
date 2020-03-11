@@ -406,7 +406,7 @@ extension ViewController: NavigationMapViewDelegate {
 // To use these delegate methods, set the `VoiceControllerDelegate` on your `VoiceController`.
 extension ViewController: VoiceControllerDelegate {
     // called when there is an error that requires the speech controller to fall back to a native engine.
-    func voiceController(_ voiceController: RouteVoiceController, didFallBackTo synthesizer: SpeechSynthesizerController, error: SpeechError) {
+    func voiceController(_ voiceController: RouteVoiceController, didFallBackTo synthesizer: SpeechSynthesizing, error: SpeechError) {
         print(error)
     }
     

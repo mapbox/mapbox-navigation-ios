@@ -47,18 +47,21 @@ extension SpokenInstruction {
 }
 
 /**
- A route voice controller plays spoken instructions as audio using the Speech Synthesis framework, also known as VoiceOver.
+ A route voice controller monitors turn-by-turn navigation events and triggers playing spoken instructions as audio using the Speech Synthesis framework, also known as VoiceOver.
  
- You initialize a voice controller using a `NavigationService` instance. The voice controller observes when the navigation service hints that the user has passed a _spoken instruction point_ and responds by reading aloud the contents of a `SpokenInstruction` object using an `AVSpeechSynthesizer` object.
+ You initialize a voice controller using a `NavigationService` instance. The voice controller observes when the navigation service hints that the user has passed a _spoken instruction point_ and responds by calling it's `speechSynthesizer` to handle the vocalization.
  
- The Speech Synthesis framework does not require a network connection, but the speech quality may be limited in some languages including English. By default, a `NavigationViewController` plays spoken instruction susing a subclass, `MapboxVoiceController`, that is powered by the [MapboxSpeech](https://github.com/mapbox/mapbox-speech-swift/) framework instead of the Speech Synthesis framework.
+ If you want to use your own custom `SpeechSynthesizing` implementation - also pass it during initialization. If no implementation is provided - `SpeechSynthesizersController` will be used by default.
  
- If you need to supply a third-party speech synthesizer, define a subclass of `RouteVoiceController` that overrides the `speak(_:)` method. If the third-party speech synthesizer requires a network connection, you can instead subclass `MapboxVoiceController` to take advantage of its prefetching functionality.
+ You can also subclass `RouteVoiceController` to implement you own mechanism of monitoring navgiation events and calling `speechSynthesizer`.
  */
 open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     typealias AudioControlFailureHandler = (SpeechError) -> Void
     
-    public let speechSynthesizer: SpeechSynthesizerController
+    /**
+     `SpeechSynthesizing` implementation, used to vocalize the spoken instructions. Defaults to `SpeechSynthesizersController`
+     */
+    public let speechSynthesizer: SpeechSynthesizing
     /**
      If true, a noise indicating the user is going to be rerouted will play prior to rerouting.
      */
@@ -82,14 +85,13 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     /**
      Default initializer for `RouteVoiceController`.
      */
-    public init(navigationService: NavigationService, speechSynthesizer: SpeechSynthesizerController? = nil) {
-        self.speechSynthesizer = speechSynthesizer ?? MapboxSpeechSynthesizerController()
+    public init(navigationService: NavigationService, speechSynthesizer: SpeechSynthesizing? = nil) {
+        self.speechSynthesizer = speechSynthesizer ?? SpeechSynthesizersController()
         
         super.init()
 
         verifyBackgroundAudio()
 
-        
         observeNotifications(by: navigationService)
     }
     
@@ -192,7 +194,7 @@ public protocol VoiceControllerDelegate: class, UnimplementedLogging {
      - parameter synthesizer: the Speech engine that was used as the fallback.
      - parameter error: An error explaining the failure and its cause.
      */
-    func voiceController(_ voiceController: RouteVoiceController, didFallBackTo synthesizer: SpeechSynthesizerController, error: SpeechError)
+    func voiceController(_ voiceController: RouteVoiceController, didFallBackTo synthesizer: SpeechSynthesizing, error: SpeechError)
    
     /**
      Called when the voice controller failed to speak an instruction.
@@ -225,7 +227,7 @@ public extension VoiceControllerDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
-    func voiceController(_ voiceController: RouteVoiceController, didFallBackTo synthesizer: SpeechSynthesizerController, error: SpeechError) {
+    func voiceController(_ voiceController: RouteVoiceController, didFallBackTo synthesizer: SpeechSynthesizing, error: SpeechError) {
         logUnimplemented(protocolType: VoiceControllerDelegate.self, level: .debug)
     }
     

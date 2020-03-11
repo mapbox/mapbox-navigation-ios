@@ -4,11 +4,14 @@ import MapboxDirections
 import MapboxCoreNavigation
 import MapboxSpeech
 
-open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizerController {
+/**
+ `SpeechSynthesizing` implementation, using `AVSpeechSynthesizer`. Supports only english language.
+ */
+open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
     
     // MARK: - Properties
     
-    public var delegate: SpeechSynthesizerDelegate?
+    public var delegate: SpeechSynthesizingDelegate?
     public var muted: Bool = false {
         didSet {
             if isSpeaking {
@@ -37,7 +40,7 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizerController {
     private var previousInstrcution: SpokenInstruction?
     
     // MARK: - Lifecycle
-        
+    
     deinit {
         interruptSpeaking()
     }
