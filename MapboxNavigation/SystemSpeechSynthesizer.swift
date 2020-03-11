@@ -54,9 +54,9 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
     public func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress) {
         print("iOS SPEAKS!")
         guard !muted else {
-            delegate?.voiceController(self,
-                                      didSpeak: instruction,
-                                      with: nil)
+            delegate?.speechSynthesizer(self,
+                                        didSpeak: instruction,
+                                        with: nil)
             return
         }
         
@@ -67,7 +67,7 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
             utterance!.voice = AVSpeechSynthesisVoice(identifier: AVSpeechSynthesisVoiceIdentifierAlex)
         }
         
-        let modifiedInstruction = delegate?.voiceController(self, willSpeak: instruction) ?? instruction
+        let modifiedInstruction = delegate?.speechSynthesizer(self, willSpeak: instruction) ?? instruction
         
         if utterance?.voice == nil {
             utterance = AVSpeechUtterance(attributedString: modifiedInstruction.attributedText(for: legProgress))
@@ -79,15 +79,15 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
         }
         
         guard let utteranceToSpeak = utterance else {
-            delegate?.voiceController(self,
-                                      didSpeak: instruction,
-                                      with: SpeechError.unsupportedLocale(languageCode: Locale.preferredLocalLanguageCountryCode))
+            delegate?.speechSynthesizer(self,
+                                        didSpeak: instruction,
+                                        with: SpeechError.unsupportedLocale(languageCode: Locale.preferredLocalLanguageCountryCode))
             return
         }
         if let previousInstrcution = previousInstrcution, speechSynth.isSpeaking {
-            delegate?.voiceController(self,
-                                      didInterrupt: previousInstrcution,
-                                      with: modifiedInstruction)
+            delegate?.speechSynthesizer(self,
+                                        didInterrupt: previousInstrcution,
+                                        with: modifiedInstruction)
         }
         
         previousInstrcution = modifiedInstruction
@@ -119,10 +119,10 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
                 return
             }
             
-            delegate?.voiceController(self,
-                                      encounteredError: SpeechError.unableToControlAudio(instruction: instruction,
-                                                                                         action: .duck,
-                                                                                         underlying: error))
+            delegate?.speechSynthesizer(self,
+                                        encounteredError: SpeechError.unableToControlAudio(instruction: instruction,
+                                                                                           action: .duck,
+                                                                                           underlying: error))
         }
     }
     
@@ -136,10 +136,10 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
                 return
             }
             
-            delegate?.voiceController(self,
-                                      encounteredError: SpeechError.unableToControlAudio(instruction: instruction,
-                                                                                         action: .unduck,
-                                                                                         underlying: error))
+            delegate?.speechSynthesizer(self,
+                                        encounteredError: SpeechError.unableToControlAudio(instruction: instruction,
+                                                                                           action: .unduck,
+                                                                                           underlying: error))
         }
     }
 }
@@ -160,9 +160,9 @@ extension SystemSpeechSynthesizer: AVSpeechSynthesizerDelegate {
             assert(false, "Speech Synthesizer finished speaking 'nil' instruction")
             return
         }
-        delegate?.voiceController(self,
-                                  didSpeak: instruction,
-                                  with: nil)
+        delegate?.speechSynthesizer(self,
+                                    didSpeak: instruction,
+                                    with: nil)
     }
     
     public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didPause utterance: AVSpeechUtterance) {
@@ -175,8 +175,8 @@ extension SystemSpeechSynthesizer: AVSpeechSynthesizerDelegate {
             assert(false, "Speech Synthesizer finished speaking 'nil' instruction")
             return
         }
-        delegate?.voiceController(self,
-                                  didSpeak: instruction,
-                                  with: nil)
+        delegate?.speechSynthesizer(self,
+                                    didSpeak: instruction,
+                                    with: nil)
     }
 }

@@ -90,43 +90,43 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     private func fetchAndSpeak(instruction: SpokenInstruction){
         audioTask?.cancel()
         
-        let modifiedInstruction = delegate?.voiceController(self, willSpeak: instruction) ?? instruction
+        let modifiedInstruction = delegate?.speechSynthesizer(self, willSpeak: instruction) ?? instruction
         let ssmlText = modifiedInstruction.ssmlText
         let options = SpeechOptions(ssml: ssmlText)
         options.locale = locale
-                        
+        
         audioTask = speech.audioData(with: options) { [weak self] (data, error) in
             guard let self = self else { return }
             if let speechError = error,
                 case let .unknown(response: _, underlying: underlyingError, code: _, message: _) = speechError,
                 let urlError = underlyingError as? URLError, urlError.code == .cancelled {
-                self.delegate?.voiceController(self,
-                                               didSpeak: modifiedInstruction,
-                                               with: SpeechError.apiError(instruction: modifiedInstruction,
-                                                                          options: options,
-                                                                          underlying: urlError))
+                self.delegate?.speechSynthesizer(self,
+                                                 didSpeak: modifiedInstruction,
+                                                 with: SpeechError.apiError(instruction: modifiedInstruction,
+                                                                            options: options,
+                                                                            underlying: urlError))
                 return
             } else if let error = error {
-                self.delegate?.voiceController(self,
-                                               didSpeak: modifiedInstruction,
-                                               with: SpeechError.apiError(instruction: modifiedInstruction,
-                                                                          options: options,
-                                                                          underlying: error))
+                self.delegate?.speechSynthesizer(self,
+                                                 didSpeak: modifiedInstruction,
+                                                 with: SpeechError.apiError(instruction: modifiedInstruction,
+                                                                            options: options,
+                                                                            underlying: error))
                 return
             }
             
             guard let data = data else {
-                self.delegate?.voiceController(self,
-                                               didSpeak: modifiedInstruction,
-                                               with: SpeechError.noData(instruction: modifiedInstruction,
-                                                                        options: options))
+                self.delegate?.speechSynthesizer(self,
+                                                 didSpeak: modifiedInstruction,
+                                                 with: SpeechError.noData(instruction: modifiedInstruction,
+                                                                          options: options))
                 return
             }
             
             self.cache(data, forKey: ssmlText, with: self.locale)
             self.safeDuckAudio(instruction: modifiedInstruction)
             self.speakWithMapboxSynthesizer(instruction: modifiedInstruction,
-                                                           instructionData: data)
+                                            instructionData: data)
         }
         
         audioTask?.resume()
@@ -136,9 +136,9 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
         
         if let audioPlayer = audioPlayer {
             if let previousInstrcution = previousInstrcution, audioPlayer.isPlaying{
-                delegate?.voiceController(self,
-                                          didInterrupt: previousInstrcution,
-                                          with: instruction)
+                delegate?.speechSynthesizer(self,
+                                            didInterrupt: previousInstrcution,
+                                            with: instruction)
             }
             
             deinitAudioPlayer()
@@ -153,14 +153,14 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
             audioPlayer?.play()
         case .failure(let error):
             safeUnduckAudio(instruction: instruction)
-            delegate?.voiceController(self,
-                                      didSpeak: instruction,
-                                      with: error)
+            delegate?.speechSynthesizer(self,
+                                        didSpeak: instruction,
+                                        with: error)
         }
     }
     
     private func downloadAndCacheSpokenInstruction(instruction: SpokenInstruction) {
-        let modifiedInstruction = delegate?.voiceController(self, willSpeak: instruction) ?? instruction
+        let modifiedInstruction = delegate?.speechSynthesizer(self, willSpeak: instruction) ?? instruction
         let ssmlText = modifiedInstruction.ssmlText
         let options = SpeechOptions(ssml: ssmlText)
         options.locale = locale
@@ -183,10 +183,10 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
             }
             try audioSession.setActive(true)
         } catch {
-            delegate?.voiceController(self,
-                                      encounteredError: SpeechError.unableToControlAudio(instruction: instruction,
-                                                                                         action: .duck,
-                                                                                         underlying: error))
+            delegate?.speechSynthesizer(self,
+                                        encounteredError: SpeechError.unableToControlAudio(instruction: instruction,
+                                                                                           action: .duck,
+                                                                                           underlying: error))
         }
     }
     
@@ -195,10 +195,10 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
             try AVAudioSession.sharedInstance().setActive(false,
                                                           options: [.notifyOthersOnDeactivation])
         } catch {
-            delegate?.voiceController(self,
-                                      encounteredError: SpeechError.unableToControlAudio(instruction: instruction,
-                                                                                         action: .unduck,
-                                                                                         underlying: error))
+            delegate?.speechSynthesizer(self,
+                                        encounteredError: SpeechError.unableToControlAudio(instruction: instruction,
+                                                                                           action: .unduck,
+                                                                                           underlying: error))
         }
     }
     
@@ -212,7 +212,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     private func hasCachedSpokenInstructionForKey(_ key: String, with locale: Locale) -> Bool {
         return cachedDataForKey(key, with: locale) != nil
     }
-
+    
     private func updatePlayerVolume() {
         audioPlayer?.volume = muted ? 0.0 : volume
     }
@@ -247,8 +247,8 @@ extension MapboxSpeechSynthesizer: AVAudioPlayerDelegate {
             return
         }
         
-        delegate?.voiceController(self,
-                                  didSpeak: instruction,
-                                  with: nil)
+        delegate?.speechSynthesizer(self,
+                                    didSpeak: instruction,
+                                    with: nil)
     }
 }

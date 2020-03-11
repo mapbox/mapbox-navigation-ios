@@ -33,7 +33,7 @@ open class SpeechSynthesizersController: SpeechSynthesizing {
     
     private var speechSynthesizers: [SpeechSynthesizing]
     private var currentLegProgress: RouteLegProgress?
-        
+    
     // MARK: - Lifecycle
     
     init(_ accessToken: String? = nil, speechSynthesizers: [SpeechSynthesizing]? = nil) {
@@ -44,7 +44,7 @@ open class SpeechSynthesizersController: SpeechSynthesizing {
         
         self.speechSynthesizers.forEach { $0.delegate = self }
     }
-        
+    
     // MARK: - Public Methods
     
     public func changedIncomingSpokenInstructions(_ instructions: [SpokenInstruction]) {
@@ -56,12 +56,12 @@ open class SpeechSynthesizersController: SpeechSynthesizing {
         
         guard let synthesizer = speechSynthesizers.first else {
             assert(false, "SpeechSynthesizersController has 0 speechSynthesizers")
-            delegate?.voiceController(self,
-                                      didSpeak: instruction,
-                                      with: nil)
+            delegate?.speechSynthesizer(self,
+                                        didSpeak: instruction,
+                                        with: nil)
             return
         }
-                
+        
         currentLegProgress = legProgress
         synthesizer.speak(instruction, during: legProgress)
     }
@@ -77,41 +77,41 @@ open class SpeechSynthesizersController: SpeechSynthesizing {
 
 extension SpeechSynthesizersController: SpeechSynthesizingDelegate {
     
-    public func voiceController(_ voiceController: SpeechSynthesizing, didSpeak instruction: SpokenInstruction, with error: SpeechError?) {
+    public func speechSynthesizer(_ speechSynthesizer: SpeechSynthesizing, didSpeak instruction: SpokenInstruction, with error: SpeechError?) {
         if let error = error {
             
             
-            if let index = speechSynthesizers.firstIndex(where: { $0 === voiceController }),
+            if let index = speechSynthesizers.firstIndex(where: { $0 === speechSynthesizer }),
                 let legProgress = currentLegProgress,
                 index + 1 < speechSynthesizers.count {
-                delegate?.voiceController(self,
-                                          encounteredError: error)
+                delegate?.speechSynthesizer(self,
+                                            encounteredError: error)
                 speechSynthesizers[index + 1].speak(instruction, during: legProgress)
             }
             else {
-                delegate?.voiceController(self,
-                                          didSpeak: instruction,
-                                          with: error)
+                delegate?.speechSynthesizer(self,
+                                            didSpeak: instruction,
+                                            with: error)
             }
         }
         else {
-            delegate?.voiceController(voiceController,
-                                      didSpeak: instruction,
-                                      with: nil)
+            delegate?.speechSynthesizer(speechSynthesizer,
+                                        didSpeak: instruction,
+                                        with: nil)
         }
     }
     
     // Just forward delegate calls
     
-    public func voiceController(_ voiceController: SpeechSynthesizing, encounteredError error: SpeechError) {
-        delegate?.voiceController(voiceController, encounteredError: error)
+    public func speechSynthesizer(_ speechSynthesizer: SpeechSynthesizing, encounteredError error: SpeechError) {
+        delegate?.speechSynthesizer(speechSynthesizer, encounteredError: error)
     }
     
-    public func voiceController(_ voiceController: SpeechSynthesizing, didInterrupt interruptedInstruction: SpokenInstruction, with interruptingInstruction: SpokenInstruction) {
-        delegate?.voiceController(voiceController, didInterrupt: interruptedInstruction, with: interruptingInstruction)
+    public func speechSynthesizer(_ speechSynthesizer: SpeechSynthesizing, didInterrupt interruptedInstruction: SpokenInstruction, with interruptingInstruction: SpokenInstruction) {
+        delegate?.speechSynthesizer(speechSynthesizer, didInterrupt: interruptedInstruction, with: interruptingInstruction)
     }
     
-    public func voiceController(_ voiceController: SpeechSynthesizing, willSpeak instruction: SpokenInstruction) -> SpokenInstruction? {
-        return delegate?.voiceController(voiceController, willSpeak: instruction)
+    public func speechSynthesizer(_ speechSynthesizer: SpeechSynthesizing, willSpeak instruction: SpokenInstruction) -> SpokenInstruction? {
+        return delegate?.speechSynthesizer(speechSynthesizer, willSpeak: instruction)
     }
 }
