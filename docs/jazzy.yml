@@ -22,16 +22,31 @@ custom_categories:
       - NavigationViewController
       - NavigationViewControllerDelegate
       - RouteVoiceController
+      - VoiceControllerDelegate
+      - MapboxVoiceController
+      - NavigationOptions
+      - NavigationView
   - name: Core Navigation Logic
     children:
       - NavigationService
+      - NavigationServiceDelegate
       - MapboxNavigationService
+      - Router
+      - RouterDataSource
       - RouteController
-      - RouteControllerDelegate
+      - RouterDelegate
       - RouteProgress
       - RouteLegProgress
       - RouteStepProgress
-      - RouteControllerNotificationUserInfoKey
+      - NavigationEventsManager
+      - EventsManagerDataSource
+      - NavigationLocationManager
+      - ReplayLocationManager
+      - SimulatedLocationManager
+      - NavigationRouteOptions
+      - NavigationMatchOptions
+      - NavigationDirections
+      - SimulationMode
   - name: Maps
     children:
       - NavigationMapView
@@ -40,29 +55,24 @@ custom_categories:
   - name: Styling
     children:
       - Style
-      - StyleKitArrows
-      - StylableButton
-      - StylableLabel
+      - StyleManager
+      - StyleManagerNotificationUserInfoKey
+      - StyleManagerDelegate
+      - DayStyle
+      - NightStyle
   - name: Formatters
     children:
       - DistanceFormatter
-      - RouteStepFormatter
   - name: UI Components
     children:
-      - RouteTableViewController
-      - NavigationPulleyViewController
-      - Button
-      - CellSubtitleLabel
-      - CellTitleLabel
-      - DashedLineView
-      - HighlightedButton
-      - LineView
-      - ProgressBar
-      - SeparatorView
-      - SubtitleLabel
-      - TitleLabel
-      - TurnArrowView
-      - WayNameLabel
+      - ManeuverView
+      - BottomBannerViewController
+      - BottomBannerViewControllerDelegate
+      - SpeedLimitView
+      - UserPuckCourseView
+      - CourseUpdatable
+      - GenericRouteShield
+      - NavigationComponent
   - name: CarPlay
     children:
       - CarPlayManager
@@ -70,20 +80,35 @@ custom_categories:
       - CarPlayNavigationViewController
       - CarPlayNavigationDelegate
       - CarPlayActivity
+      - CarPlayCompassView
+      - CarPlayMapViewController
+      - CarPlaySearchController
+      - CarPlayConnectionObserver
   - name: Configuration
     children:
-      - MaxSecondsSpentTravelingAwayFromStartOfRoute
       - RouteControllerDeadReckoningTimeInterval
+      - RouteControllerMediumAlertInterval
       - RouteControllerHighAlertInterval
       - RouteControllerManeuverZoneRadius
-      - RouteControllerMaxManipulatedCourseAngle
+      - RouteSnappingMaxManipulatedCourseAngle
       - RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion
       - RouteControllerMaximumDistanceBeforeRecalculating
-      - RouteControllerMediumAlertInterval
-      - RouteControllerMinimumDistanceForHighAlertCycling
-      - RouteControllerMinimumDistanceForHighAlertDriving
-      - RouteControllerMinimumDistanceForHighAlertWalking
-      - RouteControllerMinimumDistanceForMediumAlertCycling
-      - RouteControllerMinimumDistanceForMediumAlertDriving
-      - RouteControllerMinimumDistanceForMediumAlertWalking
       - RouteControllerUserLocationSnappingDistance
+      - MBCongestionAttribute
+      - MBCurrentLegAttribute
+      - MBRouteLineWidthByZoomLevel
+      - NavigationMapViewMinimumDistanceForOverheadZooming
+      - NavigationViewMinimumVolumeForWarning
+      - RouteControllerIncorrectCourseMultiplier
+      - RouteControllerLinkedInstructionBufferMultiplier
+      - RouteControllerMaximumSpeedForUsingCurrentStep
+      - RouteControllerMinNumberOfInCorrectCourses
+      - RouteControllerMinimumBacktrackingDistanceForRerouting
+      - RouteControllerMinimumDistanceForContinueInstruction
+      - RouteControllerMinimumDurationRemainingForProactiveRerouting
+      - RouteControllerMinimumNumberLocationUpdatesBackwards
+      - RouteControllerNumberOfSecondsForRerouteFeedback
+      - RouteControllerProactiveReroutingInterval
+      - RouteSnappingMinimumHorizontalAccuracy
+      - RouteSnappingMinimumSpeed
+      - NavigationSettings

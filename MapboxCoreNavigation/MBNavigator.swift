@@ -14,6 +14,7 @@ extension MBFixLocation {
     }
 }
 
+/// :nodoc:
 extension MBRouteState: CustomStringConvertible {
     public var description: String {
         switch self {

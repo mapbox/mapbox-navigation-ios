@@ -1,6 +1,6 @@
 import UIKit
 
-
+/// :nodoc:
 public class ManeuversStyleKit: NSObject {
 
     //// Drawing Methods
