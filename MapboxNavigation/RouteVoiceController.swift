@@ -73,9 +73,9 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     public var rerouteSoundPlayer: AVAudioPlayer = try! AVAudioPlayer(data: NSDataAsset(name: "reroute-sound", bundle: .mapboxNavigation)!.data, fileTypeHint: AVFileType.mp3.rawValue)
     
     /**
-     Delegate used for getting metadata information about a particular spoken instruction.
+     Delegate used for getting metadata information about route vocalization
      */
-    public weak var voiceControllerDelegate: VoiceControllerDelegate?
+    public weak var routeVoiceControllerDelegate: RouteVoiceControllerDelegate?
     
     var lastSpokenInstruction: SpokenInstruction?
     
@@ -148,7 +148,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         speechSynthesizer.stopSpeaking()
         
         safeMixAudio(instruction: nil) {
-            voiceControllerDelegate?.voiceController(self, spokenInstructionsDidFailWith: $0)
+            routeVoiceControllerDelegate?.routeVoiceController(self, encountered: $0)
         }
         
         rerouteSoundPlayer.play()
@@ -184,72 +184,23 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
 }
 
 /**
- The `VoiceControllerDelegate` protocol defines methods that allow an object to respond to significant events related to spoken instructions.
+ The `RouteVoiceControllerDelegate` protocol defines methods that allow an object to respond to significant events related to route vocalization
  */
-public protocol VoiceControllerDelegate: class, UnimplementedLogging {
+public protocol RouteVoiceControllerDelegate: class, UnimplementedLogging {
     /**
-     Called when the voice controller falls back to a backup speech syntehsizer, but is still able to speak the instruction.
+     Called when the route voice controller reports an error
      
-     - parameter voiceController: The voice controller that experienced the failure.
-     - parameter synthesizer: the Speech engine that was used as the fallback.
+     - parameter routeVoiceController: The route voice controller that experienced the failure.
      - parameter error: An error explaining the failure and its cause.
      */
-    func voiceController(_ voiceController: RouteVoiceController, didFallBackTo synthesizer: SpeechSynthesizing, error: SpeechError)
-   
-    /**
-     Called when the voice controller failed to speak an instruction.
-     
-     - parameter voiceController: The voice controller that experienced the failure.
-     - parameter error: An error explaining the failure and its cause.
-     */
-    func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: SpeechError)
-    
-    /**
-     Called when one spoken instruction interrupts another instruction currently being spoken.
-     
-     - parameter voiceController: The voice controller that experienced the interruption.
-     - parameter interruptedInstruction: The spoken instruction currently in progress that has been interrupted.
-     - parameter interruptingInstruction: The spoken instruction that is interrupting the current instruction.
-     */
-    func voiceController(_ voiceController: RouteVoiceController, didInterrupt interruptedInstruction: SpokenInstruction, with interruptingInstruction: SpokenInstruction)
-    
-    /**
-     Called when a spoken is about to speak. Useful if it is necessary to give a custom instruction instead. Noting, changing the `distanceAlongStep` property on `SpokenInstruction` will have no impact on when the instruction will be said.
-     
-     - parameter voiceController: The voice controller that will speak an instruction.
-     - parameter instruction: The spoken instruction that will be said.
-     - parameter routeProgress: The `RouteProgress` just before when the instruction is scheduled to be spoken.
-     */
-    func voiceController(_ voiceController: RouteVoiceController, willSpeak instruction: SpokenInstruction, routeProgress: RouteProgress) -> SpokenInstruction?
+    func routeVoiceController(_ routeVoiceController: RouteVoiceController, encountered error: SpeechError)
 }
 
-public extension VoiceControllerDelegate {
+public extension RouteVoiceControllerDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
-    func voiceController(_ voiceController: RouteVoiceController, didFallBackTo synthesizer: SpeechSynthesizing, error: SpeechError) {
-        logUnimplemented(protocolType: VoiceControllerDelegate.self, level: .debug)
-    }
-    
-    /**
-     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
-     */
-    func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: Error) {
-        logUnimplemented(protocolType: VoiceControllerDelegate.self, level: .debug)
-    }
-    
-    /**
-     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
-     */
-    func voiceController(_ voiceController: RouteVoiceController, didInterrupt interruptedInstruction: SpokenInstruction, with interruptingInstruction: SpokenInstruction) {
-        logUnimplemented(protocolType: VoiceControllerDelegate.self, level: .debug)
-    }
-    
-    /**
-     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
-     */
-    func voiceController(_ voiceController: RouteVoiceController, willSpeak instruction: SpokenInstruction, routeProgress: RouteProgress) -> SpokenInstruction? {
-        logUnimplemented(protocolType: VoiceControllerDelegate.self, level: .debug)
-        return nil
+    func routeVoiceController(_ routeVoiceController: RouteVoiceController, encountered error: SpeechError) {
+        logUnimplemented(protocolType: RouteVoiceControllerDelegate.self, level: .debug)
     }
 }

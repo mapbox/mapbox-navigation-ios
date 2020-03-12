@@ -31,7 +31,8 @@ open class SpeechSynthesizersController: SpeechSynthesizing {
         }
     }
     
-    private var speechSynthesizers: [SpeechSynthesizing]
+    public  let speechSynthesizers: [SpeechSynthesizing]
+    
     private var currentLegProgress: RouteLegProgress?
     
     // MARK: - Lifecycle
