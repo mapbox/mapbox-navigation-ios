@@ -201,15 +201,22 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      - parameter route: The route to navigate along.
      - parameter options: The navigation options to use for the navigation session.
      */
-    required public init(for route: Route,
+    required public init(for response: RouteResponse,
                          options: NavigationOptions? = nil) {
         super.init(nibName: nil, bundle: nil)
         
+        let route = response.routes!.first! //TODO: Safe-ish, but is there a better way?
+        
+        guard case let .route(routeOptions) = response.options else {
+            preconditionFailure() //FIXME: This is a smell.
+        }
+        
         self.navigationService = options?.navigationService ?? MapboxNavigationService(route: route)
         self.navigationService.delegate = self
-        self.voiceController = options?.voiceController ?? MapboxVoiceController(navigationService: navigationService, speechClient: SpeechSynthesizer(accessToken: navigationService?.directions.accessToken, host: navigationService?.directions.apiEndpoint.host))
+        let credentials = navigationService.directions.credentials
+        self.voiceController = options?.voiceController ?? MapboxVoiceController(navigationService: navigationService, speechClient: SpeechSynthesizer(accessToken: credentials.accessToken, host: credentials.host.absoluteString))
 
-        NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
+        NavigationSettings.shared.distanceUnit = routeOptions.locale.usesMetric ? .kilometer : .mile
         
         styleManager = StyleManager()
         styleManager.delegate = self
@@ -249,7 +256,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         mapViewController.view.pinInSuperview()
         mapViewController.reportButton.isHidden = !showsReportFeedback
         
-        if !(route.routeOptions is NavigationRouteOptions) {
+        if !(routeOptions is NavigationRouteOptions) {
             print("`Route` was created using `RouteOptions` and not `NavigationRouteOptions`. Although not required, this may lead to a suboptimal navigation experience. Without `NavigationRouteOptions`, it is not guaranteed you will get congestion along the route line, better ETAs and ETA label color dependent on congestion.")
         }
     }
@@ -260,9 +267,9 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      - parameter route: The route to navigate along.
      - parameter navigationService: The navigation service that manages navigation along the route.
      */
-    convenience init(route: Route, navigationService service: NavigationService) {
+    convenience init(response: RouteResponse, navigationService service: NavigationService) {
         let options = NavigationOptions(navigationService: service)
-        self.init(for: route, options: options)
+        self.init(for: response, options: options)
     }
     
     deinit {

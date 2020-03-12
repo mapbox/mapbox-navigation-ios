@@ -15,7 +15,7 @@ class StepsViewControllerTests: XCTestCase {
         let directions = Directions(accessToken: bogusToken)
         let dataSource = RouteControllerDataSourceFake()
         
-        let routeController = RouteController(along: initialRoute, directions: directions, dataSource: dataSource)
+        let routeController = RouteController(along: Constants.route, directions: directions, dataSource: dataSource)
         
         let stepsViewController = StepsViewController(routeProgress: routeController.routeProgress)
         
@@ -28,11 +28,6 @@ class StepsViewControllerTests: XCTestCase {
         return (stepsViewController: stepsViewController, routeController: routeController, firstLocation: firstLocation, lastLocation: lastLocation)
     }()
     
-    lazy var initialRoute: Route = {
-        let route = Constants.route
-        route.accessToken = "nonsense"
-        return route
-    }()
     
     func testRebuildStepsInstructionsViewDataSource() {
         let stepsViewController = dependencies.stepsViewController

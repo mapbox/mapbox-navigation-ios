@@ -220,6 +220,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
      - parameter routerType: An optional router type to use for traversing the route.
      */
     required public init(route: Route,
+                         routeOptions: RouteOptions,
                          directions: Directions? = nil,
                          locationSource: NavigationLocationManager? = nil,
                          eventsManagerType: NavigationEventsManager.Type? = nil,
@@ -240,8 +241,8 @@ public class MapboxNavigationService: NSObject, NavigationService {
         router = routerType.init(along: route, directions: self.directions, dataSource: self)
         
         let eventType = eventsManagerType ?? NavigationEventsManager.self
-        eventsManager = eventType.init(dataSource: self, accessToken: route.accessToken)
-        locationManager.activityType = route.routeOptions.activityType
+        eventsManager = eventType.init(dataSource: self, accessToken: directions!.credentials.accessToken)
+        locationManager.activityType = routeOptions.activityType
         bootstrapEvents()
         
         router.delegate = self

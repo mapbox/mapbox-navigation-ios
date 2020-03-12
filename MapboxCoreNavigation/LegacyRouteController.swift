@@ -58,7 +58,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
             return routeProgress.route
         }
         set {
-            routeProgress = RouteProgress(route: newValue)
+            routeProgress = RouteProgress(route: newValue, options: routeProgress.routeOptions)
         }
     }
 
@@ -80,7 +80,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     
     required public init(along route: Route, directions: Directions = Directions.shared, dataSource source: RouterDataSource) {
         self.directions = directions
-        self._routeProgress = RouteProgress(route: route)
+        self._routeProgress = RouteProgress(route: route, options: ) //FIXME: Finish This
         self.dataSource = source
         UIDevice.current.isBatteryMonitoringEnabled = true
 

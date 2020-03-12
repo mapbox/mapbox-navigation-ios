@@ -112,7 +112,7 @@ struct NavigationEventDetails: EventDetails {
         coordinate = dataSource.router.rawLocation?.coordinate
         startTimestamp = session.departureTimestamp ?? nil
         sdkIdentifier = defaultInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
-        profile = dataSource.routeProgress.route.routeOptions.profileIdentifier.rawValue
+        profile = dataSource.routeProgress.routeOptions.profileIdentifier.rawValue
         simulation = dataSource.locationProvider is SimulatedLocationManager.Type
         
         sessionIdentifier = session.identifier.uuidString
