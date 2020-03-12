@@ -48,11 +48,11 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
     
     // MARK: - Public methods
     
-    public func changedIncomingSpokenInstructions(_ instructions: [SpokenInstruction]) {
+    open func changedIncomingSpokenInstructions(_ instructions: [SpokenInstruction]) {
         // Do nothing
     }
     
-    public func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress) {
+    open func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress) {
         guard !muted else {
             delegate?.speechSynthesizer(self,
                                         didSpeak: instruction,
@@ -94,11 +94,11 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
         speechSynth.speak(utteranceToSpeak)
     }
     
-    public func stopSpeaking() {
+    open func stopSpeaking() {
         speechSynth.stopSpeaking(at: .word)
     }
     
-    public func interruptSpeaking() {
+    open func interruptSpeaking() {
         speechSynth.stopSpeaking(at: .immediate)
     }
     

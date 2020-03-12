@@ -53,7 +53,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     
     // MARK: - Methods
     
-    public func changedIncomingSpokenInstructions(_ instructions: [SpokenInstruction]) {
+    open func changedIncomingSpokenInstructions(_ instructions: [SpokenInstruction]) {
         instructions
             .prefix(stepsAheadToCache)
             .forEach {
@@ -63,7 +63,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
         }
     }
     
-    public func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress) {
+    open func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress) {
         if let data = cachedDataForKey(instruction.ssmlText, with: locale) {
             safeDuckAudio(instruction: instruction)
             speakWithMapboxSynthesizer(instruction: instruction,
@@ -74,11 +74,11 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
         }
     }
     
-    public func stopSpeaking() {
+    open func stopSpeaking() {
         audioPlayer?.stop()
     }
     
-    public func interruptSpeaking() {
+    open func interruptSpeaking() {
         audioPlayer?.stop()
     }
     
@@ -132,7 +132,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
         audioTask?.resume()
     }
     
-    private func speakWithMapboxSynthesizer(instruction: SpokenInstruction, instructionData: Data) {
+    func speakWithMapboxSynthesizer(instruction: SpokenInstruction, instructionData: Data) {
         
         if let audioPlayer = audioPlayer {
             if let previousInstrcution = previousInstrcution, audioPlayer.isPlaying{
