@@ -11,7 +11,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     
     // MARK: - Properties
     
-    public var delegate: SpeechSynthesizingDelegate?
+    public weak var delegate: SpeechSynthesizingDelegate?
     public var muted: Bool = false {
         didSet {
             updatePlayerVolume()
@@ -42,7 +42,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     
     // MARK: - Lifecycle
     
-    init(_ accessToken: String? = nil) {
+    public init(_ accessToken: String? = nil) {
         self.cache = DataCache()
         self.speech = SpeechSynthesizer(accessToken: accessToken)
     }

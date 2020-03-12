@@ -11,7 +11,7 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
     
     // MARK: - Properties
     
-    public var delegate: SpeechSynthesizingDelegate?
+    public weak var delegate: SpeechSynthesizingDelegate?
     public var muted: Bool = false {
         didSet {
             if isSpeaking {
@@ -30,16 +30,17 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
     }
     public var isSpeaking: Bool { return speechSynth.isSpeaking }
     public var locale: Locale = Locale.autoupdatingCurrent
-    
-    private lazy var speechSynth: AVSpeechSynthesizer = {
-        let synth = AVSpeechSynthesizer()
-        synth.delegate = self
-        return synth
-    } ()
-    
+
+    private var speechSynth: AVSpeechSynthesizer    
     private var previousInstrcution: SpokenInstruction?
     
     // MARK: - Lifecycle
+    
+    override public init() {
+        speechSynth = AVSpeechSynthesizer()
+        super.init()
+        speechSynth.delegate = self
+    }
     
     deinit {
         interruptSpeaking()

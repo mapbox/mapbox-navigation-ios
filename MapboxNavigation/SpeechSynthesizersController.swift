@@ -36,7 +36,7 @@ open class SpeechSynthesizersController: SpeechSynthesizing {
     
     // MARK: - Lifecycle
     
-    init(_ accessToken: String? = nil, speechSynthesizers: [SpeechSynthesizing]? = nil) {
+    public init(_ speechSynthesizers: [SpeechSynthesizing]? = nil, accessToken: String? = nil) {
         self.speechSynthesizers = speechSynthesizers ?? [
             MapboxSpeechSynthesizer(accessToken),
             SystemSpeechSynthesizer()

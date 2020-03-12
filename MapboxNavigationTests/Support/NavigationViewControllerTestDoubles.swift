@@ -11,13 +11,34 @@ class TestableDayStyle: DayStyle {
     }
 }
 
-class RouteVoiceControllerStub: RouteVoiceController {
-    override func speak(_ instruction: SpokenInstruction) {
-        //no-op
+class SpeechSynthesizerStub: SpeechSynthesizing {
+    weak var delegate: SpeechSynthesizingDelegate?
+    var muted: Bool = false
+    var volume: Float = 1.0
+    var isSpeaking: Bool = false
+    var locale: Locale = Locale.autoupdatingCurrent
+    
+    func changedIncomingSpokenInstructions(_ instructions: [SpokenInstruction]) {
+        // do nothing
     }
+    
+    func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress) {
+        // do nothing
+    }
+    
+    func stopSpeaking() {
+        // do nothing
+    }
+    
+    func interruptSpeaking() {
+        // do nothing
+    }
+}
 
-    override func pauseSpeechAndPlayReroutingDing(notification: NSNotification) {
-        //no-op
+class RouteVoiceControllerStub: RouteVoiceController {
+    override init(navigationService: NavigationService, speechSynthesizer: SpeechSynthesizing? = nil) {
+        super.init(navigationService: navigationService,
+                   speechSynthesizer: speechSynthesizer ?? SpeechSynthesizerStub())
     }
 }
 
