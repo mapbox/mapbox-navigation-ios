@@ -148,7 +148,6 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
                                          instruction: instruction) {
         case .success(let player):
             audioPlayer = player
-            print("Mapbox SPEAKS!")
             previousInstrcution = instruction
             audioPlayer?.play()
         case .failure(let error):

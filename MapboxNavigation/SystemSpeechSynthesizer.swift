@@ -31,7 +31,7 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
     public var isSpeaking: Bool { return speechSynth.isSpeaking }
     public var locale: Locale = Locale.autoupdatingCurrent
 
-    private var speechSynth: AVSpeechSynthesizer    
+    private var speechSynth: AVSpeechSynthesizer
     private var previousInstrcution: SpokenInstruction?
     
     // MARK: - Lifecycle
@@ -53,7 +53,6 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
     }
     
     public func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress) {
-        print("iOS SPEAKS!")
         guard !muted else {
             delegate?.speechSynthesizer(self,
                                         didSpeak: instruction,

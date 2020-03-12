@@ -52,9 +52,7 @@ open class SpeechSynthesizersController: SpeechSynthesizing {
         speechSynthesizers.forEach { $0.changedIncomingSpokenInstructions(instructions) }
     }
     
-    public func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress) {
-        print(instruction.text)
-        
+    public func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress) {        
         guard let synthesizer = speechSynthesizers.first else {
             assert(false, "SpeechSynthesizersController has 0 speechSynthesizers")
             delegate?.speechSynthesizer(self,

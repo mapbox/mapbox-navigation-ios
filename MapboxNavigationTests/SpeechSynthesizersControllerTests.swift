@@ -23,7 +23,7 @@ class SpeechSynthesizerMock: SpeechSynthesizerStub {
     }
 }
 
-class SpeechSynthesizersControllerTests: XCTestCase, SpeechSynthesizingDelegate {
+class SpeechSynthesizersControllerTests: XCTestCase {
 
     var synthesizers: [SpeechSynthesizing] = []
     
@@ -83,20 +83,12 @@ class SpeechSynthesizersControllerTests: XCTestCase, SpeechSynthesizingDelegate 
         (synthesizers[1] as! SpeechSynthesizerMock).deinitExpectation = deinitExpectation
         let dummyService = MapboxNavigationService(route: route)
         
-//        var synth: SpeechSynthesizersController? = SpeechSynthesizersController(synthesizers)
         var routeController: RouteVoiceController? = RouteVoiceController(navigationService: dummyService,
                                                                           speechSynthesizer: SpeechSynthesizersController(synthesizers))
         
         synthesizers = []
-//        synth = nil
         routeController = nil
         
         wait(for: [deinitExpectation], timeout: 3)
-    }
-
-    // MARK: - SpeechSynthesizingDelegate implemenation
-    
-    func speechSynthesizer(_ speechSynthesizer: SpeechSynthesizing, didSpeak instruction: SpokenInstruction, with error: SpeechError?) {
-        
     }
 }
