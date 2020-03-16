@@ -363,7 +363,7 @@ extension TopBannerViewController: NavigationComponent {
     public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
         instructionsBannerView.update(for: instruction)
         lanesView.update(for: instruction)
-        nextBannerView.update(for: instruction)
+        nextBannerView.navigationService(service, didPassVisualInstructionPoint: instruction, routeProgress: routeProgress)
     }
     
     public func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {
