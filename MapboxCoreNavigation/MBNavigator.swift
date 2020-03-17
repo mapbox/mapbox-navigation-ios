@@ -14,7 +14,7 @@ extension FixLocation {
     }
 }
 
-extension MBRouteState: CustomStringConvertible {
+extension RouteState: CustomStringConvertible {
     public var description: String {
         switch self {
         case .invalid:
@@ -29,6 +29,8 @@ extension MBRouteState: CustomStringConvertible {
             return "offRoute"
         case .stale:
             return "stale"
+        case .uncertain:
+            return "uncertain"
         @unknown default:
             fatalError("Indescribable route state \(rawValue)")
         }
