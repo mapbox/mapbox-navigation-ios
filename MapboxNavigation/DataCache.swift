@@ -1,14 +1,12 @@
 import Foundation
 
-public class DataCache: NSObject, BimodalDataCache {
+public class DataCache: BimodalDataCache {
     let memoryCache: NSCache<NSString, NSData>
     let fileCache = FileCache()
 
-    public override init() {
+    public init() {
         memoryCache = NSCache<NSString, NSData>()
         memoryCache.name = "In-Memory Data Cache"
-
-        super.init()
         
         NotificationCenter.default.addObserver(self, selector: #selector(DataCache.clearMemory), name: UIApplication.didReceiveMemoryWarningNotification, object: nil)
     }

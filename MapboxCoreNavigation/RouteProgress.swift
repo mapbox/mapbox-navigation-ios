@@ -272,7 +272,7 @@ open class RouteProgress: NSObject {
 /**
  `RouteLegProgress` stores the user’s progress along a route leg.
  */
-open class RouteLegProgress: NSObject {
+open class RouteLegProgress {
     /**
      Returns the current `RouteLeg`.
      */
@@ -281,7 +281,7 @@ open class RouteLegProgress: NSObject {
     /**
      Index representing the current step.
      */
-    @objc public var stepIndex: Int {
+    public var stepIndex: Int {
         didSet {
             assert(stepIndex >= 0 && stepIndex < leg.steps.endIndex)
             currentStepProgress = RouteStepProgress(step: currentStep)
@@ -515,7 +515,7 @@ open class RouteLegProgress: NSObject {
 /**
  `RouteStepProgress` stores the user’s progress along a route step.
  */
-open class RouteStepProgress: NSObject {
+open class RouteStepProgress {
     /**
      Returns the current `RouteStep`.
      */
