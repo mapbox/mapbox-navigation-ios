@@ -48,21 +48,6 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
         super.init(navigationService: navigationService)
         
         audioPlayer?.delegate = self
-        
-        volumeToken = NavigationSettings.shared.observe(\.voiceVolume) { [weak self] (settings, change) in
-            self?.audioPlayer?.volume = settings.voiceVolume
-        }
-        
-        muteToken = NavigationSettings.shared.observe(\.voiceMuted) { [weak self] (settings, change) in
-            if settings.voiceMuted {
-                self?.audioPlayer?.stop()
-                
-                guard let strongSelf = self else { return }
-                strongSelf.safeUnduckAudio(instruction: nil, engine: self?.speech) {
-                    strongSelf.voiceControllerDelegate?.voiceController(strongSelf, spokenInstructionsDidFailWith: $0)
-                }
-            }
-        }
     }
     
     deinit {
@@ -73,6 +58,19 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
         }
         
         audioPlayer?.delegate = nil
+    }
+    
+    @objc override func didUpdateSettings(notification: NSNotification) {
+        if let isMuted = notification.userInfo?[NavigationSettings.StoredProperty.voiceMuted.key] as? Bool, isMuted {
+            audioPlayer?.stop()
+            
+            safeUnduckAudio(instruction: nil, engine: speech) {
+                voiceControllerDelegate?.voiceController(self, spokenInstructionsDidFailWith: $0)
+            }
+        }
+        if let voiceVolume = notification.userInfo?[NavigationSettings.StoredProperty.voiceVolume.key] as? Float {
+            audioPlayer?.volume = voiceVolume
+        }
     }
     
     public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
