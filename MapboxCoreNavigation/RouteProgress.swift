@@ -5,7 +5,7 @@ import Turf
 /**
  `RouteProgress` stores the user’s progress along a route.
  */
-open class RouteProgress: NSObject {
+open class RouteProgress {
     private static let reroutingAccuracy: CLLocationAccuracy = 90
 
     /**
@@ -16,14 +16,17 @@ open class RouteProgress: NSObject {
     /**
      Index representing current `RouteLeg`.
      */
-    @objc dynamic public var legIndex: Int {
+    public var legIndex: Int {
         didSet {
             assert(legIndex >= 0 && legIndex < route.legs.endIndex)
             // TODO: Set stepIndex to 0 or last index based on whether leg index was incremented or decremented.
             currentLegProgress = RouteLegProgress(leg: currentLeg)
+            
+            legIndexHandler?(oldValue, legIndex)
         }
     }
-
+    typealias LegIndexHandlerAction = (_ oldValue: Int, _ newValue: Int) -> ()
+    var legIndexHandler: LegIndexHandlerAction?
     /**
      If waypoints are provided in the `Route`, this will contain which leg the user is on.
      */
@@ -175,7 +178,6 @@ open class RouteProgress: NSObject {
         self.route = route
         self.legIndex = legIndex
         self.currentLegProgress = RouteLegProgress(leg: route.legs[legIndex], stepIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
-        super.init()
 
         for (legIndex, leg) in route.legs.enumerated() {
             var maneuverCoordinateIndex = 0
