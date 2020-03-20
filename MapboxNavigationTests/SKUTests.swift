@@ -8,17 +8,20 @@ import MapboxNavigation
 class SKUTests: XCTestCase {
 
     // Billing per monthly active user (MAU), the default, corresponds to `MBXAccountsSKUID.navigationUser`.
-    func testDefaultSKU() {
-        let mapsSkuToken = MGLMapView.skuToken
+    
+    func testDirectionsSKU() {
         let directionsSkuToken = Directions.skuToken
-        let speechSkuToken = SpeechSynthesizer.skuToken
         
-        XCTAssertNotNil(mapsSkuToken)
-        XCTAssertNotNil(speechSkuToken)
         XCTAssertNotNil(directionsSkuToken)
         
-        XCTAssertEqual(mapsSkuToken?.skuId, SkuID.navigationUser.rawValue)
-        XCTAssertEqual(speechSkuToken?.skuId, SkuID.navigationUser.rawValue)
         XCTAssertEqual(directionsSkuToken?.skuId, SkuID.navigationUser.rawValue)
+    }
+    
+    func testSpeechSynthesizerSKU() {
+        let speechSkuToken = SpeechSynthesizer.skuToken
+        
+        XCTAssertNotNil(speechSkuToken)
+        
+        XCTAssertEqual(speechSkuToken?.skuId, SkuID.navigationUser.rawValue)
     }
 }

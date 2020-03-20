@@ -26,29 +26,8 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      onlyGenerateCoverageForSpecifiedTargets = "YES"
-      shouldUseLaunchSchemeArgsEnv = "NO">
-      <CodeCoverageTargets>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "351BEBD61E5BCC28006FE110"
-            BuildableName = "MapboxNavigation.framework"
-            BlueprintName = "MapboxNavigation"
-            ReferencedContainer = "container:MapboxNavigation.xcodeproj">
-         </BuildableReference>
-      </CodeCoverageTargets>
-      <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "35B711CE1E5E7AD2001EDA8D"
-               BuildableName = "MapboxNavigationTests.xctest"
-               BlueprintName = "MapboxNavigationTests"
-               ReferencedContainer = "container:MapboxNavigation.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-      </Testables>
+      shouldUseLaunchSchemeArgsEnv = "NO"
+      onlyGenerateCoverageForSpecifiedTargets = "YES">
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
@@ -70,8 +49,37 @@
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
-      <AdditionalOptions>
-      </AdditionalOptions>
+      <CodeCoverageTargets>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "351BEBD61E5BCC28006FE110"
+            BuildableName = "MapboxNavigation.framework"
+            BlueprintName = "MapboxNavigation"
+            ReferencedContainer = "container:MapboxNavigation.xcodeproj">
+         </BuildableReference>
+      </CodeCoverageTargets>
+      <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "35B711CE1E5E7AD2001EDA8D"
+               BuildableName = "MapboxNavigationTests.xctest"
+               BlueprintName = "MapboxNavigationTests"
+               ReferencedContainer = "container:MapboxNavigation.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "2B2B1EDC2424B95600FA18A6"
+               BuildableName = "ExampleUITests.xctest"
+               BlueprintName = "ExampleUITests"
+               ReferencedContainer = "container:MapboxNavigation.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+      </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -92,8 +100,6 @@
             ReferencedContainer = "container:MapboxNavigation.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

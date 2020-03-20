@@ -3,7 +3,7 @@ import MapboxSpeech
 import MapboxDirections
 import OHHTTPStubs
 
-
+#if DEBUG
 extension MGLMapView {
     
     @objc class var skuToken: String? {
@@ -55,6 +55,14 @@ extension URL {
         return urlComponents?.queryItems?.filter { $0.name == key }.first
     }
     
+    var isMapboxAPIURL: Bool {
+        guard let urlComponents = URLComponents(url: self, resolvingAgainstBaseURL: true) else { return false }
+        guard let host = urlComponents.host else { return false }
+        guard host.contains("api.mapbox.com") else { return false }
+        
+        return true
+    }
+    
     var isMapboxStyleURL: Bool {
         guard let urlComponents = URLComponents(url: self, resolvingAgainstBaseURL: true) else { return false }
         guard let host = urlComponents.host else { return false }
@@ -64,16 +72,4 @@ extension URL {
         return true
     }
 }
-
-extension String {
-    var skuId: String {
-        return String(prefix(3).dropFirst())
-    }
-}
-
-enum SkuID: String {
-    typealias RawValue = String
-    case mapsUser = "00"
-    case navigationUser = "02"
-    case navigationSession = "03"
-}
+#endif
