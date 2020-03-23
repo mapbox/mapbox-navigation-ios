@@ -6,9 +6,9 @@ import OHHTTPStubs
 
 extension ViewController {
     func testSKUTokens() {
-        if let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .allDomainsMask).first {
-            try? FileManager.default.removeItem(at: cachesDirectory)
-        }
+        // Force cache-cleaning
+        NotificationCenter.default.post(name: UIApplication.didReceiveMemoryWarningNotification,
+                                        object: nil)
         
         let semaphore = DispatchSemaphore(value: 0)
         var mapViewSkuToken: String?
