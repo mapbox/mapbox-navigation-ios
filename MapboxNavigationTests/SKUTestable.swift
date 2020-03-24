@@ -1,9 +1,9 @@
+#if DEBUG
 import Mapbox
 import MapboxSpeech
 import MapboxDirections
 import OHHTTPStubs
 
-#if DEBUG
 extension MGLMapView {
     
     @objc class var skuToken: String? {
