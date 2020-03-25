@@ -33,7 +33,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         }
         set {
             navigationService.route = newValue
-            NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
+            NavigationSettings.shared.distanceUnit = routeOptions.locale.usesMetric ? .kilometer : .mile
             
             navigationComponents.forEach { $0.navigationService(navigationService, didRerouteAlong: newValue, at: nil, proactive: false) }
         }
@@ -211,7 +211,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
             preconditionFailure() //FIXME: This is a smell.
         }
         
-        self.navigationService = options?.navigationService ?? MapboxNavigationService(route: route)
+        self.navigationService = options?.navigationService ?? MapboxNavigationService(route: route, routeOptions: routeOptions)
         self.navigationService.delegate = self
         let credentials = navigationService.directions.credentials
         self.voiceController = options?.voiceController ?? MapboxVoiceController(navigationService: navigationService, speechClient: SpeechSynthesizer(accessToken: credentials.accessToken, host: credentials.host.absoluteString))

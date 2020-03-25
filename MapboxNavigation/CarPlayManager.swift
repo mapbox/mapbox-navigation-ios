@@ -227,8 +227,9 @@ public class CarPlayManager: NSObject {
      */
     public func beginNavigationWithCarPlay(using currentLocation: CLLocationCoordinate2D, navigationService: NavigationService) {
         let route = navigationService.route
+        let routeOptions = navigationService.routeProgress.routeOptions
         
-        var trip = CPTrip(routes: [route], routeOptions: route.routeOptions, waypoints: route.routeOptions.waypoints)
+        var trip = CPTrip(routes: [route], routeOptions: routeOptions, waypoints: routeOptions.waypoints)
         trip = delegate?.carPlayManager(self, willPreview: trip) ?? trip
         
         self.navigationService = navigationService
@@ -464,13 +465,13 @@ extension CarPlayManager: CPMapTemplateDelegate {
 
         mapTemplate.hideTripPreviews()
 
-        let route = routeChoice.userInfo as! Route
+        let (route, options) = routeChoice.userInfo as! (Route, RouteOptions)
         
         let desiredSimulationMode: SimulationMode = simulatesLocations ? .always : .onPoorGPS
         
         let service = navigationService ??
             delegate?.carPlayManager(self, navigationServiceAlong: route, desiredSimulationMode: desiredSimulationMode) ??
-            MapboxNavigationService(route: route, simulating: desiredSimulationMode)
+            MapboxNavigationService(route: route, routeOptions: options, simulating: desiredSimulationMode)
         
         navigationService = service //store the service it was newly created/fetched
 
@@ -535,7 +536,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         }
         carPlayMapViewController.isOverviewingRoutes = true
         let mapView = carPlayMapViewController.mapView
-        let route = routeChoice.userInfo as! Route
+        let (route, _) = routeChoice.userInfo as! (Route, RouteOptions)
         
         let estimates = CPTravelEstimates(distanceRemaining: Measurement(distance: route.distance).localized(),
                                           timeRemaining: route.expectedTravelTime)
