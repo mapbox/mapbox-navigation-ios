@@ -206,8 +206,8 @@ public class MapboxNavigationService: NSObject, NavigationService {
      
      - parameter route: The route to follow.
      */
-    convenience init(route: Route) {
-        self.init(route: route, directions: nil, locationSource: nil, eventsManagerType: nil)
+    convenience init(route: Route, routeOptions options: RouteOptions) {
+        self.init(route: route, routeOptions: options, directions: nil, locationSource: nil, eventsManagerType: nil)
     }
     /**
      Intializes a new `NavigationService`.
@@ -238,7 +238,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         }
         
         let routerType = routerType ?? DefaultRouter.self
-        router = routerType.init(along: route, directions: self.directions, dataSource: self)
+        router = routerType.init(along: route, options: routeOptions, directions: self.directions, dataSource: self)
         
         let eventType = eventsManagerType ?? NavigationEventsManager.self
         eventsManager = eventType.init(dataSource: self, accessToken: directions!.credentials.accessToken)

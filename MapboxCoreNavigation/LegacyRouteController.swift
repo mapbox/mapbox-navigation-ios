@@ -11,7 +11,7 @@ protocol RouteControllerDataSource: class {
 }
 
 @available(*, deprecated, renamed: "RouteController")
-open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationManagerDelegate {    
+open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationManagerDelegate {
     
     public weak var delegate: RouterDelegate?
 
@@ -78,9 +78,9 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
 
     var userSnapToStepDistanceFromManeuver: CLLocationDistance?
     
-    required public init(along route: Route, directions: Directions = Directions.shared, dataSource source: RouterDataSource) {
+    required public init(along route: Route, options: RouteOptions, directions: Directions = Directions.shared, dataSource source: RouterDataSource) {
         self.directions = directions
-        self._routeProgress = RouteProgress(route: route, options: ) //FIXME: Finish This
+        self._routeProgress = RouteProgress(route: route, options: options)
         self.dataSource = source
         UIDevice.current.isBatteryMonitoringEnabled = true
 
@@ -359,24 +359,28 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
 
         self.lastRerouteLocation = location
 
-        getDirections(from: location, along: progress) { [weak self] (route, error) in
+        getDirections(from: location, along: progress) { [weak self] (session, result) in
             guard let strongSelf = self else {
                 return
             }
-
-			strongSelf.isRerouting = false
-            if let error = error {
+            
+            strongSelf.isRerouting = false
+            switch result {
+            case let .failure(error):
                 strongSelf.delegate?.router(strongSelf, didFailToRerouteWith: error)
-                NotificationCenter.default.post(name: .routeControllerDidFailToReroute, object: self, userInfo: [
-                    RouteController.NotificationUserInfoKey.routingErrorKey: error,
-                ])
-                return
+                 NotificationCenter.default.post(name: .routeControllerDidFailToReroute, object: self, userInfo: [
+                     RouteController.NotificationUserInfoKey.routingErrorKey: error,
+                 ])
+                 return
+            case let .success(response):
+                guard case let .route(options) = response.options, let route = response.routes?.first else {
+                    return
+                }
+                strongSelf.route = route
+                strongSelf._routeProgress = RouteProgress(route: route, options: options, legIndex: 0)
+                strongSelf._routeProgress.currentLegProgress.stepIndex = 0
+                strongSelf.announce(reroute: route, at: location, proactive: false)
             }
-
-            guard let route = route else { return }
-            strongSelf._routeProgress = RouteProgress(route: route, legIndex: 0)
-            strongSelf._routeProgress.currentLegProgress.stepIndex = 0
-            strongSelf.announce(reroute: route, at: location, proactive: false)
         }
     }
 

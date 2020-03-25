@@ -35,7 +35,7 @@ public protocol Router: class, CLLocationManagerDelegate {
      - parameter directions: The Directions object that created `route`.
      - parameter source: The data source for the RouteController.
      */
-    init(along route: Route, directions: Directions, dataSource source: RouterDataSource)
+    init(along route: Route, options: RouteOptions, directions: Directions, dataSource source: RouterDataSource)
     
     /**
      Details about the user’s progress along the current route, leg, and step.
