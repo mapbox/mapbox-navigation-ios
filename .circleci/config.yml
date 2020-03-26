@@ -40,7 +40,7 @@ step-library:
       run:
         name: Prepare
         command: |
-          if [ $(carthage outdated | grep -cF "latest Carthage version") -eq 0 ]; then brew update && brew upgrade carthage || true; fi
+          if [ $(carthage outdated | grep -cF "latest Carthage version") -eq 0 ]; then brew update && brew upgrade carthage --HEAD || true; fi
           echo "foo" > ~/.mapbox
 
   - &verify-missing-localizable-strings
@@ -133,6 +133,10 @@ jobs:
           condition: << parameters.delete_private_deps >>
           steps:
             - run: rm -rf Cartfile.private && rm -rf Cartfile.resolved
+      - netrc/configure:
+          machine: dl.bintray.com
+          login: ${BINTRAY_USER}
+          password: ${BINTRAY_KEY}
       - *install-dependencies
       - *save-cache
       - run:

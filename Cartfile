@@ -1,6 +1,6 @@
 binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" ~> 5.6
 # binary "https://www.mapbox.com/ios-sdk/MapboxNavigationNative.json" ~> 9.2.1
-binary "https://s3.amazonaws.com/mapbox/mapbox-navigation-native/ios/builds/Mapbox-iOS-Navigation-Native.json" ~> 9.2.1
+binary "https://s3.amazonaws.com/mapbox/mapbox-navigation-native/ios/builds/Mapbox-iOS-Navigation-Native.json" ~> 10.0.1
 github "mapbox/MapboxDirections.swift" "ac-JunctionViewsDraft"
 github "mapbox/turf-swift" ~> 0.3
 github "mapbox/mapbox-events-ios" ~> 0.10
