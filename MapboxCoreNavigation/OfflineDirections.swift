@@ -100,7 +100,7 @@ public typealias UnpackCompletionHandler = (_ numberOfTiles: UInt64, _ error: Er
  If the request was canceled or there was an error obtaining the routes, this argument is `nil`. This is not to be confused with the situation in which no results were found, in which case the array is present but empty.
  - parameter error: The error that occurred, or `nil` if the placemarks were obtained successfully.
  */
-public typealias OfflineRouteCompletionHandler = (_ session: Directions.DirectionsSession, _ result: Result<RouteResponse, OfflineRoutingError>) -> Void
+public typealias OfflineRouteCompletionHandler = (_ session: Directions.Session, _ result: Result<RouteResponse, OfflineRoutingError>) -> Void
 
 /**
  A `NavigationDirections` object provides you with optimal directions between different locations, or waypoints. The directions object passes your request to a built-in routing engine and returns the requested information to a closure (block) that you provide. A directions object can handle multiple simultaneous requests. A `RouteOptions` object specifies criteria for the results, such as intermediate waypoints, a mode of transportation, or the level of detail to be returned. In addition to `Directions`, `NavigationDirections` provides support for offline routing.
@@ -192,7 +192,7 @@ public class NavigationDirections: Directions {
         }
         
         let url = self.url(forCalculating: options)
-        let session: Directions.DirectionsSession = (options: options, credentials: self.credentials)
+        let session: Directions.Session = (options: options, credentials: self.credentials)
         
         NavigationDirectionsConstants.offlineSerialQueue.async { [weak self] in
             guard let result = self?.navigator.getRouteForDirectionsUri(url.absoluteString) else {

@@ -33,9 +33,14 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         }
         set {
             navigationService.route = newValue
-            NavigationSettings.shared.distanceUnit = routeOptions.locale.usesMetric ? .kilometer : .mile
             
             navigationComponents.forEach { $0.navigationService(navigationService, didRerouteAlong: newValue, at: nil, proactive: false) }
+        }
+    }
+    
+    public var routeOptions: RouteOptions {
+        get {
+            return navigationService.routeProgress.routeOptions
         }
     }
     
@@ -205,11 +210,13 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
                          options: NavigationOptions? = nil) {
         super.init(nibName: nil, bundle: nil)
         
-        let route = response.routes!.first! //TODO: Safe-ish, but is there a better way?
+        let route = response.routes!.first!
         
         guard case let .route(routeOptions) = response.options else {
             preconditionFailure() //FIXME: This is a smell.
         }
+        
+        
         
         self.navigationService = options?.navigationService ?? MapboxNavigationService(route: route, routeOptions: routeOptions)
         self.navigationService.delegate = self

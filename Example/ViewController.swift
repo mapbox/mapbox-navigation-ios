@@ -5,7 +5,7 @@ import MapboxDirections
 import UserNotifications
 import AVKit
 
-private typealias RouteRequestSuccess = (([Route]) -> Void)
+private typealias RouteRequestSuccess = ((RouteResponse) -> Void)
 private typealias RouteRequestFailure = ((Error) -> Void)
 
 class ViewController: UIViewController {
@@ -35,14 +35,15 @@ class ViewController: UIViewController {
         }
     }
 
-    var routes: [Route]? {
+    var response: RouteResponse? {
         didSet {
-            startButton.isEnabled = (routes?.count ?? 0 > 0)
-            guard let routes = routes, let current = routes.first else {
+            guard let routes = response?.routes, let current = routes.first else {
+                startButton.isEnabled = false
                 mapView?.removeRoutes()
                 return
+                
             }
-
+            startButton.isEnabled = true
             mapView?.show(routes)
             mapView?.showWaypoints(on: current)
         }
@@ -52,17 +53,17 @@ class ViewController: UIViewController {
 
     // MARK: Directions Request Handlers
 
-    fileprivate lazy var defaultSuccess: RouteRequestSuccess = { [weak self] (routes) in
-        guard let current = routes.first else { return }
+    fileprivate lazy var defaultSuccess: RouteRequestSuccess = { [weak self] (response) in
+        guard let current = response.routes?.first, case let .route(options) = response.options else { return }
         self?.mapView?.removeWaypoints()
-        self?.routes = routes
-        self?.waypoints = current.routeOptions.waypoints
+        self?.response = response
+        self?.waypoints = options.waypoints
         self?.clearMap.isHidden = false
         self?.longPressHintView.isHidden = true
     }
 
     fileprivate lazy var defaultFailure: RouteRequestFailure = { [weak self] (error) in
-        self?.routes = nil //clear routes from the map
+        self?.response = nil //clear routes from the map
         print(error.localizedDescription)
         self?.presentAlert(message: error.localizedDescription)
     }
@@ -207,62 +208,65 @@ class ViewController: UIViewController {
     fileprivate func requestRoute(with options: RouteOptions, success: @escaping RouteRequestSuccess, failure: RouteRequestFailure?) {
         // Calculate route offline if an offline version is selected
         let shouldUseOfflineRouting = Settings.selectedOfflineVersion != nil
-        Settings.directions.calculate(options, offline: shouldUseOfflineRouting) { (waypoints, routes, error) in
-            if let error = error { failure?(error) }
-            guard let routes = routes else { return }
-            return success(routes)
+        Settings.directions.calculate(options, offline: shouldUseOfflineRouting) { (session, result) in
+            switch result {
+            case let .success(response):
+                success(response)
+            case let .failure(error):
+                failure?(error)
+            }
         }
     }
 
     // MARK: Basic Navigation
 
     func startBasicNavigation() {
-        guard let route = routes?.first else { return }
+        guard let response = response, let route = response.routes?.first, case let .route(routeOptions) = response.options else { return }
         
-        let service = navigationService(route: route)
-        let navigationViewController = self.navigationViewController(navigationService: service)
+        let service = navigationService(route: route, options: routeOptions)
+        let navigationViewController = self.navigationViewController(response: response, navigationService: service)
         
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
     
     func startNavigation(styles: [Style]) {
-        guard let route = routes?.first else { return }
+        guard let response = response, let route = response.routes?.first, case let .route(routeOptions) = response.options else { return }
         
-        let options = NavigationOptions(styles: styles, navigationService: navigationService(route: route))
-        let navigationViewController = NavigationViewController(for: route, options: options)
+        let options = NavigationOptions(styles: styles, navigationService: navigationService(route: route, options: routeOptions))
+        let navigationViewController = NavigationViewController(for: response, options: options)
         navigationViewController.delegate = self
         
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
     
-    func navigationViewController(navigationService: NavigationService) -> NavigationViewController {
-        let route = navigationService.route
+    func navigationViewController(response: RouteResponse, navigationService: NavigationService) -> NavigationViewController {
         let options = NavigationOptions( navigationService: navigationService)
         
-        let navigationViewController = NavigationViewController(for: route, options: options)
+        let navigationViewController = NavigationViewController(for: response, options: options)
         navigationViewController.delegate = self
         navigationViewController.mapView?.delegate = self
         return navigationViewController
     }
     
-    public func beginNavigationWithCarplay(navigationService: NavigationService) {
-        self.routes = [navigationService.route]
-        
-        let navigationViewController = activeNavigationViewController ?? self.navigationViewController(navigationService: navigationService)
-        navigationViewController.didConnectToCarPlay()
-        
-        guard activeNavigationViewController == nil else { return }
-        
-        presentAndRemoveMapview(navigationViewController, completion: nil)
-    }
+//    public func beginNavigationWithCarplay(navigationService: NavigationService) {
+//        self.routes = [navigationService.route]
+//
+//        let navigationViewController = activeNavigationViewController ?? self.navigationViewController(navigationService: navigationService)
+//        navigationViewController.didConnectToCarPlay()
+//
+//        guard activeNavigationViewController == nil else { return }
+//
+//        presentAndRemoveMapview(navigationViewController, completion: nil)
+//    }
     
     // MARK: Custom Navigation UI
     func startCustomNavigation() {
-        guard let route = routes?.first else { return }
+        guard let route = response?.routes?.first, case let .route(routeOptions) = response?.options else { return }
 
         guard let customViewController = storyboard?.instantiateViewController(withIdentifier: "custom") as? CustomViewController else { return }
 
         customViewController.userRoute = route
+        customViewController.userRouteOptions = routeOptions
 
         let destination = MGLPointAnnotation()
         destination.coordinate = route.shape!.coordinates.last!
@@ -275,11 +279,11 @@ class ViewController: UIViewController {
     // MARK: Styling the default UI
 
     func startStyledNavigation() {
-        guard let route = routes?.first else { return }
+        guard let response = response, let route = response.routes?.first, case let .route(routeOptions) = response.options else { return }
 
         let styles = [CustomDayStyle(), CustomNightStyle()]
-        let options = NavigationOptions(styles:styles, navigationService: navigationService(route: route))
-        let navigationViewController = NavigationViewController(for: route, options: options)
+        let options = NavigationOptions(styles:styles, navigationService: navigationService(route: route, options: routeOptions))
+        let navigationViewController = NavigationViewController(for: response, options: options)
         navigationViewController.delegate = self
 
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
@@ -287,22 +291,22 @@ class ViewController: UIViewController {
     
     // MARK: Guidance Cards
     func startGuidanceCardsNavigation() {
-        guard let route = routes?.first else { return }
+        guard let response = response, let route = response.routes?.first, case let .route(routeOptions) = response.options else { return }
         
         let instructionsCardCollection = InstructionsCardViewController()
         instructionsCardCollection.cardCollectionDelegate = self
         
-        let options = NavigationOptions(navigationService: navigationService(route: route), topBanner: instructionsCardCollection)
-        let navigationViewController = NavigationViewController(for: route, options: options)
+        let options = NavigationOptions(navigationService: navigationService(route: route, options: routeOptions), topBanner: instructionsCardCollection)
+        let navigationViewController = NavigationViewController(for: response, options: options)
         navigationViewController.delegate = self
         
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
     
-    func navigationService(route: Route) -> NavigationService {
+    func navigationService(route: Route, options: RouteOptions) -> NavigationService {
         let simulate = simulationButton.isSelected
         let mode: SimulationMode = simulate ? .always : .onPoorGPS
-        return MapboxNavigationService(route: route, directions: Settings.directions, simulating: mode)
+        return MapboxNavigationService(route: route, routeOptions: options, directions: Settings.directions, simulating: mode)
     }
 
     func presentAndRemoveMapview(_ navigationViewController: NavigationViewController, completion: CompletionHandler?) {
@@ -361,7 +365,7 @@ extension ViewController: MGLMapViewDelegate {
         
         self.mapView?.localizeLabels()
         
-        if let routes = routes, let currentRoute = routes.first, let coords = currentRoute.shape?.coordinates {
+        if let routes = response?.routes, let currentRoute = routes.first, let coords = currentRoute.shape?.coordinates {
             mapView.setVisibleCoordinateBounds(MGLPolygon(coordinates: coords, count: UInt(coords.count)).overlayBounds, animated: false)
             self.mapView?.show(routes)
             self.mapView?.showWaypoints(on: currentRoute)
@@ -372,7 +376,7 @@ extension ViewController: MGLMapViewDelegate {
 // MARK: - NavigationMapViewDelegate
 extension ViewController: NavigationMapViewDelegate {
     func navigationMapView(_ mapView: NavigationMapView, didSelect waypoint: Waypoint) {
-        guard let routeOptions = routes?.first?.routeOptions else { return }
+        guard case let .route(routeOptions) = response?.options else { return }
         let modifiedOptions = routeOptions.without(waypoint: waypoint)
 
         presentWaypointRemovalActionSheet { _ in
@@ -381,10 +385,10 @@ extension ViewController: NavigationMapViewDelegate {
     }
 
     func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route) {
-        guard let routes = routes else { return }
+        guard let routes = response?.routes else { return }
         guard let index = routes.firstIndex(where: { $0 === route }) else { return }
-        self.routes!.remove(at: index)
-        self.routes!.insert(route, at: 0)
+        self.response!.routes!.remove(at: index)
+        self.response!.routes!.insert(route, at: 0)
     }
 
     private func presentWaypointRemovalActionSheet(completionHandler approve: @escaping ((UIAlertAction) -> Void)) {
@@ -435,22 +439,22 @@ extension ViewController: VoiceControllerDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool {
         let shouldUseOfflineRouting = Settings.selectedOfflineVersion != nil
         
-        guard shouldUseOfflineRouting == true else {
+        guard shouldUseOfflineRouting == true, case let .route(routeOptions) = response?.options else {
             return true
         }
         
-        let currentRoute = navigationViewController.route
-        let profileIdentifier = currentRoute.routeOptions.profileIdentifier
+        let profileIdentifier = routeOptions.profileIdentifier
         
         var waypoints: [Waypoint] = [Waypoint(location: location)]
-        var remainingWaypoints = currentRoute.routeOptions.waypoints
+        var remainingWaypoints = navigationViewController.navigationService.routeProgress.remainingWaypoints
         remainingWaypoints.removeFirst()
         waypoints.append(contentsOf: remainingWaypoints)
         
         let options = NavigationRouteOptions(waypoints: waypoints, profileIdentifier: profileIdentifier)
         
-        Settings.directions.calculate(options, offline: true) { (waypoints, routes, error) in
-            guard let route = routes?.first else { return }
+        Settings.directions.calculate(options, offline: true) { (session, result) in
+            guard case let .success(response) = result, let routes = response.routes, let route = routes.first else { return }
+            
             navigationViewController.navigationService.route = route
         }
         

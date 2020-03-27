@@ -707,11 +707,13 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     //TODO: Change to point-based distance calculation
-    private func waypoints(concerning routes: [Route], on options: RouteOptions, closeTo point: CGPoint) -> [Waypoint]? {
+    private func waypoints(on routes: [Route], closeTo point: CGPoint) -> [Waypoint]? {
         let tapCoordinate = convert(point, toCoordinateFrom: self)
         let multipointRoutes = routes.filter { $0.legs.count > 1}
         guard multipointRoutes.count > 0 else { return nil }
-        let waypoints = multipointRoutes.flatMap({$0.routeOptions.waypoints})
+        let waypoints = multipointRoutes.compactMap { route in
+            route.legs.dropLast().compactMap { $0.destination }
+        }.flatMap {$0}
         
         //lets sort the array in order of closest to tap
         let closest = waypoints.sorted { (left, right) -> Bool in

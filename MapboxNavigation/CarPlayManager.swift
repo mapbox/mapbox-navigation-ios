@@ -390,11 +390,11 @@ extension CarPlayManager {
     }
     
     public func previewRoutes(for options: RouteOptions, completionHandler: @escaping CompletionHandler) {
-        calculate(options) { [weak self] (waypoints, routes, error) in
-            self?.didCalculate(routes,
+        calculate(options) { [weak self] (session, result) in
+            
+            self?.didCalculate(result,
+                               in: session,
                                for: options,
-                               between: waypoints,
-                               error: error,
                                completionHandler: completionHandler)
         }
     }
@@ -403,14 +403,15 @@ extension CarPlayManager {
         directions.calculate(options, completionHandler: completionHandler)
     }
     
-    internal func didCalculate(_ routes: [Route]?, for routeOptions: RouteOptions, between waypoints: [Waypoint]?, error: DirectionsError?, completionHandler: CompletionHandler) {
+    internal func didCalculate(_ result: Result<RouteResponse, DirectionsError>?,in session: Directions.Session, for routeOptions: RouteOptions, completionHandler: CompletionHandler) {
         defer {
             completionHandler()
         }
         
-        if let error = error {
+        switch result {
+        case let .failure(error):
             guard let delegate = delegate,
-                let alert = delegate.carPlayManager(self, didFailToFetchRouteBetween: waypoints, options: routeOptions, error: error) else {
+                let alert = delegate.carPlayManager(self, didFailToFetchRouteBetween: routeOptions.waypoints, options: routeOptions, error: error) else {
                 return
             }
 
@@ -418,30 +419,30 @@ extension CarPlayManager {
             interfaceController?.popToRootTemplate(animated: true)
             mapTemplate?.present(navigationAlert: alert, animated: true)
             return
-        }
-        
-        guard let waypoints = waypoints, let routes = routes else {
+        case let .success(response):
+            guard let routes = response.routes, case let .route(responseOptions) = response.options else { return }
+            let waypoints = responseOptions.waypoints
+            var trip = CPTrip(routes: routes, routeOptions: routeOptions, waypoints: waypoints)
+            trip = delegate?.carPlayManager(self, willPreview: trip) ?? trip
+
+            var previewText = defaultTripPreviewTextConfiguration()
+
+            if let customPreviewText = delegate?.carPlayManager(self, willPreview: trip, with: previewText) {
+                previewText = customPreviewText
+            }
+
+            let traitCollection = (self.carWindow?.rootViewController as! CarPlayMapViewController).traitCollection
+            let previewMapTemplate = mapTemplateProvider.mapTemplate(forPreviewing: trip, traitCollection: traitCollection, mapDelegate: self)
+
+            previewMapTemplate.showTripPreviews([trip], textConfiguration: previewText)
+            
+            guard let interfaceController = interfaceController else {
+                    return
+            }
+            interfaceController.pushTemplate(previewMapTemplate, animated: true)
+        case .none:
             return
         }
-        
-        var trip = CPTrip(routes: routes, routeOptions: routeOptions, waypoints: waypoints)
-        trip = delegate?.carPlayManager(self, willPreview: trip) ?? trip
-
-        var previewText = defaultTripPreviewTextConfiguration()
-
-        if let customPreviewText = delegate?.carPlayManager(self, willPreview: trip, with: previewText) {
-            previewText = customPreviewText
-        }
-
-        let traitCollection = (self.carWindow?.rootViewController as! CarPlayMapViewController).traitCollection
-        let previewMapTemplate = mapTemplateProvider.mapTemplate(forPreviewing: trip, traitCollection: traitCollection, mapDelegate: self)
-
-        previewMapTemplate.showTripPreviews([trip], textConfiguration: previewText)
-        
-        guard let interfaceController = interfaceController else {
-                return
-        }
-        interfaceController.pushTemplate(previewMapTemplate, animated: true)
     }
 
     private func defaultTripPreviewTextConfiguration() -> CPTripPreviewTextConfiguration {
