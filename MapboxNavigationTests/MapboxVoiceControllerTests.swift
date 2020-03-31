@@ -11,12 +11,14 @@ class MapboxVoiceControllerTests: XCTestCase {
 
     var route: Route {
         get {
-            return Fixture.route(from: "route-with-instructions", options: NavigationRouteOptions(coordinates: [
-                CLLocationCoordinate2D(latitude: 40.311012, longitude: -112.47926),
-                CLLocationCoordinate2D(latitude: 29.99908, longitude: -102.828197),
-            ]))
+            return Fixture.route(from: "route-with-instructions", options: routeOptions)
         }
     }
+    
+    let routeOptions: RouteOptions = NavigationRouteOptions(coordinates: [
+        CLLocationCoordinate2D(latitude: 40.311012, longitude: -112.47926),
+        CLLocationCoordinate2D(latitude: 29.99908, longitude: -102.828197),
+    ])
 
     override func setUp() {
         super.setUp()
@@ -35,7 +37,7 @@ class MapboxVoiceControllerTests: XCTestCase {
     }
 
     func testControllerDownloadsAndCachesInstructionDataWhenNotified() {
-        let service = MapboxNavigationService(route: route)
+        let service = MapboxNavigationService(route: route, routeOptions: routeOptions)
         let subject = MapboxVoiceController(navigationService: service, speechClient: speechAPISpy, audioPlayerType: AudioPlayerDummy.self)
         let userInfo = [
             RouteController.NotificationUserInfoKey.routeProgressKey: service.routeProgress,
@@ -57,7 +59,7 @@ class MapboxVoiceControllerTests: XCTestCase {
     }
     
     func testVoiceDeinit() {
-        let dummyService = MapboxNavigationService(route: route)
+        let dummyService = MapboxNavigationService(route: route, routeOptions: routeOptions)
         var voiceController: MockMapboxVoiceController? = MockMapboxVoiceController(navigationService: dummyService)
         let deinitExpectation = expectation(description: "Voice Controller should deinitialize")
         voiceController!.deinitExpectation = deinitExpectation
@@ -67,7 +69,7 @@ class MapboxVoiceControllerTests: XCTestCase {
     
     func testAudioCalls() {
         typealias Note = Notification.Name.MapboxVoiceTests
-        let service = MapboxNavigationService(route: route)
+        let service = MapboxNavigationService(route: route, routeOptions: routeOptions)
         service.routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex = 1
         
         let routeProgress = service.routeProgress
@@ -92,10 +94,11 @@ class MapboxVoiceControllerTests: XCTestCase {
     }
     
     func testAccessTokenPropagatesFromNavigationViewController() {
-        let directions = DirectionsSpy(accessToken: "foo")
-        let service = MapboxNavigationService(route: route, directions: directions)
+        let directions = DirectionsSpy()
+        let service = MapboxNavigationService(route: route, routeOptions: routeOptions, directions: directions)
+        
         let options = NavigationOptions(navigationService: service)
-        let nvc = NavigationViewController(for: route, options: options)
+        let nvc = NavigationViewController(for: response, options: options)
         
         let voiceController = nvc.voiceController as! MapboxVoiceController
         XCTAssertEqual(voiceController.speech.accessToken, "foo",

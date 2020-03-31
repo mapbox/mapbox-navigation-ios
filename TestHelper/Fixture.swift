@@ -113,12 +113,13 @@ public class Fixture: NSObject {
     }
     
     // Returns `Route` objects from a match response
-    public class func routesFromMatches(at filePath: String, options: MatchOptions) -> [Match]? {
+    public class func routesFromMatches(at filePath: String, options: MatchOptions) -> [Route]? {
         let response = mapMatchingResponse(from: filePath, options: options)
-        guard let matches = response.matches else {
+        let routeResponse = try! RouteResponse(matching: response, options: options, credentials: Fixture.credentials)
+        guard let routes = routeResponse.routes else {
             preconditionFailure("No routes")
         }
-        return matches
+        return routes
     }
     
     public class func generateTrace(for route: Route, speedMultiplier: Double = 1) -> [CLLocation] {

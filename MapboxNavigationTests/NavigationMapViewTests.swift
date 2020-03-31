@@ -14,9 +14,10 @@ class NavigationMapViewTests: XCTestCase, MGLMapViewDelegate {
     
     lazy var route: Route = {
         let route = response.routes!.first!
-        route.accessToken = "foo"
         return route
     }()
+    
+    
     
     override func setUp() {
         super.setUp()
