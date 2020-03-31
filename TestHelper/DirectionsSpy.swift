@@ -20,8 +20,8 @@ public class DirectionsSpy: Directions {
     }
     
     public func fireLastCalculateCompletion(with waypoints: [Waypoint]?, routes: [Route]?, error: DirectionsError?) {
-        guard let waypoints = waypoints else { return }
-        let options = RouteOptions(waypoints: waypoints)
+        let wpts = waypoints ?? []
+        let options = RouteOptions(waypoints: wpts)
         
         let session: Directions.Session = (options: options, credentials: credentials)
         guard let lastCalculateOptionsCompletion = lastCalculateOptionsCompletion else {
@@ -32,7 +32,8 @@ public class DirectionsSpy: Directions {
         if let error = error {
             lastCalculateOptionsCompletion(session, .failure(error))
         } else {
-            let response = RouteResponse(httpResponse: nil, options: .route(options), credentials: credentials)
+            let response = RouteResponse(httpResponse: nil, routes: routes, waypoints: waypoints, options: .route(options), credentials: credentials)
+    
             lastCalculateOptionsCompletion(session, .success(response))
         }
 }

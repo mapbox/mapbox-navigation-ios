@@ -134,7 +134,7 @@ public class Fixture: NSObject {
         return traceCollector.locations
     }
     
-    public static let credentials: DirectionsCredentials = DirectionsCredentials(accessToken: "deadbeef", host: URL(string: "http://example.com")!)
+    public static let credentials: DirectionsCredentials = DirectionsCredentials(accessToken: "deadbeef", host: URL(string: "https://example.com")!)
     
 }
 
