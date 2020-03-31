@@ -213,6 +213,7 @@ public class NavigationDirections: Directions {
                 do {
                     let decoder = JSONDecoder()
                     decoder.userInfo[.options] = options
+                    decoder.userInfo[.credentials] = session.credentials
                     let response = try decoder.decode(RouteResponse.self, from: data)
                     guard let routes = response.routes, !routes.isEmpty else {
                         return completionHandler(session, .failure(.standard(.unableToRoute)))

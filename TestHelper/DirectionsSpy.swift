@@ -37,6 +37,10 @@ public class DirectionsSpy: Directions {
         }
 }
     
+    public convenience init() {
+        self.init(credentials: Fixture.credentials)
+    }
+    
     public func reset() {
         lastCalculateOptionsCompletion = nil
     }
