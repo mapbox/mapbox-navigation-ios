@@ -8,7 +8,6 @@ import TestHelper
 class MapboxNavigationServiceSpec: QuickSpec {
     lazy var initialRoute: Route = {
         let route     = response.routes!.first!
-        route.accessToken = "foo"
         return route
     }()
     
