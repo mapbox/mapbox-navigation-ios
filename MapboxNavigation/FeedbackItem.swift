@@ -10,7 +10,7 @@ extension UIImage {
 /**
  A single feedback item displayed on an instance of `FeedbackViewController`.
  */
-public class FeedbackItem: NSObject {
+public class FeedbackItem {
     /**
      The title of feedback item. This will be rendered directly below the image.
      */

@@ -78,9 +78,6 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     var lastSpokenInstruction: SpokenInstruction?
     var routeProgress: RouteProgress?
     
-    var volumeToken: NSKeyValueObservation?
-    var muteToken: NSKeyValueObservation?
-    
     /**
      Default initializer for `RouteVoiceController`.
      */
@@ -118,18 +115,20 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(didPassSpokenInstructionPoint(notification:)), name: .routeControllerDidPassSpokenInstructionPoint, object: service.router)
         NotificationCenter.default.addObserver(self, selector: #selector(pauseSpeechAndPlayReroutingDing(notification:)), name: .routeControllerWillReroute, object: service.router)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: .routeControllerDidReroute, object: service.router)
-        
-        muteToken = NavigationSettings.shared.observe(\.voiceMuted) { [weak self] (settings, change) in
-            if settings.voiceMuted {
-                self?.speechSynth.stopSpeaking(at: .immediate)
-            }
-        }
+        NotificationCenter.default.addObserver(self, selector: #selector(didUpdateSettings(notification:)), name: .navigationSettingsDidChange, object: NavigationSettings.shared)
     }
     
     func suspendNotifications() {
         NotificationCenter.default.removeObserver(self, name: .routeControllerDidPassSpokenInstructionPoint, object: nil)
         NotificationCenter.default.removeObserver(self, name: .routeControllerWillReroute, object: nil)
         NotificationCenter.default.removeObserver(self, name: .routeControllerDidReroute, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .navigationSettingsDidChange, object: nil)
+    }
+    
+    @objc func didUpdateSettings(notification: NSNotification) {
+        if let isMuted = notification.userInfo?[NavigationSettings.StoredProperty.voiceMuted.key] as? Bool, isMuted {
+            speechSynth.stopSpeaking(at: .immediate)
+        }
     }
     
     @objc func didReroute(notification: NSNotification) {
