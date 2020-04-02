@@ -83,6 +83,7 @@ public class Fixture: NSObject {
         do {
             let decoder = JSONDecoder()
             decoder.userInfo[.options] = options
+            decoder.userInfo[.credentials] = Fixture.credentials
             return try decoder.decode(MapMatchingResponse.self, from: responseData)
         } catch {
             preconditionFailure("Unable to decode JSON fixture: \(error)")

@@ -37,7 +37,6 @@ class RouteControllerSnapshotTests: FBSnapshotTestCase {
             .init(latitude: 59.33865, longitude: 18.074935),
         ])
         let route = Fixture.routesFromMatches(at: "sthlm-double-back", options: options)![0]
-        let response = Fixture.mapMatchingResponse(from: <#T##String#>, options: <#T##MatchOptions#>)
         
         let bundle = Bundle(for: RouteControllerSnapshotTests.self)
         let filePath = bundle.path(forResource: "sthlm-double-back-replay", ofType: "json")
@@ -46,7 +45,8 @@ class RouteControllerSnapshotTests: FBSnapshotTestCase {
         let locationManager = ReplayLocationManager(locations: locations)
         replayManager = locationManager
         locationManager.startDate = Date()
-        let routeController = RouteController(along: route, options: options, dataSource: self)
+        let equivalentRouteOptions = NavigationRouteOptions(navigationMatchOptions: options)
+        let routeController = RouteController(along: route, options: equivalentRouteOptions, dataSource: self)
         locationManager.delegate = routeController
         
         var snappedLocations = [CLLocation]()

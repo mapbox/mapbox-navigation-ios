@@ -35,6 +35,28 @@ open class NavigationRouteOptions: RouteOptions {
     }
 
     /**
+     Initializes an equivalent `RouteOptions` object from a `NavigationMapOptions`
+     
+     - seealso: `NavigationMatchOptions`
+     */
+    public convenience init(navigationMatchOptions options: NavigationMatchOptions) {
+        self.init(waypoints: options.waypoints, profileIdentifier: options.profileIdentifier)
+        self.includesSteps = true
+        routeShapeResolution = .full
+        shapeFormat = .polyline6
+        attributeOptions = [.congestionLevel, .expectedTravelTime]
+        if profileIdentifier == .walking {
+            attributeOptions = [.congestionLevel, .expectedTravelTime]
+        } else {
+            attributeOptions = [.congestionLevel, .expectedTravelTime, .maximumSpeedLimit]
+        }
+        includesSpokenInstructions = true
+        locale = Locale.nationalizedCurrent
+        distanceMeasurementSystem = Locale.current.usesMetricSystem ? .metric : .imperial
+        includesVisualInstructions = true
+        includesExitRoundaboutManeuver = true
+        }
+    /**
      Initializes a navigation route options object for routes between the given locations and an optional profile identifier optimized for navigation.
 
      - seealso: `RouteOptions`
@@ -68,7 +90,7 @@ open class NavigationMatchOptions: MatchOptions {
     /**
      Initializes a navigation route options object for routes between the given waypoints and an optional profile identifier optimized for navigation.
      
-     - seealso: `MatchOptions`
+     - seealso: `RouteOptions`
      */
     public required init(waypoints: [Waypoint], profileIdentifier: DirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
         super.init(waypoints: waypoints.map {
@@ -87,6 +109,7 @@ open class NavigationMatchOptions: MatchOptions {
         distanceMeasurementSystem = Locale.current.usesMetricSystem ? .metric : .imperial
         includesVisualInstructions = true
     }
+    
     
     /**
      Initializes a navigation match options object for routes between the given locations and an optional profile identifier optimized for navigation.

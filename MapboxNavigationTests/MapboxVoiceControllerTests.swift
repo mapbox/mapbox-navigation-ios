@@ -101,7 +101,7 @@ class MapboxVoiceControllerTests: XCTestCase {
         let nvc = NavigationViewController(for: response, options: options)
         
         let voiceController = nvc.voiceController as! MapboxVoiceController
-        XCTAssertEqual(voiceController.speech.accessToken, "foo",
+        XCTAssertEqual(voiceController.speech.accessToken, "deadbeef",
                        "Access token should propagate from NavigationViewController to SpeechSynthesizer")
     }
 }
