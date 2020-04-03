@@ -168,24 +168,36 @@ open class InstructionsCardViewController: UIViewController {
     }
     
     fileprivate func snappedIndexPath() -> IndexPath {
-        guard let collectionView = instructionsCardLayout.collectionView,let legCount = steps?.count, let stepCount = steps?.map({ $0.count }) else {
+        guard let collectionView = instructionsCardLayout.collectionView, let legCount = steps?.count, let stepCount = steps?.map({ $0.count }) else {
             return IndexPath(row: 0, section: 0)
         }
         
         let estimatedIndex = Int(round((collectionView.contentOffset.x + collectionView.contentInset.left) / (cardSize.width + collectionViewFlowLayoutMinimumSpacingDefault)))
+        let cellCount = estimatedIndex + 1
         
-        var stepIndex = estimatedIndex
+        var totalProcessedSteps = 0
+        var stepIndex = 0
         var legIndex = 0
+        var stop = false
 
-        while (stepIndex >= stepCount[legIndex]) {
-            stepIndex -= stepCount[legIndex]
-            legIndex += 1
+        for legCount in stepCount {
+            guard !stop else { break }
+            if totalProcessedSteps + legCount >= cellCount {
+                stop = true
+                stepIndex = (cellCount - totalProcessedSteps) - 1
+            } else {
+                totalProcessedSteps += legCount
+                legIndex += 1
+            }
         }
+
     
         
         let boundedStepIndex = max(0, min(stepCount[legIndex] - 1, stepIndex))
-        let boundedLegIndex = max(0, min(legCount, legIndex))
-        return IndexPath(row: boundedStepIndex, section: boundedLegIndex)
+        let boundedLegIndex = max(0, min(legCount - 1, legIndex))
+        let path = IndexPath(row: boundedStepIndex, section: boundedLegIndex)
+        print("Snapped Path: \(path), unbound (\(legIndex), \(stepIndex))")
+        return path
     }
     
     fileprivate func scrollTargetIndexPath(for scrollView: UIScrollView, with velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) -> IndexPath {
@@ -297,6 +309,11 @@ extension InstructionsCardViewController: UICollectionViewDataSource {
         
         guard let steps = steps, indexPath.section < steps.endIndex, indexPath.row < steps[indexPath.section].endIndex, let distanceRemaining = routeProgress?.currentLegProgress.currentStepProgress.distanceRemaining else {
             return cell
+        }
+        
+        
+        if indexPath.section > 0 {
+            print("Next Section!")
         }
         
         cell.style = cardStyle
