@@ -157,18 +157,19 @@ open class InstructionsCardViewController: UIViewController {
     }
     
     open func updateVisibleInstructionCards(at indexPaths: [IndexPath]) {
-        guard let legProgress = routeProgress?.currentLegProgress else { return }
+        guard let progress = routeProgress else { return }
+        let legProgress = progress.currentLegProgress
         let remainingSteps = legProgress.remainingSteps
         guard let currentCardStep = remainingSteps.first else { return }
         
-        for index in indexPaths.startIndex..<indexPaths.endIndex {
-            let indexPath = indexPaths[index]
-            if let container = instructionContainerView(at: indexPath), indexPath.row < remainingSteps.endIndex {
-                let visibleStep = remainingSteps[indexPath.row]
-                let distance = currentCardStep == visibleStep ? legProgress.currentStepProgress.distanceRemaining : visibleStep.distance
-                container.updateInstructionCard(distance: distance)
-            }
+        for (_, path) in indexPaths.enumerated() {
+            if let container = instructionContainerView(at: path), path.section < progress.route.legs.endIndex, path.row < remainingSteps.endIndex {
+                let visibleStep = progress.route.legs[path.section].steps[path.row]
+                 let distance = currentCardStep == visibleStep ? legProgress.currentStepProgress.distanceRemaining : visibleStep.distance
+                 container.updateInstructionCard(distance: distance)
+             }
         }
+        
     }
     
     func snapToIndexPath(_ indexPath: IndexPath) {
