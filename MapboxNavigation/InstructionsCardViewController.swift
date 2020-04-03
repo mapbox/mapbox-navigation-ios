@@ -168,7 +168,7 @@ open class InstructionsCardViewController: UIViewController {
     }
     
     fileprivate func snappedIndexPath() -> IndexPath {
-        guard let collectionView = instructionsCardLayout.collectionView, let legCount = steps?.count, let stepCount = steps?.map({ $0.count }) else {
+        guard let collectionView = instructionsCardLayout.collectionView, let legCount = steps?.count, let stepCounts = steps?.map({ $0.count }) else {
             return IndexPath(row: 0, section: 0)
         }
         
@@ -180,7 +180,7 @@ open class InstructionsCardViewController: UIViewController {
         var legIndex = 0
         var stop = false
 
-        for legCount in stepCount {
+        for legCount in stepCounts {
             guard !stop else { break }
             if totalProcessedSteps + legCount >= cellCount {
                 stop = true
@@ -193,7 +193,7 @@ open class InstructionsCardViewController: UIViewController {
 
     
         
-        let boundedStepIndex = max(0, min(stepCount[legIndex] - 1, stepIndex))
+        let boundedStepIndex = max(0, min(stepCounts[legIndex] - 1, stepIndex))
         let boundedLegIndex = max(0, min(legCount - 1, legIndex))
         let path = IndexPath(row: boundedStepIndex, section: boundedLegIndex)
         print("Snapped Path: \(path), unbound (\(legIndex), \(stepIndex))")
