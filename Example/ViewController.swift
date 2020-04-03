@@ -54,7 +54,7 @@ class ViewController: UIViewController {
     // MARK: Directions Request Handlers
 
     fileprivate lazy var defaultSuccess: RouteRequestSuccess = { [weak self] (response) in
-        guard let current = response.routes?.first, case let .route(options) = response.options else { return }
+        guard let routes = response.routes, !routes.isEmpty, case let .route(options) = response.options else { return }
         self?.mapView?.removeWaypoints()
         self?.response = response
         self?.waypoints = options.waypoints
