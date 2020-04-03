@@ -224,7 +224,7 @@ class ViewController: UIViewController {
         guard let response = response, let route = response.routes?.first, case let .route(routeOptions) = response.options else { return }
         
         let service = navigationService(route: route, options: routeOptions)
-        let navigationViewController = self.navigationViewController(response: response, navigationService: service)
+        let navigationViewController = self.navigationViewController(navigationService: service)
         
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
@@ -233,31 +233,29 @@ class ViewController: UIViewController {
         guard let response = response, let route = response.routes?.first, case let .route(routeOptions) = response.options else { return }
         
         let options = NavigationOptions(styles: styles, navigationService: navigationService(route: route, options: routeOptions))
-        let navigationViewController = NavigationViewController(for: response, options: options)
+        let navigationViewController = NavigationViewController(for: route, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
         
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
     
-    func navigationViewController(response: RouteResponse, navigationService: NavigationService) -> NavigationViewController {
-        let options = NavigationOptions( navigationService: navigationService)
+    func navigationViewController(navigationService: NavigationService) -> NavigationViewController {
+        let options = NavigationOptions(navigationService: navigationService)
         
-        let navigationViewController = NavigationViewController(for: response, options: options)
+        let navigationViewController = NavigationViewController(for: navigationService.route, routeOptions: navigationService.routeProgress.routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
         navigationViewController.mapView?.delegate = self
         return navigationViewController
     }
     
-//    public func beginNavigationWithCarplay(navigationService: NavigationService) {
-//        self.routes = [navigationService.route]
-//
-//        let navigationViewController = activeNavigationViewController ?? self.navigationViewController(navigationService: navigationService)
-//        navigationViewController.didConnectToCarPlay()
-//
-//        guard activeNavigationViewController == nil else { return }
-//
-//        presentAndRemoveMapview(navigationViewController, completion: nil)
-//    }
+    public func beginNavigationWithCarplay(navigationService: NavigationService) {
+        let navigationViewController = activeNavigationViewController ?? self.navigationViewController(navigationService: navigationService)
+        navigationViewController.didConnectToCarPlay()
+
+        guard activeNavigationViewController == nil else { return }
+
+        presentAndRemoveMapview(navigationViewController, completion: nil)
+    }
     
     // MARK: Custom Navigation UI
     func startCustomNavigation() {
@@ -283,7 +281,7 @@ class ViewController: UIViewController {
 
         let styles = [CustomDayStyle(), CustomNightStyle()]
         let options = NavigationOptions(styles:styles, navigationService: navigationService(route: route, options: routeOptions))
-        let navigationViewController = NavigationViewController(for: response, options: options)
+        let navigationViewController = NavigationViewController(for: route, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
 
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
@@ -297,7 +295,7 @@ class ViewController: UIViewController {
         instructionsCardCollection.cardCollectionDelegate = self
         
         let options = NavigationOptions(navigationService: navigationService(route: route, options: routeOptions), topBanner: instructionsCardCollection)
-        let navigationViewController = NavigationViewController(for: response, options: options)
+        let navigationViewController = NavigationViewController(for: route, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
         
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)

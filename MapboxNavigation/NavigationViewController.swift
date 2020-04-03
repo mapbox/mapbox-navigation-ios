@@ -206,37 +206,37 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      - parameter route: The route to navigate along.
      - parameter options: The navigation options to use for the navigation session.
      */
-    required public init(for response: RouteResponse,
-                         options: NavigationOptions? = nil) {
+    required public init(for route: Route, routeOptions: RouteOptions,
+                         navigationOptions: NavigationOptions? = nil) {
         super.init(nibName: nil, bundle: nil)
         
-        let route = response.routes!.first!
+//        let route = response.routes!.first!
+//
+//        guard case let .route(routeOptions) = response.options else {
+//            preconditionFailure() //FIXME: This is a smell.
+//        }
+//
         
-        guard case let .route(routeOptions) = response.options else {
-            preconditionFailure() //FIXME: This is a smell.
-        }
         
-        
-        
-        self.navigationService = options?.navigationService ?? MapboxNavigationService(route: route, routeOptions: routeOptions)
+        self.navigationService = navigationOptions?.navigationService ?? MapboxNavigationService(route: route, routeOptions: routeOptions)
         self.navigationService.delegate = self
         let credentials = navigationService.directions.credentials
-        self.voiceController = options?.voiceController ?? MapboxVoiceController(navigationService: navigationService, speechClient: SpeechSynthesizer(accessToken: credentials.accessToken, host: credentials.host.absoluteString))
+        self.voiceController = navigationOptions?.voiceController ?? MapboxVoiceController(navigationService: navigationService, speechClient: SpeechSynthesizer(accessToken: credentials.accessToken, host: credentials.host.absoluteString))
 
         NavigationSettings.shared.distanceUnit = routeOptions.locale.usesMetric ? .kilometer : .mile
         
         styleManager = StyleManager()
         styleManager.delegate = self
-        styleManager.styles = options?.styles ?? [DayStyle(), NightStyle()]
+        styleManager.styles = navigationOptions?.styles ?? [DayStyle(), NightStyle()]
         
-        let bottomBanner = options?.bottomBanner ?? {
+        let bottomBanner = navigationOptions?.bottomBanner ?? {
             let viewController: BottomBannerViewController = .init()
             viewController.delegate = self
             return viewController
         }()
         bottomViewController = bottomBanner
 
-        if let customBanner = options?.topBanner {
+        if let customBanner = navigationOptions?.topBanner {
             topViewController = customBanner
         } else {
             let defaultBanner = TopBannerViewController(nibName: nil, bundle: nil)
@@ -272,11 +272,12 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     Initializes a navigation view controller with the given route and navigation service.
      
      - parameter route: The route to navigate along.
+     - parameter routeOptions: the options object used to generate the route.
      - parameter navigationService: The navigation service that manages navigation along the route.
      */
-    convenience init(response: RouteResponse, navigationService service: NavigationService) {
+    convenience init(route: Route, routeOptions: RouteOptions, navigationService service: NavigationService) {
         let options = NavigationOptions(navigationService: service)
-        self.init(for: response, options: options)
+        self.init(for: route, routeOptions: routeOptions, navigationOptions: options)
     }
     
     deinit {
