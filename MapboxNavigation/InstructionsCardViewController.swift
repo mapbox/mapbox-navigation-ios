@@ -38,31 +38,7 @@ open class InstructionsCardViewController: UIViewController {
         
         return answer
         }
-    
-    var distancesFromCurrentLocationToManeuver: [CLLocationDistance]? {
-        guard let progress = routeProgress, let steps = steps else { return nil }
-        let distanceRemaining = progress.currentLegProgress.currentStepProgress.distanceRemaining
-        let distanceBetweenSteps = [distanceRemaining] + progress.remainingSteps.map {$0.distance}
-        guard let firstDistance = distanceBetweenSteps.first else { return nil }
-        
-        var distancesFromCurrentLocationToManeuver = [CLLocationDistance]()
-        distancesFromCurrentLocationToManeuver.reserveCapacity(steps.count)
-        
-        var cumulativeDistance: CLLocationDistance = firstDistance > 5 ? firstDistance : 0
-        distancesFromCurrentLocationToManeuver.append(cumulativeDistance)
-        
-        for index in 1..<distanceBetweenSteps.endIndex {
-            let safeIndex = index < distanceBetweenSteps.endIndex ? index : distanceBetweenSteps.endIndex - 1
-            let previousDistance = distanceBetweenSteps[safeIndex-1]
-            let currentDistance = distanceBetweenSteps[safeIndex]
-            let cardDistance = previousDistance + currentDistance
-            cumulativeDistance += cardDistance > 5 ? cardDistance : 0
-            distancesFromCurrentLocationToManeuver.append(cumulativeDistance)
-        }
-        
-        return distancesFromCurrentLocationToManeuver
-    }
-    
+
     /**
      The InstructionsCardCollection delegate.
      */
@@ -189,11 +165,6 @@ open class InstructionsCardViewController: UIViewController {
         }
         
         return cell.subviews[1] as? InstructionsCardContainerView
-    }
-    
-    fileprivate func calculateNeededSpace(count: Int) -> CGSize {
-        let cardSize = instructionsCardLayout.itemSize
-        return CGSize(width: (cardSize.width + 10) * CGFloat(count), height: cardSize.height)
     }
     
     fileprivate func snappedIndexPath() -> IndexPath {
