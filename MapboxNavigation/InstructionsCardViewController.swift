@@ -1,6 +1,10 @@
 import MapboxDirections
 import MapboxCoreNavigation
 
+public typealias StepPath = (leg: Int, step: Int)
+
+
+
 /// :nodoc:
 open class InstructionsCardViewController: UIViewController {
     typealias InstructionsCardCollectionLayout = UICollectionViewFlowLayout
@@ -13,17 +17,27 @@ open class InstructionsCardViewController: UIViewController {
     var instructionsCardLayout: InstructionsCardCollectionLayout!
     
     public private(set) var isInPreview = false
-    public var currentStepIndex: Int?
+    public var currentPath: StepPath?
     
-    public var steps: [RouteStep]? {
-        guard let stepIndex = routeProgress?.currentLegProgress.stepIndex, let steps = routeProgress?.currentLeg.steps else { return nil }
-        var mutatedSteps = steps
-        if mutatedSteps.count > 1 {
-            mutatedSteps = Array(mutatedSteps.suffix(from: stepIndex))
-            mutatedSteps.removeLast()
+    public var steps: [[RouteStep]]? {
+        guard let progress = routeProgress else { return nil }
+        
+        
+        let stepIndex = progress.currentLegProgress.stepIndex
+        let remainingStepsOnCurrentLeg: [[RouteStep]] = [progress.currentLeg.steps.suffix(from: stepIndex).dropLast()]
+        
+        let remainingSteps: [[RouteStep]] = progress.remainingLegs.map {
+            if $0 == progress.route.legs.last {
+                return $0.steps
+            } else {
+                return $0.steps.dropLast()
+            }
         }
-        return mutatedSteps
-    }
+        
+        let answer: [[RouteStep]] = remainingStepsOnCurrentLeg + remainingSteps
+        
+        return answer
+        }
     
     var distancesFromCurrentLocationToManeuver: [CLLocationDistance]? {
         guard let progress = routeProgress, let steps = steps else { return nil }
@@ -131,11 +145,11 @@ open class InstructionsCardViewController: UIViewController {
     }
     
     open func reloadDataSource() {
-        if currentStepIndex == nil, let progress = routeProgress {
-            currentStepIndex = progress.currentLegProgress.stepIndex
+        if currentPath == nil, let progress = routeProgress {
+            currentPath = (leg: progress.legIndex, step: progress.currentLegProgress.stepIndex)
             instructionCollectionView.reloadData()
-        } else if let progress = routeProgress, let stepIndex = currentStepIndex, stepIndex != progress.currentLegProgress.stepIndex {
-            currentStepIndex = progress.currentLegProgress.stepIndex
+        } else if let progress = routeProgress, let (legIndex, stepIndex) = currentPath, legIndex != progress.legIndex, stepIndex != progress.currentLegProgress.stepIndex {
+            currentPath = (leg: progress.legIndex, step: progress.currentLegProgress.stepIndex)
             instructionCollectionView.reloadData()
         } else {
             updateVisibleInstructionCards(at: instructionCollectionView.indexPathsForVisibleItems)
@@ -183,33 +197,54 @@ open class InstructionsCardViewController: UIViewController {
     }
     
     fileprivate func snappedIndexPath() -> IndexPath {
-        guard let collectionView = instructionsCardLayout.collectionView, let itemCount = steps?.count else {
+        guard let collectionView = instructionsCardLayout.collectionView,let legCount = steps?.count, let stepCount = steps?.map({ $0.count }) else {
             return IndexPath(row: 0, section: 0)
         }
         
         let estimatedIndex = Int(round((collectionView.contentOffset.x + collectionView.contentInset.left) / (cardSize.width + collectionViewFlowLayoutMinimumSpacingDefault)))
-        let indexInBounds = max(0, min(itemCount - 1, estimatedIndex))
         
-        return IndexPath(row: indexInBounds, section: 0)
+        var stepIndex = estimatedIndex
+        var legIndex = 0
+
+        while (stepIndex >= stepCount[legIndex]) {
+            stepIndex -= stepCount[legIndex]
+            legIndex += 1
+        }
+    
+        
+        let boundedStepIndex = max(0, min(stepCount[legIndex] - 1, stepIndex))
+        let boundedLegIndex = max(0, min(legCount, legIndex))
+        return IndexPath(row: boundedStepIndex, section: boundedLegIndex)
     }
     
     fileprivate func scrollTargetIndexPath(for scrollView: UIScrollView, with velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) -> IndexPath {
         targetContentOffset.pointee = scrollView.contentOffset
         
-        let itemCount = steps?.count ?? 0
+        let legCount = steps?.count ?? 0
+        let currentLegIndex = indexBeforeSwipe.section
+        let itemCount = steps?[currentLegIndex].count ?? 0
         let velocityThreshold: CGFloat = 0.4
         
-        let hasVelocityToSlideToNext = indexBeforeSwipe.row + 1 < itemCount && velocity.x > velocityThreshold
-        let hasVelocityToSlidePrev = indexBeforeSwipe.row - 1 >= 0 && velocity.x < -velocityThreshold
+        let canSlideToNext = indexBeforeSwipe.row + 1 < itemCount || (currentLegIndex + 1 < legCount && !(steps?[currentLegIndex + 1].isEmpty ?? true) )
+        let hasVelocityToSlideToNext = canSlideToNext && velocity.x > velocityThreshold
+
+        let willIncrementLegOnNext = indexBeforeSwipe.row + 1 == itemCount
+        
+        let canSlideToPrev = indexBeforeSwipe.row - 1 >= 0 || (currentLegIndex > 0 && !(steps?[currentLegIndex - 1].isEmpty ?? true))
+        let hasVelocityToSlidePrev = canSlideToPrev && velocity.x < -velocityThreshold
+        let willDecrementLegOnPrev = indexBeforeSwipe.row == 0
+        
         let didSwipe = hasVelocityToSlideToNext || hasVelocityToSlidePrev
         
         let scrollTargetIndexPath: IndexPath!
         
         if didSwipe {
             if hasVelocityToSlideToNext {
-                scrollTargetIndexPath = IndexPath(row: indexBeforeSwipe.row + 1, section: 0)
+                let section = willIncrementLegOnNext ? currentLegIndex + 1 : currentLegIndex
+                scrollTargetIndexPath = IndexPath(row: indexBeforeSwipe.row + 1, section: section)
             } else {
-                scrollTargetIndexPath = IndexPath(row: indexBeforeSwipe.row - 1, section: 0)
+                let section = willDecrementLegOnPrev ? currentLegIndex - 1 : currentLegIndex
+                scrollTargetIndexPath = IndexPath(row: indexBeforeSwipe.row - 1, section: section)
             }
         } else {
             if scrollView.contentOffset.x - contentOffsetBeforeSwipe.x < -cardSize.width / 2 {
@@ -241,7 +276,7 @@ extension InstructionsCardViewController: UICollectionViewDelegate {
         
         assert(previewIndex >= 0, "Preview Index should not be negative")
         if isInPreview, let steps = steps, previewIndex >= 0, previewIndex < steps.endIndex {
-            let step = steps[previewIndex]
+            let step = steps[indexPath.section][previewIndex]
             cardCollectionDelegate?.instructionsCardCollection(self, didPreview: step)
         }
     }
@@ -250,6 +285,14 @@ extension InstructionsCardViewController: UICollectionViewDelegate {
 /// :nodoc:
 extension InstructionsCardViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        guard let steps = steps else {
+            return 0
+        }
+        
+        return steps[section].count
+    }
+    
+    public func numberOfSections(in collectionView: UICollectionView) -> Int {
         return steps?.count ?? 0
     }
     
@@ -263,7 +306,7 @@ extension InstructionsCardViewController: UICollectionViewDataSource {
         cell.style = cardStyle
         cell.container.delegate = self
         
-        let step = steps[indexPath.row]
+        let step = steps[indexPath.section][indexPath.row]
         let firstStep = indexPath.row == 0
         let distance = firstStep ? distanceRemaining : step.distance
         cell.configure(for: step, distance: distance)
@@ -292,7 +335,7 @@ extension InstructionsCardViewController: NavigationComponent {
     }
     
     public func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
-        self.currentStepIndex = nil
+        self.currentPath = nil
         self.routeProgress = service.routeProgress
         reloadDataSource()
     }
