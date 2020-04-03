@@ -403,7 +403,7 @@ extension CarPlayManager {
         directions.calculate(options, completionHandler: completionHandler)
     }
     
-    internal func didCalculate(_ result: Result<RouteResponse, DirectionsError>?,in session: Directions.Session, for routeOptions: RouteOptions, completionHandler: CompletionHandler) {
+    internal func didCalculate(_ result: Result<RouteResponse, DirectionsError>,in session: Directions.Session, for routeOptions: RouteOptions, completionHandler: CompletionHandler) {
         defer {
             completionHandler()
         }
@@ -440,8 +440,6 @@ extension CarPlayManager {
                     return
             }
             interfaceController.pushTemplate(previewMapTemplate, animated: true)
-        case .none:
-            return
         }
     }
 

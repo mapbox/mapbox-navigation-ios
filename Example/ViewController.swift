@@ -259,7 +259,7 @@ class ViewController: UIViewController {
     
     // MARK: Custom Navigation UI
     func startCustomNavigation() {
-        guard let route = response?.routes?.first, case let .route(routeOptions) = response?.options else { return }
+        guard let route = response?.routes?.first, let responseOptions = response?.options, case let .route(routeOptions) = responseOptions else { return }
 
         guard let customViewController = storyboard?.instantiateViewController(withIdentifier: "custom") as? CustomViewController else { return }
 
@@ -374,7 +374,7 @@ extension ViewController: MGLMapViewDelegate {
 // MARK: - NavigationMapViewDelegate
 extension ViewController: NavigationMapViewDelegate {
     func navigationMapView(_ mapView: NavigationMapView, didSelect waypoint: Waypoint) {
-        guard case let .route(routeOptions) = response?.options else { return }
+        guard let responseOptions = response?.options, case let .route(routeOptions) = responseOptions else { return }
         let modifiedOptions = routeOptions.without(waypoint: waypoint)
 
         presentWaypointRemovalActionSheet { _ in
@@ -437,7 +437,7 @@ extension ViewController: VoiceControllerDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool {
         let shouldUseOfflineRouting = Settings.selectedOfflineVersion != nil
         
-        guard shouldUseOfflineRouting == true, case let .route(routeOptions) = response?.options else {
+        guard shouldUseOfflineRouting == true, let responseOptions = response?.options, case let .route(routeOptions) = responseOptions else {
             return true
         }
         
