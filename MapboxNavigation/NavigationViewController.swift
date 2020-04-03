@@ -210,14 +210,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
                          navigationOptions: NavigationOptions? = nil) {
         super.init(nibName: nil, bundle: nil)
         
-//        let route = response.routes!.first!
-//
-//        guard case let .route(routeOptions) = response.options else {
-//            preconditionFailure() //FIXME: This is a smell.
-//        }
-//
-        
-        
         self.navigationService = navigationOptions?.navigationService ?? MapboxNavigationService(route: route, routeOptions: routeOptions)
         self.navigationService.delegate = self
         let credentials = navigationService.directions.credentials
