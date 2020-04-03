@@ -220,17 +220,19 @@ open class InstructionsCardViewController: UIViewController {
     fileprivate func scrollTargetIndexPath(for scrollView: UIScrollView, with velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) -> IndexPath {
         targetContentOffset.pointee = scrollView.contentOffset
         
-        let legCount = steps?.count ?? 0
+        guard let steps = steps else { return IndexPath(row: 0, section: 0) }
+        
+        let legCount = steps.count
         let currentLegIndex = indexBeforeSwipe.section
-        let itemCount = steps?[currentLegIndex].count ?? 0
+        let itemCount = steps[currentLegIndex].count
         let velocityThreshold: CGFloat = 0.4
         
-        let canSlideToNext = indexBeforeSwipe.row + 1 < itemCount || (currentLegIndex + 1 < legCount && !(steps?[currentLegIndex + 1].isEmpty ?? true) )
+        let canSlideToNext = indexBeforeSwipe.row + 1 < itemCount || (currentLegIndex + 1 < legCount && !(steps[currentLegIndex + 1].isEmpty) )
         let hasVelocityToSlideToNext = canSlideToNext && velocity.x > velocityThreshold
 
         let willIncrementLegOnNext = indexBeforeSwipe.row + 1 == itemCount
         
-        let canSlideToPrev = indexBeforeSwipe.row - 1 >= 0 || (currentLegIndex > 0 && !(steps?[currentLegIndex - 1].isEmpty ?? true))
+        let canSlideToPrev = indexBeforeSwipe.row - 1 >= 0 || (currentLegIndex > 0 && !(steps[currentLegIndex - 1].isEmpty))
         let hasVelocityToSlidePrev = canSlideToPrev && velocity.x < -velocityThreshold
         let willDecrementLegOnPrev = indexBeforeSwipe.row == 0
         
@@ -241,16 +243,22 @@ open class InstructionsCardViewController: UIViewController {
         if didSwipe {
             if hasVelocityToSlideToNext {
                 let section = willIncrementLegOnNext ? currentLegIndex + 1 : currentLegIndex
-                scrollTargetIndexPath = IndexPath(row: indexBeforeSwipe.row + 1, section: section)
+                let row = willIncrementLegOnNext ? 0 : indexBeforeSwipe.row + 1
+                scrollTargetIndexPath = IndexPath(row: row, section: section)
             } else {
                 let section = willDecrementLegOnPrev ? currentLegIndex - 1 : currentLegIndex
-                scrollTargetIndexPath = IndexPath(row: indexBeforeSwipe.row - 1, section: section)
+                let row = willDecrementLegOnPrev ? steps[currentLegIndex - 1].count - 1 : indexBeforeSwipe.row - 1
+                scrollTargetIndexPath = IndexPath(row: row, section: section)
             }
         } else {
             if scrollView.contentOffset.x - contentOffsetBeforeSwipe.x < -cardSize.width / 2 {
-                scrollTargetIndexPath = IndexPath(row: indexBeforeSwipe.row - 1, section: 0)
+                let section = willDecrementLegOnPrev ? currentLegIndex - 1 : currentLegIndex
+                let row = willDecrementLegOnPrev ? steps[currentLegIndex - 1].count - 1 : indexBeforeSwipe.row - 1
+                scrollTargetIndexPath = IndexPath(row: row, section: section)
             } else if scrollView.contentOffset.x - contentOffsetBeforeSwipe.x > cardSize.width / 2 {
-                scrollTargetIndexPath = IndexPath(row: indexBeforeSwipe.row + 1, section: 0)
+                 let section = willIncrementLegOnNext ? currentLegIndex + 1 : currentLegIndex
+                 let row = willIncrementLegOnNext ? 0 : indexBeforeSwipe.row + 1
+                 scrollTargetIndexPath = IndexPath(row: row, section: section)
             } else {
                 scrollTargetIndexPath = indexBeforeSwipe
             }
@@ -272,13 +280,33 @@ extension InstructionsCardViewController: UICollectionViewDelegate {
         snapToIndexPath(indexPath)
         
         isInPreview = true
-        let previewIndex = indexPath.row
+        let legIndex = indexPath.section
+        let stepIndex = indexPath.row
         
-        assert(previewIndex >= 0, "Preview Index should not be negative")
-        if isInPreview, let steps = steps, previewIndex >= 0, previewIndex < steps.endIndex {
-            let step = steps[indexPath.section][previewIndex]
+        assert(legIndex >= 0 && stepIndex >= 0, "Indicies should not be negative")
+        guard isInPreview, let steps = steps else { return }
+        
+        switch stepIndex {
+        case 0 where legIndex > 0:
+            let leg = steps[legIndex - 1]
+            let step = leg[leg.endIndex]
+            
             cardCollectionDelegate?.instructionsCardCollection(self, didPreview: step)
+        case steps[legIndex].endIndex where legIndex < steps.endIndex:
+            let leg = steps[legIndex + 1]
+            let step = leg[0]
+            
+            cardCollectionDelegate?.instructionsCardCollection(self, didPreview: step)
+        case 1..<steps[legIndex].endIndex:
+            let step = steps[legIndex][stepIndex]
+            cardCollectionDelegate?.instructionsCardCollection(self, didPreview: step)
+        default:
+            return
         }
+//        if isInPreview, let steps = steps, previewIndex >= 0, previewIndex < steps.endIndex {
+//            let step = steps[indexPath.section][previewIndex]
+//            cardCollectionDelegate?.instructionsCardCollection(self, didPreview: step)
+//        }
     }
 }
 
@@ -307,7 +335,7 @@ extension InstructionsCardViewController: UICollectionViewDataSource {
         cell.container.delegate = self
         
         let step = steps[indexPath.section][indexPath.row]
-        let firstStep = indexPath.row == 0
+        let firstStep = indexPath.section == 0 && indexPath.row == 0
         let distance = firstStep ? distanceRemaining : step.distance
         cell.configure(for: step, distance: distance)
         
