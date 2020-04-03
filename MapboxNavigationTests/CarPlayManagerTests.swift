@@ -440,7 +440,7 @@ class CarPlayManagerSpec: QuickSpec {
         }
         
         //TODO: ADD OPTIONS TO THIS DELEGATE METHOD
-        func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, desiredSimulationMode: SimulationMode) -> NavigationService {
+        func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService {
             let directionsFake = Directions(credentials: Fixture.credentials)
             return MapboxNavigationService(route: route, routeOptions: routeOptions, directions: directionsFake, simulating: desiredSimulationMode)
         }
@@ -468,7 +468,7 @@ class CarPlayManagerFailureDelegateSpy: CarPlayManagerDelegate {
         return nil
     }
     
-    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, desiredSimulationMode: SimulationMode) -> NavigationService {
+    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService {
         fatalError("This is an empty stub.")
     }
     
@@ -495,7 +495,7 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
     public var trailingBarButtons: [CPBarButton]?
     public var mapButtons: [CPMapButton]?
 
-    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, desiredSimulationMode: SimulationMode) -> NavigationService {
+    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService {
         let response = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
         let initialRoute = response.routes!.first!
         let directionsClientSpy = DirectionsSpy()

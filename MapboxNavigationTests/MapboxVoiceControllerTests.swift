@@ -98,7 +98,7 @@ class MapboxVoiceControllerTests: XCTestCase {
         let service = MapboxNavigationService(route: route, routeOptions: routeOptions, directions: directions)
         
         let options = NavigationOptions(navigationService: service)
-        let nvc = NavigationViewController(for: response, options: options)
+        let nvc = NavigationViewController(for: route, routeOptions: routeOptions, navigationOptions: options)
         
         let voiceController = nvc.voiceController as! MapboxVoiceController
         XCTAssertEqual(voiceController.speech.accessToken, "deadbeef",

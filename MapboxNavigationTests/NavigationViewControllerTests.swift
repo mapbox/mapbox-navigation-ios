@@ -23,7 +23,7 @@ class NavigationViewControllerTests: XCTestCase {
         let fakeService = MapboxNavigationService(route: initialRoute, routeOptions: routeOptions, directions: fakeDirections, locationSource: NavigationLocationManagerStub(), simulating: .never)
         let fakeVoice: RouteVoiceController = RouteVoiceControllerStub(navigationService: fakeService)
         let options = NavigationOptions(navigationService: fakeService, voiceController: fakeVoice)
-        let navigationViewController = NavigationViewController(for: response, options: options)
+        let navigationViewController = NavigationViewController(for: initialRoute, routeOptions: routeOptions, navigationOptions: options)
         
         navigationViewController.delegate = self
         
@@ -81,7 +81,7 @@ class NavigationViewControllerTests: XCTestCase {
     
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceMoreThanOnceWithOneStyle() {
         let options = NavigationOptions(styles: [DayStyle()], navigationService: dependencies.navigationService, voiceController: dependencies.voice)
-        let navigationViewController = NavigationViewController(for: response, options: options)
+        let navigationViewController = NavigationViewController(for: initialRoute, routeOptions: routeOptions, navigationOptions: options)
         let service = dependencies.navigationService
         navigationViewController.styleManager.delegate = self
         
@@ -123,7 +123,7 @@ class NavigationViewControllerTests: XCTestCase {
     // If tunnel flags are enabled and we need to switch styles, we should not force refresh the map style because we have only 1 style.
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceWhenOnlyOneStyle() {
         let options = NavigationOptions(styles:[NightStyle()], navigationService: dependencies.navigationService, voiceController: dependencies.voice)
-        let navigationViewController = NavigationViewController(for: response, options: options)
+        let navigationViewController = NavigationViewController(for: initialRoute, routeOptions: routeOptions, navigationOptions: options)
         let service = dependencies.navigationService
         navigationViewController.styleManager.delegate = self
         
@@ -139,7 +139,7 @@ class NavigationViewControllerTests: XCTestCase {
     
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceMoreThanOnceWithTwoStyles() {
         let options = NavigationOptions(styles: [DayStyle(), NightStyle()], navigationService: dependencies.navigationService, voiceController: dependencies.voice)
-        let navigationViewController = NavigationViewController(for: response, options: options)
+        let navigationViewController = NavigationViewController(for: initialRoute, routeOptions: routeOptions, navigationOptions: options)
         let service = dependencies.navigationService
         navigationViewController.styleManager.delegate = self
         
@@ -194,7 +194,7 @@ class NavigationViewControllerTests: XCTestCase {
     func testDestinationAnnotationUpdatesUponReroute() {
         let service = MapboxNavigationService(route: initialRoute, routeOptions: routeOptions,  directions: DirectionsSpy(), simulating: .never)
         let options = NavigationOptions(styles: [TestableDayStyle()], navigationService: service)
-        let navigationViewController = NavigationViewController(for: response, options: options)
+        let navigationViewController = NavigationViewController(for: initialRoute, routeOptions: routeOptions, navigationOptions: options)
         let styleLoaded = keyValueObservingExpectation(for: navigationViewController, keyPath: "mapView.style", expectedValue: nil)
         
         //wait for the style to load -- routes won't show without it.
@@ -232,9 +232,7 @@ class NavigationViewControllerTests: XCTestCase {
         ])
         
         let route = Fixture.route(from: "DCA-Arboretum", options: options)
-        let response = RouteResponse(httpResponse: nil, routes: [route], waypoints: options.waypoints, options: .route(options), credentials: Fixture.credentials)
-        
-        let navigationViewController = NavigationViewController(for: response)
+        let navigationViewController = NavigationViewController(for: route, routeOptions: options)
         
         viewController.present(navigationViewController, animated: false, completion: nil)
         
@@ -260,9 +258,8 @@ class NavigationViewControllerTests: XCTestCase {
             CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
         ])
         let route = Fixture.route(from: "DCA-Arboretum", options: options)
-        let response = RouteResponse(httpResponse: nil, routes: [route], waypoints: options.waypoints, options: .route(options), credentials: Fixture.credentials)
         
-        let subject = NavigationViewController(for: response, options: navOptions)
+        let subject = NavigationViewController(for: route, routeOptions: options, navigationOptions: navOptions)
         XCTAssert(subject.topViewController == top, "Top banner not injected properly into NVC")
         XCTAssert(subject.bottomViewController == bottom, "Bottom banner not injected properly into NVC")
         XCTAssert(subject.mapViewController!.children.contains(top), "Top banner not found in child VC heirarchy")

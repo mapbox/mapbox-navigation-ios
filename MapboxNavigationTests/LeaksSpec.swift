@@ -46,7 +46,7 @@ class LeaksSpec: QuickSpec {
                 let navOptions = NavigationOptions(navigationService: service, voiceController: RouteVoiceControllerStub(navigationService: self.dummySvc))
                 
 
-                return NavigationViewController(for: response, options: navOptions)
+                return NavigationViewController(for: route, routeOptions: self.initialOptions, navigationOptions: navOptions)
             }
             
             it("must not leak") {
