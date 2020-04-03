@@ -169,7 +169,6 @@ open class InstructionsCardViewController: UIViewController {
                  container.updateInstructionCard(distance: distance)
              }
         }
-        
     }
     
     func snapToIndexPath(_ indexPath: IndexPath) {
@@ -304,10 +303,6 @@ extension InstructionsCardViewController: UICollectionViewDelegate {
         default:
             return
         }
-//        if isInPreview, let steps = steps, previewIndex >= 0, previewIndex < steps.endIndex {
-//            let step = steps[indexPath.section][previewIndex]
-//            cardCollectionDelegate?.instructionsCardCollection(self, didPreview: step)
-//        }
     }
 }
 
