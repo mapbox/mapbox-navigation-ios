@@ -1,6 +1,6 @@
 binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" ~> 5.6
 binary "https://www.mapbox.com/ios-sdk/MapboxNavigationNative.json" ~> 6.2.1
-github "mapbox/mapbox-directions-swift" "jerrad/directions-use-result" #== 1.0.0-alpha.1
+github "mapbox/mapbox-directions-swift" == 1.0.0-alpha.1
 github "mapbox/turf-swift" ~> 0.3
 github "mapbox/mapbox-events-ios" ~> 0.10
 github "ceeK/Solar" ~> 2.1.0
