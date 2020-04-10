@@ -13,7 +13,7 @@
 
 import UIKit
 
-
+/// :nodoc:
 public class LanesStyleKit : NSObject {
 
     //// Drawing Methods

@@ -34,14 +34,15 @@ open class RouteController: NSObject {
     }
     
     private var _routeProgress: RouteProgress {
+        willSet {
+            resetObservation(for: _routeProgress)
+        }
         didSet {
             movementsAwayFromRoute = 0
             updateNavigator(with: _routeProgress)
             updateObservation(for: _routeProgress)
         }
     }
-    
-    private var progressObservation: NSKeyValueObservation?
     
     var movementsAwayFromRoute = 0
     
@@ -149,12 +150,20 @@ open class RouteController: NSObject {
         updateObservation(for: _routeProgress)
     }
     
+    deinit {
+        resetObservation(for: _routeProgress)
+    }
+    
+    func resetObservation(for progress: RouteProgress) {
+        progress.legIndexHandler = nil
+    }
+    
     func updateObservation(for progress: RouteProgress) {
-        progressObservation = progress.observe(\.legIndex, options: [.old, .new]) { [weak self] (progress, change) in
-            guard change.newValue != change.oldValue, let legIndex = change.newValue else {
+        progress.legIndexHandler = { [weak self] (oldValue, newValue) in
+            guard newValue != oldValue else {
                 return
             }
-            self?.updateRouteLeg(to: legIndex)
+            self?.updateRouteLeg(to: newValue)
         }
     }
     

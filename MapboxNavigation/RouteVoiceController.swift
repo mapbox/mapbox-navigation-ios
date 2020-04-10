@@ -79,9 +79,6 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     
     var lastSpokenInstruction: SpokenInstruction?
     
-    var volumeToken: NSKeyValueObservation?
-    var muteToken: NSKeyValueObservation?
-    
     /**
      Default initializer for `RouteVoiceController`.
      */
@@ -118,19 +115,23 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(didPassSpokenInstructionPoint(notification:)), name: .routeControllerDidPassSpokenInstructionPoint, object: service.router)
         NotificationCenter.default.addObserver(self, selector: #selector(pauseSpeechAndPlayReroutingDing(notification:)), name: .routeControllerWillReroute, object: service.router)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: .routeControllerDidReroute, object: service.router)
-        
-        muteToken = NavigationSettings.shared.observe(\.voiceMuted) { [weak self] (settings, change) in
-            self?.speechSynthesizer.muted = settings.voiceMuted
-        }
-        volumeToken = NavigationSettings.shared.observe(\.voiceVolume) { [weak self] (settings, change) in
-            self?.speechSynthesizer.volume = settings.voiceVolume
-        }
+        NotificationCenter.default.addObserver(self, selector: #selector(didUpdateSettings(notification:)), name: .navigationSettingsDidChange, object: nil)
     }
     
     func suspendNotifications() {
         NotificationCenter.default.removeObserver(self, name: .routeControllerDidPassSpokenInstructionPoint, object: nil)
         NotificationCenter.default.removeObserver(self, name: .routeControllerWillReroute, object: nil)
         NotificationCenter.default.removeObserver(self, name: .routeControllerDidReroute, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .navigationSettingsDidChange, object: nil)
+    }
+    
+    @objc func didUpdateSettings(notification: NSNotification) {
+        if let isMuted = notification.userInfo?[NavigationSettings.StoredProperty.voiceMuted.key] as? Bool {
+            speechSynthesizer.muted = isMuted
+        }
+        if let volume = notification.userInfo?[NavigationSettings.StoredProperty.voiceVolume.key] as? Float {
+            speechSynthesizer.volume = volume
+        }
     }
     
     @objc func didReroute(notification: NSNotification) {

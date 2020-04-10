@@ -14,7 +14,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     public weak var delegate: SpeechSynthesizingDelegate?
     public var muted: Bool = false {
         didSet {
-            updatePlayerVolume()
+            updatePlayerVolume(audioPlayer)
         }
     }
     public var volume: Float = 1.0 {
@@ -212,15 +212,15 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
         return cachedDataForKey(key, with: locale) != nil
     }
     
-    private func updatePlayerVolume() {
-        audioPlayer?.volume = muted ? 0.0 : volume
+    private func updatePlayerVolume(_ player: AVAudioPlayer?) {
+        player?.volume = muted ? 0.0 : volume
     }
     
     private func safeInitializeAudioPlayer(data: Data, instruction: SpokenInstruction) -> Result<AVAudioPlayer, SpeechError> {
         do {
             let player = try AVAudioPlayer(data: data)
             player.delegate = self
-            updatePlayerVolume()
+            updatePlayerVolume(player)
             
             return .success(player)
         } catch {

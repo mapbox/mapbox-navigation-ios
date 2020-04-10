@@ -38,7 +38,7 @@ open class Style: NSObject {
     /**
      URL of the style to display on the map when previewing a route, for example on CarPlay or your own route preview map.
      */
-    @objc open var previewMapStyleURL = MGLStyle.navigationPreviewDayStyleURL
+    @objc open var previewMapStyleURL: URL = MGLStyle.navigationPreviewDayStyleURL
     
     /**
      Applies the style for all changed properties.
@@ -228,7 +228,7 @@ open class StylableLabel: UILabel {
     }
 }
 
-/// :nodoc
+/// :nodoc:
 @objc(MBStylableView)
 open class StylableView: UIView {
     @objc dynamic var borderWidth: CGFloat = 0.0 {

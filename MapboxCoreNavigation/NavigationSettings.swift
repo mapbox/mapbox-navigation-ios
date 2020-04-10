@@ -7,25 +7,53 @@ import Foundation
  
  To specify criteria when calculating routes, use the `NavigationRouteOptions` class. To customize the user experience during a particular turn-by-turn navigation session, use the `NavigationOptions` class when initializing a `NavigationViewController`.
  */
-public class NavigationSettings: NSObject {
+public class NavigationSettings {
+    
+    public enum StoredProperty: CaseIterable {
+        case voiceVolume, voiceMuted, distanceUnit
+
+        public var key: String {
+            switch self {
+            case .voiceVolume:
+                return "voiceVolume"
+            case .voiceMuted:
+                return "voiceMuted"
+            case .distanceUnit:
+                return "distanceUnit"
+            }
+        }
+    }
+    
     /**
      The volume that the voice controller will use.
      
      This volume is relative to the system’s volume where 1.0 is same volume as the system.
      */
-    @objc public dynamic var voiceVolume: Float = 1.0
+    public dynamic var voiceVolume: Float = 1.0 {
+        didSet {
+            notifyChanged(property: .voiceVolume, value: voiceVolume)
+        }
+    }
     
     /**
      Specifies whether to mute the voice controller or not.
      */
-    @objc public dynamic var voiceMuted : Bool = false
+    public dynamic var voiceMuted : Bool = false {
+        didSet {
+            notifyChanged(property: .voiceMuted, value: voiceMuted)
+        }
+    }
     
     /**
      Specifies the preferred distance measurement unit.
      - note: Anything but `kilometer` and `mile` will fall back to the default measurement for the current locale.
         Meters and feets will be used when the presented distances are small enough. See `DistanceFormatter` for more information.
      */
-    @objc public dynamic var distanceUnit : LengthFormatter.Unit = Locale.current.usesMetric ? .kilometer : .mile
+    public dynamic var distanceUnit : LengthFormatter.Unit = Locale.current.usesMetric ? .kilometer : .mile {
+        didSet {
+            notifyChanged(property: .distanceUnit, value: distanceUnit.rawValue)
+        }
+    }
     
     var usesMetric: Bool {
         get {
@@ -56,43 +84,36 @@ public class NavigationSettings: NSObject {
         })
     }()
     
-    override init() {
-        super.init()
-        for property in properties {
-            guard let key = property.label else { continue }
-            let val = UserDefaults.standard.object(forKey: key.prefixed) ?? value(forKey: key)
-            setValue(val, forKey: key)
-            addObserver(self, forKeyPath: key, options: .new, context: nil)
-        }
+    private func notifyChanged(property: StoredProperty, value: Any) {
+        UserDefaults.standard.set(value, forKey: property.key.prefixed)
+        NotificationCenter.default.post(name: .navigationSettingsDidChange,
+                                        object: nil,
+                                        userInfo: [property.key: value])
     }
     
-    deinit {
-        for property in properties {
-            guard let key = property.label else { continue }
-            removeObserver(self, forKeyPath: key)
-        }
-    }
-    
-    override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
-        var found = false
-        
-        for property in properties {
-            guard let key = property.label else { continue }
+    private func setupFromDefaults() {
+        for property in StoredProperty.allCases {
             
-            if key == keyPath {
-                guard let val = change?[.newKey] else { continue }
-                
-                UserDefaults.standard.set(val, forKey: key.prefixed)
-                NotificationCenter.default.post(name: .navigationSettingsDidChange, object: nil, userInfo: [key: val])
-                
-                found = true
-                break
+            guard let val = UserDefaults.standard.object(forKey: property.key.prefixed) else { continue }
+            switch property {
+            case .voiceVolume:
+                if let volume = val as? Float {
+                    voiceVolume = volume
+                }
+            case .voiceMuted:
+                if let muted = val as? Bool {
+                    voiceMuted = muted
+                }
+            case .distanceUnit:
+                if let value = val as? Int, let unit = LengthFormatter.Unit(rawValue: value) {
+                    distanceUnit = unit
+                }
             }
         }
-        
-        if !found {
-            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
-        }
+    }
+    
+    init() {
+        setupFromDefaults()
     }
 }
 
