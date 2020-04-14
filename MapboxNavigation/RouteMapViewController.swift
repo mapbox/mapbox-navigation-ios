@@ -703,25 +703,11 @@ extension RouteMapViewController: NavigationViewDelegate {
         }
     }
 
-    private func roadFeature(for line: MGLPolylineFeature) -> (roadName: String?, shieldName: NSAttributedString?) {
-        let roadNameRecord = roadFeatureHelper(ref: line.attribute(forKey: "ref"),
-                                               shield: line.attribute(forKey: "shield"),
-                                               reflen: line.attribute(forKey: "reflen"),
-                                               name: line.attribute(forKey: "name"))
-
-        return (roadName: roadNameRecord.roadName, shieldName: roadNameRecord.shieldName)
-    }
-
-    private func roadFeature(for line: MGLMultiPolylineFeature) -> (roadName: String?, shieldName: NSAttributedString?) {
-        let roadNameRecord = roadFeatureHelper(ref: line.attribute(forKey: "ref"),
-                                               shield: line.attribute(forKey: "shield"),
-                                               reflen: line.attribute(forKey: "reflen"),
-                                               name: line.attribute(forKey: "name"))
-
-        return (roadName: roadNameRecord.roadName, shieldName: roadNameRecord.shieldName)
-    }
-
-    private func roadFeatureHelper(ref: Any?, shield: Any?, reflen: Any?, name: Any?) -> (roadName: String?, shieldName: NSAttributedString?) {
+    private func roadFeature(for line: MGLFeature) -> (roadName: String?, shieldName: NSAttributedString?) {
+        let ref = line.attribute(forKey: "ref")
+        let shield = line.attribute(forKey: "shield")
+        let reflen = line.attribute(forKey: "reflen")
+        let name = line.attribute(forKey: "name")
         var currentShieldName: NSAttributedString?, currentRoadName: String?
 
         if let text = ref as? String, let shieldID = shield as? String, let reflenDigit = reflen as? Int {
