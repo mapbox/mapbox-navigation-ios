@@ -16,6 +16,7 @@
 * Renamed `NavigationMapView.showWaypoints(_:legIndex:)` to `NavigationMapView.showWaypoints(on:legIndex:)`. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
 * Removed the `NavigationMapView.navigationMapDelegate` property in favor of `NavigationMapView.navigationMapViewDelegate`. ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
 * Added a speed limit indicator to the upper-left corner of the map view during turn-by-turn navigation (upper-right corner in CarPlay). To hide the speed limit indicator, set the `NavigationViewController.showsSpeedLimits` property to `false`. To customize the indicator’s colors, configure `SpeedLimitView`’s appearance proxy inside a `Style` subclass. ([#2291](https://github.com/mapbox/mapbox-navigation-ios/pull/2291))
+* Fixed an issue where the current road name label contained an oversized route shield when the current map style was a custom style created in Mapbox Studio. ([#2357](https://github.com/mapbox/mapbox-navigation-ios/pull/2357))
 
 ### Spoken instructions
 * Removed `MapboxVoiceController.play(_:)` in favor of `MapboxVoiceController.play(instruction:data:)`. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230), [#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
