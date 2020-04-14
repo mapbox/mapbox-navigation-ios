@@ -706,10 +706,12 @@ extension RouteMapViewController: NavigationViewDelegate {
     private func roadFeature(for line: MGLFeature) -> (roadName: String?, shieldName: NSAttributedString?) {
         var currentShieldName: NSAttributedString?, currentRoadName: String?
 
-        if let text = line.attribute(forKey: "ref") as? String,
+        if let ref = line.attribute(forKey: "ref") as? String,
             let shield = line.attribute(forKey: "shield") as? String,
             let reflen = line.attribute(forKey: "reflen") as? Int {
-            currentShieldName = roadShieldName(for: text, shield: shield, reflen: reflen)
+            let textColor = roadShieldTextColor(line: line) ?? .black
+            let imageName = "\(shield)-\(reflen)"
+            currentShieldName = roadShieldAttributedText(for: ref, textColor: textColor, imageName: imageName)
         }
 
         if let roadName = line.attribute(forKey: "name") as? String {
@@ -724,12 +726,35 @@ extension RouteMapViewController: NavigationViewDelegate {
 
         return (roadName: currentRoadName, shieldName: currentShieldName)
     }
+    
+    func roadShieldTextColor(line: MGLFeature) -> UIColor? {
+        guard let shield = line.attribute(forKey: "shield") as? String else {
+            return nil
+        }
+        
+        // shield_text_color is present in Mapbox Streets source v8 but not v7.
+        guard let shieldTextColor = line.attribute(forKey: "shield_text_color") as? String else {
+            let currentShield = HighwayShield.RoadType(rawValue: shield)
+            return currentShield?.textColor
+        }
+        
+        switch shieldTextColor {
+        case "black":
+            return .black
+        case "blue":
+            return .blue
+        case "white":
+            return .white
+        case "yellow":
+            return .yellow
+        case "orange":
+            return .orange
+        default:
+            return .black
+        }
+    }
 
-    private func roadShieldName(for text: String, shield: String, reflen: Int) -> NSAttributedString? {
-        let currentShield = HighwayShield.RoadType(rawValue: shield)
-        let textColor = currentShield?.textColor ?? .black
-        let imageName = "\(shield)-\(reflen)"
-
+    private func roadShieldAttributedText(for text: String, textColor: UIColor, imageName: String) -> NSAttributedString? {
         guard let image = mapView.style?.image(forName: imageName) else {
             return nil
         }
