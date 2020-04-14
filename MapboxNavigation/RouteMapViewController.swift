@@ -704,17 +704,15 @@ extension RouteMapViewController: NavigationViewDelegate {
     }
 
     private func roadFeature(for line: MGLFeature) -> (roadName: String?, shieldName: NSAttributedString?) {
-        let ref = line.attribute(forKey: "ref")
-        let shield = line.attribute(forKey: "shield")
-        let reflen = line.attribute(forKey: "reflen")
-        let name = line.attribute(forKey: "name")
         var currentShieldName: NSAttributedString?, currentRoadName: String?
 
-        if let text = ref as? String, let shieldID = shield as? String, let reflenDigit = reflen as? Int {
-            currentShieldName = roadShieldName(for: text, shield: shieldID, reflen: reflenDigit)
+        if let text = line.attribute(forKey: "ref") as? String,
+            let shield = line.attribute(forKey: "shield") as? String,
+            let reflen = line.attribute(forKey: "reflen") as? Int {
+            currentShieldName = roadShieldName(for: text, shield: shield, reflen: reflen)
         }
 
-        if let roadName = name as? String {
+        if let roadName = line.attribute(forKey: "name") as? String {
             currentRoadName = roadName
         }
 
@@ -727,9 +725,7 @@ extension RouteMapViewController: NavigationViewDelegate {
         return (roadName: currentRoadName, shieldName: currentShieldName)
     }
 
-    private func roadShieldName(for text: String?, shield: String?, reflen: Int?) -> NSAttributedString? {
-        guard let text = text, let shield = shield, let reflen = reflen else { return nil }
-
+    private func roadShieldName(for text: String, shield: String, reflen: Int) -> NSAttributedString? {
         let currentShield = HighwayShield.RoadType(rawValue: shield)
         let textColor = currentShield?.textColor ?? .black
         let imageName = "\(shield)-\(reflen)"
