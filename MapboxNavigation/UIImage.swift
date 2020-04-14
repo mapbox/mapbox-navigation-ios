@@ -18,7 +18,7 @@ extension UIImage {
         return UIGraphicsGetImageFromCurrentImageContext()
     }
     
-    func insert(text: NSString, color: UIColor, font: UIFont, scale: CGFloat) -> UIImage {
+    func withCenteredText(_ text: String, color: UIColor, font: UIFont, scale: CGFloat) -> UIImage {
         let renderer = UIGraphicsImageRenderer(size: size)
         return renderer.image { (context) in
             let textStyle = NSMutableParagraphStyle()
@@ -28,7 +28,7 @@ extension UIImage {
             let rect = CGRect(origin: .zero, size: size)
             draw(in: rect)
             
-            text.draw(in: rect.offsetBy(dx: 0, dy: (size.height - font.lineHeight) / 2).integral, withAttributes: textFontAttributes)
+            (text as NSString).draw(in: rect.offsetBy(dx: 0, dy: (size.height - font.lineHeight) / 2).integral, withAttributes: textFontAttributes)
         }
     }
 }

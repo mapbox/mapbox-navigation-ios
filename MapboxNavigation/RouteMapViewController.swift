@@ -752,7 +752,8 @@ extension RouteMapViewController: NavigationViewDelegate {
             return nil
         }
 
-        let attachment = RoadNameLabelAttachment(image: image, text: text, color: textColor, font: UIFont.boldSystemFont(ofSize: UIFont.systemFontSize), scale: UIScreen.main.scale)
+        let attachment = ShieldAttachment()
+        attachment.image = image.withCenteredText(text, color: textColor, font: UIFont.boldSystemFont(ofSize: UIFont.systemFontSize), scale: UIScreen.main.scale)
         return NSAttributedString(attachment: attachment)
     }
 
