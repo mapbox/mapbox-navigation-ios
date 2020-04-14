@@ -25,7 +25,7 @@ public protocol SpeechSynthesizing: class {
     ///
     /// It is not guaranteed that all these instructions will be spoken. For example navigation may be re-routed.
     /// This method may be (and most likely will be) called multiple times along the route progress
-    func changedIncomingSpokenInstructions(_ instructions: [SpokenInstruction])
+    func prepareIncomingSpokenInstructions(_ instructions: [SpokenInstruction])
     
     /// A request to vocalize the instruction
     /// - parameter instruction: an instruction to be vocalized

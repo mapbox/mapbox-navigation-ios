@@ -48,7 +48,7 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
     
     // MARK: - Public methods
     
-    open func changedIncomingSpokenInstructions(_ instructions: [SpokenInstruction]) {
+    open func prepareIncomingSpokenInstructions(_ instructions: [SpokenInstruction]) {
         // Do nothing
     }
     
@@ -81,7 +81,7 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
         guard let utteranceToSpeak = utterance else {
             delegate?.speechSynthesizer(self,
                                         didSpeak: instruction,
-                                        with: SpeechError.unsupportedLocale(languageCode: Locale.preferredLocalLanguageCountryCode))
+                                        with: SpeechError.unsupportedLocale(locale: Locale.nationalizedCurrent))
             return
         }
         if let previousInstrcution = previousInstrcution, speechSynth.isSpeaking {

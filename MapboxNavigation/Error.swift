@@ -32,7 +32,7 @@ public enum SpeechFailureAction: String {
  */
 public enum SpeechError: LocalizedError {
     /**
-     The speech engine API request resulted with internal error.
+     An error occurred when requesting speech assets from a server API.
      - parameter instruction: the instruction that failed.
      - parameter options: the SpeechOptions that were used to make the API request.
      - parameter underlying: the underlying `Error` returned by the API.
@@ -72,8 +72,8 @@ public enum SpeechError: LocalizedError {
     
     /**
      The speech engine does not support current locale
-     - parameter languageCode: Language Code, which represents the adressed locale
+     - parameter languageCode: Language code representing the addressed locale.
      */
-    case unsupportedLocale(languageCode: String)
+    case unsupportedLocale(locale: Locale)
     
 }

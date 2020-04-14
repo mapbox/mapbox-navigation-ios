@@ -18,7 +18,7 @@ class SpeechSynthesizerStub: SpeechSynthesizing {
     var isSpeaking: Bool = false
     var locale: Locale = Locale.autoupdatingCurrent
     
-    func changedIncomingSpokenInstructions(_ instructions: [SpokenInstruction]) {
+    func prepareIncomingSpokenInstructions(_ instructions: [SpokenInstruction]) {
         // do nothing
     }
     

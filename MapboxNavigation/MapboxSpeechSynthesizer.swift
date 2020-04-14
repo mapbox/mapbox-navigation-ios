@@ -38,13 +38,13 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     private var speech: SpeechSynthesizer
     private var audioTask: URLSessionDataTask?
     
-    private var previousInstrcution: SpokenInstruction?
+    private var previousInstruction: SpokenInstruction?
     
     // MARK: - Lifecycle
     
-    public init(_ accessToken: String? = nil) {
+    public init(_ accessToken: String? = nil, host: String? = nil) {
         self.cache = DataCache()
-        self.speech = SpeechSynthesizer(accessToken: accessToken)
+        self.speech = SpeechSynthesizer(accessToken: accessToken, host: host)
     }
     
     deinit {        
@@ -53,7 +53,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     
     // MARK: - Methods
     
-    open func changedIncomingSpokenInstructions(_ instructions: [SpokenInstruction]) {
+    open func prepareIncomingSpokenInstructions(_ instructions: [SpokenInstruction]) {
         instructions
             .prefix(stepsAheadToCache)
             .forEach {
@@ -66,7 +66,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     open func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress) {
         if let data = cachedDataForKey(instruction.ssmlText, with: locale) {
             safeDuckAudio(instruction: instruction)
-            speakWithMapboxSynthesizer(instruction: instruction,
+            speak(instruction: instruction,
                                        instructionData: data)
         }
         else {
@@ -125,17 +125,17 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
             
             self.cache(data, forKey: ssmlText, with: self.locale)
             self.safeDuckAudio(instruction: modifiedInstruction)
-            self.speakWithMapboxSynthesizer(instruction: modifiedInstruction,
+            self.speak(instruction: modifiedInstruction,
                                             instructionData: data)
         }
         
         audioTask?.resume()
     }
     
-    func speakWithMapboxSynthesizer(instruction: SpokenInstruction, instructionData: Data) {
+    func speak(instruction: SpokenInstruction, instructionData: Data) {
         
         if let audioPlayer = audioPlayer {
-            if let previousInstrcution = previousInstrcution, audioPlayer.isPlaying{
+            if let previousInstrcution = previousInstruction, audioPlayer.isPlaying{
                 delegate?.speechSynthesizer(self,
                                             didInterrupt: previousInstrcution,
                                             with: instruction)
@@ -148,7 +148,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
                                          instruction: instruction) {
         case .success(let player):
             audioPlayer = player
-            previousInstrcution = instruction
+            previousInstruction = instruction
             audioPlayer?.play()
         case .failure(let error):
             safeUnduckAudio(instruction: instruction)
@@ -239,9 +239,9 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
 
 extension MapboxSpeechSynthesizer: AVAudioPlayerDelegate {
     public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        safeUnduckAudio(instruction: previousInstrcution)
+        safeUnduckAudio(instruction: previousInstruction)
         
-        guard let instruction = previousInstrcution else {
+        guard let instruction = previousInstruction else {
             assert(false, "Speech Synthesizer finished speaking 'nil' instruction")
             return
         }

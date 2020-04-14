@@ -13,7 +13,7 @@ class FailingSpeechSynthesizerMock: SpeechSynthesizerStub {
     override func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress) {
         delegate?.speechSynthesizer(self,
                                     didSpeak: instruction,
-                                    with: failing ? SpeechError.unsupportedLocale(languageCode: "none") : nil)
+                                    with: failing ? SpeechError.unsupportedLocale(Locale.current) : nil)
         
         speakExpectation?.fulfill()
     }
@@ -26,7 +26,7 @@ class FailingSpeechSynthesizerMock: SpeechSynthesizerStub {
 class MapboxSpeechSynthMock: MapboxSpeechSynthesizer {
     var speakExpectation: XCTestExpectation?
     
-    override func speakWithMapboxSynthesizer(instruction: SpokenInstruction, instructionData: Data) {
+    override func speak(instruction: SpokenInstruction, instructionData: Data) {
         
         
         speakExpectation?.fulfill()
@@ -69,7 +69,7 @@ class SpeechSynthesizersControllerTests: XCTestCase {
         
         (synthesizers[0] as! FailingSpeechSynthesizerMock).speakExpectation = speakExpectation
         (synthesizers[1] as! FailingSpeechSynthesizerMock).speakExpectation = dontSpeakExpectation
-        let speechSynthesizersController = SpeechSynthesizersController(synthesizers)
+        let speechSynthesizersController = MultiplexedSpeechSynthesizer(synthesizers)
         
         
         speechSynthesizersController.speak(SpokenInstruction(distanceAlongStep: .init(),
@@ -81,7 +81,7 @@ class SpeechSynthesizersControllerTests: XCTestCase {
     }
     
     func testFallback() {
-        let speechSynthesizersController = SpeechSynthesizersController(synthesizers)
+        let speechSynthesizersController = MultiplexedSpeechSynthesizer(synthesizers)
         let expectation = XCTestExpectation(description: "Both Synthesizers should be called")
         expectation.expectedFulfillmentCount = 2
         (synthesizers[0] as! FailingSpeechSynthesizerMock).failing = true
@@ -104,7 +104,7 @@ class SpeechSynthesizersControllerTests: XCTestCase {
         let dummyService = MapboxNavigationService(route: route)
         
         var routeController: RouteVoiceController? = RouteVoiceController(navigationService: dummyService,
-                                                                          speechSynthesizer: SpeechSynthesizersController(synthesizers))
+                                                                          speechSynthesizer: MultiplexedSpeechSynthesizer(synthesizers))
         
         synthesizers = []
         routeController = nil

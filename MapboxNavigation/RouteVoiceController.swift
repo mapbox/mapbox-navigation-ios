@@ -51,7 +51,7 @@ extension SpokenInstruction {
  
  You initialize a voice controller using a `NavigationService` instance. The voice controller observes when the navigation service hints that the user has passed a _spoken instruction point_ and responds by calling it's `speechSynthesizer` to handle the vocalization.
  
- If you want to use your own custom `SpeechSynthesizing` implementation - also pass it during initialization. If no implementation is provided - `SpeechSynthesizersController` will be used by default.
+ If you want to use your own custom `SpeechSynthesizing` implementation - also pass it during initialization. If no implementation is provided - `MultiplexedSpeechSynthesizer` will be used by default.
  
  You can also subclass `RouteVoiceController` to implement you own mechanism of monitoring navgiation events and calling `speechSynthesizer`.
  */
@@ -59,7 +59,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     typealias AudioControlFailureHandler = (SpeechError) -> Void
     
     /**
-     `SpeechSynthesizing` implementation, used to vocalize the spoken instructions. Defaults to `SpeechSynthesizersController`
+     `SpeechSynthesizing` implementation, used to vocalize the spoken instructions. Defaults to `MultiplexedSpeechSynthesizer`
      */
     public let speechSynthesizer: SpeechSynthesizing
     /**
@@ -82,8 +82,8 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     /**
      Default initializer for `RouteVoiceController`.
      */
-    public init(navigationService: NavigationService, speechSynthesizer: SpeechSynthesizing? = nil) {
-        self.speechSynthesizer = speechSynthesizer ?? SpeechSynthesizersController()
+    public init(navigationService: NavigationService, speechSynthesizer: SpeechSynthesizing? = nil, accessToken: String? = nil, host: String? = nil) {
+        self.speechSynthesizer = speechSynthesizer ?? MultiplexedSpeechSynthesizer(accessToken: accessToken, host: host)
         
         super.init()
 
@@ -176,7 +176,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         
         speechSynthesizer.locale = routeProgress.route.routeOptions.locale
 
-        speechSynthesizer.changedIncomingSpokenInstructions(routeProgress.currentLegProgress.currentStepProgress.remainingSpokenInstructions ?? [])
+        speechSynthesizer.prepareIncomingSpokenInstructions(routeProgress.currentLegProgress.currentStepProgress.remainingSpokenInstructions ?? [])
         
         guard let instruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction else { return }
         speechSynthesizer.speak(instruction,

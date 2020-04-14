@@ -6,7 +6,7 @@ import MapboxSpeech
 
 /// `SpeechSynthesizing`implementation, aggregating other implementations, to allow 'fallback' mechanism.
 /// Can be initialized with array of synthesizers which will be called in order of appearance, untill one of them is capable to vocalize current `SpokenInstruction`
-open class SpeechSynthesizersController: SpeechSynthesizing {
+open class MultiplexedSpeechSynthesizer: SpeechSynthesizing {
     
     // MARK: - Properties
     
@@ -37,9 +37,9 @@ open class SpeechSynthesizersController: SpeechSynthesizing {
     
     // MARK: - Lifecycle
     
-    public init(_ speechSynthesizers: [SpeechSynthesizing]? = nil, accessToken: String? = nil) {
+    public init(_ speechSynthesizers: [SpeechSynthesizing]? = nil, accessToken: String? = nil, host: String? = nil) {
         self.speechSynthesizers = speechSynthesizers ?? [
-            MapboxSpeechSynthesizer(accessToken),
+            MapboxSpeechSynthesizer(accessToken, host: host),
             SystemSpeechSynthesizer()
         ]
         
@@ -48,13 +48,13 @@ open class SpeechSynthesizersController: SpeechSynthesizing {
     
     // MARK: - Public Methods
     
-    public func changedIncomingSpokenInstructions(_ instructions: [SpokenInstruction]) {
-        speechSynthesizers.forEach { $0.changedIncomingSpokenInstructions(instructions) }
+    public func prepareIncomingSpokenInstructions(_ instructions: [SpokenInstruction]) {
+        speechSynthesizers.forEach { $0.prepareIncomingSpokenInstructions(instructions) }
     }
     
     public func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress) {        
         guard let synthesizer = speechSynthesizers.first else {
-            assert(false, "SpeechSynthesizersController has 0 speechSynthesizers")
+            assertionFailure("MultiplexedSpeechSynthesizer has 0 speechSynthesizers")
             delegate?.speechSynthesizer(self,
                                         didSpeak: instruction,
                                         with: nil)
@@ -74,7 +74,7 @@ open class SpeechSynthesizersController: SpeechSynthesizing {
     }
 }
 
-extension SpeechSynthesizersController: SpeechSynthesizingDelegate {
+extension MultiplexedSpeechSynthesizer: SpeechSynthesizingDelegate {
     
     public func speechSynthesizer(_ speechSynthesizer: SpeechSynthesizing, didSpeak instruction: SpokenInstruction, with error: SpeechError?) {
         if let error = error {

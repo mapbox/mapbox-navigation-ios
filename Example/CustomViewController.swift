@@ -16,7 +16,6 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
     var userRoute: Route?
 
     // Start voice instructions
-//    var voiceController: MapboxVoiceController!
     
     var stepsViewController: StepsViewController?
 
