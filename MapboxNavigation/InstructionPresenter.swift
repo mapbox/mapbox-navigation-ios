@@ -268,12 +268,7 @@ class RoadNameLabelAttachment: TextInstruction {
             return nil
         }
         
-        var currentImage: UIImage?
-        let textHeight = font.lineHeight
-        let pointY = (image.size.height - textHeight) / 2
-        currentImage = image.insert(text: text as NSString, color: color, font: font, atPoint: CGPoint(x: 0, y: pointY), scale: scale)
-        
-        return currentImage
+        return image.insert(text: text as NSString, color: color, font: font, scale: scale)
     }
     
     convenience init(image: UIImage, text: String, color: UIColor, font: UIFont, scale: CGFloat) {

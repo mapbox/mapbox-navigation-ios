@@ -18,21 +18,17 @@ extension UIImage {
         return UIGraphicsGetImageFromCurrentImageContext()
     }
     
-    func insert(text: NSString, color: UIColor, font: UIFont, atPoint: CGPoint, scale: CGFloat) -> UIImage? {
-        UIGraphicsBeginImageContextWithOptions(size, false, scale)
-        
-        let textStyle = NSMutableParagraphStyle()
-        textStyle.alignment = .center
-        
-        let textFontAttributes: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: color, .paragraphStyle: textStyle]
-        draw(in: CGRect(x: 0, y: 0, width: size.width, height: size.height))
-        
-        let rect = CGRect(x: atPoint.x, y: atPoint.y, width: size.width, height: size.height)
-        text.draw(in: rect.integral, withAttributes: textFontAttributes)
-        
-        let compositedImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        
-        return compositedImage
+    func insert(text: NSString, color: UIColor, font: UIFont, scale: CGFloat) -> UIImage {
+        let renderer = UIGraphicsImageRenderer(size: size)
+        return renderer.image { (context) in
+            let textStyle = NSMutableParagraphStyle()
+            textStyle.alignment = .center
+            
+            let textFontAttributes: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: color, .paragraphStyle: textStyle]
+            let rect = CGRect(origin: .zero, size: size)
+            draw(in: rect)
+            
+            text.draw(in: rect.offsetBy(dx: 0, dy: (size.height - font.lineHeight) / 2).integral, withAttributes: textFontAttributes)
+        }
     }
 }
