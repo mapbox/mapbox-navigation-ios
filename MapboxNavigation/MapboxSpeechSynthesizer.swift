@@ -67,7 +67,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
         if let data = cachedDataForKey(instruction.ssmlText, with: locale) {
             safeDuckAudio(instruction: instruction)
             speak(instruction: instruction,
-                                       instructionData: data)
+                  instructionData: data)
         }
         else {
             fetchAndSpeak(instruction: instruction)
@@ -126,7 +126,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
             self.cache(data, forKey: ssmlText, with: self.locale)
             self.safeDuckAudio(instruction: modifiedInstruction)
             self.speak(instruction: modifiedInstruction,
-                                            instructionData: data)
+                       instructionData: data)
         }
         
         audioTask?.resume()
@@ -173,15 +173,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     }
     
     func safeDuckAudio(instruction: SpokenInstruction?){
-        do {
-            let audioSession = AVAudioSession.sharedInstance()
-            if #available(iOS 12.0, *) {
-                try audioSession.setCategory(.playback, mode: .voicePrompt, options: [.duckOthers, .mixWithOthers])
-            } else {
-                try audioSession.setCategory(.ambient, mode: .spokenAudio, options: [.duckOthers, .mixWithOthers])
-            }
-            try audioSession.setActive(true)
-        } catch {
+        if let error = AVAudioSession.sharedInstance().tryDuckAudio() {
             delegate?.speechSynthesizer(self,
                                         encounteredError: SpeechError.unableToControlAudio(instruction: instruction,
                                                                                            action: .duck,
@@ -190,10 +182,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     }
     
     func safeUnduckAudio(instruction: SpokenInstruction?) {
-        do {
-            try AVAudioSession.sharedInstance().setActive(false,
-                                                          options: [.notifyOthersOnDeactivation])
-        } catch {
+        if let error = AVAudioSession.sharedInstance().tryUnduckAudio() {
             delegate?.speechSynthesizer(self,
                                         encounteredError: SpeechError.unableToControlAudio(instruction: instruction,
                                                                                            action: .unduck,

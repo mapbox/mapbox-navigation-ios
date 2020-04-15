@@ -30,7 +30,7 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
     }
     public var isSpeaking: Bool { return speechSynth.isSpeaking }
     public var locale: Locale = Locale.autoupdatingCurrent
-
+    
     private var speechSynth: AVSpeechSynthesizer
     private var previousInstrcution: SpokenInstruction?
     
@@ -105,15 +105,8 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
     // MARK: - Methods
     
     private func safeDuckAudio() {
-        do {
-            let audioSession = AVAudioSession.sharedInstance()
-            if #available(iOS 12.0, *) {
-                try audioSession.setCategory(.playback, mode: .voicePrompt, options: [.duckOthers, .mixWithOthers])
-            } else {
-                try audioSession.setCategory(.ambient, mode: .spokenAudio, options: [.duckOthers, .mixWithOthers])
-            }
-            try audioSession.setActive(true)
-        } catch {
+        
+        if let error = AVAudioSession.sharedInstance().tryDuckAudio() {
             guard let instruction = previousInstrcution else {
                 assert(false, "Speech Synthesizer finished speaking 'nil' instruction")
                 return
@@ -127,10 +120,7 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
     }
     
     private func safeUnduckAudio() {
-        do {
-            try AVAudioSession.sharedInstance().setActive(false,
-                                                          options: [.notifyOthersOnDeactivation])
-        } catch {
+        if let error = AVAudioSession.sharedInstance().tryUnduckAudio() {
             guard let instruction = previousInstrcution else {
                 assert(false, "Speech Synthesizer finished speaking 'nil' instruction")
                 return
