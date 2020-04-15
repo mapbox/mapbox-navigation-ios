@@ -207,7 +207,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         
         self.navigationService = options?.navigationService ?? MapboxNavigationService(route: route)
         self.navigationService.delegate = self
-//        self.voiceController = options?.voiceController ?? MapboxVoiceController(navigationService: navigationService, speechClient: SpeechSynthesizer(accessToken: navigationService?.directions.accessToken, host: navigationService?.directions.apiEndpoint.host))
 
         self.voiceController = options?.voiceController ?? RouteVoiceController(navigationService: navigationService,accessToken: navigationService.directions.accessToken, host: navigationService.directions.apiEndpoint.host)
         

@@ -14,12 +14,12 @@ open class MultiplexedSpeechSynthesizer: SpeechSynthesizing {
     
     public var muted: Bool = false {
         didSet {
-            speechSynthesizers.forEach { $0.muted = muted }
+            applyMute()
         }
     }
     public var volume: Float = 1.0 {
         didSet {
-            speechSynthesizers.forEach { $0.volume = volume }
+            applyVolume()
         }
     }
     public var isSpeaking: Bool {
@@ -27,23 +27,66 @@ open class MultiplexedSpeechSynthesizer: SpeechSynthesizing {
     }
     public var locale: Locale = Locale.autoupdatingCurrent {
         didSet {
-            speechSynthesizers.forEach { $0.locale = locale }
+            applyLocale()
         }
     }
     
-    public  let speechSynthesizers: [SpeechSynthesizing]
+    public var speechSynthesizers: [SpeechSynthesizing] {
+        willSet {
+            
+            var found: [SpeechSynthesizing] = []
+            let duplicate = newValue.first { newSynth in
+                if found.first(where: {
+                    return $0 === newSynth
+                }) == nil {
+                    found.append(newSynth)
+                    return false
+                }
+                return true
+            }
+            
+            precondition(duplicate == nil, "Single `SpeechSynthesizing` object passed to `MultiplexedSpeechSynthesizer` multiple times!")
+            
+            speechSynthesizers.forEach {
+                $0.interruptSpeaking()
+                $0.delegate = nil
+            }
+        }
+        didSet {
+            speechSynthesizers.forEach { $0.delegate = self }
+            applyMute()
+            applyVolume()
+            applyLocale()
+        }
+    }
     
     private var currentLegProgress: RouteLegProgress?
     
     // MARK: - Lifecycle
     
     public init(_ speechSynthesizers: [SpeechSynthesizing]? = nil, accessToken: String? = nil, host: String? = nil) {
-        self.speechSynthesizers = speechSynthesizers ?? [
+        let synthesizers = speechSynthesizers ?? [
             MapboxSpeechSynthesizer(accessToken, host: host),
-            SystemSpeechSynthesizer()
-        ]
+            SystemSpeechSynthesizer()]
+        self.speechSynthesizers = synthesizers
         
-        self.speechSynthesizers.forEach { $0.delegate = self }
+        // a trick to force willSet and didSet to be triggered in init()
+        defer {
+            self.speechSynthesizers = Array(synthesizers)
+            self.speechSynthesizers = []
+        }
+    }
+    
+    private func applyVolume() {
+        speechSynthesizers.forEach { $0.volume = volume }
+    }
+    
+    private func applyMute() {
+        speechSynthesizers.forEach { $0.muted = muted }
+    }
+    
+    private func applyLocale() {
+        speechSynthesizers.forEach { $0.locale = locale }
     }
     
     // MARK: - Public Methods
@@ -52,17 +95,9 @@ open class MultiplexedSpeechSynthesizer: SpeechSynthesizing {
         speechSynthesizers.forEach { $0.prepareIncomingSpokenInstructions(instructions) }
     }
     
-    public func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress) {        
-        guard let synthesizer = speechSynthesizers.first else {
-            assertionFailure("MultiplexedSpeechSynthesizer has 0 speechSynthesizers")
-            delegate?.speechSynthesizer(self,
-                                        didSpeak: instruction,
-                                        with: nil)
-            return
-        }
-        
+    public func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress) {
         currentLegProgress = legProgress
-        synthesizer.speak(instruction, during: legProgress)
+        speechSynthesizers.first?.speak(instruction, during: legProgress)
     }
     
     public func stopSpeaking() {
@@ -78,8 +113,6 @@ extension MultiplexedSpeechSynthesizer: SpeechSynthesizingDelegate {
     
     public func speechSynthesizer(_ speechSynthesizer: SpeechSynthesizing, didSpeak instruction: SpokenInstruction, with error: SpeechError?) {
         if let error = error {
-            
-            
             if let index = speechSynthesizers.firstIndex(where: { $0 === speechSynthesizer }),
                 let legProgress = currentLegProgress,
                 index + 1 < speechSynthesizers.count {
