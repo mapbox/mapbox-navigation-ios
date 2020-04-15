@@ -36,7 +36,7 @@ class SpeechSynthesizerStub: SpeechSynthesizing {
 }
 
 class RouteVoiceControllerStub: RouteVoiceController {
-    override init(navigationService: NavigationService, speechSynthesizer: SpeechSynthesizing? = nil) {
+    init(navigationService: NavigationService, speechSynthesizer: SpeechSynthesizing? = nil) {
         super.init(navigationService: navigationService,
                    speechSynthesizer: speechSynthesizer ?? SpeechSynthesizerStub())
     }

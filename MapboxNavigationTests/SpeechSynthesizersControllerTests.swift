@@ -13,7 +13,7 @@ class FailingSpeechSynthesizerMock: SpeechSynthesizerStub {
     override func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress) {
         delegate?.speechSynthesizer(self,
                                     didSpeak: instruction,
-                                    with: failing ? SpeechError.unsupportedLocale(Locale.current) : nil)
+                                    with: failing ? SpeechError.unsupportedLocale(locale: Locale.current) : nil)
         
         speakExpectation?.fulfill()
     }
