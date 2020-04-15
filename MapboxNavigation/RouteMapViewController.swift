@@ -712,32 +712,18 @@ extension RouteMapViewController: NavigationViewDelegate {
         }
     }
 
-    private func roadFeature(for line: MGLPolylineFeature) -> (roadName: String?, shieldName: NSAttributedString?) {
-        let roadNameRecord = roadFeatureHelper(ref: line.attribute(forKey: "ref"),
-                                            shield: line.attribute(forKey: "shield"),
-                                            reflen: line.attribute(forKey: "reflen"),
-                                              name: line.attribute(forKey: "name"))
-
-        return (roadName: roadNameRecord.roadName, shieldName: roadNameRecord.shieldName)
-    }
-
-    private func roadFeature(for line: MGLMultiPolylineFeature) -> (roadName: String?, shieldName: NSAttributedString?) {
-        let roadNameRecord = roadFeatureHelper(ref: line.attribute(forKey: "ref"),
-                                            shield: line.attribute(forKey: "shield"),
-                                            reflen: line.attribute(forKey: "reflen"),
-                                              name: line.attribute(forKey: "name"))
-
-        return (roadName: roadNameRecord.roadName, shieldName: roadNameRecord.shieldName)
-    }
-
-    private func roadFeatureHelper(ref: Any?, shield: Any?, reflen: Any?, name: Any?) -> (roadName: String?, shieldName: NSAttributedString?) {
+    private func roadFeature(for line: MGLFeature) -> (roadName: String?, shieldName: NSAttributedString?) {
         var currentShieldName: NSAttributedString?, currentRoadName: String?
 
-        if let text = ref as? String, let shieldID = shield as? String, let reflenDigit = reflen as? Int {
-            currentShieldName = roadShieldName(for: text, shield: shieldID, reflen: reflenDigit)
+        if let ref = line.attribute(forKey: "ref") as? String,
+            let shield = line.attribute(forKey: "shield") as? String,
+            let reflen = line.attribute(forKey: "reflen") as? Int {
+            let textColor = roadShieldTextColor(line: line) ?? .black
+            let imageName = "\(shield)-\(reflen)"
+            currentShieldName = roadShieldAttributedText(for: ref, textColor: textColor, imageName: imageName)
         }
 
-        if let roadName = name as? String {
+        if let roadName = line.attribute(forKey: "name") as? String {
             currentRoadName = roadName
         }
 
@@ -749,19 +735,41 @@ extension RouteMapViewController: NavigationViewDelegate {
 
         return (roadName: currentRoadName, shieldName: currentShieldName)
     }
+    
+    func roadShieldTextColor(line: MGLFeature) -> UIColor? {
+        guard let shield = line.attribute(forKey: "shield") as? String else {
+            return nil
+        }
+        
+        // shield_text_color is present in Mapbox Streets source v8 but not v7.
+        guard let shieldTextColor = line.attribute(forKey: "shield_text_color") as? String else {
+            let currentShield = HighwayShield.RoadType(rawValue: shield)
+            return currentShield?.textColor
+        }
+        
+        switch shieldTextColor {
+        case "black":
+            return .black
+        case "blue":
+            return .blue
+        case "white":
+            return .white
+        case "yellow":
+            return .yellow
+        case "orange":
+            return .orange
+        default:
+            return .black
+        }
+    }
 
-    private func roadShieldName(for text: String?, shield: String?, reflen: Int?) -> NSAttributedString? {
-        guard let text = text, let shield = shield, let reflen = reflen else { return nil }
-
-        let currentShield = HighwayShield.RoadType(rawValue: shield)
-        let textColor = currentShield?.textColor ?? .black
-        let imageName = "\(shield)-\(reflen)"
-
+    private func roadShieldAttributedText(for text: String, textColor: UIColor, imageName: String) -> NSAttributedString? {
         guard let image = mapView.style?.image(forName: imageName) else {
             return nil
         }
 
-        let attachment = RoadNameLabelAttachment(image: image, text: text, color: textColor, font: UIFont.boldSystemFont(ofSize: UIFont.systemFontSize), scale: UIScreen.main.scale)
+        let attachment = ShieldAttachment()
+        attachment.image = image.withCenteredText(text, color: textColor, font: UIFont.boldSystemFont(ofSize: UIFont.systemFontSize), scale: UIScreen.main.scale)
         return NSAttributedString(attachment: attachment)
     }
 

@@ -18,21 +18,22 @@ extension UIImage {
         return UIGraphicsGetImageFromCurrentImageContext()
     }
     
-    func insert(text: NSString, color: UIColor, font: UIFont, atPoint: CGPoint, scale: CGFloat) -> UIImage? {
-        UIGraphicsBeginImageContextWithOptions(size, false, scale)
+    func withCenteredText(_ text: String, color: UIColor, font: UIFont, scale: CGFloat) -> UIImage {
+        let maxHeight = font.lineHeight * 2
+        var constrainedSize = size
+        constrainedSize.width = min(constrainedSize.width, constrainedSize.width * maxHeight / constrainedSize.height)
+        constrainedSize.height = min(constrainedSize.height, maxHeight)
         
-        let textStyle = NSMutableParagraphStyle()
-        textStyle.alignment = .center
-        
-        let textFontAttributes: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: color, .paragraphStyle: textStyle]
-        draw(in: CGRect(x: 0, y: 0, width: size.width, height: size.height))
-        
-        let rect = CGRect(x: atPoint.x, y: atPoint.y, width: size.width, height: size.height)
-        text.draw(in: rect.integral, withAttributes: textFontAttributes)
-        
-        let compositedImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        
-        return compositedImage
+        let renderer = UIGraphicsImageRenderer(size: constrainedSize)
+        return renderer.image { (context) in
+            let textStyle = NSMutableParagraphStyle()
+            textStyle.alignment = .center
+            
+            let textFontAttributes: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: color, .paragraphStyle: textStyle]
+            let rect = CGRect(origin: .zero, size: constrainedSize)
+            draw(in: rect)
+            
+            (text as NSString).draw(in: rect.offsetBy(dx: 0, dy: (constrainedSize.height - font.lineHeight) / 2).integral, withAttributes: textFontAttributes)
+        }
     }
 }
