@@ -33,7 +33,6 @@ open class MultiplexedSpeechSynthesizer: SpeechSynthesizing {
     
     public var speechSynthesizers: [SpeechSynthesizing] {
         willSet {
-            
             var found: [SpeechSynthesizing] = []
             let duplicate = newValue.first { newSynth in
                 if found.first(where: {
@@ -73,7 +72,6 @@ open class MultiplexedSpeechSynthesizer: SpeechSynthesizing {
         // a trick to force willSet and didSet to be triggered in init()
         defer {
             self.speechSynthesizers = Array(synthesizers)
-            self.speechSynthesizers = []
         }
     }
     
