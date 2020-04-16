@@ -59,6 +59,13 @@ public class UserPuckCourseView: UIView, CourseUpdatable {
         }
     }
     
+    // Sets the color on the user puck in 'stale' state. Passing 'nil' will use desaturated 'puckColor'
+    @objc public dynamic var stalePuckColor: UIColor? {
+        didSet {
+            puckView.stalePuckColor = stalePuckColor
+        }
+    }
+    
     // Sets the fill color on the circle around the user puck
     @objc public dynamic var fillColor: UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) {
         didSet {
@@ -95,6 +102,11 @@ public class UserPuckCourseView: UIView, CourseUpdatable {
 }
 
 class UserPuckStyleKitView: UIView {
+    private static let staleRefreshInterval: TimeInterval = 1
+    private static let staleInterval: TimeInterval = 30
+    
+    private var lastLocationUpdate: Date?
+    private var staleTimer: Timer!
     
     var fillColor: UIColor = UIColor(red: 1.000, green: 1.000, blue: 1.000, alpha: 1.000) {
         didSet {
@@ -108,15 +120,87 @@ class UserPuckStyleKitView: UIView {
         }
     }
     
+    var stalePuckColor: UIColor? {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+    
+    var puckIsStale: Bool {
+        guard let lastUpdate = lastLocationUpdate else {
+            return false
+        }
+        
+        return Date().timeIntervalSince(lastUpdate) > UserPuckStyleKitView.staleInterval
+    }
+    
+    private var drawingPuckColor: UIColor
+    {
+        if puckIsStale {
+            if let stalePuckColor = stalePuckColor {
+                return stalePuckColor
+            }
+            else {
+                var hue: CGFloat = 0.0
+                var saturation: CGFloat = 0.0
+                var brigthness: CGFloat = 0.0
+                var alpha: CGFloat = 0.0
+                
+                if puckColor.getHue(&hue,
+                                    saturation: &saturation,
+                                    brightness: &brigthness,
+                                    alpha: &alpha) {
+                    return UIColor(hue: hue,
+                                   saturation: saturation * 0.1,
+                                   brightness: brigthness,
+                                   alpha: alpha)
+                } else {
+                    return puckColor
+                }
+            }
+        } else {
+            return puckColor
+        }
+    }
+    
     var shadowColor: UIColor = UIColor(red: 0.149, green: 0.239, blue: 0.341, alpha: 0.160) {
         didSet {
             setNeedsDisplay()
         }
     }
     
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        staleTimer = Timer(timeInterval: UserPuckStyleKitView.staleRefreshInterval,
+                                target: self,
+                                selector: #selector(refreshPuckStaleState),
+                                userInfo: nil,
+                                repeats: true)
+        RunLoop.current.add(staleTimer, forMode: .common)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(locationDidUpdate(_ :)), name: .routeControllerProgressDidChange, object: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .routeControllerProgressDidChange, object: nil)
+    }
+    
+    @objc func refreshPuckStaleState() {
+        setNeedsDisplay()
+    }
+    
+    @objc func locationDidUpdate(_ notification: NSNotification) {
+        lastLocationUpdate = Date()
+    }
+    
     override func draw(_ rect: CGRect) {
         super.draw(rect)
-        drawNavigation_puck(fillColor: fillColor, puckColor: puckColor, shadowColor: shadowColor, circleColor: fillColor)
+        drawNavigation_puck(fillColor: fillColor, puckColor: drawingPuckColor, shadowColor: shadowColor, circleColor: fillColor)
     }
     
     func drawNavigation_puck(fillColor: UIColor = UIColor(red: 1.000, green: 1.000, blue: 1.000, alpha: 1.000), puckColor: UIColor = UIColor(red: 0.149, green: 0.239, blue: 0.341, alpha: 1.000), shadowColor: UIColor = UIColor(red: 0.149, green: 0.239, blue: 0.341, alpha: 0.160), circleColor: UIColor = UIColor(red: 1.000, green: 1.000, blue: 1.000, alpha: 1.000)) {
