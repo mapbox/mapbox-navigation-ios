@@ -507,7 +507,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         let waypoints: [Waypoint] = Array(route.legs.dropLast().compactMap { $0.destination })
         
         let source = navigationMapViewDelegate?.navigationMapView(self, shapeFor: waypoints, legIndex: legIndex) ?? shape(for: waypoints, legIndex: legIndex)
-        if route.routeOptions.waypoints.count > 2 { //are we on a multipoint route?
+        if route.legs.count > 1 { //are we on a multipoint route?
             
             routes = [route] //update the model
             if let waypointSource = style.source(withIdentifier: SourceIdentifier.waypoint) as? MGLShapeSource {
@@ -709,9 +709,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     //TODO: Change to point-based distance calculation
     private func waypoints(on routes: [Route], closeTo point: CGPoint) -> [Waypoint]? {
         let tapCoordinate = convert(point, toCoordinateFrom: self)
-        let multipointRoutes = routes.filter { $0.routeOptions.waypoints.count >= 3}
+        let multipointRoutes = routes.filter { $0.legs.count > 1}
         guard multipointRoutes.count > 0 else { return nil }
-        let waypoints = multipointRoutes.flatMap({$0.routeOptions.waypoints})
+        let waypoints = multipointRoutes.compactMap { route in
+            route.legs.dropLast().compactMap { $0.destination }
+        }.flatMap {$0}
         
         //lets sort the array in order of closest to tap
         let closest = waypoints.sorted { (left, right) -> Bool in

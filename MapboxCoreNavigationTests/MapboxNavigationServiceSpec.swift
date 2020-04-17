@@ -8,7 +8,6 @@ import TestHelper
 class MapboxNavigationServiceSpec: QuickSpec {
     lazy var initialRoute: Route = {
         let route     = response.routes!.first!
-        route.accessToken = "foo"
         return route
     }()
     
@@ -17,7 +16,7 @@ class MapboxNavigationServiceSpec: QuickSpec {
             let route = initialRoute
             
             let subject = LeakTest {
-                let service = MapboxNavigationService(route: route, directions: DirectionsSpy(accessToken: "deadbeef"))
+                let service = MapboxNavigationService(route: route, routeOptions: routeOptions,  directions: DirectionsSpy())
                 return service
             }
             it("Must not leak.") {

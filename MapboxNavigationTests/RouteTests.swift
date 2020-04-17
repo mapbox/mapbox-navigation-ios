@@ -53,7 +53,7 @@ class RouteTests: XCTestCase {
         ], profileIdentifier: .automobile)
         options.shapeFormat = .polyline
         let response = Fixture.mapMatchingResponse(from: "route-doubling-back", options: options)
-        let routes = response.routes
+        let routes = response.matches
         let route = routes!.first!
         let leg = route.legs.first!
         

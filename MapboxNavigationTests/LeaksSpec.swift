@@ -9,12 +9,18 @@ import MapboxDirections
 class LeaksSpec: QuickSpec {
     lazy var initialRoute: Route = {
         let route = response.routes!.first!
-        route.accessToken = "foo"
         
         return route
     }()
     
-    lazy var dummySvc: NavigationService = MapboxNavigationService(route: self.initialRoute)
+    lazy var initialOptions: RouteOptions = {
+        guard case let .route(options) = response.options else {
+            preconditionFailure("expecting route options")
+        }
+        return options
+    }()
+    
+    lazy var dummySvc: NavigationService = MapboxNavigationService(route: self.initialRoute, routeOptions: initialOptions)
     
     override func spec() {
         describe("RouteVoiceController") {
@@ -35,10 +41,12 @@ class LeaksSpec: QuickSpec {
             let route = initialRoute
             
             let navigationViewController = LeakTest {
-                let directions = DirectionsSpy(accessToken: "deadbeef")
-                let service = MapboxNavigationService(route: route, directions: directions, eventsManagerType: NavigationEventsManagerSpy.self)
-                let options = NavigationOptions(navigationService: service, voiceController: RouteVoiceControllerStub(navigationService: self.dummySvc))
-                return NavigationViewController(for: route, options: options)
+                let directions = DirectionsSpy(credentials: Fixture.credentials)
+                let service = MapboxNavigationService(route: route, routeOptions: self.initialOptions, directions: directions, eventsManagerType: NavigationEventsManagerSpy.self)
+                let navOptions = NavigationOptions(navigationService: service, voiceController: RouteVoiceControllerStub(navigationService: self.dummySvc))
+                
+
+                return NavigationViewController(for: route, routeOptions: self.initialOptions, navigationOptions: navOptions)
             }
             
             it("must not leak") {

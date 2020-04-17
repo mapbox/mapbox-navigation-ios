@@ -10,7 +10,7 @@ class OfflineRoutingTests: XCTestCase {
 
         let setupExpectation = expectation(description: "Set up offline routing")
 
-        let directions = NavigationDirections(accessToken: "foo")
+        let directions = NavigationDirections(credentials: Fixture.credentials)
         
         directions.configureRouter(tilesURL: tilesURL) { (numberOfTiles) in
             XCTAssertEqual(numberOfTiles, 5)
@@ -25,20 +25,29 @@ class OfflineRoutingTests: XCTestCase {
 
         let options = NavigationRouteOptions(coordinates: coordinates, profileIdentifier: .automobile)
         let calculateRouteExpectation = expectation(description: "Calculate route offline")
-        var route: Route?
+        var possibleRoute: Route?
 
-        directions.calculate(options, offline: true) { (waypoints, routes, error) in
-            XCTAssertNil(error)
-            XCTAssertNotNil(waypoints)
-            XCTAssertNotNil(routes)
-            route = routes!.first!
-            calculateRouteExpectation.fulfill()
+        directions.calculate(options, offline: true) { (session, result) in
+            switch result {
+            case let .failure(error):
+                XCTFail("Unexpected Failure: \(error)")
+                
+            case let .success(response):
+                XCTAssertNotNil(response.routes)
+                XCTAssertNotNil(response.waypoints)
+                possibleRoute = response.routes!.first!
+                calculateRouteExpectation.fulfill()
+            }
         }
 
         wait(for: [calculateRouteExpectation], timeout: 2)
 
-        XCTAssertNotNil(route)
-        XCTAssertEqual(route!.shape!.coordinates.count, 47)
+        guard let route = possibleRoute else {
+            XCTFail("No route returned")
+            return
+        }
+        
+        XCTAssertEqual(route.shape!.coordinates.count, 47)
     }
     
     func testOfflineDirectionsError() {
@@ -47,7 +56,7 @@ class OfflineRoutingTests: XCTestCase {
         
         let setupExpectation = expectation(description: "Set up offline routing")
         
-        let directions = NavigationDirections(accessToken: "foo")
+        let directions = NavigationDirections(credentials: Fixture.credentials)
         directions.configureRouter(tilesURL: tilesURL) { (numberOfTiles) in
             XCTAssertEqual(numberOfTiles, 5)
             setupExpectation.fulfill()
@@ -62,15 +71,18 @@ class OfflineRoutingTests: XCTestCase {
         let options = NavigationRouteOptions(coordinates: coordinates, profileIdentifier: .automobile)
         let calculateRouteExpectation = expectation(description: "Calculate route offline")
         
-        directions.calculate(options, offline: true) { (waypoints, routes, error) in
-            XCTAssertNotNil(error)
-            if let error = error, case let .standard(directionsError) = error {
-                XCTAssertEqual(directionsError, .unableToRoute)
-            } else {
-                XCTFail("Error should be standard error")
+        directions.calculate(options, offline: true) { (session, response) in
+            guard case let .failure(error) = response else {
+                XCTFail("Unexpected Success")
+                return
             }
-            XCTAssertNil(routes)
-            XCTAssertNil(waypoints)
+            
+            guard case let .standard(directionsError) = error else {
+                XCTFail("Wrong error type.")
+                return
+            }
+            
+            XCTAssertEqual(directionsError, .unableToRoute)
             calculateRouteExpectation.fulfill()
         }
         
@@ -107,7 +119,7 @@ class OfflineRoutingTests: XCTestCase {
         
         let configureExpectation = self.expectation(description: "Configure router with unpacked tar")
         
-        let directions = NavigationDirections(accessToken: "foo")
+        let directions = NavigationDirections(credentials: Fixture.credentials)
         directions.configureRouter(tilesURL: outputDirectoryURL) { (numberOfTiles) in
             XCTAssertEqual(numberOfTiles, 5)
             configureExpectation.fulfill()

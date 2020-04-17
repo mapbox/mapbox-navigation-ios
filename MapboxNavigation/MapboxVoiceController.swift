@@ -81,7 +81,7 @@ open class MapboxVoiceController: RouteVoiceController, AVAudioPlayerDelegate {
     
     open override func didPassSpokenInstructionPoint(notification: NSNotification) {
         let routeProgresss = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as! RouteProgress
-        locale = routeProgresss.route.routeOptions.locale
+        locale = routeProgresss.routeOptions.locale
         let currentLegProgress: RouteLegProgress = routeProgresss.currentLegProgress
         
         let instructionSets = currentLegProgress.remainingSteps.prefix(stepsAheadToCache).compactMap { $0.instructionsSpokenAlongStep }

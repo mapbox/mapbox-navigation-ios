@@ -12,6 +12,8 @@ open class RouteProgress {
      Returns the current `Route`.
      */
     public let route: Route
+    
+    public let routeOptions: RouteOptions
 
     /**
      Index representing current `RouteLeg`.
@@ -97,7 +99,7 @@ open class RouteProgress {
      The waypoints remaining on the current route, including any waypoints that do not separate legs.
      */
     func remainingWaypointsForCalculatingRoute() -> [Waypoint] {
-        let (currentLegViaPoints, remainingWaypoints) = route.routeOptions.waypoints(fromLegAt: legIndex)
+        let (currentLegViaPoints, remainingWaypoints) = routeOptions.waypoints(fromLegAt: legIndex)
         let currentLegRemainingViaPoints = currentLegProgress.remainingWaypoints(among: currentLegViaPoints)
         return currentLegRemainingViaPoints + remainingWaypoints
     }
@@ -174,8 +176,9 @@ open class RouteProgress {
      - parameter route: The route to follow.
      - parameter legIndex: Zero-based index indicating the current leg the user is on.
      */
-    public init(route: Route, legIndex: Int = 0, spokenInstructionIndex: Int = 0) {
+    public init(route: Route, options: RouteOptions, legIndex: Int = 0, spokenInstructionIndex: Int = 0) {
         self.route = route
+        self.routeOptions = options
         self.legIndex = legIndex
         self.currentLegProgress = RouteLegProgress(leg: route.legs[legIndex], stepIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
 
@@ -256,7 +259,7 @@ open class RouteProgress {
     }
 
     func reroutingOptions(with current: CLLocation) -> RouteOptions {
-        let oldOptions = route.routeOptions
+        let oldOptions = routeOptions
         let user = Waypoint(coordinate: current.coordinate)
 
         if (current.course >= 0) {

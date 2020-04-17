@@ -36,7 +36,8 @@ extension CPTrip {
             let routeChoice = CPRouteChoice(summaryVariants: summaryVariants,
                                             additionalInformationVariants: [route.description],
                                             selectionSummaryVariants: [route.description])
-            routeChoice.userInfo = route
+            let info: (Route, RouteOptions) = (route: route, options: routeOptions)
+            routeChoice.userInfo = info
             return routeChoice
         }
         

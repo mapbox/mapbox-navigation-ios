@@ -21,7 +21,7 @@ class RouteControllerSnapshotTests: FBSnapshotTestCase {
     }
     
     func testRouteSnappingOvershooting() {
-        let route = Fixture.routesFromMatches(at: "sthlm-double-back", options: NavigationMatchOptions(coordinates: [
+        let options = NavigationMatchOptions(coordinates: [
             .init(latitude: 59.337928, longitude: 18.076841),
             .init(latitude: 59.337661, longitude: 18.075897),
             .init(latitude: 59.337129, longitude: 18.075478),
@@ -35,7 +35,8 @@ class RouteControllerSnapshotTests: FBSnapshotTestCase {
             .init(latitude: 59.338156, longitude: 18.075723),
             .init(latitude: 59.338311, longitude: 18.074968),
             .init(latitude: 59.33865, longitude: 18.074935),
-        ]))![0]
+        ])
+        let route = Fixture.routesFromMatches(at: "sthlm-double-back", options: options)![0]
         
         let bundle = Bundle(for: RouteControllerSnapshotTests.self)
         let filePath = bundle.path(forResource: "sthlm-double-back-replay", ofType: "json")
@@ -44,7 +45,8 @@ class RouteControllerSnapshotTests: FBSnapshotTestCase {
         let locationManager = ReplayLocationManager(locations: locations)
         replayManager = locationManager
         locationManager.startDate = Date()
-        let routeController = RouteController(along: route, dataSource: self)
+        let equivalentRouteOptions = NavigationRouteOptions(navigationMatchOptions: options)
+        let routeController = RouteController(along: route, options: equivalentRouteOptions, dataSource: self)
         locationManager.delegate = routeController
         
         var snappedLocations = [CLLocation]()
