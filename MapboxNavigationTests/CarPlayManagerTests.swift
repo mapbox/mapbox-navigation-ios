@@ -195,10 +195,11 @@ class CarPlayManagerTests: XCTestCase {
         // given the user is previewing route choices
         // when a trip is started using one of the route choices
         let choice = CPRouteChoice(summaryVariants: ["summary1"], additionalInformationVariants: ["addl1"], selectionSummaryVariants: ["selection1"])
-        choice.userInfo = Fixture.route(from: "route-with-banner-instructions", options: NavigationRouteOptions(coordinates: [
+        let options = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 37.764793, longitude: -122.463161),
             CLLocationCoordinate2D(latitude: 34.054081, longitude: -118.243412),
-        ]))
+        ])
+        choice.userInfo = (Fixture.route(from: "route-with-banner-instructions", options: options), options)
 
         manager.mapTemplate(mapTemplate, startedTrip: CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [choice]), using: choice)
 
@@ -223,7 +224,7 @@ class CarPlayManagerTests: XCTestCase {
         let locOne = CLLocationCoordinate2D(latitude: 0, longitude: 0)
         let fakeOptions = RouteOptions(coordinates: [locOne])
         manager.delegate = spy
-        manager.didCalculate(nil, for: fakeOptions, between: nil, error: testError, completionHandler: { })
+        manager.didCalculate(.failure(testError), in: (options: fakeOptions, credentials: Fixture.credentials), for: fakeOptions, completionHandler: { })
         XCTAssert(spy.recievedError == testError, "Delegate should have receieved error")
     }
     
@@ -240,7 +241,7 @@ class CarPlayManagerTests: XCTestCase {
         }
         
         let expectation = XCTestExpectation(description: "Ensuring Spy is called")
-        let spy = DirectionsInvocationSpy(accessToken: "DeadBeefCafe", host: nil)
+        let spy = DirectionsInvocationSpy()
         spy.payload = expectation.fulfill
         
         let subject = CarPlayManager(directions: spy)
@@ -248,7 +249,7 @@ class CarPlayManagerTests: XCTestCase {
         let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
         let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
         let options = RouteOptions(waypoints: [waypoint1, waypoint2])
-        subject.calculate(options, completionHandler: { _, _, _ in })
+        subject.calculate(options, completionHandler: { _, _ in })
         wait(for: [expectation], timeout: 1.0)
         
         XCTAssert(subject.directions == spy, "Directions client is not overridden properly.")
@@ -280,7 +281,7 @@ class CarPlayManagerSpec: QuickSpec {
         var delegate: TestCarPlayManagerDelegate?
 
         beforeEach {
-            let directionsSpy = DirectionsSpy(accessToken: "asdf")
+            let directionsSpy = DirectionsSpy()
             manager = CarPlayManager(styles: nil, directions: directionsSpy, eventsManager: nil)
             delegate = TestCarPlayManagerDelegate()
             manager!.delegate = delegate
@@ -295,15 +296,16 @@ class CarPlayManagerSpec: QuickSpec {
             }
 
             let previewRoutesAction = {
-                let route = Fixture.route(from: "route-with-banner-instructions", options: NavigationRouteOptions(coordinates: [
+                let options = NavigationRouteOptions(coordinates: [
                     CLLocationCoordinate2D(latitude: 37.764793, longitude: -122.463161),
                     CLLocationCoordinate2D(latitude: 34.054081, longitude: -118.243412),
-                ]))
-                let waypoints = route.routeOptions.waypoints
+                ])
+                let route = Fixture.route(from: "route-with-banner-instructions", options: options)
+                let waypoints = options.waypoints
 
                 let directionsSpy = manager!.directions as! DirectionsSpy
 
-                manager!.previewRoutes(for: route.routeOptions, completionHandler: {})
+                manager!.previewRoutes(for: options, completionHandler: {})
                 directionsSpy.fireLastCalculateCompletion(with: waypoints, routes: [route], error: nil)
             }
 
@@ -371,10 +373,11 @@ class CarPlayManagerSpec: QuickSpec {
             let action = {
                 let fakeTemplate = CPMapTemplate()
                 let fakeRouteChoice = CPRouteChoice(summaryVariants: ["summary1"], additionalInformationVariants: ["addl1"], selectionSummaryVariants: ["selection1"])
-                fakeRouteChoice.userInfo = Fixture.route(from: "route-with-banner-instructions", options: NavigationRouteOptions(coordinates: [
+                let options = NavigationRouteOptions(coordinates: [
                     CLLocationCoordinate2D(latitude: 37.764793, longitude: -122.463161),
                     CLLocationCoordinate2D(latitude: 34.054081, longitude: -118.243412),
-                ]))
+                ])
+                fakeRouteChoice.userInfo = (Fixture.route(from: "route-with-banner-instructions", options: options), options)
                 let fakeTrip = CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [fakeRouteChoice])
 
                 //simulate starting a fake trip
@@ -436,9 +439,10 @@ class CarPlayManagerSpec: QuickSpec {
             //no-op
         }
         
-        func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, desiredSimulationMode: SimulationMode) -> NavigationService {
-            let directionsFake = Directions(accessToken: "foo")
-            return MapboxNavigationService(route: route, directions: directionsFake, simulating: desiredSimulationMode)
+        //TODO: ADD OPTIONS TO THIS DELEGATE METHOD
+        func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService {
+            let directionsFake = Directions(credentials: Fixture.credentials)
+            return MapboxNavigationService(route: route, routeOptions: routeOptions, directions: directionsFake, simulating: desiredSimulationMode)
         }
     }
 }
@@ -464,7 +468,7 @@ class CarPlayManagerFailureDelegateSpy: CarPlayManagerDelegate {
         return nil
     }
     
-    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, desiredSimulationMode: SimulationMode) -> NavigationService {
+    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService {
         fatalError("This is an empty stub.")
     }
     
@@ -491,12 +495,11 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
     public var trailingBarButtons: [CPBarButton]?
     public var mapButtons: [CPMapButton]?
 
-    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, desiredSimulationMode: SimulationMode) -> NavigationService {
+    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService {
         let response = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
         let initialRoute = response.routes!.first!
-        initialRoute.accessToken = "deadbeef"
-        let directionsClientSpy = DirectionsSpy(accessToken: "garbage", host: nil)
-        let service = MapboxNavigationService(route: initialRoute, directions: directionsClientSpy, locationSource: NavigationLocationManager(), eventsManagerType: NavigationEventsManagerSpy.self, simulating: desiredSimulationMode)
+        let directionsClientSpy = DirectionsSpy()
+        let service = MapboxNavigationService(route: initialRoute, routeOptions: routeOptions, directions: directionsClientSpy, locationSource: NavigationLocationManager(), eventsManagerType: NavigationEventsManagerSpy.self, simulating: desiredSimulationMode)
         return service
     }
 

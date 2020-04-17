@@ -33,9 +33,14 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         }
         set {
             navigationService.route = newValue
-            NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
             
             navigationComponents.forEach { $0.navigationService(navigationService, didRerouteAlong: newValue, at: nil, proactive: false) }
+        }
+    }
+    
+    public var routeOptions: RouteOptions {
+        get {
+            return navigationService.routeProgress.routeOptions
         }
     }
     
@@ -201,29 +206,30 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      - parameter route: The route to navigate along.
      - parameter options: The navigation options to use for the navigation session.
      */
-    required public init(for route: Route,
-                         options: NavigationOptions? = nil) {
+    required public init(for route: Route, routeOptions: RouteOptions,
+                         navigationOptions: NavigationOptions? = nil) {
         super.init(nibName: nil, bundle: nil)
         
-        self.navigationService = options?.navigationService ?? MapboxNavigationService(route: route)
+        self.navigationService = navigationOptions?.navigationService ?? MapboxNavigationService(route: route, routeOptions: routeOptions)
         self.navigationService.delegate = self
 
-        self.voiceController = options?.voiceController ?? RouteVoiceController(navigationService: navigationService,accessToken: navigationService.directions.accessToken, host: navigationService.directions.apiEndpoint.host)
-        
-        NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
+        let credentials = navigationService.directions.credentials
+        self.voiceController = navigationOptions?.voiceController ?? RouteVoiceController(navigationService: navigationService,accessToken: credentials.accessToken, host: credentials.host.absoluteString)
+
+        NavigationSettings.shared.distanceUnit = routeOptions.locale.usesMetric ? .kilometer : .mile
         
         styleManager = StyleManager()
         styleManager.delegate = self
-        styleManager.styles = options?.styles ?? [DayStyle(), NightStyle()]
+        styleManager.styles = navigationOptions?.styles ?? [DayStyle(), NightStyle()]
         
-        let bottomBanner = options?.bottomBanner ?? {
+        let bottomBanner = navigationOptions?.bottomBanner ?? {
             let viewController: BottomBannerViewController = .init()
             viewController.delegate = self
             return viewController
         }()
         bottomViewController = bottomBanner
 
-        if let customBanner = options?.topBanner {
+        if let customBanner = navigationOptions?.topBanner {
             topViewController = customBanner
         } else {
             let defaultBanner = TopBannerViewController(nibName: nil, bundle: nil)
@@ -250,7 +256,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         mapViewController.view.pinInSuperview()
         mapViewController.reportButton.isHidden = !showsReportFeedback
         
-        if !(route.routeOptions is NavigationRouteOptions) {
+        if !(routeOptions is NavigationRouteOptions) {
             print("`Route` was created using `RouteOptions` and not `NavigationRouteOptions`. Although not required, this may lead to a suboptimal navigation experience. Without `NavigationRouteOptions`, it is not guaranteed you will get congestion along the route line, better ETAs and ETA label color dependent on congestion.")
         }
     }
@@ -259,11 +265,12 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     Initializes a navigation view controller with the given route and navigation service.
      
      - parameter route: The route to navigate along.
+     - parameter routeOptions: the options object used to generate the route.
      - parameter navigationService: The navigation service that manages navigation along the route.
      */
-    convenience init(route: Route, navigationService service: NavigationService) {
+    convenience init(route: Route, routeOptions: RouteOptions, navigationService service: NavigationService) {
         let options = NavigationOptions(navigationService: service)
-        self.init(for: route, options: options)
+        self.init(for: route, routeOptions: routeOptions, navigationOptions: options)
     }
     
     deinit {

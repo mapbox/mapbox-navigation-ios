@@ -259,33 +259,6 @@ class TextInstruction: ImageInstruction {}
 class ShieldAttachment: ImageInstruction {}
 class GenericShieldAttachment: ShieldAttachment {}
 class ExitAttachment: ImageInstruction {}
-class RoadNameLabelAttachment: TextInstruction {
-    var scale: CGFloat?
-    var color: UIColor?
-
-    var compositeImage: UIImage? {
-        guard let image = image, let text = text, let color = color, let scale = scale else {
-            return nil
-        }
-        
-        var currentImage: UIImage?
-        let textHeight = font.lineHeight
-        let pointY = (image.size.height - textHeight) / 2
-        currentImage = image.insert(text: text as NSString, color: color, font: font, atPoint: CGPoint(x: 0, y: pointY), scale: scale)
-        
-        return currentImage
-    }
-    
-    convenience init(image: UIImage, text: String, color: UIColor, font: UIFont, scale: CGFloat) {
-        self.init()
-        self.image = image
-        self.font = font
-        self.text = text
-        self.color = color
-        self.scale = scale
-        self.image = compositeImage ?? image
-    }
-}
 
 extension CGSize {
     fileprivate static func +(lhs: CGSize, rhs: CGSize) -> CGSize {

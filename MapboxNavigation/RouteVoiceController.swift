@@ -174,7 +174,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     @objc open func didPassSpokenInstructionPoint(notification: NSNotification) {
         let routeProgress = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as! RouteProgress
         
-        speechSynthesizer.locale = routeProgress.route.routeOptions.locale
+        speechSynthesizer.locale = routeProgress.routeOptions.locale
 
         speechSynthesizer.prepareIncomingSpokenInstructions(routeProgress.currentLegProgress.currentStepProgress.remainingSpokenInstructions ?? [])
         

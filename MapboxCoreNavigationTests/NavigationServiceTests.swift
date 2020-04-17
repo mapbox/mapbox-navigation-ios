@@ -10,13 +10,13 @@ fileprivate let mbTestHeading: CLLocationDirection = 50
 
 class NavigationServiceTests: XCTestCase {
     var eventsManagerSpy: NavigationEventsManagerSpy!
-    let directionsClientSpy = DirectionsSpy(accessToken: "garbage", host: nil)
+    let directionsClientSpy = DirectionsSpy()
     let delegate = NavigationServiceDelegateSpy()
     
     typealias RouteLocations = (firstLocation: CLLocation, penultimateLocation: CLLocation, lastLocation: CLLocation)
     
     lazy var dependencies: (navigationService: NavigationService, routeLocations: RouteLocations) = {
-        let navigationService = MapboxNavigationService(route: initialRoute, directions: directionsClientSpy, eventsManagerType: NavigationEventsManagerSpy.self, simulating: .never)
+        let navigationService = MapboxNavigationService(route: initialRoute, routeOptions: routeOptions, directions: directionsClientSpy, eventsManagerType: NavigationEventsManagerSpy.self, simulating: .never)
         navigationService.delegate = delegate
         
         let legProgress: RouteLegProgress = navigationService.router.routeProgress.currentLegProgress
@@ -174,14 +174,14 @@ class NavigationServiceTests: XCTestCase {
     
     func testUserPuckShouldFaceBackwards() {
         // This route is a simple straight line: http://geojson.io/#id=gist:anonymous/64cfb27881afba26e3969d06bacc707c&map=17/37.77717/-122.46484
-        let directions = DirectionsSpy(accessToken: "pk.feedCafeDeadBeefBadeBede")
-        let route = Fixture.route(from: "straight-line", options: NavigationRouteOptions(coordinates: [
+        let directions = DirectionsSpy()
+        let options = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 37.77735, longitude: -122.461465),
             CLLocationCoordinate2D(latitude: 37.777016, longitude: -122.468832),
-        ]))
+        ])
+        let route = Fixture.route(from: "straight-line", options: options)
         
-        route.accessToken = "foo"
-        let navigation = MapboxNavigationService(route: route, directions: directions)
+        let navigation = MapboxNavigationService(route: route, routeOptions: options, directions: directions)
         let router = navigation.router!
         let firstCoord = router.routeProgress.nearbyShape.coordinates.first!
         let firstLocation = CLLocation(latitude: firstCoord.latitude, longitude: firstCoord.longitude)
@@ -224,13 +224,13 @@ class NavigationServiceTests: XCTestCase {
     func testTurnstileEventSentUponInitialization() {
         // MARK: it sends a turnstile event upon initialization
         
-        let service = MapboxNavigationService(route: initialRoute, directions: directionsClientSpy, locationSource: NavigationLocationManager(), eventsManagerType: NavigationEventsManagerSpy.self)
+        let service = MapboxNavigationService(route: initialRoute, routeOptions: routeOptions, directions: directionsClientSpy, locationSource: NavigationLocationManager(), eventsManagerType: NavigationEventsManagerSpy.self)
         let eventsManagerSpy = service.eventsManager as! NavigationEventsManagerSpy
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeAppUserTurnstile))
     }
 
     func testReroutingFromLocationUpdatesSimulatedLocationSource() {
-        let navigationService = MapboxNavigationService(route: initialRoute, directions: directionsClientSpy, eventsManagerType: NavigationEventsManagerSpy.self, simulating: .always)
+        let navigationService = MapboxNavigationService(route: initialRoute, routeOptions: routeOptions,  directions: directionsClientSpy, eventsManagerType: NavigationEventsManagerSpy.self, simulating: .always)
         navigationService.delegate = delegate
         let router = navigationService.router!
         
@@ -366,7 +366,7 @@ class NavigationServiceTests: XCTestCase {
         
         autoreleasepool {
             let fakeDataSource = RouteControllerDataSourceFake()
-            let routeController = RouteController(along: initialRoute, directions: directionsClientSpy, dataSource: fakeDataSource)
+            let routeController = RouteController(along: initialRoute, options: routeOptions,  directions: directionsClientSpy, dataSource: fakeDataSource)
             subject = routeController
         }
         
@@ -378,7 +378,7 @@ class NavigationServiceTests: XCTestCase {
         
         autoreleasepool {
             let fakeDataSource = RouteControllerDataSourceFake()
-            let routeController = LegacyRouteController(along: initialRoute, directions: directionsClientSpy, dataSource: fakeDataSource)
+            let routeController = LegacyRouteController(along: initialRoute, options: routeOptions,  directions: directionsClientSpy, dataSource: fakeDataSource)
             subject = routeController
         }
         
@@ -390,7 +390,7 @@ class NavigationServiceTests: XCTestCase {
 
         autoreleasepool {
             let fakeDataSource = RouteControllerDataSourceFake()
-            _ = RouteController(along: initialRoute, directions: directionsClientSpy, dataSource: fakeDataSource)
+            _ = RouteController(along: initialRoute, options: routeOptions,  directions: directionsClientSpy, dataSource: fakeDataSource)
             subject = fakeDataSource
         }
         
@@ -398,8 +398,8 @@ class NavigationServiceTests: XCTestCase {
     }
     
     func testCountdownTimerDefaultAndUpdate() {
-        let directions = DirectionsSpy(accessToken: "pk.feedCafeDeadBeefBadeBede")
-        let subject = MapboxNavigationService(route: initialRoute, directions: directions)
+        let directions = DirectionsSpy()
+        let subject = MapboxNavigationService(route: initialRoute, routeOptions: routeOptions,  directions: directions)
         
         XCTAssert(subject.poorGPSTimer.countdownInterval == .milliseconds(2500), "Default countdown interval should be 2500 milliseconds.")
         
@@ -435,18 +435,19 @@ class NavigationServiceTests: XCTestCase {
     func testProactiveRerouting() {
         typealias RouterComposition = Router & InternalRouter
         
-        let route = Fixture.route(from: "DCA-Arboretum", options: NavigationRouteOptions(coordinates: [
+        let options = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 38.853108, longitude: -77.043331),
             CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
-        ]))
+        ])
+        let route = Fixture.route(from: "DCA-Arboretum", options: options)
         let trace = Fixture.generateTrace(for: route).shiftedToPresent()
         let duration = trace.last!.timestamp.timeIntervalSince(trace.first!.timestamp)
         
         XCTAssert(duration > RouteControllerProactiveReroutingInterval + RouteControllerMinimumDurationRemainingForProactiveRerouting,
                   "Duration must greater than rerouting interval and minimum duration remaining for proactive rerouting")
         
-        let directions = DirectionsSpy(accessToken: "pk.feedCafeDeadBeefBadeBede")
-        let service = MapboxNavigationService(route: route, directions: directions)
+        let directions = DirectionsSpy()
+        let service = MapboxNavigationService(route: route, routeOptions: options, directions: directions)
         service.delegate = delegate
         let router = service.router!
         let locationManager = NavigationLocationManager()
@@ -469,12 +470,12 @@ class NavigationServiceTests: XCTestCase {
         }
         
         let fasterRouteName = "DCA-Arboretum-dummy-faster-route"
-        let options = NavigationRouteOptions(coordinates: [
+        let fasterOptions = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 38.878206, longitude: -77.037265),
             CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
         ])
-        let fasterRoute = Fixture.route(from: fasterRouteName, options: options)
-        let waypointsForFasterRoute = Fixture.waypoints(from: fasterRouteName, options: options)
+        let fasterRoute = Fixture.route(from: fasterRouteName, options: fasterOptions)
+        let waypointsForFasterRoute = Fixture.waypoints(from: fasterRouteName, options: fasterOptions)
         directions.fireLastCalculateCompletion(with: waypointsForFasterRoute, routes: [fasterRoute], error: nil)
         
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didRerouteAlong:at:proactive:)"))
@@ -483,7 +484,7 @@ class NavigationServiceTests: XCTestCase {
     }
     
     func testNineLeggedRouteForOutOfBounds() {
-        let route = Fixture.route(from: "9-legged-route", options: NavigationRouteOptions(coordinates: [
+        let options = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 46.423728, longitude: 13.593578),
             CLLocationCoordinate2D(latitude: 46.339747, longitude: 13.574151),
             CLLocationCoordinate2D(latitude: 46.34447, longitude: 13.57594),
@@ -494,12 +495,13 @@ class NavigationServiceTests: XCTestCase {
             CLLocationCoordinate2D(latitude: 46.435762, longitude: 13.626714),
             CLLocationCoordinate2D(latitude: 46.436658, longitude: 13.639499),
             CLLocationCoordinate2D(latitude: 46.43878, longitude: 13.64052),
-        ]))
-        let directions = Directions(accessToken: "foo")
+        ])
+        let route = Fixture.route(from: "9-legged-route", options: options)
+        let directions = Directions(credentials: Fixture.credentials)
         let locationManager = DummyLocationManager()
         let trace = Fixture.generateTrace(for: route, speedMultiplier: 4).shiftedToPresent()
         
-        let service = MapboxNavigationService(route: route, directions: directions, locationSource: locationManager, eventsManagerType: nil)
+        let service = MapboxNavigationService(route: route, routeOptions: options, directions: directions, locationSource: locationManager, eventsManagerType: nil)
         service.start()
         
         for location in trace {
@@ -970,15 +972,16 @@ class NavigationServiceTests: XCTestCase {
     func testUnimplementedLogging() {
         unimplementedTestLogs = []
         
-        let route = Fixture.route(from: "DCA-Arboretum", options: NavigationRouteOptions(coordinates: [
-            CLLocationCoordinate2D(latitude: 38.853108, longitude: -77.043331),
-            CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
-        ]))
-        let directions = Directions(accessToken: "foo")
+        let options =  NavigationRouteOptions(coordinates: [
+                   CLLocationCoordinate2D(latitude: 38.853108, longitude: -77.043331),
+                   CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
+               ])
+        let route = Fixture.route(from: "DCA-Arboretum", options: options)
+        let directions = Directions(credentials: Fixture.credentials)
         let locationManager = DummyLocationManager()
         let trace = Fixture.generateTrace(for: route, speedMultiplier: 4).shiftedToPresent()
         
-        let service = MapboxNavigationService(route: route, directions: directions, locationSource: locationManager, eventsManagerType: nil)
+        let service = MapboxNavigationService(route: route, routeOptions: options, directions: directions, locationSource: locationManager, eventsManagerType: nil)
         
         let spy = EmptyNavigationServiceDelegate()
         service.delegate = spy

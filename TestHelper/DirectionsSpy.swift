@@ -20,12 +20,26 @@ public class DirectionsSpy: Directions {
     }
     
     public func fireLastCalculateCompletion(with waypoints: [Waypoint]?, routes: [Route]?, error: DirectionsError?) {
+        let wpts = waypoints ?? []
+        let options = RouteOptions(waypoints: wpts)
+        
+        let session: Directions.Session = (options: options, credentials: credentials)
         guard let lastCalculateOptionsCompletion = lastCalculateOptionsCompletion else {
             assert(false, "Can't fire a completion handler which doesn't exist!")
             return
         }
         
-        lastCalculateOptionsCompletion(waypoints, routes, error)
+        if let error = error {
+            lastCalculateOptionsCompletion(session, .failure(error))
+        } else {
+            let response = RouteResponse(httpResponse: nil, routes: routes, waypoints: waypoints, options: .route(options), credentials: credentials)
+    
+            lastCalculateOptionsCompletion(session, .success(response))
+        }
+}
+    
+    public convenience init() {
+        self.init(credentials: Fixture.credentials)
     }
     
     public func reset() {

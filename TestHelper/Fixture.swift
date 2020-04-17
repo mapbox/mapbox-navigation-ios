@@ -29,15 +29,18 @@ public class Fixture: NSObject {
     
     public class func downloadRouteFixture(coordinates: [CLLocationCoordinate2D], fileName: String, completion: @escaping () -> Void) {
         let accessToken = "<# Mapbox Access Token #>"
-        let directions = Directions(accessToken: accessToken)
+        let credentials = DirectionsCredentials(accessToken: accessToken)
+        let directions = Directions(credentials: credentials)
         
         let options = RouteOptions(coordinates: coordinates, profileIdentifier: .automobileAvoidingTraffic)
         options.includesSteps = true
         options.routeShapeResolution = .full
         let filePath = (NSTemporaryDirectory() as NSString).appendingPathComponent(fileName)
         
-        _ = directions.calculate(options, completionHandler: { (waypoints, routes, error) in
-            guard let _ = routes?.first else { return }
+        _ = directions.calculate(options, completionHandler: { (session, result) in
+            guard case let .success(response) = result else { return }
+ 
+            guard let routes = response.routes, !routes.isEmpty else { return }
             print("Route downloaded to \(filePath)")
             completion()
         })
@@ -68,6 +71,7 @@ public class Fixture: NSObject {
         do {
             let decoder = JSONDecoder()
             decoder.userInfo[.options] = options
+            decoder.userInfo[.credentials] = Fixture.credentials
             return try decoder.decode(RouteResponse.self, from: responseData)
         } catch {
             preconditionFailure("Unable to decode JSON fixture: \(error)")
@@ -79,6 +83,7 @@ public class Fixture: NSObject {
         do {
             let decoder = JSONDecoder()
             decoder.userInfo[.options] = options
+            decoder.userInfo[.credentials] = Fixture.credentials
             return try decoder.decode(MapMatchingResponse.self, from: responseData)
         } catch {
             preconditionFailure("Unable to decode JSON fixture: \(error)")
@@ -92,7 +97,7 @@ public class Fixture: NSObject {
         }
         
         // Like `Directions.postprocess(_:fetchStartDate:uuid:)`
-        route.routeIdentifier = response.uuid
+        route.routeIdentifier = response.identifier
         let fetchStartDate = Date(timeIntervalSince1970: 3600)
         route.fetchStartDate = fetchStartDate
         route.responseEndDate = Date(timeInterval: 1, since: fetchStartDate)
@@ -111,7 +116,8 @@ public class Fixture: NSObject {
     // Returns `Route` objects from a match response
     public class func routesFromMatches(at filePath: String, options: MatchOptions) -> [Route]? {
         let response = mapMatchingResponse(from: filePath, options: options)
-        guard let routes = response.routes else {
+        let routeResponse = try! RouteResponse(matching: response, options: options, credentials: Fixture.credentials)
+        guard let routes = routeResponse.routes else {
             preconditionFailure("No routes")
         }
         return routes
@@ -144,6 +150,8 @@ public class Fixture: NSObject {
                                               expectedTravelTime: 0.0,
                                               profileIdentifier: .automobile))
     }
+
+    public static let credentials: DirectionsCredentials = DirectionsCredentials(accessToken: "deadbeef", host: URL(string: "https://example.com")!)
 }
 
 class TraceCollector: NSObject, CLLocationManagerDelegate {
