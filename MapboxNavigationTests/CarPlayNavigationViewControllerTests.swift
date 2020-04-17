@@ -47,14 +47,15 @@ fileprivate class CPNavigationSessionFake: CPNavigationSession {
 fileprivate class CarPlayNavigationViewControllerTests: XCTestCase {
     func testCarplayDisplaysCorrectEstimates() {
         //set up the litany of dependancies
-        let directions = Directions(accessToken: "fafedeadbeef")
+        let directions = Directions(credentials: Fixture.credentials)
         let manager = CarPlayManager(directions: directions)
-        let route = Fixture.route(from: "multileg-route", options: NavigationRouteOptions(coordinates: [
+        let options = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 9.519172, longitude: 47.210823),
             CLLocationCoordinate2D(latitude: 9.52222, longitude: 47.214268),
             CLLocationCoordinate2D(latitude: 47.212326, longitude: 9.512569),
-        ]))
-        let navService = MapboxNavigationService(route: route)
+        ])
+        let route = Fixture.route(from: "multileg-route", options: options)
+        let navService = MapboxNavigationService(route: route, routeOptions: options)
         let interface = FakeCPInterfaceController("test estimates display")
         let mapSpy = MapTemplateSpy()
         let trip = CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [])

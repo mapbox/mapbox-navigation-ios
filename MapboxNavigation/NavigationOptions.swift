@@ -8,7 +8,7 @@ import MapboxCoreNavigation
  
  - note: `NavigationOptions` is designed to be used with the `NavigationViewController` class to customize the user experience. To specify criteria when calculating routes, use the `NavigationRouteOptions` class. To modify user preferences that persist across navigation sessions, use the `NavigationSettings` class.
  */
-open class NavigationOptions: NSObject, NavigationCustomizable {
+open class NavigationOptions: NavigationCustomizable {
     /**
      The styles that the view controller’s internal `StyleManager` object can select from for display.
      
@@ -41,8 +41,8 @@ open class NavigationOptions: NSObject, NavigationCustomizable {
     open var bottomBanner: ContainerViewController?
     
     // This makes the compiler happy.
-    required public override init() {
-        super.init()
+    required public init() {
+        // do nothing
     }
     
     /**

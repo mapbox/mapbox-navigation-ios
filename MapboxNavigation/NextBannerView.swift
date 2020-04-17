@@ -90,9 +90,31 @@ open class NextBannerView: UIView, NavigationComponent {
     }
     
     public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
+        guard shouldShowNextBanner(for: routeProgress) else {
+            hide()
+            return
+        }
+
         update(for: instruction)
     }
     
+    func shouldShowNextBanner(for routeProgress: RouteProgress) -> Bool {
+        guard let upcomingStep = routeProgress.currentLegProgress.upcomingStep else {
+            return false
+        }
+        
+        let durationForNext = RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier
+        
+        guard routeProgress.currentLegProgress.currentStepProgress.durationRemaining <= durationForNext, upcomingStep.expectedTravelTime <= durationForNext else {
+            return false
+        }
+        guard let _ = upcomingStep.instructionsDisplayedAlongStep?.last else {
+            return false
+        }
+        
+        return true
+    }
+            
     /**
      Updates the instructions banner info with a given `VisualInstructionBanner`.
      */

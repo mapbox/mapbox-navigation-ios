@@ -7,7 +7,7 @@ import Turf
 
 class RouteProgressTests: XCTestCase {
     func testRouteProgress() {
-        let routeProgress = RouteProgress(route: route)
+        let routeProgress = RouteProgress(route: route, options: routeOptions)
         XCTAssertEqual(routeProgress.fractionTraveled, 0)
         XCTAssertEqual(routeProgress.distanceRemaining, 4054.2)
         XCTAssertEqual(routeProgress.distanceTraveled, 0)
@@ -15,7 +15,7 @@ class RouteProgressTests: XCTestCase {
     }
     
     func testRouteLegProgress() {
-        let routeProgress = RouteProgress(route: route)
+        let routeProgress = RouteProgress(route: route, options: routeOptions)
         XCTAssertEqual(routeProgress.currentLeg.description, "Hyde Street, Page Street")
         XCTAssertEqual(routeProgress.currentLegProgress.distanceTraveled, 0)
         XCTAssertEqual(round(routeProgress.currentLegProgress.durationRemaining), 858)
@@ -26,7 +26,7 @@ class RouteProgressTests: XCTestCase {
     }
     
     func testRouteStepProgress() {
-        let routeProgress = RouteProgress(route: route)
+        let routeProgress = RouteProgress(route: route, options: routeOptions)
         XCTAssertEqual(routeProgress.currentLegProgress.currentStepProgress.distanceRemaining, 384.1)
         XCTAssertEqual(routeProgress.currentLegProgress.currentStepProgress.distanceTraveled, 0)
         XCTAssertEqual(routeProgress.currentLegProgress.currentStepProgress.durationRemaining, 86.6, accuracy: 0.001)
@@ -36,7 +36,7 @@ class RouteProgressTests: XCTestCase {
     }
     
     func testNextRouteStepProgress() {
-        let routeProgress = RouteProgress(route: route)
+        let routeProgress = RouteProgress(route: route, options: routeOptions)
         routeProgress.currentLegProgress.stepIndex = 1
         XCTAssertEqual(routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex, 0)
         XCTAssertEqual(routeProgress.currentLegProgress.currentStepProgress.distanceRemaining, 439.1)

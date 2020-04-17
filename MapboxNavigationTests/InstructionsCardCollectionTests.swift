@@ -25,13 +25,14 @@ class InstructionsCardCollectionTests: XCTestCase {
             return guidanceCard.view.constraintsForPinning(to: container)
         }
         
-        let fakeRoute = Fixture.route(from: "route-with-banner-instructions", options: NavigationRouteOptions(coordinates: [
+        let fakeOptions = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 37.764793, longitude: -122.463161),
             CLLocationCoordinate2D(latitude: 34.054081, longitude: -118.243412),
-        ]))
+        ])
+        let fakeRoute = Fixture.route(from: "route-with-banner-instructions", options: fakeOptions)
         
-        let service = MapboxNavigationService(route: initialRoute, directions: DirectionsSpy(accessToken: "adbeknut"), simulating: .never)
-        let routeProgress = RouteProgress(route: fakeRoute)
+        let service = MapboxNavigationService(route: initialRoute, routeOptions: fakeOptions, directions: DirectionsSpy(), simulating: .never)
+        let routeProgress = RouteProgress(route: fakeRoute, options: fakeOptions)
         subject.routeProgress = routeProgress
         
         return (collection: subject, progress: routeProgress, service: service, delegate: delegate)
@@ -191,11 +192,13 @@ class TestInstructionsCardStyle: InstructionsCardStyle {
     var maneuverViewPrimaryColor: UIColor = .blue
     var maneuverViewSecondaryColor: UIColor = .clear
     var maneuverViewHighlightedColor: UIColor = .brown
+    var maneuverViewSecondaryHighlightedColor: UIColor = .orange
     
     var nextBannerViewPrimaryColor: UIColor = .cardBlue
     var nextBannerViewSecondaryColor: UIColor = .cardLight
     var nextBannerInstructionLabelTextColor: UIColor = .cardDark
     var nextBannerInstructionHighlightedColor: UIColor = .cardLight
+    var nextBannerInstructionSecondaryHighlightedColor: UIColor = .orange
     var lanesViewDefaultColor: UIColor = .cardBlue
     var lanesViewHighlightedColor: UIColor = .cardLight
     lazy var nextBannerInstructionLabelNormalFont: UIFont = {

@@ -5,25 +5,30 @@ import Turf
 /**
  `RouteProgress` stores the user’s progress along a route.
  */
-open class RouteProgress: NSObject {
+open class RouteProgress {
     private static let reroutingAccuracy: CLLocationAccuracy = 90
 
     /**
      Returns the current `Route`.
      */
     public let route: Route
+    
+    public let routeOptions: RouteOptions
 
     /**
      Index representing current `RouteLeg`.
      */
-    @objc dynamic public var legIndex: Int {
+    public var legIndex: Int {
         didSet {
             assert(legIndex >= 0 && legIndex < route.legs.endIndex)
             // TODO: Set stepIndex to 0 or last index based on whether leg index was incremented or decremented.
             currentLegProgress = RouteLegProgress(leg: currentLeg)
+            
+            legIndexHandler?(oldValue, legIndex)
         }
     }
-
+    typealias LegIndexHandlerAction = (_ oldValue: Int, _ newValue: Int) -> ()
+    var legIndexHandler: LegIndexHandlerAction?
     /**
      If waypoints are provided in the `Route`, this will contain which leg the user is on.
      */
@@ -94,7 +99,7 @@ open class RouteProgress: NSObject {
      The waypoints remaining on the current route, including any waypoints that do not separate legs.
      */
     func remainingWaypointsForCalculatingRoute() -> [Waypoint] {
-        let (currentLegViaPoints, remainingWaypoints) = route.routeOptions.waypoints(fromLegAt: legIndex)
+        let (currentLegViaPoints, remainingWaypoints) = routeOptions.waypoints(fromLegAt: legIndex)
         let currentLegRemainingViaPoints = currentLegProgress.remainingWaypoints(among: currentLegViaPoints)
         return currentLegRemainingViaPoints + remainingWaypoints
     }
@@ -171,11 +176,11 @@ open class RouteProgress: NSObject {
      - parameter route: The route to follow.
      - parameter legIndex: Zero-based index indicating the current leg the user is on.
      */
-    public init(route: Route, legIndex: Int = 0, spokenInstructionIndex: Int = 0) {
+    public init(route: Route, options: RouteOptions, legIndex: Int = 0, spokenInstructionIndex: Int = 0) {
         self.route = route
+        self.routeOptions = options
         self.legIndex = legIndex
         self.currentLegProgress = RouteLegProgress(leg: route.legs[legIndex], stepIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
-        super.init()
 
         for (legIndex, leg) in route.legs.enumerated() {
             var maneuverCoordinateIndex = 0
@@ -254,7 +259,7 @@ open class RouteProgress: NSObject {
     }
 
     func reroutingOptions(with current: CLLocation) -> RouteOptions {
-        let oldOptions = route.routeOptions
+        let oldOptions = routeOptions
         let user = Waypoint(coordinate: current.coordinate)
 
         if (current.course >= 0) {
@@ -272,7 +277,7 @@ open class RouteProgress: NSObject {
 /**
  `RouteLegProgress` stores the user’s progress along a route leg.
  */
-open class RouteLegProgress: NSObject {
+open class RouteLegProgress {
     /**
      Returns the current `RouteLeg`.
      */
@@ -281,7 +286,7 @@ open class RouteLegProgress: NSObject {
     /**
      Index representing the current step.
      */
-    @objc public var stepIndex: Int {
+    public var stepIndex: Int {
         didSet {
             assert(stepIndex >= 0 && stepIndex < leg.steps.endIndex)
             currentStepProgress = RouteStepProgress(step: currentStep)
@@ -515,7 +520,7 @@ open class RouteLegProgress: NSObject {
 /**
  `RouteStepProgress` stores the user’s progress along a route step.
  */
-open class RouteStepProgress: NSObject {
+open class RouteStepProgress {
     /**
      Returns the current `RouteStep`.
      */

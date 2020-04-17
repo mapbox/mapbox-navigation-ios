@@ -35,7 +35,7 @@ public protocol Router: class, CLLocationManagerDelegate {
      - parameter directions: The Directions object that created `route`.
      - parameter source: The data source for the RouteController.
      */
-    init(along route: Route, directions: Directions, dataSource source: RouterDataSource)
+    init(along route: Route, options: RouteOptions, directions: Directions, dataSource source: RouterDataSource)
     
     /**
      Details about the user’s progress along the current route, leg, and step.
@@ -128,10 +128,13 @@ extension InternalRouter where Self: Router {
         if isRerouting { return }
         isRerouting = true
         
-        getDirections(from: location, along: routeProgress) { [weak self] (route, error) in
+        getDirections(from: location, along: routeProgress) { [weak self] (session, result) in
             self?.isRerouting = false
             
-            guard let route = route else { return }
+            guard case let .success(response) = result else {
+                return
+            }
+            guard let route = response.routes?.first else { return }
             
             self?.lastProactiveRerouteDate = nil
             
@@ -148,19 +151,28 @@ extension InternalRouter where Self: Router {
         }
     }
     
-    func getDirections(from location: CLLocation, along progress: RouteProgress, completion: @escaping (_ route: Route?, _ error: Error?)->Void) {
+    func getDirections(from location: CLLocation, along progress: RouteProgress, completion: @escaping Directions.RouteCompletionHandler) {
         routeTask?.cancel()
         let options = progress.reroutingOptions(with: location)
         
         lastRerouteLocation = location
         
-        routeTask = directions.calculate(options) {(waypoints, routes, error) in
-            guard let routes = routes else {
-                return completion(nil, error)
+        routeTask = directions.calculate(options) {(session, result) in
+            
+            guard case let .success(response) = result else {
+                return completion(session, result)
+            }
+
+            
+            guard let mostSimilar = response.routes?.mostSimilar(to: progress.route) else {
+                return completion(session, result)
             }
             
-            let mostSimilar = routes.mostSimilar(to: progress.route)
-            return completion(mostSimilar ?? routes.first, error)
+            var modifiedResponse = response
+            modifiedResponse.routes?.removeAll { $0 == mostSimilar }
+            modifiedResponse.routes?.insert(mostSimilar, at: 0)
+            
+            return completion(session, .success(modifiedResponse))
         }
     }
     
@@ -174,7 +186,7 @@ extension InternalRouter where Self: Router {
             didFindFasterRoute = false
         }
         
-        routeProgress = RouteProgress(route: route, legIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
+        routeProgress = RouteProgress(route: route, options: routeProgress.routeOptions, legIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
     }
     
     func announce(reroute newRoute: Route, at location: CLLocation?, proactive: Bool) {

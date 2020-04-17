@@ -28,20 +28,21 @@ open class RouteController: NSObject {
             return routeProgress.route
         }
         set {
-            routeProgress = RouteProgress(route: newValue)
+            routeProgress = RouteProgress(route: newValue, options: routeProgress.routeOptions)
             updateNavigator(with: routeProgress)
         }
     }
     
     private var _routeProgress: RouteProgress {
+        willSet {
+            resetObservation(for: _routeProgress)
+        }
         didSet {
             movementsAwayFromRoute = 0
             updateNavigator(with: _routeProgress)
             updateObservation(for: _routeProgress)
         }
     }
-    
-    private var progressObservation: NSKeyValueObservation?
     
     var movementsAwayFromRoute = 0
     
@@ -137,9 +138,9 @@ open class RouteController: NSObject {
         return snappedLocation ?? rawLocation
     }
     
-    required public init(along route: Route, directions: Directions = Directions.shared, dataSource source: RouterDataSource) {
+    required public init(along route: Route, options: RouteOptions, directions: Directions = Directions.shared, dataSource source: RouterDataSource) {
         self.directions = directions
-        self._routeProgress = RouteProgress(route: route)
+        self._routeProgress = RouteProgress(route: route, options: options)
         self.dataSource = source
         UIDevice.current.isBatteryMonitoringEnabled = true
         
@@ -149,19 +150,27 @@ open class RouteController: NSObject {
         updateObservation(for: _routeProgress)
     }
     
+    deinit {
+        resetObservation(for: _routeProgress)
+    }
+    
+    func resetObservation(for progress: RouteProgress) {
+        progress.legIndexHandler = nil
+    }
+    
     func updateObservation(for progress: RouteProgress) {
-        progressObservation = progress.observe(\.legIndex, options: [.old, .new]) { [weak self] (progress, change) in
-            guard change.newValue != change.oldValue, let legIndex = change.newValue else {
+        progress.legIndexHandler = { [weak self] (oldValue, newValue) in
+            guard newValue != oldValue else {
                 return
             }
-            self?.updateRouteLeg(to: legIndex)
+            self?.updateRouteLeg(to: newValue)
         }
     }
     
     /// updateNavigator is used to pass the new progress model onto nav-native.
     private func updateNavigator(with progress: RouteProgress) {
         let encoder = JSONEncoder()
-        encoder.userInfo[.options] = progress.route.routeOptions
+        encoder.userInfo[.options] = progress.routeOptions
         guard let routeData = try? encoder.encode(progress.route),
             let routeJSONString = String(data: routeData, encoding: .utf8) else {
             return
@@ -401,25 +410,31 @@ extension RouteController: Router {
         if isRerouting { return }
         isRerouting = true
         
-        getDirections(from: location, along: progress) { [weak self] (route, error) in
+        getDirections(from: location, along: progress) { [weak self] (session, result) in
             self?.isRerouting = false
             
             guard let strongSelf: RouteController = self else {
                 return
             }
             
-            if let error = error {
+            switch result {
+            case let .success(response):
+                guard let route = response.routes?.first else { return }
+                guard case let .route(routeOptions) = response.options else { return } //TODO: Can a match hit this codepoint?
+                strongSelf._routeProgress = RouteProgress(route: route, options: routeOptions, legIndex: 0)
+                strongSelf._routeProgress.currentLegProgress.stepIndex = 0
+                strongSelf.announce(reroute: route, at: location, proactive: false)
+                
+            case let .failure(error):
                 strongSelf.delegate?.router(strongSelf, didFailToRerouteWith: error)
                 NotificationCenter.default.post(name: .routeControllerDidFailToReroute, object: self, userInfo: [
                     NotificationUserInfoKey.routingErrorKey: error,
                 ])
                 return
             }
+
             
-            guard let route = route else { return }
-            strongSelf._routeProgress = RouteProgress(route: route, legIndex: 0)
-            strongSelf._routeProgress.currentLegProgress.stepIndex = 0
-            strongSelf.announce(reroute: route, at: location, proactive: false)
+
         }
     }
 }

@@ -14,6 +14,8 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
     var simulateLocation = false
 
     var userRoute: Route?
+    
+    var userRouteOptions: RouteOptions?
 
     // Start voice instructions
     var voiceController: MapboxVoiceController!
@@ -38,7 +40,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
         super.viewDidLoad()
         
         let locationManager = simulateLocation ? SimulatedLocationManager(route: userRoute!) : NavigationLocationManager()
-        navigationService = MapboxNavigationService(route: userRoute!, locationSource: locationManager, simulating: simulateLocation ? .always : .onPoorGPS)
+        navigationService = MapboxNavigationService(route: userRoute!, routeOptions: userRouteOptions!, locationSource: locationManager, simulating: simulateLocation ? .always : .onPoorGPS)
         voiceController = MapboxVoiceController(navigationService: navigationService)
         
         mapView.delegate = self

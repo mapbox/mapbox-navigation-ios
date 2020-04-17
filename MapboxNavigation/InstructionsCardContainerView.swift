@@ -277,7 +277,7 @@ public class InstructionsCardContainerView: UIView {
     fileprivate func hightlightNextBannerView(_ gradientLayer: CAGradientLayer, colors: [CGColor]) {
         gradientLayer.colors = colors
         nextBannerView.maneuverView.primaryColor = style.nextBannerInstructionHighlightedColor
-        nextBannerView.maneuverView.secondaryColor = style.nextBannerInstructionHighlightedColor
+        nextBannerView.maneuverView.secondaryColor = style.nextBannerInstructionSecondaryHighlightedColor
         nextBannerView.instructionLabel.normalTextColor = style.nextBannerInstructionHighlightedColor
     }
     
@@ -290,7 +290,7 @@ public class InstructionsCardContainerView: UIView {
         instructionsCardView.distanceLabel.valueTextColor = style.distanceLabelHighlightedTextColor
         // maneuver view
         instructionsCardView.maneuverView.primaryColor = style.maneuverViewHighlightedColor
-        instructionsCardView.maneuverView.secondaryColor = style.maneuverViewHighlightedColor
+        instructionsCardView.maneuverView.secondaryColor = style.maneuverViewSecondaryHighlightedColor
     }
 }
 
