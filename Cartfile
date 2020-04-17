@@ -1,3 +1,4 @@
+binary "https://www.mapbox.com/ios-sdk/MapboxAccounts.json" ~> 2.2
 binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" ~> 5.6
 binary "https://www.mapbox.com/ios-sdk/MapboxNavigationNative.json" ~> 6.2.1
 github "mapbox/mapbox-directions-swift" "c91d3ba051fa67759b905299dad85a163697efcf"
