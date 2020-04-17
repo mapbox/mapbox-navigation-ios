@@ -44,7 +44,7 @@ extension Directions {
     @objc class var skuToken: String? {
         let options = RouteOptions(coordinates: [CLLocationCoordinate2D(latitude: 1, longitude: 2),
                                                  CLLocationCoordinate2D(latitude: 3, longitude: 4)])
-        let url = Directions(accessToken: "foo").url(forCalculating: options)
+        let url = Directions(credentials: DirectionsCredentials(accessToken: "foo")).url(forCalculating: options)
         return url.queryItem("sku")?.value
     }
 }
