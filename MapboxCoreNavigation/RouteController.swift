@@ -58,6 +58,8 @@ open class RouteController: NSObject {
     
     var isRerouting = false
     
+    var isRefreshing = false
+    
     var userSnapToStepDistanceFromManeuver: CLLocationDistance?
     
     var previousArrivalWaypoint: Waypoint?
@@ -110,6 +112,10 @@ open class RouteController: NSObject {
     
     var lastProactiveRerouteDate: Date?
     
+    var lastRouteRefresh: Date?
+    
+    public var refreshesRoute: Bool = true
+    
     /**
      The route controller’s delegate.
      */
@@ -137,6 +143,7 @@ open class RouteController: NSObject {
         self.directions = directions
         self._routeProgress = RouteProgress(route: route, options: options)
         self.dataSource = source
+        self.refreshesRoute = options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled
         UIDevice.current.isBatteryMonitoringEnabled = true
         
         super.init()
@@ -211,7 +218,7 @@ open class RouteController: NSObject {
         }
         
         // Check for faster route proactively (if reroutesProactively is enabled)
-        checkForFasterRoute(from: location, routeProgress: routeProgress)
+        refreshAndCheckForFasterRoute(from: location, routeProgress: routeProgress)
     }
     
     func updateIndexes(status: NavigationStatus, progress: RouteProgress) {

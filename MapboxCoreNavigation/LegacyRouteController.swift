@@ -29,10 +29,14 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     public var waypointArrivalThreshold: TimeInterval = 5.0
     
     public var reroutesProactively = true
+    
+    public var refreshesRoute: Bool = true
 
     var didFindFasterRoute = false
     
     var lastProactiveRerouteDate: Date?
+    
+    var lastRouteRefresh: Date?
 
     public var routeProgress: RouteProgress {
         get {
@@ -63,6 +67,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     }
 
     var isRerouting = false
+    var isRefreshing = false
     var lastRerouteLocation: CLLocation?
 
     var routeTask: URLSessionDataTask?
@@ -82,6 +87,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         self.directions = directions
         self._routeProgress = RouteProgress(route: route, options: options)
         self.dataSource = source
+        self.refreshesRoute = options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled
         UIDevice.current.isBatteryMonitoringEnabled = true
 
         super.init()
@@ -276,7 +282,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         updateSpokenInstructionProgress()
         
         // Check for faster route proactively (if reroutesProactively is enabled)
-        checkForFasterRoute(from: location, routeProgress: routeProgress)
+        refreshAndCheckForFasterRoute(from: location, routeProgress: routeProgress)
     }
     
     private func update(progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {

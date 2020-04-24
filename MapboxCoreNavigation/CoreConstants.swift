@@ -74,7 +74,7 @@ public var RouteControllerNumberOfSecondsForRerouteFeedback: TimeInterval = 10
 public var RouteControllerMinimumDurationRemainingForProactiveRerouting: TimeInterval = 600
 
 /**
- The number of seconds between attempts to automatically calculate a more optimal route while traveling.
+ The number of seconds between attempts to automatically calculate a more optimal route while traveling. During such attempt, if Route Refresh is enabled, route will also be refreshed to verify correct ETA and congestion.
  */
 public var RouteControllerProactiveReroutingInterval: TimeInterval = 120
 
