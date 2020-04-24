@@ -235,7 +235,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
                          directions: Directions? = nil,
                          locationSource: NavigationLocationManager? = nil,
                          eventsManagerType: NavigationEventsManager.Type? = nil,
-                         simulating simulationMode: SimulationMode = .onPoorGPS,
+                         simulating simulationMode: SimulationMode = .never,
                          routerType: Router.Type? = nil) {
         nativeLocationSource = locationSource ?? NavigationLocationManager()
         self.directions = directions ?? Directions.shared
