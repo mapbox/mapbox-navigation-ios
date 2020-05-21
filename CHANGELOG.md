@@ -6,6 +6,7 @@
 * This SDK can no longer be used in applications written in pure Objective-C. If you need to use this SDK’s public API from Objective-C code, you will need to implement a wrapper in Swift that bridges the subset of the API you need from Swift to Objective-C. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
 * Added a new dependency on MapboxAccounts so that this SDK’s usage of Mapbox APIs is [billed](https://www.mapbox.com/pricing/) together based on [monthly active users](https://docs.mapbox.com/help/glossary/monthly-active-users/) rather than individually by HTTP request. If you use Carthage to install this SDK, remember to add MapboxAccounts.framework to the “Frameworks, Libraries, and Embedded Content” section and the input and output file lists of Carthage’s Run Script build phase. ([#2151](https://github.com/mapbox/mapbox-navigation-ios/pull/2151))
 * Upgraded to [Mapbox Maps SDK for iOS v5.6._x_](https://github.com/mapbox/mapbox-gl-native-ios/releases/tag/ios-v5.6.0). ([#2302](https://github.com/mapbox/mapbox-navigation-ios/pull/2302))
+* Made dependency on MapboxMobileEvents explicit in the podspec. [#2094](https://github.com/mapbox/mapbox-navigation-ios/issues/2094)
 
 ### Top and bottom banners
 * Removed `BottomBannerViewController(delegate:)` in favor of `BottomBannerViewController()` and the `BottomBannerViewController.delegate` property’s setter. ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
