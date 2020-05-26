@@ -21,10 +21,10 @@ open class RouteController: NSObject {
         public static let shouldDisableBatteryMonitoring: Bool = true
     }
     
-    var navigator: Navigator {
+    lazy var navigator: Navigator = {
         let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
         return Navigator(profile: settingsProfile, customConfig: "")
-    }
+    }()
     
     public var route: Route {
         get {
