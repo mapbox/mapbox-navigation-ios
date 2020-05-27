@@ -272,8 +272,7 @@ open class RouteController: NSObject {
         guard let currentDestination = legProgress.leg.destination else {
             preconditionFailure("Route legs used for navigation must have destinations")
         }
-        guard let remainingVoiceInstructions = legProgress.currentStepProgress.remainingSpokenInstructions else { return
-        }
+        let remainingVoiceInstructions = legProgress.currentStepProgress.remainingSpokenInstructions ?? []
         
         // We are at least at the "You will arrive" instruction
         if legProgress.remainingSteps.count <= 2 && remainingVoiceInstructions.count <= 2 {
