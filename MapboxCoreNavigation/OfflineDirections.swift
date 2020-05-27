@@ -19,6 +19,11 @@ public enum OfflineRoutingError: LocalizedError {
     case standard(DirectionsError)
     
     /**
+     The router did not finish the request
+     */
+    case cancelled
+    
+    /**
      The router returned an empty response.
      */
     case noData
@@ -34,6 +39,8 @@ public enum OfflineRoutingError: LocalizedError {
         switch self {
         case .standard(let error):
             return error.localizedDescription
+        case .cancelled:
+            return NSLocalizedString("OFFLINE_CANCELLED", bundle: .mapboxCoreNavigation, value: "Routing was cancelled before response could be acquired.", comment: "Error description when Offline Router was deallocated before receiving the API response")
         case .noData:
             return NSLocalizedString("OFFLINE_NO_RESULT", bundle: .mapboxCoreNavigation, value: "Unable to calculate the requested route while offline.", comment: "Error description when an offline route request returns no result")
         case .invalidResponse:
@@ -196,6 +203,13 @@ public class NavigationDirections: Directions {
         
         NavigationDirectionsConstants.offlineSerialQueue.async { [weak self] in
             guard let result = self?.navigator.getRouteForDirectionsUri(url.absoluteString) else {
+                DispatchQueue.main.async {
+                    completionHandler(session, .failure(.cancelled))
+                }
+                return
+            }
+            
+            guard result.isSuccess else {
                 DispatchQueue.main.async {
                     completionHandler(session, .failure(.noData))
                 }
