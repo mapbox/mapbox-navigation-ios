@@ -73,7 +73,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
 
     func suspendNotifications() {
         NotificationCenter.default.removeObserver(self, name: .routeControllerProgressDidChange, object: nil)
-        NotificationCenter.default.removeObserver(self, name: .routeControllerWillReroute, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .routeControllerDidReroute, object: nil)
         NotificationCenter.default.removeObserver(self, name: .routeControllerDidPassVisualInstructionPoint, object: nil)
     }
 
@@ -112,6 +112,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
     // Fired when the user is no longer on the route.
     // Update the route on the map.
     @objc func rerouted(_ notification: NSNotification) {
+        self.mapView.removeWaypoints()
         self.mapView.show([navigationService.route])
     }
 
