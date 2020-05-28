@@ -400,8 +400,6 @@
 		DA8805002316EAED00B54D87 /* ViewController+GuidanceCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED6285522CBE4CE00058A51 /* ViewController+GuidanceCards.swift */; };
 		DA8F3A7623B5D84900B56786 /* SpeedLimitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8F3A7523B5D84900B56786 /* SpeedLimitView.swift */; };
 		DA8F3A7823B5DB7900B56786 /* SpeedLimitStyleKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8F3A7723B5DB7900B56786 /* SpeedLimitStyleKit.swift */; };
-		DAA3804E247D75AD007F4670 /* ViewController+UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2B1EEA2424D0A700FA18A6 /* ViewController+UITests.swift */; };
-		DAA3804F247D75C8007F4670 /* SKUTestable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355B469C22B9031E009CE634 /* SKUTestable.swift */; };
 		DAA96D18215A961D00BEF703 /* route-doubling-back.json in Resources */ = {isa = PBXBuildFile; fileRef = DAA96D17215A961D00BEF703 /* route-doubling-back.json */; };
 		DAAE5F301EAE4C4700832871 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DAAE5F321EAE4C4700832871 /* Localizable.strings */; };
 		DAD17202214DB12B009C8161 /* CPMapTemplateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD17201214DB12B009C8161 /* CPMapTemplateTests.swift */; };
@@ -2715,7 +2713,6 @@
 				C53F2EE420EBC95600D9798F /* ViewController.swift in Sources */,
 				DA303CAB21B7A93B00F921DC /* OfflineViewController.swift in Sources */,
 				C53F2EE520EBC95600D9798F /* CustomViewController.swift in Sources */,
-				DAA3804F247D75C8007F4670 /* SKUTestable.swift in Sources */,
 				DA303CAA21B7A93400F921DC /* ResizableView.swift in Sources */,
 				C53F2EE720EBC95600D9798F /* WaypointConfirmationViewController.swift in Sources */,
 				C5DE4B6220F6B6B3007AFBE6 /* CustomStyles.swift in Sources */,
@@ -2725,7 +2722,6 @@
 				C53F2EE820EBC95600D9798F /* AppDelegate.swift in Sources */,
 				DA303CA621B7A90100F921DC /* UIViewController.swift in Sources */,
 				3577B878214FF35800094294 /* FavoritesList.swift in Sources */,
-				DAA3804E247D75AD007F4670 /* ViewController+UITests.swift in Sources */,
 				DA303CA921B7A93100F921DC /* SettingsItems.swift in Sources */,
 				DA303CA721B7A91C00F921DC /* SettingsViewController.swift in Sources */,
 			);
