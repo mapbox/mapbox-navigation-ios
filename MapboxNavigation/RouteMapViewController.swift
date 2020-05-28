@@ -218,6 +218,8 @@ class RouteMapViewController: UIViewController {
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
         isInOverviewMode = false
 
+        
+        mapView.updateCourseTracking(location: mapView.userLocationForCourseTracking)
         updateCameraAltitude(for: router.routeProgress)
         
         mapView.addArrow(route: router.route,
