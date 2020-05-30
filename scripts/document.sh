@@ -44,10 +44,16 @@ perl -pi -e "s/\\$\\{MINOR_VERSION\\}/${MINOR_VERSION}/" "${README}"
 echo "## Changes in version ${RELEASE_VERSION}" >> "${README}"
 sed -n -e '/^## /{' -e ':a' -e 'n' -e '/^## /q' -e 'p' -e 'ba' -e '}' CHANGELOG.md >> "${README}"
 
+# Blow away any includes of MapboxCoreNavigation, because
+# MapboxNavigation-Documentation.podspec gloms the two targets into one.
+# https://github.com/mapbox/mapbox-navigation-ios/issues/2363
+find Mapbox{Core,}Navigation/ -name '*.swift' -exec \
+    perl -pi -e 's/\bMapboxCoreNavigation\b/MapboxNavigation/' {} \;
+
 # Blow away any platform-based availability attributes, since everything is
 # compatible enough to be documented.
 # https://github.com/mapbox/mapbox-navigation-ios/issues/1682
-find Mapbox{Core,}Navigation/ -name *.swift -exec \
+find Mapbox{Core,}Navigation/ -name '*.swift' -exec \
     perl -pi -e 's/\@available\s*\(\s*iOS \d+.\d,.*?\)//' {} \;
 
 jazzy \
