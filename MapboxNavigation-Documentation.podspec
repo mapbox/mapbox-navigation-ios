@@ -32,7 +32,7 @@ Pod::Spec.new do |s|
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.source_files = ["MapboxNavigation/*", "MapboxCoreNavigation/*"]
+  s.source_files = ["MapboxNavigation/**/*.{h,m,swift}","MapboxCoreNavigation/**/*.{h,m,swift}"]
 
   # ――― Resources ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
@@ -49,6 +49,7 @@ Pod::Spec.new do |s|
   s.dependency "MapboxGeocoder.swift", "~> 0.10.0"
   s.dependency "Mapbox-iOS-SDK", "= 5.5.1"
   s.dependency "MapboxMobileEvents", "~> 0.9.5"
+  s.dependency "MapboxNavigationNative", "~> 6.2.1"
   s.dependency "Solar", "~> 2.1"
   s.dependency "Turf", "~> 0.3.0"
   s.dependency "MapboxSpeech", "~> 0.1"
