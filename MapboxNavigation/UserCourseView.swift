@@ -36,6 +36,19 @@ public extension CourseUpdatable {
  A view representing the user’s location on screen.
  */
 public class UserPuckCourseView: UIView, CourseUpdatable {
+    private var lastLocationUpdate: Date?
+    private var staleTimer: Timer!
+    
+    /// Time interval tick at which Puck view is transitioning into 'stale' state
+    public var staleRefreshInterval: TimeInterval = 1 {
+        didSet {
+            staleTimer.invalidate()
+            initTimer()
+        }
+    }
+    /// Time interval, after which Puck is considered 100% 'stale'
+    public var staleInterval: TimeInterval = 60
+    
     /**
      Transforms the location of the user puck.
      */
@@ -56,6 +69,13 @@ public class UserPuckCourseView: UIView, CourseUpdatable {
     @objc public dynamic var puckColor: UIColor = #colorLiteral(red: 0.149, green: 0.239, blue: 0.341, alpha: 1) {
         didSet {
             puckView.puckColor = puckColor
+        }
+    }
+    
+    // Sets the color on the user puck in 'stale' state. Puck will gradually transition the color as long as location updates are missing
+    @objc public dynamic var stalePuckColor: UIColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1) {
+        didSet {
+            puckView.stalePuckColor = stalePuckColor
         }
     }
     
@@ -85,16 +105,49 @@ public class UserPuckCourseView: UIView, CourseUpdatable {
         commonInit()
     }
     
+    deinit {
+        staleTimer.invalidate()
+        NotificationCenter.default.removeObserver(self, name: .routeControllerProgressDidChange, object: nil)
+    }
+    
     func commonInit() {
         isUserInteractionEnabled = false
         backgroundColor = .clear
         puckView = UserPuckStyleKitView(frame: bounds)
         puckView.backgroundColor = .clear
         addSubview(puckView)
+        
+        initTimer()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(locationDidUpdate(_ :)), name: .routeControllerProgressDidChange, object: nil)
+    }
+    
+    private func initTimer() {
+        staleTimer = Timer(timeInterval: staleRefreshInterval,
+                                target: self,
+                                selector: #selector(refreshPuckStaleState),
+                                userInfo: nil,
+                                repeats: true)
+        RunLoop.current.add(staleTimer, forMode: .common)
+    }
+    
+    @objc func refreshPuckStaleState() {
+        if let lastUpdate = lastLocationUpdate {
+            let ratio = CGFloat(Date().timeIntervalSince(lastUpdate) / staleInterval)
+            puckView.staleRatio = max(0.0, min(1.0, ratio))
+        }
+        else {
+            puckView.staleRatio = 0.0
+        }
+    }
+    
+    @objc func locationDidUpdate(_ notification: NSNotification) {
+        lastLocationUpdate = Date()
     }
 }
 
 class UserPuckStyleKitView: UIView {
+    private typealias ColorComponents = (hue: CGFloat, saturation: CGFloat, brightness: CGFloat, alpha: CGFloat)
     
     var fillColor: UIColor = UIColor(red: 1.000, green: 1.000, blue: 1.000, alpha: 1.000) {
         didSet {
@@ -103,6 +156,22 @@ class UserPuckStyleKitView: UIView {
     }
     
     var puckColor: UIColor = UIColor(red: 0.149, green: 0.239, blue: 0.341, alpha: 1.000) {
+        didSet {
+            puckColorComponents = colorComponents(puckColor)
+            setNeedsDisplay()
+        }
+    }
+    lazy private var puckColorComponents: ColorComponents! = colorComponents(puckColor)
+    
+    var stalePuckColor: UIColor = UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1) {
+        didSet {
+            stalePuckColorComponents = colorComponents(stalePuckColor)
+            setNeedsDisplay()
+        }
+    }
+    lazy private var stalePuckColorComponents: ColorComponents! = colorComponents(stalePuckColor)
+    
+    var staleRatio: CGFloat = 0 {
         didSet {
             setNeedsDisplay()
         }
@@ -114,9 +183,26 @@ class UserPuckStyleKitView: UIView {
         }
     }
     
+    private func colorComponents(_ color: UIColor) -> ColorComponents {
+        var hue: CGFloat = 0, saturation: CGFloat = 0, brightness: CGFloat = 0, alpha: CGFloat = 0
+        color.getHue(&hue,
+                     saturation: &saturation,
+                     brightness: &brightness,
+                     alpha: &alpha)
+        return (hue, saturation, brightness, alpha)
+    }
+    
+    private func drawingPuckColor() -> UIColor
+    {
+        return UIColor(hue: puckColorComponents.hue + (stalePuckColorComponents.hue - puckColorComponents.hue) * staleRatio,
+                       saturation: puckColorComponents.saturation + (stalePuckColorComponents.saturation - puckColorComponents.saturation) * staleRatio,
+                       brightness: puckColorComponents.brightness + (stalePuckColorComponents.brightness - puckColorComponents.brightness) * staleRatio,
+                       alpha: puckColorComponents.alpha + (stalePuckColorComponents.alpha - puckColorComponents.alpha) * staleRatio)
+    }
+    
     override func draw(_ rect: CGRect) {
         super.draw(rect)
-        drawNavigation_puck(fillColor: fillColor, puckColor: puckColor, shadowColor: shadowColor, circleColor: fillColor)
+        drawNavigation_puck(fillColor: fillColor, puckColor: drawingPuckColor(), shadowColor: shadowColor, circleColor: fillColor)
     }
     
     func drawNavigation_puck(fillColor: UIColor = UIColor(red: 1.000, green: 1.000, blue: 1.000, alpha: 1.000), puckColor: UIColor = UIColor(red: 0.149, green: 0.239, blue: 0.341, alpha: 1.000), shadowColor: UIColor = UIColor(red: 0.149, green: 0.239, blue: 0.341, alpha: 0.160), circleColor: UIColor = UIColor(red: 1.000, green: 1.000, blue: 1.000, alpha: 1.000)) {
