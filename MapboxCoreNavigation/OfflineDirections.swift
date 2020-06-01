@@ -17,17 +17,6 @@ public enum OfflineRoutingError: LocalizedError {
      A Directions API error can occur whether directions are calculated online or offline.
      */
     case standard(DirectionsError)
-    
-    /**
-     The router did not finish the request
-     */
-    case cancelled
-    
-    /**
-     The router returned an empty response.
-     */
-    case noData
-    
     /**
      The router returned a response that isn’t correctly formatted.
     */
@@ -39,10 +28,6 @@ public enum OfflineRoutingError: LocalizedError {
         switch self {
         case .standard(let error):
             return error.localizedDescription
-        case .cancelled:
-            return NSLocalizedString("OFFLINE_CANCELLED", bundle: .mapboxCoreNavigation, value: "Routing was cancelled before response could be acquired.", comment: "Error description when Offline Router was deallocated before receiving the API response")
-        case .noData:
-            return NSLocalizedString("OFFLINE_NO_RESULT", bundle: .mapboxCoreNavigation, value: "Unable to calculate the requested route while offline.", comment: "Error description when an offline route request returns no result")
         case .invalidResponse:
             return NSLocalizedString("OFFLINE_CORRUPT_DATA", bundle: .mapboxCoreNavigation, value: "Found an invalid route while offline.", comment: "Error message when an offline route request returns a response that can’t be deserialized")
         case .unknown(let underlying):
@@ -181,7 +166,7 @@ public class NavigationDirections: Directions {
      
      - parameter options: A `RouteOptions` object specifying the requirements for the resulting routes.
      - parameter offline: Determines whether to calculate the route offline or online.
-     - parameter completionHandler: The closure (block) to call with the resulting routes. This closure is executed on the application’s main thread.
+     - parameter completionHandler: The closure (block) to call with the resulting routes. This closure is executed on the application’s main thread. If called `NavigationDirections` instance is deallocated before route calculation is finished - completion won't be called.
      */
     public func calculate(_ options: RouteOptions, offline: Bool = true, completionHandler: @escaping OfflineRouteCompletionHandler) {
         
@@ -203,16 +188,6 @@ public class NavigationDirections: Directions {
         
         NavigationDirectionsConstants.offlineSerialQueue.async { [weak self] in
             guard let result = self?.navigator.getRouteForDirectionsUri(url.absoluteString) else {
-                DispatchQueue.main.async {
-                    completionHandler(session, .failure(.cancelled))
-                }
-                return
-            }
-            
-            guard result.isSuccess else {
-                DispatchQueue.main.async {
-                    completionHandler(session, .failure(.noData))
-                }
                 return
             }
             
