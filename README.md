@@ -36,11 +36,7 @@ To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
 
 1. Create a [Podfile](https://guides.cocoapods.org/syntax/podfile.html) with the following specification:
    ```ruby
-   # Latest stable release
-   pod 'MapboxNavigation', '~> 0.38.0'
-   # Latest prerelease
-   pod 'MapboxCoreNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v1.0.0-alpha.1'
-   pod 'MapboxNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v1.0.0-alpha.1'
+   pod 'MapboxNavigation', '~> 0.40.0'
    ```
 
 1. Run `pod repo update && pod install` and open the resulting Xcode workspace.
@@ -51,10 +47,7 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
 
 1. Create a [Cartfile](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#github-repositories) with the following dependency:
    ```cartfile
-   // Latest stable release
-   github "mapbox/mapbox-navigation-ios" ~> 0.38
-   // Latest prerelease
-   github "mapbox/mapbox-navigation-ios" "v1.0.0-alpha.1"
+   github "mapbox/mapbox-navigation-ios" ~> 0.40
    ```
 
 1. Run `carthage update --platform iOS` to build just the iOS dependencies.
@@ -82,12 +75,15 @@ import MapboxNavigation
 let origin = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 38.9131752, longitude: -77.0324047), name: "Mapbox")
 let destination = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 38.8977, longitude: -77.0365), name: "White House")
 
-let options = NavigationRouteOptions(waypoints: [origin, destination])
+let routeOptions = NavigationRouteOptions(waypoints: [origin, destination])
 
-Directions.shared.calculate(options) { (waypoints, routes, error) in
-    guard let route = routes?.first else { return }
- 
-    let viewController = NavigationViewController(for: route)
+Directions.shared.calculate(routeOptions) { (session, result) in
+    guard case let .success(response) = result,
+        let route = response.routes?.first else {
+        return
+    }
+    
+    let viewController = NavigationViewController(for: route, routeOptions: routeOptions)
     viewController.modalPresentationStyle = .fullScreen
     present(viewController, animated: true, completion: nil)
 }
@@ -132,8 +128,8 @@ class CustomStyle: DayStyle {
 then initialize `NavigationViewController` with your style or styles:
 
 ```swift
-let options = NavigationOptions(styles: [CustomStyle()])
-NavigationViewController(for: route, options: options)
+let navigationOptions = NavigationOptions(styles: [CustomStyle()])
+NavigationViewController(for: route, routeOptions: routeOptions, navigationOptions: navigationOptions)
 ```
 
 ### Starting from scratch
