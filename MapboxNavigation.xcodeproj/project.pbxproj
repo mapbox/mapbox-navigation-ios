@@ -230,6 +230,7 @@
 		35F611C41F1E1C0500C43249 /* FeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F611C31F1E1C0500C43249 /* FeedbackViewController.swift */; };
 		35F9BC2F2296FCD300364A10 /* 9-legged-route.json in Resources */ = {isa = PBXBuildFile; fileRef = 35F9BAD12296FCD200364A10 /* 9-legged-route.json */; };
 		3A163AE0249901C300D66A0D /* MBNavigatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A163ADF249901C300D66A0D /* MBNavigatorTests.swift */; };
+		3A163AE3249901D000D66A0D /* FixLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A163AE2249901D000D66A0D /* FixLocation.swift */; };
 		3EA9301B03F8679BEDD4795F /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA93A10227A7DAF1861D9F5 /* Cache.swift */; };
 		3EA9369C33A8F10DAE9043AA /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA934C5D8DBAA19DB0F5271 /* ImageDownloader.swift */; };
 		3EA9371104016CD402547F1A /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA938479CF48D7AD1B6369B /* ImageCache.swift */; };
@@ -836,6 +837,7 @@
 		35F611C31F1E1C0500C43249 /* FeedbackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackViewController.swift; sourceTree = "<group>"; };
 		35F9BAD12296FCD200364A10 /* 9-legged-route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "9-legged-route.json"; sourceTree = "<group>"; };
 		3A163ADF249901C300D66A0D /* MBNavigatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MBNavigatorTests.swift; sourceTree = "<group>"; };
+		3A163AE2249901D000D66A0D /* FixLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixLocation.swift; sourceTree = "<group>"; };
 		3EA93170CB959F3065ACFFC3 /* SpeechAPISpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeechAPISpy.swift; sourceTree = "<group>"; };
 		3EA93230997B8D59E3B76C8C /* InstructionPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionPresenter.swift; sourceTree = "<group>"; };
 		3EA934C5D8DBAA19DB0F5271 /* ImageDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
@@ -1713,6 +1715,7 @@
 				35A5413A1EFC052700E49846 /* RouteOptions.swift */,
 				C57491DE1FACC42F006F97BC /* CGPoint.swift */,
 				C582FD5E203626E900A9086E /* CLLocationDirection.swift */,
+				3A163AE2249901D000D66A0D /* FixLocation.swift */,
 				35C98732212E037900808B82 /* MBNavigator.swift */,
 				35A43F76223BD632000CB367 /* RouteLeg.swift */,
 				35F3387B2232AEBF0071DB5C /* MinimumEditDistance.swift */,
@@ -2766,6 +2769,7 @@
 				C5D9800F1EFBCDAD006DBF2E /* Date.swift in Sources */,
 				35A43F77223BD632000CB367 /* RouteLeg.swift in Sources */,
 				4303A3992332CD6200B5737D /* UnimplementedLogging.swift in Sources */,
+				3A163AE3249901D000D66A0D /* FixLocation.swift in Sources */,
 				8D2AA745211CDD4000EB7F72 /* NavigationService.swift in Sources */,
 				35A5413B1EFC052700E49846 /* RouteOptions.swift in Sources */,
 				353E69041EF0C4E5007B2AE5 /* SimulatedLocationManager.swift in Sources */,
