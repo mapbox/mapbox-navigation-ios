@@ -233,6 +233,7 @@
 		35F520C01FB482A200FC9C37 /* NextBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F520BF1FB482A200FC9C37 /* NextBannerView.swift */; };
 		35F611C41F1E1C0500C43249 /* FeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F611C31F1E1C0500C43249 /* FeedbackViewController.swift */; };
 		35F9BC2F2296FCD300364A10 /* 9-legged-route.json in Resources */ = {isa = PBXBuildFile; fileRef = 35F9BAD12296FCD200364A10 /* 9-legged-route.json */; };
+		3A163AE0249901C300D66A0D /* MBNavigatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A163ADF249901C300D66A0D /* MBNavigatorTests.swift */; };
 		3EA9301B03F8679BEDD4795F /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA93A10227A7DAF1861D9F5 /* Cache.swift */; };
 		3EA9369C33A8F10DAE9043AA /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA934C5D8DBAA19DB0F5271 /* ImageDownloader.swift */; };
 		3EA9371104016CD402547F1A /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA938479CF48D7AD1B6369B /* ImageCache.swift */; };
@@ -841,6 +842,7 @@
 		35F520BF1FB482A200FC9C37 /* NextBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextBannerView.swift; sourceTree = "<group>"; };
 		35F611C31F1E1C0500C43249 /* FeedbackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackViewController.swift; sourceTree = "<group>"; };
 		35F9BAD12296FCD200364A10 /* 9-legged-route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "9-legged-route.json"; sourceTree = "<group>"; };
+		3A163ADF249901C300D66A0D /* MBNavigatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MBNavigatorTests.swift; sourceTree = "<group>"; };
 		3EA93170CB959F3065ACFFC3 /* SpeechAPISpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeechAPISpy.swift; sourceTree = "<group>"; };
 		3EA93230997B8D59E3B76C8C /* InstructionPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionPresenter.swift; sourceTree = "<group>"; };
 		3EA934C5D8DBAA19DB0F5271 /* ImageDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
@@ -1544,6 +1546,14 @@
 			path = TestHelper;
 			sourceTree = "<group>";
 		};
+		3A163AE1249901D000D66A0D /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				3A163ADF249901C300D66A0D /* MBNavigatorTests.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		8DCB4246218A53F500D6FCAD /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
@@ -1792,6 +1802,7 @@
 		C5ADFBD61DDCC7840011824B /* MapboxCoreNavigationTests */ = {
 			isa = PBXGroup;
 			children = (
+				3A163AE1249901D000D66A0D /* Extensions */,
 				C52D09CF1DEF5E5F00BE3C5C /* Fixtures */,
 				C5BF7371206AB0DF00CDBB6D /* CLHeadingPrivate.h */,
 				DAD903AE23E3DCC80057CF1F /* DateTests.swift */,
@@ -2800,6 +2811,7 @@
 				352762A4225B751A0015B632 /* OptionsTests.swift in Sources */,
 				8DB7EF6A2176674800DA83A3 /* MapboxNavigationServiceSpec.swift in Sources */,
 				35EF782A212C324E001B4BB5 /* TunnelAuthorityTests.swift in Sources */,
+				3A163AE0249901C300D66A0D /* MBNavigatorTests.swift in Sources */,
 				C5ABB50E20408D2C00AFA92C /* NavigationServiceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
