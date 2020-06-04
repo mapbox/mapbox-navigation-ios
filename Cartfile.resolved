@@ -1,4 +1,4 @@
-binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" "5.9.0"
+binary "https://mapbox.s3.amazonaws.com/mapbox-gl-native-ios/Mapbox-iOS-SDK.json" "5.9.1000-alpha.2"
 binary "https://www.mapbox.com/ios-sdk/MapboxAccounts.json" "2.2.0"
 binary "https://www.mapbox.com/ios-sdk/MapboxNavigationNative.json" "9.0.4"
 github "CedarBDD/Cedar" "v1.0"
