@@ -1,6 +1,6 @@
 binary "https://mapbox-gl-native-ios.s3.amazonaws.com/public/internal/Mapbox-iOS-SDK.json" "5.9.1000"
 binary "https://www.mapbox.com/ios-sdk/MapboxAccounts.json" "2.3.0"
-binary "https://www.mapbox.com/ios-sdk/MapboxNavigationNative.json" "10.0.4"
+binary "https://www.mapbox.com/ios-sdk/MapboxNavigationNative.json" "12.0.3"
 github "CedarBDD/Cedar" "v1.0"
 github "Quick/Nimble" "v8.1.1"
 github "Quick/Quick" "v2.2.1"
