@@ -44,7 +44,7 @@ Pod::Spec.new do |s|
   s.dependency "MapboxAccounts", "~> 2.2.0"
   s.dependency "MapboxDirections", "~> 0.31.0"
   s.dependency "MapboxMobileEvents", "~> 0.10.2"        # Always pin to a patch release if pre-1.0
-  s.dependency "Turf", "~> 0.3.0"                       # Always pin to a patch release if pre-1.0
+  s.dependency "Turf", "~> 0.4.0"                       # Always pin to a patch release if pre-1.0
 
   s.swift_version = "5.0"
 
