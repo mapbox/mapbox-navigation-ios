@@ -67,7 +67,7 @@ extension CLLocation {
     /**
      Calculates the proper coordinates to use when calculating a snapped location.
      */
-    func snappingPolyline(for routeProgress: RouteProgress) -> Polyline {
+    func snappingPolyline(for routeProgress: RouteProgress) -> LineString {
         let legProgress = routeProgress.currentLegProgress
         let nearbyPolyline = routeProgress.nearbyShape
         let stepPolyline = legProgress.currentStep.shape!
@@ -97,12 +97,12 @@ extension CLLocation {
     /**
      Given a location and a series of coordinates, compute what the course should be for a the location.
      */
-    func interpolatedCourse(along polyline: Polyline) -> CLLocationDirection? {
+    func interpolatedCourse(along polyline: LineString) -> CLLocationDirection? {
         guard let closest = polyline.closestCoordinate(to: coordinate) else { return nil }
         
-        let reversedPolyline = Polyline(polyline.coordinates.reversed())
-        let slicedLineBehind = reversedPolyline.sliced(from: closest.coordinate, to: reversedPolyline.coordinates.last)
-        let slicedLineInFront = polyline.sliced(from: closest.coordinate, to: polyline.coordinates.last)
+        let reversedPolyline = LineString(polyline.coordinates.reversed())
+        let slicedLineBehind = reversedPolyline.sliced(from: closest.coordinate, to: reversedPolyline.coordinates.last)!
+        let slicedLineInFront = polyline.sliced(from: closest.coordinate, to: polyline.coordinates.last)!
         let userDistanceBuffer: CLLocationDistance = max(speed * RouteControllerDeadReckoningTimeInterval / 2, RouteControllerUserLocationSnappingDistance / 2)
         
         guard let pointBehind = slicedLineBehind.coordinateFromStart(distance: userDistanceBuffer) else { return nil }

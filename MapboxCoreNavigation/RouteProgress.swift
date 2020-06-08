@@ -469,11 +469,7 @@ open class RouteLegProgress {
         var slice = legPolyline
         var accumulatedCoordinates = 0
         return Array(waypoints.drop { (waypoint) -> Bool in
-            var newSlice = slice.sliced(from: waypoint.coordinate)
-            // Work around <https://github.com/mapbox/turf-swift/pull/79>.
-            if newSlice.coordinates.count > 2 && newSlice.coordinates.last == newSlice.coordinates.dropLast().last {
-                newSlice.coordinates.removeLast()
-            }
+            let newSlice = slice.sliced(from: waypoint.coordinate)!
             accumulatedCoordinates += slice.coordinates.count - newSlice.coordinates.count
             slice = newSlice
             return accumulatedCoordinates <= userCoordinateIndex
