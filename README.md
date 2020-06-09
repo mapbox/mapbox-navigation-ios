@@ -79,7 +79,7 @@ let destination = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 38.8977,
 // Set options
 let routeOptions = NavigationRouteOptions(waypoints: [origin, destination])
 
-// Request a route using MapboxDirections.swift
+// Request a route using MapboxDirections
 Directions.shared.calculate(routeOptions) { [weak self] (session, result) in
     switch result {
     case .failure(let error):
