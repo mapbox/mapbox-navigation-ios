@@ -40,8 +40,12 @@ step-library:
       run:
         name: Prepare
         command: |
-          if [ $(carthage outdated | grep -cF "latest Carthage version") -eq 0 ]; then brew update && brew upgrade carthage || true; fi
           echo "foo" > ~/.mapbox
+          brew unlink carthage
+          brew install carthage --HEAD
+          echo "machine dl.bintray.com" > ~/.netrc
+          echo "login $BINTRAY_LOGIN" >> ~/.netrc
+          echo "password $BINTRAY_API_KEY" >> ~/.netrc
 
   - &verify-missing-localizable-strings
       run:
@@ -53,7 +57,7 @@ step-library:
   - &install-dependencies
       run:
         name: Install Dependencies
-        command: carthage bootstrap --platform ios --cache-builds --configuration Debug --no-use-binaries
+        command: carthage bootstrap --platform ios --cache-builds --configuration Debug --no-use-binaries --use-netrc
 
   - &build-Example
       run:
