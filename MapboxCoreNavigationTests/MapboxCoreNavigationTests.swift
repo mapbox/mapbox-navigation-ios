@@ -127,39 +127,70 @@ class MapboxCoreNavigationTests: XCTestCase {
     }
     
     func testShouldReroute() {
-        let coordinates = route.legs[0].steps[1].shape!.coordinates
+        // Given
         let now = Date()
-        let locations = coordinates.enumerated().map { CLLocation(coordinate: $0.element,
-                                                                  altitude: -1, horizontalAccuracy: 10, verticalAccuracy: -1, course: -1, speed: 10, timestamp: now + $0.offset) }
-        
-        let offRouteCoordinates = [[-122.41765, 37.79095],[-122.41830,37.79087],[-122.41907,37.79079],[-122.41960,37.79073]]
-            .map { CLLocationCoordinate2D(latitude: $0[1], longitude: $0[0]) }
-        
+        let coordinates = route.legs[0].steps[1].shape!.coordinates
+        let locations = coordinates.enumerated().map {
+            CLLocation(coordinate: $0.element,
+                       altitude: -1,
+                       horizontalAccuracy: 10,
+                       verticalAccuracy: -1,
+                       course: -1,
+                       speed: 10,
+                       timestamp: now + $0.offset)
+        }
+
+        let offRouteCoordinates = [
+            [-122.41765, 37.79095],
+            [-122.41830,37.79087],
+            [-122.41907,37.79079],
+            [-122.41960,37.79073],
+        ].map { CLLocationCoordinate2D(latitude: $0[1], longitude: $0[0]) }
+
         let offRouteLocations = offRouteCoordinates.enumerated().map {
-            CLLocation(coordinate: $0.element, altitude: -1, horizontalAccuracy: 10,
-                       verticalAccuracy: -1, course: -1, speed: 10,
+            CLLocation(coordinate: $0.element,
+                       altitude: -1,
+                       horizontalAccuracy: 10,
+                       verticalAccuracy: -1,
+                       course: -1,
+                       speed: 10,
                        timestamp: now + locations.count + $0.offset)
         }
-        
-        let locationManager = ReplayLocationManager(locations: locations + offRouteLocations)
-        navigation = MapboxNavigationService(route: route, routeOptions: routeOptions, directions: directions, locationSource: locationManager, simulating: .never)
-        expectation(forNotification: .routeControllerWillReroute, object: navigation.router) { (notification) -> Bool in
+
+        let allLocations = locations + offRouteLocations
+
+        let locationManager = ReplayLocationManager(locations: allLocations)
+        navigation = MapboxNavigationService(route: route,
+                                             routeOptions: routeOptions,
+                                             directions: directions,
+                                             locationSource: locationManager,
+                                             simulating: .never)
+
+        let _ = expectation(forNotification: .routeControllerWillReroute,
+                            object: navigation.router) { (notification) -> Bool in
             XCTAssertEqual(notification.userInfo?.count, 1)
-            
-            let location = notification.userInfo![RouteController.NotificationUserInfoKey.locationKey] as? CLLocation
-            return location?.coordinate == offRouteLocations[1].coordinate
+
+            let locationKey = RouteController.NotificationUserInfoKey.locationKey
+            let locationFromNotification = notification.userInfo![locationKey] as? CLLocation
+            XCTAssertEqual(locationFromNotification?.coordinate,
+                           offRouteLocations[2].coordinate)
+
+            return true
         }
-        
+
+        // When
         navigation.start()
-        
-        (locations + offRouteLocations).forEach {
-            navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [$0])
+        allLocations.forEach {
+            navigation.router!.locationManager!(navigation.locationManager,
+                                                didUpdateLocations: [$0])
         }
-        
+
+        // Then
         waitForExpectations(timeout: waitForInterval) { (error) in
             XCTAssertNil(error)
         }
     }
+
     
     func testArrive() {
         let now = Date()
