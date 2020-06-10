@@ -40,6 +40,7 @@ step-library:
       run:
         name: Prepare
         command: |
+#         if [ $(carthage outdated | grep -cF "latest Carthage version") -eq 0 ]; then brew update && brew upgrade carthage || true; fi
           echo "foo" > ~/.mapbox
           brew unlink carthage
           brew install carthage --HEAD
