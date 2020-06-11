@@ -166,7 +166,8 @@ public class NavigationDirections: Directions {
      
      - parameter options: A `RouteOptions` object specifying the requirements for the resulting routes.
      - parameter offline: Determines whether to calculate the route offline or online.
-     - parameter completionHandler: The closure (block) to call with the resulting routes. This closure is executed on the application’s main thread. If called `NavigationDirections` instance is deallocated before route calculation is finished - completion won't be called.
+     - parameter completionHandler: The closure (block) to call with the resulting routes. This closure is executed on the application’s main thread.
+     If called `NavigationDirections` instance is deallocated before route calculation is finished - completion won't be called.
      */
     public func calculate(_ options: RouteOptions, offline: Bool = true, completionHandler: @escaping OfflineRouteCompletionHandler) {
         
