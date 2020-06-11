@@ -4,7 +4,7 @@ import Turf
 extension RouteLeg {
     public var shape: LineString {
         return steps.dropFirst().reduce(into: steps.first?.shape ?? LineString([])) { (result, step) in
-            result = LineString(result.coordinates + (step.shape?.coordinates ?? []).dropFirst())
+            result.coordinates += (step.shape?.coordinates ?? []).dropFirst()
         }
     }
 }
