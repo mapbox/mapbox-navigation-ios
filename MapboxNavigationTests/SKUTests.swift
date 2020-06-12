@@ -14,7 +14,7 @@ class SKUTests: XCTestCase {
         
         XCTAssertNotNil(directionsSkuToken)
         
-        XCTAssertEqual(directionsSkuToken?.skuId, SkuID.mapsUser.rawValue)
+        XCTAssertEqual(directionsSkuToken?.skuId, SkuID.navigationUser.rawValue)
     }
     
     func testSpeechSynthesizerSKU() {
@@ -22,6 +22,6 @@ class SKUTests: XCTestCase {
         
         XCTAssertNotNil(speechSkuToken)
         
-        XCTAssertEqual(speechSkuToken?.skuId, SkuID.mapsUser.rawValue)
+        XCTAssertEqual(speechSkuToken?.skuId, SkuID.navigationUser.rawValue)
     }
 }
