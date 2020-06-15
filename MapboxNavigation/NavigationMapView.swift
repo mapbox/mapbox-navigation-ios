@@ -448,7 +448,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         guard let style = style else { return }
         guard let mainRoute = routes.first else { return }
         self.routes = routes
-        
+
+
         let polylines = navigationMapViewDelegate?.navigationMapView(self, shapeFor: routes) ?? shape(for: routes, legIndex: legIndex)
         let mainPolylineSimplified = navigationMapViewDelegate?.navigationMapView(self, simplifiedShapeFor: mainRoute) ?? shape(forCasingOf: mainRoute, legIndex: legIndex)
         
@@ -768,7 +769,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 
     func shape(for routes: [Route], legIndex: Int?) -> MGLShape? {
         guard let firstRoute = routes.first else { return nil }
-        guard let congestedRoute = addCongestion(to: firstRoute, legIndex: legIndex) else { return nil }
+
+        let mainRoute = MGLPolylineFeature(firstRoute.shape!)
+        mainRoute.attributes["isAlternateRoute"] = false
+
+        //guard let congestedRoute = addCongestion(to: firstRoute, legIndex: legIndex) else { return nil }
         
         var altRoutes: [MGLPolylineFeature] = []
         
@@ -778,52 +783,54 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             altRoutes.append(polyline)
         }
         
-        return MGLShapeCollectionFeature(shapes: altRoutes + congestedRoute)
+//        return MGLShapeCollectionFeature(shapes: altRoutes + congestedRoute)
+        return MGLShapeCollectionFeature(shapes: altRoutes + [mainRoute])
     }
     
-    func addCongestion(to route: Route, legIndex: Int?) -> [MGLPolylineFeature]? {
-        guard let coordinates = route.shape?.coordinates else { return nil }
-        
-        var linesPerLeg: [MGLPolylineFeature] = []
-        
-        for (index, leg) in route.legs.enumerated() {
-            let lines: [MGLPolylineFeature]
-            // If there is no congestion, don't try and add it
-            if let legCongestion = leg.segmentCongestionLevels, legCongestion.count < coordinates.count {
-                // The last coord of the preceding step, is shared with the first coord of the next step, we don't need both.
-                let legCoordinates: [CLLocationCoordinate2D] = leg.steps.enumerated().reduce([]) { allCoordinates, current in
-                    let index = current.offset
-                    let step = current.element
-                    let stepCoordinates = step.shape!.coordinates
-                    
-                    return index == 0 ? stepCoordinates : allCoordinates + stepCoordinates.suffix(from: 1)
-                }
-                
-                let mergedCongestionSegments = combine(legCoordinates, with: legCongestion)
-                
-                lines = mergedCongestionSegments.map { (congestionSegment: CongestionSegment) -> MGLPolylineFeature in
-                    let polyline = MGLPolylineFeature(coordinates: congestionSegment.0, count: UInt(congestionSegment.0.count))
-                    polyline.attributes[MBCongestionAttribute] = String(describing: congestionSegment.1)
-                    return polyline
-                }
-            } else {
-                lines = [MGLPolylineFeature(route.shape!)]
-            }
-            
-            for line in lines {
-                line.attributes["isAlternateRoute"] = false
-                if let legIndex = legIndex {
-                    line.attributes[MBCurrentLegAttribute] = index == legIndex
-                } else {
-                    line.attributes[MBCurrentLegAttribute] = index == 0
-                }
-            }
-            
-            linesPerLeg.append(contentsOf: lines)
-        }
-        
-        return linesPerLeg
-    }
+//    func addCongestion(to route: Route, legIndex: Int?) -> [MGLPolylineFeature]? {
+//        guard let coordinates = route.shape?.coordinates else { return nil }
+//
+//        var linesPerLeg: [MGLPolylineFeature] = []
+//
+//        for (index, leg) in route.legs.enumerated() {
+//            let lines: [MGLPolylineFeature]
+//            if let legCongestion = leg.segmentCongestionLevels, legCongestion.count < coordinates.count {
+//                // The last coord of the preceding step, is shared with the first coord of the next step, we don't need both.
+//                let legCoordinates: [CLLocationCoordinate2D] = leg.steps.enumerated().reduce([]) { allCoordinates, current in
+//                    let index = current.offset
+//                    let step = current.element
+//                    let stepCoordinates = step.shape!.coordinates
+//
+//                    return index == 0 ? stepCoordinates : allCoordinates + stepCoordinates.suffix(from: 1)
+//                }
+//
+//                let mergedCongestionSegments = combine(legCoordinates, with: legCongestion)
+//
+//                lines = mergedCongestionSegments.map { (congestionSegment: CongestionSegment) -> MGLPolylineFeature in
+//                    let polyline = MGLPolylineFeature(coordinates: congestionSegment.0, count: UInt(congestionSegment.0.count))
+//                    polyline.attributes[MBCongestionAttribute] = String(describing: congestionSegment.1)
+//                    print(polyline.attributes)
+//                    return polyline
+//                }
+//            } else {
+//                // If there is no congestion, don't try and add it
+//                lines = [MGLPolylineFeature(route.shape!)]
+//            }
+//
+//            for line in lines {
+//                line.attributes["isAlternateRoute"] = false
+//                if let legIndex = legIndex {
+//                    line.attributes[MBCurrentLegAttribute] = index == legIndex
+//                } else {
+//                    line.attributes[MBCurrentLegAttribute] = index == 0
+//                }
+//            }
+//
+//            linesPerLeg.append(contentsOf: lines)
+//        }
+//
+//        return linesPerLeg
+//    }
     
     func combine(_ coordinates: [CLLocationCoordinate2D], with congestions: [CongestionLevel]) -> [CongestionSegment] {
         var segments: [CongestionSegment] = []
@@ -841,7 +848,13 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
         return segments
     }
-    
+
+    /**
+     Creates a single route line for each route leg.
+
+     A route with multiple legs (caused by adding more than one waypoint),
+     will cause linesPerLeg.count > 1.
+     */
     func shape(forCasingOf route: Route, legIndex: Int?) -> MGLShape? {
         var linesPerLeg: [MGLPolylineFeature] = []
         
