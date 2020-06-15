@@ -216,15 +216,24 @@ open class StepListIndicatorView: UIView {
 open class StylableLabel: UILabel {
     // Workaround the fact that UILabel properties are not marked with UI_APPEARANCE_SELECTOR
     @objc dynamic open var normalTextColor: UIColor = .black {
-        didSet {
-            textColor = normalTextColor
-        }
+        didSet { update() }
     }
     
     @objc dynamic open var normalFont: UIFont = .systemFont(ofSize: 16) {
-        didSet {
-            font = normalFont
-        }
+        didSet { update() }
+    }
+
+    @objc dynamic public var textColorHighlighted: UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) {
+        didSet { update() }
+    }
+
+    @objc public var showHighlightedTextColor: Bool = false {
+        didSet { update() }
+    }
+
+    open func update() {
+        textColor = showHighlightedTextColor ? textColorHighlighted : normalTextColor
+        font = normalFont
     }
 }
 
@@ -286,9 +295,6 @@ open class DistanceLabel: StylableLabel {
     @objc dynamic public var unitFont: UIFont = UIFont.systemFont(ofSize: 11, weight: .medium) {
         didSet { update() }
     }
-    @objc dynamic public var showHighlightedTextColor: Bool = false {
-        didSet { update() }
-    }
     
     /**
      An attributed string indicating the distance along with a unit.
@@ -302,7 +308,7 @@ open class DistanceLabel: StylableLabel {
         }
     }
     
-    fileprivate func update() {
+    open override func update() {
         guard let attributedDistanceString = attributedDistanceString else {
             return
         }
