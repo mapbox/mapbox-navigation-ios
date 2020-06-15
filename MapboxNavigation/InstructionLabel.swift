@@ -12,13 +12,6 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
     var imageRepository: ImageRepository = .shared
     var imageDownloadCompletion: (() -> Void)?
     weak var instructionDelegate: VisualInstructionDelegate?
-
-    @objc dynamic public var textColorHighlighted: UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-    @objc dynamic public var showHighlightedTextColor: Bool = false {
-        didSet {
-            textColor = textColorHighlighted
-        }
-    }
     
     var instruction: VisualInstruction? {
         didSet {
