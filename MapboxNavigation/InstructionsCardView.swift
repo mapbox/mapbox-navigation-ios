@@ -52,26 +52,19 @@ public class InstructionsCardView: BaseInstructionsBannerView {
     }
     
     fileprivate func prepareManeuver(_ style: InstructionsCardStyle) {
-        maneuverView.primaryColor = style.maneuverViewPrimaryColor
-        maneuverView.secondaryColor = style.maneuverViewSecondaryColor
+        maneuverView.shouldShowHighlightedColors = false
     }
     
     fileprivate func prepareDistance(_ style: InstructionsCardStyle) {
-        distanceLabel.valueTextColor = style.distanceLabelValueTextColor
-        distanceLabel.unitTextColor = style.distanceLabelUnitTextColor
-        
-        distanceLabel.valueFont = style.distanceLabelValueFont
-        distanceLabel.unitFont = style.distanceLabelUnitFont
+        distanceLabel.showHighlightedTextColor = false
     }
     
     fileprivate func preparePrimaryLabel(_ style: InstructionsCardStyle) {
-        primaryLabel.normalFont = style.primaryLabelNormalFont
-        primaryLabel.normalTextColor = style.primaryLabelTextColor
+        primaryLabel.showHighlightedTextColor = false
     }
     
     fileprivate func prepareSecondaryLabel(_ style: InstructionsCardStyle) {
-        secondaryLabel.normalFont = style.secondaryLabelNormalFont
-        secondaryLabel.normalTextColor = style.secondaryLabelTextColor
+        secondaryLabel.showHighlightedTextColor = false
     }
     
     // MARK: - Layout
