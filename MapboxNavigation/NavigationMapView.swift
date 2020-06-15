@@ -340,16 +340,20 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return
         }
         
+        let centerUserCourseView = { [weak self] in
+            guard let point = self?.convert(location.coordinate, toPointTo: self) else { return }
+            self?.userCourseView.center = point
+        }
+        
         if tracksUserCourse {
+            centerUserCourseView()
+            
             let newCamera = camera ?? MGLMapCamera(lookingAtCenter: location.coordinate, altitude: altitude, pitch: 45, heading: location.course)
             let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: .linear) : nil
             setCamera(newCamera, withDuration: duration, animationTimingFunction: function, completionHandler: nil)
         } else {
             // Animate course view updates in overview mode
-            UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear], animations: { [weak self] in
-                guard let point = self?.convert(location.coordinate, toPointTo: self) else { return }
-                self?.userCourseView.center = point
-            })
+            UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear], animations: centerUserCourseView)
         }
         
         userCourseView.update(location: location, pitch: self.camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse)
@@ -399,13 +403,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         if sender.state == .changed {
             guard let location = userLocationForCourseTracking else { return }
             
-            userCourseView.update(location: location,
-                                  pitch: camera.pitch,
-                                  direction: direction,
-                                  animated: false,
-                                  tracksUserCourse: tracksUserCourse)
-            
-            userCourseView.center = convert(location.coordinate, toPointTo: self)
+            updateCourseView(to: location)
         }
     }
     
@@ -704,6 +702,16 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         for gestureRecognizer in gestureRecognizers ?? [] {
             gestureRecognizer.addTarget(self, action: #selector(updateCourseView(_:)))
         }
+    }
+    
+    private func updateCourseView(to location: CLLocation, pitch: CGFloat? = nil, direction: CLLocationDirection? = nil, animated: Bool = false) {
+        userCourseView.update(location: location,
+                              pitch: pitch ?? camera.pitch,
+                              direction: direction ?? self.direction,
+                              animated: animated,
+                              tracksUserCourse: tracksUserCourse)
+        
+        userCourseView.center = convert(location.coordinate, toPointTo: self)
     }
     
     //TODO: Change to point-based distance calculation
@@ -1032,7 +1040,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Sets the camera directly over a series of coordinates.
      */
-    public func setOverheadCameraView(from userLocation: CLLocationCoordinate2D, along lineString: LineString, for padding: UIEdgeInsets) {
+    public func setOverheadCameraView(from userLocation: CLLocation, along lineString: LineString, for padding: UIEdgeInsets) {
         isAnimatingToOverheadMode = true
         
         let line = MGLPolyline(lineString)
@@ -1045,11 +1053,12 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             let camera = self.camera
             camera.pitch = 0
             camera.heading = 0
-            camera.centerCoordinate = userLocation
+            camera.centerCoordinate = userLocation.coordinate
             camera.altitude = self.defaultAltitude
             setCamera(camera, withDuration: 1, animationTimingFunction: nil) { [weak self] in
                 self?.isAnimatingToOverheadMode = false
             }
+            self.updateCourseView(to: userLocation, pitch: camera.pitch, direction: camera.heading, animated: true)
             return
         }
         
@@ -1065,6 +1074,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         setCamera(newCamera, withDuration: 1, animationTimingFunction: nil) { [weak self] in
             self?.isAnimatingToOverheadMode = false
         }
+        self.updateCourseView(to: userLocation, pitch: newCamera.pitch, direction: newCamera.heading, animated: true)
     }
     
     /**

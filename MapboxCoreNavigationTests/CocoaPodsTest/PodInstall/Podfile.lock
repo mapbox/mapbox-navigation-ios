@@ -2,22 +2,23 @@ PODS:
   - Mapbox-iOS-SDK (5.9.0):
     - MapboxMobileEvents (= 0.10.2)
   - MapboxAccounts (2.2.0)
-  - MapboxCoreNavigation (1.0.0-alpha.1):
+  - MapboxCoreNavigation (0.40.0):
     - MapboxAccounts (~> 2.2.0)
     - MapboxDirections (~> 0.31.0)
     - MapboxMobileEvents (~> 0.10.2)
-    - MapboxNavigationNative (~> 6.2.1)
+    - MapboxNavigationNative (= 9.0.4)
     - Turf (~> 0.3.0)
   - MapboxDirections (0.31.0):
     - Polyline (~> 4.2)
     - Turf (~> 0.3)
   - MapboxMobileEvents (0.10.2)
-  - MapboxNavigation (1.0.0-alpha.1):
+  - MapboxNavigation (0.40.0):
     - Mapbox-iOS-SDK (~> 5.6)
-    - MapboxCoreNavigation (= 1.0.0-alpha.1)
+    - MapboxCoreNavigation (= 0.40.0)
+    - MapboxMobileEvents (~> 0.10.2)
     - MapboxSpeech (~> 0.3.0)
     - Solar (~> 2.1)
-  - MapboxNavigationNative (6.2.1)
+  - MapboxNavigationNative (9.0.4)
   - MapboxSpeech (0.3.0)
   - Polyline (4.2.1)
   - Solar (2.1.0)
@@ -48,11 +49,11 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Mapbox-iOS-SDK: a5915700ec84bc1a7f8b3e746d474789e35b7956
   MapboxAccounts: 3c04a1df56c1ac4ff714619296fb47310cf70ad0
-  MapboxCoreNavigation: 3c366260f5b92318f7d2907f8adbbf950a9da726
+  MapboxCoreNavigation: 79d1b2e201be2aed7edd188f90de54c03a59606d
   MapboxDirections: 0b97aa320d7cddbe72d6513becc07dd747935240
   MapboxMobileEvents: 2bc0ca2eedb627b73cf403258dce2b2fa98074a6
-  MapboxNavigation: b8bf681a7df49783e977a423c0d8a73d5f1b82f8
-  MapboxNavigationNative: 11dc22140f4698d3f26989f2b6379dc81ef0d4c1
+  MapboxNavigation: 42bae50b0381dce317c85884ba0de38fc68a4814
+  MapboxNavigationNative: 50436c659f40d7f67ed8a60652c9d344f0e10e27
   MapboxSpeech: 403415e932e084cf290b9d55c49ab7ea210b9595
   Polyline: 0e9890790292741c8186201a536b6bb6a78d02dd
   Solar: 2dc6e7cc39186cb0c8228fa08df76fb50c7d8f24

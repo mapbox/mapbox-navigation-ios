@@ -274,7 +274,7 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
                 mapView?.setContentInset(contentInset(forOverviewing: false), animated: true, completionHandler: nil)
             } else if tracksUserCourse && !newValue {
                 isOverviewingRoutes = !isPanningAway
-                guard let userLocation = self.navigationService.router.location?.coordinate,
+                guard let userLocation = self.navigationService.router.location,
                     let shape = navigationService.route.shape else {
                     return
                 }

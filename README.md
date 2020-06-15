@@ -72,20 +72,27 @@ import MapboxNavigation
 ```
 
 ```swift
+// Define two waypoints to travel between
 let origin = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 38.9131752, longitude: -77.0324047), name: "Mapbox")
 let destination = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 38.8977, longitude: -77.0365), name: "White House")
 
+// Set options
 let routeOptions = NavigationRouteOptions(waypoints: [origin, destination])
 
-Directions.shared.calculate(routeOptions) { (session, result) in
-    guard case let .success(response) = result,
-        let route = response.routes?.first else {
-        return
+// Request a route using MapboxDirections
+Directions.shared.calculate(routeOptions) { [weak self] (session, result) in
+    switch result {
+    case .failure(let error):
+        print(error.localizedDescription)
+    case .success(let response):
+        guard let route = response.routes?.first, let strongSelf = self else {
+            return
+        }
+        // Pass the generated route to the the NavigationViewController
+        let viewController = NavigationViewController(for: route, routeOptions: routeOptions)
+        viewController.modalPresentationStyle = .fullScreen
+        strongSelf.present(viewController, animated: true, completion: nil)
     }
-    
-    let viewController = NavigationViewController(for: route, routeOptions: routeOptions)
-    viewController.modalPresentationStyle = .fullScreen
-    present(viewController, animated: true, completion: nil)
 }
 ```
 
