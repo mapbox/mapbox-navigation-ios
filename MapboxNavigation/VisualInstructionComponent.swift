@@ -18,7 +18,7 @@ extension VisualInstruction.Component {
         case .text, .delimiter, .lane:
             return nil
         case .guidanceView(let guidanceViewRepresentation, _):
-            guard let imageURL = guidanceViewRepresentation.imageBaseURL else { return nil }
+            guard let imageURL = guidanceViewRepresentation.imageURL else { return nil }
             return "guidance-" + imageURL.absoluteString
         }
     }
