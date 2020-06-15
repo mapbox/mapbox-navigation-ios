@@ -274,10 +274,19 @@ open class DistanceLabel: StylableLabel {
     @objc dynamic public var unitTextColor: UIColor = #colorLiteral(red: 0.6274509804, green: 0.6274509804, blue: 0.6274509804, alpha: 1) {
         didSet { update() }
     }
+    @objc dynamic public var valueTextColorHighlighted: UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) {
+        didSet { update() }
+    }
+    @objc dynamic public var unitTextColorHighlighted: UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) {
+        didSet { update() }
+    }
     @objc dynamic public var valueFont: UIFont = UIFont.systemFont(ofSize: 16, weight: .medium) {
         didSet { update() }
     }
     @objc dynamic public var unitFont: UIFont = UIFont.systemFont(ofSize: 11, weight: .medium) {
+        didSet { update() }
+    }
+    @objc dynamic public var showHighlightedTextColor: Bool = false {
         didSet { update() }
     }
     
@@ -306,11 +315,11 @@ open class DistanceLabel: StylableLabel {
             let foregroundColor: UIColor
             let font: UIFont
             if let _ = emphasizedDistanceString.attribute(.quantity, at: range.location, effectiveRange: nil) {
-                foregroundColor = valueTextColor
+                foregroundColor = showHighlightedTextColor ? valueTextColorHighlighted : valueTextColor
                 font = valueFont
                 hasQuantity = true
             } else {
-                foregroundColor = unitTextColor
+                foregroundColor = showHighlightedTextColor ? unitTextColorHighlighted : unitTextColor
                 font = unitFont
             }
             emphasizedDistanceString.addAttributes([.foregroundColor: foregroundColor, .font: font], range: range)
