@@ -47,7 +47,7 @@ public extension InstructionsCardContainerViewDelegate {
 }
 
 /// :nodoc:
-public class InstructionsCardContainerView: UIView {
+public class InstructionsCardContainerView: StylableView {
     lazy var informationStackView = UIStackView(orientation: .vertical, autoLayout: true)
     
     lazy var instructionsCardView: InstructionsCardView = {
@@ -66,6 +66,9 @@ public class InstructionsCardContainerView: UIView {
     private var secondaryChildren: [UIView] {
         return [lanesView, nextBannerView]
     }
+
+    @objc dynamic public var customBackgroundColor: UIColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+    @objc dynamic public var highlightedBackgroundColor: UIColor = UIColor(red: 0.26, green: 0.39, blue: 0.98, alpha: 1.0)
     
     public weak var delegate: InstructionsCardContainerViewDelegate?
     
