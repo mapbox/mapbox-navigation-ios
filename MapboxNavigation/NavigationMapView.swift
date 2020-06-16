@@ -452,19 +452,43 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 
         let polylines = navigationMapViewDelegate?.navigationMapView(self, shapeFor: routes) ?? shape(for: routes, legIndex: legIndex)
         let mainPolylineSimplified = navigationMapViewDelegate?.navigationMapView(self, simplifiedShapeFor: mainRoute) ?? shape(forCasingOf: mainRoute, legIndex: legIndex)
-        
+
+        let shapeCollectionFeature = polylines as! MGLShapeCollectionFeature
+//        for shape in shapeCollectionFeature.shapes {
+//            print(shape.attributes)
+//        }
+
+//        let mainRouteFeature = shapeCollectionFeature.shapes.first(where: {
+//            let isAlternateRoute = $0.attributes["isAlternateRoute"] as! Bool
+//            return isAlternateRoute == false
+//        })
+
+
+        /**
+         If there is already an existing source for the congestion segments and
+         the simplified route line, then just update their shapes.
+         */
         if let source = style.source(withIdentifier: SourceIdentifier.route) as? MGLShapeSource,
             let sourceSimplified = style.source(withIdentifier: SourceIdentifier.routeCasing) as? MGLShapeSource {
             source.shape = polylines
             sourceSimplified.shape = mainPolylineSimplified
         } else {
+            /**
+             Otherwise, create style layers for the sources.
+             */
             let lineSource = MGLShapeSource(identifier: SourceIdentifier.route, shape: polylines, options: [.lineDistanceMetrics: true])
             let lineCasingSource = MGLShapeSource(identifier: SourceIdentifier.routeCasing, shape: mainPolylineSimplified, options: [.lineDistanceMetrics: true])
             style.addSource(lineSource)
             style.addSource(lineCasingSource)
             
             let line = navigationMapViewDelegate?.navigationMapView(self, routeStyleLayerWithIdentifier: StyleLayerIdentifier.route, source: lineSource) ?? routeStyleLayer(identifier: StyleLayerIdentifier.route, source: lineSource)
-            let lineCasing = navigationMapViewDelegate?.navigationMapView(self, routeCasingStyleLayerWithIdentifier: StyleLayerIdentifier.routeCasing, source: lineCasingSource) ?? routeCasingStyleLayer(identifier: StyleLayerIdentifier.routeCasing, source: lineSource)
+
+
+//            let lineCasing = navigationMapViewDelegate?.navigationMapView(self, routeCasingStyleLayerWithIdentifier: StyleLayerIdentifier.routeCasing, source: lineCasingSource) ?? routeCasingStyleLayer(identifier: StyleLayerIdentifier.routeCasing, source: lineSource)
+
+            let lineCasing = navigationMapViewDelegate?.navigationMapView(self, routeCasingStyleLayerWithIdentifier: StyleLayerIdentifier.routeCasing, source: lineCasingSource) ?? TEST_routeStyleLayer(identifier: StyleLayerIdentifier.routeCasing, source: lineSource, route: mainRoute)
+
+
             
             for layer in style.layers.reversed() {
                 if !(layer is MGLSymbolStyleLayer) &&
@@ -787,50 +811,50 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         return MGLShapeCollectionFeature(shapes: altRoutes + [mainRoute])
     }
     
-//    func addCongestion(to route: Route, legIndex: Int?) -> [MGLPolylineFeature]? {
-//        guard let coordinates = route.shape?.coordinates else { return nil }
-//
-//        var linesPerLeg: [MGLPolylineFeature] = []
-//
-//        for (index, leg) in route.legs.enumerated() {
-//            let lines: [MGLPolylineFeature]
-//            if let legCongestion = leg.segmentCongestionLevels, legCongestion.count < coordinates.count {
-//                // The last coord of the preceding step, is shared with the first coord of the next step, we don't need both.
-//                let legCoordinates: [CLLocationCoordinate2D] = leg.steps.enumerated().reduce([]) { allCoordinates, current in
-//                    let index = current.offset
-//                    let step = current.element
-//                    let stepCoordinates = step.shape!.coordinates
-//
-//                    return index == 0 ? stepCoordinates : allCoordinates + stepCoordinates.suffix(from: 1)
-//                }
-//
-//                let mergedCongestionSegments = combine(legCoordinates, with: legCongestion)
-//
-//                lines = mergedCongestionSegments.map { (congestionSegment: CongestionSegment) -> MGLPolylineFeature in
-//                    let polyline = MGLPolylineFeature(coordinates: congestionSegment.0, count: UInt(congestionSegment.0.count))
-//                    polyline.attributes[MBCongestionAttribute] = String(describing: congestionSegment.1)
-//                    print(polyline.attributes)
-//                    return polyline
-//                }
-//            } else {
-//                // If there is no congestion, don't try and add it
-//                lines = [MGLPolylineFeature(route.shape!)]
-//            }
-//
-//            for line in lines {
-//                line.attributes["isAlternateRoute"] = false
-//                if let legIndex = legIndex {
-//                    line.attributes[MBCurrentLegAttribute] = index == legIndex
-//                } else {
-//                    line.attributes[MBCurrentLegAttribute] = index == 0
-//                }
-//            }
-//
-//            linesPerLeg.append(contentsOf: lines)
-//        }
-//
-//        return linesPerLeg
-//    }
+    func addCongestion(to route: Route, legIndex: Int?) -> [MGLPolylineFeature]? {
+        guard let coordinates = route.shape?.coordinates else { return nil }
+
+        var linesPerLeg: [MGLPolylineFeature] = []
+
+        for (index, leg) in route.legs.enumerated() {
+            let lines: [MGLPolylineFeature]
+            if let legCongestion = leg.segmentCongestionLevels, legCongestion.count < coordinates.count {
+                // The last coord of the preceding step, is shared with the first coord of the next step, we don't need both.
+                let legCoordinates: [CLLocationCoordinate2D] = leg.steps.enumerated().reduce([]) { allCoordinates, current in
+                    let index = current.offset
+                    let step = current.element
+                    let stepCoordinates = step.shape!.coordinates
+
+                    return index == 0 ? stepCoordinates : allCoordinates + stepCoordinates.suffix(from: 1)
+                }
+
+                let mergedCongestionSegments = combine(legCoordinates, with: legCongestion)
+
+                lines = mergedCongestionSegments.map { (congestionSegment: CongestionSegment) -> MGLPolylineFeature in
+                    let polyline = MGLPolylineFeature(coordinates: congestionSegment.0, count: UInt(congestionSegment.0.count))
+                    polyline.attributes[MBCongestionAttribute] = String(describing: congestionSegment.1)
+                    print(polyline.attributes)
+                    return polyline
+                }
+            } else {
+                // If there is no congestion, don't try and add it
+                lines = [MGLPolylineFeature(route.shape!)]
+            }
+
+            for line in lines {
+                line.attributes["isAlternateRoute"] = false
+                if let legIndex = legIndex {
+                    line.attributes[MBCurrentLegAttribute] = index == legIndex
+                } else {
+                    line.attributes[MBCurrentLegAttribute] = index == 0
+                }
+            }
+
+            linesPerLeg.append(contentsOf: lines)
+        }
+
+        return linesPerLeg
+    }
     
     func combine(_ coordinates: [CLLocationCoordinate2D], with congestions: [CongestionLevel]) -> [CongestionSegment] {
         var segments: [CongestionSegment] = []
@@ -946,6 +970,124 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                                             falseExpression: NSExpression(forConditional: NSPredicate(format: "isCurrentLeg == true"), trueExpression: NSExpression(forConstantValue: 1), falseExpression: NSExpression(forConstantValue: 0.85)))
         
         return lineCasing
+    }
+
+    func TEST_routeStyleLayer(identifier: String, source: MGLSource, route: Route) -> MGLStyleLayer {
+        let lineCasing = MGLLineStyleLayer(identifier: identifier, source: source)
+
+        // Take the default line width and make it wider for the casing
+        lineCasing.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 1.5))
+
+        lineCasing.lineColor = NSExpression(forConditional: NSPredicate(format: "isAlternateRoute == true"),
+                                            trueExpression: NSExpression(forConstantValue: routeAlternateCasingColor),
+                                            falseExpression: NSExpression(forConstantValue: routeCasingColor))
+
+        lineCasing.lineCap = NSExpression(forConstantValue: "round")
+        lineCasing.lineJoin = NSExpression(forConstantValue: "round")
+
+        lineCasing.lineOpacity = NSExpression(forConditional: NSPredicate(format: "isAlternateRoute == true"),
+                                            trueExpression: NSExpression(forConstantValue: 1),
+                                            falseExpression: NSExpression(forConditional: NSPredicate(format: "isCurrentLeg == true"), trueExpression: NSExpression(forConstantValue: 1), falseExpression: NSExpression(forConstantValue: 0.85)))
+
+        /** If traffic is enabled, set the gradient */
+        // TODO: Only apply traffic gradient to main route
+        if let stops = generateTrafficGradientStops(for: route) {
+            lineCasing.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", stops)
+        }
+
+
+        return lineCasing
+    }
+
+    func generateTrafficGradientStops(for route: Route) -> [CGFloat:UIColor]? {
+        typealias GradientStop = (percent: CGFloat, color: UIColor)
+        var stops = [GradientStop]()
+        var gradientDictionary = [CGFloat: UIColor]()
+
+        let routeLength = route.distance
+        var distanceTraveled: CLLocationDistance = 0.0
+
+        // Individual polylines associated with a congestion level
+        guard let congestionSegments = addCongestion(to: route, legIndex: 0) else { return nil }
+
+        /**
+         To create the stops dictionary that represents the route line expressed
+         as gradients, for every congestion segment we need one pair of dictionary
+         entries to represent the color to be displayed between that range. Depending
+         on the index of the congestion segment, the pair's first or second key
+         will have a buffer value added or subtracted to make room for a gradient
+         transition between congestion segments.
+
+            green       gradient       red
+                       transition
+         |-----------|~~~~~~~~~~~~|----------|
+         0         0.499        0.501       1.0
+         */
+
+        for (index, line) in congestionSegments.enumerated() {
+            line.getCoordinates(line.coordinates, range: NSMakeRange(0, Int(line.pointCount)))
+            let buffPtr = UnsafeMutableBufferPointer(start: line.coordinates, count: Int(line.pointCount))
+            let lineCoordinates = Array(buffPtr)
+
+            // Get congestion color
+            let congestionLevel = line.attributes["congestion"] as! String
+            let congestionColor = getCongestionColor(for: congestionLevel)
+
+            // Measure the line length
+            let lineString = LineString(lineCoordinates)
+            let distance = lineString.distance()
+
+            if index == congestionSegments.startIndex {
+                let segmentStartPercentTraveled = CGFloat.zero
+                stops.append(GradientStop(percent: segmentStartPercentTraveled, color: congestionColor))
+
+                distanceTraveled = distanceTraveled + distance
+
+                let segmentEndPercentTraveled = CGFloat((distanceTraveled / routeLength))
+                stops.append(GradientStop(percent: segmentEndPercentTraveled.nextDown, color: congestionColor))
+                continue
+            }
+
+            if index == congestionSegments.endIndex - 1 {
+                let segmentStartPercentTraveled = CGFloat((distanceTraveled / routeLength))
+                stops.append(GradientStop(percent: segmentStartPercentTraveled.nextUp, color: congestionColor))
+
+                let segmentEndPercentTraveled = CGFloat(1.0)
+                stops.append(GradientStop(percent: segmentEndPercentTraveled, color: congestionColor))
+                continue
+            }
+
+            let segmentStartPercentTraveled = CGFloat((distanceTraveled / routeLength))
+            stops.append(GradientStop(percent: segmentStartPercentTraveled.nextUp, color: congestionColor))
+
+            distanceTraveled = distanceTraveled + distance
+
+            let segmentEndPercentTraveled = CGFloat((distanceTraveled / routeLength))
+            stops.append(GradientStop(percent: segmentEndPercentTraveled.nextDown, color: congestionColor))
+        }
+
+        for stop in stops {
+            gradientDictionary[stop.percent] = stop.color
+        }
+
+        return gradientDictionary
+    }
+
+    // TODO: Return real traffic colors
+    func getCongestionColor(for congestionLevel: String) -> UIColor {
+        switch congestionLevel {
+        case "low":
+            return UIColor.green
+        case "moderate":
+            return UIColor.yellow
+        case "heavy":
+            return UIColor.red
+        case "severe":
+            return UIColor.black
+        default:
+            // Unknown
+            return UIColor.blue
+        }
     }
     
     /**
