@@ -13,6 +13,10 @@
 * Fixed an issue where spoken and visual instructions sometimes omitted the cardinal direction after a route number in the United States. ([valhalla/valhalla#1917](https://github.com/valhalla/valhalla/pull/1917))
 * A spoken instruction about an exit ramp no longer specifies the side of the road if the ramp branches off the slow lane (on the right side in regions that drive on the right). ([valhalla/valhalla#1990](https://github.com/valhalla/valhalla/pull/1990))
 
+### Other changes
+
+* Added a Greek localization. ([#2385](https://github.com/mapbox/mapbox-navigation-ios/pull/2385))
+
 ## v0.40.0
 
 ### Packaging
