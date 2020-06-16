@@ -29,7 +29,7 @@ DEPENDENCIES:
   - MapboxNavigation (from `../../../`)
 
 SPEC REPOS:
-  trunk:
+    https://github.com/cocoapods/specs.git:
     - Mapbox-iOS-SDK
     - MapboxAccounts
     - MapboxDirections
