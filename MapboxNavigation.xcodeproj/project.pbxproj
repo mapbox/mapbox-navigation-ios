@@ -850,6 +850,11 @@
 		6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WaypointConfirmationViewController.swift; path = Example/WaypointConfirmationViewController.swift; sourceTree = "<group>"; };
 		64847A031F04629D003F3A69 /* Feedback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Feedback.swift; sourceTree = "<group>"; };
 		7C12F2D7225B7C310010A931 /* DCA-Arboretum-dummy-faster-route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "DCA-Arboretum-dummy-faster-route.json"; sourceTree = "<group>"; };
+		8B808F852487CFEC00EEE453 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Main.strings; sourceTree = "<group>"; };
+		8B808F862487CFEC00EEE453 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Navigation.strings; sourceTree = "<group>"; };
+		8B808F892487CFEC00EEE453 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Localizable.strings; sourceTree = "<group>"; };
+		8B808F972487D2B900EEE453 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Localizable.strings; sourceTree = "<group>"; };
+		8B808F982487D2BE00EEE453 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = el; path = Resources/el.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		8D07C5A720B612310093D779 /* EmptyStyle.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = EmptyStyle.json; sourceTree = "<group>"; };
 		8D1A5CD1212DDFCD0059BA4A /* DispatchTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchTimer.swift; sourceTree = "<group>"; };
 		8D24A2F52040960C0098CBF8 /* UIEdgeInsets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIEdgeInsets.swift; sourceTree = "<group>"; };
@@ -2172,6 +2177,7 @@
 				ko,
 				ja,
 				yo,
+				el,
 			);
 			mainGroup = C5ADFBBF1DDCC7840011824B;
 			productRefGroup = C5ADFBCA1DDCC7840011824B /* Products */;
@@ -2925,6 +2931,7 @@
 				DAE26B1A20644047001D6E1F /* ar */,
 				DAE26B20206441D8001D6E1F /* pt-PT */,
 				DA9059B1223B158D006E8B46 /* ja */,
+				8B808F852487CFEC00EEE453 /* el */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -2963,6 +2970,7 @@
 				DAE26B22206441D9001D6E1F /* pt-PT */,
 				DAFEB36A2093A0D800A86A83 /* ko */,
 				DA9059B3223B1769006E8B46 /* ja */,
+				8B808F862487CFEC00EEE453 /* el */,
 			);
 			name = Navigation.storyboard;
 			path = Resources;
@@ -2991,6 +2999,7 @@
 				DAFEB36D2093A11F00A86A83 /* ko */,
 				DA9059B2223B1758006E8B46 /* ja */,
 				354691B022C0D97000626C4F /* yo */,
+				8B808F892487CFEC00EEE453 /* el */,
 			);
 			name = Localizable.strings;
 			path = Resources;
@@ -3038,6 +3047,7 @@
 				DA9059B0223B1347006E8B46 /* hu */,
 				DA9059B5223B1778006E8B46 /* ja */,
 				354691B222C0D97000626C4F /* yo */,
+				8B808F982487D2BE00EEE453 /* el */,
 			);
 			name = Localizable.stringsdict;
 			sourceTree = "<group>";
@@ -3066,6 +3076,7 @@
 				DAFEB36E2093A3E000A86A83 /* ko */,
 				DA9059B4223B1770006E8B46 /* ja */,
 				354691B122C0D97000626C4F /* yo */,
+				8B808F972487D2B900EEE453 /* el */,
 			);
 			name = Localizable.strings;
 			path = Resources;
