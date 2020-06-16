@@ -707,7 +707,7 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
         guard let stepIndex = leg.steps.firstIndex(of: step) else { return }
         let nextStepIndex = stepIndex + 1
         
-        let legProgress = RouteLegProgress(leg: leg, stepIndex: stepIndex)
+        let legProgress = try! RouteLegProgress(leg: leg, stepIndex: stepIndex)
         guard let upcomingStep = legProgress.upcomingStep else { return }
         
         let previewBanner: CompletionHandler = {
@@ -719,7 +719,7 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
     
     public func topBanner(_ banner: TopBannerViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell) {
         let progress = navigationService.routeProgress
-        let legProgress = RouteLegProgress(leg: progress.route.legs[legIndex], stepIndex: stepIndex)
+        let legProgress = try! RouteLegProgress(leg: progress.route.legs[legIndex], stepIndex: stepIndex)
         let step = legProgress.currentStep
         self.preview(step: step, in: banner, remaining: progress.remainingSteps, route: progress.route, animated: false)
         banner.dismissStepsTable()

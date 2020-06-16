@@ -37,7 +37,7 @@ class ViewController: UIViewController {
 
     var response: RouteResponse? {
         didSet {
-            guard let routes = response?.routes, let current = routes.first else {
+            guard let routes = response?.routes, let current = routes.first, let steps = current.legs.first?.steps, !steps.isEmpty else {
                 startButton.isEnabled = false
                 mapView?.removeRoutes()
                 return

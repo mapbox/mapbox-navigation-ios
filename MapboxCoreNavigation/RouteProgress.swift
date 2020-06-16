@@ -22,7 +22,7 @@ open class RouteProgress {
         didSet {
             assert(legIndex >= 0 && legIndex < route.legs.endIndex)
             // TODO: Set stepIndex to 0 or last index based on whether leg index was incremented or decremented.
-            currentLegProgress = RouteLegProgress(leg: currentLeg)
+            currentLegProgress = try! RouteLegProgress(leg: currentLeg)
             
             legIndexHandler?(oldValue, legIndex)
         }
@@ -180,7 +180,7 @@ open class RouteProgress {
         self.route = route
         self.routeOptions = options
         self.legIndex = legIndex
-        self.currentLegProgress = RouteLegProgress(leg: route.legs[legIndex], stepIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
+        self.currentLegProgress = try! RouteLegProgress(leg: route.legs[legIndex], stepIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
 
         for (legIndex, leg) in route.legs.enumerated() {
             var maneuverCoordinateIndex = 0
@@ -272,6 +272,10 @@ open class RouteProgress {
 
         return newOptions
     }
+}
+
+enum RouteLegProgressError: Error {
+    case SteplessLegError(String)
 }
 
 /**
@@ -422,9 +426,14 @@ open class RouteLegProgress {
      - parameter leg: Leg on a `Route`.
      - parameter stepIndex: Current step the user is on.
      */
-    public init(leg: RouteLeg, stepIndex: Int = 0, spokenInstructionIndex: Int = 0) {
+    public init(leg: RouteLeg, stepIndex: Int = 0, spokenInstructionIndex: Int = 0) throws {
         self.leg = leg
         self.stepIndex = stepIndex
+        
+        if !leg.steps.indices.contains(stepIndex) {
+            throw RouteLegProgressError.SteplessLegError("It's not possible to create RouteLegProgress without any steps.")
+        }
+        
         currentStepProgress = RouteStepProgress(step: leg.steps[stepIndex], spokenInstructionIndex: spokenInstructionIndex)
     }
 
