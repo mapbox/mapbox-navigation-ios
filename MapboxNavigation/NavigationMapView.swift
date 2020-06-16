@@ -750,8 +750,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             //existance has been assured through use of filter.
             let leftLine = left.shape!
             let rightLine = right.shape!
-            let leftDistance = leftLine.closestCoordinate(to: tapCoordinate)!.distance
-            let rightDistance = rightLine.closestCoordinate(to: tapCoordinate)!.distance
+            let leftDistance = leftLine.closestCoordinate(to: tapCoordinate)!.coordinate.distance(to: tapCoordinate)
+            let rightDistance = rightLine.closestCoordinate(to: tapCoordinate)!.coordinate.distance(to: tapCoordinate)
             
             return leftDistance < rightDistance
         }

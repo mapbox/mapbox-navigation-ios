@@ -43,7 +43,7 @@ extension CLLocation {
         guard let shape = routeStep.shape, let closestCoordinate = shape.closestCoordinate(to: coordinate) else {
             return false
         }
-        return closestCoordinate.distance < maximumDistance
+        return closestCoordinate.coordinate.distance(to: coordinate) < maximumDistance
     }
     
     //MARK: - Route Snapping
@@ -119,12 +119,15 @@ extension CLLocation {
         let relativeAnglepointBehind = (wrappedPointBehind - wrappedCourse).wrap(min: -180, max: 180)
         let relativeAnglepointAhead = (wrappedPointAhead - wrappedCourse).wrap(min: -180, max: 180)
         
+        let distanceBehindClosest = pointBehindClosest.coordinate.distance(to: pointBehind)
+        let distanceAheadClosest = pointAheadClosest.coordinate.distance(to: pointAhead)
+        
         let averageRelativeAngle: Double
         // User is at the beginning of the route, there is no closest point behind the user.
-        if pointBehindClosest.distance <= 0 && pointAheadClosest.distance > 0 {
+        if distanceBehindClosest <= 0 && distanceAheadClosest > 0 {
             averageRelativeAngle = relativeAnglepointAhead
             // User is at the end of the route, there is no closest point in front of the user.
-        } else if pointAheadClosest.distance <= 0 && pointBehindClosest.distance > 0 {
+        } else if distanceAheadClosest <= 0 && distanceBehindClosest > 0 {
             averageRelativeAngle = relativeAnglepointBehind
         } else {
             averageRelativeAngle = (relativeAnglepointBehind + relativeAnglepointAhead) / 2

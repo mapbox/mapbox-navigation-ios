@@ -437,16 +437,17 @@ open class RouteLegProgress {
         for (currentStepIndex, step) in remainingSteps.enumerated() {
             guard let shape = step.shape else { continue }
             guard let closestCoordOnStep = shape.closestCoordinate(to: coordinate) else { continue }
+            let closesCoordOnStepDistance = closestCoordOnStep.coordinate.distance(to: coordinate)
             let foundIndex = currentStepIndex + stepIndex
 
             // First time around, currentClosest will be `nil`.
             guard let currentClosestDistance = currentClosest?.distance else {
-                currentClosest = (index: foundIndex, distance: closestCoordOnStep.distance)
+                currentClosest = (index: foundIndex, distance: closesCoordOnStepDistance)
                 continue
             }
 
-            if closestCoordOnStep.distance < currentClosestDistance {
-                currentClosest = (index: foundIndex, distance: closestCoordOnStep.distance)
+            if closesCoordOnStepDistance < currentClosestDistance {
+                currentClosest = (index: foundIndex, distance: closesCoordOnStepDistance)
             }
         }
 
