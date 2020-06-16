@@ -1,5 +1,5 @@
 binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" "5.9.0"
-binary "https://www.mapbox.com/ios-sdk/MapboxAccounts.json" "2.2.0"
+binary "https://www.mapbox.com/ios-sdk/MapboxAccounts.json" "2.3.0"
 binary "https://www.mapbox.com/ios-sdk/MapboxNavigationNative.json" "9.0.4"
 github "CedarBDD/Cedar" "v1.0"
 github "Quick/Nimble" "v8.1.1"
