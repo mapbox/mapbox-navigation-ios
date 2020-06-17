@@ -478,23 +478,36 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 
             let alternateRoutesLayer = MGLLineStyleLayer(identifier: StyleLayerIdentifier.route, source: allRoutesSource)
             alternateRoutesLayer.predicate = NSPredicate(format: "isAlternateRoute == true")
-            alternateRoutesLayer.lineColor = NSExpression(forConstantValue: UIColor.gray)
+            alternateRoutesLayer.lineColor = NSExpression(forConstantValue: routeAlternateColor)
             alternateRoutesLayer.lineWidth = NSExpression(forConstantValue: 8.0)
+
+            let alternateRoutesCasingLayer = MGLLineStyleLayer(identifier: StyleLayerIdentifier.routeCasing, source: allRoutesSource)
+            alternateRoutesCasingLayer.predicate = NSPredicate(format: "isAlternateRoute == true")
+            alternateRoutesCasingLayer.lineColor = NSExpression(forConstantValue: routeAlternateCasingColor)
+            alternateRoutesCasingLayer.lineWidth = NSExpression(forConstantValue: 12.0)
 
             let mainRouteLayer = MGLLineStyleLayer(identifier: "main-route", source: allRoutesSource)
             mainRouteLayer.predicate = NSPredicate(format: "isAlternateRoute == false")
             mainRouteLayer.lineColor = NSExpression(forConstantValue: UIColor.blue)
             mainRouteLayer.lineWidth = NSExpression(forConstantValue: 8.0)
 
+            let mainRouteCasingLayer = MGLLineStyleLayer(identifier: "main-route-casing", source: allRoutesSource)
+            mainRouteCasingLayer.predicate = NSPredicate(format: "isAlternateRoute == false")
+            mainRouteCasingLayer.lineColor = NSExpression(forConstantValue: routeCasingColor)
+            mainRouteCasingLayer.lineWidth = NSExpression(forConstantValue: 16.0)
+
             generateTrafficGradientStops(for: mainRoute)
             mainRouteLayer.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", routeGradientStops.line)
+            mainRouteCasingLayer.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", routeGradientStops.casing)
 
             // Add all the layers
             for layer in style.layers.reversed() {
                 if !(layer is MGLSymbolStyleLayer) &&
                 layer.identifier != StyleLayerIdentifier.arrow && layer.identifier != StyleLayerIdentifier.arrowSymbol && layer.identifier != StyleLayerIdentifier.arrowCasingSymbol && layer.identifier != StyleLayerIdentifier.arrowStroke && layer.identifier != StyleLayerIdentifier.waypointCircle {
                     style.insertLayer(mainRouteLayer, below: layer)
+                    style.insertLayer(mainRouteCasingLayer, below: mainRouteLayer)
                     style.insertLayer(alternateRoutesLayer, below: mainRouteLayer)
+                    style.insertLayer(alternateRoutesCasingLayer, below: alternateRoutesLayer)
                     break
                 }
             }
@@ -502,7 +515,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
 
     func fadeRoute(_ fractionTraveled: Double) {
-        guard let mainRouteLayer = style?.layer(withIdentifier: "main-route") as? MGLLineStyleLayer else { return }
+        guard let mainRouteLayer = style?.layer(withIdentifier: "main-route") as? MGLLineStyleLayer,
+              let mainRouteCasingLayer = style?.layer(withIdentifier: "main-route-casing") as? MGLLineStyleLayer else { return }
 
         let percentTraveled = CGFloat(fractionTraveled)
 
@@ -516,14 +530,18 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         // and fade the range from zero that lowest value,
         // which represents the % of the route traveled.
         if let minStop = filtered.min(by: { $0.0 < $1.0 }) {
-            filtered[0.0] = UIColor.white
-            filtered[percentTraveled.nextDown] = UIColor.white
+            filtered[0.0] = UIColor.clear // TODO: Pull color from user-defined preference
+            filtered[percentTraveled.nextDown] = UIColor.clear
             filtered[percentTraveled] = minStop.value
         }
 
         routeGradientStops.line = filtered
+        routeGradientStops.casing = filtered
 
         mainRouteLayer.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", routeGradientStops.line)
+
+        // TODO: Figure out why fading isn't working for casing.
+        mainRouteCasingLayer.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", routeGradientStops.casing)
     }
     
     /**
@@ -961,7 +979,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     func generateTrafficGradientStops(for route: Route) {
         typealias GradientStop = (percent: CGFloat, color: UIColor)
         var stops = [GradientStop]()
-//        var gradientDictionary = [CGFloat: UIColor]()
 
         let routeLength = route.distance
         var distanceTraveled: CLLocationDistance = 0.0
@@ -1027,10 +1044,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 
         for stop in stops {
             routeGradientStops.line[stop.percent] = stop.color
-            //gradientDictionary[stop.percent] = stop.color
+            routeGradientStops.casing[stop.percent] = UIColor.yellow // TODO: Replace with route casing color
         }
-
-//        return gradientDictionary
     }
 
     /**
