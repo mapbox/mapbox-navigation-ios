@@ -536,11 +536,20 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
 
         routeGradientStops.line = filtered
-        routeGradientStops.casing = filtered
-
         mainRouteLayer.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", routeGradientStops.line)
 
-        // TODO: Figure out why fading isn't working for casing.
+        // TODO: Refactor? We're doing the same work twice here...
+        var filteredCasing = routeGradientStops.casing.filter { key, value in
+            return key >= percentTraveled
+        }
+
+        if let minStop = filteredCasing.min(by: { $0.0 < $1.0 }) {
+            filteredCasing[0.0] = UIColor.clear // TODO: Pull color from user-defined preference
+            filteredCasing[percentTraveled.nextDown] = UIColor.clear
+            filteredCasing[percentTraveled] = minStop.value
+        }
+
+        routeGradientStops.casing = filteredCasing
         mainRouteCasingLayer.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", routeGradientStops.casing)
     }
     
@@ -1044,7 +1053,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 
         for stop in stops {
             routeGradientStops.line[stop.percent] = stop.color
-            routeGradientStops.casing[stop.percent] = UIColor.yellow // TODO: Replace with route casing color
+            routeGradientStops.casing[stop.percent] = routeCasingColor // TODO: Replace with route casing color
         }
     }
 
