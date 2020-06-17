@@ -2,6 +2,10 @@
 
 ## master
 
+### MAU Billing
+
+* Enabled MAU billing by default, so that SDKs usage of Mapbox APIs is [billed](https://www.mapbox.com/pricing/) together based on [monthly active users](https://docs.mapbox.com/help/glossary/monthly-active-users/) rather than individually by HTTP request. If you prefer to still use request-based billing, set the `MBXNavigationBillingMethod` key in Info.plist to `request` ([#2405](https://github.com/mapbox/mapbox-navigation-ios/pull/2405).
+
 ### Offline navigation
 
 * Fixed a crash that occurred after setting `RouteOptions.shapeFormat` to `RouteShapeFormat.geoJSON`. ([valhalla/valhalla#1867](https://github.com/valhalla/valhalla/pull/1867))
@@ -21,7 +25,7 @@
 
 ### Packaging
 * This SDK can no longer be used in applications written in pure Objective-C. If you need to use this SDK’s public API from Objective-C code, you will need to implement a wrapper in Swift that bridges the subset of the API you need from Swift to Objective-C. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
-* Added a new dependency on MapboxAccounts so that this SDK’s usage of Mapbox APIs is [billed](https://www.mapbox.com/pricing/) together based on [monthly active users](https://docs.mapbox.com/help/glossary/monthly-active-users/) rather than individually by HTTP request. If you use Carthage to install this SDK, remember to add MapboxAccounts.framework to the “Frameworks, Libraries, and Embedded Content” section and the input and output file lists of Carthage’s Run Script build phase. ([#2151](https://github.com/mapbox/mapbox-navigation-ios/pull/2151))
+* Added a new dependency on MapboxAccounts to prepare for upcoming improvements to how Mapbox [bills](https://www.mapbox.com/pricing/) this SDK’s usage of Mapbox APIs. If you use Carthage to install this SDK, remember to add MapboxAccounts.framework to the “Frameworks, Libraries, and Embedded Content” section and the input and output file lists of Carthage’s Run Script build phase. ([#2151](https://github.com/mapbox/mapbox-navigation-ios/pull/2151))
 * Upgraded to [Mapbox Maps SDK for iOS v5.6._x_](https://github.com/mapbox/mapbox-gl-native-ios/releases/tag/ios-v5.6.0). ([#2302](https://github.com/mapbox/mapbox-navigation-ios/pull/2302))
 * Fixed sporadic build failures after installing this SDK using CocoaPods. ([#2368](https://github.com/mapbox/mapbox-navigation-ios/pull/2368))
 
