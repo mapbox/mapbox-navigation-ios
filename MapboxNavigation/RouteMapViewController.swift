@@ -452,7 +452,9 @@ extension RouteMapViewController: NavigationComponent {
         let route = progress.route
         let legIndex = progress.legIndex
         let stepIndex = progress.currentLegProgress.stepIndex
-        
+
+        mapView.fadeRoute(progress.fractionTraveled)
+
         mapView.updatePreferredFrameRate(for: progress)
         if currentLegIndexMapped != legIndex {
             mapView.showWaypoints(on: route, legIndex: legIndex)
