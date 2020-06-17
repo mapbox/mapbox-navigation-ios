@@ -49,11 +49,11 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Mapbox-iOS-SDK: a5915700ec84bc1a7f8b3e746d474789e35b7956
   MapboxAccounts: 3c04a1df56c1ac4ff714619296fb47310cf70ad0
-  MapboxMobileEvents: 2bc0ca2eedb627b73cf403258dce2b2fa98074a6
-  MapboxNavigationNative: 50436c659f40d7f67ed8a60652c9d344f0e10e27
-  MapboxCoreNavigation: 56538160b206a473f005518b406693b2a62e1daf
+  MapboxCoreNavigation: e172e4407f69e4dbef19c20bce2045347ea6dc34
   MapboxDirections: 7f36b3e9ef6a53fc997c114a341ab4da721756bd
+  MapboxMobileEvents: 2bc0ca2eedb627b73cf403258dce2b2fa98074a6
   MapboxNavigation: 42bae50b0381dce317c85884ba0de38fc68a4814
+  MapboxNavigationNative: 50436c659f40d7f67ed8a60652c9d344f0e10e27
   MapboxSpeech: 403415e932e084cf290b9d55c49ab7ea210b9595
   Polyline: 0e9890790292741c8186201a536b6bb6a78d02dd
   Solar: 2dc6e7cc39186cb0c8228fa08df76fb50c7d8f24
