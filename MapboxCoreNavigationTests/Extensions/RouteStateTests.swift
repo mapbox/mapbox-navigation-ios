@@ -8,7 +8,7 @@ class RouteStateTests: XCTestCase {
         XCTAssertEqual(RouteState.initialized.description, "initialized")
         XCTAssertEqual(RouteState.tracking.description, "tracking")
         XCTAssertEqual(RouteState.complete.description, "complete")
-        XCTAssertEqual(RouteState.offRoute.description, "invaoffRoutelid")
+        XCTAssertEqual(RouteState.offRoute.description, "offRoute")
         XCTAssertEqual(RouteState.stale.description, "stale")
         XCTAssertEqual(RouteState.uncertain.description, "uncertain")
     }
