@@ -18,7 +18,7 @@ func makeVisualInstruction(_ maneuverType: ManeuverType = .arrive,
         secondary = VisualInstruction(text: "Instruction", maneuverType: maneuverType, maneuverDirection: maneuverDirection, components: secondaryInstruction)
     }
     
-    return VisualInstructionBanner(distanceAlongStep: 482.803, primary: primary, secondary: secondary, tertiary: nil, drivingSide: .right)
+    return VisualInstructionBanner(distanceAlongStep: 482.803, primary: primary, secondary: secondary, tertiary: nil, quaternary: nil, drivingSide: .right)
 }
 
 class InstructionsBannerViewIntegrationTests: XCTestCase {

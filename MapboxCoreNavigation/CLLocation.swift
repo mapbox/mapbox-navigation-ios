@@ -43,7 +43,7 @@ extension CLLocation {
         guard let shape = routeStep.shape, let closestCoordinate = shape.closestCoordinate(to: coordinate) else {
             return false
         }
-        return closestCoordinate.distance < maximumDistance
+        return closestCoordinate.coordinate.distance(to: coordinate) < maximumDistance
     }
     
     //MARK: - Route Snapping
@@ -67,7 +67,7 @@ extension CLLocation {
     /**
      Calculates the proper coordinates to use when calculating a snapped location.
      */
-    func snappingPolyline(for routeProgress: RouteProgress) -> Polyline {
+    func snappingPolyline(for routeProgress: RouteProgress) -> LineString {
         let legProgress = routeProgress.currentLegProgress
         let nearbyPolyline = routeProgress.nearbyShape
         let stepPolyline = legProgress.currentStep.shape!
@@ -97,12 +97,12 @@ extension CLLocation {
     /**
      Given a location and a series of coordinates, compute what the course should be for a the location.
      */
-    func interpolatedCourse(along polyline: Polyline) -> CLLocationDirection? {
+    func interpolatedCourse(along polyline: LineString) -> CLLocationDirection? {
         guard let closest = polyline.closestCoordinate(to: coordinate) else { return nil }
         
-        let reversedPolyline = Polyline(polyline.coordinates.reversed())
-        let slicedLineBehind = reversedPolyline.sliced(from: closest.coordinate, to: reversedPolyline.coordinates.last)
-        let slicedLineInFront = polyline.sliced(from: closest.coordinate, to: polyline.coordinates.last)
+        let reversedPolyline = LineString(polyline.coordinates.reversed())
+        let slicedLineBehind = reversedPolyline.sliced(from: closest.coordinate, to: reversedPolyline.coordinates.last)!
+        let slicedLineInFront = polyline.sliced(from: closest.coordinate, to: polyline.coordinates.last)!
         let userDistanceBuffer: CLLocationDistance = max(speed * RouteControllerDeadReckoningTimeInterval / 2, RouteControllerUserLocationSnappingDistance / 2)
         
         guard let pointBehind = slicedLineBehind.coordinateFromStart(distance: userDistanceBuffer) else { return nil }
@@ -119,12 +119,15 @@ extension CLLocation {
         let relativeAnglepointBehind = (wrappedPointBehind - wrappedCourse).wrap(min: -180, max: 180)
         let relativeAnglepointAhead = (wrappedPointAhead - wrappedCourse).wrap(min: -180, max: 180)
         
+        let distanceBehindClosest = pointBehindClosest.coordinate.distance(to: pointBehind)
+        let distanceAheadClosest = pointAheadClosest.coordinate.distance(to: pointAhead)
+        
         let averageRelativeAngle: Double
         // User is at the beginning of the route, there is no closest point behind the user.
-        if pointBehindClosest.distance <= 0 && pointAheadClosest.distance > 0 {
+        if distanceBehindClosest <= 0 && distanceAheadClosest > 0 {
             averageRelativeAngle = relativeAnglepointAhead
             // User is at the end of the route, there is no closest point in front of the user.
-        } else if pointAheadClosest.distance <= 0 && pointBehindClosest.distance > 0 {
+        } else if distanceAheadClosest <= 0 && distanceBehindClosest > 0 {
             averageRelativeAngle = relativeAnglepointBehind
         } else {
             averageRelativeAngle = (relativeAnglepointBehind + relativeAnglepointAhead) / 2
