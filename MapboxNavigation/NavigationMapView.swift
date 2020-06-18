@@ -494,14 +494,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             generateTrafficGradientStops(for: mainRoute)
 
             let mainRouteLayer = navigationMapViewDelegate?.navigationMapView(self, mainRouteStyleLayerWithIdentifier: StyleLayerIdentifier.mainRoute, source: allRoutesSource) ?? mainRouteStyleLayer(identifier: StyleLayerIdentifier.mainRoute, source: allRoutesSource)
-
-            let mainRouteCasingLayer = MGLLineStyleLayer(identifier: StyleLayerIdentifier.mainRouteCasing, source: allRoutesSource)
-            mainRouteCasingLayer.predicate = NSPredicate(format: "isAlternateRoute == false")
-            mainRouteCasingLayer.lineColor = NSExpression(forConstantValue: routeCasingColor)
-            mainRouteCasingLayer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 1.5))
-            mainRouteCasingLayer.lineJoin = NSExpression(forConstantValue: "round")
-
-            mainRouteCasingLayer.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", routeGradientStops.casing)
+            let mainRouteCasingLayer = navigationMapViewDelegate?.navigationMapView(self, mainRouteCasingStyleLayerWithIdentifier: StyleLayerIdentifier.mainRouteCasing, source: allRoutesSource) ?? mainRouteCasingStyleLayer(identifier: StyleLayerIdentifier.mainRouteCasing, source: allRoutesSource)
 
             // Add all the layers
             for layer in style.layers.reversed() {
@@ -529,6 +522,20 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
 
         return mainRouteLayer
+    }
+
+    func mainRouteCasingStyleLayer(identifier: String, source: MGLSource) -> MGLLineStyleLayer {
+        let mainRouteCasingLayer = MGLLineStyleLayer(identifier: identifier, source: source)
+        mainRouteCasingLayer.predicate = NSPredicate(format: "isAlternateRoute == false")
+        mainRouteCasingLayer.lineColor = NSExpression(forConstantValue: routeCasingColor)
+        mainRouteCasingLayer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 1.5))
+        mainRouteCasingLayer.lineJoin = NSExpression(forConstantValue: "round")
+
+        if routeGradientStops.casing.isEmpty {
+            mainRouteCasingLayer.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", routeGradientStops.casing)
+        }
+
+        return mainRouteCasingLayer
     }
 
     func fadeRoute(_ fractionTraveled: Double) {

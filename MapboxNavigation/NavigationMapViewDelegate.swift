@@ -20,6 +20,7 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
      TODO: Docs
      */
     func navigationMapView(_ mapView: NavigationMapView, mainRouteStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+    func navigationMapView(_ mapView: NavigationMapView, mainRouteCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
     /**
      Asks the receiver to return an MGLStyleLayer for waypoints, given an identifier and source.
@@ -115,6 +116,14 @@ public extension NavigationMapViewDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func navigationMapView(_ mapView: NavigationMapView, mainRouteStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
+        return nil
+    }
+
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationMapView(_ mapView: NavigationMapView, mainRouteCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
         return nil
     }
