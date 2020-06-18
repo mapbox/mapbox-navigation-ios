@@ -248,6 +248,9 @@
 		43FB386923A202420064481E /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0557202154EF4700A1F2AA /* Route.swift */; };
 		492B6F84213703D10076D2C6 /* MapboxGeocoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3507F9F92134305C0086B39E /* MapboxGeocoder.framework */; };
 		492B6F85213703EE0076D2C6 /* MapboxGeocoder.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3507F9F92134305C0086B39E /* MapboxGeocoder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5A1C075824BDEB44000A6330 /* FreeDriveDebugger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1C075724BDEB44000A6330 /* FreeDriveDebugger.swift */; };
+		5A39B9282498F9890026DFD1 /* FreeDriveLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A39B9272498F9890026DFD1 /* FreeDriveLocationManager.swift */; };
+		5A43FC8B24B488DC00BF7943 /* FreeDriveLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A43FC8A24B488DC00BF7943 /* FreeDriveLocationManager.swift */; };
 		6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */; };
 		64847A041F04629D003F3A69 /* Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64847A031F04629D003F3A69 /* Feedback.swift */; };
 		7C12F2D8225B7C320010A931 /* DCA-Arboretum-dummy-faster-route.json in Resources */ = {isa = PBXBuildFile; fileRef = 7C12F2D7225B7C310010A931 /* DCA-Arboretum-dummy-faster-route.json */; };
@@ -848,6 +851,9 @@
 		439FFC222304BC23004C20AA /* route-with-tertiary.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "route-with-tertiary.json"; sourceTree = "<group>"; };
 		439FFC242304BF54004C20AA /* GuidanceCardsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuidanceCardsSnapshotTests.swift; sourceTree = "<group>"; };
 		43E69517233D297B0019BF6E /* cover.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = cover.md; path = docs/cover.md; sourceTree = "<group>"; };
+		5A1C075724BDEB44000A6330 /* FreeDriveDebugger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeDriveDebugger.swift; sourceTree = "<group>"; };
+		5A39B9272498F9890026DFD1 /* FreeDriveLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeDriveLocationManager.swift; sourceTree = "<group>"; };
+		5A43FC8A24B488DC00BF7943 /* FreeDriveLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeDriveLocationManager.swift; sourceTree = "<group>"; };
 		6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WaypointConfirmationViewController.swift; path = Example/WaypointConfirmationViewController.swift; sourceTree = "<group>"; };
 		64847A031F04629D003F3A69 /* Feedback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Feedback.swift; sourceTree = "<group>"; };
 		7C12F2D7225B7C310010A931 /* DCA-Arboretum-dummy-faster-route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "DCA-Arboretum-dummy-faster-route.json"; sourceTree = "<group>"; };
@@ -1339,6 +1345,7 @@
 				2B72EC5F2412AA800003B370 /* SystemSpeechSynthesizer.swift */,
 				35B1E2941F1FF8EC00A13D32 /* UserCourseView.swift */,
 				8AA849E824E722410008EE59 /* WaypointStyle.swift */,
+				5A1C075724BDEB44000A6330 /* FreeDriveDebugger.swift */,
 			);
 			path = MapboxNavigation;
 			sourceTree = "<group>";
@@ -1747,6 +1754,7 @@
 				3582A24F20EEC46B0029C5DE /* Router.swift */,
 				353E69031EF0C4E5007B2AE5 /* SimulatedLocationManager.swift */,
 				35C98730212E02B500808B82 /* RouteController.swift */,
+				5A39B9272498F9890026DFD1 /* FreeDriveLocationManager.swift */,
 			);
 			path = MapboxCoreNavigation;
 			sourceTree = "<group>";
@@ -1772,6 +1780,7 @@
 				3506DE39216E2ADE007DA352 /* OfflineRoutingTests.swift */,
 				3519D01D21F0842900582FF5 /* CLLocationTests.swift */,
 				352762A3225B751A0015B632 /* OptionsTests.swift */,
+				5A43FC8A24B488DC00BF7943 /* FreeDriveLocationManager.swift */,
 			);
 			path = MapboxCoreNavigationTests;
 			sourceTree = "<group>";
@@ -2483,6 +2492,7 @@
 				43FB386923A202420064481E /* Route.swift in Sources */,
 				C5D1C9941FB236900067C619 /* ErrorCode.swift in Sources */,
 				3EA937B1F4DF73EB004BA6BE /* InstructionPresenter.swift in Sources */,
+				5A1C075824BDEB44000A6330 /* FreeDriveDebugger.swift in Sources */,
 				3EA93A1FEFDDB709DE84BED9 /* ImageRepository.swift in Sources */,
 				2B8098412411375700FED452 /* SpeechSynthesizing.swift in Sources */,
 				3EA9371104016CD402547F1A /* ImageCache.swift in Sources */,
@@ -2657,6 +2667,7 @@
 				35A5413B1EFC052700E49846 /* RouteOptions.swift in Sources */,
 				353E69041EF0C4E5007B2AE5 /* SimulatedLocationManager.swift in Sources */,
 				DAFA92071F01735000A7FB09 /* DistanceFormatter.swift in Sources */,
+				5A39B9282498F9890026DFD1 /* FreeDriveLocationManager.swift in Sources */,
 				C5C94C1D1DDCD2370097296A /* RouteProgress.swift in Sources */,
 				8D4CF9C621349FFB009C3FEE /* NavigationServiceDelegate.swift in Sources */,
 				C5CFE4881EF2FD4C006F48E8 /* MMEEventsManager.swift in Sources */,
@@ -2680,6 +2691,7 @@
 				C551B0E620D42222009A986F /* NavigationLocationManagerTests.swift in Sources */,
 				359A8AED1FA78D3000BDB486 /* DistanceFormatterTests.swift in Sources */,
 				C52AC1261DF0E48600396B9F /* RouteProgressTests.swift in Sources */,
+				5A43FC8B24B488DC00BF7943 /* FreeDriveLocationManager.swift in Sources */,
 				359574AA1F28CCBB00838209 /* LocationTests.swift in Sources */,
 				C582BA2C2073E77E00647DAA /* StringTests.swift in Sources */,
 				3557506B21A826C600AEF9B6 /* OfflineRoutingTests.swift in Sources */,
