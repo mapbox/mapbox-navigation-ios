@@ -15,6 +15,11 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
      - returns: An MGLStyleLayer that the map applies to all routes.
      */
     func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+
+    /**
+     TODO: Docs
+     */
+    func navigationMapView(_ mapView: NavigationMapView, mainRouteStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
     /**
      Asks the receiver to return an MGLStyleLayer for waypoints, given an identifier and source.
@@ -102,6 +107,14 @@ public extension NavigationMapViewDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
+        return nil
+    }
+
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationMapView(_ mapView: NavigationMapView, mainRouteStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
         return nil
     }

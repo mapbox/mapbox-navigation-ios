@@ -491,11 +491,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             alternateRoutesCasingLayer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 1.5))
             alternateRoutesCasingLayer.lineJoin = NSExpression(forConstantValue: "round")
 
-            let mainRouteLayer = MGLLineStyleLayer(identifier: StyleLayerIdentifier.mainRoute, source: allRoutesSource)
-            mainRouteLayer.predicate = NSPredicate(format: "isAlternateRoute == false")
-            mainRouteLayer.lineColor = NSExpression(forConstantValue: UIColor.blue)
-            mainRouteLayer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel)
-            mainRouteLayer.lineJoin = NSExpression(forConstantValue: "round")
+            generateTrafficGradientStops(for: mainRoute)
+
+            let mainRouteLayer = navigationMapViewDelegate?.navigationMapView(self, mainRouteStyleLayerWithIdentifier: StyleLayerIdentifier.mainRoute, source: allRoutesSource) ?? mainRouteStyleLayer(identifier: StyleLayerIdentifier.mainRoute, source: allRoutesSource)
 
             let mainRouteCasingLayer = MGLLineStyleLayer(identifier: StyleLayerIdentifier.mainRouteCasing, source: allRoutesSource)
             mainRouteCasingLayer.predicate = NSPredicate(format: "isAlternateRoute == false")
@@ -503,8 +501,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             mainRouteCasingLayer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 1.5))
             mainRouteCasingLayer.lineJoin = NSExpression(forConstantValue: "round")
 
-            generateTrafficGradientStops(for: mainRoute)
-            mainRouteLayer.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", routeGradientStops.line)
             mainRouteCasingLayer.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", routeGradientStops.casing)
 
             // Add all the layers
@@ -519,6 +515,20 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 }
             }
         }
+    }
+
+    func mainRouteStyleLayer(identifier: String, source: MGLSource) -> MGLLineStyleLayer {
+        let mainRouteLayer = MGLLineStyleLayer(identifier: identifier, source: source)
+        mainRouteLayer.predicate = NSPredicate(format: "isAlternateRoute == false")
+        mainRouteLayer.lineColor = NSExpression(forConstantValue: UIColor.blue) // TODO: What color do we fall back to if there is no traffic?
+        mainRouteLayer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel)
+        mainRouteLayer.lineJoin = NSExpression(forConstantValue: "round")
+
+        if routeGradientStops.line.isEmpty == false {
+            mainRouteLayer.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", routeGradientStops.line)
+        }
+
+        return mainRouteLayer
     }
 
     func fadeRoute(_ fractionTraveled: Double) {

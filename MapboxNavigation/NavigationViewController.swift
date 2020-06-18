@@ -393,6 +393,10 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
     public func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         return delegate?.navigationViewController(self, routeStyleLayerWithIdentifier: identifier, source: source)
     }
+
+    public func navigationMapView(_ mapView: NavigationMapView, mainRouteStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        return delegate?.navigationViewController(self, mainRouteStyleLayerWithIdentifier: identifier, source: source)
+    }
     
     public func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route) {
         delegate?.navigationViewController(self, didSelect: route)
