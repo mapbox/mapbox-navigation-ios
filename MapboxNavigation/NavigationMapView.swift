@@ -479,22 +479,51 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             let alternateRoutesLayer = MGLLineStyleLayer(identifier: StyleLayerIdentifier.route, source: allRoutesSource)
             alternateRoutesLayer.predicate = NSPredicate(format: "isAlternateRoute == true")
             alternateRoutesLayer.lineColor = NSExpression(forConstantValue: routeAlternateColor)
-            alternateRoutesLayer.lineWidth = NSExpression(forConstantValue: 8.0)
+            alternateRoutesLayer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel)
+            alternateRoutesLayer.lineJoin = NSExpression(forConstantValue: "round")
+//            alternateRoutesLayer.lineOpacity = NSExpression(forConditional:
+//                NSPredicate(format: "isAlternateRoute == true"),
+//                                            trueExpression: NSExpression(forConstantValue: 1),
+//                                            falseExpression: NSExpression(forConditional: NSPredicate(format: "isCurrentLeg == true"),
+//                                                                          trueExpression: NSExpression(forConstantValue: 1),
+//                                                                          falseExpression: NSExpression(forConstantValue: 0)))
 
             let alternateRoutesCasingLayer = MGLLineStyleLayer(identifier: StyleLayerIdentifier.routeCasing, source: allRoutesSource)
             alternateRoutesCasingLayer.predicate = NSPredicate(format: "isAlternateRoute == true")
             alternateRoutesCasingLayer.lineColor = NSExpression(forConstantValue: routeAlternateCasingColor)
-            alternateRoutesCasingLayer.lineWidth = NSExpression(forConstantValue: 12.0)
+            alternateRoutesCasingLayer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 1.5))
+            alternateRoutesCasingLayer.lineJoin = NSExpression(forConstantValue: "round")
+//            alternateRoutesCasingLayer.lineOpacity = NSExpression(forConditional:
+//                NSPredicate(format: "isAlternateRoute == true"), // TODO: If we know these layers are filtered already based on alternate route status, then I don't think we need to do this check here.
+//                                            trueExpression: NSExpression(forConstantValue: 1),
+//                                            falseExpression: NSExpression(forConditional: NSPredicate(format: "isCurrentLeg == true"),
+//                                                                          trueExpression: NSExpression(forConstantValue: 1),
+//                                                                          falseExpression: NSExpression(forConstantValue: 0)))
 
             let mainRouteLayer = MGLLineStyleLayer(identifier: "main-route", source: allRoutesSource)
             mainRouteLayer.predicate = NSPredicate(format: "isAlternateRoute == false")
             mainRouteLayer.lineColor = NSExpression(forConstantValue: UIColor.blue)
-            mainRouteLayer.lineWidth = NSExpression(forConstantValue: 8.0)
+            mainRouteLayer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel)
+            mainRouteLayer.lineJoin = NSExpression(forConstantValue: "round")
+//            mainRouteLayer.lineOpacity = NSExpression(forConditional:
+//                NSPredicate(format: "isAlternateRoute == true"),
+//                                            trueExpression: NSExpression(forConstantValue: 1),
+//                                            falseExpression: NSExpression(forConditional: NSPredicate(format: "isCurrentLeg == true"),
+//                                                                          trueExpression: NSExpression(forConstantValue: 1),
+//                                                                          falseExpression: NSExpression(forConstantValue: 0)))
 
             let mainRouteCasingLayer = MGLLineStyleLayer(identifier: "main-route-casing", source: allRoutesSource)
             mainRouteCasingLayer.predicate = NSPredicate(format: "isAlternateRoute == false")
             mainRouteCasingLayer.lineColor = NSExpression(forConstantValue: routeCasingColor)
-            mainRouteCasingLayer.lineWidth = NSExpression(forConstantValue: 16.0)
+            mainRouteCasingLayer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 1.5))
+            mainRouteCasingLayer.lineJoin = NSExpression(forConstantValue: "round")
+//            mainRouteCasingLayer.lineOpacity = NSExpression(forConditional:
+//                NSPredicate(format: "isAlternateRoute == true"),
+//                                            trueExpression: NSExpression(forConstantValue: 1),
+//                                            falseExpression: NSExpression(forConditional: NSPredicate(format: "isCurrentLeg == true"),
+//                                                                          trueExpression: NSExpression(forConstantValue: 1),
+//                                                                          falseExpression: NSExpression(forConstantValue: 0)))
+
 
             generateTrafficGradientStops(for: mainRoute)
             mainRouteLayer.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", routeGradientStops.line)
@@ -506,8 +535,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 layer.identifier != StyleLayerIdentifier.arrow && layer.identifier != StyleLayerIdentifier.arrowSymbol && layer.identifier != StyleLayerIdentifier.arrowCasingSymbol && layer.identifier != StyleLayerIdentifier.arrowStroke && layer.identifier != StyleLayerIdentifier.waypointCircle {
                     style.insertLayer(mainRouteLayer, below: layer)
                     style.insertLayer(mainRouteCasingLayer, below: mainRouteLayer)
-                    style.insertLayer(alternateRoutesLayer, below: mainRouteLayer)
+                    style.insertLayer(alternateRoutesLayer, below: mainRouteCasingLayer)
                     style.insertLayer(alternateRoutesCasingLayer, below: alternateRoutesLayer)
+//                    style.insertLayer(mainRouteCasingLayer, above: mainRouteLayer)
+//                    style.insertLayer(alternateRoutesLayer, below: mainRouteCasingLayer)
+//                    style.insertLayer(alternateRoutesCasingLayer, below: alternateRoutesLayer)
                     break
                 }
             }
