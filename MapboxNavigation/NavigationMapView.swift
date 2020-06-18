@@ -63,8 +63,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     let sourceOptions: [MGLShapeSourceOption: Any] = [.maximumZoomLevel: 16]
 
     struct SourceIdentifier {
-        static let route = "\(identifierNamespace).route"
-        static let routeCasing = "\(identifierNamespace).routeCasing"
+        static let allRoutes = "\(identifierNamespace).allRoutes"
 
         static let waypoint = "\(identifierNamespace).waypoints"
         static let waypointCircle = "\(identifierNamespace).waypointsCircle"
@@ -459,21 +458,19 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         self.routes = routes
 
         let polylines = navigationMapViewDelegate?.navigationMapView(self, shapeFor: routes) ?? shape(for: routes, legIndex: legIndex)
-        let mainPolylineSimplified = navigationMapViewDelegate?.navigationMapView(self, simplifiedShapeFor: mainRoute) ?? shape(forCasingOf: mainRoute, legIndex: legIndex)
+        //let mainPolylineSimplified = navigationMapViewDelegate?.navigationMapView(self, simplifiedShapeFor: mainRoute) ?? shape(forCasingOf: mainRoute, legIndex: legIndex)
 
         /**
          If there is already an existing source that represents the routes,
          just update their shapes.
          */
-        if let source = style.source(withIdentifier: SourceIdentifier.route) as? MGLShapeSource,
-            let sourceSimplified = style.source(withIdentifier: SourceIdentifier.routeCasing) as? MGLShapeSource {
+        if let source = style.source(withIdentifier: SourceIdentifier.allRoutes) as? MGLShapeSource {
             source.shape = polylines
-            sourceSimplified.shape = mainPolylineSimplified
         } else {
             // Otherwise, create them for the first time.
 
             // Source layer for main route + alternative routes
-            let allRoutesSource = MGLShapeSource(identifier: SourceIdentifier.route, shape: polylines, options: [.lineDistanceMetrics: true])
+            let allRoutesSource = MGLShapeSource(identifier: SourceIdentifier.allRoutes, shape: polylines, options: [.lineDistanceMetrics: true])
             style.addSource(allRoutesSource)
 
             let alternateRoutesLayer = MGLLineStyleLayer(identifier: StyleLayerIdentifier.route, source: allRoutesSource)
@@ -481,49 +478,26 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             alternateRoutesLayer.lineColor = NSExpression(forConstantValue: routeAlternateColor)
             alternateRoutesLayer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel)
             alternateRoutesLayer.lineJoin = NSExpression(forConstantValue: "round")
-//            alternateRoutesLayer.lineOpacity = NSExpression(forConditional:
-//                NSPredicate(format: "isAlternateRoute == true"),
-//                                            trueExpression: NSExpression(forConstantValue: 1),
-//                                            falseExpression: NSExpression(forConditional: NSPredicate(format: "isCurrentLeg == true"),
-//                                                                          trueExpression: NSExpression(forConstantValue: 1),
-//                                                                          falseExpression: NSExpression(forConstantValue: 0)))
+
 
             let alternateRoutesCasingLayer = MGLLineStyleLayer(identifier: StyleLayerIdentifier.routeCasing, source: allRoutesSource)
             alternateRoutesCasingLayer.predicate = NSPredicate(format: "isAlternateRoute == true")
             alternateRoutesCasingLayer.lineColor = NSExpression(forConstantValue: routeAlternateCasingColor)
             alternateRoutesCasingLayer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 1.5))
             alternateRoutesCasingLayer.lineJoin = NSExpression(forConstantValue: "round")
-//            alternateRoutesCasingLayer.lineOpacity = NSExpression(forConditional:
-//                NSPredicate(format: "isAlternateRoute == true"), // TODO: If we know these layers are filtered already based on alternate route status, then I don't think we need to do this check here.
-//                                            trueExpression: NSExpression(forConstantValue: 1),
-//                                            falseExpression: NSExpression(forConditional: NSPredicate(format: "isCurrentLeg == true"),
-//                                                                          trueExpression: NSExpression(forConstantValue: 1),
-//                                                                          falseExpression: NSExpression(forConstantValue: 0)))
+
 
             let mainRouteLayer = MGLLineStyleLayer(identifier: "main-route", source: allRoutesSource)
             mainRouteLayer.predicate = NSPredicate(format: "isAlternateRoute == false")
             mainRouteLayer.lineColor = NSExpression(forConstantValue: UIColor.blue)
             mainRouteLayer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel)
             mainRouteLayer.lineJoin = NSExpression(forConstantValue: "round")
-//            mainRouteLayer.lineOpacity = NSExpression(forConditional:
-//                NSPredicate(format: "isAlternateRoute == true"),
-//                                            trueExpression: NSExpression(forConstantValue: 1),
-//                                            falseExpression: NSExpression(forConditional: NSPredicate(format: "isCurrentLeg == true"),
-//                                                                          trueExpression: NSExpression(forConstantValue: 1),
-//                                                                          falseExpression: NSExpression(forConstantValue: 0)))
 
             let mainRouteCasingLayer = MGLLineStyleLayer(identifier: "main-route-casing", source: allRoutesSource)
             mainRouteCasingLayer.predicate = NSPredicate(format: "isAlternateRoute == false")
             mainRouteCasingLayer.lineColor = NSExpression(forConstantValue: routeCasingColor)
             mainRouteCasingLayer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 1.5))
             mainRouteCasingLayer.lineJoin = NSExpression(forConstantValue: "round")
-//            mainRouteCasingLayer.lineOpacity = NSExpression(forConditional:
-//                NSPredicate(format: "isAlternateRoute == true"),
-//                                            trueExpression: NSExpression(forConstantValue: 1),
-//                                            falseExpression: NSExpression(forConditional: NSPredicate(format: "isCurrentLeg == true"),
-//                                                                          trueExpression: NSExpression(forConstantValue: 1),
-//                                                                          falseExpression: NSExpression(forConstantValue: 0)))
-
 
             generateTrafficGradientStops(for: mainRoute)
             mainRouteLayer.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", routeGradientStops.line)
@@ -537,9 +511,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                     style.insertLayer(mainRouteCasingLayer, below: mainRouteLayer)
                     style.insertLayer(alternateRoutesLayer, below: mainRouteCasingLayer)
                     style.insertLayer(alternateRoutesCasingLayer, below: alternateRoutesLayer)
-//                    style.insertLayer(mainRouteCasingLayer, above: mainRouteLayer)
-//                    style.insertLayer(alternateRoutesLayer, below: mainRouteCasingLayer)
-//                    style.insertLayer(alternateRoutesCasingLayer, below: alternateRoutesLayer)
                     break
                 }
             }
@@ -598,8 +569,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             StyleLayerIdentifier.routeCasing,
         ].compactMap { style.layer(withIdentifier: $0) })
         style.remove(Set([
-            SourceIdentifier.route,
-            SourceIdentifier.routeCasing,
+            SourceIdentifier.allRoutes
         ].compactMap { style.source(withIdentifier: $0) }))
     }
     
