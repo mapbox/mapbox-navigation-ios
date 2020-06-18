@@ -2,6 +2,10 @@
 
 ## master
 
+### MAU Billing
+
+* Enabled MAU billing by default, so that SDKs usage of Mapbox APIs is [billed](https://www.mapbox.com/pricing/) together based on [monthly active users](https://docs.mapbox.com/help/glossary/monthly-active-users/) rather than individually by HTTP request. If you prefer to still use request-based billing, set the `MBXNavigationBillingMethod` key in Info.plist to `request` ([#2405](https://github.com/mapbox/mapbox-navigation-ios/pull/2405).
+
 ### Offline navigation
 
 * Fixed a crash that occurred after setting `RouteOptions.shapeFormat` to `RouteShapeFormat.geoJSON`. ([valhalla/valhalla#1867](https://github.com/valhalla/valhalla/pull/1867))

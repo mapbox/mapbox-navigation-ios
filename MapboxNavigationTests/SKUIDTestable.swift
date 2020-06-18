@@ -8,7 +8,7 @@ extension String {
 enum SkuID: String {
     typealias RawValue = String
     case mapsUser = "00"
-    case navigationUser = "02"
     case navigationSession = "03"
+    case navigationUser = "08"
 }
 #endif

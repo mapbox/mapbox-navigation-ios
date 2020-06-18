@@ -11,7 +11,6 @@ class ExampleUITests: XCTestCase {
         app.launchArguments = ["enable-ui-testing"]
         app.launch()
 
-        #if false
         let mapViewLabel = app.staticTexts.element(matching:.any, identifier: "MapView SKU")
         let directionsLabel = app.staticTexts.element(matching:.any, identifier: "Directions SKU")
         let speechSynthesizerLabel = app.staticTexts.element(matching:.any, identifier: "SpeechSynthesizer SKU")
@@ -27,6 +26,5 @@ class ExampleUITests: XCTestCase {
         XCTAssertEqual(mapViewToken.skuId, SkuID.navigationUser.rawValue)
         XCTAssertEqual(mapViewToken, directionsToken)
         XCTAssertEqual(mapViewToken, speechSynthesizerToken)
-        #endif
     }
 }
