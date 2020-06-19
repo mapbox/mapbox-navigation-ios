@@ -117,6 +117,7 @@ open class DayStyle: Style {
         NavigationMapView.appearance().maneuverArrowStrokeColor = .defaultManeuverArrowStroke
         NavigationMapView.appearance().routeAlternateColor      = .defaultAlternateLine
         NavigationMapView.appearance().routeCasingColor         = .defaultRouteCasing
+        NavigationMapView.appearance().vanishingRouteColor      = .defaultVanishingRouteColor
         NavigationMapView.appearance().trafficHeavyColor        = .trafficHeavy
         NavigationMapView.appearance().trafficLowColor          = .trafficLow
         NavigationMapView.appearance().trafficModerateColor     = .trafficModerate
