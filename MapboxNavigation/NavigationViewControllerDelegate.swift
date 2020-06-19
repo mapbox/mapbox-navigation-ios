@@ -93,11 +93,31 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate{
 
 
     /**
-     TODO: Docs
-     */
+     Returns an `MGLStyleLayer` that determines the appearance of the main route line.
+
+     If this method is unimplemented, the navigation view controller’s map view draws the route line using an `MGLLineStyleLayer`.
+    */
     func navigationViewController(_ navigationViewController: NavigationViewController, mainRouteStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+
+    /**
+     Returns an `MGLStyleLayer` that determines the appearance of the casing around the main route line.
+
+     If this method is unimplemented, the navigation view controller’s map view draws the casing for the main route line using an `MGLLineStyleLayer`.
+    */
     func navigationViewController(_ navigationViewController: NavigationViewController, mainRouteCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+
+    /**
+     Returns an `MGLStyleLayer` that determines the appearance of alternative route lines.
+
+     If this method is unimplemented, the navigation view controller’s map view draws the alternative route lines using an `MGLLineStyleLayer`.
+    */
     func navigationViewController(_ navigationViewController: NavigationViewController, alternateRouteStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+
+    /**
+     Returns an `MGLStyleLayer` that determines the appearance of the casing around the alternative route lines.
+
+     If this method is unimplemented, the navigation view controller’s map view draws the casing for the alternative route lines using an `MGLLineStyleLayer`.
+    */
     func navigationViewController(_ navigationViewController: NavigationViewController, alternateRouteCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
     /**

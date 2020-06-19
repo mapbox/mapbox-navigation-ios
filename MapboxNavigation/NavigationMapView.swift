@@ -505,7 +505,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     func mainRouteStyleLayer(identifier: String, source: MGLSource) -> MGLLineStyleLayer {
         let mainRouteLayer = MGLLineStyleLayer(identifier: identifier, source: source)
         mainRouteLayer.predicate = NSPredicate(format: "isAlternateRoute == false")
-        mainRouteLayer.lineColor = NSExpression(forConstantValue: UIColor.blue) // TODO: What color do we fall back to if there is no traffic?
+        mainRouteLayer.lineColor = NSExpression(forConstantValue: trafficUnknownColor)
         mainRouteLayer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel)
         mainRouteLayer.lineJoin = NSExpression(forConstantValue: "round")
 

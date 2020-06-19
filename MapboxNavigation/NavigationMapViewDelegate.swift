@@ -8,11 +8,43 @@ import MapboxCoreNavigation
 public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
 
     /**
-     TODO: Docs
-     */
+     Asks the receiver to return an MGLStyleLayer for the main route line, given an identifier and source.
+     This method is invoked when the map view loads and any time routes are added.
+     - parameter mapView: The NavigationMapView.
+     - parameter identifier: The style identifier.
+     - parameter source: The source containing the route data that this method would style.
+     - returns: An MGLStyleLayer that is applied to the main route line.
+    */
     func navigationMapView(_ mapView: NavigationMapView, mainRouteStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+
+    /**
+     Asks the receiver to return an MGLStyleLayer for the casing layer that surrounds main route line, given an identifier and source.
+     This method is invoked when the map view loads and any time routes are added.
+     - parameter mapView: The NavigationMapView.
+     - parameter identifier: The style identifier.
+     - parameter source: The source containing the route data that this method would style.
+     - returns: An MGLStyleLayer that is applied as a casing around the main route line.
+    */
     func navigationMapView(_ mapView: NavigationMapView, mainRouteCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+
+    /**
+     Asks the receiver to return an MGLStyleLayer for the alternative route lines, given an identifier and source.
+     This method is invoked when the map view loads and any time routes are added.
+     - parameter mapView: The NavigationMapView.
+     - parameter identifier: The style identifier.
+     - parameter source: The source containing the route data that this method would style.
+     - returns: An MGLStyleLayer that is applied to alternative routes.
+    */
     func navigationMapView(_ mapView: NavigationMapView, alternateRouteStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+
+    /**
+     Asks the receiver to return an MGLStyleLayer for the casing layer that surrounds alternative route lines, given an identifier and source.
+     This method is invoked when the map view loads and any time routes are added.
+     - parameter mapView: The NavigationMapView.
+     - parameter identifier: The style identifier.
+     - parameter source: The source containing the route data that this method would style.
+     - returns: An MGLStyleLayer that is applied as a casing around alternative route lines.
+    */
     func navigationMapView(_ mapView: NavigationMapView, alternateRouteCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
     /**
