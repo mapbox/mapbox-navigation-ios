@@ -481,11 +481,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 
             let alternateRoutesLayer = navigationMapViewDelegate?.navigationMapView(self, alternateRouteStyleLayerWithIdentifier: StyleLayerIdentifier.alternateRoutes, source: allRoutesSource) ?? alternateRouteStyleLayer(identifier: StyleLayerIdentifier.alternateRoutes, source: allRoutesSource)
 
-            let alternateRoutesCasingLayer = MGLLineStyleLayer(identifier: StyleLayerIdentifier.alternateRoutesCasing, source: allRoutesSource)
-            alternateRoutesCasingLayer.predicate = NSPredicate(format: "isAlternateRoute == true")
-            alternateRoutesCasingLayer.lineColor = NSExpression(forConstantValue: routeAlternateCasingColor)
-            alternateRoutesCasingLayer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 1.5))
-            alternateRoutesCasingLayer.lineJoin = NSExpression(forConstantValue: "round")
+            let alternateRoutesCasingLayer = navigationMapViewDelegate?.navigationMapView(self, mainRouteCasingStyleLayerWithIdentifier: StyleLayerIdentifier.alternateRoutesCasing, source: allRoutesSource) ?? alternateRouteCasingStyleLayer(identifier: StyleLayerIdentifier.alternateRoutesCasing, source: allRoutesSource)
 
             generateTrafficGradientStops(for: mainRoute)
 
@@ -543,9 +539,18 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         return alternateRoutesLayer
     }
 
+    func alternateRouteCasingStyleLayer(identifier: String, source: MGLSource) -> MGLLineStyleLayer {
+        let alternateRoutesCasingLayer = MGLLineStyleLayer(identifier: identifier, source: source)
+        alternateRoutesCasingLayer.predicate = NSPredicate(format: "isAlternateRoute == true")
+        alternateRoutesCasingLayer.lineColor = NSExpression(forConstantValue: routeAlternateCasingColor)
+        alternateRoutesCasingLayer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 1.5))
+        alternateRoutesCasingLayer.lineJoin = NSExpression(forConstantValue: "round")
+        return alternateRoutesCasingLayer
+    }
+
     func fadeRoute(_ fractionTraveled: Double) {
-        guard let mainRouteLayer = style?.layer(withIdentifier: "main-route") as? MGLLineStyleLayer,
-              let mainRouteCasingLayer = style?.layer(withIdentifier: "main-route-casing") as? MGLLineStyleLayer else { return }
+        guard let mainRouteLayer = style?.layer(withIdentifier: StyleLayerIdentifier.mainRoute) as? MGLLineStyleLayer,
+              let mainRouteCasingLayer = style?.layer(withIdentifier: StyleLayerIdentifier.mainRouteCasing) as? MGLLineStyleLayer else { return }
 
         let percentTraveled = CGFloat(fractionTraveled)
 
