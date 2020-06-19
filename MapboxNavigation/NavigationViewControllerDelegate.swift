@@ -90,13 +90,6 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate{
      - parameter error: An error raised during the process of obtaining a new route.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, didFailToRerouteWith error: Error)
-    
-    /**
-     Returns an `MGLStyleLayer` that determines the appearance of the route line.
-     
-     If this method is unimplemented, the navigation view controller’s map view draws the route line using an `MGLLineStyleLayer`.
-     */
-    func navigationViewController(_ navigationViewController: NavigationViewController, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
 
 
     /**
@@ -106,13 +99,6 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate{
     func navigationViewController(_ navigationViewController: NavigationViewController, mainRouteCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     func navigationViewController(_ navigationViewController: NavigationViewController, alternateRouteStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     func navigationViewController(_ navigationViewController: NavigationViewController, alternateRouteCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
-    
-    /**
-     Returns an `MGLStyleLayer` that determines the appearance of the route line’s casing.
-     
-     If this method is unimplemented, the navigation view controller’s map view draws the route line’s casing using an `MGLLineStyleLayer` whose width is greater than that of the style layer returned by `navigationViewController(_:routeStyleLayerWithIdentifier:source:)`.
-     */
-    func navigationViewController(_ navigationViewController: NavigationViewController, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
     /**
      Returns an `MGLShape` that represents the path of the route line.
@@ -252,14 +238,6 @@ public extension NavigationViewControllerDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, didFailToRerouteWith error: Error) {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
     }
-    
-    /**
-     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
-     */
-    func navigationViewController(_ navigationViewController: NavigationViewController, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
-        return nil
-    }
 
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
@@ -280,14 +258,6 @@ public extension NavigationViewControllerDelegate {
     }
 
     func navigationViewController(_ navigationViewController: NavigationViewController, alternateRouteCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
-        return nil
-    }
-    
-    /**
-     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
-     */
-    func navigationViewController(_ navigationViewController: NavigationViewController, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
         return nil
     }
