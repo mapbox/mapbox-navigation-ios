@@ -479,11 +479,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             let allRoutesSource = MGLShapeSource(identifier: SourceIdentifier.allRoutes, shape: polylines, options: [.lineDistanceMetrics: true])
             style.addSource(allRoutesSource)
 
-            let alternateRoutesLayer = MGLLineStyleLayer(identifier: StyleLayerIdentifier.alternateRoutes, source: allRoutesSource)
-            alternateRoutesLayer.predicate = NSPredicate(format: "isAlternateRoute == true")
-            alternateRoutesLayer.lineColor = NSExpression(forConstantValue: routeAlternateColor)
-            alternateRoutesLayer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel)
-            alternateRoutesLayer.lineJoin = NSExpression(forConstantValue: "round")
+            let alternateRoutesLayer = navigationMapViewDelegate?.navigationMapView(self, alternateRouteStyleLayerWithIdentifier: StyleLayerIdentifier.alternateRoutes, source: allRoutesSource) ?? alternateRouteStyleLayer(identifier: StyleLayerIdentifier.alternateRoutes, source: allRoutesSource)
 
             let alternateRoutesCasingLayer = MGLLineStyleLayer(identifier: StyleLayerIdentifier.alternateRoutesCasing, source: allRoutesSource)
             alternateRoutesCasingLayer.predicate = NSPredicate(format: "isAlternateRoute == true")
@@ -536,6 +532,15 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
 
         return mainRouteCasingLayer
+    }
+
+    func alternateRouteStyleLayer(identifier: String, source: MGLSource) -> MGLLineStyleLayer {
+        let alternateRoutesLayer = MGLLineStyleLayer(identifier: identifier, source: source)
+        alternateRoutesLayer.predicate = NSPredicate(format: "isAlternateRoute == true")
+        alternateRoutesLayer.lineColor = NSExpression(forConstantValue: routeAlternateColor)
+        alternateRoutesLayer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel)
+        alternateRoutesLayer.lineJoin = NSExpression(forConstantValue: "round")
+        return alternateRoutesLayer
     }
 
     func fadeRoute(_ fractionTraveled: Double) {

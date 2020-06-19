@@ -104,6 +104,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate{
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, mainRouteStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     func navigationViewController(_ navigationViewController: NavigationViewController, mainRouteCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+    func navigationViewController(_ navigationViewController: NavigationViewController, alternateRouteStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
     /**
      Returns an `MGLStyleLayer` that determines the appearance of the route line’s casing.
@@ -268,6 +269,11 @@ public extension NavigationViewControllerDelegate {
     }
 
     func navigationViewController(_ navigationViewController: NavigationViewController, mainRouteCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+        return nil
+    }
+
+    func navigationViewController(_ navigationViewController: NavigationViewController, alternateRouteStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
         return nil
     }

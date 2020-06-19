@@ -559,6 +559,10 @@ extension RouteMapViewController: NavigationViewDelegate {
         return delegate?.navigationMapView(mapView, routeCasingStyleLayerWithIdentifier: identifier, source: source)
     }
 
+    func navigationMapView(_ mapView: NavigationMapView, alternateRouteStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        return delegate?.navigationMapView(mapView, alternateRouteStyleLayerWithIdentifier: identifier, source: source)
+    }
+
     func navigationMapView(_ mapView: NavigationMapView, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         return delegate?.navigationMapView(mapView, waypointStyleLayerWithIdentifier: identifier, source: source)
     }
