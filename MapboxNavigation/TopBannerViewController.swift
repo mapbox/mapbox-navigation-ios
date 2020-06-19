@@ -97,13 +97,19 @@ open class TopBannerViewController: UIViewController {
         return view
     }()
     
+    lazy var junctionView: JunctionView = {
+        let view: JunctionView = .forAutoLayout()
+        view.isHidden = true
+        return view
+    }()
+    
     private let instructionsBannerHeight: CGFloat = 100.0
     
     private var informationChildren: [UIView] {
         return [instructionsBannerView] + secondaryChildren
     }
     private var secondaryChildren: [UIView] {
-        return [lanesView, nextBannerView, statusView]
+        return [lanesView, nextBannerView, statusView, junctionView]
     }
     
     public var isDisplayingPreviewInstructions: Bool {
@@ -264,6 +270,7 @@ open class TopBannerViewController: UIViewController {
     }
     private func showSecondaryChildren(completion: CompletionHandler? = nil) {
         statusView.isHidden = !statusView.isCurrentlyVisible
+        junctionView.isHidden = !junctionView.isCurrentlyVisible
         lanesView.isHidden = !lanesView.isCurrentlyVisible
         nextBannerView.isHidden = !nextBannerView.isCurrentlyVisible
         
@@ -364,6 +371,7 @@ extension TopBannerViewController: NavigationComponent {
         instructionsBannerView.update(for: instruction)
         lanesView.update(for: instruction)
         nextBannerView.navigationService(service, didPassVisualInstructionPoint: instruction, routeProgress: routeProgress)
+        junctionView.update(for: instruction, service: service)
     }
     
     public func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {
