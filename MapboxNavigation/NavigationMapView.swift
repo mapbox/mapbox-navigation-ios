@@ -108,6 +108,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     @objc dynamic public var routeCasingColor: UIColor = .defaultRouteCasing
     @objc dynamic public var routeAlternateColor: UIColor = .defaultAlternateLine
     @objc dynamic public var routeAlternateCasingColor: UIColor = .defaultAlternateLineCasing
+    @objc dynamic public var vanishingRouteColor: UIColor = .defaultVanishingRouteColor
     @objc dynamic public var maneuverArrowColor: UIColor = .defaultManeuverArrow
     @objc dynamic public var maneuverArrowStrokeColor: UIColor = .defaultManeuverArrowStroke
 
@@ -464,7 +465,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         self.routes = routes
 
         let polylines = navigationMapViewDelegate?.navigationMapView(self, shapeFor: routes) ?? shape(for: routes, legIndex: legIndex)
-        //let mainPolylineSimplified = navigationMapViewDelegate?.navigationMapView(self, simplifiedShapeFor: mainRoute) ?? shape(forCasingOf: mainRoute, legIndex: legIndex)
 
         /**
          If there is already an existing source that represents the routes,
@@ -479,16 +479,14 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             let allRoutesSource = MGLShapeSource(identifier: SourceIdentifier.allRoutes, shape: polylines, options: [.lineDistanceMetrics: true])
             style.addSource(allRoutesSource)
 
-            let alternateRoutesLayer = navigationMapViewDelegate?.navigationMapView(self, alternateRouteStyleLayerWithIdentifier: StyleLayerIdentifier.alternateRoutes, source: allRoutesSource) ?? alternateRouteStyleLayer(identifier: StyleLayerIdentifier.alternateRoutes, source: allRoutesSource)
-
-            let alternateRoutesCasingLayer = navigationMapViewDelegate?.navigationMapView(self, mainRouteCasingStyleLayerWithIdentifier: StyleLayerIdentifier.alternateRoutesCasing, source: allRoutesSource) ?? alternateRouteCasingStyleLayer(identifier: StyleLayerIdentifier.alternateRoutesCasing, source: allRoutesSource)
-
             generateTrafficGradientStops(for: mainRoute)
 
             let mainRouteLayer = navigationMapViewDelegate?.navigationMapView(self, mainRouteStyleLayerWithIdentifier: StyleLayerIdentifier.mainRoute, source: allRoutesSource) ?? mainRouteStyleLayer(identifier: StyleLayerIdentifier.mainRoute, source: allRoutesSource)
             let mainRouteCasingLayer = navigationMapViewDelegate?.navigationMapView(self, mainRouteCasingStyleLayerWithIdentifier: StyleLayerIdentifier.mainRouteCasing, source: allRoutesSource) ?? mainRouteCasingStyleLayer(identifier: StyleLayerIdentifier.mainRouteCasing, source: allRoutesSource)
+            let alternateRoutesLayer = navigationMapViewDelegate?.navigationMapView(self, alternateRouteStyleLayerWithIdentifier: StyleLayerIdentifier.alternateRoutes, source: allRoutesSource) ?? alternateRouteStyleLayer(identifier: StyleLayerIdentifier.alternateRoutes, source: allRoutesSource)
+             let alternateRoutesCasingLayer = navigationMapViewDelegate?.navigationMapView(self, mainRouteCasingStyleLayerWithIdentifier: StyleLayerIdentifier.alternateRoutesCasing, source: allRoutesSource) ?? alternateRouteCasingStyleLayer(identifier: StyleLayerIdentifier.alternateRoutesCasing, source: allRoutesSource)
 
-            // Add all the layers
+            // Add all the layers in the correct order
             for layer in style.layers.reversed() {
                 if !(layer is MGLSymbolStyleLayer) &&
                 layer.identifier != StyleLayerIdentifier.arrow && layer.identifier != StyleLayerIdentifier.arrowSymbol && layer.identifier != StyleLayerIdentifier.arrowCasingSymbol && layer.identifier != StyleLayerIdentifier.arrowStroke && layer.identifier != StyleLayerIdentifier.waypointCircle {
@@ -564,8 +562,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         // and fade the range from zero that lowest value,
         // which represents the % of the route traveled.
         if let minStop = filtered.min(by: { $0.0 < $1.0 }) {
-            filtered[0.0] = UIColor.clear // TODO: Pull color from user-defined preference
-            filtered[percentTraveled.nextDown] = UIColor.clear
+            filtered[0.0] = vanishingRouteColor
+            filtered[percentTraveled.nextDown] = vanishingRouteColor
             filtered[percentTraveled] = minStop.value
         }
 
@@ -578,8 +576,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
 
         if let minStop = filteredCasing.min(by: { $0.0 < $1.0 }) {
-            filteredCasing[0.0] = UIColor.clear // TODO: Pull color from user-defined preference
-            filteredCasing[percentTraveled.nextDown] = UIColor.clear
+            filteredCasing[0.0] = vanishingRouteColor
+            filteredCasing[percentTraveled.nextDown] = vanishingRouteColor
             filteredCasing[percentTraveled] = minStop.value
         }
 
