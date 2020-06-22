@@ -41,6 +41,7 @@ step-library:
         name: Prepare
         command: |
           echo "foo" > ~/.mapbox
+          brew update
           brew upgrade carthage
           echo "machine dl.bintray.com" > ~/.netrc
           echo "login $BINTRAY_LOGIN" >> ~/.netrc
