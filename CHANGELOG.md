@@ -2,27 +2,14 @@
 
 ## master
 
-### User location
-
-* Fixed issues where the user puck would sometimes drift away from the route line even though the user was following the route. ([#2404](https://github.com/mapbox/mapbox-navigation-ios/pull/2404))
-* Fixed an issue where `RouteController` took longer than usual to detect that the user had gone off-route. ([#2404](https://github.com/mapbox/mapbox-navigation-ios/pull/2404))
-* Fixed an issue where `RouteController` would detect that the user had gone off-route due to a single errant location update. ([#2404](https://github.com/mapbox/mapbox-navigation-ios/pull/2404))
-
 ### Offline navigation
 
 * Fixed a crash that occurred after setting `RouteOptions.shapeFormat` to `RouteShapeFormat.geoJSON`. ([valhalla/valhalla#1867](https://github.com/valhalla/valhalla/pull/1867))
-* Fixed an issue where some routes had unreasonably long expected travel times. ([valhalla/valhalla#2102](https://github.com/valhalla/valhalla/pull/2102))
-* Fixed incorrect routing at some intersections of divided roads where there are turn restrictions. ([valhalla/valhalla#2109](https://github.com/valhalla/valhalla/pull/2109))
 * Fixed issues where routes would sometimes require divebombing. ([valhalla/valhalla#1931](https://github.com/valhalla/valhalla/pull/1931))
 * Fixed an issue where the route would sometimes contain duplicate waypoints. ([valhalla/valhalla#1880](https://github.com/valhalla/valhalla/pull/1880))
-* Fixed an issue where an exception to a road closure on a public holiday was being ignored. ([valhalla/valhalla#2198](https://github.com/valhalla/valhalla/pull/2198))
-* By default, calculated routes follow alleys less often. ([valhalla/valhalla#2231](https://github.com/valhalla/valhalla/pull/2231))
 * Turn lane indications are now shown below the turn banner as when navigating online. ([valhalla/valhalla#1830](https://github.com/valhalla/valhalla/pull/1830), [valhalla/valhalla#1859](https://github.com/valhalla/valhalla/pull/1859))
-* Fixed an issue where the `RouteStep.expectedTravelTime` properties of each step did not add up to the `RouteLeg.expectedTravelTime` property. ([valhalla/valhalla#2195](https://github.com/valhalla/valhalla/pull/2195))
-* Fixed an issue where a forward- or backward-only speed limit was not considered when calculating some expected travel times. ([valhalla/valhalla#2198](https://github.com/valhalla/valhalla/pull/2198))
 * Suppressed extraneous fork instructions. ([valhalla/valhalla#1886](https://github.com/valhalla/valhalla/pull/1886), [valhalla/valhalla#1909](https://github.com/valhalla/valhalla/pull/1909), [valhalla/valhalla#1928](https://github.com/valhalla/valhalla/pull/1928))
 * Merge instructions now indicate whether to merge to the left or the right, as when navigating online. ([valhalla/valhalla#1892](https://github.com/valhalla/valhalla/pull/1892), [valhalla/valhalla#1989](https://github.com/valhalla/valhalla/pull/1989))
-* Fixed ungrammatical spoken instructions at sharp turns in English. ([valhalla/valhalla#2226](https://github.com/valhalla/valhalla/pull/2226))
 * Fixed an issue where spoken and visual instructions sometimes omitted the cardinal direction after a route number in the United States. ([valhalla/valhalla#1917](https://github.com/valhalla/valhalla/pull/1917))
 * A spoken instruction about an exit ramp no longer specifies the side of the road if the ramp branches off the slow lane (on the right side in regions that drive on the right). ([valhalla/valhalla#1990](https://github.com/valhalla/valhalla/pull/1990))
 
