@@ -36,15 +36,25 @@ step-library:
         paths:
           - "~/.cocoapods/repos/master"
 
-  - &prepare
+  - &prepare-mapbox-file
       run:
-        name: Prepare
+        name: Prepare .mapbox file
         command: |
           echo "foo" > ~/.mapbox
-          brew update && brew install carthage
+
+  - &prepare-netrc-file
+      run:
+        name: Prepare .netrc file
+        command: |
           echo "machine dl.bintray.com" > ~/.netrc
           echo "login $BINTRAY_LOGIN" >> ~/.netrc
           echo "password $BINTRAY_API_KEY" >> ~/.netrc
+
+  - &update-carthage-version
+      run:
+        name: Update Carthage version
+        command: |
+          brew update && brew upgrade carthage
 
   - &verify-missing-localizable-strings
       run:
@@ -85,7 +95,9 @@ jobs:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
       - checkout
-      - *prepare
+      - *prepare-mapbox-file
+      - *prepare-netrc-file
+      - *update-carthage-version
       - *restore-cache-podmaster
       - *restore-cache-cocoapods
       - when:
@@ -131,7 +143,9 @@ jobs:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
       - checkout
-      - *prepare
+      - *prepare-mapbox-file
+      - *prepare-netrc-file
+      - *update-carthage-version
       - *restore-cache
       - when:
           condition: << parameters.delete_private_deps >>
@@ -168,7 +182,9 @@ jobs:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
       - checkout
-      - *prepare
+      - *prepare-mapbox-file
+      - *prepare-netrc-file
+      - *update-carthage-version
       - *restore-cache
       - *install-dependencies
       - *build-Example
