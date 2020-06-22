@@ -85,6 +85,7 @@ jobs:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
       - checkout
+      - *prepare
       - *restore-cache-podmaster
       - *restore-cache-cocoapods
       - when:
