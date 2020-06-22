@@ -111,15 +111,20 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     @objc dynamic public var vanishingRouteColor: UIColor = .defaultVanishingRouteColor
     @objc dynamic public var maneuverArrowColor: UIColor = .defaultManeuverArrow
     @objc dynamic public var maneuverArrowStrokeColor: UIColor = .defaultManeuverArrowStroke
-
-    typealias RouteGradientStops = (line: [CGFloat: UIColor], casing: [CGFloat: UIColor])
     
     var userLocationForCourseTracking: CLLocation?
     var animatesUserLocation: Bool = false
     var altitude: CLLocationDistance
     var routes: [Route]?
     var isAnimatingToOverheadMode = false
-    var routeGradientStops = RouteGradientStops(line: [:], casing: [:]) // TODO: Account for cases where traffic isn't enabled.
+
+    /**
+     A tuple that represents the dictionary of percentage/color pairs used to
+     calculate the color gradient transitions belonging to the main route line
+     and its casing.
+     */
+    typealias RouteGradientStops = (line: [CGFloat: UIColor], casing: [CGFloat: UIColor])
+    private var routeGradientStops = RouteGradientStops(line: [:], casing: [:]) // TODO: Account for cases where traffic isn't enabled.
     
     var shouldPositionCourseViewFrameByFrame = false {
         didSet {
@@ -1019,13 +1024,23 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
 
     func generateTrafficGradientStops(for route: Route) {
-        typealias GradientStop = (percent: CGFloat, color: UIColor)
-        var stops = [GradientStop]()
 
-        let routeLength = route.distance
+        /**
+         The resulting set of key/value stops that will be used
+         for the route's line gradient.
+         */
+        var stops = [[CGFloat:UIColor]]()
+
+        /**
+         We will keep track of this value as we iterate through
+         the various congestion segments.
+         */
         var distanceTraveled: CLLocationDistance = 0.0
 
-        // Individual polylines associated with a congestion level
+        /**
+         Begin by calculating individual congestion segments associated
+         with a congestion level, represented as `MGLPolylineFeature`s.
+         */
         guard let congestionSegments = addCongestion(to: route, legIndex: 0) else { return }
 
         /**
@@ -1044,50 +1059,67 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 
         for (index, line) in congestionSegments.enumerated() {
             line.getCoordinates(line.coordinates, range: NSMakeRange(0, Int(line.pointCount)))
+            //  `UnsafeMutablePointer` is needed here to
             let buffPtr = UnsafeMutableBufferPointer(start: line.coordinates, count: Int(line.pointCount))
             let lineCoordinates = Array(buffPtr)
 
-            // Get congestion color
+            // Get congestion color for the stop.
             let congestionLevel = line.attributes["congestion"] as! String
             let congestionColor = getCongestionColor(for: congestionLevel)
 
-            // Measure the line length
+            // Measure the line length of the traffic segment.
             let lineString = LineString(lineCoordinates)
             let distance = lineString.distance()
 
+            /**
+             If this is the first congestion segment, then the starting
+             percentage point will be zero.
+             */
             if index == congestionSegments.startIndex {
                 let segmentStartPercentTraveled = CGFloat.zero
-                stops.append(GradientStop(percent: segmentStartPercentTraveled, color: congestionColor))
+                stops.append([segmentStartPercentTraveled: congestionColor])
 
                 distanceTraveled = distanceTraveled + distance
 
-                let segmentEndPercentTraveled = CGFloat((distanceTraveled / routeLength))
-                stops.append(GradientStop(percent: segmentEndPercentTraveled.nextDown, color: congestionColor))
+                let segmentEndPercentTraveled = CGFloat((distanceTraveled / route.distance))
+                routeGradientStops.line[segmentEndPercentTraveled.nextDown] = congestionColor
                 continue
             }
 
+            /**
+             If this is the last congestion segment, then the ending
+             percentage point will be 1.0, to represent 100%.
+             */
             if index == congestionSegments.endIndex - 1 {
-                let segmentStartPercentTraveled = CGFloat((distanceTraveled / routeLength))
-                stops.append(GradientStop(percent: segmentStartPercentTraveled.nextUp, color: congestionColor))
+                let segmentStartPercentTraveled = CGFloat((distanceTraveled / route.distance))
+                stops.append([segmentStartPercentTraveled.nextUp: congestionColor])
 
                 let segmentEndPercentTraveled = CGFloat(1.0)
-                stops.append(GradientStop(percent: segmentEndPercentTraveled, color: congestionColor))
+                routeGradientStops.line[segmentEndPercentTraveled.nextDown] = congestionColor
                 continue
             }
 
-            let segmentStartPercentTraveled = CGFloat((distanceTraveled / routeLength))
-            stops.append(GradientStop(percent: segmentStartPercentTraveled.nextUp, color: congestionColor))
+            /**
+             If this is not the first or last congestion segment, then
+             the starting and ending percent values traveled for this segment
+             will be a fractional amount more/less than the actual values.
+             */
+            let segmentStartPercentTraveled = CGFloat((distanceTraveled / route.distance))
+            routeGradientStops.line[segmentStartPercentTraveled.nextUp] = congestionColor
 
             distanceTraveled = distanceTraveled + distance
 
-            let segmentEndPercentTraveled = CGFloat((distanceTraveled / routeLength))
-            stops.append(GradientStop(percent: segmentEndPercentTraveled.nextDown, color: congestionColor))
+            let segmentEndPercentTraveled = CGFloat((distanceTraveled / route.distance))
+            routeGradientStops.line[segmentEndPercentTraveled.nextDown] = congestionColor
         }
 
-        for stop in stops {
-            routeGradientStops.line[stop.percent] = stop.color
-            routeGradientStops.casing[stop.percent] = routeCasingColor // TODO: Replace with route casing color
-        }
+        /**
+         The casing layer around the route gradient is one single color,
+         so there's no need to give it the same stop/color combinations as
+         the main route stops dictionary.
+         */
+        routeGradientStops.casing[0.0] = routeCasingColor
+        routeGradientStops.casing[1.0] = routeCasingColor
     }
 
     /**
