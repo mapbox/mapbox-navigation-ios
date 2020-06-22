@@ -1,6 +1,6 @@
+import CoreLocation
 import Foundation
 import MapboxNavigationNative
-import CoreLocation
 
 extension FixLocation {
     convenience init(_ location: CLLocation) {
@@ -11,27 +11,5 @@ extension FixLocation {
                   altitude: location.altitude as NSNumber,
                   accuracyHorizontal: location.horizontalAccuracy >= 0 ? location.horizontalAccuracy as NSNumber : nil,
                   provider: nil)
-    }
-}
-
-/// :nodoc:
-extension MBRouteState: CustomStringConvertible {
-    public var description: String {
-        switch self {
-        case .invalid:
-            return "invalid"
-        case .initialized:
-            return "initialized"
-        case .tracking:
-            return "tracking"
-        case .complete:
-            return "complete"
-        case .offRoute:
-            return "offRoute"
-        case .stale:
-            return "stale"
-        @unknown default:
-            fatalError("Indescribable route state \(rawValue)")
-        }
     }
 }
