@@ -483,32 +483,6 @@ class NavigationServiceTests: XCTestCase {
         waitForExpectations(timeout: 10)
     }
 
-    func testNineLeggedRouteForOutOfBounds() {
-        let options = NavigationRouteOptions(coordinates: [
-            CLLocationCoordinate2D(latitude: 46.423728, longitude: 13.593578),
-            CLLocationCoordinate2D(latitude: 46.339747, longitude: 13.574151),
-            CLLocationCoordinate2D(latitude: 46.34447, longitude: 13.57594),
-            CLLocationCoordinate2D(latitude: 46.37798, longitude: 13.58583),
-            CLLocationCoordinate2D(latitude: 46.408308, longitude: 13.605585),
-            CLLocationCoordinate2D(latitude: 46.420338, longitude: 13.602128),
-            CLLocationCoordinate2D(latitude: 46.429376, longitude: 13.614679),
-            CLLocationCoordinate2D(latitude: 46.435762, longitude: 13.626714),
-            CLLocationCoordinate2D(latitude: 46.436658, longitude: 13.639499),
-            CLLocationCoordinate2D(latitude: 46.43878, longitude: 13.64052),
-        ])
-        let route = Fixture.route(from: "9-legged-route", options: options)
-        let directions = Directions(credentials: Fixture.credentials)
-        let locationManager = DummyLocationManager()
-        let trace = Fixture.generateTrace(for: route, speedMultiplier: 4).shiftedToPresent()
-
-        let service = MapboxNavigationService(route: route, routeOptions: options, directions: directions, locationSource: locationManager, eventsManagerType: nil)
-        service.start()
-
-        for location in trace {
-            service.locationManager(locationManager, didUpdateLocations: [location])
-        }
-    }
-
     func testUnimplementedLogging() {
         unimplementedTestLogs = []
 
