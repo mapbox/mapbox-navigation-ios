@@ -10,6 +10,9 @@ extension FixLocation {
                   bearing: location.course >= 0 ? location.course as NSNumber : nil,
                   altitude: location.altitude as NSNumber,
                   accuracyHorizontal: location.horizontalAccuracy >= 0 ? location.horizontalAccuracy as NSNumber : nil,
-                  provider: nil)
+                  provider: nil,
+                  bearingAccuracy: nil,
+                  speedAccuracy: location.speedAccuracy >= 0 ? location.speedAccuracy as NSNumber : nil,
+                  verticalAccuracy: location.verticalAccuracy >= 0 ? location.speedAccuracy as NSNumber : nil)
     }
 }
