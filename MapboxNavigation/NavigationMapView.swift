@@ -45,6 +45,17 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      Maximum distance the user can tap for a selection to be valid when selecting an alternate route.
      */
     public var tapGestureDistanceThreshold: CGFloat = 50
+
+    /**
+     Controls whether the route disappears as the user location
+     puck travels over it. Defaults to `false`.
+
+     If `true`, the route line behind the user location puck
+     will fade to full transparancy. To customize the fade color that
+     appears behind the traveled section of a route, override the
+     `vanishingRouteColor` property for the `NavigationMapView.appearance()`.
+     */
+    public var fadesRouteDuringNavigation: Bool = false
     
     /**
      The object that acts as the navigation delegate of the map view.
@@ -508,6 +519,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     func mainRouteStyleLayer(identifier: String, source: MGLSource) -> MGLLineStyleLayer {
         let mainRouteLayer = MGLLineStyleLayer(identifier: identifier, source: source)
         mainRouteLayer.predicate = NSPredicate(format: "isAlternateRoute == false")
+        // Default color if no traffic is enabled
         mainRouteLayer.lineColor = NSExpression(forConstantValue: trafficUnknownColor)
         mainRouteLayer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel)
         mainRouteLayer.lineJoin = NSExpression(forConstantValue: "round")
@@ -522,6 +534,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     func mainRouteCasingStyleLayer(identifier: String, source: MGLSource) -> MGLLineStyleLayer {
         let mainRouteCasingLayer = MGLLineStyleLayer(identifier: identifier, source: source)
         mainRouteCasingLayer.predicate = NSPredicate(format: "isAlternateRoute == false")
+        // Default color if no traffic is enabled
         mainRouteCasingLayer.lineColor = NSExpression(forConstantValue: routeCasingColor)
         mainRouteCasingLayer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 1.5))
         mainRouteCasingLayer.lineJoin = NSExpression(forConstantValue: "round")
