@@ -4,6 +4,11 @@ import MapboxNavigationNative
 
 extension FixLocation {
     convenience init(_ location: CLLocation) {
+        var speedAccuracy: NSNumber? = nil
+        if #available(iOS 10.0, *) {
+            speedAccuracy = location.speedAccuracy >= 0 ? location.speedAccuracy as NSNumber : nil
+        }
+        
         self.init(coordinate: location.coordinate,
                   time: location.timestamp,
                   speed: location.speed >= 0 ? location.speed as NSNumber : nil,
@@ -12,7 +17,7 @@ extension FixLocation {
                   accuracyHorizontal: location.horizontalAccuracy >= 0 ? location.horizontalAccuracy as NSNumber : nil,
                   provider: nil,
                   bearingAccuracy: nil,
-                  speedAccuracy: location.speedAccuracy >= 0 ? location.speedAccuracy as NSNumber : nil,
-                  verticalAccuracy: location.verticalAccuracy >= 0 ? location.speedAccuracy as NSNumber : nil)
+                  speedAccuracy: speedAccuracy,
+                  verticalAccuracy: location.verticalAccuracy >= 0 ? location.verticalAccuracy as NSNumber : nil)
     }
 }
