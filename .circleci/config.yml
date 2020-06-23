@@ -115,7 +115,7 @@ jobs:
           condition: << parameters.lint >>
           steps:
             - run: find . -path '*.podspec' -exec perl -pi -e 's/.+\.social_media_url.+//' {} \;
-            - run: pod lib lint MapboxCoreNavigation.podspec
+            - run: pod lib lint MapboxCoreNavigation.podspec --skip-import-validation
       - *save-cache-podmaster
       - *save-cache-cocoapods
 
