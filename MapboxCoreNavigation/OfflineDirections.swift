@@ -152,7 +152,12 @@ public class NavigationDirections: Directions {
             let tilePath = filePathURL.path
             let outputPath = outputDirectoryURL.path
             
-            let numberOfTiles = Navigator().unpackTiles(forPackedTilesPath: tilePath, outputDirectory: outputPath)
+            let navigator: Navigator = {
+                let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile,
+                                                      platform: ProfilePlatform.KIOS)
+                return Navigator(profile: settingsProfile, customConfig: "")
+            }()
+            let numberOfTiles = navigator.unpackTiles(forPackedTilesPath: tilePath, outputDirectory: outputPath)
             
             // Report 100% progress
             progressHandler?(totalPackedBytes, totalPackedBytes)
