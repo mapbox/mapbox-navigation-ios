@@ -53,7 +53,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      If `true`, the route line behind the user location puck
      will fade to full transparancy. To customize the fade color that
      appears behind the traveled section of a route, override the
-     `vanishingRouteColor` property for the `NavigationMapView.appearance()`.
+     `traversedRouteColor` property for the `NavigationMapView.appearance()`.
      */
     public var fadesRouteDuringNavigation: Bool = false
     
@@ -119,7 +119,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     @objc dynamic public var routeCasingColor: UIColor = .defaultRouteCasing
     @objc dynamic public var routeAlternateColor: UIColor = .defaultAlternateLine
     @objc dynamic public var routeAlternateCasingColor: UIColor = .defaultAlternateLineCasing
-    @objc dynamic public var vanishingRouteColor: UIColor = .defaultVanishingRouteColor
+    @objc dynamic public var traversedRouteColor: UIColor = .defaultTraversedRouteColor
     @objc dynamic public var maneuverArrowColor: UIColor = .defaultManeuverArrow
     @objc dynamic public var maneuverArrowStrokeColor: UIColor = .defaultManeuverArrowStroke
     
@@ -580,8 +580,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         // and fade the range from zero that lowest value,
         // which represents the % of the route traveled.
         if let minStop = filtered.min(by: { $0.0 < $1.0 }) {
-            filtered[0.0] = vanishingRouteColor
-            filtered[percentTraveled.nextDown] = vanishingRouteColor
+            filtered[0.0] = traversedRouteColor
+            filtered[percentTraveled.nextDown] = traversedRouteColor
             filtered[percentTraveled] = minStop.value
         }
 
@@ -594,8 +594,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
 
         if let minStop = filteredCasing.min(by: { $0.0 < $1.0 }) {
-            filteredCasing[0.0] = vanishingRouteColor
-            filteredCasing[percentTraveled.nextDown] = vanishingRouteColor
+            filteredCasing[0.0] = traversedRouteColor
+            filteredCasing[percentTraveled.nextDown] = traversedRouteColor
             filteredCasing[percentTraveled] = minStop.value
         }
 
