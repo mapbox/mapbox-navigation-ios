@@ -4,87 +4,119 @@ import Foundation
  Feedback type is used to specify the type of feedback being recorded with `NavigationEventsManager.recordFeedback(type:description:)`.
  */
 public enum FeedbackType: Int, CustomStringConvertible {
-    /**
-     Indicates general feedback. You should provide a `description` string to `NavigationEventsManager.recordFeedback(type:description:)` to elaborate on the feedback if possible.
-     */
+
+    /// Indicates general feedback. You should provide a `description` string to `NavigationEventsManager.recordFeedback(type:description:)`
+    /// to elaborate on the feedback if possible.
     case general
-    
-    /**
-     Identifies the feedback as the location of an accident or crash
-     */
-    case accident
-    
-    /**
-     Identifies the feedback as the location of a road hazard such as debris, stopped vehicles, etc.
-     */
-    case hazard
-    
-    /**
-     Identifies the feedback as the location of a closed road that should not allow vehicles
-     */
-    case roadClosed
-    
-    /**
-     Identifies the feedback as a maneuver that isn't allowed. For example, if a user is instructed to make a left turn, but the turn isn't allowed.
-     */
-    case notAllowed
-    
-    /**
-     Identifies the feedback as the location of a road that should exist along the route.
-     */
-    case missingRoad
-    
-    /**
-     Identifies the feedback as a maneuver with missing exit information such as an exit number or destination sign.
-     */
-    case missingExit
-    
-    /**
-     Identifies the feedback as the location of a poor instruction or route choice. This could be used to indicate an ambiguous or poorly-timed turn announcement, or a set of confusing turns.
-     */
-    case routingError
-    
-    /**
-     Identifies the feedback as the location of a confusing instruction.
-     */
-    case confusingInstruction
-    
-    /**
-     Identifies the feedback as a place where traffic should have been reported.
-     */
-    case reportTraffic
-    
-    /**
-     Identifies the feedback as a general map issue.
-     */
-    case mapIssue
+
+    /// Indicates an incorrect visual artifact.
+    case incorrectVisual
+
+    /// Indicates confusing voice instruction.
+    case confusingAudio
+
+    /// Indicates an issue with route quality.
+    case routeQuality
+
+    /// Indicates that an illegal route was recommended.
+    case illegalRoute
+
+    /// Indicates a road closure was observed.
+    case roadClosure
+
     
     public var description: String {
         switch self {
         case .general:
             return "general"
-        case .accident:
-            return "accident"
-        case .hazard:
-            return "hazard"
-        case .roadClosed:
-            return "road_closed"
-        case .notAllowed:
-            return "not_allowed"
-        case .missingRoad:
-            return "missing_road"
-        case .missingExit:
-            return "missing_exit"
-        case .routingError:
-            return "routing_error"
-        case .confusingInstruction:
-            return "confusing_instruction"
-        case .reportTraffic:
-            return "report_traffic"
-        case .mapIssue:
-            return "other_map_issue"
+        case .incorrectVisual:
+            return "incorrect_visual"
+        case .confusingAudio:
+            return "confusing_audio"
+        case .routeQuality:
+            return "route_quality"
+        case .illegalRoute:
+            return "illegal_route"
+        case .roadClosure:
+            return "road_closure"
         }
     }
+
+    /// Returns a corresponding list of `FeedbackSubType`s for a given `FeedbackType`
+    public var subtypes: [FeedbackSubType] {
+        switch self {
+        case .general:
+            return []
+        case .incorrectVisual:
+            return [.turnIconIncorrect,
+                    .streetNameIncorrect,
+                    .instructionUnnecessary,
+                    .instructionMissing,
+                    .maneuverIncorrect,
+                    .exitInfoIncorrect,
+                    .laneGuidanceIncorrect,
+                    .roadKnownByDifferentName]
+        case .confusingAudio:
+            return [.guidanceTooEarly,
+                    .guidanceTooLate,
+                    .pronunciationIncorrect,
+                    .roadNameRepeated]
+        case .routeQuality:
+            return [.routeNonDrivable,
+                    .routeNotPreferred,
+                    .alternativeRouteNotExpected,
+                    .routeIncludedMissingRoads,
+                    .routeHadRoadsTooNarrowToPass]
+        case .illegalRoute:
+            return [.routedDownAOneWay,
+                    .turnWasNotAllowed,
+                    .carsNotAllowedOnStreet,
+                    .turnAtIntersectionUnprotected]
+        case .roadClosure:
+            return [.streetPermanentlyBlockedOff,
+                    .roadMissingFromMap]
+
+        }
+    }
+
+
+
+}
+
+/// Enum used to define the many `FeedbackSubType`s that may be nested under a given `FeedbackType`
+public enum FeedbackSubType: String {
+    /// Incorrect Visual Subtypes
+    case turnIconIncorrect
+    case streetNameIncorrect
+    case instructionUnnecessary
+    case instructionMissing
+    case maneuverIncorrect
+    case exitInfoIncorrect
+    case laneGuidanceIncorrect
+    case roadKnownByDifferentName
+
+    /// Confusing Audio subtypes
+    case guidanceTooEarly
+    case guidanceTooLate
+    case pronunciationIncorrect
+    case roadNameRepeated
+
+    /// Route Quality subtypes
+    case routeNonDrivable
+    case routeNotPreferred
+    case alternativeRouteNotExpected
+    case routeIncludedMissingRoads
+    case routeHadRoadsTooNarrowToPass
+
+    /// Illegal Route subtypes
+    case routedDownAOneWay
+    case turnWasNotAllowed
+    case carsNotAllowedOnStreet
+    case turnAtIntersectionUnprotected
+
+    /// Road closure subtypes
+    case streetPermanentlyBlockedOff
+    case roadMissingFromMap
 }
 
 public enum FeedbackSource: Int, CustomStringConvertible {
