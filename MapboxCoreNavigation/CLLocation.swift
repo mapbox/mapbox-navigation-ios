@@ -21,19 +21,34 @@ extension CLLocation {
         locationDictionary["timestamp"] = timestamp.ISO8601
         locationDictionary["horizontalAccuracy"] = horizontalAccuracy
         locationDictionary["verticalAccuracy"] = verticalAccuracy
+        if #available(iOS 13.4, *) {
+            locationDictionary["courseAccuracy"] = courseAccuracy
+        }
         locationDictionary["course"] = course
         locationDictionary["speed"] = speed
         return locationDictionary
     }
     
     convenience init(_ location: FixLocation) {
-        self.init(coordinate: location.coordinate,
-                  altitude: location.altitude?.doubleValue ?? 0,
-                  horizontalAccuracy: location.accuracyHorizontal?.doubleValue ?? -1,
-                  verticalAccuracy: 0,
-                  course: location.bearing?.doubleValue ?? -1,
-                  speed: location.speed?.doubleValue ?? -1,
-                  timestamp: location.time)
+        if #available(iOS 13.4, *) {
+            self.init(coordinate: location.coordinate,
+                      altitude: location.altitude?.doubleValue ?? 0,
+                      horizontalAccuracy: location.accuracyHorizontal?.doubleValue ?? -1,
+                      verticalAccuracy: location.verticalAccuracy?.doubleValue ?? -1,
+                      course: location.bearing?.doubleValue ?? -1,
+                      courseAccuracy: location.bearingAccuracy?.doubleValue ?? -1,
+                      speed: location.speed?.doubleValue ?? -1,
+                      speedAccuracy: location.speedAccuracy?.doubleValue ?? -1,
+                      timestamp: location.time)
+        } else {
+            self.init(coordinate: location.coordinate,
+                      altitude: location.altitude?.doubleValue ?? 0,
+                      horizontalAccuracy: location.accuracyHorizontal?.doubleValue ?? -1,
+                      verticalAccuracy: location.verticalAccuracy?.doubleValue ?? -1,
+                      course: location.bearing?.doubleValue ?? -1,
+                      speed: location.speed?.doubleValue ?? -1,
+                      timestamp: location.time)
+        }
     }
     
     /**
