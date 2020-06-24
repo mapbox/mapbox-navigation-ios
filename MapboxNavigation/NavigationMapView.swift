@@ -1082,7 +1082,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 
             // Measure the line length of the traffic segment.
             let lineString = LineString(lineCoordinates)
-            let distance = lineString.distance()
+            guard let distance = lineString.distance() else { return }
 
             /**
              If this is the first congestion segment, then the starting
