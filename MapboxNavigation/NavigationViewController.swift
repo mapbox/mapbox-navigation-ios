@@ -395,8 +395,8 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
         return delegate?.navigationViewController(self, mainRouteCasingStyleLayerWithIdentifier: identifier, source: source)
     }
 
-    public func navigationMapView(_ mapView: NavigationMapView, alternateRouteStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        return delegate?.navigationViewController(self, alternateRouteStyleLayerWithIdentifier: identifier, source: source)
+    public func navigationMapView(_ mapView: NavigationMapView, alternativeRouteStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        return delegate?.navigationViewController(self, alternativeRouteStyleLayerWithIdentifier: identifier, source: source)
     }
 
     public func navigationMapView(_ mapView: NavigationMapView, alternateRouteCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {

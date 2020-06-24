@@ -35,7 +35,7 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
      - parameter source: The source containing the route data that this method would style.
      - returns: An MGLStyleLayer that is applied to alternative routes.
     */
-    func navigationMapView(_ mapView: NavigationMapView, alternateRouteStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+    func navigationMapView(_ mapView: NavigationMapView, alternativeRouteStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
 
     /**
      Asks the receiver to return an MGLStyleLayer for the casing layer that surrounds alternative route lines, given an identifier and source.
@@ -138,7 +138,7 @@ public extension NavigationMapViewDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
-    func navigationMapView(_ mapView: NavigationMapView, alternateRouteStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+    func navigationMapView(_ mapView: NavigationMapView, alternativeRouteStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
         return nil
     }
