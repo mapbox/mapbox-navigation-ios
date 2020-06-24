@@ -50,12 +50,12 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      Controls whether the route disappears as the user location
      puck travels over it. Defaults to `false`.
 
-     If `true`, the route line behind the user location puck
-     will fade to full transparancy. To customize the fade color that
-     appears behind the traveled section of a route, override the
+     If `true`, the part of the route that has been traversed will be
+     rendered will full transparency. To customize the color that
+     appears on the traversed section of a route, override the
      `traversedRouteColor` property for the `NavigationMapView.appearance()`.
      */
-    public var fadesRouteDuringNavigation: Bool = false
+    public var routeLineTracksTraversal: Bool = false
     
     /**
      The object that acts as the navigation delegate of the map view.
@@ -135,7 +135,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      and its casing.
      */
     typealias RouteGradientStops = (line: [CGFloat: UIColor], casing: [CGFloat: UIColor])
-    private var routeGradientStops = RouteGradientStops(line: [:], casing: [:]) // TODO: Account for cases where traffic isn't enabled.
+    private var routeGradientStops = RouteGradientStops(line: [:], casing: [:])
     
     var shouldPositionCourseViewFrameByFrame = false {
         didSet {
