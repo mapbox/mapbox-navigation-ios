@@ -74,7 +74,7 @@ step-library:
       run:
         name: Build Example
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.2,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme Example clean build | xcpretty
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=13.4,name=iPhone 8 Plus' -project MapboxNavigation.xcodeproj -scheme Example clean build | xcpretty
 
 jobs:
   pod-job:
@@ -84,10 +84,10 @@ jobs:
         default: false
       iOS:
         type: string
-        default: "12.2"
+        default: "13.4"
       xcode:
         type: string
-        default: "10.2.0"
+        default: "11.4.1"
       lint:
         type: boolean
         default: false
@@ -110,7 +110,7 @@ jobs:
           condition: << parameters.update >>
           steps:
             - run: cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall && pod install --repo-update
-      - run: cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall && xcodebuild -workspace PodInstall.xcworkspace -scheme PodInstall -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=iPhone 6 Plus' clean build | xcpretty
+      - run: cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall && xcodebuild -workspace PodInstall.xcworkspace -scheme PodInstall -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=iPhone 8 Plus' clean build | xcpretty
       - when:
           condition: << parameters.lint >>
           steps:
@@ -123,13 +123,13 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "10.1.0"
+        default: "11.4.1"
       device:
         type: string
-        default: "iPhone 6 Plus"
+        default: "iPhone 8 Plus"
       iOS:
         type: string
-        default: "12.1"
+        default: "13.4"
       test:
         type: boolean
         default: true
@@ -177,9 +177,9 @@ jobs:
           steps:
             - run: bash <(curl -s https://codecov.io/bash)
 
-  xcode-10-examples:
+  xcode-11-examples:
     macos:
-      xcode: "10.2.0"
+      xcode: "11.4.1"
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
@@ -201,24 +201,24 @@ workflows:
           iOS: "13.5"
           device: "iPhone 8 Plus"
       - build-job:
-          name: "Xcode_10.3_iOS_12.1"
-          xcode: "10.3.0"
+          name: "Xcode_11.4.1_iOS_12.1"
+          xcode: "11.4.1"
           iOS: "12.1"
           codecoverage: true
       - build-job:
-          name: "Xcode_10.2_iOS_10.3.1"
-          xcode: "10.2.1"
+          name: "Xcode_11.4.1_iOS_10.3.1"
+          xcode: "11.4.1"
           iOS: "10.3.1"
           test: false
       - pod-job:
-          name: "Xcode_10.2_iOS_12.2_CP_install"
+          name: "Xcode_11.4.1_iOS_12.2_CP_install"
           update: false
-          xcode: "10.2.1"
+          xcode: "11.4.1"
           iOS: "12.2"
       - pod-job:
-          name: "Xcode_10.2_iOS_12.2_CP_update"
+          name: "Xcode_11.4.1_iOS_12.2_CP_update"
           update: true
-          xcode: "10.2.1"
+          xcode: "11.4.1"
           iOS: "12.2"
           lint: true
-      - xcode-10-examples
+      - xcode-11-examples
