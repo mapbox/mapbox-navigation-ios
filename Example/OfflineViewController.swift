@@ -1,5 +1,6 @@
 import UIKit
 import Mapbox
+import Turf
 import MapboxDirections
 import MapboxCoreNavigation
 
@@ -47,7 +48,7 @@ class OfflineViewController: UIViewController, MGLMapViewDelegate {
     
     @objc func downloadRegion() {
         let mapCoordinateBounds = mapView.convert(resizableView.frame, toCoordinateBoundsFrom: nil)
-        let coordinateBounds = CoordinateBounds(coordinates: [mapCoordinateBounds.sw, mapCoordinateBounds.ne])
+        let coordinateBounds = BoundingBox(mapCoordinateBounds.sw, mapCoordinateBounds.ne)
         
         disableUserInterface()
         

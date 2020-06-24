@@ -304,7 +304,7 @@ open class RouteController: NSObject {
             preconditionFailure("Route steps used for navigation must have shape data")
         }
         if let closestCoordinate = polyline.closestCoordinate(to: rawLocation.coordinate) {
-            let remainingDistance = polyline.distance(from: closestCoordinate.coordinate)
+            let remainingDistance = polyline.distance(from: closestCoordinate.coordinate)!
             let distanceTraveled = step.distance - remainingDistance
             stepProgress.distanceTraveled = distanceTraveled
             

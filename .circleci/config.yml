@@ -36,12 +36,25 @@ step-library:
         paths:
           - "~/.cocoapods/repos/master"
 
-  - &prepare
+  - &prepare-mapbox-file
       run:
-        name: Prepare
+        name: Prepare .mapbox file
         command: |
-          if [ $(carthage outdated | grep -cF "latest Carthage version") -eq 0 ]; then brew update && brew upgrade carthage || true; fi
           echo "foo" > ~/.mapbox
+
+  - &prepare-netrc-file
+      run:
+        name: Prepare .netrc file
+        command: |
+          echo "machine dl.bintray.com" > ~/.netrc
+          echo "login $BINTRAY_LOGIN" >> ~/.netrc
+          echo "password $BINTRAY_API_KEY" >> ~/.netrc
+
+  - &update-carthage-version
+      run:
+        name: Update Carthage version
+        command: |
+          brew update && brew upgrade carthage
 
   - &verify-missing-localizable-strings
       run:
@@ -53,7 +66,9 @@ step-library:
   - &install-dependencies
       run:
         name: Install Dependencies
-        command: carthage bootstrap --platform ios --cache-builds --configuration Debug --no-use-binaries
+        command: |
+          carthage bootstrap --platform ios --cache-builds --configuration Debug --no-use-binaries --use-netrc
+          carthage outdated --xcode-warnings # prints warnings if there are outdated carthage dependencies
 
   - &build-Example
       run:
@@ -82,6 +97,9 @@ jobs:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
       - checkout
+      - *prepare-mapbox-file
+      - *prepare-netrc-file
+      - *update-carthage-version
       - *restore-cache-podmaster
       - *restore-cache-cocoapods
       - when:
@@ -127,7 +145,9 @@ jobs:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
       - checkout
-      - *prepare
+      - *prepare-mapbox-file
+      - *prepare-netrc-file
+      - *update-carthage-version
       - *restore-cache
       - when:
           condition: << parameters.delete_private_deps >>
@@ -164,7 +184,9 @@ jobs:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
       - checkout
-      - *prepare
+      - *prepare-mapbox-file
+      - *prepare-netrc-file
+      - *update-carthage-version
       - *restore-cache
       - *install-dependencies
       - *build-Example
