@@ -2,8 +2,6 @@ import Foundation
 import UIKit
 
 class FeedbackCollectionViewCell: UICollectionViewCell {
-    static let defaultIdentifier = "MapboxFeedbackCell"
-    
     struct Constants {
         static let circleSize: CGSize = 70.0
         static let imageSize: CGSize = 36.0
