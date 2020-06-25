@@ -3,89 +3,48 @@ import Foundation
 /**
  Feedback type is used to specify the type of feedback being recorded with `NavigationEventsManager.recordFeedback(type:description:)`.
  */
-public enum FeedbackType: Int, CustomStringConvertible {
+public enum FeedbackType: CustomStringConvertible {
 
     /// Indicates general feedback. You should provide a `description` string to `NavigationEventsManager.recordFeedback(type:description:)`
     /// to elaborate on the feedback if possible.
     case general
 
-    /// Indicates an incorrect visual artifact.
-    case incorrectVisual
+    /// Indicates an incorrect visual.
+    case incorrectVisual(subtype: IncorrectVisualSubtype)
 
     /// Indicates confusing voice instruction.
-    case confusingAudio
+    case confusingAudio(subtype: ConfusingAudioSubtype)
 
     /// Indicates an issue with route quality.
-    case routeQuality
+    case routeQuality(subtype: RouteQualitySubtype)
 
     /// Indicates that an illegal route was recommended.
-    case illegalRoute
+    case illegalRoute(subtype: IllegalRouteSubtype)
 
     /// Indicates a road closure was observed.
-    case roadClosure
-
+    case roadClosure(subtype: RoadClosureSubtype)
     
     public var description: String {
         switch self {
         case .general:
             return "general"
-        case .incorrectVisual:
+        case .incorrectVisual(_):
             return "incorrect_visual"
-        case .confusingAudio:
+        case .confusingAudio(_):
             return "confusing_audio"
-        case .routeQuality:
+        case .routeQuality(_):
             return "route_quality"
-        case .illegalRoute:
+        case .illegalRoute(_):
             return "illegal_route"
-        case .roadClosure:
+        case .roadClosure(_):
             return "road_closure"
         }
     }
-
-    /// Returns a corresponding list of `FeedbackSubType`s for a given `FeedbackType`
-    public var subtypes: [FeedbackSubType] {
-        switch self {
-        case .general:
-            return []
-        case .incorrectVisual:
-            return [.turnIconIncorrect,
-                    .streetNameIncorrect,
-                    .instructionUnnecessary,
-                    .instructionMissing,
-                    .maneuverIncorrect,
-                    .exitInfoIncorrect,
-                    .laneGuidanceIncorrect,
-                    .roadKnownByDifferentName]
-        case .confusingAudio:
-            return [.guidanceTooEarly,
-                    .guidanceTooLate,
-                    .pronunciationIncorrect,
-                    .roadNameRepeated]
-        case .routeQuality:
-            return [.routeNonDrivable,
-                    .routeNotPreferred,
-                    .alternativeRouteNotExpected,
-                    .routeIncludedMissingRoads,
-                    .routeHadRoadsTooNarrowToPass]
-        case .illegalRoute:
-            return [.routedDownAOneWay,
-                    .turnWasNotAllowed,
-                    .carsNotAllowedOnStreet,
-                    .turnAtIntersectionUnprotected]
-        case .roadClosure:
-            return [.streetPermanentlyBlockedOff,
-                    .roadMissingFromMap]
-
-        }
-    }
-
-
-
 }
 
-/// Enum used to define the many `FeedbackSubType`s that may be nested under a given `FeedbackType`
-public enum FeedbackSubType: String {
-    /// Incorrect Visual Subtypes
+/// Enum denoting the subtypes of the  `Incorrect Visual` top-level category
+public enum IncorrectVisualSubtype: String {
+    case none
     case turnIconIncorrect
     case streetNameIncorrect
     case instructionUnnecessary
@@ -94,27 +53,39 @@ public enum FeedbackSubType: String {
     case exitInfoIncorrect
     case laneGuidanceIncorrect
     case roadKnownByDifferentName
+}
 
-    /// Confusing Audio subtypes
+/// Enum denoting the subtypes of the  `Confusing Audio` top-level category
+public enum ConfusingAudioSubtype: String {
+    case none
     case guidanceTooEarly
     case guidanceTooLate
     case pronunciationIncorrect
     case roadNameRepeated
+}
 
-    /// Route Quality subtypes
+/// Enum denoting the subtypes of the  `Route Quality` top-level category
+public enum RouteQualitySubtype: String {
+    case none
     case routeNonDrivable
     case routeNotPreferred
     case alternativeRouteNotExpected
     case routeIncludedMissingRoads
     case routeHadRoadsTooNarrowToPass
+}
 
-    /// Illegal Route subtypes
+/// Enum denoting the subtypes of the  `Illegal Route` top-level category
+public enum IllegalRouteSubtype: String {
+    case none
     case routedDownAOneWay
     case turnWasNotAllowed
     case carsNotAllowedOnStreet
     case turnAtIntersectionUnprotected
+}
 
-    /// Road closure subtypes
+/// Enum denoting the subtypes of the  `Road Closure` top-level category
+public enum RoadClosureSubtype: String {
+    case none
     case streetPermanentlyBlockedOff
     case roadMissingFromMap
 }

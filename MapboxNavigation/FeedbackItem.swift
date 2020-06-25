@@ -15,15 +15,15 @@ public extension FeedbackType {
         switch self {
             case .general:
                 return "Feedback"
-            case .incorrectVisual:
+            case .incorrectVisual(_):
                 return "Incorrect Visual"
-            case .confusingAudio:
+            case .confusingAudio(_):
                 return "Confusing Audio"
-            case .routeQuality:
+            case .routeQuality(_):
                 return "Route Quality"
-            case .illegalRoute:
+            case .illegalRoute(_):
                 return "Illegal Route"
-            case .roadClosure:
+            case .roadClosure(_):
                 return "Road Closure"
         }
     }
@@ -35,15 +35,15 @@ public extension FeedbackType {
         switch self {
             case .general:
                 imageName = "feedback"
-            case .incorrectVisual:
+            case .incorrectVisual(_):
                 imageName = "incorrect_visual"
-            case .confusingAudio:
+            case .confusingAudio(_):
                 imageName = "confusing_audio"
-            case .routeQuality:
+            case .routeQuality(_):
                 imageName = "route_quality"
-            case .illegalRoute:
+            case .illegalRoute(_):
                 imageName = "illegal_route"
-            case .roadClosure:
+            case .roadClosure(_):
                 imageName = "road_closure"
         }
 
