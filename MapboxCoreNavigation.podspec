@@ -48,4 +48,9 @@ Pod::Spec.new do |s|
 
   s.swift_version = "5.0"
 
+  # MapboxNavigationNative is built for arm64 and x86_64 architectures (i386 and armv7 are not present), so only 64-bit architecture is checked.
+  s.pod_target_xcconfig = {
+    'ARCHS[sdk=iphonesimulator*]' => '$(ARCHS_STANDARD_64_BIT)'
+  }
+
 end
