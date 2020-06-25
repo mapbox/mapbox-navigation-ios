@@ -6,6 +6,7 @@ extension UIColor {
     class var defaultRouteLayer: UIColor { get { return #colorLiteral(red: 0.337254902, green: 0.6588235294, blue: 0.9843137255, alpha: 1) } }
     class var defaultAlternateLine: UIColor { get { return #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1) } }
     class var defaultAlternateLineCasing: UIColor { get { return #colorLiteral(red: 0.5019607843, green: 0.4980392157, blue: 0.5019607843, alpha: 1) } }
+    class var defaultTraversedRouteColor: UIColor { get { return #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0) } }
     class var defaultManeuverArrowStroke: UIColor { get { return .defaultRouteLayer } }
     class var defaultManeuverArrow: UIColor { get { return #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) } }
     
@@ -116,6 +117,7 @@ open class DayStyle: Style {
         NavigationMapView.appearance().maneuverArrowStrokeColor = .defaultManeuverArrowStroke
         NavigationMapView.appearance().routeAlternateColor      = .defaultAlternateLine
         NavigationMapView.appearance().routeCasingColor         = .defaultRouteCasing
+        NavigationMapView.appearance().traversedRouteColor      = .defaultTraversedRouteColor
         NavigationMapView.appearance().trafficHeavyColor        = .trafficHeavy
         NavigationMapView.appearance().trafficLowColor          = .trafficLow
         NavigationMapView.appearance().trafficModerateColor     = .trafficModerate
