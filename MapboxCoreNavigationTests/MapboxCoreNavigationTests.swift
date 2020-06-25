@@ -4,16 +4,16 @@ import Turf
 import TestHelper
 @testable import MapboxCoreNavigation
 
-let jsonFileName = "routeWithInstructions"
+let routeInstructionsJSONFileName = "routeWithInstructions"
 var routeOptions: NavigationRouteOptions {
     let from = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
     let to = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
     return NavigationRouteOptions(waypoints: [from, to])
 }
-let response = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
+let response = Fixture.routeResponse(from: routeInstructionsJSONFileName, options: routeOptions)
 let directions = DirectionsSpy()
 let route: Route = {
-    return Fixture.route(from: jsonFileName, options: routeOptions)
+    return Fixture.route(from: routeInstructionsJSONFileName, options: routeOptions)
 }()
 
 let waitForInterval: TimeInterval = 5
@@ -22,20 +22,25 @@ class MapboxCoreNavigationTests: XCTestCase {
     var navigation: MapboxNavigationService!
     
     func testNavigationNotificationsInfoDict() {
-        navigation = MapboxNavigationService(route: route, routeOptions: routeOptions, directions: directions, simulating: .never)
+        // Given
+        navigation = MapboxNavigationService(route: route,
+                                             routeOptions: routeOptions,
+                                             directions: directions,
+                                             simulating: .never)
         let now = Date()
-        let steps = route.legs.first!.steps
-        let coordinates = steps[2].shape!.coordinates + steps[3].shape!.coordinates
+        let routeSteps = route.legs.first!.steps
+        let coordinates = routeSteps[2].shape!.coordinates + routeSteps[3].shape!.coordinates
         
         let locations = coordinates.enumerated().map { CLLocation(coordinate: $0.element,
                                                                   altitude: -1, horizontalAccuracy: 10,
                                                                   verticalAccuracy: -1, course: -1, speed: 10,
                                                                   timestamp: now + $0.offset) }
         
-        let spokenTest = expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: navigation.router) { (note) -> Bool in
+        let didPassSpokenTestExpectation = expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint,
+                                     object: navigation.router) { (note) -> Bool in
             return note.userInfo!.count == 2
         }
-        spokenTest.expectationDescription = "Spoken Instruction notification expected to have user info dictionary with two values"
+        didPassSpokenTestExpectation.expectationDescription = "Spoken Instruction notification expected to have user info dictionary with two values"
         
         navigation.start()
         
@@ -47,7 +52,7 @@ class MapboxCoreNavigationTests: XCTestCase {
         
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [location])
         
-        wait(for: [spokenTest], timeout: waitForInterval)
+        wait(for: [didPassSpokenTestExpectation], timeout: waitForInterval)
     }
     
     func testDepart() {

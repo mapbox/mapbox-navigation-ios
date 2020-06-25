@@ -320,7 +320,7 @@ open class RouteController: NSObject {
                 NotificationUserInfoKey.routeProgressKey: progress,
                 NotificationUserInfoKey.locationKey: location, //guaranteed value
                 NotificationUserInfoKey.rawLocationKey: rawLocation, //raw
-                ])
+            ])
         }
     }
     
