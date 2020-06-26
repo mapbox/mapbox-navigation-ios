@@ -151,19 +151,30 @@ class NavigationServiceTests: XCTestCase {
         let firstLocation = dependencies.routeLocations.firstLocation
 
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocation])
-        XCTAssertEqual(navigation.router.location!.coordinate, firstLocation.coordinate, "Check snapped location is working")
 
+        // Check snapped location is working
+        XCTAssertEqual(navigation.router.location!.coordinate.latitude, firstLocation.coordinate.latitude, accuracy: 0.005, "Latitudes should be almost equal")
+        XCTAssertEqual(navigation.router.location!.coordinate.longitude, firstLocation.coordinate.longitude, accuracy: 0.005, "Longitudes should be almost equal")
+        
         let firstCoordinateOnUpcomingStep = navigation.router.routeProgress.currentLegProgress.upcomingStep!.shape!.coordinates.first!
 
         let finalHeading = navigation.router.routeProgress.currentLegProgress.upcomingStep!.finalHeading!
         let firstLocationOnNextStepWithDifferentCourse = CLLocation(coordinate: firstCoordinateOnUpcomingStep, altitude: 0, horizontalAccuracy: 30, verticalAccuracy: 10, course: -finalHeading, speed: 5, timestamp: Date())
 
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocationOnNextStepWithDifferentCourse])
-        XCTAssertEqual(navigation.router.location!.coordinate, navigation.router.routeProgress.currentLegProgress.currentStep.shape!.coordinates.last!, "When user's course is dissimilar from the finalHeading, they should not snap to upcoming step")
 
+        let lastCoordinate = navigation.router.routeProgress.currentLegProgress.currentStep.shape!.coordinates.last!
+
+        // When user's course is dissimilar from the finalHeading, they should not snap to upcoming step
+        XCTAssertEqual(navigation.router.location!.coordinate.latitude, lastCoordinate.latitude, accuracy: 0.005, "Latitudes should be almost equal")
+        XCTAssertEqual(navigation.router.location!.coordinate.longitude, lastCoordinate.longitude, accuracy: 0.005, "Longitudes should be almost equal")
+        
         let firstLocationOnNextStepWithCorrectCourse = CLLocation(coordinate: firstCoordinateOnUpcomingStep, altitude: 0, horizontalAccuracy: 30, verticalAccuracy: 10, course: finalHeading, speed: 0, timestamp: Date())
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocationOnNextStepWithCorrectCourse])
-        XCTAssertEqual(navigation.router.location!.coordinate, firstCoordinateOnUpcomingStep, "User is snapped to upcoming step when their course is similar to the final heading")
+        
+        // User is snapped to upcoming step when their course is similar to the final heading
+        XCTAssertEqual(navigation.router.location!.coordinate.latitude, firstCoordinateOnUpcomingStep.latitude, accuracy: 0.005, "Latitudes should be almost equal")
+        XCTAssertEqual(navigation.router.location!.coordinate.longitude, firstCoordinateOnUpcomingStep.longitude, accuracy: 0.005, "Longitudes should be almost equal")
     }
 
     func testSnappedLocationForUnqualifiedLocation() {
