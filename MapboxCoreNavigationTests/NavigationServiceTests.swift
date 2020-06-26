@@ -256,7 +256,10 @@ class NavigationServiceTests: XCTestCase {
 
         let willRerouteNotificationExpectation = expectation(forNotification: .routeControllerWillReroute, object: router) { (notification) -> Bool in
             let fromLocation = notification.userInfo![RouteController.NotificationUserInfoKey.locationKey] as? CLLocation
-            return fromLocation == testLocation
+
+            XCTAssertTrue(fromLocation == testLocation)
+
+            return true
         }
 
         let didRerouteNotificationExpectation = expectation(forNotification: .routeControllerDidReroute, object: router, handler: nil)
@@ -266,7 +269,9 @@ class NavigationServiceTests: XCTestCase {
             let rawLocation = notification.userInfo![RouteController.NotificationUserInfoKey.rawLocationKey] as? CLLocation
             let _ = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as! RouteProgress
 
-            return location!.distance(from: rawLocation!) <= 0.0005
+            XCTAssertTrue(location!.distance(from: rawLocation!) <= 0.5)
+
+            return true
         }
 
         // MARK: When told to re-route from location -- `reroute(from:)`
