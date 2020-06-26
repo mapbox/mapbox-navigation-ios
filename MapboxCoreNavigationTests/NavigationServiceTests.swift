@@ -122,19 +122,28 @@ class NavigationServiceTests: XCTestCase {
         let firstLocation = dependencies.routeLocations.firstLocation
 
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocation])
-        XCTAssertEqual(navigation.router.location!.coordinate, firstLocation.coordinate, "Check snapped location is working")
+        
+        // Check snapped location is working
+        XCTAssertEqual(navigation.router.location!.coordinate.latitude, firstLocation.coordinate.latitude, accuracy: 0.005, "Latitudes should be almost equal")
+        XCTAssertEqual(navigation.router.location!.coordinate.longitude, firstLocation.coordinate.longitude, accuracy: 0.005, "Longitudes should be almost equal")
 
         let firstCoordinateOnUpcomingStep = navigation.router.routeProgress.currentLegProgress.upcomingStep!.shape!.coordinates.first!
         let firstLocationOnNextStepWithNoSpeed = CLLocation(coordinate: firstCoordinateOnUpcomingStep, altitude: 0, horizontalAccuracy: 10, verticalAccuracy: 10, course: 10, speed: 0, timestamp: Date())
 
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocationOnNextStepWithNoSpeed])
-        XCTAssertEqual(navigation.router.location!.coordinate, navigation.router.routeProgress.currentLegProgress.currentStep.shape!.coordinates.last!, "When user is not moving, snap to current leg only")
+        
+        let lastCoordinate = navigation.router.routeProgress.currentLegProgress.currentStep.shape!.coordinates.last!
+        
+        // When user is not moving, snap to current leg only
+        XCTAssertEqual(navigation.router.location!.coordinate.latitude, lastCoordinate.latitude, accuracy: 0.005, "Latitudes should be almost equal")
+        XCTAssertEqual(navigation.router.location!.coordinate.longitude, lastCoordinate.longitude, accuracy: 0.005, "Longitudes should be almost equal")
 
         let firstLocationOnNextStepWithSpeed = CLLocation(coordinate: firstCoordinateOnUpcomingStep, altitude: 0, horizontalAccuracy: 10, verticalAccuracy: 10, course: 10, speed: 5, timestamp: Date())
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocationOnNextStepWithSpeed])
 
-        XCTAssertEqual(navigation.router.location!.coordinate.latitude, firstCoordinateOnUpcomingStep.latitude, accuracy: 0.0005, "User is snapped to upcoming step when moving")
-        XCTAssertEqual(navigation.router.location!.coordinate.longitude, firstCoordinateOnUpcomingStep.longitude, accuracy: 0.0005, "User is snapped to upcoming step when moving")
+        // User is snapped to upcoming step when moving
+        XCTAssertEqual(navigation.router.location!.coordinate.latitude, firstCoordinateOnUpcomingStep.latitude, accuracy: 0.005, "Latitudes should be almost equal")
+        XCTAssertEqual(navigation.router.location!.coordinate.longitude, firstCoordinateOnUpcomingStep.longitude, accuracy: 0.005, "Longitudes should be almost equal")
     }
 
     func testSnappedAtEndOfStepLocationWhenCourseIsSimilar() {
