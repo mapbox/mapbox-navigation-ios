@@ -170,15 +170,19 @@ class NavigationServiceTests: XCTestCase {
         let navigation = dependencies.navigationService
         let firstLocation = dependencies.routeLocations.firstLocation
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocation])
-        XCTAssertEqual(navigation.router.location!.coordinate, firstLocation.coordinate, "Check snapped location is working")
+
+        // Check snapped location is working
+        XCTAssertEqual(navigation.router.location!.coordinate.latitude, firstLocation.coordinate.latitude, accuracy: 0.005, "Latitudes should be almost equal")
+        XCTAssertEqual(navigation.router.location!.coordinate.longitude, firstLocation.coordinate.longitude, accuracy: 0.005, "Longitudes should be almost equal")
 
         let futureCoord = navigation.router.routeProgress.nearbyShape.coordinateFromStart(distance: 100)!
         let futureInaccurateLocation = CLLocation(coordinate: futureCoord, altitude: 0, horizontalAccuracy: 1, verticalAccuracy: 200, course: 0, speed: 5, timestamp: Date())
 
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [futureInaccurateLocation])
 
-        XCTAssertEqual(navigation.router.location!.coordinate.latitude, futureInaccurateLocation.coordinate.latitude, accuracy: 0.0005, "Inaccurate location is still snapped")
-        XCTAssertEqual(navigation.router.location!.coordinate.longitude, futureInaccurateLocation.coordinate.longitude, accuracy: 0.0005, "Inaccurate location is still snapped")
+        // Inaccurate location should still be snapped
+        XCTAssertEqual(navigation.router.location!.coordinate.latitude, futureInaccurateLocation.coordinate.latitude, accuracy: 0.005, "Latitudes should be almost equal")
+        XCTAssertEqual(navigation.router.location!.coordinate.longitude, futureInaccurateLocation.coordinate.longitude, accuracy: 0.005, "Longitudes should be almost equal")
     }
 
     func testUserPuckShouldFaceBackwards() {
