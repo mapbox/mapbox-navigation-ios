@@ -6,6 +6,11 @@
 
 * Enabled MAU billing by default, so that SDKs usage of Mapbox APIs is [billed](https://www.mapbox.com/pricing/) together based on [monthly active users](https://docs.mapbox.com/help/glossary/monthly-active-users/) rather than individually by HTTP request. If you prefer to still use request-based billing, set the `MBXNavigationBillingMethod` key in Info.plist to `request` ([#2405](https://github.com/mapbox/mapbox-navigation-ios/pull/2405).
 
+### User location
+
+* Improved the accuracy of location tracking and off-route detection. ([#2319](https://github.com/mapbox/mapbox-navigation-ios/pull/2319))
+* Fixed an issue where location tracking would pause at the beginning of a route after setting `RouteOptions.shapeFormat` to `RouteShapeFormat.polyline` or `RouteShapeFormat.geoJSON`. Note that you most likely do not need to override the default value of `RouteShapeFormat.polyline6`: this is the least bandwidth-intensive format, and `Route.shape` and `RouteStep.shape` are set to `LineString`s regardless. ([#2319](https://github.com/mapbox/mapbox-navigation-ios/pull/2319))
+
 ### Offline navigation
 
 * Fixed a crash that occurred after setting `RouteOptions.shapeFormat` to `RouteShapeFormat.geoJSON`. ([valhalla/valhalla#1867](https://github.com/valhalla/valhalla/pull/1867))
@@ -52,8 +57,6 @@
 * Removed `RouteLegProgress.upComingStep` in favor of `RouteLegProgress.upcomingStep`. ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
 * Removed the `RouteProgress.nearbyCoordinates` property in favor of `RouteProgress.nearbyShape`. ([#2275](https://github.com/mapbox/mapbox-navigation-ios/pull/2275), [#2275](https://github.com/mapbox/mapbox-navigation-ios/pull/2275))
 * Removed the `LegacyRouteController.tunnelIntersectionManager` property. ([#2297](https://github.com/mapbox/mapbox-navigation-ios/pull/2297))
-* Improved the accuracy of location tracking and off-route detection. ([#2319](https://github.com/mapbox/mapbox-navigation-ios/pull/2319))
-* Fixed an issue where location tracking would pause at the beginning of a route after setting `RouteOptions.shapeFormat` to `RouteShapeFormat.polyline` or `RouteShapeFormat.geoJSON`. Note that you most likely do not need to override the default value of `RouteShapeFormat.polyline6`: this is the least bandwidth-intensive format, and `Route.shape` and `RouteStep.shape` are set to `LineString`s regardless. ([#2319](https://github.com/mapbox/mapbox-navigation-ios/pull/2319))
 
 ### Other changes
 * Various delegate protocols now provide default no-op implementations for all their methods and conform to the `UnimplementedLogging` protocol, which can inform you at runtime when a delegate method is called but has not been implemented. This replaces the use of optional methods, which are disallowed in pure Swift protocols. Messages are sent through Apple Unified Logging and can be disabled globally through [Unifed Logging](https://developer.apple.com/documentation/os/logging#2878594), or by overriding the delegate function with a no-op implementation. ([#2230](https://github.com/mapbox/mapbox-navigation-ios/pull/2230))
