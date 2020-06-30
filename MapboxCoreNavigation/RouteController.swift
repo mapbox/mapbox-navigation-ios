@@ -320,7 +320,7 @@ open class RouteController: NSObject {
                 NotificationUserInfoKey.routeProgressKey: progress,
                 NotificationUserInfoKey.locationKey: location, //guaranteed value
                 NotificationUserInfoKey.rawLocationKey: rawLocation, //raw
-                ])
+            ])
         }
     }
     
@@ -391,7 +391,7 @@ extension RouteController: Router {
         }
         
         let status = status ?? navigator.getStatusForTimestamp(location.timestamp)
-        let offRoute = status.routeState == .offRoute
+        let offRoute = status.routeState == .offRoute || status.routeState == .invalid
         return !offRoute
     }
     
@@ -435,9 +435,6 @@ extension RouteController: Router {
                 ])
                 return
             }
-
-            
-
         }
     }
 }

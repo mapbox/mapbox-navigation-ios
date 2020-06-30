@@ -62,26 +62,52 @@ class NavigationServiceTests: XCTestCase {
     func testUserIsOffRoute() {
         let navigation = dependencies.navigationService
         let route = navigation.route
-
-        let coordinates = route.shape!.coordinates.prefix(3)
+        
+        // Create list of 3 coordinates which are located on actual route
+        let coordinatesOnRoute = route.shape!.coordinates.prefix(3)
         let now = Date()
-        let locations = coordinates.enumerated().map { CLLocation(coordinate: $0.element,
-                                                                  altitude: -1, horizontalAccuracy: 10, verticalAccuracy: -1, course: -1, speed: 10, timestamp: now + $0.offset) }
-
-        locations.forEach { navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [$0]) }
-
-        XCTAssertTrue(navigation.router.userIsOnRoute(locations.last!), "User should be on route")
-
-        let coordinatesOffRoute: [CLLocationCoordinate2D] = (0...3).map { _ in locations.first!.coordinate.coordinate(at: 100, facing: 90) }
-        let locationsOffRoute = coordinatesOffRoute.enumerated().map {
-            CLLocation(coordinate: $0.element, altitude: -1, horizontalAccuracy: 10,
-                       verticalAccuracy: -1, course: -1, speed: 10,
-                       timestamp: now + locations.count + $0.offset)
+        let locationsOnRoute = coordinatesOnRoute.enumerated().map {
+            CLLocation(coordinate: $0.element,
+                       altitude: -1,
+                       horizontalAccuracy: 10,
+                       verticalAccuracy: -1,
+                       course: -1,
+                       speed: 10,
+                       timestamp: now + $0.offset)
         }
-
-        locationsOffRoute.forEach { navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [$0]) }
-
-        XCTAssertFalse(navigation.router.userIsOnRoute(locationsOffRoute.last!), "User should be off route")
+        
+        // Iterate over each location on the route and simulate location update
+        locationsOnRoute.forEach {
+            navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [$0])
+            
+            // Verify whether current location is located on the route
+            XCTAssertTrue(navigation.router.userIsOnRoute($0), "User should be on the route")
+        }
+        
+        // Create list of 3 coordinates: all coordinates have distance component slightly changed, which means that they're off the route
+        let coordinatesOffRoute: [CLLocationCoordinate2D] = (0...2).map { _ in locationsOnRoute.first!.coordinate.coordinate(at: 100, facing: 90) }
+        let locationsOffRoute = coordinatesOffRoute.enumerated().map {
+            CLLocation(coordinate: $0.element,
+                       altitude: -1,
+                       horizontalAccuracy: 10,
+                       verticalAccuracy: -1,
+                       course: -1,
+                       speed: 10,
+                       timestamp: now + locationsOnRoute.count + $0.offset)
+        }
+        
+        // Iterate over the list of locations which are off the route and verify whether all locations except first one are off the route.
+        // Even though first location is off the route as per navigation native logic it sometimes can return tracking route state
+        // even if location is visually off-route.
+        locationsOffRoute.enumerated().forEach {
+            navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [$0.element])
+            
+            if ($0.offset == 0) {
+                XCTAssertTrue(navigation.router.userIsOnRoute($0.element), "For the first coordinate user is still on the route")
+            } else {
+                XCTAssertFalse(navigation.router.userIsOnRoute($0.element), "User should be off route")
+            }
+        }
     }
 
     func testAdvancingToFutureStepAndNotRerouting() {
