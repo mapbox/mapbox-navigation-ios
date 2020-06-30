@@ -58,42 +58,49 @@ class CLLocationTests: XCTestCase {
     
     func testCLLocationToFixLocation() {
         let coordinate = CLLocationCoordinate2D(latitude: 1, longitude: 2)
-        let now = Date()
-        
+        let timestamp = Date()
+        let speed: CLLocationSpeed = -1
+        let bearing: CLLocationDegrees = -1
+        let altitude: CLLocationDistance = -1
+        let horizontalAccuracy: CLLocationAccuracy = -1
+        let verticalAccuracy: CLLocationAccuracy = 1
+        let bearingAccuracy: CLLocationAccuracy = 2
+        let speedAccuracy: CLLocationAccuracy = 3
+
         var location = CLLocation(coordinate: coordinate,
-                                  altitude: -1,
-                                  horizontalAccuracy: -1,
-                                  verticalAccuracy: 1,
-                                  course: -1,
-                                  speed: -1,
-                                  timestamp: now)
+                                  altitude: altitude,
+                                  horizontalAccuracy: horizontalAccuracy,
+                                  verticalAccuracy: verticalAccuracy,
+                                  course: bearing,
+                                  speed: speed,
+                                  timestamp: timestamp)
         
         if #available(iOS 13.4, *) {
             location = CLLocation(coordinate: coordinate,
-                                  altitude: -1,
-                                  horizontalAccuracy: -1,
-                                  verticalAccuracy: 1,
-                                  course: -1,
-                                  courseAccuracy: 2,
-                                  speed: -1,
-                                  speedAccuracy: 3,
-                                  timestamp: now)
+                                  altitude: altitude,
+                                  horizontalAccuracy: horizontalAccuracy,
+                                  verticalAccuracy: verticalAccuracy,
+                                  course: bearing,
+                                  courseAccuracy: bearingAccuracy,
+                                  speed: speed,
+                                  speedAccuracy: speedAccuracy,
+                                  timestamp: timestamp)
         }
         
         let fixLocation = FixLocation(location)
         
         XCTAssertEqual(fixLocation.coordinate.latitude, coordinate.latitude)
         XCTAssertEqual(fixLocation.coordinate.longitude, coordinate.longitude)
-        XCTAssertEqual(fixLocation.altitude, -1)
+        XCTAssertEqual(fixLocation.altitude, altitude as NSNumber)
         XCTAssertEqual(fixLocation.bearing, nil)
         XCTAssertEqual(fixLocation.accuracyHorizontal, nil)
         XCTAssertEqual(fixLocation.speed, nil)
-        XCTAssertEqual(fixLocation.time, now)
-        XCTAssertEqual(fixLocation.verticalAccuracy, 1)
+        XCTAssertEqual(fixLocation.time, timestamp)
+        XCTAssertEqual(fixLocation.verticalAccuracy?.doubleValue, verticalAccuracy)
         
         if #available(iOS 13.4, *) {
-            XCTAssertEqual(fixLocation.bearingAccuracy, 2)
-            XCTAssertEqual(fixLocation.speedAccuracy, 3)
+            XCTAssertEqual(fixLocation.bearingAccuracy?.doubleValue, bearingAccuracy)
+            XCTAssertEqual(fixLocation.speedAccuracy?.doubleValue, speedAccuracy)
         }
     }
 }
