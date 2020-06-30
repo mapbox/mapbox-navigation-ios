@@ -110,29 +110,27 @@ class NavigationServiceTests: XCTestCase {
         }
     }
 
-    func testAdvancingToFutureStepAndNotRerouting() {
+    func testNotReroutingForAllSteps() {
         let navigation = dependencies.navigationService
         let route = navigation.route
-
-        let firstStepCoordinates = route.legs[0].steps[0].shape!.coordinates
-        let now = Date()
-        let firstStepLocations = firstStepCoordinates.enumerated().map {
-            CLLocation(coordinate: $0.element, altitude: -1, horizontalAccuracy: 10, verticalAccuracy: -1, course: -1, speed: 10, timestamp: now + $0.offset)
+        
+        route.legs[0].steps.enumerated().forEach {
+            let stepCoordinates = $0.element.shape!.coordinates
+            let now = Date()
+            let stepLocations = stepCoordinates.enumerated().map {
+                CLLocation(coordinate: $0.element,
+                           altitude: -1,
+                           horizontalAccuracy: 10,
+                           verticalAccuracy: -1,
+                           course: -1,
+                           speed: 10,
+                           timestamp: now + $0.offset)
+            }
+            
+            stepLocations.forEach { navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [$0]) }
+            
+            XCTAssertTrue(navigation.router.userIsOnRoute(stepLocations.last!), "User should be on route")
         }
-
-        firstStepLocations.forEach { navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [$0]) }
-        XCTAssertTrue(navigation.router.userIsOnRoute(firstStepLocations.last!), "User should be on route")
-        XCTAssertEqual(navigation.router.routeProgress.currentLegProgress.stepIndex, 1, "User is on first step")
-
-        let thirdStepCoordinates = route.legs[0].steps[2].shape!.coordinates
-        let thirdStepLocations = thirdStepCoordinates.enumerated().map {
-            CLLocation(coordinate: $0.element, altitude: -1, horizontalAccuracy: 10, verticalAccuracy: -1, course: -1, speed: 10, timestamp: now + firstStepCoordinates.count + $0.offset)
-        }
-
-        thirdStepLocations.forEach { navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [$0]) }
-
-        XCTAssertTrue(navigation.router.userIsOnRoute(thirdStepLocations.last!), "User should be on route")
-        XCTAssertEqual(navigation.router.routeProgress.currentLegProgress.stepIndex, 3, "User should be on route and we should increment all the way to the 4th step")
     }
 
     func testSnappedLocation() {
