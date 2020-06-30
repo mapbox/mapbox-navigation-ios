@@ -35,10 +35,10 @@ class CLLocationTests: XCTestCase {
         XCTAssertEqual(location.speed, fixLocation.speed?.doubleValue)
         XCTAssertEqual(location.altitude, fixLocation.altitude?.doubleValue)
         XCTAssertEqual(location.horizontalAccuracy, fixLocation.accuracyHorizontal?.doubleValue)
-        XCTAssertEqual(location.speedAccuracy, fixLocation.speedAccuracy?.doubleValue)
         XCTAssertEqual(location.verticalAccuracy, fixLocation.verticalAccuracy?.doubleValue)
         XCTAssertEqual(location.course, fixLocation.bearing?.doubleValue)
         if #available(iOS 13.4, *) {
+            XCTAssertEqual(location.speedAccuracy, fixLocation.speedAccuracy?.doubleValue)
             XCTAssertEqual(location.courseAccuracy, fixLocation.bearingAccuracy?.doubleValue)
         }
     }
