@@ -26,6 +26,7 @@ extension CLLocation {
         }
         locationDictionary["course"] = course
         locationDictionary["speed"] = speed
+        locationDictionary["speedAccuracy"] = speedAccuracy
         return locationDictionary
     }
     
