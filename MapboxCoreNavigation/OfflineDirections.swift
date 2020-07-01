@@ -155,8 +155,12 @@ public class NavigationDirections: Directions {
             
             let tilePath = filePathURL.path
             let outputPath = outputDirectoryURL.path
+
+            let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile,
+                                                  platform: ProfilePlatform.KIOS)
+            let navigator = Navigator(profile: settingsProfile, customConfig: "")
             
-            let numberOfTiles = Navigator().unpackTiles(forPackedTilesPath: tilePath, outputDirectory: outputPath)
+            let numberOfTiles = navigator.unpackTiles(forPackedTilesPath: tilePath, outputDirectory: outputPath)
             
             // Report 100% progress
             progressHandler?(totalPackedBytes, totalPackedBytes)
@@ -237,7 +241,9 @@ public class NavigationDirections: Directions {
                "The offline navigator must be accessed from the dedicated serial queue")
         
         if _navigator == nil {
-            self._navigator = Navigator()
+            let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile,
+                                                  platform: ProfilePlatform.KIOS)
+            self._navigator = Navigator(profile: settingsProfile, customConfig: "")
         }
         
         return _navigator
