@@ -10,19 +10,19 @@ public enum FeedbackType: CustomStringConvertible {
     case general
 
     /// Indicates an incorrect visual.
-    case incorrectVisual(subtype: IncorrectVisualSubtype)
+    case incorrectVisual(subtype: IncorrectVisualSubtype? = nil)
 
     /// Indicates confusing voice instruction.
-    case confusingAudio(subtype: ConfusingAudioSubtype)
+    case confusingAudio(subtype: ConfusingAudioSubtype? = nil)
 
     /// Indicates an issue with route quality.
-    case routeQuality(subtype: RouteQualitySubtype)
+    case routeQuality(subtype: RouteQualitySubtype? = nil)
 
     /// Indicates that an illegal route was recommended.
-    case illegalRoute(subtype: IllegalRouteSubtype)
+    case illegalRoute(subtype: IllegalRouteSubtype? = nil)
 
     /// Indicates a road closure was observed.
-    case roadClosure(subtype: RoadClosureSubtype)
+    case roadClosure(subtype: RoadClosureSubtype? = nil)
     
     public var description: String {
         switch self {
@@ -44,7 +44,6 @@ public enum FeedbackType: CustomStringConvertible {
 
 /// Enum denoting the subtypes of the  `Incorrect Visual` top-level category
 public enum IncorrectVisualSubtype: String {
-    case none
     case turnIconIncorrect
     case streetNameIncorrect
     case instructionUnnecessary
@@ -57,7 +56,6 @@ public enum IncorrectVisualSubtype: String {
 
 /// Enum denoting the subtypes of the  `Confusing Audio` top-level category
 public enum ConfusingAudioSubtype: String {
-    case none
     case guidanceTooEarly
     case guidanceTooLate
     case pronunciationIncorrect
@@ -66,7 +64,6 @@ public enum ConfusingAudioSubtype: String {
 
 /// Enum denoting the subtypes of the  `Route Quality` top-level category
 public enum RouteQualitySubtype: String {
-    case none
     case routeNonDrivable
     case routeNotPreferred
     case alternativeRouteNotExpected
@@ -76,7 +73,6 @@ public enum RouteQualitySubtype: String {
 
 /// Enum denoting the subtypes of the  `Illegal Route` top-level category
 public enum IllegalRouteSubtype: String {
-    case none
     case routedDownAOneWay
     case turnWasNotAllowed
     case carsNotAllowedOnStreet
@@ -85,7 +81,6 @@ public enum IllegalRouteSubtype: String {
 
 /// Enum denoting the subtypes of the  `Road Closure` top-level category
 public enum RoadClosureSubtype: String {
-    case none
     case streetPermanentlyBlockedOff
     case roadMissingFromMap
 }

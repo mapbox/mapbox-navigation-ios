@@ -75,11 +75,11 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     /**
      The feedback items that are visible and selectable by the user.
      */
-    public var sections: [FeedbackItem] =  [FeedbackType.incorrectVisual(subtype: .none),
-                                            FeedbackType.confusingAudio(subtype: .none),
-                                            FeedbackType.illegalRoute(subtype: .none),
-                                            FeedbackType.roadClosure(subtype: .none),
-                                            FeedbackType.routeQuality(subtype: .none)].map { $0.generateFeedbackItem() }
+    public var sections: [FeedbackItem] =  [FeedbackType.incorrectVisual(),
+                                            FeedbackType.confusingAudio(),
+                                            FeedbackType.illegalRoute(),
+                                            FeedbackType.roadClosure(),
+                                            FeedbackType.routeQuality()].map { $0.generateFeedbackItem() }
     
     public weak var delegate: FeedbackViewControllerDelegate?
     
