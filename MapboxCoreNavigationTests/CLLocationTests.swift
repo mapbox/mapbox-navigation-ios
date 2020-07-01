@@ -43,17 +43,19 @@ class CLLocationTests: XCTestCase {
         }
     }
 
-    func testShiftLocation() {
+    func testTimestampShiftForLocation() {
         let coordinate = CLLocationCoordinate2D(latitude: 1, longitude: 2)
+        let timestamp = Date()
         let location = CLLocation(coordinate: coordinate,
                                   altitude: 10,
                                   horizontalAccuracy: 40,
                                   verticalAccuracy: 50,
                                   course: 180,
                                   speed: 18,
-                                  timestamp: Date())
+                                  timestamp: timestamp)
         
-        XCTAssertEqual(location.timestamp, location.shifted(to: location.timestamp).timestamp)
+        let shiftedTimestamp = location.timestamp + 10
+        XCTAssertEqual(shiftedTimestamp, location.shifted(to: shiftedTimestamp).timestamp)
     }
     
     func testCLLocationToFixLocation() {
