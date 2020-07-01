@@ -36,7 +36,12 @@
 * Fixed an issue where spoken and visual instructions sometimes omitted the cardinal direction after a route number in the United States. ([valhalla/valhalla#1917](https://github.com/valhalla/valhalla/pull/1917))
 * A spoken instruction about an exit ramp no longer specifies the side of the road if the ramp branches off the slow lane (on the right side in regions that drive on the right). ([valhalla/valhalla#1990](https://github.com/valhalla/valhalla/pull/1990))
 
-## Map
+### Feedback
+* Updated `FeedbackType` enum to reflect new top level feedback categories and introduced new `FeedbackSubType`s to support a more granular feedback mechanism. ([#2419](https://github.com/mapbox/mapbox-navigation-ios/pull/2419))
+* Updated image icons for top-level feedback collection view items. ([#2419](https://github.com/mapbox/mapbox-navigation-ios/pull/2419), [#2421](https://github.com/mapbox/mapbox-navigation-ios/pull/2421))
+* The feedback screen no longer dismisses automatically after 10 seconds. ([#2420](https://github.com/mapbox/mapbox-navigation-ios/pull/2420))
+
+### Other changes
 
 * Removed `NavigationMapViewDelegate.navigationMapView(_:routeStyleLayerWithIdentifier:source:)`, `NavigationMapViewDelegate.navigationMapView(_:routeCasingStyleLayerWithIdentifier:source:)` in favor of four new delegate methods to customize the route styling ([#2377](https://github.com/mapbox/mapbox-navigation-ios/pull/2377)):
   * `NavigationMapViewDelegate.navigationMapView(_:mainRouteStyleLayerWithIdentifier:source:)` to style the main route.
