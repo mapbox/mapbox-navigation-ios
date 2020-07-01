@@ -10,19 +10,19 @@ public enum FeedbackType: CustomStringConvertible {
     case general
 
     /// Indicates an incorrect visual.
-    case incorrectVisual(subtype: IncorrectVisualSubtype? = nil)
+    case incorrectVisual(subtype: IncorrectVisualSubtype?)
 
     /// Indicates confusing voice instruction.
-    case confusingAudio(subtype: ConfusingAudioSubtype? = nil)
+    case confusingAudio(subtype: ConfusingAudioSubtype?)
 
     /// Indicates an issue with route quality.
-    case routeQuality(subtype: RouteQualitySubtype? = nil)
+    case routeQuality(subtype: RouteQualitySubtype?)
 
     /// Indicates that an illegal route was recommended.
-    case illegalRoute(subtype: IllegalRouteSubtype? = nil)
+    case illegalRoute(subtype: IllegalRouteSubtype?)
 
     /// Indicates a road closure was observed.
-    case roadClosure(subtype: RoadClosureSubtype? = nil)
+    case roadClosure(subtype: RoadClosureSubtype?)
     
     public var description: String {
         switch self {
