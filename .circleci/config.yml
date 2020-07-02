@@ -4,12 +4,12 @@ step-library:
   - &restore-cache
       restore_cache:
         keys:
-          - nav-cache-v2-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cartfile.resolved" }}
-          - nav-cache-v2-{{ .Environment.CIRCLE_JOB }} # used if checksum fails
+          - nav-cache-v3-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cartfile.resolved" }}
+          - nav-cache-v3-{{ .Environment.CIRCLE_JOB }} # used if checksum fails
 
   - &save-cache
       save_cache:
-        key: nav-cache-v2-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cartfile.resolved" }}
+        key: nav-cache-v3-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cartfile.resolved" }}
         paths:
           - Carthage
 
