@@ -95,8 +95,8 @@ class SettingsViewController: UITableViewController {
         if let selectedOfflineVersion = Settings.selectedOfflineVersion {
             let tilesURL = Bundle.mapboxCoreNavigation.suggestedTileURL(version: selectedOfflineVersion)
             
-            Settings.directions.configureRouter(tilesURL: tilesURL!) { [weak self] (numberOfTiles) in
-                let message = String.localizedStringWithFormat(NSLocalizedString("ROUTER_CONFIGURED_MSG", value: "Router configured with %ld tile(s).", comment: "Alert message when a router has been configured; 1 = number of map tiles"), numberOfTiles)
+            Settings.directions.configureRouter(tilesURL: tilesURL!) { [weak self] in
+                let message = String.localizedStringWithFormat(NSLocalizedString("ROUTER_CONFIGURED_MSG", value: "Router was configured.", comment: "Alert message when a router has been configured."))
                 self?.presentAlert(message: message)
             }
         }

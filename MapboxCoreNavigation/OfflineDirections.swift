@@ -5,7 +5,7 @@ import MapboxNavigationNative
 /**
  A closure to call when the `NavigationDirections` router has been configured completely.
  */
-public typealias NavigationDirectionsCompletionHandler = (_ numberOfTiles: UInt64) -> Void
+public typealias NavigationDirectionsCompletionHandler = () -> Void
 
 /**
  An error that occurs when calculating directions potentially offline using the `NavigationDirections.calculate(_:offline:completionHandler:)` method.
@@ -117,9 +117,9 @@ public class NavigationDirections: Directions {
     public func configureRouter(tilesURL: URL, completionHandler: @escaping NavigationDirectionsCompletionHandler) {
         NavigationDirectionsConstants.offlineSerialQueue.sync {
             let params = RouterParams(tilesPath: tilesURL.path, inMemoryTileCache: nil, mapMatchingSpatialCache: nil, threadsCount: nil, endpointConfig: nil)
-            let tileCount = self.navigator.configureRouter(for: params)
+            self.navigator.configureRouter(for: params)
             DispatchQueue.main.async {
-                completionHandler(tileCount)
+                completionHandler()
             }
         }
     }
