@@ -46,9 +46,9 @@ step-library:
       run:
         name: Prepare .netrc file
         command: |
-          echo "machine dl.bintray.com" > ~/.netrc
-          echo "login $BINTRAY_LOGIN" >> ~/.netrc
-          echo "password $BINTRAY_API_KEY" >> ~/.netrc
+          echo "api.mapbox.com" > ~/.netrc
+          echo "login mapbox" >> ~/.netrc
+          echo "password $SDK_REGISTRY_TOKEN" >> ~/.netrc
 
   - &update-carthage-version
       run:
