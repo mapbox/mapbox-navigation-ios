@@ -46,7 +46,11 @@ step-library:
       run:
         name: Prepare .netrc file
         command: |
-          echo "machine api.mapbox.com" > ~/.netrc
+          echo "machine dl.bintray.com" > ~/.netrc
+          echo "login $BINTRAY_LOGIN" >> ~/.netrc
+          echo -e "password $BINTRAY_API_KEY\n" >> ~/.netrc
+
+          echo "machine api.mapbox.com" >> ~/.netrc
           echo "login mapbox" >> ~/.netrc
           echo "password $SDK_REGISTRY_TOKEN" >> ~/.netrc
 
