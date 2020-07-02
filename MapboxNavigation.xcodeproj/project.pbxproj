@@ -1220,13 +1220,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		160A4A6521278F2D0028B070 /* Templates */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Templates;
-			sourceTree = "<group>";
-		};
 		165F91502204D50B0036CB9E /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
@@ -1333,7 +1326,6 @@
 				C51923B41EA55C5E002AF9E1 /* Extensions */,
 				356B7D8A1EE166E100FE5B89 /* scripts */,
 				351BEC201E5BD4DC006FE110 /* Supporting files */,
-				160A4A6521278F2D0028B070 /* Templates */,
 				C51923B51EA55CD4002AF9E1 /* Views */,
 				8DFD94A52225AF5C00152F45 /* Banners */,
 				AE47A32022B1F6790096458C /* Guidance Cards */,
@@ -1695,13 +1687,6 @@
 			name = Views;
 			sourceTree = "<group>";
 		};
-		C52D09CF1DEF5E5F00BE3C5C /* Fixtures */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Fixtures;
-			sourceTree = "<group>";
-		};
 		C53C196A1F38E9C1008DB406 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -1806,7 +1791,6 @@
 			isa = PBXGroup;
 			children = (
 				3A163AE1249901D000D66A0D /* Extensions */,
-				C52D09CF1DEF5E5F00BE3C5C /* Fixtures */,
 				C5BF7371206AB0DF00CDBB6D /* CLHeadingPrivate.h */,
 				DAD903AE23E3DCC80057CF1F /* DateTests.swift */,
 				359A8AEC1FA78D3000BDB486 /* DistanceFormatterTests.swift */,
