@@ -40,17 +40,12 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.module_name = "MapboxCoreNavigation"
 
-  s.dependency "MapboxNavigationNative", "~> 14.1.2"
+  s.dependency "MapboxNavigationNative", "~> 14.1.3"
   s.dependency "MapboxAccounts", "~> 2.3.0"
   s.dependency "MapboxDirections", "~> 0.32.0"
   s.dependency "MapboxMobileEvents", "~> 0.10.2"        # Always pin to a patch release if pre-1.0
   s.dependency "Turf", "~> 0.5.0"                       # Always pin to a patch release if pre-1.0
 
   s.swift_version = "5.0"
-
-  # MapboxNavigationNative is built for arm64 and x86_64 architectures (i386 and armv7 are not present), so only 64-bit architecture is checked.
-  s.pod_target_xcconfig = {
-    'ARCHS[sdk=iphonesimulator*]' => '$(ARCHS_STANDARD_64_BIT)'
-  }
 
 end
