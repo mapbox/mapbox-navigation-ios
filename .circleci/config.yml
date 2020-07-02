@@ -46,7 +46,7 @@ step-library:
       run:
         name: Prepare .netrc file
         command: |
-          echo "api.mapbox.com" > ~/.netrc
+          echo "machine api.mapbox.com" > ~/.netrc
           echo "login mapbox" >> ~/.netrc
           echo "password $SDK_REGISTRY_TOKEN" >> ~/.netrc
 
