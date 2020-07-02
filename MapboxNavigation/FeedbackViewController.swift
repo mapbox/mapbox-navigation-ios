@@ -72,11 +72,14 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     static let verticalCellPadding: CGFloat = 20.0
     
     let interactor = Interactor()
-    
     /**
      The feedback items that are visible and selectable by the user.
      */
-    public var sections: [FeedbackItem] = [.turnNotAllowed, .closure, .reportTraffic, .confusingInstructions, .generalMapError, .badRoute]
+    public var sections: [FeedbackItem] =  [FeedbackType.incorrectVisual(subtype: nil),
+                                            FeedbackType.confusingAudio(subtype: nil),
+                                            FeedbackType.illegalRoute(subtype: nil),
+                                            FeedbackType.roadClosure(subtype: nil),
+                                            FeedbackType.routeQuality(subtype: nil)].map { $0.generateFeedbackItem() }
     
     public weak var delegate: FeedbackViewControllerDelegate?
     

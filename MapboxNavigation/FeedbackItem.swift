@@ -7,10 +7,61 @@ extension UIImage {
     }
 }
 
+
+public extension FeedbackType {
+
+    // TODO: Localize these strings
+    internal var title: String {
+        switch self {
+            case .general:
+                return "Feedback"
+            case .incorrectVisual(_):
+                return "Incorrect Visual"
+            case .confusingAudio(_):
+                return "Confusing Audio"
+            case .routeQuality(_):
+                return "Route Quality"
+            case .illegalRoute(_):
+                return "Illegal Route"
+            case .roadClosure(_):
+                return "Road Closure"
+        }
+    }
+
+    /// Provides the image name for a given feedback type
+    internal var image: UIImage {
+        var imageName = ""
+
+        switch self {
+            case .general:
+                imageName = "feedback"
+            case .incorrectVisual(_):
+                imageName = "incorrect_visual"
+            case .confusingAudio(_):
+                imageName = "confusing_audio"
+            case .routeQuality(_):
+                imageName = "route_quality"
+            case .illegalRoute(_):
+                imageName = "illegal_route"
+            case .roadClosure(_):
+                imageName = "road_closure"
+        }
+
+        return .feedbackImage(named: imageName)
+    }
+
+
+    /// Generates a `FeedbackItem` for a given `FeedbackType`
+    /// - Returns: A `FeedbackItem` model object used to render UI
+    func generateFeedbackItem() -> FeedbackItem {
+        return FeedbackItem(title: self.title, image: self.image, feedbackType: self)
+   }
+}
+
 /**
  A single feedback item displayed on an instance of `FeedbackViewController`.
  */
-public class FeedbackItem {
+public struct FeedbackItem {
     /**
      The title of feedback item. This will be rendered directly below the image.
      */
@@ -34,18 +85,4 @@ public class FeedbackItem {
         self.image = image
         self.feedbackType = feedbackType
     }
-    
-    static let closure = FeedbackItem(title: closureTitle, image: .feedbackImage(named:"feedback_closed"), feedbackType: .roadClosed)
-    static let turnNotAllowed = FeedbackItem(title: notAllowedTitle, image:  .feedbackImage(named:"feedback_not_allowed"), feedbackType: .notAllowed)
-    static let reportTraffic = FeedbackItem(title: reportTrafficTitle, image: .feedbackImage(named:"feedback_traffic"), feedbackType: .reportTraffic)
-    static let confusingInstructions = FeedbackItem(title: confusingInstructionTitle, image: .feedbackImage(named:"feedback_confusing"), feedbackType: .confusingInstruction)
-    static let badRoute = FeedbackItem(title: badRouteTitle, image: .feedbackImage(named:"feedback_wrong"), feedbackType: .routingError)
-    static let generalMapError = FeedbackItem(title: generalIssueTitle, image: .feedbackImage(named:"feedback_map_issue"), feedbackType: .mapIssue)
 }
-
-fileprivate let closureTitle = NSLocalizedString("FEEDBACK_ROAD_CLOSURE", bundle: .mapboxNavigation, value: "Road\nClosed", comment: "Feedback type for Road Closed")
-fileprivate let notAllowedTitle = NSLocalizedString("FEEDBACK_NOT_ALLOWED", bundle: .mapboxNavigation, value: "Not\nAllowed", comment: "Feedback type for a maneuver that is Not Allowed")
-fileprivate let reportTrafficTitle = NSLocalizedString("FEEDBACK_REPORT_TRAFFIC", bundle: .mapboxNavigation, value: "Report\nTraffic", comment: "Feedback type for Report Traffic")
-fileprivate let confusingInstructionTitle = NSLocalizedString("FEEDBACK_CONFUSING_INSTRUCTION", bundle: .mapboxNavigation, value: "Confusing\nInstruction", comment: "Feedback type for Confusing Instruction")
-fileprivate let badRouteTitle = NSLocalizedString("FEEDBACK_BAD_ROUTE", bundle: .mapboxNavigation, value: "Bad \nRoute", comment: "Feedback type for Bad Route")
-fileprivate let generalIssueTitle = NSLocalizedString("FEEDBACK_GENERAL_ISSUE", bundle: .mapboxNavigation, value: "Other\nMap Issue", comment: "Feedback type for Other Map Issue Issue")

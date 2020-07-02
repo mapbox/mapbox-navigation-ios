@@ -1,8 +1,9 @@
 {
   "images" : [
     {
-      "filename" : "feedback_confusing.pdf",
-      "idiom" : "universal"
+      "filename" : "incorrect_visual.pdf",
+      "idiom" : "universal",
+      "language-direction" : "left-to-right"
     }
   ],
   "info" : {
