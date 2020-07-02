@@ -69,6 +69,8 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     static let cellReuseIdentifier = "collectionViewCellId"
     static let autoDismissInterval: TimeInterval = 10
     static let verticalCellPadding: CGFloat = 20.0
+    static let titleHeaderHeight: CGFloat = 30.0
+    static let contentInset: UIEdgeInsets = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
     
     let interactor = Interactor()
     /**
@@ -88,6 +90,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
         view.backgroundColor = .clear
         view.delegate = self
         view.dataSource = self
+        view.contentInset = FeedbackViewController.contentInset
         view.register(FeedbackCollectionViewCell.self, forCellWithReuseIdentifier: FeedbackCollectionViewCell.defaultIdentifier)
         return view
     }()
@@ -111,7 +114,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
         let padding = (flowLayout.sectionInset.top + flowLayout.sectionInset.bottom) * CGFloat(numberOfRows)
         let indexPath = IndexPath(row: 0, section: 0)
         let collectionViewHeight = collectionView(collectionView, layout: collectionView.collectionViewLayout, sizeForItemAt: indexPath).height * CGFloat(numberOfRows) + padding + view.safeArea.bottom
-        let fullHeight = reportIssueLabel.bounds.height+collectionViewHeight
+        let fullHeight = reportIssueLabel.bounds.height+collectionViewHeight + FeedbackViewController.titleHeaderHeight + FeedbackViewController.contentInset.top
         return fullHeight
     }
     
@@ -154,7 +157,11 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
         setupConstraints()
         view.layoutIfNeeded()
         transitioningDelegate = self
-        view.backgroundColor = .white
+        if #available(iOS 13.0, *) {
+            view.backgroundColor = .systemBackground
+        } else {
+            view.backgroundColor = .white
+        }
         enableDraggableDismiss()
     }
     
@@ -206,7 +213,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     
     private func setupConstraints() {
         let labelTop = reportIssueLabel.topAnchor.constraint(equalTo: view.topAnchor)
-        let labelHeight = reportIssueLabel.heightAnchor.constraint(equalToConstant: 30.0)
+        let labelHeight = reportIssueLabel.heightAnchor.constraint(equalToConstant: FeedbackViewController.titleHeaderHeight)
         let labelLeading = reportIssueLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor)
         let labelTrailing = reportIssueLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         let collectionLabelSpacing = collectionView.topAnchor.constraint(equalTo: reportIssueLabel.bottomAnchor)
@@ -251,7 +258,7 @@ extension FeedbackViewController: UICollectionViewDataSource {
         let item = sections[indexPath.row]
         
         cell.titleLabel.text = item.title
-        cell.imageView.tintColor = .clear
+        cell.imageView.tintColor = .white
         cell.imageView.image = item.image
         
         return cell
@@ -283,7 +290,7 @@ extension FeedbackViewController: UICollectionViewDelegateFlowLayout {
             : floor(availableWidth / CGFloat(sections.count / 2))
         let item = sections[indexPath.row]
         let titleHeight = item.title.height(constrainedTo: width, font: FeedbackCollectionViewCell.Constants.titleFont)
-        let cellHeight: CGFloat = FeedbackCollectionViewCell.Constants.imageSize.height
+        let cellHeight: CGFloat = FeedbackCollectionViewCell.Constants.circleSize.height
             + FeedbackCollectionViewCell.Constants.padding
             + titleHeight
             + FeedbackViewController.verticalCellPadding
