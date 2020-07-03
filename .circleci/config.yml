@@ -72,7 +72,7 @@ step-library:
         name: Install Dependencies
         command: |
           carthage bootstrap --platform ios --cache-builds --configuration Debug --no-use-binaries --use-netrc
-          carthage outdated --xcode-warnings 2>/dev/null # prints warnings if there are outdated carthage dependencies
+          carthage outdated --xcode-warnings || true # prints warnings if there are outdated carthage dependencies
 
   - &build-Example
       run:
