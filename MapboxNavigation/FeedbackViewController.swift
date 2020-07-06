@@ -4,7 +4,6 @@ import AVFoundation
 
 extension FeedbackViewController: UIViewControllerTransitioningDelegate {
     public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        abortAutodismiss()
         return DismissAnimator()
     }
     
@@ -107,15 +106,12 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
         return layout
     }()
     
-    lazy var progressBar: ProgressBar = .forAutoLayout()
-    
     var draggableHeight: CGFloat {
-        // V:|-0-recordingAudioLabel.height-collectionView.height-progressBar.height-0-|
         let numberOfRows = collectionView.numberOfRows(using: self)
         let padding = (flowLayout.sectionInset.top + flowLayout.sectionInset.bottom) * CGFloat(numberOfRows)
         let indexPath = IndexPath(row: 0, section: 0)
         let collectionViewHeight = collectionView(collectionView, layout: collectionView.collectionViewLayout, sizeForItemAt: indexPath).height * CGFloat(numberOfRows) + padding + view.safeArea.bottom
-        let fullHeight = reportIssueLabel.bounds.height+collectionViewHeight+progressBar.bounds.height
+        let fullHeight = reportIssueLabel.bounds.height+collectionViewHeight
         return fullHeight
     }
     
@@ -162,21 +158,9 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
         enableDraggableDismiss()
     }
     
-    override public func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        progressBar.progress = 1
-    }
-    
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
         delegate?.feedbackViewControllerDidOpen(self)
-        
-        UIView.animate(withDuration: FeedbackViewController.autoDismissInterval) {
-            self.progressBar.progress = 0
-        }
-        
-        enableAutoDismiss()
     }
     
     override public func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -186,11 +170,6 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
         if traitCollection.verticalSizeClass != newCollection.verticalSizeClass {
             dismissFeedback()
         }
-    }
-    
-    func enableAutoDismiss() {
-        abortAutodismiss()
-        perform(#selector(dismissFeedback), with: nil, afterDelay: FeedbackViewController.autoDismissInterval)
     }
     
     func presentError(_ message: String) {
@@ -203,16 +182,10 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
         present(controller, animated: true, completion: nil)
     }
     
-    func abortAutodismiss() {
-        progressBar.progress = 0
-        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(dismissFeedback), object: nil)
-    }
-    
     /**
      Instantly dismisses the FeedbackViewController if it is currently presented.
      */
     @objc public func dismissFeedback() {
-        abortAutodismiss()
         dismissFeedbackItem()
     }
     
@@ -227,7 +200,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     }
     
     private func setupViews() {
-        let children = [reportIssueLabel, collectionView, progressBar]
+        let children = [reportIssueLabel, collectionView]
         view.addSubviews(children)
     }
     
@@ -239,17 +212,12 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
         let collectionLabelSpacing = collectionView.topAnchor.constraint(equalTo: reportIssueLabel.bottomAnchor)
         let collectionLeading = collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
         let collectionTrailing = collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        let collectionBarSpacing = collectionView.bottomAnchor.constraint(equalTo: progressBar.topAnchor)
+        let collectionBarSpacing = collectionView.bottomAnchor.constraint(equalTo: view.safeBottomAnchor)
         
         let constraints = [labelTop, labelHeight, labelLeading, labelTrailing,
                            collectionLabelSpacing, collectionLeading, collectionTrailing, collectionBarSpacing]
         
         NSLayoutConstraint.activate(constraints)
-        
-        progressBar.heightAnchor.constraint(equalToConstant: 6.0).isActive = true
-        progressBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        progressBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        progressBar.bottomAnchor.constraint(equalTo: view.safeBottomAnchor).isActive = true
     }
     
     func send(_ item: FeedbackItem) {
@@ -296,18 +264,10 @@ extension FeedbackViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return sections.count
     }
-    
-    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        // In case the view is scrolled, dismiss the feedback window immediately
-        // and reset the `progressBar` back to a full progress.
-        abortAutodismiss()
-        progressBar.progress = 1.0
-    }
 }
 
 extension FeedbackViewController: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        abortAutodismiss()
         let item = sections[indexPath.row]
         send(item)
     }
