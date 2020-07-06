@@ -69,7 +69,6 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     static let cellReuseIdentifier = "collectionViewCellId"
     static let autoDismissInterval: TimeInterval = 10
     static let verticalCellPadding: CGFloat = 20.0
-    static let titleHeaderHeight: CGFloat = 30.0
     
     let interactor = Interactor()
 
@@ -131,11 +130,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
 
         view.layoutIfNeeded()
         transitioningDelegate = self
-        if #available(iOS 13.0, *) {
-            view.backgroundColor = .systemBackground
-        } else {
-            view.backgroundColor = .white
-        }
+        view.backgroundColor = .white
         enableDraggableDismiss()
     }
     

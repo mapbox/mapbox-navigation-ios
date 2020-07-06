@@ -5,13 +5,11 @@ class FeedbackCollectionViewCell: UICollectionViewCell {
     static let defaultIdentifier = "MapboxFeedbackCell"
     
     struct Constants {
-        static let circleSize: CGSize = 70.0
-        static let imageSize: CGSize = 36.0
+        static let imageSize: CGSize = 70.0
         static let padding: CGFloat = 8
         static let titleFont: UIFont = .systemFont(ofSize: 18.0)
     }
-
-    lazy var circleView: UIView = .forAutoLayout()
+    
     lazy var imageView: UIImageView = .forAutoLayout()
     
     lazy var titleLabel: UILabel = {
@@ -21,12 +19,6 @@ class FeedbackCollectionViewCell: UICollectionViewCell {
         title.font = Constants.titleFont
         return title
     }()
-
-    public var circleColor: UIColor = .black {
-        didSet {
-            circleView.backgroundColor = circleColor
-        }
-    }
     
     var longPress: UILongPressGestureRecognizer?
     var originalTransform: CGAffineTransform?
@@ -44,7 +36,6 @@ class FeedbackCollectionViewCell: UICollectionViewCell {
     func commonInit() {
         setupViews()
         setupConstraints()
-        circleColor = .black
     }
     
     override var isHighlighted: Bool {
@@ -65,25 +56,17 @@ class FeedbackCollectionViewCell: UICollectionViewCell {
     }
     
     func setupViews() {
-        addSubview(circleView)
         addSubview(imageView)
         addSubview(titleLabel)
-
-        circleView.layer.cornerRadius = Constants.circleSize.height / 2
     }
     
     func setupConstraints() {
-        circleView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        circleView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        circleView.heightAnchor.constraint(equalToConstant: Constants.circleSize.height).isActive = true
-        circleView.widthAnchor.constraint(equalToConstant: Constants.circleSize.width).isActive = true
-
-        imageView.centerYAnchor.constraint(equalTo: circleView.centerYAnchor).isActive = true
-        imageView.centerXAnchor.constraint(equalTo: circleView.centerXAnchor).isActive = true
+        imageView.topAnchor.constraint(equalTo: topAnchor, constant: Constants.padding).isActive = true
+        imageView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         imageView.heightAnchor.constraint(equalToConstant: Constants.imageSize.height).isActive = true
         imageView.widthAnchor.constraint(equalToConstant: Constants.imageSize.width).isActive = true
         
         titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        titleLabel.topAnchor.constraint(equalTo: circleView.bottomAnchor, constant: Constants.padding).isActive = true
+        titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: Constants.padding).isActive = true
     }
 }

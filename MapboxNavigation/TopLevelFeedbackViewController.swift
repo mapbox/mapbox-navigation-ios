@@ -5,7 +5,6 @@ class TopLevelFeedbackViewController: UIViewController {
 
     static let cellReuseIdentifier = "collectionViewCellId"
     static let verticalCellPadding: CGFloat = 20.0
-    static let contentInset: UIEdgeInsets = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
 
     var send: ((FeedbackItem) -> Void)!
 
@@ -24,7 +23,6 @@ class TopLevelFeedbackViewController: UIViewController {
         view.backgroundColor = .clear
         view.delegate = self
         view.dataSource = self
-        view.contentInset = TopLevelFeedbackViewController.contentInset
         view.register(FeedbackCollectionViewCell.self, forCellWithReuseIdentifier: FeedbackCollectionViewCell.defaultIdentifier)
         return view
     }()
@@ -48,7 +46,7 @@ class TopLevelFeedbackViewController: UIViewController {
         let padding = (flowLayout.sectionInset.top + flowLayout.sectionInset.bottom) * CGFloat(numberOfRows)
         let indexPath = IndexPath(row: 0, section: 0)
         let collectionViewHeight = collectionView(collectionView, layout: collectionView.collectionViewLayout, sizeForItemAt: indexPath).height * CGFloat(numberOfRows) + padding + view.safeArea.bottom
-        let fullHeight = reportIssueLabel.bounds.height+collectionViewHeight + FeedbackViewController.titleHeaderHeight + TopLevelFeedbackViewController.contentInset.top
+        let fullHeight = reportIssueLabel.bounds.height+collectionViewHeight
         return fullHeight
     }
 
@@ -68,7 +66,7 @@ class TopLevelFeedbackViewController: UIViewController {
 
     private func setupConstraints() {
         let labelTop = reportIssueLabel.topAnchor.constraint(equalTo: view.topAnchor)
-        let labelHeight = reportIssueLabel.heightAnchor.constraint(equalToConstant: FeedbackViewController.titleHeaderHeight)
+        let labelHeight = reportIssueLabel.heightAnchor.constraint(equalToConstant: 30.0)
         let labelLeading = reportIssueLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor)
         let labelTrailing = reportIssueLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         let collectionLabelSpacing = collectionView.topAnchor.constraint(equalTo: reportIssueLabel.bottomAnchor)
@@ -89,7 +87,7 @@ extension TopLevelFeedbackViewController: UICollectionViewDataSource {
         let item = sections[indexPath.row]
 
         cell.titleLabel.text = item.title
-        cell.imageView.tintColor = .white
+        cell.imageView.tintColor = .clear
         cell.imageView.image = item.image
 
         return cell
@@ -121,7 +119,7 @@ extension TopLevelFeedbackViewController: UICollectionViewDelegateFlowLayout {
             : floor(availableWidth / CGFloat(sections.count / 2))
         let item = sections[indexPath.row]
         let titleHeight = item.title.height(constrainedTo: width, font: FeedbackCollectionViewCell.Constants.titleFont)
-        let cellHeight: CGFloat = FeedbackCollectionViewCell.Constants.circleSize.height
+        let cellHeight: CGFloat = FeedbackCollectionViewCell.Constants.imageSize.height
             + FeedbackCollectionViewCell.Constants.padding
             + titleHeight
             + FeedbackViewController.verticalCellPadding
