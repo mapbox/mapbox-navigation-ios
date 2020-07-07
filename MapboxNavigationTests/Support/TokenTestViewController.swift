@@ -15,41 +15,46 @@ class TokenTestViewController: UIViewController {
     
     var tokenExpectation: XCTestExpectation?
     
+    let semaphore = DispatchSemaphore(value: 0)
+    var mapView: NavigationMapView?
+    
     override func loadView() {
         super.loadView()
-        
-        let mapView = NavigationMapView()
-        view.addSubview(mapView)
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        // Force cache-cleaning
-        NotificationCenter.default.post(name: UIApplication.didReceiveMemoryWarningNotification,
-                                        object: nil)
-        
-        let semaphore = DispatchSemaphore(value: 0)
         
         OHHTTPStubs.stubRequests(passingTest: { (request) -> Bool in
             let isMapboxStyleURL = request.url?.isMapboxAPIURL ?? false
             guard isMapboxStyleURL else { return true }
             self.mapViewToken = request.url?.queryItem("sku")?.value
-            semaphore.signal()
+            self.semaphore.signal()
             return true
         }) { (_) -> OHHTTPStubsResponse in
             return OHHTTPStubsResponse(data: "".data(using: .utf8)!, statusCode: 200, headers: [:])
         }
         
+        // Force cache-cleaning
+        NotificationCenter.default.post(name: UIApplication.didReceiveMemoryWarningNotification,
+                                        object: nil)
+        
+        MGLOfflineStorage.shared.clearAmbientCache { _ in
+            self.mapView = NavigationMapView(frame: self.view.bounds)
+            self.view.addSubview(self.mapView!)
+        }
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
         DispatchQueue.global().async {
             self.directionsToken = Directions.skuToken
             self.speechSynthesizerToken = SpeechSynthesizer.skuToken
             
-            _ = semaphore.wait(timeout: .now() + 4)
+            _ = self.semaphore.wait(timeout: .now() + 4)
             
             DispatchQueue.main.async {
                 OHHTTPStubs.removeAllStubs()
-                self.tokenExpectation?.fulfill()
+                if self.mapViewToken != nil {
+                    self.tokenExpectation?.fulfill()
+                }
             }
         }
     }
