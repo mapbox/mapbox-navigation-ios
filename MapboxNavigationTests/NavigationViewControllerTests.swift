@@ -117,7 +117,12 @@ class NavigationViewControllerTests: XCTestCase {
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:willArriveAt:after:distance:)"), "Pre-arrival delegate message not fired.")
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didArriveAt:)"))
         
-        navigationViewController.dismiss(animated: false, completion: nil)
+        let dismissExpectation = XCTestExpectation(description: "VC should be dismissed")
+        navigationViewController.dismiss(animated: false) {
+            dismissExpectation.fulfill()
+        }
+        
+        wait(for: [dismissExpectation], timeout: 3)
     }
     
     // If tunnel flags are enabled and we need to switch styles, we should not force refresh the map style because we have only 1 style.
@@ -242,6 +247,13 @@ class NavigationViewControllerTests: XCTestCase {
         
         XCTAssertNotNil(instructionsBannerView.primaryLabel.text)
         XCTAssertEqual(instructionsBannerView.primaryLabel.text, firstInstruction?.primaryInstruction.text)
+        
+        let dismissExpectation = XCTestExpectation(description: "VC should be dismissed")
+        navigationViewController.dismiss(animated: false) {
+            dismissExpectation.fulfill()
+        }
+        
+        wait(for: [dismissExpectation], timeout: 3)
     }
     
     func testBannerInjection() {

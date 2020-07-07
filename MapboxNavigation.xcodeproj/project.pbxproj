@@ -26,13 +26,8 @@
 		16E4F97F205B05FE00531791 /* MapboxVoiceControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E4F97E205B05FE00531791 /* MapboxVoiceControllerTests.swift */; };
 		16EF6C1E21193A9600AA580B /* CarPlayManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EF6C1D21193A9600AA580B /* CarPlayManagerTests.swift */; };
 		16EF6C22211BA4B300AA580B /* CarPlayMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EF6C21211BA4B300AA580B /* CarPlayMapViewController.swift */; };
-		2B2B1EE02424B95600FA18A6 /* ExampleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2B1EDF2424B95600FA18A6 /* ExampleUITests.swift */; };
-		2B2B1EE72424CE8100FA18A6 /* SKUTestable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355B469C22B9031E009CE634 /* SKUTestable.swift */; };
-		2B2B1EE82424CEBA00FA18A6 /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 355B469E22B904D2009CE634 /* OHHTTPStubs.framework */; };
-		2B2B1EE92424CEC600FA18A6 /* OHHTTPStubs.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 355B469E22B904D2009CE634 /* OHHTTPStubs.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2B2B1EEB2424D0A700FA18A6 /* ViewController+UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2B1EEA2424D0A700FA18A6 /* ViewController+UITests.swift */; };
+		2B07444124B4832400615E87 /* TokenTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B07444024B4832400615E87 /* TokenTestViewController.swift */; };
 		2B2B1EEE2424E55800FA18A6 /* SKUIDTestable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2B1EED2424E55800FA18A6 /* SKUIDTestable.swift */; };
-		2B2B1EEF2424E55800FA18A6 /* SKUIDTestable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2B1EED2424E55800FA18A6 /* SKUIDTestable.swift */; };
 		35002D611E5F6ADB0090E733 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35002D5F1E5F6ADB0090E733 /* Assets.xcassets */; };
 		35002D691E5F6B2F0090E733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35002D661E5F6B1B0090E733 /* Main.storyboard */; };
 		3502231A205BC94E00E1449A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35022319205BC94E00E1449A /* Constants.swift */; };
@@ -402,8 +397,6 @@
 		DA8805002316EAED00B54D87 /* ViewController+GuidanceCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED6285522CBE4CE00058A51 /* ViewController+GuidanceCards.swift */; };
 		DA8F3A7623B5D84900B56786 /* SpeedLimitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8F3A7523B5D84900B56786 /* SpeedLimitView.swift */; };
 		DA8F3A7823B5DB7900B56786 /* SpeedLimitStyleKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8F3A7723B5DB7900B56786 /* SpeedLimitStyleKit.swift */; };
-		DAA3804E247D75AD007F4670 /* ViewController+UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2B1EEA2424D0A700FA18A6 /* ViewController+UITests.swift */; };
-		DAA3804F247D75C8007F4670 /* SKUTestable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355B469C22B9031E009CE634 /* SKUTestable.swift */; };
 		DAA96D18215A961D00BEF703 /* route-doubling-back.json in Resources */ = {isa = PBXBuildFile; fileRef = DAA96D17215A961D00BEF703 /* route-doubling-back.json */; };
 		DAAE5F301EAE4C4700832871 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DAAE5F321EAE4C4700832871 /* Localizable.strings */; };
 		DAD17202214DB12B009C8161 /* CPMapTemplateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD17201214DB12B009C8161 /* CPMapTemplateTests.swift */; };
@@ -414,13 +407,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		2B2B1EE22424B95600FA18A6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 358D14621E5E3B7700ADE590;
-			remoteInfo = Example;
-		};
 		3525449B1E663D2C004C8F1C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
@@ -570,7 +556,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				2B2B1EE92424CEC600FA18A6 /* OHHTTPStubs.framework in Embed Frameworks */,
 				C549F8331F17F2C5001A0A2D /* MapboxMobileEvents.framework in Embed Frameworks */,
 				35CC14181F79A434009E872A /* Turf.framework in Embed Frameworks */,
 				492B6F85213703EE0076D2C6 /* MapboxGeocoder.framework in Embed Frameworks */,
@@ -655,10 +640,7 @@
 		16E4F97E205B05FE00531791 /* MapboxVoiceControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxVoiceControllerTests.swift; sourceTree = "<group>"; };
 		16EF6C1D21193A9600AA580B /* CarPlayManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayManagerTests.swift; sourceTree = "<group>"; };
 		16EF6C21211BA4B300AA580B /* CarPlayMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayMapViewController.swift; sourceTree = "<group>"; };
-		2B2B1EDD2424B95600FA18A6 /* ExampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ExampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		2B2B1EDF2424B95600FA18A6 /* ExampleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleUITests.swift; sourceTree = "<group>"; };
-		2B2B1EE12424B95600FA18A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2B2B1EEA2424D0A700FA18A6 /* ViewController+UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+UITests.swift"; sourceTree = "<group>"; };
+		2B07444024B4832400615E87 /* TokenTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenTestViewController.swift; sourceTree = "<group>"; };
 		2B2B1EED2424E55800FA18A6 /* SKUIDTestable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKUIDTestable.swift; sourceTree = "<group>"; };
 		35002D5D1E5F6ABB0090E733 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		35002D5F1E5F6ADB0090E733 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -1085,13 +1067,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		2B2B1EDA2424B95600FA18A6 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		351BEBD31E5BCC28006FE110 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1107,7 +1082,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2B2B1EE82424CEBA00FA18A6 /* OHHTTPStubs.framework in Frameworks */,
 				35E9B0AD1F9E0F8F00BF84AB /* MapboxNavigation.framework in Frameworks */,
 				35C98736212E045200808B82 /* MapboxNavigationNative.framework in Frameworks */,
 				3504DF7522B79B1D00D2FD3C /* MapboxAccounts.framework in Frameworks */,
@@ -1274,17 +1248,9 @@
 				16E3625B201265D600DF0592 /* ImageDownloadOperationSpy.swift */,
 				1662244620256C0700EA4824 /* ImageLoadingURLProtocolSpy.swift */,
 				169A9709216440820082A6A0 /* NavigationViewControllerTestDoubles.swift */,
+				2B07444024B4832400615E87 /* TokenTestViewController.swift */,
 			);
 			path = Support;
-			sourceTree = "<group>";
-		};
-		2B2B1EDE2424B95600FA18A6 /* ExampleUITests */ = {
-			isa = PBXGroup;
-			children = (
-				2B2B1EDF2424B95600FA18A6 /* ExampleUITests.swift */,
-				2B2B1EE12424B95600FA18A6 /* Info.plist */,
-			);
-			path = ExampleUITests;
 			sourceTree = "<group>";
 		};
 		35002D721E5F6C830090E733 /* Supporting files */ = {
@@ -1468,7 +1434,6 @@
 				35379CFB21480BFB00FD402E /* AppDelegate+CarPlay.swift */,
 				358D14671E5E3B7700ADE590 /* ViewController.swift */,
 				AED6285522CBE4CE00058A51 /* ViewController+GuidanceCards.swift */,
-				2B2B1EEA2424D0A700FA18A6 /* ViewController+UITests.swift */,
 				C5D9800C1EFA8BA9006DBF2E /* CustomViewController.swift */,
 				6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */,
 				C51FC31620F689F800400CE7 /* CustomStyles.swift */,
@@ -1731,7 +1696,6 @@
 				35CDA81C21908F320072B675 /* BenchTests */,
 				35CDA82721908F320072B675 /* BenchUITests */,
 				35CDA85F2190F2A30072B675 /* TestHelper */,
-				2B2B1EDE2424B95600FA18A6 /* ExampleUITests */,
 				C5ADFBCA1DDCC7840011824B /* Products */,
 				A9E2B43473B53369153F54C6 /* Frameworks */,
 			);
@@ -1750,7 +1714,6 @@
 				35CDA81921908F320072B675 /* BenchTests.xctest */,
 				35CDA82421908F320072B675 /* BenchUITests.xctest */,
 				35CDA85E2190F2A30072B675 /* TestHelper.framework */,
-				2B2B1EDD2424B95600FA18A6 /* ExampleUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1845,24 +1808,6 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		2B2B1EDC2424B95600FA18A6 /* ExampleUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 2B2B1EE62424B95600FA18A6 /* Build configuration list for PBXNativeTarget "ExampleUITests" */;
-			buildPhases = (
-				2B2B1ED92424B95600FA18A6 /* Sources */,
-				2B2B1EDA2424B95600FA18A6 /* Frameworks */,
-				2B2B1EDB2424B95600FA18A6 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				2B2B1EE32424B95600FA18A6 /* PBXTargetDependency */,
-			);
-			name = ExampleUITests;
-			productName = ExampleUITests;
-			productReference = 2B2B1EDD2424B95600FA18A6 /* ExampleUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 		351BEBD61E5BCC28006FE110 /* MapboxNavigation */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 351BEBDE1E5BCC28006FE110 /* Build configuration list for PBXNativeTarget "MapboxNavigation" */;
@@ -2079,11 +2024,6 @@
 				LastUpgradeCheck = 1150;
 				ORGANIZATIONNAME = Mapbox;
 				TargetAttributes = {
-					2B2B1EDC2424B95600FA18A6 = {
-						CreatedOnToolsVersion = 11.3.1;
-						ProvisioningStyle = Automatic;
-						TestTargetID = 358D14621E5E3B7700ADE590;
-					};
 					351BEBD61E5BCC28006FE110 = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = GJZR2MEM28;
@@ -2200,19 +2140,11 @@
 				35CDA80521908F2F0072B675 /* Bench */,
 				35CDA81821908F320072B675 /* BenchTests */,
 				35CDA82321908F320072B675 /* BenchUITests */,
-				2B2B1EDC2424B95600FA18A6 /* ExampleUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		2B2B1EDB2424B95600FA18A6 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		351BEBD51E5BCC28006FE110 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2479,15 +2411,6 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		2B2B1ED92424B95600FA18A6 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2B2B1EE02424B95600FA18A6 /* ExampleUITests.swift in Sources */,
-				2B2B1EEF2424E55800FA18A6 /* SKUIDTestable.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		351BEBD21E5BCC28006FE110 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2607,9 +2530,7 @@
 				3529FCF821A5C62400AEA9AA /* SettingsViewController.swift in Sources */,
 				3529FCF421A5C5C600AEA9AA /* SettingsItems.swift in Sources */,
 				3529FCF221A5C5B400AEA9AA /* ResizableView.swift in Sources */,
-				2B2B1EEB2424D0A700FA18A6 /* ViewController+UITests.swift in Sources */,
 				C5D9800D1EFA8BA9006DBF2E /* CustomViewController.swift in Sources */,
-				2B2B1EE72424CE8100FA18A6 /* SKUTestable.swift in Sources */,
 				AED6285622CBE4CE00058A51 /* ViewController+GuidanceCards.swift in Sources */,
 				C51FC31720F689F800400CE7 /* CustomStyles.swift in Sources */,
 				6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */,
@@ -2650,6 +2571,7 @@
 				8DEDBCA9222F442900DA2618 /* CarPlayNavigationViewControllerTests.swift in Sources */,
 				35B1AEBC20AD9B3C00C8544E /* LeaksSpec.swift in Sources */,
 				16A509D5202A87B20011D788 /* ImageDownloaderTests.swift in Sources */,
+				2B07444124B4832400615E87 /* TokenTestViewController.swift in Sources */,
 				8D86AE8B21C31CC80064A304 /* ManeuverArrowTests.swift in Sources */,
 				8D54F14A206ECF720038736D /* InstructionPresenterTests.swift in Sources */,
 				166224452025699600EA4824 /* ImageRepositoryTests.swift in Sources */,
@@ -2719,7 +2641,6 @@
 				C53F2EE420EBC95600D9798F /* ViewController.swift in Sources */,
 				DA303CAB21B7A93B00F921DC /* OfflineViewController.swift in Sources */,
 				C53F2EE520EBC95600D9798F /* CustomViewController.swift in Sources */,
-				DAA3804F247D75C8007F4670 /* SKUTestable.swift in Sources */,
 				DA303CAA21B7A93400F921DC /* ResizableView.swift in Sources */,
 				C53F2EE720EBC95600D9798F /* WaypointConfirmationViewController.swift in Sources */,
 				C5DE4B6220F6B6B3007AFBE6 /* CustomStyles.swift in Sources */,
@@ -2729,7 +2650,6 @@
 				C53F2EE820EBC95600D9798F /* AppDelegate.swift in Sources */,
 				DA303CA621B7A90100F921DC /* UIViewController.swift in Sources */,
 				3577B878214FF35800094294 /* FavoritesList.swift in Sources */,
-				DAA3804E247D75AD007F4670 /* ViewController+UITests.swift in Sources */,
 				DA303CA921B7A93100F921DC /* SettingsItems.swift in Sources */,
 				DA303CA721B7A91C00F921DC /* SettingsViewController.swift in Sources */,
 			);
@@ -2807,11 +2727,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		2B2B1EE32424B95600FA18A6 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 358D14621E5E3B7700ADE590 /* Example */;
-			targetProxy = 2B2B1EE22424B95600FA18A6 /* PBXContainerItemProxy */;
-		};
 		3525449C1E663D2C004C8F1C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C5ADFBC81DDCC7840011824B /* MapboxCoreNavigation */;
@@ -3097,50 +3012,6 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		2B2B1EE42424B95600FA18A6 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Automatic;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = ExampleUITests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.ExampleUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Example;
-			};
-			name = Debug;
-		};
-		2B2B1EE52424B95600FA18A6 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Automatic;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = ExampleUITests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.ExampleUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Example;
-			};
-			name = Release;
-		};
 		351BEBDC1E5BCC28006FE110 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3766,15 +3637,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		2B2B1EE62424B95600FA18A6 /* Build configuration list for PBXNativeTarget "ExampleUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				2B2B1EE42424B95600FA18A6 /* Debug */,
-				2B2B1EE52424B95600FA18A6 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		351BEBDE1E5BCC28006FE110 /* Build configuration list for PBXNativeTarget "MapboxNavigation" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
