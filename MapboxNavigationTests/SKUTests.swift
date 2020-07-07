@@ -24,4 +24,19 @@ class SKUTests: XCTestCase {
         
         XCTAssertEqual(speechSkuToken?.skuId, SkuID.navigationUser.rawValue)
     }
+    
+    func testSKUTokensMatch() {
+        let viewController = TokenTestViewController()
+        let tokenExpectation = XCTestExpectation(description: "All tokens should be fetched")
+        viewController.tokenExpectation = tokenExpectation
+        let rootViewController = UIApplication.shared.delegate!.window!!.rootViewController!
+        
+        rootViewController.present(viewController, animated: false, completion: nil)
+        
+        wait(for: [tokenExpectation], timeout: 5)
+        
+        XCTAssertEqual(viewController.mapViewToken!.skuId, SkuID.navigationUser.rawValue)
+        XCTAssertEqual(viewController.mapViewToken, viewController.directionsToken)
+        XCTAssertEqual(viewController.mapViewToken, viewController.speechSynthesizerToken)
+    }
 }
