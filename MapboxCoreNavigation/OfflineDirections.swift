@@ -116,7 +116,14 @@ public class NavigationDirections: Directions {
      */
     public func configureRouter(tilesURL: URL, completionHandler: @escaping NavigationDirectionsCompletionHandler) {
         NavigationDirectionsConstants.offlineSerialQueue.sync {
-            let params = RouterParams(tilesPath: tilesURL.path, inMemoryTileCache: nil, mapMatchingSpatialCache: nil, threadsCount: nil, endpointConfig: nil)
+            let skuTokenProvider = SkuTokenProvider()
+            let tileEndpointConfig = TileEndpointConfiguration(host: "",
+                                                               version: "",
+                                                               token: "",
+                                                               userAgent: "",
+                                                               navigatorVersion: "",
+                                                               skuTokenSource: skuTokenProvider)
+            let params = RouterParams(tilesPath: tilesURL.path, inMemoryTileCache: nil, mapMatchingSpatialCache: nil, threadsCount: nil, endpointConfig: tileEndpointConfig)
             let tileCount = self.navigator.configureRouter(for: params)
             DispatchQueue.main.async {
                 completionHandler(tileCount)
