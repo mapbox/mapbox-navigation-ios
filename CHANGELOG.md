@@ -1,9 +1,10 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## master
+## v1.0.0
 
 ### Packaging
 
+* Carthage v0.35 or above is now required for installing this SDK if you use Carthage. ([`81a36d0`](https://github.com/mapbox/mapbox-navigation-ios/commit/81a36d090e8a0602b7144ee7697b7857675b496f)) 
 * For the time being, MapboxCoreNavigation.framework depends on a build of MapboxNavigationNative.framework that is only available to authorized beta testers. Please contact your Mapbox sales representative or [support team](https://support.mapbox.com/) to learn more about the beta testing program. ([#2412](https://github.com/mapbox/mapbox-navigation-ios/pull/2412))
 * Xcode 11.4.1 or above is now required for building this SDK from source. ([#2417](https://github.com/mapbox/mapbox-navigation-ios/pull/2417))
 * Enabled MAU billing by default, so that SDKs usage of Mapbox APIs is [billed](https://www.mapbox.com/pricing/) together based on [monthly active users](https://docs.mapbox.com/help/glossary/monthly-active-users/) rather than individually by HTTP request. If you prefer to still use request-based billing, set the `MBXNavigationBillingMethod` key in Info.plist to `request` ([#2405](https://github.com/mapbox/mapbox-navigation-ios/pull/2405).
