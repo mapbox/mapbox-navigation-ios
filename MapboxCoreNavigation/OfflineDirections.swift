@@ -117,9 +117,9 @@ public class NavigationDirections: Directions {
     public func configureRouter(tilesURL: URL, completionHandler: @escaping NavigationDirectionsCompletionHandler) {
         NavigationDirectionsConstants.offlineSerialQueue.sync {
             let skuTokenProvider = SkuTokenProvider()
-            let tileEndpointConfig = TileEndpointConfiguration(host: "",
+            let tileEndpointConfig = TileEndpointConfiguration(host: credentials.host.absoluteString,
                                                                version: "",
-                                                               token: "",
+                                                               token: credentials.accessToken ?? "",
                                                                userAgent: "",
                                                                navigatorVersion: "",
                                                                skuTokenSource: skuTokenProvider)
