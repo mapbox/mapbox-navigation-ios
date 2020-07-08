@@ -231,6 +231,7 @@
 		3A163AE0249901C300D66A0D /* RouteStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A163ADF249901C300D66A0D /* RouteStateTests.swift */; };
 		3A163AE3249901D000D66A0D /* FixLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A163AE2249901D000D66A0D /* FixLocation.swift */; };
 		3A45EEF424B8964400F761EB /* SkuTokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A45EEF324B8964400F761EB /* SkuTokenProvider.swift */; };
+		3A45EEF624B8964400F761EB /* SkuTokenProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A45EEF524B8964400F761EB /* SkuTokenProviderTests.swift */; };
 		3EA9301B03F8679BEDD4795F /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA93A10227A7DAF1861D9F5 /* Cache.swift */; };
 		3EA9369C33A8F10DAE9043AA /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA934C5D8DBAA19DB0F5271 /* ImageDownloader.swift */; };
 		3EA9371104016CD402547F1A /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA938479CF48D7AD1B6369B /* ImageCache.swift */; };
@@ -829,6 +830,7 @@
 		3A163ADF249901C300D66A0D /* RouteStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteStateTests.swift; sourceTree = "<group>"; };
 		3A163AE2249901D000D66A0D /* FixLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixLocation.swift; sourceTree = "<group>"; };
 		3A45EEF324B8964400F761EB /* SkuTokenProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkuTokenProvider.swift; sourceTree = "<group>"; };
+		3A45EEF524B8964400F761EB /* SkuTokenProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkuTokenProviderTests.swift; sourceTree = "<group>"; };
 		3EA93170CB959F3065ACFFC3 /* SpeechAPISpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeechAPISpy.swift; sourceTree = "<group>"; };
 		3EA93230997B8D59E3B76C8C /* InstructionPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionPresenter.swift; sourceTree = "<group>"; };
 		3EA934C5D8DBAA19DB0F5271 /* ImageDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
@@ -1769,6 +1771,7 @@
 				C5ABB50D20408D2C00AFA92C /* NavigationServiceTests.swift */,
 				8DB7EF692176674800DA83A3 /* MapboxNavigationServiceSpec.swift */,
 				C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */,
+				3A45EEF524B8964400F761EB /* SkuTokenProviderTests.swift */,
 				C582BA2B2073E77E00647DAA /* StringTests.swift */,
 				AE8B1B96207D2B2B003050F6 /* TunnelAuthorityTests.swift */,
 				3506DE39216E2ADE007DA352 /* OfflineRoutingTests.swift */,
@@ -2711,6 +2714,7 @@
 			files = (
 				3519D01E21F0842900582FF5 /* CLLocationTests.swift in Sources */,
 				162039CF216C348500875F5C /* NavigationEventsManagerTests.swift in Sources */,
+				3A45EEF624B8964400F761EB /* SkuTokenProviderTests.swift in Sources */,
 				8DB7EF6C2176688D00DA83A3 /* LeakTest.swift in Sources */,
 				C5ADFBD81DDCC7840011824B /* MapboxCoreNavigationTests.swift in Sources */,
 				DAD903AF23E3DCC80057CF1F /* DateTests.swift in Sources */,
