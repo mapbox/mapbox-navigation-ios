@@ -76,16 +76,15 @@ step-library:
         command: |
           xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=13.4.1,name=iPhone 8 Plus' -project MapboxNavigation.xcodeproj -scheme Example clean build | xcpretty
 
-  - &trigger-metrics:
-    steps:
-      - run:
-          name: Trigger metrics
-          command: |
-            if [ -n "${MOBILE_METRICS_TOKEN}" ]; then
-              bash -c "curl -X POST --header \"Content-Type: application/json\" --data '{\"parameters\": {\"run_ios_navigation_benchmark\": true, \"ci_ref\": $CIRCLE_BUILD_NUM }, \"branch\": \"master\" }' https://circleci.com/api/v2/project/github/mapbox/mobile-metrics/pipeline?circle-token=${MOBILE_METRICS_TOKEN}"
-            else
-              echo "MOBILE_METRICS_TOKEN not provided"
-            fi
+  - &trigger-metrics
+      run:
+        name: Trigger metrics
+        command: |
+          if [ -n "${MOBILE_METRICS_TOKEN}" ]; then
+            bash -c "curl -X POST --header \"Content-Type: application/json\" --data '{\"parameters\": {\"run_ios_navigation_benchmark\": true, \"ci_ref\": $CIRCLE_BUILD_NUM }, \"branch\": \"master\" }' https://circleci.com/api/v2/project/github/mapbox/mobile-metrics/pipeline?circle-token=${MOBILE_METRICS_TOKEN}"
+          else
+            echo "MOBILE_METRICS_TOKEN not provided"
+          fi
 
 jobs:
   pod-job:
@@ -206,8 +205,10 @@ jobs:
   ios-trigger-metrics:
     macos:
       xcode: "11.4.1"
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
-      - trigger-metrics
+      - *trigger-metrics
 
 workflows:
   workflow:
