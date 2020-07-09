@@ -240,7 +240,7 @@ workflows:
           iOS: "12.2"
           lint: true
       - xcode-11-examples
-      - ios-trigger-metrics
+      - ios-trigger-metrics:
           filters:
             branches:
               only: master
