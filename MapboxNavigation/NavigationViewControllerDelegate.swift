@@ -188,16 +188,6 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate{
      - returns: The road name to display in the label, or nil to hide the label.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, roadNameAt location: CLLocation) -> String?
-    
-    //MARK: Obsolete
-    
-    @available(*, deprecated, message: "Use MGLMapViewDelegate.mapView(_:imageFor:) instead.")
-    
-    func navigationViewController(_ navigationViewController: NavigationViewController, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage?
-    
-    @available(*, deprecated, message: "Use MGLMapViewDelegate.mapView(_:viewFor:) instead.")
-    
-    func navigationViewController(_ navigationViewController: NavigationViewController, viewFor annotation: MGLAnnotation) -> MGLAnnotationView?
 }
 
 public extension NavigationViewControllerDelegate {
@@ -349,22 +339,6 @@ public extension NavigationViewControllerDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, roadNameAt location: CLLocation) -> String? {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
-        return nil
-    }
-    
-    /**
-     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
-     */
-    func navigationViewController(_ navigationViewController: NavigationViewController, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
-        return nil
-    }
-    
-    /**
-     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
-     */
-    func navigationViewController(_ navigationViewController: NavigationViewController, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
         return nil
     }
