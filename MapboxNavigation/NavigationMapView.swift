@@ -1084,7 +1084,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             let lineCoordinates = Array(buffPtr)
 
             // Get congestion color for the stop.
-            let congestionLevel = line.attributes["congestion"] as! String
+            let congestionLevel = line.attributes["congestion"] as? String
             let associatedCongestionColor = congestionColor(for: congestionLevel)
 
             // Measure the line length of the traffic segment.
@@ -1145,7 +1145,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Given a congestion level, return its associated color.
      */
-    private func congestionColor(for congestionLevel: String) -> UIColor {
+    private func congestionColor(for congestionLevel: String?) -> UIColor {
         switch congestionLevel {
         case "low":
             return trafficLowColor
