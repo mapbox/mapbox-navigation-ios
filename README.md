@@ -34,6 +34,15 @@ The Mapbox Navigation SDK is also available [for Android](https://github.com/map
 
 To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
 
+1. Create a Mapbox API token (from your account page on [mapbox.com](https://www.mapbox.com)) with the      `DOWNLOADS:READ` scope. 
+   **PLEASE NOTE: This is not the same as your production Mapbox API token.** 
+   Once you have the token, create a `~/.netrc` which looks like this:
+   ```
+   machine api.mapbox.com 
+      login mapbox
+      password <INSERT API TOKEN>
+   ```
+
 1. Create a [Podfile](https://guides.cocoapods.org/syntax/podfile.html) with the following specification:
    ```ruby
    pod 'MapboxNavigation', '~> 0.40.0'
@@ -45,12 +54,21 @@ To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
 
 Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/Carthage/Carthage/):
 
+1. Create a Mapbox API token (from your account page on [mapbox.com](https://www.mapbox.com)) with the      `DOWNLOADS:READ` scope. 
+   **PLEASE NOTE: This is not the same as your production Mapbox API token.** 
+   Once you have the token, create a `~/.netrc` which looks like this:
+   ```
+   machine api.mapbox.com 
+      login mapbox
+      password <INSERT API TOKEN>
+   ```
+
 1. Create a [Cartfile](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#github-repositories) with the following dependency:
    ```cartfile
    github "mapbox/mapbox-navigation-ios" ~> 0.40
    ```
 
-1. Run `carthage update --platform iOS` to build just the iOS dependencies.
+1. Run `carthage update --platform iOS --use-netrc` to build just the iOS dependencies.
 
 1. Follow the rest of [Carthage’s iOS integration instructions](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos). Your application target’s Embedded Frameworks should include `MapboxNavigation.framework`, `MapboxCoreNavigation.framework`, `MapboxNavigationNative.framework`, and `MapboxAccounts.framework`.
 
