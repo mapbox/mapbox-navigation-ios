@@ -85,6 +85,7 @@ public enum RoadClosureSubtype: String {
     case roadMissingFromMap
 }
 
+/// Enum denoting the origin source of the corresponding feedback item
 public enum FeedbackSource: Int, CustomStringConvertible {
     case user
     case reroute

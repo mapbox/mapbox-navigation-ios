@@ -24,6 +24,8 @@ custom_categories:
       - RouteVoiceController
       - VoiceControllerDelegate
       - MapboxVoiceController
+      - SpeechError
+      - SpeechFailureAction
       - NavigationOptions
       - NavigationView
   - name: Core Navigation Logic
@@ -37,20 +39,27 @@ custom_categories:
       - RouterDelegate
       - RouteProgress
       - RouteLegProgress
+      - RouteStep
       - RouteStepProgress
+      - CongestionLevel
+      - VisualInstruction
+      - VisualInstructionDelegate
       - NavigationEventsManager
       - EventsManagerDataSource
       - NavigationLocationManager
       - ReplayLocationManager
       - SimulatedLocationManager
       - NavigationRouteOptions
+      - RouteOptions
       - NavigationMatchOptions
       - NavigationDirections
+      - OfflineRoutingError
       - SimulationMode
   - name: Maps
     children:
       - NavigationMapView
       - NavigationMapViewDelegate
+      - NavigationMapViewCourseTrackingDelegate
       - MGLMapView
   - name: Styling
     children:
@@ -112,3 +121,30 @@ custom_categories:
       - RouteSnappingMinimumHorizontalAccuracy
       - RouteSnappingMinimumSpeed
       - NavigationSettings
+  - name: User Feedback collection
+    children:
+      - FeedbackViewController
+      - FeedbackViewControllerDelegate
+      - FeedbackItem
+      - FeedbackType
+      - IncorrectVisualSubtype
+      - ConfusingAudioSubtype
+      - RouteQualitySubtype
+      - IllegalRouteSubtype
+      - RoadClosureSubtype
+      - FeedbackSource
+      - EndOfRouteFeedback
+  - name: MGL Additions
+    children:
+      - MGLAccountManager
+      - MGLMultiPolygonFeature
+      - MGLMultiPolyline
+      - MGLMultiPolylineFeature
+      - MGLPointAnnotation
+      - MGLPointFeature
+      - MGLPolygon
+      - MGLPolygonFeature
+      - MGLPolyline
+      - MGLPolylineFeature
+      - MGLStyle
+      - MGLVectorTileSource
