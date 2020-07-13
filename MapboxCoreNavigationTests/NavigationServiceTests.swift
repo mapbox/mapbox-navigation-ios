@@ -715,7 +715,14 @@ class NavigationServiceTests: XCTestCase {
                 }
             }
             
-            XCTAssertTrue(voiceInstructionsArray.count == 1, "Voice instructions array should be empty after route simulation.")
+            let remainingDistance = routeController.routeProgress.currentLegProgress.distanceRemaining
+            XCTAssertEqual(remainingDistance, 0, "Remaining distance should be 0.")
+            
+            let remainingDuration = routeController.routeProgress.currentLegProgress.durationRemaining
+            XCTAssertEqual(remainingDuration, 0, "Remaining duration should be 0.")
+            
+            XCTAssertTrue(voiceInstructionsArray.count == 1, "All voice instructions expect last one should be covered during movement along the route.")
+            XCTAssertTrue(bannerInstructionsArray.count == 1, "All banner instructions expect last one should be covered during movement along the route.")
         } else {
             XCTFail("Route in invalid.")
         }
