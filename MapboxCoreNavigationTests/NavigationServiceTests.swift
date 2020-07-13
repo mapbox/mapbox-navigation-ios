@@ -687,24 +687,20 @@ class NavigationServiceTests: XCTestCase {
                     return CLLocation(latitude: currentCoordinate.latitude, longitude: currentCoordinate.longitude)
                 }
                 
-                stepLocations.enumerated().forEach { 
-                    let currentSpokenInstruction = routeController.routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction!.text
+                stepLocations.enumerated().forEach {
+                    let currentSpokenInstruction = navigationService.routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction!.text
+                    XCTAssertFalse(voiceInstructionsArray.isEmpty, "Voice instructions array should not be empty.")
                     if currentSpokenInstruction != voiceInstructionsArray.first {
                         voiceInstructionsArray.removeFirst()
                     }
-                    
-                    print("RouteController spoken instruction: \(currentSpokenInstruction)")
-                    print("Expected spoken instruction: \(voiceInstructionsArray.first!)")
-                    
+
                     XCTAssertEqual(currentSpokenInstruction, voiceInstructionsArray.first)
                     
-                    let currentBannerInstruction = routeController.routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction!.primaryInstruction.text!
+                    let currentBannerInstruction = navigationService.routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction!.primaryInstruction.text!
+                    XCTAssertFalse(bannerInstructionsArray.isEmpty, "Banner instructions array should not be empty.")
                     if currentBannerInstruction != bannerInstructionsArray.first {
                         bannerInstructionsArray.removeFirst()
                     }
-
-                    print("RouteController banner instruction: \(currentBannerInstruction)")
-                    print("Expected banner instruction: \(bannerInstructionsArray.first!)")
                     
                     XCTAssertEqual(currentBannerInstruction, bannerInstructionsArray.first)
                     
@@ -714,14 +710,7 @@ class NavigationServiceTests: XCTestCase {
                         let _ = navigationService.router.userIsOnRoute($0.element)
                         let _ = routeController.location
                         let _ = routeController.snappedLocation
-                    }
-                    
-                    navigationService.router!.locationManager!(navigationService.locationManager, didUpdateLocations: [$0.element])
-                    
-                    for _ in 0..<outOfBandCallsCount {
-                        let _ = navigationService.router.userIsOnRoute($0.element)
-                        let _ = routeController.location
-                        let _ = routeController.snappedLocation
+                        navigationService.router!.locationManager!(navigationService.locationManager, didUpdateLocations: [$0.element])
                     }
                 }
             }
