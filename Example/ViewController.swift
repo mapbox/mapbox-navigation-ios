@@ -196,8 +196,12 @@ class ViewController: UIViewController {
     func requestRoute() {
         guard waypoints.count > 0 else { return }
         guard let mapView = mapView else { return }
-
-        let userWaypoint = Waypoint(location: mapView.userLocation!.location!, heading: mapView.userLocation?.heading, name: "User location")
+        guard let userLocation = mapView.userLocation?.location else {
+            print("User location is not valid. Make sure to enable Location Services.")
+            return
+        }
+        
+        let userWaypoint = Waypoint(location: userLocation, heading: mapView.userLocation?.heading, name: "User location")
         waypoints.insert(userWaypoint, at: 0)
 
         let options = NavigationRouteOptions(waypoints: waypoints)
