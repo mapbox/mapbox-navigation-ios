@@ -26,8 +26,8 @@ class FailingSpeechSynthesizerMock: SpeechSynthesizerStub {
 class MapboxSpeechSynthMock: MapboxSpeechSynthesizer {
     var speakExpectation: XCTestExpectation?
     
-    override func speak(instruction: SpokenInstruction, instructionData: Data) {
-        
+    override func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress) {
+        super.speak(instruction, during: legProgress)
         
         speakExpectation?.fulfill()
     }
