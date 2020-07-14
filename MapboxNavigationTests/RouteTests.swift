@@ -68,14 +68,14 @@ class RouteTests: XCTestCase {
             
             let firstIndexedCoordinate = precedingStepPolyline.closestCoordinate(to: maneuverPolyline.coordinates[0])
             XCTAssertNotNil(firstIndexedCoordinate)
-            XCTAssertLessThan(firstIndexedCoordinate?.distance ?? .greatestFiniteMagnitude, 1, "Start of maneuver polyline for step \(stepIndex) is \(firstIndexedCoordinate?.distance ?? -1) away from approach to intersection.")
+            XCTAssertLessThan(firstIndexedCoordinate!.coordinate.distance(to: maneuverPolyline.coordinates[0]), 1, "Start of maneuver polyline for step \(stepIndex) is \(firstIndexedCoordinate!.coordinate.distance(to: maneuverPolyline.coordinates[0])) away from approach to intersection.")
             
             let indexedManeuverLocation = stepPolyline.closestCoordinate(to: followingStep.maneuverLocation)
             XCTAssertLessThan(indexedManeuverLocation?.distance ?? .greatestFiniteMagnitude, 1, "Maneuver polyline for step \(stepIndex) turns \(indexedManeuverLocation?.distance ?? -1) away from intersection.")
             
             let lastIndexedCoordinate = stepPolyline.closestCoordinate(to: maneuverPolyline.coordinates.last!)
             XCTAssertNotNil(lastIndexedCoordinate)
-            XCTAssertLessThan(lastIndexedCoordinate?.distance ?? .greatestFiniteMagnitude, 1, "End of maneuver polyline for step \(stepIndex) is \(lastIndexedCoordinate?.distance ?? -1) away from outlet from intersection.")
+            XCTAssertLessThan(lastIndexedCoordinate!.coordinate.distance(to: maneuverPolyline.coordinates.last!), 1, "End of maneuver polyline for step \(stepIndex) is \(lastIndexedCoordinate!.coordinate.distance(to: maneuverPolyline.coordinates.last!)) away from outlet from intersection.")
         }
     }
 }

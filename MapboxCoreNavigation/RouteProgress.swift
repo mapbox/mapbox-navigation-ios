@@ -437,16 +437,17 @@ open class RouteLegProgress {
         for (currentStepIndex, step) in remainingSteps.enumerated() {
             guard let shape = step.shape else { continue }
             guard let closestCoordOnStep = shape.closestCoordinate(to: coordinate) else { continue }
+            let closesCoordOnStepDistance = closestCoordOnStep.coordinate.distance(to: coordinate)
             let foundIndex = currentStepIndex + stepIndex
 
             // First time around, currentClosest will be `nil`.
             guard let currentClosestDistance = currentClosest?.distance else {
-                currentClosest = (index: foundIndex, distance: closestCoordOnStep.distance)
+                currentClosest = (index: foundIndex, distance: closesCoordOnStepDistance)
                 continue
             }
 
-            if closestCoordOnStep.distance < currentClosestDistance {
-                currentClosest = (index: foundIndex, distance: closestCoordOnStep.distance)
+            if closesCoordOnStepDistance < currentClosestDistance {
+                currentClosest = (index: foundIndex, distance: closesCoordOnStepDistance)
             }
         }
 
@@ -469,11 +470,7 @@ open class RouteLegProgress {
         var slice = legPolyline
         var accumulatedCoordinates = 0
         return Array(waypoints.drop { (waypoint) -> Bool in
-            var newSlice = slice.sliced(from: waypoint.coordinate)
-            // Work around <https://github.com/mapbox/turf-swift/pull/79>.
-            if newSlice.coordinates.count > 2 && newSlice.coordinates.last == newSlice.coordinates.dropLast().last {
-                newSlice.coordinates.removeLast()
-            }
+            let newSlice = slice.sliced(from: waypoint.coordinate)!
             accumulatedCoordinates += slice.coordinates.count - newSlice.coordinates.count
             slice = newSlice
             return accumulatedCoordinates <= userCoordinateIndex

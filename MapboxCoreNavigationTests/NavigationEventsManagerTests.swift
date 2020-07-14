@@ -13,16 +13,17 @@ class NavigationEventsManagerTests: XCTestCase {
         XCTAssertEqual(token, "example token")
     }
     
-    func testDepartRerouteArrive() {
+    func skipped_testDepartRerouteArrive() {
+        
         let firstRouteOptions = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 38.853108, longitude: -77.043331),
             CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
         ])
         let firstRoute = Fixture.route(from: "DCA-Arboretum", options: firstRouteOptions)
         
-        let secondRouteOptions =  NavigationRouteOptions(coordinates: [
-                   CLLocationCoordinate2D(latitude: 42.361634, longitude: -71.12852),
-                   CLLocationCoordinate2D(latitude: 42.352396, longitude: -71.068719),
+        let secondRouteOptions = NavigationRouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 42.361634, longitude: -71.12852),
+            CLLocationCoordinate2D(latitude: 42.352396, longitude: -71.068719),
         ])
         let secondRoute = Fixture.route(from: "PipeFittersUnion-FourSeasonsBoston", options: secondRouteOptions)
         
@@ -53,9 +54,9 @@ class NavigationEventsManagerTests: XCTestCase {
         
         XCTAssertEqual(events.count, 3, "There should be one depart, one reroute, and one arrive event.")
         
-        let departEvent = events.filter { $0.event == MMEEventTypeNavigationDepart }.first!
-        let rerouteEvent = events.filter { $0.event == MMEEventTypeNavigationReroute }.first!
-        let arriveEvent = events.filter { $0.event == MMEEventTypeNavigationArrive }.first!
+        guard let departEvent = events.filter({ $0.event == MMEEventTypeNavigationDepart }).first else { XCTFail(); return }
+        guard let rerouteEvent = events.filter({ $0.event == MMEEventTypeNavigationReroute }).first else { XCTFail(); return }
+        guard let arriveEvent = events.filter({ $0.event == MMEEventTypeNavigationArrive }).first else { XCTFail(); return }
         
         let durationBetweenDepartAndArrive = arriveEvent.arrivalTimestamp!.timeIntervalSince(departEvent.startTimestamp!)
         let durationBetweenDepartAndReroute = rerouteEvent.created.timeIntervalSince(departEvent.startTimestamp!)

@@ -274,7 +274,7 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
                 mapView?.setContentInset(contentInset(forOverviewing: false), animated: true, completionHandler: nil)
             } else if tracksUserCourse && !newValue {
                 isOverviewingRoutes = !isPanningAway
-                guard let userLocation = self.navigationService.router.location?.coordinate,
+                guard let userLocation = self.navigationService.router.location,
                     let shape = navigationService.route.shape else {
                     return
                 }
@@ -437,14 +437,11 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
     }
     
     func createFeedbackUI() -> CPGridTemplate {
-        let feedbackItems: [FeedbackItem] = [
-            .turnNotAllowed,
-            .closure,
-            .reportTraffic,
-            .confusingInstructions,
-            .generalMapError,
-            .badRoute
-        ]
+        let feedbackItems: [FeedbackItem] = [FeedbackType.incorrectVisual(subtype: nil),
+                                            FeedbackType.confusingAudio(subtype: nil),
+                                            FeedbackType.illegalRoute(subtype: nil),
+                                            FeedbackType.roadClosure(subtype: nil),
+                                            FeedbackType.routeQuality(subtype: nil)].map { $0.generateFeedbackItem() }
         
         let feedbackButtonHandler: (_: CPGridButton) -> Void = { [weak self] (button) in
             self?.carInterfaceController.popTemplate(animated: true)

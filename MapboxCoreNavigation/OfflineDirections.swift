@@ -116,7 +116,8 @@ public class NavigationDirections: Directions {
      */
     public func configureRouter(tilesURL: URL, completionHandler: @escaping NavigationDirectionsCompletionHandler) {
         NavigationDirectionsConstants.offlineSerialQueue.sync {
-            let tileCount = self.navigator.configureRouter(forTilesPath: tilesURL.path)
+            let params = RouterParams(tilesPath: tilesURL.path, inMemoryTileCache: nil, mapMatchingSpatialCache: nil, threadsCount: nil, endpointConfig: nil)
+            let tileCount = self.navigator.configureRouter(for: params)
             DispatchQueue.main.async {
                 completionHandler(tileCount)
             }
@@ -151,7 +152,12 @@ public class NavigationDirections: Directions {
             let tilePath = filePathURL.path
             let outputPath = outputDirectoryURL.path
             
-            let numberOfTiles = MBNavigator().unpackTiles(forPacked_tiles_path: tilePath, output_directory: outputPath)
+            let navigator: Navigator = {
+                let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile,
+                                                      platform: ProfilePlatform.KIOS)
+                return Navigator(profile: settingsProfile, customConfig: "")
+            }()
+            let numberOfTiles = navigator.unpackTiles(forPackedTilesPath: tilePath, outputDirectory: outputPath)
             
             // Report 100% progress
             progressHandler?(totalPackedBytes, totalPackedBytes)
@@ -228,13 +234,15 @@ public class NavigationDirections: Directions {
         }
     }
     
-    var _navigator: MBNavigator!
-    var navigator: MBNavigator {
+    var _navigator: Navigator!
+    var navigator: Navigator {
         assert(currentQueueName() == NavigationDirectionsConstants.offlineSerialQueueLabel,
                "The offline navigator must be accessed from the dedicated serial queue")
         
         if _navigator == nil {
-            self._navigator = MBNavigator()
+            let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile,
+                                                  platform: ProfilePlatform.KIOS)
+            self._navigator = Navigator(profile: settingsProfile, customConfig: "")
         }
         
         return _navigator
