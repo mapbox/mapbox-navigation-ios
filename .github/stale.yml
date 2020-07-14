@@ -15,7 +15,7 @@ limitPerRun: 1
 # Do not archive issues that require a SEMVER major release, those normally
 # have a longer lifeycle.
 exemptLabels:
-  - SEMVER-MAJOR
+  - backwards-incompatible
 
 pulls:
   daysUntilStale: 60
