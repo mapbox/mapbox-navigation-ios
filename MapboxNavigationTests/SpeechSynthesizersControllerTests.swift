@@ -46,10 +46,14 @@ class SystemSpeechSynthMock: SystemSpeechSynthesizer {
 class SpeechSynthesizersControllerTests: XCTestCase {
 
     var synthesizers: [SpeechSynthesizing] = []
-    let route = Fixture.route(from: "route-with-instructions", options: NavigationRouteOptions(coordinates: [
-        CLLocationCoordinate2D(latitude: 40.311012, longitude: -112.47926),
-        CLLocationCoordinate2D(latitude: 29.99908, longitude: -102.828197),
-    ]))
+    let route: Route = {
+        var options = NavigationRouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 40.311012, longitude: -112.47926),
+            CLLocationCoordinate2D(latitude: 29.99908, longitude: -102.828197),
+        ])
+        options.shapeFormat = .polyline
+        return Fixture.route(from: "route-with-instructions", options: options)
+    } ()
     
     override func setUp() {
         synthesizers = [
@@ -116,8 +120,7 @@ class SpeechSynthesizersControllerTests: XCTestCase {
         let expectation = XCTestExpectation(description: "Synthesizers speak should be called")
         let sut = SystemSpeechSynthMock()
         sut.speakExpectation = expectation
-        let dummyService = MapboxNavigationService(route: route, routeOptions: routeOptions)
-        dummyService.simulationMode = .always
+        let dummyService = MapboxNavigationService(route: route, routeOptions: routeOptions, simulating: .always)
         var routeController: RouteVoiceController? = RouteVoiceController(navigationService: dummyService,
                                                                           speechSynthesizer: sut)
         
@@ -129,10 +132,9 @@ class SpeechSynthesizersControllerTests: XCTestCase {
     func testMapboxSpeechSynthesizer() {
         
         let expectation = XCTestExpectation(description: "Synthesizers speak should be called")
-        let sut = SystemSpeechSynthMock()
+        let sut = MapboxSpeechSynthMock()
         sut.speakExpectation = expectation
-        let dummyService = MapboxNavigationService(route: route, routeOptions: routeOptions)
-        dummyService.simulationMode = .always
+        let dummyService = MapboxNavigationService(route: route, routeOptions: routeOptions, simulating: .always)
         var routeController: RouteVoiceController? = RouteVoiceController(navigationService: dummyService,
                                                                           speechSynthesizer: sut)
         
