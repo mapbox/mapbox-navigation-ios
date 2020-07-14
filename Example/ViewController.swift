@@ -138,7 +138,7 @@ class ViewController: UIViewController {
 //        let coordinates = mapView.convert(tap.location(in: mapView), toCoordinateFrom: mapView)
         // Note: The destination name can be modified. The value is used in the top banner when arriving at a destination.
         // CLLocation(latitude: 35.68145223555706, longitude: 139.78575944169057)
-        let coordinate = CLLocationCoordinate2D(latitude: 35.68145223555706, longitude: 139.78575944169057)
+        let coordinate = CLLocationCoordinate2D(latitude: 35.680960119123455, longitude: 139.78491581571785)
         let waypoint = Waypoint(coordinate: coordinate, name: "Dropped Pin #\(waypoints.endIndex + 1)")
         waypoints.append(waypoint)
 
@@ -202,7 +202,7 @@ class ViewController: UIViewController {
     func requestRoute() {
         guard waypoints.count > 0 else { return }
         guard let mapView = mapView else { return }
-        let origin = CLLocation(latitude: 35.68181766072263, longitude: 139.777119511207)
+        let origin = CLLocation(latitude: 35.677573750184806, longitude: 139.7745686565566)
 //        let origin = CLLocationCoordinate2D(latitude: 35.68145223555706, longitude: 139.78575944169057)
         
         let userWaypoint = Waypoint(location: origin, heading: mapView.userLocation?.heading, name: "User location")
