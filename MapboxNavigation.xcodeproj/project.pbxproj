@@ -175,7 +175,6 @@
 		35CDA81021908F310072B675 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35CDA80F21908F310072B675 /* Assets.xcassets */; };
 		35CDA81321908F310072B675 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35CDA81121908F310072B675 /* LaunchScreen.storyboard */; };
 		35CDA81E21908F320072B675 /* BenchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CDA81D21908F320072B675 /* BenchTests.swift */; };
-		35CDA82921908F320072B675 /* BenchUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CDA82821908F320072B675 /* BenchUITests.swift */; };
 		35CDA8362190ADD80072B675 /* ControlRouteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CDA8352190ADD80072B675 /* ControlRouteViewController.swift */; };
 		35CDA8432190EFCC0072B675 /* MapboxNavigationNative.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 35C98734212E042C00808B82 /* MapboxNavigationNative.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		35CDA8462190EFDA0072B675 /* MapboxSpeech.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C5A9DDBD202E12EE007D52DA /* MapboxSpeech.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -789,8 +788,6 @@
 		35CDA81D21908F320072B675 /* BenchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BenchTests.swift; sourceTree = "<group>"; };
 		35CDA81F21908F320072B675 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		35CDA82421908F320072B675 /* BenchUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BenchUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		35CDA82821908F320072B675 /* BenchUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BenchUITests.swift; sourceTree = "<group>"; };
-		35CDA82A21908F320072B675 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		35CDA8352190ADD80072B675 /* ControlRouteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlRouteViewController.swift; sourceTree = "<group>"; };
 		35CDA85E2190F2A30072B675 /* TestHelper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TestHelper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		35CDA8602190F2A40072B675 /* TestHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestHelper.h; sourceTree = "<group>"; };
@@ -1470,15 +1467,6 @@
 			path = BenchTests;
 			sourceTree = "<group>";
 		};
-		35CDA82721908F320072B675 /* BenchUITests */ = {
-			isa = PBXGroup;
-			children = (
-				35CDA82821908F320072B675 /* BenchUITests.swift */,
-				35CDA82A21908F320072B675 /* Info.plist */,
-			);
-			path = BenchUITests;
-			sourceTree = "<group>";
-		};
 		35CDA85F2190F2A30072B675 /* TestHelper */ = {
 			isa = PBXGroup;
 			children = (
@@ -1694,7 +1682,6 @@
 				35B711D01E5E7AD2001EDA8D /* MapboxNavigationTests */,
 				35CDA80721908F2F0072B675 /* Bench */,
 				35CDA81C21908F320072B675 /* BenchTests */,
-				35CDA82721908F320072B675 /* BenchUITests */,
 				35CDA85F2190F2A30072B675 /* TestHelper */,
 				C5ADFBCA1DDCC7840011824B /* Products */,
 				A9E2B43473B53369153F54C6 /* Frameworks */,
@@ -2612,7 +2599,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35CDA82921908F320072B675 /* BenchUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
