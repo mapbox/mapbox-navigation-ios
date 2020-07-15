@@ -52,7 +52,7 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
 
 1. Follow the rest of [Carthage’s iOS integration instructions](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos). Your application target’s Embedded Frameworks should include `MapboxNavigation.framework`, `MapboxCoreNavigation.framework`, `MapboxNavigationNative.framework`, and `MapboxAccounts.framework`.
 
-## Installing 5.10.0-beta
+## Installing the latest stable version with the Maps SDK 5.10.0-beta version
 
 ### Using CocoaPods
 
