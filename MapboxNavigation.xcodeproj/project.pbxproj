@@ -149,7 +149,6 @@
 		35C8DBF8219198320053328C /* route.json in Resources */ = {isa = PBXBuildFile; fileRef = 35C8DBF7219198310053328C /* route.json */; };
 		35C8DBFD2191D0370053328C /* CoreLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C8DBFC2191D0370053328C /* CoreLocation.swift */; };
 		35C8DBFE2191D0BD0053328C /* Turf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CC14141F799496009E872A /* Turf.framework */; };
-		35C8DC082191DA8C0053328C /* MapboxSpeech.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A9DDBD202E12EE007D52DA /* MapboxSpeech.framework */; };
 		35C8DC0B2191DAD20053328C /* MapboxCoreNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */; };
 		35C8DC0C2191DAD20053328C /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigation.framework */; };
 		35C8DC0D2191DAD20053328C /* TestHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CDA85E2190F2A30072B675 /* TestHelper.framework */; };
@@ -483,13 +482,6 @@
 			remoteGlobalIDString = 35CDA80521908F2F0072B675;
 			remoteInfo = Bench;
 		};
-		35CDA82521908F320072B675 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 35CDA80521908F2F0072B675;
-			remoteInfo = Bench;
-		};
 		35CDA8532190F03D0072B675 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
@@ -787,7 +779,6 @@
 		35CDA81921908F320072B675 /* BenchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BenchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		35CDA81D21908F320072B675 /* BenchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BenchTests.swift; sourceTree = "<group>"; };
 		35CDA81F21908F320072B675 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		35CDA82421908F320072B675 /* BenchUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BenchUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		35CDA8352190ADD80072B675 /* ControlRouteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlRouteViewController.swift; sourceTree = "<group>"; };
 		35CDA85E2190F2A30072B675 /* TestHelper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TestHelper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		35CDA8602190F2A40072B675 /* TestHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestHelper.h; sourceTree = "<group>"; };
@@ -1137,14 +1128,6 @@
 				35C8DC0B2191DAD20053328C /* MapboxCoreNavigation.framework in Frameworks */,
 				35C8DC0C2191DAD20053328C /* MapboxNavigation.framework in Frameworks */,
 				35C8DC0D2191DAD20053328C /* TestHelper.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		35CDA82121908F320072B675 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				35C8DC082191DA8C0053328C /* MapboxSpeech.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1699,7 +1682,6 @@
 				C53F2F0720EBC95600D9798F /* Example-CarPlay.app */,
 				35CDA80621908F2F0072B675 /* Bench.app */,
 				35CDA81921908F320072B675 /* BenchTests.xctest */,
-				35CDA82421908F320072B675 /* BenchUITests.xctest */,
 				35CDA85E2190F2A30072B675 /* TestHelper.framework */,
 			);
 			name = Products;
@@ -1902,24 +1884,6 @@
 			productReference = 35CDA81921908F320072B675 /* BenchTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		35CDA82321908F320072B675 /* BenchUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 35CDA83321908F320072B675 /* Build configuration list for PBXNativeTarget "BenchUITests" */;
-			buildPhases = (
-				35CDA82021908F320072B675 /* Sources */,
-				35CDA82121908F320072B675 /* Frameworks */,
-				35CDA82221908F320072B675 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				35CDA82621908F320072B675 /* PBXTargetDependency */,
-			);
-			name = BenchUITests;
-			productName = BenchUITests;
-			productReference = 35CDA82421908F320072B675 /* BenchUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 		35CDA85D2190F2A30072B675 /* TestHelper */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 35CDA86F2190F2A40072B675 /* Build configuration list for PBXNativeTarget "TestHelper" */;
@@ -2046,12 +2010,6 @@
 						ProvisioningStyle = Automatic;
 						TestTargetID = 35CDA80521908F2F0072B675;
 					};
-					35CDA82321908F320072B675 = {
-						CreatedOnToolsVersion = 10.1;
-						DevelopmentTeam = GJZR2MEM28;
-						ProvisioningStyle = Automatic;
-						TestTargetID = 35CDA80521908F2F0072B675;
-					};
 					35CDA85D2190F2A30072B675 = {
 						CreatedOnToolsVersion = 10.1;
 						DevelopmentTeam = GJZR2MEM28;
@@ -2126,7 +2084,6 @@
 				C5ADFBD11DDCC7840011824B /* MapboxCoreNavigationTests */,
 				35CDA80521908F2F0072B675 /* Bench */,
 				35CDA81821908F320072B675 /* BenchTests */,
-				35CDA82321908F320072B675 /* BenchUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -2187,13 +2144,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		35CDA81721908F320072B675 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		35CDA82221908F320072B675 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2596,13 +2546,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		35CDA82021908F320072B675 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		35CDA85A2190F2A30072B675 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2768,11 +2711,6 @@
 			isa = PBXTargetDependency;
 			target = 35CDA80521908F2F0072B675 /* Bench */;
 			targetProxy = 35CDA81A21908F320072B675 /* PBXContainerItemProxy */;
-		};
-		35CDA82621908F320072B675 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 35CDA80521908F2F0072B675 /* Bench */;
-			targetProxy = 35CDA82521908F320072B675 /* PBXContainerItemProxy */;
 		};
 		35CDA8542190F03D0072B675 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3235,62 +3173,6 @@
 			};
 			name = Release;
 		};
-		35CDA82F21908F320072B675 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = GJZR2MEM28;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = BenchUITests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.BenchUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Bench;
-			};
-			name = Debug;
-		};
-		35CDA83021908F320072B675 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = GJZR2MEM28;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = BenchUITests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.BenchUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Bench;
-			};
-			name = Release;
-		};
 		35CDA8702190F2A40072B675 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3665,15 +3547,6 @@
 			buildConfigurations = (
 				35CDA82D21908F320072B675 /* Debug */,
 				35CDA82E21908F320072B675 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		35CDA83321908F320072B675 /* Build configuration list for PBXNativeTarget "BenchUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				35CDA82F21908F320072B675 /* Debug */,
-				35CDA83021908F320072B675 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
