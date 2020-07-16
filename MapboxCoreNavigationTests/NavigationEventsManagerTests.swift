@@ -79,6 +79,8 @@ class NavigationEventsManagerTests: XCTestCase {
         let dataSource = MapboxNavigationService(route: route, routeOptions: routeOptions)
         let sessionState = SessionState(currentRoute: route, originalRoute: route)
         
+        // Attempt to create NavigationEventDetails object from global queue, no errors from Main Thread Checker
+        // are expected.
         let expectation = XCTestExpectation()
         DispatchQueue.global().async {
             let _ = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: false)
@@ -86,5 +88,8 @@ class NavigationEventsManagerTests: XCTestCase {
         }
         
         wait(for: [expectation], timeout: 0.1)
+        
+        // Sanity check to verify that no issues occur when creating NavigationEventDetails from main queue.
+        let _ = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: false)
     }
 }
