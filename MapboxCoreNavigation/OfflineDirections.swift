@@ -116,9 +116,24 @@ public class NavigationDirections: Directions {
      */
     public func configureRouter(tilesURL: URL, completionHandler: @escaping NavigationDirectionsCompletionHandler) {
         NavigationDirectionsConstants.offlineSerialQueue.sync {
-            let skuTokenProvider = SkuTokenProvider()
+
+            let tilesVersionGroup = DispatchGroup()
+            tilesVersionGroup.enter()
+            
+            let tilesVersion = RouteTilesVersion(with: credentials)
+            tilesVersion.getAvailableVersions { availableVersions in
+                if let latestVersion = availableVersions.last {
+                    tilesVersion.currentVersion =  latestVersion
+                    self.navigator.clearCache()
+                }
+                tilesVersionGroup.leave()
+            }
+
+            tilesVersionGroup.wait()
+
+            let skuTokenProvider = SkuTokenProvider(with: credentials)
             let tileEndpointConfig = TileEndpointConfiguration(host: credentials.host.absoluteString,
-                                                               version: "",
+                                                               version: tilesVersion.currentVersion,
                                                                token: credentials.accessToken ?? "",
                                                                userAgent: "",
                                                                navigatorVersion: "",
@@ -130,7 +145,7 @@ public class NavigationDirections: Directions {
             }
         }
     }
-    
+
     
     /**
      Unpacks a .tar-file at the given filePathURL to a writeable output directory.

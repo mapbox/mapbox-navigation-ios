@@ -236,6 +236,9 @@
 		3A163AE3249901D000D66A0D /* FixLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A163AE2249901D000D66A0D /* FixLocation.swift */; };
 		3A45EEF424B8964400F761EB /* SkuTokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A45EEF324B8964400F761EB /* SkuTokenProvider.swift */; };
 		3A45EEF624B8964400F761EB /* SkuTokenProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A45EEF524B8964400F761EB /* SkuTokenProviderTests.swift */; };
+		3A8187C924BDAE9C00708F19 /* URLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8187C824BDAE9C00708F19 /* URLSession.swift */; };
+		3A8187CB24BDE72300708F19 /* RouteTiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8187CA24BDE72300708F19 /* RouteTiles.swift */; };
+		3A8187CD24C1B05E00708F19 /* TileRoutingVersionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8187CC24C1B05E00708F19 /* TileRoutingVersionTests.swift */; };
 		3EA9301B03F8679BEDD4795F /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA93A10227A7DAF1861D9F5 /* Cache.swift */; };
 		3EA9369C33A8F10DAE9043AA /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA934C5D8DBAA19DB0F5271 /* ImageDownloader.swift */; };
 		3EA9371104016CD402547F1A /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA938479CF48D7AD1B6369B /* ImageCache.swift */; };
@@ -833,6 +836,9 @@
 		3A163AE2249901D000D66A0D /* FixLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixLocation.swift; sourceTree = "<group>"; };
 		3A45EEF324B8964400F761EB /* SkuTokenProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkuTokenProvider.swift; sourceTree = "<group>"; };
 		3A45EEF524B8964400F761EB /* SkuTokenProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkuTokenProviderTests.swift; sourceTree = "<group>"; };
+		3A8187C824BDAE9C00708F19 /* URLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSession.swift; sourceTree = "<group>"; };
+		3A8187CA24BDE72300708F19 /* RouteTiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteTiles.swift; sourceTree = "<group>"; };
+		3A8187CC24C1B05E00708F19 /* TileRoutingVersionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileRoutingVersionTests.swift; sourceTree = "<group>"; };
 		3EA93170CB959F3065ACFFC3 /* SpeechAPISpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeechAPISpy.swift; sourceTree = "<group>"; };
 		3EA93230997B8D59E3B76C8C /* InstructionPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionPresenter.swift; sourceTree = "<group>"; };
 		3EA934C5D8DBAA19DB0F5271 /* ImageDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
@@ -1675,6 +1681,7 @@
 				35C98732212E037900808B82 /* RouteState.swift */,
 				C561735A1F182113005954F6 /* RouteStep.swift */,
 				351927351F0FA072003A702D /* ScreenCapture.swift */,
+				3A8187C824BDAE9C00708F19 /* URLSession.swift */,
 				DA754E1623AC56E5007E16B5 /* MBXAccounts+CoreNavigationAdditions.h */,
 				DA754E1723AC56E5007E16B5 /* MBXAccounts+CoreNavigationAdditions.m */,
 			);
@@ -1743,6 +1750,7 @@
 				3A45EEF324B8964400F761EB /* SkuTokenProvider.swift */,
 				353E69031EF0C4E5007B2AE5 /* SimulatedLocationManager.swift */,
 				35C98730212E02B500808B82 /* RouteController.swift */,
+				3A8187CA24BDE72300708F19 /* RouteTiles.swift */,
 			);
 			path = MapboxCoreNavigation;
 			sourceTree = "<group>";
@@ -1769,6 +1777,7 @@
 				3506DE39216E2ADE007DA352 /* OfflineRoutingTests.swift */,
 				3519D01D21F0842900582FF5 /* CLLocationTests.swift */,
 				352762A3225B751A0015B632 /* OptionsTests.swift */,
+				3A8187CC24C1B05E00708F19 /* TileRoutingVersionTests.swift */,
 			);
 			path = MapboxCoreNavigationTests;
 			sourceTree = "<group>";
@@ -2634,6 +2643,7 @@
 				353E68FC1EF0B7F8007B2AE5 /* NavigationLocationManager.swift in Sources */,
 				353E68FE1EF0B985007B2AE5 /* BundleAdditions.swift in Sources */,
 				354A9BCD20EA9C8100F03325 /* CoreFeedbackEvent.swift in Sources */,
+				3A8187CB24BDE72300708F19 /* RouteTiles.swift in Sources */,
 				DA754E1923AC56E5007E16B5 /* MBXAccounts+CoreNavigationAdditions.m in Sources */,
 				3582A25020EEC46B0029C5DE /* Router.swift in Sources */,
 				8D75F991212B5C7F00F99CF3 /* TunnelAuthority.swift in Sources */,
@@ -2642,6 +2652,7 @@
 				351174F41EF1C0530065E248 /* ReplayLocationManager.swift in Sources */,
 				3529FCFC21A5C66800AEA9AA /* OfflineDirections.swift in Sources */,
 				C5C94C1C1DDCD2340097296A /* LegacyRouteController.swift in Sources */,
+				3A8187C924BDAE9C00708F19 /* URLSession.swift in Sources */,
 				359574A81F28CC5A00838209 /* CLLocation.swift in Sources */,
 				8DCE1050210FC5880048B0FB /* EndOfRouteFeedback.swift in Sources */,
 				35C98731212E02B500808B82 /* RouteController.swift in Sources */,
@@ -2673,6 +2684,7 @@
 				3519D01E21F0842900582FF5 /* CLLocationTests.swift in Sources */,
 				162039CF216C348500875F5C /* NavigationEventsManagerTests.swift in Sources */,
 				3A45EEF624B8964400F761EB /* SkuTokenProviderTests.swift in Sources */,
+				3A8187CD24C1B05E00708F19 /* TileRoutingVersionTests.swift in Sources */,
 				8DB7EF6C2176688D00DA83A3 /* LeakTest.swift in Sources */,
 				C5ADFBD81DDCC7840011824B /* MapboxCoreNavigationTests.swift in Sources */,
 				DAD903AF23E3DCC80057CF1F /* DateTests.swift in Sources */,
