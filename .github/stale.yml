@@ -1,0 +1,36 @@
+# Configuration for Probot (Stale) - https://github.com/probot/stale
+
+# Ignore issues in a project (defaults to false)
+exemptProjects: true
+
+# Ignore issues in a milestone (defaults to false)
+exemptMilestones: true
+
+# Label to use when marking as stale
+staleLabel: archived
+
+# Limit the number of actions to 1 per hour
+limitPerRun: 1
+
+# Do not archive issues that require a SEMVER major release, those normally
+# have a longer lifeycle.
+exemptLabels:
+  - backwards-incompatible
+
+pulls:
+  daysUntilStale: 60
+  daysUntilClose: 5
+  markComment: >
+    This pull request has been automatically marked as stale because it has not had
+    recent activity. It will be closed if no further activity occurs. Thank you
+    for your contributions.
+  closeComment: Stale.
+
+issues:
+  daysUntilStale: 180
+  daysUntilClose: 5
+  markComment: >
+    This issue has been automatically marked as stale because it has not had
+    recent activity. It will be closed if no further activity occurs. Thank you
+    for your contributions.
+  closeComment: Stale.
