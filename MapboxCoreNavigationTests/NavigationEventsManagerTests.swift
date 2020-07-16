@@ -67,4 +67,24 @@ class NavigationEventsManagerTests: XCTestCase {
         XCTAssertEqual(durationBetweenRerouteAndArrive, 816, accuracy: 1)
         XCTAssertEqual(arriveEvent.rerouteCount, 1)
     }
+    
+    // Test allows to verify whether no Main Thread Checker errors occur during
+    // NavigationEventDetails object creation.
+    func testNavigationEventDetailsGlobalQueue() {
+        let routeOptions = NavigationRouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 38.853108, longitude: -77.043331),
+            CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
+        ])
+        let route = Fixture.route(from: "DCA-Arboretum", options: routeOptions)
+        let dataSource = MapboxNavigationService(route: route, routeOptions: routeOptions)
+        let sessionState = SessionState(currentRoute: route, originalRoute: route)
+        
+        let expectation = XCTestExpectation()
+        DispatchQueue.global().async {
+            let _ = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: false)
+            expectation.fulfill()
+        }
+        
+        wait(for: [expectation], timeout: 0.1)
+    }
 }
