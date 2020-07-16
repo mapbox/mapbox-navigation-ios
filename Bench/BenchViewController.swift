@@ -34,13 +34,21 @@ class BenchViewController: UITableViewController {
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         
-        let controlRoute1 = Item(name: "DCA to Arboretum",
-                                 route: Fixture.route(from: "DCA-Arboretum"))
+        let firstRouteOptions = NavigationRouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 38.853108, longitude: -77.043331),
+            CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906)
+        ])
+        let firstControlRoute = Item(name: "DCA to Arboretum",
+                                     route: Fixture.route(from: "DCA-Arboretum", options: firstRouteOptions))
         
-        let controlRoute2 = Item(name: "Pipe Fitters Union to Four Seasons Boston",
-                                 route: Fixture.route(from: "PipeFittersUnion-FourSeasonsBoston"))
+        let secondRouteOptions = NavigationRouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 42.361634, longitude: -71.12852),
+            CLLocationCoordinate2D(latitude: 42.352396, longitude: -71.068719)
+        ])
+        let secondControlRoute = Item(name: "Pipe Fitters Union to Four Seasons Boston",
+                                      route: Fixture.route(from: "PipeFittersUnion-FourSeasonsBoston", options: secondRouteOptions))
         
-        let section = Section(title: "Control Routes", items: [controlRoute1, controlRoute2])
+        let section = Section(title: "Control Routes", items: [firstControlRoute, secondControlRoute])
         
         dataSource = [section]
     }
@@ -78,8 +86,16 @@ class BenchViewController: UITableViewController {
         let item = dataSource[indexPath.section].items[indexPath.row]
         
         guard let route = item.route else { return }
+        guard let leg = route.legs.first else { return }
+        guard let source = leg.source else { return }
+        guard let destination = leg.destination else { return }
         
-        let viewController = ControlRouteViewController(for: route)
+        let routeOptions = NavigationRouteOptions(coordinates: [
+            source.coordinate,
+            destination.coordinate
+        ])
+        
+        let viewController = ControlRouteViewController(for: route, routeOptions: routeOptions)
         viewController.delegate = self
         navigationController?.pushViewController(viewController, animated: true)
     }

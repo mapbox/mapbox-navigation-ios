@@ -149,7 +149,6 @@
 		35C8DBF8219198320053328C /* route.json in Resources */ = {isa = PBXBuildFile; fileRef = 35C8DBF7219198310053328C /* route.json */; };
 		35C8DBFD2191D0370053328C /* CoreLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C8DBFC2191D0370053328C /* CoreLocation.swift */; };
 		35C8DBFE2191D0BD0053328C /* Turf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CC14141F799496009E872A /* Turf.framework */; };
-		35C8DC082191DA8C0053328C /* MapboxSpeech.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A9DDBD202E12EE007D52DA /* MapboxSpeech.framework */; };
 		35C8DC0B2191DAD20053328C /* MapboxCoreNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */; };
 		35C8DC0C2191DAD20053328C /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigation.framework */; };
 		35C8DC0D2191DAD20053328C /* TestHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CDA85E2190F2A30072B675 /* TestHelper.framework */; };
@@ -175,7 +174,6 @@
 		35CDA81021908F310072B675 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35CDA80F21908F310072B675 /* Assets.xcassets */; };
 		35CDA81321908F310072B675 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35CDA81121908F310072B675 /* LaunchScreen.storyboard */; };
 		35CDA81E21908F320072B675 /* BenchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CDA81D21908F320072B675 /* BenchTests.swift */; };
-		35CDA82921908F320072B675 /* BenchUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CDA82821908F320072B675 /* BenchUITests.swift */; };
 		35CDA8362190ADD80072B675 /* ControlRouteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CDA8352190ADD80072B675 /* ControlRouteViewController.swift */; };
 		35CDA8432190EFCC0072B675 /* MapboxNavigationNative.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 35C98734212E042C00808B82 /* MapboxNavigationNative.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		35CDA8462190EFDA0072B675 /* MapboxSpeech.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C5A9DDBD202E12EE007D52DA /* MapboxSpeech.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -484,13 +482,6 @@
 			remoteGlobalIDString = 35CDA80521908F2F0072B675;
 			remoteInfo = Bench;
 		};
-		35CDA82521908F320072B675 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 35CDA80521908F2F0072B675;
-			remoteInfo = Bench;
-		};
 		35CDA8532190F03D0072B675 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
@@ -788,9 +779,6 @@
 		35CDA81921908F320072B675 /* BenchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BenchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		35CDA81D21908F320072B675 /* BenchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BenchTests.swift; sourceTree = "<group>"; };
 		35CDA81F21908F320072B675 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		35CDA82421908F320072B675 /* BenchUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BenchUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		35CDA82821908F320072B675 /* BenchUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BenchUITests.swift; sourceTree = "<group>"; };
-		35CDA82A21908F320072B675 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		35CDA8352190ADD80072B675 /* ControlRouteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlRouteViewController.swift; sourceTree = "<group>"; };
 		35CDA85E2190F2A30072B675 /* TestHelper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TestHelper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		35CDA8602190F2A40072B675 /* TestHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestHelper.h; sourceTree = "<group>"; };
@@ -1143,14 +1131,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		35CDA82121908F320072B675 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				35C8DC082191DA8C0053328C /* MapboxSpeech.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		35CDA85B2190F2A30072B675 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1470,15 +1450,6 @@
 			path = BenchTests;
 			sourceTree = "<group>";
 		};
-		35CDA82721908F320072B675 /* BenchUITests */ = {
-			isa = PBXGroup;
-			children = (
-				35CDA82821908F320072B675 /* BenchUITests.swift */,
-				35CDA82A21908F320072B675 /* Info.plist */,
-			);
-			path = BenchUITests;
-			sourceTree = "<group>";
-		};
 		35CDA85F2190F2A30072B675 /* TestHelper */ = {
 			isa = PBXGroup;
 			children = (
@@ -1694,7 +1665,6 @@
 				35B711D01E5E7AD2001EDA8D /* MapboxNavigationTests */,
 				35CDA80721908F2F0072B675 /* Bench */,
 				35CDA81C21908F320072B675 /* BenchTests */,
-				35CDA82721908F320072B675 /* BenchUITests */,
 				35CDA85F2190F2A30072B675 /* TestHelper */,
 				C5ADFBCA1DDCC7840011824B /* Products */,
 				A9E2B43473B53369153F54C6 /* Frameworks */,
@@ -1712,7 +1682,6 @@
 				C53F2F0720EBC95600D9798F /* Example-CarPlay.app */,
 				35CDA80621908F2F0072B675 /* Bench.app */,
 				35CDA81921908F320072B675 /* BenchTests.xctest */,
-				35CDA82421908F320072B675 /* BenchUITests.xctest */,
 				35CDA85E2190F2A30072B675 /* TestHelper.framework */,
 			);
 			name = Products;
@@ -1915,24 +1884,6 @@
 			productReference = 35CDA81921908F320072B675 /* BenchTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		35CDA82321908F320072B675 /* BenchUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 35CDA83321908F320072B675 /* Build configuration list for PBXNativeTarget "BenchUITests" */;
-			buildPhases = (
-				35CDA82021908F320072B675 /* Sources */,
-				35CDA82121908F320072B675 /* Frameworks */,
-				35CDA82221908F320072B675 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				35CDA82621908F320072B675 /* PBXTargetDependency */,
-			);
-			name = BenchUITests;
-			productName = BenchUITests;
-			productReference = 35CDA82421908F320072B675 /* BenchUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 		35CDA85D2190F2A30072B675 /* TestHelper */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 35CDA86F2190F2A40072B675 /* Build configuration list for PBXNativeTarget "TestHelper" */;
@@ -2059,12 +2010,6 @@
 						ProvisioningStyle = Automatic;
 						TestTargetID = 35CDA80521908F2F0072B675;
 					};
-					35CDA82321908F320072B675 = {
-						CreatedOnToolsVersion = 10.1;
-						DevelopmentTeam = GJZR2MEM28;
-						ProvisioningStyle = Automatic;
-						TestTargetID = 35CDA80521908F2F0072B675;
-					};
 					35CDA85D2190F2A30072B675 = {
 						CreatedOnToolsVersion = 10.1;
 						DevelopmentTeam = GJZR2MEM28;
@@ -2139,7 +2084,6 @@
 				C5ADFBD11DDCC7840011824B /* MapboxCoreNavigationTests */,
 				35CDA80521908F2F0072B675 /* Bench */,
 				35CDA81821908F320072B675 /* BenchTests */,
-				35CDA82321908F320072B675 /* BenchUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -2200,13 +2144,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		35CDA81721908F320072B675 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		35CDA82221908F320072B675 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2350,6 +2287,7 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
+				"$(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)",
 			);
 			name = "Apply Mapbox Access Token";
 			outputFileListPaths = (
@@ -2358,7 +2296,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# This Run Script build phase helps to keep the navigation SDK’s developers from exposing their own access tokens during development. See <https://www.mapbox.com/help/ios-private-access-token/> for more information. If you are developing an application privately, you may add the MGLMapboxAccessToken key directly to your Info.plist file and delete this build phase.\n\ntoken_file=~/.mapbox\ntoken_file2=~/mapbox\ntoken=\"$(cat $token_file 2>/dev/null || cat $token_file2 2>/dev/null)\"\nif [ \"$token\" ]; then\nplutil -replace MGLMapboxAccessToken -string $token \"$TARGET_BUILD_DIR/$INFOPLIST_PATH\"\nelse\necho 'warning: Missing Mapbox access token'\nopen 'https://www.mapbox.com/account/access-tokens/'\necho \"warning: Get an access token from <https://www.mapbox.com/account/access-tokens/>, then create a new file at $token_file or $token_file2 that contains the access token.\"\nfi\n";
+			shellScript = "# This Run Script build phase helps to keep the navigation SDK’s developers from exposing their own access tokens during development. See <https://www.mapbox.com/help/ios-private-access-token/> for more information. If you are developing an application privately, you may add the MGLMapboxAccessToken key directly to your Info.plist file and delete this build phase.\n\ntoken_file=~/.mapbox\ntoken_file2=~/mapbox\ntoken=\"$(cat $token_file 2>/dev/null || cat $token_file2 2>/dev/null)\"\nif [ \"$token\" ]; then\n  plutil -replace MGLMapboxAccessToken -string $token \"$TARGET_BUILD_DIR/$INFOPLIST_PATH\"\nelse\n  echo 'warning: Missing Mapbox access token'\n  open 'https://www.mapbox.com/account/access-tokens/'\n  echo \"warning: Get an access token from <https://www.mapbox.com/account/access-tokens/>, then create a new file at $token_file or $token_file2 that contains the access token.\"\nfi\n";
 		};
 		8DFD94A12224AC1A00152F45 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2608,14 +2546,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		35CDA82021908F320072B675 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				35CDA82921908F320072B675 /* BenchUITests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		35CDA85A2190F2A30072B675 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2781,11 +2711,6 @@
 			isa = PBXTargetDependency;
 			target = 35CDA80521908F2F0072B675 /* Bench */;
 			targetProxy = 35CDA81A21908F320072B675 /* PBXContainerItemProxy */;
-		};
-		35CDA82621908F320072B675 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 35CDA80521908F2F0072B675 /* Bench */;
-			targetProxy = 35CDA82521908F320072B675 /* PBXContainerItemProxy */;
 		};
 		35CDA8542190F03D0072B675 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3248,62 +3173,6 @@
 			};
 			name = Release;
 		};
-		35CDA82F21908F320072B675 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = GJZR2MEM28;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = BenchUITests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.BenchUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Bench;
-			};
-			name = Debug;
-		};
-		35CDA83021908F320072B675 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = GJZR2MEM28;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = BenchUITests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.BenchUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Bench;
-			};
-			name = Release;
-		};
 		35CDA8702190F2A40072B675 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3678,15 +3547,6 @@
 			buildConfigurations = (
 				35CDA82D21908F320072B675 /* Debug */,
 				35CDA82E21908F320072B675 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		35CDA83321908F320072B675 /* Build configuration list for PBXNativeTarget "BenchUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				35CDA82F21908F320072B675 /* Debug */,
-				35CDA83021908F320072B675 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
