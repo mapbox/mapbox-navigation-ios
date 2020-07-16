@@ -54,7 +54,18 @@ struct PerformanceEventDetails: EventDetails {
 
 struct NavigationEventDetails: EventDetails {
     let audioType: String = AVAudioSession.sharedInstance().audioType
-    let applicationState = UIApplication.shared.applicationState
+    let applicationState: UIApplication.State = {
+        var state: UIApplication.State!
+        if Thread.isMainThread {
+            state = UIApplication.shared.applicationState
+        } else {
+            DispatchQueue.main.sync {
+                state = UIApplication.shared.applicationState
+            }
+        }
+        
+        return state
+    }()
     let batteryLevel: Int = UIDevice.current.batteryLevel >= 0 ? Int(UIDevice.current.batteryLevel * 100) : -1
     let batteryPluggedIn: Bool = [.charging, .full].contains(UIDevice.current.batteryState)
     let coordinate: CLLocationCoordinate2D?
@@ -169,7 +180,7 @@ struct NavigationEventDetails: EventDetails {
         
         var totalTimeInForeground = session.timeSpentInForeground
         var totalTimeInBackground = session.timeSpentInBackground
-        if UIApplication.shared.applicationState == .active {
+        if applicationState == .active {
             totalTimeInForeground += abs(session.lastTimeInForeground.timeIntervalSinceNow)
         } else {
             totalTimeInBackground += abs(session.lastTimeInBackground.timeIntervalSinceNow)
