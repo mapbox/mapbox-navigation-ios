@@ -142,8 +142,8 @@ public class CarPlayManager: NSObject {
      The bar button that prompts the presented navigation view controller to display the feedback screen.
      */
     public lazy var showFeedbackButton: CPMapButton = {
-        let showFeedbackButton = CPMapButton { button in
-            self.currentNavigator?.showFeedback()
+        let showFeedbackButton = CPMapButton { [weak self] button in
+            self?.currentNavigator?.showFeedback()
         }
         showFeedbackButton.image = UIImage(named: "carplay_feedback", in: .mapboxNavigation, compatibleWith: nil)
         
@@ -154,8 +154,8 @@ public class CarPlayManager: NSObject {
      The bar button that shows the selected route overview on the map.
      */
     public lazy var userTrackingButton: CPMapButton = {
-        let userTrackingButton = CPMapButton { button in
-            guard let navigationViewController = self.currentNavigator else {
+        let userTrackingButton = CPMapButton { [weak self] button in
+            guard let navigationViewController = self?.currentNavigator else {
                 return
             }
             navigationViewController.tracksUserCourse = !navigationViewController.tracksUserCourse
