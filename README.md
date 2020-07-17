@@ -58,9 +58,7 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
 
 To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
 
-1. Create a Mapbox API token (from your account page on [mapbox.com](https://www.mapbox.com)) with the      `DOWNLOADS:READ` scope. 
-**PLEASE NOTE: This is not the same as your production Mapbox API token. Make sure to keep it private and not to stick it in Info.plist file.** 
-Once you have the token, create or append to a  `~/.netrc` file:
+1. Go to your [Mapbox account dashboard](https://account.mapbox.com/) and create an access token that has the `DOWNLOADS:READ` scope. **PLEASE NOTE: This is not the same as your production Mapbox API token. Make sure to keep it private and do not insert it into any Info.plist file.** Create a file named `.netrc` in your home directory if it doesn’t already exist, then add the following lines to the end of the file:
    ```
    machine api.mapbox.com 
      login mapbox
@@ -92,11 +90,9 @@ where _PRIVATE_MAPBOX_API_TOKEN_ is your Mapbox API token with the `DOWNLOADS:RE
 
 Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/Carthage/Carthage/) v0.35 or above:
 
-1. Create a Mapbox API token (from your account page on [mapbox.com](https://www.mapbox.com)) with the      `DOWNLOADS:READ` scope. 
-**PLEASE NOTE: This is not the same as your production Mapbox API token. Make sure to keep it private and not to stick it in Info.plist file.** 
-Once you have the token, create or append to a `~/.netrc` file:
+1. Go to your [Mapbox account dashboard](https://account.mapbox.com/) and create an access token that has the `DOWNLOADS:READ` scope. **PLEASE NOTE: This is not the same as your production Mapbox API token. Make sure to keep it private and do not insert it into any Info.plist file.** Create a file named `.netrc` in your home directory if it doesn’t already exist, then add the following lines to the end of the file:
    ```
-   machine api.mapbox.com 
+   machine api.mapbox.com
      login mapbox
      password PRIVATE_MAPBOX_API_TOKEN
    ```
