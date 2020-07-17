@@ -731,7 +731,12 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
         let legProgress = RouteLegProgress(leg: progress.route.legs[legIndex], stepIndex: stepIndex)
         let step = legProgress.currentStep
         self.preview(step: step, in: banner, remaining: progress.remainingSteps, route: progress.route, animated: false)
-        banner.dismissStepsTable()
+        
+        // After selecting maneuver and dismissing steps table make sure to update contentInsets of NavigationMapView
+        // to correctly place selected maneuver in the center of the screen (taking into account top and bottom banner heights).
+        banner.dismissStepsTable { [weak self] in
+            self?.mapViewController?.updateMapViewContentInsets()
+        }
     }
     
     public func topBanner(_ banner: TopBannerViewController, didDisplayStepsController: StepsViewController) {

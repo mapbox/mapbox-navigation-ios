@@ -276,7 +276,12 @@ class RouteMapViewController: UIViewController {
             // Don't move mapView content on rotation or when e.g. top banner expands.
             return
         }
-        mapView.setContentInset(contentInset(forOverviewing: isInOverviewMode), animated: false, completionHandler: nil)
+        
+        updateMapViewContentInsets()
+    }
+    
+    func updateMapViewContentInsets(animated: Bool = false, completion: CompletionHandler? = nil) {
+        mapView.setContentInset(contentInset(forOverviewing: isInOverviewMode), animated: animated, completionHandler: completion)
         mapView.setNeedsUpdateConstraints()
     }
 
