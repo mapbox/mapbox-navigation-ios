@@ -462,10 +462,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         setUserTrackingMode(.none, animated: false, completionHandler: nil)
         let line = MGLPolyline(shape)
         
-        // Workaround for https://github.com/mapbox/mapbox-gl-native/issues/15574
-        // Set content insets .zero, before cameraThatFitsShape + setCamera.
-        contentInset = .zero
-        let camera = cameraThatFitsShape(line, direction: direction, edgePadding: safeArea + NavigationMapView.defaultPadding)
+        // Current contentInset gets incorporated to cameraThatFitsShape.
+        // edgePadding is set to .zero as there's no need for additional padding.
+        contentInset = safeArea + NavigationMapView.defaultPadding
+        let camera = cameraThatFitsShape(line, direction: direction, edgePadding: .zero)
         setCamera(camera, animated: animated)
     }
     
@@ -1291,10 +1291,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         currentCamera.pitch = 0
         currentCamera.heading = 0
 
-        // Workaround for https://github.com/mapbox/mapbox-gl-native/issues/15574
-        // Set content insets .zero, before cameraThatFitsShape + setCamera.
-        contentInset = .zero
-        let newCamera = camera(currentCamera, fitting: line, edgePadding: padding)
+        contentInset = padding
+        // Current contentInset gets incorporated to calculated camera.
+        // edgePadding is set to .zero as there's no need for additional padding.
+        let newCamera = camera(currentCamera, fitting: line, edgePadding: .zero)
         
         setCamera(newCamera, withDuration: 1, animationTimingFunction: nil) { [weak self] in
             self?.isAnimatingToOverheadMode = false
