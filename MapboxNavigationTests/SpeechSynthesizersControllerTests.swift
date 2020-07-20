@@ -10,7 +10,7 @@ class FailingSpeechSynthesizerMock: SpeechSynthesizerStub {
     var deinitExpectation: XCTestExpectation?
     var speakExpectation: XCTestExpectation?
     
-    override func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress) {
+    override func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress, locale: Locale?) {
         delegate?.speechSynthesizer(self,
                                     didSpeak: instruction,
                                     with: failing ? SpeechError.unsupportedLocale(locale: Locale.current) : nil)
@@ -26,8 +26,8 @@ class FailingSpeechSynthesizerMock: SpeechSynthesizerStub {
 class MapboxSpeechSynthMock: MapboxSpeechSynthesizer {
     var speakExpectation: XCTestExpectation?
     
-    override func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress) {
-        super.speak(instruction, during: legProgress)
+    override func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress, locale: Locale?) {
+        super.speak(instruction, during: legProgress,locale: locale)
         
         speakExpectation?.fulfill()
     }
@@ -36,15 +36,16 @@ class MapboxSpeechSynthMock: MapboxSpeechSynthesizer {
 class SystemSpeechSynthMock: SystemSpeechSynthesizer {
     var speakExpectation: XCTestExpectation?
     
-    override func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress) {
-        super.speak(instruction, during: legProgress)
+    override func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress, locale: Locale?) {
+        super.speak(instruction, during: legProgress, locale: locale)
         
         speakExpectation?.fulfill()
     }
 }
 
 class SpeechSynthesizersControllerTests: XCTestCase {
-
+    
+    var delegateErrorBlock: ((SpeechError) -> ())?
     var synthesizers: [SpeechSynthesizing] = []
     let route: Route = {
         var options = NavigationRouteOptions(coordinates: [
@@ -64,6 +65,7 @@ class SpeechSynthesizersControllerTests: XCTestCase {
 
     override func tearDown() {
         synthesizers = []
+        delegateErrorBlock = nil
     }
 
     func testNoFallback() {
@@ -79,7 +81,8 @@ class SpeechSynthesizersControllerTests: XCTestCase {
         speechSynthesizersController.speak(SpokenInstruction(distanceAlongStep: .init(),
                                                              text: "text",
                                                              ssmlText: "text"),
-                                           during: Fixture.routeLegProgress())
+                                           during: Fixture.routeLegProgress(),
+                                           locale: nil)
         
         wait(for: [speakExpectation, dontSpeakExpectation], timeout: 2)
     }
@@ -95,7 +98,8 @@ class SpeechSynthesizersControllerTests: XCTestCase {
         speechSynthesizersController.speak(SpokenInstruction(distanceAlongStep: .init(),
                                                              text: "text",
                                                              ssmlText: "text"),
-                                           during: Fixture.routeLegProgress())
+                                           during: Fixture.routeLegProgress(),
+                                           locale: nil)
         
         wait(for: [expectation], timeout: 3)
     }
@@ -141,5 +145,58 @@ class SpeechSynthesizersControllerTests: XCTestCase {
         dummyService.start()
         
         wait(for: [expectation], timeout: 8)
+    }
+    
+    func testMissingLocaleOnSystemSynth() {
+        let expectation = XCTestExpectation(description: "Synthesizer should fail without Locale")
+        let sut = SystemSpeechSynthMock()
+        sut.locale = nil
+        sut.delegate = self
+        delegateErrorBlock = { error in
+            switch (error) {
+            case .undefinedSpeechLocale(_):
+                expectation.fulfill()
+            default:
+                XCTFail()
+            }
+        }
+        
+        sut.speak(SpokenInstruction(distanceAlongStep: .init(),
+                                    text: "text",
+                                    ssmlText: "text"),
+                  during: Fixture.routeLegProgress(),
+                  locale: nil)
+        
+        wait(for: [expectation], timeout: 2)
+    }
+    
+    func testMissingLocaleOnMapboxSynth() {
+        let expectation = XCTestExpectation(description: "Synthesizer should fail without Locale")
+        let sut = MapboxSpeechSynthMock()
+        sut.locale = nil
+        sut.delegate = self
+        delegateErrorBlock = { error in
+            switch (error) {
+            case .undefinedSpeechLocale(_):
+                expectation.fulfill()
+            default:
+                XCTFail()
+            }
+        }
+        
+        sut.speak(SpokenInstruction(distanceAlongStep: .init(),
+                                    text: "text",
+                                    ssmlText: "text"),
+                  during: Fixture.routeLegProgress(),
+                  locale: nil)
+        
+        wait(for: [expectation], timeout: 2)
+    }
+}
+
+extension SpeechSynthesizersControllerTests: SpeechSynthesizingDelegate {
+    
+    func speechSynthesizer(_ speechSynthesizer: SpeechSynthesizing, encounteredError error: SpeechError) {
+        delegateErrorBlock?(error)
     }
 }

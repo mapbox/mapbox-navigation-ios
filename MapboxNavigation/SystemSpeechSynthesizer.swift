@@ -29,7 +29,7 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
         }
     }
     public var isSpeaking: Bool { return speechSynth.isSpeaking }
-    public var locale: Locale = Locale.autoupdatingCurrent
+    public var locale: Locale? = Locale.autoupdatingCurrent
     
     private var speechSynth: AVSpeechSynthesizer
     private var previousInstrcution: SpokenInstruction?
@@ -48,11 +48,11 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
     
     // MARK: - Public methods
     
-    open func prepareIncomingSpokenInstructions(_ instructions: [SpokenInstruction]) {
+    open func prepareIncomingSpokenInstructions(_ instructions: [SpokenInstruction], locale: Locale?) {
         // Do nothing
     }
     
-    open func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress) {
+    open func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress, locale: Locale? = nil) {
         guard !muted else {
             delegate?.speechSynthesizer(self,
                                         didSpeak: instruction,
@@ -60,8 +60,16 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
             return
         }
         
+        guard let locale = locale ?? self.locale else {
+            self.delegate?.speechSynthesizer(self,
+                                             encounteredError: SpeechError.undefinedSpeechLocale(instruction: instruction))
+            return
+        }
+        
         var utterance: AVSpeechUtterance?
-        if Locale.preferredLocalLanguageCountryCode == "en-US" {
+        let localeCode = "\(locale.languageCode ?? "")-\(locale.regionCode ?? "")"
+        
+        if localeCode == "en-US" {
             // Alex can’t handle attributed text.
             utterance = AVSpeechUtterance(string: instruction.text)
             utterance!.voice = AVSpeechSynthesisVoice(identifier: AVSpeechSynthesisVoiceIdentifierAlex)
@@ -75,7 +83,7 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
         
         // Only localized languages will have a proper fallback voice
         if utterance?.voice == nil {
-            utterance?.voice = AVSpeechSynthesisVoice(language: Locale.preferredLocalLanguageCountryCode)
+            utterance?.voice = AVSpeechSynthesisVoice(language: localeCode)
         }
         
         guard let utteranceToSpeak = utterance else {

@@ -17,22 +17,24 @@ public protocol SpeechSynthesizing: class {
     var volume: Float { get set }
     /// Returns `true` if synthesizer is speaking
     var isSpeaking: Bool { get }
-    /// Locale setting to vocalization
-    var locale: Locale { get set }
+    /// Locale setting to vocalization. This locale will be used as 'default' if no specific locale is passed for vocalizing each individual instruction.
+    var locale: Locale? { get set }
     
     /// Used to notify speech synthesizer about future spoken instructions in order to give extra time for preparations.
     /// - parameter instructions: An array of `SpokenInstruction`s that will be encountered further.
+    /// - parameter locale: A locale to be used for preparing instructions. If `nil`passed - `SpeechSynthesizing.locale` will be used as 'default'.
     ///
     /// It is not guaranteed that all these instructions will be spoken. For example navigation may be re-routed.
     /// This method may be (and most likely will be) called multiple times along the route progress
-    func prepareIncomingSpokenInstructions(_ instructions: [SpokenInstruction])
+    func prepareIncomingSpokenInstructions(_ instructions: [SpokenInstruction], locale: Locale?)
     
     /// A request to vocalize the instruction
     /// - parameter instruction: an instruction to be vocalized
     /// - parameter legProgress: current leg progress, corresponding to the instruction
+    /// - parameter locale: A locale to be used for vocalizing the instruction. If `nil`passed - `SpeechSynthesizing.locale` will be used as 'default'.
     ///
     /// This method is not guaranteed to be synchronous or asynchronous. When vocalizing is finished, `voiceController(_ voiceController: SpeechSynthesizing, didSpeak instruction: SpokenInstruction, with error: SpeechError?)` should be called.
-    func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress)
+    func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress, locale: Locale?)
     
     /// Tells synthesizer to stop current vocalization in a graceful manner
     func stopSpeaking()

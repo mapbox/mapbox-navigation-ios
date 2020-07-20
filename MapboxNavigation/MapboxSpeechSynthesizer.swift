@@ -25,7 +25,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     public var isSpeaking: Bool {
         return audioPlayer?.isPlaying ?? false
     }
-    public var locale: Locale = Locale.autoupdatingCurrent
+    public var locale: Locale? = Locale.autoupdatingCurrent
     
     public let stepsAheadToCache: Int = 3
     
@@ -53,24 +53,37 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     
     // MARK: - Methods
     
-    open func prepareIncomingSpokenInstructions(_ instructions: [SpokenInstruction]) {
+    open func prepareIncomingSpokenInstructions(_ instructions: [SpokenInstruction], locale: Locale? = nil) {
+        
+        guard let locale = locale ?? self.locale else {
+            self.delegate?.speechSynthesizer(self,
+                                             encounteredError: SpeechError.undefinedSpeechLocale(instruction: instructions.first!))
+            return
+        }
+        
         instructions
             .prefix(stepsAheadToCache)
             .forEach {
                 if !hasCachedSpokenInstructionForKey($0.ssmlText, with: locale) {
-                    downloadAndCacheSpokenInstruction(instruction: $0)
+                    downloadAndCacheSpokenInstruction(instruction: $0, locale: locale)
                 }
         }
     }
     
-    open func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress) {
+    open func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress, locale: Locale? = nil) {
+        guard let locale = locale ?? self.locale else {
+            self.delegate?.speechSynthesizer(self,
+                                             encounteredError: SpeechError.undefinedSpeechLocale(instruction: instruction))
+            return
+        }
+        
         if let data = cachedDataForKey(instruction.ssmlText, with: locale) {
             safeDuckAudio(instruction: instruction)
             speak(instruction: instruction,
                   instructionData: data)
         }
         else {
-            fetchAndSpeak(instruction: instruction)
+            fetchAndSpeak(instruction: instruction, locale: locale)
         }
     }
     
@@ -87,7 +100,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     /**
      Fetches and plays an instruction.
      */
-    private func fetchAndSpeak(instruction: SpokenInstruction){
+    private func fetchAndSpeak(instruction: SpokenInstruction, locale: Locale){
         audioTask?.cancel()
         
         let modifiedInstruction = delegate?.speechSynthesizer(self, willSpeak: instruction) ?? instruction
@@ -123,7 +136,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
                 return
             }
             
-            self.cache(data, forKey: ssmlText, with: self.locale)
+            self.cache(data, forKey: ssmlText, with: locale)
             self.safeDuckAudio(instruction: modifiedInstruction)
             self.speak(instruction: modifiedInstruction,
                        instructionData: data)
@@ -158,7 +171,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
         }
     }
     
-    private func downloadAndCacheSpokenInstruction(instruction: SpokenInstruction) {
+    private func downloadAndCacheSpokenInstruction(instruction: SpokenInstruction, locale: Locale) {
         let modifiedInstruction = delegate?.speechSynthesizer(self, willSpeak: instruction) ?? instruction
         let ssmlText = modifiedInstruction.ssmlText
         let options = SpeechOptions(ssml: ssmlText)
@@ -168,7 +181,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
             guard let data = data, let self = self else {
                 return
             }
-            self.cache(data, forKey: ssmlText, with: self.locale)
+            self.cache(data, forKey: ssmlText, with: locale)
         }.resume()
     }
     

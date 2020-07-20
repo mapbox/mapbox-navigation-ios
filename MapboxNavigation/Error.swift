@@ -64,15 +64,14 @@ public enum SpeechError: LocalizedError {
     case unableToInitializePlayer(playerType: AVAudioPlayer.Type, instruction: SpokenInstruction, synthesizer: Any?, underlying: Error)
     
     /**
-     The active `RouteProgress` did not contain a speech locale.
+     There was no `Locale` provided during processing instruction.
      - parameter instruction: The instruction that failed.
-     - parameter progress: the offending `RouteProgress` that omits the expected `SpeechLocale`.
      */
-    case undefinedSpeechLocale(instruction: SpokenInstruction, progress: RouteProgress) // to be removed?
+    case undefinedSpeechLocale(instruction: SpokenInstruction)
     
     /**
-     The speech engine does not support current locale
-     - parameter languageCode: Language code representing the addressed locale.
+     The speech engine does not support provided locale
+     - parameter locale: Offending locale
      */
     case unsupportedLocale(locale: Locale)
     

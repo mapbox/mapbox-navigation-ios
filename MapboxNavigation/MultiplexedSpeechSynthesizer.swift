@@ -25,7 +25,7 @@ open class MultiplexedSpeechSynthesizer: SpeechSynthesizing {
     public var isSpeaking: Bool {
         return speechSynthesizers.first(where: { $0.isSpeaking }) != nil
     }
-    public var locale: Locale = Locale.autoupdatingCurrent {
+    public var locale: Locale? = Locale.autoupdatingCurrent {
         didSet {
             applyLocale()
         }
@@ -89,13 +89,13 @@ open class MultiplexedSpeechSynthesizer: SpeechSynthesizing {
     
     // MARK: - Public Methods
     
-    public func prepareIncomingSpokenInstructions(_ instructions: [SpokenInstruction]) {
-        speechSynthesizers.forEach { $0.prepareIncomingSpokenInstructions(instructions) }
+    public func prepareIncomingSpokenInstructions(_ instructions: [SpokenInstruction], locale: Locale? = nil) {
+        speechSynthesizers.forEach { $0.prepareIncomingSpokenInstructions(instructions, locale: locale) }
     }
     
-    public func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress) {
+    public func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress, locale: Locale? = nil) {
         currentLegProgress = legProgress
-        speechSynthesizers.first?.speak(instruction, during: legProgress)
+        speechSynthesizers.first?.speak(instruction, during: legProgress, locale: locale)
     }
     
     public func stopSpeaking() {
@@ -116,7 +116,7 @@ extension MultiplexedSpeechSynthesizer: SpeechSynthesizingDelegate {
                 index + 1 < speechSynthesizers.count {
                 delegate?.speechSynthesizer(self,
                                             encounteredError: error)
-                speechSynthesizers[index + 1].speak(instruction, during: legProgress)
+                speechSynthesizers[index + 1].speak(instruction, during: legProgress, locale: locale)
             }
             else {
                 delegate?.speechSynthesizer(self,
