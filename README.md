@@ -64,7 +64,7 @@ To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
      login mapbox
      password PRIVATE_MAPBOX_API_TOKEN
    ```
-where _PRIVATE_MAPBOX_API_TOKEN_ is your Mapbox API token with the `DOWNLOADS:READ` scope. 
+   where _PRIVATE_MAPBOX_API_TOKEN_ is your Mapbox API token with the `DOWNLOADS:READ` scope. 
 
 1. Create a [Bintray](https://bintray.com/mapbox) account, then [request to be added to the Mapbox Navigation SDK beta testing program](https://docs.google.com/forms/d/1mzknLZf5W9o8-KnQJ1GiYyG2grXVRqNxqHruWYTRVPc/viewform).
 
@@ -96,7 +96,7 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
      login mapbox
      password PRIVATE_MAPBOX_API_TOKEN
    ```
-where _PRIVATE_MAPBOX_API_TOKEN_ is your Mapbox API token with the `DOWNLOADS:READ` scope. 
+   where _PRIVATE_MAPBOX_API_TOKEN_ is your Mapbox API token with the `DOWNLOADS:READ` scope. 
 
 1. Create a [Bintray](https://bintray.com/mapbox) account, then [request to be added to the Mapbox Navigation SDK beta testing program](https://docs.google.com/forms/d/1mzknLZf5W9o8-KnQJ1GiYyG2grXVRqNxqHruWYTRVPc/viewform).
 
