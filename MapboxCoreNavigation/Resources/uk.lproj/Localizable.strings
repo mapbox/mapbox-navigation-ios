@@ -1,3 +1,6 @@
+/* Error message when an offline route request returns a response that can’t be deserialized */
+"OFFLINE_CORRUPT_DATA" = "Знайдено хибний маршрут в режимі офлайн.";
+
 /* Inform developer an update is available */
 "UPDATE_AVAILABLE" = "Mapbox Navigation SDK для iOS версії %@ в наявності.";
 
