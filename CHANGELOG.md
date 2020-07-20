@@ -5,11 +5,11 @@
 ### Packaging
 
 * Carthage v0.35 or above is now required for installing this SDK if you use Carthage. ([`81a36d0`](https://github.com/mapbox/mapbox-navigation-ios/commit/81a36d090e8a0602b7144ee7697b7857675b496f)) 
-* For the time being, MapboxCoreNavigation.framework depends on a build of MapboxNavigationNative.framework that is only available to authorized beta testers. Please contact your Mapbox sales representative or [support team](https://support.mapbox.com/) to learn more about the beta testing program. ([#2412](https://github.com/mapbox/mapbox-navigation-ios/pull/2412))
-* MapboxNavigation depends on Mapbox Maps SDK for iOS v6.0.0. Before CocoaPods or Carthage can download Mapbox.framework, you need to create a special-purpose access token. See [the updated installation instructions in the readme](./README.md#installing-the-latest-prerelease) for more details. ([#2437](https://github.com/mapbox/mapbox-navigation-ios/pull/2437)) 
+* MapboxNavigation depends on Mapbox Maps SDK for iOS v6.0.0, and MapboxCoreNavigation depends on builds of MapboxNavigationNative and MapboxCommon that require authentication. Before CocoaPods or Carthage can download Mapbox.framework, MapboxNavigationNative.framework, and MapboxCommon.framework, you need to create a special-purpose access token. See [the updated installation instructions in the readme](./README.md#installing-the-latest-prerelease) for more details. ([#2437](https://github.com/mapbox/mapbox-navigation-ios/pull/2437), [#2477](https://github.com/mapbox/mapbox-navigation-ios/pull/2477))
+* If you install this SDK using Carthage, you need to also add MapboxCommon.framework to your application target’s Embed Frameworks build phase. ([#2477](https://github.com/mapbox/mapbox-navigation-ios/pull/2477))
 * Xcode 11.4.1 or above is now required for building this SDK from source. ([#2417](https://github.com/mapbox/mapbox-navigation-ios/pull/2417))
 * Enabled MAU billing by default, so that SDKs usage of Mapbox APIs is [billed](https://www.mapbox.com/pricing/) together based on [monthly active users](https://docs.mapbox.com/help/glossary/monthly-active-users/) rather than individually by HTTP request. If you prefer to still use request-based billing, set the `MBXNavigationBillingMethod` key in Info.plist to `request` ([#2405](https://github.com/mapbox/mapbox-navigation-ios/pull/2405).
-* Added Greek and Turkish localizations. ([#2385](https://github.com/mapbox/mapbox-navigation-ios/pull/2385), [#2475](https://github.com/mapbox/mapbox-navigation-ios/pull/2475))
+* Added Greek and Turkish localizations. ([#2385](https://github.com/mapbox/mapbox-navigation-ios/pull/2385), [#2475](https://github.com/mapbox/mapbox-navigation-ios/pull/2475), [valhalla/valhalla#2438](https://github.com/valhalla/valhalla/pull/2438))
 * Upgraded to mapbox-directions-swift [v0.33.0](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v0.33.0). ([#2483](https://github.com/mapbox/mapbox-navigation-ios/pull/2483)) 
 
 ### User location
@@ -31,7 +31,11 @@
 
 ### Offline navigation
 
+* `NavigationDirectionsCompletionHandler` now accepts the original tile directory URL passed into `NavigationDirections.configureRouter(tilesURL:completionHandler:)`; the number of tiles added is no longer passed in. ([#2477](https://github.com/mapbox/mapbox-navigation-ios/pull/2477))
 * Fixed a crash that occurred after setting `RouteOptions.shapeFormat` to `RouteShapeFormat.geoJSON`. ([valhalla/valhalla#1867](https://github.com/valhalla/valhalla/pull/1867))
+* Fixed a crash caused by a side street that loops back to a main road. ([valhalla/valhalla#2385](https://github.com/valhalla/valhalla/pull/2385))
+* Fixed a crash caused by a turn channel leading away from a roundabout. ([valhalla/valhalla#2463](https://github.com/valhalla/valhalla/pull/2463))
+* Added Dutch and Japanese spoken instructions, for consistency with the Mapbox Directions API. ([valhalla/valhalla#2464](https://github.com/valhalla/valhalla/pull/2464), [valhalla/valhalla#2432](https://github.com/valhalla/valhalla/pull/2432))
 * Fixed an issue where some routes had unreasonably long expected travel times. ([valhalla/valhalla#2102](https://github.com/valhalla/valhalla/pull/2102))
 * Fixed incorrect routing at some intersections of divided roads where there are turn restrictions. ([valhalla/valhalla#2109](https://github.com/valhalla/valhalla/pull/2109))
 * Fixed issues where routes would sometimes require divebombing. ([valhalla/valhalla#1931](https://github.com/valhalla/valhalla/pull/1931))
@@ -44,11 +48,13 @@
 * Turn lane indications are now shown below the turn banner as when navigating online. ([valhalla/valhalla#1830](https://github.com/valhalla/valhalla/pull/1830), [valhalla/valhalla#1859](https://github.com/valhalla/valhalla/pull/1859))
 * Fixed an issue where the `RouteStep.expectedTravelTime` properties of each step did not add up to the `RouteLeg.expectedTravelTime` property. ([valhalla/valhalla#2195](https://github.com/valhalla/valhalla/pull/2195))
 * Fixed an issue where a forward- or backward-only speed limit was not considered when calculating some expected travel times. ([valhalla/valhalla#2198](https://github.com/valhalla/valhalla/pull/2198))
-* Suppressed extraneous `ManeuverType.reachFork` maneuvers. ([valhalla/valhalla#1886](https://github.com/valhalla/valhalla/pull/1886), [valhalla/valhalla#1909](https://github.com/valhalla/valhalla/pull/1909), [valhalla/valhalla#1928](https://github.com/valhalla/valhalla/pull/1928))
+* Suppressed extraneous maneuvers. ([valhalla/valhalla#1886](https://github.com/valhalla/valhalla/pull/1886), [valhalla/valhalla#1909](https://github.com/valhalla/valhalla/pull/1909), [valhalla/valhalla#1928](https://github.com/valhalla/valhalla/pull/1928), [valhalla/valhalla#2436](https://github.com/valhalla/valhalla/pull/2436))
 * A spoken instruction about a `ManeuverType.merge` maneuver now indicates whether to merge to the left or the right, as when navigating online. ([valhalla/valhalla#1892](https://github.com/valhalla/valhalla/pull/1892), [valhalla/valhalla#1989](https://github.com/valhalla/valhalla/pull/1989))
-* Spoken instructions for `ManeuverType.exitRoundabout` and `ManeuverType.exitRotary` maneuvers now indicate the outlet road name or destination if available. ([valhalla/valhalla#2378](https://github.com/valhalla/valhalla/pull/2378))
+* Spoken instructions for `ManeuverType.exitRoundabout`, `ManeuverType.exitRotary`, `ManeuverType.reachFork`, and `ManeuverType.merge` maneuvers now indicate the outlet road name or destination if available. ([valhalla/valhalla#2378](https://github.com/valhalla/valhalla/pull/2378), [valhalla/valhalla#2389](https://github.com/valhalla/valhalla/pull/2389))
+* Visual and spoken instructions for `ManeuverType.turn` and `ManeuverType.reachFork` now indicate the name of the intersection, if available. ([valhalla/valhalla#2386](https://github.com/valhalla/valhalla/pull/2386))
 * Fixed ungrammatical spoken instructions at sharp turns in English. ([valhalla/valhalla#2226](https://github.com/valhalla/valhalla/pull/2226))
 * Fixed an issue where spoken and visual instructions sometimes omitted the cardinal direction after a route number in the United States. ([valhalla/valhalla#1917](https://github.com/valhalla/valhalla/pull/1917))
+* Fixed an issue where visual instructions sometimes included duplicate content in `VisualInstructionBanner.primaryInstruction` and `VisualInstructionBanner.secondaryInstruction`. ([#2477](https://github.com/mapbox/mapbox-navigation-ios/pull/2477))
 * A spoken instruction about a `ManeuverType.takeOffRamp` maneuver no longer specifies the side of the road if the ramp branches off the slow lane (on the right side in regions that drive on the right). ([valhalla/valhalla#1990](https://github.com/valhalla/valhalla/pull/1990))
 * Improved the timing of spoken instructions for `ManeuverType.takeOffRamp` maneuvers along high-speed roads. ([#2417](https://github.com/mapbox/mapbox-navigation-ios/pull/2417))
 * Improved the timing of visual instructions when two maneuvers are spaced close together. ([#2417](https://github.com/mapbox/mapbox-navigation-ios/pull/2417))

@@ -16,6 +16,7 @@ class CLLocationTests: XCTestCase {
         let bearingAccuracy: CLLocationAccuracy = 35
         
         let fixLocation = FixLocation(coordinate: coordinate,
+                                      monotonicTimestampNanoseconds: UInt64(timestamp.timeIntervalSince1970 * 1e-6),
                                       time: timestamp,
                                       speed: speed as NSNumber,
                                       bearing: bearing as NSNumber,

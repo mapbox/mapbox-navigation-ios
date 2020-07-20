@@ -24,7 +24,7 @@ open class RouteController: NSObject {
     lazy var navigator: Navigator = {
         let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile,
                                               platform: ProfilePlatform.KIOS)
-        return Navigator(profile: settingsProfile, customConfig: "")
+        return Navigator(profile: settingsProfile, config: NavigatorConfig(), customConfig: "")
     }()
     
     public var route: Route {
@@ -63,15 +63,6 @@ open class RouteController: NSObject {
     var previousArrivalWaypoint: Waypoint?
     
     var isFirstLocation: Bool = true
-    
-    public var config: NavigatorConfig? {
-        get {
-            return navigator.getConfig()
-        }
-        set {
-            navigator.setConfigFor(newValue)
-        }
-    }
     
     /**
      Details about the user’s progress along the current route, leg, and step.

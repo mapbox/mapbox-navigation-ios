@@ -9,7 +9,12 @@ extension FixLocation {
             bearingAccuracy = location.courseAccuracy >= 0 ? location.courseAccuracy as NSNumber : nil
         }
         
+        // In practice, “submillisecond precision” is 10 nanosecond precision at best, but convert the timestamp to nanoseconds anyways.
+        // Unlike on Android, we aren’t concerned about the timestamps’ monotonicity.
+        let timestamp = location.timestamp.timeIntervalSince1970 * 1e-6
+        
         self.init(coordinate: location.coordinate,
+                  monotonicTimestampNanoseconds: UInt64(timestamp),
                   time: location.timestamp,
                   speed: location.speed >= 0 ? location.speed as NSNumber : nil,
                   bearing: location.course >= 0 ? location.course as NSNumber : nil,
