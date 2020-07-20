@@ -9,7 +9,7 @@
 * MapboxNavigation depends on Mapbox Maps SDK for iOS v6.0.0. Before CocoaPods or Carthage can download Mapbox.framework, you need to create a special-purpose access token. See [the updated installation instructions in the readme](./README.md#installing-the-latest-prerelease) for more details. ([#2437](https://github.com/mapbox/mapbox-navigation-ios/pull/2437)) 
 * Xcode 11.4.1 or above is now required for building this SDK from source. ([#2417](https://github.com/mapbox/mapbox-navigation-ios/pull/2417))
 * Enabled MAU billing by default, so that SDKs usage of Mapbox APIs is [billed](https://www.mapbox.com/pricing/) together based on [monthly active users](https://docs.mapbox.com/help/glossary/monthly-active-users/) rather than individually by HTTP request. If you prefer to still use request-based billing, set the `MBXNavigationBillingMethod` key in Info.plist to `request` ([#2405](https://github.com/mapbox/mapbox-navigation-ios/pull/2405).
-* Added a Greek localization. ([#2385](https://github.com/mapbox/mapbox-navigation-ios/pull/2385))
+* Added Greek and Turkish localizations. ([#2385](https://github.com/mapbox/mapbox-navigation-ios/pull/2385), [#2475](https://github.com/mapbox/mapbox-navigation-ios/pull/2475))
 
 ### User location
 

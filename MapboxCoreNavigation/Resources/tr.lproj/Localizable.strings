@@ -1,0 +1,6 @@
+/* Error message when an offline route request returns a response that can’t be deserialized */
+"OFFLINE_CORRUPT_DATA" = "Geçersiz bir çevrimdışı rota bulundu.";
+
+/* Inform developer an update is available */
+"UPDATE_AVAILABLE" = "iOS için Mapbox Navigation SDK %@ sürümü artık erişilebilir.";
+
