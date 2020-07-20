@@ -1005,6 +1005,7 @@
 		DA678B7C1F6CF47200F05913 /* sv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DA678B7D1F6CF47A00F05913 /* vi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DA67EA5523CAF345001686EA /* MGLShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MGLShape.swift; sourceTree = "<group>"; };
+		DA6C925424C604B7003A0AD6 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DA73F87820BF851B0067649B /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = de; path = Resources/de.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		DA754E1623AC56E5007E16B5 /* MBXAccounts+CoreNavigationAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MBXAccounts+CoreNavigationAdditions.h"; sourceTree = "<group>"; };
 		DA754E1723AC56E5007E16B5 /* MBXAccounts+CoreNavigationAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "MBXAccounts+CoreNavigationAdditions.m"; sourceTree = "<group>"; };
@@ -2852,6 +2853,7 @@
 				DA9059B2223B1758006E8B46 /* ja */,
 				354691B022C0D97000626C4F /* yo */,
 				8B808F892487CFEC00EEE453 /* el */,
+				DA6C925424C604B7003A0AD6 /* uk */,
 			);
 			name = Localizable.strings;
 			path = Resources;
