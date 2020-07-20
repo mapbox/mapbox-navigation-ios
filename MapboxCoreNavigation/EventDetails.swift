@@ -118,6 +118,8 @@ struct NavigationEventDetails: EventDetails {
     var newDistanceRemaining: CLLocationDistance?
     var newDurationRemaining: TimeInterval?
     var newGeometry: String?
+    var totalTimeInForeground: TimeInterval
+    var totalTimeInBackground: TimeInterval
     
     init(dataSource: EventsManagerDataSource, session: SessionState, defaultInterface: Bool) {
         coordinate = dataSource.router.rawLocation?.coordinate
@@ -178,8 +180,8 @@ struct NavigationEventDetails: EventDetails {
         }
         percentTimeInPortrait = totalTimeInPortrait + totalTimeInLandscape == 0 ? 100 : Int((totalTimeInPortrait / (totalTimeInPortrait + totalTimeInLandscape)) * 100)
         
-        var totalTimeInForeground = session.timeSpentInForeground
-        var totalTimeInBackground = session.timeSpentInBackground
+        totalTimeInForeground = session.timeSpentInForeground
+        totalTimeInBackground = session.timeSpentInBackground
         if applicationState == .active {
             totalTimeInForeground += abs(session.lastTimeInForeground.timeIntervalSinceNow)
         } else {
@@ -249,6 +251,8 @@ struct NavigationEventDetails: EventDetails {
         case newDurationRemaining
         case newGeometry
         case routeLegProgress = "step"
+        case totalTimeInForeground
+        case totalTimeInBackground
     }
     
     func encode(to encoder: Encoder) throws {
@@ -303,6 +307,8 @@ struct NavigationEventDetails: EventDetails {
         try container.encodeIfPresent(secondsSinceLastReroute, forKey: .secondsSinceLastReroute)
         try container.encodeIfPresent(newDistanceRemaining, forKey: .newDistanceRemaining)
         try container.encodeIfPresent(newDurationRemaining, forKey: .newDurationRemaining)
+        try container.encodeIfPresent(totalTimeInForeground, forKey: .totalTimeInForeground)
+        try container.encodeIfPresent(totalTimeInBackground, forKey: .totalTimeInBackground)
     }
 }
 
