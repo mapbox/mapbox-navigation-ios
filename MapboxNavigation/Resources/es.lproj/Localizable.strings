@@ -64,24 +64,6 @@
 /* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "Ruta más rápida encontrada";
 
-/* Feedback type for Bad Route */
-"FEEDBACK_BAD_ROUTE" = "Ruta\npobre";
-
-/* Feedback type for Confusing Instruction */
-"FEEDBACK_CONFUSING_INSTRUCTION" = "Instrucción\nengañosa";
-
-/* Feedback type for Other Map Issue Issue */
-"FEEDBACK_GENERAL_ISSUE" = "Otra problema\nen la mapa";
-
-/* Feedback type for a maneuver that is Not Allowed */
-"FEEDBACK_NOT_ALLOWED" = "Prohibido";
-
-/* Feedback type for Report Traffic */
-"FEEDBACK_REPORT_TRAFFIC" = "Reportar\ncongestión";
-
-/* Feedback type for Road Closed */
-"FEEDBACK_ROAD_CLOSURE" = "Camino\ncerrado";
-
 /* Message confirming that the user has successfully sent feedback */
 "FEEDBACK_THANK_YOU" = "¡Gracias por su informe!";
 
