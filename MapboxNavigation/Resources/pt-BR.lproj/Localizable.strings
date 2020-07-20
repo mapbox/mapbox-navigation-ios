@@ -1,33 +1,6 @@
 /* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "Rota mais rápida encontrada";
 
-/* Feedback type for Bad Route */
-"FEEDBACK_BAD_ROUTE" = "Rota\nRuim";
-
-/* Feedback type for Confusing Instruction */
-"FEEDBACK_CONFUSING_INSTRUCTION" = "Instrução\nConfusa";
-
-/* Feedback type for inaccurate GPS */
-"FEEDBACK_GPS_INACCURATE" = "GPS\nImpreciso";
-
-/* Feedback type for Heavy Traffic */
-"FEEDBACK_HEAVY_TRAFFIC" = "Tráfego\nPesado";
-
-/* Feedback type for Instruction Issue */
-"FEEDBACK_INSTRUCTION_ISSUE" = "Problema\nInstrução";
-
-/* Feedback type for Instruction Timing */
-"FEEDBACK_INSTRUCTION_TIMING" = "Instrução\nCronometragem";
-
-/* Feedback type for turn not allowed */
-"FEEDBACK_NOT_ALLOWED" = "Não\nPermitido";
-
-/* Feedback type for Report Traffic */
-"FEEDBACK_REPORT_TRAFFIC" = "Reportar\nTráfego";
-
-/* Feedback type for Closure */
-"FEEDBACK_ROAD_CLOSURE" = "Rota\nBloqueada";
-
 /* Message confirming that the user has successfully sent feedback */
 "FEEDBACK_THANK_YOU" = "Obrigado por seu relato !";
 

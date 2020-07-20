@@ -16,30 +16,6 @@
 /* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "דרך מהירה יותר נמצאה";
 
-/* Feedback type for Bad Route */
-"FEEDBACK_BAD_ROUTE" = "דרך\nמשובשת";
-
-/* Feedback type for Confusing Instruction */
-"FEEDBACK_CONFUSING_INSTRUCTION" = "הוראות\nמבולבלות";
-
-/* Feedback type for Other Map Issue Issue */
-"FEEDBACK_GENERAL_ISSUE" = "בעיה אחרת\nבמפה";
-
-/* Feedback type for Missing Exit */
-"FEEDBACK_MISSING_EXIT" = "יציאה\nלא קיימת";
-
-/* Feedback type for Missing Road */
-"FEEDBACK_MISSING_ROAD" = "דרך\nלא קיימת";
-
-/* Feedback type for a maneuver that is Not Allowed */
-"FEEDBACK_NOT_ALLOWED" = "לא\nמורשה";
-
-/* Feedback type for Report Traffic */
-"FEEDBACK_REPORT_TRAFFIC" = "דיווח\nתנועה";
-
-/* Feedback type for Road Closed */
-"FEEDBACK_ROAD_CLOSURE" = "דרך\nסגורה";
-
 /* Message confirming that the user has successfully sent feedback */
 "FEEDBACK_THANK_YOU" = "תודה על הדיווח שלך!";
 
