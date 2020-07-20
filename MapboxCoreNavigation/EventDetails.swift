@@ -307,8 +307,9 @@ struct NavigationEventDetails: EventDetails {
         try container.encodeIfPresent(secondsSinceLastReroute, forKey: .secondsSinceLastReroute)
         try container.encodeIfPresent(newDistanceRemaining, forKey: .newDistanceRemaining)
         try container.encodeIfPresent(newDurationRemaining, forKey: .newDurationRemaining)
-        try container.encodeIfPresent(totalTimeInForeground, forKey: .totalTimeInForeground)
-        try container.encodeIfPresent(totalTimeInBackground, forKey: .totalTimeInBackground)
+        try container.encode(totalTimeInForeground, forKey: .totalTimeInForeground)
+        try container.encode(totalTimeInBackground, forKey: .totalTimeInBackground)
+        try container.encodeIfPresent(rating, forKey: .rating)
     }
 }
 
