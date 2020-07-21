@@ -5,7 +5,7 @@ import MapboxCoreNavigation
 import MapboxSpeech
 
 /**
- `SpeechSynthesizing` implementation, using `AVSpeechSynthesizer`. Supports only english language.
+ `SpeechSynthesizing` implementation, using `AVSpeechSynthesizer`. Supports only English language.
  */
 open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
     
@@ -28,18 +28,18 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
             // AVSpeechSynthesizer uses 'AVAudioSession.sharedInstance().outputVolume' by default
         }
     }
-    public var isSpeaking: Bool { return speechSynth.isSpeaking }
+    public var isSpeaking: Bool { return speechSynthesizer.isSpeaking }
     public var locale: Locale? = Locale.autoupdatingCurrent
     
-    private var speechSynth: AVSpeechSynthesizer
+    private var speechSynthesizer: AVSpeechSynthesizer
     private var previousInstrcution: SpokenInstruction?
     
     // MARK: - Lifecycle
     
     override public init() {
-        speechSynth = AVSpeechSynthesizer()
+        speechSynthesizer = AVSpeechSynthesizer()
         super.init()
-        speechSynth.delegate = self
+        speechSynthesizer.delegate = self
     }
     
     deinit {
@@ -92,22 +92,22 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
                                         with: SpeechError.unsupportedLocale(locale: Locale.nationalizedCurrent))
             return
         }
-        if let previousInstrcution = previousInstrcution, speechSynth.isSpeaking {
+        if let previousInstrcution = previousInstrcution, speechSynthesizer.isSpeaking {
             delegate?.speechSynthesizer(self,
                                         didInterrupt: previousInstrcution,
                                         with: modifiedInstruction)
         }
         
         previousInstrcution = modifiedInstruction
-        speechSynth.speak(utteranceToSpeak)
+        speechSynthesizer.speak(utteranceToSpeak)
     }
     
     open func stopSpeaking() {
-        speechSynth.stopSpeaking(at: .word)
+        speechSynthesizer.stopSpeaking(at: .word)
     }
     
     open func interruptSpeaking() {
-        speechSynth.stopSpeaking(at: .immediate)
+        speechSynthesizer.stopSpeaking(at: .immediate)
     }
     
     // MARK: - Methods

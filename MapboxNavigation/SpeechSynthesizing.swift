@@ -47,7 +47,7 @@ The `SpeechSynthesizingDelegate` protocol defines methods that allow an object t
  */
 public protocol SpeechSynthesizingDelegate: class, UnimplementedLogging {
     /**
-     Called when the speech synthesizer encountered an error during processing, but may still be able to speak the instuction.
+     Called when the speech synthesizer encountered an error during processing, but may still be able to speak the instruction.
      - parameter speechSynthesizer: The voice controller that experienced the failure.
      - parameter error: An error explaining the failure and its cause.
      */
@@ -71,11 +71,10 @@ public protocol SpeechSynthesizingDelegate: class, UnimplementedLogging {
     func speechSynthesizer(_ speechSynthesizer: SpeechSynthesizing, didInterrupt interruptedInstruction: SpokenInstruction, with interruptingInstruction: SpokenInstruction)
     
     /**
-     Called when a spoken is about to speak. Useful if it is necessary to give a custom instruction instead. Noting, changing the `distanceAlongStep` property on `SpokenInstruction` will have no impact on when the instruction will be said.
+     Called when a spoken instruction is about to be vocalized. Useful if it is necessary to give a custom instruction instead. Note that changing the `distanceAlongStep` property on `SpokenInstruction` will have no impact on when the instruction will be said.
      
-     - parameter voiceController: The speech synthesizer that will speak an instruction.
+     - parameter speechSynthesizer: The speech synthesizer that will speak an instruction.
      - parameter instruction: The spoken instruction that will be said.
-     - parameter routeProgress: The `RouteProgress` just before when the instruction is scheduled to be spoken.
      */
     func speechSynthesizer(_ speechSynthesizer: SpeechSynthesizing, willSpeak instruction: SpokenInstruction) -> SpokenInstruction?
 }

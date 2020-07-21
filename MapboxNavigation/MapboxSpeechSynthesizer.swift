@@ -27,7 +27,10 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     }
     public var locale: Locale? = Locale.autoupdatingCurrent
     
-    public let stepsAheadToCache: Int = 3
+    /// Number of upcoming `Instructions` to be pre-fetched.
+    ///
+    /// Higher number may exclude cases when required vocalization data is not yet loaded, but also will increase network consumption at the beginning of the route. Keep in mind that pre-fetched instuctions are not guaranteed to be vocalized at all due to re-routing or user actions. "0" will effectively disable pre-fetching.
+    public var stepsAheadToCache: UInt = 3
     
     /**
      An `AVAudioPlayer` through which spoken instructions are played.
@@ -62,7 +65,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
         }
         
         instructions
-            .prefix(stepsAheadToCache)
+            .prefix(Int(stepsAheadToCache))
             .forEach {
                 if !hasCachedSpokenInstructionForKey($0.ssmlText, with: locale) {
                     downloadAndCacheSpokenInstruction(instruction: $0, locale: locale)
@@ -148,9 +151,9 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     func speak(instruction: SpokenInstruction, instructionData: Data) {
         
         if let audioPlayer = audioPlayer {
-            if let previousInstrcution = previousInstruction, audioPlayer.isPlaying{
+            if let previousInstruction = previousInstruction, audioPlayer.isPlaying{
                 delegate?.speechSynthesizer(self,
-                                            didInterrupt: previousInstrcution,
+                                            didInterrupt: previousInstruction,
                                             with: instruction)
             }
             

@@ -192,6 +192,38 @@ class SpeechSynthesizersControllerTests: XCTestCase {
         
         wait(for: [expectation], timeout: 2)
     }
+    
+    func testMultiplexedParameters() {
+        let controller = MultiplexedSpeechSynthesizer()
+        
+        let testLocale = Locale(identifier: "zu")
+        
+        controller.muted = true
+        controller.locale = testLocale
+        
+        XCTAssert(controller.speechSynthesizers.allSatisfy {
+            $0.muted
+        }, "Child speech synthesizers should be muted")
+        XCTAssert(controller.speechSynthesizers.allSatisfy {
+            $0.locale == testLocale
+        }, "Child speech synthesizers should have locale \"\(testLocale.identifier)\" ")
+    }
+    
+    func testSystemSpeak() {
+        let expectation = XCTestExpectation(description: "Synthesizer should speak")
+        let sut = SystemSpeechSynthMock()
+        
+        sut.speakExpectation = expectation
+        
+        sut.speak(SpokenInstruction(distanceAlongStep: .init(),
+                                    text: "text",
+                                    ssmlText: "text"),
+                  during: Fixture.routeLegProgress(),
+                  locale: nil)
+        
+        wait(for: [expectation], timeout: 2)
+        XCTAssert(sut.isSpeaking, "Synthesizer should speak")
+    }
 }
 
 extension SpeechSynthesizersControllerTests: SpeechSynthesizingDelegate {
