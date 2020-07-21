@@ -67,7 +67,7 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
         }
         
         var utterance: AVSpeechUtterance?
-        let localeCode = "\(locale.languageCode ?? "")-\(locale.regionCode ?? "")"
+        let localeCode = [locale.languageCode, locale.regionCode].compactMap{$0}.joined(separator: "-")
         
         if localeCode == "en-US" {
             // Alex can’t handle attributed text.
