@@ -242,7 +242,6 @@ class RouteMapViewController: UIViewController {
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
         if let shape = router.route.shape,
             let userLocation = router.location {
-            mapView.contentInset = contentInset(forOverviewing: true)
             mapView.setOverheadCameraView(from: userLocation, along: shape, for: contentInset(forOverviewing: true))
         }
         isInOverviewMode = true
@@ -503,7 +502,6 @@ extension RouteMapViewController: NavigationComponent {
         
         if isInOverviewMode {
             if let shape = route.shape, let userLocation = router.location {
-                mapView.contentInset = contentInset(forOverviewing: true)
                 mapView.setOverheadCameraView(from: userLocation, along: shape, for: contentInset(forOverviewing: true))
             }
         } else {
