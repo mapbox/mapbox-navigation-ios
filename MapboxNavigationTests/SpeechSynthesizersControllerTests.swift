@@ -208,22 +208,6 @@ class SpeechSynthesizersControllerTests: XCTestCase {
             $0.locale == testLocale
         }, "Child speech synthesizers should have locale \"\(testLocale.identifier)\" ")
     }
-    
-    func testSystemSpeak() {
-        let expectation = XCTestExpectation(description: "Synthesizer should speak")
-        let sut = SystemSpeechSynthMock()
-        
-        sut.speakExpectation = expectation
-        
-        sut.speak(SpokenInstruction(distanceAlongStep: .init(),
-                                    text: "text",
-                                    ssmlText: "text"),
-                  during: Fixture.routeLegProgress(),
-                  locale: nil)
-        
-        wait(for: [expectation], timeout: 2)
-        XCTAssert(sut.isSpeaking, "Synthesizer should speak")
-    }
 }
 
 extension SpeechSynthesizersControllerTests: SpeechSynthesizingDelegate {
