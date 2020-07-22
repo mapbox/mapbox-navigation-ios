@@ -4,11 +4,11 @@ PODS:
   - MapboxAccounts (2.3.0)
   - MapboxCoreNavigation (1.0.0-beta.1):
     - MapboxAccounts (~> 2.3.0)
-    - MapboxDirections (~> 0.32.0)
+    - MapboxDirections (~> 0.33.0)
     - MapboxMobileEvents (~> 0.10.2)
     - MapboxNavigationNative (~> 14.1.5)
     - Turf (~> 0.5.0)
-  - MapboxDirections (0.32.0):
+  - MapboxDirections (0.33.0):
     - Polyline (~> 4.2)
     - Turf (~> 0.5)
   - MapboxMobileEvents (0.10.2)
@@ -50,7 +50,7 @@ SPEC CHECKSUMS:
   Mapbox-iOS-SDK: 48ff7550bd459b8494da8ef4d660a668e9187ef0
   MapboxAccounts: 84abfdde95d9dc483f604c1b0fe1861edf691ce7
   MapboxCoreNavigation: f6ee6f4093a5fd02619bd9d3fc35b1e8cefe61b2
-  MapboxDirections: 7f36b3e9ef6a53fc997c114a341ab4da721756bd
+  MapboxDirections: dd01b8f9053719e02d87538b68355d3206321c81
   MapboxMobileEvents: 2bc0ca2eedb627b73cf403258dce2b2fa98074a6
   MapboxNavigation: e031095fa956e6a4af90e57577392709e3826da0
   MapboxNavigationNative: 05d47617f3d18c5e45d9b549cb82dc39cdb67693
