@@ -42,7 +42,7 @@ Pod::Spec.new do |s|
 
   s.dependency "MapboxNavigationNative", "~> 14.1.5"
   s.dependency "MapboxAccounts", "~> 2.3.0"
-  s.dependency "MapboxDirections", "~> 0.32.0"
+  s.dependency "MapboxDirections", "~> 0.33.0"
   s.dependency "MapboxMobileEvents", "~> 0.10.2"        # Always pin to a patch release if pre-1.0
   s.dependency "Turf", "~> 0.5.0"                       # Always pin to a patch release if pre-1.0
 
