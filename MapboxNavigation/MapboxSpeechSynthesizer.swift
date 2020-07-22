@@ -47,7 +47,13 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     
     public init(_ accessToken: String? = nil, host: String? = nil) {
         self.cache = DataCache()
-        self.speech = SpeechSynthesizer(accessToken: accessToken, host: host)
+        
+        var hostString = host
+        if let host = host, let url = URL(string: host) {
+            hostString = url.host
+        }
+        
+        self.speech = SpeechSynthesizer(accessToken: accessToken, host: hostString)
     }
     
     deinit {        
