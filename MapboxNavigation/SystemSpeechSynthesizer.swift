@@ -5,7 +5,7 @@ import MapboxCoreNavigation
 import MapboxSpeech
 
 /**
- `SpeechSynthesizing` implementation, using `AVSpeechSynthesizer`. Supports only English language.
+ `SpeechSynthesizing` implementation, using `AVSpeechSynthesizer`.
  */
 open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
     
