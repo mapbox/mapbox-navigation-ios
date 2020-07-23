@@ -32,7 +32,7 @@ public enum SpeechFailureAction: String {
  */
 public enum SpeechError: LocalizedError {
     /**
-     The Speech API Did not successfully return a response.
+     An error occurred when requesting speech assets from a server API.
      - parameter instruction: the instruction that failed.
      - parameter options: the SpeechOptions that were used to make the API request.
      - parameter underlying: the underlying `Error` returned by the API.
@@ -40,7 +40,7 @@ public enum SpeechError: LocalizedError {
     case apiError(instruction: SpokenInstruction, options: SpeechOptions, underlying: Error?)
     
     /**
-     The Speech API Did not return any data.
+     The speech engine did not fail with the error itself, but did not provide actual data to vocalize.
      - parameter instruction: the instruction that failed.
      - parameter options: the SpeechOptions that were used to make the API request.
      */
@@ -50,10 +50,9 @@ public enum SpeechError: LocalizedError {
      The speech engine was unable to perform an action on the system audio service.
      - parameter instruction: The instruction that failed.
      - parameter action: a `SpeechFailureAction` that describes the action attempted
-     - parameter synthesizer: the speech engine  that tried to perform the action.
      - parameter underlying: the `Error` that was optrionally returned by the audio service.
      */
-    case unableToControlAudio(instruction: SpokenInstruction?, action: SpeechFailureAction, synthesizer: Any?, underlying: Error?)
+    case unableToControlAudio(instruction: SpokenInstruction?, action: SpeechFailureAction, underlying: Error?)
     
     /**
      The speech engine was unable to initalize an audio player.
@@ -65,9 +64,15 @@ public enum SpeechError: LocalizedError {
     case unableToInitializePlayer(playerType: AVAudioPlayer.Type, instruction: SpokenInstruction, synthesizer: Any?, underlying: Error)
     
     /**
-     The active `RouteProgress` did not contain a speech locale.
+     There was no `Locale` provided during processing instruction.
      - parameter instruction: The instruction that failed.
-     - parameter progress: the offending `RouteProgress` that omits the expected `SpeechLocale`.
      */
-    case undefinedSpeechLocale(instruction: SpokenInstruction, progress: RouteProgress)
+    case undefinedSpeechLocale(instruction: SpokenInstruction)
+    
+    /**
+     The speech engine does not support provided locale
+     - parameter locale: Offending locale
+     */
+    case unsupportedLocale(locale: Locale)
+    
 }

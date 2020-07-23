@@ -408,26 +408,13 @@ extension ViewController: NavigationMapViewDelegate {
     }
 }
 
-// MARK: VoiceControllerDelegate methods
-// To use these delegate methods, set the `VoiceControllerDelegate` on your `VoiceController`.
-extension ViewController: VoiceControllerDelegate {
-    // called when there is an error that requires the speech controller to fall back to a native engine.
-    func voiceController(_ voiceController: RouteVoiceController, didFallBackTo synthesizer: AVSpeechSynthesizer, error: SpeechError) {
+// MARK: RouteVoiceControllerDelegate methods
+// To use these delegate methods, set the `routeVoiceControllerDelegate` on your `VoiceController`.
+extension ViewController: RouteVoiceControllerDelegate {
+    // Called when there is an error with instructions vocalization
+    func routeVoiceController(_ routeVoiceController: RouteVoiceController, encountered error: SpeechError) {
         print(error)
-    }
-    
-    // Called when there is an error with speaking a voice instruction.
-    func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: SpeechError) {
-        print(error)
-    }
-    
-    // Called when an instruction is interrupted by a new voice instruction.
-    func voiceController(_ voiceController: RouteVoiceController, didInterrupt interruptedInstruction: SpokenInstruction, with interruptingInstruction: SpokenInstruction) {
-        print(interruptedInstruction.text, interruptingInstruction.text)
-    }
-    
-    func voiceController(_ voiceController: RouteVoiceController, willSpeak instruction: SpokenInstruction, routeProgress: RouteProgress) -> SpokenInstruction? {
-        return SpokenInstruction(distanceAlongStep: instruction.distanceAlongStep, text: "New Instruction!", ssmlText: "<speak>New Instruction!</speak>")
+
     }
     
     // By default, the navigation service will attempt to filter out unqualified locations.
