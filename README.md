@@ -66,18 +66,6 @@ To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
    ```
    where _PRIVATE_MAPBOX_API_TOKEN_ is your Mapbox API token with the `DOWNLOADS:READ` scope. 
 
-1. Create a [Bintray](https://bintray.com/mapbox) account, then [request to be added to the Mapbox Navigation SDK beta testing program](https://docs.google.com/forms/d/1mzknLZf5W9o8-KnQJ1GiYyG2grXVRqNxqHruWYTRVPc/viewform).
-
-1. [Get a Bintray API key](https://bintray.com/profile/edit).
-
-1. Add or append to a .netrc file in your home directory:
-   ```
-   machine dl.bintray.com
-     login username@mapbox
-     password BINTRAY_API_KEY
-   ```
-   where _username_ is your user name and _BINTRAY_API_KEY_ is your Bintray API key.
-
 1. Create a [Podfile](https://guides.cocoapods.org/syntax/podfile.html) with the following specification:
    ```ruby
    pod 'MapboxCoreNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v1.0.0-beta.1'
@@ -97,18 +85,6 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
      password PRIVATE_MAPBOX_API_TOKEN
    ```
    where _PRIVATE_MAPBOX_API_TOKEN_ is your Mapbox API token with the `DOWNLOADS:READ` scope. 
-
-1. Create a [Bintray](https://bintray.com/mapbox) account, then [request to be added to the Mapbox Navigation SDK beta testing program](https://docs.google.com/forms/d/1mzknLZf5W9o8-KnQJ1GiYyG2grXVRqNxqHruWYTRVPc/viewform).
-
-1. [Get a Bintray API key](https://bintray.com/profile/edit).
-
-1. Add or append to a .netrc file in your home directory:
-   ```
-   machine dl.bintray.com
-     login username@mapbox
-     password BINTRAY_API_KEY
-   ```
-   where _username_ is your user name and _BINTRAY_API_KEY_ is your Bintray API key.
 
 1. _(Optional)_ Clear your Carthage caches:
    ```bash
