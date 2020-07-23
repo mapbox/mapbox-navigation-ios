@@ -47,16 +47,6 @@
                ReferencedContainer = "container:MapboxNavigation.xcodeproj">
             </BuildableReference>
          </TestableReference>
-         <TestableReference
-            skipped = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "35CDA82321908F320072B675"
-               BuildableName = "BenchUITests.xctest"
-               BlueprintName = "BenchUITests"
-               ReferencedContainer = "container:MapboxNavigation.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

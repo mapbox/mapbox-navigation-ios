@@ -242,7 +242,6 @@ class RouteMapViewController: UIViewController {
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
         if let shape = router.route.shape,
             let userLocation = router.location {
-            mapView.contentInset = contentInset(forOverviewing: true)
             mapView.setOverheadCameraView(from: userLocation, along: shape, for: contentInset(forOverviewing: true))
         }
         isInOverviewMode = true
@@ -276,7 +275,12 @@ class RouteMapViewController: UIViewController {
             // Don't move mapView content on rotation or when e.g. top banner expands.
             return
         }
-        mapView.setContentInset(contentInset(forOverviewing: isInOverviewMode), animated: false, completionHandler: nil)
+        
+        updateMapViewContentInsets()
+    }
+    
+    func updateMapViewContentInsets(animated: Bool = false, completion: CompletionHandler? = nil) {
+        mapView.setContentInset(contentInset(forOverviewing: isInOverviewMode), animated: animated, completionHandler: completion)
         mapView.setNeedsUpdateConstraints()
     }
 
@@ -498,7 +502,6 @@ extension RouteMapViewController: NavigationComponent {
         
         if isInOverviewMode {
             if let shape = route.shape, let userLocation = router.location {
-                mapView.contentInset = contentInset(forOverviewing: true)
                 mapView.setOverheadCameraView(from: userLocation, along: shape, for: contentInset(forOverviewing: true))
             }
         } else {

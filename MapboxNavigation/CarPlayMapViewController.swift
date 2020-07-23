@@ -29,8 +29,7 @@ public class CarPlayMapViewController: UIViewController {
     
     var isOverviewingRoutes: Bool = false {
         didSet {
-            // Workaround for https://github.com/mapbox/mapbox-gl-native/issues/15574
-            // In overview mode, content insets are set to .zero, avoid getting them changed.
+            // Fix content insets in overview mode.
             automaticallyAdjustsScrollViewInsets = !isOverviewingRoutes
         }
     }

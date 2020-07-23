@@ -1,111 +1,129 @@
 /* Delimiter between lines in an address when displayed inline */
-"ADDRESS_LINE_SEPARATOR" = "​";
+"ADDRESS_LINE_SEPARATOR" = ". ";
 
 /* Title on arrival action sheet */
-"CARPLAY_ARRIVED" = "目的地に到着しました";
+"CARPLAY_ARRIVED" = "Hedefe vardınız";
 
 /* Message on arrival action sheet */
-"CARPLAY_ARRIVED_MESSAGE" = "ご希望の操作を教えて下さい";
+"CARPLAY_ARRIVED_MESSAGE" = "Ne yapmak istersiniz?";
 
 /* Name of the waypoint associated with the current location */
-"CARPLAY_CURRENT_LOCATION" = "現在地";
+"CARPLAY_CURRENT_LOCATION" = "Mevcut Konum";
 
 /* Title for dismiss button */
-"CARPLAY_DISMISS" = "閉じる";
+"CARPLAY_DISMISS" = "İptal Et";
 
 /* Title for end navigation button */
-"CARPLAY_END" = "終了";
+"CARPLAY_END" = "Bitir";
 
 /* Title on the exit button in the arrival form */
-"CARPLAY_EXIT_NAVIGATION" = "ナビゲーションを終了する";
+"CARPLAY_EXIT_NAVIGATION" = "Navigasyondan çık";
 
 /* Title for feedback template in CarPlay */
-"CARPLAY_FEEDBACK" = "フィードバック";
+"CARPLAY_FEEDBACK" = "Geri bildirim";
 
 /* Title for start button in CPTripPreviewTextConfiguration */
-"CARPLAY_GO" = "発車する";
+"CARPLAY_GO" = "Başla";
 
 /* Title for alternative routes in CPTripPreviewTextConfiguration */
-"CARPLAY_MORE_ROUTES" = "他のルートを表示";
+"CARPLAY_MORE_ROUTES" = "Daha fazla rota";
 
 /* Title for mute button */
-"CARPLAY_MUTE" = "消音";
+"CARPLAY_MUTE" = "Sessiz";
 
 /* Title for overview button in CPTripPreviewTextConfiguration */
-"CARPLAY_OVERVIEW" = "全体を見る";
+"CARPLAY_OVERVIEW" = "Genel Bakış";
 
 /* Title for rating template in CarPlay */
-"CARPLAY_RATE_RIDE" = "乗車の評価を行う";
+"CARPLAY_RATE_RIDE" = "Sürüşünüzü derecelendirin";
 
 /* Title on rate button in CarPlay */
-"CARPLAY_RATE_TRIP" = "乗車の評価を行う";
+"CARPLAY_RATE_TRIP" = "Seyehatinizi derecelendirin";
 
 /* Message when search returned zero results in CarPlay */
-"CARPLAY_SEARCH_NO_RESULTS" = "検索結果がありません";
+"CARPLAY_SEARCH_NO_RESULTS" = "Sonuç bulunamadı";
 
 /* Alert title that shows when feedback has been submitted */
-"CARPLAY_SUBMITTED_FEEDBACK" = "提出済み";
+"CARPLAY_SUBMITTED_FEEDBACK" = "Gönderildi";
 
 /* Title for unmute button */
-"CARPLAY_UNMUTE" = "音声を出す";
+"CARPLAY_UNMUTE" = "Sesi aç";
 
 /* Dismiss button title on the steps view */
-"DISMISS_STEPS_TITLE" = "閉じる";
+"DISMISS_STEPS_TITLE" = "Kapat";
 
 /* Title used for arrival */
-"END_OF_ROUTE_ARRIVED" = "目的地に到着しました";
+"END_OF_ROUTE_ARRIVED" = "Hedefe vardınız";
 
 /* Comment Placeholder Text */
-"END_OF_ROUTE_TITLE" = "改善点を教えてください";
+"END_OF_ROUTE_TITLE" = "How can we improve?";
 
 /* Error message when the SDK is unable to read a spoken instruction. */
-"FAILED_INSTRUCTION" = "音声案内は使用できません";
+"FAILED_INSTRUCTION" = "Unable to read instruction aloud.";
 
 /* Indicates a faster route was found */
-"FASTER_ROUTE_FOUND" = "より早い経路が見つかりました";
+"FASTER_ROUTE_FOUND" = "Daha hızlı bir rota bulundu";
+
+/* Feedback type for Bad Route */
+"FEEDBACK_BAD_ROUTE" = "Kötü\nRota";
+
+/* Feedback type for Confusing Instruction */
+"FEEDBACK_CONFUSING_INSTRUCTION" = "Kafa karıştıran talimat";
+
+/* Feedback type for Other Map Issue Issue */
+"FEEDBACK_GENERAL_ISSUE" = "Diğer harita sorunu";
+
+/* Feedback type for a maneuver that is Not Allowed */
+"FEEDBACK_NOT_ALLOWED" = "Erişime kapalı";
+
+/* Feedback type for Report Traffic */
+"FEEDBACK_REPORT_TRAFFIC" = "Trafik yoğunluğu";
+
+/* Feedback type for Road Closed */
+"FEEDBACK_ROAD_CLOSURE" = "Yol kapalı";
 
 /* Message confirming that the user has successfully sent feedback */
-"FEEDBACK_THANK_YOU" = "フィードバックにご協力頂きありがとうございました";
+"FEEDBACK_THANK_YOU" = "Geri bildiriminiz için teşekkür ederiz.";
 
 /* Title of view controller for sending feedback */
-"FEEDBACK_TITLE" = "問題を報告する";
+"FEEDBACK_TITLE" = "Sorun bildir.";
 
 /* Label indicating the device volume is too low to hear spoken instructions and needs to be manually increased */
-"INAUDIBLE_INSTRUCTIONS_CTA" = "Adjust Volume to Hear Instructions";
+"INAUDIBLE_INSTRUCTIONS_CTA" = "Sesli talimatları duyabilmek için sesi yükseltin.";
 
 /* Format for displaying the first two major ways */
-"LEG_MAJOR_WAYS_FORMAT" = "%1$@と%2$@";
+"LEG_MAJOR_WAYS_FORMAT" = "%1$@ ve %2$@";
 
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
-"LESS_THAN" = "%@より小さい";
+"LESS_THAN" = "<%@";
 
 /* Accessibility value of label indicating the absence of a rating */
-"NO_RATING" = "評価レートがありません";
+"NO_RATING" = "Derecelendirme yok";
 
 /* Rating Reset To Zero Accessability Hint */
-"RATING_ACCESSIBILITY_RESET" = "タップすることで評価レートを０にできます";
+"RATING_ACCESSIBILITY_RESET" = "Derecelendirmeyi sıfırlamak için dokunun.";
 
 /* Format for accessibility label of button for setting a rating; 1 = number of stars */
-"RATING_ACCESSIBILITY_SET" = "%ld つ星のレートをつける";
+"RATING_ACCESSIBILITY_SET" = "%ld-yıldız ile derecelendir.";
 
 /* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
-"RATING_STARS_FORMAT" = "%ld つ星のレート";
+"RATING_STARS_FORMAT" = "%ld yıldız.";
 
 /* Indicates that rerouting is in progress */
-"REROUTING" = "経路を再検索中です…";
+"REROUTING" = "Yeniden yönlendiriliyor…";
 
 /* Button title for resume tracking */
-"RESUME" = "再開する";
+"RESUME" = "Devam et";
 
 /* Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible. */
 "SPEED_LIMIT_LEGEND" = "Max";
 
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
-"USER_IN_SIMULATION_MODE" = "%@ にてナビのシュミレーションを行う";
+"USER_IN_SIMULATION_MODE" = "Simulating Navigation at %@×";
 
 /* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
-"WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%2$@経由で%1$@に向かう";
+"WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%1$@, via %2$@";
 
 /* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
-"WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@と%2$@";
+"WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@ and %2$@";
 

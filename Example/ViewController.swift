@@ -68,7 +68,6 @@ class ViewController: UIViewController {
         self?.presentAlert(message: error.localizedDescription)
     }
 
-    var alertController: UIAlertController!
     // MARK: - Init
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -91,35 +90,6 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        alertController = UIAlertController(title: "Start Navigation", message: "Select the navigation type", preferredStyle: .actionSheet)
-        
-        typealias ActionHandler = (UIAlertAction) -> Void
-        
-        let basic: ActionHandler = {_ in self.startBasicNavigation() }
-        let day: ActionHandler = {_ in self.startNavigation(styles: [DayStyle()]) }
-        let night: ActionHandler = {_ in self.startNavigation(styles: [NightStyle()]) }
-        let custom: ActionHandler = {_ in self.startCustomNavigation() }
-        let styled: ActionHandler = {_ in self.startStyledNavigation() }
-        let guidanceCards: ActionHandler = {_ in self.startGuidanceCardsNavigation() }
-        
-        let actionPayloads: [(String, UIAlertAction.Style, ActionHandler?)] = [
-            ("Default UI", .default, basic),
-            ("DayStyle UI", .default, day),
-            ("NightStyle UI", .default, night),
-            ("Custom UI", .default, custom),
-            ("Guidance Card UI", .default, guidanceCards),
-            ("Styled UI", .default, styled),
-            ("Cancel", .cancel, nil)
-        ]
-        
-        actionPayloads
-            .map { payload in UIAlertAction(title: payload.0, style: payload.1, handler: payload.2)}
-            .forEach(alertController.addAction(_:))
-
-        if let popoverController = alertController.popoverPresentationController {
-            popoverController.sourceView = self.startButton
-        }
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "settings"), style: .plain, target: self, action: #selector(openSettings))
     }
@@ -188,6 +158,40 @@ class ViewController: UIViewController {
     }
 
     @IBAction func startButtonPressed(_ sender: Any) {
+        presentActionsAlertController()
+    }
+    
+    private func presentActionsAlertController() {
+        let alertController = UIAlertController(title: "Start Navigation", message: "Select the navigation type", preferredStyle: .actionSheet)
+        
+        typealias ActionHandler = (UIAlertAction) -> Void
+        
+        let basic: ActionHandler = { _ in self.startBasicNavigation() }
+        let day: ActionHandler = { _ in self.startNavigation(styles: [DayStyle()]) }
+        let night: ActionHandler = { _ in self.startNavigation(styles: [NightStyle()]) }
+        let custom: ActionHandler = { _ in self.startCustomNavigation() }
+        let styled: ActionHandler = { _ in self.startStyledNavigation() }
+        let guidanceCards: ActionHandler = { _ in self.startGuidanceCardsNavigation() }
+        
+        let actionPayloads: [(String, UIAlertAction.Style, ActionHandler?)] = [
+            ("Default UI", .default, basic),
+            ("DayStyle UI", .default, day),
+            ("NightStyle UI", .default, night),
+            ("Custom UI", .default, custom),
+            ("Guidance Card UI", .default, guidanceCards),
+            ("Styled UI", .default, styled),
+            ("Cancel", .cancel, nil)
+        ]
+        
+        actionPayloads
+            .map { payload in UIAlertAction(title: payload.0, style: payload.1, handler: payload.2) }
+            .forEach(alertController.addAction(_:))
+        
+        if let popoverController = alertController.popoverPresentationController {
+            popoverController.sourceView = self.startButton
+            popoverController.sourceRect = self.startButton.bounds
+        }
+        
         present(alertController, animated: true, completion: nil)
     }
 

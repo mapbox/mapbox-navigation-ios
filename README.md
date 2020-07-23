@@ -50,8 +50,6 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
    github "mapbox/mapbox-navigation-ios" ~> 0.40
    ```
 
-1. Run `carthage update --platform iOS` to build just the iOS dependencies.
-
 1. Follow the rest of [Carthage’s iOS integration instructions](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos). Your application target’s Embedded Frameworks should include `MapboxNavigation.framework`, `MapboxCoreNavigation.framework`, `MapboxNavigationNative.framework`, and `MapboxAccounts.framework`.
 
 ## Installing the latest prerelease
@@ -59,6 +57,14 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
 ### Using CocoaPods
 
 To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
+
+1. Go to your [Mapbox account dashboard](https://account.mapbox.com/) and create an access token that has the `DOWNLOADS:READ` scope. **PLEASE NOTE: This is not the same as your production Mapbox API token. Make sure to keep it private and do not insert it into any Info.plist file.** Create a file named `.netrc` in your home directory if it doesn’t already exist, then add the following lines to the end of the file:
+   ```
+   machine api.mapbox.com 
+     login mapbox
+     password PRIVATE_MAPBOX_API_TOKEN
+   ```
+   where _PRIVATE_MAPBOX_API_TOKEN_ is your Mapbox API token with the `DOWNLOADS:READ` scope. 
 
 1. Create a [Bintray](https://bintray.com/mapbox) account, then [request to be added to the Mapbox Navigation SDK beta testing program](https://docs.google.com/forms/d/1mzknLZf5W9o8-KnQJ1GiYyG2grXVRqNxqHruWYTRVPc/viewform).
 
@@ -84,6 +90,14 @@ To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
 
 Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/Carthage/Carthage/) v0.35 or above:
 
+1. Go to your [Mapbox account dashboard](https://account.mapbox.com/) and create an access token that has the `DOWNLOADS:READ` scope. **PLEASE NOTE: This is not the same as your production Mapbox API token. Make sure to keep it private and do not insert it into any Info.plist file.** Create a file named `.netrc` in your home directory if it doesn’t already exist, then add the following lines to the end of the file:
+   ```
+   machine api.mapbox.com
+     login mapbox
+     password PRIVATE_MAPBOX_API_TOKEN
+   ```
+   where _PRIVATE_MAPBOX_API_TOKEN_ is your Mapbox API token with the `DOWNLOADS:READ` scope. 
+
 1. Create a [Bintray](https://bintray.com/mapbox) account, then [request to be added to the Mapbox Navigation SDK beta testing program](https://docs.google.com/forms/d/1mzknLZf5W9o8-KnQJ1GiYyG2grXVRqNxqHruWYTRVPc/viewform).
 
 1. [Get a Bintray API key](https://bintray.com/profile/edit).
@@ -98,7 +112,7 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
 
 1. _(Optional)_ Clear your Carthage caches:
    ```bash
-   rm -rf ~/Library/Caches/carthage/ ~/Library/Caches/org.carthage.CarthageKit/binaries/{MapboxAccounts,MapboxNavigationNative,Mapbox-iOS-SDK}
+   rm -rf ~/Library/Caches/carthage/ ~/Library/Caches/org.carthage.CarthageKit/binaries/{MapboxAccounts,MapboxNavigationNative,mapbox-ios-sdk-dynamic}
    ```
 
 1. Create a [Cartfile](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#github-repositories) with the following dependency:
