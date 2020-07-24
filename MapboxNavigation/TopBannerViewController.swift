@@ -154,8 +154,8 @@ open class TopBannerViewController: UIViewController {
     
     private func addStackConstraints() {
         let top = informationStackView.topAnchor.constraint(equalTo: view.safeTopAnchor)
-        let leading = informationStackView.leadingAnchor.constraint(equalTo: view.safeLeadingAnchor)
-        let trailing = informationStackView.trailingAnchor.constraint(equalTo: view.safeTrailingAnchor)
+        let leading = informationStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
+        let trailing = informationStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         let bottom = informationStackBottomPinConstraint
         //bottom is taken care of as part of steps TVC show/hide
         
