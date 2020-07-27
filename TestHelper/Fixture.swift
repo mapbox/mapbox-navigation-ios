@@ -136,7 +136,7 @@ public class Fixture: NSObject {
         return traceCollector.locations
     }
     
-    public class func routeLegProgress() -> RouteLegProgress? {
+    public class func routeLegProgress() -> RouteLegProgress {
         let routeStep = RouteStep(transportType: .automobile,
                                   maneuverLocation: .init(),
                                   maneuverType: .arrive,
@@ -144,7 +144,7 @@ public class Fixture: NSObject {
                                   drivingSide: .right,
                                   distance: 0.0,
                                   expectedTravelTime: 0.0)
-        return try? RouteLegProgress(leg: RouteLeg(steps: [routeStep],
+        return try! RouteLegProgress(leg: RouteLeg(steps: [routeStep],
                                                    name: "empty",
                                                    distance: 0.0,
                                                    expectedTravelTime: 0.0,

@@ -81,7 +81,7 @@ class SpeechSynthesizersControllerTests: XCTestCase {
         speechSynthesizersController.speak(SpokenInstruction(distanceAlongStep: .init(),
                                                              text: "text",
                                                              ssmlText: "text"),
-                                           during: Fixture.routeLegProgress()!,
+                                           during: Fixture.routeLegProgress(),
                                            locale: nil)
         
         wait(for: [speakExpectation, dontSpeakExpectation], timeout: 2)
@@ -98,7 +98,7 @@ class SpeechSynthesizersControllerTests: XCTestCase {
         speechSynthesizersController.speak(SpokenInstruction(distanceAlongStep: .init(),
                                                              text: "text",
                                                              ssmlText: "text"),
-                                           during: Fixture.routeLegProgress()!,
+                                           during: Fixture.routeLegProgress(),
                                            locale: nil)
         
         wait(for: [expectation], timeout: 3)
@@ -164,7 +164,7 @@ class SpeechSynthesizersControllerTests: XCTestCase {
         sut.speak(SpokenInstruction(distanceAlongStep: .init(),
                                     text: "text",
                                     ssmlText: "text"),
-                  during: Fixture.routeLegProgress()!,
+                  during: Fixture.routeLegProgress(),
                   locale: nil)
         
         wait(for: [expectation], timeout: 2)
@@ -187,7 +187,7 @@ class SpeechSynthesizersControllerTests: XCTestCase {
         sut.speak(SpokenInstruction(distanceAlongStep: .init(),
                                     text: "text",
                                     ssmlText: "text"),
-                  during: Fixture.routeLegProgress()!,
+                  during: Fixture.routeLegProgress(),
                   locale: nil)
         
         wait(for: [expectation], timeout: 2)
