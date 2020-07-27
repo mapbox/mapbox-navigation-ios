@@ -10,7 +10,6 @@ extension UIImage {
 
 public extension FeedbackType {
 
-    // TODO: Localize these strings
     internal var title: String {
         switch self {
             case .general:
