@@ -58,9 +58,6 @@
 /* Comment Placeholder Text */
 "END_OF_ROUTE_TITLE" = "How can we improve?";
 
-/* Error message when the SDK is unable to read a spoken instruction. */
-"FAILED_INSTRUCTION" = "Unable to read instruction aloud.";
-
 /* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "Faster Route Found";
 
@@ -69,6 +66,24 @@
 
 /* Title of view controller for sending feedback */
 "FEEDBACK_TITLE" = "Report Problem";
+
+/* Feedback type for confusing audio */
+"FEEDBACK_TYPE_CONFUSING_AUDIO" = "Confusing Audio";
+
+/* Feedback type for general or unknown issue */
+"FEEDBACK_TYPE_GENERAL" = "Feedback";
+
+/* Feedback type for illegal route */
+"FEEDBACK_TYPE_ILLEGAL_ROUTE" = "Illegal Route";
+
+/* Feedback type for incorrect visual */
+"FEEDBACK_TYPE_INCORRECT_VISUAL" = "Incorrect Visual";
+
+/* Feedback type for road closure */
+"FEEDBACK_TYPE_ROAD_CLOSURE" = "Road Closure";
+
+/* Feedback type for route quality */
+"FEEDBACK_TYPE_ROUTE_QUALITY" = "Route Quality";
 
 /* Label indicating the device volume is too low to hear spoken instructions and needs to be manually increased */
 "INAUDIBLE_INSTRUCTIONS_CTA" = "Adjust Volume to Hear Instructions";
