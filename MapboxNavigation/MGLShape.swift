@@ -17,12 +17,17 @@ extension MGLPointFeature {
     /**
      Initializes a map point feature representation of the given Turf point feature.
      
-     - parameter pointFeature: The Turf point feature to convert to a map point feature.
+     - parameter pointFeature: The Turf `Point` feature to convert to a map point feature. If the Feature passed is not of type `Point` - initialization fails.
      */
-    public convenience init(_ pointFeature: PointFeature) {
-        self.init(pointFeature.geometry)
+    public convenience init?(_ pointFeature: Feature) {
+        guard case let .point(pointGeometry) = pointFeature.geometry else {
+            return nil
+        }
+        self.init(pointGeometry)
         identifier = pointFeature.identifier
-        attributes = pointFeature.properties ?? [:]
+        attributes = pointFeature.properties?.compactMapValues {
+            return $0
+        } ?? [:]
     }
 }
 
@@ -41,12 +46,17 @@ extension MGLPolylineFeature {
     /**
      Initializes a map polyline feature representation of the given Turf linestring feature.
      
-     - parameter lineStringFeature: The Turf linestring feature to convert to a map polyline feature.
+     - parameter lineStringFeature: The Turf `LineString` feature to convert to a map polyline feature. If the Feature passed is not of type `LineString` - initialization fails.
      */
-    public convenience init(_ lineStringFeature: LineStringFeature) {
-        self.init(lineStringFeature.geometry)
+    public convenience init?(_ lineStringFeature: Feature) {
+        guard case let .lineString(lineStringGeometry) = lineStringFeature.geometry else {
+            return nil
+        }
+        self.init(lineStringGeometry)
         identifier = lineStringFeature.identifier
-        attributes = lineStringFeature.properties ?? [:]
+        attributes = lineStringFeature.properties?.compactMapValues {
+            return $0
+        } ?? [:]
     }
 }
 
@@ -66,12 +76,17 @@ extension MGLMultiPolylineFeature {
     /**
      Initializes a map multipolyline feature representation of the given Turf multilinestring feature.
      
-     - parameter multiLineStringFeature: The Turf multilinestring feature to convert to a map multipolyline feature.
+     - parameter multiLineStringFeature: The Turf `MultiLineString` feature to convert to a map multipolyline feature. If the Feature passed is not of type `MultiLineString` - initialization fails.
      */
-    public convenience init(_ multiLineStringFeature: MultiLineStringFeature) {
-        self.init(multiLineStringFeature.geometry)
+    public convenience init?(_ multiLineStringFeature: Feature) {
+        guard case let .multiLineString(multiLineStringGeometry) = multiLineStringFeature.geometry else {
+            return nil
+        }
+        self.init(multiLineStringGeometry)
         identifier = multiLineStringFeature.identifier
-        attributes = multiLineStringFeature.properties ?? [:]
+        attributes = multiLineStringFeature.properties?.compactMapValues {
+            return $0
+        } ?? [:]
     }
 }
 
@@ -92,7 +107,7 @@ extension MGLPolygon {
      */
     public convenience init(_ polygon: Polygon) {
         let outerCoordinates = polygon.outerRing.coordinates
-        let interiorPolygons = polygon.innerRings?.map { MGLPolygon($0) }
+        let interiorPolygons = polygon.innerRings.map { MGLPolygon($0) }
         self.init(coordinates: outerCoordinates, count: UInt(outerCoordinates.count), interiorPolygons: interiorPolygons)
     }
 }
@@ -101,12 +116,17 @@ extension MGLPolygonFeature {
     /**
      Initializes a map polygon feature representation of the given Turf polygon feature.
      
-     - parameter polygonFeature: The Turf polygon feature to convert to a map polygon feature.
+     - parameter polygonFeature: The Turf `Polygon` feature to convert to a map polygon feature. If the Feature passed is not of type `Polygon` - initialization fails.
      */
-    public convenience init(_ polygonFeature: PolygonFeature) {
-        self.init(polygonFeature.geometry)
+    public convenience init?(_ polygonFeature: Feature) {
+        guard case let .polygon(polygonGeometry) = polygonFeature.geometry else {
+            return nil
+        }
+        self.init(polygonGeometry)
         identifier = polygonFeature.identifier
-        attributes = polygonFeature.properties ?? [:]
+        attributes = polygonFeature.properties?.compactMapValues {
+            return $0
+        } ?? [:]
     }
 }
 
@@ -121,11 +141,16 @@ extension MGLMultiPolygonFeature {
     /**
      Initializes a map multipolygon feature representation of the given Turf multipolygon feature.
      
-     - parameter multipolygonFeature: The Turf multipolygon feature to convert to a map multipolygon feature.
+     - parameter multipolygonFeature: The Turf `MultiPolygon` feature to convert to a map multipolygon feature. If the Feature passed is not of type `MultiPolygon` - initialization fails.
      */
-    public convenience init(_ multiPolygonFeature: MultiPolygonFeature) {
-        self.init(multiPolygonFeature.geometry)
+    public convenience init?(_ multiPolygonFeature: Feature) {
+        guard case let .multiPolygon(multiPolygonGeometry) = multiPolygonFeature.geometry else {
+            return nil
+        }
+        self.init(multiPolygonGeometry)
         identifier = multiPolygonFeature.identifier
-        attributes = multiPolygonFeature.properties ?? [:]
+        attributes = multiPolygonFeature.properties?.compactMapValues {
+            return $0
+        } ?? [:]
     }
 }

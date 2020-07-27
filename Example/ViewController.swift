@@ -68,7 +68,6 @@ class ViewController: UIViewController {
         self?.presentAlert(message: error.localizedDescription)
     }
 
-    var alertController: UIAlertController!
     // MARK: - Init
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -91,35 +90,6 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        alertController = UIAlertController(title: "Start Navigation", message: "Select the navigation type", preferredStyle: .actionSheet)
-        
-        typealias ActionHandler = (UIAlertAction) -> Void
-        
-        let basic: ActionHandler = {_ in self.startBasicNavigation() }
-        let day: ActionHandler = {_ in self.startNavigation(styles: [DayStyle()]) }
-        let night: ActionHandler = {_ in self.startNavigation(styles: [NightStyle()]) }
-        let custom: ActionHandler = {_ in self.startCustomNavigation() }
-        let styled: ActionHandler = {_ in self.startStyledNavigation() }
-        let guidanceCards: ActionHandler = {_ in self.startGuidanceCardsNavigation() }
-        
-        let actionPayloads: [(String, UIAlertAction.Style, ActionHandler?)] = [
-            ("Default UI", .default, basic),
-            ("DayStyle UI", .default, day),
-            ("NightStyle UI", .default, night),
-            ("Custom UI", .default, custom),
-            ("Guidance Card UI", .default, guidanceCards),
-            ("Styled UI", .default, styled),
-            ("Cancel", .cancel, nil)
-        ]
-        
-        actionPayloads
-            .map { payload in UIAlertAction(title: payload.0, style: payload.1, handler: payload.2)}
-            .forEach(alertController.addAction(_:))
-
-        if let popoverController = alertController.popoverPresentationController {
-            popoverController.sourceView = self.startButton
-        }
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "settings"), style: .plain, target: self, action: #selector(openSettings))
     }
@@ -188,6 +158,40 @@ class ViewController: UIViewController {
     }
 
     @IBAction func startButtonPressed(_ sender: Any) {
+        presentActionsAlertController()
+    }
+    
+    private func presentActionsAlertController() {
+        let alertController = UIAlertController(title: "Start Navigation", message: "Select the navigation type", preferredStyle: .actionSheet)
+        
+        typealias ActionHandler = (UIAlertAction) -> Void
+        
+        let basic: ActionHandler = { _ in self.startBasicNavigation() }
+        let day: ActionHandler = { _ in self.startNavigation(styles: [DayStyle()]) }
+        let night: ActionHandler = { _ in self.startNavigation(styles: [NightStyle()]) }
+        let custom: ActionHandler = { _ in self.startCustomNavigation() }
+        let styled: ActionHandler = { _ in self.startStyledNavigation() }
+        let guidanceCards: ActionHandler = { _ in self.startGuidanceCardsNavigation() }
+        
+        let actionPayloads: [(String, UIAlertAction.Style, ActionHandler?)] = [
+            ("Default UI", .default, basic),
+            ("DayStyle UI", .default, day),
+            ("NightStyle UI", .default, night),
+            ("Custom UI", .default, custom),
+            ("Guidance Card UI", .default, guidanceCards),
+            ("Styled UI", .default, styled),
+            ("Cancel", .cancel, nil)
+        ]
+        
+        actionPayloads
+            .map { payload in UIAlertAction(title: payload.0, style: payload.1, handler: payload.2) }
+            .forEach(alertController.addAction(_:))
+        
+        if let popoverController = alertController.popoverPresentationController {
+            popoverController.sourceView = self.startButton
+            popoverController.sourceRect = self.startButton.bounds
+        }
+        
         present(alertController, animated: true, completion: nil)
     }
 
@@ -404,26 +408,13 @@ extension ViewController: NavigationMapViewDelegate {
     }
 }
 
-// MARK: VoiceControllerDelegate methods
-// To use these delegate methods, set the `VoiceControllerDelegate` on your `VoiceController`.
-extension ViewController: VoiceControllerDelegate {
-    // called when there is an error that requires the speech controller to fall back to a native engine.
-    func voiceController(_ voiceController: RouteVoiceController, didFallBackTo synthesizer: AVSpeechSynthesizer, error: SpeechError) {
+// MARK: RouteVoiceControllerDelegate methods
+// To use these delegate methods, set the `routeVoiceControllerDelegate` on your `VoiceController`.
+extension ViewController: RouteVoiceControllerDelegate {
+    // Called when there is an error with instructions vocalization
+    func routeVoiceController(_ routeVoiceController: RouteVoiceController, encountered error: SpeechError) {
         print(error)
-    }
-    
-    // Called when there is an error with speaking a voice instruction.
-    func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: SpeechError) {
-        print(error)
-    }
-    
-    // Called when an instruction is interrupted by a new voice instruction.
-    func voiceController(_ voiceController: RouteVoiceController, didInterrupt interruptedInstruction: SpokenInstruction, with interruptingInstruction: SpokenInstruction) {
-        print(interruptedInstruction.text, interruptingInstruction.text)
-    }
-    
-    func voiceController(_ voiceController: RouteVoiceController, willSpeak instruction: SpokenInstruction, routeProgress: RouteProgress) -> SpokenInstruction? {
-        return SpokenInstruction(distanceAlongStep: instruction.distanceAlongStep, text: "New Instruction!", ssmlText: "<speak>New Instruction!</speak>")
+
     }
     
     // By default, the navigation service will attempt to filter out unqualified locations.

@@ -54,7 +54,18 @@ struct PerformanceEventDetails: EventDetails {
 
 struct NavigationEventDetails: EventDetails {
     let audioType: String = AVAudioSession.sharedInstance().audioType
-    let applicationState = UIApplication.shared.applicationState
+    let applicationState: UIApplication.State = {
+        var state: UIApplication.State!
+        if Thread.isMainThread {
+            state = UIApplication.shared.applicationState
+        } else {
+            DispatchQueue.main.sync {
+                state = UIApplication.shared.applicationState
+            }
+        }
+        
+        return state
+    }()
     let batteryLevel: Int = UIDevice.current.batteryLevel >= 0 ? Int(UIDevice.current.batteryLevel * 100) : -1
     let batteryPluggedIn: Bool = [.charging, .full].contains(UIDevice.current.batteryState)
     let coordinate: CLLocationCoordinate2D?
@@ -107,6 +118,8 @@ struct NavigationEventDetails: EventDetails {
     var newDistanceRemaining: CLLocationDistance?
     var newDurationRemaining: TimeInterval?
     var newGeometry: String?
+    var totalTimeInForeground: TimeInterval
+    var totalTimeInBackground: TimeInterval
     
     init(dataSource: EventsManagerDataSource, session: SessionState, defaultInterface: Bool) {
         coordinate = dataSource.router.rawLocation?.coordinate
@@ -167,9 +180,9 @@ struct NavigationEventDetails: EventDetails {
         }
         percentTimeInPortrait = totalTimeInPortrait + totalTimeInLandscape == 0 ? 100 : Int((totalTimeInPortrait / (totalTimeInPortrait + totalTimeInLandscape)) * 100)
         
-        var totalTimeInForeground = session.timeSpentInForeground
-        var totalTimeInBackground = session.timeSpentInBackground
-        if UIApplication.shared.applicationState == .active {
+        totalTimeInForeground = session.timeSpentInForeground
+        totalTimeInBackground = session.timeSpentInBackground
+        if applicationState == .active {
             totalTimeInForeground += abs(session.lastTimeInForeground.timeIntervalSinceNow)
         } else {
             totalTimeInBackground += abs(session.lastTimeInBackground.timeIntervalSinceNow)
@@ -238,6 +251,8 @@ struct NavigationEventDetails: EventDetails {
         case newDurationRemaining
         case newGeometry
         case routeLegProgress = "step"
+        case totalTimeInForeground
+        case totalTimeInBackground
     }
     
     func encode(to encoder: Encoder) throws {
@@ -292,6 +307,9 @@ struct NavigationEventDetails: EventDetails {
         try container.encodeIfPresent(secondsSinceLastReroute, forKey: .secondsSinceLastReroute)
         try container.encodeIfPresent(newDistanceRemaining, forKey: .newDistanceRemaining)
         try container.encodeIfPresent(newDurationRemaining, forKey: .newDurationRemaining)
+        try container.encode(totalTimeInForeground, forKey: .totalTimeInForeground)
+        try container.encode(totalTimeInBackground, forKey: .totalTimeInBackground)
+        try container.encodeIfPresent(rating, forKey: .rating)
     }
 }
 

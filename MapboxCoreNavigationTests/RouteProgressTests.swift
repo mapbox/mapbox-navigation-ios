@@ -204,22 +204,22 @@ class RouteProgressTests: XCTestCase {
         XCTAssertEqual(remainingWaypoints?.count, 4,
                        "At the first via point before backtracking, all but the source and first via point should remain")
         
-        legProgress?.currentStepProgress.distanceTraveled = LineString(coordinates).distance() / 2.0
+        legProgress?.currentStepProgress.distanceTraveled = LineString(coordinates).distance()! / 2.0
         remainingWaypoints = legProgress?.remainingWaypoints(among: Array(options.waypoints.dropLast()))
         XCTAssertEqual(remainingWaypoints?.count, 2,
                        "At the via point where the leg backtracks, only the via points after backtracking should remain")
         
-        legProgress?.currentStepProgress.distanceTraveled = LineString(coordinates).distance() / 2.0 + coordinates[3].distance(to: coordinates[4]) / 2.0
+        legProgress?.currentStepProgress.distanceTraveled = LineString(coordinates).distance()! / 2.0 + coordinates[3].distance(to: coordinates[4]) / 2.0
         remainingWaypoints = legProgress?.remainingWaypoints(among: Array(options.waypoints.dropLast()))
         XCTAssertEqual(remainingWaypoints?.count, 2,
                        "Halfway to the via point where the leg backtracks, only the via points after backtracking should remain")
         
-        legProgress?.currentStepProgress.distanceTraveled = LineString(coordinates).distance() / 2.0 + coordinates[3].distance(to: coordinates[4])
+        legProgress?.currentStepProgress.distanceTraveled = LineString(coordinates).distance()! / 2.0 + coordinates[3].distance(to: coordinates[4])
         remainingWaypoints = legProgress?.remainingWaypoints(among: Array(options.waypoints.dropLast()))
         XCTAssertEqual(remainingWaypoints?.count, 1,
                        "At the first via point after backtracking, all but one of the via points after backtracking should remain")
         
-        legProgress?.currentStepProgress.distanceTraveled = LineString(coordinates).distance()
+        legProgress?.currentStepProgress.distanceTraveled = LineString(coordinates).distance()!
         remainingWaypoints = legProgress?.remainingWaypoints(among: Array(options.waypoints.dropLast()))
         XCTAssertEqual(remainingWaypoints?.count, 0,
                        "At the last via point after backtracking, nothing should remain")
@@ -247,37 +247,36 @@ class RouteProgressTests: XCTestCase {
             .init(value: 50, unit: .kilometersPerHour),
             .init(value: .infinity, unit: .kilometersPerHour),
         ]
-        
         let legProgress = try? RouteLegProgress(leg: leg)
         
         XCTAssertEqual(legProgress?.distanceTraveled, 0)
         XCTAssertEqual(legProgress?.currentSpeedLimit, Measurement(value: 10, unit: UnitSpeed.kilometersPerHour))
-        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[1]) / 2.0
+        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[1])! / 2.0
         XCTAssertEqual(legProgress?.currentSpeedLimit, Measurement(value: 10, unit: UnitSpeed.kilometersPerHour))
         
-        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[1])
+        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[1])!
         XCTAssertEqual(legProgress?.currentSpeedLimit, Measurement(value: 20, unit: UnitSpeed.milesPerHour))
-        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[1]) + lineString.distance(from: coordinates[1], to: coordinates[2]) / 2.0
+        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[1])! + lineString.distance(from: coordinates[1], to: coordinates[2])! / 2.0
         XCTAssertEqual(legProgress?.currentSpeedLimit, Measurement(value: 20, unit: UnitSpeed.milesPerHour))
         
-        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[2])
+        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[2])!
         XCTAssertNil(legProgress?.currentSpeedLimit)
-        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[2]) + lineString.distance(from: coordinates[2], to: coordinates[3]) / 2.0
+        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[2])! + lineString.distance(from: coordinates[2], to: coordinates[3])! / 2.0
         XCTAssertNil(legProgress?.currentSpeedLimit)
         
-        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[3])
+        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[3])!
         XCTAssertEqual(legProgress?.currentSpeedLimit, Measurement(value: 40, unit: UnitSpeed.milesPerHour))
-        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[3]) + lineString.distance(from: coordinates[3], to: coordinates[4]) / 2.0
+        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[3])! + lineString.distance(from: coordinates[3], to: coordinates[4])! / 2.0
         XCTAssertEqual(legProgress?.currentSpeedLimit, Measurement(value: 40, unit: UnitSpeed.milesPerHour))
         
-        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[4])
+        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[4])!
         XCTAssertEqual(legProgress?.currentSpeedLimit, Measurement(value: 50, unit: UnitSpeed.kilometersPerHour))
-        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[4]) + lineString.distance(from: coordinates[4], to: coordinates[5]) / 2.0
+        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[4])! + lineString.distance(from: coordinates[4], to: coordinates[5])! / 2.0
         XCTAssertEqual(legProgress?.currentSpeedLimit, Measurement(value: 50, unit: UnitSpeed.kilometersPerHour))
         
-        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[5])
+        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[5])!
         XCTAssertTrue(legProgress?.currentSpeedLimit?.value.isInfinite ?? false)
-        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[5]) + (lineString.distance() - lineString.distance(to: coordinates[5])) / 2.0
+        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[5])! + (lineString.distance()! - lineString.distance(to: coordinates[5])!) / 2.0
         XCTAssertTrue(legProgress?.currentSpeedLimit?.value.isInfinite ?? false)
     }
     

@@ -20,8 +20,12 @@ open class RouteController: NSObject {
         public static let shouldPreventReroutesWhenArrivingAtWaypoint: Bool = true
         public static let shouldDisableBatteryMonitoring: Bool = true
     }
-    
-    let navigator = Navigator()
+
+    lazy var navigator: Navigator = {
+        let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile,
+                                              platform: ProfilePlatform.KIOS)
+        return Navigator(profile: settingsProfile, customConfig: "")
+    }()
     
     public var route: Route {
         get {
@@ -304,7 +308,7 @@ open class RouteController: NSObject {
             preconditionFailure("Route steps used for navigation must have shape data")
         }
         if let closestCoordinate = polyline.closestCoordinate(to: rawLocation.coordinate) {
-            let remainingDistance = polyline.distance(from: closestCoordinate.coordinate)
+            let remainingDistance = polyline.distance(from: closestCoordinate.coordinate)!
             let distanceTraveled = step.distance - remainingDistance
             stepProgress.distanceTraveled = distanceTraveled
             
@@ -316,7 +320,7 @@ open class RouteController: NSObject {
                 NotificationUserInfoKey.routeProgressKey: progress,
                 NotificationUserInfoKey.locationKey: location, //guaranteed value
                 NotificationUserInfoKey.rawLocationKey: rawLocation, //raw
-                ])
+            ])
         }
     }
     
@@ -387,7 +391,7 @@ extension RouteController: Router {
         }
         
         let status = status ?? navigator.getStatusForTimestamp(location.timestamp)
-        let offRoute = status.routeState == .offRoute
+        let offRoute = status.routeState == .offRoute || status.routeState == .invalid
         return !offRoute
     }
     
@@ -431,9 +435,6 @@ extension RouteController: Router {
                 ])
                 return
             }
-
-            
-
         }
     }
 }

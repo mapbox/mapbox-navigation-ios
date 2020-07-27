@@ -212,8 +212,9 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         
         self.navigationService = navigationOptions?.navigationService ?? MapboxNavigationService(route: route, routeOptions: routeOptions)
         self.navigationService.delegate = self
+
         let credentials = navigationService.directions.credentials
-        self.voiceController = navigationOptions?.voiceController ?? MapboxVoiceController(navigationService: navigationService, speechClient: SpeechSynthesizer(accessToken: credentials.accessToken, host: credentials.host.absoluteString))
+        self.voiceController = navigationOptions?.voiceController ?? RouteVoiceController(navigationService: navigationService,accessToken: credentials.accessToken, host: credentials.host.absoluteString)
 
         NavigationSettings.shared.distanceUnit = routeOptions.locale.usesMetric ? .kilometer : .mile
         
@@ -386,12 +387,21 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
 
 //MARK: - RouteMapViewControllerDelegate
 extension NavigationViewController: RouteMapViewControllerDelegate {
-    public func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        return delegate?.navigationViewController(self, routeCasingStyleLayerWithIdentifier: identifier, source: source)
+
+    public func navigationMapView(_ mapView: NavigationMapView, mainRouteStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        return delegate?.navigationViewController(self, mainRouteStyleLayerWithIdentifier: identifier, source: source)
     }
-    
-    public func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        return delegate?.navigationViewController(self, routeStyleLayerWithIdentifier: identifier, source: source)
+
+    public func navigationMapView(_ mapView: NavigationMapView, mainRouteCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        return delegate?.navigationViewController(self, mainRouteCasingStyleLayerWithIdentifier: identifier, source: source)
+    }
+
+    public func navigationMapView(_ mapView: NavigationMapView, alternativeRouteStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        return delegate?.navigationViewController(self, alternativeRouteStyleLayerWithIdentifier: identifier, source: source)
+    }
+
+    public func navigationMapView(_ mapView: NavigationMapView, alternateRouteCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        return delegate?.navigationViewController(self, alternateRouteCasingStyleLayerWithIdentifier: identifier, source: source)
     }
     
     public func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route) {
@@ -722,7 +732,12 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
         let legProgress = try! RouteLegProgress(leg: progress.route.legs[legIndex], stepIndex: stepIndex)
         let step = legProgress.currentStep
         self.preview(step: step, in: banner, remaining: progress.remainingSteps, route: progress.route, animated: false)
-        banner.dismissStepsTable()
+        
+        // After selecting maneuver and dismissing steps table make sure to update contentInsets of NavigationMapView
+        // to correctly place selected maneuver in the center of the screen (taking into account top and bottom banner heights).
+        banner.dismissStepsTable { [weak self] in
+            self?.mapViewController?.updateMapViewContentInsets()
+        }
     }
     
     public func topBanner(_ banner: TopBannerViewController, didDisplayStepsController: StepsViewController) {

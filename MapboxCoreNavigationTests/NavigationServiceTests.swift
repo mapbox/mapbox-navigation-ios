@@ -8,6 +8,12 @@ import os.log
 
 fileprivate let mbTestHeading: CLLocationDirection = 50
 
+// minimum distance threshold between two locations (in meters)
+fileprivate let distanceThreshold: CLLocationDistance = 1
+
+// minimum threshold for both latitude and longitude between two coordinates
+fileprivate let coordinateThreshold: CLLocationDistance = 0.0005
+
 class NavigationServiceTests: XCTestCase {
     var eventsManagerSpy: NavigationEventsManagerSpy!
     let directionsClientSpy = DirectionsSpy()
@@ -62,59 +68,75 @@ class NavigationServiceTests: XCTestCase {
     func testUserIsOffRoute() {
         let navigation = dependencies.navigationService
         let route = navigation.route
-
-        let coordinates = route.shape!.coordinates.prefix(3)
+        
+        // Create list of 3 coordinates which are located on actual route
+        let coordinatesOnRoute = route.shape!.coordinates.prefix(3)
         let now = Date()
-        let locations = coordinates.enumerated().map { CLLocation(coordinate: $0.element,
-                                                                  altitude: -1, horizontalAccuracy: 10, verticalAccuracy: -1, course: -1, speed: 10, timestamp: now + $0.offset) }
-
-        locations.forEach { navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [$0]) }
-
-        XCTAssertTrue(navigation.router.userIsOnRoute(locations.last!), "User should be on route")
-
-        let coordinatesOffRoute: [CLLocationCoordinate2D] = (0...3).map { _ in locations.first!.coordinate.coordinate(at: 100, facing: 90) }
-        let locationsOffRoute = coordinatesOffRoute.enumerated().map {
-            CLLocation(coordinate: $0.element, altitude: -1, horizontalAccuracy: 10,
-                       verticalAccuracy: -1, course: -1, speed: 10,
-                       timestamp: now + locations.count + $0.offset)
+        let locationsOnRoute = coordinatesOnRoute.enumerated().map {
+            CLLocation(coordinate: $0.element,
+                       altitude: -1,
+                       horizontalAccuracy: 10,
+                       verticalAccuracy: -1,
+                       course: -1,
+                       speed: 10,
+                       timestamp: now + $0.offset)
         }
-
-        locationsOffRoute.forEach { navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [$0]) }
-
-        XCTAssertFalse(navigation.router.userIsOnRoute(locationsOffRoute.last!), "User should be off route")
+        
+        // Iterate over each location on the route and simulate location update
+        locationsOnRoute.forEach {
+            navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [$0])
+            
+            // Verify whether current location is located on the route
+            XCTAssertTrue(navigation.router.userIsOnRoute($0), "User should be on the route")
+        }
+        
+        // Create list of 3 coordinates: all coordinates have distance component slightly changed, which means that they're off the route
+        let coordinatesOffRoute: [CLLocationCoordinate2D] = (0...2).map { _ in locationsOnRoute.first!.coordinate.coordinate(at: 100, facing: 90) }
+        let locationsOffRoute = coordinatesOffRoute.enumerated().map {
+            CLLocation(coordinate: $0.element,
+                       altitude: -1,
+                       horizontalAccuracy: 10,
+                       verticalAccuracy: -1,
+                       course: -1,
+                       speed: 10,
+                       timestamp: now + locationsOnRoute.count + $0.offset)
+        }
+        
+        // Iterate over the list of locations which are off the route and verify whether all locations except first one are off the route.
+        // Even though first location is off the route as per navigation native logic it sometimes can return tracking route state
+        // even if location is visually off-route.
+        locationsOffRoute.enumerated().forEach {
+            navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [$0.element])
+            
+            if ($0.offset == 0) {
+                XCTAssertTrue(navigation.router.userIsOnRoute($0.element), "For the first coordinate user is still on the route")
+            } else {
+                XCTAssertFalse(navigation.router.userIsOnRoute($0.element), "User should be off route")
+            }
+        }
     }
 
-    func testAdvancingToFutureStepAndNotRerouting() {
+    func testNotReroutingForAllSteps() {
         let navigation = dependencies.navigationService
         let route = navigation.route
-
-        let firstStepCoordinates = route.legs[0].steps[0].shape!.coordinates
-        let now = Date()
-        let firstStepLocations = firstStepCoordinates.enumerated().map {
-            CLLocation(coordinate: $0.element, altitude: -1, horizontalAccuracy: 10, verticalAccuracy: -1, course: -1, speed: 10, timestamp: now + $0.offset)
+        
+        route.legs[0].steps.enumerated().forEach {
+            let stepCoordinates = $0.element.shape!.coordinates
+            let now = Date()
+            let stepLocations = stepCoordinates.enumerated().map {
+                CLLocation(coordinate: $0.element,
+                           altitude: -1,
+                           horizontalAccuracy: 10,
+                           verticalAccuracy: -1,
+                           course: -1,
+                           speed: 10,
+                           timestamp: now + $0.offset)
+            }
+            
+            stepLocations.forEach { navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [$0]) }
+            
+            XCTAssertTrue(navigation.router.userIsOnRoute(stepLocations.last!), "User should be on route")
         }
-
-        firstStepLocations.forEach { navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [$0]) }
-        XCTAssertTrue(navigation.router.userIsOnRoute(firstStepLocations.last!), "User should be on route")
-        XCTAssertEqual(navigation.router.routeProgress.currentLegProgress.stepIndex, 1, "User is on first step")
-
-        let thirdStepCoordinates = route.legs[0].steps[2].shape!.coordinates
-        let thirdStepLocations = thirdStepCoordinates.enumerated().map {
-            CLLocation(coordinate: $0.element, altitude: -1, horizontalAccuracy: 10, verticalAccuracy: -1, course: -1, speed: 10, timestamp: now + firstStepCoordinates.count + $0.offset)
-        }
-
-        thirdStepLocations.forEach { navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [$0]) }
-
-        XCTAssertTrue(navigation.router.userIsOnRoute(thirdStepLocations.last!), "User should be on route")
-        XCTAssertEqual(navigation.router.routeProgress.currentLegProgress.stepIndex, 3, "User should be on route and we should increment all the way to the 4th step")
-    }
-
-    func testSnappedLocation() {
-        let navigation = dependencies.navigationService
-        let firstLocation = dependencies.routeLocations.firstLocation
-        navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocation])
-        XCTAssertEqual(navigation.router.location!.coordinate.latitude, firstLocation.coordinate.latitude, accuracy: 0.0005, "Check snapped location is working")
-        XCTAssertEqual(navigation.router.location!.coordinate.longitude, firstLocation.coordinate.longitude, accuracy: 0.0005, "Check snapped location is working")
     }
 
     func testSnappedAtEndOfStepLocationWhenMovingSlowly() {
@@ -122,19 +144,47 @@ class NavigationServiceTests: XCTestCase {
         let firstLocation = dependencies.routeLocations.firstLocation
 
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocation])
-        XCTAssertEqual(navigation.router.location!.coordinate, firstLocation.coordinate, "Check snapped location is working")
+        
+        // Check whether snapped location is within allowed threshold
+        XCTAssertEqual(navigation.router.location!.coordinate.latitude, firstLocation.coordinate.latitude, accuracy: coordinateThreshold, "Latitudes should be almost equal")
+        XCTAssertEqual(navigation.router.location!.coordinate.longitude, firstLocation.coordinate.longitude, accuracy: coordinateThreshold, "Longitudes should be almost equal")
+
+        // Check whether distance (in meters) between snapped location and first location on a route is within allowed threshold
+        var distance = navigation.router.location!.distance(from: firstLocation)
+        XCTAssertLessThan(distance, distanceThreshold)
 
         let firstCoordinateOnUpcomingStep = navigation.router.routeProgress.currentLegProgress.upcomingStep!.shape!.coordinates.first!
-        let firstLocationOnNextStepWithNoSpeed = CLLocation(coordinate: firstCoordinateOnUpcomingStep, altitude: 0, horizontalAccuracy: 10, verticalAccuracy: 10, course: 10, speed: 0, timestamp: Date())
+        let firstLocationOnNextStepWithNoSpeed = CLLocation(coordinate: firstCoordinateOnUpcomingStep,
+                                                            altitude: 0,
+                                                            horizontalAccuracy: 10,
+                                                            verticalAccuracy: 10,
+                                                            course: 10,
+                                                            speed: 0,
+                                                            timestamp: Date())
 
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocationOnNextStepWithNoSpeed])
-        XCTAssertEqual(navigation.router.location!.coordinate, navigation.router.routeProgress.currentLegProgress.currentStep.shape!.coordinates.last!, "When user is not moving, snap to current leg only")
-
-        let firstLocationOnNextStepWithSpeed = CLLocation(coordinate: firstCoordinateOnUpcomingStep, altitude: 0, horizontalAccuracy: 10, verticalAccuracy: 10, course: 10, speed: 5, timestamp: Date())
+        
+        // When user is not moving (location is changed to first one in upcoming step, but neither speed nor timestamp were changed)
+        // navigation native will snap to current location in current step
+        XCTAssertEqual(navigation.router.location!.coordinate.latitude, firstLocation.coordinate.latitude, accuracy: coordinateThreshold, "Latitudes should be almost equal")
+        XCTAssertEqual(navigation.router.location!.coordinate.longitude, firstLocation.coordinate.longitude, accuracy: coordinateThreshold, "Longitudes should be almost equal")
+        distance = navigation.router.location!.distance(from: firstLocation)
+        XCTAssertLessThan(distance, distanceThreshold)
+        
+        let firstLocationOnNextStepWithSpeed = CLLocation(coordinate: firstCoordinateOnUpcomingStep,
+                                                          altitude: 0,
+                                                          horizontalAccuracy: 10,
+                                                          verticalAccuracy: 10,
+                                                          course: 10,
+                                                          speed: 5,
+                                                          timestamp: Date() + 5)
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocationOnNextStepWithSpeed])
 
-        XCTAssertEqual(navigation.router.location!.coordinate.latitude, firstCoordinateOnUpcomingStep.latitude, accuracy: 0.0005, "User is snapped to upcoming step when moving")
-        XCTAssertEqual(navigation.router.location!.coordinate.longitude, firstCoordinateOnUpcomingStep.longitude, accuracy: 0.0005, "User is snapped to upcoming step when moving")
+        // User is snapped to upcoming step when moving
+        XCTAssertEqual(navigation.router.location!.coordinate.latitude, firstCoordinateOnUpcomingStep.latitude, accuracy: coordinateThreshold, "Latitudes should be almost equal")
+        XCTAssertEqual(navigation.router.location!.coordinate.longitude, firstCoordinateOnUpcomingStep.longitude, accuracy: coordinateThreshold, "Longitudes should be almost equal")
+        distance = navigation.router.location!.distance(from: firstLocationOnNextStepWithSpeed)
+        XCTAssertLessThan(distance, distanceThreshold)
     }
 
     func testSnappedAtEndOfStepLocationWhenCourseIsSimilar() {
@@ -142,34 +192,81 @@ class NavigationServiceTests: XCTestCase {
         let firstLocation = dependencies.routeLocations.firstLocation
 
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocation])
-        XCTAssertEqual(navigation.router.location!.coordinate, firstLocation.coordinate, "Check snapped location is working")
-
+        
+        // Check whether snapped location is within allowed threshold
+        XCTAssertEqual(navigation.router.location!.coordinate.latitude, firstLocation.coordinate.latitude, accuracy: coordinateThreshold, "Latitudes should be almost equal")
+        XCTAssertEqual(navigation.router.location!.coordinate.longitude, firstLocation.coordinate.longitude, accuracy: coordinateThreshold, "Longitudes should be almost equal")
+        
+        // Check whether distance (in meters) between snapped location and first location on a route is within allowed threshold
+        var distance = navigation.router.location!.distance(from: firstLocation)
+        XCTAssertLessThan(distance, distanceThreshold)
+        
         let firstCoordinateOnUpcomingStep = navigation.router.routeProgress.currentLegProgress.upcomingStep!.shape!.coordinates.first!
 
         let finalHeading = navigation.router.routeProgress.currentLegProgress.upcomingStep!.finalHeading!
-        let firstLocationOnNextStepWithDifferentCourse = CLLocation(coordinate: firstCoordinateOnUpcomingStep, altitude: 0, horizontalAccuracy: 30, verticalAccuracy: 10, course: -finalHeading, speed: 5, timestamp: Date())
+        let firstLocationOnNextStepWithDifferentCourse = CLLocation(coordinate: firstCoordinateOnUpcomingStep,
+                                                                    altitude: 0,
+                                                                    horizontalAccuracy: 30,
+                                                                    verticalAccuracy: 10,
+                                                                    course: -finalHeading,
+                                                                    speed: 5,
+                                                                    timestamp: Date() + 5)
 
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocationOnNextStepWithDifferentCourse])
-        XCTAssertEqual(navigation.router.location!.coordinate, navigation.router.routeProgress.currentLegProgress.currentStep.shape!.coordinates.last!, "When user's course is dissimilar from the finalHeading, they should not snap to upcoming step")
 
-        let firstLocationOnNextStepWithCorrectCourse = CLLocation(coordinate: firstCoordinateOnUpcomingStep, altitude: 0, horizontalAccuracy: 30, verticalAccuracy: 10, course: finalHeading, speed: 0, timestamp: Date())
+        let lastCoordinateOnCurrentStep = navigation.router.routeProgress.currentLegProgress.currentStep.shape!.coordinates.last!
+
+        // When user's course is dissimilar from the finalHeading, they should not snap to upcoming step
+        XCTAssertEqual(navigation.router.location!.coordinate.latitude, lastCoordinateOnCurrentStep.latitude, accuracy: coordinateThreshold, "Latitudes should be almost equal")
+        XCTAssertEqual(navigation.router.location!.coordinate.longitude, lastCoordinateOnCurrentStep.longitude, accuracy: coordinateThreshold, "Longitudes should be almost equal")
+        distance = navigation.router.location!.distance(from: CLLocation(latitude: lastCoordinateOnCurrentStep.latitude, longitude: lastCoordinateOnCurrentStep.longitude))
+        XCTAssertLessThan(distance, distanceThreshold)
+        
+        let firstLocationOnNextStepWithCorrectCourse = CLLocation(coordinate: firstCoordinateOnUpcomingStep,
+                                                                  altitude: 0,
+                                                                  horizontalAccuracy: 30,
+                                                                  verticalAccuracy: 10,
+                                                                  course: finalHeading,
+                                                                  speed: 0,
+                                                                  timestamp: Date())
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocationOnNextStepWithCorrectCourse])
-        XCTAssertEqual(navigation.router.location!.coordinate, firstCoordinateOnUpcomingStep, "User is snapped to upcoming step when their course is similar to the final heading")
+        
+        // User is snapped to upcoming step when their course is similar to the final heading
+        XCTAssertEqual(navigation.router.location!.coordinate.latitude, firstCoordinateOnUpcomingStep.latitude, accuracy: coordinateThreshold, "Latitudes should be almost equal")
+        XCTAssertEqual(navigation.router.location!.coordinate.longitude, firstCoordinateOnUpcomingStep.longitude, accuracy: coordinateThreshold, "Longitudes should be almost equal")
+        distance = navigation.router.location!.distance(from: firstLocationOnNextStepWithCorrectCourse)
+        XCTAssertLessThan(distance, distanceThreshold)
     }
 
     func testSnappedLocationForUnqualifiedLocation() {
         let navigation = dependencies.navigationService
         let firstLocation = dependencies.routeLocations.firstLocation
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocation])
-        XCTAssertEqual(navigation.router.location!.coordinate, firstLocation.coordinate, "Check snapped location is working")
+        
+        // Check whether snapped location is within allowed threshold
+        XCTAssertEqual(navigation.router.location!.coordinate.latitude, firstLocation.coordinate.latitude, accuracy: coordinateThreshold, "Latitudes should be almost equal")
+        XCTAssertEqual(navigation.router.location!.coordinate.longitude, firstLocation.coordinate.longitude, accuracy: coordinateThreshold, "Longitudes should be almost equal")
+        
+        // Check whether distance (in meters) between snapped location and first location on a route is within allowed threshold
+        var distance = navigation.router.location!.distance(from: firstLocation)
+        XCTAssertLessThan(distance, distanceThreshold)
 
-        let futureCoord = navigation.router.routeProgress.nearbyShape.coordinateFromStart(distance: 100)!
-        let futureInaccurateLocation = CLLocation(coordinate: futureCoord, altitude: 0, horizontalAccuracy: 1, verticalAccuracy: 200, course: 0, speed: 5, timestamp: Date())
-
+        let futureCoordinate = navigation.router.routeProgress.nearbyShape.coordinateFromStart(distance: 100)!
+        let futureInaccurateLocation = CLLocation(coordinate: futureCoordinate,
+                                                  altitude: 0,
+                                                  horizontalAccuracy: 0,
+                                                  verticalAccuracy: 0,
+                                                  course: 0,
+                                                  speed: 0,
+                                                  timestamp: Date() + 5)
+        
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [futureInaccurateLocation])
 
-        XCTAssertEqual(navigation.router.location!.coordinate.latitude, futureInaccurateLocation.coordinate.latitude, accuracy: 0.0005, "Inaccurate location is still snapped")
-        XCTAssertEqual(navigation.router.location!.coordinate.longitude, futureInaccurateLocation.coordinate.longitude, accuracy: 0.0005, "Inaccurate location is still snapped")
+        // Inaccurate location should still be snapped
+        XCTAssertEqual(navigation.router.location!.coordinate.latitude, futureInaccurateLocation.coordinate.latitude, accuracy: coordinateThreshold, "Latitudes should be almost equal")
+        XCTAssertEqual(navigation.router.location!.coordinate.longitude, futureInaccurateLocation.coordinate.longitude, accuracy: coordinateThreshold, "Longitudes should be almost equal")
+        distance = navigation.router.location!.distance(from: futureInaccurateLocation)
+        XCTAssertLessThan(distance, distanceThreshold)
     }
 
     func testUserPuckShouldFaceBackwards() {
@@ -256,7 +353,10 @@ class NavigationServiceTests: XCTestCase {
 
         let willRerouteNotificationExpectation = expectation(forNotification: .routeControllerWillReroute, object: router) { (notification) -> Bool in
             let fromLocation = notification.userInfo![RouteController.NotificationUserInfoKey.locationKey] as? CLLocation
-            return fromLocation == testLocation
+
+            XCTAssertTrue(fromLocation == testLocation)
+
+            return true
         }
 
         let didRerouteNotificationExpectation = expectation(forNotification: .routeControllerDidReroute, object: router, handler: nil)
@@ -266,7 +366,9 @@ class NavigationServiceTests: XCTestCase {
             let rawLocation = notification.userInfo![RouteController.NotificationUserInfoKey.rawLocationKey] as? CLLocation
             let _ = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as! RouteProgress
 
-            return location!.distance(from: rawLocation!) <= 0.0005
+            XCTAssertTrue(location!.distance(from: rawLocation!) <= distanceThreshold)
+
+            return true
         }
 
         // MARK: When told to re-route from location -- `reroute(from:)`
@@ -481,32 +583,6 @@ class NavigationServiceTests: XCTestCase {
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didRerouteAlong:at:proactive:)"))
 
         waitForExpectations(timeout: 10)
-    }
-
-    func testNineLeggedRouteForOutOfBounds() {
-        let options = NavigationRouteOptions(coordinates: [
-            CLLocationCoordinate2D(latitude: 46.423728, longitude: 13.593578),
-            CLLocationCoordinate2D(latitude: 46.339747, longitude: 13.574151),
-            CLLocationCoordinate2D(latitude: 46.34447, longitude: 13.57594),
-            CLLocationCoordinate2D(latitude: 46.37798, longitude: 13.58583),
-            CLLocationCoordinate2D(latitude: 46.408308, longitude: 13.605585),
-            CLLocationCoordinate2D(latitude: 46.420338, longitude: 13.602128),
-            CLLocationCoordinate2D(latitude: 46.429376, longitude: 13.614679),
-            CLLocationCoordinate2D(latitude: 46.435762, longitude: 13.626714),
-            CLLocationCoordinate2D(latitude: 46.436658, longitude: 13.639499),
-            CLLocationCoordinate2D(latitude: 46.43878, longitude: 13.64052),
-        ])
-        let route = Fixture.route(from: "9-legged-route", options: options)
-        let directions = Directions(credentials: Fixture.credentials)
-        let locationManager = DummyLocationManager()
-        let trace = Fixture.generateTrace(for: route, speedMultiplier: 4).shiftedToPresent()
-
-        let service = MapboxNavigationService(route: route, routeOptions: options, directions: directions, locationSource: locationManager, eventsManagerType: nil)
-        service.start()
-
-        for location in trace {
-            service.locationManager(locationManager, didUpdateLocations: [location])
-        }
     }
 
     func testUnimplementedLogging() {

@@ -29,8 +29,7 @@ public class CarPlayMapViewController: UIViewController {
     
     var isOverviewingRoutes: Bool = false {
         didSet {
-            // Workaround for https://github.com/mapbox/mapbox-gl-native/issues/15574
-            // In overview mode, content insets are set to .zero, avoid getting them changed.
+            // Fix content insets in overview mode.
             automaticallyAdjustsScrollViewInsets = !isOverviewingRoutes
         }
     }
@@ -71,11 +70,9 @@ public class CarPlayMapViewController: UIViewController {
      The map button for zooming out the current map view.
      */
     public lazy var zoomOutButton: CPMapButton = {
-        let zoomOutButton = CPMapButton { [weak self] (button) in
-            guard let strongSelf = self else {
-                return
-            }
-            strongSelf.mapView.setZoomLevel(strongSelf.mapView.zoomLevel - 1, animated: true)
+        let zoomOutButton = CPMapButton { [weak self] button in
+            guard let self = self else { return }
+            self.mapView.setZoomLevel(self.mapView.zoomLevel - 1, animated: true)
         }
         let bundle = Bundle.mapboxNavigation
         zoomOutButton.image = UIImage(named: "carplay_minus", in: bundle, compatibleWith: traitCollection)
@@ -156,7 +153,8 @@ public class CarPlayMapViewController: UIViewController {
      - parameter mapTemplate: The map template available to the pan map button for display.
      */
     @discardableResult public func panningInterfaceDisplayButton(for mapTemplate: CPMapTemplate) -> CPMapButton {
-        let panButton = CPMapButton { _ in
+        let panButton = CPMapButton { [weak mapTemplate] _ in
+            guard let mapTemplate = mapTemplate else { return }
             if !mapTemplate.isPanningInterfaceVisible {
                 mapTemplate.showPanningInterface(animated: true)
             }

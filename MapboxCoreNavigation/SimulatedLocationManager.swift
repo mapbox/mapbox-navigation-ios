@@ -35,7 +35,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
     fileprivate var timer: DispatchTimer!
     
     fileprivate var locations: [SimulatedLocation]!
-    fileprivate var routeShape: Polyline!
+    fileprivate var routeShape: LineString!
     
     /**
      Specify the multiplier to use when calculating speed based on the RouteLeg’s `expectedSegmentTravelTimes`.
@@ -157,7 +157,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
         let distanceToClosest = closestLocation.distance(from: CLLocation(newCoordinate))
         
         let distance = min(max(distanceToClosest, 10), safeDistance)
-        let coordinatesNearby = polyline.trimmed(from: newCoordinate, distance: 100).coordinates
+        let coordinatesNearby = polyline.trimmed(from: newCoordinate, distance: 100)!.coordinates
         
         // Simulate speed based on expected segment travel time
         if let expectedSegmentTravelTimes = routeProgress?.currentLeg.expectedSegmentTravelTimes,

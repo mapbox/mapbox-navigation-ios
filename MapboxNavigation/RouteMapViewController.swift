@@ -242,7 +242,6 @@ class RouteMapViewController: UIViewController {
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
         if let shape = router.route.shape,
             let userLocation = router.location {
-            mapView.contentInset = contentInset(forOverviewing: true)
             mapView.setOverheadCameraView(from: userLocation, along: shape, for: contentInset(forOverviewing: true))
         }
         isInOverviewMode = true
@@ -276,7 +275,12 @@ class RouteMapViewController: UIViewController {
             // Don't move mapView content on rotation or when e.g. top banner expands.
             return
         }
-        mapView.setContentInset(contentInset(forOverviewing: isInOverviewMode), animated: true, completionHandler: nil)
+        
+        updateMapViewContentInsets()
+    }
+    
+    func updateMapViewContentInsets(animated: Bool = false, completion: CompletionHandler? = nil) {
+        mapView.setContentInset(contentInset(forOverviewing: isInOverviewMode), animated: animated, completionHandler: completion)
         mapView.setNeedsUpdateConstraints()
     }
 
@@ -414,8 +418,8 @@ class RouteMapViewController: UIViewController {
         guard let height = navigationView.endOfRouteHeightConstraint?.constant else { return }
         let insets = UIEdgeInsets(top: topBannerContainerView.bounds.height, left: 20, bottom: height + 20, right: 20)
         
-        if let shape = route.shape, let userLocation = navService.router.location?.coordinate {
-            let slicedLineString = shape.sliced(from: userLocation)
+        if let shape = route.shape, let userLocation = navService.router.location?.coordinate, !shape.coordinates.isEmpty {
+            let slicedLineString = shape.sliced(from: userLocation)!
             let line = MGLPolyline(slicedLineString)
 
             let camera = navigationView.mapView.cameraThatFitsShape(line, direction: navigationView.mapView.camera.heading, edgePadding: insets)
@@ -452,7 +456,11 @@ extension RouteMapViewController: NavigationComponent {
         let route = progress.route
         let legIndex = progress.legIndex
         let stepIndex = progress.currentLegProgress.stepIndex
-        
+
+        if mapView.routeLineTracksTraversal {
+            mapView.fadeRoute(progress.fractionTraveled)
+        }
+
         mapView.updatePreferredFrameRate(for: progress)
         if currentLegIndexMapped != legIndex {
             mapView.showWaypoints(on: route, legIndex: legIndex)
@@ -494,7 +502,6 @@ extension RouteMapViewController: NavigationComponent {
         
         if isInOverviewMode {
             if let shape = route.shape, let userLocation = router.location {
-                mapView.contentInset = contentInset(forOverviewing: true)
                 mapView.setOverheadCameraView(from: userLocation, along: shape, for: contentInset(forOverviewing: true))
             }
         } else {
@@ -541,12 +548,21 @@ extension RouteMapViewController: NavigationViewDelegate {
     }
 
     //MARK: NavigationMapViewDelegate
-    func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        return delegate?.navigationMapView(mapView, routeStyleLayerWithIdentifier: identifier, source: source)
+
+    func navigationMapView(_ mapView: NavigationMapView, mainRouteStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        return delegate?.navigationMapView(mapView, mainRouteStyleLayerWithIdentifier: identifier, source: source)
     }
 
-    func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        return delegate?.navigationMapView(mapView, routeCasingStyleLayerWithIdentifier: identifier, source: source)
+    func navigationMapView(_ mapView: NavigationMapView, mainRouteCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        return delegate?.navigationMapView(mapView, mainRouteCasingStyleLayerWithIdentifier: identifier, source: source)
+    }
+
+    func navigationMapView(_ mapView: NavigationMapView, alternativeRouteStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        return delegate?.navigationMapView(mapView, alternativeRouteStyleLayerWithIdentifier: identifier, source: source)
+    }
+
+    func navigationMapView(_ mapView: NavigationMapView, alternateRouteCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        return delegate?.navigationMapView(mapView, alternateRouteCasingStyleLayerWithIdentifier: identifier, source: source)
     }
 
     func navigationMapView(_ mapView: NavigationMapView, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
@@ -619,7 +635,7 @@ extension RouteMapViewController: NavigationViewDelegate {
     }
 
     func labelCurrentRoadFeature(at location: CLLocation) {
-        guard let style = mapView.style, let stepShape = router.routeProgress.currentLegProgress.currentStep.shape else {
+        guard let style = mapView.style, let stepShape = router.routeProgress.currentLegProgress.currentStep.shape, !stepShape.coordinates.isEmpty else {
                 return
         }
 
@@ -663,14 +679,15 @@ extension RouteMapViewController: NavigationViewDelegate {
             }
 
             for line in allLines {
+                guard line.pointCount > 0 else { continue }
                 let featureCoordinates =  Array(UnsafeBufferPointer(start: line.coordinates, count: Int(line.pointCount)))
-                let featurePolyline = Polyline(featureCoordinates)
-                let slicedLine = stepShape.sliced(from: closestCoordinate)
+                let featurePolyline = LineString(featureCoordinates)
+                let slicedLine = stepShape.sliced(from: closestCoordinate)!
 
                 let lookAheadDistance: CLLocationDistance = 10
-                guard let pointAheadFeature = featurePolyline.sliced(from: closestCoordinate).coordinateFromStart(distance: lookAheadDistance) else { continue }
+                guard let pointAheadFeature = featurePolyline.sliced(from: closestCoordinate)!.coordinateFromStart(distance: lookAheadDistance) else { continue }
                 guard let pointAheadUser = slicedLine.coordinateFromStart(distance: lookAheadDistance) else { continue }
-                guard let reversedPoint = Polyline(featureCoordinates.reversed()).sliced(from: closestCoordinate).coordinateFromStart(distance: lookAheadDistance) else { continue }
+                guard let reversedPoint = LineString(featureCoordinates.reversed()).sliced(from: closestCoordinate)!.coordinateFromStart(distance: lookAheadDistance) else { continue }
 
                 let distanceBetweenPointsAhead = pointAheadFeature.distance(to: pointAheadUser)
                 let distanceBetweenReversedPoint = reversedPoint.distance(to: pointAheadUser)
