@@ -144,11 +144,11 @@ public class Fixture: NSObject {
                                   drivingSide: .right,
                                   distance: 0.0,
                                   expectedTravelTime: 0.0)
-        return try! RouteLegProgress(leg: RouteLeg(steps: [routeStep],
-                                                   name: "empty",
-                                                   distance: 0.0,
-                                                   expectedTravelTime: 0.0,
-                                                   profileIdentifier: .automobile))
+        return RouteLegProgress(leg: RouteLeg(steps: [routeStep],
+                                              name: "empty",
+                                              distance: 0.0,
+                                              expectedTravelTime: 0.0,
+                                              profileIdentifier: .automobile))
     }
 
     public static let credentials: DirectionsCredentials = DirectionsCredentials(accessToken: "deadbeef", host: URL(string: "https://example.com")!)

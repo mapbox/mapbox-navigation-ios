@@ -100,17 +100,9 @@ class RouteProgressTests: XCTestCase {
         return RouteLeg(steps: steps, name: "", distance: 0, expectedTravelTime: 0, profileIdentifier: .automobile)
     }
     
-    func routeLegProgress(options: RouteOptions, routeCoordinates: [CLLocationCoordinate2D]) -> RouteLegProgress? {
+    func routeLegProgress(options: RouteOptions, routeCoordinates: [CLLocationCoordinate2D]) -> RouteLegProgress {
         let leg = routeLeg(options: options, routeCoordinates: routeCoordinates)
-        
-        var routeLegProgress: RouteLegProgress? = nil
-        do {
-            routeLegProgress = try RouteLegProgress(leg: leg)
-        } catch {
-            XCTFail("Failed to create RouteLegProgress object.")
-        }
-        
-        return routeLegProgress
+        return RouteLegProgress(leg: leg)
     }
     
     func testRemainingWaypointsAlongLeg() {
@@ -129,37 +121,37 @@ class RouteProgressTests: XCTestCase {
         var options = RouteOptions(coordinates: [coordinates.first!, coordinates.last!])
         var legProgress = routeLegProgress(options: options, routeCoordinates: coordinates)
         
-        var remainingWaypoints = legProgress?.remainingWaypoints(among: Array(options.waypoints.dropLast()))
-        XCTAssertEqual(remainingWaypoints?.count, 0,
+        var remainingWaypoints = legProgress.remainingWaypoints(among: Array(options.waypoints.dropLast()))
+        XCTAssertEqual(remainingWaypoints.count, 0,
                        "With no via points, at the start of the leg, neither the source nor a via point should remain")
         
-        legProgress?.currentStepProgress.distanceTraveled = coordinates[0].distance(to: coordinates[1]) / 2.0
-        remainingWaypoints = legProgress?.remainingWaypoints(among: Array(options.waypoints.dropLast()))
-        XCTAssertEqual(remainingWaypoints?.count, 0,
+        legProgress.currentStepProgress.distanceTraveled = coordinates[0].distance(to: coordinates[1]) / 2.0
+        remainingWaypoints = legProgress.remainingWaypoints(among: Array(options.waypoints.dropLast()))
+        XCTAssertEqual(remainingWaypoints.count, 0,
                        "With no via points, partway down the leg, neither the source nor a via point should remain")
         
-        legProgress?.currentStepProgress.distanceTraveled = coordinates[0].distance(to: coordinates[1])
-        remainingWaypoints = legProgress?.remainingWaypoints(among: Array(options.waypoints.dropLast()))
-        XCTAssertEqual(remainingWaypoints?.count, 0,
+        legProgress.currentStepProgress.distanceTraveled = coordinates[0].distance(to: coordinates[1])
+        remainingWaypoints = legProgress.remainingWaypoints(among: Array(options.waypoints.dropLast()))
+        XCTAssertEqual(remainingWaypoints.count, 0,
                        "With no via points, partway down the leg, neither the source nor a via point should remain")
         
         // Every coordinate is a via point.
         options = RouteOptions(coordinates: coordinates)
         
         legProgress = routeLegProgress(options: options, routeCoordinates: coordinates)
-        remainingWaypoints = legProgress?.remainingWaypoints(among: Array(options.waypoints.dropLast()))
-        XCTAssertEqual(remainingWaypoints?.count, options.waypoints.count - 2,
+        remainingWaypoints = legProgress.remainingWaypoints(among: Array(options.waypoints.dropLast()))
+        XCTAssertEqual(remainingWaypoints.count, options.waypoints.count - 2,
                        "At the start of the leg, all but the source should remain")
         
         legProgress = routeLegProgress(options: options, routeCoordinates: coordinates)
-        legProgress?.currentStepProgress.distanceTraveled = coordinates[0].distance(to: coordinates[1]) / 2.0
-        remainingWaypoints = legProgress?.remainingWaypoints(among: Array(options.waypoints.dropLast()))
-        XCTAssertEqual(remainingWaypoints?.count, options.waypoints.count - 2,
+        legProgress.currentStepProgress.distanceTraveled = coordinates[0].distance(to: coordinates[1]) / 2.0
+        remainingWaypoints = legProgress.remainingWaypoints(among: Array(options.waypoints.dropLast()))
+        XCTAssertEqual(remainingWaypoints.count, options.waypoints.count - 2,
                        "Halfway to the first via point, all but the source should remain")
         
-        legProgress?.currentStepProgress.distanceTraveled = coordinates[0].distance(to: coordinates[1])
-        remainingWaypoints = legProgress?.remainingWaypoints(among: Array(options.waypoints.dropLast()))
-        XCTAssertEqual(remainingWaypoints?.count, options.waypoints.count - 3,
+        legProgress.currentStepProgress.distanceTraveled = coordinates[0].distance(to: coordinates[1])
+        remainingWaypoints = legProgress.remainingWaypoints(among: Array(options.waypoints.dropLast()))
+        XCTAssertEqual(remainingWaypoints.count, options.waypoints.count - 3,
                        "At the first via point, all but the source and first via point should remain")
         
         // Leg that backtracks
@@ -177,51 +169,51 @@ class RouteProgressTests: XCTestCase {
         options = RouteOptions(coordinates: [coordinates.first!, coordinates.last!])
         legProgress = routeLegProgress(options: options, routeCoordinates: coordinates)
         
-        remainingWaypoints = legProgress?.remainingWaypoints(among: Array(options.waypoints.dropLast()))
-        XCTAssertEqual(remainingWaypoints?.count, 0,
+        remainingWaypoints = legProgress.remainingWaypoints(among: Array(options.waypoints.dropLast()))
+        XCTAssertEqual(remainingWaypoints.count, 0,
                        "With no via points, at the start of a leg that backtracks, neither the source nor a via point should remain")
         
-        legProgress?.currentStepProgress.distanceTraveled = coordinates[0].distance(to: coordinates[1])
-        remainingWaypoints = legProgress?.remainingWaypoints(among: Array(options.waypoints.dropLast()))
-        XCTAssertEqual(remainingWaypoints?.count, 0,
+        legProgress.currentStepProgress.distanceTraveled = coordinates[0].distance(to: coordinates[1])
+        remainingWaypoints = legProgress.remainingWaypoints(among: Array(options.waypoints.dropLast()))
+        XCTAssertEqual(remainingWaypoints.count, 0,
                        "With no via points, partway down a leg before backtracking, neither the source nor a via point should remain")
         
-        legProgress?.currentStepProgress.distanceTraveled = coordinates[0].distance(to: coordinates[3]) + coordinates[3].distance(to: coordinates[4])
-        remainingWaypoints = legProgress?.remainingWaypoints(among: Array(options.waypoints.dropLast()))
-        XCTAssertEqual(remainingWaypoints?.count, 0,
+        legProgress.currentStepProgress.distanceTraveled = coordinates[0].distance(to: coordinates[3]) + coordinates[3].distance(to: coordinates[4])
+        remainingWaypoints = legProgress.remainingWaypoints(among: Array(options.waypoints.dropLast()))
+        XCTAssertEqual(remainingWaypoints.count, 0,
                        "With no via points, partway down a leg after backtracking, neither the source nor a via point should remain")
         
         // Every coordinate is a via point.
         options = RouteOptions(coordinates: coordinates)
         
         legProgress = routeLegProgress(options: options, routeCoordinates: coordinates)
-        remainingWaypoints = legProgress?.remainingWaypoints(among: Array(options.waypoints.dropLast()))
-        XCTAssertEqual(remainingWaypoints?.count, 5,
+        remainingWaypoints = legProgress.remainingWaypoints(among: Array(options.waypoints.dropLast()))
+        XCTAssertEqual(remainingWaypoints.count, 5,
                        "At the start of a leg that backtracks, all but the source should remain")
         
-        legProgress?.currentStepProgress.distanceTraveled = coordinates[0].distance(to: coordinates[1])
-        remainingWaypoints = legProgress?.remainingWaypoints(among: Array(options.waypoints.dropLast()))
-        XCTAssertEqual(remainingWaypoints?.count, 4,
+        legProgress.currentStepProgress.distanceTraveled = coordinates[0].distance(to: coordinates[1])
+        remainingWaypoints = legProgress.remainingWaypoints(among: Array(options.waypoints.dropLast()))
+        XCTAssertEqual(remainingWaypoints.count, 4,
                        "At the first via point before backtracking, all but the source and first via point should remain")
         
-        legProgress?.currentStepProgress.distanceTraveled = LineString(coordinates).distance()! / 2.0
-        remainingWaypoints = legProgress?.remainingWaypoints(among: Array(options.waypoints.dropLast()))
-        XCTAssertEqual(remainingWaypoints?.count, 2,
+        legProgress.currentStepProgress.distanceTraveled = LineString(coordinates).distance()! / 2.0
+        remainingWaypoints = legProgress.remainingWaypoints(among: Array(options.waypoints.dropLast()))
+        XCTAssertEqual(remainingWaypoints.count, 2,
                        "At the via point where the leg backtracks, only the via points after backtracking should remain")
         
-        legProgress?.currentStepProgress.distanceTraveled = LineString(coordinates).distance()! / 2.0 + coordinates[3].distance(to: coordinates[4]) / 2.0
-        remainingWaypoints = legProgress?.remainingWaypoints(among: Array(options.waypoints.dropLast()))
-        XCTAssertEqual(remainingWaypoints?.count, 2,
+        legProgress.currentStepProgress.distanceTraveled = LineString(coordinates).distance()! / 2.0 + coordinates[3].distance(to: coordinates[4]) / 2.0
+        remainingWaypoints = legProgress.remainingWaypoints(among: Array(options.waypoints.dropLast()))
+        XCTAssertEqual(remainingWaypoints.count, 2,
                        "Halfway to the via point where the leg backtracks, only the via points after backtracking should remain")
         
-        legProgress?.currentStepProgress.distanceTraveled = LineString(coordinates).distance()! / 2.0 + coordinates[3].distance(to: coordinates[4])
-        remainingWaypoints = legProgress?.remainingWaypoints(among: Array(options.waypoints.dropLast()))
-        XCTAssertEqual(remainingWaypoints?.count, 1,
+        legProgress.currentStepProgress.distanceTraveled = LineString(coordinates).distance()! / 2.0 + coordinates[3].distance(to: coordinates[4])
+        remainingWaypoints = legProgress.remainingWaypoints(among: Array(options.waypoints.dropLast()))
+        XCTAssertEqual(remainingWaypoints.count, 1,
                        "At the first via point after backtracking, all but one of the via points after backtracking should remain")
         
-        legProgress?.currentStepProgress.distanceTraveled = LineString(coordinates).distance()!
-        remainingWaypoints = legProgress?.remainingWaypoints(among: Array(options.waypoints.dropLast()))
-        XCTAssertEqual(remainingWaypoints?.count, 0,
+        legProgress.currentStepProgress.distanceTraveled = LineString(coordinates).distance()!
+        remainingWaypoints = legProgress.remainingWaypoints(among: Array(options.waypoints.dropLast()))
+        XCTAssertEqual(remainingWaypoints.count, 0,
                        "At the last via point after backtracking, nothing should remain")
     }
     
@@ -247,52 +239,37 @@ class RouteProgressTests: XCTestCase {
             .init(value: 50, unit: .kilometersPerHour),
             .init(value: .infinity, unit: .kilometersPerHour),
         ]
-        let legProgress = try? RouteLegProgress(leg: leg)
         
-        XCTAssertEqual(legProgress?.distanceTraveled, 0)
-        XCTAssertEqual(legProgress?.currentSpeedLimit, Measurement(value: 10, unit: UnitSpeed.kilometersPerHour))
-        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[1])! / 2.0
-        XCTAssertEqual(legProgress?.currentSpeedLimit, Measurement(value: 10, unit: UnitSpeed.kilometersPerHour))
+        let legProgress = RouteLegProgress(leg: leg)
         
-        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[1])!
-        XCTAssertEqual(legProgress?.currentSpeedLimit, Measurement(value: 20, unit: UnitSpeed.milesPerHour))
-        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[1])! + lineString.distance(from: coordinates[1], to: coordinates[2])! / 2.0
-        XCTAssertEqual(legProgress?.currentSpeedLimit, Measurement(value: 20, unit: UnitSpeed.milesPerHour))
+        XCTAssertEqual(legProgress.distanceTraveled, 0)
+        XCTAssertEqual(legProgress.currentSpeedLimit, Measurement(value: 10, unit: UnitSpeed.kilometersPerHour))
+        legProgress.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[1])! / 2.0
+        XCTAssertEqual(legProgress.currentSpeedLimit, Measurement(value: 10, unit: UnitSpeed.kilometersPerHour))
         
-        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[2])!
-        XCTAssertNil(legProgress?.currentSpeedLimit)
-        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[2])! + lineString.distance(from: coordinates[2], to: coordinates[3])! / 2.0
-        XCTAssertNil(legProgress?.currentSpeedLimit)
+        legProgress.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[1])!
+        XCTAssertEqual(legProgress.currentSpeedLimit, Measurement(value: 20, unit: UnitSpeed.milesPerHour))
+        legProgress.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[1])! + lineString.distance(from: coordinates[1], to: coordinates[2])! / 2.0
+        XCTAssertEqual(legProgress.currentSpeedLimit, Measurement(value: 20, unit: UnitSpeed.milesPerHour))
         
-        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[3])!
-        XCTAssertEqual(legProgress?.currentSpeedLimit, Measurement(value: 40, unit: UnitSpeed.milesPerHour))
-        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[3])! + lineString.distance(from: coordinates[3], to: coordinates[4])! / 2.0
-        XCTAssertEqual(legProgress?.currentSpeedLimit, Measurement(value: 40, unit: UnitSpeed.milesPerHour))
+        legProgress.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[2])!
+        XCTAssertNil(legProgress.currentSpeedLimit)
+        legProgress.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[2])! + lineString.distance(from: coordinates[2], to: coordinates[3])! / 2.0
+        XCTAssertNil(legProgress.currentSpeedLimit)
         
-        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[4])!
-        XCTAssertEqual(legProgress?.currentSpeedLimit, Measurement(value: 50, unit: UnitSpeed.kilometersPerHour))
-        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[4])! + lineString.distance(from: coordinates[4], to: coordinates[5])! / 2.0
-        XCTAssertEqual(legProgress?.currentSpeedLimit, Measurement(value: 50, unit: UnitSpeed.kilometersPerHour))
+        legProgress.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[3])!
+        XCTAssertEqual(legProgress.currentSpeedLimit, Measurement(value: 40, unit: UnitSpeed.milesPerHour))
+        legProgress.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[3])! + lineString.distance(from: coordinates[3], to: coordinates[4])! / 2.0
+        XCTAssertEqual(legProgress.currentSpeedLimit, Measurement(value: 40, unit: UnitSpeed.milesPerHour))
         
-        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[5])!
-        XCTAssertTrue(legProgress?.currentSpeedLimit?.value.isInfinite ?? false)
-        legProgress?.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[5])! + (lineString.distance()! - lineString.distance(to: coordinates[5])!) / 2.0
-        XCTAssertTrue(legProgress?.currentSpeedLimit?.value.isInfinite ?? false)
-    }
-    
-    // Check whether RouteLegProgress raises exception if no steps were provided in initializer
-    func testRouteLegWithNoSteps() {
-        let leg = RouteLeg(steps: [], name: "", distance: 0, expectedTravelTime: 0, profileIdentifier: .automobile)
-        var steplessLegErrorOccured = false
-        do {
-            let _ = try RouteLegProgress(leg: leg)
-        } catch RouteLegProgressError.SteplessLegError(let message) {
-            NSLog("SteplessLegError occured: \(message)")
-            steplessLegErrorOccured = true
-        } catch {
-            XCTFail("Unexpected error occured: \(error)")
-        }
+        legProgress.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[4])!
+        XCTAssertEqual(legProgress.currentSpeedLimit, Measurement(value: 50, unit: UnitSpeed.kilometersPerHour))
+        legProgress.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[4])! + lineString.distance(from: coordinates[4], to: coordinates[5])! / 2.0
+        XCTAssertEqual(legProgress.currentSpeedLimit, Measurement(value: 50, unit: UnitSpeed.kilometersPerHour))
         
-        XCTAssertTrue(steplessLegErrorOccured)
+        legProgress.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[5])!
+        XCTAssertTrue(legProgress.currentSpeedLimit?.value.isInfinite ?? false)
+        legProgress.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[5])! + (lineString.distance()! - lineString.distance(to: coordinates[5])!) / 2.0
+        XCTAssertTrue(legProgress.currentSpeedLimit?.value.isInfinite ?? false)
     }
 }
