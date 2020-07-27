@@ -35,7 +35,7 @@ class SKUTests: XCTestCase {
         
         wait(for: [tokenExpectation], timeout: 5)
         
-        XCTAssertEqual(viewController.mapViewToken!.skuId, SkuID.navigationUser.rawValue)
+        XCTAssertEqual(viewController.mapViewToken?.skuId, SkuID.navigationUser.rawValue)
         XCTAssertEqual(viewController.mapViewToken, viewController.directionsToken)
         XCTAssertEqual(viewController.mapViewToken, viewController.speechSynthesizerToken)
         
