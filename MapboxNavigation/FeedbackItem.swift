@@ -14,17 +14,17 @@ public extension FeedbackType {
     internal var title: String {
         switch self {
             case .general:
-                return "Feedback"
+                return NSLocalizedString("FEEDBACK_TYPE_GENERAL", bundle: .mapboxNavigation, value: "Feedback", comment: "Feedback type for general or unknown issue")
             case .incorrectVisual(_):
-                return "Incorrect Visual"
+                return NSLocalizedString("FEEDBACK_TYPE_INCORRECT_VISUAL", bundle: .mapboxNavigation, value: "Incorrect Visual", comment: "Feedback type for incorrect visual")
             case .confusingAudio(_):
-                return "Confusing Audio"
+                return NSLocalizedString("FEEDBACK_TYPE_CONFUSING_AUDIO", bundle: .mapboxNavigation, value: "Confusing Audio", comment: "Feedback type for confusing audio")
             case .routeQuality(_):
-                return "Route Quality"
+                return NSLocalizedString("FEEDBACK_TYPE_ROUTE_QUALITY", bundle: .mapboxNavigation, value: "Route Quality", comment: "Feedback type for route quality")
             case .illegalRoute(_):
-                return "Illegal Route"
+                return NSLocalizedString("FEEDBACK_TYPE_ILLEGAL_ROUTE", bundle: .mapboxNavigation, value: "Illegal Route", comment: "Feedback type for illegal route")
             case .roadClosure(_):
-                return "Road Closure"
+                return NSLocalizedString("FEEDBACK_TYPE_ROAD_CLOSURE", bundle: .mapboxNavigation, value: "Road Closure", comment: "Feedback type for road closure")
         }
     }
 
