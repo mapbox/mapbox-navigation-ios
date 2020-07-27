@@ -9,15 +9,15 @@ extension BottomBannerViewController {
     
     func setupRootViewConstraints() {
         let constraints = [
-        bottomBannerView.topAnchor.constraint(equalTo: view.topAnchor),
-        bottomBannerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-        bottomBannerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-        bottomBannerView.bottomAnchor.constraint(equalTo: bottomPaddingView.topAnchor),
-        
-        bottomPaddingView.topAnchor.constraint(equalTo: view.safeBottomAnchor),
-        bottomPaddingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-        bottomPaddingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-        bottomPaddingView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            bottomBannerView.topAnchor.constraint(equalTo: view.topAnchor),
+            bottomBannerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            bottomBannerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            bottomBannerView.bottomAnchor.constraint(equalTo: bottomPaddingView.topAnchor),
+            
+            bottomPaddingView.topAnchor.constraint(equalTo: view.safeBottomAnchor),
+            bottomPaddingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            bottomPaddingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            bottomPaddingView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ]
         
         NSLayoutConstraint.activate(constraints)
