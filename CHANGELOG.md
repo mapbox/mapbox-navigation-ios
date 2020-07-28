@@ -13,7 +13,7 @@
 
 * Updated `MapboxNavigationNative` version to `xx.yy.zz` ([]())
 * Updated `MapboxDirections` version to `x.y.z`. ([]())
-* Updated `Turf.swift` version to `x.y.z`. `CoordinateBounds` was replaced by `Turf.BoundingBox`, `Polyline` replaced by `LineString`, `MGLFeature` initializers refined as well as various bugs fixed in that version ([#2393](https://github.com/mapbox/mapbox-navigation-ios/pull/2393))
+* Updated `Turf.swift` version to `0.5.0`. `CoordinateBounds` was replaced by `Turf.BoundingBox`, `Polyline` replaced by `LineString`, `MGLFeature` initializers refined as well as various bugs fixed in that version ([#2393](https://github.com/mapbox/mapbox-navigation-ios/pull/2393))
 
 ### UI imporvements
 
@@ -29,12 +29,11 @@
 ### Navigation
 
 * Route Refreshing... ([]())
+* Free Drive... ([#2410](https://github.com/mapbox/mapbox-navigation-ios/pull/2410))
 
 ### MAU Billing
 
 * Enabled MAU billing by default, so that SDKs usage of Mapbox APIs is [billed](https://www.mapbox.com/pricing/) together based on [monthly active users](https://docs.mapbox.com/help/glossary/monthly-active-users/) rather than individually by HTTP request. If you prefer to still use request-based billing, set the `MBXNavigationBillingMethod` key in Info.plist to `request` ([#2405](https://github.com/mapbox/mapbox-navigation-ios/pull/2405).
-* Added Greek and Turkish localizations. ([#2385](https://github.com/mapbox/mapbox-navigation-ios/pull/2385), [#2475](https://github.com/mapbox/mapbox-navigation-ios/pull/2475))
-* Upgraded to mapbox-directions-swift [v0.33.0](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v0.33.0). ([#2483](https://github.com/mapbox/mapbox-navigation-ios/pull/2483)) 
 
 ### User location
 
@@ -85,7 +84,7 @@
 * Added the ability for the route line to disappear as the puck travels along a route during turn-by-turn navigation. ([#2377](https://github.com/mapbox/mapbox-navigation-ios/pull/2377))
 * Fixed an issue where the casing for the main route would not overlap alternative routes. ([#2377](https://github.com/mapbox/mapbox-navigation-ios/pull/2377))
 * Removed the `NavigationViewControllerDelegate.navigationViewController(_:imageFor:)` and `NavigationViewControllerDelegate.navigationViewController(_:viewFor:)` methods in favor of `MGLMapViewDelegate.mapView(_:imageFor:)` and `MGLMapViewDelegate.mapView(_:viewFor:)`, respectively. ([#2396](https://github.com/mapbox/mapbox-navigation-ios/pull/2396))
-* Added a Greek localization. ([#2385](https://github.com/mapbox/mapbox-navigation-ios/pull/2385))
+* Added Greek and Turkish localizations. ([#2385](https://github.com/mapbox/mapbox-navigation-ios/pull/2385), [#2475](https://github.com/mapbox/mapbox-navigation-ios/pull/2475))
 * Fixed updating camera when resuming user tracking mode ([#2376](https://github.com/mapbox/mapbox-navigation-ios/pull/2376))
 * Fixed issue with some `RouteControllerDelegate` methods were not called while no-voice navigation ([#2373](https://github.com/mapbox/mapbox-navigation-ios/pull/2373))
 * Fixed User Puck location updating caused by `NavigationMapView` resizing ([#2387](https://github.com/mapbox/mapbox-navigation-ios/pull/2387)) 
