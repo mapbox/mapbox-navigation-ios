@@ -527,7 +527,16 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         mainRouteLayer.lineCap = NSExpression(forConstantValue: "round")
 
         if routeGradientStops.line.isEmpty == false {
-            mainRouteLayer.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", routeGradientStops.line)
+            // Dictionary usage is causing crashes in Release mode (when built with optimization SWIFT_OPTIMIZATION_LEVEL = -O flag).
+            // Even though Dictionary contains valid objects prior to passing it to NSExpression:
+            // [0.4109119609930762: UIExtendedSRGBColorSpace 0.952941 0.65098 0.309804 1,
+            // 0.4109119609930761: UIExtendedSRGBColorSpace 0.337255 0.658824 0.984314 1]
+            // keys become nil in NSExpression arguments list:
+            // [0.4109119609930762 = nil,
+            // 0.4109119609930761 = nil]
+            // Passing NSMutableDictionary with all data from original Dictionary to NSExpression fixes issue.
+            let expression = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", NSMutableDictionary(dictionary: routeGradientStops.line))
+            mainRouteLayer.lineGradient = expression
         }
 
         return mainRouteLayer
@@ -543,7 +552,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         mainRouteCasingLayer.lineCap = NSExpression(forConstantValue: "round")
 
         if routeGradientStops.casing.isEmpty {
-            mainRouteCasingLayer.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", routeGradientStops.casing)
+            mainRouteCasingLayer.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", NSMutableDictionary(dictionary: routeGradientStops.casing))
         }
 
         return mainRouteCasingLayer
@@ -593,7 +602,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
 
         routeGradientStops.line = filtered
-        mainRouteLayer.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", routeGradientStops.line)
+        mainRouteLayer.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", NSMutableDictionary(dictionary: routeGradientStops.line))
 
         // TODO: Refactor? We're doing the same work twice here...
         var filteredCasing = routeGradientStops.casing.filter { key, value in
@@ -607,7 +616,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
 
         routeGradientStops.casing = filteredCasing
-        mainRouteCasingLayer.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", routeGradientStops.casing)
+        mainRouteCasingLayer.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", NSMutableDictionary(dictionary: routeGradientStops.casing))
     }
     
     /**
