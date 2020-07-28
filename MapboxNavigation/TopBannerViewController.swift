@@ -364,6 +364,7 @@ open class TopBannerViewController: UIViewController {
 extension TopBannerViewController: NavigationComponent {
     public func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         routeProgress = progress
+        junctionView.updateDistance(for: progress.currentLegProgress.currentStepProgress)
         instructionsBannerView.updateDistance(for: progress.currentLegProgress.currentStepProgress)
     }
     
@@ -384,6 +385,7 @@ extension TopBannerViewController: NavigationComponent {
     
     public func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
         instructionsBannerView.updateDistance(for: service.routeProgress.currentLegProgress.currentStepProgress)
+        junctionView.updateDistance(for: service.routeProgress.currentLegProgress.currentStepProgress)
         
         dismissStepsTable()
         if service.simulationMode == .always {

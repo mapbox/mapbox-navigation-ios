@@ -7,6 +7,7 @@ import MapboxDirections
 public class JunctionView: UIImageView {
     var isCurrentlyVisible: Bool = false
     var imageRepository: ImageRepository = .shared
+    var distanceAlongStep: CLLocationDistance = -1
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -32,14 +33,14 @@ public class JunctionView: UIImageView {
         
         if quaternaryInstruction == nil {
             hide(delay: 10, animated: true)
+            distanceAlongStep = -1
         }
         
         guard let guidanceView = quaternaryInstruction?.components.first else { return }
-        
+        distanceAlongStep = visualInstruction?.distanceAlongStep ?? -1
         if case .guidanceView(let guidanceViewImageRepresentation, _) = guidanceView {
             if let cachedImage = imageRepository.cachedImageForKey(guidanceView.cacheKey!) {
                 image = cachedImage
-                show(true)
             } else {
                 guard let imageURL = guidanceViewImageRepresentation.imageURL else { return }
                 let baseURLString = imageURL.absoluteString
@@ -50,16 +51,28 @@ public class JunctionView: UIImageView {
                 imageRepository.imageWithURL(guidanceViewImageURL, cacheKey: guidanceView.cacheKey!) { [unowned self] (downloadedImage) in
                     
                     self.isCurrentlyVisible = true
-                    self.isHidden = !self.isCurrentlyVisible
                     
                     DispatchQueue.main.async {
+                        self.isHidden = !self.isCurrentlyVisible
                         self.image = downloadedImage
-                        self.show(true)
                     }
                 }
             }
         }
         
+    }
+    
+    public func updateDistance(for currentStepProgress: RouteStepProgress) {
+        let distanceTravelled = currentStepProgress.distanceTraveled
+        if distanceAlongStep > -1 {
+            // show the Junction View if we have progressed enough along the step
+            // hide the Junction View if it is still visible from a previous instruction but shouldn't be yet.
+            if distanceTravelled >= distanceAlongStep, isHidden == true  {
+                show()
+            } else if distanceTravelled < distanceAlongStep, isHidden == false {
+                hide()
+            }
+        }
     }
     
     /**
