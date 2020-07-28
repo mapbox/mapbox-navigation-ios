@@ -37,8 +37,14 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
      */
     public var audioPlayer: AVAudioPlayer?
     
+    /**
+     Mapbox speech engine instance.
+     
+     `MapboxSpeechSynthesizer` uses it to convert insturctions text to audio.
+     */
+    public private(set) var speechEngine: SpeechSynthesizer
+    
     private var cache: BimodalDataCache
-    private var speech: SpeechSynthesizer
     private var audioTask: URLSessionDataTask?
     
     private var previousInstruction: SpokenInstruction?
@@ -53,7 +59,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
             hostString = url.host
         }
         
-        self.speech = SpeechSynthesizer(accessToken: accessToken, host: hostString)
+        self.speechEngine = SpeechSynthesizer(accessToken: accessToken, host: hostString)
     }
     
     deinit {        
@@ -104,6 +110,39 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
         audioPlayer?.stop()
     }
     
+    /**
+     Vocalize the provided audio data.
+     
+     This method is a final part of a vocalization pipeline. It passes audio data to the audio player. `instruction` is used mainly for logging and reference purposes. It's text contents do not affect the vocalization while the actual audio is passed via `instructionData`.
+     - parameter instruction: corresponding instruction to be vocalized. Used for logging and reference. Modifying it's `text` or `ssmlText` does not affect vocalization.
+     - parameter instructionData: audio data, as provided by `speechEngine`, to be played.
+     */
+    open func speak(instruction: SpokenInstruction, instructionData: Data) {
+        
+        if let audioPlayer = audioPlayer {
+            if let previousInstruction = previousInstruction, audioPlayer.isPlaying{
+                delegate?.speechSynthesizer(self,
+                                            didInterrupt: previousInstruction,
+                                            with: instruction)
+            }
+            
+            deinitAudioPlayer()
+        }
+        
+        switch safeInitializeAudioPlayer(data: instructionData,
+                                         instruction: instruction) {
+        case .success(let player):
+            audioPlayer = player
+            previousInstruction = instruction
+            audioPlayer?.play()
+        case .failure(let error):
+            safeUnduckAudio(instruction: instruction)
+            delegate?.speechSynthesizer(self,
+                                        didSpeak: instruction,
+                                        with: error)
+        }
+    }
+    
     // MARK: - Private Methods
     
     /**
@@ -117,7 +156,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
         let options = SpeechOptions(ssml: ssmlText)
         options.locale = locale
         
-        audioTask = speech.audioData(with: options) { [weak self] (data, error) in
+        audioTask = speechEngine.audioData(with: options) { [weak self] (data, error) in
             guard let self = self else { return }
             if let speechError = error,
                 case let .unknown(response: _, underlying: underlyingError, code: _, message: _) = speechError,
@@ -154,39 +193,13 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
         audioTask?.resume()
     }
     
-    func speak(instruction: SpokenInstruction, instructionData: Data) {
-        
-        if let audioPlayer = audioPlayer {
-            if let previousInstruction = previousInstruction, audioPlayer.isPlaying{
-                delegate?.speechSynthesizer(self,
-                                            didInterrupt: previousInstruction,
-                                            with: instruction)
-            }
-            
-            deinitAudioPlayer()
-        }
-        
-        switch safeInitializeAudioPlayer(data: instructionData,
-                                         instruction: instruction) {
-        case .success(let player):
-            audioPlayer = player
-            previousInstruction = instruction
-            audioPlayer?.play()
-        case .failure(let error):
-            safeUnduckAudio(instruction: instruction)
-            delegate?.speechSynthesizer(self,
-                                        didSpeak: instruction,
-                                        with: error)
-        }
-    }
-    
     private func downloadAndCacheSpokenInstruction(instruction: SpokenInstruction, locale: Locale) {
         let modifiedInstruction = delegate?.speechSynthesizer(self, willSpeak: instruction) ?? instruction
         let ssmlText = modifiedInstruction.ssmlText
         let options = SpeechOptions(ssml: ssmlText)
         options.locale = locale
         
-        speech.audioData(with: options) { [weak self] (data, error) in
+        speechEngine.audioData(with: options) { [weak self] (data, error) in
             guard let data = data, let self = self else {
                 return
             }
@@ -237,7 +250,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
         } catch {
             return .failure(SpeechError.unableToInitializePlayer(playerType: AVAudioPlayer.self,
                                                                  instruction: instruction,
-                                                                 synthesizer: speech,
+                                                                 synthesizer: speechEngine,
                                                                  underlying: error))
         }
     }
