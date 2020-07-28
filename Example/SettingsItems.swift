@@ -68,35 +68,10 @@ struct Section {
 }
 
 extension SettingsViewController {
+    static let numberOfSettings = 0
+
     func sections() -> [Section] {
-        let offlineItem = Item(title: NSLocalizedString("SETTINGS_ITEM_DOWNLOAD_REGION_TITLE", value: "Download Region", comment: "Title of table view item that downloads a new offline region"), viewControllerType: OfflineViewController.self, payload: nil)
-        let offlineSection = Section(title: NSLocalizedString("SETTINGS_SECTION_OFFLINE_EXAMPLES", value: "Offline Examples", comment: "Section of offline settings table view"), items: [offlineItem])
-        let versionSection = Section(title: NSLocalizedString("SETTINGS_SECTION_DOWNLOADED_VERSIONS", value: "Downloaded Versions", comment: "Section of offline settings table view"), items: versionDirectories())
-        
-        return [offlineSection, versionSection]
-    }
-    
-    func versionDirectories() -> [ItemProtocol] {
-        var versions = [OfflineVersionItem]()
-        
-        let directories = try? FileManager.default.contentsOfDirectory(atPath: Bundle.mapboxCoreNavigation.suggestedTileURL!.path)
-        
-        let byteCountFormatter = ByteCountFormatter()
-        byteCountFormatter.allowedUnits = .useMB
-        byteCountFormatter.countStyle = .file
-        
-        let filteredDirectories = directories?.filter { $0 != ".DS_Store" }
-        
-        filteredDirectories?.forEach {
-            var subtitle: String? = nil
-            let path = Bundle.mapboxCoreNavigation.suggestedTileURL!.appendingPathComponent($0)
-            if let directorySize = path.directorySize {
-                subtitle = byteCountFormatter.string(fromByteCount: Int64(directorySize))
-            }
-            versions.append(OfflineVersionItem(title: $0, subtitle: subtitle, canEditRow: true))
-        }
-        
-        return versions
+        return []
     }
 }
 

@@ -45,13 +45,3 @@
 
 /* Alert message when a router has been configured */
 "ROUTER_CONFIGURED_MSG" = "Router configured.";
-
-/* Title of table view item that downloads a new offline region */
-"SETTINGS_ITEM_DOWNLOAD_REGION_TITLE" = "Download Region";
-
-/* Section of offline settings table view */
-"SETTINGS_SECTION_DOWNLOADED_VERSIONS" = "Downloaded Versions";
-
-/* Section of offline settings table view */
-"SETTINGS_SECTION_OFFLINE_EXAMPLES" = "Offline Examples";
-

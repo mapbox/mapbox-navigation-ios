@@ -102,6 +102,8 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "settings"), style: .plain, target: self, action: #selector(openSettings))
+
+        navigationItem.rightBarButtonItem?.isEnabled = SettingsViewController.numberOfSettings > 0
     }
 
     override func viewWillAppear(_ animated: Bool) {
