@@ -22,10 +22,14 @@ custom_categories:
       - NavigationViewController
       - NavigationViewControllerDelegate
       - RouteVoiceController
-      - VoiceControllerDelegate
-      - MapboxVoiceController
+      - SpeechSynthesizing
+      - SpeechSynthesizingDelegate
+      - MapboxSpeechSynthesizer
+      - SystemSpeechSynthesizer
+      - MultiplexedSpeechSynthesizer
       - SpeechError
       - SpeechFailureAction
+      - SpokenInstructionErrorCode
       - NavigationOptions
       - NavigationView
   - name: Core Navigation Logic
