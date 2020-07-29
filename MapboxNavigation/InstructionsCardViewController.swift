@@ -299,18 +299,22 @@ extension InstructionsCardViewController: UICollectionViewDelegateFlowLayout {
 extension InstructionsCardViewController: NavigationComponent {
     public func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         routeProgress = progress
+        junctionView.updateDistance(for: progress.currentLegProgress.currentStepProgress)
         reloadDataSource()
     }
     
     public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
         self.routeProgress = routeProgress
-        junctionView.update(for: instruction, service: service)
+        DispatchQueue.main.async {
+            self.junctionView.update(for: instruction, service: service)
+        }
         reloadDataSource()
     }
     
     public func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
         self.currentStepIndex = nil
         self.routeProgress = service.routeProgress
+        junctionView.updateDistance(for: service.routeProgress.currentLegProgress.currentStepProgress)
         reloadDataSource()
     }
 }

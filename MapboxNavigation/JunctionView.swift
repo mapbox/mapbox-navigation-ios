@@ -7,7 +7,7 @@ import MapboxDirections
 public class JunctionView: UIImageView {
     var isCurrentlyVisible: Bool = false
     var imageRepository: ImageRepository = .shared
-    var distanceAlongStep: CLLocationDistance = -1
+    var distanceAlongStep: CLLocationDistance?
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -33,11 +33,15 @@ public class JunctionView: UIImageView {
         
         if quaternaryInstruction == nil {
             hide(delay: 10, animated: true)
-            distanceAlongStep = -1
+            distanceAlongStep = nil
         }
         
         guard let guidanceView = quaternaryInstruction?.components.first else { return }
-        distanceAlongStep = visualInstruction?.distanceAlongStep ?? -1
+        if let visualInstructionDistance = visualInstruction?.distanceAlongStep {
+            distanceAlongStep = visualInstructionDistance
+        } else {
+            distanceAlongStep = nil
+        }
         if case .guidanceView(let guidanceViewImageRepresentation, _) = guidanceView {
             if let cachedImage = imageRepository.cachedImageForKey(guidanceView.cacheKey!) {
                 image = cachedImage
@@ -63,13 +67,14 @@ public class JunctionView: UIImageView {
     }
     
     public func updateDistance(for currentStepProgress: RouteStepProgress) {
-        let distanceTravelled = currentStepProgress.distanceTraveled
-        if distanceAlongStep > -1 {
+        let distanceTraveled = currentStepProgress.distanceTraveled
+        if let distanceAlongStep = distanceAlongStep {
             // show the Junction View if we have progressed enough along the step
             // hide the Junction View if it is still visible from a previous instruction but shouldn't be yet.
-            if distanceTravelled >= distanceAlongStep, isHidden == true  {
+            let shouldHide = distanceTraveled < distanceAlongStep
+            if isHidden && !shouldHide {
                 show()
-            } else if distanceTravelled < distanceAlongStep, isHidden == false {
+            } else if !isHidden && shouldHide {
                 hide()
             }
         }
