@@ -86,6 +86,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         static let arrowStroke = "\(identifierNamespace).arrowStroke"
         
         static let instruction = "\(identifierNamespace).instruction"
+        
+        static let mainRouteCasingSource = "\(identifierNamespace).mainRouteCasingSource"
     }
     
     struct StyleLayerIdentifier {
@@ -482,13 +484,16 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         self.routes = routes
 
         let polylines = navigationMapViewDelegate?.navigationMapView(self, shapeFor: routes) ?? shape(for: routes, legIndex: legIndex)
+        let mainRouteCasingPolyline = navigationMapViewDelegate?.navigationMapView(self, shapeFor: [mainRoute]) ?? shape(for: [mainRoute], legIndex: legIndex)
 
         /**
          If there is already an existing source that represents the routes,
          just update their shapes.
          */
-        if let source = style.source(withIdentifier: SourceIdentifier.allRoutes) as? MGLShapeSource {
+        if let source = style.source(withIdentifier: SourceIdentifier.allRoutes) as? MGLShapeSource,
+            let mainRouteCasingSource = style.source(withIdentifier: SourceIdentifier.mainRouteCasingSource) as? MGLShapeSource {
             source.shape = polylines
+            mainRouteCasingSource.shape = mainRouteCasingPolyline
         } else {
             // Otherwise, create them for the first time.
 
@@ -496,17 +501,33 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             let allRoutesSource = MGLShapeSource(identifier: SourceIdentifier.allRoutes, shape: polylines, options: [.lineDistanceMetrics: true])
             style.addSource(allRoutesSource)
 
+            // FIXME: Using mainRouteCasingSource is a temporary workaround to prevent glitches when main route line and casing share the same source.
+            // After fixing https://github.com/mapbox/mapbox-gl-native-ios/issues/355 creation of separate source for main route casing should be removed.
+            let mainRouteCasingSource = MGLShapeSource(identifier: SourceIdentifier.mainRouteCasingSource, shape: mainRouteCasingPolyline, options: [.lineDistanceMetrics: true])
+            style.addSource(mainRouteCasingSource)
+            
             generateTrafficGradientStops(for: mainRoute)
 
-            let mainRouteLayer = navigationMapViewDelegate?.navigationMapView(self, mainRouteStyleLayerWithIdentifier: StyleLayerIdentifier.mainRoute, source: allRoutesSource) ?? mainRouteStyleLayer(identifier: StyleLayerIdentifier.mainRoute, source: allRoutesSource)
-            let mainRouteCasingLayer = navigationMapViewDelegate?.navigationMapView(self, mainRouteCasingStyleLayerWithIdentifier: StyleLayerIdentifier.mainRouteCasing, source: allRoutesSource) ?? mainRouteCasingStyleLayer(identifier: StyleLayerIdentifier.mainRouteCasing, source: allRoutesSource)
-            let alternateRoutesLayer = navigationMapViewDelegate?.navigationMapView(self, alternativeRouteStyleLayerWithIdentifier: StyleLayerIdentifier.alternateRoutes, source: allRoutesSource) ?? alternativeRouteStyleLayer(identifier: StyleLayerIdentifier.alternateRoutes, source: allRoutesSource)
-             let alternateRoutesCasingLayer = navigationMapViewDelegate?.navigationMapView(self, mainRouteCasingStyleLayerWithIdentifier: StyleLayerIdentifier.alternateRoutesCasing, source: allRoutesSource) ?? alternativeRouteCasingStyleLayer(identifier: StyleLayerIdentifier.alternateRoutesCasing, source: allRoutesSource)
+            let mainRouteLayer = navigationMapViewDelegate?.navigationMapView(self, mainRouteStyleLayerWithIdentifier: StyleLayerIdentifier.mainRoute, source: allRoutesSource) ??
+                mainRouteStyleLayer(identifier: StyleLayerIdentifier.mainRoute, source: allRoutesSource)
+            
+            let mainRouteCasingLayer = navigationMapViewDelegate?.navigationMapView(self, mainRouteCasingStyleLayerWithIdentifier: StyleLayerIdentifier.mainRouteCasing, source: mainRouteCasingSource) ??
+                mainRouteCasingStyleLayer(identifier: StyleLayerIdentifier.mainRouteCasing, source: mainRouteCasingSource)
+            
+            let alternateRoutesLayer = navigationMapViewDelegate?.navigationMapView(self, alternativeRouteStyleLayerWithIdentifier: StyleLayerIdentifier.alternateRoutes, source: allRoutesSource) ??
+                alternativeRouteStyleLayer(identifier: StyleLayerIdentifier.alternateRoutes, source: allRoutesSource)
+            
+            let alternateRoutesCasingLayer = navigationMapViewDelegate?.navigationMapView(self, mainRouteCasingStyleLayerWithIdentifier: StyleLayerIdentifier.alternateRoutesCasing, source: allRoutesSource) ??
+                alternativeRouteCasingStyleLayer(identifier: StyleLayerIdentifier.alternateRoutesCasing, source: allRoutesSource)
 
             // Add all the layers in the correct order
             for layer in style.layers.reversed() {
                 if !(layer is MGLSymbolStyleLayer) &&
-                layer.identifier != StyleLayerIdentifier.arrow && layer.identifier != StyleLayerIdentifier.arrowSymbol && layer.identifier != StyleLayerIdentifier.arrowCasingSymbol && layer.identifier != StyleLayerIdentifier.arrowStroke && layer.identifier != StyleLayerIdentifier.waypointCircle {
+                    layer.identifier != StyleLayerIdentifier.arrow &&
+                    layer.identifier != StyleLayerIdentifier.arrowSymbol &&
+                    layer.identifier != StyleLayerIdentifier.arrowCasingSymbol &&
+                    layer.identifier != StyleLayerIdentifier.arrowStroke &&
+                    layer.identifier != StyleLayerIdentifier.waypointCircle {
                     style.insertLayer(mainRouteLayer, below: layer)
                     style.insertLayer(mainRouteCasingLayer, below: mainRouteLayer)
                     style.insertLayer(alternateRoutesLayer, below: mainRouteCasingLayer)
@@ -633,7 +654,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             StyleLayerIdentifier.alternateRoutesCasing
         ].compactMap { style.layer(withIdentifier: $0) })
         style.remove(Set([
-            SourceIdentifier.allRoutes
+            SourceIdentifier.allRoutes,
+            SourceIdentifier.mainRouteCasingSource
         ].compactMap { style.source(withIdentifier: $0) }))
     }
     
