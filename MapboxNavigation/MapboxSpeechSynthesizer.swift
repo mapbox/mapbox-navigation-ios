@@ -40,9 +40,9 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     /**
      Mapbox speech engine instance.
      
-     `MapboxSpeechSynthesizer` uses it to convert insturctions text to audio.
+     The speech synthesizer uses this object it to convert instruction text to audio.
      */
-    public private(set) var speechEngine: SpeechSynthesizer
+    public private(set) var remoteSpeechSynthesizer: SpeechSynthesizer
     
     private var cache: BimodalDataCache
     private var audioTask: URLSessionDataTask?
@@ -51,7 +51,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     
     // MARK: - Lifecycle
     
-    public init(_ accessToken: String? = nil, host: String? = nil) {
+    public init(accessToken: String? = nil, host: String? = nil) {
         self.cache = DataCache()
         
         var hostString = host
@@ -59,7 +59,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
             hostString = url.host
         }
         
-        self.speechEngine = SpeechSynthesizer(accessToken: accessToken, host: hostString)
+        self.remoteSpeechSynthesizer = SpeechSynthesizer(accessToken: accessToken, host: hostString)
     }
     
     deinit {        
@@ -94,8 +94,8 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
         
         if let data = cachedDataForKey(instruction.ssmlText, with: locale) {
             safeDuckAudio(instruction: instruction)
-            speak(instruction: instruction,
-                  instructionData: data)
+            speak(instruction,
+                  data: data)
         }
         else {
             fetchAndSpeak(instruction: instruction, locale: locale)
@@ -113,11 +113,11 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     /**
      Vocalize the provided audio data.
      
-     This method is a final part of a vocalization pipeline. It passes audio data to the audio player. `instruction` is used mainly for logging and reference purposes. It's text contents do not affect the vocalization while the actual audio is passed via `instructionData`.
+     This method is a final part of a vocalization pipeline. It passes audio data to the audio player. `instruction` is used mainly for logging and reference purposes. It's text contents do not affect the vocalization while the actual audio is passed via `data`.
      - parameter instruction: corresponding instruction to be vocalized. Used for logging and reference. Modifying it's `text` or `ssmlText` does not affect vocalization.
-     - parameter instructionData: audio data, as provided by `speechEngine`, to be played.
+     - parameter data: audio data, as provided by `remoteSpeechSynthesizer`, to be played.
      */
-    open func speak(instruction: SpokenInstruction, instructionData: Data) {
+    open func speak(_ instruction: SpokenInstruction, data: Data) {
         
         if let audioPlayer = audioPlayer {
             if let previousInstruction = previousInstruction, audioPlayer.isPlaying{
@@ -129,7 +129,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
             deinitAudioPlayer()
         }
         
-        switch safeInitializeAudioPlayer(data: instructionData,
+        switch safeInitializeAudioPlayer(data: data,
                                          instruction: instruction) {
         case .success(let player):
             audioPlayer = player
@@ -156,7 +156,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
         let options = SpeechOptions(ssml: ssmlText)
         options.locale = locale
         
-        audioTask = speechEngine.audioData(with: options) { [weak self] (data, error) in
+        audioTask = remoteSpeechSynthesizer.audioData(with: options) { [weak self] (data, error) in
             guard let self = self else { return }
             if let speechError = error,
                 case let .unknown(response: _, underlying: underlyingError, code: _, message: _) = speechError,
@@ -186,8 +186,8 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
             
             self.cache(data, forKey: ssmlText, with: locale)
             self.safeDuckAudio(instruction: modifiedInstruction)
-            self.speak(instruction: modifiedInstruction,
-                       instructionData: data)
+            self.speak(modifiedInstruction,
+                       data: data)
         }
         
         audioTask?.resume()
@@ -199,7 +199,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
         let options = SpeechOptions(ssml: ssmlText)
         options.locale = locale
         
-        speechEngine.audioData(with: options) { [weak self] (data, error) in
+        remoteSpeechSynthesizer.audioData(with: options) { [weak self] (data, error) in
             guard let data = data, let self = self else {
                 return
             }
@@ -250,7 +250,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
         } catch {
             return .failure(SpeechError.unableToInitializePlayer(playerType: AVAudioPlayer.self,
                                                                  instruction: instruction,
-                                                                 synthesizer: speechEngine,
+                                                                 synthesizer: remoteSpeechSynthesizer,
                                                                  underlying: error))
         }
     }
