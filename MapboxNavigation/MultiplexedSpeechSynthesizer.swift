@@ -65,7 +65,7 @@ open class MultiplexedSpeechSynthesizer: SpeechSynthesizing {
     
     public init(_ speechSynthesizers: [SpeechSynthesizing]? = nil, accessToken: String? = nil, host: String? = nil) {
         let synthesizers = speechSynthesizers ?? [
-            MapboxSpeechSynthesizer(accessToken, host: host),
+            MapboxSpeechSynthesizer(accessToken: accessToken, host: host),
             SystemSpeechSynthesizer()]
         self.speechSynthesizers = synthesizers
         
