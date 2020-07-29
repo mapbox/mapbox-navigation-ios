@@ -42,6 +42,3 @@
 
 /* Title of sheet confirming waypoint removal */
 "REMOVE_WAYPOINT_CONFIRM_TITLE" = "Remove Waypoint?";
-
-/* Alert message when a router has been configured */
-"ROUTER_CONFIGURED_MSG" = "Router configured.";

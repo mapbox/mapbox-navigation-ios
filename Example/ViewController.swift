@@ -239,9 +239,7 @@ class ViewController: UIViewController {
     }
 
     fileprivate func requestRoute(with options: RouteOptions, success: @escaping RouteRequestSuccess, failure: RouteRequestFailure?) {
-        // Calculate route offline if an offline version is selected
-        let shouldUseOfflineRouting = Settings.selectedOfflineVersion != nil
-        Settings.directions.calculate(options, offline: shouldUseOfflineRouting) { (session, result) in
+        Settings.directions.calculate(options) { (session, result) in
             switch result {
             case let .success(response):
                 success(response)
@@ -346,7 +344,7 @@ class ViewController: UIViewController {
     func navigationService(route: Route, options: RouteOptions) -> NavigationService {
         let simulate = simulationButton.isSelected
         let mode: SimulationMode = simulate ? .always : .onPoorGPS
-        return MapboxNavigationService(route: route, routeOptions: options, directions: Settings.directions, simulating: mode)
+        return MapboxNavigationService(route: route, routeOptions: options, simulating: mode)
     }
 
     func presentAndRemoveMapview(_ navigationViewController: NavigationViewController, completion: CompletionHandler?) {
@@ -486,28 +484,7 @@ extension ViewController: RouteVoiceControllerDelegate {
     }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool {
-        let shouldUseOfflineRouting = Settings.selectedOfflineVersion != nil
-        
-        guard shouldUseOfflineRouting == true, let responseOptions = response?.options, case let .route(routeOptions) = responseOptions else {
-            return true
-        }
-        
-        let profileIdentifier = routeOptions.profileIdentifier
-        
-        var waypoints: [Waypoint] = [Waypoint(location: location)]
-        var remainingWaypoints = navigationViewController.navigationService.routeProgress.remainingWaypoints
-        remainingWaypoints.removeFirst()
-        waypoints.append(contentsOf: remainingWaypoints)
-        
-        let options = NavigationRouteOptions(waypoints: waypoints, profileIdentifier: profileIdentifier)
-        
-        Settings.directions.calculate(options, offline: true) { (session, result) in
-            guard case let .success(response) = result, let routes = response.routes, let route = routes.first else { return }
-            
-            navigationViewController.navigationService.route = route
-        }
-        
-        return false
+        return true
     }
 }
 

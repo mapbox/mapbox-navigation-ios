@@ -34,14 +34,6 @@ class SettingsViewController: UITableViewController {
         cell.textLabel?.text = item.title
         cell.detailTextLabel?.text = item.subtitle
         
-        if let item = item as? OfflineVersionItem {
-            let toggle = OfflineSwitch(frame: .zero)
-            toggle.item = item
-            toggle.addTarget(self, action: #selector(switchValueChanged(_:)), for: .valueChanged)
-            toggle.isOn = item.title == Settings.selectedOfflineVersion
-            cell.accessoryView = toggle
-        }
-        
         return cell
     }
     
@@ -86,19 +78,6 @@ class SettingsViewController: UITableViewController {
         
         if let payload = item.payload {
             payload()
-        }
-    }
-    
-    @objc func switchValueChanged(_ toggle: OfflineSwitch) {
-        Settings.selectedOfflineVersion = toggle.isOn ? toggle.item?.title : nil
-        
-        if let selectedOfflineVersion = Settings.selectedOfflineVersion {
-            let tilesURL = Bundle.mapboxCoreNavigation.suggestedTileURL(version: selectedOfflineVersion)
-            
-            Settings.directions.configureRouter(tilesURL: tilesURL!) { [weak self] (numberOfTiles) in
-                let message = NSLocalizedString("ROUTER_CONFIGURED_MSG", value: "Router configured.", comment: "Alert message when a router has been configured")
-                self?.presentAlert(message: message)
-            }
         }
     }
 }

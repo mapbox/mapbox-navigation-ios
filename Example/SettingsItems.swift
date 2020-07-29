@@ -33,35 +33,6 @@ struct Item: ItemProtocol {
     }
 }
 
-struct OfflineVersionItem: ItemProtocol {
-    var title: String
-    var subtitle: String?
-    var viewControllerType: UIViewController.Type?
-    var payload: Payload?
-    var canEditRow: Bool
-    
-    init(title: String, subtitle: String? = nil, viewControllerType: UIViewController.Type? = nil, payload: Payload? = nil, canEditRow: Bool = false) {
-        self.title = title
-        self.subtitle = subtitle
-        self.viewControllerType = viewControllerType
-        self.payload = payload
-        self.canEditRow = canEditRow
-    }
-}
-
-class OfflineSwitch: UISwitch {
-    var payload: Payload?
-    var item: OfflineVersionItem?
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
 struct Section {
     let title: String
     let items: [ItemProtocol]
