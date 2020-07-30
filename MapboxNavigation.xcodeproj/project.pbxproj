@@ -96,7 +96,6 @@
 		354A9BC620EA991900F03325 /* SessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 354A9BC520EA991900F03325 /* SessionState.swift */; };
 		354A9BCB20EA9BDA00F03325 /* EventDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 354A9BCA20EA9BDA00F03325 /* EventDetails.swift */; };
 		354A9BCD20EA9C8100F03325 /* CoreFeedbackEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 354A9BCC20EA9C8100F03325 /* CoreFeedbackEvent.swift */; };
-		3557506B21A826C600AEF9B6 /* OfflineRoutingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3506DE39216E2ADE007DA352 /* OfflineRoutingTests.swift */; };
 		3557506D21A827E800AEF9B6 /* li.tar in Resources */ = {isa = PBXBuildFile; fileRef = 3557506C21A827E800AEF9B6 /* li.tar */; };
 		3557506F21A8293E00AEF9B6 /* tiles in Resources */ = {isa = PBXBuildFile; fileRef = 3557506E21A8293E00AEF9B6 /* tiles */; };
 		355832AB2192F60800141922 /* PipeFittersUnion-FourSeasonsBoston.json in Resources */ = {isa = PBXBuildFile; fileRef = 355832AA2192F60800141922 /* PipeFittersUnion-FourSeasonsBoston.json */; };
@@ -662,7 +661,6 @@
 		35022319205BC94E00E1449A /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		35025F3E1F051DD2002BA3EA /* DialogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogViewController.swift; sourceTree = "<group>"; };
 		3504DF7322B79AF300D2FD3C /* MapboxAccounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxAccounts.framework; path = Carthage/Build/iOS/MapboxAccounts.framework; sourceTree = "<group>"; };
-		3506DE39216E2ADE007DA352 /* OfflineRoutingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineRoutingTests.swift; sourceTree = "<group>"; };
 		3507F9F92134305C0086B39E /* MapboxGeocoder.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxGeocoder.framework; path = Carthage/Build/iOS/MapboxGeocoder.framework; sourceTree = "<group>"; };
 		350E2C5E22707EB80014CEB3 /* UIScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIScreen.swift; sourceTree = "<group>"; };
 		3510300E1F54B67000E3B7E7 /* LaneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaneTests.swift; sourceTree = "<group>"; };
@@ -1789,7 +1787,6 @@
 				C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */,
 				C582BA2B2073E77E00647DAA /* StringTests.swift */,
 				AE8B1B96207D2B2B003050F6 /* TunnelAuthorityTests.swift */,
-				3506DE39216E2ADE007DA352 /* OfflineRoutingTests.swift */,
 				3519D01D21F0842900582FF5 /* CLLocationTests.swift */,
 				352762A3225B751A0015B632 /* OptionsTests.swift */,
 				5A43FC8A24B488DC00BF7943 /* PassiveLocationDataSourceTests.swift */,
@@ -2705,7 +2702,6 @@
 				5A43FC8B24B488DC00BF7943 /* PassiveLocationDataSourceTests.swift in Sources */,
 				359574AA1F28CCBB00838209 /* LocationTests.swift in Sources */,
 				C582BA2C2073E77E00647DAA /* StringTests.swift in Sources */,
-				3557506B21A826C600AEF9B6 /* OfflineRoutingTests.swift in Sources */,
 				352762A4225B751A0015B632 /* OptionsTests.swift in Sources */,
 				8DB7EF6A2176674800DA83A3 /* MapboxNavigationServiceSpec.swift in Sources */,
 				5A8DB89624DE16A10041F863 /* SkuTokenProviderTests.swift in Sources */,
