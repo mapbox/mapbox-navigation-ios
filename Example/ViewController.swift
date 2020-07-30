@@ -230,6 +230,9 @@ class ViewController: UIViewController {
         let service = navigationService(route: route, options: routeOptions)
         let navigationViewController = self.navigationViewController(navigationService: service)
         
+        // Render part of the route that has been traversed with full transparency, to give the illusion of a disappearing route.
+        navigationViewController.mapView?.routeLineTracksTraversal = true
+        
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
     
