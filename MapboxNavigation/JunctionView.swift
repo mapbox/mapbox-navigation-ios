@@ -37,11 +37,8 @@ public class JunctionView: UIImageView {
         }
         
         guard let guidanceView = quaternaryInstruction?.components.first else { return }
-        if let visualInstructionDistance = visualInstruction?.distanceAlongStep {
-            distanceAlongStep = visualInstructionDistance
-        } else {
-            distanceAlongStep = nil
-        }
+        distanceAlongStep = visualInstruction?.distanceAlongStep
+        
         if case .guidanceView(let guidanceViewImageRepresentation, _) = guidanceView {
             if let cachedImage = imageRepository.cachedImageForKey(guidanceView.cacheKey!) {
                 image = cachedImage
@@ -53,11 +50,8 @@ public class JunctionView: UIImageView {
 
                 guard let guidanceViewImageURL = URL(string: stringURL) else { return }
                 imageRepository.imageWithURL(guidanceViewImageURL, cacheKey: guidanceView.cacheKey!) { [unowned self] (downloadedImage) in
-                    
-                    self.isCurrentlyVisible = true
-                    
+                                        
                     DispatchQueue.main.async {
-                        self.isHidden = !self.isCurrentlyVisible
                         self.image = downloadedImage
                     }
                 }
