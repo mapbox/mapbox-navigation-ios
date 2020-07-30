@@ -73,11 +73,9 @@ public class InstructionsCardContainerView: StylableView {
     public weak var delegate: InstructionsCardContainerViewDelegate?
     
     private var gradientLayer: CAGradientLayer!
-    private (set) var style: InstructionsCardStyle!
     
-    required public init(style: InstructionsCardStyle? = DayInstructionsCardStyle()) {
+    required public init() {
         super.init(frame: .zero)
-        self.style = style
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -85,9 +83,7 @@ public class InstructionsCardContainerView: StylableView {
         self.commonInit()
     }
     
-    public func prepareLayout(for style: InstructionsCardStyle) {
-        self.style = style
-        self.instructionsCardView.style = style
+    public func prepareLayout() {
         commonInit()
     }
     
@@ -100,7 +96,12 @@ public class InstructionsCardContainerView: StylableView {
     func commonInit() {
         addStackConstraints()
         setupInformationStackView()
-        prepareLayout()
+        setGradientLayer(for: self)
+        setGradientLayer(for: instructionsCardView)
+        setGradientLayer(for: lanesView)
+        setGradientLayer(for: nextBannerView)
+        
+        instructionsCardView.prepareLayout()
         
         instructionsCardView.primaryLabel.instructionDelegate = self
         instructionsCardView.secondaryLabel.instructionDelegate = self
@@ -121,15 +122,6 @@ public class InstructionsCardContainerView: StylableView {
     private func setupInformationStackView() {
         informationStackView.insertArrangedSubview(instructionsCardView, at: 0)
         informationStackView.addArrangedSubviews(secondaryChildren)
-    }
-    
-    private func prepareLayout() {
-        setGradientLayer(for: self)
-        setGradientLayer(for: instructionsCardView)
-        setGradientLayer(for: lanesView)
-        setGradientLayer(for: nextBannerView)
-        
-        instructionsCardView.prepareLayout()
     }
     
     @discardableResult private func setGradientLayer(for view: UIView) -> UIView {

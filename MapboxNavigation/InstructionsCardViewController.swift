@@ -7,7 +7,6 @@ open class InstructionsCardViewController: UIViewController {
     
     public var routeProgress: RouteProgress?
     var cardSize: CGSize = .zero
-    public var cardStyle: DayInstructionsCardStyle = DayInstructionsCardStyle()
     
     var instructionCollectionView: UICollectionView!
     var instructionsCardLayout: InstructionsCardCollectionLayout!
@@ -260,7 +259,6 @@ extension InstructionsCardViewController: UICollectionViewDataSource {
             return cell
         }
         
-        cell.style = cardStyle
         cell.container.delegate = self
         
         let step = steps[indexPath.row]
