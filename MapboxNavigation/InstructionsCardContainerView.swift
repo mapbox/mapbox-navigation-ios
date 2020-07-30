@@ -129,9 +129,6 @@ public class InstructionsCardContainerView: StylableView {
         setGradientLayer(for: lanesView)
         setGradientLayer(for: nextBannerView)
         
-        layer.cornerRadius = 20.0
-        layer.masksToBounds = true
-        
         instructionsCardView.prepareLayout()
     }
     
