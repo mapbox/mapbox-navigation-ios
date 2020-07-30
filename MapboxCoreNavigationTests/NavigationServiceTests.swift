@@ -9,7 +9,7 @@ import os.log
 fileprivate let mbTestHeading: CLLocationDirection = 50
 
 // minimum distance threshold between two locations (in meters)
-fileprivate let distanceThreshold: CLLocationDistance = 1
+fileprivate let distanceThreshold: CLLocationDistance = 2
 
 // minimum threshold for both latitude and longitude between two coordinates
 fileprivate let coordinateThreshold: CLLocationDistance = 0.0005
@@ -208,7 +208,7 @@ class NavigationServiceTests: XCTestCase {
                                                                     altitude: 0,
                                                                     horizontalAccuracy: 30,
                                                                     verticalAccuracy: 10,
-                                                                    course: -finalHeading,
+                                                                    course: (finalHeading + 180).truncatingRemainder(dividingBy: 360),
                                                                     speed: 5,
                                                                     timestamp: Date() + 5)
 
