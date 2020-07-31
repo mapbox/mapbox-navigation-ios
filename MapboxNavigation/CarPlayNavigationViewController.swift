@@ -437,7 +437,7 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
     }
     
     func createFeedbackUI() -> CPGridTemplate {
-        let feedbackItems: [FeedbackItem] = [FeedbackType.incorrectVisual(subtype: nil),
+        let feedbackItems: [FeedbackItem] = [FeedbackType.looksIncorrect(subtype: nil),
                                             FeedbackType.confusingAudio(subtype: nil),
                                             FeedbackType.illegalRoute(subtype: nil),
                                             FeedbackType.roadClosure(subtype: nil),

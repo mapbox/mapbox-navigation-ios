@@ -9,8 +9,8 @@ public enum FeedbackType: CustomStringConvertible {
     /// to elaborate on the feedback if possible.
     case general
 
-    /// Indicates an incorrect visual.
-    case incorrectVisual(subtype: IncorrectVisualSubtype?)
+    /// Indicates a visual that looks incorrect.
+    case looksIncorrect(subtype: looksIncorrectSubtype?)
 
     /// Indicates confusing voice instruction.
     case confusingAudio(subtype: ConfusingAudioSubtype?)
@@ -28,8 +28,8 @@ public enum FeedbackType: CustomStringConvertible {
         switch self {
         case .general:
             return "general"
-        case .incorrectVisual(_):
-            return "incorrect_visual"
+        case .looksIncorrect(_):
+            return "looks_incorrect"
         case .confusingAudio(_):
             return "confusing_audio"
         case .routeQuality(_):
@@ -42,8 +42,8 @@ public enum FeedbackType: CustomStringConvertible {
     }
 }
 
-/// Enum denoting the subtypes of the  `Incorrect Visual` top-level category
-public enum IncorrectVisualSubtype: String {
+/// Enum denoting the subtypes of the  `Looks Incorrect` top-level category
+public enum looksIncorrectSubtype: String {
     case turnIconIncorrect
     case streetNameIncorrect
     case instructionUnnecessary

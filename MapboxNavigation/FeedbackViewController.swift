@@ -76,7 +76,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     /**
      The feedback items that are visible and selectable by the user.
      */
-    public var sections: [FeedbackItem] =  [FeedbackType.incorrectVisual(subtype: nil),
+    public var sections: [FeedbackItem] =  [FeedbackType.looksIncorrect(subtype: nil),
                                             FeedbackType.confusingAudio(subtype: nil),
                                             FeedbackType.illegalRoute(subtype: nil),
                                             FeedbackType.roadClosure(subtype: nil),

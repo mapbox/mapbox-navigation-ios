@@ -14,7 +14,7 @@ public extension FeedbackType {
         switch self {
             case .general:
                 return NSLocalizedString("FEEDBACK_TYPE_GENERAL", bundle: .mapboxNavigation, value: "Feedback", comment: "Feedback type for general or unknown issue")
-            case .incorrectVisual(_):
+            case .looksIncorrect(_):
                 return NSLocalizedString("FEEDBACK_TYPE_LOOKS_INCORRECT", bundle: .mapboxNavigation, value: "Looks Incorrect", comment: "Feedback type for visual that looks incorrect")
             case .confusingAudio(_):
                 return NSLocalizedString("FEEDBACK_TYPE_CONFUSING_AUDIO", bundle: .mapboxNavigation, value: "Confusing Audio", comment: "Feedback type for confusing audio")
@@ -34,8 +34,8 @@ public extension FeedbackType {
         switch self {
             case .general:
                 imageName = "feedback"
-            case .incorrectVisual(_):
-                imageName = "incorrect_visual"
+            case .looksIncorrect(_):
+                imageName = "looks_incorrect"
             case .confusingAudio(_):
                 imageName = "confusing_audio"
             case .routeQuality(_):
