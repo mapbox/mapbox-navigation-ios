@@ -76,8 +76,8 @@
 /* Feedback type for illegal route */
 "FEEDBACK_TYPE_ILLEGAL_ROUTE" = "Illegal Route";
 
-/* Feedback type for incorrect visual */
-"FEEDBACK_TYPE_INCORRECT_VISUAL" = "Incorrect Visual";
+/* Feedback type for visual that looks incorrect */
+"FEEDBACK_TYPE_LOOKS_INCORRECT" = "Looks Incorrect";
 
 /* Feedback type for road closure */
 "FEEDBACK_TYPE_ROAD_CLOSURE" = "Road Closure";
