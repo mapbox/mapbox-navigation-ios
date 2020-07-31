@@ -50,7 +50,7 @@ Pod::Spec.new do |s|
   s.dependency "MapboxGeocoder.swift", "~> 0.10.0"
   s.dependency "Mapbox-iOS-SDK", "~> 6.0"
   s.dependency "MapboxMobileEvents", "~> 0.10.2"
-  s.dependency "MapboxNavigationNative", "~> 17.0"
+  s.dependency "MapboxNavigationNative", "~> 18.0"
   s.dependency "Solar", "~> 2.1"
   s.dependency "Turf", "~> 0.5.0"
   s.dependency "MapboxSpeech", "~> 0.3.0"
