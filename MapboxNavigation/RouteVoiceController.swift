@@ -180,6 +180,8 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         speechSynthesizer.prepareIncomingSpokenInstructions(routeProgress.currentLegProgress.currentStepProgress.remainingSpokenInstructions ?? [], locale: locale)
         
         guard let instruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction else { return }
+        if NavigationSettings.shared.voiceMuted { return }
+        
         speechSynthesizer.speak(instruction,
                                 during: routeProgress.currentLegProgress,
                                 locale: locale)
