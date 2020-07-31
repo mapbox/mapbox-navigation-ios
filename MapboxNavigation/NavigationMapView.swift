@@ -602,41 +602,12 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 
     func fadeRoute(_ fractionTraveled: Double) {
         guard let mainRouteLayer = style?.layer(withIdentifier: StyleLayerIdentifier.mainRoute) as? MGLLineStyleLayer,
-              let mainRouteCasingLayer = style?.layer(withIdentifier: StyleLayerIdentifier.mainRouteCasing) as? MGLLineStyleLayer else { return }
-
-        let percentTraveled = CGFloat(fractionTraveled)
-
-        // Filter out only the stops that are greater than or equal to
-        // the percent of the route traveled.
-        var filtered = routeGradientStops.line.filter { key, value in
-            return key >= percentTraveled
-        }
-
-        // Then, get the lowest value from the above
-        // and fade the range from zero that lowest value,
-        // which represents the % of the route traveled.
-        if let minStop = filtered.min(by: { $0.0 < $1.0 }) {
-            filtered[0.0] = traversedRouteColor
-            filtered[percentTraveled.nextDown] = traversedRouteColor
-            filtered[percentTraveled] = minStop.value
-        }
-
-        routeGradientStops.line = filtered
-        mainRouteLayer.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", NSDictionary(dictionary: routeGradientStops.line))
-
-        // TODO: Refactor? We're doing the same work twice here...
-        var filteredCasing = routeGradientStops.casing.filter { key, value in
-            return key >= percentTraveled
-        }
-
-        if let minStop = filteredCasing.min(by: { $0.0 < $1.0 }) {
-            filteredCasing[0.0] = traversedRouteColor
-            filteredCasing[percentTraveled.nextDown] = traversedRouteColor
-            filteredCasing[percentTraveled] = minStop.value
-        }
-
-        routeGradientStops.casing = filteredCasing
-        mainRouteCasingLayer.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", NSDictionary(dictionary: routeGradientStops.casing))
+            let mainRouteLayerLineGradient = lineGradient(routeGradientStops.line, fractionTraveled: fractionTraveled),
+            let mainRouteCasingLayer = style?.layer(withIdentifier: StyleLayerIdentifier.mainRouteCasing) as? MGLLineStyleLayer,
+            let mainRouteCasingLayerLineGradient = lineGradient(routeGradientStops.casing, fractionTraveled: fractionTraveled) else { return }
+        
+        mainRouteLayer.lineGradient = mainRouteLayerLineGradient
+        mainRouteCasingLayer.lineGradient = mainRouteCasingLayerLineGradient
     }
     
     /**
@@ -877,6 +848,30 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                               tracksUserCourse: tracksUserCourse)
         
         userCourseView.center = convert(location.coordinate, toPointTo: self)
+    }
+    
+    private func lineGradient(_ routeGradientStops: [CGFloat: UIColor], fractionTraveled: Double) -> NSExpression? {
+        let percentTraveled = CGFloat(fractionTraveled)
+        
+        // Filter out only the stops that are greater than or equal to the percent of the route traveled.
+        var filtered = routeGradientStops.filter { key, value in
+            return key >= percentTraveled
+        }
+        
+        // Then, get the lowest value from the above and fade the range from zero that lowest value,
+        // which represents the % of the route traveled.
+        if let minStop = filtered.min(by: { $0.0 < $1.0 }) {
+            filtered[0.0] = traversedRouteColor
+            filtered[percentTraveled.nextDown] = traversedRouteColor
+            filtered[percentTraveled] = minStop.value
+        }
+        
+        // It's not possible to create line gradient in case if there are no route gradient stops.
+        if !filtered.isEmpty {
+            return NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", NSDictionary(dictionary: filtered))
+        }
+        
+        return nil
     }
     
     //TODO: Change to point-based distance calculation
