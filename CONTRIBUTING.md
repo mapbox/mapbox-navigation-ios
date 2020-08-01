@@ -21,17 +21,23 @@ When reporting a bug in the navigation SDK itself, please indicate:
 
 To build this SDK, you need Xcode 11.4.1 and [Carthage](https://github.com/Carthage/Carthage/) v0.35:
 
-1. Create a [Bintray](https://bintray.com/mapbox) account, then [request to be added to the Mapbox Navigation SDK beta testing program](https://docs.google.com/forms/d/1mzknLZf5W9o8-KnQJ1GiYyG2grXVRqNxqHruWYTRVPc/viewform).
-
-1. [Get a Bintray API key](https://bintray.com/profile/edit).
-
-1. Add or append to a .netrc file in your home directory:
+1. Go to your [Mapbox account dashboard](https://account.mapbox.com/) and create an access token that has the `DOWNLOADS:READ` scope. **PLEASE NOTE: This is not the same as your production Mapbox API token. Make sure to keep it private and do not insert it into any Info.plist file.** Create a file named `.netrc` in your home directory if it doesn’t already exist, then add the following lines to the end of the file:
    ```
-   machine dl.bintray.com
-     login username@mapbox
-     password BINTRAY_API_KEY
+   machine api.mapbox.com
+     login mapbox
+     password PRIVATE_MAPBOX_API_TOKEN
    ```
-   where _username_ is your user name and _BINTRAY_API_KEY_ is your Bintray API key.
+   where _PRIVATE_MAPBOX_API_TOKEN_ is your Mapbox API token with the `DOWNLOADS:READ` scope.
+
+1. _(Optional)_ Clear your Carthage caches:
+   ```bash
+   rm -rf ~/Library/Caches/carthage/ ~/Library/Caches/org.carthage.CarthageKit/binaries/{MapboxAccounts,MapboxCommon-ios,MapboxNavigationNative,mapbox-ios-sdk-dynamic}
+   ```
+
+1. Create a [Cartfile](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#github-repositories) with the following dependency:
+   ```cartfile
+   github "mapbox/mapbox-navigation-ios" "v1.0.0-beta.1"
+   ```
 
 1. Run `carthage bootstrap --platform iOS --cache-builds --use-netrc`.
 
