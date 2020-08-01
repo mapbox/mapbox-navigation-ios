@@ -12,9 +12,4 @@ extension Date {
         formatter.timeZone = TimeZone(secondsFromGMT: 0)
         return formatter
     }()
-    
-    var nanosecondsSince1970: Double {
-        // UnitDuration.nanoseconds requires iOS 13
-        return timeIntervalSince1970 * 1e6
-    }
 }
