@@ -31,14 +31,9 @@ open class Style: NSObject {
     @objc public var styleType: StyleType = .day
     
     /**
-     URL of the style to display on the map during turn-by-turn navigation.
+     URL of the style to display on the map during turn-by-turn navigation and on the map when previewing a route, for example on CarPlay or your own route preview map.
      */
-    @objc open var mapStyleURL: URL = MGLStyle.navigationGuidanceDayStyleURL
-    
-    /**
-     URL of the style to display on the map when previewing a route, for example on CarPlay or your own route preview map.
-     */
-    @objc open var previewMapStyleURL: URL = MGLStyle.navigationPreviewDayStyleURL
+    @objc open var mapStyleURL: URL = MGLStyle.navigationDayStyleURL
     
     /**
      Applies the style for all changed properties.

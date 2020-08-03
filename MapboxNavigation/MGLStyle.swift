@@ -9,26 +9,26 @@ extension MGLStyle {
     static let mapboxChinaNightStyleURL = URL(string:"mapbox://styles/mapbox/dark-zh-v1")!
     
     /**
-     Returns the URL to the current version of the Mapbox Navigation Guidance Day style.
+     Returns the URL to the current version of the Mapbox Navigation Day style.
      */
-    public class var navigationGuidanceDayStyleURL: URL {
+    public class var navigationDayStyleURL: URL {
         get {
             if(MGLAccountManager.hasChinaBaseURL){
                 return mapboxChinaDayStyleURL
             }
-            return URL(string:"mapbox://styles/mapbox/navigation-guidance-day-v4")!
+            return URL(string:"mapbox://styles/mapbox-map-design/ckd6dqf981hi71iqlyn3e896y")!
         }
     }
     
     /**
-     Returns the URL to the current version of the Mapbox Navigation Guidance Night style.
+     Returns the URL to the current version of the Mapbox Navigation Night style.
      */
-    public class var navigationGuidanceNightStyleURL: URL {
+    public class var navigationNightStyleURL: URL {
         get {
             if(MGLAccountManager.hasChinaBaseURL){
                 return mapboxChinaDayStyleURL
             }
-            return URL(string:"mapbox://styles/mapbox/navigation-guidance-night-v4")!
+            return URL(string:"mapbox://styles/mapbox-map-design/ckd6dnz2q0m0q1io1mssumxqd")!
         }
     }
     
@@ -54,30 +54,6 @@ extension MGLStyle {
             return mapboxChinaNightStyleURL
         }
         return URL(string: "mapbox://styles/mapbox/navigation-guidance-night-v\(version)")!
-    }
-    
-    /**
-     Returns the URL to the current version of the Mapbox Navigation Preview Day style.
-     */
-    public class var navigationPreviewDayStyleURL: URL {
-        get {
-            if MGLAccountManager.hasChinaBaseURL {
-                return mapboxChinaDayStyleURL
-            }
-            return URL(string:"mapbox://styles/mapbox/navigation-preview-day-v4")!
-        }
-    }
-    
-    /**
-     Returns the URL to the current version of the Mapbox Navigation Preview Night style.
-     */
-    public class var navigationPreviewNightStyleURL: URL {
-        get {
-            if MGLAccountManager.hasChinaBaseURL {
-                return mapboxChinaDayStyleURL
-            }
-            return URL(string:"mapbox://styles/mapbox/navigation-preview-night-v4")!
-        }
     }
     
     /**
