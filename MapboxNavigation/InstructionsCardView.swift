@@ -7,7 +7,6 @@ public class InstructionsCardView: BaseInstructionsBannerView {
     @objc dynamic var cardWidthFactor: CGFloat = 0.82
     @objc dynamic var cardHeight: CGFloat = 100.0
     
-    var style: InstructionsCardStyle = DayInstructionsCardStyle()
     var step: RouteStep! {
         didSet {
             self.updateInstruction(for: step)
@@ -17,7 +16,7 @@ public class InstructionsCardView: BaseInstructionsBannerView {
     var gradientLayer: CAGradientLayer!
     var highlightDistance: CLLocationDistance = InstructionsCardConstants.highlightDistance
     
-    required public init(style: InstructionsCardStyle? = nil, frame: CGRect = .zero) {
+    required public override init(frame: CGRect = .zero) {
         super.init(frame: frame)
         self.showStepIndicator = false
     }
@@ -28,9 +27,11 @@ public class InstructionsCardView: BaseInstructionsBannerView {
         showStepIndicator = false
     }
     
-    public func prepareLayout(for style: InstructionsCardStyle) {
-        self.style = style
-        prepareLayout()
+    public func prepareLayout() {
+        prepareManeuver()
+        prepareDistance()
+        preparePrimaryLabel()
+        prepareSecondaryLabel()
     }
     
     public func updateInstruction(for step: RouteStep) {
@@ -44,34 +45,20 @@ public class InstructionsCardView: BaseInstructionsBannerView {
         self.distance = distance
     }
     
-    func prepareLayout() {
-        prepareManeuver(style)
-        prepareDistance(style)
-        preparePrimaryLabel(style)
-        prepareSecondaryLabel(style)
+    fileprivate func prepareManeuver() {
+        maneuverView.shouldShowHighlightedColors = false
     }
     
-    fileprivate func prepareManeuver(_ style: InstructionsCardStyle) {
-        maneuverView.primaryColor = style.maneuverViewPrimaryColor
-        maneuverView.secondaryColor = style.maneuverViewSecondaryColor
+    fileprivate func prepareDistance() {
+        distanceLabel.showHighlightedTextColor = false
     }
     
-    fileprivate func prepareDistance(_ style: InstructionsCardStyle) {
-        distanceLabel.valueTextColor = style.distanceLabelValueTextColor
-        distanceLabel.unitTextColor = style.distanceLabelUnitTextColor
-        
-        distanceLabel.valueFont = style.distanceLabelValueFont
-        distanceLabel.unitFont = style.distanceLabelUnitFont
+    fileprivate func preparePrimaryLabel() {
+        primaryLabel.showHighlightedTextColor = false
     }
     
-    fileprivate func preparePrimaryLabel(_ style: InstructionsCardStyle) {
-        primaryLabel.normalFont = style.primaryLabelNormalFont
-        primaryLabel.normalTextColor = style.primaryLabelTextColor
-    }
-    
-    fileprivate func prepareSecondaryLabel(_ style: InstructionsCardStyle) {
-        secondaryLabel.normalFont = style.secondaryLabelNormalFont
-        secondaryLabel.normalTextColor = style.secondaryLabelTextColor
+    fileprivate func prepareSecondaryLabel() {
+        secondaryLabel.showHighlightedTextColor = false
     }
     
     // MARK: - Layout
