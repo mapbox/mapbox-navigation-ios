@@ -39,7 +39,7 @@ public class JunctionView: UIImageView {
         if case .guidanceView(let guidanceViewImageRepresentation, _) = guidanceView {
             if let cachedImage = imageRepository.cachedImageForKey(guidanceView.cacheKey!) {
                 image = cachedImage
-                show(true)
+                show(animated: true)
             } else {
                 guard let imageURL = guidanceViewImageRepresentation.imageURL else { return }
                 let baseURLString = imageURL.absoluteString
@@ -54,7 +54,7 @@ public class JunctionView: UIImageView {
                     
                     DispatchQueue.main.async {
                         self.image = downloadedImage
-                        self.show(true)
+                        self.show(animated: true)
                     }
                 }
             }
@@ -63,9 +63,9 @@ public class JunctionView: UIImageView {
     }
     
     /**
-     Shows the junction view with.
+     Shows the junction view, optionally with a fade animation.
      */
-    public func show(_ animated: Bool = false) {
+    public func show(animated: Bool = false) {
         guard !isCurrentlyVisible, isHidden else { return }
         
         let show = {
