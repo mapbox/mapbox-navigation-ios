@@ -125,14 +125,6 @@ class InstructionsCardCollectionTests: XCTestCase {
         XCTAssertNotNil(instructionsCardCollectionSpy.step)
     }
     
-    func testVerifyInstructionsCardCustomStyle() {
-        let instructionsCardView = InstructionsCardView()
-        XCTAssertTrue(instructionsCardView.style is DayInstructionsCardStyle)
-
-        instructionsCardView.style = TestInstructionsCardStyle()
-        XCTAssertTrue(instructionsCardView.style is TestInstructionsCardStyle)
-    }
-    
     func constrain(_ child: UIView, to parent: UIView) {
         let constraints = [
             child.leadingAnchor.constraint(equalTo: parent.leadingAnchor),
@@ -160,48 +152,4 @@ class InstructionsCardCollectionDelegateSpy: NSObject, InstructionsCardCollectio
     func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardViewController, didPreview step: RouteStep) {
         self.step = step
     }
-}
-
-/// :nodoc:
-class TestInstructionsCardStyle: InstructionsCardStyle {
-    var cornerRadius: CGFloat = 10.0
-    var backgroundColor: UIColor = .purple
-    var highlightedBackgroundColor: UIColor = .blue
-    lazy var primaryLabelNormalFont: UIFont = {
-        return UIFont.boldSystemFont(ofSize: 20.0)
-    }()
-    var primaryLabelTextColor: UIColor = .green
-    var primaryLabelHighlightedTextColor: UIColor = .red
-    var secondaryLabelNormalFont: UIFont = {
-        return UIFont.systemFont(ofSize: 15.0)
-    }()
-    var secondaryLabelTextColor: UIColor = .darkGray
-    var secondaryLabelHighlightedTextColor: UIColor = .gray
-    lazy var distanceLabelNormalFont: UIFont = {
-        return UIFont.systemFont(ofSize: 16.0)
-    }()
-    var distanceLabelValueTextColor: UIColor = .yellow
-    var distanceLabelUnitTextColor: UIColor = .orange
-    lazy var distanceLabelUnitFont: UIFont = {
-        return UIFont.systemFont(ofSize: 20.0)
-    }()
-    lazy var distanceLabelValueFont: UIFont = {
-        return UIFont.systemFont(ofSize: 12.0)
-    }()
-    var distanceLabelHighlightedTextColor: UIColor = .red
-    var maneuverViewPrimaryColor: UIColor = .blue
-    var maneuverViewSecondaryColor: UIColor = .clear
-    var maneuverViewHighlightedColor: UIColor = .brown
-    var maneuverViewSecondaryHighlightedColor: UIColor = .orange
-    
-    var nextBannerViewPrimaryColor: UIColor = .cardBlue
-    var nextBannerViewSecondaryColor: UIColor = .cardLight
-    var nextBannerInstructionLabelTextColor: UIColor = .cardDark
-    var nextBannerInstructionHighlightedColor: UIColor = .cardLight
-    var nextBannerInstructionSecondaryHighlightedColor: UIColor = .orange
-    var lanesViewDefaultColor: UIColor = .cardBlue
-    var lanesViewHighlightedColor: UIColor = .cardLight
-    lazy var nextBannerInstructionLabelNormalFont: UIFont = {
-        return CardFont.create(.regular, with: 14.0)
-    }()
 }
