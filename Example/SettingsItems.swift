@@ -4,8 +4,6 @@ import MapboxCoreNavigation
 
 typealias Payload = () -> ()
 
-let MBSelectedOfflineVersion = "MBSelectedOfflineVersion"
-
 protocol ItemProtocol {
     var title: String { get }
     var subtitle: String? { get }
@@ -39,7 +37,8 @@ struct Section {
 }
 
 extension SettingsViewController {
-    static let numberOfSettings = 0
+    // The property is used to decide whether to show the settings button or not
+    static let numberOfSections = 0
 
     func sections() -> [Section] {
         return []

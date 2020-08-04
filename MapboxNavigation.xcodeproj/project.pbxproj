@@ -64,7 +64,6 @@
 		3525449D1E663D32004C8F1C /* MapboxCoreNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */; };
 		352762A4225B751A0015B632 /* OptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352762A3225B751A0015B632 /* OptionsTests.swift */; };
 		3527D2B91EC4619400C07FC9 /* Fixtures.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3527D2B61EC45FBD00C07FC9 /* Fixtures.xcassets */; };
-		3529FCF021A5C59400AEA9AA /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCEF21A5C59400AEA9AA /* Settings.swift */; };
 		3529FCF221A5C5B400AEA9AA /* ResizableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCF121A5C5B300AEA9AA /* ResizableView.swift */; };
 		3529FCF421A5C5C600AEA9AA /* SettingsItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCF321A5C5C600AEA9AA /* SettingsItems.swift */; };
 		3529FCF621A5C5D900AEA9AA /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCF521A5C5D900AEA9AA /* UIViewController.swift */; };
@@ -391,7 +390,6 @@
 		DA303CA521B76CB000F921DC /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = DA303CA221B76CB000F921DC /* Localizable.stringsdict */; };
 		DA303CA621B7A90100F921DC /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCF521A5C5D900AEA9AA /* UIViewController.swift */; };
 		DA303CA721B7A91C00F921DC /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCF721A5C62400AEA9AA /* SettingsViewController.swift */; };
-		DA303CA821B7A92E00F921DC /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCEF21A5C59400AEA9AA /* Settings.swift */; };
 		DA303CA921B7A93100F921DC /* SettingsItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCF321A5C5C600AEA9AA /* SettingsItems.swift */; };
 		DA303CAA21B7A93400F921DC /* ResizableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCF121A5C5B300AEA9AA /* ResizableView.swift */; };
 		DA3525702010A5210048DDFC /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = DA35256E2010A5200048DDFC /* Localizable.stringsdict */; };
@@ -688,7 +686,6 @@
 		35213DAD1EC456CF00A62B21 /* FBSnapshotTestCase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSnapshotTestCase.framework; path = Carthage/Build/iOS/FBSnapshotTestCase.framework; sourceTree = "<group>"; };
 		352762A3225B751A0015B632 /* OptionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsTests.swift; sourceTree = "<group>"; };
 		3527D2B61EC45FBD00C07FC9 /* Fixtures.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Fixtures.xcassets; sourceTree = "<group>"; };
-		3529FCEF21A5C59400AEA9AA /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Settings.swift; path = Example/Settings.swift; sourceTree = "<group>"; };
 		3529FCF121A5C5B300AEA9AA /* ResizableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ResizableView.swift; path = Example/ResizableView.swift; sourceTree = "<group>"; };
 		3529FCF321A5C5C600AEA9AA /* SettingsItems.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsItems.swift; path = Example/SettingsItems.swift; sourceTree = "<group>"; };
 		3529FCF521A5C5D900AEA9AA /* UIViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIViewController.swift; path = Example/UIViewController.swift; sourceTree = "<group>"; };
@@ -1456,7 +1453,6 @@
 				6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */,
 				C51FC31620F689F800400CE7 /* CustomStyles.swift */,
 				3577B877214FF35800094294 /* FavoritesList.swift */,
-				3529FCEF21A5C59400AEA9AA /* Settings.swift */,
 				3529FCF321A5C5C600AEA9AA /* SettingsItems.swift */,
 				3529FCF121A5C5B300AEA9AA /* ResizableView.swift */,
 				3529FCF521A5C5D900AEA9AA /* UIViewController.swift */,
@@ -2518,7 +2514,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				358D14681E5E3B7700ADE590 /* ViewController.swift in Sources */,
-				3529FCF021A5C59400AEA9AA /* Settings.swift in Sources */,
 				3529FCF821A5C62400AEA9AA /* SettingsViewController.swift in Sources */,
 				3529FCF421A5C5C600AEA9AA /* SettingsItems.swift in Sources */,
 				3529FCF221A5C5B400AEA9AA /* ResizableView.swift in Sources */,
@@ -2628,7 +2623,6 @@
 				C53F2EE720EBC95600D9798F /* WaypointConfirmationViewController.swift in Sources */,
 				C5DE4B6220F6B6B3007AFBE6 /* CustomStyles.swift in Sources */,
 				DA8805002316EAED00B54D87 /* ViewController+GuidanceCards.swift in Sources */,
-				DA303CA821B7A92E00F921DC /* Settings.swift in Sources */,
 				35379CFD21480C0500FD402E /* AppDelegate+CarPlay.swift in Sources */,
 				C53F2EE820EBC95600D9798F /* AppDelegate.swift in Sources */,
 				DA303CA621B7A90100F921DC /* UIViewController.swift in Sources */,

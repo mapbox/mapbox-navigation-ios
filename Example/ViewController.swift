@@ -103,7 +103,7 @@ class ViewController: UIViewController {
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "settings"), style: .plain, target: self, action: #selector(openSettings))
 
-        navigationItem.rightBarButtonItem?.isEnabled = SettingsViewController.numberOfSettings > 0
+        navigationItem.rightBarButtonItem?.isEnabled = SettingsViewController.numberOfSections > 0
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -239,7 +239,7 @@ class ViewController: UIViewController {
     }
 
     fileprivate func requestRoute(with options: RouteOptions, success: @escaping RouteRequestSuccess, failure: RouteRequestFailure?) {
-        Settings.directions.calculate(options) { (session, result) in
+        Directions.shared.calculate(options) { (session, result) in
             switch result {
             case let .success(response):
                 success(response)
