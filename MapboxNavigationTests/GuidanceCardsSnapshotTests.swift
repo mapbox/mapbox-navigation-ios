@@ -37,7 +37,7 @@ class GuidanceCardsSnapshotTests: SnapshotTest {
         
         subject.routeProgress = progress
         
-        verify(host, for: Device.iPhone6Plus.portrait)
+        verify(host, for: Device.iPhone8Plus.portrait)
     }
     
     func testLanesManeuver() {
@@ -60,7 +60,7 @@ class GuidanceCardsSnapshotTests: SnapshotTest {
         
         subject.routeProgress = progress
         
-        verify(host, for: Device.iPhone6Plus.portrait)
+        verify(host, for: Device.iPhone8Plus.portrait)
     }
     
     func testTertiaryManeuver() {
@@ -84,6 +84,6 @@ class GuidanceCardsSnapshotTests: SnapshotTest {
         subject.routeProgress = progress
         subject.view.setNeedsDisplay()
         
-        verify(host, for: Device.iPhone6Plus.portrait)
+        verify(host, for: Device.iPhone8Plus.portrait)
     }
 }

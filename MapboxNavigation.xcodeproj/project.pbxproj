@@ -294,8 +294,6 @@
 		AE47A32B22B1F6AE0096458C /* InstructionsCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47A32122B1F6AD0096458C /* InstructionsCardCell.swift */; };
 		AE47A32C22B1F6AE0096458C /* InstructionsCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47A32222B1F6AD0096458C /* InstructionsCardViewController.swift */; };
 		AE47A32D22B1F6AE0096458C /* InstructionsCard+Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47A32322B1F6AD0096458C /* InstructionsCard+Font.swift */; };
-		AE47A32E22B1F6AE0096458C /* InstructionsCardStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47A32422B1F6AD0096458C /* InstructionsCardStyle.swift */; };
-		AE47A32F22B1F6AE0096458C /* DayInstructionsCardStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47A32522B1F6AD0096458C /* DayInstructionsCardStyle.swift */; };
 		AE47A33022B1F6AE0096458C /* InstructionsCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47A32622B1F6AE0096458C /* InstructionsCardView.swift */; };
 		AE47A33222B1F6AE0096458C /* UIColor+InstructionsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47A32822B1F6AE0096458C /* UIColor+InstructionsCard.swift */; };
 		AE47A33322B1F6AE0096458C /* Constants+InstructionsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47A32922B1F6AE0096458C /* Constants+InstructionsCard.swift */; };
@@ -902,8 +900,6 @@
 		AE47A32122B1F6AD0096458C /* InstructionsCardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionsCardCell.swift; sourceTree = "<group>"; };
 		AE47A32222B1F6AD0096458C /* InstructionsCardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionsCardViewController.swift; sourceTree = "<group>"; };
 		AE47A32322B1F6AD0096458C /* InstructionsCard+Font.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "InstructionsCard+Font.swift"; sourceTree = "<group>"; };
-		AE47A32422B1F6AD0096458C /* InstructionsCardStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionsCardStyle.swift; sourceTree = "<group>"; };
-		AE47A32522B1F6AD0096458C /* DayInstructionsCardStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayInstructionsCardStyle.swift; sourceTree = "<group>"; };
 		AE47A32622B1F6AE0096458C /* InstructionsCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionsCardView.swift; sourceTree = "<group>"; };
 		AE47A32822B1F6AE0096458C /* UIColor+InstructionsCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+InstructionsCard.swift"; sourceTree = "<group>"; };
 		AE47A32922B1F6AE0096458C /* Constants+InstructionsCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Constants+InstructionsCard.swift"; sourceTree = "<group>"; };
@@ -1573,13 +1569,11 @@
 			isa = PBXGroup;
 			children = (
 				AE47A32922B1F6AE0096458C /* Constants+InstructionsCard.swift */,
-				AE47A32522B1F6AD0096458C /* DayInstructionsCardStyle.swift */,
 				AE47A32322B1F6AD0096458C /* InstructionsCard+Font.swift */,
 				AE47A32122B1F6AD0096458C /* InstructionsCardCell.swift */,
 				AE47A32A22B1F6AE0096458C /* InstructionsCardContainerView.swift */,
 				AE47A32222B1F6AD0096458C /* InstructionsCardViewController.swift */,
 				AE87207D22CF97B900D7DAB7 /* InstructionsCardCollectionDelegate.swift */,
-				AE47A32422B1F6AD0096458C /* InstructionsCardStyle.swift */,
 				AE47A32622B1F6AE0096458C /* InstructionsCardView.swift */,
 				AE47A32822B1F6AE0096458C /* UIColor+InstructionsCard.swift */,
 			);
@@ -2415,7 +2409,6 @@
 				353EC9D71FB09708002EB0AB /* StepsViewController.swift in Sources */,
 				35726EE81F0856E900AFA1B6 /* DayStyle.swift in Sources */,
 				2B91C9B12416357700E532A5 /* MapboxSpeechSynthesizer.swift in Sources */,
-				AE47A32E22B1F6AE0096458C /* InstructionsCardStyle.swift in Sources */,
 				AE47A32C22B1F6AE0096458C /* InstructionsCardViewController.swift in Sources */,
 				358E31D622562698009B3EC2 /* CarPayCompassView.swift in Sources */,
 				AE47A33322B1F6AE0096458C /* Constants+InstructionsCard.swift in Sources */,
@@ -2468,7 +2461,6 @@
 				4316D95C24340555000DD8F8 /* Match.swift in Sources */,
 				8DEB4066220CE596008BAAB4 /* NavigationMapViewDelegate.swift in Sources */,
 				359D283C1F9DC14F00FDE9C9 /* UICollectionView.swift in Sources */,
-				AE47A32F22B1F6AE0096458C /* DayInstructionsCardStyle.swift in Sources */,
 				8D24A2F820409A890098CBF8 /* CGSize.swift in Sources */,
 				35CB1E131F97DD740011CC44 /* FeedbackItem.swift in Sources */,
 				2B5407EB24470B0A006C820B /* AVAudioSession.swift in Sources */,
