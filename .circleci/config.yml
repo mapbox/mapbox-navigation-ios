@@ -4,12 +4,12 @@ step-library:
   - &restore-cache
       restore_cache:
         keys:
-          - nav-cache-v2-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cartfile.resolved" }}
-          - nav-cache-v2-{{ .Environment.CIRCLE_JOB }} # used if checksum fails
+          - nav-cache-v3-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cartfile.resolved" }}
+          - nav-cache-v3-{{ .Environment.CIRCLE_JOB }} # used if checksum fails
 
   - &save-cache
       save_cache:
-        key: nav-cache-v2-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cartfile.resolved" }}
+        key: nav-cache-v3-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cartfile.resolved" }}
         paths:
           - Carthage
 
@@ -36,12 +36,25 @@ step-library:
         paths:
           - "~/.cocoapods/repos/master"
 
-  - &prepare
+  - &prepare-mapbox-file
       run:
-        name: Prepare
+        name: Prepare .mapbox file
         command: |
-          if [ $(carthage outdated | grep -cF "latest Carthage version") -eq 0 ]; then brew update && brew upgrade carthage || true; fi
           echo "foo" > ~/.mapbox
+
+  - &prepare-netrc-file
+      run:
+        name: Prepare .netrc file
+        command: |
+          echo "machine api.mapbox.com" >> ~/.netrc
+          echo "login mapbox" >> ~/.netrc
+          echo "password $SDK_REGISTRY_TOKEN" >> ~/.netrc
+
+  - &update-carthage-version
+      run:
+        name: Update Carthage version
+        command: |
+          brew update && brew upgrade carthage
 
   - &verify-missing-localizable-strings
       run:
@@ -53,13 +66,25 @@ step-library:
   - &install-dependencies
       run:
         name: Install Dependencies
-        command: carthage bootstrap --platform ios --cache-builds --configuration Debug --no-use-binaries
+        command: |
+          carthage bootstrap --platform ios --cache-builds --configuration Debug --no-use-binaries --use-netrc
+          carthage outdated --xcode-warnings # prints warnings if there are outdated carthage dependencies
 
   - &build-Example
       run:
         name: Build Example
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=12.2,name=iPhone 6 Plus' -project MapboxNavigation.xcodeproj -scheme Example clean build | xcpretty
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=13.4.1,name=iPhone 8 Plus' -project MapboxNavigation.xcodeproj -scheme Example clean build | xcpretty
+
+  - &trigger-metrics
+      run:
+        name: Trigger metrics
+        command: |
+          if [ -n "${MOBILE_METRICS_TOKEN}" ]; then
+            bash -c "curl -X POST --header \"Content-Type: application/json\" --data '{\"parameters\": {\"run_ios_navigation_benchmark\": true, \"ci_ref\": $CIRCLE_BUILD_NUM }, \"branch\": \"master\" }' https://circleci.com/api/v2/project/github/mapbox/mobile-metrics/pipeline?circle-token=${MOBILE_METRICS_TOKEN}"
+          else
+            echo "MOBILE_METRICS_TOKEN not provided"
+          fi
 
 jobs:
   pod-job:
@@ -69,10 +94,10 @@ jobs:
         default: false
       iOS:
         type: string
-        default: "12.2"
+        default: "13.4.1"
       xcode:
         type: string
-        default: "10.2.0"
+        default: "11.4.1"
       lint:
         type: boolean
         default: false
@@ -82,6 +107,9 @@ jobs:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
       - checkout
+      - *prepare-mapbox-file
+      - *prepare-netrc-file
+      - *update-carthage-version
       - *restore-cache-podmaster
       - *restore-cache-cocoapods
       - when:
@@ -92,7 +120,7 @@ jobs:
           condition: << parameters.update >>
           steps:
             - run: cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall && pod install --repo-update
-      - run: cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall && xcodebuild -workspace PodInstall.xcworkspace -scheme PodInstall -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=iPhone 6 Plus' clean build | xcpretty
+      - run: cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall && xcodebuild -workspace PodInstall.xcworkspace -scheme PodInstall -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=iPhone 8 Plus' clean build | xcpretty
       - when:
           condition: << parameters.lint >>
           steps:
@@ -105,13 +133,13 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "10.1.0"
+        default: "11.4.1"
       device:
         type: string
-        default: "iPhone 6 Plus"
+        default: "iPhone 8 Plus"
       iOS:
         type: string
-        default: "12.1"
+        default: "13.4.1"
       test:
         type: boolean
         default: true
@@ -127,7 +155,9 @@ jobs:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
       - checkout
-      - *prepare
+      - *prepare-mapbox-file
+      - *prepare-netrc-file
+      - *update-carthage-version
       - *restore-cache
       - when:
           condition: << parameters.delete_private_deps >>
@@ -157,46 +187,61 @@ jobs:
           steps:
             - run: bash <(curl -s https://codecov.io/bash)
 
-  xcode-10-examples:
+  xcode-11-examples:
     macos:
-      xcode: "10.2.0"
+      xcode: "11.4.1"
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
       - checkout
-      - *prepare
+      - *prepare-mapbox-file
+      - *prepare-netrc-file
+      - *update-carthage-version
       - *restore-cache
       - *install-dependencies
       - *build-Example
       - *save-cache
 
+  ios-trigger-metrics:
+    macos:
+      xcode: "11.4.1"
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+    steps:
+      - *trigger-metrics
+
 workflows:
   workflow:
     jobs:
       - build-job:
-          name: "Xcode_11.4_iOS_13.4.1"
-          xcode: "11.4.0"
-          iOS: "13.4.1"
+          name: "Xcode_11.5_iOS_13.5"
+          xcode: "11.5.0"
+          iOS: "13.5"
           device: "iPhone 8 Plus"
       - build-job:
-          name: "Xcode_10.3_iOS_12.1"
-          xcode: "10.3.0"
-          iOS: "12.1"
+          name: "Xcode_11.4.1_iOS_12.2"
+          xcode: "11.4.1"
+          iOS: "12.2"
           codecoverage: true
       - build-job:
-          name: "Xcode_10.2_iOS_10.3.1"
-          xcode: "10.2.1"
+          name: "Xcode_11.4.1_iOS_10.3.1"
+          xcode: "11.4.1"
           iOS: "10.3.1"
           test: false
+          device: "iPhone 7 Plus"
       - pod-job:
-          name: "Xcode_10.2_iOS_12.2_CP_install"
+          name: "Xcode_11.4.1_iOS_12.2_CP_install"
           update: false
-          xcode: "10.2.1"
+          xcode: "11.4.1"
           iOS: "12.2"
       - pod-job:
-          name: "Xcode_10.2_iOS_12.2_CP_update"
+          name: "Xcode_11.4.1_iOS_12.2_CP_update"
           update: true
-          xcode: "10.2.1"
+          xcode: "11.4.1"
           iOS: "12.2"
           lint: true
-      - xcode-10-examples
+      - xcode-11-examples
+      - ios-trigger-metrics:
+          filters:
+            branches:
+              only: master

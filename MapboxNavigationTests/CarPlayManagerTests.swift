@@ -457,6 +457,9 @@ func simulateCarPlayConnection(_ manager: CarPlayManager) {
     let fakeWindow = CPWindow()
     
     manager.application(UIApplication.shared, didConnectCarInterfaceController: fakeInterfaceController, to: fakeWindow)
+    if let mapViewController = manager.carWindow?.rootViewController?.view {
+        manager.carWindow?.addSubview(mapViewController)
+    }
 }
 
 @available(iOS 12.0, *)

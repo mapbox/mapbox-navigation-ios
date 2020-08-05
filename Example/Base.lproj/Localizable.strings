@@ -43,8 +43,8 @@
 /* Title of sheet confirming waypoint removal */
 "REMOVE_WAYPOINT_CONFIRM_TITLE" = "Remove Waypoint?";
 
-/* Alert message when a router has been configured; 1 = number of map tiles */
-"ROUTER_CONFIGURED_MSG" = "Router configured with %ld tile(s).";
+/* Alert message when a router has been configured */
+"ROUTER_CONFIGURED_MSG" = "Router configured.";
 
 /* Title of table view item that downloads a new offline region */
 "SETTINGS_ITEM_DOWNLOAD_REGION_TITLE" = "Download Region";

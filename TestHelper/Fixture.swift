@@ -136,8 +136,22 @@ public class Fixture: NSObject {
         return traceCollector.locations
     }
     
+    public class func routeLegProgress() -> RouteLegProgress {
+        let routeStep = RouteStep(transportType: .automobile,
+                                  maneuverLocation: .init(),
+                                  maneuverType: .arrive,
+                                  instructions: "empty",
+                                  drivingSide: .right,
+                                  distance: 0.0,
+                                  expectedTravelTime: 0.0)
+        return RouteLegProgress(leg: RouteLeg(steps: [routeStep],
+                                              name: "empty",
+                                              distance: 0.0,
+                                              expectedTravelTime: 0.0,
+                                              profileIdentifier: .automobile))
+    }
+
     public static let credentials: DirectionsCredentials = DirectionsCredentials(accessToken: "deadbeef", host: URL(string: "https://example.com")!)
-    
 }
 
 class TraceCollector: NSObject, CLLocationManagerDelegate {

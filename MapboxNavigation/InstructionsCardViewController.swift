@@ -7,10 +7,16 @@ open class InstructionsCardViewController: UIViewController {
     
     public var routeProgress: RouteProgress?
     var cardSize: CGSize = .zero
-    public var cardStyle: DayInstructionsCardStyle = DayInstructionsCardStyle()
     
     var instructionCollectionView: UICollectionView!
     var instructionsCardLayout: InstructionsCardCollectionLayout!
+    
+    lazy var junctionView: JunctionView = {
+        let view: JunctionView = .forAutoLayout()
+        view.isHidden = true
+        view.applyDefaultCornerRadiusShadow(cornerRadius: 4, shadowOpacity: 0.4)
+        return view
+    }()
     
     public private(set) var isInPreview = false
     public var currentStepIndex: Int?
@@ -106,7 +112,7 @@ open class InstructionsCardViewController: UIViewController {
     }
     
     func addSubviews() {
-        [topPaddingView, instructionCollectionView].forEach(view.addSubview(_:))
+        [topPaddingView, instructionCollectionView, junctionView].forEach(view.addSubview(_:))
     }
     
     func setConstraints() {
@@ -128,6 +134,15 @@ open class InstructionsCardViewController: UIViewController {
         ]
         
         NSLayoutConstraint.activate(instructionCollectionViewContraints)
+        
+        let junctionViewConstraints: [NSLayoutConstraint] = [
+            junctionView.topAnchor.constraint(equalTo: instructionCollectionView.bottomAnchor),
+            junctionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            junctionView.widthAnchor.constraint(equalToConstant: cardSize.width),
+            junctionView.heightAnchor.constraint(equalTo: junctionView.widthAnchor, multiplier: 0.6) // aspect ratio fit
+        ]
+        
+        NSLayoutConstraint.activate(junctionViewConstraints)
     }
     
     open func reloadDataSource() {
@@ -260,7 +275,6 @@ extension InstructionsCardViewController: UICollectionViewDataSource {
             return cell
         }
         
-        cell.style = cardStyle
         cell.container.delegate = self
         
         let step = steps[indexPath.row]
@@ -288,6 +302,7 @@ extension InstructionsCardViewController: NavigationComponent {
     
     public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
         self.routeProgress = routeProgress
+        junctionView.update(for: instruction, service: service)
         reloadDataSource()
     }
     

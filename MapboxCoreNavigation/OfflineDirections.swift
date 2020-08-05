@@ -5,7 +5,7 @@ import MapboxNavigationNative
 /**
  A closure to call when the `NavigationDirections` router has been configured completely.
  */
-public typealias NavigationDirectionsCompletionHandler = (_ numberOfTiles: UInt64) -> Void
+public typealias NavigationDirectionsCompletionHandler = (_ tilesURL: URL) -> Void
 
 /**
  An error that occurs when calculating directions potentially offline using the `NavigationDirections.calculate(_:offline:completionHandler:)` method.
@@ -109,9 +109,9 @@ public class NavigationDirections: Directions {
     public func configureRouter(tilesURL: URL, completionHandler: @escaping NavigationDirectionsCompletionHandler) {
         NavigationDirectionsConstants.offlineSerialQueue.sync {
             let params = RouterParams(tilesPath: tilesURL.path, inMemoryTileCache: nil, mapMatchingSpatialCache: nil, threadsCount: nil, endpointConfig: nil)
-            let tileCount = self.navigator.configureRouter(for: params, httpInterface: nil)
+            self.navigator.configureRouter(for: params)
             DispatchQueue.main.async {
-                completionHandler(tileCount)
+                completionHandler(tilesURL)
             }
         }
     }
@@ -144,7 +144,12 @@ public class NavigationDirections: Directions {
             let tilePath = filePathURL.path
             let outputPath = outputDirectoryURL.path
             
-            let numberOfTiles = Navigator().unpackTiles(forPackedTilesPath: tilePath, outputDirectory: outputPath)
+            let navigator: Navigator = {
+                let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile,
+                                                      platform: ProfilePlatform.KIOS)
+                return Navigator(profile: settingsProfile, config: NavigatorConfig(), customConfig: "")
+            }()
+            let numberOfTiles = navigator.unpackTiles(forPackedTilesPath: tilePath, outputDirectory: outputPath)
             
             // Report 100% progress
             progressHandler?(totalPackedBytes, totalPackedBytes)
@@ -225,7 +230,9 @@ public class NavigationDirections: Directions {
                "The offline navigator must be accessed from the dedicated serial queue")
         
         if _navigator == nil {
-            self._navigator = Navigator()
+            let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile,
+                                                  platform: ProfilePlatform.KIOS)
+            self._navigator = Navigator(profile: settingsProfile, config: NavigatorConfig(), customConfig: "")
         }
         
         return _navigator

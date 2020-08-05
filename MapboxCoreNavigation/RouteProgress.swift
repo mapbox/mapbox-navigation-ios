@@ -425,6 +425,9 @@ open class RouteLegProgress {
     public init(leg: RouteLeg, stepIndex: Int = 0, spokenInstructionIndex: Int = 0) {
         self.leg = leg
         self.stepIndex = stepIndex
+        
+        precondition(leg.steps.indices.contains(stepIndex), "It's not possible to create RouteLegProgress without any steps or when stepIndex is higher than steps count.")
+        
         currentStepProgress = RouteStepProgress(step: leg.steps[stepIndex], spokenInstructionIndex: spokenInstructionIndex)
     }
 

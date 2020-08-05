@@ -64,24 +64,6 @@
 /* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "Gyorsabb útvonal elérhető";
 
-/* Feedback type for Bad Route */
-"FEEDBACK_BAD_ROUTE" = "Rossz \nútvonal";
-
-/* Feedback type for Confusing Instruction */
-"FEEDBACK_CONFUSING_INSTRUCTION" = "Megtévesztő\nutasítás";
-
-/* Feedback type for Other Map Issue Issue */
-"FEEDBACK_GENERAL_ISSUE" = "Egyéb\ntérkép probléma";
-
-/* Feedback type for a maneuver that is Not Allowed */
-"FEEDBACK_NOT_ALLOWED" = "Nem\nengedélyezett";
-
-/* Feedback type for Report Traffic */
-"FEEDBACK_REPORT_TRAFFIC" = "Forgalom\njelentése";
-
-/* Feedback type for Road Closed */
-"FEEDBACK_ROAD_CLOSURE" = "Út\nlezárva";
-
 /* Message confirming that the user has successfully sent feedback */
 "FEEDBACK_THANK_YOU" = "Köszönjük bejelentésed!";
 

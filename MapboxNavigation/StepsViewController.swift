@@ -299,9 +299,9 @@ open class StepTableViewCell: UITableViewCell {
         self.instructionsView = instructionsView
 
         instructionsView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        instructionsView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        instructionsView.leadingAnchor.constraint(equalTo: safeLeadingAnchor).isActive = true
         instructionsView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        instructionsView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        instructionsView.trailingAnchor.constraint(equalTo: safeTrailingAnchor).isActive = true
 
         let separatorView = SeparatorView()
         separatorView.translatesAutoresizingMaskIntoConstraints = false

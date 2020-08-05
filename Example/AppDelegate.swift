@@ -16,13 +16,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if isRunningTests() {
             window!.rootViewController = UIViewController()
         }
-        #if DEBUG
-        if CommandLine.arguments.contains("enable-ui-testing") {
-            if let viewController = (window?.rootViewController as? UINavigationController)?.visibleViewController as? ViewController {
-                viewController.testSKUTokens()
-            }
-        }
-        #endif
         
         return true
     }

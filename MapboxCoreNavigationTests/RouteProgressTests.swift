@@ -239,6 +239,7 @@ class RouteProgressTests: XCTestCase {
             .init(value: 50, unit: .kilometersPerHour),
             .init(value: .infinity, unit: .kilometersPerHour),
         ]
+        
         let legProgress = RouteLegProgress(leg: leg)
         
         XCTAssertEqual(legProgress.distanceTraveled, 0)

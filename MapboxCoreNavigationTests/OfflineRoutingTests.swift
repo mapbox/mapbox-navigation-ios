@@ -12,8 +12,8 @@ class OfflineRoutingTests: XCTestCase {
 
         let directions = NavigationDirections(credentials: Fixture.credentials)
         
-        directions.configureRouter(tilesURL: tilesURL) { (numberOfTiles) in
-            XCTAssertEqual(numberOfTiles, 5)
+        directions.configureRouter(tilesURL: tilesURL) { (outTilesURL) in
+            XCTAssertEqual(tilesURL, outTilesURL)
             setupExpectation.fulfill()
         }
 
@@ -57,8 +57,8 @@ class OfflineRoutingTests: XCTestCase {
         let setupExpectation = expectation(description: "Set up offline routing")
         
         let directions = NavigationDirections(credentials: Fixture.credentials)
-        directions.configureRouter(tilesURL: tilesURL) { (numberOfTiles) in
-            XCTAssertEqual(numberOfTiles, 5)
+        directions.configureRouter(tilesURL: tilesURL) { (outTilesURL) in
+            XCTAssertEqual(tilesURL, outTilesURL)
             setupExpectation.fulfill()
         }
         
@@ -120,8 +120,8 @@ class OfflineRoutingTests: XCTestCase {
         let configureExpectation = self.expectation(description: "Configure router with unpacked tar")
         
         let directions = NavigationDirections(credentials: Fixture.credentials)
-        directions.configureRouter(tilesURL: outputDirectoryURL) { (numberOfTiles) in
-            XCTAssertEqual(numberOfTiles, 5)
+        directions.configureRouter(tilesURL: outputDirectoryURL) { (outOutputDirectoryURL) in
+            XCTAssertEqual(outputDirectoryURL, outOutputDirectoryURL)
             configureExpectation.fulfill()
         }
         
