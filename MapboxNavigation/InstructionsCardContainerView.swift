@@ -292,7 +292,7 @@ extension InstructionsCardContainerView: InstructionsCardContainerViewDelegate {
         } else {
             let highlighted = instructionsCardView.distanceFromCurrentLocation < InstructionsCardConstants.highlightDistance
             let textColor = highlighted ? instructionsCardView.primaryLabel.textColor : instructionsCardView.primaryLabel.textColorHighlighted
-            let attributes = [NSAttributedString.Key.foregroundColor: textColor]
+            let attributes = [NSAttributedString.Key.foregroundColor: textColor as Any]
             
             let range = NSRange(location: 0, length: presented.length)
             let mutable = NSMutableAttributedString(attributedString: presented)
