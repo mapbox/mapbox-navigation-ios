@@ -4,7 +4,7 @@ import TestHelper
 @testable import MapboxCoreNavigation
 
 class OfflineRoutingTests: XCTestCase {
-    func skipped_testOfflineDirections() {
+    func testOfflineDirections() {
         let bundle = Bundle(for: Fixture.self)
         let tilesURL = URL(fileURLWithPath: bundle.bundlePath.appending("/tiles/liechtenstein"))
 
