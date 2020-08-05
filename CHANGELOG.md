@@ -5,15 +5,36 @@
 ### Packaging
 
 * Carthage v0.35 or above is now required for installing this SDK if you use Carthage. ([`81a36d0`](https://github.com/mapbox/mapbox-navigation-ios/commit/81a36d090e8a0602b7144ee7697b7857675b496f)) 
-* For the time being, MapboxCoreNavigation.framework depends on a build of MapboxNavigationNative.framework that is only available to authorized beta testers. Please contact your Mapbox sales representative or [support team](https://support.mapbox.com/) to learn more about the beta testing program. ([#2412](https://github.com/mapbox/mapbox-navigation-ios/pull/2412))
-* MapboxNavigation depends on Mapbox Maps SDK for iOS v6.0.0. Before CocoaPods or Carthage can download Mapbox.framework, you need to create a special-purpose access token. See [the updated installation instructions in the readme](./README.md#installing-the-latest-prerelease) for more details. ([#2437](https://github.com/mapbox/mapbox-navigation-ios/pull/2437)) 
+* MapboxNavigation depends on Mapbox Maps SDK for iOS v6.0.0, and MapboxCoreNavigation depends on builds of MapboxNavigationNative and MapboxCommon that require authentication. Before CocoaPods or Carthage can download Mapbox.framework, MapboxNavigationNative.framework, and MapboxCommon.framework, you need to create a special-purpose access token. See [the updated installation instructions in the readme](./README.md#installing-the-latest-prerelease) for more details. ([#2437](https://github.com/mapbox/mapbox-navigation-ios/pull/2437), [#2477](https://github.com/mapbox/mapbox-navigation-ios/pull/2477))
+* If you install this SDK using Carthage, you need to also add MapboxCommon.framework to your application target’s Embed Frameworks build phase. ([#2477](https://github.com/mapbox/mapbox-navigation-ios/pull/2477))
 * Xcode 11.4.1 or above is now required for building this SDK from source. ([#2417](https://github.com/mapbox/mapbox-navigation-ios/pull/2417))
 * Enabled MAU billing by default, so that SDKs usage of Mapbox APIs is [billed](https://www.mapbox.com/pricing/) together based on [monthly active users](https://docs.mapbox.com/help/glossary/monthly-active-users/) rather than individually by HTTP request. If you prefer to still use request-based billing, set the `MBXNavigationBillingMethod` key in Info.plist to `request` ([#2405](https://github.com/mapbox/mapbox-navigation-ios/pull/2405).
-* Added Greek and Turkish localizations. ([#2385](https://github.com/mapbox/mapbox-navigation-ios/pull/2385), [#2475](https://github.com/mapbox/mapbox-navigation-ios/pull/2475))
-* Upgraded to mapbox-directions-swift [v0.33.0](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v0.33.0). ([#2483](https://github.com/mapbox/mapbox-navigation-ios/pull/2483)) 
+* Added Greek and Turkish localizations. ([#2385](https://github.com/mapbox/mapbox-navigation-ios/pull/2385), [#2475](https://github.com/mapbox/mapbox-navigation-ios/pull/2475), [valhalla/valhalla#2438](https://github.com/valhalla/valhalla/pull/2438))
+* Upgraded to [MapboxDirections v0.33.0](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v0.33.0). ([#2483](https://github.com/mapbox/mapbox-navigation-ios/pull/2483)) 
+
+### User interface
+
+* A portion of the route line now disappears behind the user puck as the user travels along the route during turn-by-turn navigation. ([#2377](https://github.com/mapbox/mapbox-navigation-ios/pull/2377))
+* As the user approaches certain junctions, an enlarged illustration of the junction appears below the top banner to help the user understand a complex maneuver. These junction views require only appear when the relevant data is available. Contact your Mapbox sales representative or [support team](https://support.mapbox.com/) for access to the junction views feature. ([#2408](https://github.com/mapbox/mapbox-navigation-ios/pull/2408))
+* Removed the `NavigationViewControllerDelegate.navigationViewController(_:imageFor:)` and `NavigationViewControllerDelegate.navigationViewController(_:viewFor:)` methods in favor of `MGLMapViewDelegate.mapView(_:imageFor:)` and `MGLMapViewDelegate.mapView(_:viewFor:)`, respectively. ([#2396](https://github.com/mapbox/mapbox-navigation-ios/pull/2396))
+* Removed `NavigationMapViewDelegate.navigationMapView(_:routeStyleLayerWithIdentifier:source:)`, `NavigationMapViewDelegate.navigationMapView(_:routeCasingStyleLayerWithIdentifier:source:)` in favor of four new delegate methods to customize the route styling ([#2377](https://github.com/mapbox/mapbox-navigation-ios/pull/2377)):
+  * `NavigationMapViewDelegate.navigationMapView(_:mainRouteStyleLayerWithIdentifier:source:)` to style the main route.
+  * `NavigationMapViewDelegate.navigationMapView(_:mainRouteCasingStyleLayerWithIdentifier:source:)` to style the casing of the main route.
+  * `NavigationMapViewDelegate.navigationMapView(_:alternativeRouteStyleLayerWithIdentifier:source:)` to style alternative routes.
+  * `NavigationMapViewDelegate.navigationMapView(_:alternativeRouteCasingStyleLayerWithIdentifier:source:)` to style the casing of alternative routes.
+  * Fixed an issue where the casing for the main route would not overlap alternative routes. ([#2377](https://github.com/mapbox/mapbox-navigation-ios/pull/2377))
+
+### Feedback
+
+* Updated `FeedbackType` enum to reflect new top level feedback categories and introduced new `FeedbackSubType`s to support a more granular feedback mechanism. ([#2419](https://github.com/mapbox/mapbox-navigation-ios/pull/2419))
+* Updated image icons for top-level feedback collection view items. ([#2419](https://github.com/mapbox/mapbox-navigation-ios/pull/2419), [#2421](https://github.com/mapbox/mapbox-navigation-ios/pull/2421))
+* The feedback screen no longer dismisses automatically after 10 seconds. ([#2420](https://github.com/mapbox/mapbox-navigation-ios/pull/2420))
+* Fixed warnings in Interface Builder that prevented styling of UI components in `EndOfRouteViewController`. ([#2518](https://github.com/mapbox/mapbox-navigation-ios/pull/2518))
 
 ### User location
 
+* Improved the accuracy of location tracking and off-route detection. ([#2319](https://github.com/mapbox/mapbox-navigation-ios/pull/2319))
+* Fixed an issue where location tracking would pause at the beginning of a route after setting `RouteOptions.shapeFormat` to `RouteShapeFormat.polyline` or `RouteShapeFormat.geoJSON`. Note that you most likely do not need to override the default value of `RouteShapeFormat.polyline6`: this is the least bandwidth-intensive format, and `Route.shape` and `RouteStep.shape` are set to `LineString`s regardless. ([#2319](https://github.com/mapbox/mapbox-navigation-ios/pull/2319))
 * Fixed an issue where various delegate methods omitted `CLLocation.courseAccuracy` and `CLLocation.speedAccuracy` properties from passed-in `CLLocation` objects when using `RouteController`, even when these properties are provided by Core Location on iOS 13.4 and above. ([#2417](https://github.com/mapbox/mapbox-navigation-ios/pull/2417))
 * Fixed issues where the user puck would sometimes drift away from the route line even though the user was following the route. ([#2412](https://github.com/mapbox/mapbox-navigation-ios/pull/2412), [#2417](https://github.com/mapbox/mapbox-navigation-ios/pull/2417))
 * Fixed an issue where `RouteController` took longer than usual to detect that the user had gone off-route. ([#2412](https://github.com/mapbox/mapbox-navigation-ios/pull/2412))
@@ -24,14 +45,13 @@
 * `RouteController` now tracks the user’s location more accurately within roundabouts. ([#2417](https://github.com/mapbox/mapbox-navigation-ios/pull/2417))
 * Fixed an issue where departure instructions were briefly missing when beginning turn-by-turn navigation. ([#2417](https://github.com/mapbox/mapbox-navigation-ios/pull/2417))
 
-### User location
-
-* Improved the accuracy of location tracking and off-route detection. ([#2319](https://github.com/mapbox/mapbox-navigation-ios/pull/2319))
-* Fixed an issue where location tracking would pause at the beginning of a route after setting `RouteOptions.shapeFormat` to `RouteShapeFormat.polyline` or `RouteShapeFormat.geoJSON`. Note that you most likely do not need to override the default value of `RouteShapeFormat.polyline6`: this is the least bandwidth-intensive format, and `Route.shape` and `RouteStep.shape` are set to `LineString`s regardless. ([#2319](https://github.com/mapbox/mapbox-navigation-ios/pull/2319))
-
 ### Offline navigation
 
+* `NavigationDirectionsCompletionHandler` now accepts the original tile directory URL passed into `NavigationDirections.configureRouter(tilesURL:completionHandler:)`; the number of tiles added is no longer passed in. ([#2477](https://github.com/mapbox/mapbox-navigation-ios/pull/2477))
 * Fixed a crash that occurred after setting `RouteOptions.shapeFormat` to `RouteShapeFormat.geoJSON`. ([valhalla/valhalla#1867](https://github.com/valhalla/valhalla/pull/1867))
+* Fixed a crash caused by a side street that loops back to a main road. ([valhalla/valhalla#2385](https://github.com/valhalla/valhalla/pull/2385))
+* Fixed a crash caused by a turn channel leading away from a roundabout. ([valhalla/valhalla#2463](https://github.com/valhalla/valhalla/pull/2463))
+* Added Dutch and Japanese spoken instructions, for consistency with the Mapbox Directions API. ([valhalla/valhalla#2464](https://github.com/valhalla/valhalla/pull/2464), [valhalla/valhalla#2432](https://github.com/valhalla/valhalla/pull/2432))
 * Fixed an issue where some routes had unreasonably long expected travel times. ([valhalla/valhalla#2102](https://github.com/valhalla/valhalla/pull/2102))
 * Fixed incorrect routing at some intersections of divided roads where there are turn restrictions. ([valhalla/valhalla#2109](https://github.com/valhalla/valhalla/pull/2109))
 * Fixed issues where routes would sometimes require divebombing. ([valhalla/valhalla#1931](https://github.com/valhalla/valhalla/pull/1931))
@@ -44,33 +64,20 @@
 * Turn lane indications are now shown below the turn banner as when navigating online. ([valhalla/valhalla#1830](https://github.com/valhalla/valhalla/pull/1830), [valhalla/valhalla#1859](https://github.com/valhalla/valhalla/pull/1859))
 * Fixed an issue where the `RouteStep.expectedTravelTime` properties of each step did not add up to the `RouteLeg.expectedTravelTime` property. ([valhalla/valhalla#2195](https://github.com/valhalla/valhalla/pull/2195))
 * Fixed an issue where a forward- or backward-only speed limit was not considered when calculating some expected travel times. ([valhalla/valhalla#2198](https://github.com/valhalla/valhalla/pull/2198))
-* Suppressed extraneous `ManeuverType.reachFork` maneuvers. ([valhalla/valhalla#1886](https://github.com/valhalla/valhalla/pull/1886), [valhalla/valhalla#1909](https://github.com/valhalla/valhalla/pull/1909), [valhalla/valhalla#1928](https://github.com/valhalla/valhalla/pull/1928))
+* Suppressed extraneous maneuvers. ([valhalla/valhalla#1886](https://github.com/valhalla/valhalla/pull/1886), [valhalla/valhalla#1909](https://github.com/valhalla/valhalla/pull/1909), [valhalla/valhalla#1928](https://github.com/valhalla/valhalla/pull/1928), [valhalla/valhalla#2436](https://github.com/valhalla/valhalla/pull/2436))
 * A spoken instruction about a `ManeuverType.merge` maneuver now indicates whether to merge to the left or the right, as when navigating online. ([valhalla/valhalla#1892](https://github.com/valhalla/valhalla/pull/1892), [valhalla/valhalla#1989](https://github.com/valhalla/valhalla/pull/1989))
-* Spoken instructions for `ManeuverType.exitRoundabout` and `ManeuverType.exitRotary` maneuvers now indicate the outlet road name or destination if available. ([valhalla/valhalla#2378](https://github.com/valhalla/valhalla/pull/2378))
+* Spoken instructions for `ManeuverType.exitRoundabout`, `ManeuverType.exitRotary`, `ManeuverType.reachFork`, and `ManeuverType.merge` maneuvers now indicate the outlet road name or destination if available. ([valhalla/valhalla#2378](https://github.com/valhalla/valhalla/pull/2378), [valhalla/valhalla#2389](https://github.com/valhalla/valhalla/pull/2389))
+* Visual and spoken instructions for `ManeuverType.turn` and `ManeuverType.reachFork` now indicate the name of the intersection, if available. ([valhalla/valhalla#2386](https://github.com/valhalla/valhalla/pull/2386))
 * Fixed ungrammatical spoken instructions at sharp turns in English. ([valhalla/valhalla#2226](https://github.com/valhalla/valhalla/pull/2226))
 * Fixed an issue where spoken and visual instructions sometimes omitted the cardinal direction after a route number in the United States. ([valhalla/valhalla#1917](https://github.com/valhalla/valhalla/pull/1917))
+* Fixed an issue where visual instructions sometimes included duplicate content in `VisualInstructionBanner.primaryInstruction` and `VisualInstructionBanner.secondaryInstruction`. ([#2477](https://github.com/mapbox/mapbox-navigation-ios/pull/2477))
 * A spoken instruction about a `ManeuverType.takeOffRamp` maneuver no longer specifies the side of the road if the ramp branches off the slow lane (on the right side in regions that drive on the right). ([valhalla/valhalla#1990](https://github.com/valhalla/valhalla/pull/1990))
 * Improved the timing of spoken instructions for `ManeuverType.takeOffRamp` maneuvers along high-speed roads. ([#2417](https://github.com/mapbox/mapbox-navigation-ios/pull/2417))
 * Improved the timing of visual instructions when two maneuvers are spaced close together. ([#2417](https://github.com/mapbox/mapbox-navigation-ios/pull/2417))
 
-### Feedback
-* Updated `FeedbackType` enum to reflect new top level feedback categories and introduced new `FeedbackSubType`s to support a more granular feedback mechanism. ([#2419](https://github.com/mapbox/mapbox-navigation-ios/pull/2419))
-* Updated image icons for top-level feedback collection view items. ([#2419](https://github.com/mapbox/mapbox-navigation-ios/pull/2419), [#2421](https://github.com/mapbox/mapbox-navigation-ios/pull/2421))
-* The feedback screen no longer dismisses automatically after 10 seconds. ([#2420](https://github.com/mapbox/mapbox-navigation-ios/pull/2420))
-
 ### Other changes
 
-* Removed `NavigationMapViewDelegate.navigationMapView(_:routeStyleLayerWithIdentifier:source:)`, `NavigationMapViewDelegate.navigationMapView(_:routeCasingStyleLayerWithIdentifier:source:)` in favor of four new delegate methods to customize the route styling ([#2377](https://github.com/mapbox/mapbox-navigation-ios/pull/2377)):
-  * `NavigationMapViewDelegate.navigationMapView(_:mainRouteStyleLayerWithIdentifier:source:)` to style the main route.
-  * `NavigationMapViewDelegate.navigationMapView(_:mainRouteCasingStyleLayerWithIdentifier:source:)` to style the casing of the main route.
-  * `NavigationMapViewDelegate.navigationMapView(_:alternativeRouteStyleLayerWithIdentifier:source:)` to style alternative routes.
-  * `NavigationMapViewDelegate.navigationMapView(_:alternativeRouteCasingStyleLayerWithIdentifier:source:)` to style the casing of alternative routes.
-* Added the ability for the route line to disappear as the puck travels along a route during turn-by-turn navigation. ([#2377](https://github.com/mapbox/mapbox-navigation-ios/pull/2377))
-* Fixed an issue where the casing for the main route would not overlap alternative routes. ([#2377](https://github.com/mapbox/mapbox-navigation-ios/pull/2377))
-* Removed the `NavigationViewControllerDelegate.navigationViewController(_:imageFor:)` and `NavigationViewControllerDelegate.navigationViewController(_:viewFor:)` methods in favor of `MGLMapViewDelegate.mapView(_:imageFor:)` and `MGLMapViewDelegate.mapView(_:viewFor:)`, respectively. ([#2396](https://github.com/mapbox/mapbox-navigation-ios/pull/2396))
 * Fixed memory leaks after disconnecting the application from CarPlay. ([#2470](https://github.com/mapbox/mapbox-navigation-ios/pull/2470))
-* As the user approaches certain junctions, an enlarged illustration of the junction appears below the top banner to help the user understand a complex maneuver. These junction views require only appear when the relevant data is available. Contact your Mapbox sales representative or [support team](https://support.mapbox.com/) for access to the junction views feature. ([#2408](https://github.com/mapbox/mapbox-navigation-ios/pull/2408))
-* Fixed warnings which were prevening styling of UI components in `EndOfRouteViewController`. ([#2518](https://github.com/mapbox/mapbox-navigation-ios/pull/2518))
 
 ## v0.40.0
 

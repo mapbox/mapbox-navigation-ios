@@ -10,6 +10,7 @@ extension FixLocation {
         }
         
         self.init(coordinate: location.coordinate,
+                  monotonicTimestampNanoseconds: 0, // use time instead; see also `Navigator.status(at:)`
                   time: location.timestamp,
                   speed: location.speed >= 0 ? location.speed as NSNumber : nil,
                   bearing: location.course >= 0 ? location.course as NSNumber : nil,

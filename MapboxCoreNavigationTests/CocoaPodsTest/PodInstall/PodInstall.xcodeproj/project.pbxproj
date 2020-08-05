@@ -128,6 +128,7 @@
 			buildConfigurationList = 352544F91E66623D004C8F1C /* Build configuration list for PBXNativeTarget "PodInstall" */;
 			buildPhases = (
 				FCAEDB6CF8C116409B047EA1 /* [CP] Check Pods Manifest.lock */,
+				DBC6C5683D9BDC04331D7A2D /* [CP] Prepare Artifacts */,
 				352544D81E66623D004C8F1C /* Sources */,
 				352544D91E66623D004C8F1C /* Frameworks */,
 				352544DA1E66623D004C8F1C /* Resources */,
@@ -231,6 +232,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-PodInstall/Pods-PodInstall-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/cocoapods-artifacts-${CONFIGURATION}.txt",
 				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/Mapbox.framework",
 				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/Mapbox.framework.dSYM",
 				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/C4CEBB96-98D0-316A-AACC-B5CFBF29F45A.bcsymbolmap",
@@ -244,7 +246,7 @@
 				"${BUILT_PRODUCTS_DIR}/MapboxNavigation/MapboxNavigation.framework",
 				"${PODS_ROOT}/MapboxNavigationNative/MapboxNavigationNative.framework",
 				"${PODS_ROOT}/MapboxNavigationNative/MapboxNavigationNative.framework.dSYM",
-				"${PODS_ROOT}/MapboxNavigationNative/3B99A79B-2E8B-34B5-ABAA-D85AB8D5565D.bcsymbolmap",
+				"${PODS_ROOT}/MapboxNavigationNative/A67EB591-798A-3BA5-9F94-23F239B2B5A8.bcsymbolmap",
 				"${BUILT_PRODUCTS_DIR}/MapboxSpeech/MapboxSpeech.framework",
 				"${BUILT_PRODUCTS_DIR}/Polyline/Polyline.framework",
 				"${BUILT_PRODUCTS_DIR}/Solar/Solar.framework",
@@ -265,7 +267,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxNavigation.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxNavigationNative.framework",
 				"${DWARF_DSYM_FOLDER_PATH}/MapboxNavigationNative.framework.dSYM",
-				"${BUILT_PRODUCTS_DIR}/3B99A79B-2E8B-34B5-ABAA-D85AB8D5565D.bcsymbolmap",
+				"${BUILT_PRODUCTS_DIR}/A67EB591-798A-3BA5-9F94-23F239B2B5A8.bcsymbolmap",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxSpeech.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Polyline.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Solar.framework",
@@ -274,6 +276,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PodInstall/Pods-PodInstall-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DBC6C5683D9BDC04331D7A2D /* [CP] Prepare Artifacts */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-PodInstall/Pods-PodInstall-artifacts.sh",
+				"${PODS_ROOT}/MapboxCommon/MapboxCommon.xcframework",
+			);
+			name = "[CP] Prepare Artifacts";
+			outputPaths = (
+				"${BUILT_PRODUCTS_DIR}/cocoapods-artifacts-${CONFIGURATION}.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PodInstall/Pods-PodInstall-artifacts.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FCAEDB6CF8C116409B047EA1 /* [CP] Check Pods Manifest.lock */ = {

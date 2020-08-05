@@ -24,7 +24,7 @@ open class RouteController: NSObject {
     lazy var navigator: Navigator = {
         let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile,
                                               platform: ProfilePlatform.KIOS)
-        return Navigator(profile: settingsProfile, customConfig: "")
+        return Navigator(profile: settingsProfile, config: NavigatorConfig(), customConfig: "")
     }()
     
     public var route: Route {
@@ -64,15 +64,6 @@ open class RouteController: NSObject {
     
     var isFirstLocation: Bool = true
     
-    public var config: NavigatorConfig? {
-        get {
-            return navigator.getConfig()
-        }
-        set {
-            navigator.setConfigFor(newValue)
-        }
-    }
-    
     /**
      Details about the user’s progress along the current route, leg, and step.
      */
@@ -94,7 +85,7 @@ open class RouteController: NSObject {
      - important: If the rawLocation is outside of the route snapping tolerances, this value is nil.
      */
     var snappedLocation: CLLocation? {
-        let status = navigator.getStatusForTimestamp(Date())
+        let status = navigator.status(at: Date())
         guard status.routeState == .tracking || status.routeState == .complete else {
             return nil
         }
@@ -202,7 +193,7 @@ open class RouteController: NSObject {
         
         locations.forEach { navigator.updateLocation(for: FixLocation($0)) }
         
-        let status = navigator.getStatusForTimestamp(location.timestamp)
+        let status = navigator.status(at: location.timestamp)
         
         // Notify observers if the step’s remaining distance has changed.
         update(progress: routeProgress, with: CLLocation(status.location), rawLocation: location)
@@ -351,11 +342,11 @@ open class RouteController: NSObject {
      a future timestamp compared to the last location received by the location manager.
      */
     public func projectedLocation(for timestamp: Date) -> CLLocation {
-        return CLLocation(navigator.getStatusForTimestamp(timestamp).location)
+        return CLLocation(navigator.status(at:timestamp).location)
     }
     
     public func advanceLegIndex(location: CLLocation) {
-        let status = navigator.getStatusForTimestamp(location.timestamp)
+        let status = navigator.status(at: location.timestamp)
         routeProgress.legIndex = Int(status.legIndex)
     }
     
@@ -390,7 +381,7 @@ extension RouteController: Router {
             return true
         }
         
-        let status = status ?? navigator.getStatusForTimestamp(location.timestamp)
+        let status = status ?? navigator.status(at: location.timestamp)
         let offRoute = status.routeState == .offRoute || status.routeState == .invalid
         return !offRoute
     }

@@ -50,7 +50,7 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
    github "mapbox/mapbox-navigation-ios" ~> 0.40
    ```
 
-1. Follow the rest of [Carthage’s iOS integration instructions](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos). Your application target’s Embedded Frameworks should include `MapboxNavigation.framework`, `MapboxCoreNavigation.framework`, `MapboxNavigationNative.framework`, and `MapboxAccounts.framework`.
+1. Follow the rest of [Carthage’s iOS integration instructions](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos). Your application target’s Embed Frameworks build phase should include `MapboxNavigation.framework`, `MapboxCoreNavigation.framework`, `MapboxNavigationNative.framework`, and `MapboxAccounts.framework`.
 
 ## Installing the latest prerelease
 
@@ -88,7 +88,7 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
 
 1. _(Optional)_ Clear your Carthage caches:
    ```bash
-   rm -rf ~/Library/Caches/carthage/ ~/Library/Caches/org.carthage.CarthageKit/binaries/{MapboxAccounts,MapboxNavigationNative,mapbox-ios-sdk-dynamic}
+   rm -rf ~/Library/Caches/carthage/ ~/Library/Caches/org.carthage.CarthageKit/binaries/{MapboxAccounts,MapboxCommon-ios,MapboxNavigationNative,mapbox-ios-sdk-dynamic}
    ```
 
 1. Create a [Cartfile](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#github-repositories) with the following dependency:
@@ -98,7 +98,7 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
 
 1. Run `carthage update --platform iOS --use-netrc` to build just the iOS dependencies.
 
-1. Follow the rest of [Carthage’s iOS integration instructions](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos). Your application target’s Embedded Frameworks should include `MapboxNavigation.framework`, `MapboxCoreNavigation.framework`, `MapboxNavigationNative.framework`, and `MapboxAccounts.framework`.
+1. Follow the rest of [Carthage’s iOS integration instructions](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos). Your application target’s Embed Frameworks build phase should include `MapboxNavigation.framework`, `MapboxCoreNavigation.framework`, `MapboxNavigationNative.framework`, `MapboxCommon.framework`, and `MapboxAccounts.framework`.
 
 ## Configuration
 
