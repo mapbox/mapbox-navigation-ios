@@ -21,7 +21,7 @@ extension UIColor {
     class var defaultLaneArrowSecondaryHighlighted: UIColor { get { return #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) } }
     
     class var trafficUnknown: UIColor { get { return defaultRouteLayer } }
-    class var trafficLow: UIColor { get { return #colorLiteral(red: 0.3215686275, green: 0.8784313725, blue: 0.3215686275, alpha: 1) } }//{ get { return defaultRouteLayer } }
+    class var trafficLow: UIColor { get { return defaultRouteLayer } }
     class var trafficModerate: UIColor { get { return #colorLiteral(red: 1, green: 0.5843137255, blue: 0, alpha: 1) } }
     class var trafficHeavy: UIColor { get { return #colorLiteral(red: 1, green: 0.3019607843, blue: 0.3019607843, alpha: 1) } }
     class var trafficSevere: UIColor { get { return #colorLiteral(red: 0.5607843137, green: 0.1411764706, blue: 0.2784313725, alpha: 1) } }
@@ -48,6 +48,7 @@ open class DayStyle: Style {
     public required init() {
         super.init()
         mapStyleURL = MGLStyle.navigationDayStyleURL
+        previewMapStyleURL = mapStyleURL
         styleType = .day
         statusBarStyle = .default
     }
@@ -207,6 +208,7 @@ open class NightStyle: DayStyle {
     public required init() {
         super.init()
         mapStyleURL = MGLStyle.navigationNightStyleURL
+        previewMapStyleURL = mapStyleURL
         styleType = .night
         statusBarStyle = .lightContent
     }

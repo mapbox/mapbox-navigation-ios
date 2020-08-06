@@ -218,7 +218,7 @@ extension CarPlayMapViewController: StyleManagerDelegate {
     }
     
     public func styleManager(_ styleManager: StyleManager, didApply style: Style) {
-        let styleURL = style.mapStyleURL
+        let styleURL = style.previewMapStyleURL
         if mapView.styleURL != styleURL {
             mapView.style?.transition = MGLTransition(duration: 0.5, delay: 0)
             mapView.styleURL = styleURL

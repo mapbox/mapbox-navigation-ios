@@ -11,6 +11,8 @@
 * Enabled MAU billing by default, so that SDKs usage of Mapbox APIs is [billed](https://www.mapbox.com/pricing/) together based on [monthly active users](https://docs.mapbox.com/help/glossary/monthly-active-users/) rather than individually by HTTP request. If you prefer to still use request-based billing, set the `MBXNavigationBillingMethod` key in Info.plist to `request` ([#2405](https://github.com/mapbox/mapbox-navigation-ios/pull/2405).
 * Added Greek and Turkish localizations. ([#2385](https://github.com/mapbox/mapbox-navigation-ios/pull/2385), [#2475](https://github.com/mapbox/mapbox-navigation-ios/pull/2475), [valhalla/valhalla#2438](https://github.com/valhalla/valhalla/pull/2438))
 * Upgraded to [MapboxDirections v0.33.0](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v0.33.0). ([#2483](https://github.com/mapbox/mapbox-navigation-ios/pull/2483)) 
+* `MGLStyle.navigationGuidanceDayStyleURL` and `MGLStyle.navigationGuidanceNightStyleURL` are renamed to `MGLStyle.navigationDayStyleURL` and `MGLStyle.navigationNightStyleURL`respectively. ([#2523](https://github.com/mapbox/mapbox-navigation-ios/pull/2523))
+* `MGLStyle.navigationPreviewDayStyleURL` and `MGLStyle.navigationPreviewNightStyleURL` are removed. Now, corresponding `MGLStyle.navigationDayStyleURL` or `MGLStyle.navigationNightStyleURL` will be used to visualize `MGLMapView.showsTraffic`. ([#2523](https://github.com/mapbox/mapbox-navigation-ios/pull/2523))
 * By default, NavigationMapView displays the `Navigation Day v5` style. This style consolidates `Navigation Preview` and `Navigation Guidance` styles and thus is used in both Navigation and Preview views. ([#2523](https://github.com/mapbox/mapbox-navigation-ios/pull/2523))
 
 ### User interface
