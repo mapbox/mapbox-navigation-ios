@@ -187,8 +187,6 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
             self.speak(modifiedInstruction,
                        data: data)
         }
-        
-        audioTask?.resume()
     }
     
     private func downloadAndCacheSpokenInstruction(instruction: SpokenInstruction, locale: Locale) {
@@ -202,7 +200,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
                 return
             }
             self.cache(data, forKey: ssmlText, with: locale)
-        }.resume()
+        }
     }
     
     func safeDuckAudio(instruction: SpokenInstruction?){
