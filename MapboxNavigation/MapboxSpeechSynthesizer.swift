@@ -148,7 +148,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     /**
      Fetches and plays an instruction.
      */
-    private func fetchAndSpeak(instruction: SpokenInstruction, locale: Locale){
+    private func fetchAndSpeak(instruction: SpokenInstruction, locale: Locale) {
         audioTask?.cancel()
         
         let modifiedInstruction = delegate?.speechSynthesizer(self, willSpeak: instruction) ?? instruction
@@ -161,11 +161,9 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
             if let speechError = error,
                 case let .unknown(response: _, underlying: underlyingError, code: _, message: _) = speechError,
                 let urlError = underlyingError as? URLError, urlError.code == .cancelled {
-                self.delegate?.speechSynthesizer(self,
-                                                 didSpeak: modifiedInstruction,
-                                                 with: SpeechError.apiError(instruction: modifiedInstruction,
-                                                                            options: options,
-                                                                            underlying: urlError))
+                // Since several voice instructions might be received almost at the same time cancelled URLSessionDataTask
+                // is not considered as error. This means that in this case fallback to another speech synthesizer
+                // will not be performed.
                 return
             } else if let error = error {
                 self.delegate?.speechSynthesizer(self,
