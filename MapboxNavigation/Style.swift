@@ -242,13 +242,13 @@ open class StylableLabel: UILabel {
 /// :nodoc:
 @objc(MBStylableView)
 open class StylableView: UIView {
-    @objc dynamic var borderWidth: CGFloat = 0.0 {
+    @objc dynamic public var borderWidth: CGFloat = 0.0 {
         didSet {
             layer.borderWidth = borderWidth
         }
     }
     
-    @objc dynamic var cornerRadius: CGFloat = 0.0 {
+    @objc dynamic public var cornerRadius: CGFloat = 0.0 {
         didSet {
             layer.cornerRadius = cornerRadius
         }
@@ -559,7 +559,7 @@ open class StylableButton: UIButton {
 open class ManeuverContainerView: UIView {
     @IBOutlet weak var heightConstraint: NSLayoutConstraint!
     
-    @objc dynamic var height: CGFloat = 100 {
+    @objc dynamic public var height: CGFloat = 100 {
         didSet {
             heightConstraint.constant = height
             setNeedsUpdateConstraints()
