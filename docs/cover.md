@@ -42,7 +42,7 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
 
 1. _(Optional)_ Clear your Carthage caches:
    ```bash
-   rm -rf ~/Library/Caches/carthage/ ~/Library/Caches/org.carthage.CarthageKit/binaries/{MapboxAccounts,MapboxNavigationNative,mapbox-ios-sdk-dynamic}
+   rm -rf ~/Library/Caches/carthage/ ~/Library/Caches/org.carthage.CarthageKit/binaries/{MapboxAccounts,MapboxCommon-ios,MapboxNavigationNative,mapbox-ios-sdk-dynamic}
    ```
 
 1. Create a [Cartfile](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#github-repositories) with the following dependency:
