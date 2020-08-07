@@ -257,6 +257,7 @@
 		5A3D212E24DADFA000EA652A /* SkuTokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D212D24DADF9F00EA652A /* SkuTokenProvider.swift */; };
 		5A43FC8B24B488DC00BF7943 /* FreeDriveLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A43FC8A24B488DC00BF7943 /* FreeDriveLocationManager.swift */; };
 		5A8DB88F24DDE33C0041F863 /* FreeDriveDebugInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A8DB88E24DDE33C0041F863 /* FreeDriveDebugInfoView.swift */; };
+		5A8DB89424DE0ED70041F863 /* MBXPeerWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 5A8DB89224DE0E4E0041F863 /* MBXPeerWrapper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */; };
 		64847A041F04629D003F3A69 /* Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64847A031F04629D003F3A69 /* Feedback.swift */; };
 		7C12F2D8225B7C320010A931 /* DCA-Arboretum-dummy-faster-route.json in Resources */ = {isa = PBXBuildFile; fileRef = 7C12F2D7225B7C310010A931 /* DCA-Arboretum-dummy-faster-route.json */; };
@@ -866,6 +867,7 @@
 		5A3D212D24DADF9F00EA652A /* SkuTokenProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SkuTokenProvider.swift; sourceTree = "<group>"; };
 		5A43FC8A24B488DC00BF7943 /* FreeDriveLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeDriveLocationManager.swift; sourceTree = "<group>"; };
 		5A8DB88E24DDE33C0041F863 /* FreeDriveDebugInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeDriveDebugInfoView.swift; sourceTree = "<group>"; };
+		5A8DB89224DE0E4E0041F863 /* MBXPeerWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MBXPeerWrapper.h; sourceTree = "<group>"; };
 		6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WaypointConfirmationViewController.swift; path = Example/WaypointConfirmationViewController.swift; sourceTree = "<group>"; };
 		64847A031F04629D003F3A69 /* Feedback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Feedback.swift; sourceTree = "<group>"; };
 		7C12F2D7225B7C310010A931 /* DCA-Arboretum-dummy-faster-route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "DCA-Arboretum-dummy-faster-route.json"; sourceTree = "<group>"; };
@@ -1778,6 +1780,7 @@
 				353E69031EF0C4E5007B2AE5 /* SimulatedLocationManager.swift */,
 				35C98730212E02B500808B82 /* RouteController.swift */,
 				5A39B9272498F9890026DFD1 /* FreeDriveLocationManager.swift */,
+				5A8DB89224DE0E4E0041F863 /* MBXPeerWrapper.h */,
 				5A3D212D24DADF9F00EA652A /* SkuTokenProvider.swift */,
 				3A8187CA24BDE72300708F19 /* RouteTiles.swift */,
 			);
@@ -1838,6 +1841,7 @@
 			files = (
 				C5C94C1B1DDCD22B0097296A /* MapboxCoreNavigation.h in Headers */,
 				DA754E1823AC56E5007E16B5 /* MBXAccounts+CoreNavigationAdditions.h in Headers */,
+				5A8DB89424DE0ED70041F863 /* MBXPeerWrapper.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
