@@ -87,7 +87,7 @@ class NavigationEventsManagerTests: XCTestCase {
             expectation.fulfill()
         }
         
-        wait(for: [expectation], timeout: 0.1)
+        wait(for: [expectation], timeout: 0.3)
         
         // Sanity check to verify that no issues occur when creating NavigationEventDetails from main queue.
         let _ = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: false)
