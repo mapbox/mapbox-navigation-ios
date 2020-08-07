@@ -1,7 +1,6 @@
 import MapboxNavigationNative
 import CoreLocation
 import MapboxDirections
-import Mapbox
 import MapboxAccounts
 
 public protocol FreeDriveDebugInfoListener: AnyObject {
