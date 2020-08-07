@@ -235,7 +235,6 @@
 		35F9BC2F2296FCD300364A10 /* 9-legged-route.json in Resources */ = {isa = PBXBuildFile; fileRef = 35F9BAD12296FCD200364A10 /* 9-legged-route.json */; };
 		3A163AE0249901C300D66A0D /* RouteStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A163ADF249901C300D66A0D /* RouteStateTests.swift */; };
 		3A163AE3249901D000D66A0D /* FixLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A163AE2249901D000D66A0D /* FixLocation.swift */; };
-		3A45EEF624B8964400F761EB /* SkuTokenProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A45EEF524B8964400F761EB /* SkuTokenProviderTests.swift */; };
 		3A8187C924BDAE9C00708F19 /* URLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8187C824BDAE9C00708F19 /* URLSession.swift */; };
 		3A8187CB24BDE72300708F19 /* RouteTiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8187CA24BDE72300708F19 /* RouteTiles.swift */; };
 		3A8187CD24C1B05E00708F19 /* TileRoutingVersionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8187CC24C1B05E00708F19 /* TileRoutingVersionTests.swift */; };
@@ -258,6 +257,7 @@
 		5A43FC8B24B488DC00BF7943 /* FreeDriveLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A43FC8A24B488DC00BF7943 /* FreeDriveLocationManager.swift */; };
 		5A8DB88F24DDE33C0041F863 /* FreeDriveDebugInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A8DB88E24DDE33C0041F863 /* FreeDriveDebugInfoView.swift */; };
 		5A8DB89424DE0ED70041F863 /* MBXPeerWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 5A8DB89224DE0E4E0041F863 /* MBXPeerWrapper.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5A8DB89624DE16A10041F863 /* SkuTokenProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A8DB89524DE16A10041F863 /* SkuTokenProviderTests.swift */; };
 		6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */; };
 		64847A041F04629D003F3A69 /* Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64847A031F04629D003F3A69 /* Feedback.swift */; };
 		7C12F2D8225B7C320010A931 /* DCA-Arboretum-dummy-faster-route.json in Resources */ = {isa = PBXBuildFile; fileRef = 7C12F2D7225B7C310010A931 /* DCA-Arboretum-dummy-faster-route.json */; };
@@ -868,6 +868,7 @@
 		5A43FC8A24B488DC00BF7943 /* FreeDriveLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeDriveLocationManager.swift; sourceTree = "<group>"; };
 		5A8DB88E24DDE33C0041F863 /* FreeDriveDebugInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeDriveDebugInfoView.swift; sourceTree = "<group>"; };
 		5A8DB89224DE0E4E0041F863 /* MBXPeerWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MBXPeerWrapper.h; sourceTree = "<group>"; };
+		5A8DB89524DE16A10041F863 /* SkuTokenProviderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SkuTokenProviderTests.swift; sourceTree = "<group>"; };
 		6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WaypointConfirmationViewController.swift; path = Example/WaypointConfirmationViewController.swift; sourceTree = "<group>"; };
 		64847A031F04629D003F3A69 /* Feedback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Feedback.swift; sourceTree = "<group>"; };
 		7C12F2D7225B7C310010A931 /* DCA-Arboretum-dummy-faster-route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "DCA-Arboretum-dummy-faster-route.json"; sourceTree = "<group>"; };
@@ -1792,6 +1793,7 @@
 			children = (
 				3A163AE1249901D000D66A0D /* Extensions */,
 				C5BF7371206AB0DF00CDBB6D /* CLHeadingPrivate.h */,
+				5A8DB89524DE16A10041F863 /* SkuTokenProviderTests.swift */,
 				DAD903AE23E3DCC80057CF1F /* DateTests.swift */,
 				359A8AEC1FA78D3000BDB486 /* DistanceFormatterTests.swift */,
 				C5ADFBD91DDCC7840011824B /* Info.plist */,
@@ -2719,7 +2721,6 @@
 			files = (
 				3519D01E21F0842900582FF5 /* CLLocationTests.swift in Sources */,
 				162039CF216C348500875F5C /* NavigationEventsManagerTests.swift in Sources */,
-				3A45EEF624B8964400F761EB /* SkuTokenProviderTests.swift in Sources */,
 				3A8187CD24C1B05E00708F19 /* TileRoutingVersionTests.swift in Sources */,
 				8DB7EF6C2176688D00DA83A3 /* LeakTest.swift in Sources */,
 				C5ADFBD81DDCC7840011824B /* MapboxCoreNavigationTests.swift in Sources */,
@@ -2733,6 +2734,7 @@
 				3557506B21A826C600AEF9B6 /* OfflineRoutingTests.swift in Sources */,
 				352762A4225B751A0015B632 /* OptionsTests.swift in Sources */,
 				8DB7EF6A2176674800DA83A3 /* MapboxNavigationServiceSpec.swift in Sources */,
+				5A8DB89624DE16A10041F863 /* SkuTokenProviderTests.swift in Sources */,
 				35EF782A212C324E001B4BB5 /* TunnelAuthorityTests.swift in Sources */,
 				3A163AE0249901C300D66A0D /* RouteStateTests.swift in Sources */,
 				C5ABB50E20408D2C00AFA92C /* NavigationServiceTests.swift in Sources */,

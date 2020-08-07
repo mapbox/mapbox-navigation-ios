@@ -35,6 +35,18 @@ extension CLLocationCoordinate2D {
     }
 }
 
+class DebugInfoListener: FreeDriveDebugInfoListener {
+    var onUpdated: ((CLLocationCoordinate2D, CLLocationCoordinate2D)->Void)?
+
+    init(onUpdated: ((CLLocationCoordinate2D, CLLocationCoordinate2D)->Void)? = nil) {
+        self.onUpdated = onUpdated
+    }
+
+    func didGet(location: CLLocation, with matches: [MapMatch], for rawLocation: CLLocation) {
+        onUpdated?(rawLocation.coordinate, location.coordinate)
+    }
+}
+
 class FreeDriveLocationManagerTests: XCTestCase {
     class LocationsObserver: NSObject, CLLocationManagerDelegate {
         func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -45,17 +57,20 @@ class FreeDriveLocationManagerTests: XCTestCase {
 
     func testFreeDrive() {
         let locationManager = FreeDriveLocationManager()
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(10)) {
         locationManager.setCustomLocation(CLLocation(latitude: 47.208674, longitude: 9.524650))
+        }
 
         let road = Road(from: CLLocationCoordinate2D(latitude: 47.207966, longitude: 9.527012), to: CLLocationCoordinate2D(latitude: 47.209518, longitude: 9.522167))
 
         let expectation = XCTestExpectation(description: "")
 
-        _ = locationManager.debugView() { rawLocation, location in
+        let listener = DebugInfoListener() { rawLocation, location in
             print("Got locations: (\(rawLocation.latitude), \(rawLocation.longitude)) -> (\(location.latitude), \(location.longitude))")
             print("Value: \(road.proximity(of: location)) < \(road.proximity(of: rawLocation))")
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(5)) {
+        locationManager.debugInfoListener = listener
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(25)) {
             locationManager.setCustomLocation(CLLocation(latitude: 47.208943, longitude: 9.524707))
             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
                 locationManager.setCustomLocation(CLLocation(latitude: 47.209082, longitude: 9.524319))
@@ -72,6 +87,6 @@ class FreeDriveLocationManagerTests: XCTestCase {
                 }
             }
         }
-        wait(for: [expectation], timeout: 20.1)
+        wait(for: [expectation], timeout: 50.1)
     }
 }
