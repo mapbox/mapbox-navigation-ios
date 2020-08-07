@@ -232,6 +232,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 
     private lazy var routeGradient = [CGFloat: UIColor]()
     
+    private lazy var buildingExtrusionStyler: BuildingExtrusionStyler? = nil
+    
     //MARK: - Initalizers
     
     public override init(frame: CGRect) {
@@ -260,6 +262,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         let mapTapGesture = self.mapTapGesture
         mapTapGesture.requireFailure(of: gestures)
         addGestureRecognizer(mapTapGesture)
+        
+        buildingExtrusionStyler = BuildingExtrusionStyler(mapView: self)
+        buildingExtrusionStyler?.extrudeBuildings(for: [(CLLocationCoordinate2D(latitude: 37.773240, longitude: -122.411911), .red)], extrudeAll: true)
         
         installUserCourseView()
     }

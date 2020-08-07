@@ -1,11 +1,3 @@
-//
-//  BuildingExtrusionStyler.swift
-//  Apex
-//
-//  Created by Avi Cieplinski on 4/9/19.
-//  Copyright © 2019 Mapbox. All rights reserved.
-//
-
 import Foundation
 import UIKit
 
@@ -64,7 +56,7 @@ class BuildingExtrusionStyler {
             guard highlightedBuildingsLayer == nil else { return }
 
             let highlightedBuildingLayer = MGLFillExtrusionStyleLayer(identifier: apexBuildingStyleLayerIdentifier, source: buildingsPlusSource)
-            highlightedBuildingLayer.sourceLayerIdentifier = "buildings_plus"
+            highlightedBuildingLayer.sourceLayerIdentifier = "building"
             highlightedBuildingLayer.fillExtrusionColor = NSExpression(forConstantValue: UIColor.white)
             highlightedBuildingLayer.fillExtrusionHeightTransition = MGLTransition(duration: 0.8, delay: 0)
             highlightedBuildingLayer.fillExtrusionOpacityTransition = MGLTransition(duration: 0.8, delay: 0)
@@ -172,10 +164,8 @@ class BuildingExtrusionStyler {
         extrudeBuildings(buildingsToExtrude, extrudeAll: extrudeAll)
     }
     
-    private func getBuildingId(coordinate: CLLocationCoordinate2D?) -> Int? {
-        guard let coord = coordinate else { return nil }
-    
-        let screenCoordinateForGeoCoordinate = mapView.convert(coord, toPointTo: mapView)
+    private func getBuildingId(coordinate: CLLocationCoordinate2D) -> Int? {
+        let screenCoordinateForGeoCoordinate = mapView.convert(coordinate, toPointTo: mapView)
         let visibleFeatures = mapView.visibleFeatures(at: screenCoordinateForGeoCoordinate, styleLayerIdentifiers: [apexBuildingStyleLayerIdentifier], predicate: NSPredicate(format: regularBuildingPredicate) )
         
         if let feature = visibleFeatures.first, let buildingId = feature.identifier as? Int {
