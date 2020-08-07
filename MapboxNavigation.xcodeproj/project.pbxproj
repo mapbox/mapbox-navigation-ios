@@ -235,7 +235,6 @@
 		35F9BC2F2296FCD300364A10 /* 9-legged-route.json in Resources */ = {isa = PBXBuildFile; fileRef = 35F9BAD12296FCD200364A10 /* 9-legged-route.json */; };
 		3A163AE0249901C300D66A0D /* RouteStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A163ADF249901C300D66A0D /* RouteStateTests.swift */; };
 		3A163AE3249901D000D66A0D /* FixLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A163AE2249901D000D66A0D /* FixLocation.swift */; };
-		3A45EEF424B8964400F761EB /* SkuTokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A45EEF324B8964400F761EB /* SkuTokenProvider.swift */; };
 		3A45EEF624B8964400F761EB /* SkuTokenProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A45EEF524B8964400F761EB /* SkuTokenProviderTests.swift */; };
 		3A8187C924BDAE9C00708F19 /* URLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8187C824BDAE9C00708F19 /* URLSession.swift */; };
 		3A8187CB24BDE72300708F19 /* RouteTiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8187CA24BDE72300708F19 /* RouteTiles.swift */; };
@@ -255,7 +254,9 @@
 		492B6F85213703EE0076D2C6 /* MapboxGeocoder.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3507F9F92134305C0086B39E /* MapboxGeocoder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5A1C075824BDEB44000A6330 /* FreeDriveDebugger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1C075724BDEB44000A6330 /* FreeDriveDebugger.swift */; };
 		5A39B9282498F9890026DFD1 /* FreeDriveLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A39B9272498F9890026DFD1 /* FreeDriveLocationManager.swift */; };
+		5A3D212E24DADFA000EA652A /* SkuTokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D212D24DADF9F00EA652A /* SkuTokenProvider.swift */; };
 		5A43FC8B24B488DC00BF7943 /* FreeDriveLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A43FC8A24B488DC00BF7943 /* FreeDriveLocationManager.swift */; };
+		5A8DB88F24DDE33C0041F863 /* FreeDriveDebugInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A8DB88E24DDE33C0041F863 /* FreeDriveDebugInfoView.swift */; };
 		6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */; };
 		64847A041F04629D003F3A69 /* Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64847A031F04629D003F3A69 /* Feedback.swift */; };
 		7C12F2D8225B7C320010A931 /* DCA-Arboretum-dummy-faster-route.json in Resources */ = {isa = PBXBuildFile; fileRef = 7C12F2D7225B7C310010A931 /* DCA-Arboretum-dummy-faster-route.json */; };
@@ -843,7 +844,6 @@
 		35F9BAD12296FCD200364A10 /* 9-legged-route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "9-legged-route.json"; sourceTree = "<group>"; };
 		3A163ADF249901C300D66A0D /* RouteStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteStateTests.swift; sourceTree = "<group>"; };
 		3A163AE2249901D000D66A0D /* FixLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixLocation.swift; sourceTree = "<group>"; };
-		3A45EEF324B8964400F761EB /* SkuTokenProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkuTokenProvider.swift; sourceTree = "<group>"; };
 		3A45EEF524B8964400F761EB /* SkuTokenProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkuTokenProviderTests.swift; sourceTree = "<group>"; };
 		3A8187C824BDAE9C00708F19 /* URLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSession.swift; sourceTree = "<group>"; };
 		3A8187CA24BDE72300708F19 /* RouteTiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteTiles.swift; sourceTree = "<group>"; };
@@ -863,7 +863,9 @@
 		43E69517233D297B0019BF6E /* cover.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = cover.md; path = docs/cover.md; sourceTree = "<group>"; };
 		5A1C075724BDEB44000A6330 /* FreeDriveDebugger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeDriveDebugger.swift; sourceTree = "<group>"; };
 		5A39B9272498F9890026DFD1 /* FreeDriveLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeDriveLocationManager.swift; sourceTree = "<group>"; };
+		5A3D212D24DADF9F00EA652A /* SkuTokenProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SkuTokenProvider.swift; sourceTree = "<group>"; };
 		5A43FC8A24B488DC00BF7943 /* FreeDriveLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeDriveLocationManager.swift; sourceTree = "<group>"; };
+		5A8DB88E24DDE33C0041F863 /* FreeDriveDebugInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeDriveDebugInfoView.swift; sourceTree = "<group>"; };
 		6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WaypointConfirmationViewController.swift; path = Example/WaypointConfirmationViewController.swift; sourceTree = "<group>"; };
 		64847A031F04629D003F3A69 /* Feedback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Feedback.swift; sourceTree = "<group>"; };
 		7C12F2D7225B7C310010A931 /* DCA-Arboretum-dummy-faster-route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "DCA-Arboretum-dummy-faster-route.json"; sourceTree = "<group>"; };
@@ -1356,6 +1358,7 @@
 				35B1E2941F1FF8EC00A13D32 /* UserCourseView.swift */,
 				8AA849E824E722410008EE59 /* WaypointStyle.swift */,
 				5A1C075724BDEB44000A6330 /* FreeDriveDebugger.swift */,
+				5A8DB88E24DDE33C0041F863 /* FreeDriveDebugInfoView.swift */,
 			);
 			path = MapboxNavigation;
 			sourceTree = "<group>";
@@ -1530,6 +1533,14 @@
 				3A163ADF249901C300D66A0D /* RouteStateTests.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		5A3D212C24DACF5D00EA652A /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				3A45EEF524B8964400F761EB /* SkuTokenProviderTests.swift */,
+			);
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		8DCB4246218A53F500D6FCAD /* Protocols */ = {
@@ -1718,6 +1729,7 @@
 				35CDA85F2190F2A30072B675 /* TestHelper */,
 				C5ADFBCA1DDCC7840011824B /* Products */,
 				A9E2B43473B53369153F54C6 /* Frameworks */,
+				5A3D212C24DACF5D00EA652A /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1766,6 +1778,7 @@
 				353E69031EF0C4E5007B2AE5 /* SimulatedLocationManager.swift */,
 				35C98730212E02B500808B82 /* RouteController.swift */,
 				5A39B9272498F9890026DFD1 /* FreeDriveLocationManager.swift */,
+				5A3D212D24DADF9F00EA652A /* SkuTokenProvider.swift */,
 				3A8187CA24BDE72300708F19 /* RouteTiles.swift */,
 			);
 			path = MapboxCoreNavigation;
@@ -2421,6 +2434,7 @@
 				353610CE1FAB6A8F00FB1746 /* BottomBannerViewController.swift in Sources */,
 				AEC3AC9A2106703100A26F34 /* HighwayShield.swift in Sources */,
 				C58822001FB0F0D7008B0A2D /* Error.swift in Sources */,
+				5A8DB88F24DDE33C0041F863 /* FreeDriveDebugInfoView.swift in Sources */,
 				C5F4D21920DC468B0059FABF /* CongestionLevel.swift in Sources */,
 				AE47A32B22B1F6AE0096458C /* InstructionsCardCell.swift in Sources */,
 				3597B9A42149B2C20021B0D9 /* UIViewController.swift in Sources */,
@@ -2672,6 +2686,7 @@
 				8DCE1050210FC5880048B0FB /* EndOfRouteFeedback.swift in Sources */,
 				35C98731212E02B500808B82 /* RouteController.swift in Sources */,
 				DA0A4B8124D1C9B200D6B4F8 /* Navigator.swift in Sources */,
+				5A3D212E24DADFA000EA652A /* SkuTokenProvider.swift in Sources */,
 				351927361F0FA072003A702D /* ScreenCapture.swift in Sources */,
 				35F3387C2232AEBF0071DB5C /* MinimumEditDistance.swift in Sources */,
 				C5D9800F1EFBCDAD006DBF2E /* Date.swift in Sources */,

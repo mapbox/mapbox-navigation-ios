@@ -118,11 +118,12 @@ func addFreeDriveDebugger(mapView: NavigationMapView) {
     let locationManager = CLLToMGLConverterLocationManager(locationManager: freeDriveLocationManager)
     mapView.locationManager = locationManager
 
-    let debugView = freeDriveLocationManager.debugView() { from, to in
+    let debugView = FreeDriveDebugInfoView() { from, to in
         if debugger.polylineAdded {
             debugger.updatePolylineWithCoordinates(coordinates: [from, to])
         }
     }
+    freeDriveLocationManager.debugInfoListener = debugView
 
     mapView.addSubview(debugView)
     NSLayoutConstraint.activate([
