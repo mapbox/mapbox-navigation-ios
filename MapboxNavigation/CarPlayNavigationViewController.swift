@@ -159,6 +159,7 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
             self?.mapView?.localizeLabels()
             self?.updateRouteOnMap()
             self?.mapView?.recenterMap()
+            self?.mapView?.showsTraffic = false
         }
         
         styleManager = StyleManager()
