@@ -49,6 +49,8 @@ class ViewController: UIViewController {
         }
     }
     
+    var destinationCoordinate: CLLocationCoordinate2D?
+    
     weak var activeNavigationViewController: NavigationViewController?
 
     // MARK: Directions Request Handlers
@@ -135,9 +137,9 @@ class ViewController: UIViewController {
             waypoints = Array(waypoints.dropFirst())
         }
         
-        let coordinates = mapView.convert(tap.location(in: mapView), toCoordinateFrom: mapView)
+        destinationCoordinate = mapView.convert(tap.location(in: mapView), toCoordinateFrom: mapView)
         // Note: The destination name can be modified. The value is used in the top banner when arriving at a destination.
-        let waypoint = Waypoint(coordinate: coordinates, name: "Dropped Pin #\(waypoints.endIndex + 1)")
+        let waypoint = Waypoint(coordinate: destinationCoordinate!, name: "Dropped Pin #\(waypoints.endIndex + 1)")
         waypoints.append(waypoint)
 
         requestRoute()
@@ -237,6 +239,8 @@ class ViewController: UIViewController {
         // Render part of the route that has been traversed with full transparency, to give the illusion of a disappearing route.
         navigationViewController.mapView?.routeLineTracksTraversal = true
         
+        navigationViewController.buildingExtrusionCoordinate = destinationCoordinate
+        
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
     
@@ -246,6 +250,8 @@ class ViewController: UIViewController {
         let options = NavigationOptions(styles: styles, navigationService: navigationService(route: route, options: routeOptions))
         let navigationViewController = NavigationViewController(for: route, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
+        
+        navigationViewController.buildingExtrusionCoordinate = destinationCoordinate
         
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
