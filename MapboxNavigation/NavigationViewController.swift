@@ -147,6 +147,11 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      */
     public var shouldManageApplicationIdleTimer = true
     
+    /**
+     Coordinate which is used to determine what associated building extrusion should be highlighted.
+     */
+    public var buildingExtrusionCoordinate: CLLocationCoordinate2D? = nil
+    
     var isConnectedToCarPlay: Bool {
         if #available(iOS 12.0, *) {
             return CarPlayManager.isConnected
@@ -580,6 +585,9 @@ extension NavigationViewController: NavigationServiceDelegate {
     public func showEndOfRouteFeedback(duration: TimeInterval = 1.0, completionHandler: ((Bool) -> Void)? = nil) {
         guard let mapController = mapViewController else { return }
         mapController.showEndOfRoute(duration: duration, completion: completionHandler)
+        if let buildingExtrusionCoordinate = buildingExtrusionCoordinate {
+            mapController.mapView.highlightBuildingExtrusion(for: buildingExtrusionCoordinate)
+        }
     }
 
     public func navigationService(_ service: NavigationService, willBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
