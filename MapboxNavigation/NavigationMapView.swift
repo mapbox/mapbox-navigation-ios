@@ -111,6 +111,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 
         static let instructionLabel = "\(identifierNamespace).instructionLabel"
         static let instructionCircle = "\(identifierNamespace).instructionCircle"
+        
+        static let buildingExtrusion = "\(identifierNamespace).buildingExtrusion"
     }
 
     // MARK: - Instance Properties
@@ -232,8 +234,12 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 
     private lazy var routeGradient = [CGFloat: UIColor]()
     
-    private lazy var buildingExtrusionStyler: BuildingExtrusionStyler? = nil
-    
+    // Building extrusion related properties
+    private var extrudedBuildingFeatureIDs = [Int: UIColor]()
+    private let regularBuildingPredicate = "extrude = 'true' && type = 'building' && underground = 'false'"
+    private var coordinateColorList: [(CLLocationCoordinate2D, UIColor)]?
+    private var extrudedBuildingsFillColor: UIColor = UIColor.green
+        
     //MARK: - Initalizers
     
     public override init(frame: CGRect) {
@@ -262,8 +268,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         let mapTapGesture = self.mapTapGesture
         mapTapGesture.requireFailure(of: gestures)
         addGestureRecognizer(mapTapGesture)
-        
-        buildingExtrusionStyler = BuildingExtrusionStyler(mapView: self)
         
         installUserCourseView()
     }
@@ -401,9 +405,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     @objc func didRecieveTap(sender: UITapGestureRecognizer) {
         guard let tapPoint = sender.point else { return }
         
-        buildingExtrusionStyler?.removeHighlights(extrudeAll: true)
-        let coordForPoint = self.convert(tapPoint, toCoordinateFrom: self)
-        buildingExtrusionStyler?.extrudeBuildings(for: [(coordForPoint, .red)], extrudeAll: true)
+        removeHighlights(extrudeAll: true)
+        let coordForPoint = convert(tapPoint, toCoordinateFrom: self)
+        extrude(for: [(coordForPoint, .red)], extrudeAll: true)
         
         guard let routes = routes else { return }
         
@@ -1343,5 +1347,241 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     public func recenterMap() {
         tracksUserCourse = true
         enableFrameByFrameCourseViewTracking(for: 3)
+    }
+}
+
+// MARK: - Deprecated
+
+extension NavigationMapView {
+    @available(*, deprecated, renamed: "show(_:legIndex:)")
+    public func showRoutes(_ routes: [Route], legIndex: Int = 0) {
+        self.show(routes, legIndex: legIndex)
+    }
+    
+    @available(*, deprecated, renamed: "showWaypoints(on:legIndex:)")
+    public func showWaypoints(_ route: Route, legIndex: Int = 0) {
+        showWaypoints(on: route, legIndex: legIndex)
+    }
+}
+
+extension NavigationMapView {
+    struct ExtrudedBuilding {
+        let identifier: Int
+        let color: UIColor
+    }
+    
+    private var targetLayer: MGLStyleLayer? {
+        guard let style = style else { return nil }
+        
+        var layer: MGLStyleLayer?
+        
+        // see if the style contains a destination annotation
+        let pointAnnotation = style.layers.filter { layer -> Bool in
+            return layer.identifier.contains("com.mapbox.annotations.points")
+        }
+        
+        if pointAnnotation.count > 0 {
+            layer = pointAnnotation.first
+        } else {
+            let scalerankLayers = style.layers.filter { layer -> Bool in
+                return layer.identifier.contains("poi-scalerank")
+            }
+            
+            layer = scalerankLayers.first
+        }
+        
+        return layer
+    }
+    
+    private func addStyleLayersIfNecessary() {
+        if let buildingsPlusSource = style?.source(withIdentifier: "composite") {
+            
+            let highlightedBuildingLayer = MGLFillExtrusionStyleLayer(identifier: StyleLayerIdentifier.buildingExtrusion, source: buildingsPlusSource)
+            highlightedBuildingLayer.sourceLayerIdentifier = "building"
+            highlightedBuildingLayer.fillExtrusionColor = NSExpression(forConstantValue: UIColor.white)
+            highlightedBuildingLayer.fillExtrusionHeightTransition = MGLTransition(duration: 0.8, delay: 0)
+            highlightedBuildingLayer.fillExtrusionOpacityTransition = MGLTransition(duration: 0.8, delay: 0)
+            
+            if let targetLayer = targetLayer {
+                style?.insertLayer(highlightedBuildingLayer, below: targetLayer)
+            } else {
+                style?.addLayer(highlightedBuildingLayer)
+            }
+            
+            // hide layers with identifiers starting with 'building-extrusion' & 'buildings-plus'
+            let buildingLayers = style?.layers.filter({ styleLayer -> Bool in
+                guard let layer = styleLayer as? MGLFillExtrusionStyleLayer, layer.identifier != StyleLayerIdentifier.buildingExtrusion, layer.sourceIdentifier == "composite", let sourceLayerIdentifier = layer.sourceLayerIdentifier, sourceLayerIdentifier.contains("building") else { return false }
+                return true
+            })
+            
+            buildingLayers?.forEach({ styleLayer in
+                styleLayer.isVisible = false
+            })
+        }
+    }
+    
+    private func setOpacity(opacity: Float) {
+        guard let highlightedBuildingFillExtrusionLayer = style?.layer(withIdentifier: StyleLayerIdentifier.buildingExtrusion) as? MGLFillExtrusionStyleLayer else { return }
+        let opacityStops = [15: 0.5, 17: opacity]
+        highlightedBuildingFillExtrusionLayer.fillExtrusionOpacity = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", opacityStops)
+    }
+    
+    public func showAllBuildings(color: UIColor, opacity: Float) {
+        extrudedBuildingFeatureIDs.removeAll()
+        addStyleLayersIfNecessary()
+        setOpacity(opacity: opacity)
+        
+        if let buildingFillExtrusionLayer = style?.layer(withIdentifier: StyleLayerIdentifier.buildingExtrusion) as? MGLFillExtrusionStyleLayer {
+            buildingFillExtrusionLayer.predicate = NSPredicate(format: regularBuildingPredicate)
+            buildingFillExtrusionLayer.fillExtrusionColor = NSExpression(forConstantValue: color)
+            let heightDictionary = [0: NSExpression(forConstantValue: 0), 15: NSExpression(forConstantValue: 0), 15.25: NSExpression(forKeyPath: "height")]
+            let baseHeightDictionary = [0: NSExpression(forConstantValue: 0), 15: NSExpression(forConstantValue: 0), 15.25: NSExpression(forKeyPath: "min_height")]
+            
+            buildingFillExtrusionLayer.fillExtrusionHeight = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", heightDictionary)
+            buildingFillExtrusionLayer.fillExtrusionBase = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", baseHeightDictionary)
+        }
+    }
+    
+    public func extrude(for coordinates: [(CLLocationCoordinate2D, UIColor)], extrudeAll: Bool) {
+        let buildings = coordinates.map {
+            (coordinate: $0.0, highlightColor: $0.1)
+        }
+        extrudeBuildingsWithVisibleFeatures(for: buildings, extrudeAll: extrudeAll)
+    }
+    
+    private func processFeatures(features: [[String: Any?]]) {
+        for featureDict in features {
+            var color = extrudedBuildingsFillColor
+            if let featureGeometry = featureDict["geometry"] as? [String: Any?],
+                let coordinateDict = featureGeometry["coordinates"] as? [Double] {
+                let longitude = coordinateDict[0]
+                let latitude = coordinateDict[1]
+                let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+                let colorEntry = coordinateColorList?.first(where: { (colorEntry) -> Bool in
+                    return colorEntry.0 == coordinate
+                })
+                if let colorValue = colorEntry?.1, let id = featureDict["id"] as? Int {
+                    color = colorValue
+                    self.extrudedBuildingFeatureIDs[id] = color
+                }
+            }
+            
+            // look for and append any parts of this building that are specified so we get the entire visual structure of some buildings such as the Ferry Building in SF. Make sure each part will be colored with the matching color
+            if let properties = featureDict["properties"] as? [String: Any?], let parts = properties["parts"] as? String, let firstCharacter = parts.first, let lastCharacter = parts.last, firstCharacter == "[", lastCharacter == "]" {
+                let substring = parts.dropLast().dropFirst()
+                let partFeatureIDStrings = substring.split(separator: ",")
+                let featureIDIntArray = partFeatureIDStrings.map { Int($0)!}
+                featureIDIntArray.forEach { featureID in
+                    self.extrudedBuildingFeatureIDs[featureID] = color
+                }
+            }
+        }
+    }
+    
+    private func extrudeBuildingsWithVisibleFeatures(for buildings: [(coordinate: CLLocationCoordinate2D, highlightColor: UIColor)], extrudeAll: Bool) {
+        var buildingsToExtrude = [ExtrudedBuilding]()
+        
+        buildings.forEach { buildingInfo in
+            if let buildingId = getBuildingId(coordinate: buildingInfo.coordinate) {
+                buildingsToExtrude.append(ExtrudedBuilding(identifier: buildingId, color: buildingInfo.highlightColor))
+            }
+        }
+        
+        extrudeBuildings(buildingsToExtrude, extrudeAll: extrudeAll)
+    }
+    
+    private func getBuildingId(coordinate: CLLocationCoordinate2D) -> Int? {
+        let screenCoordinateForGeoCoordinate = convert(coordinate, toPointTo: self)
+        let features = visibleFeatures(at: screenCoordinateForGeoCoordinate,
+                                       styleLayerIdentifiers: [StyleLayerIdentifier.buildingExtrusion],
+                                       predicate: NSPredicate(format: regularBuildingPredicate))
+        
+        if let feature = features.first, let buildingId = feature.identifier as? Int {
+            return buildingId
+        }
+        
+        return nil
+    }
+    
+    public func remove() {
+        extrudedBuildingFeatureIDs.removeAll()
+        if let highlightedBuildingsLayer = style?.layer(withIdentifier: StyleLayerIdentifier.buildingExtrusion) as? MGLFillExtrusionStyleLayer {
+            style?.removeLayer(highlightedBuildingsLayer)
+        }
+        
+        // hide layers with identifiers: 'building-extrusion' & 'buildings-plus'
+        let buildingLayers = style?.layers.filter({ styleLayer -> Bool in
+            guard let layer = styleLayer as? MGLFillExtrusionStyleLayer, layer.sourceIdentifier == "composite", let sourceLayerIdentifier = layer.sourceLayerIdentifier, sourceLayerIdentifier.contains("building") else { return false }
+            return true
+        })
+        
+        buildingLayers?.forEach({ styleLayer in
+            styleLayer.isVisible = false
+        })
+    }
+    
+    public func removeHighlights(extrudeAll: Bool) {
+        extrudedBuildingFeatureIDs.removeAll()
+        showAllBuildings(color: extrudedBuildingsFillColor, opacity: 0.9)
+    }
+    
+    private func extrudeBuildings(_ buildings: [ExtrudedBuilding], extrudeAll: Bool) {
+        guard buildings.count > 0 else {
+            return
+        }
+        
+        addStyleLayersIfNecessary() // may need to re-add the layers if the map style has changed (e.g. preview style -> nav style)
+        
+        let opacity = 0.8
+        setOpacity(opacity: Float(opacity))
+        
+        if let highlightedBuildingFillExtrusionLayer = style?.layer(withIdentifier: StyleLayerIdentifier.buildingExtrusion) as? MGLFillExtrusionStyleLayer {
+            if extrudeAll == false {
+                // form a predicate to filter out the other buildings from the datasource so only the desired ones are included
+                var identifiersBoolean = "($featureIdentifier == \(buildings.first!.identifier)"
+                
+                if buildings.count > 1 {
+                    for building in buildings[1...buildings.count-1] {
+                        identifiersBoolean += " || $featureIdentifier == \(building.identifier)"
+                    }
+                }
+                
+                identifiersBoolean += ")"
+                
+                let predicateString = regularBuildingPredicate + " && \(identifiersBoolean)"
+                highlightedBuildingFillExtrusionLayer.predicate = NSPredicate(format: predicateString)
+            } else {
+                // use just the general predicate so all buildings are included in the extrusion
+                highlightedBuildingFillExtrusionLayer.predicate = NSPredicate(format: regularBuildingPredicate)
+            }
+            
+            // we have some specific building IDs that we will be the highlight color
+            // the rest of the buildings will be extruded but kept at a uniform color
+            var colorsList = [UIColor]()
+            var highlightedBuildingHeightExpression = "MGL_MATCH($featureIdentifier, "
+            var highlightedBuildingColorExpression = "MGL_MATCH($featureIdentifier, "
+            
+            for building in buildings {
+                highlightedBuildingHeightExpression += "\(building.identifier), height, "
+                highlightedBuildingColorExpression += "\(building.identifier), %@, "
+                colorsList.append(building.color)
+            }
+            
+            highlightedBuildingColorExpression += "%@)"
+            colorsList.append(extrudedBuildingsFillColor)
+            
+            if extrudeAll == true {
+                highlightedBuildingHeightExpression += "height)"
+            } else {
+                highlightedBuildingHeightExpression += "0)"
+            }
+            
+            let heightDictionary = [0: NSExpression(forConstantValue: 0), 15: NSExpression(forConstantValue: 0), 15.25: NSExpression(format: highlightedBuildingHeightExpression)]
+            let baseHeightDictionary = [0: NSExpression(forConstantValue: 0), 15: NSExpression(forConstantValue: 0), 15.25: NSExpression(forKeyPath: "min_height")]
+            highlightedBuildingFillExtrusionLayer.fillExtrusionHeight = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", heightDictionary)
+            highlightedBuildingFillExtrusionLayer.fillExtrusionBase = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", baseHeightDictionary)
+            
+            highlightedBuildingFillExtrusionLayer.fillExtrusionColor = NSExpression(format: highlightedBuildingColorExpression, argumentArray: colorsList)
+        }
     }
 }

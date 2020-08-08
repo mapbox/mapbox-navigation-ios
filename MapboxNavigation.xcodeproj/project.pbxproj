@@ -235,7 +235,6 @@
 		35F9BC2F2296FCD300364A10 /* 9-legged-route.json in Resources */ = {isa = PBXBuildFile; fileRef = 35F9BAD12296FCD200364A10 /* 9-legged-route.json */; };
 		3A163AE0249901C300D66A0D /* RouteStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A163ADF249901C300D66A0D /* RouteStateTests.swift */; };
 		3A163AE3249901D000D66A0D /* FixLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A163AE2249901D000D66A0D /* FixLocation.swift */; };
-		3DAF626C24DDE25B001F83B8 /* BuildingExtrusionStyler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DAF626B24DDE25A001F83B8 /* BuildingExtrusionStyler.swift */; };
 		3EA9301B03F8679BEDD4795F /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA93A10227A7DAF1861D9F5 /* Cache.swift */; };
 		3EA9369C33A8F10DAE9043AA /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA934C5D8DBAA19DB0F5271 /* ImageDownloader.swift */; };
 		3EA9371104016CD402547F1A /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA938479CF48D7AD1B6369B /* ImageCache.swift */; };
@@ -835,7 +834,6 @@
 		35F9BAD12296FCD200364A10 /* 9-legged-route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "9-legged-route.json"; sourceTree = "<group>"; };
 		3A163ADF249901C300D66A0D /* RouteStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteStateTests.swift; sourceTree = "<group>"; };
 		3A163AE2249901D000D66A0D /* FixLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixLocation.swift; sourceTree = "<group>"; };
-		3DAF626B24DDE25A001F83B8 /* BuildingExtrusionStyler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuildingExtrusionStyler.swift; sourceTree = "<group>"; };
 		3EA93170CB959F3065ACFFC3 /* SpeechAPISpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeechAPISpy.swift; sourceTree = "<group>"; };
 		3EA93230997B8D59E3B76C8C /* InstructionPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionPresenter.swift; sourceTree = "<group>"; };
 		3EA934C5D8DBAA19DB0F5271 /* ImageDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
@@ -1302,7 +1300,6 @@
 				C51923B51EA55CD4002AF9E1 /* Views */,
 				8DFD94A52225AF5C00152F45 /* Banners */,
 				AE47A32022B1F6790096458C /* Guidance Cards */,
-				3DAF626B24DDE25A001F83B8 /* BuildingExtrusionStyler.swift */,
 				3EA93A10227A7DAF1861D9F5 /* Cache.swift */,
 				C54C655120336F2600D338E0 /* Constants.swift */,
 				160D8278205996DA00D278D6 /* DataCache.swift */,
@@ -2477,7 +2474,6 @@
 				C5A6B2DD1F4CE8E8004260EA /* StyleType.swift in Sources */,
 				C5381F03204E052A00A5493E /* UIDevice.swift in Sources */,
 				351BEC021E5BCC63006FE110 /* UIView.swift in Sources */,
-				3DAF626C24DDE25B001F83B8 /* BuildingExtrusionStyler.swift in Sources */,
 				160D8279205996DA00D278D6 /* DataCache.swift in Sources */,
 				351BEBF21E5BCC63006FE110 /* Style.swift in Sources */,
 				43FB386923A202420064481E /* Route.swift in Sources */,
