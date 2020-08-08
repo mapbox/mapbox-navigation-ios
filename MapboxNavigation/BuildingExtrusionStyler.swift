@@ -7,7 +7,7 @@ struct ExtrudedBuilding {
 }
 
 class BuildingExtrusionStyler {
-    private unowned let mapView: MGLMapView
+    private weak var mapView: MGLMapView?
     private var extrudedBuildingFeatureIDs = [Int: UIColor]() // paired list of features and colors. Includes building parts
     private let tilequeryRequestGroup = DispatchGroup()
     private let extrudedBuildingFeatureIDDispatchQueue = DispatchQueue(label: "com.mapbox.Apex.extrudedBuildings", attributes: .concurrent)
@@ -27,7 +27,7 @@ class BuildingExtrusionStyler {
     }
 
     private var targetLayer: MGLStyleLayer? {
-        guard let style = mapView.style else { return nil }
+        guard let style = mapView?.style else { return nil }
 
         var layer: MGLStyleLayer?
 
@@ -50,7 +50,7 @@ class BuildingExtrusionStyler {
     }
 
     private func addStyleLayersIfNecessary() {
-        if let style = mapView.style, let buildingsPlusSource = style.source(withIdentifier: "composite") {
+        if let mapView = mapView, let style = mapView.style, let buildingsPlusSource = style.source(withIdentifier: "composite") {
 
             let highlightedBuildingsLayer = mapView.style?.layer(withIdentifier: apexBuildingStyleLayerIdentifier) as? MGLFillExtrusionStyleLayer
             guard highlightedBuildingsLayer == nil else { return }
@@ -80,7 +80,7 @@ class BuildingExtrusionStyler {
     }
 
     private func setOpacity(opacity: Float) {
-        guard let highlightedBuildingFillExtrusionLayer = mapView.style?.layer(withIdentifier: apexBuildingStyleLayerIdentifier) as? MGLFillExtrusionStyleLayer else { return }
+        guard let mapView = mapView, let highlightedBuildingFillExtrusionLayer = mapView.style?.layer(withIdentifier: apexBuildingStyleLayerIdentifier) as? MGLFillExtrusionStyleLayer else { return }
         let opacityStops = [15: 0.5, 17: opacity]
         highlightedBuildingFillExtrusionLayer.fillExtrusionOpacity = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", opacityStops)
     }
@@ -90,7 +90,7 @@ class BuildingExtrusionStyler {
         addStyleLayersIfNecessary()
         setOpacity(opacity: opacity)
 
-        if let buildingFillExtrusionLayer = mapView.style?.layer(withIdentifier: apexBuildingStyleLayerIdentifier) as? MGLFillExtrusionStyleLayer {
+        if let mapView = mapView, let buildingFillExtrusionLayer = mapView.style?.layer(withIdentifier: apexBuildingStyleLayerIdentifier) as? MGLFillExtrusionStyleLayer {
             buildingFillExtrusionLayer.predicate = NSPredicate(format: regularBuildingPredicate)
             buildingFillExtrusionLayer.fillExtrusionColor = NSExpression(forConstantValue: color)
             let heightDictionary = [0: NSExpression(forConstantValue: 0), 15: NSExpression(forConstantValue: 0), 15.25: NSExpression(forKeyPath: "height")]
@@ -165,11 +165,13 @@ class BuildingExtrusionStyler {
     }
     
     private func getBuildingId(coordinate: CLLocationCoordinate2D) -> Int? {
-        let screenCoordinateForGeoCoordinate = mapView.convert(coordinate, toPointTo: mapView)
-        let visibleFeatures = mapView.visibleFeatures(at: screenCoordinateForGeoCoordinate, styleLayerIdentifiers: [apexBuildingStyleLayerIdentifier], predicate: NSPredicate(format: regularBuildingPredicate) )
-        
-        if let feature = visibleFeatures.first, let buildingId = feature.identifier as? Int {
-            return buildingId
+        if let mapView = mapView {
+            let screenCoordinateForGeoCoordinate = mapView.convert(coordinate, toPointTo: mapView)
+            let visibleFeatures = mapView.visibleFeatures(at: screenCoordinateForGeoCoordinate, styleLayerIdentifiers: [apexBuildingStyleLayerIdentifier], predicate: NSPredicate(format: regularBuildingPredicate) )
+            
+            if let feature = visibleFeatures.first, let buildingId = feature.identifier as? Int {
+                return buildingId
+            }
         }
         
         return nil
@@ -177,12 +179,12 @@ class BuildingExtrusionStyler {
 
     public func remove() {
         extrudedBuildingFeatureIDs.removeAll()
-        if let style = mapView.style, let highlightedBuildingsLayer = mapView.style?.layer(withIdentifier: apexBuildingStyleLayerIdentifier) as? MGLFillExtrusionStyleLayer {
+        if let mapView = mapView, let style = mapView.style, let highlightedBuildingsLayer = mapView.style?.layer(withIdentifier: apexBuildingStyleLayerIdentifier) as? MGLFillExtrusionStyleLayer {
             style.removeLayer(highlightedBuildingsLayer)
         }
 
         // hide layers with identifiers: 'building-extrusion' & 'buildings-plus'
-        let buildingLayers = mapView.style?.layers.filter({ styleLayer -> Bool in
+        let buildingLayers = mapView?.style?.layers.filter({ styleLayer -> Bool in
             guard let layer = styleLayer as? MGLFillExtrusionStyleLayer, layer.sourceIdentifier == "composite", let sourceLayerIdentifier = layer.sourceLayerIdentifier, sourceLayerIdentifier.contains("building") else { return false }
             return true
         })
@@ -207,7 +209,7 @@ class BuildingExtrusionStyler {
         let opacity = 0.8
         setOpacity(opacity: Float(opacity))
 
-        if let highlightedBuildingFillExtrusionLayer = mapView.style?.layer(withIdentifier: apexBuildingStyleLayerIdentifier) as? MGLFillExtrusionStyleLayer {
+        if let mapView = mapView, let highlightedBuildingFillExtrusionLayer = mapView.style?.layer(withIdentifier: apexBuildingStyleLayerIdentifier) as? MGLFillExtrusionStyleLayer {
             if extrudeAll == false {
                 // form a predicate to filter out the other buildings from the datasource so only the desired ones are included
                 var identifiersBoolean = "($featureIdentifier == \(buildings.first!.identifier)"
