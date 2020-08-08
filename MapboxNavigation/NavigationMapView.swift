@@ -403,7 +403,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     @objc func didRecieveTap(sender: UITapGestureRecognizer) {
         guard let tapPoint = sender.point else { return }
         
-        removeHighlights()
+        showAllBuildings(color: extrudedBuildingsFillColor, opacity: 0.9)
         let coordForPoint = convert(tapPoint, toCoordinateFrom: self)
         extrude(for: [(coordForPoint, .red)], extrudeAll: true)
         
@@ -1424,7 +1424,7 @@ extension NavigationMapView {
         highlightedBuildingFillExtrusionLayer.fillExtrusionOpacity = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", opacityStops)
     }
     
-    public func showAllBuildings(color: UIColor, opacity: Float) {
+    private func showAllBuildings(color: UIColor, opacity: Float) {
         addStyleLayersIfNecessary()
         setOpacity(opacity: opacity)
         
@@ -1439,19 +1439,12 @@ extension NavigationMapView {
         }
     }
     
-    public func extrude(for coordinates: [(CLLocationCoordinate2D, UIColor)], extrudeAll: Bool) {
-        let buildings = coordinates.map {
-            (coordinate: $0.0, highlightColor: $0.1)
-        }
-        extrudeBuildingsWithVisibleFeatures(for: buildings, extrudeAll: extrudeAll)
-    }
-    
-    private func extrudeBuildingsWithVisibleFeatures(for buildings: [(coordinate: CLLocationCoordinate2D, highlightColor: UIColor)], extrudeAll: Bool) {
+    private func extrude(for coordinates: [(CLLocationCoordinate2D, UIColor)], extrudeAll: Bool) {
         var buildingsToExtrude = [ExtrudedBuilding]()
         
-        buildings.forEach { buildingInfo in
-            if let buildingId = getBuildingId(coordinate: buildingInfo.coordinate) {
-                buildingsToExtrude.append(ExtrudedBuilding(identifier: buildingId, color: buildingInfo.highlightColor))
+        coordinates.forEach { buildingInfo in
+            if let buildingId = getBuildingId(coordinate: buildingInfo.0) {
+                buildingsToExtrude.append(ExtrudedBuilding(identifier: buildingId, color: buildingInfo.1))
             }
         }
         
@@ -1469,10 +1462,6 @@ extension NavigationMapView {
         }
         
         return nil
-    }
-    
-    public func removeHighlights() {
-        showAllBuildings(color: extrudedBuildingsFillColor, opacity: 0.9)
     }
     
     private func extrudeBuildings(_ buildings: [ExtrudedBuilding], extrudeAll: Bool) {
