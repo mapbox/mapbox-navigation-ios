@@ -1357,14 +1357,19 @@ extension NavigationMapView {
     }
 }
 
+// MARK: - Building Extrusion Highlights
+
 extension NavigationMapView {
     public func highlightBuildingExtrusion(for coordinate: CLLocationCoordinate2D) {
-        guard let buildingId = buildingId(coordinate: coordinate) else {
-            print("Unable to find buildingId for coordinate: \(coordinate). Building extrusion will not be performed.")
-            return
+        if let buildingId = buildingId(coordinate: coordinate) {
+            extrudeBuildings([(buildingId, buildingExtrusionColor)], extrudeAll: true)
+        } else {
+            unhighlightBuildingExtrusions()
         }
-        
-        extrudeBuildings([(buildingId, buildingExtrusionColor)], extrudeAll: true)
+    }
+    
+    public func unhighlightBuildingExtrusions() {
+        extrudeBuildings([(0, buildingExtrusionColor)], extrudeAll: true)
     }
     
     private func addStyleLayersIfNecessary() {
