@@ -264,7 +264,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         addGestureRecognizer(mapTapGesture)
         
         buildingExtrusionStyler = BuildingExtrusionStyler(mapView: self)
-        buildingExtrusionStyler?.extrudeBuildings(for: [(CLLocationCoordinate2D(latitude: 37.773240, longitude: -122.411911), .red)], extrudeAll: true)
         
         installUserCourseView()
     }
@@ -400,7 +399,13 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      Fired when NavigationMapView detects a tap not handled elsewhere by other gesture recognizers.
      */
     @objc func didRecieveTap(sender: UITapGestureRecognizer) {
-        guard let routes = routes, let tapPoint = sender.point else { return }
+        guard let tapPoint = sender.point else { return }
+        
+        buildingExtrusionStyler?.removeHighlights(extrudeAll: true)
+        let coordForPoint = self.convert(tapPoint, toCoordinateFrom: self)
+        buildingExtrusionStyler?.extrudeBuildings(for: [(coordForPoint, .red)], extrudeAll: true)
+        
+        guard let routes = routes else { return }
         
         let waypointTest = waypoints(on: routes, closeTo: tapPoint) //are there waypoints near the tapped location?
         if let selected = waypointTest?.first { //test passes
