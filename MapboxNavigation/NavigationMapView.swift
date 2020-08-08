@@ -235,9 +235,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     private lazy var routeGradient = [CGFloat: UIColor]()
     
     // Building extrusion related properties
-    private var extrudedBuildingFeatureIDs = [Int: UIColor]()
     private let regularBuildingPredicate = "extrude = 'true' && type = 'building' && underground = 'false'"
-    private var coordinateColorList: [(CLLocationCoordinate2D, UIColor)]?
     private var extrudedBuildingsFillColor: UIColor = UIColor.green
         
     //MARK: - Initalizers
@@ -397,7 +395,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         userCourseView.update(location: location, pitch: self.camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse)
     }
     
-    //MARK: -  Gesture Recognizers
+    //MARK: - Gesture Recognizers
     
     /**
      Fired when NavigationMapView detects a tap not handled elsewhere by other gesture recognizers.
@@ -405,7 +403,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     @objc func didRecieveTap(sender: UITapGestureRecognizer) {
         guard let tapPoint = sender.point else { return }
         
-        removeHighlights(extrudeAll: true)
+        removeHighlights()
         let coordForPoint = convert(tapPoint, toCoordinateFrom: self)
         extrude(for: [(coordForPoint, .red)], extrudeAll: true)
         
@@ -1427,7 +1425,6 @@ extension NavigationMapView {
     }
     
     public func showAllBuildings(color: UIColor, opacity: Float) {
-        extrudedBuildingFeatureIDs.removeAll()
         addStyleLayersIfNecessary()
         setOpacity(opacity: opacity)
         
@@ -1447,35 +1444,6 @@ extension NavigationMapView {
             (coordinate: $0.0, highlightColor: $0.1)
         }
         extrudeBuildingsWithVisibleFeatures(for: buildings, extrudeAll: extrudeAll)
-    }
-    
-    private func processFeatures(features: [[String: Any?]]) {
-        for featureDict in features {
-            var color = extrudedBuildingsFillColor
-            if let featureGeometry = featureDict["geometry"] as? [String: Any?],
-                let coordinateDict = featureGeometry["coordinates"] as? [Double] {
-                let longitude = coordinateDict[0]
-                let latitude = coordinateDict[1]
-                let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-                let colorEntry = coordinateColorList?.first(where: { (colorEntry) -> Bool in
-                    return colorEntry.0 == coordinate
-                })
-                if let colorValue = colorEntry?.1, let id = featureDict["id"] as? Int {
-                    color = colorValue
-                    self.extrudedBuildingFeatureIDs[id] = color
-                }
-            }
-            
-            // look for and append any parts of this building that are specified so we get the entire visual structure of some buildings such as the Ferry Building in SF. Make sure each part will be colored with the matching color
-            if let properties = featureDict["properties"] as? [String: Any?], let parts = properties["parts"] as? String, let firstCharacter = parts.first, let lastCharacter = parts.last, firstCharacter == "[", lastCharacter == "]" {
-                let substring = parts.dropLast().dropFirst()
-                let partFeatureIDStrings = substring.split(separator: ",")
-                let featureIDIntArray = partFeatureIDStrings.map { Int($0)!}
-                featureIDIntArray.forEach { featureID in
-                    self.extrudedBuildingFeatureIDs[featureID] = color
-                }
-            }
-        }
     }
     
     private func extrudeBuildingsWithVisibleFeatures(for buildings: [(coordinate: CLLocationCoordinate2D, highlightColor: UIColor)], extrudeAll: Bool) {
@@ -1503,25 +1471,7 @@ extension NavigationMapView {
         return nil
     }
     
-    public func remove() {
-        extrudedBuildingFeatureIDs.removeAll()
-        if let highlightedBuildingsLayer = style?.layer(withIdentifier: StyleLayerIdentifier.buildingExtrusion) as? MGLFillExtrusionStyleLayer {
-            style?.removeLayer(highlightedBuildingsLayer)
-        }
-        
-        // hide layers with identifiers: 'building-extrusion' & 'buildings-plus'
-        let buildingLayers = style?.layers.filter({ styleLayer -> Bool in
-            guard let layer = styleLayer as? MGLFillExtrusionStyleLayer, layer.sourceIdentifier == "composite", let sourceLayerIdentifier = layer.sourceLayerIdentifier, sourceLayerIdentifier.contains("building") else { return false }
-            return true
-        })
-        
-        buildingLayers?.forEach({ styleLayer in
-            styleLayer.isVisible = false
-        })
-    }
-    
-    public func removeHighlights(extrudeAll: Bool) {
-        extrudedBuildingFeatureIDs.removeAll()
+    public func removeHighlights() {
         showAllBuildings(color: extrudedBuildingsFillColor, opacity: 0.9)
     }
     
