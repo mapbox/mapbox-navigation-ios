@@ -139,10 +139,15 @@ class ViewController: UIViewController {
         
         destinationCoordinate = mapView.convert(tap.location(in: mapView), toCoordinateFrom: mapView)
         // Note: The destination name can be modified. The value is used in the top banner when arriving at a destination.
-        let waypoint = Waypoint(coordinate: destinationCoordinate!, name: "Dropped Pin #\(waypoints.endIndex + 1)")
-        waypoints.append(waypoint)
+        
+        if let destinationCoord = destinationCoordinate {
+            mapView.highlightBuildingExtrusion(for: destinationCoord)
+            
+            let waypoint = Waypoint(coordinate: destinationCoord, name: "Dropped Pin #\(waypoints.endIndex + 1)")
+            waypoints.append(waypoint)
 
-        requestRoute()
+            requestRoute()
+        }
     }
 
     // MARK: - IBActions
@@ -155,6 +160,7 @@ class ViewController: UIViewController {
         clearMap.isHidden = true
         mapView?.removeRoutes()
         mapView?.removeWaypoints()
+        mapView?.unhighlightBuildingExtrusions()
         waypoints.removeAll()
         longPressHintView.isHidden = false
     }
