@@ -46,6 +46,7 @@ class TokenTestViewController: UIViewController {
         
         DispatchQueue.global().async {
             
+            // waiting for MapView token to be extracted from a style request
             _ = self.semaphore.wait(timeout: .now() + 4)
 
             self.directionsToken = Directions.skuToken

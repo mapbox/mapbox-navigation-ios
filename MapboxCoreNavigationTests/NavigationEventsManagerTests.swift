@@ -75,6 +75,7 @@ class NavigationEventsManagerTests: XCTestCase {
             CLLocationCoordinate2D(latitude: 38.853108, longitude: -77.043331),
             CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
         ])
+        let eventTimeout = 0.3
         let route = Fixture.route(from: "DCA-Arboretum", options: routeOptions)
         let dataSource = MapboxNavigationService(route: route, routeOptions: routeOptions)
         let sessionState = SessionState(currentRoute: route, originalRoute: route)
@@ -87,7 +88,7 @@ class NavigationEventsManagerTests: XCTestCase {
             expectation.fulfill()
         }
         
-        wait(for: [expectation], timeout: 0.3)
+        wait(for: [expectation], timeout: eventTimeout)
         
         // Sanity check to verify that no issues occur when creating NavigationEventDetails from main queue.
         let _ = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: false)
