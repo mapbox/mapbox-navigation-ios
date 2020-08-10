@@ -45,10 +45,12 @@ class TokenTestViewController: UIViewController {
         super.viewDidLoad()
         
         DispatchQueue.global().async {
+            
+            // waiting for MapView token to be extracted from a style request
+            _ = self.semaphore.wait(timeout: .now() + 4)
+
             self.directionsToken = Directions.skuToken
             self.speechSynthesizerToken = SpeechSynthesizer.skuToken
-            
-            _ = self.semaphore.wait(timeout: .now() + 4)
             
             DispatchQueue.main.async {
                 OHHTTPStubs.removeAllStubs()

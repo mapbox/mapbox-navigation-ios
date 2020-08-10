@@ -144,6 +144,7 @@ class RouteMapViewController: UIViewController {
             }
             self?.showRouteIfNeeded()
             mapView.localizeLabels()
+            mapView.showsTraffic = false
         }
         
         makeGestureRecognizersResetFrameRate()

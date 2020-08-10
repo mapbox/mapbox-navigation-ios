@@ -22,9 +22,9 @@ extension UIColor {
     
     class var trafficUnknown: UIColor { get { return defaultRouteLayer } }
     class var trafficLow: UIColor { get { return defaultRouteLayer } }
-    class var trafficModerate: UIColor { get { return #colorLiteral(red: 0.9529411765, green: 0.6509803922, blue: 0.3098039216, alpha: 1) } }
-    class var trafficHeavy: UIColor { get { return #colorLiteral(red: 0.9137254902, green: 0.2, blue: 0.2509803922, alpha: 1) } }
-    class var trafficSevere: UIColor { get { return #colorLiteral(red: 0.5411764706, green: 0.05882352941, blue: 0.2196078431, alpha: 1) } }
+    class var trafficModerate: UIColor { get { return #colorLiteral(red: 1, green: 0.5843137255, blue: 0, alpha: 1) } }
+    class var trafficHeavy: UIColor { get { return #colorLiteral(red: 1, green: 0.3019607843, blue: 0.3019607843, alpha: 1) } }
+    class var trafficSevere: UIColor { get { return #colorLiteral(red: 0.5607843137, green: 0.1411764706, blue: 0.2784313725, alpha: 1) } }
     class var trafficAlternateLow: UIColor { get { return #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1) } }
 }
 
@@ -47,7 +47,8 @@ extension UIFont {
 open class DayStyle: Style {
     public required init() {
         super.init()
-        mapStyleURL = MGLStyle.navigationGuidanceDayStyleURL
+        mapStyleURL = MGLStyle.navigationDayStyleURL
+        previewMapStyleURL = mapStyleURL
         styleType = .day
         statusBarStyle = .default
     }
@@ -206,8 +207,8 @@ open class DayStyle: Style {
 open class NightStyle: DayStyle {
     public required init() {
         super.init()
-        mapStyleURL = MGLStyle.navigationGuidanceNightStyleURL
-        previewMapStyleURL = MGLStyle.navigationPreviewNightStyleURL
+        mapStyleURL = MGLStyle.navigationNightStyleURL
+        previewMapStyleURL = mapStyleURL
         styleType = .night
         statusBarStyle = .lightContent
     }
