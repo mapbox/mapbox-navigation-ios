@@ -22,8 +22,14 @@ custom_categories:
       - NavigationViewController
       - NavigationViewControllerDelegate
       - RouteVoiceController
-      - VoiceControllerDelegate
-      - MapboxVoiceController
+      - SpeechSynthesizing
+      - SpeechSynthesizingDelegate
+      - MapboxSpeechSynthesizer
+      - SystemSpeechSynthesizer
+      - MultiplexedSpeechSynthesizer
+      - SpeechError
+      - SpeechFailureAction
+      - SpokenInstructionErrorCode
       - NavigationOptions
       - NavigationView
   - name: Core Navigation Logic
@@ -37,21 +43,40 @@ custom_categories:
       - RouterDelegate
       - RouteProgress
       - RouteLegProgress
+      - RouteStep
       - RouteStepProgress
+      - CongestionLevel
+      - VisualInstruction
+      - VisualInstructionDelegate
       - NavigationEventsManager
       - EventsManagerDataSource
       - NavigationLocationManager
       - ReplayLocationManager
       - SimulatedLocationManager
       - NavigationRouteOptions
+      - RouteOptions
       - NavigationMatchOptions
       - NavigationDirections
+      - OfflineRoutingError
       - SimulationMode
   - name: Maps
     children:
       - NavigationMapView
       - NavigationMapViewDelegate
+      - NavigationMapViewCourseTrackingDelegate
       - MGLMapView
+      - MGLAccountManager
+      - MGLMultiPolygonFeature
+      - MGLMultiPolyline
+      - MGLMultiPolylineFeature
+      - MGLPointAnnotation
+      - MGLPointFeature
+      - MGLPolygon
+      - MGLPolygonFeature
+      - MGLPolyline
+      - MGLPolylineFeature
+      - MGLStyle
+      - MGLVectorTileSource
   - name: Styling
     children:
       - Style
@@ -112,3 +137,16 @@ custom_categories:
       - RouteSnappingMinimumHorizontalAccuracy
       - RouteSnappingMinimumSpeed
       - NavigationSettings
+  - name: User Feedback
+    children:
+      - FeedbackViewController
+      - FeedbackViewControllerDelegate
+      - FeedbackItem
+      - FeedbackType
+      - IncorrectVisualSubtype
+      - ConfusingAudioSubtype
+      - RouteQualitySubtype
+      - IllegalRouteSubtype
+      - RoadClosureSubtype
+      - FeedbackSource
+      - EndOfRouteFeedback

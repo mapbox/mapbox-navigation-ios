@@ -12,9 +12,18 @@ The Mapbox Navigation SDK and Core Navigation are compatible with applications w
 
 To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
 
+1. Go to your [Mapbox account dashboard](https://account.mapbox.com/) and create an access token that has the `DOWNLOADS:READ` scope. **PLEASE NOTE: This is not the same as your production Mapbox API token. Make sure to keep it private and do not insert it into any Info.plist file.** Create a file named `.netrc` in your home directory if it doesn’t already exist, then add the following lines to the end of the file:
+   ```
+   machine api.mapbox.com 
+     login mapbox
+     password PRIVATE_MAPBOX_API_TOKEN
+   ```
+   where _PRIVATE_MAPBOX_API_TOKEN_ is your Mapbox API token with the `DOWNLOADS:READ` scope. 
+
 1. Create a [Podfile](https://guides.cocoapods.org/syntax/podfile.html) with the following specification:
    ```ruby
-   pod 'MapboxNavigation', '~> ${MINOR_VERSION}'
+   pod 'MapboxCoreNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => '${MINOR_VERSION}'
+   pod 'MapboxNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => '${MINOR_VERSION}'
    ```
 
 1. Run `pod repo update && pod install` and open the resulting Xcode workspace.
@@ -23,18 +32,27 @@ To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
 
 Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/Carthage/Carthage/):
 
-1. Create a [Cartfile](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#binary-only-frameworks) with the following dependency:
-   ```cartfile
-   github "mapbox/mapbox-navigation-ios" ~> ${MINOR_VERSION}
+1. Go to your [Mapbox account dashboard](https://account.mapbox.com/) and create an access token that has the `DOWNLOADS:READ` scope. **PLEASE NOTE: This is not the same as your production Mapbox API token. Make sure to keep it private and do not insert it into any Info.plist file.** Create a file named `.netrc` in your home directory if it doesn’t already exist, then add the following lines to the end of the file:
+   ```
+   machine api.mapbox.com
+     login mapbox
+     password PRIVATE_MAPBOX_API_TOKEN
+   ```
+   where _PRIVATE_MAPBOX_API_TOKEN_ is your Mapbox API token with the `DOWNLOADS:READ` scope. 
+
+1. _(Optional)_ Clear your Carthage caches:
+   ```bash
+   rm -rf ~/Library/Caches/carthage/ ~/Library/Caches/org.carthage.CarthageKit/binaries/{MapboxAccounts,MapboxCommon-ios,MapboxNavigationNative,mapbox-ios-sdk-dynamic}
    ```
 
-1. Run `carthage update --platform iOS` to build just the iOS dependencies.
-
-1. Follow the rest of [Carthage’s iOS integration instructions](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos). Your application target’s Embedded Frameworks should include `MapboxNavigation.framework`, `MapboxCoreNavigation.framework`, and `MapboxNavigationNative.framework`.
+1. Create a [Cartfile](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#github-repositories) with the following dependency:
+   ```cartfile
+   github "mapbox/mapbox-navigation-ios" "${MINOR_VERSION}"
+   ```
 
 ## Configuration
 
-1. Mapbox APIs and vector tiles require a Mapbox account and API access token. In the project editor, select the application target, then go to the Info tab. Under the “Custom iOS Target Properties” section, set `MGLMapboxAccessToken` to your access token. You can obtain an access token from the [Mapbox account page](https://account.mapbox.com/access-tokens/).
+1. Mapbox APIs and vector tiles require a Mapbox account and API access token. In the project editor, select the application target, then go to the Info tab. Under the “Custom iOS Target Properties” section, set `MGLMapboxAccessToken` to your access token. You can obtain an access token from the [Mapbox account page](https://account.mapbox.com/access-tokens/). Usage of Mapbox APIs is [billed](https://www.mapbox.com/pricing/) together based on [monthly active users (MAU)](https://docs.mapbox.com/help/glossary/monthly-active-users/) rather than individually by HTTP request.
 
 1. In order for the SDK to track the user’s location as they move along the route, set `NSLocationWhenInUseUsageDescription` to:
    > Shows your location on the map and helps improve the map.
