@@ -609,12 +609,19 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 
     func fadeRoute(_ fractionTraveled: Double) {
         guard let mainRouteLayer = style?.layer(withIdentifier: StyleLayerIdentifier.mainRoute) as? MGLLineStyleLayer,
-            let mainRouteLayerLineGradient = lineGradient(routeGradientStops.line, fractionTraveled: fractionTraveled),
-            let mainRouteCasingLayer = style?.layer(withIdentifier: StyleLayerIdentifier.mainRouteCasing) as? MGLLineStyleLayer,
-            let mainRouteCasingLayerLineGradient = lineGradient(routeGradientStops.casing, fractionTraveled: fractionTraveled) else { return }
+            let mainRouteCasingLayer = style?.layer(withIdentifier: StyleLayerIdentifier.mainRouteCasing) as? MGLLineStyleLayer else { return }
         
-        mainRouteLayer.lineGradient = mainRouteLayerLineGradient
-        mainRouteCasingLayer.lineGradient = mainRouteCasingLayerLineGradient
+        // In case if route was fully travelled - remove main route and its casing.
+        if fractionTraveled == 1.0 {
+            style?.remove([mainRouteLayer, mainRouteCasingLayer])
+            return
+        }
+        
+        if let mainRouteLayerLineGradient = lineGradient(routeGradientStops.line, fractionTraveled: fractionTraveled),
+            let mainRouteCasingLayerLineGradient = lineGradient(routeGradientStops.casing, fractionTraveled: fractionTraveled) {
+            mainRouteLayer.lineGradient = mainRouteLayerLineGradient
+            mainRouteCasingLayer.lineGradient = mainRouteCasingLayerLineGradient
+        }
     }
     
     /**

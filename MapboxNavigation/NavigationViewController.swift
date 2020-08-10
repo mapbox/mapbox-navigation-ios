@@ -577,7 +577,12 @@ extension NavigationViewController: NavigationServiceDelegate {
         let advancesToNextLeg = componentsWantAdvance && (delegate?.navigationViewController(self, didArriveAt: waypoint) ?? defaultBehavior)
         
         if service.routeProgress.isFinalLeg && advancesToNextLeg && showsEndOfRouteFeedback {
-            showEndOfRouteFeedback()
+            showEndOfRouteFeedback { [weak self] _ in
+                self?.mapViewController?.updateMapViewContentInsets(animated: false)
+                self?.mapViewController?.mapView.updateCourseTracking(location: service.router.location,
+                                                                      animated: false)
+                self?.mapViewController?.mapView.setZoomLevel(17.0, animated: false)
+            }
         }
         return advancesToNextLeg
     }
