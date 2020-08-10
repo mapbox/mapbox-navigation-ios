@@ -1373,13 +1373,13 @@ extension NavigationMapView {
     }
     
     private func addStyleLayersIfNecessary() {
-        if let buildingsPlusSource = style?.source(withIdentifier: "composite") {
+        if let buildingsSource = style?.source(withIdentifier: "composite") {
             
             if let highlightedBuildingLayer = highlightedBuildingLayer {
                 style?.removeLayer(highlightedBuildingLayer)
             }
             
-            highlightedBuildingLayer = MGLFillExtrusionStyleLayer(identifier: StyleLayerIdentifier.buildingExtrusion, source: buildingsPlusSource)
+            highlightedBuildingLayer = MGLFillExtrusionStyleLayer(identifier: StyleLayerIdentifier.buildingExtrusion, source: buildingsSource)
             highlightedBuildingLayer?.sourceLayerIdentifier = "building"
             highlightedBuildingLayer?.fillExtrusionColor = NSExpression(forConstantValue: UIColor.white)
             highlightedBuildingLayer?.fillExtrusionHeightTransition = MGLTransition(duration: 0.8, delay: 0)
