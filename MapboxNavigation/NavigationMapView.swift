@@ -1368,7 +1368,7 @@ extension NavigationMapView {
 
 extension NavigationMapView {
     public func highlightBuildingExtrusion(for coordinate: CLLocationCoordinate2D) {
-        if let buildingId = buildingId(coordinate: coordinate) {
+        if let buildingId = buildingId(for: coordinate) {
             extrudeBuildings([(buildingId, buildingExtrusionColor)], extrudeAll: true)
         } else {
             unhighlightBuildingExtrusions()
@@ -1398,18 +1398,23 @@ extension NavigationMapView {
         }
     }
 
-    private func buildingId(coordinate: CLLocationCoordinate2D) -> Int? {
+    private func buildingId(for coordinate: CLLocationCoordinate2D) -> UInt64? {
         let screenCoordinate = convert(coordinate, toPointTo: self)
-        let features = visibleFeatures(at: screenCoordinate)
+
+        let features = visibleFeatures(at: screenCoordinate).filter {
+            let extrude = $0.attribute(forKey: "extrude") as? String
+            let type = $0.attribute(forKey: "type") as? String
+            return extrude == "true" && type == "building"
+        }
         
-        if let feature = features.first, let buildingId = feature.identifier as? Int {
+        if let feature = features.first, let buildingId = feature.identifier as? UInt64 {
             return buildingId
         }
         
         return nil
     }
     
-    private func extrudeBuildings(_ buildings: [(Int, UIColor)], extrudeAll: Bool) {
+    private func extrudeBuildings(_ buildings: [(UInt64, UIColor)], extrudeAll: Bool) {
         guard buildings.count > 0 else {
             return
         }
