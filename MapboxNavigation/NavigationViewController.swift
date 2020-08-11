@@ -149,7 +149,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     
     public var highlightDestinationBuildings: Bool = false {
         didSet {
-            highlightDestinationBuildings ? mapView?.showBuildings() : mapView?.hideBuildings()
+            highlightDestinationBuildings ? mapView?.showAllBuildings() : mapView?.hideAllBuildings()
+            mapViewController?.highlightDestinationBuildings = highlightDestinationBuildings
         }
     }
     
@@ -160,6 +161,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
             return false
         }
     }
+    var buildingHighlightCoordinates: [CLLocationCoordinate2D] = []
     
     var mapViewController: RouteMapViewController?
     
@@ -266,7 +268,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
             print("`Route` was created using `RouteOptions` and not `NavigationRouteOptions`. Although not required, this may lead to a suboptimal navigation experience. Without `NavigationRouteOptions`, it is not guaranteed you will get congestion along the route line, better ETAs and ETA label color dependent on congestion.")
         }
         
-        mapViewController.mapView.delegate = self
+        buildingHighlightCoordinates = routeOptions.waypoints.compactMap { $0.targetCoordinate ?? $0.coordinate }
     }
     
     /**
@@ -594,8 +596,7 @@ extension NavigationViewController: NavigationServiceDelegate {
         guard let mapController = mapViewController else { return }
         mapController.showEndOfRoute(duration: duration, completion: completionHandler)
         if highlightDestinationBuildings {
-            let coordinates = routeOptions.waypoints.compactMap { $0.targetCoordinate }
-            mapController.mapView.highlightBuildings(for: coordinates)
+            mapController.mapView.highlightBuildings(for: buildingHighlightCoordinates)
         }
     }
 
@@ -675,9 +676,6 @@ extension NavigationViewController: StyleManagerDelegate {
     
     public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
         mapView?.reloadStyle(self)
-        if highlightDestinationBuildings {
-            mapView?.showBuildings()
-        }
     }
 }
 // MARK: - TopBannerViewController
@@ -797,16 +795,6 @@ extension NavigationViewController: CarPlayConnectionObserver {
     public func didDisconnectFromCarPlay() {
         navigationComponents.compactMap({$0 as? CarPlayConnectionObserver}).forEach {
             $0.didDisconnectFromCarPlay()
-        }
-    }
-}
-
-// MARK: - MGLMapViewDelegate
-
-extension NavigationViewController: MGLMapViewDelegate {
-    public func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
-        if highlightDestinationBuildings {
-            self.mapView?.showBuildings()
         }
     }
 }

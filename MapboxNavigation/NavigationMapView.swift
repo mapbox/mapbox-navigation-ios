@@ -1367,47 +1367,41 @@ extension NavigationMapView {
 
 // MARK: - Building Extrusion Highlights
 
-public struct BuildingHighlightStatus {
-    var location: CLLocationCoordinate2D
-    var highlighted: Bool = false
-}
-
 private struct BuildingHighlightAttributes {
-    var location: CLLocationCoordinate2D
+    var location: CLLocationCoordinate2D = kCLLocationCoordinate2DInvalid
     var highlightColor: UIColor = .defaultBuildingHighlightColor
-    var identifier: Int64 = -1
+    var identifier: UInt64? = nil
 }
 
 extension NavigationMapView {
        
-    public func highlightBuildings(for coordinates: [CLLocationCoordinate2D]) -> [BuildingHighlightStatus] {
+    public func highlightBuildings(for coordinates: [CLLocationCoordinate2D]) {
         let attributes = coordinates.map { BuildingHighlightAttributes(location: $0, highlightColor: buildingHighlightColor) }
-        return highlightBuildings(for: attributes)
+        highlightBuildings(with: attributes)
     }
     
-    private func highlightBuildings(for attributes: [BuildingHighlightAttributes]) -> [BuildingHighlightStatus] {
+    private func highlightBuildings(with attributes: [BuildingHighlightAttributes]) {
         let buildingAttributes = attributes.map {(value) -> BuildingHighlightAttributes in
             var output = value
-            if output.identifier == -1 {
+            if output.identifier == nil {
                 output.identifier = buildingId(coordinate: value.location)
             }
             return output
         }
-        let buildingsToHighlight = buildingAttributes.filter { $0.identifier > -1 }.map {($0.identifier, $0.highlightColor)}
-        let buildingHighlightStatus = buildingAttributes.map { BuildingHighlightStatus(location: $0.location, highlighted: $0.identifier > -1)}
+        let buildingsToHighlight = buildingAttributes.filter { $0.identifier != nil }.map {($0.identifier!, $0.highlightColor)}
         if buildingsToHighlight.count > 0 {
             highlightBuildings(buildingsToHighlight, extrudeAll: true)
         } else {
             unhighlightBuildings()
         }
-        return buildingHighlightStatus
     }
     
     public func unhighlightBuildings() {
-        highlightBuildings([(-1, buildingColor)], extrudeAll: true)
+// FIXME: Change 0 to nil. Add support for nil to the `highlightBuildings` function.
+        highlightBuildings([(0, buildingColor)], extrudeAll: true)
     }
     
-    public func showBuildings() {
+    public func showAllBuildings() {
         guard highlightedBuildingLayer == nil else { return }
         
         if let buildingsSource = style?.source(withIdentifier: "composite") {
@@ -1425,14 +1419,14 @@ extension NavigationMapView {
         unhighlightBuildings()
     }
     
-    public func hideBuildings() {
+    public func hideAllBuildings() {
         if let highlightedBuildingLayer = highlightedBuildingLayer {
             style?.removeLayer(highlightedBuildingLayer)
             self.highlightedBuildingLayer = nil
         }
     }
 
-    private func buildingId(coordinate: CLLocationCoordinate2D) -> Int64 {
+    private func buildingId(coordinate: CLLocationCoordinate2D) -> UInt64? {
         let screenCoordinate = convert(coordinate, toPointTo: self)
 
         let features = visibleFeatures(at: screenCoordinate).filter {
@@ -1441,14 +1435,14 @@ extension NavigationMapView {
             return extrude == "true" && type == "building"
         }
         
-        if let feature = features.first, let buildingId = feature.identifier as? Int64 {
+        if let feature = features.first, let buildingId = feature.identifier as? UInt64 {
             return buildingId
         }
         
-        return -1
+        return nil
     }
     
-    private func highlightBuildings(_ buildings: [(Int64, UIColor)], extrudeAll: Bool) {
+    private func highlightBuildings(_ buildings: [(UInt64, UIColor)], extrudeAll: Bool) {
         guard buildings.count > 0 else {
             return
         }
