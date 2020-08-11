@@ -149,8 +149,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     
     public var highlightDestinationBuildings: Bool = false {
         didSet {
-            highlightDestinationBuildings ? mapView?.showAllBuildings() : mapView?.hideAllBuildings()
-            mapViewController?.highlightDestinationBuildings = highlightDestinationBuildings
+            mapView?.highlightDestinationBuildings = highlightDestinationBuildings
         }
     }
     

@@ -237,7 +237,12 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     private lazy var routeGradient = [CGFloat: UIColor]()
     
     // Building extrusion related properties
+    public var highlightDestinationBuildings: Bool = false
+    
+    private lazy var highlightedBuildingFootprintLayer: MGLFillExtrusionStyleLayer? = nil
     private lazy var highlightedBuildingLayer: MGLFillExtrusionStyleLayer? = nil
+    
+    private lazy var styleObservation: NSKeyValueObservation? = nil
     
     //MARK: - Initalizers
     
@@ -295,6 +300,15 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         //If the map is in tracking mode, make sure we update the camera after the layout pass.
         if (tracksUserCourse) {
             updateCourseTracking(location: userLocationForCourseTracking, camera:self.camera, animated: false)
+        }
+        
+        styleObservation = self.observe(\.style, options: .new) { [weak self] (mapView, change) in
+            guard change.newValue != nil else {
+                return
+            }
+            if self?.highlightDestinationBuildings == true {
+                self?.showAllBuildings()
+            }
         }
     }
     
@@ -1401,13 +1415,14 @@ extension NavigationMapView {
         highlightBuildings([(0, buildingColor)], extrudeAll: true)
     }
     
-    public func showAllBuildings() {
+    private func showAllBuildings() {
         guard highlightedBuildingLayer == nil else { return }
         
         if let buildingsSource = style?.source(withIdentifier: "composite") {
             highlightedBuildingLayer = MGLFillExtrusionStyleLayer(identifier: StyleLayerIdentifier.buildingExtrusion, source: buildingsSource)
             highlightedBuildingLayer?.sourceLayerIdentifier = "building"
             highlightedBuildingLayer?.fillExtrusionColor = NSExpression(forConstantValue: buildingColor)
+            highlightedBuildingLayer?.fillExtrusionOpacity = NSExpression(forConstantValue: 0.05)
             highlightedBuildingLayer?.fillExtrusionHeightTransition = MGLTransition(duration: 0.8, delay: 0)
             highlightedBuildingLayer?.fillExtrusionOpacityTransition = MGLTransition(duration: 0.8, delay: 0)
   
@@ -1415,8 +1430,6 @@ extension NavigationMapView {
                 style?.addLayer(highlightedBuildingLayer)
             }
         }
-        
-        unhighlightBuildings()
     }
     
     public func hideAllBuildings() {

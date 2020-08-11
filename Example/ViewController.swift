@@ -99,6 +99,7 @@ class ViewController: UIViewController {
         
         if mapView == nil {
             mapView = NavigationMapView(frame: view.bounds)
+            mapView?.highlightDestinationBuildings = true
         }
         
         // Reset the navigation styling to the defaults if we are returning from a presentation.
@@ -382,7 +383,6 @@ extension ViewController: MGLMapViewDelegate {
         }
         
         self.mapView?.localizeLabels()
-        self.mapView?.showAllBuildings()
         
         if let routes = response?.routes, let currentRoute = routes.first, let coords = currentRoute.shape?.coordinates {
             mapView.setVisibleCoordinateBounds(MGLPolygon(coordinates: coords, count: UInt(coords.count)).overlayBounds, animated: false)
