@@ -49,8 +49,6 @@ class ViewController: UIViewController {
         }
     }
     
-    var destinationCoordinate: CLLocationCoordinate2D?
-    
     weak var activeNavigationViewController: NavigationViewController?
 
     // MARK: Directions Request Handlers
@@ -136,18 +134,17 @@ class ViewController: UIViewController {
         if waypoints.count > 1 {
             waypoints = Array(waypoints.dropFirst())
         }
-        
-        destinationCoordinate = mapView.convert(tap.location(in: mapView), toCoordinateFrom: mapView)
-        // Note: The destination name can be modified. The value is used in the top banner when arriving at a destination.
-        
-        if let destinationCoord = destinationCoordinate {
-            mapView.highlightBuildingExtrusion(for: destinationCoord)
             
-            let waypoint = Waypoint(coordinate: destinationCoord, name: "Dropped Pin #\(waypoints.endIndex + 1)")
-            waypoints.append(waypoint)
+        let destinationCoord = mapView.convert(tap.location(in: mapView), toCoordinateFrom: mapView)
+        // Note: The destination name can be modified. The value is used in the top banner when arriving at a destination.
+        let waypoint = Waypoint(coordinate: destinationCoord, name: "Dropped Pin #\(waypoints.endIndex + 1)")
+        waypoint.targetCoordinate = destinationCoord
+        waypoints.append(waypoint)
+    
+        let buildingHighlightCoordinates = waypoints.compactMap { $0.targetCoordinate }
+        mapView.highlightBuildings(for: buildingHighlightCoordinates)
 
-            requestRoute()
-        }
+        requestRoute()
     }
 
     // MARK: - IBActions
@@ -160,7 +157,7 @@ class ViewController: UIViewController {
         clearMap.isHidden = true
         mapView?.removeRoutes()
         mapView?.removeWaypoints()
-        mapView?.unhighlightBuildingExtrusions()
+        mapView?.unhighlightBuildings()
         waypoints.removeAll()
         longPressHintView.isHidden = false
     }
@@ -239,13 +236,15 @@ class ViewController: UIViewController {
     func startBasicNavigation() {
         guard let response = response, let route = response.routes?.first, case let .route(routeOptions) = response.options else { return }
         
+        let waypoints = routeOptions.waypoints
+        
         let service = navigationService(route: route, options: routeOptions)
         let navigationViewController = self.navigationViewController(navigationService: service)
         
         // Render part of the route that has been traversed with full transparency, to give the illusion of a disappearing route.
         navigationViewController.mapView?.routeLineTracksTraversal = true
         
-        navigationViewController.buildingExtrusionCoordinate = destinationCoordinate
+        navigationViewController.highlightDestinationBuildings = true
         
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
@@ -257,7 +256,7 @@ class ViewController: UIViewController {
         let navigationViewController = NavigationViewController(for: route, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
         
-        navigationViewController.buildingExtrusionCoordinate = destinationCoordinate
+        navigationViewController.highlightDestinationBuildings = true
         
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
@@ -267,7 +266,7 @@ class ViewController: UIViewController {
         
         let navigationViewController = NavigationViewController(for: navigationService.route, routeOptions: navigationService.routeProgress.routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
-        navigationViewController.mapView?.delegate = self
+//        navigationViewController.mapView?.delegate = self
         return navigationViewController
     }
     
@@ -385,6 +384,7 @@ extension ViewController: MGLMapViewDelegate {
         }
         
         self.mapView?.localizeLabels()
+        self.mapView?.showBuildings()
         
         if let routes = response?.routes, let currentRoute = routes.first, let coords = currentRoute.shape?.coordinates {
             mapView.setVisibleCoordinateBounds(MGLPolygon(coordinates: coords, count: UInt(coords.count)).overlayBounds, animated: false)
