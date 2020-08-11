@@ -1480,7 +1480,6 @@ extension NavigationMapView {
             
             highlightedBuildingColorExpression += "%@)"
             
-            // TODO: Verify whether extrusion only for specific building or all buildings is required.
             colorsList.append(buildingColor)
             
             if extrudeAll == true {
