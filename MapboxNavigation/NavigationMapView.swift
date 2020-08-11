@@ -238,6 +238,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     
     // Building extrusion related properties
     public var highlightDestinationBuildings: Bool = false
+    public var showAllBuildings: Bool = true
     
     private lazy var highlightedBuildingFootprintLayer: MGLFillExtrusionStyleLayer? = nil
     private lazy var highlightedBuildingLayer: MGLFillExtrusionStyleLayer? = nil
@@ -307,7 +308,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 return
             }
             if self?.highlightDestinationBuildings == true {
-                self?.showAllBuildings()
+                self?.prepareBuildingsForQuerying()
             }
         }
     }
@@ -1404,7 +1405,7 @@ extension NavigationMapView {
         }
         let buildingsToHighlight = buildingAttributes.filter { $0.identifier != nil }.map {($0.identifier!, $0.highlightColor)}
         if buildingsToHighlight.count > 0 {
-            highlightBuildings(buildingsToHighlight, extrudeAll: true)
+            highlightBuildings(buildingsToHighlight, extrudeAll: showAllBuildings)
         } else {
             unhighlightBuildings()
         }
@@ -1412,10 +1413,10 @@ extension NavigationMapView {
     
     public func unhighlightBuildings() {
 // FIXME: Change 0 to nil. Add support for nil to the `highlightBuildings` function.
-        highlightBuildings([(0, buildingColor)], extrudeAll: true)
+        highlightBuildings([(0, buildingColor)], extrudeAll: showAllBuildings)
     }
     
-    private func showAllBuildings() {
+    private func prepareBuildingsForQuerying() {
         guard highlightedBuildingLayer == nil else { return }
         
         if let buildingsSource = style?.source(withIdentifier: "composite") {
@@ -1432,7 +1433,7 @@ extension NavigationMapView {
         }
     }
     
-    public func hideAllBuildings() {
+    private func removeBuildingsLayer() {
         if let highlightedBuildingLayer = highlightedBuildingLayer {
             style?.removeLayer(highlightedBuildingLayer)
             self.highlightedBuildingLayer = nil
