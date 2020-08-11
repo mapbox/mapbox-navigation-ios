@@ -238,7 +238,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     
     // Building extrusion related properties
     public var highlightDestinationBuildings: Bool = false
-    public var showAllBuildings: Bool = true
+    private var shouldShowAllBuildings: Bool = true
     
     private lazy var highlightedBuildingFootprintLayer: MGLFillExtrusionStyleLayer? = nil
     private lazy var highlightedBuildingLayer: MGLFillExtrusionStyleLayer? = nil
@@ -1395,6 +1395,21 @@ extension NavigationMapView {
         highlightBuildings(with: attributes)
     }
     
+    public func unhighlightBuildings() {
+    // FIXME: Change 0 to nil. Add support for nil to the `highlightBuildings` function.
+        highlightBuildings([(0, buildingColor)], extrudeAll: shouldShowAllBuildings)
+    }
+    
+    public func showAllBuildings() {
+        shouldShowAllBuildings = true
+        unhighlightBuildings()
+    }
+    
+    public func hideAllBuildings() {
+        shouldShowAllBuildings = false
+        removeBuildingsLayer()
+    }
+    
     private func highlightBuildings(with attributes: [BuildingHighlightAttributes]) {
         let buildingAttributes = attributes.map {(value) -> BuildingHighlightAttributes in
             var output = value
@@ -1405,15 +1420,10 @@ extension NavigationMapView {
         }
         let buildingsToHighlight = buildingAttributes.filter { $0.identifier != nil }.map {($0.identifier!, $0.highlightColor)}
         if buildingsToHighlight.count > 0 {
-            highlightBuildings(buildingsToHighlight, extrudeAll: showAllBuildings)
+            highlightBuildings(buildingsToHighlight, extrudeAll: shouldShowAllBuildings)
         } else {
             unhighlightBuildings()
         }
-    }
-    
-    public func unhighlightBuildings() {
-// FIXME: Change 0 to nil. Add support for nil to the `highlightBuildings` function.
-        highlightBuildings([(0, buildingColor)], extrudeAll: showAllBuildings)
     }
     
     private func prepareBuildingsForQuerying() {
