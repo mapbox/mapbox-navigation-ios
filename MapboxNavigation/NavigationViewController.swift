@@ -147,10 +147,11 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      */
     public var shouldManageApplicationIdleTimer = true
     
-    /**
-     Coordinate which is used to determine what associated building extrusion should be highlighted.
-     */
-    public var buildingExtrusionCoordinate: CLLocationCoordinate2D? = nil
+    public var highlightDestinationBuildings: Bool = false {
+        didSet {
+            mapView?.highlightDestinationBuildings = highlightDestinationBuildings
+        }
+    }
     
     var isConnectedToCarPlay: Bool {
         if #available(iOS 12.0, *) {
@@ -159,6 +160,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
             return false
         }
     }
+    var buildingHighlightCoordinates: [CLLocationCoordinate2D] = []
     
     var mapViewController: RouteMapViewController?
     
@@ -264,6 +266,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         if !(routeOptions is NavigationRouteOptions) {
             print("`Route` was created using `RouteOptions` and not `NavigationRouteOptions`. Although not required, this may lead to a suboptimal navigation experience. Without `NavigationRouteOptions`, it is not guaranteed you will get congestion along the route line, better ETAs and ETA label color dependent on congestion.")
         }
+        
+        buildingHighlightCoordinates = routeOptions.waypoints.compactMap { $0.targetCoordinate ?? $0.coordinate }
     }
     
     /**
@@ -590,8 +594,8 @@ extension NavigationViewController: NavigationServiceDelegate {
     public func showEndOfRouteFeedback(duration: TimeInterval = 1.0, completionHandler: ((Bool) -> Void)? = nil) {
         guard let mapController = mapViewController else { return }
         mapController.showEndOfRoute(duration: duration, completion: completionHandler)
-        if let buildingExtrusionCoordinate = buildingExtrusionCoordinate {
-            mapController.mapView.highlightBuildingExtrusion(for: buildingExtrusionCoordinate)
+        if highlightDestinationBuildings {
+            mapController.mapView.highlightBuildings(for: buildingHighlightCoordinates)
         }
     }
 

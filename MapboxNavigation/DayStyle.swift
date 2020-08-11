@@ -27,7 +27,8 @@ extension UIColor {
     class var trafficSevere: UIColor { get { return #colorLiteral(red: 0.5607843137, green: 0.1411764706, blue: 0.2784313725, alpha: 1) } }
     class var trafficAlternateLow: UIColor { get { return #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1) } }
     
-    class var defaultBuildingExtrusionColor: UIColor { get { return #colorLiteral(red: 0.337254902, green: 0.6588235294, blue: 0.9843137255, alpha: 1) } }
+    class var defaultBuildingColor: UIColor { get { return #colorLiteral(red: 0.9833194452, green: 0.9843137255, blue: 0.9331936657, alpha: 0.8019049658) } }
+    class var defaultBuildingHighlightColor: UIColor { get { return #colorLiteral(red: 0.337254902, green: 0.6588235294, blue: 0.9843137255, alpha: 0.949406036) } }
 }
 
 extension UIColor {
@@ -147,7 +148,8 @@ open class DayStyle: Style {
         NavigationMapView.appearance().trafficModerateColor = .trafficModerate
         NavigationMapView.appearance().trafficSevereColor = .trafficSevere
         NavigationMapView.appearance().trafficUnknownColor = .trafficUnknown
-        NavigationMapView.appearance().buildingExtrusionColor = .defaultBuildingExtrusionColor
+        NavigationMapView.appearance().buildingColor = .defaultBuildingColor
+        NavigationMapView.appearance().buildingHighlightColor = .defaultBuildingHighlightColor
         NavigationView.appearance().backgroundColor = #colorLiteral(red: 0.764706, green: 0.752941, blue: 0.733333, alpha: 1)
         NextBannerView.appearance().backgroundColor = #colorLiteral(red: 0.9675388083, green: 0.9675388083, blue: 0.9675388083, alpha: 1)
         NextBannerView.appearance(whenContainedInInstancesOf:[InstructionsCardContainerView.self]).backgroundColor = #colorLiteral(red: 0.9675388083, green: 0.9675388083, blue: 0.9675388083, alpha: 1)
@@ -259,7 +261,8 @@ open class NightStyle: DayStyle {
         ManeuverView.appearance(whenContainedInInstancesOf: [StepInstructionsView.self]).primaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         ManeuverView.appearance(whenContainedInInstancesOf: [StepInstructionsView.self]).secondaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.3)
         NavigationMapView.appearance().routeAlternateColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
-        NavigationMapView.appearance().buildingExtrusionColor = #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)
+        NavigationMapView.appearance().buildingColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        NavigationMapView.appearance().buildingHighlightColor = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
         NavigationView.appearance().backgroundColor = #colorLiteral(red: 0.0470588, green: 0.0509804, blue: 0.054902, alpha: 1)
         NextBannerView.appearance().backgroundColor = #colorLiteral(red: 0.103291966, green: 0.1482483149, blue: 0.2006777823, alpha: 1)
         NextInstructionLabel.appearance().normalTextColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)

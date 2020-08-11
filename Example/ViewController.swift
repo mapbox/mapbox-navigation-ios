@@ -49,8 +49,6 @@ class ViewController: UIViewController {
         }
     }
     
-    var destinationCoordinate: CLLocationCoordinate2D?
-    
     weak var activeNavigationViewController: NavigationViewController?
 
     // MARK: Directions Request Handlers
@@ -101,6 +99,7 @@ class ViewController: UIViewController {
         
         if mapView == nil {
             mapView = NavigationMapView(frame: view.bounds)
+            mapView?.highlightDestinationBuildings = true
         }
         
         // Reset the navigation styling to the defaults if we are returning from a presentation.
@@ -136,18 +135,17 @@ class ViewController: UIViewController {
         if waypoints.count > 1 {
             waypoints = Array(waypoints.dropFirst())
         }
-        
-        destinationCoordinate = mapView.convert(tap.location(in: mapView), toCoordinateFrom: mapView)
-        // Note: The destination name can be modified. The value is used in the top banner when arriving at a destination.
-        
-        if let destinationCoord = destinationCoordinate {
-            mapView.highlightBuildingExtrusion(for: destinationCoord)
             
-            let waypoint = Waypoint(coordinate: destinationCoord, name: "Dropped Pin #\(waypoints.endIndex + 1)")
-            waypoints.append(waypoint)
+        let destinationCoord = mapView.convert(tap.location(in: mapView), toCoordinateFrom: mapView)
+        // Note: The destination name can be modified. The value is used in the top banner when arriving at a destination.
+        let waypoint = Waypoint(coordinate: destinationCoord, name: "Dropped Pin #\(waypoints.endIndex + 1)")
+        waypoint.targetCoordinate = destinationCoord
+        waypoints.append(waypoint)
+    
+        let buildingHighlightCoordinates = waypoints.compactMap { $0.targetCoordinate }
+        mapView.highlightBuildings(for: buildingHighlightCoordinates)
 
-            requestRoute()
-        }
+        requestRoute()
     }
 
     // MARK: - IBActions
@@ -160,7 +158,7 @@ class ViewController: UIViewController {
         clearMap.isHidden = true
         mapView?.removeRoutes()
         mapView?.removeWaypoints()
-        mapView?.unhighlightBuildingExtrusions()
+        mapView?.unhighlightBuildings()
         waypoints.removeAll()
         longPressHintView.isHidden = false
     }
@@ -245,7 +243,7 @@ class ViewController: UIViewController {
         // Render part of the route that has been traversed with full transparency, to give the illusion of a disappearing route.
         navigationViewController.mapView?.routeLineTracksTraversal = true
         
-        navigationViewController.buildingExtrusionCoordinate = destinationCoordinate
+        navigationViewController.highlightDestinationBuildings = true
         
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
@@ -257,7 +255,7 @@ class ViewController: UIViewController {
         let navigationViewController = NavigationViewController(for: route, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
         
-        navigationViewController.buildingExtrusionCoordinate = destinationCoordinate
+        navigationViewController.highlightDestinationBuildings = true
         
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
