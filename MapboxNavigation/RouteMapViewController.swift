@@ -98,8 +98,6 @@ class RouteMapViewController: UIViewController {
     typealias LabelRoadNameCompletionHandler = (_ defaultRaodNameAssigned: Bool) -> Void
 
     var labelRoadNameCompletionHandler: (LabelRoadNameCompletionHandler)?
-    
-    var highlightDestinationBuildings: Bool = false
 
     convenience init(navigationService: NavigationService, delegate: RouteMapViewControllerDelegate? = nil, topBanner: ContainerViewController, bottomBanner: ContainerViewController) {
         self.init()
@@ -147,9 +145,6 @@ class RouteMapViewController: UIViewController {
             self?.showRouteIfNeeded()
             mapView.localizeLabels()
             mapView.showsTraffic = false
-            if self?.highlightDestinationBuildings == true {
-                mapView.showAllBuildings()
-            }
         }
         
         makeGestureRecognizersResetFrameRate()
