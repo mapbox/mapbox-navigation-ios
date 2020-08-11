@@ -236,8 +236,6 @@ class ViewController: UIViewController {
     func startBasicNavigation() {
         guard let response = response, let route = response.routes?.first, case let .route(routeOptions) = response.options else { return }
         
-        let waypoints = routeOptions.waypoints
-        
         let service = navigationService(route: route, options: routeOptions)
         let navigationViewController = self.navigationViewController(navigationService: service)
         
@@ -266,7 +264,7 @@ class ViewController: UIViewController {
         
         let navigationViewController = NavigationViewController(for: navigationService.route, routeOptions: navigationService.routeProgress.routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
-//        navigationViewController.mapView?.delegate = self
+        navigationViewController.mapView?.delegate = self
         return navigationViewController
     }
     
@@ -384,7 +382,7 @@ extension ViewController: MGLMapViewDelegate {
         }
         
         self.mapView?.localizeLabels()
-        self.mapView?.showBuildings()
+        self.mapView?.showAllBuildings()
         
         if let routes = response?.routes, let currentRoute = routes.first, let coords = currentRoute.shape?.coordinates {
             mapView.setVisibleCoordinateBounds(MGLPolygon(coordinates: coords, count: UInt(coords.count)).overlayBounds, animated: false)
