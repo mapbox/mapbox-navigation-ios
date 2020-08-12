@@ -238,7 +238,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     
     // Building extrusion related properties
     public var highlightDestinationBuildings: Bool = false
-    private var shouldShowAllBuildings: Bool = true
+    private var shouldShowAllBuildings: Bool = false
     
     private lazy var highlightedBuildingFootprintLayer: MGLFillExtrusionStyleLayer? = nil
     private lazy var highlightedBuildingLayer: MGLFillExtrusionStyleLayer? = nil
@@ -417,8 +417,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      Fired when NavigationMapView detects a tap not handled elsewhere by other gesture recognizers.
      */
     @objc func didRecieveTap(sender: UITapGestureRecognizer) {
-        guard let tapPoint = sender.point else { return }
-        guard let routes = routes else { return }
+        guard let routes = routes, let tapPoint = sender.point else { return }
         
         let waypointTest = waypoints(on: routes, closeTo: tapPoint) //are there waypoints near the tapped location?
         if let selected = waypointTest?.first { //test passes
@@ -1396,8 +1395,7 @@ extension NavigationMapView {
     }
     
     public func unhighlightBuildings() {
-    // FIXME: Change 0 to nil. Add support for nil to the `highlightBuildings` function.
-        highlightBuildings([(0, buildingColor)], extrudeAll: shouldShowAllBuildings)
+        highlightBuildings(nil, extrudeAll: shouldShowAllBuildings)
     }
     
     public func showAllBuildings() {
@@ -1466,51 +1464,29 @@ extension NavigationMapView {
         return nil
     }
     
-    private func highlightBuildings(_ buildings: [(UInt64, UIColor)], extrudeAll: Bool) {
-        guard buildings.count > 0 else {
-            return
-        }
-        
+    private func highlightBuildings(_ buildings: [(identifier: UInt64, highlightColor: UIColor)]?, extrudeAll: Bool) {
         if let highlightedBuildingFillExtrusionLayer = style?.layer(withIdentifier: StyleLayerIdentifier.buildingExtrusion) as? MGLFillExtrusionStyleLayer {
-            var predicate = "extrude = 'true' && type = 'building' && underground = 'false'"
-            if extrudeAll == false {
-                // form a predicate to filter out the other buildings from the datasource so only the desired ones are included
-                var identifiersBoolean = "($featureIdentifier == \(buildings.first!.0)"
-                
-                if buildings.count > 1 {
-                    for building in buildings[1...buildings.count-1] {
-                        identifiersBoolean += " || $featureIdentifier == \(building.0)"
-                    }
-                }
-                
-                identifiersBoolean += ")"
-                
-                predicate += " && \(identifiersBoolean)"
+            if extrudeAll || buildings == nil {
+                highlightedBuildingFillExtrusionLayer.predicate = NSPredicate(format: "extrude = 'true' AND type = 'building' AND underground = 'false'")
+            } else {
+                // Form a predicate to filter out the other buildings from the datasource so only the desired ones are included.
+                highlightedBuildingFillExtrusionLayer.predicate = NSPredicate(format: "extrude = 'true' AND type = 'building' AND underground = 'false' AND $featureIdentifier IN %@", buildings!.map { $0.identifier })
             }
-            
-            highlightedBuildingFillExtrusionLayer.predicate = NSPredicate(format: predicate)
             
             // we have some specific building IDs that we will be the highlight color
             // the rest of the buildings will be extruded but kept at a uniform color
-            var colorsList = [UIColor]()
-            var highlightedBuildingHeightExpression = "MGL_MATCH($featureIdentifier, "
-            var highlightedBuildingColorExpression = "MGL_MATCH($featureIdentifier, "
             
-            for building in buildings {
-                highlightedBuildingHeightExpression += "\(building.0), height, "
-                highlightedBuildingColorExpression += "\(building.0), %@, "
-                colorsList.append(building.1)
+            var highlightedBuildingHeightExpression = "MGL_MATCH($featureIdentifier, -1, height, \(extrudeAll ? "height" : "0"))"
+            var highlightedBuildingColorExpression = "MGL_MATCH($featureIdentifier, -1, %@, %@)"
+            var colorsList: [UIColor] = [.green]
+            
+            if let buildings = buildings {
+                highlightedBuildingHeightExpression = "MGL_MATCH($featureIdentifier, \(buildings.map { "\($0.identifier), height, " } .joined(separator: ""))\(extrudeAll ? "height" : "0"))"
+                highlightedBuildingColorExpression = "MGL_MATCH($featureIdentifier, \(buildings.map { "\($0.identifier), %@, " }.joined(separator: ""))%@)"
+                colorsList = buildings.map { $0.highlightColor }
             }
-            
-            highlightedBuildingColorExpression += "%@)"
             
             colorsList.append(buildingColor)
-            
-            if extrudeAll == true {
-                highlightedBuildingHeightExpression += "height)"
-            } else {
-                highlightedBuildingHeightExpression += "0)"
-            }
             
             let fillExtrusionHeightStops = [0: NSExpression(forConstantValue: 0),
                                             13: NSExpression(forConstantValue: 0),
