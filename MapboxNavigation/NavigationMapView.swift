@@ -237,6 +237,12 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     private lazy var routeGradient = [CGFloat: UIColor]()
     
     // Building extrusion related properties
+    
+    /**
+     This property enables the ability to highlight buildings.
+     
+     Use the `highlightBuildings(for coordinates:, in3D:)` function to perform building highlighting.
+     */
     public var buildingHighlightingEnabled: Bool = false {
         didSet {
             if buildingHighlightingEnabled == true {
@@ -1396,11 +1402,19 @@ private struct BuildingHighlightAttributes {
 
 extension NavigationMapView {
        
+    /**
+     Receives coordinates for searching the map for buildings. If buildings are found, they will be highlighted in 2d or 3d depending on the `in3D` value.
+     `in3D` defaults to true
+     `buildingHighlightingEnabled` must be set to true before this function will work.
+     */
     public func highlightBuildings(for coordinates: [CLLocationCoordinate2D], in3D: Bool = true) {
         let attributes = coordinates.map { BuildingHighlightAttributes(location: $0, highlightColor: buildingHighlightColor) }
         highlightBuildings(with: attributes, in3D: in3D)
     }
     
+    /**
+     Removes the highlight from all buildings highlighted by `highlightBuildings(for coordinates:, in3D:)`.
+     */
     public func unhighlightBuildings() {
         highlightBuildings(nil, in3D: false, extrudeAll: false)
     }
