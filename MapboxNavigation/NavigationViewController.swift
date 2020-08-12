@@ -147,12 +147,20 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      */
     public var shouldManageApplicationIdleTimer = true
     
+    /**
+     Enables highlighting of the destination building when arriving.
+     */
     public var highlightDestinationBuildings: Bool = false {
         didSet {
             mapView?.buildingHighlightingEnabled = highlightDestinationBuildings
         }
     }
     
+    /**
+     When destination building highlighting is enabled, this option controls whether the building will be presented in 3d or 2d.
+     
+     The default value of this property is `true`.
+     */
     public var highlightBuildingsIn3D: Bool = true
     
     var isConnectedToCarPlay: Bool {
@@ -269,6 +277,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
             print("`Route` was created using `RouteOptions` and not `NavigationRouteOptions`. Although not required, this may lead to a suboptimal navigation experience. Without `NavigationRouteOptions`, it is not guaranteed you will get congestion along the route line, better ETAs and ETA label color dependent on congestion.")
         }
         
+        //  Building highlighting uses the `targetCoordinate` property of Waypoint to find buildings on the map to highlight.
+        //  If no `targetCoordinate` is supplied, the Waypoint's `coordinate` property will be used.
         buildingHighlightCoordinates = routeOptions.waypoints.compactMap { $0.targetCoordinate ?? $0.coordinate }
     }
     
