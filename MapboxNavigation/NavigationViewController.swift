@@ -153,6 +153,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         }
     }
     
+    public var highlightBuildingsIn3D: Bool = true
+    
     var isConnectedToCarPlay: Bool {
         if #available(iOS 12.0, *) {
             return CarPlayManager.isConnected
@@ -610,7 +612,7 @@ extension NavigationViewController: NavigationServiceDelegate {
                           animated: true,
                           completionHandler: {
                             // Highlight buildings which were marked as target destination coordinate in waypoint.
-                            mapView.highlightBuildings(for: self.routeOptions.waypoints.compactMap({ $0.targetCoordinate }))
+                            mapView.highlightBuildings(for: self.routeOptions.waypoints.compactMap({ $0.targetCoordinate }), in3D: self.highlightBuildingsIn3D)
                             
                             // Update insets to be able to correctly center map view after
                             mapViewController.updateMapViewContentInsets()
