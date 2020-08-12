@@ -2,30 +2,25 @@ import Foundation
 import MapboxDirections
 
 extension URLSession {
-    /// The user agent string for any HTTP requests performed directly within this library.
-    static let userAgent: String = {
-        var components: [String] = []
-
-        if let appName =
-            Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String ??
-            Bundle.main.object(forInfoDictionaryKey: "CFBundleIdentifier") as? String
-        {
-            let version = Bundle.main.object(forInfoDictionaryKey:"CFBundleShortVersionString") as? String ?? ""
-            components.append("\(appName)/\(version)")
-        }
-
-        // TODO: check the bundle
-        let libraryBundle: Bundle? = Bundle(for: NavigationLocationManager.self)
-
-        if let libraryName = libraryBundle?.object(forInfoDictionaryKey: "CFBundleName") as? String, let libVersion = libraryBundle?.object(forInfoDictionaryKey:"CFBundleShortVersionString") as? String {
-            components.append("\(libraryName)/\(libVersion)")
-        }
-
-        // TODO: check the bundle
-        let directionsLibraryBundle: Bundle? = Bundle(for: Directions.self)
-
-        if let directionsLibraryName = directionsLibraryBundle?.object(forInfoDictionaryKey: "CFBundleName") as? String, let directionsVersion = directionsLibraryBundle?.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String {
-            components.append("\(directionsLibraryName)/\(directionsVersion)")
+    /**
+     :nodoc:
+     
+     The user agent string for any HTTP requests performed directly within MapboxCoreNavigation or MapboxNavigation.
+     */
+    public static let userAgent: String = {
+        let bundles: [Bundle?] = [
+            // Bundles in order from the application level on down
+            .main,
+            .mapboxNavigation,
+            .mapboxCoreNavigation,
+            .init(for: Directions.self),
+        ]
+        let bundleComponents = bundles.compactMap { (bundle) -> String? in
+            guard let name = bundle?.object(forInfoDictionaryKey: "CFBundleName") as? String ?? bundle?.bundleIdentifier,
+                let version = bundle?.object(forInfoDictionaryKey:"CFBundleShortVersionString") as? String else {
+                return nil
+            }
+            return "\(name)/\(version)"
         }
 
         let system: String
@@ -41,7 +36,7 @@ extension URLSession {
         system = "Linux"
         #endif
         let systemVersion = ProcessInfo().operatingSystemVersion
-        components.append("\(system)/\(systemVersion.majorVersion).\(systemVersion.minorVersion).\(systemVersion.patchVersion)")
+        let systemComponent = "\(system)/\(systemVersion.majorVersion).\(systemVersion.minorVersion).\(systemVersion.patchVersion)"
 
         let chip: String
         #if arch(x86_64)
@@ -53,8 +48,12 @@ extension URLSession {
         #elseif arch(i386)
         chip = "i386"
         #endif
-        components.append("(\(chip))")
-
+        let chipComponent = "(\(chip))"
+        
+        let components: [String] = bundleComponents + [
+            systemComponent,
+            chipComponent,
+        ]
         return components.joined(separator: " ")
     }()
 }
