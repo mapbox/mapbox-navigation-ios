@@ -624,10 +624,10 @@ extension NavigationViewController: NavigationServiceDelegate {
                             // Highlight buildings which were marked as target destination coordinate in waypoint.
                             mapView.highlightBuildings(for: self.routeOptions.waypoints.compactMap({ $0.targetCoordinate }), in3D: self.highlightBuildingsIn3D)
                             
-                            // Update insets to be able to correctly center map view after
+                            // Update insets to be able to correctly center map view after presenting end of route view.
                             mapViewController.updateMapViewContentInsets()
                             
-                            // Update user course view to correctly place it in
+                            // Update user course view to correctly place it in map view.
                             mapView.updateCourseTracking(location: location, animated: false)
         })
     }
