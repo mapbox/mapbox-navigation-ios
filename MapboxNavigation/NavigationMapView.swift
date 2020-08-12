@@ -237,7 +237,15 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     private lazy var routeGradient = [CGFloat: UIColor]()
     
     // Building extrusion related properties
-    public var highlightDestinationBuildings: Bool = false
+    public var highlightDestinationBuildings: Bool = false {
+        didSet {
+            if highlightDestinationBuildings == true {
+                prepareBuildingsForQuerying()
+            } else {
+                removeBuildingsLayer()
+            }
+        }
+    }
     private var shouldShowAllBuildings: Bool = false
     
     private lazy var highlightedBuildingFootprintLayer: MGLFillExtrusionStyleLayer? = nil
