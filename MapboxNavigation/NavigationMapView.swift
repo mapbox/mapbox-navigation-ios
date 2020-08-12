@@ -246,7 +246,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             }
         }
     }
-    public var highlightBuildingsIn3D: Bool = true
     
     private lazy var highlightedBuildingFootprintLayer: MGLFillExtrusionStyleLayer? = nil
     private lazy var highlightedBuildingLayer: MGLFillExtrusionStyleLayer? = nil
@@ -1397,16 +1396,16 @@ private struct BuildingHighlightAttributes {
 
 extension NavigationMapView {
        
-    public func highlightBuildings(for coordinates: [CLLocationCoordinate2D]) {
+    public func highlightBuildings(for coordinates: [CLLocationCoordinate2D], in3D: Bool = true) {
         let attributes = coordinates.map { BuildingHighlightAttributes(location: $0, highlightColor: buildingHighlightColor) }
-        highlightBuildings(with: attributes)
+        highlightBuildings(with: attributes, in3D: in3D)
     }
     
     public func unhighlightBuildings() {
-        highlightBuildings(nil, extrudeAll: false)
+        highlightBuildings(nil, in3D: false, extrudeAll: false)
     }
     
-    private func highlightBuildings(with attributes: [BuildingHighlightAttributes]) {
+    private func highlightBuildings(with attributes: [BuildingHighlightAttributes], in3D: Bool) {
         let buildingAttributes = attributes.map {(value) -> BuildingHighlightAttributes in
             var output = value
             if output.identifier == nil {
@@ -1416,7 +1415,7 @@ extension NavigationMapView {
         }
         let buildingsToHighlight = buildingAttributes.filter { $0.identifier != nil }.map {($0.identifier!, $0.highlightColor)}
         if buildingsToHighlight.count > 0 {
-            highlightBuildings(buildingsToHighlight, extrudeAll: false)
+            highlightBuildings(buildingsToHighlight, in3D: in3D, extrudeAll: false)
         } else {
             unhighlightBuildings()
         }
@@ -1462,7 +1461,7 @@ extension NavigationMapView {
         return nil
     }
     
-    private func highlightBuildings(_ buildings: [(identifier: UInt64, highlightColor: UIColor)]?, extrudeAll: Bool) {
+    private func highlightBuildings(_ buildings: [(identifier: UInt64, highlightColor: UIColor)]?, in3D: Bool, extrudeAll: Bool) {
         if let highlightedBuildingFillExtrusionLayer = style?.layer(withIdentifier: StyleLayerIdentifier.buildingExtrusion) as? MGLFillExtrusionStyleLayer {
             if extrudeAll || buildings == nil {
                 highlightedBuildingFillExtrusionLayer.predicate = NSPredicate(format: "extrude = 'true' AND type = 'building' AND underground = 'false'")
@@ -1479,7 +1478,7 @@ extension NavigationMapView {
             var colorsList: [UIColor] = [.green]
             
             if let buildings = buildings {
-                highlightedBuildingHeightExpression = "MGL_MATCH($featureIdentifier, \(buildings.map { "\($0.identifier), \(highlightBuildingsIn3D ? "height" : "0"), " } .joined(separator: ""))\(extrudeAll ? "height" : "0"))"
+                highlightedBuildingHeightExpression = "MGL_MATCH($featureIdentifier, \(buildings.map { "\($0.identifier), \(in3D ? "height" : "0"), " } .joined(separator: ""))\(extrudeAll ? "height" : "0"))"
                 highlightedBuildingColorExpression = "MGL_MATCH($featureIdentifier, \(buildings.map { "\($0.identifier), %@, " }.joined(separator: ""))%@)"
                 colorsList = buildings.map { $0.highlightColor }
             }

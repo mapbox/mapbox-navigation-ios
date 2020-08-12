@@ -143,7 +143,7 @@ class ViewController: UIViewController {
         waypoints.append(waypoint)
     
         let buildingHighlightCoordinates = waypoints.compactMap { $0.targetCoordinate }
-        mapView.highlightBuildings(for: buildingHighlightCoordinates)
+        mapView.highlightBuildings(for: buildingHighlightCoordinates, in3D: false)
 
         requestRoute()
     }
