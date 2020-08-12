@@ -149,7 +149,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     
     public var highlightDestinationBuildings: Bool = false {
         didSet {
-            mapView?.highlightDestinationBuildings = highlightDestinationBuildings
+            mapView?.buildingHighlightingEnabled = highlightDestinationBuildings
         }
     }
     
