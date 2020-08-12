@@ -246,7 +246,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             }
         }
     }
-    private var shouldShowAllBuildings: Bool = false
+    public var highlightBuildingsIn3D: Bool = true
     
     private lazy var highlightedBuildingFootprintLayer: MGLFillExtrusionStyleLayer? = nil
     private lazy var highlightedBuildingLayer: MGLFillExtrusionStyleLayer? = nil
@@ -1403,17 +1403,7 @@ extension NavigationMapView {
     }
     
     public func unhighlightBuildings() {
-        highlightBuildings(nil, extrudeAll: shouldShowAllBuildings)
-    }
-    
-    public func showAllBuildings() {
-        shouldShowAllBuildings = true
-        unhighlightBuildings()
-    }
-    
-    public func hideAllBuildings() {
-        shouldShowAllBuildings = false
-        removeBuildingsLayer()
+        highlightBuildings(nil, extrudeAll: false)
     }
     
     private func highlightBuildings(with attributes: [BuildingHighlightAttributes]) {
@@ -1426,7 +1416,7 @@ extension NavigationMapView {
         }
         let buildingsToHighlight = buildingAttributes.filter { $0.identifier != nil }.map {($0.identifier!, $0.highlightColor)}
         if buildingsToHighlight.count > 0 {
-            highlightBuildings(buildingsToHighlight, extrudeAll: shouldShowAllBuildings)
+            highlightBuildings(buildingsToHighlight, extrudeAll: false)
         } else {
             unhighlightBuildings()
         }
@@ -1489,7 +1479,7 @@ extension NavigationMapView {
             var colorsList: [UIColor] = [.green]
             
             if let buildings = buildings {
-                highlightedBuildingHeightExpression = "MGL_MATCH($featureIdentifier, \(buildings.map { "\($0.identifier), height, " } .joined(separator: ""))\(extrudeAll ? "height" : "0"))"
+                highlightedBuildingHeightExpression = "MGL_MATCH($featureIdentifier, \(buildings.map { "\($0.identifier), \(highlightBuildingsIn3D ? "height" : "0"), " } .joined(separator: ""))\(extrudeAll ? "height" : "0"))"
                 highlightedBuildingColorExpression = "MGL_MATCH($featureIdentifier, \(buildings.map { "\($0.identifier), %@, " }.joined(separator: ""))%@)"
                 colorsList = buildings.map { $0.highlightColor }
             }
