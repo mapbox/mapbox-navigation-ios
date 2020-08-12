@@ -236,8 +236,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 
     private lazy var routeGradient = [CGFloat: UIColor]()
     
-    // Building extrusion related properties
-    
     /**
      This property enables the ability to highlight buildings.
      
@@ -253,7 +251,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
     
-    private lazy var highlightedBuildingFootprintLayer: MGLFillExtrusionStyleLayer? = nil
     private lazy var highlightedBuildingLayer: MGLFillExtrusionStyleLayer? = nil
     
     private lazy var styleObservation: NSKeyValueObservation? = nil
@@ -1462,6 +1459,8 @@ extension NavigationMapView {
     private func buildingId(coordinate: CLLocationCoordinate2D) -> UInt64? {
         let screenCoordinate = convert(coordinate, toPointTo: self)
 
+        // To increase a chance of selecting correct building ID filter out
+        // features which do not contain appropriate attributes.
         let features = visibleFeatures(at: screenCoordinate).filter {
             let extrude = $0.attribute(forKey: "extrude") as? String
             let type = $0.attribute(forKey: "type") as? String
