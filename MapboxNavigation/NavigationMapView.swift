@@ -1366,20 +1366,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
 }
 
-// MARK: - Deprecated
-
-extension NavigationMapView {
-    @available(*, deprecated, renamed: "show(_:legIndex:)")
-    public func showRoutes(_ routes: [Route], legIndex: Int = 0) {
-        self.show(routes, legIndex: legIndex)
-    }
-    
-    @available(*, deprecated, renamed: "showWaypoints(on:legIndex:)")
-    public func showWaypoints(_ route: Route, legIndex: Int = 0) {
-        showWaypoints(on: route, legIndex: legIndex)
-    }
-}
-
 // MARK: - Building Extrusion Highlights
 
 private struct BuildingHighlightAttributes: Hashable {
