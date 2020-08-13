@@ -404,7 +404,7 @@ extension ViewController: NavigationMapViewDelegate {
         guard let responseOptions = response?.options, case let .route(routeOptions) = responseOptions else { return }
         let modifiedOptions = routeOptions.without(waypoint: waypoint)
 
-        presentWaypointRemovalActionSheet { _ in
+        presentWaypointRemovalAlert { _ in
             self.requestRoute(with:modifiedOptions, success: self.defaultSuccess, failure: self.defaultFailure)
         }
     }
@@ -416,18 +416,18 @@ extension ViewController: NavigationMapViewDelegate {
         self.response!.routes!.insert(route, at: 0)
     }
 
-    private func presentWaypointRemovalActionSheet(completionHandler approve: @escaping ((UIAlertAction) -> Void)) {
-        let title = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_TITLE", value: "Remove Waypoint?", comment: "Title of sheet confirming waypoint removal")
-        let message = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_MSG", value: "Do you want to remove this waypoint?", comment: "Message of sheet confirming waypoint removal")
-        let removeTitle = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_REMOVE", value: "Remove Waypoint", comment: "Title of alert sheet action for removing a waypoint")
+    private func presentWaypointRemovalAlert(completionHandler approve: @escaping ((UIAlertAction) -> Void)) {
+        let title = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_TITLE", value: "Remove Waypoint?", comment: "Title of alert confirming waypoint removal")
+        let message = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_MSG", value: "Do you want to remove this waypoint?", comment: "Message of alert confirming waypoint removal")
+        let removeTitle = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_REMOVE", value: "Remove Waypoint", comment: "Title of alert action for removing a waypoint")
         let cancelTitle = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_CANCEL", value: "Cancel", comment: "Title of action for dismissing waypoint removal confirmation sheet")
-
-        let actionSheet = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
-        let remove = UIAlertAction(title: removeTitle, style: .destructive, handler: approve)
-        let cancel = UIAlertAction(title: cancelTitle, style: .cancel, handler: nil)
-        [remove, cancel].forEach(actionSheet.addAction(_:))
-
-        self.present(actionSheet, animated: true, completion: nil)
+        
+        let waypointRemovalAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let removeAction = UIAlertAction(title: removeTitle, style: .destructive, handler: approve)
+        let cancelAction = UIAlertAction(title: cancelTitle, style: .cancel, handler: nil)
+        [removeAction, cancelAction].forEach(waypointRemovalAlertController.addAction(_:))
+        
+        self.present(waypointRemovalAlertController, animated: true, completion: nil)
     }
 }
 
