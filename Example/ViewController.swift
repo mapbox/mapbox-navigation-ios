@@ -100,7 +100,9 @@ class ViewController: UIViewController {
         if mapView == nil {
             mapView = NavigationMapView(frame: view.bounds)
         }
-        mapView?.buildingHighlightingEnabled = true
+        
+        let buildingHighlightCoordinates = waypoints.compactMap { $0.targetCoordinate }
+        mapView?.highlightBuildings(for: buildingHighlightCoordinates, in3D: false)
         
         // Reset the navigation styling to the defaults if we are returning from a presentation.
         if (presentedViewController != nil) {

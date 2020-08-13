@@ -150,11 +150,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     /**
      Enables highlighting of the destination building when arriving.
      */
-    public var highlightDestinationBuildings: Bool = false {
-        didSet {
-            mapView?.buildingHighlightingEnabled = highlightDestinationBuildings
-        }
-    }
+    public var highlightDestinationBuildings: Bool = false
     
     /**
      When destination building highlighting is enabled, this option controls whether the building will be presented in 3d or 2d.

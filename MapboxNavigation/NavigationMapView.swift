@@ -235,22 +235,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     private lazy var mapTapGesture = UITapGestureRecognizer(target: self, action: #selector(didRecieveTap(sender:)))
 
     private lazy var routeGradient = [CGFloat: UIColor]()
-    
-    /**
-     This property enables the ability to highlight buildings.
-     
-     Use the `highlightBuildings(for coordinates:, in3D:)` function to perform building highlighting.
-     */
-    public var buildingHighlightingEnabled: Bool = false {
-        didSet {
-            if buildingHighlightingEnabled == true {
-                prepareBuildingsForQuerying()
-            } else {
-                removeBuildingsLayer()
-            }
-        }
-    }
-    
+
     private lazy var highlightedBuildingLayer: MGLFillExtrusionStyleLayer? = nil
     
     private lazy var styleObservation: NSKeyValueObservation? = nil
@@ -317,9 +302,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             guard change.newValue != nil else {
                 return
             }
-            if self?.buildingHighlightingEnabled == true {
-                self?.prepareBuildingsForQuerying()
-            }
+            
+            // FIXME: Since building is already highlighted and we do not have any info stored regarding its identification
+            // calling prepareBuildingsForQuerying() will have no effect.
         }
     }
     
@@ -1475,6 +1460,8 @@ extension NavigationMapView {
     }
     
     private func highlightBuildings(_ buildings: [(identifier: UInt64, highlightColor: UIColor)]?, in3D: Bool, extrudeAll: Bool) {
+        // In case if user wants to highlight certain buildings - add layer if it wasn't added already.
+        prepareBuildingsForQuerying()
         if let highlightedBuildingFillExtrusionLayer = style?.layer(withIdentifier: StyleLayerIdentifier.buildingExtrusion) as? MGLFillExtrusionStyleLayer {
             var opacityStops = [13: 0.05, 17: 0.05]
             
