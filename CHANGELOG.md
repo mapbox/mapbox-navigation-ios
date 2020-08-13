@@ -82,6 +82,7 @@
 
 * Replaced `RouteVoiceController` and `MapboxVoiceController` with `MultiplexedSpeechSynthesizer`. `MultiplexedSpeechSynthesizer` coordinates multiple cascading speech synthesizers. By default, the controller still tries to speak instructions via the Mapbox Voice API (`MapboxSpeechSynthesizer`) before falling back to VoiceOver (`SystemSpeechSynthesizer`), but you can also provide your own speech synthesizer that conforms to the `SpeechSynthesizing` protocol. ([#2348](https://github.com/mapbox/mapbox-navigation-ios/pull/2348))
 * Fixed memory leaks after disconnecting the application from CarPlay. ([#2470](https://github.com/mapbox/mapbox-navigation-ios/pull/2470))
+* Removed the deprecated `NavigationMapView.showRoutes(_:legIndex:)`, and `NavigationMapView.showWaypoints(_:legIndex:)` methods. ([#2539](https://github.com/mapbox/mapbox-navigation-ios/pull/2539))
 
 ## v0.40.0
 

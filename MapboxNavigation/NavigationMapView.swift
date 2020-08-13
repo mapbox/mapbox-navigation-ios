@@ -1335,18 +1335,3 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         enableFrameByFrameCourseViewTracking(for: 3)
     }
 }
-
-// MARK: - Deprecated
-
-extension NavigationMapView {
-    @available(*, deprecated, renamed: "show(_:legIndex:)")
-    public func showRoutes(_ routes: [Route], legIndex: Int = 0) {
-        self.show(routes, legIndex: legIndex)
-    }
-    
-    @available(*, deprecated, renamed: "showWaypoints(on:legIndex:)")
-    public func showWaypoints(_ route: Route, legIndex: Int = 0) {
-        showWaypoints(on: route, legIndex: legIndex)
-    }
-}
-
