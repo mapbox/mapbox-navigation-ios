@@ -170,7 +170,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
             return false
         }
     }
-    var buildingHighlightCoordinates: [CLLocationCoordinate2D] = []
     
     var mapViewController: RouteMapViewController?
     
@@ -276,10 +275,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         if !(routeOptions is NavigationRouteOptions) {
             print("`Route` was created using `RouteOptions` and not `NavigationRouteOptions`. Although not required, this may lead to a suboptimal navigation experience. Without `NavigationRouteOptions`, it is not guaranteed you will get congestion along the route line, better ETAs and ETA label color dependent on congestion.")
         }
-        
-        //  Building highlighting uses the `targetCoordinate` property of Waypoint to find buildings on the map to highlight.
-        //  If no `targetCoordinate` is supplied, the Waypoint's `coordinate` property will be used.
-        buildingHighlightCoordinates = routeOptions.waypoints.compactMap { $0.targetCoordinate ?? $0.coordinate }
     }
     
     /**
