@@ -1404,19 +1404,24 @@ extension NavigationMapView {
      `buildingHighlightingEnabled` must be set to true before this function will work.
      */
     public func highlightBuildings(for coordinates: [CLLocationCoordinate2D], in3D: Bool = true) {
-        let buildingAttributes = coordinates.map { BuildingHighlightAttributes(coordinate: $0,
-                                                                               highlightColor: buildingHighlightColor,
-                                                                               identifier: buildingId(for: $0))
-        }.filter({ $0.identifier != BuildingHighlightAttributes.kDefaultIdentifier })
+        let buildingAttributes = coordinates
+            // Create building attributes by searching for building ID by provided coordinate.
+            .map({ BuildingHighlightAttributes(coordinate: $0,
+                                               highlightColor: buildingHighlightColor,
+                                               identifier: buildingId(for: $0)) })
+            // Do not add building attribute, in case if it wasn't found.
+            .filter({ $0.identifier != BuildingHighlightAttributes.kDefaultIdentifier })
+            // Since there might be case in which the same building is highlighted several times, remove duplicated IDs.
+            .withoutDuplicates
         
-        highlightBuildings(buildingAttributes.withoutDuplicates, in3D: in3D, extrudeAll: false)
+        highlightBuildings(buildingAttributes, in3D: in3D, extrudeAll: false)
     }
     
     /**
      Removes the highlight from all buildings highlighted by `highlightBuildings(for coordinates:, in3D:)`.
      */
     public func unhighlightBuildings() {
-        highlightBuildings(nil)
+        removeBuildingsLayer()
     }
     
     private func addBuildingsLayer() -> MGLFillExtrusionStyleLayer? {
@@ -1462,29 +1467,23 @@ extension NavigationMapView {
         return BuildingHighlightAttributes.kDefaultIdentifier
     }
     
-    private func highlightBuildings(_ buildings: [BuildingHighlightAttributes]?, in3D: Bool = false, extrudeAll: Bool = false) {
+    private func highlightBuildings(_ buildings: [BuildingHighlightAttributes], in3D: Bool = false, extrudeAll: Bool = false) {
         // In case if array with highlighted building attributes is empty - do nothing.
-        if let buildings = buildings, buildings.isEmpty { return }
+        if buildings.isEmpty { return }
         // Add layer which will be used to highlight buildings if it wasn't added yet.
         guard let highlightedBuildingsLayer = addBuildingsLayer() else { return }
         
-        if extrudeAll || buildings == nil {
+        if extrudeAll {
             highlightedBuildingsLayer.predicate = NSPredicate(format: "extrude = 'true' AND type = 'building' AND underground = 'false'")
         } else {
             // Form a predicate to filter out the other buildings from the datasource so only the desired ones are included.
-            highlightedBuildingsLayer.predicate = NSPredicate(format: "extrude = 'true' AND type = 'building' AND underground = 'false' AND $featureIdentifier IN %@", buildings!.map { $0.identifier })
+            highlightedBuildingsLayer.predicate = NSPredicate(format: "extrude = 'true' AND type = 'building' AND underground = 'false' AND $featureIdentifier IN %@", buildings.map { $0.identifier })
         }
         
         // Buildings with IDs will be highlighted with provided color. Rest of the buildings will be highlighted, but kept at a uniform color.
-        var highlightedBuildingHeightExpression = "MGL_MATCH($featureIdentifier, -1, height, \(extrudeAll ? "height" : "0"))"
-        var highlightedBuildingColorExpression = "MGL_MATCH($featureIdentifier, -1, %@, %@)"
-        var colorsList: [UIColor] = [buildingDefaultColor]
-        
-        if let buildings = buildings {
-            highlightedBuildingHeightExpression = "MGL_MATCH($featureIdentifier, \(buildings.map { "\($0.identifier), \(in3D ? "height" : "0"), " } .joined(separator: ""))\(extrudeAll ? "height" : "0"))"
-            highlightedBuildingColorExpression = "MGL_MATCH($featureIdentifier, \(buildings.map { "\($0.identifier), %@, " }.joined(separator: ""))%@)"
-            colorsList = buildings.map { $0.highlightColor }
-        }
+        let highlightedBuildingHeightExpression = "MGL_MATCH($featureIdentifier, \(buildings.map { "\($0.identifier), \(in3D ? "height" : "0"), " }.joined(separator: ""))\(extrudeAll ? "height" : "0"))"
+        let highlightedBuildingColorExpression = "MGL_MATCH($featureIdentifier, \(buildings.map { "\($0.identifier), %@, " }.joined(separator: ""))%@)"
+        var colorsList = buildings.map { $0.highlightColor }
         
         colorsList.append(buildingDefaultColor)
         
