@@ -1467,14 +1467,12 @@ extension NavigationMapView {
         if let buildings = buildings, buildings.isEmpty { return }
         // Add layer which will be used to highlight buildings if it wasn't added yet.
         guard let highlightedBuildingsLayer = addBuildingsLayer() else { return }
-        var opacityStops = [13: 0.05, 17: 0.05]
         
         if extrudeAll || buildings == nil {
             highlightedBuildingsLayer.predicate = NSPredicate(format: "extrude = 'true' AND type = 'building' AND underground = 'false'")
         } else {
             // Form a predicate to filter out the other buildings from the datasource so only the desired ones are included.
             highlightedBuildingsLayer.predicate = NSPredicate(format: "extrude = 'true' AND type = 'building' AND underground = 'false' AND $featureIdentifier IN %@", buildings!.map { $0.identifier })
-            opacityStops = [13: 0.5, 17: 0.8]
         }
         
         // Buildings with IDs will be highlighted with provided color. Rest of the buildings will be highlighted, but kept at a uniform color.
@@ -1497,6 +1495,8 @@ extension NavigationMapView {
         let fillExtrusionBaseStops = [0: NSExpression(forConstantValue: 0),
                                       13: NSExpression(forConstantValue: 0),
                                       13.25: NSExpression(forKeyPath: "min_height")]
+        
+        let opacityStops = [13: 0.5, 17: 0.8]
         
         highlightedBuildingsLayer.fillExtrusionHeight = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", fillExtrusionHeightStops)
         highlightedBuildingsLayer.fillExtrusionBase = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", fillExtrusionBaseStops)
