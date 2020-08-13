@@ -270,6 +270,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         addGestureRecognizer(mapTapGesture)
         
         installUserCourseView()
+        
+        styleURL = MGLStyle.navigationDayStyleURL
     }
     
     open override func layoutMarginsDidChange() {
