@@ -101,9 +101,6 @@ class ViewController: UIViewController {
             mapView = NavigationMapView(frame: view.bounds)
         }
         
-        let buildingHighlightCoordinates = waypoints.compactMap { $0.targetCoordinate }
-        mapView?.highlightBuildings(for: buildingHighlightCoordinates, in3D: false)
-        
         // Reset the navigation styling to the defaults if we are returning from a presentation.
         if (presentedViewController != nil) {
             DayStyle().apply()
@@ -262,6 +259,9 @@ class ViewController: UIViewController {
         
         // Example of building highlighting using the NavigationViewController.
         navigationViewController.highlightDestinationBuildings = true
+        
+        // Extrude buildings in 2D.
+        navigationViewController.highlightBuildingsIn3D = false
         
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
