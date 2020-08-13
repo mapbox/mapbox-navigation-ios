@@ -127,7 +127,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     @objc dynamic public var traversedRouteColor: UIColor = .defaultTraversedRouteColor
     @objc dynamic public var maneuverArrowColor: UIColor = .defaultManeuverArrow
     @objc dynamic public var maneuverArrowStrokeColor: UIColor = .defaultManeuverArrowStroke
-    @objc dynamic public var buildingColor: UIColor = .defaultBuildingColor
+    @objc dynamic public var buildingDefaultColor: UIColor = .defaultBuildingColor
     @objc dynamic public var buildingHighlightColor: UIColor = .defaultBuildingHighlightColor
     
     var userLocationForCourseTracking: CLLocation?
@@ -1438,7 +1438,7 @@ extension NavigationMapView {
         if let buildingsSource = style?.source(withIdentifier: "composite") {
             highlightedBuildingLayer = MGLFillExtrusionStyleLayer(identifier: StyleLayerIdentifier.buildingExtrusion, source: buildingsSource)
             highlightedBuildingLayer?.sourceLayerIdentifier = "building"
-            highlightedBuildingLayer?.fillExtrusionColor = NSExpression(forConstantValue: buildingColor)
+            highlightedBuildingLayer?.fillExtrusionColor = NSExpression(forConstantValue: buildingDefaultColor)
             highlightedBuildingLayer?.fillExtrusionOpacity = NSExpression(forConstantValue: 0.05)
             highlightedBuildingLayer?.fillExtrusionHeightTransition = MGLTransition(duration: 0.8, delay: 0)
             highlightedBuildingLayer?.fillExtrusionOpacityTransition = MGLTransition(duration: 0.8, delay: 0)
@@ -1491,7 +1491,7 @@ extension NavigationMapView {
             
             var highlightedBuildingHeightExpression = "MGL_MATCH($featureIdentifier, -1, height, \(extrudeAll ? "height" : "0"))"
             var highlightedBuildingColorExpression = "MGL_MATCH($featureIdentifier, -1, %@, %@)"
-            var colorsList: [UIColor] = [.green]
+            var colorsList: [UIColor] = [buildingDefaultColor]
             
             if let buildings = buildings {
                 highlightedBuildingHeightExpression = "MGL_MATCH($featureIdentifier, \(buildings.map { "\($0.identifier), \(in3D ? "height" : "0"), " } .joined(separator: ""))\(extrudeAll ? "height" : "0"))"
@@ -1499,7 +1499,7 @@ extension NavigationMapView {
                 colorsList = buildings.map { $0.highlightColor }
             }
             
-            colorsList.append(buildingColor)
+            colorsList.append(buildingDefaultColor)
             
             let fillExtrusionHeightStops = [0: NSExpression(forConstantValue: 0),
                                             13: NSExpression(forConstantValue: 0),
