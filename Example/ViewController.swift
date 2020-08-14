@@ -249,8 +249,8 @@ class ViewController: UIViewController {
         // Render part of the route that has been traversed with full transparency, to give the illusion of a disappearing route.
         navigationViewController.mapView?.routeLineTracksTraversal = true
         
-        // Example of building highlighting using the NavigationViewController.
-        navigationViewController.highlightsDestinationBuildings = true
+        // Example of building highlighting in 3D.
+        navigationViewController.destinationBuildingHighlightType = .highlightIn3D
         
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
@@ -262,11 +262,8 @@ class ViewController: UIViewController {
         let navigationViewController = NavigationViewController(for: route, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
         
-        // Example of building highlighting using the NavigationViewController.
-        navigationViewController.highlightsDestinationBuildings = true
-        
-        // Extrude buildings in 2D.
-        navigationViewController.highlightBuildingsIn3D = false
+        // Example of building highlighting in 2D.
+        navigationViewController.destinationBuildingHighlightType = .highlightIn2D
         
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }

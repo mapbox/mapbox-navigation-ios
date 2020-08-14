@@ -266,8 +266,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         addGestureRecognizer(mapTapGesture)
         
         installUserCourseView()
-        
-        styleURL = MGLStyle.navigationDayStyleURL
     }
     
     open override func layoutMarginsDidChange() {
@@ -295,11 +293,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         if (tracksUserCourse) {
             updateCourseTracking(location: userLocationForCourseTracking, camera:self.camera, animated: false)
         }
-    
-        // TODO: Add style observation to be able to re-add highlighted building whenever it happens.
-        
-        // FIXME: Since building might be already highlighted and we do not have any info
-        // regarding its identification after style change such highlighted building will be lost.
     }
     
     open override func anchorPoint(forGesture gesture: UIGestureRecognizer) -> CGPoint {
@@ -1359,12 +1352,13 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 extension NavigationMapView {
        
     /**
-     Receives coordinates for searching the map for buildings. If buildings are found, they will be highlighted in 2d or 3d depending on the `in3D` value.
-     `in3D` defaults to true
-     `buildingHighlightingEnabled` must be set to true before this function will work.
+     Receives coordinates for searching the map for buildings. If buildings are found, they will be highlighted in 2D or 3D depending on the `in3D` value.
+     
+     - parameter coordinates: Coordinates which represent buildings locations.
+     - parameter in3D: Switch which allows to highlight buildings in either 2D or 3D. Defaults to true.
      */
     public func highlightBuildings(at coordinates: [CLLocationCoordinate2D], in3D extrudesBuildings: Bool = true) {
-        highlightBuildings(Set(coordinates.compactMap({ buildingIdentifier(at: $0) })), in3D: extrudesBuildings, extrudeAll: false)
+        highlightBuildings(with: Set(coordinates.compactMap({ buildingIdentifier(at: $0) })), in3D: extrudesBuildings, extrudeAll: false)
     }
     
     /**
@@ -1410,9 +1404,9 @@ extension NavigationMapView {
         return nil
     }
     
-    private func highlightBuildings(_ buildingIdentifiers: Set<Int64>, in3D: Bool = false, extrudeAll: Bool = false) {
+    private func highlightBuildings(with identifiers: Set<Int64>, in3D: Bool = false, extrudeAll: Bool = false) {
         // In case if set with highlighted building identifiers is empty - do nothing.
-        if buildingIdentifiers.isEmpty { return }
+        if identifiers.isEmpty { return }
         // Add layer which will be used to highlight buildings if it wasn't added yet.
         guard let highlightedBuildingsLayer = addBuildingsLayer() else { return }
         
@@ -1420,13 +1414,13 @@ extension NavigationMapView {
             highlightedBuildingsLayer.predicate = NSPredicate(format: "extrude = 'true' AND type = 'building' AND underground = 'false'")
         } else {
             // Form a predicate to filter out the other buildings from the datasource so only the desired ones are included.
-            highlightedBuildingsLayer.predicate = NSPredicate(format: "extrude = 'true' AND type = 'building' AND underground = 'false' AND $featureIdentifier IN %@", buildingIdentifiers.map { $0 })
+            highlightedBuildingsLayer.predicate = NSPredicate(format: "extrude = 'true' AND type = 'building' AND underground = 'false' AND $featureIdentifier IN %@", identifiers.map { $0 })
         }
         
         // Buildings with identifiers will be highlighted with provided color. Rest of the buildings will be highlighted, but kept at a uniform color.
-        let highlightedBuildingHeightExpression = "MGL_MATCH($featureIdentifier, \(buildingIdentifiers.map { "\($0), \(in3D ? "height" : "0"), " }.joined(separator: ""))\(extrudeAll ? "height" : "0"))"
-        let highlightedBuildingColorExpression = "MGL_MATCH($featureIdentifier, \(buildingIdentifiers.map { "\($0), %@, " }.joined(separator: ""))%@)"
-        var colorsList = buildingIdentifiers.map { _ in buildingHighlightColor }
+        let highlightedBuildingHeightExpression = "MGL_MATCH($featureIdentifier, \(identifiers.map { "\($0), \(in3D ? "height" : "0"), " }.joined(separator: ""))\(extrudeAll ? "height" : "0"))"
+        let highlightedBuildingColorExpression = "MGL_MATCH($featureIdentifier, \(identifiers.map { "\($0), %@, " }.joined(separator: ""))%@)"
+        var colorsList = identifiers.map { _ in buildingHighlightColor }
         
         colorsList.append(buildingDefaultColor)
         

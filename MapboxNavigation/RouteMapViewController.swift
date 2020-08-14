@@ -145,6 +145,9 @@ class RouteMapViewController: UIViewController {
             self?.showRouteIfNeeded()
             mapView.localizeLabels()
             mapView.showsTraffic = false
+                        
+            // FIXME: In case when building highlighting feature is enabled due to style changes and no info currently being stored
+            // regarding building identification such highlighted building will disappear.
         }
         
         makeGestureRecognizersResetFrameRate()
