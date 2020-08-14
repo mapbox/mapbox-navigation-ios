@@ -143,7 +143,7 @@ class ViewController: UIViewController {
     
         // Example of highlighting buildings in 2d and directly using the API on NavigationMapView.
         let buildingHighlightCoordinates = waypoints.compactMap { $0.targetCoordinate }
-        mapView.highlightBuildings(for: buildingHighlightCoordinates, in3D: false)
+        mapView.highlightBuildings(at: buildingHighlightCoordinates, in3D: false)
 
         requestRoute()
     }
@@ -250,7 +250,7 @@ class ViewController: UIViewController {
         navigationViewController.mapView?.routeLineTracksTraversal = true
         
         // Example of building highlighting using the NavigationViewController.
-        navigationViewController.highlightDestinationBuildings = true
+        navigationViewController.highlightsDestinationBuildings = true
         
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
@@ -263,7 +263,7 @@ class ViewController: UIViewController {
         navigationViewController.delegate = self
         
         // Example of building highlighting using the NavigationViewController.
-        navigationViewController.highlightDestinationBuildings = true
+        navigationViewController.highlightsDestinationBuildings = true
         
         // Extrude buildings in 2D.
         navigationViewController.highlightBuildingsIn3D = false

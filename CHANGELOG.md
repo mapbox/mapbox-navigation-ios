@@ -27,8 +27,8 @@
   * `NavigationMapViewDelegate.navigationMapView(_:alternativeRouteCasingStyleLayerWithIdentifier:source:)` to style the casing of alternative routes.
   * Fixed an issue where the casing for the main route would not overlap alternative routes. ([#2377](https://github.com/mapbox/mapbox-navigation-ios/pull/2377))
 * Building highlighting and unhighlighting is now available using `NavigationMapView.highlightBuildings(for coordinates:, in3D: Bool)` and `NavigationMapView.unhighlightBuildings()`.
-* Destination building highlighting is now available by setting `NavigationViewController.highlightDestinationBuildings` to true.
-* Presentation of building highlights can be controlled by setting `NavigationViewController.highlightBuildingsIn3D` to true or false.
+* Added the NavigationViewController.highlightsDestinationBuildings property and NavigationMapView.highlightBuildings(at:in3D:) method to highlight the destination building in UIColor.defaultBuildingHighlightColor as the user approaches it.
+* Added the NavigationViewController.highlightsBuilidngsIn3D property to additionally extrude the destination building in 3D.
 
 ### Feedback
 

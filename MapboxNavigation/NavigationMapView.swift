@@ -235,8 +235,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     private lazy var mapTapGesture = UITapGestureRecognizer(target: self, action: #selector(didRecieveTap(sender:)))
 
     private lazy var routeGradient = [CGFloat: UIColor]()
-
-    private lazy var highlightedBuildingsLayer: MGLFillExtrusionStyleLayer? = nil
     
     private lazy var styleObservation: NSKeyValueObservation? = nil
     
@@ -279,6 +277,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         enableFrameByFrameCourseViewTracking(for: 3)
     }
     
+    deinit {
+        styleObservation = nil
+    }
+    
     //MARK: - Overrides
     
     open override func prepareForInterfaceBuilder() {
@@ -310,7 +312,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             
             // In case if style was changed make sure to remove existing layer so that it can be
             // re-created in future.
-            self?.removeBuildingsLayer()
+            self?.unhighlightBuildings()
         }
     }
     
@@ -1391,53 +1393,46 @@ extension NavigationMapView {
      `in3D` defaults to true
      `buildingHighlightingEnabled` must be set to true before this function will work.
      */
-    public func highlightBuildings(for coordinates: [CLLocationCoordinate2D], in3D: Bool = true) {
+    public func highlightBuildings(at coordinates: [CLLocationCoordinate2D], in3D extrudesBuildings: Bool = true) {
         let buildingAttributes = coordinates
             // Create building attributes by searching for building ID by provided coordinate.
             .map({ BuildingHighlightAttributes(coordinate: $0,
                                                highlightColor: buildingHighlightColor,
-                                               identifier: buildingId(for: $0)) })
+                                               identifier: buildingId(at: $0)) })
             // Do not add building attribute, in case if it wasn't found.
             .filter({ $0.identifier != BuildingHighlightAttributes.kDefaultIdentifier })
             // Since there might be case in which the same building is highlighted several times, remove duplicated IDs.
             .withoutDuplicates
         
-        highlightBuildings(buildingAttributes, in3D: in3D, extrudeAll: false)
+        highlightBuildings(buildingAttributes, in3D: extrudesBuildings, extrudeAll: false)
     }
     
     /**
      Removes the highlight from all buildings highlighted by `highlightBuildings(for coordinates:, in3D:)`.
      */
     public func unhighlightBuildings() {
-        removeBuildingsLayer()
+        guard let highlightedBuildingsLayer = style?.layer(withIdentifier: StyleLayerIdentifier.buildingExtrusion) else { return }
+        
+        style?.removeLayer(highlightedBuildingsLayer)
     }
     
     private func addBuildingsLayer() -> MGLFillExtrusionStyleLayer? {
-        if let highlightedBuildingLayer = highlightedBuildingsLayer { return highlightedBuildingLayer }
+        if let highlightedBuildingsLayer = style?.layer(withIdentifier: StyleLayerIdentifier.buildingExtrusion) as? MGLFillExtrusionStyleLayer { return highlightedBuildingsLayer }
         guard let buildingsSource = style?.source(withIdentifier: "composite") else { return nil }
         
-        highlightedBuildingsLayer = MGLFillExtrusionStyleLayer(identifier: StyleLayerIdentifier.buildingExtrusion, source: buildingsSource)
-        highlightedBuildingsLayer?.sourceLayerIdentifier = "building"
-        highlightedBuildingsLayer?.fillExtrusionColor = NSExpression(forConstantValue: buildingDefaultColor)
-        highlightedBuildingsLayer?.fillExtrusionOpacity = NSExpression(forConstantValue: 0.05)
-        highlightedBuildingsLayer?.fillExtrusionHeightTransition = MGLTransition(duration: 0.8, delay: 0)
-        highlightedBuildingsLayer?.fillExtrusionOpacityTransition = MGLTransition(duration: 0.8, delay: 0)
+        let highlightedBuildingsLayer = MGLFillExtrusionStyleLayer(identifier: StyleLayerIdentifier.buildingExtrusion, source: buildingsSource)
+        highlightedBuildingsLayer.sourceLayerIdentifier = "building"
+        highlightedBuildingsLayer.fillExtrusionColor = NSExpression(forConstantValue: buildingDefaultColor)
+        highlightedBuildingsLayer.fillExtrusionOpacity = NSExpression(forConstantValue: 0.05)
+        highlightedBuildingsLayer.fillExtrusionHeightTransition = MGLTransition(duration: 0.8, delay: 0)
+        highlightedBuildingsLayer.fillExtrusionOpacityTransition = MGLTransition(duration: 0.8, delay: 0)
         
-        if let highlightedBuildingLayer = highlightedBuildingsLayer {
-            style?.addLayer(highlightedBuildingLayer)
-        }
+        style?.addLayer(highlightedBuildingsLayer)
         
         return highlightedBuildingsLayer
     }
-    
-    private func removeBuildingsLayer() {
-        guard let highlightedBuildingsLayer = highlightedBuildingsLayer else { return }
-        
-        style?.removeLayer(highlightedBuildingsLayer)
-        self.highlightedBuildingsLayer = nil
-    }
 
-    private func buildingId(for coordinate: CLLocationCoordinate2D) -> Int64 {
+    private func buildingId(at coordinate: CLLocationCoordinate2D) -> Int64 {
         let screenCoordinate = convert(coordinate, toPointTo: self)
 
         // To increase a chance of selecting correct building ID filter out

@@ -150,7 +150,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     /**
      Enables highlighting of the destination building when arriving.
      */
-    public var highlightDestinationBuildings: Bool = false
+    public var highlightsDestinationBuildings: Bool = false
     
     /**
      When destination building highlighting is enabled, this option controls whether the building will be presented in 3d or 2d.
@@ -593,7 +593,7 @@ extension NavigationViewController: NavigationServiceDelegate {
     }
     
     private func zoomInAndHighlightBuilding(for location: CLLocation?) {
-        if !highlightDestinationBuildings { return }
+        if !highlightsDestinationBuildings { return }
         guard let mapViewController = self.mapViewController else { return }
         guard let location = location else { return }
         
@@ -613,7 +613,7 @@ extension NavigationViewController: NavigationServiceDelegate {
                           animated: true,
                           completionHandler: {
                             // Highlight buildings which were marked as target destination coordinate in waypoint.
-                            mapView.highlightBuildings(for: self.routeOptions.waypoints.compactMap({ $0.targetCoordinate }), in3D: self.highlightBuildingsIn3D)
+                            mapView.highlightBuildings(at: self.routeOptions.waypoints.compactMap({ $0.targetCoordinate }), in3D: self.highlightBuildingsIn3D)
                             
                             // Update insets to be able to correctly center map view after presenting end of route view.
                             mapViewController.updateMapViewContentInsets()
