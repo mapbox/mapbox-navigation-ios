@@ -1355,14 +1355,14 @@ extension NavigationMapView {
      Receives coordinates for searching the map for buildings. If buildings are found, they will be highlighted in 2D or 3D depending on the `in3D` value.
      
      - parameter coordinates: Coordinates which represent buildings locations.
-     - parameter in3D: Switch which allows to highlight buildings in either 2D or 3D. Defaults to true.
+     - parameter extrudesBuildings: Switch which allows to highlight buildings in either 2D or 3D. Defaults to true.
      */
     public func highlightBuildings(at coordinates: [CLLocationCoordinate2D], in3D extrudesBuildings: Bool = true) {
         highlightBuildings(with: Set(coordinates.compactMap({ buildingIdentifier(at: $0) })), in3D: extrudesBuildings, extrudeAll: false)
     }
     
     /**
-     Removes the highlight from all buildings highlighted by `highlightBuildings(for coordinates:, in3D:)`.
+     Removes the highlight from all buildings highlighted by `highlightBuildings(at:in3D:)`.
      */
     public func unhighlightBuildings() {
         guard let highlightedBuildingsLayer = style?.layer(withIdentifier: StyleLayerIdentifier.buildingExtrusion) else { return }
