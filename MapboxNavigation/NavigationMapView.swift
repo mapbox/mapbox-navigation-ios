@@ -1358,7 +1358,7 @@ extension NavigationMapView {
      - parameter extrudesBuildings: Switch which allows to highlight buildings in either 2D or 3D. Defaults to true.
      */
     public func highlightBuildings(at coordinates: [CLLocationCoordinate2D], in3D extrudesBuildings: Bool = true) {
-        highlightBuildings(with: Set(coordinates.compactMap({ buildingIdentifier(at: $0) })), in3D: extrudesBuildings, extrudeAll: false)
+        highlightBuildings(with: Set(coordinates.compactMap({ buildingIdentifier(at: $0) })), in3D: extrudesBuildings)
     }
     
     /**
@@ -1418,15 +1418,13 @@ extension NavigationMapView {
         }
         
         // Buildings with identifiers will be highlighted with provided color. Rest of the buildings will be highlighted, but kept at a uniform color.
-        let highlightedBuildingHeightExpression = "MGL_MATCH($featureIdentifier, \(identifiers.map { "\($0), \(in3D ? "height" : "0"), " }.joined(separator: ""))\(extrudeAll ? "height" : "0"))"
-        let highlightedBuildingColorExpression = "MGL_MATCH($featureIdentifier, \(identifiers.map { "\($0), %@, " }.joined(separator: ""))%@)"
-        var colorsList = identifiers.map { _ in buildingHighlightColor }
-        
-        colorsList.append(buildingDefaultColor)
+        let highlightedBuildingsHeightExpression = NSExpression(format: "TERNARY(%@ = TRUE AND (%@ = TRUE OR $featureIdentifier IN %@), height, 0)", in3D as NSValue, extrudeAll as NSValue, identifiers.map { $0 })
+        let colorsByBuilding = Dictionary(identifiers.map { (NSExpression(forConstantValue: $0), NSExpression(forConstantValue: buildingHighlightColor)) }) { (_, last) in last }
+        let highlightedBuildingsColorExpression = NSExpression(forMGLMatchingKey: NSExpression(forVariable: "featureIdentifier"), in: colorsByBuilding, default: NSExpression(forConstantValue: buildingDefaultColor))
         
         let fillExtrusionHeightStops = [0: NSExpression(forConstantValue: 0),
                                         13: NSExpression(forConstantValue: 0),
-                                        13.25: NSExpression(format: highlightedBuildingHeightExpression)]
+                                        13.25: highlightedBuildingsHeightExpression]
         
         let fillExtrusionBaseStops = [0: NSExpression(forConstantValue: 0),
                                       13: NSExpression(forConstantValue: 0),
@@ -1436,7 +1434,7 @@ extension NavigationMapView {
         
         highlightedBuildingsLayer.fillExtrusionHeight = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", fillExtrusionHeightStops)
         highlightedBuildingsLayer.fillExtrusionBase = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", fillExtrusionBaseStops)
-        highlightedBuildingsLayer.fillExtrusionColor = NSExpression(format: highlightedBuildingColorExpression, argumentArray: colorsList)
+        highlightedBuildingsLayer.fillExtrusionColor = highlightedBuildingsColorExpression
         highlightedBuildingsLayer.fillExtrusionOpacity = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", opacityStops)
     }
 }
