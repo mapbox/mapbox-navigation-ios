@@ -57,8 +57,18 @@ class FreeDriveLocationManagerTests: XCTestCase {
 
     func testFreeDrive() {
         let locationManager = FreeDriveLocationManager()
+        let startingExpectation = expectation(description: "Location manager should start without an error")
+        locationManager.startUpdatingLocation { (error) in
+            XCTAssertNil(error)
+            startingExpectation.fulfill()
+        }
+        wait(for: [startingExpectation], timeout: 2)
+        
+        // FIXME: Starting the location manager should automatically configure the navigator.
+        XCTAssertNoThrow(try locationManager.configureNavigator(withTilesVersion: "1234"))
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(10)) {
-        locationManager.setCustomLocation(CLLocation(latitude: 47.208674, longitude: 9.524650))
+            locationManager.updateLocation(CLLocation(latitude: 47.208674, longitude: 9.524650))
         }
 
         let road = Road(from: CLLocationCoordinate2D(latitude: 47.207966, longitude: 9.527012), to: CLLocationCoordinate2D(latitude: 47.209518, longitude: 9.522167))
@@ -71,15 +81,15 @@ class FreeDriveLocationManagerTests: XCTestCase {
         }
         locationManager.debugInfoListener = listener
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(25)) {
-            locationManager.setCustomLocation(CLLocation(latitude: 47.208943, longitude: 9.524707))
+            locationManager.updateLocation(CLLocation(latitude: 47.208943, longitude: 9.524707))
             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
-                locationManager.setCustomLocation(CLLocation(latitude: 47.209082, longitude: 9.524319))
+                locationManager.updateLocation(CLLocation(latitude: 47.209082, longitude: 9.524319))
                 DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
-                    locationManager.setCustomLocation(CLLocation(latitude: 47.209229, longitude: 9.523838))
+                    locationManager.updateLocation(CLLocation(latitude: 47.209229, longitude: 9.523838))
                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
-                        locationManager.setCustomLocation(CLLocation(latitude: 47.209612, longitude: 9.522629))
+                        locationManager.updateLocation(CLLocation(latitude: 47.209612, longitude: 9.522629))
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
-                            locationManager.setCustomLocation(CLLocation(latitude: 47.209842, longitude: 9.522377))
+                            locationManager.updateLocation(CLLocation(latitude: 47.209842, longitude: 9.522377))
                             XCTAssert(true)
                             expectation.fulfill()
                         }

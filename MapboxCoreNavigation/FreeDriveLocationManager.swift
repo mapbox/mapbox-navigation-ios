@@ -28,66 +28,68 @@ open class FreeDriveLocationManager: NavigationLocationManager, CLLocationManage
      Initializes the location manager with the given directions service.
      
      - parameter directions: The directions service that allows the location manager to access road network data. If this argument is omitted, the shared `Directions` object is used.
+     
+     - postcondition: Call `startUpdatingLocation(completionHandler:)` afterwards to begin receiving location updates.
      */
     public required init(directions: Directions = Directions.shared) {
         self.directions = directions
-        proxyDelegate = ProxyDelegate()
+        
+        let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
+        let navigator = Navigator(profile: settingsProfile, config: NavigatorConfig() , customConfig: "")
+        
+        let proxyDelegate = ProxyDelegate()
+        proxyDelegate.navNative = navigator
+        self.proxyDelegate = proxyDelegate
+        
         super.init()
 
+        super.delegate = proxyDelegate
+    }
+    
+    public override func startUpdatingLocation() {
+        startUpdatingLocation(completionHandler: nil)
+    }
+    
+    /**
+     Starts the generation of location updates with an optional completion handler that gets called when the location manager is ready to receive snapped location updates.
+     */
+    public func startUpdatingLocation(completionHandler: ((Error?) -> Void)?) {
+        super.startUpdatingLocation()
+        
         let tilesVersion = RouteTilesVersion(with: directions.credentials)
         tilesVersion.getAvailableVersions { availableVersions in
             if let latestVersion = availableVersions.last {
                 tilesVersion.currentVersion = latestVersion
-                let navigator = self.createNavigator(withTilesVersion: latestVersion)
-                self.proxyDelegate?.navNative = navigator
+                do {
+                    try self.configureNavigator(withTilesVersion: latestVersion)
+                    completionHandler?(nil)
+                } catch {
+                    completionHandler?(error)
+                }
             }
         }
+    }
+    
+    func configureNavigator(withTilesVersion tilesVersion: String) throws {
+        let endpointConfig = TileEndpointConfiguration(directions: directions, tilesVersion: tilesVersion)
 
-        super.delegate = proxyDelegate
+        guard var tilesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first else {
+            preconditionFailure("No Caches directory to create the tile directory inside")
+        }
+        tilesURL.appendPathComponent(tilesVersion, isDirectory: true)
+        // Tiles with different versions shouldn't be mixed, it may cause inappropriate Navigator's behaviour
+        try FileManager.default.createDirectory(at: tilesURL, withIntermediateDirectories: true, attributes: nil)
+        let params = RouterParams(tilesPath: tilesURL.path, inMemoryTileCache: nil, mapMatchingSpatialCache: nil, threadsCount: nil, endpointConfig: endpointConfig)
+        
+        proxyDelegate?.navNative?.configureRouter(for: params)
     }
 
-    private func createNavigator(withTilesVersion tilesVersion: String) -> Navigator {
-        let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
-        let navigator = Navigator(profile: settingsProfile, config: NavigatorConfig() , customConfig: "")
-        let host = directions.credentials.host.absoluteString
-        guard let publicToken = directions.credentials.accessToken else {
-            preconditionFailure("No access token specified in Info.plist")
-        }
-        assert(publicToken != "")
-        let endpointConfig = TileEndpointConfiguration(
-            host: host,
-            version: tilesVersion,
-            token: publicToken,
-            userAgent: URLSession.userAgent,
-            navigatorVersion: "", skuTokenSource: SkuTokenProvider(with: DirectionsCredentials())
-        )
-
-        if let cachesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first {
-            var tilesURL = cachesURL
-            tilesURL.appendPathComponent(tilesVersion, isDirectory: true)
-            do {
-                // Tiles with different versions shouldn't be mixed, it may cause inappropriate Navigator's behaviour
-                try FileManager.default.createDirectory(at: tilesURL, withIntermediateDirectories: true, attributes: nil)
-                let params = RouterParams(tilesPath: tilesURL.path, inMemoryTileCache: nil, mapMatchingSpatialCache: nil, threadsCount: nil, endpointConfig: endpointConfig)
-
-                navigator.configureRouter(for: params)
-            } catch {
-                assert(false, "Couldn't create cache directory for tiles")
-            }
-        } else {
-            assert(false, "Couldn't create cache directory for tiles")
-        }
-        return navigator
-    }
-
-    func setCustomLocation(_ location: CLLocation?) {
+    public func updateLocation(_ location: CLLocation?) {
         guard let location = location else { return }
         stopUpdatingLocation()
         stopUpdatingHeading()
         proxyDelegate?.locationManager(self, didUpdateLocations: [location])
     }
-
-    // MARK: MGLLocationManager
 
     override public var delegate: CLLocationManagerDelegate? {
         get {
@@ -139,5 +141,16 @@ open class FreeDriveLocationManager: NavigationLocationManager, CLLocationManage
         public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
             delegate?.locationManager?(manager, didFailWithError: error)
         }
+    }
+}
+
+extension TileEndpointConfiguration {
+    convenience init(directions: Directions, tilesVersion: String) {
+        let host = directions.credentials.host.absoluteString
+        guard let accessToken = directions.credentials.accessToken, !accessToken.isEmpty else {
+            preconditionFailure("No access token specified in Info.plist")
+        }
+        let skuTokenProvider = SkuTokenProvider(with: directions.credentials)
+        self.init(host: host, version: tilesVersion, token: accessToken, userAgent: URLSession.userAgent, navigatorVersion: "", skuTokenSource: skuTokenProvider)
     }
 }
