@@ -236,8 +236,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 
     private lazy var routeGradient = [CGFloat: UIColor]()
     
-    private lazy var styleObservation: NSKeyValueObservation? = nil
-    
     //MARK: - Initalizers
     
     public override init(frame: CGRect) {
@@ -277,10 +275,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         enableFrameByFrameCourseViewTracking(for: 3)
     }
     
-    deinit {
-        styleObservation = nil
-    }
-    
     //MARK: - Overrides
     
     open override func prepareForInterfaceBuilder() {
@@ -301,15 +295,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         if (tracksUserCourse) {
             updateCourseTracking(location: userLocationForCourseTracking, camera:self.camera, animated: false)
         }
+    
+        // TODO: Add style observation to be able to re-add highlighted building whenever it happens.
         
-        styleObservation = self.observe(\.style, options: .new) { (mapView, change) in
-            guard change.newValue != nil else {
-                return
-            }
-
-            // FIXME: Since building might be already highlighted and we do not have any info
-            // regarding its identification after style change such highlighted building will be lost.
-        }
+        // FIXME: Since building might be already highlighted and we do not have any info
+        // regarding its identification after style change such highlighted building will be lost.
     }
     
     open override func anchorPoint(forGesture gesture: UIGestureRecognizer) -> CGPoint {
