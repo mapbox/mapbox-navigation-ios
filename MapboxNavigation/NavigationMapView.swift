@@ -1388,15 +1388,11 @@ extension NavigationMapView {
 
     private func buildingIdentifier(at coordinate: CLLocationCoordinate2D) -> Int64? {
         let screenCoordinate = convert(coordinate, toPointTo: self)
-
-        // To increase a chance of selecting correct building identifier filter out
-        // features which do not contain appropriate attributes.
-        let features = visibleFeatures(at: screenCoordinate).filter {
-            let extrude = $0.attribute(forKey: "extrude") as? String
-            let type = $0.attribute(forKey: "type") as? String
-            return extrude == "true" && type == "building"
-        }
+        guard let style = style else { return nil }
         
+        let identifiers = Set(style.layers.compactMap({ $0 as? MGLVectorStyleLayer }).filter({ $0.sourceLayerIdentifier == "building" }).compactMap({ $0.identifier }))
+        let features = visibleFeatures(at: screenCoordinate, styleLayerIdentifiers: identifiers)
+
         if let feature = features.first, let identifier = feature.identifier as? Int64 {
             return identifier
         }
@@ -1411,10 +1407,10 @@ extension NavigationMapView {
         guard let highlightedBuildingsLayer = addBuildingsLayer() else { return }
         
         if extrudeAll {
-            highlightedBuildingsLayer.predicate = NSPredicate(format: "extrude = 'true' AND type = 'building' AND underground = 'false'")
+            highlightedBuildingsLayer.predicate = NSPredicate(format: "extrude = 'true' AND underground = 'false'")
         } else {
             // Form a predicate to filter out the other buildings from the datasource so only the desired ones are included.
-            highlightedBuildingsLayer.predicate = NSPredicate(format: "extrude = 'true' AND type = 'building' AND underground = 'false' AND $featureIdentifier IN %@", identifiers.map { $0 })
+            highlightedBuildingsLayer.predicate = NSPredicate(format: "extrude = 'true' AND underground = 'false' AND $featureIdentifier IN %@", identifiers.map { $0 })
         }
         
         // Buildings with identifiers will be highlighted with provided color. Rest of the buildings will be highlighted, but kept at a uniform color.
