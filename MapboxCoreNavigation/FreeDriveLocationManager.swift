@@ -8,6 +8,11 @@ public protocol FreeDriveDebugInfoListener: AnyObject {
 }
 
 open class FreeDriveLocationManager: NavigationLocationManager, CLLocationManagerDelegate {
+    /**
+     The directions service that allows the location manager to access road network data.
+     */
+    public let directions: Directions
+    
     public weak var debugInfoListener: FreeDriveDebugInfoListener? {
         get {
             proxyDelegate?.debugDelegate
@@ -19,20 +24,22 @@ open class FreeDriveLocationManager: NavigationLocationManager, CLLocationManage
 
     private var proxyDelegate: ProxyDelegate?
 
-    public required init(navigator: Navigator? = nil) {
+    /**
+     Initializes the location manager with the given directions service.
+     
+     - parameter directions: The directions service that allows the location manager to access road network data. If this argument is omitted, the shared `Directions` object is used.
+     */
+    public required init(directions: Directions = Directions.shared) {
+        self.directions = directions
         proxyDelegate = ProxyDelegate()
         super.init()
 
-        if let navigator = navigator {
-            proxyDelegate?.navNative = navigator
-        } else {
-            let tilesVersion = RouteTilesVersion(with: Directions.shared.credentials)
-            tilesVersion.getAvailableVersions { availableVersions in
-                if let latestVersion = availableVersions.last {
-                    tilesVersion.currentVersion = latestVersion
-                    let navigator = self.createNavigator(withTilesVersion: latestVersion)
-                    self.proxyDelegate?.navNative = navigator
-                }
+        let tilesVersion = RouteTilesVersion(with: directions.credentials)
+        tilesVersion.getAvailableVersions { availableVersions in
+            if let latestVersion = availableVersions.last {
+                tilesVersion.currentVersion = latestVersion
+                let navigator = self.createNavigator(withTilesVersion: latestVersion)
+                self.proxyDelegate?.navNative = navigator
             }
         }
 
@@ -42,14 +49,16 @@ open class FreeDriveLocationManager: NavigationLocationManager, CLLocationManage
     private func createNavigator(withTilesVersion tilesVersion: String) -> Navigator {
         let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
         let navigator = Navigator(profile: settingsProfile, config: NavigatorConfig() , customConfig: "")
-        let host = Directions.shared.credentials.host.absoluteString
-        let publicToken = Directions.shared.credentials.accessToken ?? ""
+        let host = directions.credentials.host.absoluteString
+        guard let publicToken = directions.credentials.accessToken else {
+            preconditionFailure("No access token specified in Info.plist")
+        }
         assert(publicToken != "")
         let endpointConfig = TileEndpointConfiguration(
             host: host,
             version: tilesVersion,
             token: publicToken,
-            userAgent: "",
+            userAgent: URLSession.userAgent,
             navigatorVersion: "", skuTokenSource: SkuTokenProvider(with: DirectionsCredentials())
         )
 
