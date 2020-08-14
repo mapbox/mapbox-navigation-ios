@@ -1364,23 +1364,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
 }
 
-// MARK: - Building Extrusion Highlights
-
-private struct BuildingHighlightAttributes: Hashable {
-    static let kDefaultIdentifier: Int64 = -1
-    
-    var coordinate: CLLocationCoordinate2D = kCLLocationCoordinate2DInvalid
-    var highlightColor: UIColor = .defaultBuildingHighlightColor
-    var identifier: Int64 = kDefaultIdentifier
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(identifier)
-    }
-    
-    static func ==(lhs: BuildingHighlightAttributes, rhs: BuildingHighlightAttributes) -> Bool {
-        return lhs.identifier == rhs.identifier
-    }
-}
+// MARK: - Building Extrusion Highlighting
 
 extension NavigationMapView {
        
@@ -1390,17 +1374,7 @@ extension NavigationMapView {
      `buildingHighlightingEnabled` must be set to true before this function will work.
      */
     public func highlightBuildings(at coordinates: [CLLocationCoordinate2D], in3D extrudesBuildings: Bool = true) {
-        let buildingAttributes = coordinates
-            // Create building attributes by searching for building identifier by provided coordinate.
-            .map({ BuildingHighlightAttributes(coordinate: $0,
-                                               highlightColor: buildingHighlightColor,
-                                               identifier: buildingIdentifier(at: $0)) })
-            // Do not add building attribute, in case if it wasn't found.
-            .filter({ $0.identifier != BuildingHighlightAttributes.kDefaultIdentifier })
-            // Since there might be case in which the same building is highlighted several times, remove duplicated identifiers.
-            .withoutDuplicates
-        
-        highlightBuildings(buildingAttributes, in3D: extrudesBuildings, extrudeAll: false)
+        highlightBuildings(Set(coordinates.compactMap({ buildingIdentifier(at: $0) })), in3D: extrudesBuildings, extrudeAll: false)
     }
     
     /**
@@ -1428,7 +1402,7 @@ extension NavigationMapView {
         return highlightedBuildingsLayer
     }
 
-    private func buildingIdentifier(at coordinate: CLLocationCoordinate2D) -> Int64 {
+    private func buildingIdentifier(at coordinate: CLLocationCoordinate2D) -> Int64? {
         let screenCoordinate = convert(coordinate, toPointTo: self)
 
         // To increase a chance of selecting correct building identifier filter out
@@ -1443,12 +1417,12 @@ extension NavigationMapView {
             return identifier
         }
         
-        return BuildingHighlightAttributes.kDefaultIdentifier
+        return nil
     }
     
-    private func highlightBuildings(_ buildings: [BuildingHighlightAttributes], in3D: Bool = false, extrudeAll: Bool = false) {
+    private func highlightBuildings(_ buildingIdentifiers: Set<Int64>, in3D: Bool = false, extrudeAll: Bool = false) {
         // In case if array with highlighted building attributes is empty - do nothing.
-        if buildings.isEmpty { return }
+        if buildingIdentifiers.isEmpty { return }
         // Add layer which will be used to highlight buildings if it wasn't added yet.
         guard let highlightedBuildingsLayer = addBuildingsLayer() else { return }
         
@@ -1456,13 +1430,13 @@ extension NavigationMapView {
             highlightedBuildingsLayer.predicate = NSPredicate(format: "extrude = 'true' AND type = 'building' AND underground = 'false'")
         } else {
             // Form a predicate to filter out the other buildings from the datasource so only the desired ones are included.
-            highlightedBuildingsLayer.predicate = NSPredicate(format: "extrude = 'true' AND type = 'building' AND underground = 'false' AND $featureIdentifier IN %@", buildings.map { $0.identifier })
+            highlightedBuildingsLayer.predicate = NSPredicate(format: "extrude = 'true' AND type = 'building' AND underground = 'false' AND $featureIdentifier IN %@", buildingIdentifiers.map { $0 })
         }
         
         // Buildings with identifiers will be highlighted with provided color. Rest of the buildings will be highlighted, but kept at a uniform color.
-        let highlightedBuildingHeightExpression = "MGL_MATCH($featureIdentifier, \(buildings.map { "\($0.identifier), \(in3D ? "height" : "0"), " }.joined(separator: ""))\(extrudeAll ? "height" : "0"))"
-        let highlightedBuildingColorExpression = "MGL_MATCH($featureIdentifier, \(buildings.map { "\($0.identifier), %@, " }.joined(separator: ""))%@)"
-        var colorsList = buildings.map { $0.highlightColor }
+        let highlightedBuildingHeightExpression = "MGL_MATCH($featureIdentifier, \(buildingIdentifiers.map { "\($0), \(in3D ? "height" : "0"), " }.joined(separator: ""))\(extrudeAll ? "height" : "0"))"
+        let highlightedBuildingColorExpression = "MGL_MATCH($featureIdentifier, \(buildingIdentifiers.map { "\($0), %@, " }.joined(separator: ""))%@)"
+        var colorsList = buildingIdentifiers.map { _ in buildingHighlightColor }
         
         colorsList.append(buildingDefaultColor)
         

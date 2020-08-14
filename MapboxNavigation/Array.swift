@@ -32,12 +32,3 @@ extension Array where Element: NSAttributedString {
         return joinedAttributedString
     }
 }
-
-extension Array where Element: Hashable {
-    /**
-     Returns array without duplicates. Order of elements might differ from original array.
-     */
-    var withoutDuplicates: Array {
-        return Array(Set(self))
-    }
-}
