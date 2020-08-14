@@ -302,17 +302,13 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             updateCourseTracking(location: userLocationForCourseTracking, camera:self.camera, animated: false)
         }
         
-        styleObservation = self.observe(\.style, options: .new) { [weak self] (mapView, change) in
+        styleObservation = self.observe(\.style, options: .new) { (mapView, change) in
             guard change.newValue != nil else {
                 return
             }
 
             // FIXME: Since building might be already highlighted and we do not have any info
             // regarding its identification after style change such highlighted building will be lost.
-            
-            // In case if style was changed make sure to remove existing layer so that it can be
-            // re-created in future.
-            self?.unhighlightBuildings()
         }
     }
     
@@ -1395,13 +1391,13 @@ extension NavigationMapView {
      */
     public func highlightBuildings(at coordinates: [CLLocationCoordinate2D], in3D extrudesBuildings: Bool = true) {
         let buildingAttributes = coordinates
-            // Create building attributes by searching for building ID by provided coordinate.
+            // Create building attributes by searching for building identifier by provided coordinate.
             .map({ BuildingHighlightAttributes(coordinate: $0,
                                                highlightColor: buildingHighlightColor,
-                                               identifier: buildingId(at: $0)) })
+                                               identifier: buildingIdentifier(at: $0)) })
             // Do not add building attribute, in case if it wasn't found.
             .filter({ $0.identifier != BuildingHighlightAttributes.kDefaultIdentifier })
-            // Since there might be case in which the same building is highlighted several times, remove duplicated IDs.
+            // Since there might be case in which the same building is highlighted several times, remove duplicated identifiers.
             .withoutDuplicates
         
         highlightBuildings(buildingAttributes, in3D: extrudesBuildings, extrudeAll: false)
@@ -1432,10 +1428,10 @@ extension NavigationMapView {
         return highlightedBuildingsLayer
     }
 
-    private func buildingId(at coordinate: CLLocationCoordinate2D) -> Int64 {
+    private func buildingIdentifier(at coordinate: CLLocationCoordinate2D) -> Int64 {
         let screenCoordinate = convert(coordinate, toPointTo: self)
 
-        // To increase a chance of selecting correct building ID filter out
+        // To increase a chance of selecting correct building identifier filter out
         // features which do not contain appropriate attributes.
         let features = visibleFeatures(at: screenCoordinate).filter {
             let extrude = $0.attribute(forKey: "extrude") as? String
@@ -1443,8 +1439,8 @@ extension NavigationMapView {
             return extrude == "true" && type == "building"
         }
         
-        if let feature = features.first, let buildingId = feature.identifier as? Int64 {
-            return buildingId
+        if let feature = features.first, let identifier = feature.identifier as? Int64 {
+            return identifier
         }
         
         return BuildingHighlightAttributes.kDefaultIdentifier
@@ -1463,7 +1459,7 @@ extension NavigationMapView {
             highlightedBuildingsLayer.predicate = NSPredicate(format: "extrude = 'true' AND type = 'building' AND underground = 'false' AND $featureIdentifier IN %@", buildings.map { $0.identifier })
         }
         
-        // Buildings with IDs will be highlighted with provided color. Rest of the buildings will be highlighted, but kept at a uniform color.
+        // Buildings with identifiers will be highlighted with provided color. Rest of the buildings will be highlighted, but kept at a uniform color.
         let highlightedBuildingHeightExpression = "MGL_MATCH($featureIdentifier, \(buildings.map { "\($0.identifier), \(in3D ? "height" : "0"), " }.joined(separator: ""))\(extrudeAll ? "height" : "0"))"
         let highlightedBuildingColorExpression = "MGL_MATCH($featureIdentifier, \(buildings.map { "\($0.identifier), %@, " }.joined(separator: ""))%@)"
         var colorsList = buildings.map { $0.highlightColor }
