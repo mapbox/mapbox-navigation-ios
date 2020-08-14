@@ -250,7 +250,7 @@ class ViewController: UIViewController {
         navigationViewController.mapView?.routeLineTracksTraversal = true
         
         // Example of building highlighting in 3D.
-        navigationViewController.destinationBuildingHighlightType = .highlightIn3D
+        navigationViewController.waypointStyle = .extrudedBuilding
         
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
@@ -263,7 +263,7 @@ class ViewController: UIViewController {
         navigationViewController.delegate = self
         
         // Example of building highlighting in 2D.
-        navigationViewController.destinationBuildingHighlightType = .highlightIn2D
+        navigationViewController.waypointStyle = .building
         
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }

@@ -148,29 +148,29 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     public var shouldManageApplicationIdleTimer = true
     
     /**
-     Enum denoting the types of the destination building highlighting on arrival.
+     Enum denoting the types of the destination waypoint highlighting on arrival.
      */
-    public enum DestinationBuildingHighlightType: Int {
+    public enum WaypointStyle: Int {
         /**
-         Do not highlight destination building on arrival.
+         Do not highlight destination waypoint on arrival. Destination annotation is always shown by default.
          */
-        case noHighlight
+        case annotation
         
         /**
-         Highlight destination building on arrival in 2D.
+         Highlight destination building on arrival in 2D. In case if destination building wasn't found only annotation will be shown.
          */
-        case highlightIn2D
+        case building
         
         /**
-         Highlight destination building on arrival in 3D.
+         Highlight destination building on arrival in 3D. In case if destination building wasn't found only annotation will be shown.
          */
-        case highlightIn3D
+        case extrudedBuilding
     }
     
     /**
      Allows to control highlighting of the destination building on arrival. By default destination buildings will not be highlighted.
      */
-    public var destinationBuildingHighlightType: DestinationBuildingHighlightType = .noHighlight
+    public var waypointStyle: WaypointStyle = .annotation
     
     var isConnectedToCarPlay: Bool {
         if #available(iOS 12.0, *) {
@@ -606,7 +606,7 @@ extension NavigationViewController: NavigationServiceDelegate {
     }
     
     private func zoomInAndHighlightBuilding(for location: CLLocation?) {
-        if destinationBuildingHighlightType == .noHighlight { return }
+        if waypointStyle == .annotation { return }
         guard let mapViewController = self.mapViewController else { return }
         guard let location = location else { return }
         
@@ -626,7 +626,7 @@ extension NavigationViewController: NavigationServiceDelegate {
                           animated: true,
                           completionHandler: {
                             // Highlight buildings which were marked as target destination coordinate in waypoint.
-                            mapView.highlightBuildings(at: self.routeOptions.waypoints.compactMap({ $0.targetCoordinate }), in3D: self.destinationBuildingHighlightType == .highlightIn3D ? true : false)
+                            mapView.highlightBuildings(at: self.routeOptions.waypoints.compactMap({ $0.targetCoordinate }), in3D: self.waypointStyle == .extrudedBuilding ? true : false)
                             
                             // Update insets to be able to correctly center map view after presenting end of route view.
                             mapViewController.updateMapViewContentInsets()
