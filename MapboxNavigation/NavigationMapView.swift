@@ -1411,7 +1411,7 @@ extension NavigationMapView {
     }
     
     private func highlightBuildings(_ buildingIdentifiers: Set<Int64>, in3D: Bool = false, extrudeAll: Bool = false) {
-        // In case if array with highlighted building attributes is empty - do nothing.
+        // In case if set with highlighted building identifiers is empty - do nothing.
         if buildingIdentifiers.isEmpty { return }
         // Add layer which will be used to highlight buildings if it wasn't added yet.
         guard let highlightedBuildingsLayer = addBuildingsLayer() else { return }
