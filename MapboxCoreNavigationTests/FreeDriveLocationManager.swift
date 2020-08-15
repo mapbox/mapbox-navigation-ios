@@ -35,28 +35,32 @@ extension CLLocationCoordinate2D {
     }
 }
 
-class DebugInfoListener: FreeDriveDebugInfoListener {
-    var onUpdated: ((CLLocationCoordinate2D, CLLocationCoordinate2D)->Void)?
-
-    init(onUpdated: ((CLLocationCoordinate2D, CLLocationCoordinate2D)->Void)? = nil) {
-        self.onUpdated = onUpdated
-    }
-
-    func didGet(location: CLLocation, with matches: [MapMatch], for rawLocation: CLLocation) {
-        onUpdated?(rawLocation.coordinate, location.coordinate)
-    }
-}
-
 class FreeDriveLocationManagerTests: XCTestCase {
-    class LocationsObserver: NSObject, CLLocationManagerDelegate {
-        func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-            guard let location = locations.first else { return }
-            print("Got location: \(location.coordinate.latitude), \(location.coordinate.longitude)")
+    class Delegate: FreeDriveLocationManagerDelegate {
+        let road: Road
+        let locationUpdateExpectation: XCTestExpectation
+        
+        init(road: Road, locationUpdateExpectation: XCTestExpectation) {
+            self.road = road
+            self.locationUpdateExpectation = locationUpdateExpectation
+        }
+        
+        func locationManager(_ manager: FreeDriveLocationManager, didUpdateLocation location: CLLocation, rawLocation: CLLocation) {
+            print("Got location: \(rawLocation.coordinate.latitude), \(rawLocation.coordinate.longitude) → \(location.coordinate.latitude), \(location.coordinate.longitude)")
+            print("Value: \(road.proximity(of: location.coordinate)) < \(road.proximity(of: rawLocation.coordinate))")
+            locationUpdateExpectation.fulfill()
+        }
+        
+        func locationManager(_ manager: FreeDriveLocationManager, didUpdateHeading newHeading: CLHeading) {
+        }
+        
+        func locationManager(_ manager: FreeDriveLocationManager, didFailWithError error: Error) {
         }
     }
-
+    
     func testFreeDrive() {
         let locationManager = FreeDriveLocationManager()
+        
         let startingExpectation = expectation(description: "Location manager should start without an error")
         locationManager.startUpdatingLocation { (error) in
             XCTAssertNil(error)
@@ -67,19 +71,17 @@ class FreeDriveLocationManagerTests: XCTestCase {
         // FIXME: Starting the location manager should automatically configure the navigator.
         XCTAssertNoThrow(try locationManager.configureNavigator(withTilesVersion: "1234"))
         
+        let locationUpdateExpectation = expectation(description: "Location manager should respond to every manual location update")
+        locationUpdateExpectation.expectedFulfillmentCount = 5
+        
+        let road = Road(from: CLLocationCoordinate2D(latitude: 47.207966, longitude: 9.527012), to: CLLocationCoordinate2D(latitude: 47.209518, longitude: 9.522167))
+        let delegate = Delegate(road: road, locationUpdateExpectation: locationUpdateExpectation)
+        locationManager.delegate = delegate
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(10)) {
             locationManager.updateLocation(CLLocation(latitude: 47.208674, longitude: 9.524650))
         }
-
-        let road = Road(from: CLLocationCoordinate2D(latitude: 47.207966, longitude: 9.527012), to: CLLocationCoordinate2D(latitude: 47.209518, longitude: 9.522167))
-
-        let expectation = XCTestExpectation(description: "")
-
-        let listener = DebugInfoListener() { rawLocation, location in
-            print("Got locations: (\(rawLocation.latitude), \(rawLocation.longitude)) -> (\(location.latitude), \(location.longitude))")
-            print("Value: \(road.proximity(of: location)) < \(road.proximity(of: rawLocation))")
-        }
-        locationManager.debugInfoListener = listener
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(25)) {
             locationManager.updateLocation(CLLocation(latitude: 47.208943, longitude: 9.524707))
             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
@@ -90,13 +92,11 @@ class FreeDriveLocationManagerTests: XCTestCase {
                         locationManager.updateLocation(CLLocation(latitude: 47.209612, longitude: 9.522629))
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
                             locationManager.updateLocation(CLLocation(latitude: 47.209842, longitude: 9.522377))
-                            XCTAssert(true)
-                            expectation.fulfill()
                         }
                     }
                 }
             }
         }
-        wait(for: [expectation], timeout: 50.1)
+        wait(for: [locationUpdateExpectation], timeout: 50.1)
     }
 }

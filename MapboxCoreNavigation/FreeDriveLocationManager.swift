@@ -3,27 +3,12 @@ import CoreLocation
 import MapboxDirections
 import MapboxAccounts
 
-public protocol FreeDriveDebugInfoListener: AnyObject {
-    func didGet(location: CLLocation, with matches: [MapMatch], for rawLocation: CLLocation)
-}
-
-open class FreeDriveLocationManager: NavigationLocationManager, CLLocationManagerDelegate {
-    /**
-     The directions service that allows the location manager to access road network data.
-     */
-    public let directions: Directions
-    
-    public weak var debugInfoListener: FreeDriveDebugInfoListener? {
-        get {
-            proxyDelegate?.debugDelegate
-        }
-        set {
-            proxyDelegate?.debugDelegate = newValue
-        }
-    }
-
-    private var proxyDelegate: ProxyDelegate?
-
+/**
+ An object that notifies your application when the user’s location changes, minimizing the noise that normally accompanies location updates from a `CLLocationManager` object.
+ 
+ Unlike `Router` classes such as `RouteController` and `LegacyRouteController`, this class operates without a predefined route, matching the user’s location to the road network at large.
+ */
+open class FreeDriveLocationManager: NSObject {
     /**
      Initializes the location manager with the given directions service.
      
@@ -31,30 +16,44 @@ open class FreeDriveLocationManager: NavigationLocationManager, CLLocationManage
      
      - postcondition: Call `startUpdatingLocation(completionHandler:)` afterwards to begin receiving location updates.
      */
-    public required init(directions: Directions = Directions.shared) {
+    public required init(directions: Directions = Directions.shared, systemLocationManager: NavigationLocationManager? = nil) {
         self.directions = directions
         
         let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
-        let navigator = Navigator(profile: settingsProfile, config: NavigatorConfig() , customConfig: "")
+        self.navigator = Navigator(profile: settingsProfile, config: NavigatorConfig() , customConfig: "")
         
-        let proxyDelegate = ProxyDelegate()
-        proxyDelegate.navNative = navigator
-        self.proxyDelegate = proxyDelegate
+        self.systemLocationManager = systemLocationManager ?? NavigationLocationManager()
         
         super.init()
-
-        super.delegate = proxyDelegate
+        
+        self.systemLocationManager.delegate = self
     }
     
-    public override func startUpdatingLocation() {
-        startUpdatingLocation(completionHandler: nil)
-    }
+    /**
+     The directions service that allows the location manager to access road network data.
+     */
+    public let directions: Directions
+    
+    /**
+     The location manager that provides raw locations for the receiver to match against the road network.
+     */
+    public let systemLocationManager: NavigationLocationManager
+    
+    /**
+     The underlying navigator that performs map matching.
+     */
+    let navigator: Navigator
+    
+    /**
+     The location manager’s delegate.
+     */
+    public weak var delegate: FreeDriveLocationManagerDelegate?
     
     /**
      Starts the generation of location updates with an optional completion handler that gets called when the location manager is ready to receive snapped location updates.
      */
-    public func startUpdatingLocation(completionHandler: ((Error?) -> Void)?) {
-        super.startUpdatingLocation()
+    public func startUpdatingLocation(completionHandler: ((Error?) -> Void)? = nil) {
+        systemLocationManager.startUpdatingLocation()
         
         let tilesVersion = RouteTilesVersion(with: directions.credentials)
         tilesVersion.getAvailableVersions { availableVersions in
@@ -70,6 +69,9 @@ open class FreeDriveLocationManager: NavigationLocationManager, CLLocationManage
         }
     }
     
+    /**
+     Creates a cache for tiles of the given version and configures the navigator to use this cache.
+     */
     func configureNavigator(withTilesVersion tilesVersion: String) throws {
         let endpointConfig = TileEndpointConfiguration(directions: directions, tilesVersion: tilesVersion)
 
@@ -81,70 +83,63 @@ open class FreeDriveLocationManager: NavigationLocationManager, CLLocationManage
         try FileManager.default.createDirectory(at: tilesURL, withIntermediateDirectories: true, attributes: nil)
         let params = RouterParams(tilesPath: tilesURL.path, inMemoryTileCache: nil, mapMatchingSpatialCache: nil, threadsCount: nil, endpointConfig: endpointConfig)
         
-        proxyDelegate?.navNative?.configureRouter(for: params)
+        navigator.configureRouter(for: params)
     }
-
+    
+    /**
+     Manually sets the current location.
+     
+     This method stops any automatic location updates.
+     */
     public func updateLocation(_ location: CLLocation?) {
         guard let location = location else { return }
-        stopUpdatingLocation()
-        stopUpdatingHeading()
-        proxyDelegate?.locationManager(self, didUpdateLocations: [location])
-    }
-
-    override public var delegate: CLLocationManagerDelegate? {
-        get {
-            proxyDelegate?.delegate
-        }
-        set {
-            proxyDelegate?.delegate = newValue
-        }
-    }
-
-    private class ProxyDelegate: NSObject, CLLocationManagerDelegate {
-        var navNative: Navigator?
-        var delegate: CLLocationManagerDelegate?
-        weak var debugDelegate: FreeDriveDebugInfoListener?
-
-        required init(navigator: Navigator? = nil) {
-            self.navNative = navigator
-            super.init()
-        }
-
-        deinit {
-            self.navNative = nil
-        }
-
-        // MARK: CLLocationManagerDelegate
-
-        public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-            if let loc = locations.first {
-                navNative?.updateLocation(for: FixLocation(loc))
-                let projectedDate = Date()
-                if let status = navNative?.getStatusForTimestamp(projectedDate) {
-                    delegate?.locationManager?(manager, didUpdateLocations: [CLLocation(status.location)])
-
-                    debugDelegate?.didGet(location: CLLocation(status.location), with: status.map_matcher_output.matches, for: loc)
-                } else {
-                    delegate?.locationManager?(manager, didUpdateLocations: locations)
-                }
-            }
-        }
-
-        public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
-            delegate?.locationManager?(manager, didUpdateHeading: newHeading)
-        }
-
-        public func locationManagerShouldDisplayHeadingCalibration(_ manager: CLLocationManager) -> Bool {
-            return delegate?.locationManagerShouldDisplayHeadingCalibration?(manager) ?? false
-        }
-
-        public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-            delegate?.locationManager?(manager, didFailWithError: error)
-        }
+        systemLocationManager.stopUpdatingLocation()
+        systemLocationManager.stopUpdatingHeading()
+        delegate?.locationManager(self, didUpdateLocation: location, rawLocation: location)
     }
 }
 
+extension FreeDriveLocationManager: CLLocationManagerDelegate {
+    public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        for location in locations {
+            navigator.updateLocation(for: FixLocation(location))
+        }
+        
+        guard let lastLocation = locations.last else {
+            return
+        }
+        
+        let status = navigator.status(at: lastLocation.timestamp)
+        delegate?.locationManager(self, didUpdateLocation: CLLocation(status.location), rawLocation: lastLocation)
+    }
+
+    public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+        delegate?.locationManager(self, didUpdateHeading: newHeading)
+    }
+
+    public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        delegate?.locationManager(self, didFailWithError: error)
+    }
+}
+
+/**
+ A delegate of a `FreeDriveLocationManager` object implements methods that the location manager calls as the user’s location changes.
+ */
+public protocol FreeDriveLocationManagerDelegate: class {
+    /// - seealso: `CLLocationManagerDelegate.locationManager(_:didUpdateLocations:)`
+    func locationManager(_ manager: FreeDriveLocationManager, didUpdateLocation location: CLLocation, rawLocation: CLLocation)
+    
+    /// - seealso: `CLLocationManagerDelegate.locationManager(_:didUpdateHeading:)`
+    func locationManager(_ manager: FreeDriveLocationManager, didUpdateHeading newHeading: CLHeading)
+    
+    /// - seealso: `CLLocationManagerDelegate.locationManager(_:didFailWithError:)`
+    func locationManager(_ manager: FreeDriveLocationManager, didFailWithError error: Error)
+}
+
 extension TileEndpointConfiguration {
+    /**
+     Initializes an object that configures a navigator to obtain routing tiles of the given version from an endpoint, using credentials that are consistent with the given directions service.
+     */
     convenience init(directions: Directions, tilesVersion: String) {
         let host = directions.credentials.host.absoluteString
         guard let accessToken = directions.credentials.accessToken, !accessToken.isEmpty else {

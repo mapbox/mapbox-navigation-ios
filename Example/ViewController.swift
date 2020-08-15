@@ -382,6 +382,27 @@ class ViewController: UIViewController {
         mapView.gestureRecognizers?.filter({ $0 is UILongPressGestureRecognizer }).forEach(singleTap.require(toFail:))
         mapView.addGestureRecognizer(singleTap)
     }
+
+    func addFreeDriveDebugger(mapView: NavigationMapView) {
+        let debugger = FreeDriveDebugger(mapView: mapView)
+
+        let freeDriveLocationManager = FreeDriveLocationManager()
+        let locationManager = CLLToMGLConverterLocationManager(locationManager: freeDriveLocationManager)
+        mapView.locationManager = locationManager
+
+        let debugView = FreeDriveDebugInfoView() { from, to in
+            if debugger.polylineAdded {
+                debugger.updatePolylineWithCoordinates(coordinates: [from, to])
+            }
+        }
+        freeDriveLocationManager.delegate = debugView
+
+        mapView.addSubview(debugView)
+        NSLayoutConstraint.activate([
+            debugView.trailingAnchor.constraint(equalTo: mapView.trailingAnchor, constant: -8),
+            debugView.topAnchor.constraint(equalTo: mapView.topAnchor, constant: 90)
+        ])
+    }
 }
 
 extension ViewController: MGLMapViewDelegate {
@@ -539,5 +560,43 @@ extension ViewController: VisualInstructionDelegate {
         // return mutable
         
         return presented
+    }
+}
+
+class FreeDriveDebugger {
+    var polylineAdded: Bool = false
+    weak var mapView: NavigationMapView?
+    var polylineSource: MGLShapeSource?
+
+    init(mapView: NavigationMapView) {
+        self.mapView = mapView
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
+            if !self.polylineAdded, let style = mapView.style {
+                self.addPolyline(to: style)
+                self.polylineAdded = true
+            }
+        }
+    }
+
+    func updatePolylineWithCoordinates(coordinates: [CLLocationCoordinate2D]) {
+        var mutableCoordinates = coordinates
+        let polyline = MGLPolylineFeature(coordinates: &mutableCoordinates, count: UInt(mutableCoordinates.count))
+        polylineSource?.shape = polyline
+    }
+
+    func addPolyline(to style: MGLStyle) {
+        let source = MGLShapeSource(identifier: "polyline", shape: nil, options: nil)
+        style.addSource(source)
+        polylineSource = source
+
+        let layer = MGLLineStyleLayer(identifier: "polyline", source: source)
+        layer.lineJoin = NSExpression(forConstantValue: "round")
+        layer.lineCap = NSExpression(forConstantValue: "round")
+        layer.lineColor = NSExpression(forConstantValue: UIColor(red: 0xE2/0xff, green: 0x3D/0xff, blue: 0x5a/0xff, alpha: 1))
+
+        layer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
+        [14: 2, 18: 12])
+        style.addLayer(layer)
     }
 }

@@ -2,56 +2,56 @@ import UIKit
 import Mapbox
 import MapboxCoreNavigation
 
-class CLLToMGLConverterLocationManager: NSObject, MGLLocationManager, CLLocationManagerDelegate {
-    var delegate: MGLLocationManagerDelegate?
+open class CLLToMGLConverterLocationManager: NSObject, MGLLocationManager {
+    public var delegate: MGLLocationManagerDelegate?
 
-    private let locationManager: CLLocationManager
+    private let locationManager: FreeDriveLocationManager
 
-    init(locationManager: CLLocationManager) {
+    public init(locationManager: FreeDriveLocationManager) {
         self.locationManager = locationManager
         super.init()
         locationManager.delegate = self
     }
 
-    var authorizationStatus: CLAuthorizationStatus {
+    public var authorizationStatus: CLAuthorizationStatus {
         CLLocationManager.authorizationStatus()
     }
 
-    func requestAlwaysAuthorization() {
-        locationManager.requestAlwaysAuthorization()
+    public func requestAlwaysAuthorization() {
+        locationManager.systemLocationManager.requestAlwaysAuthorization()
     }
 
-    func requestWhenInUseAuthorization() {
-        locationManager.requestWhenInUseAuthorization()
+    public func requestWhenInUseAuthorization() {
+        locationManager.systemLocationManager.requestWhenInUseAuthorization()
     }
 
-    func startUpdatingLocation() {
+    public func startUpdatingLocation() {
         locationManager.startUpdatingLocation()
     }
 
-    func stopUpdatingLocation() {
-        locationManager.stopUpdatingLocation()
+    public func stopUpdatingLocation() {
+        locationManager.systemLocationManager.stopUpdatingLocation()
     }
 
-    var headingOrientation: CLDeviceOrientation {
+    public var headingOrientation: CLDeviceOrientation {
         get {
-            locationManager.headingOrientation
+            locationManager.systemLocationManager.headingOrientation
         }
         set {
-            locationManager.headingOrientation = newValue
+            locationManager.systemLocationManager.headingOrientation = newValue
         }
     }
 
-    func startUpdatingHeading() {
-        locationManager.startUpdatingHeading()
+    public func startUpdatingHeading() {
+        locationManager.systemLocationManager.startUpdatingHeading()
     }
 
-    func stopUpdatingHeading() {
-        locationManager.stopUpdatingHeading()
+    public func stopUpdatingHeading() {
+        locationManager.systemLocationManager.stopUpdatingHeading()
     }
 
-    func dismissHeadingCalibrationDisplay() {
-        locationManager.dismissHeadingCalibrationDisplay()
+    public func dismissHeadingCalibrationDisplay() {
+        locationManager.systemLocationManager.dismissHeadingCalibrationDisplay()
     }
 
     // MARK: CLLocationManagerDelegate
@@ -73,61 +73,16 @@ class CLLToMGLConverterLocationManager: NSObject, MGLLocationManager, CLLocation
     }
 }
 
-class FreeDriveDebugger {
-    var polylineAdded: Bool = false
-    private weak var mapView: NavigationMapView?
-    private var polylineSource: MGLShapeSource?
-
-    init(mapView: NavigationMapView) {
-        self.mapView = mapView
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
-            if !self.polylineAdded, let style = mapView.style {
-                self.addPolyline(to: style)
-                self.polylineAdded = true
-            }
-        }
+extension CLLToMGLConverterLocationManager: FreeDriveLocationManagerDelegate {
+    public func locationManager(_ manager: FreeDriveLocationManager, didUpdateLocation location: CLLocation, rawLocation: CLLocation) {
+        delegate?.locationManager(self, didUpdate: [location])
     }
-
-    func updatePolylineWithCoordinates(coordinates: [CLLocationCoordinate2D]) {
-        var mutableCoordinates = coordinates
-        let polyline = MGLPolylineFeature(coordinates: &mutableCoordinates, count: UInt(mutableCoordinates.count))
-        polylineSource?.shape = polyline
+    
+    public func locationManager(_ manager: FreeDriveLocationManager, didUpdateHeading newHeading: CLHeading) {
+        delegate?.locationManager(self, didUpdate: newHeading)
     }
-
-    func addPolyline(to style: MGLStyle) {
-        let source = MGLShapeSource(identifier: "polyline", shape: nil, options: nil)
-        style.addSource(source)
-        polylineSource = source
-
-        let layer = MGLLineStyleLayer(identifier: "polyline", source: source)
-        layer.lineJoin = NSExpression(forConstantValue: "round")
-        layer.lineCap = NSExpression(forConstantValue: "round")
-        layer.lineColor = NSExpression(forConstantValue: UIColor(red: 0xE2/0xff, green: 0x3D/0xff, blue: 0x5a/0xff, alpha: 1))
-
-        layer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
-        [14: 2, 18: 12])
-        style.addLayer(layer)
+    
+    public func locationManager(_ manager: FreeDriveLocationManager, didFailWithError error: Error) {
+        delegate?.locationManager(self, didFailWithError: error)
     }
-}
-
-func addFreeDriveDebugger(mapView: NavigationMapView) {
-    let debugger = FreeDriveDebugger(mapView: mapView)
-
-    let freeDriveLocationManager = FreeDriveLocationManager()
-    let locationManager = CLLToMGLConverterLocationManager(locationManager: freeDriveLocationManager)
-    mapView.locationManager = locationManager
-
-    let debugView = FreeDriveDebugInfoView() { from, to in
-        if debugger.polylineAdded {
-            debugger.updatePolylineWithCoordinates(coordinates: [from, to])
-        }
-    }
-    freeDriveLocationManager.debugInfoListener = debugView
-
-    mapView.addSubview(debugView)
-    NSLayoutConstraint.activate([
-        debugView.trailingAnchor.constraint(equalTo: mapView.trailingAnchor, constant: -8),
-        debugView.topAnchor.constraint(equalTo: mapView.topAnchor, constant: 90)
-    ])
 }

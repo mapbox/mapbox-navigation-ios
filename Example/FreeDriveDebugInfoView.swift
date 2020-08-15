@@ -1,12 +1,13 @@
+import MapboxDirections
 import MapboxCoreNavigation
-import MapboxNavigationNative
+import CoreLocation
 import UIKit
 
-class FreeDriveDebugInfoView: UIView, FreeDriveDebugInfoListener, UITableViewDataSource, UITableViewDelegate {
+class FreeDriveDebugInfoView: UIView, UITableViewDataSource, UITableViewDelegate {
     private let rawLocationLabel: UILabel
     private let locationLabel: UILabel
     private let matchesTable: UITableView
-    private var matches: [MapMatch] = []
+    private var matches: [Match] = []
     var onUpdated: ((CLLocationCoordinate2D, CLLocationCoordinate2D)->Void)?
 
     init(onUpdated: ((CLLocationCoordinate2D, CLLocationCoordinate2D)->Void)? = nil) {
@@ -35,15 +36,6 @@ class FreeDriveDebugInfoView: UIView, FreeDriveDebugInfoListener, UITableViewDat
         fatalError("init(coder:) has not been implemented")
     }
 
-    func didGet(location: CLLocation, with matches: [MapMatch], for rawLocation: CLLocation) {
-        //TODO: implement
-        rawLocationLabel.text = String(format: "RawLoc: %.8f, %.8f", rawLocation.coordinate.latitude, rawLocation.coordinate.longitude)
-        locationLabel.text = String(format: "Loc: %.8f, %.8f", location.coordinate.latitude, location.coordinate.longitude)
-        self.matches = matches
-        matchesTable.reloadData()
-        onUpdated?(rawLocation.coordinate, location.coordinate)
-    }
-
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         return nil
     }
@@ -56,12 +48,28 @@ class FreeDriveDebugInfoView: UIView, FreeDriveDebugInfoListener, UITableViewDat
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
-        cell.textLabel?.text = "Match with probability: \(matches[indexPath.row].proba)"
+        cell.textLabel?.text = "Match with probability: \(matches[indexPath.row].confidence)"
         cell.textLabel?.font = UIFont.systemFont(ofSize: 9)
         return cell
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 15
+    }
+}
+
+extension FreeDriveDebugInfoView: FreeDriveLocationManagerDelegate {
+    func locationManager(_ manager: FreeDriveLocationManager, didUpdateLocation location: CLLocation, rawLocation: CLLocation) {
+        rawLocationLabel.text = String(format: "RawLoc: %.8f, %.8f", rawLocation.coordinate.latitude, rawLocation.coordinate.longitude)
+        locationLabel.text = String(format: "Loc: %.8f, %.8f", location.coordinate.latitude, location.coordinate.longitude)
+        // TODO: Populate matches from notification.
+        matchesTable.reloadData()
+        onUpdated?(rawLocation.coordinate, location.coordinate)
+    }
+    
+    func locationManager(_ manager: FreeDriveLocationManager, didUpdateHeading newHeading: CLHeading) {
+    }
+    
+    func locationManager(_ manager: FreeDriveLocationManager, didFailWithError error: Error) {
     }
 }
