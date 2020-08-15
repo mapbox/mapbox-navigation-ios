@@ -111,6 +111,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 
         static let instructionLabel = "\(identifierNamespace).instructionLabel"
         static let instructionCircle = "\(identifierNamespace).instructionCircle"
+        
+        static let buildingExtrusion = "\(identifierNamespace).buildingExtrusion"
     }
 
     // MARK: - Instance Properties
@@ -125,6 +127,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     @objc dynamic public var traversedRouteColor: UIColor = .defaultTraversedRouteColor
     @objc dynamic public var maneuverArrowColor: UIColor = .defaultManeuverArrow
     @objc dynamic public var maneuverArrowStrokeColor: UIColor = .defaultManeuverArrowStroke
+    @objc dynamic public var buildingDefaultColor: UIColor = .defaultBuildingColor
+    @objc dynamic public var buildingHighlightColor: UIColor = .defaultBuildingHighlightColor
     
     var userLocationForCourseTracking: CLLocation?
     var animatesUserLocation: Bool = false
@@ -389,7 +393,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         userCourseView.update(location: location, pitch: self.camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse)
     }
     
-    //MARK: -  Gesture Recognizers
+    //MARK: - Gesture Recognizers
     
     /**
      Fired when NavigationMapView detects a tap not handled elsewhere by other gesture recognizers.
@@ -602,12 +606,19 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 
     func fadeRoute(_ fractionTraveled: Double) {
         guard let mainRouteLayer = style?.layer(withIdentifier: StyleLayerIdentifier.mainRoute) as? MGLLineStyleLayer,
-            let mainRouteLayerLineGradient = lineGradient(routeGradientStops.line, fractionTraveled: fractionTraveled),
-            let mainRouteCasingLayer = style?.layer(withIdentifier: StyleLayerIdentifier.mainRouteCasing) as? MGLLineStyleLayer,
-            let mainRouteCasingLayerLineGradient = lineGradient(routeGradientStops.casing, fractionTraveled: fractionTraveled) else { return }
+            let mainRouteCasingLayer = style?.layer(withIdentifier: StyleLayerIdentifier.mainRouteCasing) as? MGLLineStyleLayer else { return }
         
-        mainRouteLayer.lineGradient = mainRouteLayerLineGradient
-        mainRouteCasingLayer.lineGradient = mainRouteCasingLayerLineGradient
+        // In case if route was fully travelled - remove main route and its casing.
+        if fractionTraveled == 1.0 {
+            style?.remove([mainRouteLayer, mainRouteCasingLayer])
+            return
+        }
+        
+        if let mainRouteLayerLineGradient = lineGradient(routeGradientStops.line, fractionTraveled: fractionTraveled),
+            let mainRouteCasingLayerLineGradient = lineGradient(routeGradientStops.casing, fractionTraveled: fractionTraveled) {
+            mainRouteLayer.lineGradient = mainRouteLayerLineGradient
+            mainRouteCasingLayer.lineGradient = mainRouteCasingLayerLineGradient
+        }
     }
     
     /**
@@ -1333,5 +1344,93 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     public func recenterMap() {
         tracksUserCourse = true
         enableFrameByFrameCourseViewTracking(for: 3)
+    }
+}
+
+// MARK: - Building Extrusion Highlighting
+
+extension NavigationMapView {
+       
+    /**
+     Receives coordinates for searching the map for buildings. If buildings are found, they will be highlighted in 2D or 3D depending on the `in3D` value.
+     
+     - parameter coordinates: Coordinates which represent buildings locations.
+     - parameter extrudesBuildings: Switch which allows to highlight buildings in either 2D or 3D. Defaults to true.
+     */
+    public func highlightBuildings(at coordinates: [CLLocationCoordinate2D], in3D extrudesBuildings: Bool = true) {
+        highlightBuildings(with: Set(coordinates.compactMap({ buildingIdentifier(at: $0) })), in3D: extrudesBuildings)
+    }
+    
+    /**
+     Removes the highlight from all buildings highlighted by `highlightBuildings(at:in3D:)`.
+     */
+    public func unhighlightBuildings() {
+        guard let highlightedBuildingsLayer = style?.layer(withIdentifier: StyleLayerIdentifier.buildingExtrusion) else { return }
+        
+        style?.removeLayer(highlightedBuildingsLayer)
+    }
+    
+    private func addBuildingsLayer() -> MGLFillExtrusionStyleLayer? {
+        if let highlightedBuildingsLayer = style?.layer(withIdentifier: StyleLayerIdentifier.buildingExtrusion) as? MGLFillExtrusionStyleLayer { return highlightedBuildingsLayer }
+        guard let buildingsSource = style?.source(withIdentifier: "composite") else { return nil }
+        
+        let highlightedBuildingsLayer = MGLFillExtrusionStyleLayer(identifier: StyleLayerIdentifier.buildingExtrusion, source: buildingsSource)
+        highlightedBuildingsLayer.sourceLayerIdentifier = "building"
+        highlightedBuildingsLayer.fillExtrusionColor = NSExpression(forConstantValue: buildingDefaultColor)
+        highlightedBuildingsLayer.fillExtrusionOpacity = NSExpression(forConstantValue: 0.05)
+        highlightedBuildingsLayer.fillExtrusionHeightTransition = MGLTransition(duration: 0.8, delay: 0)
+        highlightedBuildingsLayer.fillExtrusionOpacityTransition = MGLTransition(duration: 0.8, delay: 0)
+        
+        style?.addLayer(highlightedBuildingsLayer)
+        
+        return highlightedBuildingsLayer
+    }
+
+    private func buildingIdentifier(at coordinate: CLLocationCoordinate2D) -> Int64? {
+        let screenCoordinate = convert(coordinate, toPointTo: self)
+        guard let style = style else { return nil }
+        
+        let identifiers = Set(style.layers.compactMap({ $0 as? MGLVectorStyleLayer }).filter({ $0.sourceLayerIdentifier == "building" }).compactMap({ $0.identifier }))
+        let features = visibleFeatures(at: screenCoordinate, styleLayerIdentifiers: identifiers)
+
+        if let feature = features.first, let identifier = feature.identifier as? Int64 {
+            return identifier
+        }
+        
+        return nil
+    }
+    
+    private func highlightBuildings(with identifiers: Set<Int64>, in3D: Bool = false, extrudeAll: Bool = false) {
+        // In case if set with highlighted building identifiers is empty - do nothing.
+        if identifiers.isEmpty { return }
+        // Add layer which will be used to highlight buildings if it wasn't added yet.
+        guard let highlightedBuildingsLayer = addBuildingsLayer() else { return }
+        
+        if extrudeAll {
+            highlightedBuildingsLayer.predicate = NSPredicate(format: "extrude = 'true' AND underground = 'false'")
+        } else {
+            // Form a predicate to filter out the other buildings from the datasource so only the desired ones are included.
+            highlightedBuildingsLayer.predicate = NSPredicate(format: "extrude = 'true' AND underground = 'false' AND $featureIdentifier IN %@", identifiers.map { $0 })
+        }
+        
+        // Buildings with identifiers will be highlighted with provided color. Rest of the buildings will be highlighted, but kept at a uniform color.
+        let highlightedBuildingsHeightExpression = NSExpression(format: "TERNARY(%@ = TRUE AND (%@ = TRUE OR $featureIdentifier IN %@), height, 0)", in3D as NSValue, extrudeAll as NSValue, identifiers.map { $0 })
+        let colorsByBuilding = Dictionary(identifiers.map { (NSExpression(forConstantValue: $0), NSExpression(forConstantValue: buildingHighlightColor)) }) { (_, last) in last }
+        let highlightedBuildingsColorExpression = NSExpression(forMGLMatchingKey: NSExpression(forVariable: "featureIdentifier"), in: colorsByBuilding, default: NSExpression(forConstantValue: buildingDefaultColor))
+        
+        let fillExtrusionHeightStops = [0: NSExpression(forConstantValue: 0),
+                                        13: NSExpression(forConstantValue: 0),
+                                        13.25: highlightedBuildingsHeightExpression]
+        
+        let fillExtrusionBaseStops = [0: NSExpression(forConstantValue: 0),
+                                      13: NSExpression(forConstantValue: 0),
+                                      13.25: NSExpression(forKeyPath: "min_height")]
+        
+        let opacityStops = [13: 0.5, 17: 0.8]
+        
+        highlightedBuildingsLayer.fillExtrusionHeight = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", fillExtrusionHeightStops)
+        highlightedBuildingsLayer.fillExtrusionBase = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", fillExtrusionBaseStops)
+        highlightedBuildingsLayer.fillExtrusionColor = highlightedBuildingsColorExpression
+        highlightedBuildingsLayer.fillExtrusionOpacity = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", opacityStops)
     }
 }

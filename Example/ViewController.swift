@@ -37,15 +37,14 @@ class ViewController: UIViewController {
 
     var response: RouteResponse? {
         didSet {
-            guard let routes = response?.routes, let current = routes.first, let steps = current.legs.first?.steps, !steps.isEmpty else {
-                startButton.isEnabled = false
-                mapView?.removeRoutes()
+            guard let routes = response?.routes, let currentRoute = routes.first else {
+                clearMapView()
                 return
-                
             }
+            
             startButton.isEnabled = true
             mapView?.show(routes)
-            mapView?.showWaypoints(on: current)
+            mapView?.showWaypoints(on: currentRoute)
         }
     }
     
@@ -135,10 +134,16 @@ class ViewController: UIViewController {
             waypoints = Array(waypoints.dropFirst())
         }
         
-        let coordinates = mapView.convert(tap.location(in: mapView), toCoordinateFrom: mapView)
+        let destinationCoord = mapView.convert(tap.location(in: mapView), toCoordinateFrom: mapView)
         // Note: The destination name can be modified. The value is used in the top banner when arriving at a destination.
-        let waypoint = Waypoint(coordinate: coordinates, name: "Dropped Pin #\(waypoints.endIndex + 1)")
+        let waypoint = Waypoint(coordinate: destinationCoord, name: "Dropped Pin #\(waypoints.endIndex + 1)")
+        // Example of building highlighting. `targetCoordinate`, in this example, is used implicitly by NavigationViewController to determine which buildings to highlight.
+        waypoint.targetCoordinate = destinationCoord
         waypoints.append(waypoint)
+    
+        // Example of highlighting buildings in 2d and directly using the API on NavigationMapView.
+        let buildingHighlightCoordinates = waypoints.compactMap { $0.targetCoordinate }
+        mapView.highlightBuildings(at: buildingHighlightCoordinates, in3D: false)
 
         requestRoute()
     }
@@ -150,15 +155,22 @@ class ViewController: UIViewController {
     }
 
     @IBAction func clearMapPressed(_ sender: Any) {
-        clearMap.isHidden = true
-        mapView?.removeRoutes()
-        mapView?.removeWaypoints()
-        waypoints.removeAll()
-        longPressHintView.isHidden = false
+        clearMapView()
     }
 
     @IBAction func startButtonPressed(_ sender: Any) {
         presentActionsAlertController()
+    }
+    
+    private func clearMapView() {
+        startButton.isEnabled = false
+        clearMap.isHidden = true
+        longPressHintView.isHidden = false
+        
+        mapView?.unhighlightBuildings()
+        mapView?.removeRoutes()
+        mapView?.removeWaypoints()
+        waypoints.removeAll()
     }
     
     private func presentActionsAlertController() {
@@ -237,6 +249,9 @@ class ViewController: UIViewController {
         // Render part of the route that has been traversed with full transparency, to give the illusion of a disappearing route.
         navigationViewController.mapView?.routeLineTracksTraversal = true
         
+        // Example of building highlighting in 3D.
+        navigationViewController.waypointStyle = .extrudedBuilding
+        
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
     
@@ -246,6 +261,9 @@ class ViewController: UIViewController {
         let options = NavigationOptions(styles: styles, navigationService: navigationService(route: route, options: routeOptions))
         let navigationViewController = NavigationViewController(for: route, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
+        
+        // Example of building highlighting in 2D.
+        navigationViewController.waypointStyle = .building
         
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
@@ -388,7 +406,7 @@ extension ViewController: NavigationMapViewDelegate {
         guard let responseOptions = response?.options, case let .route(routeOptions) = responseOptions else { return }
         let modifiedOptions = routeOptions.without(waypoint: waypoint)
 
-        presentWaypointRemovalActionSheet { _ in
+        presentWaypointRemovalAlert { _ in
             self.requestRoute(with:modifiedOptions, success: self.defaultSuccess, failure: self.defaultFailure)
         }
     }
@@ -400,18 +418,18 @@ extension ViewController: NavigationMapViewDelegate {
         self.response!.routes!.insert(route, at: 0)
     }
 
-    private func presentWaypointRemovalActionSheet(completionHandler approve: @escaping ((UIAlertAction) -> Void)) {
-        let title = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_TITLE", value: "Remove Waypoint?", comment: "Title of sheet confirming waypoint removal")
-        let message = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_MSG", value: "Do you want to remove this waypoint?", comment: "Message of sheet confirming waypoint removal")
-        let removeTitle = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_REMOVE", value: "Remove Waypoint", comment: "Title of alert sheet action for removing a waypoint")
+    private func presentWaypointRemovalAlert(completionHandler approve: @escaping ((UIAlertAction) -> Void)) {
+        let title = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_TITLE", value: "Remove Waypoint?", comment: "Title of alert confirming waypoint removal")
+        let message = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_MSG", value: "Do you want to remove this waypoint?", comment: "Message of alert confirming waypoint removal")
+        let removeTitle = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_REMOVE", value: "Remove Waypoint", comment: "Title of alert action for removing a waypoint")
         let cancelTitle = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_CANCEL", value: "Cancel", comment: "Title of action for dismissing waypoint removal confirmation sheet")
-
-        let actionSheet = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
-        let remove = UIAlertAction(title: removeTitle, style: .destructive, handler: approve)
-        let cancel = UIAlertAction(title: cancelTitle, style: .cancel, handler: nil)
-        [remove, cancel].forEach(actionSheet.addAction(_:))
-
-        self.present(actionSheet, animated: true, completion: nil)
+        
+        let waypointRemovalAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let removeAction = UIAlertAction(title: removeTitle, style: .destructive, handler: approve)
+        let cancelAction = UIAlertAction(title: cancelTitle, style: .cancel, handler: nil)
+        [removeAction, cancelAction].forEach(waypointRemovalAlertController.addAction(_:))
+        
+        self.present(waypointRemovalAlertController, animated: true, completion: nil)
     }
 }
 

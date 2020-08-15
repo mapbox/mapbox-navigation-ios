@@ -147,6 +147,11 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      */
     public var shouldManageApplicationIdleTimer = true
     
+    /**
+     Allows to control highlighting of the destination building on arrival. By default destination buildings will not be highlighted.
+     */
+    public var waypointStyle: WaypointStyle = .annotation
+    
     var isConnectedToCarPlay: Bool {
         if #available(iOS 12.0, *) {
             return CarPlayManager.isConnected
@@ -572,9 +577,43 @@ extension NavigationViewController: NavigationServiceDelegate {
         let advancesToNextLeg = componentsWantAdvance && (delegate?.navigationViewController(self, didArriveAt: waypoint) ?? defaultBehavior)
         
         if service.routeProgress.isFinalLeg && advancesToNextLeg && showsEndOfRouteFeedback {
-            showEndOfRouteFeedback()
+            // In case of final destination present end of route view first and then zoom in to extruded building.
+            showEndOfRouteFeedback { [weak self] _ in
+                self?.zoomInAndHighlightBuilding(for: service.router.location)
+            }
         }
         return advancesToNextLeg
+    }
+    
+    private func zoomInAndHighlightBuilding(for location: CLLocation?) {
+        if waypointStyle == .annotation { return }
+        guard let mapViewController = self.mapViewController else { return }
+        guard let location = location else { return }
+        
+        // Since all buildings are included in zoom level 16 and above as per
+        // https://docs.mapbox.com/vector-tiles/reference/mapbox-streets-v8/#building
+        // we make sure to zoom in before making update to insets, user course view etc
+        var currentZoomLevel = mapViewController.mapView.zoomLevel
+        let expectedZoomLevel = 16.5
+        if currentZoomLevel < expectedZoomLevel {
+            currentZoomLevel = expectedZoomLevel
+        }
+        
+        let mapView = mapViewController.mapView
+        mapView.setCenter(location.coordinate,
+                          zoomLevel: currentZoomLevel,
+                          direction: location.course,
+                          animated: true,
+                          completionHandler: {
+                            // Highlight buildings which were marked as target destination coordinate in waypoint.
+                            mapView.highlightBuildings(at: self.routeOptions.waypoints.compactMap({ $0.targetCoordinate }), in3D: self.waypointStyle == .extrudedBuilding ? true : false)
+                            
+                            // Update insets to be able to correctly center map view after presenting end of route view.
+                            mapViewController.updateMapViewContentInsets()
+                            
+                            // Update user course view to correctly place it in map view.
+                            mapView.updateCourseTracking(location: location, animated: false)
+        })
     }
     
     public func showEndOfRouteFeedback(duration: TimeInterval = 1.0, completionHandler: ((Bool) -> Void)? = nil) {
