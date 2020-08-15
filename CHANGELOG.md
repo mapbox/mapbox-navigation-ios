@@ -14,6 +14,7 @@
 * `MGLStyle.navigationGuidanceDayStyleURL` and `MGLStyle.navigationGuidanceNightStyleURL` are renamed to `MGLStyle.navigationDayStyleURL` and `MGLStyle.navigationNightStyleURL`respectively. ([#2523](https://github.com/mapbox/mapbox-navigation-ios/pull/2523))
 * `MGLStyle.navigationPreviewDayStyleURL` and `MGLStyle.navigationPreviewNightStyleURL` are removed. Now, corresponding `MGLStyle.navigationDayStyleURL` or `MGLStyle.navigationNightStyleURL` will be used to visualize `MGLMapView.showsTraffic`. ([#2523](https://github.com/mapbox/mapbox-navigation-ios/pull/2523))
 * By default, NavigationMapView displays the `Navigation Day v5` style. This style consolidates `Navigation Preview` and `Navigation Guidance` styles and thus is used in both Navigation and Preview views. ([#2523](https://github.com/mapbox/mapbox-navigation-ios/pull/2523))
+* Upgraded to [MapboxSpeech v0.3.1](https://github.com/mapbox/mapbox-speech-swift/releases/tag/v0.3.1). ([#2543](https://github.com/mapbox/mapbox-navigation-ios/pull/2543))
 
 ### User interface
 
