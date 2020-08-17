@@ -75,9 +75,14 @@ open class FreeDriveLocationManager: NSObject {
     func configureNavigator(withTilesVersion tilesVersion: String) throws {
         let endpointConfig = TileEndpointConfiguration(directions: directions, tilesVersion: tilesVersion)
 
+        // ~/Library/Caches/tld.app.bundle.id/.mapbox/2020_08_08-03_00_00/
         guard var tilesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first else {
             preconditionFailure("No Caches directory to create the tile directory inside")
         }
+        if let bundleIdentifier = Bundle.main.bundleIdentifier ?? Bundle.mapboxCoreNavigation.bundleIdentifier {
+            tilesURL.appendPathComponent(bundleIdentifier, isDirectory: true)
+        }
+        tilesURL.appendPathComponent(".mapbox", isDirectory: true)
         tilesURL.appendPathComponent(tilesVersion, isDirectory: true)
         // Tiles with different versions shouldn't be mixed, it may cause inappropriate Navigator's behaviour
         try FileManager.default.createDirectory(at: tilesURL, withIntermediateDirectories: true, attributes: nil)
