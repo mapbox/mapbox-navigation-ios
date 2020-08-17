@@ -253,7 +253,7 @@
 		5A1C075824BDEB44000A6330 /* FreeDriveDebugger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1C075724BDEB44000A6330 /* FreeDriveDebugger.swift */; };
 		5A39B9282498F9890026DFD1 /* FreeDriveLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A39B9272498F9890026DFD1 /* FreeDriveLocationManager.swift */; };
 		5A3D212E24DADFA000EA652A /* SkuTokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D212D24DADF9F00EA652A /* SkuTokenProvider.swift */; };
-		5A43FC8B24B488DC00BF7943 /* FreeDriveLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A43FC8A24B488DC00BF7943 /* FreeDriveLocationManager.swift */; };
+		5A43FC8B24B488DC00BF7943 /* FreeDriveLocationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A43FC8A24B488DC00BF7943 /* FreeDriveLocationManagerTests.swift */; };
 		5A8DB89424DE0ED70041F863 /* MBXPeerWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 5A8DB89224DE0E4E0041F863 /* MBXPeerWrapper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5A8DB89624DE16A10041F863 /* SkuTokenProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A8DB89524DE16A10041F863 /* SkuTokenProviderTests.swift */; };
 		6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */; };
@@ -864,7 +864,7 @@
 		5A1C075724BDEB44000A6330 /* FreeDriveDebugger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeDriveDebugger.swift; sourceTree = "<group>"; };
 		5A39B9272498F9890026DFD1 /* FreeDriveLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeDriveLocationManager.swift; sourceTree = "<group>"; };
 		5A3D212D24DADF9F00EA652A /* SkuTokenProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SkuTokenProvider.swift; sourceTree = "<group>"; };
-		5A43FC8A24B488DC00BF7943 /* FreeDriveLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeDriveLocationManager.swift; sourceTree = "<group>"; };
+		5A43FC8A24B488DC00BF7943 /* FreeDriveLocationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeDriveLocationManagerTests.swift; sourceTree = "<group>"; };
 		5A8DB88E24DDE33C0041F863 /* FreeDriveDebugInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FreeDriveDebugInfoView.swift; path = Example/FreeDriveDebugInfoView.swift; sourceTree = "<group>"; };
 		5A8DB89224DE0E4E0041F863 /* MBXPeerWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MBXPeerWrapper.h; sourceTree = "<group>"; };
 		5A8DB89524DE16A10041F863 /* SkuTokenProviderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SkuTokenProviderTests.swift; sourceTree = "<group>"; };
@@ -1808,7 +1808,7 @@
 				3506DE39216E2ADE007DA352 /* OfflineRoutingTests.swift */,
 				3519D01D21F0842900582FF5 /* CLLocationTests.swift */,
 				352762A3225B751A0015B632 /* OptionsTests.swift */,
-				5A43FC8A24B488DC00BF7943 /* FreeDriveLocationManager.swift */,
+				5A43FC8A24B488DC00BF7943 /* FreeDriveLocationManagerTests.swift */,
 				3A8187CC24C1B05E00708F19 /* TileRoutingVersionTests.swift */,
 			);
 			path = MapboxCoreNavigationTests;
@@ -2726,7 +2726,7 @@
 				C551B0E620D42222009A986F /* NavigationLocationManagerTests.swift in Sources */,
 				359A8AED1FA78D3000BDB486 /* DistanceFormatterTests.swift in Sources */,
 				C52AC1261DF0E48600396B9F /* RouteProgressTests.swift in Sources */,
-				5A43FC8B24B488DC00BF7943 /* FreeDriveLocationManager.swift in Sources */,
+				5A43FC8B24B488DC00BF7943 /* FreeDriveLocationManagerTests.swift in Sources */,
 				359574AA1F28CCBB00838209 /* LocationTests.swift in Sources */,
 				C582BA2C2073E77E00647DAA /* StringTests.swift in Sources */,
 				3557506B21A826C600AEF9B6 /* OfflineRoutingTests.swift in Sources */,
