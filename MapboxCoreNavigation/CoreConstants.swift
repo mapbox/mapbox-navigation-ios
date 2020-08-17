@@ -113,9 +113,20 @@ public var RouteControllerMaximumSpeedForUsingCurrentStep: CLLocationSpeed = 1
 
 public extension Notification.Name {
     /**
+     Posted when `FreeDriveLocationManager` receives a user location update representing movement along the expected route.
+     
+     The user info dictionary contains the keys `FreeDriveLocationManager.NotificationUserInfoKey.locationKey`, `FreeDriveLocationManager.NotificationUserInfoKey.rawLocationKey`, and `FreeDriveLocationManager.NotificationUserInfoKey.matchesKey`.
+     
+     - seealso: `routeControllerProgressDidUpdate`
+     */
+    static let freeDriveLocationManagerDidUpdate: Notification.Name = .init(rawValue: "FreeDriveLocationManagerDidUpdate")
+    
+    /**
      Posted when `RouteController` receives a user location update representing movement along the expected route.
      
      The user info dictionary contains the keys `RouteController.NotificationUserInfoKey.routeProgressKey`, `RouteController.NotificationUserInfoKey.locationKey`, and `RouteController.NotificationUserInfoKey.rawLocationKey`.
+     
+     - seealso: `freeDriveLocationManagerDidUpdate`
      */
     static let routeControllerProgressDidChange: Notification.Name = .init(rawValue: "RouteControllerProgressDidChange")
     
@@ -164,8 +175,7 @@ public extension Notification.Name {
 
 extension RouteController {
     /**
-     Keys in the user info dictionaries of various notifications posted by instances
-     of `RouteController`.
+     Keys in the user info dictionaries of various notifications posted by instances of `RouteController`.
      */
     public struct NotificationUserInfoKey: Hashable, Equatable, RawRepresentable {
         public typealias RawValue = String
@@ -213,3 +223,32 @@ extension RouteController {
     }
 }
 
+extension FreeDriveLocationManager {
+    /**
+     Keys in the user info dictionaries of various notifications posted by instances of `FreeDriveLocationManager`.
+     */
+    public struct NotificationUserInfoKey: Hashable, Equatable, RawRepresentable {
+        public typealias RawValue = String
+
+        public var rawValue: String
+
+        public init(rawValue: String) {
+            self.rawValue = rawValue
+        }
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.freeDriveLocationManagerDidUpdate` notification. The corresponding value is a `CLLocation` object representing the current idealized user location.
+         */
+        public static let locationKey: NotificationUserInfoKey = .init(rawValue: "location")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.freeDriveLocationManagerDidUpdate` notification. The corresponding value is a `CLLocation` object representing the current raw user location.
+         */
+        public static let rawLocationKey: NotificationUserInfoKey = .init(rawValue: "rawLocation")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.freeDriveLocationManagerDidUpdate` notification. The corresponding value is an array of `Match` objects representing possible matches against the road network.
+         */
+        public static let matchesKey: NotificationUserInfoKey = .init(rawValue: "matches")
+    }
+}

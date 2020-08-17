@@ -17,10 +17,15 @@ class ViewController: UIViewController {
     @IBOutlet weak var clearMap: UIButton!
     @IBOutlet weak var bottomBarBackground: UIView!
     
+    var trackPolyline: MGLPolyline?
+    var rawTrackPolyline: MGLPolyline?
+    
     // MARK: Properties
     var mapView: NavigationMapView? {
         didSet {
-            oldValue?.removeFromSuperview()
+            if let mapView = oldValue {
+                uninstall(mapView)
+            }
             if let mapView = mapView {
                 configureMapView(mapView)
                 view.insertSubview(mapView, belowSubview: longPressHintView)
@@ -82,6 +87,12 @@ class ViewController: UIViewController {
     private func commonInit() {
         if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
             appDelegate.currentAppRootViewController = self
+        }
+    }
+    
+    deinit {
+        if let mapView = mapView {
+            uninstall(mapView)
         }
     }
     
@@ -343,7 +354,6 @@ class ViewController: UIViewController {
         present(navigationViewController, animated: true) { [weak self] in
             completion?()
             
-            self?.mapView?.removeFromSuperview()
             self?.mapView = nil
         }
     }
@@ -375,33 +385,20 @@ class ViewController: UIViewController {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.delegate = self
         mapView.navigationMapViewDelegate = self
-        mapView.userTrackingMode = .follow
         mapView.logoView.isHidden = true
 
         let singleTap = UILongPressGestureRecognizer(target: self, action: #selector(didLongPress(tap:)))
         mapView.gestureRecognizers?.filter({ $0 is UILongPressGestureRecognizer }).forEach(singleTap.require(toFail:))
         mapView.addGestureRecognizer(singleTap)
+        
+        trackLocations(mapView: mapView)
+        mapView.showsUserLocation = true
+        mapView.userTrackingMode = .followWithHeading
     }
-
-    func addFreeDriveDebugger(mapView: NavigationMapView) {
-        let debugger = FreeDriveDebugger(mapView: mapView)
-
-        let freeDriveLocationManager = FreeDriveLocationManager()
-        let locationManager = CLLToMGLConverterLocationManager(locationManager: freeDriveLocationManager)
-        mapView.locationManager = locationManager
-
-        let debugView = FreeDriveDebugInfoView() { from, to in
-            if debugger.polylineAdded {
-                debugger.updatePolylineWithCoordinates(coordinates: [from, to])
-            }
-        }
-        freeDriveLocationManager.delegate = debugView
-
-        mapView.addSubview(debugView)
-        NSLayoutConstraint.activate([
-            debugView.trailingAnchor.constraint(equalTo: mapView.trailingAnchor, constant: -8),
-            debugView.topAnchor.constraint(equalTo: mapView.topAnchor, constant: 90)
-        ])
+    
+    func uninstall(_ mapView: NavigationMapView) {
+        NotificationCenter.default.removeObserver(self, name: .freeDriveLocationManagerDidUpdate, object: nil)
+        mapView.removeFromSuperview()
     }
 }
 
@@ -418,6 +415,20 @@ extension ViewController: MGLMapViewDelegate {
             self.mapView?.show(routes)
             self.mapView?.showWaypoints(on: currentRoute)
         }
+    }
+    
+    func mapView(_ mapView: MGLMapView, strokeColorForShapeAnnotation annotation: MGLShape) -> UIColor {
+        if annotation == trackPolyline {
+            return .darkGray
+        }
+        if annotation == rawTrackPolyline {
+            return .lightGray
+        }
+        return .black
+    }
+    
+    func mapView(_ mapView: MGLMapView, lineWidthForPolylineAnnotation annotation: MGLPolyline) -> CGFloat {
+        return annotation == trackPolyline || annotation == rawTrackPolyline ? 4 : 1
     }
 }
 
@@ -550,7 +561,7 @@ extension ViewController: NavigationViewControllerDelegate {
     }
 }
 
-// Mark: VisualInstructionDelegate
+// MARK: VisualInstructionDelegate
 extension ViewController: VisualInstructionDelegate {
     func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
         // Uncomment to mutate the instruction shown in the top instruction banner
@@ -563,40 +574,38 @@ extension ViewController: VisualInstructionDelegate {
     }
 }
 
-class FreeDriveDebugger {
-    var polylineAdded: Bool = false
-    weak var mapView: NavigationMapView?
-    var polylineSource: MGLShapeSource?
-
-    init(mapView: NavigationMapView) {
-        self.mapView = mapView
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
-            if !self.polylineAdded, let style = mapView.style {
-                self.addPolyline(to: style)
-                self.polylineAdded = true
+// MARK: Free driving
+extension ViewController {
+    func trackLocations(mapView: NavigationMapView) {
+        let freeDriveLocationManager = FreeDriveLocationManager(directions: Settings.directions)
+        let locationManager = CLLToMGLConverterLocationManager(locationManager: freeDriveLocationManager)
+        mapView.locationManager = locationManager
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(didUpdateFreeDriveLocation(_:)), name: .freeDriveLocationManagerDidUpdate, object: freeDriveLocationManager)
+        
+        trackPolyline = nil
+        rawTrackPolyline = nil
+    }
+    
+    @objc func didUpdateFreeDriveLocation(_ notification: Notification) {
+        if let location = notification.userInfo?[FreeDriveLocationManager.NotificationUserInfoKey.locationKey] as? CLLocation {
+            if trackPolyline == nil {
+                trackPolyline = MGLPolyline()
             }
+            
+            var coordinates: [CLLocationCoordinate2D] = [location.coordinate]
+            trackPolyline?.appendCoordinates(&coordinates, count: UInt(coordinates.count))
         }
-    }
-
-    func updatePolylineWithCoordinates(coordinates: [CLLocationCoordinate2D]) {
-        var mutableCoordinates = coordinates
-        let polyline = MGLPolylineFeature(coordinates: &mutableCoordinates, count: UInt(mutableCoordinates.count))
-        polylineSource?.shape = polyline
-    }
-
-    func addPolyline(to style: MGLStyle) {
-        let source = MGLShapeSource(identifier: "polyline", shape: nil, options: nil)
-        style.addSource(source)
-        polylineSource = source
-
-        let layer = MGLLineStyleLayer(identifier: "polyline", source: source)
-        layer.lineJoin = NSExpression(forConstantValue: "round")
-        layer.lineCap = NSExpression(forConstantValue: "round")
-        layer.lineColor = NSExpression(forConstantValue: UIColor(red: 0xE2/0xff, green: 0x3D/0xff, blue: 0x5a/0xff, alpha: 1))
-
-        layer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
-        [14: 2, 18: 12])
-        style.addLayer(layer)
+        
+        if let rawLocation = notification.userInfo?[FreeDriveLocationManager.NotificationUserInfoKey.rawLocationKey] as? CLLocation {
+            if rawTrackPolyline == nil {
+                rawTrackPolyline = MGLPolyline()
+            }
+            
+            var coordinates: [CLLocationCoordinate2D] = [rawLocation.coordinate]
+            rawTrackPolyline?.appendCoordinates(&coordinates, count: UInt(coordinates.count))
+        }
+        
+        mapView?.addAnnotations([rawTrackPolyline!, trackPolyline!])
     }
 }

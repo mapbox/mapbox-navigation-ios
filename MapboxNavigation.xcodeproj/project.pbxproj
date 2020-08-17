@@ -410,8 +410,6 @@
 		DA67EA5623CAF345001686EA /* MGLShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA67EA5523CAF345001686EA /* MGLShape.swift */; };
 		DA754E1823AC56E5007E16B5 /* MBXAccounts+CoreNavigationAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = DA754E1623AC56E5007E16B5 /* MBXAccounts+CoreNavigationAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DA754E1923AC56E5007E16B5 /* MBXAccounts+CoreNavigationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DA754E1723AC56E5007E16B5 /* MBXAccounts+CoreNavigationAdditions.m */; };
-		DA85DB7E24E77D67000528EA /* FreeDriveDebugInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A8DB88E24DDE33C0041F863 /* FreeDriveDebugInfoView.swift */; };
-		DA85DB7F24E77D67000528EA /* FreeDriveDebugInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A8DB88E24DDE33C0041F863 /* FreeDriveDebugInfoView.swift */; };
 		DA8805002316EAED00B54D87 /* ViewController+GuidanceCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED6285522CBE4CE00058A51 /* ViewController+GuidanceCards.swift */; };
 		DA8F3A7623B5D84900B56786 /* SpeedLimitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8F3A7523B5D84900B56786 /* SpeedLimitView.swift */; };
 		DA8F3A7823B5DB7900B56786 /* SpeedLimitStyleKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8F3A7723B5DB7900B56786 /* SpeedLimitStyleKit.swift */; };
@@ -865,7 +863,6 @@
 		5A39B9272498F9890026DFD1 /* FreeDriveLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeDriveLocationManager.swift; sourceTree = "<group>"; };
 		5A3D212D24DADF9F00EA652A /* SkuTokenProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SkuTokenProvider.swift; sourceTree = "<group>"; };
 		5A43FC8A24B488DC00BF7943 /* FreeDriveLocationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeDriveLocationManagerTests.swift; sourceTree = "<group>"; };
-		5A8DB88E24DDE33C0041F863 /* FreeDriveDebugInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FreeDriveDebugInfoView.swift; path = Example/FreeDriveDebugInfoView.swift; sourceTree = "<group>"; };
 		5A8DB89224DE0E4E0041F863 /* MBXPeerWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MBXPeerWrapper.h; sourceTree = "<group>"; };
 		5A8DB89524DE16A10041F863 /* SkuTokenProviderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SkuTokenProviderTests.swift; sourceTree = "<group>"; };
 		6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WaypointConfirmationViewController.swift; path = Example/WaypointConfirmationViewController.swift; sourceTree = "<group>"; };
@@ -1476,7 +1473,6 @@
 				3529FCF521A5C5D900AEA9AA /* UIViewController.swift */,
 				3529FCF721A5C62400AEA9AA /* SettingsViewController.swift */,
 				3529FCF921A5C63A00AEA9AA /* OfflineViewController.swift */,
-				5A8DB88E24DDE33C0041F863 /* FreeDriveDebugInfoView.swift */,
 			);
 			name = Example;
 			sourceTree = "<group>";
@@ -2549,7 +2545,6 @@
 				6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */,
 				358D14661E5E3B7700ADE590 /* AppDelegate.swift in Sources */,
 				3529FCF621A5C5D900AEA9AA /* UIViewController.swift in Sources */,
-				DA85DB7F24E77D67000528EA /* FreeDriveDebugInfoView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2657,7 +2652,6 @@
 				DA303CA621B7A90100F921DC /* UIViewController.swift in Sources */,
 				3577B878214FF35800094294 /* FavoritesList.swift in Sources */,
 				DA303CA921B7A93100F921DC /* SettingsItems.swift in Sources */,
-				DA85DB7E24E77D67000528EA /* FreeDriveDebugInfoView.swift in Sources */,
 				DA303CA721B7A91C00F921DC /* SettingsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

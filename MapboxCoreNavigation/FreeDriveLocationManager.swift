@@ -110,12 +110,22 @@ extension FreeDriveLocationManager: CLLocationManagerDelegate {
             navigator.updateLocation(for: FixLocation(location))
         }
         
-        guard let lastLocation = locations.last else {
+        guard let lastRawLocation = locations.last else {
             return
         }
         
-        let status = navigator.status(at: lastLocation.timestamp)
-        delegate?.locationManager(self, didUpdateLocation: CLLocation(status.location), rawLocation: lastLocation)
+        let status = navigator.status(at: lastRawLocation.timestamp)
+        let lastLocation = CLLocation(status.location)
+        
+        delegate?.locationManager(self, didUpdateLocation: lastLocation, rawLocation: lastRawLocation)
+        let matches = status.map_matcher_output.matches.map {
+            Match(legs: [], shape: nil, distance: -1, expectedTravelTime: -1, confidence: $0.proba, weight: .routability(value: 1))
+        }
+        NotificationCenter.default.post(name: .freeDriveLocationManagerDidUpdate, object: self, userInfo: [
+            NotificationUserInfoKey.locationKey: lastLocation,
+            NotificationUserInfoKey.rawLocationKey: lastRawLocation,
+            NotificationUserInfoKey.matchesKey: matches,
+        ])
     }
 
     public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
