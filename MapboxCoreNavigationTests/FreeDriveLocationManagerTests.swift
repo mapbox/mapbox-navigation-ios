@@ -59,6 +59,7 @@ class FreeDriveLocationManagerTests: XCTestCase {
     }
     
     func testFreeDrive() {
+//        let directions = DirectionsSpy()
         let locationManager = FreeDriveLocationManager()
         
         let startingExpectation = expectation(description: "Location manager should start without an error")
