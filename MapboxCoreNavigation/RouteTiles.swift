@@ -8,7 +8,7 @@ private struct RouteTileVersion: Decodable {
 /**
  `RouteTiles` object describes the meta-information about the route tiles.
  */
-final class RouteTilesVersion {
+class RouteTilesVersion {
     
     // MARK: Constants
     
@@ -45,10 +45,17 @@ final class RouteTilesVersion {
 
     /// URL to request the availalbe version of route tiles format.
     private var requestVersionsURL: URL? {
-        let requestVersionsURLString = directionsCredentials.host.absoluteString +
-                                       "/route-tiles/v1/versions" +
-                                       "?access_token=" + (directionsCredentials.accessToken ?? "")
-        return URL(string: requestVersionsURLString)
+        guard let accessToken = directionsCredentials.accessToken else {
+            return nil
+        }
+        
+        var endpointURL = directionsCredentials.host
+        endpointURL.appendPathComponent("route-tiles")
+        endpointURL.appendPathComponent("v1")
+        endpointURL.appendPathComponent("versions")
+        var components = URLComponents(url: endpointURL, resolvingAgainstBaseURL: false)
+        components?.queryItems = [URLQueryItem(name: "access_token", value: accessToken)]
+        return components?.url
     }
     
     // MARK: Private methods
@@ -70,10 +77,9 @@ final class RouteTilesVersion {
         }
     
         URLSession.shared.dataTask(with: requestURL) { data, response, error in
-            guard
-                error == nil, let data = data,
-                let decodedData = try? JSONDecoder().decode(RouteTileVersion.self, from: data)
-            else {
+            guard error == nil,
+                let data = data,
+                let decodedData = try? JSONDecoder().decode(RouteTileVersion.self, from: data) else {
                 completionHandlerQueue.async {
                     completion([])
                 }
