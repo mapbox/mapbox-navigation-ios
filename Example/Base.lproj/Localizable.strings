@@ -7,8 +7,11 @@
 /* Title of button to cancel sending of  navigation feedback items */
 "NAVIGATION_REPORT_CANCEL" = "Cancel";
 
-/* Title of button to send all selected navigation feedback items */
+/* Title of button to send single selected navigation feedback item */
 "NAVIGATION_REPORT_ISSUE" = "Report Issue";
+
+/* Title of button to send multiple selected navigation feedback items */
+"NAVIGATION_REPORT_ISSUES" = "Report Issues";
 
 /* Title of button that downloads an offline region */
 "OFFLINE_ITEM_DOWNLOAD" = "Download";

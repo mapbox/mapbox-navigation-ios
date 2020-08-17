@@ -346,13 +346,14 @@ public class FeedbackSubtypeViewController: FeedbackViewController {
         reportButton.backgroundColor = UIColor.defaultRouteLayer
         reportButton.layer.cornerRadius = 24
         reportButton.clipsToBounds = true
-        reportButton.setTitle(NSLocalizedString("NAVIGATION_REPORT_CANCEL", comment: "Title for button that cancels user's submission of feedback on navigation session issues."), for: .normal)
         reportButton.addTarget(self, action: #selector(reportButtonTapped(_:)), for: .touchUpInside)
 
         collectionView.register(FeedbackSubtypeCollectionViewCell.self, forCellWithReuseIdentifier: FeedbackSubtypeCollectionViewCell.defaultIdentifier)
         collectionView.allowsMultipleSelection = true
 
         reportIssueLabel.text = feedbackType.title
+
+        updateButtonTitle()
     }
 
     @objc private func reportButtonTapped(_ sender: UIButton) {
@@ -434,7 +435,6 @@ public class FeedbackSubtypeViewController: FeedbackViewController {
     }
 
     public override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        reportButton.setTitle(NSLocalizedString("NAVIGATION_REPORT_ISSUE", comment: "Title for button that submits user's feedback on navigation session issues."), for: .normal)
 
         let cell = collectionView.cellForItem(at: indexPath) as! FeedbackSubtypeCollectionViewCell
         if #available(iOS 13.0, *) {
@@ -446,6 +446,8 @@ public class FeedbackSubtypeViewController: FeedbackViewController {
 
         let item = sections[indexPath.row]
         selectedItems.append(item)
+
+        updateButtonTitle()
     }
 
     public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
@@ -463,8 +465,16 @@ public class FeedbackSubtypeViewController: FeedbackViewController {
             return existingItem.feedbackType.title == item.feedbackType.title
         }
 
+        updateButtonTitle()
+    }
+
+    private func updateButtonTitle() {
         if selectedItems.count == 0 {
             reportButton.setTitle(NSLocalizedString("NAVIGATION_REPORT_CANCEL", comment: "Title for button that cancels user's submission of feedback on navigation session issues."), for: .normal)
+        } else if selectedItems.count == 1 {
+            reportButton.setTitle(NSLocalizedString("NAVIGATION_REPORT_ISSUE", comment: "Title for button that submits user's feedback on navigation session issues."), for: .normal)
+        } else {
+            reportButton.setTitle(NSLocalizedString("NAVIGATION_REPORT_ISSUES", comment: "Title for button that submits user's feedback on multiple navigation session issues."), for: .normal)
         }
     }
 
