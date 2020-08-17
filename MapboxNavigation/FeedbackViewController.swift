@@ -81,6 +81,13 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
         FeedbackType.roadClosure(subtype: nil),
         FeedbackType.routeQuality(subtype: nil)].map { $0.generateFeedbackItem() }
     }
+
+    /**
+     Controls whether or not the feedback view controller shows a second level of detail for feedback items.
+     When disabled, feedback will be submitted on a single tap of a top level category.
+     When enabled, a first tap reveals an instance of FeedbackSubtypeViewController. A second tap on an item there will submit a feedback.
+    */
+    public var detailedFeedbackEnabled: Bool = false
     
     public weak var delegate: FeedbackViewControllerDelegate?
     
@@ -276,7 +283,21 @@ extension FeedbackViewController: UICollectionViewDataSource {
 extension FeedbackViewController: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let item = sections[indexPath.row]
-        send(item)
+
+        if detailedFeedbackEnabled, eventsManager != nil {
+            let feedbackViewController = FeedbackSubtypeViewController(eventsManager: eventsManager!, feedbackType: item.feedbackType)
+
+            guard let parent = presentingViewController else {
+                dismiss(animated: true)
+                return
+            }
+
+            dismiss(animated: true) {
+                parent.present(feedbackViewController, animated: true, completion: nil)
+            }
+        } else {
+            send(item)
+        }
     }
 }
 
@@ -356,26 +377,30 @@ public class FeedbackSubtypeViewController: FeedbackViewController {
                         FeedbackType.incorrectVisual(subtype: .maneuverIncorrect),
                         FeedbackType.incorrectVisual(subtype: .exitInfoIncorrect),
                         FeedbackType.incorrectVisual(subtype: .laneGuidanceIncorrect),
-                        FeedbackType.incorrectVisual(subtype: .roadKnownByDifferentName)].map { $0.generateFeedbackItem() }
+                        FeedbackType.incorrectVisual(subtype: .roadKnownByDifferentName),
+                        FeedbackType.incorrectVisual(subtype: .other)].map { $0.generateFeedbackItem() }
             case .confusingAudio(_):
                 return [FeedbackType.confusingAudio(subtype: .guidanceTooEarly),
                         FeedbackType.confusingAudio(subtype: .guidanceTooLate),
                         FeedbackType.confusingAudio(subtype: .pronunciationIncorrect),
-                        FeedbackType.confusingAudio(subtype: .roadNameRepeated)].map { $0.generateFeedbackItem() }
+                        FeedbackType.confusingAudio(subtype: .roadNameRepeated),
+                        FeedbackType.confusingAudio(subtype: .other)].map { $0.generateFeedbackItem() }
             case .routeQuality(_):
                 return [FeedbackType.routeQuality(subtype: .routeNonDrivable),
                         FeedbackType.routeQuality(subtype: .routeNotPreferred),
                         FeedbackType.routeQuality(subtype: .alternativeRouteNotExpected),
                         FeedbackType.routeQuality(subtype: .routeIncludedMissingRoads),
-                        FeedbackType.routeQuality(subtype: .alternativeRouteNotExpected)].map { $0.generateFeedbackItem() }
+                        FeedbackType.routeQuality(subtype: .other)].map { $0.generateFeedbackItem() }
             case .illegalRoute(_):
                 return [FeedbackType.illegalRoute(subtype: .routedDownAOneWay),
                         FeedbackType.illegalRoute(subtype: .turnWasNotAllowed),
                         FeedbackType.illegalRoute(subtype: .carsNotAllowedOnStreet),
-                        FeedbackType.illegalRoute(subtype: .turnAtIntersectionUnprotected)].map { $0.generateFeedbackItem() }
+                        FeedbackType.illegalRoute(subtype: .turnAtIntersectionUnprotected),
+                        FeedbackType.illegalRoute(subtype: .other)].map { $0.generateFeedbackItem() }
             case .roadClosure(_):
                 return [FeedbackType.roadClosure(subtype: .streetPermanentlyBlockedOff),
-                        FeedbackType.roadClosure(subtype: .roadMissingFromMap)].map { $0.generateFeedbackItem() }
+                        FeedbackType.roadClosure(subtype: .roadMissingFromMap),
+                        FeedbackType.roadClosure(subtype: .other)].map { $0.generateFeedbackItem() }
             }
         }
     }

@@ -33,14 +33,54 @@ public extension FeedbackType {
             return "Lane Guidance Incorrect"
         case .incorrectVisual(.roadKnownByDifferentName):
             return "Road Known By Different Name"
-        case .confusingAudio(_):
+        case .incorrectVisual(.other):
+            return "Other"
+        case .confusingAudio(.none):
             return "Confusing Audio"
-        case .routeQuality(_):
+        case .confusingAudio(.guidanceTooEarly):
+            return "Guidance Too Early"
+        case .confusingAudio(.guidanceTooLate):
+            return "Guidance Too Late"
+        case .confusingAudio(.pronunciationIncorrect):
+            return "Pronunciation Incorrect"
+        case .confusingAudio(.roadNameRepeated):
+            return "Road Name Repeated"
+        case .confusingAudio(.other):
+            return "Other"
+        case .routeQuality(.none):
             return "Route Quality"
-        case .illegalRoute(_):
+        case .routeQuality(.routeNonDrivable):
+            return "Route Non Drivable"
+        case .routeQuality(.routeNotPreferred):
+            return "Route Not Preferred"
+        case .routeQuality(.alternativeRouteNotExpected):
+            return "Alternative Route Not Expected"
+        case .routeQuality(.routeIncludedMissingRoads):
+            return "Route Includes Missing Roads"
+        case .routeQuality(.routeHadRoadsTooNarrowToPass):
+            return "Route Had Roads Too Narrow To Pass"
+        case .routeQuality(.other):
+            return "Other"
+        case .illegalRoute(.none):
             return "Illegal Route"
-        case .roadClosure(_):
+        case .illegalRoute(.routedDownAOneWay):
+            return "Routed Down A One Way"
+        case .illegalRoute(.turnWasNotAllowed):
+            return "Turn Was Not Allowed"
+        case .illegalRoute(.carsNotAllowedOnStreet):
+            return "Cars Not Allowed On Street"
+        case .illegalRoute(.turnAtIntersectionUnprotected):
+            return "Turn at Intersection Unprotected"
+        case .illegalRoute(.other):
+            return "Other"
+        case .roadClosure(.none):
             return "Road Closure"
+        case .roadClosure(.streetPermanentlyBlockedOff):
+            return "Street Permanently Blocked Off"
+        case .roadClosure(.roadMissingFromMap):
+            return "Road Missing From Map"
+        case .roadClosure(.other):
+            return "Other"
         }
     }
 

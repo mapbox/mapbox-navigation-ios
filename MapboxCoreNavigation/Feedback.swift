@@ -52,6 +52,7 @@ public enum IncorrectVisualSubtype: String {
     case exitInfoIncorrect
     case laneGuidanceIncorrect
     case roadKnownByDifferentName
+    case other
 }
 
 /// Enum denoting the subtypes of the  `Confusing Audio` top-level category
@@ -60,6 +61,7 @@ public enum ConfusingAudioSubtype: String {
     case guidanceTooLate
     case pronunciationIncorrect
     case roadNameRepeated
+    case other
 }
 
 /// Enum denoting the subtypes of the  `Route Quality` top-level category
@@ -69,6 +71,7 @@ public enum RouteQualitySubtype: String {
     case alternativeRouteNotExpected
     case routeIncludedMissingRoads
     case routeHadRoadsTooNarrowToPass
+    case other
 }
 
 /// Enum denoting the subtypes of the  `Illegal Route` top-level category
@@ -77,12 +80,14 @@ public enum IllegalRouteSubtype: String {
     case turnWasNotAllowed
     case carsNotAllowedOnStreet
     case turnAtIntersectionUnprotected
+    case other
 }
 
 /// Enum denoting the subtypes of the  `Road Closure` top-level category
 public enum RoadClosureSubtype: String {
     case streetPermanentlyBlockedOff
     case roadMissingFromMap
+    case other
 }
 
 /// Enum denoting the origin source of the corresponding feedback item
