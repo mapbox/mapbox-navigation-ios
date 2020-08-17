@@ -63,8 +63,6 @@ public extension FeedbackViewControllerDelegate {
  A view controller containing a grid of buttons the user can use to denote an issue their current navigation experience.
  */
 public class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecognizerDelegate {
-    var activeFeedbackItem: FeedbackItem?
-    
     static let sceneTitle = NSLocalizedString("FEEDBACK_TITLE", value: "Report Problem", comment: "Title of view controller for sending feedback")
     static let cellReuseIdentifier = "collectionViewCellId"
     static let autoDismissInterval: TimeInterval = 10
@@ -76,11 +74,13 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     /**
      The feedback items that are visible and selectable by the user.
      */
-    public var sections: [FeedbackItem] =  [FeedbackType.incorrectVisual(subtype: nil),
-                                            FeedbackType.confusingAudio(subtype: nil),
-                                            FeedbackType.illegalRoute(subtype: nil),
-                                            FeedbackType.roadClosure(subtype: nil),
-                                            FeedbackType.routeQuality(subtype: nil)].map { $0.generateFeedbackItem() }
+    public var sections: [FeedbackItem] {
+        [FeedbackType.incorrectVisual(subtype: nil),
+        FeedbackType.confusingAudio(subtype: nil),
+        FeedbackType.illegalRoute(subtype: nil),
+        FeedbackType.roadClosure(subtype: nil),
+        FeedbackType.routeQuality(subtype: nil)].map { $0.generateFeedbackItem() }
+    }
     
     public weak var delegate: FeedbackViewControllerDelegate?
     
@@ -206,12 +206,12 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
         dismissFeedback()
     }
     
-    private func setupViews() {
+    fileprivate func setupViews() {
         let children = [reportIssueLabel, collectionView]
         view.addSubviews(children)
     }
     
-    private func setupConstraints() {
+    fileprivate func setupConstraints() {
         let labelTop = reportIssueLabel.topAnchor.constraint(equalTo: view.topAnchor)
         let labelHeight = reportIssueLabel.heightAnchor.constraint(equalToConstant: FeedbackViewController.titleHeaderHeight)
         let labelLeading = reportIssueLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor)
@@ -305,3 +305,211 @@ extension String {
         return ceil(boundingBox.height)
     }
 }
+
+public class FeedbackSubtypeViewController: FeedbackViewController {
+
+    public var activeFeedbackType: FeedbackType?
+
+    private let reportButtonContainer = UIView()
+    private let reportButtonSeparator = UIView()
+    private let reportButton = UIButton()
+
+    private var selectedItems = [FeedbackItem]()
+
+    /**
+     Initialize a new FeedbackSubtypeViewController from a `NavigationEventsManager`.
+     */
+    public init(eventsManager: NavigationEventsManager, feedbackType: FeedbackType) {
+        super.init(eventsManager: eventsManager)
+        self.activeFeedbackType = feedbackType
+        reportButton.backgroundColor = UIColor.defaultRouteLayer
+        reportButton.layer.cornerRadius = 24
+        reportButton.clipsToBounds = true
+        reportButton.setTitle(NSLocalizedString("NAVIGATION_REPORT_CANCEL", comment: "Title for button that cancels user's submission of feedback on navigation session issues."), for: .normal)
+        reportButton.addTarget(self, action: #selector(reportButtonTapped(_:)), for: .touchUpInside)
+
+        collectionView.register(FeedbackSubtypeCollectionViewCell.self, forCellWithReuseIdentifier: FeedbackSubtypeCollectionViewCell.defaultIdentifier)
+        collectionView.allowsMultipleSelection = true
+
+        reportIssueLabel.text = feedbackType.title
+    }
+
+    @objc private func reportButtonTapped(_ sender: UIButton) {
+        sendReport()
+    }
+
+    required public init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    public override var sections: [FeedbackItem]  {
+        get {
+            guard let activeFeedbackType = activeFeedbackType else { return [] }
+            switch activeFeedbackType {
+            case .general:
+                return []
+            case .incorrectVisual(_):
+                return [FeedbackType.incorrectVisual(subtype: .turnIconIncorrect),
+                        FeedbackType.incorrectVisual(subtype: .streetNameIncorrect),
+                        FeedbackType.incorrectVisual(subtype: .instructionUnnecessary),
+                        FeedbackType.incorrectVisual(subtype: .instructionMissing),
+                        FeedbackType.incorrectVisual(subtype: .maneuverIncorrect),
+                        FeedbackType.incorrectVisual(subtype: .exitInfoIncorrect),
+                        FeedbackType.incorrectVisual(subtype: .laneGuidanceIncorrect),
+                        FeedbackType.incorrectVisual(subtype: .roadKnownByDifferentName)].map { $0.generateFeedbackItem() }
+            case .confusingAudio(_):
+                return [FeedbackType.confusingAudio(subtype: .guidanceTooEarly),
+                        FeedbackType.confusingAudio(subtype: .guidanceTooLate),
+                        FeedbackType.confusingAudio(subtype: .pronunciationIncorrect),
+                        FeedbackType.confusingAudio(subtype: .roadNameRepeated)].map { $0.generateFeedbackItem() }
+            case .routeQuality(_):
+                return [FeedbackType.routeQuality(subtype: .routeNonDrivable),
+                        FeedbackType.routeQuality(subtype: .routeNotPreferred),
+                        FeedbackType.routeQuality(subtype: .alternativeRouteNotExpected),
+                        FeedbackType.routeQuality(subtype: .routeIncludedMissingRoads),
+                        FeedbackType.routeQuality(subtype: .alternativeRouteNotExpected)].map { $0.generateFeedbackItem() }
+            case .illegalRoute(_):
+                return [FeedbackType.illegalRoute(subtype: .routedDownAOneWay),
+                        FeedbackType.illegalRoute(subtype: .turnWasNotAllowed),
+                        FeedbackType.illegalRoute(subtype: .carsNotAllowedOnStreet),
+                        FeedbackType.illegalRoute(subtype: .turnAtIntersectionUnprotected)].map { $0.generateFeedbackItem() }
+            case .roadClosure(_):
+                return [FeedbackType.roadClosure(subtype: .streetPermanentlyBlockedOff),
+                        FeedbackType.roadClosure(subtype: .roadMissingFromMap)].map { $0.generateFeedbackItem() }
+            }
+        }
+    }
+
+    override var draggableHeight: CGFloat {
+        return 400
+    }
+
+    public override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let availableWidth = collectionView.bounds.width
+        return CGSize(width: availableWidth, height: 80 )
+    }
+
+    public override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedbackSubtypeCollectionViewCell.defaultIdentifier, for: indexPath) as! FeedbackSubtypeCollectionViewCell
+        let item = sections[indexPath.row]
+
+        cell.titleLabel.text = item.title
+
+        if indexPath.row == sections.count - 1 {
+            cell.separatorColor = .clear
+        } else {
+            if #available(iOS 13.0, *) {
+                cell.separatorColor = .separator
+            } else {
+                cell.separatorColor = UIColor(white: 0.95, alpha: 1.0)
+            }
+        }
+
+        return cell
+    }
+
+    public override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        reportButton.setTitle(NSLocalizedString("NAVIGATION_REPORT_ISSUE", comment: "Title for button that submits user's feedback on navigation session issues."), for: .normal)
+
+        let cell = collectionView.cellForItem(at: indexPath) as! FeedbackSubtypeCollectionViewCell
+        if #available(iOS 13.0, *) {
+            cell.circleColor = .systemBlue
+        } else {
+            cell.circleColor = .lightGray
+        }
+        cell.circleOutlineColor = cell.circleColor
+
+        let item = sections[indexPath.row]
+        selectedItems.append(item)
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        let cell = collectionView.cellForItem(at: indexPath) as! FeedbackSubtypeCollectionViewCell
+        if #available(iOS 13.0, *) {
+            cell.circleColor = .systemBackground
+            cell.circleOutlineColor = .label
+        } else {
+            cell.circleColor = .white
+            cell.circleOutlineColor = .darkText
+        }
+
+        let item = sections[indexPath.row]
+        selectedItems.removeAll { existingItem -> Bool in
+            return existingItem.feedbackType.title == item.feedbackType.title
+        }
+
+        if selectedItems.count == 0 {
+            reportButton.setTitle(NSLocalizedString("NAVIGATION_REPORT_CANCEL", comment: "Title for button that cancels user's submission of feedback on navigation session issues."), for: .normal)
+        }
+    }
+
+    private func sendReport() {
+        if selectedItems.count > 0 {
+            selectedItems.forEach { item in
+                if let uuid = self.uuid {
+                    delegate?.feedbackViewController(self, didSend: item, uuid: uuid)
+                    eventsManager?.updateFeedback(uuid: uuid, type: item.feedbackType, source: .user, description: nil)
+                }
+            }
+
+            guard let parent = presentingViewController else {
+                dismiss(animated: true)
+                return
+            }
+
+            dismiss(animated: true) {
+                DialogViewController().present(on: parent)
+            }
+        } else {
+            dismiss(animated: true, completion: nil)
+        }
+    }
+
+    fileprivate override func setupViews() {
+        super.setupViews()
+        reportButtonContainer.translatesAutoresizingMaskIntoConstraints = false
+        reportButton.translatesAutoresizingMaskIntoConstraints = false
+        reportButtonContainer.addSubview(reportButton)
+        reportButtonContainer.addSubview(reportButtonSeparator)
+        reportButtonSeparator.translatesAutoresizingMaskIntoConstraints = false
+        if #available(iOS 13.0, *) {
+            reportButtonSeparator.backgroundColor = .separator
+        } else {
+            reportButtonSeparator.backgroundColor = .lightGray
+        }
+        view.addSubview(reportButtonContainer)
+    }
+
+    fileprivate override func setupConstraints() {
+        let labelTop = reportIssueLabel.topAnchor.constraint(equalTo: view.topAnchor)
+        let labelHeight = reportIssueLabel.heightAnchor.constraint(equalToConstant: FeedbackViewController.titleHeaderHeight)
+        let labelLeading = reportIssueLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor)
+        let labelTrailing = reportIssueLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        let collectionLabelSpacing = collectionView.topAnchor.constraint(equalTo: reportIssueLabel.bottomAnchor)
+        let collectionLeading = collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
+        let collectionTrailing = collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        let collectionBarSpacing = collectionView.bottomAnchor.constraint(equalTo: reportButtonContainer.topAnchor)
+
+        let reportButtonContainerLeading = reportButtonContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor)
+        let reportButtonContainerTrailing = reportButtonContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        let reportButtonContainerBottom = reportButtonContainer.bottomAnchor.constraint(equalTo: view.safeBottomAnchor)
+        let reportButtonContainerHeight = reportButtonContainer.heightAnchor.constraint(equalToConstant: 96)
+
+        let reportButtonSeparatorLeading = reportButtonSeparator.leadingAnchor.constraint(equalTo: reportButtonContainer.leadingAnchor)
+        let reportButtonSeparatorTrailing = reportButtonSeparator.trailingAnchor.constraint(equalTo: reportButtonContainer.trailingAnchor)
+        let reportButtonSeparatorTop = reportButtonSeparator.bottomAnchor.constraint(equalTo: reportButtonContainer.topAnchor)
+        let reportButtonSeparatorHeight = reportButtonSeparator.heightAnchor.constraint(equalToConstant: 0.5)
+
+        let reportButtonCenterX = reportButton.centerXAnchor.constraint(equalTo: reportButtonContainer.centerXAnchor)
+        let reportButtonCenterY = reportButton.centerYAnchor.constraint(equalTo: reportButtonContainer.centerYAnchor)
+        let reportButtonWidth = reportButton.widthAnchor.constraint(equalToConstant: 165)
+        let reportButtonHeight = reportButton.heightAnchor.constraint(equalToConstant: 48)
+
+        let constraints = [labelTop, labelHeight, labelLeading, labelTrailing,
+                           collectionLabelSpacing, collectionLeading, collectionTrailing, collectionBarSpacing,
+                           reportButtonContainerLeading, reportButtonContainerTrailing, reportButtonContainerBottom, reportButtonContainerHeight, reportButtonCenterX, reportButtonCenterY, reportButtonWidth, reportButtonHeight, reportButtonSeparatorLeading, reportButtonSeparatorTrailing, reportButtonSeparatorTop, reportButtonSeparatorHeight]
+
+        NSLayoutConstraint.activate(constraints)
+    }
+}
+

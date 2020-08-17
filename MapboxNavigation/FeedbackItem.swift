@@ -13,18 +13,34 @@ public extension FeedbackType {
     // TODO: Localize these strings
     internal var title: String {
         switch self {
-            case .general:
-                return "Feedback"
-            case .incorrectVisual(_):
-                return "Incorrect Visual"
-            case .confusingAudio(_):
-                return "Confusing Audio"
-            case .routeQuality(_):
-                return "Route Quality"
-            case .illegalRoute(_):
-                return "Illegal Route"
-            case .roadClosure(_):
-                return "Road Closure"
+        case .general:
+            return "Feedback"
+        case .incorrectVisual(.none):
+            return "Incorrect Visual"
+        case .incorrectVisual(.turnIconIncorrect):
+            return "Turn Icon Incorrect"
+        case .incorrectVisual(.streetNameIncorrect):
+            return "Street Name Incorrect"
+        case .incorrectVisual(.instructionUnnecessary):
+            return "Instruction Unnecessary"
+        case .incorrectVisual(.instructionMissing):
+            return "Instruction Missing"
+        case .incorrectVisual(.maneuverIncorrect):
+            return "Maneuver Incorrect"
+        case .incorrectVisual(.exitInfoIncorrect):
+            return "Exit Info Incorrect"
+        case .incorrectVisual(.laneGuidanceIncorrect):
+            return "Lane Guidance Incorrect"
+        case .incorrectVisual(.roadKnownByDifferentName):
+            return "Road Known By Different Name"
+        case .confusingAudio(_):
+            return "Confusing Audio"
+        case .routeQuality(_):
+            return "Route Quality"
+        case .illegalRoute(_):
+            return "Illegal Route"
+        case .roadClosure(_):
+            return "Road Closure"
         }
     }
 
@@ -85,4 +101,9 @@ public struct FeedbackItem {
         self.image = image
         self.feedbackType = feedbackType
     }
+}
+
+public struct FeedbackSubtypeItem {
+    public var item: FeedbackItem
+    public var subtype: String?
 }
