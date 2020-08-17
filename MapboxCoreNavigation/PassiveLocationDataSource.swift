@@ -8,11 +8,11 @@ import MapboxAccounts
  
  Unlike `Router` classes such as `RouteController` and `LegacyRouteController`, this class operates without a predefined route, matching the user’s location to the road network at large.
  */
-open class FreeDriveLocationManager: NSObject {
+open class PassiveLocationDataSource: NSObject {
     /**
-     Initializes the location manager with the given directions service.
+     Initializes the location data source with the given directions service.
      
-     - parameter directions: The directions service that allows the location manager to access road network data. If this argument is omitted, the shared `Directions` object is used.
+     - parameter directions: The directions service that allows the location data source to access road network data. If this argument is omitted, the shared `Directions` object is used.
      
      - postcondition: Call `startUpdatingLocation(completionHandler:)` afterwards to begin receiving location updates.
      */
@@ -30,7 +30,7 @@ open class FreeDriveLocationManager: NSObject {
     }
     
     /**
-     The directions service that allows the location manager to access road network data.
+     The directions service that allows the location data source to access road network data.
      */
     public let directions: Directions
     
@@ -45,12 +45,12 @@ open class FreeDriveLocationManager: NSObject {
     let navigator: Navigator
     
     /**
-     The location manager’s delegate.
+     The location data source’s delegate.
      */
-    public weak var delegate: FreeDriveLocationManagerDelegate?
+    public weak var delegate: PassiveLocationDataSourceDelegate?
     
     /**
-     Starts the generation of location updates with an optional completion handler that gets called when the location manager is ready to receive snapped location updates.
+     Starts the generation of location updates with an optional completion handler that gets called when the location data source is ready to receive snapped location updates.
      */
     public func startUpdatingLocation(completionHandler: ((Error?) -> Void)? = nil) {
         systemLocationManager.startUpdatingLocation()
@@ -100,11 +100,11 @@ open class FreeDriveLocationManager: NSObject {
         guard let location = location else { return }
         systemLocationManager.stopUpdatingLocation()
         systemLocationManager.stopUpdatingHeading()
-        delegate?.locationManager(self, didUpdateLocation: location, rawLocation: location)
+        delegate?.passiveLocationDataSource(self, didUpdateLocation: location, rawLocation: location)
     }
 }
 
-extension FreeDriveLocationManager: CLLocationManagerDelegate {
+extension PassiveLocationDataSource: CLLocationManagerDelegate {
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         for location in locations {
             navigator.updateLocation(for: FixLocation(location))
@@ -117,11 +117,11 @@ extension FreeDriveLocationManager: CLLocationManagerDelegate {
         let status = navigator.status(at: lastRawLocation.timestamp)
         let lastLocation = CLLocation(status.location)
         
-        delegate?.locationManager(self, didUpdateLocation: lastLocation, rawLocation: lastRawLocation)
+        delegate?.passiveLocationDataSource(self, didUpdateLocation: lastLocation, rawLocation: lastRawLocation)
         let matches = status.map_matcher_output.matches.map {
             Match(legs: [], shape: nil, distance: -1, expectedTravelTime: -1, confidence: $0.proba, weight: .routability(value: 1))
         }
-        NotificationCenter.default.post(name: .freeDriveLocationManagerDidUpdate, object: self, userInfo: [
+        NotificationCenter.default.post(name: .passiveLocationDataSourceDidUpdate, object: self, userInfo: [
             NotificationUserInfoKey.locationKey: lastLocation,
             NotificationUserInfoKey.rawLocationKey: lastRawLocation,
             NotificationUserInfoKey.matchesKey: matches,
@@ -130,26 +130,26 @@ extension FreeDriveLocationManager: CLLocationManagerDelegate {
     }
 
     public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
-        delegate?.locationManager(self, didUpdateHeading: newHeading)
+        delegate?.passiveLocationDataSource(self, didUpdateHeading: newHeading)
     }
 
     public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        delegate?.locationManager(self, didFailWithError: error)
+        delegate?.passiveLocationDataSource(self, didFailWithError: error)
     }
 }
 
 /**
- A delegate of a `FreeDriveLocationManager` object implements methods that the location manager calls as the user’s location changes.
+ A delegate of a `PassiveLocationDataSource` object implements methods that the location data source calls as the user’s location changes.
  */
-public protocol FreeDriveLocationManagerDelegate: class {
+public protocol PassiveLocationDataSourceDelegate: class {
     /// - seealso: `CLLocationManagerDelegate.locationManager(_:didUpdateLocations:)`
-    func locationManager(_ manager: FreeDriveLocationManager, didUpdateLocation location: CLLocation, rawLocation: CLLocation)
+    func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didUpdateLocation location: CLLocation, rawLocation: CLLocation)
     
     /// - seealso: `CLLocationManagerDelegate.locationManager(_:didUpdateHeading:)`
-    func locationManager(_ manager: FreeDriveLocationManager, didUpdateHeading newHeading: CLHeading)
+    func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didUpdateHeading newHeading: CLHeading)
     
     /// - seealso: `CLLocationManagerDelegate.locationManager(_:didFailWithError:)`
-    func locationManager(_ manager: FreeDriveLocationManager, didFailWithError error: Error)
+    func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didFailWithError error: Error)
 }
 
 extension TileEndpointConfiguration {

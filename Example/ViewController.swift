@@ -397,7 +397,7 @@ class ViewController: UIViewController {
     }
     
     func uninstall(_ mapView: NavigationMapView) {
-        NotificationCenter.default.removeObserver(self, name: .freeDriveLocationManagerDidUpdate, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .passiveLocationDataSourceDidUpdate, object: nil)
         mapView.removeFromSuperview()
     }
 }
@@ -577,22 +577,22 @@ extension ViewController: VisualInstructionDelegate {
 // MARK: Free driving
 extension ViewController {
     func trackLocations(mapView: NavigationMapView) {
-        let freeDriveLocationManager = FreeDriveLocationManager(directions: Settings.directions)
-        let locationManager = CLLToMGLConverterLocationManager(locationManager: freeDriveLocationManager)
+        let dataSource = PassiveLocationDataSource(directions: Settings.directions)
+        let locationManager = PassiveLocationManager(dataSource: dataSource)
         mapView.locationManager = locationManager
         
-        NotificationCenter.default.addObserver(self, selector: #selector(didUpdateFreeDriveLocation(_:)), name: .freeDriveLocationManagerDidUpdate, object: freeDriveLocationManager)
+        NotificationCenter.default.addObserver(self, selector: #selector(didUpdatePassiveLocation), name: .passiveLocationDataSourceDidUpdate, object: dataSource)
         
         trackPolyline = nil
         rawTrackPolyline = nil
     }
     
-    @objc func didUpdateFreeDriveLocation(_ notification: Notification) {
-        if let roadName = notification.userInfo?[FreeDriveLocationManager.NotificationUserInfoKey.roadNameKey] as? String {
+    @objc func didUpdatePassiveLocation(_ notification: Notification) {
+        if let roadName = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.roadNameKey] as? String {
             title = roadName
         }
         
-        if let location = notification.userInfo?[FreeDriveLocationManager.NotificationUserInfoKey.locationKey] as? CLLocation {
+        if let location = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.locationKey] as? CLLocation {
             if trackPolyline == nil {
                 trackPolyline = MGLPolyline()
             }
@@ -601,7 +601,7 @@ extension ViewController {
             trackPolyline?.appendCoordinates(&coordinates, count: UInt(coordinates.count))
         }
         
-        if let rawLocation = notification.userInfo?[FreeDriveLocationManager.NotificationUserInfoKey.rawLocationKey] as? CLLocation {
+        if let rawLocation = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.rawLocationKey] as? CLLocation {
             if rawTrackPolyline == nil {
                 rawTrackPolyline = MGLPolyline()
             }

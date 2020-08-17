@@ -61,10 +61,10 @@
                   Identifier = "BridgingTests/testOfflineRouting">
                </Test>
                <Test
-                  Identifier = "FreeDriveLocationManagerTests/testFreeDrive()">
+                  Identifier = "MapboxNavigationTests/testLowAlert()">
                </Test>
                <Test
-                  Identifier = "MapboxNavigationTests/testLowAlert()">
+                  Identifier = "PassiveLocationDataSourceTests/testManualLocations()">
                </Test>
             </SkippedTests>
          </TestableReference>

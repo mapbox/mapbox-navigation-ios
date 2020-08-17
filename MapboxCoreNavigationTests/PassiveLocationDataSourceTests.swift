@@ -35,8 +35,8 @@ extension CLLocationCoordinate2D {
     }
 }
 
-class FreeDriveLocationManagerTests: XCTestCase {
-    class Delegate: FreeDriveLocationManagerDelegate {
+class PassiveLocationDataSourceTests: XCTestCase {
+    class Delegate: PassiveLocationDataSourceDelegate {
         let road: Road
         let locationUpdateExpectation: XCTestExpectation
         
@@ -45,22 +45,22 @@ class FreeDriveLocationManagerTests: XCTestCase {
             self.locationUpdateExpectation = locationUpdateExpectation
         }
         
-        func locationManager(_ manager: FreeDriveLocationManager, didUpdateLocation location: CLLocation, rawLocation: CLLocation) {
+        func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didUpdateLocation location: CLLocation, rawLocation: CLLocation) {
             print("Got location: \(rawLocation.coordinate.latitude), \(rawLocation.coordinate.longitude) → \(location.coordinate.latitude), \(location.coordinate.longitude)")
             print("Value: \(road.proximity(of: location.coordinate)) < \(road.proximity(of: rawLocation.coordinate))")
             locationUpdateExpectation.fulfill()
         }
         
-        func locationManager(_ manager: FreeDriveLocationManager, didUpdateHeading newHeading: CLHeading) {
+        func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didUpdateHeading newHeading: CLHeading) {
         }
         
-        func locationManager(_ manager: FreeDriveLocationManager, didFailWithError error: Error) {
+        func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didFailWithError error: Error) {
         }
     }
     
-    func testFreeDrive() {
+    func testManualLocations() {
 //        let directions = DirectionsSpy()
-        let locationManager = FreeDriveLocationManager()
+        let locationManager = PassiveLocationDataSource()
         
         let startingExpectation = expectation(description: "Location manager should start without an error")
         locationManager.startUpdatingLocation { (error) in
