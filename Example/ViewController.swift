@@ -588,6 +588,10 @@ extension ViewController {
     }
     
     @objc func didUpdateFreeDriveLocation(_ notification: Notification) {
+        if let roadName = notification.userInfo?[FreeDriveLocationManager.NotificationUserInfoKey.roadNameKey] as? String {
+            title = roadName
+        }
+        
         if let location = notification.userInfo?[FreeDriveLocationManager.NotificationUserInfoKey.locationKey] as? CLLocation {
             if trackPolyline == nil {
                 trackPolyline = MGLPolyline()

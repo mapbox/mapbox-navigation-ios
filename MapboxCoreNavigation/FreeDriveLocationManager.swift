@@ -125,6 +125,7 @@ extension FreeDriveLocationManager: CLLocationManagerDelegate {
             NotificationUserInfoKey.locationKey: lastLocation,
             NotificationUserInfoKey.rawLocationKey: lastRawLocation,
             NotificationUserInfoKey.matchesKey: matches,
+            NotificationUserInfoKey.roadNameKey: status.roadName,
         ])
     }
 

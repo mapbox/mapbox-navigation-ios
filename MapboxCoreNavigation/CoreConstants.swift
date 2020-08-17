@@ -115,7 +115,7 @@ public extension Notification.Name {
     /**
      Posted when `FreeDriveLocationManager` receives a user location update representing movement along the expected route.
      
-     The user info dictionary contains the keys `FreeDriveLocationManager.NotificationUserInfoKey.locationKey`, `FreeDriveLocationManager.NotificationUserInfoKey.rawLocationKey`, and `FreeDriveLocationManager.NotificationUserInfoKey.matchesKey`.
+     The user info dictionary contains the keys `FreeDriveLocationManager.NotificationUserInfoKey.locationKey`, `FreeDriveLocationManager.NotificationUserInfoKey.rawLocationKey`, `FreeDriveLocationManager.NotificationUserInfoKey.matchesKey`, and `FreeDriveLocationManager.NotificationUserInfoKey.roadNameKey`.
      
      - seealso: `routeControllerProgressDidUpdate`
      */
@@ -250,5 +250,12 @@ extension FreeDriveLocationManager {
          A key in the user info dictionary of a `Notification.Name.freeDriveLocationManagerDidUpdate` notification. The corresponding value is an array of `Match` objects representing possible matches against the road network.
          */
         public static let matchesKey: NotificationUserInfoKey = .init(rawValue: "matches")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.freeDriveLocationManagerDidUpdate` notification. The corresponding value is a string representing the name of the road the user is currently traveling on.
+         
+         - seealso: `WayNameView`
+         */
+        public static let roadNameKey: NotificationUserInfoKey = .init(rawValue: "roadName")
     }
 }
