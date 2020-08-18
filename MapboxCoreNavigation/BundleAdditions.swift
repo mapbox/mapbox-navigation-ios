@@ -36,6 +36,17 @@ extension Bundle {
         return Bundle(for: RouteController.self)
     }
     
+    /**
+     The Mapbox Navigation framework bundle, if installed.
+     */
+    public class var mapboxNavigation: Bundle? {
+        // Assumption: MapboxNavigation.framework includes NavigationViewController and exposes it to the Objective-C runtime as MapboxNavigation.NavigationViewController.
+        guard let NavigationViewController = NSClassFromString("MapboxNavigation.NavigationViewController") else {
+            return nil
+        }
+        return Bundle(for: NavigationViewController)
+    }
+    
     public func ensureSuggestedTileURLExists() -> Bool {
         guard let tilePath = suggestedTileURL else { return false }
         try? FileManager.default.createDirectory(at: tilePath, withIntermediateDirectories: true, attributes: nil)

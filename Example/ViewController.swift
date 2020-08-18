@@ -17,10 +17,15 @@ class ViewController: UIViewController {
     @IBOutlet weak var clearMap: UIButton!
     @IBOutlet weak var bottomBarBackground: UIView!
     
+    var trackPolyline: MGLPolyline?
+    var rawTrackPolyline: MGLPolyline?
+    
     // MARK: Properties
     var mapView: NavigationMapView? {
         didSet {
-            oldValue?.removeFromSuperview()
+            if let mapView = oldValue {
+                uninstall(mapView)
+            }
             if let mapView = mapView {
                 configureMapView(mapView)
                 view.insertSubview(mapView, belowSubview: longPressHintView)
@@ -82,6 +87,12 @@ class ViewController: UIViewController {
     private func commonInit() {
         if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
             appDelegate.currentAppRootViewController = self
+        }
+    }
+    
+    deinit {
+        if let mapView = mapView {
+            uninstall(mapView)
         }
     }
     
@@ -343,7 +354,6 @@ class ViewController: UIViewController {
         present(navigationViewController, animated: true) { [weak self] in
             completion?()
             
-            self?.mapView?.removeFromSuperview()
             self?.mapView = nil
         }
     }
@@ -375,12 +385,20 @@ class ViewController: UIViewController {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.delegate = self
         mapView.navigationMapViewDelegate = self
-        mapView.userTrackingMode = .follow
         mapView.logoView.isHidden = true
 
         let singleTap = UILongPressGestureRecognizer(target: self, action: #selector(didLongPress(tap:)))
         mapView.gestureRecognizers?.filter({ $0 is UILongPressGestureRecognizer }).forEach(singleTap.require(toFail:))
         mapView.addGestureRecognizer(singleTap)
+        
+        trackLocations(mapView: mapView)
+        mapView.showsUserLocation = true
+        mapView.userTrackingMode = .followWithHeading
+    }
+    
+    func uninstall(_ mapView: NavigationMapView) {
+        NotificationCenter.default.removeObserver(self, name: .passiveLocationDataSourceDidUpdate, object: nil)
+        mapView.removeFromSuperview()
     }
 }
 
@@ -397,6 +415,20 @@ extension ViewController: MGLMapViewDelegate {
             self.mapView?.show(routes)
             self.mapView?.showWaypoints(on: currentRoute)
         }
+    }
+    
+    func mapView(_ mapView: MGLMapView, strokeColorForShapeAnnotation annotation: MGLShape) -> UIColor {
+        if annotation == trackPolyline {
+            return .darkGray
+        }
+        if annotation == rawTrackPolyline {
+            return .lightGray
+        }
+        return .black
+    }
+    
+    func mapView(_ mapView: MGLMapView, lineWidthForPolylineAnnotation annotation: MGLPolyline) -> CGFloat {
+        return annotation == trackPolyline || annotation == rawTrackPolyline ? 4 : 1
     }
 }
 
@@ -529,7 +561,7 @@ extension ViewController: NavigationViewControllerDelegate {
     }
 }
 
-// Mark: VisualInstructionDelegate
+// MARK: VisualInstructionDelegate
 extension ViewController: VisualInstructionDelegate {
     func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
         // Uncomment to mutate the instruction shown in the top instruction banner
@@ -539,5 +571,45 @@ extension ViewController: VisualInstructionDelegate {
         // return mutable
         
         return presented
+    }
+}
+
+// MARK: Free driving
+extension ViewController {
+    func trackLocations(mapView: NavigationMapView) {
+        let dataSource = PassiveLocationDataSource(directions: Settings.directions)
+        let locationManager = PassiveLocationManager(dataSource: dataSource)
+        mapView.locationManager = locationManager
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(didUpdatePassiveLocation), name: .passiveLocationDataSourceDidUpdate, object: dataSource)
+        
+        trackPolyline = nil
+        rawTrackPolyline = nil
+    }
+    
+    @objc func didUpdatePassiveLocation(_ notification: Notification) {
+        if let roadName = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.roadNameKey] as? String {
+            title = roadName
+        }
+        
+        if let location = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.locationKey] as? CLLocation {
+            if trackPolyline == nil {
+                trackPolyline = MGLPolyline()
+            }
+            
+            var coordinates: [CLLocationCoordinate2D] = [location.coordinate]
+            trackPolyline?.appendCoordinates(&coordinates, count: UInt(coordinates.count))
+        }
+        
+        if let rawLocation = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.rawLocationKey] as? CLLocation {
+            if rawTrackPolyline == nil {
+                rawTrackPolyline = MGLPolyline()
+            }
+            
+            var coordinates: [CLLocationCoordinate2D] = [rawLocation.coordinate]
+            rawTrackPolyline?.appendCoordinates(&coordinates, count: UInt(coordinates.count))
+        }
+        
+        mapView?.addAnnotations([rawTrackPolyline!, trackPolyline!])
     }
 }
