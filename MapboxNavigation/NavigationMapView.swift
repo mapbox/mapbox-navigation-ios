@@ -125,6 +125,12 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     var altitude: CLLocationDistance
     var routes: [Route]?
     var isAnimatingToOverheadMode = false
+    var styleObservation: NSKeyValueObservation?
+    
+    /**
+     A tuple that represents currently highlighted buildings and their extrusion (either 2D or 3D).
+     */
+    private var highlightedBuildings: (coordinates: [CLLocationCoordinate2D], extrudesBuildings: Bool)?
     
     var shouldPositionCourseViewFrameByFrame = false {
         didSet {
@@ -236,6 +242,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         commonInit()
     }
     
+    deinit {
+        styleObservation = nil
+    }
+    
     fileprivate func commonInit() {
         makeGestureRecognizersRespectCourseTracking()
         makeGestureRecognizersUpdateCourseView()
@@ -246,6 +256,19 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         addGestureRecognizer(mapTapGesture)
         
         installUserCourseView()
+        
+        styleObservation = observe(\.style, options: .new) { [weak self] (mapView, change) in
+            guard let self = self else { return }
+            
+            if let routes = self.routes, let currentRoute = routes.first {
+                self.show(routes)
+                self.showWaypoints(on: currentRoute)
+            }
+            
+            if let highlightedBuildings = self.highlightedBuildings {
+                self.highlightBuildings(at: highlightedBuildings.0, in3D: highlightedBuildings.1)
+            }
+        }
     }
     
     open override func layoutMarginsDidChange() {
@@ -1430,6 +1453,7 @@ extension NavigationMapView {
      */
     @discardableResult public func highlightBuildings(at coordinates: [CLLocationCoordinate2D], in3D extrudesBuildings: Bool = true) -> Bool {
         let foundBuildingIds = Set(coordinates.compactMap({ buildingIdentifier(at: $0) }))
+        highlightedBuildings = (coordinates, extrudesBuildings)
         highlightBuildings(with: foundBuildingIds, in3D: extrudesBuildings)
         return foundBuildingIds.count == coordinates.count
     }
@@ -1438,6 +1462,7 @@ extension NavigationMapView {
      Removes the highlight from all buildings highlighted by `highlightBuildings(at:in3D:)`.
      */
     public func unhighlightBuildings() {
+        highlightedBuildings = nil
         guard let highlightedBuildingsLayer = style?.layer(withIdentifier: StyleLayerIdentifier.buildingExtrusion) else { return }
         
         style?.removeLayer(highlightedBuildingsLayer)
