@@ -258,6 +258,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         installUserCourseView()
         
         styleObservation = observe(\.style, options: .new) { [weak self] (mapView, change) in
+            guard change.newValue != nil else { return }
             guard let self = self else { return }
             
             if let routes = self.routes, let currentRoute = routes.first {
