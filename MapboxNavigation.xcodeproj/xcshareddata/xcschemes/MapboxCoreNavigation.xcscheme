@@ -63,6 +63,9 @@
                <Test
                   Identifier = "MapboxNavigationTests/testLowAlert()">
                </Test>
+               <Test
+                  Identifier = "PassiveLocationDataSourceTests/testManualLocations()">
+               </Test>
             </SkippedTests>
          </TestableReference>
       </Testables>
