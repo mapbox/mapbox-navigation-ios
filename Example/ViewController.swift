@@ -393,7 +393,8 @@ class ViewController: UIViewController {
         
         trackLocations(mapView: mapView)
         mapView.showsUserLocation = true
-        mapView.userTrackingMode = .followWithHeading
+        mapView.userTrackingMode = .follow
+        mapView.showsUserHeadingIndicator = true
     }
     
     func uninstall(_ mapView: NavigationMapView) {
