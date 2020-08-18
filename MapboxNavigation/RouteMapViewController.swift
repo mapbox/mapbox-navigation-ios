@@ -154,9 +154,8 @@ class RouteMapViewController: UIViewController {
             self?.showRouteIfNeeded()
             mapView.localizeLabels()
             mapView.showsTraffic = false
-                        
-            // FIXME: In case when building highlighting feature is enabled due to style changes and no info currently being stored
-            // regarding building identification such highlighted building will disappear.
+            
+            self?.highlightBuildingsIfNeeded()
         }
         
         makeGestureRecognizersResetFrameRate()
@@ -197,6 +196,7 @@ class RouteMapViewController: UIViewController {
         super.viewDidAppear(animated)
         annotatesSpokenInstructions = delegate?.mapViewControllerShouldAnnotateSpokenInstructions(self) ?? false
         showRouteIfNeeded()
+        highlightBuildingsIfNeeded()
         currentLegIndexMapped = router.routeProgress.legIndex
         currentStepIndexMapped = router.routeProgress.currentLegProgress.stepIndex
     }
@@ -823,6 +823,13 @@ extension RouteMapViewController: NavigationViewDelegate {
         if annotatesSpokenInstructions {
             mapView.showVoiceInstructionsOnMap(route: router.route)
         }
+    }
+    
+    func highlightBuildingsIfNeeded() {
+        guard let parent = parent as? NavigationViewController, parent.waypointStyle != .annotation else { return }
+        
+        mapView.highlightBuildings(at: parent.routeOptions.waypoints.compactMap({ $0.targetCoordinate }),
+                                   in3D: parent.waypointStyle == .extrudedBuilding)
     }
 }
 
