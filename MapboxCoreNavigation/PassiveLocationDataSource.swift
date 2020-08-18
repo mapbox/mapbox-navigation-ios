@@ -57,16 +57,17 @@ open class PassiveLocationDataSource: NSObject {
     public func startUpdatingLocation(completionHandler: ((Error?) -> Void)? = nil) {
         systemLocationManager.startUpdatingLocation()
         
-        let tilesVersion = RouteTilesVersion(with: directions.credentials)
-        tilesVersion.getAvailableVersions { availableVersions in
-            if let latestVersion = availableVersions.last {
-                tilesVersion.currentVersion = latestVersion
-                do {
-                    try self.configureNavigator(withTilesVersion: latestVersion)
-                    completionHandler?(nil)
-                } catch {
-                    completionHandler?(error)
-                }
+        directions.fetchAvailableOfflineVersions { [weak self] (versions, error) in
+            guard let self = self, let latestVersion = versions?.first(where: { !$0.isEmpty }), error == nil else {
+                completionHandler?(error)
+                return
+            }
+            
+            do {
+                try self.configureNavigator(withTilesVersion: latestVersion)
+                completionHandler?(nil)
+            } catch {
+                completionHandler?(error)
             }
         }
     }
