@@ -639,6 +639,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             SourceIdentifier.allRoutes,
             SourceIdentifier.mainRouteCasingSource
         ].compactMap { style.source(withIdentifier: $0) }))
+        
+        routes = nil
     }
     
     /**
