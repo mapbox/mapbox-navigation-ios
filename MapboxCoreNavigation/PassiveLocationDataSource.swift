@@ -22,7 +22,7 @@ open class PassiveLocationDataSource: NSObject {
         self.directions = directions
         
         let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
-        self.navigator = Navigator(profile: settingsProfile, config: NavigatorConfig() , customConfig: "")
+        self.navigator = Navigator.createWith(profile: settingsProfile, config: NavigatorConfig() , customConfig: "")
         
         self.systemLocationManager = systemLocationManager ?? NavigationLocationManager()
         
@@ -56,42 +56,7 @@ open class PassiveLocationDataSource: NSObject {
      */
     public func startUpdatingLocation(completionHandler: ((Error?) -> Void)? = nil) {
         systemLocationManager.startUpdatingLocation()
-        
-        directions.fetchAvailableOfflineVersions { [weak self] (versions, error) in
-            guard let self = self, let latestVersion = versions?.first(where: { !$0.isEmpty }), error == nil else {
-                completionHandler?(error)
-                return
-            }
-            
-            do {
-                try self.configureNavigator(withTilesVersion: latestVersion)
-                completionHandler?(nil)
-            } catch {
-                completionHandler?(error)
-            }
-        }
-    }
-    
-    /**
-     Creates a cache for tiles of the given version and configures the navigator to use this cache.
-     */
-    func configureNavigator(withTilesVersion tilesVersion: String) throws {
-        let endpointConfig = TileEndpointConfiguration(directions: directions, tilesVersion: tilesVersion)
-
-        // ~/Library/Caches/tld.app.bundle.id/.mapbox/2020_08_08-03_00_00/
-        guard var tilesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first else {
-            preconditionFailure("No Caches directory to create the tile directory inside")
-        }
-        if let bundleIdentifier = Bundle.main.bundleIdentifier ?? Bundle.mapboxCoreNavigation.bundleIdentifier {
-            tilesURL.appendPathComponent(bundleIdentifier, isDirectory: true)
-        }
-        tilesURL.appendPathComponent(".mapbox", isDirectory: true)
-        tilesURL.appendPathComponent(tilesVersion, isDirectory: true)
-        // Tiles with different versions shouldn't be mixed, it may cause inappropriate Navigator's behaviour
-        try FileManager.default.createDirectory(at: tilesURL, withIntermediateDirectories: true, attributes: nil)
-        let params = RouterParams(tilesPath: tilesURL.path, inMemoryTileCache: nil, mapMatchingSpatialCache: nil, threadsCount: nil, endpointConfig: endpointConfig)
-        
-        navigator.configureRouter(for: params)
+        completionHandler?(nil)
     }
     
     /**

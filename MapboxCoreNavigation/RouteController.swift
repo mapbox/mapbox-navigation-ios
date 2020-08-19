@@ -24,7 +24,7 @@ open class RouteController: NSObject {
     lazy var navigator: Navigator = {
         let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile,
                                               platform: ProfilePlatform.KIOS)
-        return Navigator(profile: settingsProfile, config: NavigatorConfig(), customConfig: "")
+        return Navigator.createWith(profile: settingsProfile, config: NavigatorConfig(), customConfig: "")
     }()
     
     public var route: Route {
