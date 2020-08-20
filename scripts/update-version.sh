@@ -16,6 +16,7 @@ fi
 SEM_VERSION=$1
 SEM_VERSION=${SEM_VERSION/#v}
 SHORT_VERSION=${SEM_VERSION%-*}
+YEAR=$(date '+%Y')
 
 step "Version ${SEM_VERSION}"
 
@@ -40,3 +41,7 @@ elif [[ $SHORT_VERSION != $SEM_VERSION ]]; then
     step "Updating readmes to version ${SEM_VERSION}…"
     sed -i '' -E "s/:tag => 'v[^']+'/:tag => 'v${SEM_VERSION}'/g; s/\"mapbox\/mapbox-navigation-ios\" \"v[^\"]+\"/\"mapbox\/mapbox-navigation-ios\" \"v${SEM_VERSION}\"/g" README.md custom-navigation.md
 fi
+
+step "Updating copyright year to ${YEAR}…"
+
+sed -i '' -E "s/© ([0-9]{4})[–-][0-9]{4}/© \\1–${YEAR}/g" LICENSE.md docs/jazzy.yml
