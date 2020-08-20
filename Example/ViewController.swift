@@ -600,6 +600,13 @@ extension ViewController {
             
             var coordinates: [CLLocationCoordinate2D] = [location.coordinate]
             trackPolyline?.appendCoordinates(&coordinates, count: UInt(coordinates.count))
+            
+            if mapView?.userTrackingMode != .followWithCourse, location.horizontalAccuracy < 65.0, location.speed > 8.0, let camera = mapView?.camera {
+                mapView?.userTrackingMode = .followWithCourse
+                camera.altitude = 750.0
+                camera.pitch = 45.0
+                mapView?.setCamera(camera, animated: true)
+            }
         }
         
         if let rawLocation = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.rawLocationKey] as? CLLocation {
