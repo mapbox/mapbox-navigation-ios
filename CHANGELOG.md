@@ -33,6 +33,7 @@
 ### Feedback
 
 * Updated `FeedbackType` enum to reflect new top level feedback categories and introduced new `FeedbackSubType`s to support a more granular feedback mechanism. ([#2419](https://github.com/mapbox/mapbox-navigation-ios/pull/2419))
+* Added a `FeedbackSubtypeViewController` subclass of  `FeedbackViewController` for optionally soliciting the more detailed  `FeedbackSubType` items from the user. The presentation of the `FeedbackSubtypeViewController` is enabled through the new `detailedFeedbackEnabled` property of  `FeedbackViewController` ([#2544](https://github.com/mapbox/mapbox-navigation-ios/pull/2544))
 * Updated image icons for top-level feedback collection view items. ([#2419](https://github.com/mapbox/mapbox-navigation-ios/pull/2419), [#2421](https://github.com/mapbox/mapbox-navigation-ios/pull/2421))
 * The feedback screen no longer dismisses automatically after 10 seconds. ([#2420](https://github.com/mapbox/mapbox-navigation-ios/pull/2420))
 * Fixed warnings in Interface Builder that prevented styling of UI components in `EndOfRouteViewController`. ([#2518](https://github.com/mapbox/mapbox-navigation-ios/pull/2518))

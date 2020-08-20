@@ -40,7 +40,6 @@ class FeedbackSubtypeCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    var longPress: UILongPressGestureRecognizer?
     var originalTransform: CGAffineTransform?
 
     override init(frame: CGRect) {
