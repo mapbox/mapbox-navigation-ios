@@ -41,6 +41,8 @@ class RouteMapViewController: UIViewController {
         }
     }
 
+    var detailedFeedbackEnabled: Bool = false
+
     var pendingCamera: MGLMapCamera? {
         guard let parent = parent as? NavigationViewController else {
             return nil
@@ -265,6 +267,7 @@ class RouteMapViewController: UIViewController {
     func showFeedback(source: FeedbackSource = .user) {
         guard let parent = parent else { return }
         let feedbackViewController = FeedbackViewController(eventsManager: navService.eventsManager)
+        feedbackViewController.detailedFeedbackEnabled = detailedFeedbackEnabled
         parent.present(feedbackViewController, animated: true, completion: nil)
     }
 
