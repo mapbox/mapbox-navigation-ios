@@ -1,11 +1,3 @@
-//
-//  FeedbackSubtypeCollectionViewCell.swift
-//  MapboxNavigation
-//
-//  Created by Avi Cieplinski on 8/17/20.
-//  Copyright © 2020 Mapbox. All rights reserved.
-//
-
 import UIKit
 
 class FeedbackSubtypeCollectionViewCell: UICollectionViewCell {
@@ -76,8 +68,8 @@ class FeedbackSubtypeCollectionViewCell: UICollectionViewCell {
                 if self.isHighlighted {
                     self.circleView.transform = self.circleView.transform.scaledBy(x: 0.85, y: 0.85)
                 } else {
-                    guard let t = self.originalTransform else { return }
-                    self.circleView.transform = t
+                    guard let originalTransform = self.originalTransform else { return }
+                    self.circleView.transform = originalTransform
                 }
             }, completion: nil)
         }

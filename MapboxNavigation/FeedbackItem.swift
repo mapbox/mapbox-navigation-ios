@@ -16,69 +16,69 @@ public extension FeedbackType {
         case .general:
             return "Feedback"
         case .incorrectVisual(.none):
-            return "Incorrect Visual"
+            return "Incorrect visual"
         case .incorrectVisual(.turnIconIncorrect):
-            return "Turn Icon Incorrect"
+            return "Turn icon incorrect"
         case .incorrectVisual(.streetNameIncorrect):
-            return "Street Name Incorrect"
+            return "Street name incorrect"
         case .incorrectVisual(.instructionUnnecessary):
-            return "Instruction Unnecessary"
+            return "Instruction unnecessary"
         case .incorrectVisual(.instructionMissing):
-            return "Instruction Missing"
+            return "Instruction missing"
         case .incorrectVisual(.maneuverIncorrect):
-            return "Maneuver Incorrect"
+            return "Maneuver incorrect"
         case .incorrectVisual(.exitInfoIncorrect):
-            return "Exit Info Incorrect"
+            return "Exit info incorrect"
         case .incorrectVisual(.laneGuidanceIncorrect):
-            return "Lane Guidance Incorrect"
+            return "Lane guidance incorrect"
         case .incorrectVisual(.roadKnownByDifferentName):
-            return "Road Known By Different Name"
+            return "Road known by different name"
         case .incorrectVisual(.other):
             return "Other"
         case .confusingAudio(.none):
-            return "Confusing Audio"
+            return "Confusing audio"
         case .confusingAudio(.guidanceTooEarly):
-            return "Guidance Too Early"
+            return "Guidance too early"
         case .confusingAudio(.guidanceTooLate):
-            return "Guidance Too Late"
+            return "Guidance too late"
         case .confusingAudio(.pronunciationIncorrect):
-            return "Pronunciation Incorrect"
+            return "Pronunciation incorrect"
         case .confusingAudio(.roadNameRepeated):
-            return "Road Name Repeated"
+            return "Road name repeated"
         case .confusingAudio(.other):
             return "Other"
         case .routeQuality(.none):
-            return "Route Quality"
+            return "Route quality"
         case .routeQuality(.routeNonDrivable):
-            return "Route Non Drivable"
+            return "Route non drivable"
         case .routeQuality(.routeNotPreferred):
-            return "Route Not Preferred"
+            return "Route not preferred"
         case .routeQuality(.alternativeRouteNotExpected):
-            return "Alternative Route Not Expected"
+            return "Alternative route not expected"
         case .routeQuality(.routeIncludedMissingRoads):
-            return "Route Includes Missing Roads"
+            return "Route includes missing roads"
         case .routeQuality(.routeHadRoadsTooNarrowToPass):
-            return "Route Had Roads Too Narrow To Pass"
+            return "Route had roads too narrow to pass"
         case .routeQuality(.other):
             return "Other"
         case .illegalRoute(.none):
-            return "Illegal Route"
+            return "Illegal route"
         case .illegalRoute(.routedDownAOneWay):
-            return "Routed Down A One Way"
+            return "Routed down a one way"
         case .illegalRoute(.turnWasNotAllowed):
-            return "Turn Was Not Allowed"
+            return "Turn wasn't allowed"
         case .illegalRoute(.carsNotAllowedOnStreet):
-            return "Cars Not Allowed On Street"
+            return "Cars not allowed on street"
         case .illegalRoute(.turnAtIntersectionUnprotected):
-            return "Turn at Intersection Unprotected"
+            return "Turn at intersection unprotected"
         case .illegalRoute(.other):
             return "Other"
         case .roadClosure(.none):
-            return "Road Closure"
+            return "Road closure"
         case .roadClosure(.streetPermanentlyBlockedOff):
-            return "Street Permanently Blocked Off"
+            return "Street permanently blocked off"
         case .roadClosure(.roadMissingFromMap):
-            return "Road Missing From Map"
+            return "Road missing from map"
         case .roadClosure(.other):
             return "Other"
         }

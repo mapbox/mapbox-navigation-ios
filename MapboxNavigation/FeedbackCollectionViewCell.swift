@@ -57,8 +57,8 @@ class FeedbackCollectionViewCell: UICollectionViewCell {
                 if self.isHighlighted {
                     self.imageView.transform = self.imageView.transform.scaledBy(x: 0.85, y: 0.85)
                 } else {
-                    guard let t = self.originalTransform else { return }
-                    self.imageView.transform = t
+                    guard let originalTransform = self.originalTransform else { return }
+                    self.imageView.transform = originalTransform
                 }
             }, completion: nil)
         }
