@@ -88,6 +88,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         static let instruction = "\(identifierNamespace).instruction"
         
         static let mainRouteCasingSource = "\(identifierNamespace).mainRouteCasingSource"
+        
+        static let buildingExtrusionSource = "\(identifierNamespace).buildingExtrusionSource"
     }
     
     struct StyleLayerIdentifier {
@@ -1370,9 +1372,22 @@ extension NavigationMapView {
         style?.removeLayer(highlightedBuildingsLayer)
     }
     
+    private func addBuildingsSource() -> MGLSource? {
+        let buildingsSource = style?.source(withIdentifier: SourceIdentifier.buildingExtrusionSource)
+        if buildingsSource == nil {
+            let buildingsSource = MGLVectorTileSource(identifier: SourceIdentifier.buildingExtrusionSource,
+                                                      configurationURL: URL(string: "mapbox://mapbox.mapbox-streets-v8")!)
+            style?.addSource(buildingsSource)
+            
+            return buildingsSource
+        }
+        
+        return buildingsSource
+    }
+    
     private func addBuildingsLayer() -> MGLFillExtrusionStyleLayer? {
         if let highlightedBuildingsLayer = style?.layer(withIdentifier: StyleLayerIdentifier.buildingExtrusion) as? MGLFillExtrusionStyleLayer { return highlightedBuildingsLayer }
-        guard let buildingsSource = style?.source(withIdentifier: "composite") else { return nil }
+        guard let buildingsSource = addBuildingsSource() else { return nil }
         
         let highlightedBuildingsLayer = MGLFillExtrusionStyleLayer(identifier: StyleLayerIdentifier.buildingExtrusion, source: buildingsSource)
         highlightedBuildingsLayer.sourceLayerIdentifier = "building"
