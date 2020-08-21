@@ -177,13 +177,11 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
         delegate?.feedbackViewControllerDidOpen(self)
     }
     
-    override public func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.willTransition(to: newCollection, with: coordinator)
-        
+    override public func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+
         // Dismiss the feedback view when switching between landscape and portrait mode.
-        if traitCollection.verticalSizeClass != newCollection.verticalSizeClass {
-            dismissFeedback()
-        }
+        dismissFeedback()
     }
     
     func presentError(_ message: String) {
