@@ -263,6 +263,9 @@ class ViewController: UIViewController {
         // Example of building highlighting in 3D.
         navigationViewController.waypointStyle = .extrudedBuilding
         
+        // Show second level of detail for feedback items.
+        navigationViewController.detailedFeedbackEnabled = true
+        
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
     

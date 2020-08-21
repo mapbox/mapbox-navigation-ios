@@ -17,7 +17,7 @@ class FeedbackSubtypeViewController: FeedbackViewController {
     public init(eventsManager: NavigationEventsManager, feedbackType: FeedbackType) {
         super.init(eventsManager: eventsManager)
         self.activeFeedbackType = feedbackType
-        reportButton.backgroundColor = UIColor.defaultRouteLayer
+        reportButton.setBackgroundImage(UIImage(color: #colorLiteral(red: 0.337254902, green: 0.6588235294, blue: 0.9843137255, alpha: 1)), for: .normal)
         reportButton.layer.cornerRadius = 24
         reportButton.clipsToBounds = true
         reportButton.addTarget(self, action: #selector(reportButtonTapped(_:)), for: .touchUpInside)
@@ -38,7 +38,7 @@ class FeedbackSubtypeViewController: FeedbackViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public override var sections: [FeedbackItem]  {
+    public override var sections: [FeedbackItem] {
         get {
             guard let activeFeedbackType = activeFeedbackType else { return [] }
             switch activeFeedbackType {
@@ -81,12 +81,17 @@ class FeedbackSubtypeViewController: FeedbackViewController {
     }
 
     override var draggableHeight: CGFloat {
-        return UIScreen.main.bounds.height
+        return UIScreen.main.bounds.height - UIApplication.shared.statusBarFrame.size.height
     }
 
     public override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let availableWidth = collectionView.bounds.width
-        return CGSize(width: availableWidth, height: 80 )
+        var availableWidth = collectionView.bounds.width
+        
+        if #available(iOS 11.0, *), let keyWindow = UIApplication.shared.keyWindow {
+            availableWidth = keyWindow.safeAreaLayoutGuide.layoutFrame.size.width
+        }
+        
+        return CGSize(width: availableWidth, height: 80)
     }
 
     public override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -195,8 +200,8 @@ class FeedbackSubtypeViewController: FeedbackViewController {
         let labelLeading = reportIssueLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor)
         let labelTrailing = reportIssueLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         let collectionLabelSpacing = collectionView.topAnchor.constraint(equalTo: reportIssueLabel.bottomAnchor)
-        let collectionLeading = collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
-        let collectionTrailing = collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        let collectionLeading = collectionView.leadingAnchor.constraint(equalTo: view.safeLeadingAnchor)
+        let collectionTrailing = collectionView.trailingAnchor.constraint(equalTo: view.safeTrailingAnchor)
         let collectionBarSpacing = collectionView.bottomAnchor.constraint(equalTo: reportButtonContainer.topAnchor)
 
         let reportButtonContainerLeading = reportButtonContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor)
@@ -214,9 +219,28 @@ class FeedbackSubtypeViewController: FeedbackViewController {
         let reportButtonWidth = reportButton.widthAnchor.constraint(equalToConstant: 165)
         let reportButtonHeight = reportButton.heightAnchor.constraint(equalToConstant: 48)
 
-        let constraints = [labelTop, labelHeight, labelLeading, labelTrailing,
-                           collectionLabelSpacing, collectionLeading, collectionTrailing, collectionBarSpacing,
-                           reportButtonContainerLeading, reportButtonContainerTrailing, reportButtonContainerBottom, reportButtonContainerHeight, reportButtonCenterX, reportButtonCenterY, reportButtonWidth, reportButtonHeight, reportButtonSeparatorLeading, reportButtonSeparatorTrailing, reportButtonSeparatorTop, reportButtonSeparatorHeight]
+        let constraints = [
+            labelTop,
+            labelHeight,
+            labelLeading,
+            labelTrailing,
+            collectionLabelSpacing,
+            collectionLeading,
+            collectionTrailing,
+            collectionBarSpacing,
+            reportButtonContainerLeading,
+            reportButtonContainerTrailing,
+            reportButtonContainerBottom,
+            reportButtonContainerHeight,
+            reportButtonCenterX,
+            reportButtonCenterY,
+            reportButtonWidth,
+            reportButtonHeight,
+            reportButtonSeparatorLeading,
+            reportButtonSeparatorTrailing,
+            reportButtonSeparatorTop,
+            reportButtonSeparatorHeight
+        ]
 
         NSLayoutConstraint.activate(constraints)
     }
