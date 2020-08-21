@@ -56,35 +56,9 @@
 * `RouteController` now tracks the user’s location more accurately within roundabouts. ([#2417](https://github.com/mapbox/mapbox-navigation-ios/pull/2417))
 * Fixed an issue where departure instructions were briefly missing when beginning turn-by-turn navigation. ([#2417](https://github.com/mapbox/mapbox-navigation-ios/pull/2417))
 
-### Offline navigation
+### Other changes
 
-* `NavigationDirectionsCompletionHandler` now accepts the original tile directory URL passed into `NavigationDirections.configureRouter(tilesURL:completionHandler:)`; the number of tiles added is no longer passed in. ([#2477](https://github.com/mapbox/mapbox-navigation-ios/pull/2477))
-* Fixed a crash that occurred after setting `RouteOptions.shapeFormat` to `RouteShapeFormat.geoJSON`. ([valhalla/valhalla#1867](https://github.com/valhalla/valhalla/pull/1867))
-* Fixed a crash caused by a side street that loops back to a main road. ([valhalla/valhalla#2385](https://github.com/valhalla/valhalla/pull/2385))
-* Fixed a crash caused by a turn channel leading away from a roundabout. ([valhalla/valhalla#2463](https://github.com/valhalla/valhalla/pull/2463))
-* Added Dutch and Japanese spoken instructions, for consistency with the Mapbox Directions API. ([valhalla/valhalla#2464](https://github.com/valhalla/valhalla/pull/2464), [valhalla/valhalla#2432](https://github.com/valhalla/valhalla/pull/2432))
-* Fixed an issue where some routes had unreasonably long expected travel times. ([valhalla/valhalla#2102](https://github.com/valhalla/valhalla/pull/2102))
-* Fixed incorrect routing at some intersections of divided roads where there are turn restrictions. ([valhalla/valhalla#2109](https://github.com/valhalla/valhalla/pull/2109))
-* Fixed issues where routes would sometimes require divebombing. ([valhalla/valhalla#1931](https://github.com/valhalla/valhalla/pull/1931))
-* Fixed an issue where the route would sometimes contain duplicate waypoints. ([valhalla/valhalla#1880](https://github.com/valhalla/valhalla/pull/1880))
-* Fixed an issue where an exception to a road closure on a public holiday was being ignored. ([valhalla/valhalla#2198](https://github.com/valhalla/valhalla/pull/2198))
-* By default, calculated routes follow alleys less often. ([valhalla/valhalla#2231](https://github.com/valhalla/valhalla/pull/2231))
-* When `RouteOptions.profileIdentifier` is set to `DirectionsProfileIdentifier.cycling`, the calculated route may now follow paths tagged with [mountain biking difficulty levels](https://wiki.openstreetmap.org/wiki/Key:mtb:scale) in OpenStreetMap. ([valhalla/valhalla#2117](https://github.com/valhalla/valhalla/pull/2117))
-* Fixed an issue where floating-point numbers in tags were parsed incorrectly. ([valhalla/valhalla#2355](https://github.com/valhalla/valhalla/pull/2355))
-* When two maneuvers are spaced close together, the spoken instruction now describes both maneuvers. ([valhalla/valhalla#2353](https://github.com/valhalla/valhalla/pull/2353))
-* Turn lane indications are now shown below the turn banner as when navigating online. ([valhalla/valhalla#1830](https://github.com/valhalla/valhalla/pull/1830), [valhalla/valhalla#1859](https://github.com/valhalla/valhalla/pull/1859))
-* Fixed an issue where the `RouteStep.expectedTravelTime` properties of each step did not add up to the `RouteLeg.expectedTravelTime` property. ([valhalla/valhalla#2195](https://github.com/valhalla/valhalla/pull/2195))
-* Fixed an issue where a forward- or backward-only speed limit was not considered when calculating some expected travel times. ([valhalla/valhalla#2198](https://github.com/valhalla/valhalla/pull/2198))
-* Suppressed extraneous maneuvers. ([valhalla/valhalla#1886](https://github.com/valhalla/valhalla/pull/1886), [valhalla/valhalla#1909](https://github.com/valhalla/valhalla/pull/1909), [valhalla/valhalla#1928](https://github.com/valhalla/valhalla/pull/1928), [valhalla/valhalla#2436](https://github.com/valhalla/valhalla/pull/2436))
-* A spoken instruction about a `ManeuverType.merge` maneuver now indicates whether to merge to the left or the right, as when navigating online. ([valhalla/valhalla#1892](https://github.com/valhalla/valhalla/pull/1892), [valhalla/valhalla#1989](https://github.com/valhalla/valhalla/pull/1989))
-* Spoken instructions for `ManeuverType.exitRoundabout`, `ManeuverType.exitRotary`, `ManeuverType.reachFork`, and `ManeuverType.merge` maneuvers now indicate the outlet road name or destination if available. ([valhalla/valhalla#2378](https://github.com/valhalla/valhalla/pull/2378), [valhalla/valhalla#2389](https://github.com/valhalla/valhalla/pull/2389))
-* Visual and spoken instructions for `ManeuverType.turn` and `ManeuverType.reachFork` now indicate the name of the intersection, if available. ([valhalla/valhalla#2386](https://github.com/valhalla/valhalla/pull/2386))
-* Fixed ungrammatical spoken instructions at sharp turns in English. ([valhalla/valhalla#2226](https://github.com/valhalla/valhalla/pull/2226))
-* Fixed an issue where spoken and visual instructions sometimes omitted the cardinal direction after a route number in the United States. ([valhalla/valhalla#1917](https://github.com/valhalla/valhalla/pull/1917))
-* Fixed an issue where visual instructions sometimes included duplicate content in `VisualInstructionBanner.primaryInstruction` and `VisualInstructionBanner.secondaryInstruction`. ([#2477](https://github.com/mapbox/mapbox-navigation-ios/pull/2477))
-* A spoken instruction about a `ManeuverType.takeOffRamp` maneuver no longer specifies the side of the road if the ramp branches off the slow lane (on the right side in regions that drive on the right). ([valhalla/valhalla#1990](https://github.com/valhalla/valhalla/pull/1990))
-* Improved the timing of spoken instructions for `ManeuverType.takeOffRamp` maneuvers along high-speed roads. ([#2417](https://github.com/mapbox/mapbox-navigation-ios/pull/2417))
-* Improved the timing of visual instructions when two maneuvers are spaced close together. ([#2417](https://github.com/mapbox/mapbox-navigation-ios/pull/2417))
+* Deprecated `NavigationDirectionsCompletionHandler`, `OfflineRoutingError`, `UnpackProgressHandler`, `UnpackCompletionHandler`, `OfflineRouteCompletionHandler`, and `NavigationDirections`. Use `Directions` instead of `NavigationDirections` to calculate a route. ([#2509](https://github.com/mapbox/mapbox-navigation-ios/pull/2509))
 
 ## v0.40.0
 
