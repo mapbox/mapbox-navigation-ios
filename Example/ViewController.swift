@@ -557,7 +557,7 @@ extension ViewController: VisualInstructionDelegate {
 // MARK: Free driving
 extension ViewController {
     func trackLocations(mapView: NavigationMapView) {
-        let dataSource = PassiveLocationDataSource(directions: Directions.shared)
+        let dataSource = PassiveLocationDataSource()
         let locationManager = PassiveLocationManager(dataSource: dataSource)
         mapView.locationManager = locationManager
         
