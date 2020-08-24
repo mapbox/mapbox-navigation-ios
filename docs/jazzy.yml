@@ -56,8 +56,6 @@ custom_categories:
       - NavigationRouteOptions
       - RouteOptions
       - NavigationMatchOptions
-      - NavigationDirections
-      - OfflineRoutingError
       - SimulationMode
   - name: Maps
     children:
