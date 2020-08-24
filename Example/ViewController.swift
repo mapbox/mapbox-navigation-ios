@@ -102,6 +102,8 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "settings"), style: .plain, target: self, action: #selector(openSettings))
+
+        navigationItem.rightBarButtonItem?.isEnabled = SettingsViewController.numberOfSections > 0
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -237,9 +239,7 @@ class ViewController: UIViewController {
     }
 
     fileprivate func requestRoute(with options: RouteOptions, success: @escaping RouteRequestSuccess, failure: RouteRequestFailure?) {
-        // Calculate route offline if an offline version is selected
-        let shouldUseOfflineRouting = Settings.selectedOfflineVersion != nil
-        Settings.directions.calculate(options, offline: shouldUseOfflineRouting) { (session, result) in
+        Directions.shared.calculate(options) { (session, result) in
             switch result {
             case let .success(response):
                 success(response)
@@ -347,7 +347,7 @@ class ViewController: UIViewController {
     func navigationService(route: Route, options: RouteOptions) -> NavigationService {
         let simulate = simulationButton.isSelected
         let mode: SimulationMode = simulate ? .always : .onPoorGPS
-        return MapboxNavigationService(route: route, routeOptions: options, directions: Settings.directions, simulating: mode)
+        return MapboxNavigationService(route: route, routeOptions: options, simulating: mode)
     }
 
     func presentAndRemoveMapview(_ navigationViewController: NavigationViewController, completion: CompletionHandler?) {
@@ -396,7 +396,8 @@ class ViewController: UIViewController {
         
         trackLocations(mapView: mapView)
         mapView.showsUserLocation = true
-        mapView.userTrackingMode = .followWithHeading
+        mapView.userTrackingMode = .follow
+        mapView.showsUserHeadingIndicator = true
     }
     
     func uninstall(_ mapView: NavigationMapView) {
@@ -486,28 +487,7 @@ extension ViewController: RouteVoiceControllerDelegate {
     }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool {
-        let shouldUseOfflineRouting = Settings.selectedOfflineVersion != nil
-        
-        guard shouldUseOfflineRouting == true, let responseOptions = response?.options, case let .route(routeOptions) = responseOptions else {
-            return true
-        }
-        
-        let profileIdentifier = routeOptions.profileIdentifier
-        
-        var waypoints: [Waypoint] = [Waypoint(location: location)]
-        var remainingWaypoints = navigationViewController.navigationService.routeProgress.remainingWaypoints
-        remainingWaypoints.removeFirst()
-        waypoints.append(contentsOf: remainingWaypoints)
-        
-        let options = NavigationRouteOptions(waypoints: waypoints, profileIdentifier: profileIdentifier)
-        
-        Settings.directions.calculate(options, offline: true) { (session, result) in
-            guard case let .success(response) = result, let routes = response.routes, let route = routes.first else { return }
-            
-            navigationViewController.navigationService.route = route
-        }
-        
-        return false
+        return true
     }
 }
 
@@ -580,7 +560,7 @@ extension ViewController: VisualInstructionDelegate {
 // MARK: Free driving
 extension ViewController {
     func trackLocations(mapView: NavigationMapView) {
-        let dataSource = PassiveLocationDataSource(directions: Settings.directions)
+        let dataSource = PassiveLocationDataSource()
         let locationManager = PassiveLocationManager(dataSource: dataSource)
         mapView.locationManager = locationManager
         

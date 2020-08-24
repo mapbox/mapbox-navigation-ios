@@ -34,16 +34,9 @@ To build this SDK, you need Xcode 11.4.1 and [Carthage](https://github.com/Carth
    rm -rf ~/Library/Caches/carthage/ ~/Library/Caches/org.carthage.CarthageKit/binaries/{MapboxAccounts,MapboxCommon-ios,MapboxNavigationNative,mapbox-ios-sdk-dynamic}
    ```
 
-1. Create a [Cartfile](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#github-repositories) with the following dependency:
-   ```cartfile
-   github "mapbox/mapbox-navigation-ios" "v1.0.0-beta.1"
-   ```
-
 1. Run `carthage bootstrap --platform iOS --cache-builds --use-netrc`.
 
-1. Once the Carthage build finishes, open `MapboxNavigation.xcodeproj` in Xcode and build the MapboxNavigation scheme.
-
-See [the README](./README.md#running-the-example-project) for instructions on building and running the included Swift and Objective-C example projects.
+1. Once the Carthage build finishes, open `MapboxNavigation.xcodeproj` in Xcode and build the MapboxNavigation scheme. Switch to the Example or Example-CarPlay scheme to see the SDK in action.
 
 ## Testing the SDK
 
@@ -51,7 +44,7 @@ It is important to test the SDK using the `iPhone 8 Plus` simulator for the `FBS
 
 ## Opening a pull request
 
-Pull requests are appreciated. If your PR includes any changes that would impact developers or end users, please mention those changes in the “master” section of [CHANGELOG.md](CHANGELOG.md), noting the PR number. Examples of noteworthy changes include new features, fixes for user-visible bugs, renamed or deleted public symbols, and changes that affect bridging to Objective-C.
+Pull requests are appreciated. If your PR includes any changes that would impact developers or end users, please mention those changes in the “master” section of [CHANGELOG.md](CHANGELOG.md), noting the PR number. Examples of noteworthy changes include new features, fixes for user-visible bugs, and renamed or deleted public symbols.
 
 ## Making any symbol public
 

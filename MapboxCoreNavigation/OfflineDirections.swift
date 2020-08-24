@@ -2,14 +2,16 @@ import Foundation
 import MapboxDirections
 import MapboxNavigationNative
 
-/**
+/** :nodoc:
  A closure to call when the `NavigationDirections` router has been configured completely.
  */
+@available(*, deprecated)
 public typealias NavigationDirectionsCompletionHandler = (_ tilesURL: URL) -> Void
 
-/**
+/** :nodoc:
  An error that occurs when calculating directions potentially offline using the `NavigationDirections.calculate(_:offline:completionHandler:)` method.
 */
+@available(*, deprecated)
 public enum OfflineRoutingError: LocalizedError {
     /**
      A standard Directions API error occurred.
@@ -58,6 +60,7 @@ public enum OfflineRoutingError: LocalizedError {
     }
 }
 
+@available(*, deprecated)
 struct NavigationDirectionsConstants {
     static let offlineSerialQueueLabel = Bundle.mapboxCoreNavigation.bundleIdentifier!.appending(".offline")
     static let unpackSerialQueueLabel = Bundle.mapboxCoreNavigation.bundleIdentifier!.appending(".offline.unpack")
@@ -65,23 +68,25 @@ struct NavigationDirectionsConstants {
     static let unpackSerialQueue = DispatchQueue(label: NavigationDirectionsConstants.unpackSerialQueueLabel)
 }
 
-/**
+/** :nodoc:
  A closure to call when an unpacking operation has made some progress.
  
  - parameter totalBytes: The total size of tile pack in bytes.
  - parameter remainingBytes: The remaining number of bytes left to download.
  */
+@available(*, deprecated)
 public typealias UnpackProgressHandler = (_ totalBytes: UInt64, _ remainingBytes: UInt64) -> ()
 
-/**
+/** :nodoc:
  A closure to call once an unpacking operation has completed.
  
  - parameter numberOfTiles: The number of tiles that were unpacked.
  - parameter error: Potential error that occured when trying to unpack.
  */
+@available(*, deprecated)
 public typealias UnpackCompletionHandler = (_ numberOfTiles: UInt64, _ error: Error?) -> ()
 
-/**
+/** :nodoc:
  A closure (block) to be called when a directions request is complete.
  
  - parameter waypoints: An array of `Waypoint` objects. Each waypoint object corresponds to a `Waypoint` object in the original `RouteOptions` object. The locations and names of these waypoints are the result of conflating the original waypoints to known roads. The waypoints may include additional information that was not specified in the original waypoints.
@@ -92,13 +97,15 @@ public typealias UnpackCompletionHandler = (_ numberOfTiles: UInt64, _ error: Er
  If the request was canceled or there was an error obtaining the routes, this argument is `nil`. This is not to be confused with the situation in which no results were found, in which case the array is present but empty.
  - parameter error: The error that occurred, or `nil` if the placemarks were obtained successfully.
  */
+@available(*, deprecated)
 public typealias OfflineRouteCompletionHandler = (_ session: Directions.Session, _ result: Result<RouteResponse, OfflineRoutingError>) -> Void
 
-/**
+/** :nodoc:
  A `NavigationDirections` object provides you with optimal directions between different locations, or waypoints. The directions object passes your request to a built-in routing engine and returns the requested information to a closure (block) that you provide. A directions object can handle multiple simultaneous requests. A `RouteOptions` object specifies criteria for the results, such as intermediate waypoints, a mode of transportation, or the level of detail to be returned. In addition to `Directions`, `NavigationDirections` provides support for offline routing.
  
  Each result produced by the directions object is stored in a `Route` object. Depending on the `RouteOptions` object you provide, each route may include detailed information suitable for turn-by-turn directions, or it may include only high-level information such as the distance, estimated travel time, and name of each leg of the trip. The waypoints that form the request may be conflated with nearby locations, as appropriate; the resulting waypoints are provided to the closure.
  */
+@available(*, deprecated, message: "Use the Directions class instead.")
 public class NavigationDirections: Directions {
     /**
      Configures the router with the given set of tiles.

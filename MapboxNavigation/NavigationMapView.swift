@@ -87,7 +87,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         static let instruction = "\(identifierNamespace).instruction"
         
-        static let mainRouteCasingSource = "\(identifierNamespace).mainRouteCasingSource"
+        static let mainRouteCasing = "\(identifierNamespace).mainRouteCasing"
+        
+        static let buildingExtrusion = "\(identifierNamespace).buildingExtrusion"
     }
     
     struct StyleLayerIdentifier {
@@ -495,7 +497,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
          just update their shapes.
          */
         if let source = style.source(withIdentifier: SourceIdentifier.allRoutes) as? MGLShapeSource,
-            let mainRouteCasingSource = style.source(withIdentifier: SourceIdentifier.mainRouteCasingSource) as? MGLShapeSource {
+            let mainRouteCasingSource = style.source(withIdentifier: SourceIdentifier.mainRouteCasing) as? MGLShapeSource {
             source.shape = polylines
             mainRouteCasingSource.shape = mainRouteCasingPolyline
         } else {
@@ -507,7 +509,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 
             // FIXME: Using mainRouteCasingSource is a temporary workaround to prevent glitches when main route line and casing share the same source.
             // After fixing https://github.com/mapbox/mapbox-gl-native-ios/issues/355 creation of separate source for main route casing should be removed.
-            let mainRouteCasingSource = MGLShapeSource(identifier: SourceIdentifier.mainRouteCasingSource, shape: mainRouteCasingPolyline, options: [.lineDistanceMetrics: true])
+            let mainRouteCasingSource = MGLShapeSource(identifier: SourceIdentifier.mainRouteCasing, shape: mainRouteCasingPolyline, options: [.lineDistanceMetrics: true])
             style.addSource(mainRouteCasingSource)
             
             generateTrafficGradientStops(for: mainRoute)
@@ -637,8 +639,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         ].compactMap { style.layer(withIdentifier: $0) })
         style.remove(Set([
             SourceIdentifier.allRoutes,
-            SourceIdentifier.mainRouteCasingSource
+            SourceIdentifier.mainRouteCasing
         ].compactMap { style.source(withIdentifier: $0) }))
+        
+        routes = nil
     }
     
     /**
@@ -1370,9 +1374,22 @@ extension NavigationMapView {
         style?.removeLayer(highlightedBuildingsLayer)
     }
     
+    private func addBuildingsSource() -> MGLSource? {
+        let buildingsSource = style?.source(withIdentifier: SourceIdentifier.buildingExtrusion)
+        if buildingsSource == nil {
+            let buildingsSource = MGLVectorTileSource(identifier: SourceIdentifier.buildingExtrusion,
+                                                      configurationURL: URL(string: "mapbox://mapbox.mapbox-streets-v8")!)
+            style?.addSource(buildingsSource)
+            
+            return buildingsSource
+        }
+        
+        return buildingsSource
+    }
+    
     private func addBuildingsLayer() -> MGLFillExtrusionStyleLayer? {
         if let highlightedBuildingsLayer = style?.layer(withIdentifier: StyleLayerIdentifier.buildingExtrusion) as? MGLFillExtrusionStyleLayer { return highlightedBuildingsLayer }
-        guard let buildingsSource = style?.source(withIdentifier: "composite") else { return nil }
+        guard let buildingsSource = addBuildingsSource() else { return nil }
         
         let highlightedBuildingsLayer = MGLFillExtrusionStyleLayer(identifier: StyleLayerIdentifier.buildingExtrusion, source: buildingsSource)
         highlightedBuildingsLayer.sourceLayerIdentifier = "building"

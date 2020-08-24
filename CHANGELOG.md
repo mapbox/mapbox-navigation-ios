@@ -11,24 +11,28 @@
 * Enabled MAU billing by default, so that SDKs usage of Mapbox APIs is [billed](https://www.mapbox.com/pricing/) together based on [monthly active users](https://docs.mapbox.com/help/glossary/monthly-active-users/) rather than individually by HTTP request. If you prefer to still use request-based billing, set the `MBXNavigationBillingMethod` key in Info.plist to `request` ([#2405](https://github.com/mapbox/mapbox-navigation-ios/pull/2405).
 * Added Greek and Turkish localizations. ([#2385](https://github.com/mapbox/mapbox-navigation-ios/pull/2385), [#2475](https://github.com/mapbox/mapbox-navigation-ios/pull/2475), [valhalla/valhalla#2438](https://github.com/valhalla/valhalla/pull/2438))
 * Upgraded to [MapboxDirections v0.33.0](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v0.33.0). ([#2483](https://github.com/mapbox/mapbox-navigation-ios/pull/2483)) 
-* `MGLStyle.navigationGuidanceDayStyleURL` and `MGLStyle.navigationGuidanceNightStyleURL` are renamed to `MGLStyle.navigationDayStyleURL` and `MGLStyle.navigationNightStyleURL`respectively. ([#2523](https://github.com/mapbox/mapbox-navigation-ios/pull/2523))
-* `MGLStyle.navigationPreviewDayStyleURL` and `MGLStyle.navigationPreviewNightStyleURL` are removed. Now, corresponding `MGLStyle.navigationDayStyleURL` or `MGLStyle.navigationNightStyleURL` will be used to visualize `MGLMapView.showsTraffic`. ([#2523](https://github.com/mapbox/mapbox-navigation-ios/pull/2523))
-* By default, NavigationMapView displays the `Navigation Day v5` style. This style consolidates `Navigation Preview` and `Navigation Guidance` styles and thus is used in both Navigation and Preview views. ([#2523](https://github.com/mapbox/mapbox-navigation-ios/pull/2523))
 * Upgraded to [MapboxSpeech v0.3.1](https://github.com/mapbox/mapbox-speech-swift/releases/tag/v0.3.1). ([#2543](https://github.com/mapbox/mapbox-navigation-ios/pull/2543))
 
-### User interface
+### Map
 
+* The `MGLStyle.navigationDayStyleURL` and `MGLStyle.navigationNightStyleURL` properties contain URLs to the Mapbox Navigation Day and Night v5 styles, both of which show traffic congestion lines on all roads by default. The traffic congestion layer is appropriate for a preview map; to tailor the style to turn-by-turn navigation, set `MGLMapView.showsTraffic` to `false`. ([#2523](https://github.com/mapbox/mapbox-navigation-ios/pull/2523))
 * A portion of the route line now disappears behind the user puck as the user travels along the route during turn-by-turn navigation. ([#2377](https://github.com/mapbox/mapbox-navigation-ios/pull/2377))
-* As the user approaches certain junctions, an enlarged illustration of the junction appears below the top banner to help the user understand a complex maneuver. These junction views require only appear when the relevant data is available. Contact your Mapbox sales representative or [support team](https://support.mapbox.com/) for access to the junction views feature. ([#2408](https://github.com/mapbox/mapbox-navigation-ios/pull/2408))
+* A building at the destination waypoint can be extruded in 3D and highlighted for emphasis and recognizability. To enable building extrusion or highlighting, set the `NavigationViewController.waypointStyle` property. For a standalone map view that is not part of `NavigationViewController`, call the `NavigationMapView.highlightBuildings(at:in3D:)` method to highlight the destination building at a specific coordinate and `NavigationMapView.unhighlightBuildings()` to reverse this effect. ([#2535](https://github.com/mapbox/mapbox-navigation-ios/pull/2535))
+* Replaced the `MGLStyle.navigationPreviewDayStyleURL` and `MGLStyle.navigationGuidanceDayStyleURL` properties with `MGLStyle.navigationDayStyleURL`, and replaced `MGLStyle.navigationPreviewNightStyleURL` and `MGLStyle.navigationGuidanceNightStyleURL` with `MGLStyle.navigationNightStyleURL`. ([#2523](https://github.com/mapbox/mapbox-navigation-ios/pull/2523))
 * Removed the `NavigationViewControllerDelegate.navigationViewController(_:imageFor:)` and `NavigationViewControllerDelegate.navigationViewController(_:viewFor:)` methods in favor of `MGLMapViewDelegate.mapView(_:imageFor:)` and `MGLMapViewDelegate.mapView(_:viewFor:)`, respectively. ([#2396](https://github.com/mapbox/mapbox-navigation-ios/pull/2396))
 * Removed `NavigationMapViewDelegate.navigationMapView(_:routeStyleLayerWithIdentifier:source:)`, `NavigationMapViewDelegate.navigationMapView(_:routeCasingStyleLayerWithIdentifier:source:)` in favor of four new delegate methods to customize the route styling ([#2377](https://github.com/mapbox/mapbox-navigation-ios/pull/2377)):
   * `NavigationMapViewDelegate.navigationMapView(_:mainRouteStyleLayerWithIdentifier:source:)` to style the main route.
   * `NavigationMapViewDelegate.navigationMapView(_:mainRouteCasingStyleLayerWithIdentifier:source:)` to style the casing of the main route.
   * `NavigationMapViewDelegate.navigationMapView(_:alternativeRouteStyleLayerWithIdentifier:source:)` to style alternative routes.
   * `NavigationMapViewDelegate.navigationMapView(_:alternativeRouteCasingStyleLayerWithIdentifier:source:)` to style the casing of alternative routes.
-  * Fixed an issue where the casing for the main route would not overlap alternative routes. ([#2377](https://github.com/mapbox/mapbox-navigation-ios/pull/2377))
-  * Added `NavigationViewController.WaypointStyle` enum to control building highlighting. ([#2535](https://github.com/mapbox/mapbox-navigation-ios/pull/2535))
-  * Added `NavigationMapView.highlightBuildings(at:in3D:)` method to highlight the destination building in `UIColor.defaultBuildingHighlightColor` as the user approaches it. Added `NavigationMapView.unhighlightBuildings` to give the ability to unhighlight buildings. ([#2535](https://github.com/mapbox/mapbox-navigation-ios/pull/2535))
+* Removed the deprecated `NavigationMapView.showRoutes(_:legIndex:)` method in favor of `NavigationMapView.show(_:legIndex:)` and `NavigationMapView.showWaypoints(_:legIndex:)` in favor of `NavigationMapView.showWaypoints(on:legIndex:)`. ([#2539](https://github.com/mapbox/mapbox-navigation-ios/pull/2539))
+* Fixed an issue where the casing for the main route would not overlap alternative routes. ([#2377](https://github.com/mapbox/mapbox-navigation-ios/pull/2377))
+* Fixed memory leaks after disconnecting the application from CarPlay. ([#2470](https://github.com/mapbox/mapbox-navigation-ios/pull/2470))
+
+### Visual and spoken instructions
+
+* As the user approaches certain junctions, an enlarged illustration of the junction appears below the top banner to help the user understand a complex maneuver. These junction views only appear when the relevant data is available. Contact your Mapbox sales representative or [support team](https://support.mapbox.com/) for access to the junction views feature. ([#2408](https://github.com/mapbox/mapbox-navigation-ios/pull/2408))
+* Replaced `RouteVoiceController` and `MapboxVoiceController` with `MultiplexedSpeechSynthesizer`. `MultiplexedSpeechSynthesizer` coordinates multiple cascading speech synthesizers. By default, the controller still tries to speak instructions via the Mapbox Voice API (`MapboxSpeechSynthesizer`) before falling back to VoiceOver (`SystemSpeechSynthesizer`), but you can also provide your own speech synthesizer that conforms to the `SpeechSynthesizing` protocol. ([#2348](https://github.com/mapbox/mapbox-navigation-ios/pull/2348))
 
 ### Feedback
 
@@ -53,41 +57,9 @@
 * `RouteController` now tracks the user’s location more accurately within roundabouts. ([#2417](https://github.com/mapbox/mapbox-navigation-ios/pull/2417))
 * Fixed an issue where departure instructions were briefly missing when beginning turn-by-turn navigation. ([#2417](https://github.com/mapbox/mapbox-navigation-ios/pull/2417))
 
-### Offline navigation
-
-* `NavigationDirectionsCompletionHandler` now accepts the original tile directory URL passed into `NavigationDirections.configureRouter(tilesURL:completionHandler:)`; the number of tiles added is no longer passed in. ([#2477](https://github.com/mapbox/mapbox-navigation-ios/pull/2477))
-* Fixed a crash that occurred after setting `RouteOptions.shapeFormat` to `RouteShapeFormat.geoJSON`. ([valhalla/valhalla#1867](https://github.com/valhalla/valhalla/pull/1867))
-* Fixed a crash caused by a side street that loops back to a main road. ([valhalla/valhalla#2385](https://github.com/valhalla/valhalla/pull/2385))
-* Fixed a crash caused by a turn channel leading away from a roundabout. ([valhalla/valhalla#2463](https://github.com/valhalla/valhalla/pull/2463))
-* Added Dutch and Japanese spoken instructions, for consistency with the Mapbox Directions API. ([valhalla/valhalla#2464](https://github.com/valhalla/valhalla/pull/2464), [valhalla/valhalla#2432](https://github.com/valhalla/valhalla/pull/2432))
-* Fixed an issue where some routes had unreasonably long expected travel times. ([valhalla/valhalla#2102](https://github.com/valhalla/valhalla/pull/2102))
-* Fixed incorrect routing at some intersections of divided roads where there are turn restrictions. ([valhalla/valhalla#2109](https://github.com/valhalla/valhalla/pull/2109))
-* Fixed issues where routes would sometimes require divebombing. ([valhalla/valhalla#1931](https://github.com/valhalla/valhalla/pull/1931))
-* Fixed an issue where the route would sometimes contain duplicate waypoints. ([valhalla/valhalla#1880](https://github.com/valhalla/valhalla/pull/1880))
-* Fixed an issue where an exception to a road closure on a public holiday was being ignored. ([valhalla/valhalla#2198](https://github.com/valhalla/valhalla/pull/2198))
-* By default, calculated routes follow alleys less often. ([valhalla/valhalla#2231](https://github.com/valhalla/valhalla/pull/2231))
-* When `RouteOptions.profileIdentifier` is set to `DirectionsProfileIdentifier.cycling`, the calculated route may now follow paths tagged with [mountain biking difficulty levels](https://wiki.openstreetmap.org/wiki/Key:mtb:scale) in OpenStreetMap. ([valhalla/valhalla#2117](https://github.com/valhalla/valhalla/pull/2117))
-* Fixed an issue where floating-point numbers in tags were parsed incorrectly. ([valhalla/valhalla#2355](https://github.com/valhalla/valhalla/pull/2355))
-* When two maneuvers are spaced close together, the spoken instruction now describes both maneuvers. ([valhalla/valhalla#2353](https://github.com/valhalla/valhalla/pull/2353))
-* Turn lane indications are now shown below the turn banner as when navigating online. ([valhalla/valhalla#1830](https://github.com/valhalla/valhalla/pull/1830), [valhalla/valhalla#1859](https://github.com/valhalla/valhalla/pull/1859))
-* Fixed an issue where the `RouteStep.expectedTravelTime` properties of each step did not add up to the `RouteLeg.expectedTravelTime` property. ([valhalla/valhalla#2195](https://github.com/valhalla/valhalla/pull/2195))
-* Fixed an issue where a forward- or backward-only speed limit was not considered when calculating some expected travel times. ([valhalla/valhalla#2198](https://github.com/valhalla/valhalla/pull/2198))
-* Suppressed extraneous maneuvers. ([valhalla/valhalla#1886](https://github.com/valhalla/valhalla/pull/1886), [valhalla/valhalla#1909](https://github.com/valhalla/valhalla/pull/1909), [valhalla/valhalla#1928](https://github.com/valhalla/valhalla/pull/1928), [valhalla/valhalla#2436](https://github.com/valhalla/valhalla/pull/2436))
-* A spoken instruction about a `ManeuverType.merge` maneuver now indicates whether to merge to the left or the right, as when navigating online. ([valhalla/valhalla#1892](https://github.com/valhalla/valhalla/pull/1892), [valhalla/valhalla#1989](https://github.com/valhalla/valhalla/pull/1989))
-* Spoken instructions for `ManeuverType.exitRoundabout`, `ManeuverType.exitRotary`, `ManeuverType.reachFork`, and `ManeuverType.merge` maneuvers now indicate the outlet road name or destination if available. ([valhalla/valhalla#2378](https://github.com/valhalla/valhalla/pull/2378), [valhalla/valhalla#2389](https://github.com/valhalla/valhalla/pull/2389))
-* Visual and spoken instructions for `ManeuverType.turn` and `ManeuverType.reachFork` now indicate the name of the intersection, if available. ([valhalla/valhalla#2386](https://github.com/valhalla/valhalla/pull/2386))
-* Fixed ungrammatical spoken instructions at sharp turns in English. ([valhalla/valhalla#2226](https://github.com/valhalla/valhalla/pull/2226))
-* Fixed an issue where spoken and visual instructions sometimes omitted the cardinal direction after a route number in the United States. ([valhalla/valhalla#1917](https://github.com/valhalla/valhalla/pull/1917))
-* Fixed an issue where visual instructions sometimes included duplicate content in `VisualInstructionBanner.primaryInstruction` and `VisualInstructionBanner.secondaryInstruction`. ([#2477](https://github.com/mapbox/mapbox-navigation-ios/pull/2477))
-* A spoken instruction about a `ManeuverType.takeOffRamp` maneuver no longer specifies the side of the road if the ramp branches off the slow lane (on the right side in regions that drive on the right). ([valhalla/valhalla#1990](https://github.com/valhalla/valhalla/pull/1990))
-* Improved the timing of spoken instructions for `ManeuverType.takeOffRamp` maneuvers along high-speed roads. ([#2417](https://github.com/mapbox/mapbox-navigation-ios/pull/2417))
-* Improved the timing of visual instructions when two maneuvers are spaced close together. ([#2417](https://github.com/mapbox/mapbox-navigation-ios/pull/2417))
-
 ### Other changes
 
-* Replaced `RouteVoiceController` and `MapboxVoiceController` with `MultiplexedSpeechSynthesizer`. `MultiplexedSpeechSynthesizer` coordinates multiple cascading speech synthesizers. By default, the controller still tries to speak instructions via the Mapbox Voice API (`MapboxSpeechSynthesizer`) before falling back to VoiceOver (`SystemSpeechSynthesizer`), but you can also provide your own speech synthesizer that conforms to the `SpeechSynthesizing` protocol. ([#2348](https://github.com/mapbox/mapbox-navigation-ios/pull/2348))
-* Fixed memory leaks after disconnecting the application from CarPlay. ([#2470](https://github.com/mapbox/mapbox-navigation-ios/pull/2470))
-* Removed the deprecated `NavigationMapView.showRoutes(_:legIndex:)`, and `NavigationMapView.showWaypoints(_:legIndex:)` methods. ([#2539](https://github.com/mapbox/mapbox-navigation-ios/pull/2539))
+* Deprecated `NavigationDirectionsCompletionHandler`, `OfflineRoutingError`, `UnpackProgressHandler`, `UnpackCompletionHandler`, `OfflineRouteCompletionHandler`, and `NavigationDirections`. Use `Directions` instead of `NavigationDirections` to calculate a route. ([#2509](https://github.com/mapbox/mapbox-navigation-ios/pull/2509))
 
 ## v0.40.0
 

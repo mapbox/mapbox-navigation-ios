@@ -4,7 +4,7 @@ title: "Navigation SDK for iOS"
 author_url: https://docs.mapbox.com/ios/navigation/
 github_url: https://github.com/mapbox/mapbox-navigation-ios
 dash_url: https://docs.mapbox.com/ios/docsets/MapboxNavigation.xml
-copyright: '© 2014–2019 [Mapbox](https://www.mapbox.com/). See [license](https://github.com/mapbox/mapbox-navigation-ios/blob/master/LICENSE.md) for more details.'
+copyright: '© 2014–2020 [Mapbox](https://www.mapbox.com/). See [license](https://github.com/mapbox/mapbox-navigation-ios/blob/master/LICENSE.md) for more details.'
 
 head: |
   <link rel='shortcut icon' href='https://www.mapbox.com/img/favicon.ico' type='image/x-icon' />
@@ -56,8 +56,6 @@ custom_categories:
       - NavigationRouteOptions
       - RouteOptions
       - NavigationMatchOptions
-      - NavigationDirections
-      - OfflineRoutingError
       - SimulationMode
   - name: Maps
     children:
