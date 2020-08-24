@@ -31,7 +31,7 @@ open class NavigationEventsManager {
      Indicates whether the application depends on MapboxNavigation in addition to MapboxCoreNavigation.
      */
     var usesDefaultUserInterface = {
-        return Bundle.mapboxNavigation != nil
+        return Bundle.mapboxNavigationIfInstalled != nil
     }()
 
     /// :nodoc: the internal lower-level mobile events manager is an implementation detail which should not be manipulated directly
