@@ -26,7 +26,7 @@ extension MGLStyle {
     public class var navigationNightStyleURL: URL {
         get {
             if MGLAccountManager.hasChinaBaseURL {
-                return mapboxChinaDayStyleURL
+                return mapboxChinaNightStyleURL
             }
             return URL(string:"mapbox://styles/mapbox-map-design/ckd6dnz2q0m0q1io1mssumxqd")!
         }
