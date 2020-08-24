@@ -151,6 +151,15 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      Allows to control highlighting of the destination building on arrival. By default destination buildings will not be highlighted.
      */
     public var waypointStyle: WaypointStyle = .annotation
+
+    /**
+     Controls whether or not the FeedbackViewController shows a second level of detail for feedback items.
+    */
+    public var detailedFeedbackEnabled: Bool = false {
+        didSet {
+            mapViewController?.detailedFeedbackEnabled = detailedFeedbackEnabled
+        }
+    }
     
     var isConnectedToCarPlay: Bool {
         if #available(iOS 12.0, *) {

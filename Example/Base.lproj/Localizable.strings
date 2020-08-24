@@ -4,6 +4,15 @@
 /* CPAlertTemplate OK button title */
 "CARPLAY_OK" = "OK";
 
+/* Title of button to cancel sending of  navigation feedback items */
+"NAVIGATION_REPORT_CANCEL" = "Cancel";
+
+/* Title of button to send single selected navigation feedback item */
+"NAVIGATION_REPORT_ISSUE" = "Report Issue";
+
+/* Title of button to send multiple selected navigation feedback items */
+"NAVIGATION_REPORT_ISSUES" = "Report Issues";
+
 /* Title of action for dismissing waypoint removal confirmation sheet */
 "REMOVE_WAYPOINT_CONFIRM_CANCEL" = "Cancel";
 

@@ -139,6 +139,7 @@ custom_categories:
   - name: User Feedback
     children:
       - FeedbackViewController
+      - FeedbackSubtypeViewController
       - FeedbackViewControllerDelegate
       - FeedbackItem
       - FeedbackType

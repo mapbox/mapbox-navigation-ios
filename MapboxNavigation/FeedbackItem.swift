@@ -13,18 +13,74 @@ public extension FeedbackType {
     // TODO: Localize these strings
     internal var title: String {
         switch self {
-            case .general:
-                return "Feedback"
-            case .incorrectVisual(_):
-                return "Incorrect Visual"
-            case .confusingAudio(_):
-                return "Confusing Audio"
-            case .routeQuality(_):
-                return "Route Quality"
-            case .illegalRoute(_):
-                return "Illegal Route"
-            case .roadClosure(_):
-                return "Road Closure"
+        case .general:
+            return "Feedback"
+        case .incorrectVisual(.none):
+            return "Incorrect visual"
+        case .incorrectVisual(.turnIconIncorrect):
+            return "Turn icon incorrect"
+        case .incorrectVisual(.streetNameIncorrect):
+            return "Street name incorrect"
+        case .incorrectVisual(.instructionUnnecessary):
+            return "Instruction unnecessary"
+        case .incorrectVisual(.instructionMissing):
+            return "Instruction missing"
+        case .incorrectVisual(.maneuverIncorrect):
+            return "Maneuver incorrect"
+        case .incorrectVisual(.exitInfoIncorrect):
+            return "Exit info incorrect"
+        case .incorrectVisual(.laneGuidanceIncorrect):
+            return "Lane guidance incorrect"
+        case .incorrectVisual(.roadKnownByDifferentName):
+            return "Road known by different name"
+        case .incorrectVisual(.other):
+            return "Other"
+        case .confusingAudio(.none):
+            return "Confusing audio"
+        case .confusingAudio(.guidanceTooEarly):
+            return "Guidance too early"
+        case .confusingAudio(.guidanceTooLate):
+            return "Guidance too late"
+        case .confusingAudio(.pronunciationIncorrect):
+            return "Pronunciation incorrect"
+        case .confusingAudio(.roadNameRepeated):
+            return "Road name repeated"
+        case .confusingAudio(.other):
+            return "Other"
+        case .routeQuality(.none):
+            return "Route quality"
+        case .routeQuality(.routeNonDrivable):
+            return "Route non drivable"
+        case .routeQuality(.routeNotPreferred):
+            return "Route not preferred"
+        case .routeQuality(.alternativeRouteNotExpected):
+            return "Alternative route not expected"
+        case .routeQuality(.routeIncludedMissingRoads):
+            return "Route includes missing roads"
+        case .routeQuality(.routeHadRoadsTooNarrowToPass):
+            return "Route had roads too narrow to pass"
+        case .routeQuality(.other):
+            return "Other"
+        case .illegalRoute(.none):
+            return "Illegal route"
+        case .illegalRoute(.routedDownAOneWay):
+            return "Routed down a one way"
+        case .illegalRoute(.turnWasNotAllowed):
+            return "Turn wasn't allowed"
+        case .illegalRoute(.carsNotAllowedOnStreet):
+            return "Cars not allowed on street"
+        case .illegalRoute(.turnAtIntersectionUnprotected):
+            return "Turn at intersection unprotected"
+        case .illegalRoute(.other):
+            return "Other"
+        case .roadClosure(.none):
+            return "Road closure"
+        case .roadClosure(.streetPermanentlyBlockedOff):
+            return "Street permanently blocked off"
+        case .roadClosure(.roadMissingFromMap):
+            return "Road missing from map"
+        case .roadClosure(.other):
+            return "Other"
         }
     }
 
@@ -85,4 +141,9 @@ public struct FeedbackItem {
         self.image = image
         self.feedbackType = feedbackType
     }
+}
+
+public struct FeedbackSubtypeItem {
+    public var item: FeedbackItem
+    public var subtype: String?
 }

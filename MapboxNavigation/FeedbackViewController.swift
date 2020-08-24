@@ -63,8 +63,6 @@ public extension FeedbackViewControllerDelegate {
  A view controller containing a grid of buttons the user can use to denote an issue their current navigation experience.
  */
 public class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecognizerDelegate {
-    var activeFeedbackItem: FeedbackItem?
-    
     static let sceneTitle = NSLocalizedString("FEEDBACK_TITLE", value: "Report Problem", comment: "Title of view controller for sending feedback")
     static let cellReuseIdentifier = "collectionViewCellId"
     static let autoDismissInterval: TimeInterval = 10
@@ -76,11 +74,20 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     /**
      The feedback items that are visible and selectable by the user.
      */
-    public var sections: [FeedbackItem] =  [FeedbackType.incorrectVisual(subtype: nil),
-                                            FeedbackType.confusingAudio(subtype: nil),
-                                            FeedbackType.illegalRoute(subtype: nil),
-                                            FeedbackType.roadClosure(subtype: nil),
-                                            FeedbackType.routeQuality(subtype: nil)].map { $0.generateFeedbackItem() }
+    public var sections: [FeedbackItem] {
+        [FeedbackType.incorrectVisual(subtype: nil),
+        FeedbackType.confusingAudio(subtype: nil),
+        FeedbackType.illegalRoute(subtype: nil),
+        FeedbackType.roadClosure(subtype: nil),
+        FeedbackType.routeQuality(subtype: nil)].map { $0.generateFeedbackItem() }
+    }
+
+    /**
+     Controls whether or not the feedback view controller shows a second level of detail for feedback items.
+     When disabled, feedback will be submitted on a single tap of a top level category.
+     When enabled, a first tap reveals an instance of FeedbackSubtypeViewController. A second tap on an item there will submit a feedback.
+    */
+    public var detailedFeedbackEnabled: Bool = false
     
     public weak var delegate: FeedbackViewControllerDelegate?
     
@@ -206,12 +213,12 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
         dismissFeedback()
     }
     
-    private func setupViews() {
+    internal func setupViews() {
         let children = [reportIssueLabel, collectionView]
         view.addSubviews(children)
     }
     
-    private func setupConstraints() {
+    internal func setupConstraints() {
         let labelTop = reportIssueLabel.topAnchor.constraint(equalTo: view.topAnchor)
         let labelHeight = reportIssueLabel.heightAnchor.constraint(equalToConstant: FeedbackViewController.titleHeaderHeight)
         let labelLeading = reportIssueLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor)
@@ -276,7 +283,21 @@ extension FeedbackViewController: UICollectionViewDataSource {
 extension FeedbackViewController: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let item = sections[indexPath.row]
-        send(item)
+
+        if detailedFeedbackEnabled, let eventsManager = eventsManager {
+            let feedbackViewController = FeedbackSubtypeViewController(eventsManager: eventsManager, feedbackType: item.feedbackType)
+
+            guard let parent = presentingViewController else {
+                dismiss(animated: true)
+                return
+            }
+
+            dismiss(animated: true) {
+                parent.present(feedbackViewController, animated: true, completion: nil)
+            }
+        } else {
+            send(item)
+        }
     }
 }
 
