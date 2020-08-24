@@ -39,7 +39,7 @@ extension Bundle {
     /**
      The Mapbox Navigation framework bundle, if installed.
      */
-    public class var mapboxNavigation: Bundle? {
+    class var mapboxNavigationIfInstalled: Bundle? {
         // Assumption: MapboxNavigation.framework includes NavigationViewController and exposes it to the Objective-C runtime as MapboxNavigation.NavigationViewController.
         guard let NavigationViewController = NSClassFromString("MapboxNavigation.NavigationViewController") else {
             return nil

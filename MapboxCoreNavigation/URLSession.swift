@@ -11,7 +11,7 @@ extension URLSession {
         let bundles: [Bundle?] = [
             // Bundles in order from the application level on down
             .main,
-            .mapboxNavigation,
+            .mapboxNavigationIfInstalled,
             .mapboxCoreNavigation,
             .init(for: Directions.self),
         ]
