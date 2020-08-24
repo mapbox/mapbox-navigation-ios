@@ -13,7 +13,7 @@ extension MGLStyle {
      */
     public class var navigationDayStyleURL: URL {
         get {
-            if(MGLAccountManager.hasChinaBaseURL){
+            if MGLAccountManager.hasChinaBaseURL {
                 return mapboxChinaDayStyleURL
             }
             return URL(string:"mapbox://styles/mapbox-map-design/ckd6dqf981hi71iqlyn3e896y")!
@@ -25,7 +25,7 @@ extension MGLStyle {
      */
     public class var navigationNightStyleURL: URL {
         get {
-            if(MGLAccountManager.hasChinaBaseURL){
+            if MGLAccountManager.hasChinaBaseURL {
                 return mapboxChinaDayStyleURL
             }
             return URL(string:"mapbox://styles/mapbox-map-design/ckd6dnz2q0m0q1io1mssumxqd")!
@@ -33,35 +33,11 @@ extension MGLStyle {
     }
     
     /**
-     Returns the URL to the given version of the navigation guidance style. Available version are 1, 2, 3, and 4.
+     Returns the URL to the given version of the Mapbox Navigation Day style. Available versions are 1, 2, 3, and 4.
      
-     We only have one version of navigation guidance style in China, so if you switch your endpoint to .cn, it will return the default day style.
+     We only have one version of Mapbox Navigation Day style in China, so if you switch your endpoint to .cn, it will return the default day style.
      */
-    public class func navigationGuidanceDayStyleURL(version: Int) -> URL {
-        if(MGLAccountManager.hasChinaBaseURL){
-            return mapboxChinaDayStyleURL
-        }
-        return URL(string:"mapbox://styles/mapbox/navigation-guidance-day-v\(version)")!
-    }
-    
-    /**
-     Returns the URL to the given version of the navigation guidance style. Available version are 2, 3, and 4.
-     
-     We only have one version of navigation guidance style in China, so if you switch your endpoint to .cn, it will return the default night style.
-     */
-    public class func navigationGuidanceNightStyleURL(version: Int) -> URL {
-        if(MGLAccountManager.hasChinaBaseURL){
-            return mapboxChinaNightStyleURL
-        }
-        return URL(string: "mapbox://styles/mapbox/navigation-guidance-night-v\(version)")!
-    }
-    
-    /**
-     Returns the URL to the given version of the Mapbox Navigation Preview Day style. Available versions are 1, 2, 3, and 4.
-     
-     We only have one version of Navigation Preview style in China, so if you switch your endpoint to .cn, it will return the default day style.
-     */
-    public class func navigationPreviewDayStyleURL(version: Int) -> URL {
+    public class func navigationDayStyleURL(version: Int) -> URL {
         if MGLAccountManager.hasChinaBaseURL {
             return mapboxChinaDayStyleURL
         }
@@ -69,11 +45,11 @@ extension MGLStyle {
     }
     
     /**
-     Returns the URL to the given version of the Mapbox Navigation Preview Night style. Available versions are 2, 3, and 4.
+     Returns the URL to the given version of the Mapbox Navigation Night style. Available versions are 2, 3, and 4.
      
-     We only have one version of Navigation Preview style in China, so if you switch your endpoint to .cn, it will return the default night style.
+     We only have one version of Mapbox Navigation Night style in China, so if you switch your endpoint to .cn, it will return the default night style.
      */
-    public class func navigationPreviewNightStyleURL(version: Int) -> URL {
+    public class func navigationNightStyleURL(version: Int) -> URL {
         if MGLAccountManager.hasChinaBaseURL {
             return mapboxChinaNightStyleURL
         }
