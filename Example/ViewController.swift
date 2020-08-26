@@ -61,7 +61,13 @@ class ViewController: UIViewController {
         guard let routes = response.routes, !routes.isEmpty, case let .route(options) = response.options else { return }
         self?.mapView?.removeWaypoints()
         self?.response = response
-        self?.waypoints = options.waypoints
+        
+        // Waypoints which were placed by the user are rewritten by slightly changed waypoints
+        // which are returned in response with routes.
+        if let waypoints = response.waypoints {
+            self?.waypoints = waypoints
+        }
+        
         self?.clearMap.isHidden = false
         self?.longPressHintView.isHidden = true
     }
