@@ -489,6 +489,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         guard let mainRoute = routes.first else { return }
         self.routes = routes
 
+        generateTrafficGradientStops(for: mainRoute)
+
         let polylines = navigationMapViewDelegate?.navigationMapView(self, shapeFor: routes) ?? shape(for: routes, legIndex: legIndex)
         let mainRouteCasingPolyline = navigationMapViewDelegate?.navigationMapView(self, shapeFor: [mainRoute]) ?? shape(for: [mainRoute], legIndex: legIndex)
 
@@ -500,6 +502,20 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             let mainRouteCasingSource = style.source(withIdentifier: SourceIdentifier.mainRouteCasing) as? MGLShapeSource {
             source.shape = polylines
             mainRouteCasingSource.shape = mainRouteCasingPolyline
+            
+            let mainRouteLayer = navigationMapViewDelegate?.navigationMapView(self, mainRouteStyleLayerWithIdentifier: StyleLayerIdentifier.mainRoute, source: source) ??
+                style.layer(withIdentifier: StyleLayerIdentifier.mainRoute)
+            if mainRouteLayer is MGLLineStyleLayer, !routeGradientStops.line.isEmpty {
+                let mainRouteLineStyleLayer = mainRouteLayer as? MGLLineStyleLayer
+                mainRouteLineStyleLayer?.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", NSDictionary(dictionary: routeGradientStops.line))
+            }
+            
+            let mainRouteCasingLayer = navigationMapViewDelegate?.navigationMapView(self, mainRouteStyleLayerWithIdentifier: StyleLayerIdentifier.mainRouteCasing, source: source) ??
+                style.layer(withIdentifier: StyleLayerIdentifier.mainRouteCasing)
+            if mainRouteCasingLayer is MGLLineStyleLayer, !routeGradientStops.casing.isEmpty {
+                let mainRouteCasingStyleLayer = mainRouteCasingLayer as? MGLLineStyleLayer
+                mainRouteCasingStyleLayer?.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", NSDictionary(dictionary: routeGradientStops.casing))
+            }
         } else {
             // Otherwise, create them for the first time.
 
@@ -511,8 +527,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             // After fixing https://github.com/mapbox/mapbox-gl-native-ios/issues/355 creation of separate source for main route casing should be removed.
             let mainRouteCasingSource = MGLShapeSource(identifier: SourceIdentifier.mainRouteCasing, shape: mainRouteCasingPolyline, options: [.lineDistanceMetrics: true])
             style.addSource(mainRouteCasingSource)
-            
-            generateTrafficGradientStops(for: mainRoute)
 
             let mainRouteLayer = navigationMapViewDelegate?.navigationMapView(self, mainRouteStyleLayerWithIdentifier: StyleLayerIdentifier.mainRoute, source: allRoutesSource) ??
                 mainRouteStyleLayer(identifier: StyleLayerIdentifier.mainRoute, source: allRoutesSource)
@@ -1084,6 +1098,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
 
     func generateTrafficGradientStops(for route: Route) {
+        routeGradientStops.casing.removeAll()
+        routeGradientStops.line.removeAll()
 
         /**
          The resulting set of key/value stops that will be used
