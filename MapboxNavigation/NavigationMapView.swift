@@ -144,7 +144,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      and its casing.
      */
     typealias RouteGradientStops = (line: [CGFloat: UIColor], casing: [CGFloat: UIColor])
-    private var routeGradientStops = RouteGradientStops(line: [:], casing: [:])
     
     var shouldPositionCourseViewFrameByFrame = false {
         didSet {
@@ -489,7 +488,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         guard let mainRoute = routes.first else { return }
         self.routes = routes
 
-        generateTrafficGradientStops(for: mainRoute)
+        let routeGradientStops = trafficGradientStops(for: mainRoute)
 
         let polylines = navigationMapViewDelegate?.navigationMapView(self, shapeFor: routes) ?? shape(for: routes, legIndex: legIndex)
         let mainRouteCasingPolyline = navigationMapViewDelegate?.navigationMapView(self, shapeFor: [mainRoute]) ?? shape(for: [mainRoute], legIndex: legIndex)
@@ -529,10 +528,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             style.addSource(mainRouteCasingSource)
 
             let mainRouteLayer = navigationMapViewDelegate?.navigationMapView(self, mainRouteStyleLayerWithIdentifier: StyleLayerIdentifier.mainRoute, source: allRoutesSource) ??
-                mainRouteStyleLayer(identifier: StyleLayerIdentifier.mainRoute, source: allRoutesSource)
+                mainRouteStyleLayer(identifier: StyleLayerIdentifier.mainRoute, source: allRoutesSource, routeGradientStops: routeGradientStops)
             
             let mainRouteCasingLayer = navigationMapViewDelegate?.navigationMapView(self, mainRouteCasingStyleLayerWithIdentifier: StyleLayerIdentifier.mainRouteCasing, source: mainRouteCasingSource) ??
-                mainRouteCasingStyleLayer(identifier: StyleLayerIdentifier.mainRouteCasing, source: mainRouteCasingSource)
+                mainRouteCasingStyleLayer(identifier: StyleLayerIdentifier.mainRouteCasing, source: mainRouteCasingSource, routeGradientStops: routeGradientStops)
             
             let alternateRoutesLayer = navigationMapViewDelegate?.navigationMapView(self, alternativeRouteStyleLayerWithIdentifier: StyleLayerIdentifier.alternateRoutes, source: allRoutesSource) ??
                 alternativeRouteStyleLayer(identifier: StyleLayerIdentifier.alternateRoutes, source: allRoutesSource)
@@ -558,7 +557,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
 
-    func mainRouteStyleLayer(identifier: String, source: MGLSource) -> MGLLineStyleLayer {
+    func mainRouteStyleLayer(identifier: String, source: MGLSource, routeGradientStops: RouteGradientStops) -> MGLLineStyleLayer {
         let mainRouteLayer = MGLLineStyleLayer(identifier: identifier, source: source)
         mainRouteLayer.predicate = NSPredicate(format: "isAlternateRoute == false")
         // Default color if no traffic is enabled
@@ -582,7 +581,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         return mainRouteLayer
     }
 
-    func mainRouteCasingStyleLayer(identifier: String, source: MGLSource) -> MGLLineStyleLayer {
+    func mainRouteCasingStyleLayer(identifier: String, source: MGLSource, routeGradientStops: RouteGradientStops) -> MGLLineStyleLayer {
         let mainRouteCasingLayer = MGLLineStyleLayer(identifier: identifier, source: source)
         mainRouteCasingLayer.predicate = NSPredicate(format: "isAlternateRoute == false")
         // Default color if no traffic is enabled
@@ -620,7 +619,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         return alternateRoutesCasingLayer
     }
 
-    func fadeRoute(_ fractionTraveled: Double) {
+    func fade(_ route: Route, fractionTraveled: Double) {
         guard let mainRouteLayer = style?.layer(withIdentifier: StyleLayerIdentifier.mainRoute) as? MGLLineStyleLayer,
             let mainRouteCasingLayer = style?.layer(withIdentifier: StyleLayerIdentifier.mainRouteCasing) as? MGLLineStyleLayer else { return }
         
@@ -630,6 +629,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return
         }
         
+        let routeGradientStops = trafficGradientStops(for: route)
         if let mainRouteLayerLineGradient = lineGradient(routeGradientStops.line, fractionTraveled: fractionTraveled),
             let mainRouteCasingLayerLineGradient = lineGradient(routeGradientStops.casing, fractionTraveled: fractionTraveled) {
             mainRouteLayer.lineGradient = mainRouteLayerLineGradient
@@ -1097,9 +1097,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         return symbol
     }
 
-    func generateTrafficGradientStops(for route: Route) {
-        routeGradientStops.casing.removeAll()
-        routeGradientStops.line.removeAll()
+    func trafficGradientStops(for route: Route) -> RouteGradientStops {
+        var routeGradientStops = RouteGradientStops(line: [:], casing: [:])
 
         /**
          The resulting set of key/value stops that will be used
@@ -1117,7 +1116,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
          Begin by calculating individual congestion segments associated
          with a congestion level, represented as `MGLPolylineFeature`s.
          */
-        guard let congestionSegments = addCongestion(to: route, legIndex: 0) else { return }
+        guard let congestionSegments = addCongestion(to: route, legIndex: 0) else { return routeGradientStops }
 
         /**
          To create the stops dictionary that represents the route line expressed
@@ -1145,7 +1144,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 
             // Measure the line length of the traffic segment.
             let lineString = LineString(lineCoordinates)
-            guard let distance = lineString.distance() else { return }
+            guard let distance = lineString.distance() else { return routeGradientStops }
 
             /**
              If this is the first congestion segment, then the starting
@@ -1196,6 +1195,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
          */
         routeGradientStops.casing[0.0] = routeCasingColor
         routeGradientStops.casing[1.0] = routeCasingColor
+    
+        return routeGradientStops
     }
 
     /**
