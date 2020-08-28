@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v1.1.0-alpha.1
+
+### Packaging
+
+* Upgraded to [Mapbox Maps SDK for iOS v6.1.0-beta.2](https://github.com/mapbox/mapbox-gl-native-ios/releases/tag/ios-v6.1.0-beta.2). ([#2565](https://github.com/mapbox/mapbox-navigation-ios/pull/2565))
+
 ## v1.0.0
 
 ### Packaging
