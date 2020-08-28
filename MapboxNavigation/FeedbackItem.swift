@@ -16,71 +16,71 @@ public extension FeedbackType {
         case .general:
             return "Feedback"
         case .incorrectVisual(.none):
-            return "Incorrect visual"
+            return NSLocalizedString("INCORRECT_VISUAL_FEEDBACK", bundle: .mapboxNavigation, value: "Incorrect visual", comment: "General category of route feedback where visual instruction was incorrect.")
         case .incorrectVisual(.turnIconIncorrect):
-            return "Turn icon incorrect"
+            return NSLocalizedString("INCORRECT_VISUAL_TURN_ICON_INCORRECT_FEEDBACK", bundle: .mapboxNavigation, value: "Turn icon incorrect", comment: "Specific route feedback for incorrect turn arrow being shown.")
         case .incorrectVisual(.streetNameIncorrect):
-            return "Street name incorrect"
+            return NSLocalizedString("INCORRECT_VISUAL_STREET_NAME_INCORRECT_FEEDBACK", bundle: .mapboxNavigation, value: "Street name incorrect", comment: "Specific route feedback for incorrect street name.")
         case .incorrectVisual(.instructionUnnecessary):
-            return "Instruction unnecessary"
+            return NSLocalizedString("INCORRECT_VISUAL_INSTRUCTION_UNNECESSARY_FEEDBACK", bundle: .mapboxNavigation, value: "Instruction unnecessary", comment: "Specific route feedback for an unnecessary instruction.")
         case .incorrectVisual(.instructionMissing):
-            return "Instruction missing"
+            return NSLocalizedString("INCORRECT_VISUAL_INSTRUCTION_MISSING_FEEDBACK", bundle: .mapboxNavigation, value: "Instruction missing", comment: "Specific route feedback that an instruction was missing.")
         case .incorrectVisual(.maneuverIncorrect):
-            return "Maneuver incorrect"
+            return NSLocalizedString("INCORRECT_VISUAL_MANEUVER_INCORRECT_FEEDBACK", bundle: .mapboxNavigation, value: "Maneuver incorrect", comment: "Specific route feedback that a maneuver specified was incorrect.")
         case .incorrectVisual(.exitInfoIncorrect):
-            return "Exit info incorrect"
+            return NSLocalizedString("INCORRECT_VISUAL_EXIT_INFO_INCORRECT_FEEDBACK", bundle: .mapboxNavigation, value: "Exit info incorrect", comment: "Specific route feedback that an exit was incorrect.")
         case .incorrectVisual(.laneGuidanceIncorrect):
-            return "Lane guidance incorrect"
+            return NSLocalizedString("INCORRECT_VISUAL_LANE_GUIDANCE_INCORRECT_FEEDBACK", bundle: .mapboxNavigation, value: "Lane guidance incorrect", comment: "Specific route feedback that the wrong lane was specified.")
         case .incorrectVisual(.roadKnownByDifferentName):
-            return "Road known by different name"
+            return NSLocalizedString("INCORRECT_VISUAL_ROAD_NAME_DIFFERENT_FEEDBACK", bundle: .mapboxNavigation, value: "Road known by different name", comment: "Specific route feedback that a road is known by another name.")
         case .incorrectVisual(.other):
-            return "Other"
+            return NSLocalizedString("INCORRECT_VISUAL_OTHER_FEEDBACK", bundle: .mapboxNavigation, value: "Other", comment: "Specific route feedback that a visual instruction problem was encountered but not listed as a choice.")
         case .confusingAudio(.none):
-            return "Confusing audio"
+            return NSLocalizedString("CONFUSING_AUDIO_FEEDBACK", bundle: .mapboxNavigation, value: "Confusing audio", comment: "Specific route feedback that audio guidance provided was confusing.")
         case .confusingAudio(.guidanceTooEarly):
-            return "Guidance too early"
+            return NSLocalizedString("CONFUSING_AUDIO_GUIDANCE_TOO_EARLY_FEEDBACK", bundle: .mapboxNavigation, value: "Guidance too early", comment: "Specific route feedback that audio guidance was provided too early before a maneuever.")
         case .confusingAudio(.guidanceTooLate):
-            return "Guidance too late"
+            return NSLocalizedString("CONFUSING_AUDIO_GUIDANCE_TOO_LATE_FEEDBACK", bundle: .mapboxNavigation, value: "Guidance too late", comment: "Specific route feedback that audio guidance was provided too late for a maneuever.")
         case .confusingAudio(.pronunciationIncorrect):
-            return "Pronunciation incorrect"
+            return NSLocalizedString("CONFUSING_AUDIO_PRONUNCIATION_INCORRECT_FEEDBACK", bundle: .mapboxNavigation, value: "Pronunciation incorrect", comment: "Specific route feedback that audio guidance used incorrect pronunciation.")
         case .confusingAudio(.roadNameRepeated):
-            return "Road name repeated"
+            return NSLocalizedString("CONFUSING_AUDIO_ROADNAME_REPEATED_FEEDBACK", bundle: .mapboxNavigation, value: "Road name repeated", comment: "Specific route feedback that audio guidance repeated a road name.")
         case .confusingAudio(.other):
-            return "Other"
+            return NSLocalizedString("CONFUSING_AUDIO_OTHER_FEEDBACK", bundle: .mapboxNavigation, value: "Other", comment: "Specific route feedback that an audio guidance problem was encountered but not listed as a choice.")
         case .routeQuality(.none):
-            return "Route quality"
+            return NSLocalizedString("ROUTE_QUALITY_FEEDBACK", bundle: .mapboxNavigation, value: "Route quality", comment: "General category of route feedback where route quality was poor.")
         case .routeQuality(.routeNonDrivable):
-            return "Route non drivable"
+            return NSLocalizedString("ROUTE_QUALITY_NON_DRIVABLE_FEEDBACK", bundle: .mapboxNavigation, value: "Route non drivable", comment: "Specific route feedback that route was not drivable.")
         case .routeQuality(.routeNotPreferred):
-            return "Route not preferred"
+            return NSLocalizedString("ROUTE_QUALITY_NOT_PREFERRED_FEEDBACK", bundle: .mapboxNavigation, value: "Route not preferred", comment: "Specific route feedback that route was not ideal according to user.")
         case .routeQuality(.alternativeRouteNotExpected):
-            return "Alternative route not expected"
+            return NSLocalizedString("ROUTE_QUALITY_ALTERNATIVE_ROUTE_NOT_EXPECTED_FEEDBACK", bundle: .mapboxNavigation, value: "Alternative route not expected", comment: "Specific route feedback that user was offered an alternative that was unexpected.")
         case .routeQuality(.routeIncludedMissingRoads):
-            return "Route includes missing roads"
+            return NSLocalizedString("ROUTE_QUALITY_INCLUDED_MISSING_ROADS_FEEDBACK", bundle: .mapboxNavigation, value: "Route includes missing roads", comment: "Specific route feedback that route contained non-existant roads.")
         case .routeQuality(.routeHadRoadsTooNarrowToPass):
-            return "Route had roads too narrow to pass"
+            return NSLocalizedString("ROUTE_QUALITY_ROADS_TOO_NARROW_FEEDBACK", bundle: .mapboxNavigation, value: "Route had roads too narrow to pass", comment: "Specific route feedback that route contained impassible, narrow roads.")
         case .routeQuality(.other):
-            return "Other"
+            return NSLocalizedString("ROUTE_QUALITY_OTHER_FEEDBACK", bundle: .mapboxNavigation, value: "Other", comment: "Specific route feedback that a route quality problem was encountered but not listed as a choice.")
         case .illegalRoute(.none):
-            return "Illegal route"
+            return NSLocalizedString("ROUTE_QUALITY_ILLEGAL_ROUTE_FEEDBACK", bundle: .mapboxNavigation, value: "Illegal route", comment: "General route feedback that route contained illegal instructions.")
         case .illegalRoute(.routedDownAOneWay):
-            return "Routed down a one way"
+            return NSLocalizedString("ROUTE_QUALITY_ILLEGAL_ROUTE_ONE_WAY_FEEDBACK", bundle: .mapboxNavigation, value: "Routed down a one way", comment: "Specific route feedback that route travelled wrong way on a one-way road.")
         case .illegalRoute(.turnWasNotAllowed):
-            return "Turn wasn't allowed"
+            return NSLocalizedString("ROUTE_QUALITY_ILLEGAL_ROUTE_TURN_NOT_ALLOWED_FEEDBACK", bundle: .mapboxNavigation, value: "Turn wasn't allowed", comment: "Specific route feedback that route suggested an illegal turn.")
         case .illegalRoute(.carsNotAllowedOnStreet):
-            return "Cars not allowed on street"
+            return NSLocalizedString("ROUTE_QUALITY_ILLEGAL_ROUTE_CARS_NOT_ALLOWED_FEEDBACK", bundle: .mapboxNavigation, value: "Cars not allowed on street", comment: "Specific route feedback that route suggested an illegal roadway.")
         case .illegalRoute(.turnAtIntersectionUnprotected):
-            return "Turn at intersection unprotected"
+            return NSLocalizedString("ROUTE_QUALITY_ILLEGAL_ROUTE_UNPROTECTED_TURN_FEEDBACK", bundle: .mapboxNavigation, value: "Turn at intersection unprotected", comment: "Specific route feedback that route suggested an illegal unprotected turn.")
         case .illegalRoute(.other):
-            return "Other"
+            return NSLocalizedString("ILLEGAL_ROUTE_OTHER_FEEDBACK", bundle: .mapboxNavigation, value: "Other", comment: "Specific route feedback that a illegal route problem was encountered but not listed as a choice.")
         case .roadClosure(.none):
-            return "Road closure"
+            return NSLocalizedString("ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK", bundle: .mapboxNavigation, value: "Road closure", comment: "General route feedback that route contained closed road.")
         case .roadClosure(.streetPermanentlyBlockedOff):
-            return "Street permanently blocked off"
+            return NSLocalizedString("ROUTE_QUALITY_ROAD_CLOSURE_PERMANENT_FEEDBACK", bundle: .mapboxNavigation, value: "Street permanently blocked off", comment: "Specifc route feedback that route contained road that is permanently closed.")
         case .roadClosure(.roadMissingFromMap):
-            return "Road missing from map"
+            return NSLocalizedString("ROUTE_QUALITY_ROAD_MISSING_FROM_MAP_FEEDBACK", bundle: .mapboxNavigation, value: "Road missing from map", comment: "Specifc route feedback that route contained road not shown on map.")
         case .roadClosure(.other):
-            return "Other"
+            return NSLocalizedString("ROAD_CLOSURE_OTHER_FEEDBACK", bundle: .mapboxNavigation, value: "Other", comment: "Specific route feedback that a road closure type was encountered but not listed as a choice.")
         }
     }
 
