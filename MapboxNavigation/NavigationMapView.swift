@@ -612,7 +612,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
         
         if let mainRouteCasingLayer = currentMainRouteCasingLayer as? MGLLineStyleLayer {
-            if !routeGradientStops.line.isEmpty {
+            if !routeGradientStops.casing.isEmpty {
                 mainRouteCasingLayer.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", NSDictionary(dictionary: routeGradientStops.casing))
             }
             
@@ -1179,12 +1179,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         var routeGradientStops = RouteGradientStops(line: [:], casing: [:])
 
         /**
-         The resulting set of key/value stops that will be used
-         for the route's line gradient.
-         */
-        var stops = [[CGFloat:UIColor]]()
-
-        /**
          We will keep track of this value as we iterate through
          the various congestion segments.
          */
@@ -1229,9 +1223,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
              percentage point will be zero.
              */
             if index == congestionSegments.startIndex {
-                let segmentStartPercentTraveled = CGFloat.zero
-                stops.append([segmentStartPercentTraveled: associatedCongestionColor])
-
                 distanceTraveled = distanceTraveled + distance
 
                 let segmentEndPercentTraveled = CGFloat((distanceTraveled / route.distance))
@@ -1244,9 +1235,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
              percentage point will be 1.0, to represent 100%.
              */
             if index == congestionSegments.endIndex - 1 {
-                let segmentStartPercentTraveled = CGFloat((distanceTraveled / route.distance))
-                stops.append([segmentStartPercentTraveled.nextUp: associatedCongestionColor])
-
                 let segmentEndPercentTraveled = CGFloat(1.0)
                 routeGradientStops.line[segmentEndPercentTraveled.nextDown] = associatedCongestionColor
                 continue
