@@ -464,10 +464,6 @@ extension RouteMapViewController: NavigationComponent {
         let legIndex = progress.legIndex
         let stepIndex = progress.currentLegProgress.stepIndex
 
-        if mapView.routeLineTracksTraversal {
-            mapView.fade(route, fractionTraveled: progress.fractionTraveled)
-        }
-
         mapView.updatePreferredFrameRate(for: progress)
         if currentLegIndexMapped != legIndex {
             mapView.showWaypoints(on: route, legIndex: legIndex)
@@ -483,6 +479,10 @@ extension RouteMapViewController: NavigationComponent {
         
         if annotatesSpokenInstructions {
             mapView.showVoiceInstructionsOnMap(route: route)
+        }
+        
+        if mapView.routeLineTracksTraversal {
+            mapView.fade(route, fractionTraveled: progress.fractionTraveled)
         }
         
         navigationView.speedLimitView.signStandard = progress.currentLegProgress.currentStep.speedLimitSignStandard
