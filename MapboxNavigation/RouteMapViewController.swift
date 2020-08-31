@@ -481,8 +481,8 @@ extension RouteMapViewController: NavigationComponent {
             mapView.showVoiceInstructionsOnMap(route: route)
         }
         
-        if mapView.routeLineTracksTraversal {
-            mapView.fade(route, fractionTraveled: progress.fractionTraveled)
+        if let parent = parent as? NavigationViewController, parent.routeLineTracksTraversal {
+            mapView.updateRoute(progress)
         }
         
         navigationView.speedLimitView.signStandard = progress.currentLegProgress.currentStep.speedLimitSignStandard
