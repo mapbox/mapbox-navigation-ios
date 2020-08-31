@@ -119,23 +119,21 @@ open class PassiveLocationDataSource: NSObject {
         guard let location = location else { return }
         systemLocationManager.stopUpdatingLocation()
         systemLocationManager.stopUpdatingHeading()
-        delegate?.passiveLocationDataSource(self, didUpdateLocation: location, rawLocation: location)
+        self.didUpdate(locations: [location])
     }
-}
 
-extension PassiveLocationDataSource: CLLocationManagerDelegate {
-    public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    private func didUpdate(locations: [CLLocation]) {
         for location in locations {
             navigator.updateLocation(for: FixLocation(location))
         }
-        
+
         guard let lastRawLocation = locations.last else {
             return
         }
-        
+
         let status = navigator.status(at: lastRawLocation.timestamp)
         let lastLocation = CLLocation(status.location)
-        
+
         delegate?.passiveLocationDataSource(self, didUpdateLocation: lastLocation, rawLocation: lastRawLocation)
         let matches = status.map_matcher_output.matches.map {
             Match(legs: [], shape: nil, distance: -1, expectedTravelTime: -1, confidence: $0.proba, weight: .routability(value: 1))
@@ -146,6 +144,12 @@ extension PassiveLocationDataSource: CLLocationManagerDelegate {
             NotificationUserInfoKey.matchesKey: matches,
             NotificationUserInfoKey.roadNameKey: status.roadName,
         ])
+    }
+}
+
+extension PassiveLocationDataSource: CLLocationManagerDelegate {
+    public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        didUpdate(locations: locations)
     }
 
     public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {

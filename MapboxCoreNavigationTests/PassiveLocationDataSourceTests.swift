@@ -47,8 +47,9 @@ class PassiveLocationDataSourceTests: XCTestCase {
         
         func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didUpdateLocation location: CLLocation, rawLocation: CLLocation) {
             print("Got location: \(rawLocation.coordinate.latitude), \(rawLocation.coordinate.longitude) → \(location.coordinate.latitude), \(location.coordinate.longitude)")
-            print("Value: \(road.proximity(of: location.coordinate)) < \(road.proximity(of: rawLocation.coordinate))")
-            locationUpdateExpectation.fulfill()
+            print("Value: \(road.proximity(of: location.coordinate)) should be less \(road.proximity(of: rawLocation.coordinate))")
+
+            XCTAssert(road.proximity(of: location.coordinate) < road.proximity(of: rawLocation.coordinate), "Raw Location wasn't mapped to a road")
         }
         
         func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didUpdateHeading newHeading: CLHeading) {
@@ -59,47 +60,52 @@ class PassiveLocationDataSourceTests: XCTestCase {
     }
     
     func testManualLocations() {
-//        let directions = DirectionsSpy()
-        let locationManager = PassiveLocationDataSource()
-        
-        let startingExpectation = expectation(description: "Location manager should start without an error")
-        locationManager.startUpdatingLocation { (error) in
-            XCTAssertNil(error)
-            startingExpectation.fulfill()
+        let tilesVersion = "preloadedtiles" // any string
+
+        // Copy tiles to the cache directory, tiles should be placed in a folder with name
+        guard var tilesCacheURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first else {
+            preconditionFailure("No Caches directory to create the tile directory inside")
         }
-        wait(for: [startingExpectation], timeout: 2)
+        if let bundleIdentifier = Bundle.main.bundleIdentifier ?? Bundle.mapboxCoreNavigation.bundleIdentifier {
+            tilesCacheURL.appendPathComponent(bundleIdentifier, isDirectory: true)
+        }
+        tilesCacheURL.appendPathComponent(".mapbox", isDirectory: true)
+        tilesCacheURL.appendPathComponent(tilesVersion, isDirectory: true)
+        let bundle = Bundle(for: Fixture.self)
+        let filePathURL: URL = URL(fileURLWithPath: bundle.bundlePath.appending("/tiles/liechtenstein"))
+        let fileManager = FileManager.default
+        var isDir : ObjCBool = false
+        if !fileManager.fileExists(atPath: tilesCacheURL.path, isDirectory:&isDir) {
+            do {
+                try fileManager.copyItem(atPath: filePathURL.path, toPath: tilesCacheURL.path)
+            }catch let error{
+                print(error.localizedDescription)
+            }
+        }
+
+        // Create PassiveLocationDataSource and configure it with the tiles version (version is used to find the tiles in the cache folder)
+        let locationManager = PassiveLocationDataSource()
+        do {
+            try locationManager.configureNavigator(withTilesVersion: tilesVersion)
+        } catch {
+            XCTAssertTrue(false)
+        }
         
-        // FIXME: Starting the location manager should automatically configure the navigator.
-        XCTAssertFalse(locationManager.isConfigured)
-        XCTAssertNoThrow(try locationManager.configureNavigator(withTilesVersion: "1234"))
-        XCTAssertTrue(locationManager.isConfigured)
-        
-        let locationUpdateExpectation = expectation(description: "Location manager should respond to every manual location update")
-        locationUpdateExpectation.expectedFulfillmentCount = 5
+        let locationUpdateExpectation = expectation(description: "Location manager takes some time to start mapping locations to a road graph")
+        locationUpdateExpectation.expectedFulfillmentCount = 1
         
         let road = Road(from: CLLocationCoordinate2D(latitude: 47.207966, longitude: 9.527012), to: CLLocationCoordinate2D(latitude: 47.209518, longitude: 9.522167))
         let delegate = Delegate(road: road, locationUpdateExpectation: locationUpdateExpectation)
+        locationManager.updateLocation(CLLocation(latitude: 47.208674, longitude: 9.524650))
         locationManager.delegate = delegate
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(10)) {
-            locationManager.updateLocation(CLLocation(latitude: 47.208674, longitude: 9.524650))
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(25)) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
             locationManager.updateLocation(CLLocation(latitude: 47.208943, longitude: 9.524707))
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
-                locationManager.updateLocation(CLLocation(latitude: 47.209082, longitude: 9.524319))
-                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
-                    locationManager.updateLocation(CLLocation(latitude: 47.209229, longitude: 9.523838))
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
-                        locationManager.updateLocation(CLLocation(latitude: 47.209612, longitude: 9.522629))
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
-                            locationManager.updateLocation(CLLocation(latitude: 47.209842, longitude: 9.522377))
-                        }
-                    }
-                }
-            }
+            locationManager.updateLocation(CLLocation(latitude: 47.209082, longitude: 9.524319))
+            locationManager.updateLocation(CLLocation(latitude: 47.209229, longitude: 9.523838))
+            locationManager.updateLocation(CLLocation(latitude: 47.209612, longitude: 9.522629))
+            locationManager.updateLocation(CLLocation(latitude: 47.209842, longitude: 9.522377))
+            locationUpdateExpectation.fulfill()
         }
-        wait(for: [locationUpdateExpectation], timeout: 50.1)
+        wait(for: [locationUpdateExpectation], timeout: 5)
     }
 }
