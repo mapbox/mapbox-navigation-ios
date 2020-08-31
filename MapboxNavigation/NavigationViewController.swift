@@ -581,6 +581,10 @@ extension NavigationViewController: NavigationServiceDelegate {
             mapViewController?.mapView.updateCourseTracking(location: location, animated: true)
         }
         
+        if waypointStyle != .annotation, progress.currentLegProgress.distanceRemaining < 500 {
+            mapView?.highlightBuildings(at: self.routeOptions.waypoints.compactMap({ $0.targetCoordinate }), in3D: self.waypointStyle == .extrudedBuilding ? true : false)
+        }
+        
         // Finally, pass the message onto the NVC delegate.
         delegate?.navigationViewController(self, didUpdate: progress, with: location, rawLocation: rawLocation)
     }
@@ -649,9 +653,6 @@ extension NavigationViewController: NavigationServiceDelegate {
                           direction: location.course,
                           animated: true,
                           completionHandler: {
-                            // Highlight buildings which were marked as target destination coordinate in waypoint.
-                            mapView.highlightBuildings(at: self.routeOptions.waypoints.compactMap({ $0.targetCoordinate }), in3D: self.waypointStyle == .extrudedBuilding ? true : false)
-                            
                             // Update insets to be able to correctly center map view after presenting end of route view.
                             mapViewController.updateMapViewContentInsets()
                             

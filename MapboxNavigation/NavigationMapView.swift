@@ -29,7 +29,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Returns the altitude that the map camera initally defaults to.
      */
-    public var defaultAltitude: CLLocationDistance = 1000.0
+    public var defaultAltitude: CLLocationDistance = 850.0
     
     /**
      Returns the altitude the map conditionally zooms out to when user is on a motorway, and the maneuver length is sufficently long.
@@ -216,6 +216,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     
     private lazy var mapTapGesture = UITapGestureRecognizer(target: self, action: #selector(didRecieveTap(sender:)))
     
+    private var buildingHighlightPollingTimer: Timer?
+    
     //MARK: - Initalizers
     
     public override init(frame: CGRect) {
@@ -246,6 +248,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         addGestureRecognizer(mapTapGesture)
         
         installUserCourseView()
+    }
+    
+    deinit {
+        buildingHighlightPollingTimer?.invalidate()
     }
     
     open override func layoutMarginsDidChange() {
@@ -1427,13 +1433,17 @@ extension NavigationMapView {
      - parameter extrudesBuildings: Switch which allows to highlight buildings in either 2D or 3D. Defaults to true.
      */
     public func highlightBuildings(at coordinates: [CLLocationCoordinate2D], in3D extrudesBuildings: Bool = true) {
-        highlightBuildings(with: Set(coordinates.compactMap({ buildingIdentifier(at: $0) })), in3D: extrudesBuildings)
+        buildingHighlightPollingTimer?.invalidate()
+        buildingHighlightPollingTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] timer in
+            self?.highlightBuildings(with: Set(coordinates.compactMap({ self?.buildingIdentifier(at: $0) })), in3D: extrudesBuildings)
+        }
     }
     
     /**
      Removes the highlight from all buildings highlighted by `highlightBuildings(at:in3D:)`.
      */
     public func unhighlightBuildings() {
+        buildingHighlightPollingTimer?.invalidate()
         guard let highlightedBuildingsLayer = style?.layer(withIdentifier: StyleLayerIdentifier.buildingExtrusion) else { return }
         
         style?.removeLayer(highlightedBuildingsLayer)
