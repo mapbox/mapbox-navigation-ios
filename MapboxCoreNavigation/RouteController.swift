@@ -193,7 +193,8 @@ open class RouteController: NSObject {
         
         locations.forEach { navigator.updateLocation(for: FixLocation($0)) }
         
-        let status = navigator.status(at: location.timestamp)
+        let timestampForStatus = Date().addingTimeInterval(RouteControllerDeadReckoningTimeInterval)
+        let status = navigator.status(at: timestampForStatus)
         
         // Notify observers if the step’s remaining distance has changed.
         update(progress: routeProgress, with: CLLocation(status.location), rawLocation: location)

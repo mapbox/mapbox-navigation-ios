@@ -117,7 +117,7 @@ extension PassiveLocationDataSource: CLLocationManagerDelegate {
             return
         }
         
-        let timestampForStatus = Date().addingTimeInterval(TimeInterval(1.1))
+        let timestampForStatus = Date().addingTimeInterval(RouteControllerDeadReckoningTimeInterval)
         let status = navigator.status(at: timestampForStatus)
         let lastLocation = CLLocation(status.location)
         
