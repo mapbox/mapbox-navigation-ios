@@ -149,11 +149,12 @@ class FeedbackSubtypeViewController: FeedbackViewController {
 
     private func updateButtonTitle() {
         if selectedItems.count == 0 {
-            reportButton.setTitle(NSLocalizedString("NAVIGATION_REPORT_CANCEL", comment: "Title for button that cancels user's submission of feedback on navigation session issues."), for: .normal)
+            reportButton.setTitle(NSLocalizedString("NAVIGATION_REPORT_CANCEL", bundle: .mapboxNavigation, value: "Cancel", comment: "Title for button that cancels user's submission of feedback on navigation session issues."), for: .normal)
+            
         } else if selectedItems.count == 1 {
-            reportButton.setTitle(NSLocalizedString("NAVIGATION_REPORT_ISSUE", comment: "Title for button that submits user's feedback on navigation session issues."), for: .normal)
+            reportButton.setTitle(NSLocalizedString("NAVIGATION_REPORT_ISSUE", bundle: .mapboxNavigation, value: "Send Item", comment: "Title for button that submits user's feedback on navigation session issues."), for: .normal)
         } else {
-            reportButton.setTitle(NSLocalizedString("NAVIGATION_REPORT_ISSUES", comment: "Title for button that submits user's feedback on multiple navigation session issues."), for: .normal)
+            reportButton.setTitle(NSLocalizedString("NAVIGATION_REPORT_ISSUES", bundle: .mapboxNavigation, value: "Send Items",  comment: "Title for button that submits user's feedback on multiple navigation session issues."), for: .normal)
         }
     }
 

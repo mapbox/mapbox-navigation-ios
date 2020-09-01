@@ -128,13 +128,13 @@
 "LESS_THAN" = "<%@";
 
 /* Title for button that cancels user's submission of feedback on navigation session issues. */
-"NAVIGATION_REPORT_CANCEL" = "NAVIGATION_REPORT_CANCEL";
+"NAVIGATION_REPORT_CANCEL" = "Cancel";
 
 /* Title for button that submits user's feedback on navigation session issues. */
-"NAVIGATION_REPORT_ISSUE" = "NAVIGATION_REPORT_ISSUE";
+"NAVIGATION_REPORT_ISSUE" = "Send Item";
 
 /* Title for button that submits user's feedback on multiple navigation session issues. */
-"NAVIGATION_REPORT_ISSUES" = "NAVIGATION_REPORT_ISSUES";
+"NAVIGATION_REPORT_ISSUES" = "Send Items";
 
 /* Accessibility value of label indicating the absence of a rating */
 "NO_RATING" = "No rating set.";
