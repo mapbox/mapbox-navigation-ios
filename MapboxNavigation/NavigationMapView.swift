@@ -217,6 +217,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     private lazy var mapTapGesture = UITapGestureRecognizer(target: self, action: #selector(didRecieveTap(sender:)))
     
     private var buildingHighlightPollingTimer: Timer?
+    private var highlightedBuildingIdentifiers: Set<Int64>?
+    private var currentCoordinatesForBuildingsToHighlight: [CLLocationCoordinate2D]?
     
     //MARK: - Initalizers
     
@@ -1433,9 +1435,13 @@ extension NavigationMapView {
      - parameter extrudesBuildings: Switch which allows to highlight buildings in either 2D or 3D. Defaults to true.
      */
     public func highlightBuildings(at coordinates: [CLLocationCoordinate2D], in3D extrudesBuildings: Bool = true) {
+        guard coordinates != currentCoordinatesForBuildingsToHighlight else { return }
+        currentCoordinatesForBuildingsToHighlight = coordinates
         buildingHighlightPollingTimer?.invalidate()
-        buildingHighlightPollingTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] timer in
-            self?.highlightBuildings(with: Set(coordinates.compactMap({ self?.buildingIdentifier(at: $0) })), in3D: extrudesBuildings)
+        highlightedBuildingIdentifiers = Set()
+        findAndHighlightBuildings(at: coordinates, in3D: extrudesBuildings)
+        buildingHighlightPollingTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] timer in
+            self?.findAndHighlightBuildings(at: coordinates, in3D: extrudesBuildings)
         }
     }
     
@@ -1444,9 +1450,23 @@ extension NavigationMapView {
      */
     public func unhighlightBuildings() {
         buildingHighlightPollingTimer?.invalidate()
+        highlightedBuildingIdentifiers = nil
+        currentCoordinatesForBuildingsToHighlight = nil
         guard let highlightedBuildingsLayer = style?.layer(withIdentifier: StyleLayerIdentifier.buildingExtrusion) else { return }
         
         style?.removeLayer(highlightedBuildingsLayer)
+    }
+    
+    private func findAndHighlightBuildings(at coordinates: [CLLocationCoordinate2D], in3D extrudesBuildings: Bool = true) {
+        let foundBuildingIds = Set(coordinates.compactMap({ buildingIdentifier(at: $0) }))
+        if let storedBuildingIds = highlightedBuildingIdentifiers, storedBuildingIds.isSuperset(of: foundBuildingIds) == false {
+            let newBuildingIds = storedBuildingIds.union(foundBuildingIds)
+            highlightBuildings(with: newBuildingIds, in3D: extrudesBuildings)
+            highlightedBuildingIdentifiers = newBuildingIds
+        }
+        if highlightedBuildingIdentifiers?.count == coordinates.count {
+            buildingHighlightPollingTimer?.invalidate()
+        }
     }
     
     private func addBuildingsSource() -> MGLSource? {

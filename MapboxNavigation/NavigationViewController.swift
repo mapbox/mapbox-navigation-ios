@@ -581,8 +581,8 @@ extension NavigationViewController: NavigationServiceDelegate {
             mapViewController?.mapView.updateCourseTracking(location: location, animated: true)
         }
         
-        if waypointStyle != .annotation, progress.currentLegProgress.distanceRemaining < 500 {
-            mapView?.highlightBuildings(at: self.routeOptions.waypoints.compactMap({ $0.targetCoordinate }), in3D: self.waypointStyle == .extrudedBuilding ? true : false)
+        if waypointStyle != .annotation, let currentLegWaypoint = progress.currentLeg.destination?.targetCoordinate, progress.currentLegProgress.distanceRemaining < 250 {
+            mapView?.highlightBuildings(at: [currentLegWaypoint], in3D: self.waypointStyle == .extrudedBuilding ? true : false)
         }
         
         // Finally, pass the message onto the NVC delegate.
