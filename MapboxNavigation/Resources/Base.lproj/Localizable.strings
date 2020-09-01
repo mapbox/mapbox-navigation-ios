@@ -130,11 +130,8 @@
 /* Title for button that cancels user's submission of feedback on navigation session issues. */
 "NAVIGATION_REPORT_CANCEL" = "Cancel";
 
-/* Title for button that submits user's feedback on navigation session issues. */
-"NAVIGATION_REPORT_ISSUE" = "Send Item";
-
-/* Title for button that submits user's feedback on multiple navigation session issues. */
-"NAVIGATION_REPORT_ISSUES" = "Send Items";
+/* Title for button that submits user's feedback on multiple navigation session issues. 1 is the number of items */
+"NAVIGATION_REPORT_ISSUES" = "Send %ld Item(s)";
 
 /* Accessibility value of label indicating the absence of a rating */
 "NO_RATING" = "No rating set.";
