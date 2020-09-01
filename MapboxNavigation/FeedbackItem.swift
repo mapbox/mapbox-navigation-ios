@@ -16,7 +16,7 @@ public extension FeedbackType {
         case .general:
             return "Feedback"
         case .incorrectVisual(.none):
-            return NSLocalizedString("INCORRECT_VISUAL_FEEDBACK", bundle: .mapboxNavigation, value: "Incorrect visual", comment: "General category of route feedback where visual instruction was incorrect.")
+            return NSLocalizedString("INCORRECT_VISUAL_FEEDBACK", bundle: .mapboxNavigation, value: "Looks incorrect", comment: "General category of route feedback where visual instruction was incorrect.")
         case .incorrectVisual(.turnIconIncorrect):
             return NSLocalizedString("INCORRECT_VISUAL_TURN_ICON_INCORRECT_FEEDBACK", bundle: .mapboxNavigation, value: "Turn icon incorrect", comment: "Specific route feedback for incorrect turn arrow being shown.")
         case .incorrectVisual(.streetNameIncorrect):
