@@ -1,4 +1,5 @@
 import Foundation
+import MapboxCoreNavigation
 #if canImport(CarPlay)
 import CarPlay
 
@@ -121,6 +122,10 @@ public class CarPlayMapViewController: UIViewController {
         let mapView = NavigationMapView()
         mapView.logoView.isHidden = true
         mapView.attributionButton.isHidden = true
+        
+        let dataSource = PassiveLocationDataSource()
+        let locationManager = PassiveLocationManager(dataSource: dataSource)
+        mapView.locationManager = locationManager
         
         styleObservation = mapView.observe(\.style, options: .new) { (mapView, change) in
             guard change.newValue != nil else {

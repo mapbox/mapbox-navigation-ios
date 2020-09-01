@@ -6,6 +6,10 @@
 
 * Upgraded to [Mapbox Maps SDK for iOS v6.1.0-beta.2](https://github.com/mapbox/mapbox-gl-native-ios/releases/tag/ios-v6.1.0-beta.2). ([#2565](https://github.com/mapbox/mapbox-navigation-ios/pull/2565))
 
+### Other changes
+
+* In CarPlay, the map view’s camera and user location indicator also snap to the road network during the browsing and previewing activities, just as in the navigating activity. ([#2588](https://github.com/mapbox/mapbox-navigation-ios/pull/2588))
+
 ## v1.0.0
 
 ### Packaging
