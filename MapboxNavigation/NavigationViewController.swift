@@ -627,13 +627,13 @@ extension NavigationViewController: NavigationServiceDelegate {
         if service.routeProgress.isFinalLeg && advancesToNextLeg && showsEndOfRouteFeedback {
             // In case of final destination present end of route view first and then zoom in to extruded building.
             showEndOfRouteFeedback { [weak self] _ in
-                self?.zoomInAndHighlightBuilding(for: service.router.location)
+                self?.frameDestinationArrival(for: service.router.location)
             }
         }
         return advancesToNextLeg
     }
     
-    private func zoomInAndHighlightBuilding(for location: CLLocation?) {
+    private func frameDestinationArrival(for location: CLLocation?) {
         if waypointStyle == .annotation { return }
         guard let mapViewController = self.mapViewController else { return }
         guard let location = location else { return }
@@ -654,10 +654,10 @@ extension NavigationViewController: NavigationServiceDelegate {
                           animated: true,
                           completionHandler: {
                             // Update insets to be able to correctly center map view after presenting end of route view.
-                            mapViewController.updateMapViewContentInsets()
-                            
-                            // Update user course view to correctly place it in map view.
-                            mapView.updateCourseTracking(location: location, animated: false)
+                            mapViewController.updateMapViewContentInsets(animated: true, completion: {
+                                // Update user course view to correctly place it in map view.
+                                self.mapView?.updateCourseTracking(location: location, animated: false)
+                            })
         })
     }
     
