@@ -1,6 +1,6 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## v1.1.0-alpha.1
+## v1.1.0
 
 ### Packaging
 
