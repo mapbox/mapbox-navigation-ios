@@ -9,10 +9,10 @@ extension MGLStyle {
     static let mapboxChinaNightStyleURL = URL(string:"mapbox://styles/mapbox/dark-zh-v1")!
     
     // Default Mapbox Navigation Day Style URL.
-    static let defaultNavigationDayStyleURL = URL(string:"mapbox://styles/mapbox-map-design/ckd6dqf981hi71iqlyn3e896y")!
+    static let defaultNavigationDayStyleURL = URL(string:"mapbox://styles/mapbox/navigation-day-v1")!
     
     // Default Mapbox Navigation Night Style URL.
-    static let defaultNavigationNightStyleURL = URL(string:"mapbox://styles/mapbox-map-design/ckd6dnz2q0m0q1io1mssumxqd")!
+    static let defaultNavigationNightStyleURL = URL(string:"mapbox://styles/mapbox/navigation-night-v1")!
     
     /**
      Returns the URL to the current version of the Mapbox Navigation Day style.
