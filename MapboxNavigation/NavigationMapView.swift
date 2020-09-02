@@ -610,9 +610,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     
     @discardableResult func addAlternativeRoutesLayer(_ style: MGLStyle, source: MGLSource, below layer: MGLStyleLayer) -> MGLStyleLayer {
         let customAlternativeRoutesLayer = navigationMapViewDelegate?.navigationMapView(self,
-                                                                                      alternativeRouteStyleLayerWithIdentifier: StyleLayerIdentifier.alternativeRoutes,
-                                                                                      source: source)
-        
+                                                                                        alternativeRouteStyleLayerWithIdentifier: StyleLayerIdentifier.alternativeRoutes,
+                                                                                        source: source)
         let currentAlternativeRoutesLayer = style.layer(withIdentifier: StyleLayerIdentifier.alternativeRoutes)
         
         if let alternativeRoutesLayer = customAlternativeRoutesLayer, let _ = currentAlternativeRoutesLayer {
@@ -641,9 +640,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     
     @discardableResult func addAlternativeRoutesCasingLayer(_ style: MGLStyle, source: MGLSource, below layer: MGLStyleLayer) -> MGLStyleLayer {
         let customAlternativeRoutesCasingLayer = navigationMapViewDelegate?.navigationMapView(self,
-                                                                                            alternativeRouteCasingStyleLayerWithIdentifier: StyleLayerIdentifier.alternativeRoutesCasing,
-                                                                                            source: source)
-        
+                                                                                              alternativeRouteCasingStyleLayerWithIdentifier: StyleLayerIdentifier.alternativeRoutesCasing,
+                                                                                              source: source)
         let currentAlternativeRoutesCasingLayer = style.layer(withIdentifier: StyleLayerIdentifier.alternativeRoutesCasing)
         
         if let alternativeRoutesCasingLayer = customAlternativeRoutesCasingLayer, let _ = currentAlternativeRoutesCasingLayer {
@@ -691,6 +689,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         // In case if mainRouteLayer was already added - extract congestion segments out of it.
         if let mainRouteLayer = style?.layer(withIdentifier: StyleLayerIdentifier.mainRoute) as? MGLLineStyleLayer,
+            // lineGradient contains 4 arguments, last one (stops) allows to store line gradient stops, if they're present - reuse them.
             let lineGradients = mainRouteLayer.lineGradient?.arguments?[3],
             let stops = lineGradients.expressionValue(with: nil, context: nil) as? NSDictionary {
             
