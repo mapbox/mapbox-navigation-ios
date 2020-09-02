@@ -661,7 +661,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     // MARK: - Vanishing route line methods
     
     /**
-     Update route style layer and its casing to disappear as the user location puck travels along certain route.
+     Updates the route style layer and its casing style layer to gradually disappear as the user location puck travels along the displayed route.
      
      - parameter routeProgress: Current route progress.
      */

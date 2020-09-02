@@ -162,7 +162,11 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      traversed section of a route, override the `traversedRouteColor` property
      for the `NavigationMapView.appearance()`.
      */
-    public var routeLineTracksTraversal: Bool = false
+    public var routeLineTracksTraversal: Bool = false {
+        didSet {
+            mapViewController?.routeLineTracksTraversal = routeLineTracksTraversal
+        }
+    }
 
     /**
      Controls whether or not the FeedbackViewController shows a second level of detail for feedback items.

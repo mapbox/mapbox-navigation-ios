@@ -96,6 +96,8 @@ class RouteMapViewController: UIViewController {
     var overheadInsets: UIEdgeInsets {
         return UIEdgeInsets(top: topBannerContainerView.bounds.height, left: 20, bottom: bottomBannerContainerView.bounds.height, right: 20)
     }
+    
+    var routeLineTracksTraversal = false
 
     typealias LabelRoadNameCompletionHandler = (_ defaultRaodNameAssigned: Bool) -> Void
 
@@ -481,7 +483,7 @@ extension RouteMapViewController: NavigationComponent {
             mapView.showVoiceInstructionsOnMap(route: route)
         }
         
-        if let parent = parent as? NavigationViewController, parent.routeLineTracksTraversal {
+        if routeLineTracksTraversal {
             mapView.updateRoute(progress)
         }
         
