@@ -133,6 +133,13 @@ public extension Notification.Name {
     static let routeControllerProgressDidChange: Notification.Name = .init(rawValue: "RouteControllerProgressDidChange")
     
     /**
+     Posted when `RouteController` receives updated information about the current route.
+     
+     The user info dictionary contains the key `RouteController.NotificationUserInfoKey.routeProgressKey`.
+     */
+    static let routeControllerDidRefreshRoute: Notification.Name = .init(rawValue: "RouteControllerDidRefreshRoute")
+    
+    /**
      Posted after the user diverges from the expected route, just before `RouteController` attempts to calculate a new route.
      
      The user info dictionary contains the key `RouteController.NotificationUserInfoKey.locationKey`.

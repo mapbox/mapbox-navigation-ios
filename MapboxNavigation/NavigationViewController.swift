@@ -536,6 +536,14 @@ extension NavigationViewController: NavigationServiceDelegate {
         delegate?.navigationViewController(self, didFailToRerouteWith: error)
     }
     
+    public func navigationService(_ service: NavigationService, didRefresh routeProgress: RouteProgress) {
+        for component in navigationComponents {
+            component.navigationService(service, didRefresh: routeProgress)
+        }
+        
+        delegate?.navigationViewController(self, didRefresh: routeProgress)
+    }
+    
     public func navigationService(_ service: NavigationService, shouldDiscard location: CLLocation) -> Bool {
         let defaultBehavior = RouteController.DefaultBehavior.shouldDiscardLocation
         let componentsWantToDiscard = navigationComponents.allSatisfy { $0.navigationService(service, shouldDiscard: location) }

@@ -518,6 +518,13 @@ extension RouteMapViewController: NavigationComponent {
             navigationView.wayNameView.isHidden = true
         }
     }
+    
+    func navigationService(_ service: NavigationService, didRefresh routeProgress: RouteProgress) {
+        mapView.show([routeProgress.route], legIndex: routeProgress.legIndex)
+        if routeLineTracksTraversal {
+            mapView.updateRoute(routeProgress)
+        }
+    }
 }
 
 // MARK: - UIContentContainer

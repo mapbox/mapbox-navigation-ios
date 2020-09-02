@@ -159,11 +159,16 @@ extension InternalRouter where Self: Router {
                 completion()
             }
             
-            guard case let .success(response) = result else {
+            guard case let .success(response) = result, let strongSelf = self else {
                 return
             }
             
-            self?.routeProgress.refreshRoute(with: response.route)
+            strongSelf.routeProgress.refreshRoute(with: response.route)
+            
+            var userInfo = [RouteController.NotificationUserInfoKey: Any]()
+            userInfo[.routeProgressKey] = strongSelf.routeProgress
+            NotificationCenter.default.post(name: .routeControllerDidRefreshRoute, object: strongSelf, userInfo: userInfo)
+            strongSelf.delegate?.router(strongSelf, didRefresh: strongSelf.routeProgress)
         }
     }
     

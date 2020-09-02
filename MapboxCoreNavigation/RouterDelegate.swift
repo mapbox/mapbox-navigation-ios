@@ -62,6 +62,14 @@ public protocol RouterDelegate: class, UnimplementedLogging {
      - parameter error: An error raised during the process of obtaining a new route.
      */
     func router(_ router: Router, didFailToRerouteWith error: Error)
+
+    /**
+     Called immediately after the router refreshes the route.
+     
+     - parameter router: The router that has refreshed the route.
+     - parameter routeProgress: The route progress updated with the refreshed route.
+     */
+    func router(_ router: Router, didRefresh routeProgress: RouteProgress)
     
     /**
      Called when the router updates the route progress model.
