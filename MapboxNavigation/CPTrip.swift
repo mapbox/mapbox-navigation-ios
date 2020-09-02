@@ -27,7 +27,7 @@ extension CPTrip {
     }()
     
     convenience init(routes: [Route], routeOptions: RouteOptions, waypoints: [Waypoint]) {
-        let routeChoices = routes.map { (route) -> CPRouteChoice in
+        let routeChoices = routes.enumerated().map { (routeIndex, route) -> CPRouteChoice in
             let summaryVariants = [
                 CPTrip.fullDateComponentsFormatter.string(from: route.expectedTravelTime)!,
                 CPTrip.shortDateComponentsFormatter.string(from: route.expectedTravelTime)!,
@@ -36,7 +36,7 @@ extension CPTrip {
             let routeChoice = CPRouteChoice(summaryVariants: summaryVariants,
                                             additionalInformationVariants: [route.description],
                                             selectionSummaryVariants: [route.description])
-            let info: (Route, RouteOptions) = (route: route, options: routeOptions)
+            let info: (Route, Int, RouteOptions) = (route: route, routeIndex: routeIndex, options: routeOptions)
             routeChoice.userInfo = info
             return routeChoice
         }

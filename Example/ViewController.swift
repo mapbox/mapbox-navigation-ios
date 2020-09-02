@@ -260,7 +260,7 @@ class ViewController: UIViewController {
     func startBasicNavigation() {
         guard let response = response, let route = response.routes?.first, case let .route(routeOptions) = response.options else { return }
         
-        let service = navigationService(route: route, options: routeOptions)
+        let service = navigationService(route: route, routeIndex: 0, options: routeOptions)
         let navigationViewController = self.navigationViewController(navigationService: service)
         
         // Render part of the route that has been traversed with full transparency, to give the illusion of a disappearing route.
@@ -279,8 +279,8 @@ class ViewController: UIViewController {
     func startNavigation(styles: [Style]) {
         guard let response = response, let route = response.routes?.first, case let .route(routeOptions) = response.options else { return }
         
-        let options = NavigationOptions(styles: styles, navigationService: navigationService(route: route, options: routeOptions))
-        let navigationViewController = NavigationViewController(for: route, routeOptions: routeOptions, navigationOptions: options)
+        let options = NavigationOptions(styles: styles, navigationService: navigationService(route: route, routeIndex: 0, options: routeOptions))
+        let navigationViewController = NavigationViewController(for: route, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
         
         // Example of building highlighting in 2D.
@@ -292,7 +292,7 @@ class ViewController: UIViewController {
     func navigationViewController(navigationService: NavigationService) -> NavigationViewController {
         let options = NavigationOptions(navigationService: navigationService)
         
-        let navigationViewController = NavigationViewController(for: navigationService.route, routeOptions: navigationService.routeProgress.routeOptions, navigationOptions: options)
+        let navigationViewController = NavigationViewController(for: navigationService.route, routeIndex: navigationService.indexedRoute.1, routeOptions: navigationService.routeProgress.routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
         navigationViewController.mapView?.delegate = self
         return navigationViewController
@@ -313,7 +313,7 @@ class ViewController: UIViewController {
 
         guard let customViewController = storyboard?.instantiateViewController(withIdentifier: "custom") as? CustomViewController else { return }
 
-        customViewController.userRoute = route
+        customViewController.userIndexedRoute = (route, 0)
         customViewController.userRouteOptions = routeOptions
 
         let destination = MGLPointAnnotation()
@@ -330,8 +330,8 @@ class ViewController: UIViewController {
         guard let response = response, let route = response.routes?.first, case let .route(routeOptions) = response.options else { return }
 
         let styles = [CustomDayStyle(), CustomNightStyle()]
-        let options = NavigationOptions(styles:styles, navigationService: navigationService(route: route, options: routeOptions))
-        let navigationViewController = NavigationViewController(for: route, routeOptions: routeOptions, navigationOptions: options)
+        let options = NavigationOptions(styles: styles, navigationService: navigationService(route: route, routeIndex: 0, options: routeOptions))
+        let navigationViewController = NavigationViewController(for: route, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
 
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
@@ -344,17 +344,17 @@ class ViewController: UIViewController {
         let instructionsCardCollection = InstructionsCardViewController()
         instructionsCardCollection.cardCollectionDelegate = self
         
-        let options = NavigationOptions(navigationService: navigationService(route: route, options: routeOptions), topBanner: instructionsCardCollection)
-        let navigationViewController = NavigationViewController(for: route, routeOptions: routeOptions, navigationOptions: options)
+        let options = NavigationOptions(navigationService: navigationService(route: route, routeIndex: 0, options: routeOptions), topBanner: instructionsCardCollection)
+        let navigationViewController = NavigationViewController(for: route, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
         
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
     
-    func navigationService(route: Route, options: RouteOptions) -> NavigationService {
+    func navigationService(route: Route, routeIndex: Int, options: RouteOptions) -> NavigationService {
         let simulate = simulationButton.isSelected
         let mode: SimulationMode = simulate ? .always : .onPoorGPS
-        return MapboxNavigationService(route: route, routeOptions: options, simulating: mode)
+        return MapboxNavigationService(route: route, routeIndex: routeIndex, routeOptions: options, simulating: mode)
     }
 
     func presentAndRemoveMapview(_ navigationViewController: NavigationViewController, completion: CompletionHandler?) {

@@ -109,7 +109,7 @@ class SpeechSynthesizersControllerTests: XCTestCase {
         deinitExpectation.expectedFulfillmentCount = 2
         (synthesizers[0] as! FailingSpeechSynthesizerMock).deinitExpectation = deinitExpectation
         (synthesizers[1] as! FailingSpeechSynthesizerMock).deinitExpectation = deinitExpectation
-        let dummyService = MapboxNavigationService(route: route, routeOptions: routeOptions)
+        let dummyService = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: routeOptions)
         
         var routeController: RouteVoiceController? = RouteVoiceController(navigationService: dummyService,
                                                                           speechSynthesizer: MultiplexedSpeechSynthesizer(synthesizers))
@@ -124,7 +124,7 @@ class SpeechSynthesizersControllerTests: XCTestCase {
         let expectation = XCTestExpectation(description: "Synthesizers speak should be called")
         let sut = SystemSpeechSynthMock()
         sut.speakExpectation = expectation
-        let dummyService = MapboxNavigationService(route: route, routeOptions: routeOptions, simulating: .always)
+        let dummyService = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: routeOptions, simulating: .always)
         var routeController: RouteVoiceController? = RouteVoiceController(navigationService: dummyService,
                                                                           speechSynthesizer: sut)
         
@@ -138,7 +138,7 @@ class SpeechSynthesizersControllerTests: XCTestCase {
         let expectation = XCTestExpectation(description: "Synthesizers speak should be called")
         let sut = MapboxSpeechSynthMock()
         sut.speakExpectation = expectation
-        let dummyService = MapboxNavigationService(route: route, routeOptions: routeOptions, simulating: .always)
+        let dummyService = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: routeOptions, simulating: .always)
         var routeController: RouteVoiceController? = RouteVoiceController(navigationService: dummyService,
                                                                           speechSynthesizer: sut)
         

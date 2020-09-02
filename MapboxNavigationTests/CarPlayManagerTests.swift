@@ -199,7 +199,7 @@ class CarPlayManagerTests: XCTestCase {
             CLLocationCoordinate2D(latitude: 37.764793, longitude: -122.463161),
             CLLocationCoordinate2D(latitude: 34.054081, longitude: -118.243412),
         ])
-        choice.userInfo = (Fixture.route(from: "route-with-banner-instructions", options: options), options)
+        choice.userInfo = (Fixture.route(from: "route-with-banner-instructions", options: options), 0, options)
 
         manager.mapTemplate(mapTemplate, startedTrip: CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [choice]), using: choice)
 
@@ -377,7 +377,7 @@ class CarPlayManagerSpec: QuickSpec {
                     CLLocationCoordinate2D(latitude: 37.764793, longitude: -122.463161),
                     CLLocationCoordinate2D(latitude: 34.054081, longitude: -118.243412),
                 ])
-                fakeRouteChoice.userInfo = (Fixture.route(from: "route-with-banner-instructions", options: options), options)
+                fakeRouteChoice.userInfo = (Fixture.route(from: "route-with-banner-instructions", options: options), 0, options)
                 let fakeTrip = CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [fakeRouteChoice])
 
                 //simulate starting a fake trip
@@ -441,9 +441,9 @@ class CarPlayManagerSpec: QuickSpec {
         }
         
         //TODO: ADD OPTIONS TO THIS DELEGATE METHOD
-        func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService {
+        func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, routeIndex: Int, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService {
             let directionsFake = Directions(credentials: Fixture.credentials)
-            return MapboxNavigationService(route: route, routeOptions: routeOptions, directions: directionsFake, simulating: desiredSimulationMode)
+            return MapboxNavigationService(route: route, routeIndex: routeIndex, routeOptions: routeOptions, directions: directionsFake, simulating: desiredSimulationMode)
         }
     }
 }
@@ -472,7 +472,7 @@ class CarPlayManagerFailureDelegateSpy: CarPlayManagerDelegate {
         return nil
     }
     
-    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService {
+    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, routeIndex: Int, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService {
         fatalError("This is an empty stub.")
     }
     
@@ -499,11 +499,11 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
     public var trailingBarButtons: [CPBarButton]?
     public var mapButtons: [CPMapButton]?
 
-    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService {
+    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, routeIndex: Int, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService {
         let response = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
         let initialRoute = response.routes!.first!
         let directionsClientSpy = DirectionsSpy()
-        let service = MapboxNavigationService(route: initialRoute, routeOptions: routeOptions, directions: directionsClientSpy, locationSource: NavigationLocationManager(), eventsManagerType: NavigationEventsManagerSpy.self, simulating: desiredSimulationMode)
+        let service = MapboxNavigationService(route: initialRoute, routeIndex: 0, routeOptions: routeOptions, directions: directionsClientSpy, locationSource: NavigationLocationManager(), eventsManagerType: NavigationEventsManagerSpy.self, simulating: desiredSimulationMode)
         return service
     }
 

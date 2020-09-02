@@ -16,7 +16,7 @@ class MapboxNavigationServiceSpec: QuickSpec {
             let route = initialRoute
             
             let subject = LeakTest {
-                let service = MapboxNavigationService(route: route, routeOptions: routeOptions,  directions: DirectionsSpy())
+                let service = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: routeOptions,  directions: DirectionsSpy())
                 return service
             }
             it("Must not leak.") {

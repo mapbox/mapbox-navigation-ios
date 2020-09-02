@@ -13,6 +13,11 @@ public protocol RouterDataSource: class {
 }
 
 /**
+ A route and its index in a `RouteResponse` that sorts routes from most optimal to least optimal.
+ */
+public typealias IndexedRoute = (Route, Int)
+
+/**
  A class conforming to the `Router` protocol tracks the user’s progress as they travel along a predetermined route. It calls methods on its `delegate`, which conforms to the `RouterDelegate` protocol, whenever significant events or decision points occur along the route. Despite its name, this protocol does not define the interface of a routing engine.
  
  There are two concrete implementations of the `Router` protocol. `RouteController`, the default implementation, is capable of client-side routing and depends on the Mapbox Navigation Native framework. `LegacyRouteController` is an alternative implementation that does not have this dependency but must be used in conjunction with the Mapbox Directions API over a network connection.
@@ -32,17 +37,20 @@ public protocol Router: class, CLLocationManagerDelegate {
      Intializes a new `RouteController`.
      
      - parameter route: The route to follow.
+     - parameter routeIndex: The index of the route within the original `RouteResponse` object.
      - parameter directions: The Directions object that created `route`.
      - parameter source: The data source for the RouteController.
      */
-    init(along route: Route, options: RouteOptions, directions: Directions, dataSource source: RouterDataSource)
+    init(along route: Route, routeIndex: Int, options: RouteOptions, directions: Directions, dataSource source: RouterDataSource)
     
     /**
      Details about the user’s progress along the current route, leg, and step.
      */
     var routeProgress: RouteProgress { get }
     
-    var route: Route { get set }
+    var indexedRoute: IndexedRoute { get set }
+    
+    var route: Route { get }
     
     /**
      Given a users current location, returns a Boolean whether they are currently on the route.
@@ -98,7 +106,7 @@ protocol InternalRouter: class {
     
     var lastRerouteLocation: CLLocation? { get set }
     
-    func setRoute(route: Route, proactive: Bool)
+    func setRoute(route: Route, routeIndex: Int, proactive: Bool)
     
     var isRerouting: Bool { get set }
     
@@ -122,7 +130,7 @@ extension InternalRouter where Self: Router {
     }
     
     func refreshRoute(from location: CLLocation, legIndex: Int, completion: @escaping ()->()) {
-        guard refreshesRoute else {
+        guard refreshesRoute, let routeIdentifier = route.routeIdentifier else {
             completion()
             return
         }
@@ -144,24 +152,19 @@ extension InternalRouter where Self: Router {
         }
         isRefreshing = true
         
-        directions.refresh(route: route,
-                           currentLegIndex: legIndex,
-                           completionHandler: { [weak self] (session, result) in
-                            defer {
-                                self?.isRefreshing = false
-                                self?.lastRouteRefresh = nil
-                                completion()
-                            }
-                            
-                            guard case let .success(response) = result else {
-                                return
-                            }
-                            
-                            guard let route = response.route else {
-                                return
-                            }
-                            self?.routeProgress.refreshRoute(with: route)
-        })
+        directions.refreshRoute(responseIdentifier: routeIdentifier, routeIndex: indexedRoute.1, fromLegAtIndex: legIndex) { [weak self] (session, result) in
+            defer {
+                self?.isRefreshing = false
+                self?.lastRouteRefresh = nil
+                completion()
+            }
+            
+            guard case let .success(response) = result else {
+                return
+            }
+            
+            self?.routeProgress.refreshRoute(with: response.route)
+        }
     }
     
     func checkForFasterRoute(from location: CLLocation, routeProgress: RouteProgress) {
@@ -211,7 +214,7 @@ extension InternalRouter where Self: Router {
                 currentUpcomingManeuver == firstLeg.steps[1] && route.expectedTravelTime <= 0.9 * durationRemaining
             
             if routeIsFaster {
-                self?.setRoute(route: route, proactive: true)
+                self?.setRoute(route: route, routeIndex: 0, proactive: true)
             }
         }
     }
@@ -240,7 +243,7 @@ extension InternalRouter where Self: Router {
         }
     }
     
-    func setRoute(route: Route, proactive: Bool) {
+    func setRoute(route: Route, routeIndex: Int, proactive: Bool) {
         let spokenInstructionIndex = routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex
         
         if proactive {
@@ -250,7 +253,7 @@ extension InternalRouter where Self: Router {
             didFindFasterRoute = false
         }
         
-        routeProgress = RouteProgress(route: route, options: routeProgress.routeOptions, legIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
+        routeProgress = RouteProgress(route: route, routeIndex: routeIndex, options: routeProgress.routeOptions, legIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
     }
     
     func announce(reroute newRoute: Route, at location: CLLocation?, proactive: Bool) {

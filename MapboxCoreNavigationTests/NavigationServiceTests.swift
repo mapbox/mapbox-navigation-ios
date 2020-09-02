@@ -22,7 +22,7 @@ class NavigationServiceTests: XCTestCase {
     typealias RouteLocations = (firstLocation: CLLocation, penultimateLocation: CLLocation, lastLocation: CLLocation)
 
     lazy var dependencies: (navigationService: NavigationService, routeLocations: RouteLocations) = {
-        let navigationService = MapboxNavigationService(route: initialRoute, routeOptions: routeOptions, directions: directionsClientSpy, eventsManagerType: NavigationEventsManagerSpy.self, simulating: .never)
+        let navigationService = MapboxNavigationService(route: initialRoute, routeIndex: 0, routeOptions: routeOptions, directions: directionsClientSpy, eventsManagerType: NavigationEventsManagerSpy.self, simulating: .never)
         navigationService.delegate = delegate
 
         let legProgress: RouteLegProgress = navigationService.router.routeProgress.currentLegProgress
@@ -278,7 +278,7 @@ class NavigationServiceTests: XCTestCase {
         ])
         let route = Fixture.route(from: "straight-line", options: options)
 
-        let navigation = MapboxNavigationService(route: route, routeOptions: options, directions: directions)
+        let navigation = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: options, directions: directions)
         let router = navigation.router!
         let firstCoord = router.routeProgress.nearbyShape.coordinates.first!
         let firstLocation = CLLocation(latitude: firstCoord.latitude, longitude: firstCoord.longitude)
@@ -321,13 +321,13 @@ class NavigationServiceTests: XCTestCase {
     func testTurnstileEventSentUponInitialization() {
         // MARK: it sends a turnstile event upon initialization
 
-        let service = MapboxNavigationService(route: initialRoute, routeOptions: routeOptions, directions: directionsClientSpy, locationSource: NavigationLocationManager(), eventsManagerType: NavigationEventsManagerSpy.self)
+        let service = MapboxNavigationService(route: initialRoute, routeIndex: 0, routeOptions: routeOptions, directions: directionsClientSpy, locationSource: NavigationLocationManager(), eventsManagerType: NavigationEventsManagerSpy.self)
         let eventsManagerSpy = service.eventsManager as! NavigationEventsManagerSpy
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeAppUserTurnstile))
     }
 
     func testReroutingFromLocationUpdatesSimulatedLocationSource() {
-        let navigationService = MapboxNavigationService(route: initialRoute, routeOptions: routeOptions,  directions: directionsClientSpy, eventsManagerType: NavigationEventsManagerSpy.self, simulating: .always)
+        let navigationService = MapboxNavigationService(route: initialRoute, routeIndex: 0, routeOptions: routeOptions,  directions: directionsClientSpy, eventsManagerType: NavigationEventsManagerSpy.self, simulating: .always)
         navigationService.delegate = delegate
         let router = navigationService.router!
 
@@ -337,7 +337,7 @@ class NavigationServiceTests: XCTestCase {
         let eventsManagerSpy = navigationService.eventsManager as! NavigationEventsManagerSpy
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: NavigationEventTypeRouteRetrieval))
 
-        router.route = alternateRoute
+        router.indexedRoute = (alternateRoute, 0)
 
         let simulatedLocationManager = navigationService.locationManager as! SimulatedLocationManager
 
@@ -468,7 +468,7 @@ class NavigationServiceTests: XCTestCase {
 
         autoreleasepool {
             let fakeDataSource = RouteControllerDataSourceFake()
-            let routeController = RouteController(along: initialRoute, options: routeOptions,  directions: directionsClientSpy, dataSource: fakeDataSource)
+            let routeController = RouteController(along: initialRoute, routeIndex: 0, options: routeOptions,  directions: directionsClientSpy, dataSource: fakeDataSource)
             subject = routeController
         }
 
@@ -480,7 +480,7 @@ class NavigationServiceTests: XCTestCase {
 
         autoreleasepool {
             let fakeDataSource = RouteControllerDataSourceFake()
-            let routeController = RouteController(along: initialRoute, options: routeOptions,  directions: directionsClientSpy, dataSource: fakeDataSource)
+            let routeController = RouteController(along: initialRoute, routeIndex: 0, options: routeOptions,  directions: directionsClientSpy, dataSource: fakeDataSource)
             subject = routeController
         }
 
@@ -492,7 +492,7 @@ class NavigationServiceTests: XCTestCase {
 
         autoreleasepool {
             let fakeDataSource = RouteControllerDataSourceFake()
-            _ = RouteController(along: initialRoute, options: routeOptions,  directions: directionsClientSpy, dataSource: fakeDataSource)
+            _ = RouteController(along: initialRoute, routeIndex: 0, options: routeOptions, directions: directionsClientSpy, dataSource: fakeDataSource)
             subject = fakeDataSource
         }
 
@@ -501,7 +501,7 @@ class NavigationServiceTests: XCTestCase {
 
     func testCountdownTimerDefaultAndUpdate() {
         let directions = DirectionsSpy()
-        let subject = MapboxNavigationService(route: initialRoute, routeOptions: routeOptions,  directions: directions)
+        let subject = MapboxNavigationService(route: initialRoute, routeIndex: 0, routeOptions: routeOptions,  directions: directions)
 
         XCTAssert(subject.poorGPSTimer.countdownInterval == .milliseconds(2500), "Default countdown interval should be 2500 milliseconds.")
 
@@ -519,7 +519,7 @@ class NavigationServiceTests: XCTestCase {
         let service = dependencies.navigationService
 
         let routeController = service.router as! RouteController
-        routeController.route = route
+        routeController.indexedRoute = (route, 0)
 
         for (index, location) in trace.enumerated() {
             service.locationManager!(service.locationManager, didUpdateLocations: [location])
@@ -549,7 +549,7 @@ class NavigationServiceTests: XCTestCase {
                   "Duration must greater than rerouting interval and minimum duration remaining for proactive rerouting")
 
         let directions = DirectionsSpy()
-        let service = MapboxNavigationService(route: route, routeOptions: options, directions: directions)
+        let service = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: options, directions: directions)
         service.delegate = delegate
         let router = service.router!
         let locationManager = NavigationLocationManager()
@@ -597,7 +597,7 @@ class NavigationServiceTests: XCTestCase {
         let locationManager = DummyLocationManager()
         let trace = Fixture.generateTrace(for: route, speedMultiplier: 2).shiftedToPresent()
 
-        let service = MapboxNavigationService(route: route, routeOptions: options, directions: directions, locationSource: locationManager, eventsManagerType: nil)
+        let service = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: options, directions: directions, locationSource: locationManager, eventsManagerType: nil)
 
         let spy = EmptyNavigationServiceDelegate()
         service.delegate = spy

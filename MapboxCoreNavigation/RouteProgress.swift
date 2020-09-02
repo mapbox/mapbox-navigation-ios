@@ -7,11 +7,15 @@ import Turf
  */
 open class RouteProgress {
     private static let reroutingAccuracy: CLLocationAccuracy = 90
+    
+    var indexedRoute: IndexedRoute
 
     /**
      Returns the current `Route`.
      */
-    public private(set) var route: Route
+    public var route: Route {
+        return indexedRoute.0
+    }
     
     public let routeOptions: RouteOptions
 
@@ -174,10 +178,11 @@ open class RouteProgress {
      Intializes a new `RouteProgress`.
 
      - parameter route: The route to follow.
+     - parameter routeIndex: The index of the route in the `RouteResponse`. By default, the route is the first route in the response.
      - parameter legIndex: Zero-based index indicating the current leg the user is on.
      */
-    public init(route: Route, options: RouteOptions, legIndex: Int = 0, spokenInstructionIndex: Int = 0) {
-        self.route = route
+    public init(route: Route, routeIndex: Int, options: RouteOptions, legIndex: Int = 0, spokenInstructionIndex: Int = 0) {
+        self.indexedRoute = (route, routeIndex)
         self.routeOptions = options
         self.legIndex = legIndex
         self.currentLegProgress = RouteLegProgress(leg: route.legs[legIndex], stepIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
@@ -280,8 +285,11 @@ open class RouteProgress {
         }
     }
     
-    public func refreshRoute(with refreshedRoute: Route) {
-        route = refreshedRoute
+    /**
+     Updates the current route with attributes from the given skeletal route.
+     */
+    public func refreshRoute(with refreshedRoute: RefreshedRoute) {
+        route.refreshLegAttributes(from: refreshedRoute)
         currentLegProgress = RouteLegProgress(leg: route.legs[legIndex],
                                               stepIndex: currentLegProgress.stepIndex,
                                               spokenInstructionIndex: currentLegProgress.currentStepProgress.spokenInstructionIndex)

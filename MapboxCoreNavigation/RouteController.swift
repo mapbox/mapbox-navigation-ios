@@ -27,14 +27,18 @@ open class RouteController: NSObject {
         return Navigator(profile: settingsProfile, config: NavigatorConfig(), customConfig: "")
     }()
     
-    public var route: Route {
+    public var indexedRoute: IndexedRoute {
         get {
-            return routeProgress.route
+            return routeProgress.indexedRoute
         }
         set {
-            routeProgress = RouteProgress(route: newValue, options: routeProgress.routeOptions)
+            routeProgress = RouteProgress(route: newValue.0, routeIndex: newValue.1, options: routeProgress.routeOptions)
             updateNavigator(with: routeProgress)
         }
+    }
+    
+    public var route: Route {
+        return indexedRoute.0
     }
     
     private var _routeProgress: RouteProgress {
@@ -139,9 +143,9 @@ open class RouteController: NSObject {
         return snappedLocation ?? rawLocation
     }
     
-    required public init(along route: Route, options: RouteOptions, directions: Directions = Directions.shared, dataSource source: RouterDataSource) {
+    required public init(along route: Route, routeIndex: Int, options: RouteOptions, directions: Directions = Directions.shared, dataSource source: RouterDataSource) {
         self.directions = directions
-        self._routeProgress = RouteProgress(route: route, options: options)
+        self._routeProgress = RouteProgress(route: route, routeIndex: routeIndex, options: options)
         self.dataSource = source
         self.refreshesRoute = options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled
         UIDevice.current.isBatteryMonitoringEnabled = true
@@ -422,7 +426,7 @@ extension RouteController: Router {
             case let .success(response):
                 guard let route = response.routes?.first else { return }
                 guard case let .route(routeOptions) = response.options else { return } //TODO: Can a match hit this codepoint?
-                strongSelf._routeProgress = RouteProgress(route: route, options: routeOptions, legIndex: 0)
+                strongSelf._routeProgress = RouteProgress(route: route, routeIndex: 0, options: routeOptions, legIndex: 0)
                 strongSelf._routeProgress.currentLegProgress.stepIndex = 0
                 strongSelf.announce(reroute: route, at: location, proactive: false)
                 

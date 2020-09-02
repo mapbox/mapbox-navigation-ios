@@ -58,11 +58,12 @@ public protocol CarPlayManagerDelegate: class, UnimplementedLogging {
      
      - parameter carPlayManager: The CarPlay manager instance.
      - parameter route: The route for which the returned route controller will manage location updates.
+     - parameter routeIndex: The index of the route within the original `RouteResponse` object.
      - parameter routeOptions: the options that were specified for the route request.
      - parameter desiredSimulationMode: The desired simulation mode to use.
      - returns: A navigation service that manages location updates along `route`.
      */
-    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService
+    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, routeIndex: Int, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService
     
     /**
      Offers the delegate an opportunity to react to updates in the search text.
