@@ -37,9 +37,9 @@ extension MGLStyle {
     /**
      Returns the URL to the given version of the Mapbox Navigation Day style. Available versions are: 1.
      
-     If you'd like to use previous versions of Navigation Guidance or Navigation Preview Day styles you can construct URLs directly. For example:
-     - Navigation Guidance: mapbox://styles/mapbox/navigation-guidance-day-v1 (availbale versions are: 1, 2, 3, and 4)
-     - Navigation Preview: mapbox://styles/mapbox/navigation-preview-day-v1 (availbale versions are: 1, 2, 3, and 4)
+     To use the Navigation Guidance Day or Navigation Preview Day style, which predates the Navigation Day style, create a mapbox: URL directly. For example:
+     - Navigation Guidance Day: mapbox://styles/mapbox/navigation-guidance-day-v1 (available versions are: 1, 2, 3, and 4)
+     - Navigation Preview Day: mapbox://styles/mapbox/navigation-preview-day-v1 (available versions are: 1, 2, 3, and 4)
      
      We only have one version of Mapbox Navigation Day style in China, so if you switch your endpoint to .cn, it will return the default day style.
      */
@@ -54,9 +54,9 @@ extension MGLStyle {
     /**
      Returns the URL to the given version of the Mapbox Navigation Night style. Available versions are: 1.
      
-     If you'd like to use previous versions of Navigation Guidance or Navigation Preview styles you can construct URLs directly. For example:
-     - Navigation Guidance: mapbox://styles/mapbox/navigation-guidance-night-v2 (availbale versions are: 2, 3, and 4)
-     - Navigation Preview: mapbox://styles/mapbox/navigation-preview-night-v2 (availbale versions are: 2, 3, and 4)
+     To use the Navigation Guidance Night or Navigation Preview Night style, which predates the Navigation Night style, create a mapbox: URL directly. For example:
+     - Navigation Guidance Night: mapbox://styles/mapbox/navigation-guidance-night-v2 (available versions are: 2, 3, and 4)
+     - Navigation Preview Night: mapbox://styles/mapbox/navigation-preview-night-v2 (available versions are: 2, 3, and 4)
      
      We only have one version of Mapbox Navigation Night style in China, so if you switch your endpoint to .cn, it will return the default night style.
      */
