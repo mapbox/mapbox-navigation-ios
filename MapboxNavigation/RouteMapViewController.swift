@@ -96,6 +96,8 @@ class RouteMapViewController: UIViewController {
     var overheadInsets: UIEdgeInsets {
         return UIEdgeInsets(top: topBannerContainerView.bounds.height, left: 20, bottom: bottomBannerContainerView.bounds.height, right: 20)
     }
+    
+    var routeLineTracksTraversal = false
 
     typealias LabelRoadNameCompletionHandler = (_ defaultRaodNameAssigned: Bool) -> Void
 
@@ -481,8 +483,8 @@ extension RouteMapViewController: NavigationComponent {
             mapView.showVoiceInstructionsOnMap(route: route)
         }
         
-        if mapView.routeLineTracksTraversal {
-            mapView.fade(route, fractionTraveled: progress.fractionTraveled)
+        if routeLineTracksTraversal {
+            mapView.updateRoute(progress)
         }
         
         navigationView.speedLimitView.signStandard = progress.currentLegProgress.currentStep.speedLimitSignStandard
