@@ -2,7 +2,7 @@ binary "https://www.mapbox.com/ios-sdk/MapboxAccounts.json" ~> 2.3.0
 binary "https://api.mapbox.com/downloads/v2/carthage/mobile-navigation-native/MapboxNavigationNative.json" ~> 18.0.2
 binary "https://api.mapbox.com/downloads/v2/carthage/mobile-maps/mapbox-ios-sdk-dynamic.json" == 6.1.0-beta.2
 binary "https://api.mapbox.com/downloads/v2/carthage/mapbox-common/MapboxCommon-ios.json" == 4.0.0
-github "mapbox/mapbox-directions-swift" ~> 0.33
+github "mapbox/mapbox-directions-swift" == 1.0.0-rc.1
 github "mapbox/turf-swift" ~> 0.5
 github "mapbox/mapbox-events-ios" ~> 0.10
 github "ceeK/Solar" ~> 2.1.0
