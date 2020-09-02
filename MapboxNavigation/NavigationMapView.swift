@@ -97,8 +97,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 
         static let mainRoute = "\(identifierNamespace).mainRoute"
         static let mainRouteCasing = "\(identifierNamespace).mainRouteCasing"
-        static let alternateRoutes = "\(identifierNamespace).alternateRoutes"
-        static let alternateRoutesCasing = "\(identifierNamespace).alternateRoutesCasing"
+        static let alternativeRoutes = "\(identifierNamespace).alternativeRoutes"
+        static let alternativeRoutesCasing = "\(identifierNamespace).alternativeRoutesCasing"
 
         static let route = "\(identifierNamespace).route"
         static let routeCasing = "\(identifierNamespace).routeCasing"
@@ -490,8 +490,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         let mainRouteLayer = addMainRouteLayer(style, source: allRoutesSource, lineGradient: routeLineGradient(mainRoute, fractionTraveled: 0.0))
         let mainRouteCasingLayer = addMainRouteCasingLayer(style, source: mainRouteCasingSource, lineGradient: routeCasingGradient(0.0), below: mainRouteLayer)
-        let alternateRoutesLayer = addAlternateRoutesLayer(style, source: allRoutesSource, below: mainRouteCasingLayer)
-        addAlternateRoutesCasingLayer(style, source: allRoutesSource, below: alternateRoutesLayer)
+        let alternativeRoutesLayer = addAlternativeRoutesLayer(style, source: allRoutesSource, below: mainRouteCasingLayer)
+        addAlternativeRoutesCasingLayer(style, source: allRoutesSource, below: alternativeRoutesLayer)
     }
     
     // MARK: - Route line insertion methods
@@ -608,66 +608,66 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         return mainRouteCasingLayer
     }
     
-    @discardableResult func addAlternateRoutesLayer(_ style: MGLStyle, source: MGLSource, below layer: MGLStyleLayer) -> MGLStyleLayer {
-        let customAlternateRoutesLayer = navigationMapViewDelegate?.navigationMapView(self,
-                                                                                      alternativeRouteStyleLayerWithIdentifier: StyleLayerIdentifier.alternateRoutes,
+    @discardableResult func addAlternativeRoutesLayer(_ style: MGLStyle, source: MGLSource, below layer: MGLStyleLayer) -> MGLStyleLayer {
+        let customAlternativeRoutesLayer = navigationMapViewDelegate?.navigationMapView(self,
+                                                                                      alternativeRouteStyleLayerWithIdentifier: StyleLayerIdentifier.alternativeRoutes,
                                                                                       source: source)
         
-        let currentAlternateRoutesLayer = style.layer(withIdentifier: StyleLayerIdentifier.alternateRoutes)
+        let currentAlternativeRoutesLayer = style.layer(withIdentifier: StyleLayerIdentifier.alternativeRoutes)
         
-        if let alternateRoutesLayer = customAlternateRoutesLayer, let _ = currentAlternateRoutesLayer {
-            return alternateRoutesLayer
+        if let alternativeRoutesLayer = customAlternativeRoutesLayer, let _ = currentAlternativeRoutesLayer {
+            return alternativeRoutesLayer
         }
         
-        if let alternateRoutesLayer = customAlternateRoutesLayer, currentAlternateRoutesLayer == nil {
-            style.insertLayer(alternateRoutesLayer, below: layer)
-            return alternateRoutesLayer
+        if let alternativeRoutesLayer = customAlternativeRoutesLayer, currentAlternativeRoutesLayer == nil {
+            style.insertLayer(alternativeRoutesLayer, below: layer)
+            return alternativeRoutesLayer
         }
         
-        if let alternateRoutesLayer = currentAlternateRoutesLayer {
-            return alternateRoutesLayer
+        if let alternativeRoutesLayer = currentAlternativeRoutesLayer {
+            return alternativeRoutesLayer
         }
         
-        let alternateRoutesLayer = MGLLineStyleLayer(identifier: StyleLayerIdentifier.alternateRoutes, source: source)
-        alternateRoutesLayer.predicate = NSPredicate(format: "isAlternateRoute == true")
-        alternateRoutesLayer.lineColor = NSExpression(forConstantValue: routeAlternateColor)
-        alternateRoutesLayer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel)
-        alternateRoutesLayer.lineJoin = NSExpression(forConstantValue: "round")
-        alternateRoutesLayer.lineCap = NSExpression(forConstantValue: "round")
-        style.insertLayer(alternateRoutesLayer, below: layer)
+        let alternativeRoutesLayer = MGLLineStyleLayer(identifier: StyleLayerIdentifier.alternativeRoutes, source: source)
+        alternativeRoutesLayer.predicate = NSPredicate(format: "isAlternateRoute == true")
+        alternativeRoutesLayer.lineColor = NSExpression(forConstantValue: routeAlternateColor)
+        alternativeRoutesLayer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel)
+        alternativeRoutesLayer.lineJoin = NSExpression(forConstantValue: "round")
+        alternativeRoutesLayer.lineCap = NSExpression(forConstantValue: "round")
+        style.insertLayer(alternativeRoutesLayer, below: layer)
         
-        return alternateRoutesLayer
+        return alternativeRoutesLayer
     }
     
-    @discardableResult func addAlternateRoutesCasingLayer(_ style: MGLStyle, source: MGLSource, below layer: MGLStyleLayer) -> MGLStyleLayer {
-        let customAlternateRoutesCasingLayer = navigationMapViewDelegate?.navigationMapView(self,
-                                                                                            alternateRouteCasingStyleLayerWithIdentifier: StyleLayerIdentifier.alternateRoutesCasing,
+    @discardableResult func addAlternativeRoutesCasingLayer(_ style: MGLStyle, source: MGLSource, below layer: MGLStyleLayer) -> MGLStyleLayer {
+        let customAlternativeRoutesCasingLayer = navigationMapViewDelegate?.navigationMapView(self,
+                                                                                            alternativeRouteCasingStyleLayerWithIdentifier: StyleLayerIdentifier.alternativeRoutesCasing,
                                                                                             source: source)
         
-        let currentAlternateRoutesCasingLayer = style.layer(withIdentifier: StyleLayerIdentifier.alternateRoutesCasing)
+        let currentAlternativeRoutesCasingLayer = style.layer(withIdentifier: StyleLayerIdentifier.alternativeRoutesCasing)
         
-        if let alternateRoutesCasingLayer = customAlternateRoutesCasingLayer, let _ = currentAlternateRoutesCasingLayer {
-            return alternateRoutesCasingLayer
+        if let alternativeRoutesCasingLayer = customAlternativeRoutesCasingLayer, let _ = currentAlternativeRoutesCasingLayer {
+            return alternativeRoutesCasingLayer
         }
         
-        if let alternateRoutesCasingLayer = customAlternateRoutesCasingLayer, currentAlternateRoutesCasingLayer == nil {
-            style.insertLayer(alternateRoutesCasingLayer, below: layer)
-            return alternateRoutesCasingLayer
+        if let alternativeRoutesCasingLayer = customAlternativeRoutesCasingLayer, currentAlternativeRoutesCasingLayer == nil {
+            style.insertLayer(alternativeRoutesCasingLayer, below: layer)
+            return alternativeRoutesCasingLayer
         }
         
-        if let alternateRoutesCasingLayer = currentAlternateRoutesCasingLayer {
-            return alternateRoutesCasingLayer
+        if let alternativeRoutesCasingLayer = currentAlternativeRoutesCasingLayer {
+            return alternativeRoutesCasingLayer
         }
         
-        let alternateRoutesCasingLayer = MGLLineStyleLayer(identifier: StyleLayerIdentifier.alternateRoutesCasing, source: source)
-        alternateRoutesCasingLayer.predicate = NSPredicate(format: "isAlternateRoute == true")
-        alternateRoutesCasingLayer.lineColor = NSExpression(forConstantValue: routeAlternateCasingColor)
-        alternateRoutesCasingLayer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 1.5))
-        alternateRoutesCasingLayer.lineJoin = NSExpression(forConstantValue: "round")
-        alternateRoutesCasingLayer.lineCap = NSExpression(forConstantValue: "round")
-        style.insertLayer(alternateRoutesCasingLayer, below: layer)
+        let alternativeRoutesCasingLayer = MGLLineStyleLayer(identifier: StyleLayerIdentifier.alternativeRoutesCasing, source: source)
+        alternativeRoutesCasingLayer.predicate = NSPredicate(format: "isAlternateRoute == true")
+        alternativeRoutesCasingLayer.lineColor = NSExpression(forConstantValue: routeAlternateCasingColor)
+        alternativeRoutesCasingLayer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 1.5))
+        alternativeRoutesCasingLayer.lineJoin = NSExpression(forConstantValue: "round")
+        alternativeRoutesCasingLayer.lineCap = NSExpression(forConstantValue: "round")
+        style.insertLayer(alternativeRoutesCasingLayer, below: layer)
         
-        return alternateRoutesCasingLayer
+        return alternativeRoutesCasingLayer
     }
 
     // MARK: - Vanishing route line methods
@@ -828,8 +828,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         style.remove([
             StyleLayerIdentifier.mainRoute,
             StyleLayerIdentifier.mainRouteCasing,
-            StyleLayerIdentifier.alternateRoutes,
-            StyleLayerIdentifier.alternateRoutesCasing
+            StyleLayerIdentifier.alternativeRoutes,
+            StyleLayerIdentifier.alternativeRoutesCasing
         ].compactMap { style.layer(withIdentifier: $0) })
         style.remove(Set([
             SourceIdentifier.allRoutes,
