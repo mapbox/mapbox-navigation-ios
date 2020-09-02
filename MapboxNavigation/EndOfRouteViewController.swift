@@ -69,8 +69,8 @@ class EndOfRouteViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        view.roundCorners([.topLeft, .topRight])
+        super.viewWillAppear(animated)
+        
         preferredContentSize.height = height(for: .normal)
         updateInterface()
     }

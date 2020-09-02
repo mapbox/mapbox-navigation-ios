@@ -13,13 +13,6 @@ extension UIView {
         subviews.forEach(addSubview(_:))
     }
     
-    func roundCorners(_ corners: UIRectCorner = [.allCorners], radius: CGFloat = 5.0) {
-        let path = UIBezierPath(roundedRect: bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
-        let maskLayer = CAShapeLayer()
-        maskLayer.path = path.cgPath
-        layer.mask = maskLayer
-    }
-    
     func applyDefaultCornerRadiusShadow(cornerRadius: CGFloat? = 4, shadowOpacity: CGFloat? = 0.1) {
         layer.cornerRadius = cornerRadius!
         layer.shadowOffset = CGSize(width: 0, height: 0)
