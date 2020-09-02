@@ -151,6 +151,22 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      Allows to control highlighting of the destination building on arrival. By default destination buildings will not be highlighted.
      */
     public var waypointStyle: WaypointStyle = .annotation
+    
+    /**
+     Controls whether the main route style layer and its casing disappears
+     as the user location puck travels over it. Defaults to `false`.
+     
+     If `true`, the part of the route that has been traversed will be
+     rendered with full transparency, to give the illusion of a
+     disappearing route. To customize the color that appears on the
+     traversed section of a route, override the `traversedRouteColor` property
+     for the `NavigationMapView.appearance()`.
+     */
+    public var routeLineTracksTraversal: Bool = false {
+        didSet {
+            mapViewController?.routeLineTracksTraversal = routeLineTracksTraversal
+        }
+    }
 
     /**
      Controls whether or not the FeedbackViewController shows a second level of detail for feedback items.

@@ -45,18 +45,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      Maximum distance the user can tap for a selection to be valid when selecting an alternate route.
      */
     public var tapGestureDistanceThreshold: CGFloat = 50
-
-    /**
-     Controls whether the main route style layer and its casing disappears
-     as the user location puck travels over it. Defaults to `false`.
-
-     If `true`, the part of the route that has been traversed will be
-     rendered with full transparency, to give the illusion of a
-     disappearing route. To customize the color that appears on the
-     traversed section of a route, override the `traversedRouteColor` property
-     for the `NavigationMapView.appearance()`.
-     */
-    public var routeLineTracksTraversal: Bool = false
     
     /**
      The object that acts as the navigation delegate of the map view.
@@ -670,17 +658,24 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 
     // MARK: - Vanishing route line methods
     
-    func fade(_ route: Route, fractionTraveled: Double) {
+    /**
+     Updates the route style layer and its casing style layer to gradually disappear as the user location puck travels along the displayed route.
+     
+     - parameter routeProgress: Current route progress.
+     */
+    public func updateRoute(_ routeProgress: RouteProgress) {
         guard let mainRouteLayer = style?.layer(withIdentifier: StyleLayerIdentifier.mainRoute) as? MGLLineStyleLayer,
             let mainRouteCasingLayer = style?.layer(withIdentifier: StyleLayerIdentifier.mainRouteCasing) as? MGLLineStyleLayer else { return }
+        
+        let fractionTraveled = routeProgress.fractionTraveled
         
         // In case if route was fully travelled - remove main route and its casing.
         if fractionTraveled == 1.0 {
             style?.remove([mainRouteLayer, mainRouteCasingLayer])
             return
         }
-
-        mainRouteLayer.lineGradient = routeLineGradient(route, fractionTraveled: fractionTraveled)
+        
+        mainRouteLayer.lineGradient = routeLineGradient(routeProgress.route, fractionTraveled: fractionTraveled)
         mainRouteCasingLayer.lineGradient = routeCasingGradient(fractionTraveled)
     }
     
