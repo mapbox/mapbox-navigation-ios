@@ -49,6 +49,24 @@
 /* Title for unmute button */
 "CARPLAY_UNMUTE" = "Unmute";
 
+/* Specific route feedback that audio guidance provided was confusing. */
+"CONFUSING_AUDIO_FEEDBACK" = "Confusing audio";
+
+/* Specific route feedback that audio guidance was provided too early before a maneuever. */
+"CONFUSING_AUDIO_GUIDANCE_TOO_EARLY_FEEDBACK" = "Guidance too early";
+
+/* Specific route feedback that audio guidance was provided too late for a maneuever. */
+"CONFUSING_AUDIO_GUIDANCE_TOO_LATE_FEEDBACK" = "Guidance too late";
+
+/* Specific route feedback that an audio guidance problem was encountered but not listed as a choice. */
+"CONFUSING_AUDIO_OTHER_FEEDBACK" = "Other";
+
+/* Specific route feedback that audio guidance used incorrect pronunciation. */
+"CONFUSING_AUDIO_PRONUNCIATION_INCORRECT_FEEDBACK" = "Pronunciation incorrect";
+
+/* Specific route feedback that audio guidance repeated a road name. */
+"CONFUSING_AUDIO_ROADNAME_REPEATED_FEEDBACK" = "Road name repeated";
+
 /* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "Close";
 
@@ -57,9 +75,6 @@
 
 /* Comment Placeholder Text */
 "END_OF_ROUTE_TITLE" = "How can we improve?";
-
-/* Error message when the SDK is unable to read a spoken instruction. */
-"FAILED_INSTRUCTION" = "Unable to read instruction aloud.";
 
 /* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "Faster Route Found";
@@ -70,14 +85,53 @@
 /* Title of view controller for sending feedback */
 "FEEDBACK_TITLE" = "Report Problem";
 
+/* Specific route feedback that a illegal route problem was encountered but not listed as a choice. */
+"ILLEGAL_ROUTE_OTHER_FEEDBACK" = "Other";
+
 /* Label indicating the device volume is too low to hear spoken instructions and needs to be manually increased */
 "INAUDIBLE_INSTRUCTIONS_CTA" = "Adjust Volume to Hear Instructions";
+
+/* Specific route feedback that an exit was incorrect. */
+"INCORRECT_VISUAL_EXIT_INFO_INCORRECT_FEEDBACK" = "Exit info incorrect";
+
+/* General category of route feedback where visual instruction was incorrect. */
+"INCORRECT_VISUAL_FEEDBACK" = "Looks incorrect";
+
+/* Specific route feedback that an instruction was missing. */
+"INCORRECT_VISUAL_INSTRUCTION_MISSING_FEEDBACK" = "Instruction missing";
+
+/* Specific route feedback for an unnecessary instruction. */
+"INCORRECT_VISUAL_INSTRUCTION_UNNECESSARY_FEEDBACK" = "Instruction unnecessary";
+
+/* Specific route feedback that the wrong lane was specified. */
+"INCORRECT_VISUAL_LANE_GUIDANCE_INCORRECT_FEEDBACK" = "Lane guidance incorrect";
+
+/* Specific route feedback that a maneuver specified was incorrect. */
+"INCORRECT_VISUAL_MANEUVER_INCORRECT_FEEDBACK" = "Maneuver incorrect";
+
+/* Specific route feedback that a visual instruction problem was encountered but not listed as a choice. */
+"INCORRECT_VISUAL_OTHER_FEEDBACK" = "Other";
+
+/* Specific route feedback that a road is known by another name. */
+"INCORRECT_VISUAL_ROAD_NAME_DIFFERENT_FEEDBACK" = "Road known by different name";
+
+/* Specific route feedback for incorrect street name. */
+"INCORRECT_VISUAL_STREET_NAME_INCORRECT_FEEDBACK" = "Street name incorrect";
+
+/* Specific route feedback for incorrect turn arrow being shown. */
+"INCORRECT_VISUAL_TURN_ICON_INCORRECT_FEEDBACK" = "Turn icon incorrect";
 
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@ and %2$@";
 
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "<%@";
+
+/* Title for button that cancels user's submission of feedback on navigation session issues. */
+"NAVIGATION_REPORT_CANCEL" = "Cancel";
+
+/* Title for button that submits user's feedback on multiple navigation session issues. 1 is the number of items */
+"NAVIGATION_REPORT_ISSUES" = "Send %ld Item(s)";
 
 /* Accessibility value of label indicating the absence of a rating */
 "NO_RATING" = "No rating set.";
@@ -96,6 +150,54 @@
 
 /* Button title for resume tracking */
 "RESUME" = "Resume";
+
+/* Specific route feedback that a road closure type was encountered but not listed as a choice. */
+"ROAD_CLOSURE_OTHER_FEEDBACK" = "Other";
+
+/* Specific route feedback that user was offered an alternative that was unexpected. */
+"ROUTE_QUALITY_ALTERNATIVE_ROUTE_NOT_EXPECTED_FEEDBACK" = "Alternative route not expected";
+
+/* General category of route feedback where route quality was poor. */
+"ROUTE_QUALITY_FEEDBACK" = "Route quality";
+
+/* Specific route feedback that route suggested an illegal roadway. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_CARS_NOT_ALLOWED_FEEDBACK" = "Cars not allowed on street";
+
+/* General route feedback that route contained illegal instructions. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_FEEDBACK" = "Illegal route";
+
+/* Specific route feedback that route travelled wrong way on a one-way road. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_ONE_WAY_FEEDBACK" = "Routed down a one way";
+
+/* Specific route feedback that route suggested an illegal turn. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_TURN_NOT_ALLOWED_FEEDBACK" = "Turn wasn't allowed";
+
+/* Specific route feedback that route suggested an illegal unprotected turn. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_UNPROTECTED_TURN_FEEDBACK" = "Turn at intersection unprotected";
+
+/* Specific route feedback that route contained non-existant roads. */
+"ROUTE_QUALITY_INCLUDED_MISSING_ROADS_FEEDBACK" = "Route includes missing roads";
+
+/* Specific route feedback that route was not drivable. */
+"ROUTE_QUALITY_NON_DRIVABLE_FEEDBACK" = "Route non drivable";
+
+/* Specific route feedback that route was not ideal according to user. */
+"ROUTE_QUALITY_NOT_PREFERRED_FEEDBACK" = "Route not preferred";
+
+/* Specific route feedback that a route quality problem was encountered but not listed as a choice. */
+"ROUTE_QUALITY_OTHER_FEEDBACK" = "Other";
+
+/* General route feedback that route contained closed road. */
+"ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK" = "Road closure";
+
+/* Specifc route feedback that route contained road that is permanently closed. */
+"ROUTE_QUALITY_ROAD_CLOSURE_PERMANENT_FEEDBACK" = "Street permanently blocked off";
+
+/* Specifc route feedback that route contained road not shown on map. */
+"ROUTE_QUALITY_ROAD_MISSING_FROM_MAP_FEEDBACK" = "Road missing from map";
+
+/* Specific route feedback that route contained impassible, narrow roads. */
+"ROUTE_QUALITY_ROADS_TOO_NARROW_FEEDBACK" = "Route had roads too narrow to pass";
 
 /* Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible. */
 "SPEED_LIMIT_LEGEND" = "Max";

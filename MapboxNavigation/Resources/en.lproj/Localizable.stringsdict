@@ -34,5 +34,21 @@
 			<string>%ld stars set.</string>
 		</dict>
 	</dict>
+	<key>NAVIGATION_REPORT_ISSUES</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@items@</string>
+		<key>items</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>ld</string>
+			<key>one</key>
+			<string>Submit 1 Item</string>
+			<key>other</key>
+			<string>Submit %ld Items</string>
+		</dict>
+	</dict>
 </dict>
 </plist>
