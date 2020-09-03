@@ -237,6 +237,10 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     
     private var traversingTunnel = false
     
+    private var approachingDestinationThreshold: CLLocationDistance = 250.0
+    private var passedApproachingDestinationThreshold: Bool = false
+    private var currentLeg: RouteLeg?
+    
     /**
      Initializes a navigation view controller that presents the user interface for following a predefined route based on the given options.
 
@@ -581,8 +585,20 @@ extension NavigationViewController: NavigationServiceDelegate {
             mapViewController?.mapView.updateCourseTracking(location: location, animated: true)
         }
         
-        if waypointStyle != .annotation, let currentLegWaypoint = progress.currentLeg.destination?.targetCoordinate, progress.currentLegProgress.distanceRemaining < 250 {
-            mapView?.highlightBuildings(at: [currentLegWaypoint], in3D: self.waypointStyle == .extrudedBuilding ? true : false)
+        if currentLeg != progress.currentLeg {
+            currentLeg = progress.currentLeg
+            passedApproachingDestinationThreshold = false
+            mapViewController?.supressAutomaticAltitudeChanges = false
+            if let mapView = mapView {
+                mapView.altitude = mapView.defaultAltitude
+            }
+        }
+        
+        if let mapView = mapView, passedApproachingDestinationThreshold == false, waypointStyle != .annotation, let currentLegWaypoint = progress.currentLeg.destination?.targetCoordinate, progress.currentLegProgress.distanceRemaining < approachingDestinationThreshold {
+            passedApproachingDestinationThreshold = true
+            mapViewController?.supressAutomaticAltitudeChanges = true
+            mapView.highlightBuildings(at: [currentLegWaypoint], in3D: self.waypointStyle == .extrudedBuilding ? true : false)
+            mapView.altitude = MGLAltitudeForZoomLevel(16.1, mapView.camera.pitch, location.coordinate.latitude, mapView.frame.size)
         }
         
         // Finally, pass the message onto the NVC delegate.

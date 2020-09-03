@@ -29,7 +29,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Returns the altitude that the map camera initally defaults to.
      */
-    public var defaultAltitude: CLLocationDistance = 850.0
+    public var defaultAltitude: CLLocationDistance = 1000.0
     
     /**
      Returns the altitude the map conditionally zooms out to when user is on a motorway, and the maneuver length is sufficently long.
