@@ -118,7 +118,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate{
 
      If this method is unimplemented, the navigation view controller’s map view draws the casing for the alternative route lines using an `MGLLineStyleLayer`.
     */
-    func navigationViewController(_ navigationViewController: NavigationViewController, alternateRouteCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+    func navigationViewController(_ navigationViewController: NavigationViewController, alternativeRouteCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
     /**
      Returns an `MGLShape` that represents the path of the route line.
@@ -267,7 +267,7 @@ public extension NavigationViewControllerDelegate {
         return nil
     }
 
-    func navigationViewController(_ navigationViewController: NavigationViewController, alternateRouteCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+    func navigationViewController(_ navigationViewController: NavigationViewController, alternativeRouteCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
         return nil
     }

@@ -8,12 +8,6 @@ extension MGLStyle {
     // The Mapbox China Night Style URL.
     static let mapboxChinaNightStyleURL = URL(string:"mapbox://styles/mapbox/dark-zh-v1")!
     
-    // Default Mapbox Navigation Day Style URL.
-    static let defaultNavigationDayStyleURL = URL(string:"mapbox://styles/mapbox-map-design/ckd6dqf981hi71iqlyn3e896y")!
-    
-    // Default Mapbox Navigation Night Style URL.
-    static let defaultNavigationNightStyleURL = URL(string:"mapbox://styles/mapbox-map-design/ckd6dnz2q0m0q1io1mssumxqd")!
-    
     /**
      Returns the URL to the current version of the Mapbox Navigation Day style.
      */
@@ -22,7 +16,8 @@ extension MGLStyle {
             if MGLAccountManager.hasChinaBaseURL {
                 return mapboxChinaDayStyleURL
             }
-            return defaultNavigationDayStyleURL
+            
+            return URL(string:"mapbox://styles/mapbox/navigation-day-v1")!
         }
     }
     
@@ -34,12 +29,17 @@ extension MGLStyle {
             if MGLAccountManager.hasChinaBaseURL {
                 return mapboxChinaNightStyleURL
             }
-            return defaultNavigationNightStyleURL
+            
+            return URL(string:"mapbox://styles/mapbox/navigation-night-v1")!
         }
     }
     
     /**
-     Returns the URL to the given version of the Mapbox Navigation Day style. Available versions are 1, 2, 3, 4 and 5.
+     Returns the URL to the given version of the Mapbox Navigation Day style. Available versions are: 1.
+     
+     To use the Navigation Guidance Day or Navigation Preview Day style, which predates the Navigation Day style, create a mapbox: URL directly. For example:
+     - Navigation Guidance Day: mapbox://styles/mapbox/navigation-guidance-day-v1 (available versions are: 1, 2, 3, and 4)
+     - Navigation Preview Day: mapbox://styles/mapbox/navigation-preview-day-v1 (available versions are: 1, 2, 3, and 4)
      
      We only have one version of Mapbox Navigation Day style in China, so if you switch your endpoint to .cn, it will return the default day style.
      */
@@ -48,15 +48,15 @@ extension MGLStyle {
             return mapboxChinaDayStyleURL
         }
         
-        if (1...4).contains(version) {
-            return URL(string:"mapbox://styles/mapbox/navigation-guidance-day-v\(version)")!
-        }
-        
-        return defaultNavigationDayStyleURL
+        return URL(string:"mapbox://styles/mapbox/navigation-day-v\(version)")!
     }
     
     /**
-     Returns the URL to the given version of the Mapbox Navigation Night style. Available versions are 2, 3, 4 and 5.
+     Returns the URL to the given version of the Mapbox Navigation Night style. Available versions are: 1.
+     
+     To use the Navigation Guidance Night or Navigation Preview Night style, which predates the Navigation Night style, create a mapbox: URL directly. For example:
+     - Navigation Guidance Night: mapbox://styles/mapbox/navigation-guidance-night-v2 (available versions are: 2, 3, and 4)
+     - Navigation Preview Night: mapbox://styles/mapbox/navigation-preview-night-v2 (available versions are: 2, 3, and 4)
      
      We only have one version of Mapbox Navigation Night style in China, so if you switch your endpoint to .cn, it will return the default night style.
      */
@@ -65,11 +65,7 @@ extension MGLStyle {
             return mapboxChinaNightStyleURL
         }
         
-        if (2...4).contains(version) {
-            return URL(string:"mapbox://styles/mapbox/navigation-guidance-night-v\(version)")!
-        }
-        
-        return defaultNavigationNightStyleURL
+        return URL(string:"mapbox://styles/mapbox/navigation-night-v\(version)")!
     }
     
     /**

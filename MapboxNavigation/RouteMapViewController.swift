@@ -96,6 +96,8 @@ class RouteMapViewController: UIViewController {
     var overheadInsets: UIEdgeInsets {
         return UIEdgeInsets(top: topBannerContainerView.bounds.height, left: 20, bottom: bottomBannerContainerView.bounds.height, right: 20)
     }
+    
+    var routeLineTracksTraversal = false
 
     typealias LabelRoadNameCompletionHandler = (_ defaultRaodNameAssigned: Bool) -> Void
 
@@ -464,10 +466,6 @@ extension RouteMapViewController: NavigationComponent {
         let legIndex = progress.legIndex
         let stepIndex = progress.currentLegProgress.stepIndex
 
-        if mapView.routeLineTracksTraversal {
-            mapView.fadeRoute(progress.fractionTraveled)
-        }
-
         mapView.updatePreferredFrameRate(for: progress)
         if currentLegIndexMapped != legIndex {
             mapView.showWaypoints(on: route, legIndex: legIndex)
@@ -483,6 +481,10 @@ extension RouteMapViewController: NavigationComponent {
         
         if annotatesSpokenInstructions {
             mapView.showVoiceInstructionsOnMap(route: route)
+        }
+        
+        if routeLineTracksTraversal {
+            mapView.updateRoute(progress)
         }
         
         navigationView.speedLimitView.signStandard = progress.currentLegProgress.currentStep.speedLimitSignStandard
@@ -568,8 +570,8 @@ extension RouteMapViewController: NavigationViewDelegate {
         return delegate?.navigationMapView(mapView, alternativeRouteStyleLayerWithIdentifier: identifier, source: source)
     }
 
-    func navigationMapView(_ mapView: NavigationMapView, alternateRouteCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        return delegate?.navigationMapView(mapView, alternateRouteCasingStyleLayerWithIdentifier: identifier, source: source)
+    func navigationMapView(_ mapView: NavigationMapView, alternativeRouteCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        return delegate?.navigationMapView(mapView, alternativeRouteCasingStyleLayerWithIdentifier: identifier, source: source)
     }
 
     func navigationMapView(_ mapView: NavigationMapView, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
