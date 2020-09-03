@@ -240,6 +240,9 @@ class ViewController: UIViewController {
         waypoints.insert(userWaypoint, at: 0)
 
         let options = NavigationRouteOptions(waypoints: waypoints)
+        
+        // Get periodic updates regarding changes in estimated arrival time and traffic congestion segments along the route line.
+        RouteControllerProactiveReroutingInterval = 30
 
         requestRoute(with: options, success: defaultSuccess, failure: defaultFailure)
     }
