@@ -64,14 +64,8 @@ class ViewController: UIViewController {
         
         // Waypoints which were placed by the user are rewritten by slightly changed waypoints
         // which are returned in response with routes.
-        if let rewrittenWaypoints = response.waypoints {
-            let newWaypoints = rewrittenWaypoints.enumerated().map { (index, waypoint) -> Waypoint in
-                if let oldWaypoint = self?.waypoints[index] {
-                    waypoint.targetCoordinate = oldWaypoint.targetCoordinate
-                }
-                return waypoint
-            }
-            self?.waypoints = newWaypoints
+        if let waypoints = response.waypoints {
+            self?.waypoints = waypoints
         }
         
         self?.clearMap.isHidden = false
