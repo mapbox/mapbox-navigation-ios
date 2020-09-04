@@ -23,7 +23,7 @@ class BenchTests: XCTestCase, CLLocationManagerDelegate {
         let trace = Fixture.locations(from: "PipeFittersUnion-FourSeasonsBoston.trace")
         
         let locationManager = ReplayLocationManager(locations: trace)
-        _ = navigationViewController(route: route, routeOptions: routeOptions, locationManager: locationManager)
+        _ = navigationViewController(route: route, routeIndex: 0, routeOptions: routeOptions, locationManager: locationManager)
         
         locationManager.tick()
         
@@ -44,7 +44,7 @@ class BenchTests: XCTestCase, CLLocationManagerDelegate {
         let trace = Fixture.locations(from: "DCA-Arboretum.trace")
         
         let locationManager = ReplayLocationManager(locations: trace)
-        _ = navigationViewController(route: route, routeOptions: routeOptions, locationManager: locationManager)
+        _ = navigationViewController(route: route, routeIndex: 0, routeOptions: routeOptions, locationManager: locationManager)
         
         locationManager.tick()
         
@@ -55,20 +55,21 @@ class BenchTests: XCTestCase, CLLocationManagerDelegate {
         }
     }
     
-    func navigationViewController(route: Route, routeOptions: NavigationRouteOptions, locationManager: ReplayLocationManager) -> NavigationViewController {
-        let speechAPI = SpeechAPISpy(accessToken: token)
+    func navigationViewController(route: Route, routeIndex: Int, routeOptions: NavigationRouteOptions, locationManager: ReplayLocationManager) -> NavigationViewController {
         let directions = DirectionsSpy()
-        let service = MapboxNavigationService(route: route,
+        let service = MapboxNavigationService(route: route, routeIndex: 0,
                                               routeOptions: routeOptions,
                                               directions: directions,
                                               locationSource: locationManager,
                                               eventsManagerType: NavigationEventsManagerSpy.self,
                                               simulating: .never,
                                               routerType: RouteController.self)
-        let voiceController = MapboxVoiceController(navigationService: service, speechClient: speechAPI, audioPlayerType: AudioPlayerDummy.self)
+        let speechSynthesizer = SpeechSynthesizerSpy()
+        let voiceController = RouteVoiceController(navigationService: service, speechSynthesizer: speechSynthesizer, accessToken: token)
         
         let navigationOptions = NavigationOptions(navigationService: service, voiceController: voiceController)
         
-        return NavigationViewController(for: route, routeOptions: routeOptions, navigationOptions: navigationOptions)
+        let navigationViewController = NavigationViewController(for: route, routeIndex: routeIndex, routeOptions: routeOptions, navigationOptions: navigationOptions)
+        return navigationViewController
     }
 }
