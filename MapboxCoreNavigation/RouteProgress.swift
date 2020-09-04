@@ -7,11 +7,15 @@ import Turf
  */
 open class RouteProgress {
     private static let reroutingAccuracy: CLLocationAccuracy = 90
+    
+    var indexedRoute: IndexedRoute
 
     /**
      Returns the current `Route`.
      */
-    public let route: Route
+    public var route: Route {
+        return indexedRoute.0
+    }
     
     public let routeOptions: RouteOptions
 
@@ -174,48 +178,16 @@ open class RouteProgress {
      Intializes a new `RouteProgress`.
 
      - parameter route: The route to follow.
+     - parameter routeIndex: The index of the route in the `RouteResponse`. By default, the route is the first route in the response.
      - parameter legIndex: Zero-based index indicating the current leg the user is on.
      */
-    public init(route: Route, options: RouteOptions, legIndex: Int = 0, spokenInstructionIndex: Int = 0) {
-        self.route = route
+    public init(route: Route, routeIndex: Int, options: RouteOptions, legIndex: Int = 0, spokenInstructionIndex: Int = 0) {
+        self.indexedRoute = (route, routeIndex)
         self.routeOptions = options
         self.legIndex = legIndex
         self.currentLegProgress = RouteLegProgress(leg: route.legs[legIndex], stepIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
 
-        for (legIndex, leg) in route.legs.enumerated() {
-            var maneuverCoordinateIndex = 0
-
-            congestionTimesPerStep.append([])
-
-            /// An index into the route’s coordinates and congestionTravelTimesSegmentsByStep that corresponds to a step’s maneuver location.
-            var congestionTravelTimesSegmentsByLeg: [[TimedCongestionLevel]] = []
-
-            if let segmentCongestionLevels = leg.segmentCongestionLevels, let expectedSegmentTravelTimes = leg.expectedSegmentTravelTimes {
-                for step in leg.steps {
-                    guard let coordinates = step.shape?.coordinates else { continue }
-                    let stepCoordinateCount = step.maneuverType == .arrive ? Int(coordinates.count) : coordinates.dropLast().count
-                    let nextManeuverCoordinateIndex = maneuverCoordinateIndex + stepCoordinateCount - 1
-
-                    guard nextManeuverCoordinateIndex < segmentCongestionLevels.count else { continue }
-                    guard nextManeuverCoordinateIndex < expectedSegmentTravelTimes.count else { continue }
-
-                    let stepSegmentCongestionLevels = Array(segmentCongestionLevels[maneuverCoordinateIndex..<nextManeuverCoordinateIndex])
-                    let stepSegmentTravelTimes = Array(expectedSegmentTravelTimes[maneuverCoordinateIndex..<nextManeuverCoordinateIndex])
-                    maneuverCoordinateIndex = nextManeuverCoordinateIndex
-
-                    let stepTimedCongestionLevels = Array(zip(stepSegmentCongestionLevels, stepSegmentTravelTimes))
-                    congestionTravelTimesSegmentsByLeg.append(stepTimedCongestionLevels)
-                    var stepCongestionValues: [CongestionLevel: TimeInterval] = [:]
-                    for (segmentCongestion, segmentTime) in stepTimedCongestionLevels {
-                        stepCongestionValues[segmentCongestion] = (stepCongestionValues[segmentCongestion] ?? 0) + segmentTime
-                    }
-
-                    congestionTimesPerStep[legIndex].append(stepCongestionValues)
-                }
-            }
-
-            congestionTravelTimesSegmentsByStep.append(congestionTravelTimesSegmentsByLeg)
-        }
+        self.calculateLegsCongestion()
     }
 
     public var averageCongestionLevelRemainingOnLeg: CongestionLevel? {
@@ -271,6 +243,58 @@ open class RouteProgress {
         newOptions.waypoints = newWaypoints
 
         return newOptions
+    }
+    
+    func calculateLegsCongestion() {
+        congestionTimesPerStep.removeAll()
+        congestionTravelTimesSegmentsByStep.removeAll()
+        
+        for (legIndex, leg) in route.legs.enumerated() {
+            var maneuverCoordinateIndex = 0
+
+            congestionTimesPerStep.append([])
+
+            /// An index into the route’s coordinates and congestionTravelTimesSegmentsByStep that corresponds to a step’s maneuver location.
+            var congestionTravelTimesSegmentsByLeg: [[TimedCongestionLevel]] = []
+
+            if let segmentCongestionLevels = leg.segmentCongestionLevels, let expectedSegmentTravelTimes = leg.expectedSegmentTravelTimes {
+                for step in leg.steps {
+                    guard let coordinates = step.shape?.coordinates else { continue }
+                    let stepCoordinateCount = step.maneuverType == .arrive ? Int(coordinates.count) : coordinates.dropLast().count
+                    let nextManeuverCoordinateIndex = maneuverCoordinateIndex + stepCoordinateCount - 1
+
+                    guard nextManeuverCoordinateIndex < segmentCongestionLevels.count else { continue }
+                    guard nextManeuverCoordinateIndex < expectedSegmentTravelTimes.count else { continue }
+
+                    let stepSegmentCongestionLevels = Array(segmentCongestionLevels[maneuverCoordinateIndex..<nextManeuverCoordinateIndex])
+                    let stepSegmentTravelTimes = Array(expectedSegmentTravelTimes[maneuverCoordinateIndex..<nextManeuverCoordinateIndex])
+                    maneuverCoordinateIndex = nextManeuverCoordinateIndex
+
+                    let stepTimedCongestionLevels = Array(zip(stepSegmentCongestionLevels, stepSegmentTravelTimes))
+                    congestionTravelTimesSegmentsByLeg.append(stepTimedCongestionLevels)
+                    var stepCongestionValues: [CongestionLevel: TimeInterval] = [:]
+                    for (segmentCongestion, segmentTime) in stepTimedCongestionLevels {
+                        stepCongestionValues[segmentCongestion] = (stepCongestionValues[segmentCongestion] ?? 0) + segmentTime
+                    }
+
+                    congestionTimesPerStep[legIndex].append(stepCongestionValues)
+                }
+            }
+
+            congestionTravelTimesSegmentsByStep.append(congestionTravelTimesSegmentsByLeg)
+        }
+    }
+    
+    /**
+     Updates the current route with attributes from the given skeletal route.
+     */
+    public func refreshRoute(with refreshedRoute: RefreshedRoute) {
+        route.refreshLegAttributes(from: refreshedRoute)
+        currentLegProgress = RouteLegProgress(leg: route.legs[legIndex],
+                                              stepIndex: currentLegProgress.stepIndex,
+                                              spokenInstructionIndex: currentLegProgress.currentStepProgress.spokenInstructionIndex)
+        
+        calculateLegsCongestion()
     }
 }
 

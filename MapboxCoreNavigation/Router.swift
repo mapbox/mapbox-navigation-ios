@@ -13,6 +13,11 @@ public protocol RouterDataSource: class {
 }
 
 /**
+ A route and its index in a `RouteResponse` that sorts routes from most optimal to least optimal.
+ */
+public typealias IndexedRoute = (Route, Int)
+
+/**
  A class conforming to the `Router` protocol tracks the user’s progress as they travel along a predetermined route. It calls methods on its `delegate`, which conforms to the `RouterDelegate` protocol, whenever significant events or decision points occur along the route. Despite its name, this protocol does not define the interface of a routing engine.
  
  There are two concrete implementations of the `Router` protocol. `RouteController`, the default implementation, is capable of client-side routing and depends on the Mapbox Navigation Native framework. `LegacyRouteController` is an alternative implementation that does not have this dependency but must be used in conjunction with the Mapbox Directions API over a network connection.
@@ -32,17 +37,20 @@ public protocol Router: class, CLLocationManagerDelegate {
      Intializes a new `RouteController`.
      
      - parameter route: The route to follow.
+     - parameter routeIndex: The index of the route within the original `RouteResponse` object.
      - parameter directions: The Directions object that created `route`.
      - parameter source: The data source for the RouteController.
      */
-    init(along route: Route, options: RouteOptions, directions: Directions, dataSource source: RouterDataSource)
+    init(along route: Route, routeIndex: Int, options: RouteOptions, directions: Directions, dataSource source: RouterDataSource)
     
     /**
      Details about the user’s progress along the current route, leg, and step.
      */
     var routeProgress: RouteProgress { get }
     
-    var route: Route { get set }
+    var indexedRoute: IndexedRoute { get set }
+    
+    var route: Route { get }
     
     /**
      Given a users current location, returns a Boolean whether they are currently on the route.
@@ -64,9 +72,16 @@ public protocol Router: class, CLLocationManagerDelegate {
     var rawLocation: CLLocation? { get }
     
     /**
-     If true, the `RouteController` attempts to calculate a more optimal route for the user on an interval defined by `RouteControllerProactiveReroutingInterval`.
+     If true, the `RouteController` attempts to calculate a more optimal route for the user on an interval defined by `RouteControllerProactiveReroutingInterval`. If `refreshesRoute` is enabled too, reroute attempt will be fired after route refreshing.
      */
     var reroutesProactively: Bool { get set }
+    
+    /**
+     If true, the `RouteController` attempts to update ETA and route congestion on an interval defined by `RouteControllerProactiveReroutingInterval`.
+     
+     Refreshing will be used only if route's mode of transportation profile is set to `.automobileAvoidingTraffic`. If `reroutesProactively` is enabled too, rerouting will be checked after route is refreshed.
+     */
+    var refreshesRoute: Bool { get set }
     
     /**
      Advances the leg index.
@@ -83,15 +98,19 @@ public protocol Router: class, CLLocationManagerDelegate {
 protocol InternalRouter: class {
     var lastProactiveRerouteDate: Date? { get set }
     
+    var lastRouteRefresh: Date? { get set }
+    
     var routeTask: URLSessionDataTask? { get set }
     
     var didFindFasterRoute: Bool { get set }
     
     var lastRerouteLocation: CLLocation? { get set }
     
-    func setRoute(route: Route, proactive: Bool)
+    func setRoute(route: Route, routeIndex: Int, proactive: Bool)
     
     var isRerouting: Bool { get set }
+    
+    var isRefreshing: Bool { get set }
     
     var directions: Directions { get }
     
@@ -99,6 +118,60 @@ protocol InternalRouter: class {
 }
 
 extension InternalRouter where Self: Router {
+    
+    func refreshAndCheckForFasterRoute(from location: CLLocation, routeProgress: RouteProgress) {
+        if refreshesRoute {
+            refreshRoute(from: location, legIndex: routeProgress.legIndex) {
+                self.checkForFasterRoute(from: location, routeProgress: routeProgress)
+            }
+        } else {
+            checkForFasterRoute(from: location, routeProgress: routeProgress)
+        }
+    }
+    
+    func refreshRoute(from location: CLLocation, legIndex: Int, completion: @escaping ()->()) {
+        guard refreshesRoute, let routeIdentifier = route.routeIdentifier else {
+            completion()
+            return
+        }
+        
+        guard let lastRouteRefresh = lastRouteRefresh else {
+            self.lastRouteRefresh = location.timestamp
+            completion()
+            return
+        }
+        
+        guard location.timestamp.timeIntervalSince(lastRouteRefresh) >= RouteControllerProactiveReroutingInterval else {
+            completion()
+            return
+        }
+        
+        if isRefreshing {
+            completion()
+            return
+        }
+        isRefreshing = true
+        
+        directions.refreshRoute(responseIdentifier: routeIdentifier, routeIndex: indexedRoute.1, fromLegAtIndex: legIndex) { [weak self] (session, result) in
+            defer {
+                self?.isRefreshing = false
+                self?.lastRouteRefresh = nil
+                completion()
+            }
+            
+            guard case let .success(response) = result, let strongSelf = self else {
+                return
+            }
+            
+            strongSelf.routeProgress.refreshRoute(with: response.route)
+            
+            var userInfo = [RouteController.NotificationUserInfoKey: Any]()
+            userInfo[.routeProgressKey] = strongSelf.routeProgress
+            NotificationCenter.default.post(name: .routeControllerDidRefreshRoute, object: strongSelf, userInfo: userInfo)
+            strongSelf.delegate?.router(strongSelf, didRefresh: strongSelf.routeProgress)
+        }
+    }
+    
     func checkForFasterRoute(from location: CLLocation, routeProgress: RouteProgress) {
         // Check for faster route given users current location
         guard reroutesProactively else { return }
@@ -112,13 +185,13 @@ extension InternalRouter where Self: Router {
             return
         }
         
-        guard let lastProactiveRerouteDate = lastProactiveRerouteDate else {
+        guard let lastRouteValidationDate = lastProactiveRerouteDate else {
             self.lastProactiveRerouteDate = location.timestamp
             return
         }
         
         // Only check every so often for a faster route.
-        guard location.timestamp.timeIntervalSince(lastProactiveRerouteDate) >= RouteControllerProactiveReroutingInterval else {
+        guard location.timestamp.timeIntervalSince(lastRouteValidationDate) >= RouteControllerProactiveReroutingInterval else {
             return
         }
         
@@ -146,7 +219,7 @@ extension InternalRouter where Self: Router {
                 currentUpcomingManeuver == firstLeg.steps[1] && route.expectedTravelTime <= 0.9 * durationRemaining
             
             if routeIsFaster {
-                self?.setRoute(route: route, proactive: true)
+                self?.setRoute(route: route, routeIndex: 0, proactive: true)
             }
         }
     }
@@ -162,7 +235,6 @@ extension InternalRouter where Self: Router {
             guard case let .success(response) = result else {
                 return completion(session, result)
             }
-
             
             guard let mostSimilar = response.routes?.mostSimilar(to: progress.route) else {
                 return completion(session, result)
@@ -176,7 +248,7 @@ extension InternalRouter where Self: Router {
         }
     }
     
-    func setRoute(route: Route, proactive: Bool) {
+    func setRoute(route: Route, routeIndex: Int, proactive: Bool) {
         let spokenInstructionIndex = routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex
         
         if proactive {
@@ -186,7 +258,7 @@ extension InternalRouter where Self: Router {
             didFindFasterRoute = false
         }
         
-        routeProgress = RouteProgress(route: route, options: routeProgress.routeOptions, legIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
+        routeProgress = RouteProgress(route: route, routeIndex: routeIndex, options: routeProgress.routeOptions, legIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
     }
     
     func announce(reroute newRoute: Route, at location: CLLocation?, proactive: Bool) {

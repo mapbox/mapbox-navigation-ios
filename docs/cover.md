@@ -85,7 +85,7 @@ Directions.shared.calculate(routeOptions) { [weak self] (session, result) in
             return
         }
         // Pass the generated route to the the NavigationViewController
-        let viewController = NavigationViewController(for: route, routeOptions: routeOptions)
+        let viewController = NavigationViewController(for: route, routeIndex: 0, routeOptions: routeOptions)
         viewController.modalPresentationStyle = .fullScreen
         strongSelf.present(viewController, animated: true, completion: nil)
     }

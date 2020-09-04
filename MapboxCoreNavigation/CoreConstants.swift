@@ -75,6 +75,8 @@ public var RouteControllerMinimumDurationRemainingForProactiveRerouting: TimeInt
 
 /**
  The number of seconds between attempts to automatically calculate a more optimal route while traveling.
+ 
+ In addition to calculating a more optimal route, `RouteController` also refreshes time-dependent statistics about the route, such as traffic congestion and the remaining duration, as long as `DirectionsOptions.profileIdentifier` is set to `DirectionsProfileIdentifier.automobileAvoidingTraffic` and `RouteOptions.refreshingEnabled` is set to `true`.
  */
 public var RouteControllerProactiveReroutingInterval: TimeInterval = 120
 
@@ -129,6 +131,13 @@ public extension Notification.Name {
      - seealso: `passiveLocationDataSourceDidUpdate`
      */
     static let routeControllerProgressDidChange: Notification.Name = .init(rawValue: "RouteControllerProgressDidChange")
+    
+    /**
+     Posted when `RouteController` receives updated information about the current route.
+     
+     The user info dictionary contains the key `RouteController.NotificationUserInfoKey.routeProgressKey`.
+     */
+    static let routeControllerDidRefreshRoute: Notification.Name = .init(rawValue: "RouteControllerDidRefreshRoute")
     
     /**
      Posted after the user diverges from the expected route, just before `RouteController` attempts to calculate a new route.

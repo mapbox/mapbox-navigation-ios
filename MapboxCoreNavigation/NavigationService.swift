@@ -59,9 +59,14 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
     var eventsManager: NavigationEventsManager! { get }
     
     /**
+     The route along which the user is expected to travel, plus its index in the `RouteResponse`, if applicable.
+     */
+    var indexedRoute: IndexedRoute { get set }
+    
+    /**
      The route along which the user is expected to travel.
      */
-    var route: Route { get set }
+    var route: Route { get }
     
     /**
      The simulation mode of the service.
@@ -207,15 +212,17 @@ public class MapboxNavigationService: NSObject, NavigationService {
      Intializes a new `NavigationService`. Useful convienence initalizer for OBJ-C users, for when you just want to set up a service without customizing anything.
      
      - parameter route: The route to follow.
+     - parameter routeindex: The index of the route within the original `RouteController` object.
      */
-    convenience init(route: Route, routeOptions options: RouteOptions) {
-        self.init(route: route, routeOptions: options, directions: nil, locationSource: nil, eventsManagerType: nil)
+    convenience init(route: Route, routeIndex: Int, routeOptions options: RouteOptions) {
+        self.init(route: route, routeIndex: routeIndex, routeOptions: options, directions: nil, locationSource: nil, eventsManagerType: nil)
     }
     
     /**
      Intializes a new `NavigationService`.
      
      - parameter route: The route to follow.
+     - parameter routeIndex: The index of the route within the original `RouteResponse` object.
      - parameter directions: The Directions object that created `route`.
      - parameter locationSource: An optional override for the default `NaviationLocationManager`.
      - parameter eventsManagerType: An optional events manager type to use while tracking the route.
@@ -223,6 +230,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
      - parameter routerType: An optional router type to use for traversing the route.
      */
     required public init(route: Route,
+                         routeIndex: Int,
                          routeOptions: RouteOptions,
                          directions: Directions? = nil,
                          locationSource: NavigationLocationManager? = nil,
@@ -241,7 +249,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         }
         
         let routerType = routerType ?? DefaultRouter.self
-        router = routerType.init(along: route, options: routeOptions, directions: self.directions, dataSource: self)
+        router = routerType.init(along: route, routeIndex: routeIndex, options: routeOptions, directions: self.directions, dataSource: self)
         NavigationSettings.shared.distanceUnit = routeOptions.locale.usesMetric ? .kilometer : .mile
         
         let eventType = eventsManagerType ?? NavigationEventsManager.self
@@ -297,13 +305,17 @@ public class MapboxNavigationService: NSObject, NavigationService {
         delegate?.navigationService(self, didEndSimulating: progress, becauseOf: intent)
     }
     
-    public var route: Route {
+    public var indexedRoute: IndexedRoute {
         get {
-            return router.route
+            return router.indexedRoute
         }
         set {
-            router.route = newValue
+            router.indexedRoute = newValue
         }
+    }
+    
+    public var route: Route {
+        return indexedRoute.0
     }
     
     public func start() {
@@ -434,6 +446,10 @@ extension MapboxNavigationService: RouterDelegate {
     
     public func router(_ router: Router, didFailToRerouteWith error: Error) {
         delegate?.navigationService(self, didFailToRerouteWith: error)
+    }
+    
+    public func router(_ router: Router, didRefresh routeProgress: RouteProgress) {
+        delegate?.navigationService(self, didRefresh: routeProgress)
     }
     
     public func router(_ router: Router, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {

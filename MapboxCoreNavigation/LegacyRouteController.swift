@@ -29,10 +29,14 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     public var waypointArrivalThreshold: TimeInterval = 5.0
     
     public var reroutesProactively = true
+    
+    public var refreshesRoute: Bool = true
 
     var didFindFasterRoute = false
     
     var lastProactiveRerouteDate: Date?
+    
+    var lastRouteRefresh: Date?
 
     public var routeProgress: RouteProgress {
         get {
@@ -53,16 +57,21 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         }
     }
     
-    public var route: Route {
+    public var indexedRoute: IndexedRoute {
         get {
-            return routeProgress.route
+            return routeProgress.indexedRoute
         }
         set {
-            routeProgress = RouteProgress(route: newValue, options: routeProgress.routeOptions)
+            routeProgress.indexedRoute = newValue
         }
+    }
+    
+    public var route: Route {
+        return indexedRoute.0
     }
 
     var isRerouting = false
+    var isRefreshing = false
     var lastRerouteLocation: CLLocation?
 
     var routeTask: URLSessionDataTask?
@@ -78,10 +87,11 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
 
     var userSnapToStepDistanceFromManeuver: CLLocationDistance?
     
-    required public init(along route: Route, options: RouteOptions, directions: Directions = Directions.shared, dataSource source: RouterDataSource) {
+    required public init(along route: Route, routeIndex: Int, options: RouteOptions, directions: Directions = Directions.shared, dataSource source: RouterDataSource) {
         self.directions = directions
-        self._routeProgress = RouteProgress(route: route, options: options)
+        self._routeProgress = RouteProgress(route: route, routeIndex: routeIndex, options: options)
         self.dataSource = source
+        self.refreshesRoute = options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled
         UIDevice.current.isBatteryMonitoringEnabled = true
 
         super.init()
@@ -276,7 +286,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         updateSpokenInstructionProgress()
         
         // Check for faster route proactively (if reroutesProactively is enabled)
-        checkForFasterRoute(from: location, routeProgress: routeProgress)
+        refreshAndCheckForFasterRoute(from: location, routeProgress: routeProgress)
     }
     
     private func update(progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
@@ -376,8 +386,8 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
                 guard case let .route(options) = response.options, let route = response.routes?.first else {
                     return
                 }
-                strongSelf.route = route
-                strongSelf._routeProgress = RouteProgress(route: route, options: options, legIndex: 0)
+                strongSelf.indexedRoute = (route, 0) // unconditionally getting the first route above
+                strongSelf._routeProgress = RouteProgress(route: route, routeIndex: 0, options: options, legIndex: 0)
                 strongSelf._routeProgress.currentLegProgress.stepIndex = 0
                 strongSelf.announce(reroute: route, at: location, proactive: false)
             }

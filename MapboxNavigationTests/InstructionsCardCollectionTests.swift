@@ -31,8 +31,8 @@ class InstructionsCardCollectionTests: XCTestCase {
         ])
         let fakeRoute = Fixture.route(from: "route-with-banner-instructions", options: fakeOptions)
         
-        let service = MapboxNavigationService(route: initialRoute, routeOptions: fakeOptions, directions: DirectionsSpy(), simulating: .never)
-        let routeProgress = RouteProgress(route: fakeRoute, options: fakeOptions)
+        let service = MapboxNavigationService(route: initialRoute, routeIndex: 0, routeOptions: fakeOptions, directions: DirectionsSpy(), simulating: .never)
+        let routeProgress = RouteProgress(route: fakeRoute, routeIndex: 0, options: fakeOptions)
         subject.routeProgress = routeProgress
         
         return (collection: subject, progress: routeProgress, service: service, delegate: delegate)
