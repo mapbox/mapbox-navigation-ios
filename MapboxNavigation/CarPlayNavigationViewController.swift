@@ -74,6 +74,18 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
         }
     }
     
+    /**
+     Controls whether the main route style layer and its casing disappears
+     as the user location puck travels over it. Defaults to `false`.
+     
+     If `true`, the part of the route that has been traversed will be
+     rendered with full transparency, to give the illusion of a
+     disappearing route. To customize the color that appears on the
+     traversed section of a route, override the `traversedRouteColor` property
+     for the `NavigationMapView.appearance()`.
+     */
+    public var routeLineTracksTraversal: Bool = false
+    
     var edgePadding: UIEdgeInsets {
         let padding:CGFloat = 15
         return UIEdgeInsets(top: view.safeAreaInsets.top + padding,
@@ -339,7 +351,9 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
             speedLimitView.speedLimit = routeProgress.currentLegProgress.currentSpeedLimit
         }
         
-        mapView?.updateRoute(routeProgress)
+        if routeLineTracksTraversal {
+            mapView?.updateRoute(routeProgress)
+        }
     }
     
     /** Modifies the gesture recognizers to also update the map’s frame rate. */
