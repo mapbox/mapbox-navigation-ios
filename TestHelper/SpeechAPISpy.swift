@@ -1,7 +1,10 @@
 import Foundation
 import MapboxSpeech
 import AVKit
+import MapboxDirections
+import MapboxCoreNavigation
 @testable import MapboxNavigation
+
 /**
  This class can be used as a substitute for SpeechSynthesizer under test, in order to verify whether expected calls were made.
  */
@@ -30,21 +33,33 @@ public class SpeechAPISpy: SpeechSynthesizer {
     }
 }
 
-public class AudioPlayerDummy: AVAudioPlayer {
-    public let sound = NSDataAsset(name: "reroute-sound", bundle: .mapboxNavigation)!
-    
+public class SpeechSynthesizerSpy: SpeechSynthesizing {
     lazy var notifier: NotificationCenter = .default
     fileprivate typealias Note = Notification.Name.MapboxVoiceTests
     
-    override public func prepareToPlay() -> Bool {
+    public init() {}
+    
+    public var delegate: SpeechSynthesizingDelegate?
+    
+    public var muted = false
+    
+    public var volume: Float = 0
+    
+    public var isSpeaking = false
+    
+    public var locale: Locale?
+    
+    public func prepareIncomingSpokenInstructions(_ instructions: [SpokenInstruction], locale: Locale?) {
         notifier.post(name: Note.prepareToPlay, object: self)
-        return true
     }
     
-    override public func play() -> Bool {
+    public func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress, locale: Locale?) {
         notifier.post(name: Note.play, object: self)
-        return true
     }
+    
+    public func stopSpeaking() {}
+    
+    public func interruptSpeaking() {}
 }
 
 extension Notification.Name {

@@ -95,7 +95,7 @@ class BenchViewController: UITableViewController {
             destination.coordinate
         ])
         
-        let viewController = ControlRouteViewController(for: route, routeOptions: routeOptions)
+        let viewController = ControlRouteViewController(for: route, routeIndex: 0, routeOptions: routeOptions)
         viewController.delegate = self
         navigationController?.pushViewController(viewController, animated: true)
     }
