@@ -508,6 +508,7 @@ extension ViewController: WaypointConfirmationViewControllerDelegate {
             guard router.route.legs.count > router.routeProgress.legIndex + 1 else { return }
             
             router.routeProgress.legIndex += 1
+            navigationViewController.mapView?.unhighlightBuildings()
             navService.start()
         })
     }
