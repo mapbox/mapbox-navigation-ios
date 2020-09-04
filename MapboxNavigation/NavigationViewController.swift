@@ -237,6 +237,10 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     
     private var traversingTunnel = false
     
+    private var approachingDestinationThreshold: CLLocationDistance = 250.0
+    private var passedApproachingDestinationThreshold: Bool = false
+    private var currentLeg: RouteLeg?
+    
     /**
      Initializes a navigation view controller that presents the user interface for following a predefined route based on the given options.
 
@@ -581,6 +585,22 @@ extension NavigationViewController: NavigationServiceDelegate {
             mapViewController?.mapView.updateCourseTracking(location: location, animated: true)
         }
         
+        if currentLeg != progress.currentLeg {
+            currentLeg = progress.currentLeg
+            passedApproachingDestinationThreshold = false
+            mapViewController?.supressAutomaticAltitudeChanges = false
+            if let mapView = mapView {
+                mapView.altitude = mapView.defaultAltitude
+            }
+        }
+        
+        if let mapView = mapView, passedApproachingDestinationThreshold == false, waypointStyle != .annotation, let currentLegWaypoint = progress.currentLeg.destination?.targetCoordinate, progress.currentLegProgress.distanceRemaining < approachingDestinationThreshold {
+            passedApproachingDestinationThreshold = true
+            mapViewController?.supressAutomaticAltitudeChanges = true
+            mapView.highlightBuildings(at: [currentLegWaypoint], in3D: self.waypointStyle == .extrudedBuilding ? true : false)
+            mapView.altitude = MGLAltitudeForZoomLevel(16.1, mapView.camera.pitch, location.coordinate.latitude, mapView.frame.size)
+        }
+        
         // Finally, pass the message onto the NVC delegate.
         delegate?.navigationViewController(self, didUpdate: progress, with: location, rawLocation: rawLocation)
     }
@@ -623,13 +643,13 @@ extension NavigationViewController: NavigationServiceDelegate {
         if service.routeProgress.isFinalLeg && advancesToNextLeg && showsEndOfRouteFeedback {
             // In case of final destination present end of route view first and then zoom in to extruded building.
             showEndOfRouteFeedback { [weak self] _ in
-                self?.zoomInAndHighlightBuilding(for: service.router.location)
+                self?.frameDestinationArrival(for: service.router.location)
             }
         }
         return advancesToNextLeg
     }
     
-    private func zoomInAndHighlightBuilding(for location: CLLocation?) {
+    private func frameDestinationArrival(for location: CLLocation?) {
         if waypointStyle == .annotation { return }
         guard let mapViewController = self.mapViewController else { return }
         guard let location = location else { return }
@@ -649,14 +669,11 @@ extension NavigationViewController: NavigationServiceDelegate {
                           direction: location.course,
                           animated: true,
                           completionHandler: {
-                            // Highlight buildings which were marked as target destination coordinate in waypoint.
-                            mapView.highlightBuildings(at: self.routeOptions.waypoints.compactMap({ $0.targetCoordinate }), in3D: self.waypointStyle == .extrudedBuilding ? true : false)
-                            
                             // Update insets to be able to correctly center map view after presenting end of route view.
-                            mapViewController.updateMapViewContentInsets()
-                            
-                            // Update user course view to correctly place it in map view.
-                            mapView.updateCourseTracking(location: location, animated: false)
+                            mapViewController.updateMapViewContentInsets(animated: true, completion: {
+                                // Update user course view to correctly place it in map view.
+                                self.mapView?.updateCourseTracking(location: location, animated: false)
+                            })
         })
     }
     
