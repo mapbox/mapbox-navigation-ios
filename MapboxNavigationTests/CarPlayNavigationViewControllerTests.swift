@@ -55,7 +55,7 @@ fileprivate class CarPlayNavigationViewControllerTests: XCTestCase {
             CLLocationCoordinate2D(latitude: 47.212326, longitude: 9.512569),
         ])
         let route = Fixture.route(from: "multileg-route", options: options)
-        let navService = MapboxNavigationService(route: route, routeOptions: options)
+        let navService = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: options)
         let interface = FakeCPInterfaceController("test estimates display")
         let mapSpy = MapTemplateSpy()
         let trip = CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [])

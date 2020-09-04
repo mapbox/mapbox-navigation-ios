@@ -5,7 +5,7 @@ import CoreLocation
 
 class LocationTests: XCTestCase {
     var setup: (progress: RouteProgress, firstLocation: CLLocation) {
-        let progress = RouteProgress(route: route, options: routeOptions)
+        let progress = RouteProgress(route: route, routeIndex: 0, options: routeOptions)
         let firstCoord = progress.nearbyShape.coordinates.first!
         let firstLocation = CLLocation(latitude: firstCoord.latitude, longitude: firstCoord.longitude)
         

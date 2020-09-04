@@ -23,19 +23,28 @@ public typealias ContainerViewController = UIViewController & NavigationComponen
  */
 open class NavigationViewController: UIViewController, NavigationStatusPresenter {
     /**
-     A `Route` object constructed by [MapboxDirections](https://mapbox.github.io/mapbox-navigation-ios/directions/).
+     A `Route` object constructed by [MapboxDirections](https://docs.mapbox.com/ios/api/directions/) along with its index in a `RouteResponse`.
      
-     In cases where you need to update the route after navigation has started you can set a new `route` here and `NavigationViewController` will update its UI accordingly.
+     In cases where you need to update the route after navigation has started, you can set a new route here and `NavigationViewController` will update its UI accordingly.
      */
-    public var route: Route {
+    var indexedRoute: IndexedRoute {
         get {
-            return navigationService.route
+            return navigationService.indexedRoute
         }
         set {
-            navigationService.route = newValue
+            navigationService.indexedRoute = newValue
             
-            navigationComponents.forEach { $0.navigationService(navigationService, didRerouteAlong: newValue, at: nil, proactive: false) }
+            for component in navigationComponents {
+                component.navigationService(navigationService, didRerouteAlong: newValue.0, at: nil, proactive: false)
+            }
         }
+    }
+    
+    /**
+     A `Route` object constructed by [MapboxDirections](https://docs.mapbox.com/ios/api/directions/).
+     */
+    public var route: Route {
+        return indexedRoute.0
     }
     
     public var routeOptions: RouteOptions {
@@ -45,7 +54,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     }
     
     /**
-     An instance of `Directions` need for rerouting. See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
+     An instance of `Directions` need for rerouting. See [Mapbox Directions](https://docs.mapbox.com/ios/api/directions/) for further information.
      */
     public var directions: Directions {
         return navigationService!.directions
@@ -231,16 +240,17 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     /**
      Initializes a navigation view controller that presents the user interface for following a predefined route based on the given options.
 
-     The route may come directly from the completion handler of the [MapboxDirections.swift](https://mapbox.github.io/mapbox-navigation-ios/directions/) framework’s `Directions.calculate(_:completionHandler:)` method, or it may be unarchived or created from a JSON object.
+     The route may come directly from the completion handler of the [MapboxDirections](https://docs.mapbox.com/ios/api/directions/) framework’s `Directions.calculate(_:completionHandler:)` method, or it may be unarchived or created from a JSON object.
      
      - parameter route: The route to navigate along.
-     - parameter options: The navigation options to use for the navigation session.
+     - parameter routeIndex: The index of the route within the original `RouteResponse` object.
+     - parameter routeOptions: The route options used to get the route.
+     - parameter navigationOptions: The navigation options to use for the navigation session.
      */
-    required public init(for route: Route, routeOptions: RouteOptions,
-                         navigationOptions: NavigationOptions? = nil) {
+    required public init(for route: Route, routeIndex: Int, routeOptions: RouteOptions, navigationOptions: NavigationOptions? = nil) {
         super.init(nibName: nil, bundle: nil)
         
-        self.navigationService = navigationOptions?.navigationService ?? MapboxNavigationService(route: route, routeOptions: routeOptions)
+        self.navigationService = navigationOptions?.navigationService ?? MapboxNavigationService(route: route, routeIndex: routeIndex, routeOptions: routeOptions)
         self.navigationService.delegate = self
 
         let credentials = navigationService.directions.credentials
@@ -295,12 +305,13 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     Initializes a navigation view controller with the given route and navigation service.
      
      - parameter route: The route to navigate along.
+     - parameter routeIndex: The index of the route within the original `RouteResponse` object.
      - parameter routeOptions: the options object used to generate the route.
      - parameter navigationService: The navigation service that manages navigation along the route.
      */
-    convenience init(route: Route, routeOptions: RouteOptions, navigationService service: NavigationService) {
+    convenience init(route: Route, routeIndex: Int, routeOptions: RouteOptions, navigationService service: NavigationService) {
         let options = NavigationOptions(navigationService: service)
-        self.init(for: route, routeOptions: routeOptions, navigationOptions: options)
+        self.init(for: route, routeIndex: routeIndex, routeOptions: routeOptions, navigationOptions: options)
     }
     
     deinit {
@@ -523,6 +534,14 @@ extension NavigationViewController: NavigationServiceDelegate {
         }
 
         delegate?.navigationViewController(self, didFailToRerouteWith: error)
+    }
+    
+    public func navigationService(_ service: NavigationService, didRefresh routeProgress: RouteProgress) {
+        for component in navigationComponents {
+            component.navigationService(service, didRefresh: routeProgress)
+        }
+        
+        delegate?.navigationViewController(self, didRefresh: routeProgress)
     }
     
     public func navigationService(_ service: NavigationService, shouldDiscard location: CLLocation) -> Bool {

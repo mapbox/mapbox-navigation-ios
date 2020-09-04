@@ -30,7 +30,7 @@ public protocol NavigationServiceDelegate: class, UnimplementedLogging {
     /**
      Called immediately before the navigation service calculates a new route.
      
-     This method is called after `navigationService(_:shouldRerouteFrom:)` is called, simultaneously with the `NavigationServiceWillReroute` notification being posted, and before `navigationService(_:didRerouteAlong:)` is called.
+     This method is called after `navigationService(_:shouldRerouteFrom:)` is called, simultaneously with the `Notification.Name.routeControllerWillReroute` notification being posted, and before `navigationService(_:didRerouteAlong:)` is called.
      
      - parameter service: The navigation service that will calculate a new route.
      - parameter location: The user’s current location.
@@ -51,7 +51,7 @@ public protocol NavigationServiceDelegate: class, UnimplementedLogging {
     /**
      Called immediately after the navigation service receives a new route.
      
-     This method is called after `navigationService(_:willRerouteFrom:)` and simultaneously with the `NavigationServiceDidReroute` notification being posted.
+     This method is called after `navigationService(_:willRerouteFrom:)` and simultaneously with the `Notification.Name.routeControllerDidReroute` notification being posted.
      
      - parameter service: The navigation service that has calculated a new route.
      - parameter route: The new route.
@@ -61,12 +61,22 @@ public protocol NavigationServiceDelegate: class, UnimplementedLogging {
     /**
      Called when the navigation service fails to receive a new route.
      
-     This method is called after `navigationService(_:willRerouteFrom:)` and simultaneously with the `NavigationServiceDidFailToReroute` notification being posted.
+     This method is called after `navigationService(_:willRerouteFrom:)` and simultaneously with the `Notification.Name.routeControllerDidFailToReroute` notification being posted.
      
      - parameter service: The navigation service that has calculated a new route.
      - parameter error: An error raised during the process of obtaining a new route.
      */
     func navigationService(_ service: NavigationService, didFailToRerouteWith error: Error)
+    
+    /**
+     Called immediately after the navigation service refreshes the route.
+     
+     This method is called simultaneously with the `Notification.Name.routeControllerDidRefreshRoute` notification being posted.
+     
+     - parameter service: The navigation service that has refreshed the route.
+     - parameter routeProgress: The route progress updated with the refreshed route.
+     */
+    func navigationService(_ service: NavigationService, didRefresh routeProgress: RouteProgress)
     
     /**
      Called when the navigation service updates the route progress model.
@@ -220,6 +230,13 @@ public extension NavigationServiceDelegate {
      */
     func navigationService(_ service: NavigationService, didFailToRerouteWith error: Error) {
         logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationService(_ service: NavigationService, didRefresh routeProgress: RouteProgress) {
+        logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .info)
     }
     
     /**

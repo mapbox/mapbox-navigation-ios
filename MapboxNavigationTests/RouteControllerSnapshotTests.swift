@@ -46,7 +46,7 @@ class RouteControllerSnapshotTests: FBSnapshotTestCase {
         replayManager = locationManager
         locationManager.startDate = Date()
         let equivalentRouteOptions = NavigationRouteOptions(navigationMatchOptions: options)
-        let routeController = RouteController(along: route, options: equivalentRouteOptions, dataSource: self)
+        let routeController = RouteController(along: route, routeIndex: 0, options: equivalentRouteOptions, dataSource: self)
         locationManager.delegate = routeController
         
         var snappedLocations = [CLLocation]()

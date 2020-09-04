@@ -33,7 +33,7 @@ class GuidanceCardsSnapshotTests: SnapshotTest {
             return cards.view.constraintsForPinning(to: container)
         }
         
-        let progress = RouteProgress(route: route, options: tertiaryRouteOptions, legIndex: 0, spokenInstructionIndex: 0)
+        let progress = RouteProgress(route: route, routeIndex: 0, options: tertiaryRouteOptions, legIndex: 0, spokenInstructionIndex: 0)
         
         subject.routeProgress = progress
         
@@ -55,7 +55,7 @@ class GuidanceCardsSnapshotTests: SnapshotTest {
             return cards.view.constraintsForPinning(to: container)
         }
         
-        let progress = RouteProgress(route: route, options: tertiaryRouteOptions, legIndex: 0, spokenInstructionIndex: 0)
+        let progress = RouteProgress(route: route, routeIndex: 0, options: tertiaryRouteOptions, legIndex: 0, spokenInstructionIndex: 0)
         progress.currentLegProgress.stepIndex = 1
         
         subject.routeProgress = progress
@@ -78,7 +78,7 @@ class GuidanceCardsSnapshotTests: SnapshotTest {
             return cards.view.constraintsForPinning(to: container)
         }
         
-        let progress = RouteProgress(route: route, options: tertiaryRouteOptions, legIndex: 0, spokenInstructionIndex: 0)
+        let progress = RouteProgress(route: route, routeIndex: 0, options: tertiaryRouteOptions, legIndex: 0, spokenInstructionIndex: 0)
         progress.currentLegProgress.stepIndex = 5
         
         subject.routeProgress = progress

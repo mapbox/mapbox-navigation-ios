@@ -474,13 +474,13 @@ extension CarPlayManager: CPMapTemplateDelegate {
 
         mapTemplate.hideTripPreviews()
 
-        let (route, options) = routeChoice.userInfo as! (Route, RouteOptions)
+        let (route, routeIndex, options) = routeChoice.userInfo as! (Route, Int, RouteOptions)
         
         let desiredSimulationMode: SimulationMode = simulatesLocations ? .always : .onPoorGPS
         
         let service = navigationService ??
-            delegate?.carPlayManager(self, navigationServiceAlong: route, routeOptions: options, desiredSimulationMode: desiredSimulationMode) ??
-            MapboxNavigationService(route: route, routeOptions: options, simulating: desiredSimulationMode)
+            delegate?.carPlayManager(self, navigationServiceAlong: route, routeIndex: routeIndex, routeOptions: options, desiredSimulationMode: desiredSimulationMode) ??
+            MapboxNavigationService(route: route, routeIndex: routeIndex, routeOptions: options, simulating: desiredSimulationMode)
         
         navigationService = service //store the service it was newly created/fetched
 
@@ -545,7 +545,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         }
         carPlayMapViewController.isOverviewingRoutes = true
         let mapView = carPlayMapViewController.mapView
-        let (route, _) = routeChoice.userInfo as! (Route, RouteOptions)
+        let (route, _, _) = routeChoice.userInfo as! (Route, Int, RouteOptions)
         
         let estimates = CPTravelEstimates(distanceRemaining: Measurement(distance: route.distance).localized(),
                                           timeRemaining: route.expectedTravelTime)

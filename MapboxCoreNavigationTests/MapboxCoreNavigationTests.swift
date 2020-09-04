@@ -22,7 +22,7 @@ class MapboxCoreNavigationTests: XCTestCase {
     var navigation: MapboxNavigationService!
     
     func testNavigationNotificationsInfoDict() {
-        navigation = MapboxNavigationService(route: route, routeOptions: routeOptions, directions: directions, simulating: .never)
+        navigation = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: routeOptions, directions: directions, simulating: .never)
         let now = Date()
         let steps = route.legs.first!.steps
         let coordinates = steps[2].shape!.coordinates + steps[3].shape!.coordinates
@@ -51,7 +51,7 @@ class MapboxCoreNavigationTests: XCTestCase {
     }
     
     func testDepart() {
-        navigation = MapboxNavigationService(route: route, routeOptions: routeOptions, directions: directions, simulating: .never)
+        navigation = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: routeOptions, directions: directions, simulating: .never)
         
         // Coordinates from first step
         let coordinates = route.legs[0].steps[0].shape!.coordinates
@@ -87,7 +87,7 @@ class MapboxCoreNavigationTests: XCTestCase {
                                                               altitude: -1, horizontalAccuracy: -1, verticalAccuracy: -1, course: -1, speed: 10,
                                                               timestamp: now + $0.offset) }
         
-        navigation = MapboxNavigationService(route: route, routeOptions: routeOptions, directions: directions, simulating: .never)
+        navigation = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: routeOptions, directions: directions, simulating: .never)
         expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: navigation.router) { (notification) -> Bool in
             let routeProgress = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
             
@@ -110,7 +110,7 @@ class MapboxCoreNavigationTests: XCTestCase {
         let locations = coordinates.enumerated().map { CLLocation(coordinate: $0.element, altitude: -1, horizontalAccuracy: -1, verticalAccuracy: -1, timestamp: now + $0.offset) }
         
         let locationManager = ReplayLocationManager(locations: locations)
-        navigation = MapboxNavigationService(route: route, routeOptions: routeOptions, directions: directions, locationSource: locationManager, simulating: .never)
+        navigation = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: routeOptions, directions: directions, locationSource: locationManager, simulating: .never)
         
         expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: navigation.router) { (notification) -> Bool in
             let routeProgress = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
@@ -142,7 +142,7 @@ class MapboxCoreNavigationTests: XCTestCase {
         }
         
         let locationManager = ReplayLocationManager(locations: locations + offRouteLocations)
-        navigation = MapboxNavigationService(route: route, routeOptions: routeOptions, directions: directions, locationSource: locationManager, simulating: .never)
+        navigation = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: routeOptions, directions: directions, locationSource: locationManager, simulating: .never)
         expectation(forNotification: .routeControllerWillReroute, object: navigation.router) { (notification) -> Bool in
             XCTAssertEqual(notification.userInfo?.count, 1)
             
@@ -168,7 +168,7 @@ class MapboxCoreNavigationTests: XCTestCase {
         }
 
         let locationManager = DummyLocationManager()
-        navigation = MapboxNavigationService(route: route, routeOptions: routeOptions, directions: directions, locationSource: locationManager, simulating: .never)
+        navigation = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: routeOptions, directions: directions, locationSource: locationManager, simulating: .never)
 
         expectation(forNotification: .routeControllerProgressDidChange, object: navigation.router) { (notification) -> Bool in
             let routeProgress = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
@@ -216,7 +216,7 @@ class MapboxCoreNavigationTests: XCTestCase {
     func testOrderOfExecution() {
         let trace = Fixture.generateTrace(for: route).shiftedToPresent().qualified()
         let directions = DirectionsSpy()
-        navigation = MapboxNavigationService(route: route, routeOptions: routeOptions, directions: directions)
+        navigation = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: routeOptions, directions: directions)
         
         struct InstructionPoint {
             enum InstructionType {
@@ -311,7 +311,7 @@ class MapboxCoreNavigationTests: XCTestCase {
     
     func testFailToReroute() {
         let directionsClientSpy = DirectionsSpy()
-        navigation = MapboxNavigationService(route: route, routeOptions: routeOptions, directions: directionsClientSpy,  simulating: .never)
+        navigation = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: routeOptions, directions: directionsClientSpy,  simulating: .never)
         
         expectation(forNotification: .routeControllerWillReroute, object: navigation.router) { (notification) -> Bool in
             return true
