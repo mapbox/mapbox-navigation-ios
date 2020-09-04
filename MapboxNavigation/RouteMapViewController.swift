@@ -102,6 +102,11 @@ class RouteMapViewController: UIViewController {
     typealias LabelRoadNameCompletionHandler = (_ defaultRaodNameAssigned: Bool) -> Void
 
     var labelRoadNameCompletionHandler: (LabelRoadNameCompletionHandler)?
+    
+    /**
+     A Boolean value that determines whether the map altitude should change based on internal conditions.
+    */
+    var supressAutomaticAltitudeChanges: Bool = false
 
     convenience init(navigationService: NavigationService, delegate: RouteMapViewControllerDelegate? = nil, topBanner: ContainerViewController, bottomBanner: ContainerViewController) {
         self.init()
@@ -492,7 +497,9 @@ extension RouteMapViewController: NavigationComponent {
     }
     
     public func navigationService(_ service: NavigationService, didPassSpokenInstructionPoint instruction: SpokenInstruction, routeProgress: RouteProgress) {
-        updateCameraAltitude(for: routeProgress)
+        if !supressAutomaticAltitudeChanges {
+            updateCameraAltitude(for: routeProgress)
+        }
     }
     
     func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
