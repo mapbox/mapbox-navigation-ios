@@ -76,8 +76,8 @@
 * If the user’s raw course as reported by Core Location differs significantly from the direction of the road ahead, the camera and user puck are oriented according to the raw course. ([#2417](https://github.com/mapbox/mapbox-navigation-ios/pull/2417))
 * `RouteController` now tracks the user’s location more accurately within roundabouts. ([#2417](https://github.com/mapbox/mapbox-navigation-ios/pull/2417))
 * Fixed an issue where departure instructions were briefly missing when beginning turn-by-turn navigation. ([#2417](https://github.com/mapbox/mapbox-navigation-ios/pull/2417))
-* Removed the `RouteController.projectedLocation(for:)` method in favor of `RouteController.location`. It is no longer possible to predict the user’s location at an arbitrary time. ([#2583](https://github.com/mapbox/mapbox-navigation-ios/issues/2583))
-* Renamed the `Router.advanceLegIndex(location:)` method to `Router.advanceLegIndex()`. It is no longer possible to advance to an arbitrary leg using this method. ([#2583](https://github.com/mapbox/mapbox-navigation-ios/issues/2583))
+* Removed the `RouteController.projectedLocation(for:)` method in favor of `RouteController.location`. It is no longer possible to predict the user’s location at an arbitrary time. ([#2610](https://github.com/mapbox/mapbox-navigation-ios/pull/2610))
+* Renamed the `Router.advanceLegIndex(location:)` method to `Router.advanceLegIndex()`. It is no longer possible to advance to an arbitrary leg using this method. ([#2610](https://github.com/mapbox/mapbox-navigation-ios/pull/2610))
 
 ### Other changes
 
