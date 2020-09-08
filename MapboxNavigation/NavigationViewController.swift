@@ -591,6 +591,7 @@ extension NavigationViewController: NavigationServiceDelegate {
             currentLeg = progress.currentLeg
             passedApproachingDestinationThreshold = false
             mapViewController?.supressAutomaticAltitudeChanges = false
+            foundAllBuildings = false
             if let mapView = mapView {
                 mapView.altitude = mapView.defaultAltitude
             }
