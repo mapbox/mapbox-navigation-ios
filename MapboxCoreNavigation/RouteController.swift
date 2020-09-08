@@ -91,15 +91,23 @@ open class RouteController: NSObject {
      - important: If the rawLocation is outside of the route snapping tolerances, this value is nil.
      */
     var snappedLocation: CLLocation? {
-        let status = navigator.status(at: Date())
+        guard let locationUpdateDate = lastLocationUpdateDate else {
+            return nil
+        }
+
+        let status = navigator.status(at: locationUpdateDate)
         guard status.routeState == .tracking || status.routeState == .complete else {
             return nil
         }
         return CLLocation(status.location)
     }
-    
+
+    private var lastLocationUpdateDate: Date? {
+        return rawLocation?.timestamp
+    }
+
     var heading: CLHeading?
-    
+
     /**
      The most recently received user location.
      - note: This is a raw location received from `locationManager`. To obtain an idealized location, use the `location` property.
@@ -188,7 +196,6 @@ open class RouteController: NSObject {
     /// updateRouteLeg is used to notify nav-native of the developer changing the active route-leg.
     private func updateRouteLeg(to value: Int) {
         let legIndex = UInt32(value)
-        navigator.changeRouteLeg(forRoute: 0, leg: legIndex)
         let newStatus = navigator.changeRouteLeg(forRoute: 0, leg: legIndex)
         updateIndexes(status: newStatus, progress: routeProgress)
     }
@@ -200,10 +207,10 @@ open class RouteController: NSObject {
             return
         }
         
-        rawLocation = locations.last
+        rawLocation = location
         
         locations.forEach { navigator.updateLocation(for: FixLocation($0)) }
-        
+
         let status = navigator.status(at: location.timestamp)
         
         // Notify observers if the step’s remaining distance has changed.
@@ -348,17 +355,8 @@ open class RouteController: NSObject {
         NotificationCenter.default.post(name: .routeControllerDidPassVisualInstructionPoint, object: self, userInfo: info)
     }
     
-    /**
-     Returns an estimated location at a given timestamp. The timestamp must be
-     a future timestamp compared to the last location received by the location manager.
-     */
-    public func projectedLocation(for timestamp: Date) -> CLLocation {
-        return CLLocation(navigator.status(at:timestamp).location)
-    }
-    
-    public func advanceLegIndex(location: CLLocation) {
-        let status = navigator.status(at: location.timestamp)
-        routeProgress.legIndex = Int(status.legIndex)
+    public func advanceLegIndex() {
+        updateRouteLeg(to: routeProgress.legIndex + 1)
     }
     
     public func enableLocationRecording() {

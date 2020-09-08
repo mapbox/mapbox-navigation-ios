@@ -222,7 +222,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         return isCloseToCurrentStep
     }
     
-    public func advanceLegIndex(location: CLLocation) {
+    public func advanceLegIndex() {
         precondition(!routeProgress.isFinalLeg, "Can not increment leg index beyond final leg.")
         routeProgress.legIndex += 1
     }
@@ -341,7 +341,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
                 let advancesToNextLeg = delegate?.router(self, didArriveAt: currentDestination) ?? RouteController.DefaultBehavior.didArriveAtWaypoint
                 
                 guard !routeProgress.isFinalLeg && advancesToNextLeg else { return }
-                advanceLegIndex(location: location)
+                advanceLegIndex()
                 updateDistanceToManeuver()
             } else { //we are approaching the destination
                 delegate?.router(self, willArriveAt: currentDestination, after: legProgress.durationRemaining, distance: legProgress.distanceRemaining)
