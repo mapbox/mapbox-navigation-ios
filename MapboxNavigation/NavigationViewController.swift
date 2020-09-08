@@ -590,7 +590,7 @@ extension NavigationViewController: NavigationServiceDelegate {
         if currentLeg != progress.currentLeg {
             currentLeg = progress.currentLeg
             passedApproachingDestinationThreshold = false
-            mapViewController?.supressAutomaticAltitudeChanges = false
+            mapViewController?.suppressAutomaticAltitudeChanges = false
             foundAllBuildings = false
             if let mapView = mapView {
                 mapView.altitude = mapView.defaultAltitude
@@ -599,7 +599,7 @@ extension NavigationViewController: NavigationServiceDelegate {
         
         if let mapView = mapView, passedApproachingDestinationThreshold == false, progress.currentLegProgress.distanceRemaining < approachingDestinationThreshold {
             passedApproachingDestinationThreshold = true
-            mapViewController?.supressAutomaticAltitudeChanges = true
+            mapViewController?.suppressAutomaticAltitudeChanges = true
             mapView.altitude = MGLAltitudeForZoomLevel(16.1, mapView.camera.pitch, location.coordinate.latitude, mapView.frame.size)
         }
         

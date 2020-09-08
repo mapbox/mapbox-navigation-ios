@@ -447,8 +447,8 @@ extension ViewController: MGLMapViewDelegate {
         return annotation == trackPolyline || annotation == rawTrackPolyline ? 4 : 1
     }
     
-    func mapView(_ mapView: MGLMapView, regionDidChangeWith reason: MGLCameraChangeReason, animated: Bool) {
-        if foundAllBuildings == false, let navMapView = mapView as? NavigationMapView, reason != .programmatic {
+    func mapViewRegionIsChanging(_ mapView: MGLMapView) {
+        if activeNavigationViewController == nil, foundAllBuildings == false, let navMapView = mapView as? NavigationMapView {
             let buildingHighlightCoordinates = waypoints.compactMap { $0.targetCoordinate }
             if buildingHighlightCoordinates.count > 0 {
                 foundAllBuildings = navMapView.highlightBuildings(at: buildingHighlightCoordinates, in3D: false)
