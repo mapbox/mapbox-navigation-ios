@@ -194,7 +194,6 @@ open class RouteController: NSObject {
     /// updateRouteLeg is used to notify nav-native of the developer changing the active route-leg.
     private func updateRouteLeg(to value: Int) {
         let legIndex = UInt32(value)
-        navigator.changeRouteLeg(forRoute: 0, leg: legIndex)
         let newStatus = navigator.changeRouteLeg(forRoute: 0, leg: legIndex)
         updateIndexes(status: newStatus, progress: routeProgress)
     }
@@ -355,9 +354,8 @@ open class RouteController: NSObject {
         NotificationCenter.default.post(name: .routeControllerDidPassVisualInstructionPoint, object: self, userInfo: info)
     }
     
-    public func advanceLegIndex(location: CLLocation) {
-        let status = navigator.status(at: location.timestamp)
-        routeProgress.legIndex = Int(status.legIndex)
+    public func advanceLegIndex() {
+        updateRouteLeg(to: routeProgress.legIndex + 1)
     }
     
     public func enableLocationRecording() {
