@@ -348,14 +348,6 @@ open class RouteController: NSObject {
         NotificationCenter.default.post(name: .routeControllerDidPassVisualInstructionPoint, object: self, userInfo: info)
     }
     
-    /**
-     Returns an estimated location at a given timestamp. The timestamp must be
-     a future timestamp compared to the last location received by the location manager.
-     */
-    public func projectedLocation(for timestamp: Date) -> CLLocation {
-        return CLLocation(navigator.status(at:timestamp).location)
-    }
-    
     public func advanceLegIndex(location: CLLocation) {
         let status = navigator.status(at: location.timestamp)
         routeProgress.legIndex = Int(status.legIndex)
