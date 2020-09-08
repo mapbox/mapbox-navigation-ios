@@ -77,6 +77,8 @@ class ViewController: UIViewController {
         print(error.localizedDescription)
         self?.presentAlert(message: error.localizedDescription)
     }
+    
+    private var foundAllBuildings = false
 
     // MARK: - Init
     
@@ -162,7 +164,7 @@ class ViewController: UIViewController {
     
         // Example of highlighting buildings in 2d and directly using the API on NavigationMapView.
         let buildingHighlightCoordinates = waypoints.compactMap { $0.targetCoordinate }
-        mapView.highlightBuildings(at: buildingHighlightCoordinates, in3D: false)
+        foundAllBuildings = mapView.highlightBuildings(at: buildingHighlightCoordinates, in3D: false)
 
         requestRoute()
     }
@@ -443,6 +445,15 @@ extension ViewController: MGLMapViewDelegate {
     
     func mapView(_ mapView: MGLMapView, lineWidthForPolylineAnnotation annotation: MGLPolyline) -> CGFloat {
         return annotation == trackPolyline || annotation == rawTrackPolyline ? 4 : 1
+    }
+    
+    func mapView(_ mapView: MGLMapView, regionDidChangeWith reason: MGLCameraChangeReason, animated: Bool) {
+        if foundAllBuildings == false, let navMapView = mapView as? NavigationMapView, reason != .programmatic {
+            let buildingHighlightCoordinates = waypoints.compactMap { $0.targetCoordinate }
+            if buildingHighlightCoordinates.count > 0 {
+                foundAllBuildings = navMapView.highlightBuildings(at: buildingHighlightCoordinates, in3D: false)
+            }
+        }
     }
 }
 

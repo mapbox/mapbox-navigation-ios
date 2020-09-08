@@ -241,6 +241,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     private var passedApproachingDestinationThreshold: Bool = false
     private var currentLeg: RouteLeg?
     
+    private var foundAllBuildings = false
+    
     /**
      Initializes a navigation view controller that presents the user interface for following a predefined route based on the given options.
 
@@ -594,11 +596,14 @@ extension NavigationViewController: NavigationServiceDelegate {
             }
         }
         
-        if let mapView = mapView, passedApproachingDestinationThreshold == false, waypointStyle != .annotation, let currentLegWaypoint = progress.currentLeg.destination?.targetCoordinate, progress.currentLegProgress.distanceRemaining < approachingDestinationThreshold {
+        if let mapView = mapView, passedApproachingDestinationThreshold == false, progress.currentLegProgress.distanceRemaining < approachingDestinationThreshold {
             passedApproachingDestinationThreshold = true
             mapViewController?.supressAutomaticAltitudeChanges = true
-            mapView.highlightBuildings(at: [currentLegWaypoint], in3D: self.waypointStyle == .extrudedBuilding ? true : false)
             mapView.altitude = MGLAltitudeForZoomLevel(16.1, mapView.camera.pitch, location.coordinate.latitude, mapView.frame.size)
+        }
+        
+        if let mapView = mapView, foundAllBuildings == false, passedApproachingDestinationThreshold == true, waypointStyle != .annotation, let currentLegWaypoint = progress.currentLeg.destination?.targetCoordinate {
+            foundAllBuildings = mapView.highlightBuildings(at: [currentLegWaypoint], in3D: self.waypointStyle == .extrudedBuilding ? true : false)
         }
         
         // Finally, pass the message onto the NVC delegate.
