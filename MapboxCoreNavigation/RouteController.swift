@@ -102,7 +102,9 @@ open class RouteController: NSObject {
         return CLLocation(status.location)
     }
 
-    private var lastLocationUpdateDate: Date?
+    private var lastLocationUpdateDate: Date? {
+        return rawLocation?.timestamp
+    }
 
     var heading: CLHeading?
 
@@ -209,7 +211,6 @@ open class RouteController: NSObject {
         
         locations.forEach { navigator.updateLocation(for: FixLocation($0)) }
 
-        lastLocationUpdateDate = location.timestamp
         let status = navigator.status(at: location.timestamp)
         
         // Notify observers if the step’s remaining distance has changed.
