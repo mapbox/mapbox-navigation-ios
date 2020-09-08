@@ -76,6 +76,7 @@
 * If the user’s raw course as reported by Core Location differs significantly from the direction of the road ahead, the camera and user puck are oriented according to the raw course. ([#2417](https://github.com/mapbox/mapbox-navigation-ios/pull/2417))
 * `RouteController` now tracks the user’s location more accurately within roundabouts. ([#2417](https://github.com/mapbox/mapbox-navigation-ios/pull/2417))
 * Fixed an issue where departure instructions were briefly missing when beginning turn-by-turn navigation. ([#2417](https://github.com/mapbox/mapbox-navigation-ios/pull/2417))
+* Removed `RouteController.projectedLocation(for:)` method and `location` parameter from `advanceLegIndex` method to avoid inconsistencies with utilized timestamps ([#2583](https://github.com/mapbox/mapbox-navigation-ios/issues/2583))
 
 ### Other changes
 
