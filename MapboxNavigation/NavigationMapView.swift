@@ -678,7 +678,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         let fractionTraveled = routeProgress.fractionTraveled
         
         // In case if route was fully travelled - remove main route and its casing.
-        if Int(fractionTraveled) == 1 {
+        if fractionTraveled >= 1.0 {
             style?.remove([mainRouteLayer, mainRouteCasingLayer])
             return
         }
