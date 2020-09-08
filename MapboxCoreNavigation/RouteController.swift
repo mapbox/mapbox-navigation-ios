@@ -91,15 +91,21 @@ open class RouteController: NSObject {
      - important: If the rawLocation is outside of the route snapping tolerances, this value is nil.
      */
     var snappedLocation: CLLocation? {
-        let status = navigator.status(at: Date())
+        guard let locationUpdateDate = lastLocationUpdateDate else {
+            return nil
+        }
+
+        let status = navigator.status(at: locationUpdateDate)
         guard status.routeState == .tracking || status.routeState == .complete else {
             return nil
         }
         return CLLocation(status.location)
     }
-    
+
+    private var lastLocationUpdateDate: Date?
+
     var heading: CLHeading?
-    
+
     /**
      The most recently received user location.
      - note: This is a raw location received from `locationManager`. To obtain an idealized location, use the `location` property.
@@ -200,10 +206,11 @@ open class RouteController: NSObject {
             return
         }
         
-        rawLocation = locations.last
+        rawLocation = location
         
         locations.forEach { navigator.updateLocation(for: FixLocation($0)) }
-        
+
+        lastLocationUpdateDate = location.timestamp
         let status = navigator.status(at: location.timestamp)
         
         // Notify observers if the step’s remaining distance has changed.
