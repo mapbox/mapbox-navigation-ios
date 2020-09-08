@@ -17,6 +17,9 @@ open class NextBannerView: UIView, NavigationComponent {
         }
     }
     public var isCurrentlyVisible: Bool = false
+    private var shouldHide: Bool = false
+    private var shouldShow: Bool = false
+    private var isAnimating: Bool = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -58,6 +61,8 @@ open class NextBannerView: UIView, NavigationComponent {
         bottomSeparatorView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(bottomSeparatorView)
         self.bottomSeparatorView = bottomSeparatorView
+        
+        clipsToBounds = true
     }
     
     override open func prepareForInterfaceBuilder() {
@@ -132,17 +137,45 @@ open class NextBannerView: UIView, NavigationComponent {
     
     public func show() {
         guard isHidden, !isCurrentlyVisible else { return }
-        UIView.defaultAnimation(0.3, animations: {
-            self.isCurrentlyVisible = true
-            self.isHidden = false
-        }, completion: nil)
+        
+        shouldShow = true
+        
+        if !isAnimating {
+            isAnimating = true
+            
+            UIView.defaultAnimation(1.0, animations: {
+                self.isCurrentlyVisible = true
+                self.isHidden = false
+            }) { _ in
+                self.shouldShow = false
+                self.isAnimating = false
+                
+                if self.shouldHide {
+                    self.hide()
+                }
+            }
+        }
     }
     
     public func hide() {
         guard !isHidden, isCurrentlyVisible else { return }
-        UIView.defaultAnimation(0.3, animations: {
-            self.isCurrentlyVisible = false
-            self.isHidden = true
-        }, completion: nil)
+        
+        shouldHide = true
+        
+        if !isAnimating {
+            isAnimating = true
+            
+            UIView.defaultAnimation(1.0, animations: {
+                self.isCurrentlyVisible = false
+                self.isHidden = true
+            }) { _ in
+                self.shouldHide = false
+                self.isAnimating = false
+                
+                if self.shouldShow {
+                    self.show()
+                }
+            }
+        }
     }
 }
