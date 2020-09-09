@@ -91,8 +91,6 @@ open class PassiveLocationDataSource: NSObject {
             return
         }
         
-        let endpointConfig = TileEndpointConfiguration(directions: directions, tilesVersion: tilesVersion)
-
         // ~/Library/Caches/tld.app.bundle.id/.mapbox/2020_08_08-03_00_00/
         guard var tilesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first else {
             preconditionFailure("No Caches directory to create the tile directory inside")
@@ -104,10 +102,16 @@ open class PassiveLocationDataSource: NSObject {
         tilesURL.appendPathComponent(tilesVersion, isDirectory: true)
         // Tiles with different versions shouldn't be mixed, it may cause inappropriate Navigator's behaviour
         try FileManager.default.createDirectory(at: tilesURL, withIntermediateDirectories: true, attributes: nil)
+        configureNavigator(withURL: tilesURL, tilesVersion: tilesVersion)
+    }
+
+    func configureNavigator(withURL tilesURL: URL, tilesVersion: String) {
+        let endpointConfig = TileEndpointConfiguration(directions: directions, tilesVersion: tilesVersion)
+
         let params = RouterParams(tilesPath: tilesURL.path, inMemoryTileCache: nil, mapMatchingSpatialCache: nil, threadsCount: nil, endpointConfig: endpointConfig)
+        navigator.configureRouter(for: params)
         
         isConfigured = true
-        navigator.configureRouter(for: params)
     }
     
     /**
