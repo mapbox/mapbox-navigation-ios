@@ -67,8 +67,6 @@ extension BottomBannerViewController {
     }
     
     fileprivate func setupVerticalCompactLayout(_ c: inout [NSLayoutConstraint]) {
-        c.append(bottomBannerView.heightAnchor.constraint(equalToConstant: 50))
-        
         c.append(cancelButton.widthAnchor.constraint(equalTo: bottomBannerView.heightAnchor))
         c.append(cancelButton.topAnchor.constraint(equalTo: bottomBannerView.topAnchor))
         c.append(cancelButton.trailingAnchor.constraint(equalTo: bottomBannerView.trailingAnchor))
@@ -81,7 +79,8 @@ extension BottomBannerViewController {
         c.append(distanceRemainingLabel.lastBaselineAnchor.constraint(equalTo: timeRemainingLabel.lastBaselineAnchor))
         
         c.append(verticalDividerView.widthAnchor.constraint(equalToConstant: 1))
-        c.append(verticalDividerView.heightAnchor.constraint(equalToConstant: 40))
+        c.append(verticalDividerView.topAnchor.constraint(equalTo: bottomBannerView.topAnchor, constant: 10))
+        c.append(verticalDividerView.bottomAnchor.constraint(equalTo: bottomBannerView.bottomAnchor, constant: -10))
         c.append(verticalDividerView.centerYAnchor.constraint(equalTo: bottomBannerView.centerYAnchor))
         c.append(verticalDividerView.trailingAnchor.constraint(equalTo: cancelButton.leadingAnchor))
         
@@ -95,9 +94,6 @@ extension BottomBannerViewController {
     }
     
     fileprivate func setupVerticalRegularLayout(_ c: inout [NSLayoutConstraint]) {
-        let size = bottomBannerView.heightAnchor.constraint(equalToConstant: 80)
-        c.append(size)
-        
         c.append(timeRemainingLabel.leadingAnchor.constraint(equalTo: bottomBannerView.leadingAnchor, constant: 10))
         c.append(timeRemainingLabel.lastBaselineAnchor.constraint(equalTo: bottomBannerView.centerYAnchor, constant: 0))
         
@@ -110,7 +106,8 @@ extension BottomBannerViewController {
         c.append(cancelButton.bottomAnchor.constraint(equalTo: bottomBannerView.bottomAnchor))
         
         c.append(verticalDividerView.widthAnchor.constraint(equalToConstant: 1))
-        c.append(verticalDividerView.heightAnchor.constraint(equalToConstant: 40))
+        c.append(verticalDividerView.topAnchor.constraint(equalTo: bottomBannerView.topAnchor, constant: 10))
+        c.append(verticalDividerView.bottomAnchor.constraint(equalTo: bottomBannerView.bottomAnchor, constant: -10))
         c.append(verticalDividerView.centerYAnchor.constraint(equalTo: bottomBannerView.centerYAnchor))
         c.append(verticalDividerView.trailingAnchor.constraint(equalTo: cancelButton.leadingAnchor))
         
