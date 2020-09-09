@@ -67,6 +67,8 @@ extension BottomBannerViewController {
     }
     
     fileprivate func setupVerticalCompactLayout(_ c: inout [NSLayoutConstraint]) {
+        c.append(bottomBannerView.heightAnchor.constraint(equalToConstant: 50))
+        
         c.append(cancelButton.widthAnchor.constraint(equalTo: bottomBannerView.heightAnchor))
         c.append(cancelButton.topAnchor.constraint(equalTo: bottomBannerView.topAnchor))
         c.append(cancelButton.trailingAnchor.constraint(equalTo: bottomBannerView.trailingAnchor))
@@ -94,6 +96,8 @@ extension BottomBannerViewController {
     }
     
     fileprivate func setupVerticalRegularLayout(_ c: inout [NSLayoutConstraint]) {
+        c.append(bottomBannerView.heightAnchor.constraint(equalToConstant: 80))
+        
         c.append(timeRemainingLabel.leadingAnchor.constraint(equalTo: bottomBannerView.leadingAnchor, constant: 10))
         c.append(timeRemainingLabel.lastBaselineAnchor.constraint(equalTo: bottomBannerView.centerYAnchor, constant: 0))
         
