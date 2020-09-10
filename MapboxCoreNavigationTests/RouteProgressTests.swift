@@ -275,7 +275,7 @@ class RouteProgressTests: XCTestCase {
     
     func testRouteProggressCodable() {
         let routeProgress = RouteProgress(route: route, routeIndex: 0, options: routeOptions)
-
+        
         let encoder = JSONEncoder()
         encoder.userInfo[.options] = routeOptions
         let data = try! encoder.encode(routeProgress)
@@ -283,7 +283,9 @@ class RouteProgressTests: XCTestCase {
         decoder.userInfo[.options] = routeOptions
         let decoded = try! decoder.decode(RouteProgress.self, from: data)
 
-        XCTAssertEqual(routeProgress.indexedRoute.0.shape?.coordinates, decoded.indexedRoute.0.shape?.coordinates)
+        XCTAssertEqual(routeProgress.indexedRoute.0.distance, decoded.indexedRoute.0.distance)
+        XCTAssertEqual(routeProgress.indexedRoute.0.speechLocale, decoded.indexedRoute.0.speechLocale)
+        XCTAssertEqual(routeProgress.indexedRoute.0.shape, decoded.indexedRoute.0.shape)
         XCTAssertEqual(routeProgress.indexedRoute.0.expectedTravelTime, decoded.indexedRoute.0.expectedTravelTime)
         XCTAssertEqual(routeProgress.indexedRoute.0.routeIdentifier, decoded.indexedRoute.0.routeIdentifier)
         XCTAssertEqual(routeProgress.indexedRoute.1, decoded.indexedRoute.1)
