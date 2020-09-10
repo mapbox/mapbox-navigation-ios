@@ -49,6 +49,24 @@
 /* Title for unmute button */
 "CARPLAY_UNMUTE" = "Bật Tiếng";
 
+/* Specific route feedback that audio guidance provided was confusing. */
+"CONFUSING_AUDIO_FEEDBACK" = "Lời nói gây nhầm lẫn";
+
+/* Specific route feedback that audio guidance was provided too early before a maneuever. */
+"CONFUSING_AUDIO_GUIDANCE_TOO_EARLY_FEEDBACK" = "Lời hướng dẫn quá sớm";
+
+/* Specific route feedback that audio guidance was provided too late for a maneuever. */
+"CONFUSING_AUDIO_GUIDANCE_TOO_LATE_FEEDBACK" = "Lời hướng dẫn quá trễ";
+
+/* Specific route feedback that an audio guidance problem was encountered but not listed as a choice. */
+"CONFUSING_AUDIO_OTHER_FEEDBACK" = "Khác";
+
+/* Specific route feedback that audio guidance used incorrect pronunciation. */
+"CONFUSING_AUDIO_PRONUNCIATION_INCORRECT_FEEDBACK" = "Phát âm sai";
+
+/* Specific route feedback that audio guidance repeated a road name. */
+"CONFUSING_AUDIO_ROADNAME_REPEATED_FEEDBACK" = "Đọc lại tên đường hai lần";
+
 /* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "Đóng";
 
@@ -57,9 +75,6 @@
 
 /* Comment Placeholder Text */
 "END_OF_ROUTE_TITLE" = "Chúng tôi có thể cải thiện bằng cách nào?";
-
-/* Error message when the SDK is unable to read a spoken instruction. */
-"FAILED_INSTRUCTION" = "Không thể đọc lời chỉ dẫn.";
 
 /* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "Đã Tìm thấy Đường Nhanh Hơn";
@@ -70,14 +85,53 @@
 /* Title of view controller for sending feedback */
 "FEEDBACK_TITLE" = "Báo cáo Vấn đề";
 
+/* Specific route feedback that a illegal route problem was encountered but not listed as a choice. */
+"ILLEGAL_ROUTE_OTHER_FEEDBACK" = "Khác";
+
 /* Label indicating the device volume is too low to hear spoken instructions and needs to be manually increased */
 "INAUDIBLE_INSTRUCTIONS_CTA" = "Điều chỉnh Âm lượng để Nghe Hướng dẫn";
+
+/* Specific route feedback that an exit was incorrect. */
+"INCORRECT_VISUAL_EXIT_INFO_INCORRECT_FEEDBACK" = "Chi tiết đường nhánh sai";
+
+/* General category of route feedback where visual instruction was incorrect. */
+"INCORRECT_VISUAL_FEEDBACK" = "Có vẻ không chính xác";
+
+/* Specific route feedback that an instruction was missing. */
+"INCORRECT_VISUAL_INSTRUCTION_MISSING_FEEDBACK" = "Lời hướng dẫn bị thiếu";
+
+/* Specific route feedback for an unnecessary instruction. */
+"INCORRECT_VISUAL_INSTRUCTION_UNNECESSARY_FEEDBACK" = "Lời hướng dẫn thừa";
+
+/* Specific route feedback that the wrong lane was specified. */
+"INCORRECT_VISUAL_LANE_GUIDANCE_INCORRECT_FEEDBACK" = "Chi tiết làn xe sai";
+
+/* Specific route feedback that a maneuver specified was incorrect. */
+"INCORRECT_VISUAL_MANEUVER_INCORRECT_FEEDBACK" = "Tháo tác sai";
+
+/* Specific route feedback that a visual instruction problem was encountered but not listed as a choice. */
+"INCORRECT_VISUAL_OTHER_FEEDBACK" = "Khác";
+
+/* Specific route feedback that a road is known by another name. */
+"INCORRECT_VISUAL_ROAD_NAME_DIFFERENT_FEEDBACK" = "Đường có tên khác";
+
+/* Specific route feedback for incorrect street name. */
+"INCORRECT_VISUAL_STREET_NAME_INCORRECT_FEEDBACK" = "Tên đường sai";
+
+/* Specific route feedback for incorrect turn arrow being shown. */
+"INCORRECT_VISUAL_TURN_ICON_INCORRECT_FEEDBACK" = "Hình quẹo phía sai";
 
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@ và %2$@";
 
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "<%@";
+
+/* Title for button that cancels user's submission of feedback on navigation session issues. */
+"NAVIGATION_REPORT_CANCEL" = "Hủy";
+
+/* Title for button that submits user's feedback on multiple navigation session issues. 1 is the number of items */
+"NAVIGATION_REPORT_ISSUES" = "Gửi %ld Mục";
 
 /* Accessibility value of label indicating the absence of a rating */
 "NO_RATING" = "Chưa đánh giá.";
@@ -96,6 +150,57 @@
 
 /* Button title for resume tracking */
 "RESUME" = "Tiếp tục";
+
+/* Specific route feedback that a road closure type was encountered but not listed as a choice. */
+"ROAD_CLOSURE_OTHER_FEEDBACK" = "Khác";
+
+/* Specific route feedback that user was offered an alternative that was unexpected. */
+"ROUTE_QUALITY_ALTERNATIVE_ROUTE_NOT_EXPECTED_FEEDBACK" = "Tuyến đường thay thế bất ngờ";
+
+/* General category of route feedback where route quality was poor. */
+"ROUTE_QUALITY_FEEDBACK" = "Chất lượng tuyến đường";
+
+/* Specific route feedback that route suggested an illegal roadway. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_CARS_NOT_ALLOWED_FEEDBACK" = "Không cho phép lái xe trên đường đó";
+
+/* General route feedback that route contained illegal instructions. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_FEEDBACK" = "Tuyến đường bất hợp pháp";
+
+/* Specific route feedback that route travelled wrong way on a one-way road. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_ONE_WAY_FEEDBACK" = "Tuyến đường đi ngược đường";
+
+/* Specific route feedback that route suggested an illegal turn. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_TURN_NOT_ALLOWED_FEEDBACK" = "Không cho phép quẹo vào đấy";
+
+/* Specific route feedback that route suggested an illegal unprotected turn. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_UNPROTECTED_TURN_FEEDBACK" = "Khó quẹo tại ngã tư không có đèn giao thông hoặc bảng dừng lại";
+
+/* Specific route feedback that route contained non-existant roads. */
+"ROUTE_QUALITY_INCLUDED_MISSING_ROADS_FEEDBACK" = "Đường sá bị thiếu trên tuyến đường";
+
+/* Specific route feedback that route was not drivable. */
+"ROUTE_QUALITY_NON_DRIVABLE_FEEDBACK" = "Không thể đi theo tuyến đường";
+
+/* Specific route feedback that route was not ideal according to user. */
+"ROUTE_QUALITY_NOT_PREFERRED_FEEDBACK" = "Tuyến đường không ổn";
+
+/* Specific route feedback that a route quality problem was encountered but not listed as a choice. */
+"ROUTE_QUALITY_OTHER_FEEDBACK" = "Khác";
+
+/* General route feedback that route contained closed road. */
+"ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK" = "Đường đóng cửa";
+
+/* Specifc route feedback that route contained road that is permanently closed. */
+"ROUTE_QUALITY_ROAD_CLOSURE_PERMANENT_FEEDBACK" = "Đường chặn cố định";
+
+/* Specifc route feedback that route contained road not shown on map. */
+"ROUTE_QUALITY_ROAD_MISSING_FROM_MAP_FEEDBACK" = "Đường không hiển thị trên bản đồ";
+
+/* Specific route feedback that route contained impassible, narrow roads. */
+"ROUTE_QUALITY_ROADS_TOO_NARROW_FEEDBACK" = "Tuyến đường đi theo đường quá hẹp";
+
+/* Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible. */
+"SPEED_LIMIT_LEGEND" = "T.đa";
 
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
 "USER_IN_SIMULATION_MODE" = "Đang Mô phỏng Điều hướng (Tốc độ Gấp %@ Lần)";
