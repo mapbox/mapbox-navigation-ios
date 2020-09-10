@@ -31,6 +31,7 @@
 * Removed the deprecated `NavigationMapView.showRoutes(_:legIndex:)` method in favor of `NavigationMapView.show(_:legIndex:)` and `NavigationMapView.showWaypoints(_:legIndex:)` in favor of `NavigationMapView.showWaypoints(on:legIndex:)`. ([#2539](https://github.com/mapbox/mapbox-navigation-ios/pull/2539))
 * Fixed an issue where the casing for the main route would not overlap alternative routes. ([#2377](https://github.com/mapbox/mapbox-navigation-ios/pull/2377))
 * Fixed memory leaks after disconnecting the application from CarPlay. ([#2470](https://github.com/mapbox/mapbox-navigation-ios/pull/2470))
+* Fixed issue which was causing incorrect alignment of `MGLMapView.attributionButton` and `MGLMapView.logoView`. ([#2613](https://github.com/mapbox/mapbox-navigation-ios/pull/2613))
 
 ### Visual and spoken instructions
 
