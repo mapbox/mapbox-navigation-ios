@@ -6,7 +6,16 @@ open class InstructionsCardViewController: UIViewController {
     typealias InstructionsCardCollectionLayout = UICollectionViewFlowLayout
     
     public var routeProgress: RouteProgress?
-    var cardSize: CGSize = .zero
+    var cardSize: CGSize {
+        var cardSize = CGSize(width: Int(floor(UIScreen.main.bounds.width * 0.8)), height: 140)
+        
+        /* TODO: Identify the traitCollections to define the width of the cards */
+        if let customSize = cardCollectionDelegate?.instructionsCardCollection(self, cardSizeFor: traitCollection) {
+            cardSize = customSize
+        }
+        
+        return cardSize
+    }
     
     var instructionCollectionView: UICollectionView!
     var instructionsCardLayout: InstructionsCardCollectionLayout!
@@ -62,42 +71,25 @@ open class InstructionsCardViewController: UIViewController {
     
     fileprivate var contentOffsetBeforeSwipe = CGPoint(x: 0, y: 0)
     fileprivate var indexBeforeSwipe = IndexPath(row: 0, section: 0)
-    fileprivate var isSnapAndRemove = false
-    public let cardCollectionCellIdentifier = "InstructionsCardCollectionCellID"
-    fileprivate let collectionViewFlowLayoutMinimumSpacingDefault: CGFloat = 10.0
-    fileprivate let collectionViewPadding: CGFloat = 8.0
-    
-    lazy open var topPaddingView: TopBannerView =  {
-        let view: TopBannerView = .forAutoLayout()
-        return view
-    }()
+    fileprivate let cardCollectionCellIdentifier = NSStringFromClass(InstructionsCardCell.self)
     
     override open func viewDidLoad() {
         super.viewDidLoad()
-        
-        /* TODO: Identify the traitCollections to define the width of the cards */
-        if let customSize = cardCollectionDelegate?.instructionsCardCollection(self, cardSizeFor: traitCollection) {
-            cardSize = customSize
-        } else {
-            cardSize = CGSize(width: Int(floor(view.frame.size.width * 0.82)), height: 200)
-        }
         
         /* TODO: Custom dataSource */
         
         view.backgroundColor = .clear
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.clipsToBounds = false
         
         instructionsCardLayout = InstructionsCardCollectionLayout()
         instructionsCardLayout.scrollDirection = .horizontal
-        instructionsCardLayout.itemSize = cardSize
-        
         instructionCollectionView = UICollectionView(frame: .zero, collectionViewLayout: instructionsCardLayout)
         instructionCollectionView.register(InstructionsCardCell.self, forCellWithReuseIdentifier: cardCollectionCellIdentifier)
-        instructionCollectionView.contentInset = UIEdgeInsets(top: 0, left: collectionViewPadding, bottom: 0, right: collectionViewPadding)
-        instructionCollectionView.contentOffset = CGPoint(x: -collectionViewPadding, y: 0.0)
+        instructionCollectionView.contentOffset = CGPoint(x: -5.0, y: 0.0)
+        instructionCollectionView.contentInset = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
         instructionCollectionView.dataSource = self
         instructionCollectionView.delegate = self
-        
         instructionCollectionView.showsVerticalScrollIndicator = false
         instructionCollectionView.showsHorizontalScrollIndicator = false
         instructionCollectionView.backgroundColor = .clear
@@ -106,27 +98,34 @@ open class InstructionsCardViewController: UIViewController {
         
         addSubviews()
         setConstraints()
-        
-        view.clipsToBounds = false
-        topPaddingView.backgroundColor = .clear
+        addObservers()
+    }
+    
+    deinit {
+        removeObservers()
+    }
+    
+    // MARK: - Notification observer methods
+    
+    func addObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChange(_:)), name: UIDevice.orientationDidChangeNotification, object: nil)
+    }
+    
+    func removeObservers() {
+        NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
+    }
+    
+    @objc func orientationDidChange(_ notification: Notification) {
+        instructionsCardLayout.invalidateLayout()
     }
     
     func addSubviews() {
-        [topPaddingView, instructionCollectionView, junctionView].forEach(view.addSubview(_:))
+        [instructionCollectionView, junctionView].forEach(view.addSubview(_:))
     }
     
     func setConstraints() {
-        let topPaddingConstraints: [NSLayoutConstraint] = [
-            topPaddingView.topAnchor.constraint(equalTo: view.topAnchor),
-            topPaddingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            topPaddingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            topPaddingView.bottomAnchor.constraint(equalTo: view.safeTopAnchor),
-        ]
-        
-        NSLayoutConstraint.activate(topPaddingConstraints)
-        
         let instructionCollectionViewContraints: [NSLayoutConstraint] = [
-            instructionCollectionView.topAnchor.constraint(equalTo: topPaddingView.bottomAnchor),
+            instructionCollectionView.topAnchor.constraint(equalTo: view.safeTopAnchor, constant: 5.0),
             instructionCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             instructionCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             instructionCollectionView.heightAnchor.constraint(equalToConstant: cardSize.height),
@@ -192,17 +191,12 @@ open class InstructionsCardViewController: UIViewController {
         return cell.subviews[1] as? InstructionsCardContainerView
     }
     
-    fileprivate func calculateNeededSpace(count: Int) -> CGSize {
-        let cardSize = instructionsCardLayout.itemSize
-        return CGSize(width: (cardSize.width + 10) * CGFloat(count), height: cardSize.height)
-    }
-    
     fileprivate func snappedIndexPath() -> IndexPath {
         guard let collectionView = instructionsCardLayout.collectionView, let itemCount = steps?.count else {
             return IndexPath(row: 0, section: 0)
         }
         
-        let estimatedIndex = Int(round((collectionView.contentOffset.x + collectionView.contentInset.left) / (cardSize.width + collectionViewFlowLayoutMinimumSpacingDefault)))
+        let estimatedIndex = Int(round((collectionView.contentOffset.x + collectionView.contentInset.left) / (cardSize.width + 10.0)))
         let indexInBounds = max(0, min(itemCount - 1, estimatedIndex))
         
         return IndexPath(row: indexInBounds, section: 0)
