@@ -106,7 +106,7 @@ class RouteMapViewController: UIViewController {
     /**
      A Boolean value that determines whether the map altitude should change based on internal conditions.
     */
-    var supressAutomaticAltitudeChanges: Bool = false
+    var suppressAutomaticAltitudeChanges: Bool = false
 
     convenience init(navigationService: NavigationService, delegate: RouteMapViewControllerDelegate? = nil, topBanner: ContainerViewController, bottomBanner: ContainerViewController) {
         self.init()
@@ -498,7 +498,7 @@ extension RouteMapViewController: NavigationComponent {
     }
     
     public func navigationService(_ service: NavigationService, didPassSpokenInstructionPoint instruction: SpokenInstruction, routeProgress: RouteProgress) {
-        if !supressAutomaticAltitudeChanges {
+        if !suppressAutomaticAltitudeChanges {
             updateCameraAltitude(for: routeProgress)
         }
     }

@@ -240,6 +240,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     private var approachingDestinationThreshold: CLLocationDistance = 250.0
     private var passedApproachingDestinationThreshold: Bool = false
     private var currentLeg: RouteLeg?
+    private var foundAllBuildings = false
     
     /**
      Initializes a navigation view controller that presents the user interface for following a predefined route based on the given options.
@@ -585,21 +586,7 @@ extension NavigationViewController: NavigationServiceDelegate {
             mapViewController?.mapView.updateCourseTracking(location: location, animated: true)
         }
         
-        if currentLeg != progress.currentLeg {
-            currentLeg = progress.currentLeg
-            passedApproachingDestinationThreshold = false
-            mapViewController?.supressAutomaticAltitudeChanges = false
-            if let mapView = mapView {
-                mapView.altitude = mapView.defaultAltitude
-            }
-        }
-        
-        if let mapView = mapView, passedApproachingDestinationThreshold == false, waypointStyle != .annotation, let currentLegWaypoint = progress.currentLeg.destination?.targetCoordinate, progress.currentLegProgress.distanceRemaining < approachingDestinationThreshold {
-            passedApproachingDestinationThreshold = true
-            mapViewController?.supressAutomaticAltitudeChanges = true
-            mapView.highlightBuildings(at: [currentLegWaypoint], in3D: self.waypointStyle == .extrudedBuilding ? true : false)
-            mapView.altitude = MGLAltitudeForZoomLevel(16.1, mapView.camera.pitch, location.coordinate.latitude, mapView.frame.size)
-        }
+        attemptToHighlightBuildings(progress, with: location)
         
         // Finally, pass the message onto the NVC delegate.
         delegate?.navigationViewController(self, didUpdate: progress, with: location, rawLocation: rawLocation)
@@ -641,40 +628,12 @@ extension NavigationViewController: NavigationServiceDelegate {
         let advancesToNextLeg = componentsWantAdvance && (delegate?.navigationViewController(self, didArriveAt: waypoint) ?? defaultBehavior)
         
         if service.routeProgress.isFinalLeg && advancesToNextLeg && showsEndOfRouteFeedback {
-            // In case of final destination present end of route view first and then zoom in to extruded building.
+            // In case of final destination present end of route view first and then re-center final destination.
             showEndOfRouteFeedback { [weak self] _ in
                 self?.frameDestinationArrival(for: service.router.location)
             }
         }
         return advancesToNextLeg
-    }
-    
-    private func frameDestinationArrival(for location: CLLocation?) {
-        if waypointStyle == .annotation { return }
-        guard let mapViewController = self.mapViewController else { return }
-        guard let location = location else { return }
-        
-        // Since all buildings are included in zoom level 16 and above as per
-        // https://docs.mapbox.com/vector-tiles/reference/mapbox-streets-v8/#building
-        // we make sure to zoom in before making update to insets, user course view etc
-        var currentZoomLevel = mapViewController.mapView.zoomLevel
-        let expectedZoomLevel = 16.5
-        if currentZoomLevel < expectedZoomLevel {
-            currentZoomLevel = expectedZoomLevel
-        }
-        
-        let mapView = mapViewController.mapView
-        mapView.setCenter(location.coordinate,
-                          zoomLevel: currentZoomLevel,
-                          direction: location.course,
-                          animated: true,
-                          completionHandler: {
-                            // Update insets to be able to correctly center map view after presenting end of route view.
-                            mapViewController.updateMapViewContentInsets(animated: true, completion: {
-                                // Update user course view to correctly place it in map view.
-                                self.mapView?.updateCourseTracking(location: location, animated: false)
-                            })
-        })
     }
     
     public func showEndOfRouteFeedback(duration: TimeInterval = 1.0, completionHandler: ((Bool) -> Void)? = nil) {
@@ -726,6 +685,58 @@ extension NavigationViewController: NavigationServiceDelegate {
     
     public func navigationServiceShouldDisableBatteryMonitoring(_ service: NavigationService) -> Bool {
         return navigationComponents.allSatisfy { $0.navigationServiceShouldDisableBatteryMonitoring(service) }
+    }
+    
+    // MARK: - Building Extrusion Highlighting
+    
+    private func attemptToHighlightBuildings(_ progress: RouteProgress, with location: CLLocation) {
+        // In case if distance was fully covered - do nothing.
+        // FIXME: This check prevents issue which leads to highlighting random buildings after arrival to final destination.
+        // At the same time this check will prevent building highlighting in case of arrival in overview mode/high altitude.
+        if progress.fractionTraveled >= 1.0 { return }
+        if waypointStyle == .annotation { return }
+        guard let mapView = mapView else { return }
+
+        if currentLeg != progress.currentLeg {
+            currentLeg = progress.currentLeg
+            passedApproachingDestinationThreshold = false
+            mapViewController?.suppressAutomaticAltitudeChanges = false
+            foundAllBuildings = false
+            mapView.altitude = mapView.defaultAltitude
+        }
+        
+        let altitude = MGLAltitudeForZoomLevel(16.1, mapView.camera.pitch, location.coordinate.latitude, mapView.frame.size)
+        
+        if !passedApproachingDestinationThreshold, progress.currentLegProgress.distanceRemaining < approachingDestinationThreshold {
+            passedApproachingDestinationThreshold = true
+            mapViewController?.suppressAutomaticAltitudeChanges = true
+        }
+        
+        // Attempt to decrease altitude so that highlighted building becomes visible.
+        // This is required in cases when:
+        // - Switching from overview to follow mode.
+        // - Previous attempt to decrease altitude failed (happens when highlighted building is within destination
+        // threshold right after starting navigation).
+        // FIXME: When device was rotated to landscape mode altitude should be adjusted so that building is highlighted.
+        if passedApproachingDestinationThreshold, mapView.altitude == mapView.defaultAltitude, altitude < mapView.altitude {
+            mapView.altitude = altitude
+        }
+        
+        if !foundAllBuildings, passedApproachingDestinationThreshold, let currentLegWaypoint = progress.currentLeg.destination?.targetCoordinate {
+            foundAllBuildings = mapView.highlightBuildings(at: [currentLegWaypoint], in3D: waypointStyle == .extrudedBuilding ? true : false)
+        }
+    }
+    
+    private func frameDestinationArrival(for location: CLLocation?) {
+        if waypointStyle == .annotation { return }
+        guard let mapViewController = self.mapViewController else { return }
+        guard let location = location else { return }
+        
+        // Update insets to be able to correctly center map view after presenting end of route view.
+        mapViewController.updateMapViewContentInsets(animated: true, completion: {
+            // Update user course view to correctly place it in map view.
+            self.mapView?.updateCourseTracking(location: location, animated: false)
+        })
     }
 }
 
