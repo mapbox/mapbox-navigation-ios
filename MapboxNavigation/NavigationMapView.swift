@@ -473,7 +473,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         let allRoutesShape = navigationMapViewDelegate?.navigationMapView(self, shapeFor: routes) ?? shape(for: routes, legIndex: legIndex)
         let allRoutesSource = addAllRoutesSource(style, shape: allRoutesShape)
         
-        let mainRouteCasingShape = navigationMapViewDelegate?.navigationMapView(self, shapeFor: [mainRoute]) ?? shape(for: [mainRoute], legIndex: legIndex)
+        let mainRouteCasingShape = navigationMapViewDelegate?.navigationMapView(self, simplifiedShapeFor: mainRoute) ?? shape(forCasingOf: mainRoute, legIndex: legIndex)
+        
         let mainRouteCasingSource = addMainRouteCasingSource(style, shape: mainRouteCasingShape)
         
         let mainRouteLayer = addMainRouteLayer(style, source: allRoutesSource, lineGradient: routeLineGradient(mainRoute, fractionTraveled: 0.0))
