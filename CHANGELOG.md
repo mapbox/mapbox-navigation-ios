@@ -10,7 +10,7 @@
 * Xcode 11.4.1 or above is now required for building this SDK from source. ([#2417](https://github.com/mapbox/mapbox-navigation-ios/pull/2417))
 * Enabled MAU billing by default, so that SDKs usage of Mapbox APIs is [billed](https://www.mapbox.com/pricing/) together based on [monthly active users](https://docs.mapbox.com/help/glossary/monthly-active-users/) rather than individually by HTTP request. If you prefer to still use request-based billing, set the `MBXNavigationBillingMethod` key in Info.plist to `request` ([#2405](https://github.com/mapbox/mapbox-navigation-ios/pull/2405).
 * Added Greek and Turkish localizations. ([#2385](https://github.com/mapbox/mapbox-navigation-ios/pull/2385), [#2475](https://github.com/mapbox/mapbox-navigation-ios/pull/2475), [valhalla/valhalla#2438](https://github.com/valhalla/valhalla/pull/2438))
-* Upgraded to [MapboxDirections v1.0.0-rc.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v1.0.0-rc.1). ([#2585](https://github.com/mapbox/mapbox-navigation-ios/pull/2585)) 
+* Upgraded to [MapboxDirections v1.0.0-rc.2](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v1.0.0-rc.2). ([#2619](https://github.com/mapbox/mapbox-navigation-ios/pull/2619)) 
 * Upgraded to [MapboxSpeech v0.3.1](https://github.com/mapbox/mapbox-speech-swift/releases/tag/v0.3.1). ([#2543](https://github.com/mapbox/mapbox-navigation-ios/pull/2543))
 
 ### Map

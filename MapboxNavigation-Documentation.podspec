@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
   # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.name = "MapboxNavigation-Documentation"
-  s.version = '1.0.0-rc.3'
+  s.version = '1.0.0-rc.4'
   s.summary = "Complete turn-by-turn navigation interface for iOS."
 
   s.description  = <<-DESC
@@ -46,7 +46,7 @@ Pod::Spec.new do |s|
   s.frameworks = ['CarPlay']
 
   s.dependency "MapboxAccounts", "~> 2.3.0"
-  s.dependency "MapboxDirections", "~> 1.0.0-rc.1"
+  s.dependency "MapboxDirections", "~> 1.0.0-rc.2"
   s.dependency "MapboxGeocoder.swift", "~> 0.10.0"
   s.dependency "Mapbox-iOS-SDK", "~> 6.0"
   s.dependency "MapboxMobileEvents", "~> 0.10.2"
