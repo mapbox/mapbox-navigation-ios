@@ -7,7 +7,7 @@ open class InstructionsCardViewController: UIViewController {
     
     public var routeProgress: RouteProgress?
     var cardSize: CGSize {
-        var cardSize = CGSize(width: Int(floor(UIScreen.main.bounds.width * 0.8)), height: 150)
+        var cardSize = CGSize(width: Int(floor(UIScreen.main.bounds.width * 0.8)), height: 140)
         
         /* TODO: Identify the traitCollections to define the width of the cards */
         if let customSize = cardCollectionDelegate?.instructionsCardCollection(self, cardSizeFor: traitCollection) {
@@ -80,6 +80,7 @@ open class InstructionsCardViewController: UIViewController {
         
         view.backgroundColor = .clear
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.clipsToBounds = false
         
         instructionsCardLayout = InstructionsCardCollectionLayout()
         instructionsCardLayout.scrollDirection = .horizontal
@@ -97,8 +98,25 @@ open class InstructionsCardViewController: UIViewController {
         
         addSubviews()
         setConstraints()
-        
-        view.clipsToBounds = false
+        addObservers()
+    }
+    
+    deinit {
+        removeObservers()
+    }
+    
+    // MARK: - Notification observer methods
+    
+    func addObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChange(_:)), name: UIDevice.orientationDidChangeNotification, object: nil)
+    }
+    
+    func removeObservers() {
+        NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
+    }
+    
+    @objc func orientationDidChange(_ notification: Notification) {
+        instructionsCardLayout.invalidateLayout()
     }
     
     func addSubviews() {
