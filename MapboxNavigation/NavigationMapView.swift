@@ -1166,18 +1166,23 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         return linesPerLeg
     }
     
+    /**
+     Returns an array of congestion segments by associating the given congestion levels with the coordinates of the respective line segments that they apply to.
+     
+     This method coalesces consecutive line segments that have the same congestion level.
+     
+     - coordinates: The coordinates of a leg.
+     - congestions: The congestion levels along a leg. There should be one fewer congestion levels than coordinates.
+     */
     func combine(_ coordinates: [CLLocationCoordinate2D], with congestions: [CongestionLevel]) -> [CongestionSegment] {
         var segments: [CongestionSegment] = []
         segments.reserveCapacity(congestions.count)
-        for (index, congestion) in congestions.enumerated() {
-            let congestionSegment: ([CLLocationCoordinate2D], CongestionLevel) = ([coordinates[index], coordinates[index + 1]], congestion)
-            let coordinates = congestionSegment.0
-            let congestionLevel = congestionSegment.1
-            
+        for (firstSegment, congestionLevel) in zip(zip(coordinates, coordinates.suffix(from: 1)), congestions) {
+            let coordinates = [firstSegment.0, firstSegment.1]
             if segments.last?.1 == congestionLevel {
                 segments[segments.count - 1].0 += coordinates
             } else {
-                segments.append(congestionSegment)
+                segments.append((coordinates, congestionLevel))
             }
         }
         return segments
