@@ -4,8 +4,6 @@ import MapboxCoreNavigation
 
 /// :nodoc:
 public class InstructionsCardView: BaseInstructionsBannerView {
-    @objc dynamic var cardWidthFactor: CGFloat = 0.82
-    @objc dynamic var cardHeight: CGFloat = 100.0
     
     var step: RouteStep! {
         didSet {
