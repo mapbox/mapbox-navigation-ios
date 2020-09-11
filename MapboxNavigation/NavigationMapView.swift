@@ -1428,7 +1428,7 @@ extension NavigationMapView {
      
      - returns: Bool indicating if number of buildings found equals number of coordinates supplied.
      */
-    public func highlightBuildings(at coordinates: [CLLocationCoordinate2D], in3D extrudesBuildings: Bool = true) -> Bool {
+    @discardableResult public func highlightBuildings(at coordinates: [CLLocationCoordinate2D], in3D extrudesBuildings: Bool = true) -> Bool {
         let foundBuildingIds = Set(coordinates.compactMap({ buildingIdentifier(at: $0) }))
         highlightBuildings(with: foundBuildingIds, in3D: extrudesBuildings)
         return foundBuildingIds.count == coordinates.count
