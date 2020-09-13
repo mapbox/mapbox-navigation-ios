@@ -79,7 +79,8 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
         FeedbackType.confusingAudio(subtype: nil),
         FeedbackType.illegalRoute(subtype: nil),
         FeedbackType.roadClosure(subtype: nil),
-        FeedbackType.routeQuality(subtype: nil)].map { $0.generateFeedbackItem() }
+        FeedbackType.routeQuality(subtype: nil),
+        FeedbackType.positioning(subtype: nil)].map { $0.generateFeedbackItem() }
     }
 
     /**

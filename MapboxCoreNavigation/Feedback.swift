@@ -23,6 +23,9 @@ public enum FeedbackType: CustomStringConvertible {
 
     /// Indicates a road closure was observed.
     case roadClosure(subtype: RoadClosureSubtype?)
+
+    /// Indicates a problem with positioning the user
+    case positioning(subtype: PositioningSubtype?)
     
     public var description: String {
         switch self {
@@ -38,6 +41,8 @@ public enum FeedbackType: CustomStringConvertible {
             return "illegal_route"
         case .roadClosure(_):
             return "road_closure"
+        case .positioning(_):
+            return "positioning_issue"
         }
     }
 }
@@ -88,6 +93,10 @@ public enum RoadClosureSubtype: String {
     case streetPermanentlyBlockedOff
     case roadMissingFromMap
     case other
+}
+
+public enum PositioningSubtype: String {
+    case userPosition
 }
 
 /// Enum denoting the origin source of the corresponding feedback item

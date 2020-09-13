@@ -76,6 +76,8 @@ class FeedbackSubtypeViewController: FeedbackViewController {
                 return [FeedbackType.roadClosure(subtype: .streetPermanentlyBlockedOff),
                         FeedbackType.roadClosure(subtype: .roadMissingFromMap),
                         FeedbackType.roadClosure(subtype: .other)].map { $0.generateFeedbackItem() }
+            case .positioning(_):
+                return [FeedbackType.positioning(subtype: .userPosition)].map { $0.generateFeedbackItem() }
             }
         }
     }
