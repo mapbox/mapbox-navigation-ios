@@ -140,7 +140,7 @@
 "POSITIONING" = "Positioning";
 
 /* Specific route feedback that user positioning is incorrect. */
-"POSITIONING_USER" = "User Position";
+"POSITIONING_USER" = "Your position";
 
 /* Rating Reset To Zero Accessability Hint */
 "RATING_ACCESSIBILITY_RESET" = "Tap to reset the rating to zero.";
