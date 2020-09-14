@@ -77,6 +77,7 @@
 ### Other changes
 
 * Deprecated `NavigationDirectionsCompletionHandler`, `OfflineRoutingError`, `UnpackProgressHandler`, `UnpackCompletionHandler`, `OfflineRouteCompletionHandler`, and `NavigationDirections`. Use `Directions` instead of `NavigationDirections` to calculate a route. ([#2509](https://github.com/mapbox/mapbox-navigation-ios/pull/2509))
+* The `RouteLegProgress.congestionTravelTimesSegmentsByStep` and `RouteLegProgress.congestionTimesPerStep` properties are now read-only. ([#2615](https://github.com/mapbox/mapbox-navigation-ios/pull/2615))
 
 ## v0.40.0
 
