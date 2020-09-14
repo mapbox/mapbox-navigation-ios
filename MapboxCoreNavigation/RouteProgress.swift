@@ -305,34 +305,6 @@ open class RouteProgress: Codable {
         case routeOptions
         case legIndex
         case currentLegProgress
-        case congestionTravelTimesSegmentsByStep
-        case congestionTimesPerStep
-    }
-    
-    private struct TimedCongestionLevelCodable: Codable {
-        var congestionLevel: CongestionLevel
-        var travelTime: TimeInterval
-    }
-    
-    private func decodeCongestion(_ decodable: [[[TimedCongestionLevelCodable]]]) -> [[[TimedCongestionLevel]]] {
-        return decodable.map {
-            return $0.map {
-                return $0.map {
-                    return ($0.congestionLevel, $0.travelTime)
-                }
-            }
-        }
-    }
-    
-    private func encodeCongestion(_ encodable: [[[TimedCongestionLevel]]]) -> [[[TimedCongestionLevelCodable]]] {
-        return encodable.map {
-            return $0.map {
-                return $0.map {
-                    return TimedCongestionLevelCodable(congestionLevel: $0.0,
-                                                       travelTime: $0.1)
-                }
-            }
-        }
     }
         
     required public init(from decoder: Decoder) throws {
@@ -344,9 +316,8 @@ open class RouteProgress: Codable {
         self.routeOptions = try container.decode(RouteOptions.self, forKey: .routeOptions)
         self.legIndex = try container.decode(Int.self, forKey: .legIndex)
         self.currentLegProgress = try container.decode(RouteLegProgress.self, forKey: .currentLegProgress)
-        self.congestionTravelTimesSegmentsByStep = decodeCongestion(try container.decode([[[TimedCongestionLevelCodable]]].self,
-                                                                                         forKey: .congestionTravelTimesSegmentsByStep))
-        self.congestionTimesPerStep = try container.decode([[[CongestionLevel: TimeInterval]]].self, forKey: .congestionTimesPerStep)
+        
+        calculateLegsCongestion()
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -357,7 +328,5 @@ open class RouteProgress: Codable {
         try container.encode(routeOptions, forKey: .routeOptions)
         try container.encode(legIndex, forKey: .legIndex)
         try container.encode(currentLegProgress, forKey: .currentLegProgress)
-        try container.encode(encodeCongestion(congestionTravelTimesSegmentsByStep), forKey: .congestionTravelTimesSegmentsByStep)
-        try container.encode(congestionTimesPerStep, forKey: .congestionTimesPerStep)
     }
 }
