@@ -43,6 +43,7 @@
 
 * As the user approaches certain junctions, an enlarged illustration of the junction appears below the top banner to help the user understand a complex maneuver. These junction views only appear when the relevant data is available. Contact your Mapbox sales representative or [support team](https://support.mapbox.com/) for access to the junction views feature. ([#2408](https://github.com/mapbox/mapbox-navigation-ios/pull/2408))
 * Replaced `RouteVoiceController` and `MapboxVoiceController` with `MultiplexedSpeechSynthesizer`. `MultiplexedSpeechSynthesizer` coordinates multiple cascading speech synthesizers. By default, the controller still tries to speak instructions via the Mapbox Voice API (`MapboxSpeechSynthesizer`) before falling back to VoiceOver (`SystemSpeechSynthesizer`), but you can also provide your own speech synthesizer that conforms to the `SpeechSynthesizing` protocol. ([#2348](https://github.com/mapbox/mapbox-navigation-ios/pull/2348))
+* Added an alternative presentation for maneuver instructions that resembles swipeable user notification cards. To replace the conventional `TopBannerViewController` presentation with the cardlike presentation, create an instance of `InstructionsCardViewController` and pass it into the `NavigationOptions(styles:navigationService:voiceController:topBanner:bottomBanner:)` method. ([#2149](https://github.com/mapbox/mapbox-navigation-ios/pull/2149), [#2296](https://github.com/mapbox/mapbox-navigation-ios/pull/2296), [#2627](https://github.com/mapbox/mapbox-navigation-ios/pull/2627))
 
 ### Feedback
 

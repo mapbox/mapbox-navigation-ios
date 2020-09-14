@@ -89,14 +89,20 @@ custom_categories:
       - DistanceFormatter
   - name: UI Components
     children:
-      - ManeuverView
       - BottomBannerViewController
       - BottomBannerViewControllerDelegate
       - SpeedLimitView
       - UserPuckCourseView
       - CourseUpdatable
-      - GenericRouteShield
       - NavigationComponent
+  - name: Guidance Instruction UI
+      - TopBannerViewController
+      - InstructionsCardViewController
+      - InstructionsCardContainerView
+      - InstructionsCardContainerViewDelegate
+      - ManeuverView
+      - JunctionView
+      - GenericRouteShield
   - name: CarPlay
     children:
       - CarPlayManager
