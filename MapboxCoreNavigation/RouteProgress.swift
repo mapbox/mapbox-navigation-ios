@@ -167,12 +167,12 @@ open class RouteProgress {
     /**
      If the route contains both `segmentCongestionLevels` and `expectedSegmentTravelTimes`, this property is set to a deeply nested array of `TimeCongestionLevels` per segment per step per leg.
      */
-    public var congestionTravelTimesSegmentsByStep: [[[TimedCongestionLevel]]] = []
+    public private(set) var congestionTravelTimesSegmentsByStep: [[[TimedCongestionLevel]]] = []
 
     /**
      An dictionary containing a `TimeInterval` total per `CongestionLevel`. Only `CongestionLevel` founnd on that step will present. Broken up by leg and then step.
      */
-    public var congestionTimesPerStep: [[[CongestionLevel: TimeInterval]]]  = [[[:]]]
+    public private(set) var congestionTimesPerStep: [[[CongestionLevel: TimeInterval]]]  = [[[:]]]
 
     /**
      Intializes a new `RouteProgress`.
