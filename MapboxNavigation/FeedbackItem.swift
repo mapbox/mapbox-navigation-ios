@@ -84,7 +84,7 @@ public extension FeedbackType {
         case .positioning(.none):
             return NSLocalizedString("POSITIONING", bundle: .mapboxNavigation, value: "Positioning", comment: "General category of route feedback where user position is incorrect.")
         case .positioning(.userPosition):
-            return NSLocalizedString("POSITIONING", bundle: .mapboxNavigation, value: "User Position", comment: "Specific route feedback that user positioning is incorrect.")
+            return NSLocalizedString("POSITIONING_USER", bundle: .mapboxNavigation, value: "Your position", comment: "Specific route feedback that user positioning is incorrect.")
         }
     }
 

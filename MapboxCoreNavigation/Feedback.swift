@@ -27,17 +27,29 @@ public enum FeedbackType: CustomStringConvertible {
     /// Indicates a problem with positioning the user
     case positioning(subtype: PositioningSubtype?)
 
-    /*
-      case streetPermanentlyBlockedOff
-      case roadMissingFromMap
-      case other
-     */
+    /// Description of the category for this type of feedback
     public var description: String {
         switch self {
         case .general:
             return "general"
-        case .incorrectVisual(subtype: .none):
-            return "incorrect_visual"
+        case .incorrectVisual(_):
+            return "incorrect_visual_guidance"
+        case .confusingAudio(_):
+            return "incorrect_audio_guidance"
+        case .routeQuality(_):
+            return "routing_error"
+        case .illegalRoute(_):
+            return "not_allowed"
+        case .roadClosure(_):
+            return "road_closed"
+        case .positioning(_):
+            return "positioning_issue"
+        }
+    }
+
+    /// Optional detailed description of the subtype of this feedback
+    public var subtypeDescription: String? {
+        switch self {
         case .incorrectVisual(subtype: .turnIconIncorrect):
             return "turn_icon_incorrect"
         case .incorrectVisual(subtype: .streetNameIncorrect):
@@ -54,10 +66,6 @@ public enum FeedbackType: CustomStringConvertible {
             return "lane_guidance_incorrect"
         case .incorrectVisual(subtype: .roadKnownByDifferentName):
             return "road_known_by_different_name"
-        case .incorrectVisual(subtype: .other):
-            return "incorrect_visual"
-        case .confusingAudio(subtype: .none):
-            return "confusing_audio"
         case .confusingAudio(subtype: .guidanceTooEarly):
             return "guidance_too_early"
         case .confusingAudio(subtype: .guidanceTooLate):
@@ -66,10 +74,6 @@ public enum FeedbackType: CustomStringConvertible {
             return "pronunciation_incorrect"
         case .confusingAudio(subtype: .roadNameRepeated):
             return "road_name_repeated"
-        case .confusingAudio(subtype: .other):
-            return "confusing_audio"
-        case .routeQuality(subtype: .none):
-            return "route_quality"
         case .routeQuality(subtype: .routeNonDrivable):
             return "route_not_driveable"
         case .routeQuality(subtype: .routeNotPreferred):
@@ -80,10 +84,6 @@ public enum FeedbackType: CustomStringConvertible {
             return "route_included_missing_roads"
         case .routeQuality(subtype: .routeHadRoadsTooNarrowToPass):
             return "route_had_roads_too_narrow_to_pass"
-        case .routeQuality(subtype: .other):
-            return "route_quality"
-        case .illegalRoute(subtype: .none):
-            return "illegal_route"
         case .illegalRoute(subtype: .routedDownAOneWay):
             return "routed_down_a_one_way"
         case .illegalRoute(subtype: .turnWasNotAllowed):
@@ -92,20 +92,14 @@ public enum FeedbackType: CustomStringConvertible {
             return "cars_not_allowed_on_street"
         case .illegalRoute(subtype: .turnAtIntersectionUnprotected):
             return "turn_at_intersection_was_unprotected"
-        case .illegalRoute(subtype: .other):
-            return "illegal_route"
-        case .roadClosure(subtype: .none):
-            return "road_closure"
         case .roadClosure(subtype: .streetPermanentlyBlockedOff):
             return "street_permanently_blocked_off"
         case .roadClosure(subtype: .roadMissingFromMap):
             return "road_is_missing_from_map"
-        case .roadClosure(subtype: .other):
-            return "road_closure"
-        case .positioning(subtype: .none):
-            return "positioning_issue"
         case .positioning(subtype: .userPosition):
             return "positioning_issue"
+        default:
+            return nil
         }
     }
 }

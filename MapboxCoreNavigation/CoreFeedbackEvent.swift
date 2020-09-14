@@ -26,6 +26,19 @@ class CoreFeedbackEvent: Hashable {
 class FeedbackEvent: CoreFeedbackEvent {
     func update(type: FeedbackType, source: FeedbackSource, description: String?) {
         eventDictionary["feedbackType"] = type.description
+
+        // if there is a subtype for this event then append the subtype description to our list for this type of feedback
+        if let subtypeDescription = type.subtypeDescription {
+            var subtypeList = [String]()
+            if let existingSubtypeList = eventDictionary["feedbackSubType"] as? [String] {
+                subtypeList.append(contentsOf: existingSubtypeList)
+            }
+
+            if !subtypeList.contains(subtypeDescription) {
+                subtypeList.append(subtypeDescription)
+            }
+            eventDictionary["feedbackSubType"] = subtypeList
+        }
         eventDictionary["source"] = source.description
         eventDictionary["description"] = description
     }

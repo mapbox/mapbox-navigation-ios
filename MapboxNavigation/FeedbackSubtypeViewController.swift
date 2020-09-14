@@ -160,8 +160,8 @@ class FeedbackSubtypeViewController: FeedbackViewController {
 
     private func sendReport() {
         if selectedItems.count > 0 {
-            selectedItems.forEach { item in
-                if let uuid = self.uuid {
+            if let uuid = self.uuid {
+                for item in selectedItems {
                     delegate?.feedbackViewController(self, didSend: item, uuid: uuid)
                     eventsManager?.updateFeedback(uuid: uuid, type: item.feedbackType, source: .user, description: nil)
                 }
