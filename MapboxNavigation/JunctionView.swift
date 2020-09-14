@@ -2,8 +2,11 @@ import UIKit
 import MapboxCoreNavigation
 import MapboxDirections
 
-
-/// :nodoc:
+/**
+ A junction view shows an image depicting the layout of a highway junction.
+ 
+ As the user approaches certain junctions, an enlarged illustration of the junction appears in this view to help the user understand a complex maneuver. A junction view only appears when the relevant data is available.
+ */
 public class JunctionView: UIImageView {
     var isCurrentlyVisible: Bool = false
     var imageRepository: ImageRepository = .shared

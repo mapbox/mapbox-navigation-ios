@@ -3,7 +3,6 @@ import MapboxDirections
 import MapboxCoreNavigation
 
 /**
- :nodoc:
  The `InstructionsCardContainerViewDelegate` protocol defines a method that allows an object to customize presented visual instructions within the instructions container view.
  */
 public protocol InstructionsCardContainerViewDelegate: VisualInstructionDelegate {
@@ -46,7 +45,9 @@ public extension InstructionsCardContainerViewDelegate {
     }
 }
 
-/// :nodoc:
+/**
+ A container view for the information currently displayed in `InstructionsCardViewController`.
+ */
 public class InstructionsCardContainerView: StylableView {
     lazy var informationStackView = UIStackView(orientation: .vertical, autoLayout: true)
     
@@ -280,7 +281,6 @@ public class InstructionsCardContainerView: StylableView {
     }
 }
 
-/// :nodoc:
 extension InstructionsCardContainerView: InstructionsCardContainerViewDelegate {
     public func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
         if let primaryLabel = label as? PrimaryLabel,

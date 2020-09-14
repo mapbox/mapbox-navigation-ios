@@ -1,7 +1,11 @@
 import MapboxDirections
 import MapboxCoreNavigation
 
-/// :nodoc:
+/**
+ A view controller that displays the current maneuver instruction as a “card” resembling a user notification. A subsequent maneuver is always partially visible on one side of the view; swiping to one side reveals the full maneuver.
+ 
+ This class is an alternative to the more traditional banner interface provided by the `TopBannerViewController` class. To use `InstructionsCardViewController`, create an instance of it and pass it into the `NavigationOptions(styles:navigationService:voiceController:topBanner:bottomBanner:)` method.
+ */
 open class InstructionsCardViewController: UIViewController {
     typealias InstructionsCardCollectionLayout = UICollectionViewFlowLayout
     
@@ -234,7 +238,6 @@ open class InstructionsCardViewController: UIViewController {
     }
 }
 
-/// :nodoc:
 extension InstructionsCardViewController: UICollectionViewDelegate {
     public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         indexBeforeSwipe = snappedIndexPath()
@@ -256,7 +259,6 @@ extension InstructionsCardViewController: UICollectionViewDelegate {
     }
 }
 
-/// :nodoc:
 extension InstructionsCardViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return steps?.count ?? 0
@@ -280,14 +282,12 @@ extension InstructionsCardViewController: UICollectionViewDataSource {
     }
 }
 
-/// :nodoc:
 extension InstructionsCardViewController: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return cardSize
     }
 }
 
-/// :nodoc:
 extension InstructionsCardViewController: NavigationComponent {
     public func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         routeProgress = progress
@@ -307,7 +307,6 @@ extension InstructionsCardViewController: NavigationComponent {
     }
 }
 
-/// :nodoc:
 extension InstructionsCardViewController: InstructionsCardContainerViewDelegate {
     public func primaryLabel(_ primaryLabel: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
         return cardCollectionDelegate?.primaryLabel(primaryLabel, willPresent: instruction, as: presented)
@@ -318,7 +317,6 @@ extension InstructionsCardViewController: InstructionsCardContainerViewDelegate 
     }
 }
 
-/// :nodoc:
 extension InstructionsCardViewController: NavigationMapInteractionObserver {
     public func navigationViewController(didCenterOn location: CLLocation) {
         stopPreview()

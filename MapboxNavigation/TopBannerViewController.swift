@@ -42,6 +42,11 @@ public extension TopBannerViewControllerDelegate {
     }
 }
 
+/**
+ A view controller that displays the current maneuver instruction as a “banner” flush with the edges of the containing view. The user swipes to one side to preview a subsequent maneuver.
+ 
+ This class is the default top banner view controller used by `NavigationOptions` and `NavigationViewController`. `InstructionsCardViewController` provides an alternative, user notification–like interface.
+ */
 open class TopBannerViewController: UIViewController {
     weak var delegate: TopBannerViewControllerDelegate? = nil
     
