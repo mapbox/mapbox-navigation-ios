@@ -458,7 +458,8 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
                                             FeedbackType.confusingAudio(subtype: nil),
                                             FeedbackType.illegalRoute(subtype: nil),
                                             FeedbackType.roadClosure(subtype: nil),
-                                            FeedbackType.routeQuality(subtype: nil)].map { $0.generateFeedbackItem() }
+                                            FeedbackType.routeQuality(subtype: nil),
+                                            FeedbackType.positioning(subtype: nil)].map { $0.generateFeedbackItem() }
         
         let feedbackButtonHandler: (_: CPGridButton) -> Void = { [weak self] (button) in
             self?.carInterfaceController.popTemplate(animated: true)

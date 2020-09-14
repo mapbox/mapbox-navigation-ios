@@ -81,6 +81,10 @@ public extension FeedbackType {
             return NSLocalizedString("ROUTE_QUALITY_ROAD_MISSING_FROM_MAP_FEEDBACK", bundle: .mapboxNavigation, value: "Road missing from map", comment: "Specifc route feedback that route contained road not shown on map.")
         case .roadClosure(.other):
             return NSLocalizedString("ROAD_CLOSURE_OTHER_FEEDBACK", bundle: .mapboxNavigation, value: "Other", comment: "Specific route feedback that a road closure type was encountered but not listed as a choice.")
+        case .positioning(.none):
+            return NSLocalizedString("POSITIONING", bundle: .mapboxNavigation, value: "Positioning", comment: "General category of route feedback where user position is incorrect.")
+        case .positioning(.userPosition):
+            return NSLocalizedString("POSITIONING_USER", bundle: .mapboxNavigation, value: "Your position", comment: "Specific route feedback that user positioning is incorrect.")
         }
     }
 
@@ -101,6 +105,8 @@ public extension FeedbackType {
                 imageName = "illegal_route"
             case .roadClosure(_):
                 imageName = "road_closure"
+            case .positioning(_):
+                imageName = "positioning"
         }
 
         return .feedbackImage(named: imageName)

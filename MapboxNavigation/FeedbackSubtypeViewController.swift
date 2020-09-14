@@ -76,6 +76,8 @@ class FeedbackSubtypeViewController: FeedbackViewController {
                 return [FeedbackType.roadClosure(subtype: .streetPermanentlyBlockedOff),
                         FeedbackType.roadClosure(subtype: .roadMissingFromMap),
                         FeedbackType.roadClosure(subtype: .other)].map { $0.generateFeedbackItem() }
+            case .positioning(_):
+                return [FeedbackType.positioning(subtype: .userPosition)].map { $0.generateFeedbackItem() }
             }
         }
     }
@@ -158,8 +160,8 @@ class FeedbackSubtypeViewController: FeedbackViewController {
 
     private func sendReport() {
         if selectedItems.count > 0 {
-            selectedItems.forEach { item in
-                if let uuid = self.uuid {
+            if let uuid = self.uuid {
+                for item in selectedItems {
                     delegate?.feedbackViewController(self, didSend: item, uuid: uuid)
                     eventsManager?.updateFeedback(uuid: uuid, type: item.feedbackType, source: .user, description: nil)
                 }
