@@ -26,22 +26,85 @@ public enum FeedbackType: CustomStringConvertible {
 
     /// Indicates a problem with positioning the user
     case positioning(subtype: PositioningSubtype?)
-    
+
+    /*
+      case streetPermanentlyBlockedOff
+      case roadMissingFromMap
+      case other
+     */
     public var description: String {
         switch self {
         case .general:
             return "general"
-        case .incorrectVisual(_):
+        case .incorrectVisual(subtype: .none):
             return "incorrect_visual"
-        case .confusingAudio(_):
+        case .incorrectVisual(subtype: .turnIconIncorrect):
+            return "turn_icon_incorrect"
+        case .incorrectVisual(subtype: .streetNameIncorrect):
+            return "street_name_incorrect"
+        case .incorrectVisual(subtype: .instructionUnnecessary):
+            return "instruction_unnecessary"
+        case .incorrectVisual(subtype: .instructionMissing):
+            return "instruction_missing"
+        case .incorrectVisual(subtype: .maneuverIncorrect):
+            return "maneuver_incorrect"
+        case .incorrectVisual(subtype: .exitInfoIncorrect):
+            return "exit_info_incorrect"
+        case .incorrectVisual(subtype: .laneGuidanceIncorrect):
+            return "lane_guidance_incorrect"
+        case .incorrectVisual(subtype: .roadKnownByDifferentName):
+            return "road_known_by_different_name"
+        case .incorrectVisual(subtype: .other):
+            return "incorrect_visual"
+        case .confusingAudio(subtype: .none):
             return "confusing_audio"
-        case .routeQuality(_):
+        case .confusingAudio(subtype: .guidanceTooEarly):
+            return "guidance_too_early"
+        case .confusingAudio(subtype: .guidanceTooLate):
+            return "guidance_too_late"
+        case .confusingAudio(subtype: .pronunciationIncorrect):
+            return "pronunciation_incorrect"
+        case .confusingAudio(subtype: .roadNameRepeated):
+            return "road_name_repeated"
+        case .confusingAudio(subtype: .other):
+            return "confusing_audio"
+        case .routeQuality(subtype: .none):
             return "route_quality"
-        case .illegalRoute(_):
+        case .routeQuality(subtype: .routeNonDrivable):
+            return "route_not_driveable"
+        case .routeQuality(subtype: .routeNotPreferred):
+            return "route_not_preferred"
+        case .routeQuality(subtype: .alternativeRouteNotExpected):
+            return "alternative_route_not_expected"
+        case .routeQuality(subtype: .routeIncludedMissingRoads):
+            return "route_included_missing_roads"
+        case .routeQuality(subtype: .routeHadRoadsTooNarrowToPass):
+            return "route_had_roads_too_narrow_to_pass"
+        case .routeQuality(subtype: .other):
+            return "route_quality"
+        case .illegalRoute(subtype: .none):
             return "illegal_route"
-        case .roadClosure(_):
+        case .illegalRoute(subtype: .routedDownAOneWay):
+            return "routed_down_a_one_way"
+        case .illegalRoute(subtype: .turnWasNotAllowed):
+            return "turn_was_not_allowed"
+        case .illegalRoute(subtype: .carsNotAllowedOnStreet):
+            return "cars_not_allowed_on_street"
+        case .illegalRoute(subtype: .turnAtIntersectionUnprotected):
+            return "turn_at_intersection_was_unprotected"
+        case .illegalRoute(subtype: .other):
+            return "illegal_route"
+        case .roadClosure(subtype: .none):
             return "road_closure"
-        case .positioning(_):
+        case .roadClosure(subtype: .streetPermanentlyBlockedOff):
+            return "street_permanently_blocked_off"
+        case .roadClosure(subtype: .roadMissingFromMap):
+            return "road_is_missing_from_map"
+        case .roadClosure(subtype: .other):
+            return "road_closure"
+        case .positioning(subtype: .none):
+            return "positioning_issue"
+        case .positioning(subtype: .userPosition):
             return "positioning_issue"
         }
     }
