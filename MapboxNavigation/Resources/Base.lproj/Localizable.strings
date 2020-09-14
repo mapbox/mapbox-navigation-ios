@@ -136,9 +136,11 @@
 /* Accessibility value of label indicating the absence of a rating */
 "NO_RATING" = "No rating set.";
 
-/* General category of route feedback where user position is incorrect.
-   Specific route feedback that user positioning is incorrect. */
+/* General category of route feedback where user position is incorrect. */
 "POSITIONING" = "Positioning";
+
+/* Specific route feedback that user positioning is incorrect. */
+"POSITIONING_USER" = "User Position";
 
 /* Rating Reset To Zero Accessability Hint */
 "RATING_ACCESSIBILITY_RESET" = "Tap to reset the rating to zero.";
