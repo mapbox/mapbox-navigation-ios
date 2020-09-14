@@ -352,9 +352,7 @@ enum EventDetailsError: Error {
 
 extension EventDetails {
     func asDictionary() throws -> [String: Any] {
-        let encoder = JSONEncoder()
-        encoder.keyEncodingStrategy = .convertToSnakeCase
-        let data = try encoder.encode(self)
+        let data = try JSONEncoder().encode(self)
         if let dictionary = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] {
             return dictionary
         } else {
