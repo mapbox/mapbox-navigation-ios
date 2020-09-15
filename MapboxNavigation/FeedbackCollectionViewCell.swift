@@ -8,6 +8,7 @@ class FeedbackCollectionViewCell: UICollectionViewCell {
         static let circleSize: CGSize = 70.0
         static let imageSize: CGSize = 36.0
         static let padding: CGFloat = 8
+        static let verticalPadding: CGFloat = 32.0
         static let titleFont: UIFont = .systemFont(ofSize: 18.0)
     }
 
@@ -17,6 +18,7 @@ class FeedbackCollectionViewCell: UICollectionViewCell {
     lazy var titleLabel: UILabel = {
         let title: UILabel = .forAutoLayout()
         title.numberOfLines = 2
+        title.adjustsFontSizeToFitWidth = true
         title.textAlignment = .center
         title.font = Constants.titleFont
         return title
@@ -84,5 +86,7 @@ class FeedbackCollectionViewCell: UICollectionViewCell {
         
         titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         titleLabel.topAnchor.constraint(equalTo: circleView.bottomAnchor, constant: Constants.padding).isActive = true
+        titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.padding).isActive = true
+        titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Constants.padding).isActive = true
     }
 }
