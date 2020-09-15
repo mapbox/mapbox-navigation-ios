@@ -313,39 +313,6 @@ struct NavigationEventDetails: EventDetails {
     }
 }
 
-extension RouteLegProgress: Encodable {
-    private enum CodingKeys: String, CodingKey {
-        case upcomingInstruction
-        case upcomingType
-        case upcomingModifier
-        case upcomingName
-        case previousInstruction
-        case previousType
-        case previousModifier
-        case previousName
-        case distance
-        case duration
-        case distanceRemaining
-        case durationRemaining
-    }
-    
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(upcomingStep?.instructions, forKey: .upcomingInstruction)
-        try container.encodeIfPresent(upcomingStep?.maneuverType, forKey: .upcomingType)
-        try container.encodeIfPresent(upcomingStep?.maneuverDirection, forKey: .upcomingModifier)
-        try container.encodeIfPresent(upcomingStep?.names?.joined(separator: ";"), forKey: .upcomingName)
-        try container.encodeIfPresent(currentStep.instructions, forKey: .previousInstruction)
-        try container.encode(currentStep.maneuverType, forKey: .previousType)
-        try container.encode(currentStep.maneuverDirection, forKey: .previousModifier)
-        try container.encode(currentStep.names?.joined(separator: ";"), forKey: .previousName)
-        try container.encode(Int(currentStep.distance), forKey: .distance)
-        try container.encode(Int(currentStep.expectedTravelTime), forKey: .duration)
-        try container.encode(Int(currentStepProgress.distanceRemaining), forKey: .distanceRemaining)
-        try container.encode(Int(currentStepProgress.durationRemaining), forKey: .durationRemaining)
-    }
-}
-
 enum EventDetailsError: Error {
     case EncodingError(String)
 }

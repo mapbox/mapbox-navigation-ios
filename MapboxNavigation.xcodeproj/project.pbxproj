@@ -35,6 +35,8 @@
 		2B8098432411447E00FED452 /* MultiplexedSpeechSynthesizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8098422411447E00FED452 /* MultiplexedSpeechSynthesizer.swift */; };
 		2B81EC28241A237E00145086 /* SpeechSynthesizersControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B81EC27241A237E00145086 /* SpeechSynthesizersControllerTests.swift */; };
 		2B91C9B12416357700E532A5 /* MapboxSpeechSynthesizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B91C9B02416357700E532A5 /* MapboxSpeechSynthesizer.swift */; };
+		2BBEEDA52508DB1700C8DA4A /* RouteLegProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BBEEDA42508DB1700C8DA4A /* RouteLegProgress.swift */; };
+		2BBEEDA72508E1E300C8DA4A /* RouteStepProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BBEEDA62508E1E300C8DA4A /* RouteStepProgress.swift */; };
 		35002D611E5F6ADB0090E733 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35002D5F1E5F6ADB0090E733 /* Assets.xcassets */; };
 		35002D691E5F6B2F0090E733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35002D661E5F6B1B0090E733 /* Main.storyboard */; };
 		3502231A205BC94E00E1449A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35022319205BC94E00E1449A /* Constants.swift */; };
@@ -657,6 +659,8 @@
 		2B8098422411447E00FED452 /* MultiplexedSpeechSynthesizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiplexedSpeechSynthesizer.swift; sourceTree = "<group>"; };
 		2B81EC27241A237E00145086 /* SpeechSynthesizersControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechSynthesizersControllerTests.swift; sourceTree = "<group>"; };
 		2B91C9B02416357700E532A5 /* MapboxSpeechSynthesizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxSpeechSynthesizer.swift; sourceTree = "<group>"; };
+		2BBEEDA42508DB1700C8DA4A /* RouteLegProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteLegProgress.swift; sourceTree = "<group>"; };
+		2BBEEDA62508E1E300C8DA4A /* RouteStepProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteStepProgress.swift; sourceTree = "<group>"; };
 		35002D5D1E5F6ABB0090E733 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		35002D5F1E5F6ADB0090E733 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		35002D671E5F6B1B0090E733 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -1765,6 +1769,8 @@
 				8D75F990212B5C7F00F99CF3 /* TunnelAuthority.swift */,
 				3582A25120EFA9680029C5DE /* RouterDelegate.swift */,
 				C5ADFBFB1DDCC9AD0011824B /* RouteProgress.swift */,
+				2BBEEDA42508DB1700C8DA4A /* RouteLegProgress.swift */,
+				2BBEEDA62508E1E300C8DA4A /* RouteStepProgress.swift */,
 				3582A24F20EEC46B0029C5DE /* Router.swift */,
 				353E69031EF0C4E5007B2AE5 /* SimulatedLocationManager.swift */,
 				35C98730212E02B500808B82 /* RouteController.swift */,
@@ -2675,8 +2681,10 @@
 				DA0A4B8124D1C9B200D6B4F8 /* Navigator.swift in Sources */,
 				5A3D212E24DADFA000EA652A /* SkuTokenProvider.swift in Sources */,
 				351927361F0FA072003A702D /* ScreenCapture.swift in Sources */,
+				2BBEEDA72508E1E300C8DA4A /* RouteStepProgress.swift in Sources */,
 				35F3387C2232AEBF0071DB5C /* MinimumEditDistance.swift in Sources */,
 				C5D9800F1EFBCDAD006DBF2E /* Date.swift in Sources */,
+				2BBEEDA52508DB1700C8DA4A /* RouteLegProgress.swift in Sources */,
 				35A43F77223BD632000CB367 /* RouteLeg.swift in Sources */,
 				4303A3992332CD6200B5737D /* UnimplementedLogging.swift in Sources */,
 				3A163AE3249901D000D66A0D /* FixLocation.swift in Sources */,

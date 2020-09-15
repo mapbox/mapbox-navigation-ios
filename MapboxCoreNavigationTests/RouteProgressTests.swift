@@ -272,4 +272,76 @@ class RouteProgressTests: XCTestCase {
         legProgress.currentStepProgress.distanceTraveled = lineString.distance(to: coordinates[5])! + (lineString.distance()! - lineString.distance(to: coordinates[5])!) / 2.0
         XCTAssertTrue(legProgress.currentSpeedLimit?.value.isInfinite ?? false)
     }
+    
+    func testRouteProggressCodable() {
+        let routeProgress = RouteProgress(route: route, routeIndex: 0, options: routeOptions)
+        
+        let encoder = JSONEncoder()
+        encoder.userInfo[.options] = routeOptions
+        let data = try! encoder.encode(routeProgress)
+        let decoder = JSONDecoder()
+        decoder.userInfo[.options] = routeOptions
+        let decoded = try! decoder.decode(RouteProgress.self, from: data)
+
+        XCTAssertEqual(routeProgress.indexedRoute.0.distance, decoded.indexedRoute.0.distance)
+        XCTAssertEqual(routeProgress.indexedRoute.0.speechLocale, decoded.indexedRoute.0.speechLocale)
+        XCTAssertEqual(routeProgress.indexedRoute.0.shape, decoded.indexedRoute.0.shape)
+        XCTAssertEqual(routeProgress.indexedRoute.0.expectedTravelTime, decoded.indexedRoute.0.expectedTravelTime)
+        XCTAssertEqual(routeProgress.indexedRoute.0.routeIdentifier, decoded.indexedRoute.0.routeIdentifier)
+        XCTAssertEqual(routeProgress.indexedRoute.1, decoded.indexedRoute.1)
+        XCTAssertEqual(routeProgress.routeOptions, decoded.routeOptions)
+        XCTAssertEqual(routeProgress.legIndex, decoded.legIndex)
+        XCTAssertEqual(routeProgress.currentLegProgress.leg.source, decoded.currentLegProgress.leg.source)
+        XCTAssertEqual(routeProgress.currentLegProgress.leg.destination, decoded.currentLegProgress.leg.destination)
+        XCTAssertEqual(routeProgress.currentLegProgress.leg.name, decoded.currentLegProgress.leg.name)
+        XCTAssertEqual(routeProgress.currentLegProgress.leg.distance, decoded.currentLegProgress.leg.distance)
+        XCTAssertEqual(routeProgress.currentLegProgress.leg.source, decoded.currentLegProgress.leg.source)
+        XCTAssertEqual(routeProgress.congestionTravelTimesSegmentsByStep.count, decoded.congestionTravelTimesSegmentsByStep.count)
+        XCTAssertEqual(routeProgress.congestionTimesPerStep, decoded.congestionTimesPerStep)
+    }
+    
+    func testRouteLegProgressCodable() {
+        let coordinates = [
+            CLLocationCoordinate2D(latitude: 0, longitude: 0),
+            CLLocationCoordinate2D(latitude: 2, longitude: 3),
+            CLLocationCoordinate2D(latitude: 4, longitude: 6),
+            CLLocationCoordinate2D(latitude: 6, longitude: 9),
+            CLLocationCoordinate2D(latitude: 8, longitude: 12),
+            CLLocationCoordinate2D(latitude: 10, longitude: 15),
+            CLLocationCoordinate2D(latitude: 12, longitude: 18),
+        ]
+        let options = RouteOptions(coordinates: [coordinates.first!, coordinates.last!])
+        let legProgress = routeLegProgress(options: options, routeCoordinates: coordinates)
+        
+        let data = try! JSONEncoder().encode(legProgress)
+        let decoded = try! JSONDecoder().decode(RouteLegProgress.self, from: data)
+        
+        XCTAssertEqual(legProgress.leg, decoded.leg)
+        XCTAssertEqual(legProgress.stepIndex, decoded.stepIndex)
+        XCTAssertEqual(legProgress.userHasArrivedAtWaypoint, decoded.userHasArrivedAtWaypoint)
+        XCTAssertEqual(legProgress.currentStepProgress.step, decoded.currentStepProgress.step)
+        XCTAssertEqual(legProgress.currentStepProgress.distanceTraveled, decoded.currentStepProgress.distanceTraveled)
+    }
+    
+    func testRouteStepProgressCodable() {
+        let stepProgress = RouteStepProgress(step: RouteStep(transportType: .automobile,
+                                                             maneuverLocation: CLLocationCoordinate2D(latitude: 0, longitude: 0),
+                                                             maneuverType: .arrive,
+                                                             instructions: "instructions",
+                                                             drivingSide: .right,
+                                                             distance: 13.3,
+                                                             expectedTravelTime: 0.7))
+        
+        let data = try! JSONEncoder().encode(stepProgress)
+        let decoded = try! JSONDecoder().decode(RouteStepProgress.self, from: data)
+        
+        XCTAssertEqual(stepProgress.step, decoded.step)
+        XCTAssertEqual(stepProgress.userDistanceToManeuverLocation, decoded.userDistanceToManeuverLocation)
+        XCTAssertEqual(stepProgress.intersectionsIncludingUpcomingManeuverIntersection, decoded.intersectionsIncludingUpcomingManeuverIntersection)
+        XCTAssertEqual(stepProgress.intersectionIndex, decoded.intersectionIndex)
+        XCTAssertEqual(stepProgress.intersectionDistances, decoded.intersectionDistances)
+        XCTAssertEqual(stepProgress.userDistanceToUpcomingIntersection, decoded.userDistanceToUpcomingIntersection)
+        XCTAssertEqual(stepProgress.visualInstructionIndex, decoded.visualInstructionIndex)
+        XCTAssertEqual(stepProgress.spokenInstructionIndex, decoded.spokenInstructionIndex)
+    }
 }
