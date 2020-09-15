@@ -312,7 +312,7 @@ extension FeedbackViewController: UICollectionViewDelegateFlowLayout {
         let titleHeight = item.title.height(constrainedTo: width, font: FeedbackCollectionViewCell.Constants.titleFont)
         let cellHeight: CGFloat = FeedbackCollectionViewCell.Constants.circleSize.height
             + FeedbackCollectionViewCell.Constants.padding
-            + titleHeight
+            + FeedbackCollectionViewCell.Constants.verticalPadding // top and bottom padding
             + FeedbackViewController.verticalCellPadding
         return CGSize(width: width, height: cellHeight )
     }
