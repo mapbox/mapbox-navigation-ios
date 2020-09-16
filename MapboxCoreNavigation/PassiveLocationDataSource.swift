@@ -47,6 +47,13 @@ open class PassiveLocationDataSource: NSObject {
     let navigator: Navigator
     
     /**
+     Whether the navigator’s router has been configured.
+     
+     Set this property to `true` before calling `Navigator.configureRouter(for:)` and reset it to `false` if something causes the router to be unconfigured.
+     */
+    var isConfigured = false
+    
+    /**
      The location data source’s delegate.
      */
     public weak var delegate: PassiveLocationDataSourceDelegate?
@@ -56,6 +63,10 @@ open class PassiveLocationDataSource: NSObject {
      */
     public func startUpdatingLocation(completionHandler: ((Error?) -> Void)? = nil) {
         systemLocationManager.startUpdatingLocation()
+        
+        guard !isConfigured else {
+            return
+        }
         
         directions.fetchAvailableOfflineVersions { [weak self] (versions, error) in
             guard let self = self, let latestVersion = versions?.first(where: { !$0.isEmpty }), error == nil else {
@@ -76,6 +87,10 @@ open class PassiveLocationDataSource: NSObject {
      Creates a cache for tiles of the given version and configures the navigator to use this cache.
      */
     func configureNavigator(withTilesVersion tilesVersion: String) throws {
+        guard !isConfigured else {
+            return
+        }
+        
         let endpointConfig = TileEndpointConfiguration(directions: directions, tilesVersion: tilesVersion)
 
         // ~/Library/Caches/tld.app.bundle.id/.mapbox/2020_08_08-03_00_00/
@@ -91,6 +106,7 @@ open class PassiveLocationDataSource: NSObject {
         try FileManager.default.createDirectory(at: tilesURL, withIntermediateDirectories: true, attributes: nil)
         let params = RouterParams(tilesPath: tilesURL.path, inMemoryTileCache: nil, mapMatchingSpatialCache: nil, threadsCount: nil, endpointConfig: endpointConfig)
         
+        isConfigured = true
         navigator.configureRouter(for: params)
     }
     
