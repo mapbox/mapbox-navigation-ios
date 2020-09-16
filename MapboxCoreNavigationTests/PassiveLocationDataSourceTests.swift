@@ -70,7 +70,9 @@ class PassiveLocationDataSourceTests: XCTestCase {
         wait(for: [startingExpectation], timeout: 2)
         
         // FIXME: Starting the location manager should automatically configure the navigator.
+        XCTAssertFalse(locationManager.isConfigured)
         XCTAssertNoThrow(try locationManager.configureNavigator(withTilesVersion: "1234"))
+        XCTAssertTrue(locationManager.isConfigured)
         
         let locationUpdateExpectation = expectation(description: "Location manager should respond to every manual location update")
         locationUpdateExpectation.expectedFulfillmentCount = 5
