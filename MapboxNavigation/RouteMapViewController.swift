@@ -684,6 +684,13 @@ extension RouteMapViewController: NavigationViewDelegate {
             streetLabelLayer.lineOpacity = NSExpression(forConstantValue: 1)
             streetLabelLayer.lineWidth = NSExpression(forConstantValue: 20)
             streetLabelLayer.lineColor = NSExpression(forConstantValue: UIColor.white)
+
+            // filter out to road classes valid for motor transport
+            let roadPredicates = ["motorway", "trunk", "primary", "secondary", "tertiary", "street"].compactMap { roadClass -> NSPredicate? in
+                return NSPredicate(format: "%K == %@", "class", roadClass)
+            }
+            let compoundPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: roadPredicates)
+            streetLabelLayer.predicate = compoundPredicate
             style.insertLayer(streetLabelLayer, at: 0)
         }
 
@@ -692,6 +699,7 @@ extension RouteMapViewController: NavigationViewDelegate {
         var smallestLabelDistance = Double.infinity
         var currentName: String?
         var currentShieldName: NSAttributedString?
+        let slicedLine = stepShape.sliced(from: closestCoordinate)!
 
         for feature in features {
             var allLines: [MGLPolyline] = []
@@ -706,7 +714,6 @@ extension RouteMapViewController: NavigationViewDelegate {
                 guard line.pointCount > 0 else { continue }
                 let featureCoordinates =  Array(UnsafeBufferPointer(start: line.coordinates, count: Int(line.pointCount)))
                 let featurePolyline = LineString(featureCoordinates)
-                let slicedLine = stepShape.sliced(from: closestCoordinate)!
 
                 let lookAheadDistance: CLLocationDistance = 10
                 guard let pointAheadFeature = featurePolyline.sliced(from: closestCoordinate)!.coordinateFromStart(distance: lookAheadDistance) else { continue }
