@@ -410,6 +410,7 @@ class ViewController: UIViewController {
         mapView.showsUserLocation = true
         mapView.userTrackingMode = .follow
         mapView.showsUserHeadingIndicator = true
+        mapView.showsDelay = true
     }
     
     func uninstall(_ mapView: NavigationMapView) {

@@ -60,6 +60,29 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      */
     public weak var courseTrackingDelegate: NavigationMapViewCourseTrackingDelegate?
     
+    /**
+     Controls whether delays are shown along the route line.
+     */
+    public var showsDelay: Bool = false {
+        didSet {
+            guard let style = style else { return }
+            
+            if showsDelay {
+                guard let routes = routes else { return }
+                let delayInformationSource = addDelayInformationSource(style, routes: routes)
+                addDelayLayer(style, source: delayInformationSource)
+            } else {
+                if let delaySource = style.source(withIdentifier: SourceIdentifier.delay) {
+                    style.removeSource(delaySource)
+                }
+                
+                if let delayLayer = style.layer(withIdentifier: StyleLayerIdentifier.delay) {
+                    style.removeLayer(delayLayer)
+                }
+            }
+        }
+    }
+    
     let sourceOptions: [MGLShapeSourceOption: Any] = [.maximumZoomLevel: 16]
 
     struct SourceIdentifier {
@@ -78,6 +101,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         static let mainRouteCasing = "\(identifierNamespace).mainRouteCasing"
         
         static let buildingExtrusion = "\(identifierNamespace).buildingExtrusion"
+        
+        static let delay = "\(identifierNamespace).delay"
     }
     
     struct StyleLayerIdentifier {
@@ -103,6 +128,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         static let instructionCircle = "\(identifierNamespace).instructionCircle"
         
         static let buildingExtrusion = "\(identifierNamespace).buildingExtrusion"
+        
+        static let delay = "\(identifierNamespace).delay"
     }
 
     // MARK: - Instance Properties
@@ -480,6 +507,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         let mainRouteCasingLayer = addMainRouteCasingLayer(style, source: mainRouteCasingSource, lineGradient: routeCasingGradient(0.0), below: mainRouteLayer)
         let alternativeRoutesLayer = addAlternativeRoutesLayer(style, source: allRoutesSource, below: mainRouteCasingLayer)
         addAlternativeRoutesCasingLayer(style, source: allRoutesSource, below: alternativeRoutesLayer)
+        
+        if showsDelay {
+            let delayInformationSource = addDelayInformationSource(style, routes: routes)
+            addDelayLayer(style, source: delayInformationSource)
+        }
     }
     
     // MARK: - Route line insertion methods
@@ -508,6 +540,24 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         style.addSource(mainRouteCasingSource)
         
         return mainRouteCasingSource
+    }
+    
+    func addDelayInformationSource(_ style: MGLStyle, routes: [Route]) -> MGLSource {
+        if let delayInformationSource = style.source(withIdentifier: SourceIdentifier.delay) as? MGLShapeSource {
+            return delayInformationSource
+        }
+        
+        let delayInformationSource = MGLShapeSource(identifier: SourceIdentifier.delay, features: delayFeatures(routes), options: nil)
+        style.addSource(delayInformationSource)
+        
+        // TODO: Improve delay view size calculation for various delay values.
+        let delayInformationView = DelayInformationView(frame: CGRect(x: 0, y: 0, width: 80, height: 40))
+        delayInformationView.backgroundColor = .clear
+        if let imageRepresentation = delayInformationView.imageRepresentation {
+            style.setImage(imageRepresentation, forName: "delay_information")
+        }
+        
+        return delayInformationSource
     }
 
     @discardableResult func addMainRouteLayer(_ style: MGLStyle, source: MGLSource, lineGradient: NSExpression?) -> MGLStyleLayer {
@@ -654,6 +704,36 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         style.insertLayer(alternativeRoutesCasingLayer, below: layer)
         
         return alternativeRoutesCasingLayer
+    }
+    
+    @discardableResult func addDelayLayer(_ style: MGLStyle, source: MGLSource) -> MGLStyleLayer {
+        if let delayLayer = style.layer(withIdentifier: StyleLayerIdentifier.delay) {
+            return delayLayer
+        }
+        
+        let opacityStops = [
+            11: 0.0,
+            13: 0.7,
+            15: 1
+        ]
+        
+        let delayLayer = MGLSymbolStyleLayer(identifier: StyleLayerIdentifier.delay, source: source)
+        delayLayer.iconImageName = NSExpression(forConstantValue: "delay_information")
+        delayLayer.iconScale = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", [11: 0.05, 13: 0.5, 15: 1])
+        delayLayer.iconOpacity = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", opacityStops)
+        delayLayer.iconAnchor = NSExpression(forConstantValue: NSValue(mglIconAnchor: .bottom))
+        delayLayer.iconHaloColor = NSExpression(forConstantValue: UIColor.black)
+        delayLayer.text = NSExpression(forKeyPath: "delay")
+        delayLayer.textColor = NSExpression(forConstantValue: UIColor.white)
+        delayLayer.textFontSize = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", [11: 0.05, 13: 7, 15: 15])
+        delayLayer.textOpacity = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", opacityStops)
+        delayLayer.maximumTextWidth = NSExpression(forConstantValue: 80.0)
+        delayLayer.textAnchor = NSExpression(forConstantValue: NSValue(mglTextAnchor: .bottom))
+        delayLayer.textOffset = NSExpression(forConstantValue: CGVector(dx: 0, dy: -1))
+        
+        style.addLayer(delayLayer)
+        
+        return delayLayer
     }
 
     // MARK: - Vanishing route line methods
@@ -823,11 +903,13 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             StyleLayerIdentifier.mainRoute,
             StyleLayerIdentifier.mainRouteCasing,
             StyleLayerIdentifier.alternativeRoutes,
-            StyleLayerIdentifier.alternativeRoutesCasing
+            StyleLayerIdentifier.alternativeRoutesCasing,
+            StyleLayerIdentifier.delay
         ].compactMap { style.layer(withIdentifier: $0) })
         style.remove(Set([
             SourceIdentifier.allRoutes,
-            SourceIdentifier.mainRouteCasing
+            SourceIdentifier.mainRouteCasing,
+            SourceIdentifier.delay
         ].compactMap { style.source(withIdentifier: $0) }))
         
         routes = nil
@@ -1523,5 +1605,53 @@ extension NavigationMapView {
         highlightedBuildingsLayer.fillExtrusionBase = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", fillExtrusionBaseStops)
         highlightedBuildingsLayer.fillExtrusionColor = highlightedBuildingsColorExpression
         highlightedBuildingsLayer.fillExtrusionOpacity = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", opacityStops)
+    }
+}
+
+// MARK: - Delay Information
+
+extension NavigationMapView {
+    
+    func delay(_ expectedTravelTime: TimeInterval, typicalTravelTime: TimeInterval?) -> String {
+        var delay = ""
+        // TODO: Handle case when typicalTravelTime is larger than expectedTravelTime.
+        // TODO: Improve size calculation for various delays.
+        if let typicalTravelTime = typicalTravelTime, expectedTravelTime >= typicalTravelTime {
+            let timeDifference = Int(expectedTravelTime - typicalTravelTime)
+            let (hours, minutes) = (timeDifference / 3600, (timeDifference % 3600) / 60)
+            
+            if hours > 0 {
+                delay += "+\(hours) hr "
+            }
+            
+            if minutes > 0 {
+                if delay.isEmpty { delay += "+" }
+                delay += "\(minutes) min"
+            }
+        }
+        
+        return delay
+    }
+    
+    func delayFeatures(_ routes: [Route]) -> [MGLPointFeature] {
+        var features = [MGLPointFeature]()
+        
+        routes.forEach {
+            $0.legs.forEach {
+                $0.steps.forEach {
+                    let totalDelay = delay($0.expectedTravelTime, typicalTravelTime: $0.typicalTravelTime)
+                    if !totalDelay.isEmpty {
+                        let pointFeature = MGLPointFeature()
+                        pointFeature.coordinate = $0.maneuverLocation
+                        pointFeature.attributes = [
+                            "delay": totalDelay
+                        ]
+                        features.append(pointFeature)
+                    }
+                }
+            }
+        }
+        
+        return features
     }
 }
