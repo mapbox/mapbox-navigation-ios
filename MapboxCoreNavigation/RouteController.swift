@@ -309,7 +309,7 @@ open class RouteController: NSObject {
     }
     
     private func update(progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
-        updateDistanceTraveled(progress, at: rawLocation)
+        progress.updateDistanceTraveled(with: rawLocation)
         
         //Fire the delegate method
         delegate?.router(self, didUpdate: progress, with: location, rawLocation: rawLocation)

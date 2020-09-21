@@ -163,8 +163,7 @@ extension InternalRouter where Self: Router {
                 return
             }
             
-            self.routeProgress.refreshRoute(with: response.route)
-            self.updateDistanceTraveled(self.routeProgress, at: location)
+            self.routeProgress.refreshRoute(with: response.route, at: location)
             
             var userInfo = [RouteController.NotificationUserInfoKey: Any]()
             userInfo[.routeProgressKey] = self.routeProgress
@@ -270,22 +269,6 @@ extension InternalRouter where Self: Router {
         userInfo[.isProactiveKey] = proactive
         NotificationCenter.default.post(name: .routeControllerDidReroute, object: self, userInfo: userInfo)
         delegate?.router(self, didRerouteAlong: routeProgress.route, at: location, proactive: proactive)
-    }
-    
-    /// :nodoc:
-    func updateDistanceTraveled(_ progress: RouteProgress, at location: CLLocation) {
-        let stepProgress = progress.currentLegProgress.currentStepProgress
-        let step = stepProgress.step
-        
-        //Increment the progress model
-        guard let polyline = step.shape else {
-            preconditionFailure("Route steps used for navigation must have shape data")
-        }
-        if let closestCoordinate = polyline.closestCoordinate(to: location.coordinate) {
-            let remainingDistance = polyline.distance(from: closestCoordinate.coordinate)!
-            let distanceTraveled = step.distance - remainingDistance
-            stepProgress.distanceTraveled = distanceTraveled
-        }
     }
 }
 
