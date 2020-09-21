@@ -136,6 +136,12 @@
 /* Accessibility value of label indicating the absence of a rating */
 "NO_RATING" = "Keine Bewertung gesetzt.";
 
+/* General category of route feedback where user position is incorrect. */
+"POSITIONING" = "Positioning";
+
+/* Specific route feedback that user positioning is incorrect. */
+"POSITIONING_USER" = "Your position";
+
 /* Rating Reset To Zero Accessability Hint */
 "RATING_ACCESSIBILITY_RESET" = "Klicke, um Bewertung auf 0 zurückzusetzen.";
 
