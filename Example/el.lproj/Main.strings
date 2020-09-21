@@ -1,0 +1,15 @@
+
+/* Class = "UIButton"; normalTitle = "Continue to next destination"; ObjectID = "1vl-kS-fBt"; */
+"1vl-kS-fBt.normalTitle" = "Συνεχίστε στον επόμενο προορισμό";
+
+/* Class = "UILabel"; text = "Long press to select a destination"; ObjectID = "dEY-t6-Ect"; */
+"dEY-t6-Ect.text" = "Πατήστε παρατεταμένα για να επιλέξετε έναν προορισμό";
+
+/* Class = "UIButton"; normalTitle = "Simulate Locations"; ObjectID = "iiq-Gf-SKY"; */
+"iiq-Gf-SKY.normalTitle" = "Προσομοίωση τοποθεσιών";
+
+/* Class = "UIButton"; normalTitle = "Start Navigation"; ObjectID = "nMe-Tl-a1N"; */
+"nMe-Tl-a1N.normalTitle" = "Ξεκινήστε την πλοήγηση";
+
+/* Class = "UINavigationItem"; title = "Mapbox Navigation"; ObjectID = "zxr-0T-HBr"; */
+"zxr-0T-HBr.title" = "Πλοήγηση Mapbox";
