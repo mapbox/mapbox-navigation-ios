@@ -304,15 +304,14 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         let expectedTravelTime = stepProgress.step.expectedTravelTime
         let durationUntilNextManeuver = stepProgress.durationRemaining
         let durationSincePreviousManeuver = expectedTravelTime - durationUntilNextManeuver
+        let conservativeFramesPerSecond = UIDevice.current.isPluggedIn ? FrameIntervalOptions.pluggedInFramesPerSecond : minimumFramesPerSecond
         
-        if UIDevice.current.isPluggedIn {
-            preferredFramesPerSecond = FrameIntervalOptions.pluggedInFramesPerSecond
-        } else if let upcomingStep = routeProgress.currentLegProgress.upcomingStep,
+        if let upcomingStep = routeProgress.currentLegProgress.upcomingStep,
             upcomingStep.maneuverDirection == .straightAhead || upcomingStep.maneuverDirection == .slightLeft || upcomingStep.maneuverDirection == .slightRight {
-            preferredFramesPerSecond = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFramesPerSecond : minimumFramesPerSecond
+            preferredFramesPerSecond = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFramesPerSecond : conservativeFramesPerSecond
         } else if durationUntilNextManeuver > FrameIntervalOptions.durationUntilNextManeuver &&
             durationSincePreviousManeuver > FrameIntervalOptions.durationSincePreviousManeuver {
-            preferredFramesPerSecond = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFramesPerSecond : minimumFramesPerSecond
+            preferredFramesPerSecond = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFramesPerSecond : conservativeFramesPerSecond
         } else {
             preferredFramesPerSecond = FrameIntervalOptions.pluggedInFramesPerSecond
         }
