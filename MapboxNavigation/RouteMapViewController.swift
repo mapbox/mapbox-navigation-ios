@@ -687,10 +687,9 @@ extension RouteMapViewController: NavigationViewDelegate {
 
             if ![DirectionsProfileIdentifier.walking, DirectionsProfileIdentifier.cycling].contains( router.routeProgress.routeOptions.profileIdentifier) {
                 // filter out to road classes valid for motor transport
-                let roadPredicates = ["motorway", "motorway_link", "trunk", "trunk_link", "primary", "primary_link", "secondary", "secondary_link", "tertiary", "tertiary_link", "street", "street_limited", "roundabout", "mini_roundabout"].compactMap { roadClass -> NSPredicate? in
-                    return NSPredicate(format: "%K == %@", "class", roadClass)
-                }
-                let compoundPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: roadPredicates)
+                let roadPredicates = ["motorway", "motorway_link", "trunk", "trunk_link", "primary", "primary_link", "secondary", "secondary_link", "tertiary", "tertiary_link", "street", "street_limited", "roundabout"]
+
+                let compoundPredicate = NSPredicate(format: "class IN %@", roadPredicates)
                 streetLabelLayer.predicate = compoundPredicate
             }
             style.insertLayer(streetLabelLayer, at: 0)
