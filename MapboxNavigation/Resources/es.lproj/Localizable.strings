@@ -5,19 +5,19 @@
 "CARPLAY_ARRIVED" = "Ha llegado";
 
 /* Message on arrival action sheet */
-"CARPLAY_ARRIVED_MESSAGE" = "What would you like to do?";
+"CARPLAY_ARRIVED_MESSAGE" = "¿Qué quieres hacer?";
 
 /* Name of the waypoint associated with the current location */
 "CARPLAY_CURRENT_LOCATION" = "Ubicación actual";
 
 /* Title for dismiss button */
-"CARPLAY_DISMISS" = "Dismiss";
+"CARPLAY_DISMISS" = "Cerrar";
 
 /* Title for end navigation button */
 "CARPLAY_END" = "Terminar";
 
 /* Title on the exit button in the arrival form */
-"CARPLAY_EXIT_NAVIGATION" = "Terminar navegación";
+"CARPLAY_EXIT_NAVIGATION" = "Terminar la navegación";
 
 /* Title for feedback template in CarPlay */
 "CARPLAY_FEEDBACK" = "Feedback";
@@ -32,7 +32,7 @@
 "CARPLAY_MUTE" = "Silenciar";
 
 /* Title for overview button in CPTripPreviewTextConfiguration */
-"CARPLAY_OVERVIEW" = "Overview";
+"CARPLAY_OVERVIEW" = "Vista previa";
 
 /* Title for rating template in CarPlay */
 "CARPLAY_RATE_RIDE" = "Calificar su viaje";
@@ -41,13 +41,31 @@
 "CARPLAY_RATE_TRIP" = "Calificar su viaje";
 
 /* Message when search returned zero results in CarPlay */
-"CARPLAY_SEARCH_NO_RESULTS" = "No resueltos";
+"CARPLAY_SEARCH_NO_RESULTS" = "No hay resultados";
 
 /* Alert title that shows when feedback has been submitted */
-"CARPLAY_SUBMITTED_FEEDBACK" = "Submitted";
+"CARPLAY_SUBMITTED_FEEDBACK" = "Enviado";
 
 /* Title for unmute button */
-"CARPLAY_UNMUTE" = "Unmute";
+"CARPLAY_UNMUTE" = "Dejar de silenciar";
+
+/* Specific route feedback that audio guidance provided was confusing. */
+"CONFUSING_AUDIO_FEEDBACK" = "Audio confuso";
+
+/* Specific route feedback that audio guidance was provided too early before a maneuever. */
+"CONFUSING_AUDIO_GUIDANCE_TOO_EARLY_FEEDBACK" = "Instrucciones tempranas";
+
+/* Specific route feedback that audio guidance was provided too late for a maneuever. */
+"CONFUSING_AUDIO_GUIDANCE_TOO_LATE_FEEDBACK" = "Instrucciones tardes";
+
+/* Specific route feedback that an audio guidance problem was encountered but not listed as a choice. */
+"CONFUSING_AUDIO_OTHER_FEEDBACK" = "Otro";
+
+/* Specific route feedback that audio guidance used incorrect pronunciation. */
+"CONFUSING_AUDIO_PRONUNCIATION_INCORRECT_FEEDBACK" = "Pronunciación incorrecta";
+
+/* Specific route feedback that audio guidance repeated a road name. */
+"CONFUSING_AUDIO_ROADNAME_REPEATED_FEEDBACK" = "Nombre de calle repetido";
 
 /* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "Cerrar";
@@ -58,9 +76,6 @@
 /* Comment Placeholder Text */
 "END_OF_ROUTE_TITLE" = "¿Cómo podemos mejorar?";
 
-/* Error message when the SDK is unable to read a spoken instruction. */
-"FAILED_INSTRUCTION" = "No se logró leer la instrucción en voz alta.";
-
 /* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "Ruta más rápida encontrada";
 
@@ -70,8 +85,41 @@
 /* Title of view controller for sending feedback */
 "FEEDBACK_TITLE" = "Reportar un problema";
 
+/* Specific route feedback that a illegal route problem was encountered but not listed as a choice. */
+"ILLEGAL_ROUTE_OTHER_FEEDBACK" = "Otro";
+
 /* Label indicating the device volume is too low to hear spoken instructions and needs to be manually increased */
 "INAUDIBLE_INSTRUCTIONS_CTA" = "Ajustar el volumen para escuchar las instrucciones";
+
+/* Specific route feedback that an exit was incorrect. */
+"INCORRECT_VISUAL_EXIT_INFO_INCORRECT_FEEDBACK" = "Detalles de la salida incorrectos";
+
+/* General category of route feedback where visual instruction was incorrect. */
+"INCORRECT_VISUAL_FEEDBACK" = "Parece incorrecto";
+
+/* Specific route feedback that an instruction was missing. */
+"INCORRECT_VISUAL_INSTRUCTION_MISSING_FEEDBACK" = "Faltan instrucciones";
+
+/* Specific route feedback for an unnecessary instruction. */
+"INCORRECT_VISUAL_INSTRUCTION_UNNECESSARY_FEEDBACK" = "Instrucción innecessaria";
+
+/* Specific route feedback that the wrong lane was specified. */
+"INCORRECT_VISUAL_LANE_GUIDANCE_INCORRECT_FEEDBACK" = "Guiado de carriles incorrecto";
+
+/* Specific route feedback that a maneuver specified was incorrect. */
+"INCORRECT_VISUAL_MANEUVER_INCORRECT_FEEDBACK" = "Maniobra incorrecta";
+
+/* Specific route feedback that a visual instruction problem was encountered but not listed as a choice. */
+"INCORRECT_VISUAL_OTHER_FEEDBACK" = "Otro";
+
+/* Specific route feedback that a road is known by another name. */
+"INCORRECT_VISUAL_ROAD_NAME_DIFFERENT_FEEDBACK" = "Calle conocida con un nombre diferente";
+
+/* Specific route feedback for incorrect street name. */
+"INCORRECT_VISUAL_STREET_NAME_INCORRECT_FEEDBACK" = "Nombre de calle incorrecto";
+
+/* Specific route feedback for incorrect turn arrow being shown. */
+"INCORRECT_VISUAL_TURN_ICON_INCORRECT_FEEDBACK" = "Ícono de giro incorrecto";
 
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@ y %2$@";
@@ -79,8 +127,20 @@
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "<%@";
 
+/* Title for button that cancels user's submission of feedback on navigation session issues. */
+"NAVIGATION_REPORT_CANCEL" = "Cancelar";
+
+/* Title for button that submits user's feedback on multiple navigation session issues. 1 is the number of items */
+"NAVIGATION_REPORT_ISSUES" = "Enviar %ld Artículo(s)";
+
 /* Accessibility value of label indicating the absence of a rating */
 "NO_RATING" = "No hay calificación.";
+
+/* General category of route feedback where user position is incorrect. */
+"POSITIONING" = "Posicionamiento";
+
+/* Specific route feedback that user positioning is incorrect. */
+"POSITIONING_USER" = "Tu posición";
 
 /* Rating Reset To Zero Accessability Hint */
 "RATING_ACCESSIBILITY_RESET" = "Tocar para volver la calificación a cero.";
@@ -92,10 +152,61 @@
 "RATING_STARS_FORMAT" = "Ha calificado %li estrella(s).";
 
 /* Indicates that rerouting is in progress */
-"REROUTING" = "Reenrutando…";
+"REROUTING" = "Redirigiendo…";
 
 /* Button title for resume tracking */
 "RESUME" = "Continuar";
+
+/* Specific route feedback that a road closure type was encountered but not listed as a choice. */
+"ROAD_CLOSURE_OTHER_FEEDBACK" = "Otro";
+
+/* Specific route feedback that user was offered an alternative that was unexpected. */
+"ROUTE_QUALITY_ALTERNATIVE_ROUTE_NOT_EXPECTED_FEEDBACK" = "Ruta alternativa inesperada";
+
+/* General category of route feedback where route quality was poor. */
+"ROUTE_QUALITY_FEEDBACK" = "Calidad de la ruta";
+
+/* Specific route feedback that route suggested an illegal roadway. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_CARS_NOT_ALLOWED_FEEDBACK" = "El tránsito de autos no está permitido en la calle";
+
+/* General route feedback that route contained illegal instructions. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_FEEDBACK" = "Ruta no permitida";
+
+/* Specific route feedback that route travelled wrong way on a one-way road. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_ONE_WAY_FEEDBACK" = "La ruta sigue contra un sentido único";
+
+/* Specific route feedback that route suggested an illegal turn. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_TURN_NOT_ALLOWED_FEEDBACK" = "No se permite girar";
+
+/* Specific route feedback that route suggested an illegal unprotected turn. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_UNPROTECTED_TURN_FEEDBACK" = "La intersección es peligrosa";
+
+/* Specific route feedback that route contained non-existant roads. */
+"ROUTE_QUALITY_INCLUDED_MISSING_ROADS_FEEDBACK" = "La ruta incluye calles faltantes";
+
+/* Specific route feedback that route was not drivable. */
+"ROUTE_QUALITY_NON_DRIVABLE_FEEDBACK" = "La ruta no es transitable";
+
+/* Specific route feedback that route was not ideal according to user. */
+"ROUTE_QUALITY_NOT_PREFERRED_FEEDBACK" = "No es la ruta preferida";
+
+/* Specific route feedback that a route quality problem was encountered but not listed as a choice. */
+"ROUTE_QUALITY_OTHER_FEEDBACK" = "Otro";
+
+/* General route feedback that route contained closed road. */
+"ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK" = "Camino cerrado";
+
+/* Specifc route feedback that route contained road that is permanently closed. */
+"ROUTE_QUALITY_ROAD_CLOSURE_PERMANENT_FEEDBACK" = "Calle cerrada permanentemente";
+
+/* Specifc route feedback that route contained road not shown on map. */
+"ROUTE_QUALITY_ROAD_MISSING_FROM_MAP_FEEDBACK" = "Calle ausente del mapa";
+
+/* Specific route feedback that route contained impassible, narrow roads. */
+"ROUTE_QUALITY_ROADS_TOO_NARROW_FEEDBACK" = "La ruta tiene caminos angostos al tránsito";
+
+/* Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible. */
+"SPEED_LIMIT_LEGEND" = "Máx";
 
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
 "USER_IN_SIMULATION_MODE" = "Simulando navegación a velocidad %@×";

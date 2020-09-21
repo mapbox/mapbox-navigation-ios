@@ -136,6 +136,12 @@
 /* Accessibility value of label indicating the absence of a rating */
 "NO_RATING" = "Chưa đánh giá.";
 
+/* General category of route feedback where user position is incorrect. */
+"POSITIONING" = "Định vị";
+
+/* Specific route feedback that user positioning is incorrect. */
+"POSITIONING_USER" = "Vị trí của bạn";
+
 /* Rating Reset To Zero Accessability Hint */
 "RATING_ACCESSIBILITY_RESET" = "Chạm để đặt lại đánh giá.";
 
