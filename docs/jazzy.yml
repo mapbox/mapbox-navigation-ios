@@ -57,6 +57,7 @@ custom_categories:
       - RouteOptions
       - NavigationMatchOptions
       - SimulationMode
+      - PassiveLocationDataSource
   - name: Maps
     children:
       - NavigationMapView
@@ -74,6 +75,7 @@ custom_categories:
       - MGLPolyline
       - MGLPolylineFeature
       - MGLStyle
+      - PassiveLocationManager
       - WaypointStyle
   - name: Styling
     children:
@@ -100,6 +102,7 @@ custom_categories:
       - InstructionsCardViewController
       - InstructionsCardContainerView
       - InstructionsCardContainerViewDelegate
+      - InstructionsBannerViewDelegate
       - ManeuverView
       - JunctionView
       - GenericRouteShield
