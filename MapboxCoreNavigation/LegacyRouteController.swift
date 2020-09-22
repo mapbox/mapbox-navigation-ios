@@ -290,29 +290,17 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     }
     
     private func update(progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
-        let stepProgress = progress.currentLegProgress.currentStepProgress
-        let step = stepProgress.step
+        progress.updateDistanceTraveled(with: rawLocation)
         
-        //Increment the progress model
-        guard let polyline = step.shape else {
-            preconditionFailure("Route steps used for navigation must have shape data")
-        }
+        //Fire the delegate method
+        delegate?.router(self, didUpdate: progress, with: location, rawLocation: rawLocation)
         
-        if let closestCoordinate = polyline.closestCoordinate(to: rawLocation.coordinate) {
-            let remainingDistance = polyline.distance(from: closestCoordinate.coordinate)!
-            let distanceTraveled = step.distance - remainingDistance
-            stepProgress.distanceTraveled = distanceTraveled
-            
-            //Fire the delegate method
-            delegate?.router(self, didUpdate: progress, with: location, rawLocation: rawLocation)
-            
-            //Fire the notification (for now)
-            NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: [
-                RouteController.NotificationUserInfoKey.routeProgressKey: progress,
-                RouteController.NotificationUserInfoKey.locationKey: location, //guaranteed value
-                RouteController.NotificationUserInfoKey.rawLocationKey: rawLocation, //raw
-            ])
-        }
+        //Fire the notification (for now)
+        NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: [
+            RouteController.NotificationUserInfoKey.routeProgressKey: progress,
+            RouteController.NotificationUserInfoKey.locationKey: location, //guaranteed value
+            RouteController.NotificationUserInfoKey.rawLocationKey: rawLocation, //raw
+        ])
     }
         
     func updateIntersectionIndex(for currentStepProgress: RouteStepProgress) {

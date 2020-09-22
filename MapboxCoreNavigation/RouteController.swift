@@ -309,28 +309,17 @@ open class RouteController: NSObject {
     }
     
     private func update(progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
-        let stepProgress = progress.currentLegProgress.currentStepProgress
-        let step = stepProgress.step
+        progress.updateDistanceTraveled(with: rawLocation)
         
-        //Increment the progress model
-        guard let polyline = step.shape else {
-            preconditionFailure("Route steps used for navigation must have shape data")
-        }
-        if let closestCoordinate = polyline.closestCoordinate(to: rawLocation.coordinate) {
-            let remainingDistance = polyline.distance(from: closestCoordinate.coordinate)!
-            let distanceTraveled = step.distance - remainingDistance
-            stepProgress.distanceTraveled = distanceTraveled
-            
-            //Fire the delegate method
-            delegate?.router(self, didUpdate: progress, with: location, rawLocation: rawLocation)
-            
-            //Fire the notification (for now)
-            NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: [
-                NotificationUserInfoKey.routeProgressKey: progress,
-                NotificationUserInfoKey.locationKey: location, //guaranteed value
-                NotificationUserInfoKey.rawLocationKey: rawLocation, //raw
-            ])
-        }
+        //Fire the delegate method
+        delegate?.router(self, didUpdate: progress, with: location, rawLocation: rawLocation)
+        
+        //Fire the notification (for now)
+        NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: [
+            NotificationUserInfoKey.routeProgressKey: progress,
+            NotificationUserInfoKey.locationKey: location, //guaranteed value
+            NotificationUserInfoKey.rawLocationKey: rawLocation, //raw
+        ])
     }
     
     private func announcePassage(of spokenInstructionPoint: SpokenInstruction, routeProgress: RouteProgress) {
