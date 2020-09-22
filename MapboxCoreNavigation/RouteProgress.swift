@@ -288,13 +288,32 @@ open class RouteProgress: Codable {
     /**
      Updates the current route with attributes from the given skeletal route.
      */
-    public func refreshRoute(with refreshedRoute: RefreshedRoute) {
+    public func refreshRoute(with refreshedRoute: RefreshedRoute, at location: CLLocation) {
         route.refreshLegAttributes(from: refreshedRoute)
         currentLegProgress = RouteLegProgress(leg: route.legs[legIndex],
                                               stepIndex: currentLegProgress.stepIndex,
                                               spokenInstructionIndex: currentLegProgress.currentStepProgress.spokenInstructionIndex)
-        
         calculateLegsCongestion()
+        updateDistanceTraveled(with: location)
+    }
+    
+    /**
+     Increments the progress according to new location specified.
+     - parameter location: Updated user location.
+     */
+    public func updateDistanceTraveled(with location: CLLocation) {
+        let stepProgress = currentLegProgress.currentStepProgress
+        let step = stepProgress.step
+        
+        //Increment the progress model
+        guard let polyline = step.shape else {
+            preconditionFailure("Route steps used for navigation must have shape data")
+        }
+        if let closestCoordinate = polyline.closestCoordinate(to: location.coordinate) {
+            let remainingDistance = polyline.distance(from: closestCoordinate.coordinate)!
+            let distanceTraveled = step.distance - remainingDistance
+            stepProgress.distanceTraveled = distanceTraveled
+        }
     }
     
     // MARK: - Codable implementation
