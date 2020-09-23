@@ -4,12 +4,12 @@ step-library:
   - &restore-cache
       restore_cache:
         keys:
-          - nav-cache-v3-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cartfile.resolved" }}
-          - nav-cache-v3-{{ .Environment.CIRCLE_JOB }} # used if checksum fails
+          - nav-cache-v5-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cartfile.resolved" }}
+          - nav-cache-v5-{{ .Environment.CIRCLE_JOB }} # used if checksum fails
 
   - &save-cache
       save_cache:
-        key: nav-cache-v3-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cartfile.resolved" }}
+        key: nav-cache-v5-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cartfile.resolved" }}
         paths:
           - Carthage
 
@@ -64,11 +64,25 @@ step-library:
           git diff --exit-code -- */*/*.lproj
 
   - &install-dependencies
-      run:
-        name: Install Dependencies
-        command: |
-          carthage bootstrap --platform ios --cache-builds --configuration Debug --no-use-binaries --use-netrc
-          carthage outdated --xcode-warnings # prints warnings if there are outdated carthage dependencies
+      unless:
+        condition:
+          equal: [ "12.0.0", << parameters.xcode >> ]
+        steps:
+          run:
+            name: Install Dependencies
+            command: |
+              carthage bootstrap --platform ios --cache-builds --configuration Debug --no-use-binaries --use-netrc
+              carthage outdated --xcode-warnings # prints warnings if there are outdated carthage dependencies
+
+  - &install-dependencies-12
+      when:
+        condition:
+          equal: [ "12.0.0", << parameters.xcode >> ]
+        steps:
+          run:
+            name: Install Dependencies
+            command: |
+              ./scripts/wcarthage.sh bootstrap --platform ios --cache-builds --configuration Debug --no-use-binaries --use-netrc
 
   - &build-Example
       run:
@@ -164,6 +178,7 @@ jobs:
           steps:
             - run: rm -rf Cartfile.private && rm -rf Cartfile.resolved
       - *install-dependencies
+      - *install-dependencies-12
       - *save-cache
       - run:
           name: Install prerequisites
@@ -188,8 +203,12 @@ jobs:
             - run: bash <(curl -s https://codecov.io/bash)
 
   xcode-11-examples:
+    parameters:
+      xcode:
+        type: string
+        default: "11.4.1"
     macos:
-      xcode: "11.4.1"
+      xcode: << parameters.xcode >>
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
@@ -203,8 +222,12 @@ jobs:
       - *save-cache
 
   ios-trigger-metrics:
+    parameters:
+      xcode:
+        type: string
+        default: "11.4.1"
     macos:
-      xcode: "11.4.1"
+      xcode: << parameters.xcode >>
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
@@ -213,6 +236,12 @@ jobs:
 workflows:
   workflow:
     jobs:
+      - build-job:
+          name: "Xcode_12.0_iOS_14.0"
+          xcode: "12.0.0"
+          iOS: "14.0"
+          test: false
+          device: "iPhone 8 Plus"
       - build-job:
           name: "Xcode_11.5_iOS_13.5"
           xcode: "11.5.0"
