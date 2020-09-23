@@ -16,6 +16,7 @@ fi
 SEM_VERSION=$1
 SEM_VERSION=${SEM_VERSION/#v}
 SHORT_VERSION=${SEM_VERSION%-*}
+MINOR_VERSION=${SEM_VERSION%.*}
 YEAR=$(date '+%Y')
 
 step "Version ${SEM_VERSION}"
@@ -42,7 +43,7 @@ sed -i '' -E "s/## *master/## ${SHORT_VERSION}/g" CHANGELOG.md
 # Skip updating the installation instructions for patch releases or prereleases.
 if [[ $SHORT_VERSION == $SEM_VERSION && $SHORT_VERSION == *.0 ]]; then
     step "Updating readmes to version ${SEM_VERSION}…"
-    sed -i '' -E "s/~> *[^']+/~> ${SEM_VERSION}/g" README.md custom-navigation.md
+    sed -i '' -E "s/~> *[^']+/~> ${MINOR_VERSION}/g" README.md custom-navigation.md
 elif [[ $SHORT_VERSION != $SEM_VERSION ]]; then
     step "Updating readmes to version ${SEM_VERSION}…"
     sed -i '' -E "s/:tag => 'v[^']+'/:tag => 'v${SEM_VERSION}'/g; s/\"mapbox\/mapbox-navigation-ios\" \"v[^\"]+\"/\"mapbox\/mapbox-navigation-ios\" \"v${SEM_VERSION}\"/g" README.md custom-navigation.md
