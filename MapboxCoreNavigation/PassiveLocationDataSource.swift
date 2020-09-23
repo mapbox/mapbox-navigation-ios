@@ -91,8 +91,6 @@ open class PassiveLocationDataSource: NSObject {
             return
         }
         
-        let endpointConfig = TileEndpointConfiguration(directions: directions, tilesVersion: tilesVersion)
-
         // ~/Library/Caches/tld.app.bundle.id/.mapbox/2020_08_08-03_00_00/
         guard var tilesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first else {
             preconditionFailure("No Caches directory to create the tile directory inside")
@@ -104,10 +102,16 @@ open class PassiveLocationDataSource: NSObject {
         tilesURL.appendPathComponent(tilesVersion, isDirectory: true)
         // Tiles with different versions shouldn't be mixed, it may cause inappropriate Navigator's behaviour
         try FileManager.default.createDirectory(at: tilesURL, withIntermediateDirectories: true, attributes: nil)
+        configureNavigator(withURL: tilesURL, tilesVersion: tilesVersion)
+    }
+
+    func configureNavigator(withURL tilesURL: URL, tilesVersion: String) {
+        let endpointConfig = TileEndpointConfiguration(directions: directions, tilesVersion: tilesVersion)
+
         let params = RouterParams(tilesPath: tilesURL.path, inMemoryTileCache: nil, mapMatchingSpatialCache: nil, threadsCount: nil, endpointConfig: endpointConfig)
+        navigator.configureRouter(for: params)
         
         isConfigured = true
-        navigator.configureRouter(for: params)
     }
     
     /**
@@ -119,23 +123,21 @@ open class PassiveLocationDataSource: NSObject {
         guard let location = location else { return }
         systemLocationManager.stopUpdatingLocation()
         systemLocationManager.stopUpdatingHeading()
-        delegate?.passiveLocationDataSource(self, didUpdateLocation: location, rawLocation: location)
+        self.didUpdate(locations: [location])
     }
-}
 
-extension PassiveLocationDataSource: CLLocationManagerDelegate {
-    public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    private func didUpdate(locations: [CLLocation]) {
         for location in locations {
             navigator.updateLocation(for: FixLocation(location))
         }
-        
+
         guard let lastRawLocation = locations.last else {
             return
         }
-        
+
         let status = navigator.status(at: lastRawLocation.timestamp)
         let lastLocation = CLLocation(status.location)
-        
+
         delegate?.passiveLocationDataSource(self, didUpdateLocation: lastLocation, rawLocation: lastRawLocation)
         let matches = status.map_matcher_output.matches.map {
             Match(legs: [], shape: nil, distance: -1, expectedTravelTime: -1, confidence: $0.proba, weight: .routability(value: 1))
@@ -146,6 +148,12 @@ extension PassiveLocationDataSource: CLLocationManagerDelegate {
             NotificationUserInfoKey.matchesKey: matches,
             NotificationUserInfoKey.roadNameKey: status.roadName,
         ])
+    }
+}
+
+extension PassiveLocationDataSource: CLLocationManagerDelegate {
+    public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        didUpdate(locations: locations)
     }
 
     public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
