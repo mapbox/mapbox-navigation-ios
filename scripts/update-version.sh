@@ -29,6 +29,12 @@ step "Updating CocoaPods podspecs to version ${SEM_VERSION}…"
 
 find . -type f -name '*.podspec' -exec sed -i '' "s/^ *s.version *=.*$/  s.version = '${SEM_VERSION}'/" {} +
 
+step "Updating CocoaPods installation test fixture…"
+
+cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall/
+pod update
+cd -
+
 step "Updating changelog to version ${SHORT_VERSION}…"
 
 sed -i '' -E "s/## *master/## ${SHORT_VERSION}/g" CHANGELOG.md
