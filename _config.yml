@@ -1,0 +1,7 @@
+baseurl: /ios/navigation/api
+permalink: /:title/index.html # required for redirects
+exclude:
+  - .artifacts.yml
+  - .pubisher.yml
+  - README.md
+  - .jekyll-cache
