@@ -402,6 +402,7 @@
 		DA3DA6DA23E4D7B5004B7B5B /* MapboxAccounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3504DF7322B79AF300D2FD3C /* MapboxAccounts.framework */; };
 		DA3DA6DB23E4D7B5004B7B5B /* MapboxAccounts.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3504DF7322B79AF300D2FD3C /* MapboxAccounts.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DA443DDE2278C90E00ED1307 /* CPTrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA443DDD2278C90E00ED1307 /* CPTrip.swift */; };
+		DA5B9522251AEE58007FE6AC /* CLLocationManager+MGLNavigationAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = DA5B9521251AEE58007FE6AC /* CLLocationManager+MGLNavigationAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DA66063023B32F99007832E5 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA66062F23B32F99007832E5 /* Array.swift */; };
 		DA67EA5623CAF345001686EA /* MGLShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA67EA5523CAF345001686EA /* MGLShape.swift */; };
 		DA754E1823AC56E5007E16B5 /* MBXAccounts+CoreNavigationAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = DA754E1623AC56E5007E16B5 /* MBXAccounts+CoreNavigationAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1017,6 +1018,7 @@
 		DA545AC41FAA86450090908E /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DA5AD03C1FEBA03700FC7D7B /* bg */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = bg; path = bg.lproj/Main.strings; sourceTree = "<group>"; };
 		DA5AD0401FEBA23200FC7D7B /* bg */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = bg; path = bg.lproj/Localizable.strings; sourceTree = "<group>"; };
+		DA5B9521251AEE58007FE6AC /* CLLocationManager+MGLNavigationAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CLLocationManager+MGLNavigationAdditions.h"; sourceTree = "<group>"; };
 		DA625E901F10557300FBE176 /* fa */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fa; path = fa.lproj/Main.strings; sourceTree = "<group>"; };
 		DA625E921F1055DE00FBE176 /* fa */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fa; path = fa.lproj/Navigation.strings; sourceTree = "<group>"; };
 		DA625E931F105B1900FBE176 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
@@ -1627,6 +1629,7 @@
 				C51511D020EAC89D00372A91 /* CPMapTemplate.swift */,
 				DA443DDD2278C90E00ED1307 /* CPTrip.swift */,
 				35BF8CA31F28EBD8003F6125 /* String.swift */,
+				DA5B9521251AEE58007FE6AC /* CLLocationManager+MGLNavigationAdditions.h */,
 				8D24A2F920449B430098CBF8 /* Dictionary.swift */,
 				351BEBDF1E5BCC63006FE110 /* MGLMapView.swift */,
 				35D825F91E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.h */,
@@ -1815,6 +1818,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA5B9522251AEE58007FE6AC /* CLLocationManager+MGLNavigationAdditions.h in Headers */,
 				DA23C9611F4FC05C00BA9522 /* MGLMapView+MGLNavigationAdditions.h in Headers */,
 				35D825FE1E6A2EC60088F83B /* MapboxNavigation.h in Headers */,
 			);

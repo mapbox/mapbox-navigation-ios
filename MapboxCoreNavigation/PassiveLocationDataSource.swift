@@ -169,6 +169,10 @@ extension PassiveLocationDataSource: CLLocationManagerDelegate {
  A delegate of a `PassiveLocationDataSource` object implements methods that the location data source calls as the user’s location changes.
  */
 public protocol PassiveLocationDataSourceDelegate: class {
+    /// - seealso: `CLLocationManagerDelegate.locationManagerDidChangeAuthorization(_:)`
+    @available(iOS 14.0, *)
+    func passiveLocationDataSourceDidChangeAuthorization(_ dataSource: PassiveLocationDataSource)
+    
     /// - seealso: `CLLocationManagerDelegate.locationManager(_:didUpdateLocations:)`
     func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didUpdateLocation location: CLLocation, rawLocation: CLLocation)
     
