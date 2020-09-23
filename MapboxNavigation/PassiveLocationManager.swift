@@ -42,6 +42,26 @@ open class PassiveLocationManager: NSObject, MGLLocationManager {
     public func requestWhenInUseAuthorization() {
         dataSource.systemLocationManager.requestWhenInUseAuthorization()
     }
+    
+    @available(iOS 14.0, *)
+    public func accuracyAuthorization() -> MBNavigationAccuracyAuthorization {
+        // CLLocationManager.accuracyAuthorization was introduced in the iOS 14 SDK in Xcode 12, so Xcode 11 doesn’t recognize it.
+        guard let accuracyAuthorizationValue = dataSource.systemLocationManager.value(forKey: "accuracyAuthorization") as? Int,
+              let accuracyAuthorization = MBNavigationAccuracyAuthorization(rawValue: accuracyAuthorizationValue) else {
+            return MBNavigationAccuracyAuthorization(rawValue: 0)!
+        }
+        return accuracyAuthorization
+    }
+    
+    @available(iOS 14.0, *)
+    public func requestTemporaryFullAccuracyAuthorization(withPurposeKey purposeKey: String) {
+        // CLLocationManager.requestTemporaryFullAccuracyAuthorization(withPurposeKey:) was introduced in the iOS 14 SDK in Xcode 12, so Xcode 11 doesn’t recognize it.
+        let requestTemporaryFullAccuracyAuthorization = Selector(("requestTemporaryFullAccuracyAuthorizationWithPurposeKey:" as NSString) as String)
+        guard dataSource.systemLocationManager.responds(to: requestTemporaryFullAccuracyAuthorization) else {
+            return
+        }
+        dataSource.systemLocationManager.perform(requestTemporaryFullAccuracyAuthorization, with: purposeKey)
+    }
 
     public func startUpdatingLocation() {
         dataSource.startUpdatingLocation()
@@ -74,6 +94,16 @@ open class PassiveLocationManager: NSObject, MGLLocationManager {
 }
 
 extension PassiveLocationManager: PassiveLocationDataSourceDelegate {
+    @available(iOS 14.0, *)
+    public func passiveLocationDataSourceDidChangeAuthorization(_ dataSource: PassiveLocationDataSource) {
+        // MGLLocationManager.locationManagerDidChangeAuthorization(_:) was introduced in Mapbox Maps SDK for iOS v6.2.0, but v6.0.0–v6.1.x are still supported.
+        let locationManagerDidChangeAuthorization = Selector(("locationManagerDidChangeAuthorization:" as NSString) as String)
+        guard let delegate = delegate, delegate.responds(to: locationManagerDidChangeAuthorization) else {
+            return
+        }
+        delegate.perform(locationManagerDidChangeAuthorization, with: self)
+    }
+    
     public func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didUpdateLocation location: CLLocation, rawLocation: CLLocation) {
         delegate?.locationManager(self, didUpdate: [location])
     }
