@@ -45,6 +45,9 @@ class PassiveLocationDataSourceTests: XCTestCase {
             self.locationUpdateExpectation = locationUpdateExpectation
         }
         
+        func passiveLocationDataSourceDidChangeAuthorization(_ dataSource: PassiveLocationDataSource) {
+        }
+        
         func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didUpdateLocation location: CLLocation, rawLocation: CLLocation) {
             print("Got location: \(rawLocation.coordinate.latitude), \(rawLocation.coordinate.longitude) → \(location.coordinate.latitude), \(location.coordinate.longitude)")
             print("Value: \(road.proximity(of: location.coordinate)) < \(road.proximity(of: rawLocation.coordinate))")
