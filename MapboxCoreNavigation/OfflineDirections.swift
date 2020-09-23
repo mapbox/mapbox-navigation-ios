@@ -115,14 +115,20 @@ public class NavigationDirections: Directions {
      */
     public func configureRouter(tilesURL: URL, completionHandler: @escaping NavigationDirectionsCompletionHandler) {
         NavigationDirectionsConstants.offlineSerialQueue.sync {
-            let params = RouterParams(tilesPath: tilesURL.path, inMemoryTileCache: nil, mapMatchingSpatialCache: nil, threadsCount: nil, endpointConfig: nil)
-            self.navigator.configureRouter(for: params)
+            let tilesConfig = TilesConfig(tilesPath: tilesURL.path,
+                                          inMemoryTileCache: nil,
+                                          mapMatchingSpatialCache: nil,
+                                          threadsCount: nil,
+                                          endpointConfig: nil)
+            
+            let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
+            self.navigator = Navigator(profile: settingsProfile, config: NavigatorConfig() , customConfig: "", tilesConfig: tilesConfig)
+            
             DispatchQueue.main.async {
                 completionHandler(tilesURL)
             }
         }
     }
-    
     
     /**
      Unpacks a .tar-file at the given filePathURL to a writeable output directory.
@@ -152,9 +158,8 @@ public class NavigationDirections: Directions {
             let outputPath = outputDirectoryURL.path
             
             let navigator: Navigator = {
-                let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile,
-                                                      platform: ProfilePlatform.KIOS)
-                return Navigator(profile: settingsProfile, config: NavigatorConfig(), customConfig: "")
+                let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
+                return Navigator(profile: settingsProfile, config: NavigatorConfig(), customConfig: "", tilesConfig: TilesConfig())
             }()
             let numberOfTiles = navigator.unpackTiles(forPackedTilesPath: tilePath, outputDirectory: outputPath)
             
@@ -226,23 +231,27 @@ public class NavigationDirections: Directions {
                 catch {
                     return completionHandler(session, .failure(.unknown(underlying: error)))
                 }
-                
             }
         }
     }
     
     var _navigator: Navigator!
     var navigator: Navigator {
-        assert(currentQueueName() == NavigationDirectionsConstants.offlineSerialQueueLabel,
-               "The offline navigator must be accessed from the dedicated serial queue")
-        
-        if _navigator == nil {
-            let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile,
-                                                  platform: ProfilePlatform.KIOS)
-            self._navigator = Navigator(profile: settingsProfile, config: NavigatorConfig(), customConfig: "")
+        get {
+            assert(currentQueueName() == NavigationDirectionsConstants.offlineSerialQueueLabel,
+                   "The offline navigator must be accessed from the dedicated serial queue")
+            
+            if _navigator == nil {
+                let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
+                self._navigator = Navigator(profile: settingsProfile, config: NavigatorConfig(), customConfig: "", tilesConfig: TilesConfig())
+            }
+            
+            return _navigator
         }
         
-        return _navigator
+        set {
+            _navigator = newValue
+        }
     }
 }
 

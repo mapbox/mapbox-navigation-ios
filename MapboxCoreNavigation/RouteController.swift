@@ -22,9 +22,8 @@ open class RouteController: NSObject {
     }
 
     lazy var navigator: Navigator = {
-        let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile,
-                                              platform: ProfilePlatform.KIOS)
-        return Navigator(profile: settingsProfile, config: NavigatorConfig(), customConfig: "")
+        let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
+        return Navigator(profile: settingsProfile, config: NavigatorConfig(), customConfig: "", tilesConfig: TilesConfig())
     }()
     
     public var indexedRoute: IndexedRoute {
@@ -190,14 +189,15 @@ open class RouteController: NSObject {
             return
         }
         // TODO: Add support for alternative route
-        navigator.setRouteForRouteResponse(routeJSONString, route: 0, leg: UInt32(routeProgress.legIndex))
+        navigator.setRouteForRouteResponse(routeJSONString, route: 0, leg: UInt32(routeProgress.legIndex), options: ActiveGuidanceOptions())
     }
     
     /// updateRouteLeg is used to notify nav-native of the developer changing the active route-leg.
     private func updateRouteLeg(to value: Int) {
         let legIndex = UInt32(value)
-        let newStatus = navigator.changeRouteLeg(forRoute: 0, leg: legIndex)
-        updateIndexes(status: newStatus, progress: routeProgress)
+        if navigator.changeRouteLeg(forRoute: 0, leg: legIndex), let timestamp = location?.timestamp {
+            updateIndexes(status: navigator.status(at: timestamp), progress: routeProgress)
+        }
     }
     
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
