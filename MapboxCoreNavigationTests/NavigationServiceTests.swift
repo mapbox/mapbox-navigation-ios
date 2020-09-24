@@ -269,33 +269,39 @@ class NavigationServiceTests: XCTestCase {
         XCTAssertLessThan(distance, distanceThreshold)
     }
 
-    func testUserPuckShouldFaceBackwards() {
+    func testLocationCourseShouldNotChange() {
         // This route is a simple straight line: http://geojson.io/#id=gist:anonymous/64cfb27881afba26e3969d06bacc707c&map=17/37.77717/-122.46484
-        let directions = DirectionsSpy()
         let options = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 37.77735, longitude: -122.461465),
             CLLocationCoordinate2D(latitude: 37.777016, longitude: -122.468832),
         ])
         let route = Fixture.route(from: "straight-line", options: options)
-
-        let navigation = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: options, directions: directions)
-        let router = navigation.router!
-        let firstCoord = router.routeProgress.nearbyShape.coordinates.first!
-        let firstLocation = CLLocation(latitude: firstCoord.latitude, longitude: firstCoord.longitude)
-        let coordNearStart = router.routeProgress.nearbyShape.coordinateFromStart(distance: 10)!
-
-        navigation.locationManager(navigation.locationManager, didUpdateLocations: [firstLocation])
-
-        // We're now 10 meters away from the last coord, looking at the start.
-        // Basically, simulating moving backwards.
-        let directionToStart = coordNearStart.direction(to: firstCoord)
-        let facingTowardsStartLocation = CLLocation(coordinate: coordNearStart, altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: directionToStart, speed: 0, timestamp: Date())
-
-        navigation.locationManager(navigation.locationManager, didUpdateLocations: [facingTowardsStartLocation])
-
-        // The course should not be the interpolated course, rather the raw course.
-        XCTAssertEqual(directionToStart, router.location!.course, "The course should be the raw course and not an interpolated course")
-        XCTAssertFalse(facingTowardsStartLocation.shouldSnap(toRouteWith: facingTowardsStartLocation.interpolatedCourse(along: router.routeProgress.nearbyShape)!, distanceToFirstCoordinateOnLeg: facingTowardsStartLocation.distance(from: firstLocation)), "Should not snap")
+        let navigationService = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: options, directions: DirectionsSpy())
+        let router = navigationService.router!
+        let firstCoordinate = router.routeProgress.nearbyShape.coordinates.first!
+        let firstLocation = CLLocation(latitude: firstCoordinate.latitude, longitude: firstCoordinate.longitude)
+        let coordinateNearStart = router.routeProgress.nearbyShape.coordinateFromStart(distance: 10)!
+        
+        navigationService.locationManager(navigationService.locationManager, didUpdateLocations: [firstLocation])
+        
+        // As per navigation native logic location course will be set to the course of the road,
+        // so providing locations with different course will not affect anything.
+        let directionToStart = coordinateNearStart.direction(to: firstCoordinate)
+        let facingTowardsStartLocation = CLLocation(coordinate: coordinateNearStart,
+                                                    altitude: 0,
+                                                    horizontalAccuracy: 0,
+                                                    verticalAccuracy: 0,
+                                                    course: directionToStart,
+                                                    speed: 0,
+                                                    timestamp: Date())
+        
+        navigationService.locationManager(navigationService.locationManager, didUpdateLocations: [facingTowardsStartLocation])
+        
+        // Instead of raw course navigator will return interpolated course (course of the road).
+        let interpolatedCourse = facingTowardsStartLocation.interpolatedCourse(along: router.routeProgress.nearbyShape)!
+        XCTAssertEqual(Int(interpolatedCourse), Int(router.location!.course), "Interpolated course and course provided by navigation native should be almost equal.")
+        XCTAssertFalse(facingTowardsStartLocation.shouldSnap(toRouteWith: interpolatedCourse,
+                                                             distanceToFirstCoordinateOnLeg: facingTowardsStartLocation.distance(from: firstLocation)), "Should not snap")
     }
 
     //TODO: Broken by PortableRoutecontroller & MBNavigator -- needs team discussion.
@@ -515,16 +521,16 @@ class NavigationServiceTests: XCTestCase {
             CLLocationCoordinate2D(latitude: 9.52222, longitude: 47.214268),
             CLLocationCoordinate2D(latitude: 47.212326, longitude: 9.512569),
         ]))
-        let trace = Fixture.generateTrace(for: route).shiftedToPresent().qualified()
-        let service = dependencies.navigationService
 
-        let routeController = service.router as! RouteController
+        let navigationService = dependencies.navigationService
+        let routeController = navigationService.router as! RouteController
         routeController.indexedRoute = (route, 0)
-
+        let trace = Fixture.generateTrace(for: route).shiftedToPresent().qualified()
+        
         for (index, location) in trace.enumerated() {
-            service.locationManager!(service.locationManager, didUpdateLocations: [location])
+            navigationService.locationManager!(navigationService.locationManager, didUpdateLocations: [location])
 
-            if index < 33 {
+            if index < 32 {
                 XCTAssert(routeController.routeProgress.legIndex == 0)
             } else {
                 XCTAssert(routeController.routeProgress.legIndex == 1)
