@@ -180,6 +180,32 @@ open class RouteController: NSObject {
         }
     }
     
+    func geometryEncoding(_ routeShapeFormat: RouteShapeFormat) -> ActiveGuidanceGeometryEncoding {
+        switch routeShapeFormat {
+        case .geoJSON:
+            return .kGeoJSON
+        case .polyline:
+            return .kPolyline5
+        case .polyline6:
+            return .kPolyline6
+        }
+    }
+    
+    func mode(_ profileIdentifier: DirectionsProfileIdentifier) -> ActiveGuidanceMode {
+        switch profileIdentifier {
+        case .automobile:
+            return .kDriving
+        case .automobileAvoidingTraffic:
+            return .kDriving
+        case .cycling:
+            return .kCycling
+        case .walking:
+            return .kWalking
+        default:
+            return .kDriving
+        }
+    }
+    
     /// updateNavigator is used to pass the new progress model onto nav-native.
     private func updateNavigator(with progress: RouteProgress) {
         let encoder = JSONEncoder()
@@ -189,7 +215,8 @@ open class RouteController: NSObject {
             return
         }
         // TODO: Add support for alternative route
-        let activeGuidanceOptions = ActiveGuidanceOptions(mode: .kDriving, geometryEncoding: .kPolyline6)
+        let activeGuidanceOptions = ActiveGuidanceOptions(mode: mode(progress.routeOptions.profileIdentifier),
+                                                          geometryEncoding: geometryEncoding(progress.routeOptions.shapeFormat))
         navigator.setRouteForRouteResponse(routeJSONString, route: 0, leg: UInt32(routeProgress.legIndex), options: activeGuidanceOptions)
     }
     
