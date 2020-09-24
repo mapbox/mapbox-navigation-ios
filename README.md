@@ -34,30 +34,6 @@ The Mapbox Navigation SDK is also available [for Android](https://github.com/map
 
 To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
 
-1. Create a [Podfile](https://guides.cocoapods.org/syntax/podfile.html) with the following specification:
-   ```ruby
-   pod 'MapboxNavigation', '~> 0.40.0'
-   ```
-
-1. Run `pod repo update && pod install` and open the resulting Xcode workspace.
-
-### Using Carthage
-
-Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/Carthage/Carthage/):
-
-1. Create a [Cartfile](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#github-repositories) with the following dependency:
-   ```cartfile
-   github "mapbox/mapbox-navigation-ios" ~> 0.40
-   ```
-
-1. Follow the rest of [Carthage’s iOS integration instructions](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos). Your application target’s Embed Frameworks build phase should include `MapboxNavigation.framework`, `MapboxCoreNavigation.framework`, `MapboxNavigationNative.framework`, and `MapboxAccounts.framework`.
-
-## Installing the latest prerelease
-
-### Using CocoaPods
-
-To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
-
 1. Go to your [Mapbox account dashboard](https://account.mapbox.com/) and create an access token that has the `DOWNLOADS:READ` scope. **PLEASE NOTE: This is not the same as your production Mapbox API token. Make sure to keep it private and do not insert it into any Info.plist file.** Create a file named `.netrc` in your home directory if it doesn’t already exist, then add the following lines to the end of the file:
    ```
    machine api.mapbox.com 
@@ -68,8 +44,7 @@ To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
 
 1. Create a [Podfile](https://guides.cocoapods.org/syntax/podfile.html) with the following specification:
    ```ruby
-   pod 'MapboxCoreNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v1.0.0-rc.5'
-   pod 'MapboxNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v1.0.0-rc.5'
+   pod 'MapboxNavigation', '~> 1.0'
    ```
 
 1. Run `pod repo update && pod install` and open the resulting Xcode workspace.
@@ -93,7 +68,7 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
 
 1. Create a [Cartfile](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#github-repositories) with the following dependency:
    ```cartfile
-   github "mapbox/mapbox-navigation-ios" "v1.0.0-rc.5"
+   github "mapbox/mapbox-navigation-ios" ~> 1.0
    ```
 
 1. Run `carthage update --platform iOS --use-netrc` to build just the iOS dependencies.

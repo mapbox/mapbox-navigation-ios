@@ -1,30 +1,30 @@
 PODS:
-  - Mapbox-iOS-SDK (6.2.0):
+  - Mapbox-iOS-SDK (6.2.1):
     - MapboxMobileEvents (~> 0.10.4)
   - MapboxAccounts (2.3.0)
   - MapboxCommon (4.0.0)
-  - MapboxCoreNavigation (1.0.0-rc.5):
+  - MapboxCoreNavigation (1.0.0):
     - MapboxAccounts (~> 2.3.0)
-    - MapboxDirections (~> 1.0.0-rc.2)
+    - MapboxDirections (~> 1.0)
     - MapboxMobileEvents (~> 0.10.2)
     - MapboxNavigationNative (~> 18.0.2)
-    - Turf (~> 0.5.0)
-  - MapboxDirections (1.0.0-rc.2):
+    - Turf (~> 1.0)
+  - MapboxDirections (1.0.0):
     - Polyline (~> 4.2)
-    - Turf (~> 0.5.0)
+    - Turf (~> 1.0)
   - MapboxMobileEvents (0.10.4)
-  - MapboxNavigation (1.0.0-rc.5):
+  - MapboxNavigation (1.0.0):
     - Mapbox-iOS-SDK (~> 6.0)
-    - MapboxCoreNavigation (= 1.0.0-rc.5)
+    - MapboxCoreNavigation (= 1.0.0)
     - MapboxMobileEvents (~> 0.10.2)
-    - MapboxSpeech (~> 0.3.1)
+    - MapboxSpeech (~> 1.0)
     - Solar (~> 2.1)
   - MapboxNavigationNative (18.0.4):
     - MapboxCommon (= 4.0.0)
-  - MapboxSpeech (0.3.1)
+  - MapboxSpeech (1.0.0)
   - Polyline (4.2.1)
   - Solar (2.1.0)
-  - Turf (0.5.0)
+  - Turf (1.0.0)
 
 DEPENDENCIES:
   - MapboxCoreNavigation (from `../../../`)
@@ -50,18 +50,18 @@ EXTERNAL SOURCES:
     :path: "../../../"
 
 SPEC CHECKSUMS:
-  Mapbox-iOS-SDK: edea81429a4d56b944946d6abdf8152f3d1e5c5f
+  Mapbox-iOS-SDK: c5a2ec3a3a0a77ee0ba78f91380e83898cb6aa41
   MapboxAccounts: 84abfdde95d9dc483f604c1b0fe1861edf691ce7
   MapboxCommon: dd235a3715fa752aee83bb3be1d4ce0ba93e3b68
-  MapboxCoreNavigation: 0a147eaa2645406e8d3942b8c2ff6190add361dd
-  MapboxDirections: 5d2a2b6e955983505718ad640728ae8c169940f0
+  MapboxCoreNavigation: 66cc24c44597062f47e5e638ab75044d10148245
+  MapboxDirections: 35c071db30397f06708ae305287f10395586e154
   MapboxMobileEvents: 3dc72ea23e62d4afd64d3242f04686405b4a0e98
-  MapboxNavigation: fa6a92209db5af5bcb62548fd7af45bce89af37b
+  MapboxNavigation: 4f090f5d2baa3995f1d28c8cdb3450c6e0bb8f65
   MapboxNavigationNative: 43492de7a30d587b309ca467b9ae15fead79af6e
-  MapboxSpeech: 67a558a672dc2b6266a993f4624895f69e58d105
+  MapboxSpeech: 4b3aea42e35d056fae1d7ad847a9fc0f412d911e
   Polyline: 0e9890790292741c8186201a536b6bb6a78d02dd
   Solar: 2dc6e7cc39186cb0c8228fa08df76fb50c7d8f24
-  Turf: bdcfefe60df3ca8dc5f742681c178e47f8c5a567
+  Turf: 29b37f6d67f184a7b2d00f594c3e20b3e5474b7d
 
 PODFILE CHECKSUM: d4084fe664fbacd0cffd88ab45eaed1ad907ad1d
 

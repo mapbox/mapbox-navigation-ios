@@ -20,10 +20,9 @@
 * MapboxNavigation depends on Mapbox Maps SDK for iOS v6.0.0, and MapboxCoreNavigation depends on builds of MapboxNavigationNative and MapboxCommon that require authentication. Before CocoaPods or Carthage can download Mapbox.framework, MapboxNavigationNative.framework, and MapboxCommon.framework, you need to create a special-purpose access token. See [the updated installation instructions in the readme](./README.md#installing-the-latest-prerelease) for more details. ([#2437](https://github.com/mapbox/mapbox-navigation-ios/pull/2437), [#2477](https://github.com/mapbox/mapbox-navigation-ios/pull/2477))
 * If you install this SDK using Carthage, you need to also add MapboxCommon.framework to your application target’s Embed Frameworks build phase. ([#2477](https://github.com/mapbox/mapbox-navigation-ios/pull/2477))
 * Xcode 11.4.1 or above is now required for building this SDK from source. ([#2417](https://github.com/mapbox/mapbox-navigation-ios/pull/2417))
-* Enabled MAU billing by default, so that SDKs usage of Mapbox APIs is [billed](https://www.mapbox.com/pricing/) together based on [monthly active users](https://docs.mapbox.com/help/glossary/monthly-active-users/) rather than individually by HTTP request. If you prefer to still use request-based billing, set the `MBXNavigationBillingMethod` key in Info.plist to `request` ([#2405](https://github.com/mapbox/mapbox-navigation-ios/pull/2405).
-* Added Greek and Turkish localizations. ([#2385](https://github.com/mapbox/mapbox-navigation-ios/pull/2385), [#2475](https://github.com/mapbox/mapbox-navigation-ios/pull/2475), [valhalla/valhalla#2438](https://github.com/valhalla/valhalla/pull/2438))
-* Upgraded to [MapboxDirections v1.0.0-rc.2](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v1.0.0-rc.2). ([#2619](https://github.com/mapbox/mapbox-navigation-ios/pull/2619)) 
-* Upgraded to [MapboxSpeech v0.3.1](https://github.com/mapbox/mapbox-speech-swift/releases/tag/v0.3.1). ([#2543](https://github.com/mapbox/mapbox-navigation-ios/pull/2543))
+* By default, usage of Mapbox APIs is now [billed](https://www.mapbox.com/pricing/) together based on [monthly active users](https://docs.mapbox.com/help/glossary/monthly-active-users/) rather than individually by HTTP request. If you prefer to still use request-based billing, set the `MBXNavigationBillingMethod` key in Info.plist to `request`. ([#2405](https://github.com/mapbox/mapbox-navigation-ios/pull/2405))
+* Added Greek and Turkish localizations. ([#2385](https://github.com/mapbox/mapbox-navigation-ios/pull/2385), [#2475](https://github.com/mapbox/mapbox-navigation-ios/pull/2475))
+* Upgraded to [MapboxDirections v1.0.0](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v1.0.0), [MapboxSpeech v1.0.0](https://github.com/mapbox/mapbox-speech-swift/releases/tag/v1.0.0), and [Turf v1.0.0](https://github.com/mapbox/turf-swift/releases/tag/v1.0.0). ([#2646](https://github.com/mapbox/mapbox-navigation-ios/pull/2646))
 
 ### Map
 
@@ -53,10 +52,17 @@
 
 ### Feedback
 
-* Updated `FeedbackType` enum to reflect new top level feedback categories and introduced new `FeedbackSubType`s to support a more granular feedback mechanism. ([#2419](https://github.com/mapbox/mapbox-navigation-ios/pull/2419))
-* Added a `FeedbackSubtypeViewController` subclass of  `FeedbackViewController` for optionally soliciting the more detailed  `FeedbackSubType` items from the user. The presentation of the `FeedbackSubtypeViewController` is enabled through the new `detailedFeedbackEnabled` property of  `FeedbackViewController` ([#2544](https://github.com/mapbox/mapbox-navigation-ios/pull/2544))
-* Updated image icons for top-level feedback collection view items. ([#2419](https://github.com/mapbox/mapbox-navigation-ios/pull/2419), [#2421](https://github.com/mapbox/mapbox-navigation-ios/pull/2421))
-* The feedback screen no longer dismisses automatically after 10 seconds. ([#2420](https://github.com/mapbox/mapbox-navigation-ios/pull/2420))
+* The user can optionally provide more detailed feedback during turn-by-turn navigation. After tapping the feedback button and selecting a feedback type, the user is taken to a second screen for selecting from among multiple subtypes. Set the  `FeedbackViewController.detailedFeedbackEnabled` property to `true` to enable two-step feedback. ([#2544](https://github.com/mapbox/mapbox-navigation-ios/pull/2544))
+* Reorganized `FeedbackType` cases ([#2419](https://github.com/mapbox/mapbox-navigation-ios/pull/2419)):
+   * Removed `FeedbackType.accident`, `FeedbackType.hazard`, `FeedbackType.reportTraffic`, and `FeedbackType.mapIssue`.
+   * Renamed `FeedbackType.roadClosed` and `FeedbackType.notAllowed` to `FeedbackType.roadClosure(subtype:)` and `FeedbackType.illegalRoute(subtype:)`, respectively.
+   * Renamed `FeedbackType.routingError` to `FeedbackType.routeQuality(subtype:)`.
+   * Renamed `FeedbackType.confusingInstruction` to `FeedbackType.confusingAudio(subtype:)`.
+   * Added `FeedbackType.incorrectVisual(subtype:)`, `FeedbackType.routeQuality(subtype:)`, and `FeedbackType.positioning(subtype:)`.
+   * `FeedbackType.missingRoad` is now represented as `FeedbackType.routeQuality(subtype:)` with a subtype of `RouteQualitySubtype.routeIncludedMissingRoads`.
+   * `FeedbackType.missingExit` is now represented as `FeedbackType.incorrectVisual(subtype:)` with a subtype of `IncorrectVisualSubtype.exitInfoIncorrect`.
+* `FeedbackViewController` no longer dismisses automatically after 10 seconds. ([#2420](https://github.com/mapbox/mapbox-navigation-ios/pull/2420))
+* Refreshed the feedback type icons. ([#2419](https://github.com/mapbox/mapbox-navigation-ios/pull/2419), [#2421](https://github.com/mapbox/mapbox-navigation-ios/pull/2421))
 * Fixed warnings in Interface Builder that prevented styling of UI components in `EndOfRouteViewController`. ([#2518](https://github.com/mapbox/mapbox-navigation-ios/pull/2518))
 
 ### User location
