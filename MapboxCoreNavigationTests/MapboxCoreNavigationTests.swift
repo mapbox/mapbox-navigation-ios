@@ -266,6 +266,11 @@ class MapboxCoreNavigationTests: XCTestCase {
             XCTAssertNil(error)
         }
         
+        if points.isEmpty {
+            XCTFail()
+            return
+        }
+        
         XCTAssertEqual(points[0].legIndex, 0)
         XCTAssertEqual(points[0].stepIndex, 0)
         XCTAssertEqual(points[0].visualInstructionIndex, 0)

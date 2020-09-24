@@ -189,7 +189,8 @@ open class RouteController: NSObject {
             return
         }
         // TODO: Add support for alternative route
-        navigator.setRouteForRouteResponse(routeJSONString, route: 0, leg: UInt32(routeProgress.legIndex), options: ActiveGuidanceOptions())
+        let activeGuidanceOptions = ActiveGuidanceOptions(mode: .kDriving, geometryEncoding: .kPolyline6)
+        navigator.setRouteForRouteResponse(routeJSONString, route: 0, leg: UInt32(routeProgress.legIndex), options: activeGuidanceOptions)
     }
     
     /// updateRouteLeg is used to notify nav-native of the developer changing the active route-leg.
