@@ -74,7 +74,6 @@ custom_categories:
       - MGLPolyline
       - MGLPolylineFeature
       - MGLStyle
-      - MGLVectorTileSource
       - WaypointStyle
   - name: Styling
     children:
@@ -96,6 +95,7 @@ custom_categories:
       - CourseUpdatable
       - NavigationComponent
   - name: Guidance Instruction UI
+    children:
       - TopBannerViewController
       - InstructionsCardViewController
       - InstructionsCardContainerView
