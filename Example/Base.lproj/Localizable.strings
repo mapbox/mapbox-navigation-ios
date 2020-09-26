@@ -16,3 +16,8 @@
 /* Title of alert confirming waypoint removal */
 "REMOVE_WAYPOINT_CONFIRM_TITLE" = "Remove Waypoint?";
 
+/* Offline Service Title */
+"OFFLINE_SERVICE_TITLE" = "Offline Service";
+
+/* Close Title */
+"CLOSE_TITLE" = "Close";

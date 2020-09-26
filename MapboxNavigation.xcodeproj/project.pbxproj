@@ -67,9 +67,8 @@
 		352762A4225B751A0015B632 /* OptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352762A3225B751A0015B632 /* OptionsTests.swift */; };
 		3527D2B91EC4619400C07FC9 /* Fixtures.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3527D2B61EC45FBD00C07FC9 /* Fixtures.xcassets */; };
 		3529FCF221A5C5B400AEA9AA /* ResizableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCF121A5C5B300AEA9AA /* ResizableView.swift */; };
-		3529FCF421A5C5C600AEA9AA /* SettingsItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCF321A5C5C600AEA9AA /* SettingsItems.swift */; };
 		3529FCF621A5C5D900AEA9AA /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCF521A5C5D900AEA9AA /* UIViewController.swift */; };
-		3529FCF821A5C62400AEA9AA /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCF721A5C62400AEA9AA /* SettingsViewController.swift */; };
+		3529FCF821A5C62400AEA9AA /* OfflineServiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCF721A5C62400AEA9AA /* OfflineServiceViewController.swift */; };
 		3529FCFC21A5C66800AEA9AA /* OfflineDirections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCFB21A5C66700AEA9AA /* OfflineDirections.swift */; };
 		352BBC3B1E5E6A0C00703DF1 /* MapboxCoreNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */; };
 		352F464D20EB74C200147886 /* NavigationEventsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352F464C20EB74C200147886 /* NavigationEventsManager.swift */; };
@@ -257,6 +256,10 @@
 		6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */; };
 		64847A041F04629D003F3A69 /* Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64847A031F04629D003F3A69 /* Feedback.swift */; };
 		7C12F2D8225B7C320010A931 /* DCA-Arboretum-dummy-faster-route.json in Resources */ = {isa = PBXBuildFile; fileRef = 7C12F2D7225B7C310010A931 /* DCA-Arboretum-dummy-faster-route.json */; };
+		8A53644B251EB2EA002470C4 /* OfflineServiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCF721A5C62400AEA9AA /* OfflineServiceViewController.swift */; };
+		8A53644C251EB2FC002470C4 /* OfflineDataRegionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5CDDC4251BFA3300235CBC /* OfflineDataRegionTableViewCell.swift */; };
+		8A5CDDC9251BFA7300235CBC /* OfflineDataRegionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5CDDC4251BFA3300235CBC /* OfflineDataRegionTableViewCell.swift */; };
+		8A5CDDCB251BFA7900235CBC /* OfflineDataRegionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8A5CDDC5251BFA3300235CBC /* OfflineDataRegionTableViewCell.xib */; };
 		8AA849E924E722410008EE59 /* WaypointStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA849E824E722410008EE59 /* WaypointStyle.swift */; };
 		8D07C5A820B612310093D779 /* EmptyStyle.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D07C5A720B612310093D779 /* EmptyStyle.json */; };
 		8D1A5CD2212DDFCD0059BA4A /* DispatchTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D1A5CD1212DDFCD0059BA4A /* DispatchTimer.swift */; };
@@ -393,8 +396,6 @@
 		DA303CA421B76CB000F921DC /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = DA303CA221B76CB000F921DC /* Localizable.stringsdict */; };
 		DA303CA521B76CB000F921DC /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = DA303CA221B76CB000F921DC /* Localizable.stringsdict */; };
 		DA303CA621B7A90100F921DC /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCF521A5C5D900AEA9AA /* UIViewController.swift */; };
-		DA303CA721B7A91C00F921DC /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCF721A5C62400AEA9AA /* SettingsViewController.swift */; };
-		DA303CA921B7A93100F921DC /* SettingsItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCF321A5C5C600AEA9AA /* SettingsItems.swift */; };
 		DA303CAA21B7A93400F921DC /* ResizableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCF121A5C5B300AEA9AA /* ResizableView.swift */; };
 		DA3525702010A5210048DDFC /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = DA35256E2010A5200048DDFC /* Localizable.stringsdict */; };
 		DA3DA6D823E4D78E004B7B5B /* MapboxAccounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3504DF7322B79AF300D2FD3C /* MapboxAccounts.framework */; };
@@ -697,9 +698,8 @@
 		352762A3225B751A0015B632 /* OptionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsTests.swift; sourceTree = "<group>"; };
 		3527D2B61EC45FBD00C07FC9 /* Fixtures.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Fixtures.xcassets; sourceTree = "<group>"; };
 		3529FCF121A5C5B300AEA9AA /* ResizableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ResizableView.swift; path = Example/ResizableView.swift; sourceTree = "<group>"; };
-		3529FCF321A5C5C600AEA9AA /* SettingsItems.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsItems.swift; path = Example/SettingsItems.swift; sourceTree = "<group>"; };
 		3529FCF521A5C5D900AEA9AA /* UIViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIViewController.swift; path = Example/UIViewController.swift; sourceTree = "<group>"; };
-		3529FCF721A5C62400AEA9AA /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsViewController.swift; path = Example/SettingsViewController.swift; sourceTree = "<group>"; };
+		3529FCF721A5C62400AEA9AA /* OfflineServiceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfflineServiceViewController.swift; sourceTree = "<group>"; };
 		3529FCFB21A5C66700AEA9AA /* OfflineDirections.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfflineDirections.swift; sourceTree = "<group>"; };
 		352AFFA22139986E00EB3567 /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
 		352C35BF2134958F00D77796 /* RecentItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentItem.swift; sourceTree = "<group>"; };
@@ -865,6 +865,8 @@
 		6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WaypointConfirmationViewController.swift; path = Example/WaypointConfirmationViewController.swift; sourceTree = "<group>"; };
 		64847A031F04629D003F3A69 /* Feedback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Feedback.swift; sourceTree = "<group>"; };
 		7C12F2D7225B7C310010A931 /* DCA-Arboretum-dummy-faster-route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "DCA-Arboretum-dummy-faster-route.json"; sourceTree = "<group>"; };
+		8A5CDDC4251BFA3300235CBC /* OfflineDataRegionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineDataRegionTableViewCell.swift; sourceTree = "<group>"; };
+		8A5CDDC5251BFA3300235CBC /* OfflineDataRegionTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OfflineDataRegionTableViewCell.xib; sourceTree = "<group>"; };
 		8AA849E824E722410008EE59 /* WaypointStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaypointStyle.swift; sourceTree = "<group>"; };
 		8B808F852487CFEC00EEE453 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Main.strings; sourceTree = "<group>"; };
 		8B808F862487CFEC00EEE453 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Navigation.strings; sourceTree = "<group>"; };
@@ -1460,7 +1462,6 @@
 		35B711DB1E5E7B70001EDA8D /* Example */ = {
 			isa = PBXGroup;
 			children = (
-				35002D721E5F6C830090E733 /* Supporting files */,
 				358D14651E5E3B7700ADE590 /* AppDelegate.swift */,
 				35379CFB21480BFB00FD402E /* AppDelegate+CarPlay.swift */,
 				358D14671E5E3B7700ADE590 /* ViewController.swift */,
@@ -1469,10 +1470,10 @@
 				6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */,
 				C51FC31620F689F800400CE7 /* CustomStyles.swift */,
 				3577B877214FF35800094294 /* FavoritesList.swift */,
-				3529FCF321A5C5C600AEA9AA /* SettingsItems.swift */,
 				3529FCF121A5C5B300AEA9AA /* ResizableView.swift */,
 				3529FCF521A5C5D900AEA9AA /* UIViewController.swift */,
-				3529FCF721A5C62400AEA9AA /* SettingsViewController.swift */,
+				8A53644A251EAF2C002470C4 /* OfflineService */,
+				35002D721E5F6C830090E733 /* Supporting files */,
 			);
 			name = Example;
 			sourceTree = "<group>";
@@ -1539,6 +1540,16 @@
 				3A45EEF524B8964400F761EB /* SkuTokenProviderTests.swift */,
 			);
 			name = "Recovered References";
+			sourceTree = "<group>";
+		};
+		8A53644A251EAF2C002470C4 /* OfflineService */ = {
+			isa = PBXGroup;
+			children = (
+				3529FCF721A5C62400AEA9AA /* OfflineServiceViewController.swift */,
+				8A5CDDC4251BFA3300235CBC /* OfflineDataRegionTableViewCell.swift */,
+				8A5CDDC5251BFA3300235CBC /* OfflineDataRegionTableViewCell.xib */,
+			);
+			path = OfflineService;
 			sourceTree = "<group>";
 		};
 		8DCB4246218A53F500D6FCAD /* Protocols */ = {
@@ -2175,6 +2186,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DA303C9521B728DD00F921DC /* Localizable.strings in Resources */,
+				8A5CDDCB251BFA7900235CBC /* OfflineDataRegionTableViewCell.xib in Resources */,
 				C57AD98A20EAA39A0087B24B /* Entitlements.plist in Resources */,
 				35002D691E5F6B2F0090E733 /* Main.storyboard in Resources */,
 				35002D611E5F6ADB0090E733 /* Assets.xcassets in Resources */,
@@ -2538,8 +2550,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				358D14681E5E3B7700ADE590 /* ViewController.swift in Sources */,
-				3529FCF821A5C62400AEA9AA /* SettingsViewController.swift in Sources */,
-				3529FCF421A5C5C600AEA9AA /* SettingsItems.swift in Sources */,
+				3529FCF821A5C62400AEA9AA /* OfflineServiceViewController.swift in Sources */,
 				3529FCF221A5C5B400AEA9AA /* ResizableView.swift in Sources */,
 				C5D9800D1EFA8BA9006DBF2E /* CustomViewController.swift in Sources */,
 				AED6285622CBE4CE00058A51 /* ViewController+GuidanceCards.swift in Sources */,
@@ -2547,6 +2558,7 @@
 				6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */,
 				358D14661E5E3B7700ADE590 /* AppDelegate.swift in Sources */,
 				3529FCF621A5C5D900AEA9AA /* UIViewController.swift in Sources */,
+				8A5CDDC9251BFA7300235CBC /* OfflineDataRegionTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2642,6 +2654,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C53F2EE420EBC95600D9798F /* ViewController.swift in Sources */,
+				8A53644B251EB2EA002470C4 /* OfflineServiceViewController.swift in Sources */,
 				C53F2EE520EBC95600D9798F /* CustomViewController.swift in Sources */,
 				DA303CAA21B7A93400F921DC /* ResizableView.swift in Sources */,
 				C53F2EE720EBC95600D9798F /* WaypointConfirmationViewController.swift in Sources */,
@@ -2651,8 +2664,7 @@
 				C53F2EE820EBC95600D9798F /* AppDelegate.swift in Sources */,
 				DA303CA621B7A90100F921DC /* UIViewController.swift in Sources */,
 				3577B878214FF35800094294 /* FavoritesList.swift in Sources */,
-				DA303CA921B7A93100F921DC /* SettingsItems.swift in Sources */,
-				DA303CA721B7A91C00F921DC /* SettingsViewController.swift in Sources */,
+				8A53644C251EB2FC002470C4 /* OfflineDataRegionTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

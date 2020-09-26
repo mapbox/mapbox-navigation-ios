@@ -110,8 +110,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "settings"), style: .plain, target: self, action: #selector(openSettings))
-
-        navigationItem.rightBarButtonItem?.isEnabled = SettingsViewController.numberOfSections > 0
+        navigationItem.rightBarButtonItem?.isEnabled = true
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -138,7 +137,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func openSettings() {
-        let controller = UINavigationController(rootViewController: SettingsViewController())
+        let controller = UINavigationController(rootViewController: OfflineServiceViewController())
         present(controller, animated: true, completion: nil)
     }
 
