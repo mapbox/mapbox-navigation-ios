@@ -536,6 +536,14 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             var parentLayer: MGLStyleLayer? = nil
             for layer in style.layers.reversed() {
                 if !(layer is MGLSymbolStyleLayer) && !identifiers.contains(layer.identifier) {
+                    // MGLMapView automatically adds an MGLLineStyleLayer or MGLFillStyleLayer to the top of the layer stack when adding a polyline or polygon annotation, respectively. There’s no way to insert them lower in the layer stack, so they aren’t good indicators of where to insert the route line.
+                    // Detect and skip such a layer by checking if its source lacks a dedicated MGLSource subclass.
+                    if let vectorLayer = layer as? MGLVectorStyleLayer,
+                       let sourceIdentifier = vectorLayer.sourceIdentifier,
+                       let source = style.source(withIdentifier: sourceIdentifier), type(of: source) == MGLSource.self {
+                        continue
+                    }
+                    
                     parentLayer = layer
                     break
                 }
