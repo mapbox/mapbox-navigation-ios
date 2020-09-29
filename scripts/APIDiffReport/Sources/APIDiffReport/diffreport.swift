@@ -12,6 +12,10 @@
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
+ 
+ Code modified by Mapbox to adjust API filetring criteria, original at https://github.com/material-motion/apidiff/blob/e78f92ae310cd4affc86a4510bb7b9f9609662d2/apple/diffreport/Sources/diffreportlib/diffreport.swift
+ 
+ TODO: log briefly all code updates
  */
 
 import Foundation
