@@ -22,20 +22,23 @@ commands:
 
   run_api_log:
     parameters:
-      xcode:
+      iOS:
           type: string
       device:
         type: string
     steps:
       - run:
+          name: Install Sourcekitten
+          command: brew update && brew install sourcekitten
+      - run:
           name: Building API Diff Report
           command: cd scripts/APIDiffReport && swift build 
       - run:
           name: Generating MapboxCoreNavigation API Log
-          command: cd scripts/APIDiffReport && swift run APIDiffReport log ../.. << pipeline.parameters.api_log_file >>/core_navigation_log.json doc --module-name MapboxCoreNavigation -- -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build
+          command: cd scripts/APIDiffReport && swift run APIDiffReport log ../.. << pipeline.parameters.api_log_file >>/core_navigation_log.json doc --module-name MapboxCoreNavigation -- -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build
       - run:
           name: Generating MapboxNavigation API Log
-          command: cd scripts/APIDiffReport && swift run APIDiffReport log ../.. << pipeline.parameters.api_log_file >>/navigation_log.json doc --module-name MapboxNavigation -- -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build
+          command: cd scripts/APIDiffReport && swift run APIDiffReport log ../.. << pipeline.parameters.api_log_file >>/navigation_log.json doc --module-name MapboxNavigation -- -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build
 
 step-library:
   - &restore-cache
@@ -246,7 +249,7 @@ jobs:
           condition: << parameters.generate_api_log >>
           steps:
             - run_api_log:
-                xcode: << parameters.xcode >>
+                iOS: << parameters.iOS >>
                 device: << parameters.device >>
             - save-api-diff-cache:
                 api_diff_cache: $CIRCLE_SHA1
@@ -335,7 +338,7 @@ jobs:
             - save-api-diff-cache:
                 api_diff_cache: << parameters.base_api_tag >>      
       - run_api_log:
-          xcode: << parameters.xcode >>
+          iOS: << parameters.iOS >>
           device: << parameters.device >>
       - run:
           name: Generating MapboxCoreNavigation API Diff
@@ -347,7 +350,7 @@ jobs:
 parameters:
   api_log_file:
     type: string
-    default: api_logs
+    default: $CIRCLE_WORKING_DIRECTORY/api_logs
 
 workflows:
   workflow:
