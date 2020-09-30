@@ -1,0 +1,2252 @@
+{
+  "warnings": [
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/BundleAdditions.swift",
+      "line": 50,
+      "symbol": "Bundle.ensureSuggestedTileURLExists()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/DispatchTimer.swift",
+      "line": 8,
+      "symbol": "DispatchTimer.State",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/DispatchTimer.swift",
+      "line": 12,
+      "symbol": "DispatchTimer.Payload",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/DispatchTimer.swift",
+      "line": 13,
+      "symbol": "DispatchTimer.defaultAccuracy",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/DispatchTimer.swift",
+      "line": 27,
+      "symbol": "DispatchTimer.state",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/DistanceFormatter.swift",
+      "line": 100,
+      "symbol": "DistanceFormatter.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/DistanceFormatter.swift",
+      "line": 149,
+      "symbol": "DistanceFormatter.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/DistanceFormatter.swift",
+      "line": 155,
+      "symbol": "DistanceFormatter.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/DistanceFormatter.swift",
+      "line": 220,
+      "symbol": "DistanceFormatter.string(for:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/DistanceFormatter.swift",
+      "line": 230,
+      "symbol": "DistanceFormatter.attributedString(for:withDefaultAttributes:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/EndOfRouteFeedback.swift",
+      "line": 17,
+      "symbol": "EndOfRouteFeedback.init(rating:comment:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/EndOfRouteFeedback.swift",
+      "line": 21,
+      "symbol": "EndOfRouteFeedback.init(rating:comment:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Feedback.swift",
+      "line": 109,
+      "symbol": "IncorrectVisualSubtype.turnIconIncorrect",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Feedback.swift",
+      "line": 110,
+      "symbol": "IncorrectVisualSubtype.streetNameIncorrect",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Feedback.swift",
+      "line": 111,
+      "symbol": "IncorrectVisualSubtype.instructionUnnecessary",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Feedback.swift",
+      "line": 112,
+      "symbol": "IncorrectVisualSubtype.instructionMissing",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Feedback.swift",
+      "line": 113,
+      "symbol": "IncorrectVisualSubtype.maneuverIncorrect",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Feedback.swift",
+      "line": 114,
+      "symbol": "IncorrectVisualSubtype.exitInfoIncorrect",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Feedback.swift",
+      "line": 115,
+      "symbol": "IncorrectVisualSubtype.laneGuidanceIncorrect",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Feedback.swift",
+      "line": 116,
+      "symbol": "IncorrectVisualSubtype.roadKnownByDifferentName",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Feedback.swift",
+      "line": 117,
+      "symbol": "IncorrectVisualSubtype.other",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Feedback.swift",
+      "line": 122,
+      "symbol": "ConfusingAudioSubtype.guidanceTooEarly",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Feedback.swift",
+      "line": 123,
+      "symbol": "ConfusingAudioSubtype.guidanceTooLate",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Feedback.swift",
+      "line": 124,
+      "symbol": "ConfusingAudioSubtype.pronunciationIncorrect",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Feedback.swift",
+      "line": 125,
+      "symbol": "ConfusingAudioSubtype.roadNameRepeated",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Feedback.swift",
+      "line": 126,
+      "symbol": "ConfusingAudioSubtype.other",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Feedback.swift",
+      "line": 131,
+      "symbol": "RouteQualitySubtype.routeNonDrivable",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Feedback.swift",
+      "line": 132,
+      "symbol": "RouteQualitySubtype.routeNotPreferred",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Feedback.swift",
+      "line": 133,
+      "symbol": "RouteQualitySubtype.alternativeRouteNotExpected",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Feedback.swift",
+      "line": 134,
+      "symbol": "RouteQualitySubtype.routeIncludedMissingRoads",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Feedback.swift",
+      "line": 135,
+      "symbol": "RouteQualitySubtype.routeHadRoadsTooNarrowToPass",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Feedback.swift",
+      "line": 136,
+      "symbol": "RouteQualitySubtype.other",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Feedback.swift",
+      "line": 141,
+      "symbol": "IllegalRouteSubtype.routedDownAOneWay",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Feedback.swift",
+      "line": 142,
+      "symbol": "IllegalRouteSubtype.turnWasNotAllowed",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Feedback.swift",
+      "line": 143,
+      "symbol": "IllegalRouteSubtype.carsNotAllowedOnStreet",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Feedback.swift",
+      "line": 144,
+      "symbol": "IllegalRouteSubtype.turnAtIntersectionUnprotected",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Feedback.swift",
+      "line": 145,
+      "symbol": "IllegalRouteSubtype.other",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Feedback.swift",
+      "line": 150,
+      "symbol": "RoadClosureSubtype.streetPermanentlyBlockedOff",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Feedback.swift",
+      "line": 151,
+      "symbol": "RoadClosureSubtype.roadMissingFromMap",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Feedback.swift",
+      "line": 152,
+      "symbol": "RoadClosureSubtype.other",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Feedback.swift",
+      "line": 155,
+      "symbol": "PositioningSubtype",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Feedback.swift",
+      "line": 161,
+      "symbol": "FeedbackSource.user",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Feedback.swift",
+      "line": 162,
+      "symbol": "FeedbackSource.reroute",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Feedback.swift",
+      "line": 163,
+      "symbol": "FeedbackSource.unknown",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/LegacyRouteController.swift",
+      "line": 14,
+      "symbol": "LegacyRouteController",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Locale.swift",
+      "line": 27,
+      "symbol": "Locale.usesMetric",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Locale.swift",
+      "line": 35,
+      "symbol": "Locale.usesMetric",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/MMEEventsManager.swift",
+      "line": 10,
+      "symbol": "MMEEventsManager.unrated",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/NavigationEventsManager.swift",
+      "line": 11,
+      "symbol": "EventsManagerDataSource.routeProgress",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/NavigationEventsManager.swift",
+      "line": 12,
+      "symbol": "EventsManagerDataSource.router",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/NavigationEventsManager.swift",
+      "line": 13,
+      "symbol": "EventsManagerDataSource.desiredAccuracy",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/NavigationEventsManager.swift",
+      "line": 14,
+      "symbol": "EventsManagerDataSource.locationProvider",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/NavigationEventsManager.swift",
+      "line": 52,
+      "symbol": "NavigationEventsManager.init(dataSource:accessToken:mobileEventsManager:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/NavigationEventsManager.swift",
+      "line": 189,
+      "symbol": "NavigationEventsManager.sendCarPlayConnectEvent()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/NavigationEventsManager.swift",
+      "line": 195,
+      "symbol": "NavigationEventsManager.sendCarPlayDisconnectEvent()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/NavigationLocationManager.swift",
+      "line": 11,
+      "symbol": "NavigationLocationManager.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/NavigationRouteOptions.swift",
+      "line": 61,
+      "symbol": "NavigationRouteOptions.init(from:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/NavigationRouteOptions.swift",
+      "line": 111,
+      "symbol": "NavigationMatchOptions.init(from:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/NavigationService.swift",
+      "line": 7,
+      "symbol": "SimulationIntent",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/NavigationService.swift",
+      "line": 391,
+      "symbol": "MapboxNavigationService.locationManager(_:didUpdateHeading:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/NavigationService.swift",
+      "line": 395,
+      "symbol": "MapboxNavigationService.locationManager(_:didUpdateLocations:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/NavigationService.swift",
+      "line": 506,
+      "symbol": "MapboxNavigationService.routeProgress",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/NavigationService.swift",
+      "line": 510,
+      "symbol": "MapboxNavigationService.desiredAccuracy",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/NavigationSettings.swift",
+      "line": 12,
+      "symbol": "NavigationSettings.StoredProperty",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/PassiveLocationDataSource.swift",
+      "line": 127,
+      "symbol": "PassiveLocationDataSource.locationManager(_:didUpdateLocations:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/PassiveLocationDataSource.swift",
+      "line": 151,
+      "symbol": "PassiveLocationDataSource.locationManager(_:didUpdateHeading:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/PassiveLocationDataSource.swift",
+      "line": 155,
+      "symbol": "PassiveLocationDataSource.locationManager(_:didFailWithError:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/ReplayLocationManager.swift",
+      "line": 29,
+      "symbol": "ReplayLocationManager.location",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/ReplayLocationManager.swift",
+      "line": 38,
+      "symbol": "ReplayLocationManager.init(locations:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/ReplayLocationManager.swift",
+      "line": 47,
+      "symbol": "ReplayLocationManager.startUpdatingLocation()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/ReplayLocationManager.swift",
+      "line": 52,
+      "symbol": "ReplayLocationManager.stopUpdatingLocation()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/RouteController.swift",
+      "line": 16,
+      "symbol": "RouteController.DefaultBehavior",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/RouteController.swift",
+      "line": 30,
+      "symbol": "RouteController.indexedRoute",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/RouteController.swift",
+      "line": 40,
+      "symbol": "RouteController.route",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/RouteController.swift",
+      "line": 203,
+      "symbol": "RouteController.locationManager(_:didUpdateLocations:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/RouteController.swift",
+      "line": 362,
+      "symbol": "RouteController.enableLocationRecording()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/RouteController.swift",
+      "line": 366,
+      "symbol": "RouteController.disableLocationRecording()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/RouteController.swift",
+      "line": 370,
+      "symbol": "RouteController.locationHistory()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/RouteController.swift",
+      "line": 380,
+      "symbol": "RouteController.userIsOnRoute(_:status:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/RouteController.swift",
+      "line": 398,
+      "symbol": "RouteController.reroute(from:along:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/RouteLeg.swift",
+      "line": 5,
+      "symbol": "RouteLeg.shape",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/RouteOptions.swift",
+      "line": 32,
+      "symbol": "RouteOptions.copy(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/RouteProgress.swift",
+      "line": 20,
+      "symbol": "RouteProgress.routeOptions",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/RouteProgress.swift",
+      "line": 116,
+      "symbol": "RouteProgress.priorLeg",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/RouteProgress.swift",
+      "line": 193,
+      "symbol": "RouteProgress.averageCongestionLevelRemainingOnLeg",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/RouteProgress.swift",
+      "line": 355,
+      "symbol": "RouteLegProgress.userHasArrivedAtWaypoint",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/RouteProgress.swift",
+      "line": 412,
+      "symbol": "RouteLegProgress.upcomingStep",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/RouteProgress.swift",
+      "line": 689,
+      "symbol": "RouteStepProgress.keyPathsAffectingValueForRemainingVisualInstructions",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/RouteProgress.swift",
+      "line": 693,
+      "symbol": "RouteStepProgress.keyPathsAffectingValueForRemainingSpokenInstructions",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Router.swift",
+      "line": 51,
+      "symbol": "Router.indexedRoute",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Router.swift",
+      "line": 53,
+      "symbol": "Router.route",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Router.swift",
+      "line": 61,
+      "symbol": "Router.reroute(from:along:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Router.swift",
+      "line": 93,
+      "symbol": "Router.enableLocationRecording()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Router.swift",
+      "line": 94,
+      "symbol": "Router.disableLocationRecording()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/Router.swift",
+      "line": 95,
+      "symbol": "Router.locationHistory()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/SimulatedLocationManager.swift",
+      "line": 45,
+      "symbol": "SimulatedLocationManager.location",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/SimulatedLocationManager.swift",
+      "line": 60,
+      "symbol": "SimulatedLocationManager.copy()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/SimulatedLocationManager.swift",
+      "line": 139,
+      "symbol": "SimulatedLocationManager.startUpdatingLocation()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxCoreNavigation/SimulatedLocationManager.swift",
+      "line": 143,
+      "symbol": "SimulatedLocationManager.stopUpdatingLocation()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/AVAudioSession.swift",
+      "line": 5,
+      "symbol": "AVAudioSession.tryDuckAudio()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/AVAudioSession.swift",
+      "line": 19,
+      "symbol": "AVAudioSession.tryUnduckAudio()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/BottomBannerViewController.swift",
+      "line": 128,
+      "symbol": "BottomBannerViewController.viewWillDisappear(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/BottomBannerViewController.swift",
+      "line": 133,
+      "symbol": "BottomBannerViewController.viewDidLoad()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/BottomBannerViewController.swift",
+      "line": 160,
+      "symbol": "BottomBannerViewController.prepareForInterfaceBuilder()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/BottomBannerViewLayout.swift",
+      "line": 127,
+      "symbol": "BottomBannerViewController.reinstallConstraints()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/BottomBannerViewLayout.swift",
+      "line": 132,
+      "symbol": "BottomBannerViewController.traitCollectionDidChange(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CGSize.swift",
+      "line": 7,
+      "symbol": "CGSize.init(size:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/Cache.swift",
+      "line": 3,
+      "symbol": "CompletionHandler",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/Cache.swift",
+      "line": 10,
+      "symbol": "BimodalCache.clearMemory()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/Cache.swift",
+      "line": 11,
+      "symbol": "BimodalCache.clearDisk(completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/Cache.swift",
+      "line": 18,
+      "symbol": "BimodalImageCache.store(_:forKey:toDisk:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/Cache.swift",
+      "line": 19,
+      "symbol": "BimodalImageCache.image(forKey:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/Cache.swift",
+      "line": 26,
+      "symbol": "BimodalDataCache.store(_:forKey:toDisk:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/Cache.swift",
+      "line": 27,
+      "symbol": "BimodalDataCache.data(forKey:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPayCompassView.swift",
+      "line": 44,
+      "symbol": "CarPlayCompassView.init(frame:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPayCompassView.swift",
+      "line": 49,
+      "symbol": "CarPlayCompassView.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayManager.swift",
+      "line": 30,
+      "symbol": "CarPlayManager.interfaceController",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayManager.swift",
+      "line": 31,
+      "symbol": "CarPlayManager.carWindow",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayManager.swift",
+      "line": 60,
+      "symbol": "CarPlayManager.mainMapTemplate",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayManager.swift",
+      "line": 61,
+      "symbol": "CarPlayManager.currentNavigator",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayManager.swift",
+      "line": 91,
+      "symbol": "CarPlayManager.navigationViewControllerType",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayManager.swift",
+      "line": 170,
+      "symbol": "CarPlayManager.overviewButton",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayManager.swift",
+      "line": 247,
+      "symbol": "CarPlayManager.application(_:didConnectCarInterfaceController:to:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayManager.swift",
+      "line": 269,
+      "symbol": "CarPlayManager.application(_:didDisconnectCarInterfaceController:from:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayManager.swift",
+      "line": 320,
+      "symbol": "CarPlayManager.resetPanButtons(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayManager.swift",
+      "line": 350,
+      "symbol": "CarPlayManager.templateWillAppear(_:animated:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayManager.swift",
+      "line": 356,
+      "symbol": "CarPlayManager.templateDidAppear(_:animated:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayManager.swift",
+      "line": 365,
+      "symbol": "CarPlayManager.templateWillDisappear(_:animated:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayManager.swift",
+      "line": 383,
+      "symbol": "CarPlayManager.previewRoutes(to:completionHandler:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayManager.swift",
+      "line": 397,
+      "symbol": "CarPlayManager.previewRoutes(between:completionHandler:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayManager.swift",
+      "line": 402,
+      "symbol": "CarPlayManager.previewRoutes(for:completionHandler:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayManager.swift",
+      "line": 469,
+      "symbol": "CarPlayManager.mapTemplate(_:startedTrip:using:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayManager.swift",
+      "line": 542,
+      "symbol": "CarPlayManager.mapTemplate(_:selectedPreviewFor:using:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayManager.swift",
+      "line": 564,
+      "symbol": "CarPlayManager.mapTemplateDidCancelNavigation(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayManager.swift",
+      "line": 574,
+      "symbol": "CarPlayManager.mapTemplateDidBeginPanGesture(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayManager.swift",
+      "line": 580,
+      "symbol": "CarPlayManager.mapTemplate(_:didEndPanGestureWithVelocity:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayManager.swift",
+      "line": 595,
+      "symbol": "CarPlayManager.mapTemplateDidShowPanningInterface(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayManager.swift",
+      "line": 609,
+      "symbol": "CarPlayManager.mapTemplateWillDismissPanningInterface(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayManager.swift",
+      "line": 618,
+      "symbol": "CarPlayManager.mapTemplate(_:didUpdatePanGestureWithTranslation:velocity:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayManager.swift",
+      "line": 644,
+      "symbol": "CarPlayManager.mapTemplate(_:panWith:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayMapViewController.swift",
+      "line": 114,
+      "symbol": "CarPlayMapViewController.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayMapViewController.swift",
+      "line": 120,
+      "symbol": "CarPlayMapViewController.loadView()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayMapViewController.swift",
+      "line": 135,
+      "symbol": "CarPlayMapViewController.viewDidLoad()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayMapViewController.swift",
+      "line": 145,
+      "symbol": "CarPlayMapViewController.viewWillDisappear(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayMapViewController.swift",
+      "line": 196,
+      "symbol": "CarPlayMapViewController.viewSafeAreaInsetsDidChange()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayNavigationViewController.swift",
+      "line": 27,
+      "symbol": "CarPlayNavigationViewController.carPlayManager",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayNavigationViewController.swift",
+      "line": 29,
+      "symbol": "CarPlayNavigationViewController.drivingSide",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayNavigationViewController.swift",
+      "line": 129,
+      "symbol": "CarPlayNavigationViewController.viewDidLoad()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayNavigationViewController.swift",
+      "line": 188,
+      "symbol": "CarPlayNavigationViewController.viewWillDisappear(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayNavigationViewController.swift",
+      "line": 206,
+      "symbol": "CarPlayNavigationViewController.viewSafeAreaInsetsDidChange()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayNavigationViewController.swift",
+      "line": 214,
+      "symbol": "CarPlayNavigationViewController.viewDidLayoutSubviews()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayNavigationViewController.swift",
+      "line": 308,
+      "symbol": "CarPlayNavigationViewController.beginPanGesture()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayNavigationViewController.swift",
+      "line": 566,
+      "symbol": "CarPlayNavigationDelegate.carPlayNavigationViewControllerDidArrive(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlayNavigationViewController.swift",
+      "line": 578,
+      "symbol": "CarPlayNavigationDelegate.carPlayNavigationViewControllerDidArrive(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlaySearchController+ CPSearchTemplateDelegate.swift",
+      "line": 10,
+      "symbol": "CarPlaySearchController.CarPlayGeocodedPlacemarkKey",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlaySearchController+ CPSearchTemplateDelegate.swift",
+      "line": 21,
+      "symbol": "CarPlaySearchController.searchTemplate(_:updatedSearchText:completionHandler:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlaySearchController+ CPSearchTemplateDelegate.swift",
+      "line": 47,
+      "symbol": "CarPlaySearchController.searchTemplateSearchButtonPressed(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlaySearchController+ CPSearchTemplateDelegate.swift",
+      "line": 57,
+      "symbol": "CarPlaySearchController.searchTemplate(_:selectedResult:completionHandler:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlaySearchController+ CPSearchTemplateDelegate.swift",
+      "line": 72,
+      "symbol": "CarPlaySearchController.searchTemplateButton(searchTemplate:interfaceController:traitCollection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlaySearchController+ CPSearchTemplateDelegate.swift",
+      "line": 105,
+      "symbol": "CarPlaySearchController.selectResult(item:completionHandler:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlaySearchController+ CPSearchTemplateDelegate.swift",
+      "line": 148,
+      "symbol": "CarPlaySearchController.listTemplate(_:didSelect:completionHandler:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/CarPlaySearchController.swift",
+      "line": 6,
+      "symbol": "CarPlaySearchControllerDelegate",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/DataCache.swift",
+      "line": 3,
+      "symbol": "DataCache",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/DayStyle.swift",
+      "line": 51,
+      "symbol": "DayStyle.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/DayStyle.swift",
+      "line": 213,
+      "symbol": "NightStyle.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/EndOfRouteViewController.swift",
+      "line": 161,
+      "symbol": "EndOfRouteViewController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/ExitView.swift",
+      "line": 11,
+      "symbol": "ExitView",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/FeedbackItem.swift",
+      "line": 152,
+      "symbol": "FeedbackSubtypeItem",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/FeedbackViewController.swift",
+      "line": 6,
+      "symbol": "FeedbackViewController.animationController(forDismissed:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/FeedbackViewController.swift",
+      "line": 10,
+      "symbol": "FeedbackViewController.animationController(forPresented:presenting:source:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/FeedbackViewController.swift",
+      "line": 14,
+      "symbol": "FeedbackViewController.interactionControllerForDismissal(using:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/FeedbackViewController.swift",
+      "line": 93,
+      "symbol": "FeedbackViewController.delegate",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/FeedbackViewController.swift",
+      "line": 147,
+      "symbol": "FeedbackViewController.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/FeedbackViewController.swift",
+      "line": 151,
+      "symbol": "FeedbackViewController.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/FeedbackViewController.swift",
+      "line": 162,
+      "symbol": "FeedbackViewController.viewDidLoad()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/FeedbackViewController.swift",
+      "line": 176,
+      "symbol": "FeedbackViewController.viewDidAppear(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/FeedbackViewController.swift",
+      "line": 181,
+      "symbol": "FeedbackViewController.viewWillTransition(to:with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/FeedbackViewController.swift",
+      "line": 205,
+      "symbol": "FeedbackViewController.gestureRecognizer(_:shouldReceive:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/FeedbackViewController.swift",
+      "line": 262,
+      "symbol": "FeedbackViewController.collectionView(_:cellForItemAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/FeedbackViewController.swift",
+      "line": 273,
+      "symbol": "FeedbackViewController.numberOfSections(in:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/FeedbackViewController.swift",
+      "line": 277,
+      "symbol": "FeedbackViewController.collectionView(_:numberOfItemsInSection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/FeedbackViewController.swift",
+      "line": 283,
+      "symbol": "FeedbackViewController.collectionView(_:didSelectItemAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/FeedbackViewController.swift",
+      "line": 304,
+      "symbol": "FeedbackViewController.collectionView(_:layout:sizeForItemAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/GenericRouteShield.swift",
+      "line": 11,
+      "symbol": "GenericRouteShield.foregroundColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/GenericRouteShield.swift",
+      "line": 57,
+      "symbol": "GenericRouteShield.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/InstructionsBannerView.swift",
+      "line": 29,
+      "symbol": "InstructionsBannerViewDelegate.didDragInstructionsBanner(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/InstructionsCardContainerView.swift",
+      "line": 71,
+      "symbol": "InstructionsCardContainerView.customBackgroundColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/InstructionsCardContainerView.swift",
+      "line": 72,
+      "symbol": "InstructionsCardContainerView.highlightedBackgroundColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/InstructionsCardContainerView.swift",
+      "line": 74,
+      "symbol": "InstructionsCardContainerView.delegate",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/InstructionsCardContainerView.swift",
+      "line": 78,
+      "symbol": "InstructionsCardContainerView.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/InstructionsCardContainerView.swift",
+      "line": 87,
+      "symbol": "InstructionsCardContainerView.prepareLayout()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/InstructionsCardContainerView.swift",
+      "line": 91,
+      "symbol": "InstructionsCardContainerView.updateBackgroundColor(highlightEnabled:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/InstructionsCardContainerView.swift",
+      "line": 165,
+      "symbol": "InstructionsCardContainerView.layoutSubviews()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/InstructionsCardContainerView.swift",
+      "line": 184,
+      "symbol": "InstructionsCardContainerView.updateInstruction(for:distance:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/InstructionsCardContainerView.swift",
+      "line": 193,
+      "symbol": "InstructionsCardContainerView.updateInstruction(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/InstructionsCardContainerView.swift",
+      "line": 199,
+      "symbol": "InstructionsCardContainerView.updateInstructionCard(distance:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 12,
+      "symbol": "InstructionsCardViewController.routeProgress",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 34,
+      "symbol": "InstructionsCardViewController.isInPreview",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 35,
+      "symbol": "InstructionsCardViewController.currentStepIndex",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 37,
+      "symbol": "InstructionsCardViewController.steps",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 80,
+      "symbol": "InstructionsCardViewController.viewDidLoad()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 151,
+      "symbol": "InstructionsCardViewController.reloadDataSource()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 163,
+      "symbol": "InstructionsCardViewController.updateVisibleInstructionCards(at:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 183,
+      "symbol": "InstructionsCardViewController.stopPreview()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 189,
+      "symbol": "InstructionsCardViewController.instructionContainerView(at:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 242,
+      "symbol": "InstructionsCardViewController.scrollViewWillBeginDragging(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 247,
+      "symbol": "InstructionsCardViewController.scrollViewWillEndDragging(_:withVelocity:targetContentOffset:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 263,
+      "symbol": "InstructionsCardViewController.collectionView(_:numberOfItemsInSection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 267,
+      "symbol": "InstructionsCardViewController.collectionView(_:cellForItemAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 286,
+      "symbol": "InstructionsCardViewController.collectionView(_:layout:sizeForItemAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/JunctionView.swift",
+      "line": 14,
+      "symbol": "JunctionView.init(frame:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/JunctionView.swift",
+      "line": 19,
+      "symbol": "JunctionView.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/MGLShape.swift",
+      "line": 134,
+      "symbol": "MGLMultiPolygon.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/ManeuverView.swift",
+      "line": 15,
+      "symbol": "ManeuverView.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/ManeuverView.swift",
+      "line": 26,
+      "symbol": "ManeuverView.primaryColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/ManeuverView.swift",
+      "line": 32,
+      "symbol": "ManeuverView.secondaryColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/ManeuverView.swift",
+      "line": 38,
+      "symbol": "ManeuverView.primaryColorHighlighted",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/ManeuverView.swift",
+      "line": 44,
+      "symbol": "ManeuverView.secondaryColorHighlighted",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/ManeuverView.swift",
+      "line": 50,
+      "symbol": "ManeuverView.shouldShowHighlightedColors",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/ManeuverView.swift",
+      "line": 57,
+      "symbol": "ManeuverView.isStart",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/ManeuverView.swift",
+      "line": 63,
+      "symbol": "ManeuverView.isEnd",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/ManeuverView.swift",
+      "line": 94,
+      "symbol": "ManeuverView.draw(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/MapboxSpeechSynthesizer.swift",
+      "line": 54,
+      "symbol": "MapboxSpeechSynthesizer.init(accessToken:host:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/MapboxSpeechSynthesizer.swift",
+      "line": 261,
+      "symbol": "MapboxSpeechSynthesizer.audioPlayerDidFinishPlaying(_:successfully:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/MultiplexedSpeechSynthesizer.swift",
+      "line": 34,
+      "symbol": "MultiplexedSpeechSynthesizer.speechSynthesizers",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/MultiplexedSpeechSynthesizer.swift",
+      "line": 66,
+      "symbol": "MultiplexedSpeechSynthesizer.init(_:accessToken:host:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationMapView.swift",
+      "line": 109,
+      "symbol": "NavigationMapView.trafficUnknownColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationMapView.swift",
+      "line": 110,
+      "symbol": "NavigationMapView.trafficLowColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationMapView.swift",
+      "line": 111,
+      "symbol": "NavigationMapView.trafficModerateColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationMapView.swift",
+      "line": 112,
+      "symbol": "NavigationMapView.trafficHeavyColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationMapView.swift",
+      "line": 113,
+      "symbol": "NavigationMapView.trafficSevereColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationMapView.swift",
+      "line": 114,
+      "symbol": "NavigationMapView.routeCasingColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationMapView.swift",
+      "line": 115,
+      "symbol": "NavigationMapView.routeAlternateColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationMapView.swift",
+      "line": 116,
+      "symbol": "NavigationMapView.routeAlternateCasingColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationMapView.swift",
+      "line": 117,
+      "symbol": "NavigationMapView.traversedRouteColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationMapView.swift",
+      "line": 118,
+      "symbol": "NavigationMapView.maneuverArrowColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationMapView.swift",
+      "line": 119,
+      "symbol": "NavigationMapView.maneuverArrowStrokeColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationMapView.swift",
+      "line": 120,
+      "symbol": "NavigationMapView.buildingDefaultColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationMapView.swift",
+      "line": 121,
+      "symbol": "NavigationMapView.buildingHighlightColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationMapView.swift",
+      "line": 144,
+      "symbol": "NavigationMapView.showsUserLocation",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationMapView.swift",
+      "line": 221,
+      "symbol": "NavigationMapView.init(frame:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationMapView.swift",
+      "line": 227,
+      "symbol": "NavigationMapView.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationMapView.swift",
+      "line": 233,
+      "symbol": "NavigationMapView.init(frame:styleURL:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationMapView.swift",
+      "line": 251,
+      "symbol": "NavigationMapView.layoutMarginsDidChange()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationMapView.swift",
+      "line": 258,
+      "symbol": "NavigationMapView.prepareForInterfaceBuilder()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationMapView.swift",
+      "line": 269,
+      "symbol": "NavigationMapView.layoutSubviews()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationMapView.swift",
+      "line": 278,
+      "symbol": "NavigationMapView.anchorPoint(forGesture:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationMapView.swift",
+      "line": 286,
+      "symbol": "NavigationMapView.mapViewDidFinishRenderingFrameFullyRendered(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationMapView.swift",
+      "line": 348,
+      "symbol": "NavigationMapView.updateCourseTracking(location:camera:animated:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationMapView.swift",
+      "line": 430,
+      "symbol": "NavigationMapView.showcase(_:animated:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationMapView.swift",
+      "line": 1331,
+      "symbol": "NavigationMapView.showVoiceInstructionsOnMap(route:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationOptions.swift",
+      "line": 44,
+      "symbol": "NavigationOptions.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationView.swift",
+      "line": 125,
+      "symbol": "NavigationView.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationView.swift",
+      "line": 155,
+      "symbol": "NavigationView.prepareForInterfaceBuilder()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationViewController.swift",
+      "line": 50,
+      "symbol": "NavigationViewController.routeOptions",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationViewController.swift",
+      "line": 228,
+      "symbol": "NavigationViewController.preferredStatusBarStyle",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationViewController.swift",
+      "line": 234,
+      "symbol": "NavigationViewController.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationViewController.swift",
+      "line": 326,
+      "symbol": "NavigationViewController.viewDidLoad()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationViewController.swift",
+      "line": 343,
+      "symbol": "NavigationViewController.viewWillAppear(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationViewController.swift",
+      "line": 353,
+      "symbol": "NavigationViewController.viewWillDisappear(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationViewController.swift",
+      "line": 639,
+      "symbol": "NavigationViewController.showEndOfRouteFeedback(duration:completionHandler:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationViewController.swift",
+      "line": 788,
+      "symbol": "NavigationViewController.topBanner(_:didSwipeInDirection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationViewController.swift",
+      "line": 825,
+      "symbol": "NavigationViewController.preview(step:in:remaining:route:animated:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationViewController.swift",
+      "line": 841,
+      "symbol": "NavigationViewController.topBanner(_:didSelect:stepIndex:cell:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationViewController.swift",
+      "line": 854,
+      "symbol": "NavigationViewController.topBanner(_:didDisplayStepsController:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/NavigationViewLayout.swift",
+      "line": 40,
+      "symbol": "NavigationView.reinstallRequiredConstraints()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/PassiveLocationManager.swift",
+      "line": 34,
+      "symbol": "PassiveLocationManager.authorizationStatus",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/PassiveLocationManager.swift",
+      "line": 38,
+      "symbol": "PassiveLocationManager.requestAlwaysAuthorization()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/PassiveLocationManager.swift",
+      "line": 42,
+      "symbol": "PassiveLocationManager.requestWhenInUseAuthorization()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/PassiveLocationManager.swift",
+      "line": 47,
+      "symbol": "PassiveLocationManager.accuracyAuthorization()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/PassiveLocationManager.swift",
+      "line": 57,
+      "symbol": "PassiveLocationManager.requestTemporaryFullAccuracyAuthorization(withPurposeKey:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/PassiveLocationManager.swift",
+      "line": 66,
+      "symbol": "PassiveLocationManager.startUpdatingLocation()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/PassiveLocationManager.swift",
+      "line": 70,
+      "symbol": "PassiveLocationManager.stopUpdatingLocation()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/PassiveLocationManager.swift",
+      "line": 74,
+      "symbol": "PassiveLocationManager.headingOrientation",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/PassiveLocationManager.swift",
+      "line": 83,
+      "symbol": "PassiveLocationManager.startUpdatingHeading()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/PassiveLocationManager.swift",
+      "line": 87,
+      "symbol": "PassiveLocationManager.stopUpdatingHeading()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/PassiveLocationManager.swift",
+      "line": 91,
+      "symbol": "PassiveLocationManager.dismissHeadingCalibrationDisplay()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/RouteMapViewController.swift",
+      "line": 469,
+      "symbol": "RouteMapViewController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/RouteMapViewController.swift",
+      "line": 550,
+      "symbol": "RouteMapViewController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/RouteVoiceController.swift",
+      "line": 9,
+      "symbol": "NSAttributedString.pronounced(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/RouteVoiceController.swift",
+      "line": 174,
+      "symbol": "RouteVoiceController.didPassSpokenInstructionPoint(notification:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/SpeedLimitStyleKit.swift",
+      "line": 16,
+      "symbol": "SpeedLimitStyleKit",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/SpeedLimitView.swift",
+      "line": 104,
+      "symbol": "SpeedLimitView.draw(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/StepsViewController.swift",
+      "line": 193,
+      "symbol": "StepsViewController.tableView(_:didSelectRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/StepsViewController.swift",
+      "line": 211,
+      "symbol": "StepsViewController.numberOfSections(in:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/StepsViewController.swift",
+      "line": 215,
+      "symbol": "StepsViewController.tableView(_:numberOfRowsInSection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/StepsViewController.swift",
+      "line": 220,
+      "symbol": "StepsViewController.tableView(_:heightForRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/StepsViewController.swift",
+      "line": 224,
+      "symbol": "StepsViewController.tableView(_:cellForRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/StepsViewController.swift",
+      "line": 229,
+      "symbol": "StepsViewController.tableView(_:willDisplay:forRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/StepsViewController.swift",
+      "line": 252,
+      "symbol": "StepsViewController.tableView(_:titleForHeaderInSection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/Style.swift",
+      "line": 50,
+      "symbol": "Style.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/Style.swift",
+      "line": 582,
+      "symbol": "BottomPaddingView",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/StyleKitMarker.swift",
+      "line": 4,
+      "symbol": "StyleKitMarker",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/StyleManager.swift",
+      "line": 98,
+      "symbol": "StyleManager.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/StyleType.swift",
+      "line": 3,
+      "symbol": "StyleType",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/SystemSpeechSynthesizer.swift",
+      "line": 39,
+      "symbol": "SystemSpeechSynthesizer.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/SystemSpeechSynthesizer.swift",
+      "line": 147,
+      "symbol": "SystemSpeechSynthesizer.speechSynthesizer(_:didStart:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/SystemSpeechSynthesizer.swift",
+      "line": 151,
+      "symbol": "SystemSpeechSynthesizer.speechSynthesizer(_:didContinue:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/SystemSpeechSynthesizer.swift",
+      "line": 155,
+      "symbol": "SystemSpeechSynthesizer.speechSynthesizer(_:didFinish:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/SystemSpeechSynthesizer.swift",
+      "line": 166,
+      "symbol": "SystemSpeechSynthesizer.speechSynthesizer(_:didPause:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/SystemSpeechSynthesizer.swift",
+      "line": 170,
+      "symbol": "SystemSpeechSynthesizer.speechSynthesizer(_:didCancel:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/TopBannerViewController.swift",
+      "line": 5,
+      "symbol": "TopBannerViewControllerDelegate",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/TopBannerViewController.swift",
+      "line": 19,
+      "symbol": "TopBannerViewControllerDelegate",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/TopBannerViewController.swift",
+      "line": 120,
+      "symbol": "TopBannerViewController.isDisplayingPreviewInstructions",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/TopBannerViewController.swift",
+      "line": 124,
+      "symbol": "TopBannerViewController.isDisplayingSteps",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/TopBannerViewController.swift",
+      "line": 131,
+      "symbol": "TopBannerViewController.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/TopBannerViewController.swift",
+      "line": 139,
+      "symbol": "TopBannerViewController.viewDidLoad()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/TopBannerViewController.swift",
+      "line": 185,
+      "symbol": "TopBannerViewController.displayStepsTable()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/TopBannerViewController.swift",
+      "line": 240,
+      "symbol": "TopBannerViewController.dismissStepsTable(completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/TopBannerViewController.swift",
+      "line": 316,
+      "symbol": "TopBannerViewController.preview(step:maneuverStep:distance:steps:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/TopBannerViewController.swift",
+      "line": 343,
+      "symbol": "TopBannerViewController.stopPreviewing(showingSecondaryChildren:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/Transitioning.swift",
+      "line": 9,
+      "symbol": "DismissAnimator",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/Transitioning.swift",
+      "line": 34,
+      "symbol": "PresentAnimator",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/UIEdgeInsets.swift",
+      "line": 6,
+      "symbol": "UIEdgeInsets.+(_:_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/UserCourseView.swift",
+      "line": 22,
+      "symbol": "CourseUpdatable.applyDefaultUserPuckTransformation(location:pitch:direction:animated:tracksUserCourse:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/UserCourseView.swift",
+      "line": 69,
+      "symbol": "UserPuckCourseView.puckColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/UserCourseView.swift",
+      "line": 76,
+      "symbol": "UserPuckCourseView.stalePuckColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/UserCourseView.swift",
+      "line": 83,
+      "symbol": "UserPuckCourseView.fillColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/UserCourseView.swift",
+      "line": 90,
+      "symbol": "UserPuckCourseView.shadowColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/UserCourseView.swift",
+      "line": 98,
+      "symbol": "UserPuckCourseView.init(frame:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/mxn/hub/ios-sdk/_code/navigation/MapboxNavigation/UserCourseView.swift",
+      "line": 103,
+      "symbol": "UserPuckCourseView.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Users/mxn/hub/ios-sdk/_code/navigation"
+}
