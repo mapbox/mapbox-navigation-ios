@@ -11,16 +11,16 @@ func printUsage() {
 
 func absURL ( _ path: String ) -> URL {
     // some methods cannot correctly expand '~' in a path, so we'll do it manually
+    let homeDirectory = URL(fileURLWithPath: NSHomeDirectory())
     guard path != "~" else {
-        return FileManager.default.homeDirectoryForCurrentUser
+        return homeDirectory
     }
     guard path.hasPrefix("~/") else { return URL(fileURLWithPath: path)  }
 
     var relativePath = path
     relativePath.removeFirst(2)
-    return URL(fileURLWithPath: relativePath,
-        relativeTo: FileManager.default.homeDirectoryForCurrentUser
-    )
+    return URL(string: relativePath,
+               relativeTo: homeDirectory) ?? homeDirectory
 }
 
 guard ProcessInfo.processInfo.arguments.count > 2 else {
