@@ -112,7 +112,7 @@ jobs:
         default: "13.4.1"
       xcode:
         type: string
-        default: "11.4.1"
+        default: "11.7.0"
       lint:
         type: boolean
         default: false
@@ -148,7 +148,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "11.4.1"
+        default: "11.7.0"
       device:
         type: string
         default: "iPhone 8 Plus"
@@ -207,7 +207,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "11.4.1"
+        default: "11.7.0"
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -226,7 +226,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "11.4.1"
+        default: "11.7.0"
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -244,18 +244,18 @@ workflows:
           test: false
           device: "iPhone 8 Plus"
       - build-job:
-          name: "Xcode_11.5_iOS_13.5"
-          xcode: "11.5.0"
-          iOS: "13.5"
+          name: "Xcode_11.7_iOS_13.7"
+          xcode: "11.7.0"
+          iOS: "13.7"
           device: "iPhone 8 Plus"
       - build-job:
-          name: "Xcode_11.4.1_iOS_12.2"
-          xcode: "11.4.1"
-          iOS: "12.2"
+          name: "Xcode_11.7_iOS_12.4"
+          xcode: "11.7.0"
+          iOS: "12.4"
           codecoverage: true
       - build-job:
-          name: "Xcode_11.4.1_iOS_10.3.1"
-          xcode: "11.4.1"
+          name: "Xcode_11.7_iOS_10.3.1"
+          xcode: "11.7.0"
           iOS: "10.3.1"
           test: false
           device: "iPhone 7 Plus"
@@ -271,15 +271,15 @@ workflows:
           iOS: "14.0"
           lint: true
       - pod-job:
-          name: "Xcode_11.4.1_iOS_12.2_CP_install"
+          name: "Xcode_11.7_iOS_12.4_CP_install"
           update: false
-          xcode: "11.4.1"
-          iOS: "12.2"
+          xcode: "11.7.0"
+          iOS: "12.4"
       - pod-job:
-          name: "Xcode_11.4.1_iOS_12.2_CP_update"
+          name: "Xcode_11.7_iOS_12.4_CP_update"
           update: true
-          xcode: "11.4.1"
-          iOS: "12.2"
+          xcode: "11.7.0"
+          iOS: "12.4"
           lint: true
       - xcode-11-examples
       - ios-trigger-metrics:
