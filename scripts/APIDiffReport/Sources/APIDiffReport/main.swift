@@ -46,8 +46,10 @@ case "log":
         print("Decoding 'sourcekitten' output failed.")
         exit(1)
     }
-    
-    try log.write(to: absURL(outputFile),
+    let outputURL = absURL(outputFile)
+    try FileManager.default.createDirectory(at: outputURL.deletingLastPathComponent(),
+                                            withIntermediateDirectories: true)
+    try log.write(to: outputURL,
                   atomically: true,
                   encoding: .utf8)
 case "diff":

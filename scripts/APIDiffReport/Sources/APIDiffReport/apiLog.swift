@@ -14,6 +14,7 @@ struct ApiLog {
     }
     
     static private func runSourcekitten(apiFolder: String, args: [String]) -> Data? {
+        var result = Data()
         let task = Process()
         task.launchPath = "/usr/local/bin/sourcekitten"
         task.currentDirectoryPath = apiFolder
@@ -21,9 +22,14 @@ struct ApiLog {
         
         let standardOutput = Pipe()
         let standardError = Pipe()
-        let outputHandle = standardError.fileHandleForReading
+        let outputHandle = standardOutput.fileHandleForReading
+        let errorHandle = standardError.fileHandleForReading
         outputHandle.waitForDataInBackgroundAndNotify()
+        errorHandle.waitForDataInBackgroundAndNotify()
         outputHandle.readabilityHandler = { pipe in
+            result.append(pipe.availableData)
+        }
+        errorHandle.readabilityHandler = { pipe in
             guard let currentOutput = String(data: pipe.availableData, encoding: .utf8) else {
                 print("Error decoding output data: \(pipe.availableData)")
                 return
@@ -44,7 +50,7 @@ struct ApiLog {
         
         if task.terminationStatus == 0 {
             print("Sourcekitten succeeded.")
-            return standardOutput.fileHandleForReading.readDataToEndOfFile()
+            return result
         } else {
             print("Sourcekitten failed.")
             return nil
