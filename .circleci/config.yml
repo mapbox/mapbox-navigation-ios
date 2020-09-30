@@ -54,7 +54,8 @@ step-library:
       run:
         name: Update Carthage version
         command: |
-          brew update && brew upgrade carthage
+          curl -OL "https://github.com/Carthage/Carthage/releases/download/0.36.0/Carthage.pkg"
+          sudo installer -pkg Carthage.pkg -target /
 
   - &verify-missing-localizable-strings
       run:
