@@ -89,7 +89,7 @@ step-library:
       run:
         name: Build Example
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=13.4.1,name=iPhone 8 Plus' -project MapboxNavigation.xcodeproj -scheme Example clean build | xcpretty
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=13.7,name=iPhone 8 Plus' -project MapboxNavigation.xcodeproj -scheme Example clean build | xcpretty
 
   - &trigger-metrics
       run:
@@ -109,7 +109,7 @@ jobs:
         default: false
       iOS:
         type: string
-        default: "13.4.1"
+        default: "13.7"
       xcode:
         type: string
         default: "11.7.0"
@@ -154,7 +154,7 @@ jobs:
         default: "iPhone 8 Plus"
       iOS:
         type: string
-        default: "13.4.1"
+        default: "13.7"
       test:
         type: boolean
         default: true
