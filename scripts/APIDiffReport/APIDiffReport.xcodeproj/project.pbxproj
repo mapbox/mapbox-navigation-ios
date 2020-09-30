@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		2B237961251E3C3000CCF9C4 /* diffreport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B23795F251E3C3000CCF9C4 /* diffreport.swift */; };
 		2B237962251E3C3000CCF9C4 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B237960251E3C3000CCF9C4 /* main.swift */; };
+		2B2379662524717100CCF9C4 /* apiLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2379652524717100CCF9C4 /* apiLog.swift */; };
+		2B2379682524768600CCF9C4 /* apiDiff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2379672524768600CCF9C4 /* apiDiff.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -28,6 +30,8 @@
 		2B23795F251E3C3000CCF9C4 /* diffreport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = diffreport.swift; sourceTree = "<group>"; };
 		2B237960251E3C3000CCF9C4 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		2B237963251E3C4000CCF9C4 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		2B2379652524717100CCF9C4 /* apiLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = apiLog.swift; sourceTree = "<group>"; };
+		2B2379672524768600CCF9C4 /* apiDiff.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = apiDiff.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +75,8 @@
 			children = (
 				2B23795F251E3C3000CCF9C4 /* diffreport.swift */,
 				2B237960251E3C3000CCF9C4 /* main.swift */,
+				2B2379652524717100CCF9C4 /* apiLog.swift */,
+				2B2379672524768600CCF9C4 /* apiDiff.swift */,
 			);
 			path = APIDiffReport;
 			sourceTree = "<group>";
@@ -134,7 +140,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				2B237962251E3C3000CCF9C4 /* main.swift in Sources */,
+				2B2379662524717100CCF9C4 /* apiLog.swift in Sources */,
 				2B237961251E3C3000CCF9C4 /* diffreport.swift in Sources */,
+				2B2379682524768600CCF9C4 /* apiDiff.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

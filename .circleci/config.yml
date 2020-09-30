@@ -1,5 +1,42 @@
 version: 2.1
 
+commands:
+  save-api-diff-cache:
+    parameters:
+      api_diff_cache:
+        type: string
+    steps:
+      - save_cache:
+          key: nav-api-diff-cache-v5-{{ .Environment.CIRCLE_JOB }}-{{ << parameters.api_diff_cache >> }}
+          paths:
+            - << pipeline.parameters.api_log_file >>
+
+  restore-api-diff-cache:
+    parameters:
+        api_diff_cache:
+          type: string
+    steps:
+      - restore_cache:
+          keys:
+            - nav-api-diff-cache-v5-{{ .Environment.CIRCLE_JOB }}-{{ << parameters.api_diff_cache >> }}
+
+  run_api_log:
+    parameters:
+      xcode:
+          type: string
+      device:
+        type: string
+    steps:
+      - run:
+          name: Building API Diff Report
+          command: cd scripts/APIDiffReport && swift build 
+      - run:
+          name: Generating MapboxCoreNavigation API Log
+          command: cd scripts/APIDiffReport && swift run APIDiffReport log ../.. << pipeline.parameters.api_log_file >>/core_navigation_log.json doc --module-name MapboxCoreNavigation -- -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build
+      - run:
+          name: Generating MapboxNavigation API Log
+          command: cd scripts/APIDiffReport && swift run APIDiffReport log ../.. << pipeline.parameters.api_log_file >>/navigation_log.json doc --module-name MapboxNavigation -- -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build
+
 step-library:
   - &restore-cache
       restore_cache:
@@ -72,8 +109,8 @@ step-library:
           run:
             name: Install Dependencies
             command: |
-              cd << parameters.dependencies_path >> && carthage bootstrap --platform ios --cache-builds --configuration Debug --no-use-binaries --use-netrc
-              cd << parameters.dependencies_path >> && carthage outdated --xcode-warnings # prints warnings if there are outdated carthage dependencies
+              carthage bootstrap --platform ios --cache-builds --configuration Debug --no-use-binaries --use-netrc
+              carthage outdated --xcode-warnings # prints warnings if there are outdated carthage dependencies
 
   - &install-dependencies-12
       when:
@@ -83,7 +120,7 @@ step-library:
           run:
             name: Install Dependencies
             command: |
-              cd << parameters.dependencies_path >> && ./scripts/wcarthage.sh bootstrap --platform ios --cache-builds --configuration Debug --no-use-binaries --use-netrc
+              ./scripts/wcarthage.sh bootstrap --platform ios --cache-builds --configuration Debug --no-use-binaries --use-netrc
 
   - &build-Example
       run:
@@ -100,20 +137,6 @@ step-library:
           else
             echo "MOBILE_METRICS_TOKEN not provided"
           fi
-
-commands:
-  install-dependencies-guided:
-    description: "todo"
-    parameters:
-      xcode:
-        type: string
-        default: "11.4.1"
-      dependencies_path:
-        type: string
-        default: "./"
-    steps:
-      - *install-dependencies
-      - *install-dependencies-12
 
 jobs:
   pod-job:
@@ -178,9 +201,9 @@ jobs:
       delete_private_deps:
         type: boolean
         default: false
-      dependencies_path:
-        type: string
-        default: "./"
+      generate_api_log:
+        type: boolean
+        default: false
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -219,15 +242,20 @@ jobs:
           condition: << parameters.codecoverage >>
           steps:
             - run: bash <(curl -s https://codecov.io/bash)
+      - when:
+          condition: << parameters.generate_api_log >>
+          steps:
+            - run_api_log:
+                xcode: << parameters.xcode >>
+                device: << parameters.device >>
+            - save-api-diff-cache:
+                api_diff_cache: $CIRCLE_SHA1
 
   xcode-11-examples:
     parameters:
       xcode:
         type: string
         default: "11.4.1"
-      dependencies_path:
-        type: string
-        default: "./"
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -268,49 +296,58 @@ jobs:
       base_api_tag:
         type: string
         default: "v0.40.0"
-      base_api_folder:
-        type: string
-        default: "base_api_folder"
-      dependencies_path:
-        type: string
-        default: "./"
     macos:
       xcode: << parameters.xcode >>
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
       - checkout
-      - *prepare-mapbox-file
-      - *prepare-netrc-file
-      - *update-carthage-version
-      - *restore-cache
-      - *install-dependencies
-      - *install-dependencies-12
-      - *save-cache      
-      - run:
-          name: Creating temporary Base API container folder
-          command: mkdir << parameters.base_api_folder >>
-      - checkout:
-          path: << parameters.base_api_folder >>
       - run:
           name: Checking out Base API
-          working_directory: << parameters.base_api_folder >>
           command: git checkout << parameters.base_api_tag >>
-      - install-dependencies-guided:
-          dependencies_path: << parameters.base_api_folder >>
+      - restore-api-diff-cache:
+          api_diff_cache: $CIRCLE_SHA1
+      - run:
+          name: Move Api Diff
+          command: mv << pipeline.parameters.api_log_file >> original_api
+      - restore-api-diff-cache:
+          api_diff_cache: << parameters.base_api_tag >>
+      - run:
+          name: Verify Base API report exists
+          command: |
+            if test -f "<< pipeline.parameters.api_log_file >>"; then \
+              echo "Base API log file exists" \
+              export API_CACHE_EXISTS=TRUE \
+            fi
+      - unless:
+          condition: .Environment.API_CACHE_EXISTS
+          steps:
+            - *prepare-mapbox-file
+            - *prepare-netrc-file
+            - *update-carthage-version
+            - *restore-cache
+            - *install-dependencies
+            - *install-dependencies-12
+            - run:
+                name: Install prerequisites
+                command: if [ $(xcversion simulators | grep -cF "iOS << parameters.iOS >> Simulator (installed)") -eq 0 ]; then xcversion simulators --install="iOS << parameters.iOS >>" || true; fi
+            - *save-cache
+            - save-api-diff-cache:
+                api_diff_cache: << parameters.base_api_tag >>      
+      - run_api_log:
           xcode: << parameters.xcode >>
+          device: << parameters.device >>
       - run:
-          name: Install prerequisites
-          command: if [ $(xcversion simulators | grep -cF "iOS << parameters.iOS >> Simulator (installed)") -eq 0 ]; then xcversion simulators --install="iOS << parameters.iOS >>" || true; fi
+          name: Generating MapboxCoreNavigation API Diff
+          command: cd scripts/APIDiffReport && swift run APIDiffReport diff original_api/core_navigation_log.json << pipeline.parameters.api_log_file>>/core_navigation_log.json
       - run:
-          name: Building API Diff Report
-          command: cd scripts/APIDiffReport && swift build 
-      - run:
-          name: MapboxCoreNavigation API Diff Report
-          command: swift run scripts/APIDiffReport/APIDiffReport << parameters.base_api_folder >> ./ doc --module-name MapboxCoreNavigation -- -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build
-      - run:
-          name: MapboxCoreNavigation API Diff Report
-          command: swift run scripts/APIDiffReport/APIDiffReport << parameters.base_api_folder >> ./ doc --module-name MapboxNavigation -- -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build
+          name: Generating MapboxNavigation API Diff
+          command: cd scripts/APIDiffReport && swift run APIDiffReport diff original_api/navigation_log.json << pipeline.parameters.api_log_file>>/navigation_log.json      
+
+parameters:
+  api_log_file:
+    type: string
+    default: api_logs
 
 workflows:
   workflow:
@@ -321,6 +358,7 @@ workflows:
           iOS: "14.0"
           test: false
           device: "iPhone 8 Plus"
+          generate_api_log: true
       - build-job:
           name: "Xcode_11.5_iOS_13.5"
           xcode: "11.5.0"
@@ -364,4 +402,9 @@ workflows:
           filters:
             branches:
               only: main
-      - api-diff-job
+      - api-diff-job-approval:
+          type: approval
+      - api-diff-job:
+          requires:
+            - "Xcode_12.0_iOS_14.0"
+            - api-diff-job-approval
