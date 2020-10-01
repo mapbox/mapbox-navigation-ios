@@ -426,7 +426,7 @@ extension CarPlayManager {
             }
 
             let mapTemplate = interfaceController?.rootTemplate as? CPMapTemplate
-            interfaceController?.popToRootTemplate(animated: true)
+            popToRootTemplate(interfaceController: interfaceController, animated: true)
             mapTemplate?.present(navigationAlert: alert, animated: true)
             return
         case let .success(response):
@@ -487,8 +487,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         if simulatesLocations == true {
             service.simulationSpeedMultiplier = simulatedSpeedMultiplier
         }
-
-        interfaceController.popToRootTemplate(animated: false)
+        popToRootTemplate(interfaceController: interfaceController, animated: false)
         let navigationMapTemplate = self.mapTemplate(forNavigating: trip)
         interfaceController.setRootTemplate(navigationMapTemplate, animated: true)
 
@@ -664,6 +663,24 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let shiftedCenterCoordinate = mapView.centerCoordinate.coordinate(at: distance, facing: shiftedDirection)
         mapView.setCenter(shiftedCenterCoordinate, animated: true)
     }
+
+    private func popToRootTemplate(interfaceController: CPInterfaceController?, animated: Bool) {
+        guard let interfaceController = interfaceController else { return }
+        // TODO: uncomment
+//        if #available(iOS 14.0, *) {
+//            interfaceController.popToRootTemplate(animated: true)
+//            { isFailed, error in
+//                assert(!isFailed)
+//                if !isFailed {
+//                    print(error?.localizedDescription ?? "")
+//                }
+//            }
+//        } else {
+            if interfaceController.templates.count > 1 {
+                interfaceController.popToRootTemplate(animated: animated)
+            }
+//        }
+    }
 }
 
 // MARK: CarPlayNavigationDelegate
@@ -680,9 +697,9 @@ extension CarPlayManager: CarPlayNavigationDelegate {
         // Then (re-)create and assign new map template
         let mapTemplate = self.mapTemplate(for: interfaceController)
         mainMapTemplate = mapTemplate
-        
+
         interfaceController.setRootTemplate(mapTemplate, animated: true)
-        interfaceController.popToRootTemplate(animated: true)
+        popToRootTemplate(interfaceController: interfaceController, animated: true)
         
         delegate?.carPlayManagerDidEndNavigation(self)
     }
