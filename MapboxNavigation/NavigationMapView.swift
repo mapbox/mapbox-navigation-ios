@@ -246,6 +246,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         addGestureRecognizer(mapTapGesture)
         
         installUserCourseView()
+        showsUserLocation = false
     }
     
     open override func layoutMarginsDidChange() {
