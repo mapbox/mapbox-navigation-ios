@@ -666,20 +666,10 @@ extension CarPlayManager: CPMapTemplateDelegate {
 
     private func popToRootTemplate(interfaceController: CPInterfaceController?, animated: Bool) {
         guard let interfaceController = interfaceController else { return }
-        // TODO: uncomment
-//        if #available(iOS 14.0, *) {
-//            interfaceController.popToRootTemplate(animated: true)
-//            { isFailed, error in
-//                assert(!isFailed)
-//                if !isFailed {
-//                    print(error?.localizedDescription ?? "")
-//                }
-//            }
-//        } else {
-            if interfaceController.templates.count > 1 {
-                interfaceController.popToRootTemplate(animated: animated)
-            }
-//        }
+        if interfaceController.templates.count > 1 {
+            // TODO: CPInterfaceController.popToRootTemplate(animated:completion:) (available on iOS 14/Xcode 12) should be used after Xcode 11 support is dropped.
+            interfaceController.popToRootTemplate(animated: animated)
+        }
     }
 }
 
