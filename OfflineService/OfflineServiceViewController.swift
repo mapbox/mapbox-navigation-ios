@@ -1,6 +1,7 @@
 import UIKit
 import MapboxCommon
 import MapboxCoreNavigation
+import MapboxDirections
 
 struct OfflineDataItem {
     
@@ -20,7 +21,6 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
     let cellIdentifier = NSStringFromClass(OfflineDataRegionTableViewCell.self)
     var offlineDataItems = [OfflineDataItem]()
     var offlineService: OfflineService?
-    let tilesVersiom = "1.0"
     var username = "1tap-nav"
     var baseURL = "https://api.mapbox.com"
     var accessToken: String = {
@@ -31,6 +31,7 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
 
         return accessToken
     }()
+    let tilesUnpackingLock = NSLock()
     
     // MARK: - OfflineServiceObserver methods
     
@@ -65,6 +66,43 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
         print("[OfflineServiceObserver] \(#function)")
 
         updateOfflineDataRegions(for: domain, metadata: metadata)
+        
+        if domain == .navigation {
+            tilesUnpackingLock.lock()
+            
+            do {
+                guard let outputDirectoryURL = Bundle.mapboxCoreNavigation.suggestedTileURL?.appendingPathComponent("unpacked") else { return }
+                guard let packName = URL(string: pack.path)?.lastPathComponent else { return }
+                guard let packData = FileManager.default.contents(atPath: pack.path) else { return }
+                
+                try FileManager.default.createDirectory(at: outputDirectoryURL, withIntermediateDirectories: true, attributes: nil)
+                let temporaryPackURL = outputDirectoryURL.appendingPathComponent(packName).appendingPathExtension("tar")
+                try packData.write(to: temporaryPackURL)
+                
+                NavigationDirections.unpackTilePack(at: temporaryPackURL, outputDirectoryURL: outputDirectoryURL) {(totalBytes, unpackedBytes) in
+                    print("Unpacked \(unpackedBytes) of \(totalBytes) bytes")
+                } completionHandler: { (numberOfTiles, error) in
+                    do {
+                        if FileManager.default.fileExists(atPath: temporaryPackURL.path) {
+                            try FileManager.default.removeItem(at: temporaryPackURL)
+                        }
+                    } catch {
+                        self.tilesUnpackingLock.unlock()
+                        
+                        print("Failed to remove temporary pack archive. Error: \(error)")
+                        self.presentAlert(OfflineServiceConstants.title, message: error.localizedDescription)
+                    }
+                    
+                    self.tilesUnpackingLock.unlock()
+                    print("Finished unpacking \(numberOfTiles) tiles")
+                }
+            } catch {
+                tilesUnpackingLock.unlock()
+                
+                print("Error occured while unpacking navigation tiles: \(error)")
+                presentAlert(OfflineServiceConstants.title, message: error.localizedDescription)
+            }
+        }
     }
     
     public func onExpired(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, pack: OfflineDataPack) {
@@ -126,7 +164,7 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
         tableView.separatorInset = .zero
         tableView.allowsSelection = true
         
-        title = NSLocalizedString(OfflineServiceConstants.title, value: "", comment: "")
+        title = OfflineServiceConstants.title
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: OfflineServiceConstants.close, style: .done, target: self, action: #selector(dismissViewController))
     }
     
@@ -165,15 +203,14 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
     }
     
     func listAvailableRegions() {
-        let outputDirectoryURL = Bundle.mapboxCoreNavigation.suggestedTileURL(version: tilesVersiom)
-        do {
-            try FileManager.default.createDirectory(at: outputDirectoryURL!, withIntermediateDirectories: true, attributes: nil)
-        } catch {
-            print("Failed to create tiles folder with error: \(error)")
+        guard let outputDirectory = Bundle.mapboxCoreNavigation.suggestedTileURL?.path else { return }
+        if !Bundle.mapboxCoreNavigation.ensureSuggestedTileURLExists() {
+            print("Failed to create tiles directory")
+            return
         }
-
-        guard let outputDirectory = outputDirectoryURL?.path else { return }
-
+        
+        removeUnpackedTilesDirectory()
+        
         offlineService = OfflineService.getInstanceForPath(outputDirectory, options: OfflineServiceOptions(username: username,
                                                                                                            accessToken: accessToken,
                                                                                                            baseURL: baseURL))
@@ -192,8 +229,8 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
             offlineDataRegions?.forEach({
                 if let metadata = $0 as? OfflineDataRegionMetadata {
                     self.offlineDataItems.append(OfflineDataItem(dataRegionMetadata: metadata,
-                                                                     mapPackMetadata: nil,
-                                                                     navigationPackMetadata: nil))
+                                                                 mapPackMetadata: nil,
+                                                                 navigationPackMetadata: nil))
                 }
             })
 
@@ -203,6 +240,11 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
                 self.tableView.reloadData()
             }
         })
+    }
+    
+    func removeUnpackedTilesDirectory() {
+        guard let unpackedTilesDirectoryURL = Bundle.mapboxCoreNavigation.suggestedTileURL?.appendingPathComponent("unpacked") else { return }
+        try? FileManager.default.removeItem(at: unpackedTilesDirectoryURL)
     }
     
     func updateOfflineDataRegions(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, delete: Bool = false) {

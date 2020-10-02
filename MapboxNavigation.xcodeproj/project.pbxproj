@@ -256,6 +256,7 @@
 		6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */; };
 		64847A041F04629D003F3A69 /* Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64847A031F04629D003F3A69 /* Feedback.swift */; };
 		7C12F2D8225B7C320010A931 /* DCA-Arboretum-dummy-faster-route.json in Resources */ = {isa = PBXBuildFile; fileRef = 7C12F2D7225B7C310010A931 /* DCA-Arboretum-dummy-faster-route.json */; };
+		8A19484E25262A0E001E4135 /* OfflineDataRegionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8A5CDDC5251BFA3300235CBC /* OfflineDataRegionTableViewCell.xib */; };
 		8A53644B251EB2EA002470C4 /* OfflineServiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCF721A5C62400AEA9AA /* OfflineServiceViewController.swift */; };
 		8A53644C251EB2FC002470C4 /* OfflineDataRegionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5CDDC4251BFA3300235CBC /* OfflineDataRegionTableViewCell.swift */; };
 		8A5CDDC9251BFA7300235CBC /* OfflineDataRegionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5CDDC4251BFA3300235CBC /* OfflineDataRegionTableViewCell.swift */; };
@@ -2270,6 +2271,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DA303C9621B728DD00F921DC /* Localizable.strings in Resources */,
+				8A19484E25262A0E001E4135 /* OfflineDataRegionTableViewCell.xib in Resources */,
 				C53F2EF320EBC95600D9798F /* Entitlements.plist in Resources */,
 				C53F2EF420EBC95600D9798F /* Main.storyboard in Resources */,
 				C53F2EF620EBC95600D9798F /* Assets.xcassets in Resources */,

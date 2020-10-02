@@ -4,6 +4,7 @@ import MapboxNavigation
 import MapboxDirections
 import UserNotifications
 import AVKit
+import MapboxNavigationNative
 
 private typealias RouteRequestSuccess = ((RouteResponse) -> Void)
 private typealias RouteRequestFailure = ((Error) -> Void)
@@ -19,6 +20,7 @@ class ViewController: UIViewController {
     
     var trackPolyline: MGLPolyline?
     var rawTrackPolyline: MGLPolyline?
+    let navigationDirections = NavigationDirections()
     
     // MARK: Properties
     var mapView: NavigationMapView? {
@@ -254,7 +256,21 @@ class ViewController: UIViewController {
             case let .success(response):
                 success(response)
             case let .failure(error):
-                failure?(error)
+                print("Error occured while requesting route: \(error)")
+                
+                // Attempt to load offline Navigation tiles.
+                guard let tilesURL = Bundle.mapboxCoreNavigation.suggestedTileURL?.appendingPathComponent("unpacked") else { return }
+                
+                self.navigationDirections.configureRouter(tilesURL: tilesURL) { (outTilesURL) in
+                    self.navigationDirections.calculate(options, offline: true) { (session, result) in
+                        switch result {
+                        case let .failure(error):
+                            failure?(error)
+                        case let .success(response):
+                            success(response)
+                        }
+                    }
+                }
             }
         }
     }
