@@ -261,6 +261,10 @@
 		8A53644C251EB2FC002470C4 /* OfflineDataRegionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5CDDC4251BFA3300235CBC /* OfflineDataRegionTableViewCell.swift */; };
 		8A5CDDC9251BFA7300235CBC /* OfflineDataRegionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5CDDC4251BFA3300235CBC /* OfflineDataRegionTableViewCell.swift */; };
 		8A5CDDCB251BFA7900235CBC /* OfflineDataRegionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8A5CDDC5251BFA3300235CBC /* OfflineDataRegionTableViewCell.xib */; };
+		8A67E0502527A70400B529DC /* OfflineDataItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A67E04F2527A70400B529DC /* OfflineDataItem.swift */; };
+		8A67E0512527A70400B529DC /* OfflineDataItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A67E04F2527A70400B529DC /* OfflineDataItem.swift */; };
+		8A67E05F2527A73600B529DC /* OfflineServiceConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A67E05E2527A73600B529DC /* OfflineServiceConstants.swift */; };
+		8A67E0602527A73600B529DC /* OfflineServiceConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A67E05E2527A73600B529DC /* OfflineServiceConstants.swift */; };
 		8AA849E924E722410008EE59 /* WaypointStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA849E824E722410008EE59 /* WaypointStyle.swift */; };
 		8D07C5A820B612310093D779 /* EmptyStyle.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D07C5A720B612310093D779 /* EmptyStyle.json */; };
 		8D1A5CD2212DDFCD0059BA4A /* DispatchTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D1A5CD1212DDFCD0059BA4A /* DispatchTimer.swift */; };
@@ -868,6 +872,8 @@
 		7C12F2D7225B7C310010A931 /* DCA-Arboretum-dummy-faster-route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "DCA-Arboretum-dummy-faster-route.json"; sourceTree = "<group>"; };
 		8A5CDDC4251BFA3300235CBC /* OfflineDataRegionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineDataRegionTableViewCell.swift; sourceTree = "<group>"; };
 		8A5CDDC5251BFA3300235CBC /* OfflineDataRegionTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OfflineDataRegionTableViewCell.xib; sourceTree = "<group>"; };
+		8A67E04F2527A70400B529DC /* OfflineDataItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineDataItem.swift; sourceTree = "<group>"; };
+		8A67E05E2527A73600B529DC /* OfflineServiceConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineServiceConstants.swift; sourceTree = "<group>"; };
 		8AA849E824E722410008EE59 /* WaypointStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaypointStyle.swift; sourceTree = "<group>"; };
 		8B808F852487CFEC00EEE453 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Main.strings; sourceTree = "<group>"; };
 		8B808F862487CFEC00EEE453 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Navigation.strings; sourceTree = "<group>"; };
@@ -1546,6 +1552,8 @@
 		8A53644A251EAF2C002470C4 /* OfflineService */ = {
 			isa = PBXGroup;
 			children = (
+				8A67E05E2527A73600B529DC /* OfflineServiceConstants.swift */,
+				8A67E04F2527A70400B529DC /* OfflineDataItem.swift */,
 				3529FCF721A5C62400AEA9AA /* OfflineServiceViewController.swift */,
 				8A5CDDC4251BFA3300235CBC /* OfflineDataRegionTableViewCell.swift */,
 				8A5CDDC5251BFA3300235CBC /* OfflineDataRegionTableViewCell.xib */,
@@ -2556,10 +2564,12 @@
 				3529FCF221A5C5B400AEA9AA /* ResizableView.swift in Sources */,
 				C5D9800D1EFA8BA9006DBF2E /* CustomViewController.swift in Sources */,
 				AED6285622CBE4CE00058A51 /* ViewController+GuidanceCards.swift in Sources */,
+				8A67E05F2527A73600B529DC /* OfflineServiceConstants.swift in Sources */,
 				C51FC31720F689F800400CE7 /* CustomStyles.swift in Sources */,
 				6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */,
 				358D14661E5E3B7700ADE590 /* AppDelegate.swift in Sources */,
 				3529FCF621A5C5D900AEA9AA /* UIViewController.swift in Sources */,
+				8A67E0502527A70400B529DC /* OfflineDataItem.swift in Sources */,
 				8A5CDDC9251BFA7300235CBC /* OfflineDataRegionTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2658,6 +2668,7 @@
 				C53F2EE420EBC95600D9798F /* ViewController.swift in Sources */,
 				8A53644B251EB2EA002470C4 /* OfflineServiceViewController.swift in Sources */,
 				C53F2EE520EBC95600D9798F /* CustomViewController.swift in Sources */,
+				8A67E0602527A73600B529DC /* OfflineServiceConstants.swift in Sources */,
 				DA303CAA21B7A93400F921DC /* ResizableView.swift in Sources */,
 				C53F2EE720EBC95600D9798F /* WaypointConfirmationViewController.swift in Sources */,
 				C5DE4B6220F6B6B3007AFBE6 /* CustomStyles.swift in Sources */,
@@ -2667,6 +2678,7 @@
 				DA303CA621B7A90100F921DC /* UIViewController.swift in Sources */,
 				3577B878214FF35800094294 /* FavoritesList.swift in Sources */,
 				8A53644C251EB2FC002470C4 /* OfflineDataRegionTableViewCell.swift in Sources */,
+				8A67E0512527A70400B529DC /* OfflineDataItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

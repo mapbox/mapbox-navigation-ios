@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -72,17 +72,17 @@
                                 <rect key="frame" x="0.0" y="548" width="914" height="25"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cAj-91-ulA">
-                                        <rect key="frame" x="0.0" y="0.0" width="914" height="23"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="914" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="LX2-zi-58t">
-                                        <rect key="frame" x="0.0" y="23" width="914" height="2"/>
+                                        <rect key="frame" x="0.0" y="21" width="914" height="4"/>
                                     </progressView>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="25" id="n0y-GK-vkA"/>
+                                    <constraint firstAttribute="height" priority="999" constant="25" id="n0y-GK-vkA"/>
                                 </constraints>
                             </stackView>
                         </subviews>
@@ -119,7 +119,7 @@
                 <outlet property="navigationPackLastUpdatedLabel" destination="LCA-DN-Sup" id="FHG-NV-JKL"/>
                 <outlet property="navigationPackSizeLabel" destination="wdL-Ge-Lmp" id="YaU-aV-aT3"/>
             </connections>
-            <point key="canvasLocation" x="-1495.6521739130435" y="71.316964285714278"/>
+            <point key="canvasLocation" x="-1230" y="64"/>
         </tableViewCell>
     </objects>
 </document>

@@ -494,7 +494,7 @@ extension ViewController: NavigationMapViewDelegate {
         let title = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_TITLE", value: "Remove Waypoint?", comment: "Title of alert confirming waypoint removal")
         let message = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_MSG", value: "Do you want to remove this waypoint?", comment: "Message of alert confirming waypoint removal")
         let removeTitle = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_REMOVE", value: "Remove Waypoint", comment: "Title of alert action for removing a waypoint")
-        let cancelTitle = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_CANCEL", value: "Cancel", comment: "Title of action for dismissing waypoint removal confirmation sheet")
+        let cancelTitle = NSLocalizedString("CANCEL_TITLE", value: "Cancel", comment: "Title of action for dismissing waypoint removal confirmation sheet")
         
         let waypointRemovalAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let removeAction = UIAlertAction(title: removeTitle, style: .destructive, handler: approve)

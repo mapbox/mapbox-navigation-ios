@@ -3,34 +3,10 @@ import MapboxCommon
 import MapboxCoreNavigation
 import MapboxDirections
 
-struct OfflineDataItem {
-    
-    var dataRegionMetadata: OfflineDataRegionMetadata
-    var mapPackMetadata: OfflineDataPackMetadata? = nil
-    var navigationPackMetadata: OfflineDataPackMetadata? = nil
-}
-
-struct OfflineServiceConstants {
-    
-    static let title = NSLocalizedString("OFFLINE_SERVICE_TITLE", value: "Offline Service", comment: "Title for UIViewController and UIAlertController.")
-    static let close = NSLocalizedString("CLOSE_TITLE", value: "Close", comment: "Close title.")
-}
-
 class OfflineServiceViewController: UITableViewController, OfflineServiceObserver {
     
-    let cellIdentifier = NSStringFromClass(OfflineDataRegionTableViewCell.self)
     var offlineDataItems = [OfflineDataItem]()
     var offlineService: OfflineService?
-    var username = "1tap-nav"
-    var baseURL = "https://api.mapbox.com"
-    var accessToken: String = {
-        guard let accessToken = Bundle.main.object(forInfoDictionaryKey: "MGLMapboxAccessToken") as? String else {
-            assertionFailure("`accessToken` must be set in the Info.plist as `MGLMapboxAccessToken`.")
-            return ""
-        }
-
-        return accessToken
-    }()
     let tilesUnpackingLock = NSLock()
     
     // MARK: - OfflineServiceObserver methods
@@ -79,21 +55,21 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
                 let temporaryPackURL = outputDirectoryURL.appendingPathComponent(packName).appendingPathExtension("tar")
                 try packData.write(to: temporaryPackURL)
                 
-                NavigationDirections.unpackTilePack(at: temporaryPackURL, outputDirectoryURL: outputDirectoryURL) {(totalBytes, unpackedBytes) in
+                NavigationDirections.unpackTilePack(at: temporaryPackURL, outputDirectoryURL: outputDirectoryURL) { (totalBytes, unpackedBytes) in
                     print("Unpacked \(unpackedBytes) of \(totalBytes) bytes")
-                } completionHandler: { (numberOfTiles, error) in
+                } completionHandler: { [weak self] (numberOfTiles, error) in
                     do {
                         if FileManager.default.fileExists(atPath: temporaryPackURL.path) {
                             try FileManager.default.removeItem(at: temporaryPackURL)
                         }
                     } catch {
-                        self.tilesUnpackingLock.unlock()
+                        self?.tilesUnpackingLock.unlock()
                         
                         print("Failed to remove temporary pack archive. Error: \(error)")
-                        self.presentAlert(OfflineServiceConstants.title, message: error.localizedDescription)
+                        self?.presentAlert(OfflineServiceConstants.title, message: error.localizedDescription)
                     }
                     
-                    self.tilesUnpackingLock.unlock()
+                    self?.tilesUnpackingLock.unlock()
                     print("Finished unpacking \(numberOfTiles) tiles")
                 }
             } catch {
@@ -138,7 +114,7 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
     public func onLogMessage(forMessage message: String) {
         print("[OfflineServiceObserver] \(#function): \(message)")
         
-        presentAlert(title, message: message)
+        presentAlert(OfflineServiceConstants.title, message: message)
     }
     
     public var peer: MBXPeerWrapper?
@@ -160,12 +136,17 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
     // MARK: - Setting-up methods
     
     func setupUI() {
-        tableView.register(UINib(nibName: "OfflineDataRegionTableViewCell", bundle: nil), forCellReuseIdentifier: cellIdentifier)
+        tableView.register(UINib(nibName: OfflineDataRegionTableViewCell.identifier, bundle: nil),
+                           forCellReuseIdentifier: OfflineDataRegionTableViewCell.identifier)
+        
         tableView.separatorInset = .zero
         tableView.allowsSelection = true
         
         title = OfflineServiceConstants.title
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: OfflineServiceConstants.close, style: .done, target: self, action: #selector(dismissViewController))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: OfflineServiceConstants.close,
+                                                            style: .done,
+                                                            target: self,
+                                                            action: #selector(dismissViewController))
     }
     
     // MARK: - Action handler methods
@@ -177,7 +158,7 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
     // MARK: - UITableView delegate methods
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! OfflineDataRegionTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: OfflineDataRegionTableViewCell.identifier, for: indexPath) as! OfflineDataRegionTableViewCell
         cell.presentUI(for: offlineDataItems[indexPath.row])
 
         return cell
@@ -202,7 +183,9 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
         presentActionsAlertController(offlineDataRegion)
     }
     
-    func listAvailableRegions() {
+    // MARK: - Private methods
+    
+    private func listAvailableRegions() {
         guard let outputDirectory = Bundle.mapboxCoreNavigation.suggestedTileURL?.path else { return }
         if !Bundle.mapboxCoreNavigation.ensureSuggestedTileURLExists() {
             print("Failed to create tiles directory")
@@ -211,16 +194,14 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
         
         removeUnpackedTilesDirectory()
         
-        offlineService = OfflineService.getInstanceForPath(outputDirectory, options: OfflineServiceOptions(username: username,
-                                                                                                           accessToken: accessToken,
-                                                                                                           baseURL: baseURL))
+        offlineService = OfflineService.getInstanceForPath(outputDirectory, options: OfflineServiceOptions(username: OfflineServiceConstants.username,
+                                                                                                           accessToken: OfflineServiceConstants.accessToken,
+                                                                                                           baseURL: OfflineServiceConstants.baseURL))
 
-        offlineService?.listAvailableRegions(forCallback: { [weak self] (expected) in
+        offlineService?.listAvailableRegions { [weak self] (expected) in
             guard let self = self else { return }
             if let error = expected?.error as? OfflineDataError {
-                DispatchQueue.main.async {
-                    self.presentAlert(OfflineServiceConstants.title, message: error.message)
-                }
+                self.presentAlert(OfflineServiceConstants.title, message: error.message)
 
                 return
             }
@@ -239,15 +220,15 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
-        })
+        }
     }
     
-    func removeUnpackedTilesDirectory() {
+    private func removeUnpackedTilesDirectory() {
         guard let unpackedTilesDirectoryURL = Bundle.mapboxCoreNavigation.suggestedTileURL?.appendingPathComponent("unpacked") else { return }
         try? FileManager.default.removeItem(at: unpackedTilesDirectoryURL)
     }
     
-    func updateOfflineDataRegions(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, delete: Bool = false) {
+    private func updateOfflineDataRegions(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, delete: Bool = false) {
         var indexPaths = [IndexPath]()
         for index in 0 ..< offlineDataItems.count {
             if offlineDataItems[index].dataRegionMetadata.id != metadata.id { continue }
@@ -268,7 +249,9 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
     }
     
     private func presentActionsAlertController(_ offlineDataRegion: OfflineDataItem) {
-        let alertController = UIAlertController(title: title, message: "Please select appropriate action.", preferredStyle: .alert)
+        let alertController = UIAlertController(title: OfflineServiceConstants.title,
+                                                message: "Please select appropriate action.",
+                                                preferredStyle: .alert)
 
         var mapsPackTitle = "Download Maps Pack"
         var mapsActionHandler: ActionHandler = { _ in
@@ -299,7 +282,7 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
         let actionPayloads: [(String, UIAlertAction.Style, ActionHandler?)] = [
             (mapsPackTitle, .default, mapsActionHandler),
             (navigationPackTitle, .default, navigationActionHandler),
-            ("Cancel", .cancel, nil)
+            (OfflineServiceConstants.cancel, .cancel, nil)
         ]
         
         actionPayloads
