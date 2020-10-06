@@ -2,6 +2,7 @@ import UIKit
 import MapboxCommon
 import MapboxCoreNavigation
 import MapboxDirections
+import Mapbox
 
 class OfflineServiceViewController: UITableViewController, OfflineServiceObserver {
     
@@ -43,7 +44,31 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
 
         updateOfflineDataRegions(for: domain, metadata: metadata)
         
-        if domain == .navigation {
+        switch domain {
+        case .maps:
+            MGLOfflineStorage.shared.addContents(ofFile: pack.path) { [weak self] (fileURL, packs, error) in
+                if let error = error {
+                    print("Error occured while adding map pack: \(error)")
+                    self?.presentAlert(OfflineServiceConstants.title, message: error.localizedDescription)
+                    
+                    return
+                }
+                
+                packs?.forEach {
+                    if let region = $0.region as? MGLShapeOfflineRegion {
+                        let context = "Offline Region".data(using: .utf8)!
+                        MGLOfflineStorage.shared.addPack(for: region, withContext: context) { (pack, error) in
+                            if let error = error {
+                                print("Error occured while adding map pack: \(error.localizedDescription)")
+                                return
+                            }
+                            
+                            pack?.resume()
+                        }
+                    }
+                }
+            }
+        case .navigation:
             tilesUnpackingLock.lock()
             
             do {
@@ -124,11 +149,15 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        subscribeForNotifications()
         setupUI()
         listAvailableRegions()
+        showOfflineStorageInfo()
     }
     
     deinit {
+        unsubscribeFromNotifications()
+        
         // FIXME: In some cases this call might cause crash.
         OfflineService.unregisterObserver(for: self)
     }
@@ -155,6 +184,25 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
         dismiss(animated: true, completion: nil)
     }
     
+    // MARK: - Notification observer methods
+    
+    func subscribeForNotifications() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(packProgressChanged(_:)),
+                                               name: NSNotification.Name.MGLOfflinePackProgressChanged,
+                                               object: nil)
+    }
+    
+    func unsubscribeFromNotifications() {
+        NotificationCenter.default.removeObserver(self,
+                                                  name: NSNotification.Name.MGLOfflinePackProgressChanged,
+                                                  object: nil)
+    }
+    
+    @objc func packProgressChanged(_ notification: NSNotification) {
+        print("Pack download progress changed: \(notification)")
+    }
+
     // MARK: - UITableView delegate methods
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -200,6 +248,9 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
 
         offlineService?.listAvailableRegions { [weak self] (expected) in
             guard let self = self else { return }
+            
+            OfflineService.registerObserver(for: self)
+            
             if let error = expected?.error as? OfflineDataError {
                 self.presentAlert(OfflineServiceConstants.title, message: error.message)
 
@@ -207,20 +258,27 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
             }
 
             let offlineDataRegions = expected?.value as? Array<Any>
-            offlineDataRegions?.forEach({
+            offlineDataRegions?.forEach {
                 if let metadata = $0 as? OfflineDataRegionMetadata {
                     self.offlineDataItems.append(OfflineDataItem(dataRegionMetadata: metadata,
                                                                  mapPackMetadata: nil,
                                                                  navigationPackMetadata: nil))
                 }
-            })
-
-            OfflineService.registerObserver(for: self)
+            }
 
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
         }
+    }
+    
+    private func showOfflineStorageInfo() {
+        let offlineStorage = MGLOfflineStorage.shared
+        let className = String(describing: MGLOfflineStorage.self)
+        
+        print("\(className) databaseURL: \(offlineStorage.databaseURL)")
+        print("\(className) databasePath: \(offlineStorage.databasePath)")
+        print("\(className) offline packs: \(offlineStorage.packs ?? [])")
     }
     
     private func removeUnpackedTilesDirectory() {
