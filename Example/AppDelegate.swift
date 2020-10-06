@@ -17,10 +17,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             window!.rootViewController = UIViewController()
         }
         
+        listMapboxFrameworks()
+        
         return true
     }
 
     private func isRunningTests() -> Bool {
         return NSClassFromString("XCTestCase") != nil
+    }
+    
+    private func listMapboxFrameworks() {
+        print("Linked Mapbox frameworks:")
+        
+        for framework in Bundle.allFrameworks {
+            if let bundleIdentifier = framework.bundleIdentifier, bundleIdentifier.contains("mapbox") {
+                let version = "CFBundleShortVersionString"
+                print("\(bundleIdentifier): \(framework.infoDictionary?[version] ?? "Unknown version")")
+            }
+        }
     }
 }
