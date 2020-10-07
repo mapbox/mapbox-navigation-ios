@@ -38,7 +38,7 @@ cd -
 
 step "Updating changelog to version ${SHORT_VERSION}…"
 
-sed -i '' -E "s/## *master/## ${SHORT_VERSION}/g" CHANGELOG.md
+sed -i '' -E "s/## *main/## ${SHORT_VERSION}/g" CHANGELOG.md
 
 # Skip updating the installation instructions for patch releases or prereleases.
 if [[ $SHORT_VERSION == $SEM_VERSION && $SHORT_VERSION == *.0 ]]; then

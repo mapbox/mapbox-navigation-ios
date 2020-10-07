@@ -10,7 +10,7 @@ class ImageDownloaderTests: XCTestCase {
 
     var downloader: ReentrantImageDownloader?
 
-    let imageURL = URL(string: "https://github.com/mapbox/mapbox-navigation-ios/blob/master/docs/img/navigation.png")!
+    let imageURL = URL(string: "https://github.com/mapbox/mapbox-navigation-ios/blob/main/docs/img/navigation.png")!
 
     override func setUp() {
         super.setUp()

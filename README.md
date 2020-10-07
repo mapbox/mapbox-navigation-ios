@@ -1,7 +1,7 @@
 # [Mapbox Navigation SDK for iOS](https://docs.mapbox.com/ios/navigation/)
 
 [![CircleCI](https://circleci.com/gh/mapbox/mapbox-navigation-ios.svg?style=svg)](https://circleci.com/gh/mapbox/mapbox-navigation-ios)
-[![codecov](https://codecov.io/gh/mapbox/mapbox-navigation-ios/branch/master/graph/badge.svg)](https://codecov.io/gh/mapbox/mapbox-navigation-ios)
+[![codecov](https://codecov.io/gh/mapbox/mapbox-navigation-ios/branch/main/graph/badge.svg)](https://codecov.io/gh/mapbox/mapbox-navigation-ios)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![CocoaPods](https://img.shields.io/cocoapods/v/MapboxNavigation.svg)](https://cocoapods.org/pods/MapboxNavigation/)
 
@@ -130,9 +130,9 @@ Consult the [API reference](https://docs.mapbox.com/ios/api/navigation/) for fur
 
 The [API reference](https://docs.mapbox.com/ios/api/navigation/) includes example code for accomplishing common tasks. You can run these examples as part of the [navigation-ios-examples](https://github.com/mapbox/navigation-ios-examples) project.
 
-This repository also contains [a testbed](https://github.com/mapbox/mapbox-navigation-ios/tree/master/Example) that exercises a variety of navigation SDK features:
+This repository also contains [a testbed](https://github.com/mapbox/mapbox-navigation-ios/tree/main/Example) that exercises a variety of navigation SDK features:
 
-1. Clone the repository or download the [.zip file](https://github.com/mapbox/mapbox-navigation-ios/archive/master.zip)
+1. Clone the repository or download the [.zip file](https://github.com/mapbox/mapbox-navigation-ios/archive/main.zip)
 1. Run `carthage update --platform ios --use-netrc` to build just the iOS dependencies.
 1. Open `MapboxNavigation.xcodeproj`.
 1. Sign up or log in to your Mapbox account and grab a [Mapbox Access Token](https://account.mapbox.com/access-tokens/).
@@ -143,7 +143,7 @@ This repository also contains [a testbed](https://github.com/mapbox/mapbox-navig
 
 ### Styling
 
-You can customize the appearance in order to blend in with the rest of your app. Checkout [`DayStyle.swift`](https://github.com/mapbox/mapbox-navigation-ios/blob/master/MapboxNavigation/DayStyle.swift) for all styleable elements.
+You can customize the appearance in order to blend in with the rest of your app. Checkout [`DayStyle.swift`](https://github.com/mapbox/mapbox-navigation-ios/blob/main/MapboxNavigation/DayStyle.swift) for all styleable elements.
 
 ```swift
 class CustomStyle: DayStyle {
