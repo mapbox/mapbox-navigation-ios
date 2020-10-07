@@ -80,9 +80,9 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
                 let temporaryPackURL = outputDirectoryURL.appendingPathComponent(packName).appendingPathExtension("tar")
                 try packData.write(to: temporaryPackURL)
                 
-                NavigationDirections.unpackTilePack(at: temporaryPackURL, outputDirectoryURL: outputDirectoryURL) { (totalBytes, unpackedBytes) in
+                NavigationDirections.unpackTilePack(at: temporaryPackURL, outputDirectoryURL: outputDirectoryURL, progressHandler: { (totalBytes, unpackedBytes) in
                     print("Unpacked \(unpackedBytes) of \(totalBytes) bytes")
-                } completionHandler: { [weak self] (numberOfTiles, error) in
+                }) { [weak self] (numberOfTiles, error) in
                     do {
                         if FileManager.default.fileExists(atPath: temporaryPackURL.path) {
                             try FileManager.default.removeItem(at: temporaryPackURL)
