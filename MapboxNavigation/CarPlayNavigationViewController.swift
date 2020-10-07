@@ -96,6 +96,9 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
     
     var styleObservation: NSKeyValueObservation?
     
+    private let contentInsetUpdateDelay = 10.0
+    private var shouldUpdateContentInset = true
+    
     /**
      Creates a new CarPlay navigation view controller for the given route controller and user interface.
      
@@ -213,9 +216,15 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
 
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        if (isOverviewingRoutes) { return } // Don't move content when overlays change.
-        guard let mapView = mapView else { return }
-        mapView.contentInset = contentInset(forOverviewing: false)
+        
+        if shouldUpdateContentInset {
+            shouldUpdateContentInset = false
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + contentInsetUpdateDelay, execute: {
+                self.shouldUpdateContentInset = true
+                self.mapView?.contentInset = self.contentInset(forOverviewing: self.isOverviewingRoutes)
+            })
+        }
     }
 
     func contentInset(forOverviewing overviewing: Bool) -> UIEdgeInsets {
