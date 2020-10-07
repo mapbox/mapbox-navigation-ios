@@ -1,5 +1,5 @@
 binary "https://www.mapbox.com/ios-sdk/MapboxAccounts.json" ~> 2.3.0
-binary "https://api.mapbox.com/downloads/v2/carthage/mobile-navigation-native/MapboxNavigationNative.json" ~> 23.0.0
+binary "https://api.mapbox.com/downloads/v2/carthage/mobile-navigation-native/MapboxNavigationNative.json" ~> 22.0
 binary "https://api.mapbox.com/downloads/v2/carthage/mobile-maps/mapbox-ios-sdk-dynamic.json" ~> 6.0
 binary "https://api.mapbox.com/downloads/v2/carthage/mapbox-common/MapboxCommon-ios.json" == 7.1.0
 github "mapbox/mapbox-directions-swift" ~> 1.0
