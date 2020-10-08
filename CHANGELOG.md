@@ -2,10 +2,6 @@
 
 ## v1.1.0
 
-### Packaging
-
-* Upgraded to [Mapbox Maps SDK for iOS v6.1.0-beta.2](https://github.com/mapbox/mapbox-gl-native-ios/releases/tag/ios-v6.1.0-beta.2). ([#2565](https://github.com/mapbox/mapbox-navigation-ios/pull/2565))
-
 ### Other changes
 
 * `RouteProgress`, `RouteLegProgress`, and `RouteStepProgress` now conform to the `Codable` protocol. ([#2615](https://github.com/mapbox/mapbox-navigation-ios/pull/2615))
