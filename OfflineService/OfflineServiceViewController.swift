@@ -129,14 +129,11 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        subscribeForNotifications()
         setupUI()
         listAvailableRegions()
     }
     
     deinit {
-        unsubscribeFromNotifications()
-        
         // FIXME: In some cases this call might cause crash.
         OfflineService.unregisterObserver(for: self)
     }
@@ -161,25 +158,6 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
     
     @IBAction func dismissViewController() {
         dismiss(animated: true, completion: nil)
-    }
-    
-    // MARK: - Notification observer methods
-    
-    func subscribeForNotifications() {
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(packProgressChanged(_:)),
-                                               name: NSNotification.Name.MGLOfflinePackProgressChanged,
-                                               object: nil)
-    }
-    
-    func unsubscribeFromNotifications() {
-        NotificationCenter.default.removeObserver(self,
-                                                  name: NSNotification.Name.MGLOfflinePackProgressChanged,
-                                                  object: nil)
-    }
-    
-    @objc func packProgressChanged(_ notification: NSNotification) {
-        print("Pack download progress changed: \(notification)")
     }
 
     // MARK: - UITableView delegate methods
