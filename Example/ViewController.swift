@@ -111,6 +111,9 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Trigger OfflineServiceManager singleton creation to make sure that Maps SDK is notified whenever offline packs are available.
+        let _ = OfflineServiceManager.instance
+        
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "settings"), style: .plain, target: self, action: #selector(openSettings))
         navigationItem.rightBarButtonItem?.isEnabled = true
     }

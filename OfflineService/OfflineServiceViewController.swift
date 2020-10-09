@@ -7,17 +7,17 @@ import Mapbox
 class OfflineServiceViewController: UITableViewController, OfflineServiceObserver {
     
     var offlineDataItems = [OfflineDataItem]()
-    var offlineService: OfflineService?
+    let offlineServiceManager = OfflineServiceManager.instance
     let tilesUnpackingLock = NSLock()
     
     // MARK: - OfflineServiceObserver methods
     
     public func onPending(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, pack: OfflineDataPack) {
-        print("[OfflineServiceObserver] \(#function)")
+        print("[OfflineServiceObserver] \(#function), identifier: \(metadata.id)")
     }
     
     public func onDownloading(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, pack: OfflineDataPack) {
-        print("[OfflineServiceObserver] \(#function)")
+        print("[OfflineServiceObserver] \(#function), identifier: \(metadata.id), progress: \(pack.bytes) bytes")
         
         for index in (0 ..< offlineDataItems.count) {
             if offlineDataItems[index].dataRegionMetadata.id != metadata.id { continue }
@@ -32,42 +32,22 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
     }
     
     public func onIncomplete(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, pack: OfflineDataPack) {
-        print("[OfflineServiceObserver] \(#function)")
+        print("[OfflineServiceObserver] \(#function), identifier: \(metadata.id)")
     }
     
     public func onVerifying(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, pack: OfflineDataPack) {
-        print("[OfflineServiceObserver] \(#function)")
+        print("[OfflineServiceObserver] \(#function), identifier: \(metadata.id)")
     }
     
     public func onAvailable(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, pack: OfflineDataPack) {
-        print("[OfflineServiceObserver] \(#function)")
+        print("[OfflineServiceObserver] \(#function), identifier: \(metadata.id)")
 
         updateOfflineDataRegions(for: domain, metadata: metadata)
         
         switch domain {
         case .maps:
-            MGLOfflineStorage.shared.addContents(ofFile: pack.path) { [weak self] (fileURL, packs, error) in
-                if let error = error {
-                    print("Error occured while adding map pack: \(error)")
-                    self?.presentAlert(OfflineServiceConstants.title, message: error.localizedDescription)
-                    
-                    return
-                }
-                
-                packs?.forEach {
-                    if let region = $0.region as? MGLShapeOfflineRegion {
-                        let context = "Offline Region".data(using: .utf8)!
-                        MGLOfflineStorage.shared.addPack(for: region, withContext: context) { (pack, error) in
-                            if let error = error {
-                                print("Error occured while adding map pack: \(error.localizedDescription)")
-                                return
-                            }
-                            
-                            pack?.resume()
-                        }
-                    }
-                }
-            }
+            // Maps SDK will automatically pick up downloaded offline pack
+            break
         case .navigation:
             tilesUnpackingLock.lock()
             
@@ -107,15 +87,15 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
     }
     
     public func onExpired(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, pack: OfflineDataPack) {
-        print("[OfflineServiceObserver] \(#function)")
+        print("[OfflineServiceObserver] \(#function), identifier: \(metadata.id)")
     }
     
     public func onErrored(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, pack: OfflineDataPack) {
-        print("[OfflineServiceObserver] \(#function)")
+        print("[OfflineServiceObserver] \(#function), identifier: \(metadata.id)")
     }
     
     public func onDeleting(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, pack: OfflineDataPack, callback: @escaping OfflineDataPackAcknowledgeCallback) {
-        print("[OfflineServiceObserver] \(#function)")
+        print("[OfflineServiceObserver] \(#function), identifier: \(metadata.id)")
         
         presentAlert(OfflineServiceConstants.title, message: "Would you like to remove \(metadata.id)?", handler: { _ in
             callback()
@@ -152,7 +132,6 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
         subscribeForNotifications()
         setupUI()
         listAvailableRegions()
-        showOfflineStorageInfo()
     }
     
     deinit {
@@ -234,19 +213,9 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
     // MARK: - Private methods
     
     private func listAvailableRegions() {
-        guard let outputDirectory = Bundle.mapboxCoreNavigation.suggestedTileURL?.path else { return }
-        if !Bundle.mapboxCoreNavigation.ensureSuggestedTileURLExists() {
-            print("Failed to create tiles directory")
-            return
-        }
-        
         removeUnpackedTilesDirectory()
-        
-        offlineService = OfflineService.getInstanceForPath(outputDirectory, options: OfflineServiceOptions(username: OfflineServiceConstants.username,
-                                                                                                           accessToken: OfflineServiceConstants.accessToken,
-                                                                                                           baseURL: OfflineServiceConstants.baseURL))
 
-        offlineService?.listAvailableRegions { [weak self] (expected) in
+        offlineServiceManager.listAvailableRegions { [weak self] (expected) in
             guard let self = self else { return }
             
             OfflineService.registerObserver(for: self)
@@ -270,15 +239,6 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
                 self.tableView.reloadData()
             }
         }
-    }
-    
-    private func showOfflineStorageInfo() {
-        let offlineStorage = MGLOfflineStorage.shared
-        let className = String(describing: MGLOfflineStorage.self)
-        
-        print("\(className) databaseURL: \(offlineStorage.databaseURL)")
-        print("\(className) databasePath: \(offlineStorage.databasePath)")
-        print("\(className) offline packs: \(offlineStorage.packs ?? [])")
     }
     
     private func removeUnpackedTilesDirectory() {
@@ -313,25 +273,25 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
 
         var mapsPackTitle = "Download Maps Pack"
         var mapsActionHandler: ActionHandler = { _ in
-            self.offlineService?.downloadPack(for: .maps, metadata: offlineDataRegion.dataRegionMetadata)
+            self.offlineServiceManager.downloadPack(.maps, metadata: offlineDataRegion.dataRegionMetadata)
         }
         
         if offlineDataRegion.mapPackMetadata != nil {
             mapsPackTitle = "Delete Maps Pack"
             mapsActionHandler = { _ in
-                self.offlineService?.deletePack(for: .maps, metadata: offlineDataRegion.dataRegionMetadata)
+                self.offlineServiceManager.deletePack(.maps, metadata: offlineDataRegion.dataRegionMetadata)
             }
         }
         
         var navigationPackTitle = "Download Navigation Pack"
         var navigationActionHandler: ActionHandler = { _ in
-            self.offlineService?.downloadPack(for: .navigation, metadata: offlineDataRegion.dataRegionMetadata)
+            self.offlineServiceManager.downloadPack(.navigation, metadata: offlineDataRegion.dataRegionMetadata)
         }
         
         if offlineDataRegion.navigationPackMetadata != nil {
             navigationPackTitle = "Delete Navigation Pack"
             navigationActionHandler = { _ in
-                self.offlineService?.deletePack(for: .navigation, metadata: offlineDataRegion.dataRegionMetadata)
+                self.offlineServiceManager.deletePack(.navigation, metadata: offlineDataRegion.dataRegionMetadata)
             }
         }
         

@@ -257,6 +257,8 @@
 		64847A041F04629D003F3A69 /* Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64847A031F04629D003F3A69 /* Feedback.swift */; };
 		7C12F2D8225B7C320010A931 /* DCA-Arboretum-dummy-faster-route.json in Resources */ = {isa = PBXBuildFile; fileRef = 7C12F2D7225B7C310010A931 /* DCA-Arboretum-dummy-faster-route.json */; };
 		8A19484E25262A0E001E4135 /* OfflineDataRegionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8A5CDDC5251BFA3300235CBC /* OfflineDataRegionTableViewCell.xib */; };
+		8A4B09AF252FDCCF00FFC6E7 /* OfflineServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B09AE252FDCCF00FFC6E7 /* OfflineServiceManager.swift */; };
+		8A4B09B0252FDCCF00FFC6E7 /* OfflineServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4B09AE252FDCCF00FFC6E7 /* OfflineServiceManager.swift */; };
 		8A53644B251EB2EA002470C4 /* OfflineServiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCF721A5C62400AEA9AA /* OfflineServiceViewController.swift */; };
 		8A53644C251EB2FC002470C4 /* OfflineDataRegionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5CDDC4251BFA3300235CBC /* OfflineDataRegionTableViewCell.swift */; };
 		8A5CDDC9251BFA7300235CBC /* OfflineDataRegionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5CDDC4251BFA3300235CBC /* OfflineDataRegionTableViewCell.swift */; };
@@ -870,6 +872,7 @@
 		6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WaypointConfirmationViewController.swift; path = Example/WaypointConfirmationViewController.swift; sourceTree = "<group>"; };
 		64847A031F04629D003F3A69 /* Feedback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Feedback.swift; sourceTree = "<group>"; };
 		7C12F2D7225B7C310010A931 /* DCA-Arboretum-dummy-faster-route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "DCA-Arboretum-dummy-faster-route.json"; sourceTree = "<group>"; };
+		8A4B09AE252FDCCF00FFC6E7 /* OfflineServiceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineServiceManager.swift; sourceTree = "<group>"; };
 		8A5CDDC4251BFA3300235CBC /* OfflineDataRegionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineDataRegionTableViewCell.swift; sourceTree = "<group>"; };
 		8A5CDDC5251BFA3300235CBC /* OfflineDataRegionTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OfflineDataRegionTableViewCell.xib; sourceTree = "<group>"; };
 		8A67E04F2527A70400B529DC /* OfflineDataItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineDataItem.swift; sourceTree = "<group>"; };
@@ -1557,6 +1560,7 @@
 				3529FCF721A5C62400AEA9AA /* OfflineServiceViewController.swift */,
 				8A5CDDC4251BFA3300235CBC /* OfflineDataRegionTableViewCell.swift */,
 				8A5CDDC5251BFA3300235CBC /* OfflineDataRegionTableViewCell.xib */,
+				8A4B09AE252FDCCF00FFC6E7 /* OfflineServiceManager.swift */,
 			);
 			path = OfflineService;
 			sourceTree = "<group>";
@@ -2561,6 +2565,7 @@
 			files = (
 				358D14681E5E3B7700ADE590 /* ViewController.swift in Sources */,
 				3529FCF821A5C62400AEA9AA /* OfflineServiceViewController.swift in Sources */,
+				8A4B09AF252FDCCF00FFC6E7 /* OfflineServiceManager.swift in Sources */,
 				3529FCF221A5C5B400AEA9AA /* ResizableView.swift in Sources */,
 				C5D9800D1EFA8BA9006DBF2E /* CustomViewController.swift in Sources */,
 				AED6285622CBE4CE00058A51 /* ViewController+GuidanceCards.swift in Sources */,
@@ -2671,6 +2676,7 @@
 				8A67E0602527A73600B529DC /* OfflineServiceConstants.swift in Sources */,
 				DA303CAA21B7A93400F921DC /* ResizableView.swift in Sources */,
 				C53F2EE720EBC95600D9798F /* WaypointConfirmationViewController.swift in Sources */,
+				8A4B09B0252FDCCF00FFC6E7 /* OfflineServiceManager.swift in Sources */,
 				C5DE4B6220F6B6B3007AFBE6 /* CustomStyles.swift in Sources */,
 				DA8805002316EAED00B54D87 /* ViewController+GuidanceCards.swift in Sources */,
 				35379CFD21480C0500FD402E /* AppDelegate+CarPlay.swift in Sources */,
