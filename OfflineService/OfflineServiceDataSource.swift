@@ -18,7 +18,8 @@ open class OfflineServiceDataSource: OfflineServiceObserver {
     public func onDownloading(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, pack: OfflineDataPack) {
         NSLog("[OfflineServiceObserver] \(#function), identifier: \(metadata.id), progress: \(pack.bytes) bytes")
         
-        self.delegate?.offlineServiceDataSource(self, didUpdate: OfflineDataItem(dataRegionMetadata: metadata, domain: domain, offlineDataPack: pack))
+        let offlineDataItem = OfflineDataItem(dataRegionMetadata: metadata, domain: domain, offlineDataPack: pack)
+        self.delegate?.offlineServiceDataSource(self, didUpdate: [offlineDataItem])
     }
     
     public func onIncomplete(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, pack: OfflineDataPack) {
@@ -30,14 +31,14 @@ open class OfflineServiceDataSource: OfflineServiceObserver {
     }
     
     public func onAvailable(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, pack: OfflineDataPack) {
-        NSLog("[OfflineServiceObserver] \(#function), identifier: \(metadata.id)")
+        NSLog("[OfflineServiceObserver] \(#function), domain: \(domain.rawValue) identifier: \(metadata.id)")
 
         let offlineDataItem = OfflineDataItem(dataRegionMetadata: metadata,
-                                              mapPackMetadata: metadata.mapPack,
-                                              navigationPackMetadata: metadata.navigationPack,
+                                              mapPackMetadata: domain == .maps ? metadata.mapPack : nil,
+                                              navigationPackMetadata: domain == .navigation ? metadata.navigationPack : nil,
                                               domain: domain)
         
-        self.delegate?.offlineServiceDataSource(self, didUpdate: offlineDataItem)
+        self.delegate?.offlineServiceDataSource(self, didUpdate: [offlineDataItem])
         
         switch domain {
         case .maps:
@@ -56,7 +57,7 @@ open class OfflineServiceDataSource: OfflineServiceObserver {
                 try packData.write(to: temporaryPackURL)
                 
                 NavigationDirections.unpackTilePack(at: temporaryPackURL, outputDirectoryURL: outputDirectoryURL, progressHandler: { (totalBytes, unpackedBytes) in
-                    print("Unpacked \(unpackedBytes) of \(totalBytes) bytes")
+                    NSLog("Unpacked \(unpackedBytes) of \(totalBytes) bytes")
                 }) { (numberOfTiles, error) in
                     do {
                         if FileManager.default.fileExists(atPath: temporaryPackURL.path) {
@@ -65,17 +66,17 @@ open class OfflineServiceDataSource: OfflineServiceObserver {
                     } catch {
                         self.tilesUnpackingLock.unlock()
                         
-                        print("Failed to remove temporary pack archive. Error: \(error)")
+                        NSLog("Failed to remove temporary pack archive. Error: \(error)")
                         self.delegate?.offlineServiceDataSource(self, didFail: OfflineServiceError.genericError(message: error.localizedDescription))
                     }
                     
                     self.tilesUnpackingLock.unlock()
-                    print("Finished unpacking \(numberOfTiles) tiles")
+                    NSLog("Finished unpacking \(numberOfTiles) tiles")
                 }
             } catch {
                 tilesUnpackingLock.unlock()
                 
-                print("Error occured while unpacking navigation tiles: \(error)")
+                NSLog("Error occured while unpacking navigation tiles: \(error)")
                 delegate?.offlineServiceDataSource(self, didFail: OfflineServiceError.genericError(message: error.localizedDescription))
             }
         }
@@ -97,7 +98,8 @@ open class OfflineServiceDataSource: OfflineServiceObserver {
     public func onDeleted(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata) {
         NSLog("[OfflineServiceObserver] \(#function), identifier: \(metadata.id)")
         
-        self.delegate?.offlineServiceDataSource(self, didUpdate: OfflineDataItem(dataRegionMetadata: metadata, domain: domain))
+        let offlineDataItem = OfflineDataItem(dataRegionMetadata: metadata, domain: domain)
+        self.delegate?.offlineServiceDataSource(self, didUpdate: [offlineDataItem])
     }
     
     public func onInitialized() {
@@ -135,11 +137,15 @@ open class OfflineServiceDataSource: OfflineServiceObserver {
             }
 
             let offlineDataRegions = expected?.value as? Array<Any>
+            var offlineDataItems = [OfflineDataItem]()
             offlineDataRegions?.forEach {
-                if let metadata = $0 as? OfflineDataRegionMetadata {                    
-                    let offlineDataItem = OfflineDataItem(dataRegionMetadata: metadata)
-                    self.delegate?.offlineServiceDataSource(self, didUpdate: offlineDataItem)
+                if let metadata = $0 as? OfflineDataRegionMetadata {
+                    offlineDataItems.append(OfflineDataItem(dataRegionMetadata: metadata))
                 }
+            }
+            
+            if !offlineDataItems.isEmpty {
+                self.delegate?.offlineServiceDataSource(self, didUpdate: offlineDataItems)
             }
         }
     }
@@ -152,7 +158,7 @@ open class OfflineServiceDataSource: OfflineServiceObserver {
 
 public protocol OfflineServiceDataSourceDelegate: class {
 
-    func offlineServiceDataSource(_ dataSource: OfflineServiceDataSource, didUpdate offlineDataItem: OfflineDataItem)
+    func offlineServiceDataSource(_ dataSource: OfflineServiceDataSource, didUpdate offlineDataItems: [OfflineDataItem])
     
     func offlineServiceDataSource(_ dataSource: OfflineServiceDataSource, didFail error: OfflineServiceError)
 }

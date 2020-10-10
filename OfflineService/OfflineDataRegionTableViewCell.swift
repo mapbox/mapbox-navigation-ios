@@ -111,9 +111,11 @@ class OfflineDataRegionTableViewCell: UITableViewCell {
         mapsPackLabel.font = UIFont.systemFont(ofSize: 13.0)
         mapsPackLabel.textColor = .red
         
+        mapsPackLastUpdatedLabel.text = ""
         mapsPackLastUpdatedLabel.font = UIFont.systemFont(ofSize: 11.0)
         mapsPackLastUpdatedLabel.textColor = .darkGray
         
+        mapsPackSizeLabel.text = ""
         mapsPackSizeLabel.font = UIFont.systemFont(ofSize: 11.0)
         mapsPackSizeLabel.textColor = .darkGray
         
@@ -121,9 +123,11 @@ class OfflineDataRegionTableViewCell: UITableViewCell {
         navigationPackLabel.font = UIFont.systemFont(ofSize: 13.0)
         navigationPackLabel.textColor = .red
         
+        navigationPackLastUpdatedLabel.text = ""
         navigationPackLastUpdatedLabel.font = UIFont.systemFont(ofSize: 11.0)
         navigationPackLastUpdatedLabel.textColor = .darkGray
         
+        navigationPackSizeLabel.text = ""
         navigationPackSizeLabel.font = UIFont.systemFont(ofSize: 11.0)
         navigationPackSizeLabel.textColor = .darkGray
         

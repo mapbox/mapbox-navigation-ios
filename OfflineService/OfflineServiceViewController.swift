@@ -45,49 +45,51 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceDataSou
     
     // MARK: - OfflineServiceDataSourceDelegate methods
     
-    func offlineServiceDataSource(_ dataSource: OfflineServiceDataSource, didUpdate offlineDataItem: OfflineDataItem) {
+    func offlineServiceDataSource(_ dataSource: OfflineServiceDataSource, didUpdate offlineDataItems: [OfflineDataItem]) {
         DispatchQueue.main.async {
-            var indexPaths = [IndexPath]()
-            var found = false
-            let metadata = offlineDataItem.dataRegionMetadata
-            
-            // In case if OfflineDataItem was found in list - update existing item with available pack for either map or navigation.
-            for index in 0 ..< self.offlineDataItems.count {
-                if self.offlineDataItems[index].dataRegionMetadata.id != metadata.id { continue }
-                found = true
+            offlineDataItems.forEach {
+                var indexPaths = [IndexPath]()
+                var found = false
+                let metadata = $0.dataRegionMetadata
                 
-                guard let domain = offlineDataItem.domain else { continue }
-                
-                if let pack = offlineDataItem.offlineDataPack {
-                    let indexPath = IndexPath(row: index, section: 0)
-                    let cell = self.tableView.cellForRow(at: indexPath) as? OfflineDataRegionTableViewCell
-                    cell?.showDownloadProgress(for: domain, dataPack: pack, metadata: metadata)
+                // In case if OfflineDataItem was found in list - update existing item with available pack for either map or navigation.
+                for index in 0 ..< self.offlineDataItems.count {
+                    if self.offlineDataItems[index].dataRegionMetadata.id != metadata.id { continue }
+                    found = true
                     
-                    continue
+                    guard let domain = $0.domain else { continue }
+                    
+                    if let pack = $0.offlineDataPack {
+                        let indexPath = IndexPath(row: index, section: 0)
+                        let cell = self.tableView.cellForRow(at: indexPath) as? OfflineDataRegionTableViewCell
+                        cell?.showDownloadProgress(for: domain, dataPack: pack, metadata: metadata)
+                        
+                        continue
+                    }
+                    
+                    switch domain {
+                    case .maps:
+                        self.offlineDataItems[index].mapPackMetadata = $0.mapPackMetadata
+                    case .navigation:
+                        self.offlineDataItems[index].navigationPackMetadata = $0.navigationPackMetadata
+                    }
+                    
+                    indexPaths.append(IndexPath(row: index, section: 0))
                 }
                 
-                switch domain {
-                case .maps:
-                    self.offlineDataItems[index].mapPackMetadata = offlineDataItem.mapPackMetadata
-                case .navigation:
-                    self.offlineDataItems[index].navigationPackMetadata = offlineDataItem.navigationPackMetadata
+                // In case if OfflineDataItem wasn't found (e.g. in case if there is no internet connection) - add it to list and refresh UITableView.
+                if !found {
+                    self.offlineDataItems.append($0)
+                    
+                    self.tableView.beginUpdates()
+                    self.tableView.insertRows(at: [IndexPath(row: self.offlineDataItems.count - 1, section: 0)], with: .automatic)
+                    self.tableView.endUpdates()
+                    
+                    return
                 }
                 
-                indexPaths.append(IndexPath(row: index, section: 0))
+                self.tableView.reloadRows(at: indexPaths, with: .automatic)
             }
-            
-            // In case if OfflineDataItem wasn't found (e.g. in case if there is no internet connection) - add it to list and refresh UITableView.
-            if !found {
-                self.offlineDataItems.append(offlineDataItem)
-                
-                self.tableView.beginUpdates()
-                self.tableView.insertRows(at: [IndexPath(row: self.offlineDataItems.count - 1, section: 0)], with: .automatic)
-                self.tableView.endUpdates()
-                
-                return
-            }
-            
-            self.tableView.reloadRows(at: indexPaths, with: .automatic)
         }
     }
     
