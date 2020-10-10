@@ -4,124 +4,10 @@ import MapboxCoreNavigation
 import MapboxDirections
 import Mapbox
 
-class OfflineServiceViewController: UITableViewController, OfflineServiceObserver {
-    
-    var offlineDataItems = [OfflineDataItem]()
-    let tilesUnpackingLock = NSLock()
-    
-    // MARK: - OfflineServiceObserver methods
-    
-    public func onPending(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, pack: OfflineDataPack) {
-        print("[OfflineServiceObserver] \(#function), identifier: \(metadata.id)")
-    }
-    
-    public func onDownloading(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, pack: OfflineDataPack) {
-        print("[OfflineServiceObserver] \(#function), identifier: \(metadata.id), progress: \(pack.bytes) bytes")
-        
-        for index in (0 ..< offlineDataItems.count) {
-            if offlineDataItems[index].dataRegionMetadata.id != metadata.id { continue }
-            
-            DispatchQueue.main.async {
-                let indexPath = IndexPath(row: index, section: 0)
-                let cell = self.tableView.cellForRow(at: indexPath) as? OfflineDataRegionTableViewCell
-                
-                cell?.showDownloadProgress(for: domain, dataPack: pack, metadata: metadata)
-            }
-        }
-    }
-    
-    public func onIncomplete(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, pack: OfflineDataPack) {
-        print("[OfflineServiceObserver] \(#function), identifier: \(metadata.id)")
-    }
-    
-    public func onVerifying(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, pack: OfflineDataPack) {
-        print("[OfflineServiceObserver] \(#function), identifier: \(metadata.id)")
-    }
-    
-    public func onAvailable(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, pack: OfflineDataPack) {
-        print("[OfflineServiceObserver] \(#function), identifier: \(metadata.id)")
+class OfflineServiceViewController: UITableViewController, OfflineServiceDataSourceDelegate {
 
-        updateOfflineDataRegions(for: domain, metadata: metadata)
-        
-        switch domain {
-        case .maps:
-            // Maps SDK will automatically pick up downloaded offline pack
-            break
-        case .navigation:
-            tilesUnpackingLock.lock()
-            
-            do {
-                guard let outputDirectoryURL = Bundle.mapboxCoreNavigation.suggestedTileURL?.appendingPathComponent("unpacked") else { return }
-                guard let packName = URL(string: pack.path)?.lastPathComponent else { return }
-                guard let packData = FileManager.default.contents(atPath: pack.path) else { return }
-                
-                try FileManager.default.createDirectory(at: outputDirectoryURL, withIntermediateDirectories: true, attributes: nil)
-                let temporaryPackURL = outputDirectoryURL.appendingPathComponent(packName).appendingPathExtension("tar")
-                try packData.write(to: temporaryPackURL)
-                
-                NavigationDirections.unpackTilePack(at: temporaryPackURL, outputDirectoryURL: outputDirectoryURL, progressHandler: { (totalBytes, unpackedBytes) in
-                    print("Unpacked \(unpackedBytes) of \(totalBytes) bytes")
-                }) { [weak self] (numberOfTiles, error) in
-                    do {
-                        if FileManager.default.fileExists(atPath: temporaryPackURL.path) {
-                            try FileManager.default.removeItem(at: temporaryPackURL)
-                        }
-                    } catch {
-                        self?.tilesUnpackingLock.unlock()
-                        
-                        print("Failed to remove temporary pack archive. Error: \(error)")
-                        self?.presentAlert(OfflineServiceConstants.title, message: error.localizedDescription)
-                    }
-                    
-                    self?.tilesUnpackingLock.unlock()
-                    print("Finished unpacking \(numberOfTiles) tiles")
-                }
-            } catch {
-                tilesUnpackingLock.unlock()
-                
-                print("Error occured while unpacking navigation tiles: \(error)")
-                presentAlert(OfflineServiceConstants.title, message: error.localizedDescription)
-            }
-        }
-    }
-    
-    public func onExpired(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, pack: OfflineDataPack) {
-        print("[OfflineServiceObserver] \(#function), identifier: \(metadata.id)")
-    }
-    
-    public func onErrored(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, pack: OfflineDataPack) {
-        print("[OfflineServiceObserver] \(#function), identifier: \(metadata.id)")
-    }
-    
-    public func onDeleting(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, pack: OfflineDataPack, callback: @escaping OfflineDataPackAcknowledgeCallback) {
-        print("[OfflineServiceObserver] \(#function), identifier: \(metadata.id)")
-        
-        presentAlert(OfflineServiceConstants.title, message: "Would you like to remove \(metadata.id)?", handler: { _ in
-            callback()
-        })
-    }
-    
-    public func onDeleted(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata) {
-        print("[OfflineServiceObserver] \(#function)")
-        
-        updateOfflineDataRegions(for: domain, metadata: metadata, delete: true)
-    }
-    
-    public func onInitialized() {
-        print("[OfflineServiceObserver] \(#function)")
-    }
-    
-    public func onIdle() {
-        print("[OfflineServiceObserver] \(#function)")
-    }
-    
-    public func onLogMessage(forMessage message: String) {
-        print("[OfflineServiceObserver] \(#function): \(message)")
-        
-        presentAlert(OfflineServiceConstants.title, message: message)
-    }
-    
-    public var peer: MBXPeerWrapper?
+    var offlineDataItems = [OfflineDataItem]()
+    var offlineServiceDataSource: OfflineServiceDataSource? = nil
     
     // MARK: - UIViewController delegate methods
     
@@ -129,11 +15,10 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
         super.viewDidLoad()
         
         setupUI()
-        listAvailableRegions()
-    }
-    
-    deinit {
-        OfflineServiceManager.unregister(self)
+        
+        offlineServiceDataSource = OfflineServiceDataSource()
+        offlineServiceDataSource?.delegate = self
+        offlineServiceDataSource?.startObservingAvailableRegions()
     }
 
     // MARK: - Setting-up methods
@@ -156,6 +41,61 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
     
     @IBAction func dismissViewController() {
         dismiss(animated: true, completion: nil)
+    }
+    
+    // MARK: - OfflineServiceDataSourceDelegate methods
+    
+    func offlineServiceDataSource(_ dataSource: OfflineServiceDataSource, didUpdate offlineDataItem: OfflineDataItem) {
+        DispatchQueue.main.async {
+            var indexPaths = [IndexPath]()
+            var found = false
+            let metadata = offlineDataItem.dataRegionMetadata
+            
+            // In case if OfflineDataItem was found in list - update existing item with available pack for either map or navigation.
+            for index in 0 ..< self.offlineDataItems.count {
+                if self.offlineDataItems[index].dataRegionMetadata.id != metadata.id { continue }
+                found = true
+                
+                guard let domain = offlineDataItem.domain else { continue }
+                
+                if let pack = offlineDataItem.offlineDataPack {
+                    let indexPath = IndexPath(row: index, section: 0)
+                    let cell = self.tableView.cellForRow(at: indexPath) as? OfflineDataRegionTableViewCell
+                    cell?.showDownloadProgress(for: domain, dataPack: pack, metadata: metadata)
+                    
+                    continue
+                }
+                
+                switch domain {
+                case .maps:
+                    self.offlineDataItems[index].mapPackMetadata = offlineDataItem.mapPackMetadata
+                case .navigation:
+                    self.offlineDataItems[index].navigationPackMetadata = offlineDataItem.navigationPackMetadata
+                }
+                
+                indexPaths.append(IndexPath(row: index, section: 0))
+            }
+            
+            // In case if OfflineDataItem wasn't found (e.g. in case if there is no internet connection) - add it to list and refresh UITableView.
+            if !found {
+                self.offlineDataItems.append(offlineDataItem)
+                
+                self.tableView.beginUpdates()
+                self.tableView.insertRows(at: [IndexPath(row: self.offlineDataItems.count - 1, section: 0)], with: .automatic)
+                self.tableView.endUpdates()
+                
+                return
+            }
+            
+            self.tableView.reloadRows(at: indexPaths, with: .automatic)
+        }
+    }
+    
+    func offlineServiceDataSource(_ dataSource: OfflineServiceDataSource, didFail error: OfflineServiceError) {
+        switch error {
+        case .genericError(message: let message):
+            self.presentAlert(OfflineServiceConstants.title, message: message)
+        }
     }
 
     // MARK: - UITableView delegate methods
@@ -187,73 +127,7 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceObserve
     }
     
     // MARK: - Private methods
-    
-    private func listAvailableRegions() {
-        OfflineServiceManager.register(self)
-        
-        removeUnpackedTilesDirectory()
 
-        OfflineServiceManager.instance.listAvailableRegions { [weak self] (expected) in
-            guard let self = self else { return }
-            
-            if let error = expected?.error as? OfflineDataError {
-                self.presentAlert(OfflineServiceConstants.title, message: error.message)
-
-                return
-            }
-
-            let offlineDataRegions = expected?.value as? Array<Any>
-            offlineDataRegions?.forEach {
-                if let metadata = $0 as? OfflineDataRegionMetadata {
-                    self.updateOfflineDataRegions(metadata: metadata)
-                }
-            }
-        }
-    }
-    
-    private func removeUnpackedTilesDirectory() {
-        guard let unpackedTilesDirectoryURL = Bundle.mapboxCoreNavigation.suggestedTileURL?.appendingPathComponent("unpacked") else { return }
-        try? FileManager.default.removeItem(at: unpackedTilesDirectoryURL)
-    }
-    
-    private func updateOfflineDataRegions(for domain: OfflineDataDomain? = nil, metadata: OfflineDataRegionMetadata, delete: Bool = false) {
-        DispatchQueue.main.async {
-            var indexPaths = [IndexPath]()
-            var found = false
-            
-            // In case if OfflineDataItem was found in list - update existing item with available pack for either map or navigation.
-            for index in 0 ..< self.offlineDataItems.count {
-                if self.offlineDataItems[index].dataRegionMetadata.id != metadata.id { continue }
-                found = true
-                
-                guard let domain = domain else { continue }
-                switch domain {
-                case .maps:
-                    self.offlineDataItems[index].mapPackMetadata = delete ? nil : metadata.mapPack
-                case .navigation:
-                    self.offlineDataItems[index].navigationPackMetadata = delete ? nil : metadata.navigationPack
-                }
-                
-                indexPaths.append(IndexPath(row: index, section: 0))
-            }
-            
-            // In case if OfflineDataItem wasn't found (e.g. in case if there is no internet connection) - add it to list and refresh UITableView.
-            if !found {
-                self.offlineDataItems.append(OfflineDataItem(dataRegionMetadata: metadata,
-                                                             mapPackMetadata: domain == .maps ? metadata.mapPack : nil,
-                                                             navigationPackMetadata: domain == .navigation ? metadata.mapPack : nil))
-                
-                self.tableView.beginUpdates()
-                self.tableView.insertRows(at: [IndexPath(row: self.offlineDataItems.count - 1, section: 0)], with: .automatic)
-                self.tableView.endUpdates()
-                
-                return
-            }
-            
-            self.tableView.reloadRows(at: indexPaths, with: .automatic)
-        }
-    }
-    
     private func presentActionsAlertController(_ offlineDataRegion: OfflineDataItem) {
         let alertController = UIAlertController(title: OfflineServiceConstants.title,
                                                 message: "Please select appropriate action.",

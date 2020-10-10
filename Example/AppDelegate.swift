@@ -27,7 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     private func listMapboxFrameworks() {
-        print("Linked Mapbox frameworks:")
+        print("Versions of linked Mapbox frameworks:")
         
         for framework in Bundle.allFrameworks {
             if let bundleIdentifier = framework.bundleIdentifier, bundleIdentifier.contains("mapbox") {

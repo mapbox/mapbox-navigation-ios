@@ -268,6 +268,10 @@
 		8A67E05F2527A73600B529DC /* OfflineServiceConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A67E05E2527A73600B529DC /* OfflineServiceConstants.swift */; };
 		8A67E0602527A73600B529DC /* OfflineServiceConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A67E05E2527A73600B529DC /* OfflineServiceConstants.swift */; };
 		8AA849E924E722410008EE59 /* WaypointStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA849E824E722410008EE59 /* WaypointStyle.swift */; };
+		8AF692C62530DC6E00FAAC5C /* OfflineServiceDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AF692C52530DC6E00FAAC5C /* OfflineServiceDataSource.swift */; };
+		8AF692C72530DC6E00FAAC5C /* OfflineServiceDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AF692C52530DC6E00FAAC5C /* OfflineServiceDataSource.swift */; };
+		8AF692DB253131AE00FAAC5C /* OfflineServiceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AF692DA253131AE00FAAC5C /* OfflineServiceError.swift */; };
+		8AF692DC253131AE00FAAC5C /* OfflineServiceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AF692DA253131AE00FAAC5C /* OfflineServiceError.swift */; };
 		8D07C5A820B612310093D779 /* EmptyStyle.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D07C5A720B612310093D779 /* EmptyStyle.json */; };
 		8D1A5CD2212DDFCD0059BA4A /* DispatchTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D1A5CD1212DDFCD0059BA4A /* DispatchTimer.swift */; };
 		8D24A2F62040960C0098CBF8 /* UIEdgeInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D24A2F52040960C0098CBF8 /* UIEdgeInsets.swift */; };
@@ -878,6 +882,8 @@
 		8A67E04F2527A70400B529DC /* OfflineDataItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineDataItem.swift; sourceTree = "<group>"; };
 		8A67E05E2527A73600B529DC /* OfflineServiceConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineServiceConstants.swift; sourceTree = "<group>"; };
 		8AA849E824E722410008EE59 /* WaypointStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaypointStyle.swift; sourceTree = "<group>"; };
+		8AF692C52530DC6E00FAAC5C /* OfflineServiceDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineServiceDataSource.swift; sourceTree = "<group>"; };
+		8AF692DA253131AE00FAAC5C /* OfflineServiceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineServiceError.swift; sourceTree = "<group>"; };
 		8B808F852487CFEC00EEE453 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Main.strings; sourceTree = "<group>"; };
 		8B808F862487CFEC00EEE453 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Navigation.strings; sourceTree = "<group>"; };
 		8B808F892487CFEC00EEE453 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1561,6 +1567,8 @@
 				8A5CDDC4251BFA3300235CBC /* OfflineDataRegionTableViewCell.swift */,
 				8A5CDDC5251BFA3300235CBC /* OfflineDataRegionTableViewCell.xib */,
 				8A4B09AE252FDCCF00FFC6E7 /* OfflineServiceManager.swift */,
+				8AF692C52530DC6E00FAAC5C /* OfflineServiceDataSource.swift */,
+				8AF692DA253131AE00FAAC5C /* OfflineServiceError.swift */,
 			);
 			path = OfflineService;
 			sourceTree = "<group>";
@@ -2567,6 +2575,7 @@
 				3529FCF821A5C62400AEA9AA /* OfflineServiceViewController.swift in Sources */,
 				8A4B09AF252FDCCF00FFC6E7 /* OfflineServiceManager.swift in Sources */,
 				3529FCF221A5C5B400AEA9AA /* ResizableView.swift in Sources */,
+				8AF692C62530DC6E00FAAC5C /* OfflineServiceDataSource.swift in Sources */,
 				C5D9800D1EFA8BA9006DBF2E /* CustomViewController.swift in Sources */,
 				AED6285622CBE4CE00058A51 /* ViewController+GuidanceCards.swift in Sources */,
 				8A67E05F2527A73600B529DC /* OfflineServiceConstants.swift in Sources */,
@@ -2574,6 +2583,7 @@
 				6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */,
 				358D14661E5E3B7700ADE590 /* AppDelegate.swift in Sources */,
 				3529FCF621A5C5D900AEA9AA /* UIViewController.swift in Sources */,
+				8AF692DB253131AE00FAAC5C /* OfflineServiceError.swift in Sources */,
 				8A67E0502527A70400B529DC /* OfflineDataItem.swift in Sources */,
 				8A5CDDC9251BFA7300235CBC /* OfflineDataRegionTableViewCell.swift in Sources */,
 			);
@@ -2678,12 +2688,14 @@
 				C53F2EE720EBC95600D9798F /* WaypointConfirmationViewController.swift in Sources */,
 				8A4B09B0252FDCCF00FFC6E7 /* OfflineServiceManager.swift in Sources */,
 				C5DE4B6220F6B6B3007AFBE6 /* CustomStyles.swift in Sources */,
+				8AF692C72530DC6E00FAAC5C /* OfflineServiceDataSource.swift in Sources */,
 				DA8805002316EAED00B54D87 /* ViewController+GuidanceCards.swift in Sources */,
 				35379CFD21480C0500FD402E /* AppDelegate+CarPlay.swift in Sources */,
 				C53F2EE820EBC95600D9798F /* AppDelegate.swift in Sources */,
 				DA303CA621B7A90100F921DC /* UIViewController.swift in Sources */,
 				3577B878214FF35800094294 /* FavoritesList.swift in Sources */,
 				8A53644C251EB2FC002470C4 /* OfflineDataRegionTableViewCell.swift in Sources */,
+				8AF692DC253131AE00FAAC5C /* OfflineServiceError.swift in Sources */,
 				8A67E0512527A70400B529DC /* OfflineDataItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
