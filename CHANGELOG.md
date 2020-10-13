@@ -11,6 +11,7 @@
 * `RouteProgress`, `RouteLegProgress`, and `RouteStepProgress` now conform to the `Codable` protocol. ([#2615](https://github.com/mapbox/mapbox-navigation-ios/pull/2615))
 * Fixed an issue where `NavigationMapView` redrew at a low frame rate even when the device was plugged in. ([#2643](https://github.com/mapbox/mapbox-navigation-ios/pull/2643))
 * Fixed an issue where the route line flickered when refreshing. ([#2642](https://github.com/mapbox/mapbox-navigation-ios/pull/2642))
+* Fixed an issue where the End of route view UI is broken prior to iOS 11 . ([#2690](https://github.com/mapbox/mapbox-navigation-ios/pull/2690))
 
 ## v1.0.0
 
