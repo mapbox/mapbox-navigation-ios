@@ -418,6 +418,15 @@ extension MapboxNavigationService: CLLocationManagerDelegate {
         //Finally, pass the update onto the router.
         router.locationManager?(manager, didUpdateLocations: locations)
     }
+    
+    public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        if #available(iOS 14.0, *) {
+            delegate?.locationManagerDidChangeAuthorization(manager)
+        } else {
+            // Fallback on earlier versions
+            return
+        }
+    }
 }
 
 //MARK: - RouteControllerDelegate

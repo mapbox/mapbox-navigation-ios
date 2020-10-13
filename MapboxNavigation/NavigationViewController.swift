@@ -24,7 +24,7 @@ public typealias ContainerViewController = UIViewController & NavigationComponen
 open class NavigationViewController: UIViewController, NavigationStatusPresenter {
     /**
      A `Route` object constructed by [MapboxDirections](https://docs.mapbox.com/ios/api/directions/) along with its index in a `RouteResponse`.
-     
+      
      In cases where you need to update the route after navigation has started, you can set a new route here and `NavigationViewController` will update its UI accordingly.
      */
     var indexedRoute: IndexedRoute {
@@ -367,6 +367,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         showStatus(title: title, spinner: false, duration: 3, animated: true, interactive: false)
     }
     
+    
     // MARK: Containerization
     
     func embed(_ child: UIViewController, in container: UIView, constrainedBy constraints: ((NavigationViewController, UIViewController) -> [NSLayoutConstraint])?) {
@@ -685,6 +686,17 @@ extension NavigationViewController: NavigationServiceDelegate {
     
     public func navigationServiceShouldDisableBatteryMonitoring(_ service: NavigationService) -> Bool {
         return navigationComponents.allSatisfy { $0.navigationServiceShouldDisableBatteryMonitoring(service) }
+    }
+    
+    public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        let title = NSLocalizedString("ENABLE_PRECISE_LOCATION", bundle: .mapboxNavigation, value: "Enable precise location to  navigate", comment: "Label indicating precise location is off and needs to be turned on to navigate")
+        if #available(iOS 14.0, *), manager.accuracyAuthorization == .reducedAccuracy {
+            // It takes about 9 seconds to recognize the banner and change location authorization in settings
+            showStatus(title: title, spinner: false, duration: 9, animated: true, interactive: false)
+        } else {
+            // Fallback on earlier versions
+            return
+        }
     }
     
     // MARK: - Building Extrusion Highlighting
