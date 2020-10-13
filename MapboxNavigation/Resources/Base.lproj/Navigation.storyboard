@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -125,7 +125,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="D6B-Ff-n7b" userLabel="End Navigation Button Container">
                                 <rect key="frame" x="0.0" y="350" width="375" height="50"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5f2-dT-la4" customClass="EndOfRouteButton" customModule="MapboxNavigation" customModuleProvider="target">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5f2-dT-la4" customClass="EndOfRouteButton" customModule="MapboxNavigation" customModuleProvider="target">
                                         <rect key="frame" x="136" y="10" width="103" height="30"/>
                                         <state key="normal" title="End Navigation"/>
                                         <connections>
@@ -140,6 +140,7 @@
                                 </constraints>
                             </view>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="P8U-kf-mkb"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="unQ-4I-UPo" secondAttribute="trailing" id="1BB-nP-SYc"/>
@@ -153,17 +154,16 @@
                             <constraint firstItem="P8U-kf-mkb" firstAttribute="trailing" secondItem="TEs-GQ-xWN" secondAttribute="trailing" id="Vg9-Xi-JtV"/>
                             <constraint firstItem="unQ-4I-UPo" firstAttribute="leading" secondItem="IDF-XF-2Ta" secondAttribute="leading" id="WJ9-OZ-x1y"/>
                             <constraint firstAttribute="bottom" secondItem="ekW-06-trL" secondAttribute="bottom" id="f1v-ju-qen"/>
-                            <constraint firstItem="unQ-4I-UPo" firstAttribute="top" secondItem="P8U-kf-mkb" secondAttribute="top" id="gVo-YH-zU7"/>
+                            <constraint firstItem="unQ-4I-UPo" firstAttribute="top" secondItem="IDF-XF-2Ta" secondAttribute="top" id="gVo-YH-zU7"/>
                             <constraint firstItem="evE-dd-pMr" firstAttribute="leading" secondItem="P8U-kf-mkb" secondAttribute="leading" id="k0v-jB-TbO"/>
                             <constraint firstItem="TEs-GQ-xWN" firstAttribute="leading" secondItem="P8U-kf-mkb" secondAttribute="leading" id="lxR-dT-lxi"/>
                             <constraint firstItem="4jh-bR-wXL" firstAttribute="leading" secondItem="P8U-kf-mkb" secondAttribute="leading" id="muP-uc-2iF"/>
-                            <constraint firstItem="4jh-bR-wXL" firstAttribute="top" secondItem="P8U-kf-mkb" secondAttribute="top" constant="16" id="rx6-4c-WD7"/>
+                            <constraint firstItem="4jh-bR-wXL" firstAttribute="top" secondItem="IDF-XF-2Ta" secondAttribute="top" constant="16" id="rx6-4c-WD7"/>
                             <constraint firstItem="P8U-kf-mkb" firstAttribute="trailing" secondItem="4jh-bR-wXL" secondAttribute="trailing" id="s63-sP-XUC"/>
                             <constraint firstItem="evE-dd-pMr" firstAttribute="top" secondItem="4jh-bR-wXL" secondAttribute="bottom" constant="16" id="vRY-cm-7kg"/>
                             <constraint firstItem="D6B-Ff-n7b" firstAttribute="bottom" secondItem="P8U-kf-mkb" secondAttribute="bottom" id="xqf-EL-Wnt"/>
                             <constraint firstItem="ekW-06-trL" firstAttribute="top" secondItem="D6B-Ff-n7b" secondAttribute="top" id="zG7-CU-Ygb"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="P8U-kf-mkb"/>
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="GFJ-yQ-Cye"/>
