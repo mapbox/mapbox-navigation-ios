@@ -6,8 +6,9 @@ import Mapbox
 
 class OfflineServiceViewController: UITableViewController, OfflineServiceDataSourceDelegate {
 
-    var offlineDataItems = [OfflineDataItem]()
-    var offlineServiceDataSource: OfflineServiceDataSource? = nil
+    private var offlineDataItems = [OfflineDataItem]()
+    private var offlineServiceDataSource: OfflineServiceDataSource? = nil
+    private typealias ActionHandler = (UIAlertAction) -> Void
     
     // MARK: - UIViewController delegate methods
     
@@ -23,7 +24,7 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceDataSou
 
     // MARK: - Setting-up methods
     
-    func setupUI() {
+    private func setupUI() {
         tableView.register(UINib(nibName: OfflineDataRegionTableViewCell.identifier, bundle: nil),
                            forCellReuseIdentifier: OfflineDataRegionTableViewCell.identifier)
         
@@ -31,6 +32,12 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceDataSou
         tableView.allowsSelection = true
         
         title = OfflineServiceConstants.title
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "settings"),
+                                                           style: .plain,
+                                                           target: self,
+                                                           action: #selector(showSettings))
+        
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: OfflineServiceConstants.close,
                                                             style: .done,
                                                             target: self,
@@ -39,8 +46,32 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceDataSou
     
     // MARK: - Action handler methods
     
-    @IBAction func dismissViewController() {
+    @objc private func dismissViewController() {
         dismiss(animated: true, completion: nil)
+    }
+    
+    @objc private func showSettings() {
+        let alertController = UIAlertController(title: OfflineServiceConstants.title,
+                                                message: OfflineServiceConstants.selectActionTitle,
+                                                preferredStyle: .alert)
+        
+        let clearAmbientCacheActionHandler: ActionHandler = { _ in
+            MGLOfflineStorage.shared.clearAmbientCache { (error) in
+                guard let error = error else { return }
+                NSLog("Error occured while clearing ambient cache: \(error.localizedDescription)")
+            }
+        }
+        
+        let actionPayloads: [(String, UIAlertAction.Style, ActionHandler?)] = [
+            (OfflineServiceConstants.clearAmbientCache, .default, clearAmbientCacheActionHandler),
+            (OfflineServiceConstants.cancel, .cancel, nil)
+        ]
+        
+        actionPayloads
+            .map({ payload in UIAlertAction(title: payload.0, style: payload.1, handler: payload.2) })
+            .forEach(alertController.addAction(_:))
+        
+        present(alertController, animated: true, completion: nil)
     }
     
     // MARK: - OfflineServiceDataSourceDelegate methods
@@ -125,41 +156,39 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceDataSou
         tableView.deselectRow(at: indexPath, animated: true)
         
         let offlineDataRegion = offlineDataItems[indexPath.row]
-        presentActionsAlertController(offlineDataRegion)
+        showActions(offlineDataRegion)
     }
     
     // MARK: - Private methods
 
-    private func presentActionsAlertController(_ offlineDataRegion: OfflineDataItem) {
+    private func showActions(_ offlineDataRegion: OfflineDataItem) {
         let alertController = UIAlertController(title: OfflineServiceConstants.title,
-                                                message: "Please select appropriate action.",
+                                                message: OfflineServiceConstants.selectActionTitle,
                                                 preferredStyle: .alert)
 
-        var mapsPackTitle = "Download Maps Pack"
+        var mapsPackTitle = OfflineServiceConstants.downloadMapsPack
         var mapsActionHandler: ActionHandler = { _ in
             OfflineServiceManager.instance.downloadPack(.maps, metadata: offlineDataRegion.dataRegionMetadata)
         }
         
         if offlineDataRegion.mapPackMetadata != nil {
-            mapsPackTitle = "Delete Maps Pack"
+            mapsPackTitle = OfflineServiceConstants.deleteMapsPack
             mapsActionHandler = { _ in
                 OfflineServiceManager.instance.deletePack(.maps, metadata: offlineDataRegion.dataRegionMetadata)
             }
         }
         
-        var navigationPackTitle = "Download Navigation Pack"
+        var navigationPackTitle = OfflineServiceConstants.downloadNavigationPack
         var navigationActionHandler: ActionHandler = { _ in
             OfflineServiceManager.instance.downloadPack(.navigation, metadata: offlineDataRegion.dataRegionMetadata)
         }
         
         if offlineDataRegion.navigationPackMetadata != nil {
-            navigationPackTitle = "Delete Navigation Pack"
+            navigationPackTitle = OfflineServiceConstants.deleteNavigationPack
             navigationActionHandler = { _ in
                 OfflineServiceManager.instance.deletePack(.navigation, metadata: offlineDataRegion.dataRegionMetadata)
             }
         }
-        
-        typealias ActionHandler = (UIAlertAction) -> Void
         
         let actionPayloads: [(String, UIAlertAction.Style, ActionHandler?)] = [
             (mapsPackTitle, .default, mapsActionHandler),

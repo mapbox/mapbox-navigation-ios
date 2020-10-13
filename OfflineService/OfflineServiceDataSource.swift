@@ -6,8 +6,8 @@ open class OfflineServiceDataSource: OfflineServiceObserver {
     
     public weak var delegate: OfflineServiceDataSourceDelegate?
     
-    var offlineDataItems = [OfflineDataItem]()
-    let tilesUnpackingLock = NSLock()
+    private var offlineDataItems = [OfflineDataItem]()
+    private let tilesUnpackingLock = NSLock()
     
     // MARK: - OfflineServiceObserver methods
     
@@ -149,6 +149,8 @@ open class OfflineServiceDataSource: OfflineServiceObserver {
             }
         }
     }
+    
+    // MARK: - Private methods
     
     private func removeUnpackedTilesDirectory() {
         guard let unpackedTilesDirectoryURL = Bundle.mapboxCoreNavigation.suggestedTileURL?.appendingPathComponent("unpacked") else { return }

@@ -50,7 +50,7 @@ class OfflineDataRegionTableViewCell: UITableViewCell {
         setupUI()
     }
     
-    // MARK: Public UI update related methods
+    // MARK: - Public UI update related methods
     
     func showDownloadProgress(for domain: OfflineDataDomain, dataPack: OfflineDataPack, metadata: OfflineDataRegionMetadata) {
         DispatchQueue.main.async {
@@ -70,28 +70,28 @@ class OfflineDataRegionTableViewCell: UITableViewCell {
         }
     }
     
-    func presentUI(for offlineDataRegion: OfflineDataItem) {
+    func presentUI(for offlineDataItem: OfflineDataItem) {
         DispatchQueue.main.async {
             self.updateDownloadProgressContainerHeight(constant: 0.0)
             
-            self.identifierLabel.text = offlineDataRegion.dataRegionMetadata.id
-            self.lastUpdatedLabel.text = "Last updated: \(OfflineDataRegionTableViewCell.dateFormatter.string(from: offlineDataRegion.dataRegionMetadata.last_updated))"
+            self.identifierLabel.text = offlineDataItem.dataRegionMetadata.id
+            self.lastUpdatedLabel.text = "\(OfflineServiceConstants.lastUpdated): \(OfflineDataRegionTableViewCell.dateFormatter.string(from: offlineDataItem.dataRegionMetadata.last_updated))"
             
-            if let mapPack = offlineDataRegion.dataRegionMetadata.mapPack {
-                self.mapsPackLastUpdatedLabel.text = "Last updated: \(mapPack.data_version)"
-                self.mapsPackSizeLabel.text = "Size: \(OfflineDataRegionTableViewCell.byteCountFormatter.string(fromByteCount: Int64(mapPack.bytes)))"
+            if let mapPack = offlineDataItem.dataRegionMetadata.mapPack {
+                self.mapsPackLastUpdatedLabel.text = "\(OfflineServiceConstants.lastUpdated): \(mapPack.data_version)"
+                self.mapsPackSizeLabel.text = "\(OfflineServiceConstants.size): \(OfflineDataRegionTableViewCell.byteCountFormatter.string(fromByteCount: Int64(mapPack.bytes)))"
             }
             
-            if offlineDataRegion.mapPackMetadata != nil {
+            if offlineDataItem.mapPackMetadata != nil {
                 self.mapsPackLabel.textColor = .green
             }
             
-            if let navigationPack = offlineDataRegion.dataRegionMetadata.navigationPack {
-                self.navigationPackLastUpdatedLabel.text = "Last updated: \(navigationPack.data_version)"
-                self.navigationPackSizeLabel.text = "Size: \(OfflineDataRegionTableViewCell.byteCountFormatter.string(fromByteCount: Int64(navigationPack.bytes)))"
+            if let navigationPack = offlineDataItem.dataRegionMetadata.navigationPack {
+                self.navigationPackLastUpdatedLabel.text = "\(OfflineServiceConstants.lastUpdated): \(navigationPack.data_version)"
+                self.navigationPackSizeLabel.text = "\(OfflineServiceConstants.size): \(OfflineDataRegionTableViewCell.byteCountFormatter.string(fromByteCount: Int64(navigationPack.bytes)))"
             }
             
-            if offlineDataRegion.navigationPackMetadata != nil {
+            if offlineDataItem.navigationPackMetadata != nil {
                 self.navigationPackLabel.textColor = .green
             }
         }
@@ -107,7 +107,7 @@ class OfflineDataRegionTableViewCell: UITableViewCell {
         lastUpdatedLabel.font = UIFont.systemFont(ofSize: 11.0)
         lastUpdatedLabel.textColor = .darkGray
         
-        mapsPackLabel.text = "Maps pack"
+        mapsPackLabel.text = OfflineServiceConstants.mapsPack
         mapsPackLabel.font = UIFont.systemFont(ofSize: 13.0)
         mapsPackLabel.textColor = .red
         
@@ -119,7 +119,7 @@ class OfflineDataRegionTableViewCell: UITableViewCell {
         mapsPackSizeLabel.font = UIFont.systemFont(ofSize: 11.0)
         mapsPackSizeLabel.textColor = .darkGray
         
-        navigationPackLabel.text = "Navigation pack"
+        navigationPackLabel.text = OfflineServiceConstants.navigationPack
         navigationPackLabel.font = UIFont.systemFont(ofSize: 13.0)
         navigationPackLabel.textColor = .red
         
