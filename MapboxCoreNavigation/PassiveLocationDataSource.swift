@@ -15,14 +15,26 @@ open class PassiveLocationDataSource: NSObject {
      Initializes the location data source with the given directions service.
      
      - parameter directions: The directions service that allows the location data source to access road network data. If this argument is omitted, the shared `Directions` object is used.
+     - parameter systemLocationManager: The location manager that provides raw locations for the receiver to match against the road network.
+     - parameter tilesURL: URL to unpacked routing tiles which were downloaded using Offline Service.
      
      - postcondition: Call `startUpdatingLocation(completionHandler:)` afterwards to begin receiving location updates.
      */
-    public required init(directions: Directions = Directions.shared, systemLocationManager: NavigationLocationManager? = nil) {
+    public required init(directions: Directions = Directions.shared, systemLocationManager: NavigationLocationManager? = nil, tilesURL: URL? = nil) {
         self.directions = directions
         
         let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
-        self.navigator = Navigator(profile: settingsProfile, config: NavigatorConfig() , customConfig: "", tilesConfig: TilesConfig())
+        var tilesConfig = TilesConfig()
+        if let tilesURL = tilesURL {
+            tilesConfig = TilesConfig(tilesPath: tilesURL.path,
+                                      inMemoryTileCache: nil,
+                                      mapMatchingSpatialCache: nil,
+                                      threadsCount: nil,
+                                      endpointConfig: TileEndpointConfiguration(directions: directions, tilesVersion: ""))
+            isConfigured = true
+        }
+        
+        self.navigator = Navigator(profile: settingsProfile, config: NavigatorConfig(), customConfig: "", tilesConfig: tilesConfig)
         
         self.systemLocationManager = systemLocationManager ?? NavigationLocationManager()
         
