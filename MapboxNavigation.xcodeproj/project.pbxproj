@@ -37,6 +37,12 @@
 		2B91C9B12416357700E532A5 /* MapboxSpeechSynthesizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B91C9B02416357700E532A5 /* MapboxSpeechSynthesizer.swift */; };
 		2BBEEDA52508DB1700C8DA4A /* RouteLegProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BBEEDA42508DB1700C8DA4A /* RouteLegProgress.swift */; };
 		2BBEEDA72508E1E300C8DA4A /* RouteStepProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BBEEDA62508E1E300C8DA4A /* RouteStepProgress.swift */; };
+		2BE701172535940D00F46E4E /* TunnelInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE701162535940D00F46E4E /* TunnelInfo.swift */; };
+		2BE701252535943900F46E4E /* BorderCrossingInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE701242535943900F46E4E /* BorderCrossingInfo.swift */; };
+		2BE701352535948100F46E4E /* RestStopInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE701342535948100F46E4E /* RestStopInfo.swift */; };
+		2BE7013D25359C7B00F46E4E /* UpcomingRouteAlertInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE7013C25359C7B00F46E4E /* UpcomingRouteAlertInfo.swift */; };
+		2BE7016925371E3400F46E4E /* IncidentInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE7016825371E3400F46E4E /* IncidentInfo.swift */; };
+		2BE70189253734A000F46E4E /* TollCollectionAlertInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE7012C2535946300F46E4E /* TollCollectionAlertInfo.swift */; };
 		35002D611E5F6ADB0090E733 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35002D5F1E5F6ADB0090E733 /* Assets.xcassets */; };
 		35002D691E5F6B2F0090E733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35002D661E5F6B1B0090E733 /* Main.storyboard */; };
 		3502231A205BC94E00E1449A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35022319205BC94E00E1449A /* Constants.swift */; };
@@ -663,6 +669,12 @@
 		2B91C9B02416357700E532A5 /* MapboxSpeechSynthesizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxSpeechSynthesizer.swift; sourceTree = "<group>"; };
 		2BBEEDA42508DB1700C8DA4A /* RouteLegProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteLegProgress.swift; sourceTree = "<group>"; };
 		2BBEEDA62508E1E300C8DA4A /* RouteStepProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteStepProgress.swift; sourceTree = "<group>"; };
+		2BE701162535940D00F46E4E /* TunnelInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelInfo.swift; sourceTree = "<group>"; };
+		2BE701242535943900F46E4E /* BorderCrossingInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderCrossingInfo.swift; sourceTree = "<group>"; };
+		2BE7012C2535946300F46E4E /* TollCollectionAlertInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TollCollectionAlertInfo.swift; sourceTree = "<group>"; };
+		2BE701342535948100F46E4E /* RestStopInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestStopInfo.swift; sourceTree = "<group>"; };
+		2BE7013C25359C7B00F46E4E /* UpcomingRouteAlertInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingRouteAlertInfo.swift; sourceTree = "<group>"; };
+		2BE7016825371E3400F46E4E /* IncidentInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncidentInfo.swift; sourceTree = "<group>"; };
 		35002D5D1E5F6ABB0090E733 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		35002D5F1E5F6ADB0090E733 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		35002D671E5F6B1B0090E733 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -1279,6 +1291,19 @@
 			path = Support;
 			sourceTree = "<group>";
 		};
+		2BE701152535934500F46E4E /* RouteAlerts */ = {
+			isa = PBXGroup;
+			children = (
+				2BE7016825371E3400F46E4E /* IncidentInfo.swift */,
+				2BE701162535940D00F46E4E /* TunnelInfo.swift */,
+				2BE701242535943900F46E4E /* BorderCrossingInfo.swift */,
+				2BE7012C2535946300F46E4E /* TollCollectionAlertInfo.swift */,
+				2BE701342535948100F46E4E /* RestStopInfo.swift */,
+				2BE7013C25359C7B00F46E4E /* UpcomingRouteAlertInfo.swift */,
+			);
+			path = RouteAlerts;
+			sourceTree = "<group>";
+		};
 		35002D721E5F6C830090E733 /* Supporting files */ = {
 			isa = PBXGroup;
 			children = (
@@ -1753,6 +1778,7 @@
 		C5ADFBCB1DDCC7840011824B /* MapboxCoreNavigation */ = {
 			isa = PBXGroup;
 			children = (
+				2BE701152535934500F46E4E /* RouteAlerts */,
 				354A9BC920EA9BC100F03325 /* Events */,
 				C56173591F182103005954F6 /* Extensions */,
 				C53C196A1F38E9C1008DB406 /* Resources */,
@@ -2672,14 +2698,18 @@
 				C582FD5F203626E900A9086E /* CLLocationDirection.swift in Sources */,
 				3582A25220EFA9680029C5DE /* RouterDelegate.swift in Sources */,
 				353E68FC1EF0B7F8007B2AE5 /* NavigationLocationManager.swift in Sources */,
+				2BE7013D25359C7B00F46E4E /* UpcomingRouteAlertInfo.swift in Sources */,
 				353E68FE1EF0B985007B2AE5 /* BundleAdditions.swift in Sources */,
 				354A9BCD20EA9C8100F03325 /* CoreFeedbackEvent.swift in Sources */,
+				2BE70189253734A000F46E4E /* TollCollectionAlertInfo.swift in Sources */,
 				DA754E1923AC56E5007E16B5 /* MBXAccounts+CoreNavigationAdditions.m in Sources */,
+				2BE701252535943900F46E4E /* BorderCrossingInfo.swift in Sources */,
 				3582A25020EEC46B0029C5DE /* Router.swift in Sources */,
 				8D75F991212B5C7F00F99CF3 /* TunnelAuthority.swift in Sources */,
 				C5E7A31C1F4F6828001CB015 /* NavigationRouteOptions.swift in Sources */,
 				352F464D20EB74C200147886 /* NavigationEventsManager.swift in Sources */,
 				351174F41EF1C0530065E248 /* ReplayLocationManager.swift in Sources */,
+				2BE701172535940D00F46E4E /* TunnelInfo.swift in Sources */,
 				3529FCFC21A5C66800AEA9AA /* OfflineDirections.swift in Sources */,
 				C5C94C1C1DDCD2340097296A /* LegacyRouteController.swift in Sources */,
 				3A8187C924BDAE9C00708F19 /* URLSession.swift in Sources */,
@@ -2702,10 +2732,12 @@
 				DAFA92071F01735000A7FB09 /* DistanceFormatter.swift in Sources */,
 				5A39B9282498F9890026DFD1 /* PassiveLocationDataSource.swift in Sources */,
 				C5C94C1D1DDCD2370097296A /* RouteProgress.swift in Sources */,
+				2BE701352535948100F46E4E /* RestStopInfo.swift in Sources */,
 				8D4CF9C621349FFB009C3FEE /* NavigationServiceDelegate.swift in Sources */,
 				C5CFE4881EF2FD4C006F48E8 /* MMEEventsManager.swift in Sources */,
 				C578DA081EFD0FFF0052079F /* ProcessInfo.swift in Sources */,
 				64847A041F04629D003F3A69 /* Feedback.swift in Sources */,
+				2BE7016925371E3400F46E4E /* IncidentInfo.swift in Sources */,
 				C58D6BAD1DDCF2AE00387F53 /* CoreConstants.swift in Sources */,
 				35C77F621FE8219900338416 /* NavigationSettings.swift in Sources */,
 				C51DF8661F38C31C006C6A15 /* Locale.swift in Sources */,

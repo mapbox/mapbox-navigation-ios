@@ -145,6 +145,13 @@ open class RouteProgress: Codable {
     }
     
     /**
+     Upcoming `RouteAlerts` as reported by the navigation engine.
+     
+     Contents of the array depends on user's current progress along the route and are modified on each location update. You can use this to get info about incoming POIs.
+     */
+    public internal(set) var upcomingRouteAlerts: [UpcomingRouteAlertInfo] = []
+    
+    /**
      Returns an array of `CLLocationCoordinate2D` of the coordinates along the current step and any adjacent steps.
      
      - important: The adjacent steps may be part of legs other than the current leg.
