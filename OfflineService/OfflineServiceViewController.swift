@@ -55,15 +55,35 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceDataSou
                                                 message: OfflineServiceConstants.selectActionTitle,
                                                 preferredStyle: .alert)
         
-        let clearAmbientCacheActionHandler: ActionHandler = { _ in
+        let clearMapsAmbientCacheActionHandler: ActionHandler = { _ in
             MGLOfflineStorage.shared.clearAmbientCache { (error) in
                 guard let error = error else { return }
                 NSLog("Error occured while clearing ambient cache: \(error.localizedDescription)")
             }
         }
         
+        let clearNavigationAmbientCacheActionHandler: ActionHandler = { _ in
+            guard var tilesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first else {
+                NSLog("Failed to locate tilesURL.")
+                return
+            }
+            
+            if let bundleIdentifier = Bundle.main.bundleIdentifier ?? Bundle.mapboxCoreNavigation.bundleIdentifier {
+                tilesURL.appendPathComponent(bundleIdentifier, isDirectory: true)
+            }
+            tilesURL.appendPathComponent(".mapbox", isDirectory: true)
+            
+            do {
+                NSLog("Removing navigation ambient cache (e.g. cache generated during free drive) at path: \(tilesURL.path)")
+                try FileManager().removeItem(at: tilesURL)
+            } catch {
+                NSLog("Error occured while removing navigation ambient cache: \(error.localizedDescription)")
+            }
+        }
+        
         let actionPayloads: [(String, UIAlertAction.Style, ActionHandler?)] = [
-            (OfflineServiceConstants.clearAmbientCache, .default, clearAmbientCacheActionHandler),
+            (OfflineServiceConstants.clearMapsAmbientCache, .default, clearMapsAmbientCacheActionHandler),
+            (OfflineServiceConstants.clearNavigationAmbientCache, .default, clearNavigationAmbientCacheActionHandler),
             (OfflineServiceConstants.cancel, .cancel, nil)
         ]
         

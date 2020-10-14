@@ -25,5 +25,6 @@ struct OfflineServiceConstants {
     static let deleteNavigationPack = NSLocalizedString("DELETE_NAVIGATION_PACK_TITLE", value: "Delete Navigation Pack", comment: "Delete Navigation Pack.")
     static let lastUpdated = NSLocalizedString("LAST_UPDATED_TITLE", value: "Last updated", comment: "Last updated.")
     static let size = NSLocalizedString("SIZE_TITLE", value: "Size", comment: "Size.")
-    static let clearAmbientCache = NSLocalizedString("CLEAR_AMBIENT_CACHE_TITLE", value: "Clear ambient cache", comment: "Clear ambient cache.")
+    static let clearMapsAmbientCache = NSLocalizedString("CLEAR_MAPS_AMBIENT_CACHE_TITLE", value: "Clear maps ambient cache", comment: "Clear maps ambient cache.")
+    static let clearNavigationAmbientCache = NSLocalizedString("CLEAR_NAVIGATION_AMBIENT_CACHE_TITLE", value: "Clear navigation ambient cache", comment: "Clear navigation ambient cache.")
 }
