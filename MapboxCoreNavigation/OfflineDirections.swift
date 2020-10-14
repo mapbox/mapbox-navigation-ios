@@ -107,9 +107,9 @@ public class NavigationDirections: Directions {
      - parameter tilesVersion: Version of sideloaded tiles (e.g. downloaded via Offline Service).
      - parameter completionHandler: A block that is called when the router is completely configured.
      */
-    public func configureRouter(tilesURL: URL, tilesVersion: String, completionHandler: @escaping NavigationDirectionsCompletionHandler) {
+    public func configureRouter(tilesURL: URL, tilesVersion: String? = nil, completionHandler: @escaping NavigationDirectionsCompletionHandler) {
         NavigationDirectionsConstants.offlineSerialQueue.sync {
-            let endpointConfig = TileEndpointConfiguration(directions: Directions.shared, tilesVersion: tilesVersion)
+            let endpointConfig = TileEndpointConfiguration(directions: Directions.shared, tilesVersion: tilesVersion ?? "")
             let tilesConfig = TilesConfig(tilesPath: tilesURL.path,
                                           inMemoryTileCache: nil,
                                           mapMatchingSpatialCache: nil,
