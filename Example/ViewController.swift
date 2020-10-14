@@ -261,10 +261,11 @@ class ViewController: UIViewController {
             case let .failure(error):
                 print("Error occured while requesting route: \(error)")
                 
-                // Attempt to load offline Navigation tiles.
-                guard let tilesURL = Bundle.mapboxCoreNavigation.suggestedTileURL?.appendingPathComponent("unpacked") else { return }
-                
-                self.navigationDirections.configureRouter(tilesURL: tilesURL) { (outTilesURL) in
+                // Attempt to load offline Navigation tiles, depending on version of Navigation pack `tilesVersion` property
+                // should be changed accordingly.
+                guard let tilesURL = Bundle.mapboxCoreNavigation.suggestedTileURL else { return }
+                let tilesVersion = "2020_10_11-03_00_00"
+                self.navigationDirections.configureRouter(tilesURL: tilesURL, tilesVersion: tilesVersion) { (outTilesURL) in
                     self.navigationDirections.calculate(options, offline: true) { (session, result) in
                         switch result {
                         case let .failure(error):
@@ -599,6 +600,9 @@ extension ViewController: VisualInstructionDelegate {
 extension ViewController {
     func trackLocations(mapView: NavigationMapView) {
         let dataSource = PassiveLocationDataSource()
+        // In case if there is no internet connection it's possible to create instance of `PassiveLocationDataSource`
+        // and point to sideloaded routing packs and its version. For example:
+        // let dataSource = PassiveLocationDataSource(tilesURL: Bundle.mapboxCoreNavigation.suggestedTileURL, tilesVersion: "2020_10_11-03_00_00")
         let locationManager = PassiveLocationManager(dataSource: dataSource)
         mapView.locationManager = locationManager
         

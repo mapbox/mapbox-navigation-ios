@@ -5,13 +5,11 @@ import MapboxNavigationNative
 /** :nodoc:
  A closure to call when the `NavigationDirections` router has been configured completely.
  */
-@available(*, deprecated)
 public typealias NavigationDirectionsCompletionHandler = (_ tilesURL: URL) -> Void
 
 /** :nodoc:
  An error that occurs when calculating directions potentially offline using the `NavigationDirections.calculate(_:offline:completionHandler:)` method.
 */
-@available(*, deprecated)
 public enum OfflineRoutingError: LocalizedError {
     /**
      A standard Directions API error occurred.
@@ -60,7 +58,6 @@ public enum OfflineRoutingError: LocalizedError {
     }
 }
 
-@available(*, deprecated)
 struct NavigationDirectionsConstants {
     static let offlineSerialQueueLabel = Bundle.mapboxCoreNavigation.bundleIdentifier!.appending(".offline")
     static let unpackSerialQueueLabel = Bundle.mapboxCoreNavigation.bundleIdentifier!.appending(".offline.unpack")
@@ -74,7 +71,6 @@ struct NavigationDirectionsConstants {
  - parameter totalBytes: The total size of tile pack in bytes.
  - parameter remainingBytes: The remaining number of bytes left to download.
  */
-@available(*, deprecated)
 public typealias UnpackProgressHandler = (_ totalBytes: UInt64, _ remainingBytes: UInt64) -> ()
 
 /** :nodoc:
@@ -83,7 +79,6 @@ public typealias UnpackProgressHandler = (_ totalBytes: UInt64, _ remainingBytes
  - parameter numberOfTiles: The number of tiles that were unpacked.
  - parameter error: Potential error that occured when trying to unpack.
  */
-@available(*, deprecated)
 public typealias UnpackCompletionHandler = (_ numberOfTiles: UInt64, _ error: Error?) -> ()
 
 /** :nodoc:
@@ -97,7 +92,6 @@ public typealias UnpackCompletionHandler = (_ numberOfTiles: UInt64, _ error: Er
  If the request was canceled or there was an error obtaining the routes, this argument is `nil`. This is not to be confused with the situation in which no results were found, in which case the array is present but empty.
  - parameter error: The error that occurred, or `nil` if the placemarks were obtained successfully.
  */
-@available(*, deprecated)
 public typealias OfflineRouteCompletionHandler = (_ session: Directions.Session, _ result: Result<RouteResponse, OfflineRoutingError>) -> Void
 
 /** :nodoc:
@@ -105,21 +99,22 @@ public typealias OfflineRouteCompletionHandler = (_ session: Directions.Session,
  
  Each result produced by the directions object is stored in a `Route` object. Depending on the `RouteOptions` object you provide, each route may include detailed information suitable for turn-by-turn directions, or it may include only high-level information such as the distance, estimated travel time, and name of each leg of the trip. The waypoints that form the request may be conflated with nearby locations, as appropriate; the resulting waypoints are provided to the closure.
  */
-@available(*, deprecated, message: "Use the Directions class instead.")
 public class NavigationDirections: Directions {
     /**
      Configures the router with the given set of tiles.
      
      - parameter tilesURL: The location where the tiles has been sideloaded to.
+     - parameter tilesVersion: Version of sideloaded tiles (e.g. downloaded via Offline Service).
      - parameter completionHandler: A block that is called when the router is completely configured.
      */
-    public func configureRouter(tilesURL: URL, completionHandler: @escaping NavigationDirectionsCompletionHandler) {
+    public func configureRouter(tilesURL: URL, tilesVersion: String, completionHandler: @escaping NavigationDirectionsCompletionHandler) {
         NavigationDirectionsConstants.offlineSerialQueue.sync {
+            let endpointConfig = TileEndpointConfiguration(directions: Directions.shared, tilesVersion: tilesVersion)
             let tilesConfig = TilesConfig(tilesPath: tilesURL.path,
                                           inMemoryTileCache: nil,
                                           mapMatchingSpatialCache: nil,
                                           threadsCount: nil,
-                                          endpointConfig: nil)
+                                          endpointConfig: endpointConfig)
             
             let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
             self.navigator = Navigator(profile: settingsProfile, config: NavigatorConfig() , customConfig: "", tilesConfig: tilesConfig)
