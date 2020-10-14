@@ -7,7 +7,7 @@ PODS:
     - MapboxAccounts (~> 2.3.0)
     - MapboxDirections (~> 1.0)
     - MapboxMobileEvents (~> 0.10.2)
-    - MapboxNavigationNative (~> 22.0)
+    - MapboxNavigationNative (~> 24.0)
     - Turf (~> 1.0)
   - MapboxDirections (1.1.0):
     - Polyline (~> 5.0)
@@ -19,7 +19,7 @@ PODS:
     - MapboxMobileEvents (~> 0.10.2)
     - MapboxSpeech (~> 1.0)
     - Solar (~> 2.1)
-  - MapboxNavigationNative (22.0.3):
+  - MapboxNavigationNative (24.0.0):
     - MapboxCommon (= 7.1.0)
   - MapboxSpeech (1.0.0)
   - Polyline (5.0.2)

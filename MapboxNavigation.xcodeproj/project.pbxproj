@@ -1291,7 +1291,7 @@
 			path = Support;
 			sourceTree = "<group>";
 		};
-		2BE701152535934500F46E4E /* RouteAlerts */ = {
+		2BE701A4253760B300F46E4E /* RouteAlerts */ = {
 			isa = PBXGroup;
 			children = (
 				2BE7016825371E3400F46E4E /* IncidentInfo.swift */,
@@ -1301,7 +1301,7 @@
 				2BE701342535948100F46E4E /* RestStopInfo.swift */,
 				2BE7013C25359C7B00F46E4E /* UpcomingRouteAlertInfo.swift */,
 			);
-			path = RouteAlerts;
+			name = RouteAlerts;
 			sourceTree = "<group>";
 		};
 		35002D721E5F6C830090E733 /* Supporting files */ = {
@@ -1778,7 +1778,7 @@
 		C5ADFBCB1DDCC7840011824B /* MapboxCoreNavigation */ = {
 			isa = PBXGroup;
 			children = (
-				2BE701152535934500F46E4E /* RouteAlerts */,
+				2BE701A4253760B300F46E4E /* RouteAlerts */,
 				354A9BC920EA9BC100F03325 /* Events */,
 				C56173591F182103005954F6 /* Extensions */,
 				C53C196A1F38E9C1008DB406 /* Resources */,
