@@ -27,6 +27,11 @@ public struct OfflineServiceUser {
     }
 }
 
+/**
+ A singleton class that allows querying the server for available offline regions, as well as downloading offline packs to
+ disk. Observers attached to this object get notified when the status of an offline pack changes (e.g. when a new one is
+ downloaded).
+ */
 public class OfflineService {
     private var instance: CommonOfflineService?
 
@@ -38,7 +43,6 @@ public class OfflineService {
         Array(_regions.values)
     }
 
-//    private var downloadedRegions: [OfflineDataRegionMetadata] = []
     private var observers: [OfflineServiceObserver] = []
 
     public var peer: MBXPeerWrapper?
@@ -65,12 +69,19 @@ public class OfflineService {
         }
     }
 
-    public func fetchAvailableRegions(_ completion:  (([OfflineRegion]) -> Void)?) {
+    /**
+     @brief Queries the Offline Data API and lists all available regions
+
+     Only lists regions that are compatible with the current format.
+
+     @param callback Callback function that will be called with the result.
+     */
+    public func fetchAvailableRegions(_ callback:  (([OfflineRegion]) -> Void)?) {
         instance?.listAvailableRegions { [weak self] (expected) in
             guard let self = self else { return }
             if let error = expected?.error as? OfflineDataError {
                 print(error.message)
-                completion?([])
+                callback?([])
                 return
             }
 
@@ -92,12 +103,20 @@ public class OfflineService {
                     self._regions.removeValue(forKey: key)
                 }
             }
-            completion?(self.regions)
+            callback?(self.regions)
         }
     }
 
+    /**
+     @brief Deletes a region
+
+     Cancels active region downloads and deletes existing regions with this id.
+
+     @param domain A flag indicating whether the Maps or Navigation pack should be deleted.
+     If no value or nil is provided, packs for both domains will be deleted
+     @param metadata The offline region to be deleted
+     */
     public func remove(region: OfflineRegion, forDomain domain: OfflineRegionDomain? = nil) {
-        // todo: observe downloaded packs (store in the region's properties)
         if let domainToRemove = domain {
             instance?.deletePack(for: domainToRemove.commonDomain, metadata: region.region)
         } else {
@@ -110,7 +129,30 @@ public class OfflineService {
         }
     }
 
-    public func download(region: OfflineRegion, forDomain domain: OfflineRegionDomain?) {
+    /**
+     @brief Cancels a pack download
+
+     Cancellation is done via the string ID because downloads can be started from multiple places.
+
+     @param domain A flag indicating whether the Maps or Navigation pack should be canceled.
+     @param region The offline region to be canceled
+     */
+    public func cancelDownload(for region: OfflineRegion, domain: OfflineRegionDomain) {
+        instance?.cancelPackDownload(for: domain.commonDomain, metadata: region.region)
+    }
+
+    /**
+     @brief Starts the download of a pack
+
+     If a pack with the same metadata is already being downloaded, nothing will happen. If the metadata is different,
+     that download will be canceled, and a new download will be started. If the downloaded pack with this ID is
+     already complete, a new download will be started if the revision is different.
+
+     @param domain A flag indicating whether the Maps or Navigation pack should be downloaded.
+     If no value or nil is provided, packs for both domains will be downloaded
+     @param region The offline region to be downloaded
+     */
+    public func download(region: OfflineRegion, forDomain domain: OfflineRegionDomain? = nil) {
         if let domainToDownload = domain {
             instance?.downloadPack(for: domainToDownload.commonDomain, metadata: region.region)
         } else {
@@ -123,13 +165,37 @@ public class OfflineService {
         }
     }
 
+    /**
+     @brief Add an observer that gets events as region state changes.
+
+     @param observer An object implementing the observer interface.
+     */
     public func register(observer: OfflineServiceObserver) {
         observers.append(observer)
+        notifyAvailable(forObserver: observer)
     }
 
+    /**
+     @brief Removes an observer.
+
+     @param observer The observer that should be removed.
+     */
     public func unregister(observer: OfflineServiceObserver) {
         observers.removeAll {
             $0 === observer
+        }
+    }
+
+    private func notifyAvailable(forObserver observer: OfflineServiceObserver) {
+        DispatchQueue.main.async { [weak self] in
+            self?.regions.forEach {
+                if $0.mapsPack != nil {
+                    observer.didBecomeAvailable(region: $0, forDomain: .maps)
+                }
+                if $0.navigationPack != nil {
+                    observer.didBecomeAvailable(region: $0, forDomain: .navigation)
+                }
+            }
         }
     }
 }
@@ -257,11 +323,19 @@ extension OfflineService: MapboxCommon.OfflineServiceObserver {
     }
 
     public func onInitialized() {
-        // do nothing
+        DispatchQueue.main.async { [weak self] in
+            self?.observers.forEach {
+                $0.initialized()
+            }
+        }
     }
 
     public func onIdle() {
-        // do nothing
+        DispatchQueue.main.async { [weak self] in
+            self?.observers.forEach {
+                $0.idle()
+            }
+        }
     }
 
     public func onLogMessage(forMessage message: String) {
