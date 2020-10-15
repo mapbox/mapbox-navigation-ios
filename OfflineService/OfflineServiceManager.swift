@@ -1,6 +1,10 @@
 import Foundation
 import MapboxCommon
 
+/**
+ `OfflineServiceManager` wraps `OfflineService` object to use only one instance of it and
+ prevent usage of multiple users within single application.
+ */
 class OfflineServiceManager {
     
     private let offlineService: OfflineService = {

@@ -16,10 +16,7 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceDataSou
         super.viewDidLoad()
         
         setupUI()
-        
-        offlineServiceDataSource = OfflineServiceDataSource()
-        offlineServiceDataSource?.delegate = self
-        offlineServiceDataSource?.startObservingAvailableRegions()
+        setupOfflineServiceDataSource()
     }
 
     // MARK: - Setting-up methods
@@ -44,6 +41,12 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceDataSou
                                                             action: #selector(dismissViewController))
     }
     
+    private func setupOfflineServiceDataSource() {
+        offlineServiceDataSource = OfflineServiceDataSource()
+        offlineServiceDataSource?.delegate = self
+        offlineServiceDataSource?.startObservingAvailableRegions()
+    }
+    
     // MARK: - Action handler methods
     
     @objc private func dismissViewController() {
@@ -56,29 +59,11 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceDataSou
                                                 preferredStyle: .alert)
         
         let clearMapsAmbientCacheActionHandler: ActionHandler = { _ in
-            MGLOfflineStorage.shared.clearAmbientCache { (error) in
-                guard let error = error else { return }
-                NSLog("Error occured while clearing ambient cache: \(error.localizedDescription)")
-            }
+            clearMapsAmbientCache()
         }
         
         let clearNavigationAmbientCacheActionHandler: ActionHandler = { _ in
-            guard var tilesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first else {
-                NSLog("Failed to locate tilesURL.")
-                return
-            }
-            
-            if let bundleIdentifier = Bundle.main.bundleIdentifier ?? Bundle.mapboxCoreNavigation.bundleIdentifier {
-                tilesURL.appendPathComponent(bundleIdentifier, isDirectory: true)
-            }
-            tilesURL.appendPathComponent(".mapbox", isDirectory: true)
-            
-            do {
-                NSLog("Removing navigation ambient cache (e.g. cache generated during free drive) at path: \(tilesURL.path)")
-                try FileManager().removeItem(at: tilesURL)
-            } catch {
-                NSLog("Error occured while removing navigation ambient cache: \(error.localizedDescription)")
-            }
+            clearNavigationAmbientCache()
         }
         
         let actionPayloads: [(String, UIAlertAction.Style, ActionHandler?)] = [

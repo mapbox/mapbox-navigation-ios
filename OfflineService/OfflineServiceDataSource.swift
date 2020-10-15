@@ -2,8 +2,15 @@ import Foundation
 import MapboxCommon
 import MapboxCoreNavigation
 
+/**
+ `OfflineServiceDataSource` provides information about available offline regions downloaded via Offline Service. It also subscribes
+ for any events (downloading and removing certain Maps and Navigation packs) related to specific regions.
+ */
 open class OfflineServiceDataSource: OfflineServiceObserver {
     
+    /**
+     The `OfflineServiceDataSource` delegate.
+     */
     public weak var delegate: OfflineServiceDataSourceDelegate?
     
     private var offlineDataItems = [OfflineDataItem]()
@@ -46,6 +53,8 @@ open class OfflineServiceDataSource: OfflineServiceObserver {
     
     public func onErrored(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, pack: OfflineDataPack) {
         NSLog("[OfflineServiceObserver] \(#function), identifier: \(metadata.id)")
+        
+        self.delegate?.offlineServiceDataSource(self, didFail: OfflineServiceError.genericError(message: "Error occured for: \(metadata.id)"))
     }
     
     public func onDeleting(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, pack: OfflineDataPack, callback: @escaping OfflineDataPackAcknowledgeCallback) {
@@ -80,6 +89,9 @@ open class OfflineServiceDataSource: OfflineServiceObserver {
     
     // MARK: - Public methods
     
+    /**
+     Subscribe to updates from `OfflineService` and list all available regions for `username` and `accessToken` specified in `OfflineServiceConstants`.
+     */
     public func startObservingAvailableRegions() {
         OfflineServiceManager.register(self)
         
@@ -107,9 +119,24 @@ open class OfflineServiceDataSource: OfflineServiceObserver {
     }
 }
 
+/**
+ The `OfflineServiceDataSource` delegate which can provide information regarding new and updated `OfflineDataItem`s and any errors which might occur.
+ */
 public protocol OfflineServiceDataSourceDelegate: class {
-
+    
+    /**
+     If implemented, this method is called whenever there are any changes in list of available of `OfflineDataItem`s.
+     
+     - parameter dataSource: `OfflineServiceDataSource` instance which was updated.
+     - parameter offlineDataItems: List of `OfflineDataItem`s which were updated.
+     */
     func offlineServiceDataSource(_ dataSource: OfflineServiceDataSource, didUpdate offlineDataItems: [OfflineDataItem])
     
+    /**
+     If implemented, this method is called whenever there are any changes in list of available of `OfflineDataItem`s.
+     
+     - parameter dataSource: `OfflineServiceDataSource` instance which was updated.
+     - parameter error: Instance of `OfflineServiceError` which contains error information.
+     */
     func offlineServiceDataSource(_ dataSource: OfflineServiceDataSource, didFail error: OfflineServiceError)
 }
