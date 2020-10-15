@@ -688,13 +688,16 @@ extension NavigationViewController: NavigationServiceDelegate {
         return navigationComponents.allSatisfy { $0.navigationServiceShouldDisableBatteryMonitoring(service) }
     }
     
-    public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        let title = NSLocalizedString("ENABLE_PRECISE_LOCATION", bundle: .mapboxNavigation, value: "Enable precise location to  navigate", comment: "Label indicating precise location is off and needs to be turned on to navigate")
-        if #available(iOS 14.0, *), manager.accuracyAuthorization == .reducedAccuracy {
-            // It takes about 9 seconds to recognize the banner and change location authorization in settings
-            showStatus(title: title, spinner: false, duration: 9, animated: true, interactive: false)
+    public func navigationServiceDidChangeAuthorization(_ service: NavigationService, _ manager: CLLocationManager) {
+        let title = NSLocalizedString("ENABLE_PRECISE_LOCATION", bundle: .mapboxNavigation, value: "Enable precise location to navigate", comment: "Label indicating precise location is off and needs to be turned on to navigate")
+        
+        // CLLocationManager.accuracyAuthorization was introduced in the iOS 14 SDK in Xcode 12, so Xcode 11 doesn’t recognize it.
+        let accuracyAuthorization = MBNavigationAccuracyAuthorization(rawValue: manager.value(forKey: "accuracyAuthorization") as! Int)
+        
+        if #available(iOS 14.0, *), accuracyAuthorization == .reducedAccuracy {
+            showStatus(title: title, spinner: false, duration: 20, animated: true, interactive: false)
         } else {
-            // Fallback on earlier versions
+            //Fallback on earlier versions
             return
         }
     }

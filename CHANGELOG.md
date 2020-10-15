@@ -9,6 +9,7 @@
 * Fixed an issue where the route line flickered when refreshing. ([#2642](https://github.com/mapbox/mapbox-navigation-ios/pull/2642))
 * Fixed an issue where the End of route view UI is broken prior to iOS 11 . ([#2690](https://github.com/mapbox/mapbox-navigation-ios/pull/2690))
 
+
 ## v1.0.0
 
 ### Packaging

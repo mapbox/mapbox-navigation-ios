@@ -70,6 +70,9 @@
 /* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "Close";
 
+/* Label indicating precise location is off and needs to be turned on to navigate */
+"ENABLE_PRECISE_LOCATION" = "Enable precise location to navigate";
+
 /* Title used for arrival */
 "END_OF_ROUTE_ARRIVED" = "You have arrived";
 
