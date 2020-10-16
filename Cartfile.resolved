@@ -1,6 +1,6 @@
 binary "https://api.mapbox.com/downloads/v2/carthage/mapbox-common/MapboxCommon-ios.json" "7.1.0"
 binary "https://api.mapbox.com/downloads/v2/carthage/mobile-maps/mapbox-ios-sdk-dynamic.json" "6.2.1"
-binary "https://api.mapbox.com/downloads/v2/carthage/mobile-navigation-native/MapboxNavigationNative.json" "24.0.0"
+binary "https://api.mapbox.com/downloads/v2/carthage/mobile-navigation-native/MapboxNavigationNative.json" "25.0.0"
 binary "https://www.mapbox.com/ios-sdk/MapboxAccounts.json" "2.3.0"
 github "CedarBDD/Cedar" "v1.0"
 github "Quick/Nimble" "v8.1.2"

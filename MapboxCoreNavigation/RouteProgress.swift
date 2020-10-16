@@ -147,7 +147,7 @@ open class RouteProgress: Codable {
     /**
      Upcoming `RouteAlerts` as reported by the navigation engine.
      
-     Contents of the array depends on user's current progress along the route and are modified on each location update. You can use this to get info about incoming POIs.
+     Contents of the array depends on user's current progress along the route and are modified on each location update. Array always contains only events, that user stil not passed. Keep in mind that some events may have non-zero length and are also incleded while user is mid-traversing it. You can use this to get info about incoming POIs.
      */
     public internal(set) var upcomingRouteAlerts: [UpcomingRouteAlertInfo] = []
     
