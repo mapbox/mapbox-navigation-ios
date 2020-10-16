@@ -40,6 +40,11 @@ open class NavigationOptions: NavigationCustomizable {
      */
     open var bottomBanner: ContainerViewController?
     
+    /**
+     Version of tiles downloaded via Offline Service.
+     */
+    open var tilesVersion: String? = nil
+    
     // This makes the compiler happy.
     required public init() {
         // do nothing
@@ -53,14 +58,21 @@ open class NavigationOptions: NavigationCustomizable {
      - parameter voiceController: The voice controller that vocalizes spoken instructions along the route at the appropriate times.
      - parameter topBanner: The container view controller that presents the top banner.
      - parameter bottomBanner: The container view controller that presents the bottom banner.
+     - parameter tilesVersion: Version of tiles downloaded via Offline Service.
      */
-    public convenience init(styles: [Style]? = nil, navigationService: NavigationService? = nil, voiceController: RouteVoiceController? = nil, topBanner: ContainerViewController? = nil, bottomBanner: ContainerViewController? = nil) {
+    public convenience init(styles: [Style]? = nil,
+                            navigationService: NavigationService? = nil,
+                            voiceController: RouteVoiceController? = nil,
+                            topBanner: ContainerViewController? = nil,
+                            bottomBanner: ContainerViewController? = nil,
+                            tilesVersion: String? = nil) {
         self.init()
         self.styles = styles
         self.navigationService = navigationService
         self.voiceController = voiceController
         self.topBanner = topBanner
         self.bottomBanner = bottomBanner
+        self.tilesVersion = tilesVersion
     }
     
     /**

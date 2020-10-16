@@ -375,7 +375,11 @@ class ViewController: UIViewController {
     func navigationService(route: Route, routeIndex: Int, options: RouteOptions) -> NavigationService {
         let simulate = simulationButton.isSelected
         let mode: SimulationMode = simulate ? .always : .onPoorGPS
-        return MapboxNavigationService(route: route, routeIndex: routeIndex, routeOptions: options, simulating: mode)
+        return MapboxNavigationService(route: route,
+                                       routeIndex: routeIndex,
+                                       routeOptions: options,
+                                       simulating: mode,
+                                       tilesVersion: "2020_10_11-03_00_00")
     }
 
     func presentAndRemoveMapview(_ navigationViewController: NavigationViewController, completion: CompletionHandler?) {
