@@ -21,7 +21,7 @@ public struct OfflineDataItem {
     var navigationPackMetadata: OfflineDataPackMetadata? = nil
     
     /**
-     Domain of an offline pack pack (either for Maps or Navigation). This property is `nil` by default and set to either `.maps` or
+     Domain of an offline pack (either for Maps or Navigation). This property is `nil` by default and set to either `.maps` or
      `.navigation` whenever new pack or region was downloaded, deleted or available.
      */
     var domain: OfflineDataDomain? = nil

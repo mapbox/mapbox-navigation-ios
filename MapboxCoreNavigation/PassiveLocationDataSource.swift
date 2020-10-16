@@ -16,12 +16,11 @@ open class PassiveLocationDataSource: NSObject {
      
      - parameter directions: The directions service that allows the location data source to access road network data. If this argument is omitted, the shared `Directions` object is used.
      - parameter systemLocationManager: The location manager that provides raw locations for the receiver to match against the road network.
-     - parameter tilesURL: URL to unpacked routing tiles which were downloaded using Offline Service.
-     - parameter tilesVersion: Version of sideloaded tiles (e.g. downloaded via Offline Service).
+     - parameter tilesVersion: Version of tiles downloaded via Offline Service.
      
      - postcondition: Call `startUpdatingLocation(completionHandler:)` afterwards to begin receiving location updates.
      */
-    public required init(directions: Directions = Directions.shared, systemLocationManager: NavigationLocationManager? = nil, tilesURL: URL? = nil, tilesVersion: String? = nil) {
+    public required init(directions: Directions = Directions.shared, systemLocationManager: NavigationLocationManager? = nil, tilesVersion: String? = nil) {
         self.directions = directions
         
         let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
@@ -29,9 +28,9 @@ open class PassiveLocationDataSource: NSObject {
         
         // In case if `tilesURL` and `tilesVersion` were provided configure `Navigator` to point to it, so that sideloaded
         // tiles (e.g. via Offline Service) can be used.
-        if let tilesURL = tilesURL, let tilesVersion = tilesVersion {
+        if let tilesVersion = tilesVersion {
             let endpointConfig = TileEndpointConfiguration(directions: directions, tilesVersion: tilesVersion)
-            tilesConfig = TilesConfig(tilesPath: tilesURL.path,
+            tilesConfig = TilesConfig(tilesPath: "",
                                       inMemoryTileCache: nil,
                                       mapMatchingSpatialCache: nil,
                                       threadsCount: nil,

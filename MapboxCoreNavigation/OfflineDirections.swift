@@ -5,6 +5,7 @@ import MapboxNavigationNative
 /** :nodoc:
  A closure to call when the `NavigationDirections` router has been configured completely.
  */
+@available(*, deprecated)
 public typealias NavigationDirectionsCompletionHandler = (_ tilesURL: URL) -> Void
 
 /** :nodoc:
@@ -71,6 +72,7 @@ struct NavigationDirectionsConstants {
  - parameter totalBytes: The total size of tile pack in bytes.
  - parameter remainingBytes: The remaining number of bytes left to download.
  */
+@available(*, deprecated)
 public typealias UnpackProgressHandler = (_ totalBytes: UInt64, _ remainingBytes: UInt64) -> ()
 
 /** :nodoc:
@@ -79,6 +81,7 @@ public typealias UnpackProgressHandler = (_ totalBytes: UInt64, _ remainingBytes
  - parameter numberOfTiles: The number of tiles that were unpacked.
  - parameter error: Potential error that occured when trying to unpack.
  */
+@available(*, deprecated)
 public typealias UnpackCompletionHandler = (_ numberOfTiles: UInt64, _ error: Error?) -> ()
 
 /** :nodoc:
@@ -103,18 +106,17 @@ public class NavigationDirections: Directions {
     /**
      Configures the router with the given set of tiles.
      
-     - parameter tilesURL: The location where the tiles has been sideloaded to.
-     - parameter tilesVersion: Version of sideloaded tiles (e.g. downloaded via Offline Service).
+     - parameter tilesURL: The location where the tiles have been sideloaded to.
      - parameter completionHandler: A block that is called when the router is completely configured.
      */
-    public func configureRouter(tilesURL: URL, tilesVersion: String? = nil, completionHandler: @escaping NavigationDirectionsCompletionHandler) {
+    @available(*, deprecated)
+    public func configureRouter(tilesURL: URL, completionHandler: @escaping NavigationDirectionsCompletionHandler) {
         NavigationDirectionsConstants.offlineSerialQueue.sync {
-            let endpointConfig = TileEndpointConfiguration(directions: Directions.shared, tilesVersion: tilesVersion ?? "")
             let tilesConfig = TilesConfig(tilesPath: tilesURL.path,
                                           inMemoryTileCache: nil,
                                           mapMatchingSpatialCache: nil,
                                           threadsCount: nil,
-                                          endpointConfig: endpointConfig)
+                                          endpointConfig: nil)
             
             let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
             self.navigator = Navigator(profile: settingsProfile, config: NavigatorConfig() , customConfig: "", tilesConfig: tilesConfig)
@@ -122,6 +124,25 @@ public class NavigationDirections: Directions {
             DispatchQueue.main.async {
                 completionHandler(tilesURL)
             }
+        }
+    }
+    
+    /**
+     Configures the router with the given `tilesVersion`.
+     
+     - parameter tilesVersion: Version of tiles downloaded via Offline Service.
+     */
+    public func configureRouter(tilesVersion: String) {
+        NavigationDirectionsConstants.offlineSerialQueue.sync {
+            let endpointConfig = TileEndpointConfiguration(directions: Directions.shared, tilesVersion: tilesVersion)
+            let tilesConfig = TilesConfig(tilesPath: "",
+                                          inMemoryTileCache: nil,
+                                          mapMatchingSpatialCache: nil,
+                                          threadsCount: nil,
+                                          endpointConfig: endpointConfig)
+            
+            let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
+            self.navigator = Navigator(profile: settingsProfile, config: NavigatorConfig() , customConfig: "", tilesConfig: tilesConfig)
         }
     }
     
@@ -134,6 +155,7 @@ public class NavigationDirections: Directions {
      - parameter progressHandler: Unpacking reports progress every 500ms.
      - parameter completionHandler: Called when unpacking completed.
      */
+    @available(*, deprecated)
     public class func unpackTilePack(at filePathURL: URL, outputDirectoryURL: URL, progressHandler: UnpackProgressHandler?, completionHandler: UnpackCompletionHandler?) {
         NavigationDirectionsConstants.offlineSerialQueue.sync {
             let totalPackedBytes = filePathURL.fileSize!
