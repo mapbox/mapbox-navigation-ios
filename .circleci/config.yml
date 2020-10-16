@@ -96,7 +96,7 @@ step-library:
         name: Trigger metrics
         command: |
           if [ -n "${MOBILE_METRICS_TOKEN}" ]; then
-            bash -c "curl -X POST --header \"Content-Type: application/json\" --data '{\"parameters\": {\"run_ios_navigation_benchmark\": true, \"ci_ref\": $CIRCLE_BUILD_NUM }, \"branch\": \"main\" }' https://circleci.com/api/v2/project/github/mapbox/mobile-metrics/pipeline?circle-token=${MOBILE_METRICS_TOKEN}"
+            bash -c "curl -X POST --header \"Content-Type: application/json\" --data '{\"parameters\": {\"run_ios_navigation_benchmark\": true, \"ci_ref\": $CIRCLE_BUILD_NUM }, \"target_branch\": \"main\" }' https://circleci.com/api/v2/project/github/mapbox/mobile-metrics/pipeline?circle-token=${MOBILE_METRICS_TOKEN}"
           else
             echo "MOBILE_METRICS_TOKEN not provided"
           fi
