@@ -13,6 +13,11 @@
 * Fixed an issue where the route line flickered when refreshing. ([#2642](https://github.com/mapbox/mapbox-navigation-ios/pull/2642))
 * Fixed an issue where the End of route view UI is broken prior to iOS 11. ([#2690](https://github.com/mapbox/mapbox-navigation-ios/pull/2690))
 
+## v1.0.1
+
+### User location
+* Fixed [#2671](https://github.com/mapbox/mapbox-navigation-ios/issues/2671) and [#2660](https://github.com/mapbox/mapbox-navigation-ios/issues/2660) issues which were causing excessive calls to `layoutSubviews()` on iOS and CarPlay by updating to Mapbox Maps SDK for iOS v6.2.2. ([#2699](https://github.com/mapbox/mapbox-navigation-ios/pull/2699))
+
 ## v1.0.0
 
 ### Packaging
