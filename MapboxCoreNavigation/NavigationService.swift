@@ -421,7 +421,8 @@ extension MapboxNavigationService: CLLocationManagerDelegate {
     
     public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         if #available(iOS 14.0, *) {
-            delegate?.navigationServiceDidChangeAuthorization(self, manager)
+            NotificationCenter.default.post(name: .locationAuthorizationDidChange, object: nil)
+            delegate?.navigationServiceDidChangeAuthorization(self, manager: manager)
         } else {
             // Fallback on earlier versions
             return

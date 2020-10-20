@@ -147,7 +147,7 @@ public protocol NavigationServiceDelegate: class, UnimplementedLogging {
      - parameter service: The navigation service that will alert that user that reducedAccuracy is enabled.
      - parameter manager: The location manager.
      */
-    func navigationServiceDidChangeAuthorization(_ service: NavigationService, _ manager: CLLocationManager)
+    func navigationServiceDidChangeAuthorization(_ service: NavigationService, manager: CLLocationManager)
     
     /**
      Called when the navigation service will disable battery monitoring.
@@ -293,7 +293,7 @@ public extension NavigationServiceDelegate {
         return MapboxNavigationService.Default.shouldPreventReroutesWhenArrivingAtWaypoint
     }
     
-    func navigationServiceDidChangeAuthorization(_ service: NavigationService, _ manager: CLLocationManager) {
+    func navigationServiceDidChangeAuthorization(_ service: NavigationService, manager: CLLocationManager) {
         logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
     }
     

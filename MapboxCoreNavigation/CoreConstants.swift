@@ -180,6 +180,14 @@ public extension Notification.Name {
      The user info dictionary indicates which keys and values changed.
      */
     static let navigationSettingsDidChange: Notification.Name = .init(rawValue: "NavigationSettingsDidChange")
+    
+    /**
+     Posted when user changes location authorization settings.
+     
+     The user info dictionary indicates which keys and values changed.
+    */
+    static let locationAuthorizationDidChange: Notification.Name = .init(rawValue: "LocationAuthorizationDidChange")
+ 
 }
 
 extension RouteController {
@@ -209,6 +217,12 @@ extension RouteController {
          A key in the user info dictionary of a `Notification.Name.routeControllerProgressDidChange` notification. The corresponding value is a `CLLocation` object representing the current raw user location.
          */
         public static let rawLocationKey: NotificationUserInfoKey = .init(rawValue: "rawLocation")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.locationAuthorizationDidChange` notification. The corresponding value is a `Int` object the current location authorization setting. */
+         
+        public static let locationAuthorizationKey: NotificationUserInfoKey = .init(rawValue: "locationAuthorization")
+         
         
         /**
          A key in the user info dictionary of a `Notification.Name.routeControllerDidFailToReroute` notification. The corresponding value is an `NSError` object indicating why `RouteController` was unable to calculate a new route.
