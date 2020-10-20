@@ -18,12 +18,17 @@ class OfflineDataRegionTableViewCell: UITableViewCell {
     @IBOutlet weak var navigationPackLastUpdatedLabel: UILabel!
     @IBOutlet weak var navigationPackSizeLabel: UILabel!
     
-    // TODO: Improve UI for simultaneous downloads of Maps and Navigation packs.
-    @IBOutlet weak var downloadProgressContainerStackView: UIStackView!
-    @IBOutlet weak var downloadProgressLabel: UILabel!
-    @IBOutlet weak var downloadProgressView: UIProgressView!
+    @IBOutlet weak var mapsDownloadProgressContainerStackView: UIStackView!
+    @IBOutlet weak var mapsDownloadProgressLabel: UILabel!
+    @IBOutlet weak var mapsDownloadProgressView: UIProgressView!
     
-    var downloadProgressContainerHeightConstraint: NSLayoutConstraint? = nil
+    var mapsDownloadProgressContainerHeightConstraint: NSLayoutConstraint? = nil
+    
+    @IBOutlet weak var navigationDownloadProgressContainerStackView: UIStackView!
+    @IBOutlet weak var navigationDownloadProgressLabel: UILabel!
+    @IBOutlet weak var navigationDownloadProgressView: UIProgressView!
+    
+    var navigationDownloadProgressContainerHeightConstraint: NSLayoutConstraint? = nil
     
     static var dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -54,18 +59,14 @@ class OfflineDataRegionTableViewCell: UITableViewCell {
     
     func showDownloadProgress(for domain: OfflineDataDomain, dataPack: OfflineDataPack, metadata: OfflineDataRegionMetadata) {
         DispatchQueue.main.async {
-            self.updateDownloadProgressContainerHeight(constant: 25.0)
+            self.updateDownloadProgressContainerHeight(for: domain, constant: 25.0)
             
-            var totalSize: Int64? = nil
             if domain == .maps, let mapPack = metadata.mapPack {
-                totalSize = Int64(mapPack.bytes)
+                self.mapsDownloadProgressView.progress = Float(dataPack.bytes) / Float(mapPack.bytes)
+                self.mapsDownloadProgressLabel.text = "\(OfflineDataRegionTableViewCell.byteCountFormatter.string(fromByteCount: Int64(dataPack.bytes))) / \(OfflineDataRegionTableViewCell.byteCountFormatter.string(fromByteCount: Int64(mapPack.bytes)))"
             } else if domain == .navigation, let navigationPack = metadata.navigationPack {
-                totalSize = Int64(navigationPack.bytes)
-            }
-            
-            if let totalSize = totalSize {
-                self.downloadProgressView.progress = Float(dataPack.bytes) / Float(totalSize)
-                self.downloadProgressLabel.text = "\(OfflineDataRegionTableViewCell.byteCountFormatter.string(fromByteCount: Int64(dataPack.bytes))) / \(OfflineDataRegionTableViewCell.byteCountFormatter.string(fromByteCount: totalSize))"
+                self.navigationDownloadProgressView.progress = Float(dataPack.bytes) / Float(navigationPack.bytes)
+                self.navigationDownloadProgressLabel.text = "\(OfflineDataRegionTableViewCell.byteCountFormatter.string(fromByteCount: Int64(dataPack.bytes))) / \(OfflineDataRegionTableViewCell.byteCountFormatter.string(fromByteCount: Int64(navigationPack.bytes)))"
             }
         }
     }
@@ -131,29 +132,56 @@ class OfflineDataRegionTableViewCell: UITableViewCell {
         navigationPackSizeLabel.font = UIFont.systemFont(ofSize: 11.0)
         navigationPackSizeLabel.textColor = .darkGray
         
-        downloadProgressLabel.text = ""
-        downloadProgressLabel.font = UIFont.systemFont(ofSize: 11.0)
-        downloadProgressLabel.textColor = .darkGray
-        downloadProgressLabel.textAlignment = .center
+        mapsDownloadProgressLabel.text = ""
+        mapsDownloadProgressLabel.font = UIFont.systemFont(ofSize: 11.0)
+        mapsDownloadProgressLabel.textColor = .darkGray
+        mapsDownloadProgressLabel.textAlignment = .center
         
-        downloadProgressView.progress = 0.0
+        mapsDownloadProgressView.progress = 0.0
+        
+        navigationDownloadProgressLabel.text = ""
+        navigationDownloadProgressLabel.font = UIFont.systemFont(ofSize: 11.0)
+        navigationDownloadProgressLabel.textColor = .darkGray
+        navigationDownloadProgressLabel.textAlignment = .center
+        
+        navigationDownloadProgressView.progress = 0.0
     }
     
     private func setupConstraints() {
-        downloadProgressContainerStackView.translatesAutoresizingMaskIntoConstraints = false
-        downloadProgressContainerHeightConstraint = NSLayoutConstraint(item: downloadProgressContainerStackView!,
-                                                                       attribute: .height,
-                                                                       relatedBy: .equal,
-                                                                       toItem: nil,
-                                                                       attribute: .notAnAttribute,
-                                                                       multiplier: 0.0,
-                                                                       constant: 0)
-        downloadProgressContainerHeightConstraint?.isActive = true
+        mapsDownloadProgressContainerStackView.translatesAutoresizingMaskIntoConstraints = false
+        mapsDownloadProgressContainerHeightConstraint = NSLayoutConstraint(item: mapsDownloadProgressContainerStackView!,
+                                                                           attribute: .height,
+                                                                           relatedBy: .equal,
+                                                                           toItem: nil,
+                                                                           attribute: .notAnAttribute,
+                                                                           multiplier: 0.0,
+                                                                           constant: 0)
+        mapsDownloadProgressContainerHeightConstraint?.isActive = true
+        
+        navigationDownloadProgressContainerStackView.translatesAutoresizingMaskIntoConstraints = false
+        navigationDownloadProgressContainerHeightConstraint = NSLayoutConstraint(item: navigationDownloadProgressContainerStackView!,
+                                                                                 attribute: .height,
+                                                                                 relatedBy: .equal,
+                                                                                 toItem: nil,
+                                                                                 attribute: .notAnAttribute,
+                                                                                 multiplier: 0.0,
+                                                                                 constant: 0)
+        navigationDownloadProgressContainerHeightConstraint?.isActive = true
     }
     
-    private func updateDownloadProgressContainerHeight(constant: CGFloat) {
-        if self.downloadProgressContainerHeightConstraint?.constant != constant {
-            self.downloadProgressContainerHeightConstraint?.constant = constant
+    private func updateDownloadProgressContainerHeight(for domain: OfflineDataDomain? = nil, constant: CGFloat) {
+        switch domain {
+        case .maps:
+            if self.mapsDownloadProgressContainerHeightConstraint?.constant != constant {
+                self.mapsDownloadProgressContainerHeightConstraint?.constant = constant
+            }
+        case .navigation:
+            if self.navigationDownloadProgressContainerHeightConstraint?.constant != constant {
+                self.navigationDownloadProgressContainerHeightConstraint?.constant = constant
+            }
+        case .none:
+            self.mapsDownloadProgressContainerHeightConstraint?.constant = constant
+            self.navigationDownloadProgressContainerHeightConstraint?.constant = constant
         }
     }
 }

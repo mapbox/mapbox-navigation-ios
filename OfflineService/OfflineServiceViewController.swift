@@ -154,7 +154,7 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceDataSou
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 200.0
+        return 240.0
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

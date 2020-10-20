@@ -2,9 +2,6 @@ import UIKit
 import MapboxCoreNavigation
 import MapboxNavigation
 import MapboxDirections
-import UserNotifications
-import AVKit
-import MapboxNavigationNative
 
 private typealias RouteRequestSuccess = ((RouteResponse) -> Void)
 private typealias RouteRequestFailure = ((Error) -> Void)
@@ -111,11 +108,10 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Trigger OfflineServiceManager singleton creation to make sure that Maps SDK is notified whenever offline packs are available.
-        let _ = OfflineServiceManager.instance
-        
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "settings"), style: .plain, target: self, action: #selector(openSettings))
         navigationItem.rightBarButtonItem?.isEnabled = true
+        
+        setupOfflineService()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -139,11 +135,6 @@ class ViewController: UIViewController {
                 CLLocationManager().requestWhenInUseAuthorization()
             }
         }
-    }
-    
-    @IBAction func openSettings() {
-        let controller = UINavigationController(rootViewController: OfflineServiceViewController())
-        present(controller, animated: true, completion: nil)
     }
 
     // MARK: Gesture Recognizer Handlers
@@ -185,6 +176,11 @@ class ViewController: UIViewController {
 
     @IBAction func startButtonPressed(_ sender: Any) {
         presentActionsAlertController()
+    }
+    
+    @IBAction func openSettings() {
+        let controller = UINavigationController(rootViewController: OfflineServiceViewController())
+        present(controller, animated: true, completion: nil)
     }
     
     private func clearMapView() {
@@ -435,6 +431,12 @@ class ViewController: UIViewController {
     func uninstall(_ mapView: NavigationMapView) {
         NotificationCenter.default.removeObserver(self, name: .passiveLocationDataSourceDidUpdate, object: nil)
         mapView.removeFromSuperview()
+    }
+    
+    private func setupOfflineService() {
+        // Trigger OfflineServiceManager singleton creation to make sure that Maps SDK is notified whenever offline packs are available.
+        let _ = OfflineServiceManager.instance
+        NSLog("Suggested tiles path for Offline Service: \(Bundle.mapboxCoreNavigation.suggestedTileURL?.path ?? "Not available")")
     }
 }
 
