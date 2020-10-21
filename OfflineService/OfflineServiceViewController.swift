@@ -1,12 +1,10 @@
 import UIKit
-import MapboxCommon
 import MapboxCoreNavigation
 import MapboxDirections
 import Mapbox
 
-class OfflineServiceViewController: UITableViewController, OfflineServiceDataSourceDelegate {
+class OfflineServiceViewController: UITableViewController {
 
-    private var offlineDataItems = [OfflineDataItem]()
     private var offlineServiceDataSource: OfflineServiceDataSource? = nil
     private typealias ActionHandler = (UIAlertAction) -> Void
     
@@ -42,9 +40,11 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceDataSou
     }
     
     private func setupOfflineServiceDataSource() {
-        offlineServiceDataSource = OfflineServiceDataSource()
-        offlineServiceDataSource?.delegate = self
-        offlineServiceDataSource?.startObservingAvailableRegions()
+        OfflineService.shared.register(observer: self)
+        OfflineService.shared.fetchAvailableRegions() { [weak self] regions in
+            guard let self = self else { return }
+            self.process(regions: regions)
+        }
     }
     
     // MARK: - Action handler methods
@@ -80,67 +80,64 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceDataSou
     }
     
     // MARK: - OfflineServiceDataSourceDelegate methods
-    
-    func offlineServiceDataSource(_ dataSource: OfflineServiceDataSource, didUpdate offlineDataItems: [OfflineDataItem]) {
-        DispatchQueue.main.async {
-            offlineDataItems.forEach {
-                var indexPaths = [IndexPath]()
-                var found = false
-                let metadata = $0.dataRegionMetadata
-                
-                // In case if OfflineDataItem was found in list - update existing item with available pack for either map or navigation.
-                for index in 0 ..< self.offlineDataItems.count {
-                    if self.offlineDataItems[index].dataRegionMetadata.id != metadata.id { continue }
-                    found = true
-                    
-                    guard let domain = $0.domain else { continue }
-                    
-                    if let pack = $0.offlineDataPack {
-                        let indexPath = IndexPath(row: index, section: 0)
-                        let cell = self.tableView.cellForRow(at: indexPath) as? OfflineDataRegionTableViewCell
-                        cell?.showDownloadProgress(for: domain, dataPack: pack, metadata: metadata)
-                        
-                        continue
-                    }
-                    
-                    switch domain {
-                    case .maps:
-                        self.offlineDataItems[index].mapPackMetadata = $0.mapPackMetadata
-                    case .navigation:
-                        self.offlineDataItems[index].navigationPackMetadata = $0.navigationPackMetadata
-                    }
-                    
-                    indexPaths.append(IndexPath(row: index, section: 0))
-                }
-                
-                // In case if OfflineDataItem wasn't found (e.g. in case if there is no internet connection) - add it to list and refresh UITableView.
-                if !found {
-                    self.offlineDataItems.append($0)
-                    
-                    self.tableView.beginUpdates()
-                    self.tableView.insertRows(at: [IndexPath(row: self.offlineDataItems.count - 1, section: 0)], with: .automatic)
-                    self.tableView.endUpdates()
-                    
-                    return
-                }
-                
-                self.tableView.reloadRows(at: indexPaths, with: .automatic)
+
+    private var offlineRegions = [OfflineRegion]()
+
+    func process(regions: [OfflineRegion]) {
+        offlineRegions = regions
+        tableView.reloadData()
+    }
+
+    func update(region: OfflineRegion) {
+        for index in 0..<offlineRegions.count {
+            let showedRegion = offlineRegions[index]
+            if showedRegion.id == region.id {
+                offlineRegions[index] = region
+                tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+                return
+            }
+        }
+        offlineRegions.append(region)
+        tableView.beginUpdates()
+        tableView.insertRows(at: [IndexPath(row: offlineRegions.count - 1, section: 0)], with: .automatic)
+        tableView.endUpdates()
+    }
+
+    func showDownloadProgress(for region: OfflineRegion) {
+        for index in 0..<offlineRegions.count {
+            if offlineRegions[index].id == region.id {
+                let indexPath = IndexPath(row: index, section: 0)
+                let cell = self.tableView.cellForRow(at: indexPath) as? OfflineDataRegionTableViewCell
+                cell?.updateDownloadProgress(for: region)
+                return
             }
         }
     }
-    
-    func offlineServiceDataSource(_ dataSource: OfflineServiceDataSource, didFail error: OfflineServiceError) {
-        switch error {
-        case .genericError(message: let message):
-            self.presentAlert(OfflineServiceConstants.title, message: message)
+
+    func remove(region: OfflineRegion) {
+        var indexesToRemove: [IndexPath] = []
+
+        for index in 0..<offlineRegions.count {
+            let showedRegion = offlineRegions[index]
+            if showedRegion.id == region.id {
+                indexesToRemove.append(IndexPath(row: index, section: 0))
+            }
         }
+
+        indexesToRemove.forEach { index in
+            offlineRegions.remove(at: index.row)
+        }
+
+        tableView.beginUpdates()
+        tableView.deleteRows(at: indexesToRemove, with: .automatic)
+        tableView.endUpdates()
     }
 
     // MARK: - UITableView delegate methods
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: OfflineDataRegionTableViewCell.identifier, for: indexPath) as! OfflineDataRegionTableViewCell
-        cell.presentUI(for: offlineDataItems[indexPath.row])
+        cell.presentUI(for: offlineRegions[indexPath.row])
 
         return cell
     }
@@ -150,7 +147,7 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceDataSou
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return offlineDataItems.count
+        return offlineRegions.count
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -160,51 +157,73 @@ class OfflineServiceViewController: UITableViewController, OfflineServiceDataSou
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let offlineDataRegion = offlineDataItems[indexPath.row]
-        showActions(offlineDataRegion)
+        let offlineRegion = offlineRegions[indexPath.row]
+        showActions(offlineRegion)
     }
     
     // MARK: - Private methods
 
-    private func showActions(_ offlineDataRegion: OfflineDataItem) {
+    private func showActions(_ offlineRegion: OfflineRegion) {
         let alertController = UIAlertController(title: OfflineServiceConstants.title,
                                                 message: OfflineServiceConstants.selectActionTitle,
                                                 preferredStyle: .alert)
 
         var mapsPackTitle = OfflineServiceConstants.downloadMapsPack
         var mapsActionHandler: ActionHandler = { _ in
-            OfflineServiceManager.instance.downloadPack(.maps, metadata: offlineDataRegion.dataRegionMetadata)
+            OfflineService.shared.download(region: offlineRegion, forDomain: .maps)
         }
-        
-        if offlineDataRegion.mapPackMetadata != nil {
+
+        if offlineRegion.mapsPack != nil {
             mapsPackTitle = OfflineServiceConstants.deleteMapsPack
             mapsActionHandler = { _ in
-                OfflineServiceManager.instance.deletePack(.maps, metadata: offlineDataRegion.dataRegionMetadata)
+                OfflineService.shared.remove(region: offlineRegion, forDomain: .maps)
             }
         }
-        
+
         var navigationPackTitle = OfflineServiceConstants.downloadNavigationPack
         var navigationActionHandler: ActionHandler = { _ in
-            OfflineServiceManager.instance.downloadPack(.navigation, metadata: offlineDataRegion.dataRegionMetadata)
+            OfflineService.shared.download(region: offlineRegion, forDomain: .navigation)
         }
-        
-        if offlineDataRegion.navigationPackMetadata != nil {
+
+        if offlineRegion.navigationPack != nil {
             navigationPackTitle = OfflineServiceConstants.deleteNavigationPack
             navigationActionHandler = { _ in
-                OfflineServiceManager.instance.deletePack(.navigation, metadata: offlineDataRegion.dataRegionMetadata)
+                OfflineService.shared.remove(region: offlineRegion, forDomain: .navigation)
             }
         }
-        
+
         let actionPayloads: [(String, UIAlertAction.Style, ActionHandler?)] = [
             (mapsPackTitle, .default, mapsActionHandler),
             (navigationPackTitle, .default, navigationActionHandler),
             (OfflineServiceConstants.cancel, .cancel, nil)
         ]
-        
+
         actionPayloads
             .map({ payload in UIAlertAction(title: payload.0, style: payload.1, handler: payload.2) })
             .forEach(alertController.addAction(_:))
 
         present(alertController, animated: true, completion: nil)
+    }
+}
+
+extension OfflineServiceViewController: MapboxCoreNavigation.OfflineServiceObserver {
+    func didBecomeAvailable(region: OfflineRegion, forDomain: OfflineRegionDomain) {
+        update(region: region)
+    }
+
+    func didBecomeUnavailable(region: OfflineRegion) {
+        remove(region: region)
+    }
+
+    func didDelete(region: OfflineRegion, forDomain: OfflineRegionDomain) {
+        update(region: region)
+    }
+
+    func didStartDownloading(region: OfflineRegion, forDomain: OfflineRegionDomain) {
+        showDownloadProgress(for: region)
+    }
+
+    func didBecomeErrored(region: OfflineRegion, forDomain: OfflineRegionDomain, withError error: OfflineRegionError?) {
+        self.presentAlert(OfflineServiceConstants.title, message: "Error occured for: \(region.id)")
     }
 }
