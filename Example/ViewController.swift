@@ -435,7 +435,7 @@ class ViewController: UIViewController {
     
     private func setupOfflineService() {
         // Trigger OfflineServiceManager singleton creation to make sure that Maps SDK is notified whenever offline packs are available.
-        let _ = OfflineServiceManager.instance
+        let _ = OfflineService.shared
         NSLog("Suggested tiles path for Offline Service: \(Bundle.mapboxCoreNavigation.suggestedTileURL?.path ?? "Not available")")
     }
 }

@@ -5,7 +5,6 @@ import Mapbox
 
 class OfflineServiceViewController: UITableViewController {
 
-    private var offlineServiceDataSource: OfflineServiceDataSource? = nil
     private typealias ActionHandler = (UIAlertAction) -> Void
     
     // MARK: - UIViewController delegate methods

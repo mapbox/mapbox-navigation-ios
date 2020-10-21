@@ -189,7 +189,7 @@ class OfflineDataRegionTableViewCell: UITableViewCell {
         navigationDownloadProgressContainerHeightConstraint?.isActive = true
     }
     
-    private func updateDownloadProgressContainerHeight(for domain: OfflineDataDomain? = nil, constant: CGFloat) {
+    private func updateDownloadProgressContainerHeight(for domain: OfflineRegionDomain? = nil, constant: CGFloat) {
         switch domain {
         case .maps:
             if self.mapsDownloadProgressContainerHeightConstraint?.constant != constant {
