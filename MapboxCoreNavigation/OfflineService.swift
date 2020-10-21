@@ -40,7 +40,11 @@ public class OfflineService {
     private var _regions: [String: OfflineRegion] = [:]
 
     public var regions: [OfflineRegion] {
-        Array(_regions.values)
+        var regions = Array(_regions.values)
+        regions.sort {
+            $0.description < $1.description
+        }
+        return regions
     }
 
     private var observers: [OfflineServiceObserver] = []
@@ -76,7 +80,7 @@ public class OfflineService {
 
      @param callback Callback function that will be called with the result.
      */
-    public func fetchAvailableRegions(_ callback:  (([OfflineRegion]) -> Void)?) {
+    public func fetchAvailableRegions(_ callback:  (([OfflineRegion]) -> Void)? = nil) {
         instance?.listAvailableRegions { [weak self] (expected) in
             guard let self = self else { return }
             if let error = expected?.error as? OfflineDataError {
@@ -88,12 +92,15 @@ public class OfflineService {
             guard let offlineDataRegions = expected?.value as? Array<Any> else { return }
 
             var regionIDsToStay: Set<String> = []
-
+            print("Regions:")
             for regionMetadata in offlineDataRegions {
                 if let metadata = regionMetadata as? OfflineDataRegionMetadata {
-                    if self._regions[metadata.id] == nil {
+                    if let downloadedRegion = self._regions[metadata.id] {
+                        self._regions[metadata.id] = OfflineRegion(region: metadata, mapsPack: downloadedRegion.mapsPack, navigationPack: downloadedRegion.navigationPack)
+                    } else {
                         self._regions[metadata.id] = OfflineRegion(region: metadata)
                     }
+                    print(metadata)
                     regionIDsToStay.insert(metadata.id)
                 }
             }
@@ -101,9 +108,16 @@ public class OfflineService {
             for key in regionKeysToRemove {
                 if !regionIDsToStay.contains(key), let region = self._regions[key], !region.isDownloaded {
                     self._regions.removeValue(forKey: key)
+                    DispatchQueue.main.async {
+                        self.observers.forEach {
+                            $0.didBecomeUnavailable(region: region)
+                        }
+                    }
                 }
             }
-            callback?(self.regions)
+            DispatchQueue.main.async {
+                callback?(self.regions)
+            }
         }
     }
 
@@ -214,9 +228,17 @@ extension OfflineService: MapboxCommon.OfflineServiceObserver {
     public func onDownloading(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, pack: OfflineDataPack) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            let region = self._regions[metadata.id] ?? OfflineRegion(region: metadata)
-            self.observers.forEach {
-                $0.didStartDownloading(region: region, forDomain: .common(domain: domain))
+            if let region = self._regions[metadata.id] {
+                if domain == .maps {
+                    region.mapsPack = OfflineRegionPack(pack: pack)
+                    region.mapsPack?.commonPackMetadata = metadata.mapPack
+                } else {
+                    region.navigationPack = OfflineRegionPack(pack: pack)
+                    region.navigationPack?.commonPackMetadata = metadata.navigationPack
+                }
+                self.observers.forEach {
+                    $0.didStartDownloading(region: region, forDomain: .common(domain: domain))
+                }
             }
         }
     }
@@ -244,15 +266,23 @@ extension OfflineService: MapboxCommon.OfflineServiceObserver {
     public func onAvailable(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, pack: OfflineDataPack) {
         if let region = _regions[metadata.id] {
             if domain == .maps {
-                _regions[metadata.id] = OfflineRegion(region: metadata, mapsPack: pack, navigationPack: region.navigationPack?.commonPack)
+                var mapsPack = OfflineRegionPack(pack: pack)
+                mapsPack.commonPackMetadata = metadata.mapPack
+                _regions[metadata.id] = OfflineRegion(region: metadata, mapsPack: mapsPack, navigationPack: region.navigationPack)
             } else {
-                _regions[metadata.id] = OfflineRegion(region: metadata, mapsPack: region.mapsPack?.commonPack, navigationPack: pack)
+                var navigationPack = OfflineRegionPack(pack: pack)
+                navigationPack.commonPackMetadata = metadata.navigationPack
+                _regions[metadata.id] = OfflineRegion(region: metadata, mapsPack: region.mapsPack, navigationPack: navigationPack)
             }
         } else {
+            var mapsPack = domain == .maps ? OfflineRegionPack(pack: pack) : nil
+            mapsPack?.commonPackMetadata = metadata.mapPack
+            var navigationPack = domain == .navigation ? OfflineRegionPack(pack: pack) : nil
+            navigationPack?.commonPackMetadata = metadata.navigationPack
             _regions[metadata.id] = OfflineRegion(
                 region: metadata,
-                mapsPack: domain == .maps ? pack : nil,
-                navigationPack: domain == .navigation ? pack : nil
+                mapsPack: mapsPack,
+                navigationPack: navigationPack
             )
         }
 

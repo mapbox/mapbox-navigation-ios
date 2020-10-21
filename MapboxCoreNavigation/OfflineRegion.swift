@@ -57,7 +57,36 @@ public struct OfflineRegionPack {
         commonPack.bytes
     }
 
+    /**
+     The total number of bytes of this offline pack
+     */
+    public var totalBytes: UInt64? {
+        commonPackMetadata?.bytes
+    }
+
+    /**
+     The URL the offline pack can be downloaded from.
+     */
+    public var url: String? {
+        commonPackMetadata?.url
+    }
+
+    /**
+     A numeric version of the format. An SDK version only supports one format version and uses this field to verify compatibility.
+     */
+    public var format: UInt32? {
+        commonPackMetadata?.format
+    }
+
+    /**
+     A version identifier. Some data can only be used together with matching versions.
+     */
+    public var dataVersion: String? {
+        commonPackMetadata?.data_version
+    }
+
     let commonPack: OfflineDataPack
+    var commonPackMetadata: OfflineDataPackMetadata?
 
     init(pack: OfflineDataPack) {
         self.commonPack = pack
@@ -69,7 +98,7 @@ public struct OfflineRegionPack {
 
  The key for looking up offline regions should be a compound of id and revision.
  */
-public struct OfflineRegion: Equatable {
+public class OfflineRegion: Equatable {
     /**
      A machine-readable identifier
      */
@@ -131,7 +160,13 @@ public struct OfflineRegion: Equatable {
         self.navigationPack = navigationPack != nil ? OfflineRegionPack(pack: navigationPack!) : nil
     }
 
-    public static func == (lhs: Self, rhs: Self) -> Bool {
+    init(region: OfflineDataRegionMetadata, mapsPack: OfflineRegionPack?, navigationPack: OfflineRegionPack?) {
+        self.region = region
+        self.mapsPack = mapsPack
+        self.navigationPack = navigationPack
+    }
+
+    public static func == (lhs: OfflineRegion, rhs: OfflineRegion) -> Bool {
         return lhs.region == rhs.region
     }
 }
