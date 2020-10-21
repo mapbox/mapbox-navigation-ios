@@ -42,7 +42,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
                                                     routeOptions: userRouteOptions!,
                                                     locationSource: locationManager,
                                                     simulating: simulateLocation ? .always : .onPoorGPS,
-                                                    tilesVersion: "2020_10_11-03_00_00")
+                                                    tilesVersion: OfflineServiceConstants.tilesVersion)
         
         mapView.delegate = self
         mapView.compassView.isHidden = true

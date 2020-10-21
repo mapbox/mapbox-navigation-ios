@@ -259,7 +259,7 @@ class ViewController: UIViewController {
                 
                 // Attempt to load offline Navigation tiles, depending on version of Navigation pack `tilesVersion` property
                 // should be changed accordingly.
-                self.navigationDirections.configureRouter(tilesVersion: "2020_10_11-03_00_00")
+                self.navigationDirections.configureRouter(tilesVersion: OfflineServiceConstants.tilesVersion)
                 self.navigationDirections.calculate(options, offline: true) { (session, result) in
                     switch result {
                     case let .failure(error):
@@ -375,7 +375,7 @@ class ViewController: UIViewController {
                                        routeIndex: routeIndex,
                                        routeOptions: options,
                                        simulating: mode,
-                                       tilesVersion: "2020_10_11-03_00_00")
+                                       tilesVersion: OfflineServiceConstants.tilesVersion)
     }
 
     func presentAndRemoveMapview(_ navigationViewController: NavigationViewController, completion: CompletionHandler?) {
@@ -605,7 +605,7 @@ extension ViewController {
         let dataSource = PassiveLocationDataSource()
         // In case if there is no internet connection it's possible to create instance of `PassiveLocationDataSource`
         // and point to version of sideloaded routing packs. For example:
-        // let dataSource = PassiveLocationDataSource(tilesVersion: "2020_10_11-03_00_00")
+        // let dataSource = PassiveLocationDataSource(tilesVersion: OfflineServiceConstants.tilesVersion)
         let locationManager = PassiveLocationManager(dataSource: dataSource)
         mapView.locationManager = locationManager
         

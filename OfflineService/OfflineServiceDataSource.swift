@@ -12,9 +12,7 @@ open class OfflineServiceDataSource: OfflineServiceObserver {
      The `OfflineServiceDataSource` delegate.
      */
     public weak var delegate: OfflineServiceDataSourceDelegate?
-    
-    private var offlineDataItems = [OfflineDataItem]()
-    
+        
     // MARK: - OfflineServiceObserver methods
     
     public func onPending(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, pack: OfflineDataPack) {

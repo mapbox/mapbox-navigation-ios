@@ -12,6 +12,7 @@ struct OfflineServiceConstants {
         
         return accessToken
     }()
+    static let tilesVersion = "2020_10_11-03_00_00"
     
     static let title = NSLocalizedString("OFFLINE_SERVICE_TITLE", value: "Offline Service", comment: "Title for UIViewController and UIAlertController.")
     static let close = NSLocalizedString("CLOSE_TITLE", value: "Close", comment: "Close title.")
