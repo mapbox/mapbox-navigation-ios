@@ -38,9 +38,6 @@ extension NavigationView {
     }
     
     public func reinstallRequiredConstraints() {
-        if let bottomBannerContainerHeightConstraint = bottomBannerContainerHeightConstraint {
-            bottomBannerContainerView.removeConstraint(bottomBannerContainerHeightConstraint)
-        }
         
         var height: CGFloat = 100.0
         
@@ -54,6 +51,7 @@ extension NavigationView {
             height = 80.0
         }
         
+        var bottomBannerContainerHeightConstraint: NSLayoutConstraint?
         bottomBannerContainerHeightConstraint = bottomBannerContainerView.heightAnchor.constraint(equalToConstant: height)
         bottomBannerContainerHeightConstraint?.isActive = true
     }

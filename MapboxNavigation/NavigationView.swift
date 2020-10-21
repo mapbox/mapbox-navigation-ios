@@ -48,7 +48,6 @@ open class NavigationView: UIView {
     
     lazy var endOfRouteHeightConstraint: NSLayoutConstraint? = self.endOfRouteView?.heightAnchor.constraint(equalToConstant: Constants.endOfRouteHeight)
     
-    var bottomBannerContainerHeightConstraint: NSLayoutConstraint?
     
     private enum Images {
         static let overview = UIImage(named: "overview", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
