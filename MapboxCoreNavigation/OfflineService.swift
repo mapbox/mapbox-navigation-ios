@@ -3,17 +3,26 @@ import MapboxCommon
 
 private typealias CommonOfflineService = MapboxCommon.OfflineService
 
+/**
+ The struct contains configuration options for accessing the Offline Data API.
+ */
 public struct OfflineServiceUser {
-    private enum Constants {
-        static let username = "1tap-nav"
-        static let baseURL = "https://api.mapbox.com"
-    }
+    /**
+     The username is used when querying information from the server, and for compartmentalizing offline packs on disk.
+     */
+    public let username: String
 
-    let username: String
-    let accessToken: String?
-    let baseUrl: String
+    /**
+     An access token for querying information from the server. By default value is gotten from the Info.plist file with the key `MGLMapboxAccessToken`
+     */
+    public let accessToken: String?
 
-    init(username: String = Constants.username, accessToken: String? = nil, baseUrl: String = Constants.baseURL) {
+    /**
+     Base endpoint URL. Defaults to "https://api.mapbox.com"
+     */
+    public let baseUrl: String?
+
+    public init(username: String, accessToken: String? = nil, baseUrl: String? = nil) {
         self.username = username
         if accessToken == nil, let accessToken = Bundle.main.object(forInfoDictionaryKey: "MGLMapboxAccessToken") as? String {
             self.accessToken = accessToken
@@ -35,7 +44,14 @@ public struct OfflineServiceUser {
 public class OfflineService {
     private var instance: CommonOfflineService?
 
-    public static let shared = OfflineService(user: OfflineServiceUser())
+    public static var shared: OfflineService {
+        if _shared == nil {
+            _shared = OfflineService(user: OfflineServiceUser(username: ""))
+        }
+        return _shared
+    }
+
+    public static var _shared: OfflineService!
 
     private var _regions: [String: OfflineRegion] = [:]
 
@@ -74,25 +90,37 @@ public class OfflineService {
     }
 
     /**
+     @brief The method allows to configure an OfflineService singleton with the options for accessing the Offline Data API.
+    The method should be called once and before accessing the `OfflineService.shared`
+
+     @param user The struct which contains configuration options for accessing the Offline Data API.
+     */
+    public static func register(user: OfflineServiceUser) {
+        guard _shared == nil else { return }
+        _shared = OfflineService(user: user)
+    }
+
+    /**
      @brief Queries the Offline Data API and lists all available regions
 
      Only lists regions that are compatible with the current format.
 
      @param callback Callback function that will be called with the result.
      */
-    public func fetchAvailableRegions(_ callback:  (([OfflineRegion]) -> Void)? = nil) {
+    public func fetchAvailableRegions(_ callback:  (([OfflineRegion], OfflineRegionError?) -> Void)? = nil) {
         instance?.listAvailableRegions { [weak self] (expected) in
             guard let self = self else { return }
             if let error = expected?.error as? OfflineDataError {
-                print(error.message)
-                callback?([])
+                NSLog(error.message)
+                DispatchQueue.main.async {
+                    callback?([], .init(error))
+                }
                 return
             }
 
             guard let offlineDataRegions = expected?.value as? Array<Any> else { return }
 
             var regionIDsToStay: Set<String> = []
-            print("Regions:")
             for regionMetadata in offlineDataRegions {
                 if let metadata = regionMetadata as? OfflineDataRegionMetadata {
                     if let downloadedRegion = self._regions[metadata.id] {
@@ -100,13 +128,12 @@ public class OfflineService {
                     } else {
                         self._regions[metadata.id] = OfflineRegion(region: metadata)
                     }
-                    print(metadata)
                     regionIDsToStay.insert(metadata.id)
                 }
             }
             let regionKeysToRemove = self._regions.keys
             for key in regionKeysToRemove {
-                if !regionIDsToStay.contains(key), let region = self._regions[key], !region.isDownloaded {
+                if !regionIDsToStay.contains(key), let region = self._regions[key], region.mapsPack?.status == .deleted, region.navigationPack?.status == .deleted {
                     self._regions.removeValue(forKey: key)
                     DispatchQueue.main.async {
                         self.observers.forEach {
@@ -116,7 +143,7 @@ public class OfflineService {
                 }
             }
             DispatchQueue.main.async {
-                callback?(self.regions)
+                callback?(self.regions, nil)
             }
         }
     }
@@ -218,9 +245,15 @@ extension OfflineService: MapboxCommon.OfflineServiceObserver {
     public func onPending(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, pack: OfflineDataPack) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            let region = self._regions[metadata.id] ?? OfflineRegion(region: metadata)
-            self.observers.forEach {
-                $0.didAddPending(region: region, forDomain: .common(domain: domain))
+            if let region = self._regions[metadata.id] {
+                if domain == .maps {
+                    region.mapsPack?.status = .pending
+                } else {
+                    region.navigationPack?.status = .pending
+                }
+                self.observers.forEach {
+                    $0.didAddPending(region: region, forDomain: .common(domain: domain))
+                }
             }
         }
     }
@@ -232,9 +265,11 @@ extension OfflineService: MapboxCommon.OfflineServiceObserver {
                 if domain == .maps {
                     region.mapsPack = OfflineRegionPack(pack: pack)
                     region.mapsPack?.commonPackMetadata = metadata.mapPack
+                    region.mapsPack?.status = .downloading
                 } else {
                     region.navigationPack = OfflineRegionPack(pack: pack)
                     region.navigationPack?.commonPackMetadata = metadata.navigationPack
+                    region.navigationPack?.status = .downloading
                 }
                 self.observers.forEach {
                     $0.didStartDownloading(region: region, forDomain: .common(domain: domain))
@@ -244,11 +279,31 @@ extension OfflineService: MapboxCommon.OfflineServiceObserver {
     }
 
     public func onIncomplete(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, pack: OfflineDataPack) {
+        if _regions[metadata.id] == nil {
+            var mapsPack = OfflineRegionPack(pack: domain == .maps ? pack : nil)
+            mapsPack.commonPackMetadata = metadata.mapPack
+            mapsPack.status = domain == .maps ? .incomplete : .deleted
+            var navigationPack = OfflineRegionPack(pack: domain == .navigation ? pack : nil)
+            navigationPack.commonPackMetadata = metadata.navigationPack
+            navigationPack.status = domain == .navigation ? .incomplete : .deleted
+            _regions[metadata.id] = OfflineRegion(
+                region: metadata,
+                mapsPack: mapsPack,
+                navigationPack: navigationPack
+            )
+        }
+
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            let region = self._regions[metadata.id] ?? OfflineRegion(region: metadata)
-            self.observers.forEach {
-                $0.didBecomeIncomplete(region: region, forDomain: .common(domain: domain))
+            if let region = self._regions[metadata.id] {
+                if domain == .maps {
+                    region.mapsPack?.status = .incomplete
+                } else {
+                    region.navigationPack?.status = .incomplete
+                }
+                self.observers.forEach {
+                    $0.didBecomeIncomplete(region: region, forDomain: .common(domain: domain))
+                }
             }
         }
     }
@@ -256,9 +311,15 @@ extension OfflineService: MapboxCommon.OfflineServiceObserver {
     public func onVerifying(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, pack: OfflineDataPack) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            let region = self._regions[metadata.id] ?? OfflineRegion(region: metadata)
-            self.observers.forEach {
-                $0.didBeginVerifying(region: region, forDomain: .common(domain: domain))
+            if let region = self._regions[metadata.id] {
+                if domain == .maps {
+                    region.mapsPack?.status = .verifying
+                } else {
+                    region.navigationPack?.status = .verifying
+                }
+                self.observers.forEach {
+                    $0.didBeginVerifying(region: region, forDomain: .common(domain: domain))
+                }
             }
         }
     }
@@ -269,16 +330,20 @@ extension OfflineService: MapboxCommon.OfflineServiceObserver {
                 var mapsPack = OfflineRegionPack(pack: pack)
                 mapsPack.commonPackMetadata = metadata.mapPack
                 _regions[metadata.id] = OfflineRegion(region: metadata, mapsPack: mapsPack, navigationPack: region.navigationPack)
+                region.mapsPack?.status = .available
             } else {
                 var navigationPack = OfflineRegionPack(pack: pack)
                 navigationPack.commonPackMetadata = metadata.navigationPack
                 _regions[metadata.id] = OfflineRegion(region: metadata, mapsPack: region.mapsPack, navigationPack: navigationPack)
+                region.navigationPack?.status = .available
             }
         } else {
-            var mapsPack = domain == .maps ? OfflineRegionPack(pack: pack) : nil
-            mapsPack?.commonPackMetadata = metadata.mapPack
-            var navigationPack = domain == .navigation ? OfflineRegionPack(pack: pack) : nil
-            navigationPack?.commonPackMetadata = metadata.navigationPack
+            var mapsPack = OfflineRegionPack(pack: domain == .maps ? pack : nil)
+            mapsPack.commonPackMetadata = metadata.mapPack
+            mapsPack.status = domain == .maps ? .available : .deleted
+            var navigationPack = OfflineRegionPack(pack: domain == .navigation ? pack : nil)
+            navigationPack.commonPackMetadata = metadata.navigationPack
+            navigationPack.status = domain == .navigation ? .available : .deleted
             _regions[metadata.id] = OfflineRegion(
                 region: metadata,
                 mapsPack: mapsPack,
@@ -298,9 +363,15 @@ extension OfflineService: MapboxCommon.OfflineServiceObserver {
     public func onExpired(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, pack: OfflineDataPack) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            let region = self._regions[metadata.id] ?? OfflineRegion(region: metadata)
-            self.observers.forEach {
-                $0.didBecomeExpired(region: region, forDomain: .common(domain: domain))
+            if let region = self._regions[metadata.id] {
+                if domain == .maps {
+                    region.mapsPack?.status = .expired
+                } else {
+                    region.navigationPack?.status = .expired
+                }
+                self.observers.forEach {
+                    $0.didBecomeExpired(region: region, forDomain: .common(domain: domain))
+                }
             }
         }
     }
@@ -308,16 +379,22 @@ extension OfflineService: MapboxCommon.OfflineServiceObserver {
     public func onErrored(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, pack: OfflineDataPack) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            let region = self._regions[metadata.id] ?? OfflineRegion(region: metadata)
+            if let region = self._regions[metadata.id] {
 
-            let error: OfflineRegionError?
-            if let packError = pack.error {
-                error = OfflineRegionError(packError)
-            } else {
-                error = nil
-            }
-            self.observers.forEach {
-                $0.didBecomeErrored(region: region, forDomain: .common(domain: domain), withError: error)
+                let error: OfflineRegionError?
+                if let packError = pack.error {
+                    error = OfflineRegionError(packError)
+                    if domain == .maps {
+                        region.mapsPack?.status = .errored(error: error!)
+                    } else {
+                        region.navigationPack?.status = .errored(error: error!)
+                    }
+                } else {
+                    error = nil
+                }
+                self.observers.forEach {
+                    $0.didBecomeErrored(region: region, forDomain: .common(domain: domain), withError: error)
+                }
             }
         }
     }
@@ -325,10 +402,16 @@ extension OfflineService: MapboxCommon.OfflineServiceObserver {
     public func onDeleting(for domain: OfflineDataDomain, metadata: OfflineDataRegionMetadata, pack: OfflineDataPack, callback: @escaping OfflineDataPackAcknowledgeCallback) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            let region = self._regions[metadata.id] ?? OfflineRegion(region: metadata)
-            self.observers.forEach {
-                if $0.shouldRemove(region: region, forDomain: .common(domain: domain)) {
-                    callback()
+            if let region = self._regions[metadata.id] {
+                if domain == .maps {
+                    region.mapsPack?.status = .deleting
+                } else {
+                    region.navigationPack?.status = .deleting
+                }
+                self.observers.forEach {
+                    if $0.shouldRemove(region: region, forDomain: .common(domain: domain)) {
+                        callback()
+                    }
                 }
             }
         }
@@ -338,8 +421,10 @@ extension OfflineService: MapboxCommon.OfflineServiceObserver {
         if let region = _regions[metadata.id] {
             if domain == .maps {
                 _regions[metadata.id] = OfflineRegion(region: metadata, mapsPack: nil, navigationPack: region.navigationPack?.commonPack)
+                region.mapsPack?.status = .deleted
             } else {
                 _regions[metadata.id] = OfflineRegion(region: metadata, mapsPack: region.mapsPack?.commonPack, navigationPack: nil)
+                region.navigationPack?.status = .deleted
             }
         }
 

@@ -46,7 +46,7 @@ public enum OfflineRegionErrorType: Int {
 /**
  Describes an error that occured while querying for offline regions, or downloading and verifying an offline pack.
  */
-public struct OfflineRegionError {
+public struct OfflineRegionError: Equatable {
     /**
      An error code describing why an error occurred.
      */

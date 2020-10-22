@@ -6,6 +6,8 @@ import Mapbox
 class OfflineServiceViewController: UITableViewController {
 
     private typealias ActionHandler = (UIAlertAction) -> Void
+
+    private var offlineRegions = [OfflineRegion]()
     
     // MARK: - UIViewController delegate methods
     
@@ -13,14 +15,14 @@ class OfflineServiceViewController: UITableViewController {
         super.viewDidLoad()
         
         setupUI()
-        setupOfflineServiceDataSource()
+        setupOfflineService()
     }
 
     // MARK: - Setting-up methods
     
     private func setupUI() {
-        tableView.register(UINib(nibName: OfflineDataRegionTableViewCell.identifier, bundle: nil),
-                           forCellReuseIdentifier: OfflineDataRegionTableViewCell.identifier)
+        tableView.register(UINib(nibName: OfflineRegionTableViewCell.identifier, bundle: nil),
+                           forCellReuseIdentifier: OfflineRegionTableViewCell.identifier)
         
         tableView.separatorInset = .zero
         tableView.allowsSelection = true
@@ -38,11 +40,15 @@ class OfflineServiceViewController: UITableViewController {
                                                             action: #selector(dismissViewController))
     }
     
-    private func setupOfflineServiceDataSource() {
+    private func setupOfflineService() {
         OfflineService.shared.register(observer: self)
-        OfflineService.shared.fetchAvailableRegions() { [weak self] regions in
+        OfflineService.shared.fetchAvailableRegions() { [weak self] regions,fetchError in
             guard let self = self else { return }
-            self.process(regions: regions)
+            if let error = fetchError {
+                self.presentAlert(OfflineServiceConstants.title, message: error.message)
+                return
+            }
+            self.show(regions: regions)
         }
     }
     
@@ -78,11 +84,9 @@ class OfflineServiceViewController: UITableViewController {
         present(alertController, animated: true, completion: nil)
     }
     
-    // MARK: - OfflineServiceDataSourceDelegate methods
+    // MARK: - OfflineRegion entities management methods
 
-    private var offlineRegions = [OfflineRegion]()
-
-    func process(regions: [OfflineRegion]) {
+    func show(regions: [OfflineRegion]) {
         offlineRegions = regions
         tableView.reloadData()
     }
@@ -106,7 +110,7 @@ class OfflineServiceViewController: UITableViewController {
         for index in 0..<offlineRegions.count {
             if offlineRegions[index].id == region.id {
                 let indexPath = IndexPath(row: index, section: 0)
-                let cell = self.tableView.cellForRow(at: indexPath) as? OfflineDataRegionTableViewCell
+                let cell = self.tableView.cellForRow(at: indexPath) as? OfflineRegionTableViewCell
                 cell?.updateDownloadProgress(for: region)
                 return
             }
@@ -135,7 +139,7 @@ class OfflineServiceViewController: UITableViewController {
     // MARK: - UITableView delegate methods
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: OfflineDataRegionTableViewCell.identifier, for: indexPath) as! OfflineDataRegionTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: OfflineRegionTableViewCell.identifier, for: indexPath) as! OfflineRegionTableViewCell
         cell.presentUI(for: offlineRegions[indexPath.row])
 
         return cell
@@ -172,10 +176,22 @@ class OfflineServiceViewController: UITableViewController {
             OfflineService.shared.download(region: offlineRegion, forDomain: .maps)
         }
 
-        if offlineRegion.mapsPack != nil {
+        if offlineRegion.mapsPack?.status == .available {
             mapsPackTitle = OfflineServiceConstants.deleteMapsPack
             mapsActionHandler = { _ in
                 OfflineService.shared.remove(region: offlineRegion, forDomain: .maps)
+            }
+        }
+        if offlineRegion.mapsPack?.status == .downloading {
+            mapsPackTitle = OfflineServiceConstants.pauseDownloadingMapsPack
+            mapsActionHandler = { _ in
+                OfflineService.shared.cancelDownload(for: offlineRegion, domain: .maps)
+            }
+        }
+        if offlineRegion.mapsPack?.status == .pending {
+            mapsPackTitle = OfflineServiceConstants.continueDownloadingMapsPack
+            mapsActionHandler = { _ in
+                OfflineService.shared.download(region: offlineRegion, forDomain: .maps)
             }
         }
 
@@ -184,10 +200,22 @@ class OfflineServiceViewController: UITableViewController {
             OfflineService.shared.download(region: offlineRegion, forDomain: .navigation)
         }
 
-        if offlineRegion.navigationPack != nil {
+        if offlineRegion.navigationPack?.status == .available {
             navigationPackTitle = OfflineServiceConstants.deleteNavigationPack
             navigationActionHandler = { _ in
                 OfflineService.shared.remove(region: offlineRegion, forDomain: .navigation)
+            }
+        }
+        if offlineRegion.navigationPack?.status == .downloading {
+            navigationPackTitle = OfflineServiceConstants.pauseDownloadingNavigationPack
+            navigationActionHandler = { _ in
+                OfflineService.shared.cancelDownload(for: offlineRegion, domain: .navigation)
+            }
+        }
+        if offlineRegion.navigationPack?.status == .pending {
+            navigationPackTitle = OfflineServiceConstants.continueDownloadingNavigationPack
+            navigationActionHandler = { _ in
+                OfflineService.shared.download(region: offlineRegion, forDomain: .navigation)
             }
         }
 

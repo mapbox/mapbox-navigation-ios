@@ -1,18 +1,6 @@
 import Foundation
 import MapboxCommon
 
-public enum OfflineRegionStatus {
-    case pending
-    case downloading
-    case available
-    case incomplete
-    case verifying
-    case expired
-    case errored(error: OfflineRegionError)
-    case deleting
-    case deleted
-}
-
 /**
  The usage domain of an offline pack.
  */
@@ -37,24 +25,29 @@ public struct OfflineRegionPack {
      Error description for status=Errored
      */
     public var error: OfflineRegionError? {
-        if let error = commonPack.error {
+        if let error = commonPack?.error {
             return OfflineRegionError(error)
         }
         return nil
     }
 
     /**
+     The status of the pack
+     */
+    public internal(set) var status: OfflineRegionStatus = .deleted
+
+    /**
      The file path on disk this offline pack is being downloaded to
      */
-    public var path: String {
-        commonPack.path
+    public var path: String? {
+        commonPack?.path
     }
 
     /**
      The number of bytes that have been downloaded to disk
      */
-    public var bytes: UInt64 {
-        commonPack.bytes
+    public var downloadedBytes: UInt64 {
+        commonPack?.bytes ?? 0
     }
 
     /**
@@ -85,11 +78,12 @@ public struct OfflineRegionPack {
         commonPackMetadata?.data_version
     }
 
-    let commonPack: OfflineDataPack
+    let commonPack: OfflineDataPack?
     var commonPackMetadata: OfflineDataPackMetadata?
 
-    init(pack: OfflineDataPack) {
+    init(pack: OfflineDataPack?, packMetadata: OfflineDataPackMetadata? = nil) {
         self.commonPack = pack
+        self.commonPackMetadata = packMetadata
     }
 }
 
@@ -141,13 +135,6 @@ public class OfflineRegion: Equatable {
         region.geography
     }
 
-    /**
-     Shows if there is data related to the region downloaded to disk
-     */
-    public var isDownloaded: Bool {
-        mapsPack != nil || navigationPack != nil
-    }
-
     public var mapsPack: OfflineRegionPack?
 
     public var navigationPack: OfflineRegionPack?
@@ -156,8 +143,8 @@ public class OfflineRegion: Equatable {
 
     init(region: OfflineDataRegionMetadata, mapsPack: OfflineDataPack? = nil, navigationPack: OfflineDataPack? = nil) {
         self.region = region
-        self.mapsPack = mapsPack != nil ? OfflineRegionPack(pack: mapsPack!) : nil
-        self.navigationPack = navigationPack != nil ? OfflineRegionPack(pack: navigationPack!) : nil
+        self.mapsPack = OfflineRegionPack(pack: mapsPack, packMetadata: region.mapPack)
+        self.navigationPack = OfflineRegionPack(pack: navigationPack, packMetadata: region.navigationPack)
     }
 
     init(region: OfflineDataRegionMetadata, mapsPack: OfflineRegionPack?, navigationPack: OfflineRegionPack?) {

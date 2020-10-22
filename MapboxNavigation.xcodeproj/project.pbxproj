@@ -256,14 +256,15 @@
 		5A9BFA3325347381006E8C2E /* OfflineRegionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9BFA3225347381006E8C2E /* OfflineRegionError.swift */; };
 		5A9BFA35253473B8006E8C2E /* OfflineRegion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9BFA34253473B8006E8C2E /* OfflineRegion.swift */; };
 		5A9BFA372534741B006E8C2E /* OfflineServiceObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9BFA362534741B006E8C2E /* OfflineServiceObserver.swift */; };
+		5A9BFA392541E59A006E8C2E /* OfflineRegionStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9BFA382541E59A006E8C2E /* OfflineRegionStatus.swift */; };
 		6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */; };
 		64847A041F04629D003F3A69 /* Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64847A031F04629D003F3A69 /* Feedback.swift */; };
 		7C12F2D8225B7C320010A931 /* DCA-Arboretum-dummy-faster-route.json in Resources */ = {isa = PBXBuildFile; fileRef = 7C12F2D7225B7C310010A931 /* DCA-Arboretum-dummy-faster-route.json */; };
-		8A19484E25262A0E001E4135 /* OfflineDataRegionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8A5CDDC5251BFA3300235CBC /* OfflineDataRegionTableViewCell.xib */; };
+		8A19484E25262A0E001E4135 /* OfflineRegionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8A5CDDC5251BFA3300235CBC /* OfflineRegionTableViewCell.xib */; };
 		8A53644B251EB2EA002470C4 /* OfflineServiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCF721A5C62400AEA9AA /* OfflineServiceViewController.swift */; };
 		8A53644C251EB2FC002470C4 /* OfflineDataRegionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5CDDC4251BFA3300235CBC /* OfflineDataRegionTableViewCell.swift */; };
 		8A5CDDC9251BFA7300235CBC /* OfflineDataRegionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5CDDC4251BFA3300235CBC /* OfflineDataRegionTableViewCell.swift */; };
-		8A5CDDCB251BFA7900235CBC /* OfflineDataRegionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8A5CDDC5251BFA3300235CBC /* OfflineDataRegionTableViewCell.xib */; };
+		8A5CDDCB251BFA7900235CBC /* OfflineRegionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8A5CDDC5251BFA3300235CBC /* OfflineRegionTableViewCell.xib */; };
 		8A5D70732538EDF900B19558 /* OfflineServiceUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5D70722538EDF900B19558 /* OfflineServiceUtils.swift */; };
 		8A5D70742538EDF900B19558 /* OfflineServiceUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5D70722538EDF900B19558 /* OfflineServiceUtils.swift */; };
 		8A67E05F2527A73600B529DC /* OfflineServiceConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A67E05E2527A73600B529DC /* OfflineServiceConstants.swift */; };
@@ -872,11 +873,12 @@
 		5A9BFA3225347381006E8C2E /* OfflineRegionError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineRegionError.swift; sourceTree = "<group>"; };
 		5A9BFA34253473B8006E8C2E /* OfflineRegion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineRegion.swift; sourceTree = "<group>"; };
 		5A9BFA362534741B006E8C2E /* OfflineServiceObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineServiceObserver.swift; sourceTree = "<group>"; };
+		5A9BFA382541E59A006E8C2E /* OfflineRegionStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineRegionStatus.swift; sourceTree = "<group>"; };
 		6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WaypointConfirmationViewController.swift; path = Example/WaypointConfirmationViewController.swift; sourceTree = "<group>"; };
 		64847A031F04629D003F3A69 /* Feedback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Feedback.swift; sourceTree = "<group>"; };
 		7C12F2D7225B7C310010A931 /* DCA-Arboretum-dummy-faster-route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "DCA-Arboretum-dummy-faster-route.json"; sourceTree = "<group>"; };
 		8A5CDDC4251BFA3300235CBC /* OfflineDataRegionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineDataRegionTableViewCell.swift; sourceTree = "<group>"; };
-		8A5CDDC5251BFA3300235CBC /* OfflineDataRegionTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OfflineDataRegionTableViewCell.xib; sourceTree = "<group>"; };
+		8A5CDDC5251BFA3300235CBC /* OfflineRegionTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OfflineRegionTableViewCell.xib; sourceTree = "<group>"; };
 		8A5D70722538EDF900B19558 /* OfflineServiceUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineServiceUtils.swift; sourceTree = "<group>"; };
 		8A67E05E2527A73600B529DC /* OfflineServiceConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineServiceConstants.swift; sourceTree = "<group>"; };
 		8AA849E824E722410008EE59 /* WaypointStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaypointStyle.swift; sourceTree = "<group>"; };
@@ -1560,6 +1562,7 @@
 				5A9BFA3225347381006E8C2E /* OfflineRegionError.swift */,
 				5A9BFA34253473B8006E8C2E /* OfflineRegion.swift */,
 				5A9BFA362534741B006E8C2E /* OfflineServiceObserver.swift */,
+				5A9BFA382541E59A006E8C2E /* OfflineRegionStatus.swift */,
 			);
 			name = Offline;
 			sourceTree = "<group>";
@@ -1570,7 +1573,7 @@
 				8A67E05E2527A73600B529DC /* OfflineServiceConstants.swift */,
 				3529FCF721A5C62400AEA9AA /* OfflineServiceViewController.swift */,
 				8A5CDDC4251BFA3300235CBC /* OfflineDataRegionTableViewCell.swift */,
-				8A5CDDC5251BFA3300235CBC /* OfflineDataRegionTableViewCell.xib */,
+				8A5CDDC5251BFA3300235CBC /* OfflineRegionTableViewCell.xib */,
 				8A5D70722538EDF900B19558 /* OfflineServiceUtils.swift */,
 			);
 			path = OfflineService;
@@ -2211,7 +2214,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DA303C9521B728DD00F921DC /* Localizable.strings in Resources */,
-				8A5CDDCB251BFA7900235CBC /* OfflineDataRegionTableViewCell.xib in Resources */,
+				8A5CDDCB251BFA7900235CBC /* OfflineRegionTableViewCell.xib in Resources */,
 				C57AD98A20EAA39A0087B24B /* Entitlements.plist in Resources */,
 				35002D691E5F6B2F0090E733 /* Main.storyboard in Resources */,
 				35002D611E5F6ADB0090E733 /* Assets.xcassets in Resources */,
@@ -2295,7 +2298,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DA303C9621B728DD00F921DC /* Localizable.strings in Resources */,
-				8A19484E25262A0E001E4135 /* OfflineDataRegionTableViewCell.xib in Resources */,
+				8A19484E25262A0E001E4135 /* OfflineRegionTableViewCell.xib in Resources */,
 				C53F2EF320EBC95600D9798F /* Entitlements.plist in Resources */,
 				C53F2EF420EBC95600D9798F /* Main.storyboard in Resources */,
 				C53F2EF620EBC95600D9798F /* Assets.xcassets in Resources */,
@@ -2703,6 +2706,7 @@
 				354A9BCB20EA9BDA00F03325 /* EventDetails.swift in Sources */,
 				8D1A5CD2212DDFCD0059BA4A /* DispatchTimer.swift in Sources */,
 				5A9BFA372534741B006E8C2E /* OfflineServiceObserver.swift in Sources */,
+				5A9BFA392541E59A006E8C2E /* OfflineRegionStatus.swift in Sources */,
 				C561735B1F182113005954F6 /* RouteStep.swift in Sources */,
 				354A9BC620EA991900F03325 /* SessionState.swift in Sources */,
 				35C98733212E037900808B82 /* RouteState.swift in Sources */,

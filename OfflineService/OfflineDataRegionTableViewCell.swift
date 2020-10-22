@@ -1,9 +1,9 @@
 import UIKit
 import MapboxCoreNavigation
 
-class OfflineDataRegionTableViewCell: UITableViewCell {
+class OfflineRegionTableViewCell: UITableViewCell {
     
-    static let identifier = String(describing: OfflineDataRegionTableViewCell.self)
+    static let identifier = String(describing: OfflineRegionTableViewCell.self)
     
     @IBOutlet weak var containerStackView: UIStackView!
     
@@ -58,27 +58,25 @@ class OfflineDataRegionTableViewCell: UITableViewCell {
     // MARK: - Public UI update related methods
 
     func showDownloadProgress(for domain: OfflineRegionDomain, dataPack: OfflineRegionPack, region: OfflineRegion) {
-        DispatchQueue.main.async {
-            self.updateDownloadProgressContainerHeight(for: domain, constant: 25.0)
+        self.updateDownloadProgressContainerHeight(for: domain, constant: 25.0)
 
-            if let totalSize = dataPack.totalBytes {
-                if domain == .maps {
-                    self.mapsDownloadProgressView.progress = Float(dataPack.bytes) / Float(totalSize)
-                    self.mapsDownloadProgressLabel.text = "\(OfflineDataRegionTableViewCell.byteCountFormatter.string(fromByteCount: Int64(dataPack.bytes))) / \(OfflineDataRegionTableViewCell.byteCountFormatter.string(fromByteCount: Int64(totalSize)))"
-                } else {
-                    self.navigationDownloadProgressView.progress = Float(dataPack.bytes) / Float(totalSize)
-                    self.navigationDownloadProgressLabel.text = "\(OfflineDataRegionTableViewCell.byteCountFormatter.string(fromByteCount: Int64(dataPack.bytes))) / \(OfflineDataRegionTableViewCell.byteCountFormatter.string(fromByteCount: Int64(totalSize)))"
-                }
+        if let totalSize = dataPack.totalBytes {
+            if domain == .maps {
+                self.mapsDownloadProgressView.progress = Float(dataPack.downloadedBytes) / Float(totalSize)
+                self.mapsDownloadProgressLabel.text = "\(OfflineRegionTableViewCell.byteCountFormatter.string(fromByteCount: Int64(dataPack.downloadedBytes))) / \(OfflineRegionTableViewCell.byteCountFormatter.string(fromByteCount: Int64(totalSize)))"
+            } else {
+                self.navigationDownloadProgressView.progress = Float(dataPack.downloadedBytes) / Float(totalSize)
+                self.navigationDownloadProgressLabel.text = "\(OfflineRegionTableViewCell.byteCountFormatter.string(fromByteCount: Int64(dataPack.downloadedBytes))) / \(OfflineRegionTableViewCell.byteCountFormatter.string(fromByteCount: Int64(totalSize)))"
             }
         }
     }
 
     func updateDownloadProgress(for region: OfflineRegion) {
         DispatchQueue.main.async {
-            if let mapsPack = region.mapsPack, mapsPack.bytes < mapsPack.totalBytes ?? 0 {
+            if let mapsPack = region.mapsPack, mapsPack.status == .downloading || mapsPack.status == .incomplete {
                 self.showDownloadProgress(for: .maps, dataPack: mapsPack, region: region)
             }
-            if let navigationPack = region.navigationPack, navigationPack.bytes < navigationPack.totalBytes ?? 0 {
+            if let navigationPack = region.navigationPack, navigationPack.status == .downloading || navigationPack.status == .incomplete {
                 self.showDownloadProgress(for: .navigation, dataPack: navigationPack, region: region)
             }
         }
@@ -89,30 +87,31 @@ class OfflineDataRegionTableViewCell: UITableViewCell {
             self.updateDownloadProgressContainerHeight(constant: 0.0)
 
             self.identifierLabel.text = region.id
-            self.lastUpdatedLabel.text = "\(OfflineServiceConstants.lastUpdated): \(OfflineDataRegionTableViewCell.dateFormatter.string(from: region.lastUpdated))"
+            self.lastUpdatedLabel.text = "\(OfflineServiceConstants.lastUpdated): \(OfflineRegionTableViewCell.dateFormatter.string(from: region.lastUpdated))"
 
             if let mapPack = region.mapsPack {
                 self.mapsPackLastUpdatedLabel.text = "\(OfflineServiceConstants.lastUpdated): \(mapPack.dataVersion ?? "")"
-                self.mapsPackSizeLabel.text = "\(OfflineServiceConstants.size): \(OfflineDataRegionTableViewCell.byteCountFormatter.string(fromByteCount: Int64(mapPack.bytes)))"
+                self.mapsPackSizeLabel.text = "\(OfflineServiceConstants.size): \(OfflineRegionTableViewCell.byteCountFormatter.string(fromByteCount: Int64(mapPack.totalBytes ?? 0)))"
 
-                if mapPack.bytes < mapPack.totalBytes ?? 0 {
+                if mapPack.status == .downloading || mapPack.status == .incomplete {
                     self.showDownloadProgress(for: .maps, dataPack: mapPack, region: region)
                 }
             }
 
-            if region.mapsPack != nil {
+            if region.mapsPack?.status == .available {
                 self.mapsPackLabel.textColor = .green
             }
 
             if let navigationPack = region.navigationPack {
                 self.navigationPackLastUpdatedLabel.text = "\(OfflineServiceConstants.lastUpdated): \(navigationPack.dataVersion ?? "")"
-                self.navigationPackSizeLabel.text = "\(OfflineServiceConstants.size): \(OfflineDataRegionTableViewCell.byteCountFormatter.string(fromByteCount: Int64(navigationPack.bytes)))"
-                if navigationPack.bytes < navigationPack.totalBytes ?? 0 {
+                self.navigationPackSizeLabel.text = "\(OfflineServiceConstants.size): \(OfflineRegionTableViewCell.byteCountFormatter.string(fromByteCount: Int64(navigationPack.totalBytes ?? 0)))"
+
+                if navigationPack.status == .downloading || navigationPack.status == .incomplete {
                     self.showDownloadProgress(for: .navigation, dataPack: navigationPack, region: region)
                 }
             }
 
-            if region.navigationPack != nil {
+            if region.navigationPack?.status == .available {
                 self.navigationPackLabel.textColor = .green
             }
         }
