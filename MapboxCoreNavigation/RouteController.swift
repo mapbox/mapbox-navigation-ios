@@ -162,7 +162,7 @@ open class RouteController: NSObject {
         let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
         var tilesConfig = TilesConfig()
         
-        // In case if `tilesVersion` were provided configure `Navigator` to use it, so that sideloaded
+        // In case if `tilesVersion` was provided configure `Navigator` to use it, so that sideloaded
         // tiles (e.g. via Offline Service) can be used.
         if let tilesVersion = tilesVersion {
             let endpointConfig = TileEndpointConfiguration(directions: directions, tilesVersion: tilesVersion)
