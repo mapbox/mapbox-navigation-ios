@@ -1,5 +1,5 @@
 PODS:
-  - Mapbox-iOS-SDK (6.2.1):
+  - Mapbox-iOS-SDK (6.2.2):
     - MapboxMobileEvents (~> 0.10.4)
   - MapboxAccounts (2.3.0)
   - MapboxCommon (7.1.2)
@@ -50,7 +50,7 @@ EXTERNAL SOURCES:
     :path: "../../../"
 
 SPEC CHECKSUMS:
-  Mapbox-iOS-SDK: c5a2ec3a3a0a77ee0ba78f91380e83898cb6aa41
+  Mapbox-iOS-SDK: 3f83697efa97f3c21ea7f65c1e75205e1dc030ee
   MapboxAccounts: 84abfdde95d9dc483f604c1b0fe1861edf691ce7
   MapboxCommon: e469f6c62de29e1906c37e0bce65f6826e7fb9ac
   MapboxCoreNavigation: 6de899b067714754670dca5c1fd507a085dcba49
