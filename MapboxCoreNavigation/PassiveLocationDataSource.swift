@@ -22,7 +22,7 @@ open class PassiveLocationDataSource: NSObject {
         self.directions = directions
         
         let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
-        self.navigator = Navigator(profile: settingsProfile, config: NavigatorConfig() , customConfig: "")
+        self.navigator = Navigator(profile: settingsProfile, config: NavigatorConfig() , customConfig: "", tilesConfig: TilesConfig())
         
         self.systemLocationManager = systemLocationManager ?? NavigationLocationManager()
         
@@ -44,7 +44,7 @@ open class PassiveLocationDataSource: NSObject {
     /**
      The underlying navigator that performs map matching.
      */
-    let navigator: Navigator
+    var navigator: Navigator
     
     /**
      Whether the navigator’s router has been configured.
@@ -107,9 +107,14 @@ open class PassiveLocationDataSource: NSObject {
 
     func configureNavigator(withURL tilesURL: URL, tilesVersion: String) {
         let endpointConfig = TileEndpointConfiguration(directions: directions, tilesVersion: tilesVersion)
-
-        let params = RouterParams(tilesPath: tilesURL.path, inMemoryTileCache: nil, mapMatchingSpatialCache: nil, threadsCount: nil, endpointConfig: endpointConfig)
-        navigator.configureRouter(for: params)
+        let tilesConfig = TilesConfig(tilesPath: tilesURL.path,
+                                      inMemoryTileCache: nil,
+                                      mapMatchingSpatialCache: nil,
+                                      threadsCount: nil,
+                                      endpointConfig: endpointConfig)
+        
+        let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
+        navigator = Navigator(profile: settingsProfile, config: NavigatorConfig() , customConfig: "", tilesConfig: tilesConfig)
         
         isConfigured = true
     }
