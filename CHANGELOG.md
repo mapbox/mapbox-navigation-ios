@@ -16,7 +16,8 @@
 ## v1.0.1
 
 ### User location
-* Fixed [#2671](https://github.com/mapbox/mapbox-navigation-ios/issues/2671) and [#2660](https://github.com/mapbox/mapbox-navigation-ios/issues/2660) issues which were causing excessive calls to `layoutSubviews()` on iOS and CarPlay by updating to Mapbox Maps SDK for iOS v6.2.2. ([#2699](https://github.com/mapbox/mapbox-navigation-ios/pull/2699))
+
+* Fixed issues which was causing unsmooth user puck updates on iOS and inability to zoom-in to current location at the start of navigation on CarPlay by updating to Mapbox Maps SDK for iOS v6.2.2. ([#2699](https://github.com/mapbox/mapbox-navigation-ios/pull/2699))
 
 ## v1.0.0
 
