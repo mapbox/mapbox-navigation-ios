@@ -27,12 +27,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     private func listMapboxFrameworks() {
-        print("Versions of linked Mapbox frameworks:")
+        NSLog("Versions of linked Mapbox frameworks:")
         
         for framework in Bundle.allFrameworks {
             if let bundleIdentifier = framework.bundleIdentifier, bundleIdentifier.contains("mapbox") {
                 let version = "CFBundleShortVersionString"
-                print("\(bundleIdentifier): \(framework.infoDictionary?[version] ?? "Unknown version")")
+                NSLog("\(bundleIdentifier): \(framework.infoDictionary?[version] ?? "Unknown version")")
             }
         }
     }
