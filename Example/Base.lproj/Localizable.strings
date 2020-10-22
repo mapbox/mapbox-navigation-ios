@@ -4,8 +4,8 @@
 /* CPAlertTemplate OK button title */
 "CARPLAY_OK" = "OK";
 
-/* Title of action for dismissing waypoint removal confirmation sheet */
-"REMOVE_WAYPOINT_CONFIRM_CANCEL" = "Cancel";
+/* Generic cancel title */
+"CANCEL_TITLE" = "Cancel";
 
 /* Message of alert confirming waypoint removal */
 "REMOVE_WAYPOINT_CONFIRM_MSG" = "Do you want to remove this waypoint?";
@@ -16,3 +16,8 @@
 /* Title of alert confirming waypoint removal */
 "REMOVE_WAYPOINT_CONFIRM_TITLE" = "Remove Waypoint?";
 
+/* Offline Service Title */
+"OFFLINE_SERVICE_TITLE" = "Offline Service";
+
+/* Close Title */
+"CLOSE_TITLE" = "Close";

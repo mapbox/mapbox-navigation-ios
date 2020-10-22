@@ -6,6 +6,10 @@
 
 * MapboxNavigationNative dependency was updated to v22.0.5 and MapboxCommon to v7.1.2. ([#2648](https://github.com/mapbox/mapbox-navigation-ios/pull/2648))
 
+### Offline
+
+* Added Offline Service support for Maps and Navigation. To allow Mapbox Maps SDK to pick up downloaded regions, `OfflineService` has to be instantiated prior to `MGLMapView`. In case of offline navigation `MapboxNavigationService` and `PassiveLocationDataSource` has to contain `tilesVersion` parameter of downloaded Navigation region. Undeprecated `NavigationDirections`, `OfflineRouteCompletionHandler` and `NavigationDirections.calculate(_:offline:completionHandler:)` and introduced `NavigationDirections.configureRouter(tilesVersion:)` to be able to request route in offline. ([#2653](https://github.com/mapbox/mapbox-navigation-ios/pull/2653))
+
 ### Other changes
 
 * `RouteProgress`, `RouteLegProgress`, and `RouteStepProgress` now conform to the `Codable` protocol. ([#2615](https://github.com/mapbox/mapbox-navigation-ios/pull/2615))

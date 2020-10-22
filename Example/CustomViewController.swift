@@ -37,7 +37,12 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
         super.viewDidLoad()
         
         let locationManager = simulateLocation ? SimulatedLocationManager(route: userIndexedRoute!.0) : NavigationLocationManager()
-        navigationService = MapboxNavigationService(route: userIndexedRoute!.0, routeIndex: userIndexedRoute!.1, routeOptions: userRouteOptions!, locationSource: locationManager, simulating: simulateLocation ? .always : .onPoorGPS)
+        navigationService = MapboxNavigationService(route: userIndexedRoute!.0,
+                                                    routeIndex: userIndexedRoute!.1,
+                                                    routeOptions: userRouteOptions!,
+                                                    locationSource: locationManager,
+                                                    simulating: simulateLocation ? .always : .onPoorGPS,
+                                                    tilesVersion: OfflineServiceConstants.tilesVersion)
         
         mapView.delegate = self
         mapView.compassView.isHidden = true

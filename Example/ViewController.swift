@@ -2,8 +2,6 @@ import UIKit
 import MapboxCoreNavigation
 import MapboxNavigation
 import MapboxDirections
-import UserNotifications
-import AVKit
 
 private typealias RouteRequestSuccess = ((RouteResponse) -> Void)
 private typealias RouteRequestFailure = ((Error) -> Void)
@@ -19,6 +17,7 @@ class ViewController: UIViewController {
     
     var trackPolyline: MGLPolyline?
     var rawTrackPolyline: MGLPolyline?
+    let navigationDirections = NavigationDirections()
     
     // MARK: Properties
     var mapView: NavigationMapView? {
@@ -110,8 +109,9 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "settings"), style: .plain, target: self, action: #selector(openSettings))
-
-        navigationItem.rightBarButtonItem?.isEnabled = SettingsViewController.numberOfSections > 0
+        navigationItem.rightBarButtonItem?.isEnabled = true
+        
+        setupOfflineService()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -135,11 +135,6 @@ class ViewController: UIViewController {
                 CLLocationManager().requestWhenInUseAuthorization()
             }
         }
-    }
-    
-    @IBAction func openSettings() {
-        let controller = UINavigationController(rootViewController: SettingsViewController())
-        present(controller, animated: true, completion: nil)
     }
 
     // MARK: Gesture Recognizer Handlers
@@ -181,6 +176,11 @@ class ViewController: UIViewController {
 
     @IBAction func startButtonPressed(_ sender: Any) {
         presentActionsAlertController()
+    }
+    
+    @IBAction func openSettings() {
+        let controller = UINavigationController(rootViewController: OfflineServiceViewController())
+        present(controller, animated: true, completion: nil)
     }
     
     private func clearMapView() {
@@ -255,7 +255,19 @@ class ViewController: UIViewController {
             case let .success(response):
                 success(response)
             case let .failure(error):
-                failure?(error)
+                print("Error occured while requesting route: \(error)")
+                
+                // Attempt to load offline Navigation tiles, depending on version of Navigation pack `tilesVersion` property
+                // should be changed accordingly.
+                self.navigationDirections.configureRouter(tilesVersion: OfflineServiceConstants.tilesVersion)
+                self.navigationDirections.calculate(options, offline: true) { (session, result) in
+                    switch result {
+                    case let .failure(error):
+                        failure?(error)
+                    case let .success(response):
+                        success(response)
+                    }
+                }
             }
         }
     }
@@ -359,7 +371,11 @@ class ViewController: UIViewController {
     func navigationService(route: Route, routeIndex: Int, options: RouteOptions) -> NavigationService {
         let simulate = simulationButton.isSelected
         let mode: SimulationMode = simulate ? .always : .onPoorGPS
-        return MapboxNavigationService(route: route, routeIndex: routeIndex, routeOptions: options, simulating: mode)
+        return MapboxNavigationService(route: route,
+                                       routeIndex: routeIndex,
+                                       routeOptions: options,
+                                       simulating: mode,
+                                       tilesVersion: OfflineServiceConstants.tilesVersion)
     }
 
     func presentAndRemoveMapview(_ navigationViewController: NavigationViewController, completion: CompletionHandler?) {
@@ -415,6 +431,12 @@ class ViewController: UIViewController {
     func uninstall(_ mapView: NavigationMapView) {
         NotificationCenter.default.removeObserver(self, name: .passiveLocationDataSourceDidUpdate, object: nil)
         mapView.removeFromSuperview()
+    }
+    
+    private func setupOfflineService() {
+        // Trigger OfflineServiceManager singleton creation to make sure that Maps SDK is notified whenever offline packs are available.
+        let _ = OfflineServiceManager.instance
+        NSLog("Suggested tiles path for Offline Service: \(Bundle.mapboxCoreNavigation.suggestedTileURL?.path ?? "Not available")")
     }
 }
 
@@ -479,7 +501,7 @@ extension ViewController: NavigationMapViewDelegate {
         let title = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_TITLE", value: "Remove Waypoint?", comment: "Title of alert confirming waypoint removal")
         let message = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_MSG", value: "Do you want to remove this waypoint?", comment: "Message of alert confirming waypoint removal")
         let removeTitle = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_REMOVE", value: "Remove Waypoint", comment: "Title of alert action for removing a waypoint")
-        let cancelTitle = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_CANCEL", value: "Cancel", comment: "Title of action for dismissing waypoint removal confirmation sheet")
+        let cancelTitle = NSLocalizedString("CANCEL_TITLE", value: "Cancel", comment: "Title of action for dismissing waypoint removal confirmation sheet")
         
         let waypointRemovalAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let removeAction = UIAlertAction(title: removeTitle, style: .destructive, handler: approve)
@@ -581,6 +603,9 @@ extension ViewController: VisualInstructionDelegate {
 extension ViewController {
     func trackLocations(mapView: NavigationMapView) {
         let dataSource = PassiveLocationDataSource()
+        // In case if there is no internet connection it's possible to create instance of `PassiveLocationDataSource`
+        // and point to version of sideloaded routing packs. For example:
+        // let dataSource = PassiveLocationDataSource(tilesVersion: OfflineServiceConstants.tilesVersion)
         let locationManager = PassiveLocationManager(dataSource: dataSource)
         mapView.locationManager = locationManager
         

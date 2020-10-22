@@ -15,14 +15,30 @@ open class PassiveLocationDataSource: NSObject {
      Initializes the location data source with the given directions service.
      
      - parameter directions: The directions service that allows the location data source to access road network data. If this argument is omitted, the shared `Directions` object is used.
+     - parameter systemLocationManager: The location manager that provides raw locations for the receiver to match against the road network.
+     - parameter tilesVersion: Version of tiles downloaded via Offline Service.
      
      - postcondition: Call `startUpdatingLocation(completionHandler:)` afterwards to begin receiving location updates.
      */
-    public required init(directions: Directions = Directions.shared, systemLocationManager: NavigationLocationManager? = nil) {
+    public required init(directions: Directions = Directions.shared, systemLocationManager: NavigationLocationManager? = nil, tilesVersion: String? = nil) {
         self.directions = directions
         
         let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
-        self.navigator = Navigator(profile: settingsProfile, config: NavigatorConfig() , customConfig: "", tilesConfig: TilesConfig())
+        var tilesConfig = TilesConfig()
+        
+        // In case if `tilesVersion` was provided configure `Navigator` to use it, so that sideloaded
+        // tiles (e.g. via Offline Service) can be used.
+        if let tilesVersion = tilesVersion {
+            let endpointConfig = TileEndpointConfiguration(directions: directions, tilesVersion: tilesVersion)
+            tilesConfig = TilesConfig(tilesPath: Bundle.mapboxCoreNavigation.suggestedTileURL(version: tilesVersion)?.path ?? "",
+                                      inMemoryTileCache: nil,
+                                      mapMatchingSpatialCache: nil,
+                                      threadsCount: nil,
+                                      endpointConfig: endpointConfig)
+            isConfigured = true
+        }
+        
+        self.navigator = Navigator(profile: settingsProfile, config: NavigatorConfig(), customConfig: "", tilesConfig: tilesConfig)
         
         self.systemLocationManager = systemLocationManager ?? NavigationLocationManager()
         
@@ -114,7 +130,7 @@ open class PassiveLocationDataSource: NSObject {
                                       endpointConfig: endpointConfig)
         
         let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
-        navigator = Navigator(profile: settingsProfile, config: NavigatorConfig() , customConfig: "", tilesConfig: tilesConfig)
+        navigator = Navigator(profile: settingsProfile, config: NavigatorConfig(), customConfig: "", tilesConfig: tilesConfig)
         
         isConfigured = true
     }
