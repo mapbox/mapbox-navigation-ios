@@ -135,7 +135,7 @@ public class NavigationDirections: Directions {
     public func configureRouter(tilesVersion: String) {
         NavigationDirectionsConstants.offlineSerialQueue.sync {
             let endpointConfig = TileEndpointConfiguration(directions: Directions.shared, tilesVersion: tilesVersion)
-            let tilesConfig = TilesConfig(tilesPath: "",
+            let tilesConfig = TilesConfig(tilesPath: Bundle.mapboxCoreNavigation.suggestedTileURL(version: tilesVersion)?.path ?? "",
                                           inMemoryTileCache: nil,
                                           mapMatchingSpatialCache: nil,
                                           threadsCount: nil,

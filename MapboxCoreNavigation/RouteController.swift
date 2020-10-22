@@ -166,7 +166,7 @@ open class RouteController: NSObject {
         // tiles (e.g. via Offline Service) can be used.
         if let tilesVersion = tilesVersion {
             let endpointConfig = TileEndpointConfiguration(directions: directions, tilesVersion: tilesVersion)
-            tilesConfig = TilesConfig(tilesPath: "",
+            tilesConfig = TilesConfig(tilesPath: Bundle.mapboxCoreNavigation.suggestedTileURL(version: tilesVersion)?.path ?? "",
                                       inMemoryTileCache: nil,
                                       mapMatchingSpatialCache: nil,
                                       threadsCount: nil,
