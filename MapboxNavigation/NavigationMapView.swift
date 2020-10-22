@@ -271,13 +271,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         super.layoutSubviews()
         
         //If the map is in tracking mode, make sure we update the camera after the layout pass.
-        if (tracksUserCourse) {            
-            if #available(iOS 14.0, *) {
-                // Since layoutSubviews() is called too often on iOS 14.0, it leads to lags in `UserCourseView` animated updates.
-                // Workaround is to allow `UserCourseView` updates only on iOS versions lower than 14.0.
-            } else {
-                updateCourseTracking(location: userLocationForCourseTracking, camera:self.camera, animated: false)
-            }
+        if (tracksUserCourse) {
+            updateCourseTracking(location: userLocationForCourseTracking, camera:self.camera, animated: false)
         }
     }
     
