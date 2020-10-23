@@ -25,6 +25,9 @@ extension NavigationView {
         mapView.attributionButton.trailingAnchor.constraint(equalTo: safeTrailingAnchor, constant: -8).isActive = true
         mapView.attributionButton.bottomAnchor.constraint(equalTo: bottomBannerContainerView.topAnchor, constant: -10).isActive = true
         
+        mapView.logoView.leadingAnchor.constraint(equalTo: safeLeadingAnchor, constant: 8).isActive = true
+        mapView.logoView.bottomAnchor.constraint(equalTo: bottomBannerContainerView.topAnchor, constant: -10).isActive = true
+        
         wayNameView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         wayNameView.bottomAnchor.constraint(equalTo: bottomBannerContainerView.topAnchor, constant: -10).isActive = true
         
