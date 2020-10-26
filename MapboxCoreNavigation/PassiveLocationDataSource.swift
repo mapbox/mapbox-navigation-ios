@@ -15,6 +15,7 @@ open class PassiveLocationDataSource: NSObject {
      Initializes the location data source with the given directions service.
      
      - parameter directions: The directions service that allows the location data source to access road network data. If this argument is omitted, the shared `Directions` object is used.
+     - parameter systemLocationManager: The location manager that provides raw locations for the receiver to match against the road network.
      
      - postcondition: Call `startUpdatingLocation(completionHandler:)` afterwards to begin receiving location updates.
      */

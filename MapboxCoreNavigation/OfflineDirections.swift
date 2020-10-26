@@ -110,7 +110,7 @@ public class NavigationDirections: Directions {
     /**
      Configures the router with the given set of tiles.
      
-     - parameter tilesURL: The location where the tiles has been sideloaded to.
+     - parameter tilesURL: The location where the tiles have been sideloaded to.
      - parameter completionHandler: A block that is called when the router is completely configured.
      */
     public func configureRouter(tilesURL: URL, completionHandler: @escaping NavigationDirectionsCompletionHandler) {
