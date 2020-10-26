@@ -27,7 +27,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      
      In cases where you need to update the route after navigation has started, you can set a new route here and `NavigationViewController` will update its UI accordingly.
      */
-    var indexedRoute: IndexedRoute {
+    public var indexedRoute: IndexedRoute {
         get {
             return navigationService.indexedRoute
         }
