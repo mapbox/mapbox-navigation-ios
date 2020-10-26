@@ -6,18 +6,19 @@
 
 * MapboxNavigationNative dependency was updated to v22.0.5 and MapboxCommon to v7.1.2. ([#2648](https://github.com/mapbox/mapbox-navigation-ios/pull/2648))
 
+### User location
+
+* Fixed issues which was causing unsmooth user puck updates on iOS and inability to zoom-in to current location at the start of navigation on CarPlay by updating to Mapbox Maps SDK for iOS v6.2.2. ([#2699](https://github.com/mapbox/mapbox-navigation-ios/pull/2699))
+
 ### Other changes
 
 * `RouteProgress`, `RouteLegProgress`, and `RouteStepProgress` now conform to the `Codable` protocol. ([#2615](https://github.com/mapbox/mapbox-navigation-ios/pull/2615))
 * Fixed an issue where `NavigationMapView` redrew at a low frame rate even when the device was plugged in. ([#2643](https://github.com/mapbox/mapbox-navigation-ios/pull/2643))
 * Fixed an issue where the route line flickered when refreshing. ([#2642](https://github.com/mapbox/mapbox-navigation-ios/pull/2642))
 * Fixed an issue where the End of route view UI is broken prior to iOS 11. ([#2690](https://github.com/mapbox/mapbox-navigation-ios/pull/2690))
-
-## v1.0.1
-
-### User location
-
-* Fixed issues which was causing unsmooth user puck updates on iOS and inability to zoom-in to current location at the start of navigation on CarPlay by updating to Mapbox Maps SDK for iOS v6.2.2. ([#2699](https://github.com/mapbox/mapbox-navigation-ios/pull/2699))
+* Fixed an issue where completed waypoints remained on map after rerouting. ([#2378](https://github.com/mapbox/mapbox-navigation-ios/pull/2378))
+* Fixed an issue where positioning icon was not highlighted on CarPlay when using iOS 14.0. ([#2681](https://github.com/mapbox/mapbox-navigation-ios/issues/2681))
+* Fixed an issue where ETA label font was too small during turn-by-turn navigation. ([#2679](https://github.com/mapbox/mapbox-navigation-ios/pull/2679))
 
 ## v1.0.0
 
