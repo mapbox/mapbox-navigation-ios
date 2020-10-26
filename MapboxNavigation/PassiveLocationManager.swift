@@ -64,7 +64,10 @@ open class PassiveLocationManager: NSObject, MGLLocationManager {
     }
 
     public func startUpdatingLocation() {
-        dataSource.startUpdatingLocation()
+        dataSource.startUpdatingLocation { (error) in
+            guard let error = error else { return }
+            self.delegate?.locationManager(self, didFailWithError: error)
+        }
     }
 
     public func stopUpdatingLocation() {

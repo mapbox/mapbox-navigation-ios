@@ -7,7 +7,7 @@ import UIKit
 /**
  `NavigationLocationManager` is the base location manager which handles permissions and background modes.
  */
-open class NavigationLocationManager: CLLocationManager{
+open class NavigationLocationManager: CLLocationManager {
     override public init() {
         super.init()
         

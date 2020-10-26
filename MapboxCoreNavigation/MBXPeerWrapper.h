@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
 
-@interface MBXPeerWrapper
+@interface MBXPeerWrapper: NSObject
 
 @end
