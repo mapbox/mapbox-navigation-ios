@@ -403,7 +403,7 @@ extension TopBannerViewController: NavigationComponent {
         }
     }
     
-    public func navigationService(_ service: NavigationService, willBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
+    public func navigationService(_ service: NavigationService, didBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
         guard reason == .manual else { return }
         statusView.showSimulationStatus(speed: Int(service.simulationSpeedMultiplier))
     }

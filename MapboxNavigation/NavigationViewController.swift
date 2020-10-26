@@ -778,9 +778,7 @@ extension NavigationViewController {
         let displayValue = 1+min(Int(9 * statusView.value), 8)
         statusView.showSimulationStatus(speed: displayValue)
 
-        if let locationManager = navigationService.locationManager as? SimulatedLocationManager {
-            locationManager.speedMultiplier = Double(displayValue)
-        }
+        navigationService.simulationSpeedMultiplier = Double(displayValue)
     }
 }
 // MARK: TopBannerViewControllerDelegate
