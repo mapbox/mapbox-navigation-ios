@@ -4,6 +4,9 @@ import Turf
 
 fileprivate let maximumSpeed: CLLocationSpeed = 30 // ~108 kmh
 fileprivate let minimumSpeed: CLLocationSpeed = 6 // ~21 kmh
+// add variables to document the average speed from past route info
+fileprivate var previousAverageSpeed: Double = 30
+fileprivate var previousSpeedCount: Double = 0
 fileprivate var distanceFilter: CLLocationDistance = 10
 fileprivate var verticalAccuracy: CLLocationAccuracy = 10
 fileprivate var horizontalAccuracy: CLLocationAccuracy = 40
@@ -166,7 +169,14 @@ open class SimulatedLocationManager: NavigationLocationManager {
             let nextCoordinateOnRoute = shape.coordinates.after(element: shape.coordinates[closestCoordinateOnRoute.index]),
             let time = expectedSegmentTravelTimes.optional[closestCoordinateOnRoute.index] {
             let distance = shape.coordinates[closestCoordinateOnRoute.index].distance(to: nextCoordinateOnRoute)
-            currentSpeed =  max(distance / time, 2)
+            // add upper bound to route generated speed
+            currentSpeed =  min(max(distance / time, 2), maximumSpeed)
+            if previousSpeedCount == 0 {
+                previousAverageSpeed = currentSpeed
+            } else {
+                previousAverageSpeed = (previousAverageSpeed * previousSpeedCount + currentSpeed) / (previousSpeedCount + 1)
+            }
+            previousSpeedCount += 1
         } else {
             currentSpeed = calculateCurrentSpeed(distance: distance, coordinatesNearby: coordinatesNearby, closestLocation: closestLocation)
         }
@@ -192,19 +202,19 @@ open class SimulatedLocationManager: NavigationLocationManager {
         }
         // Maximum speed if we are a safe distance from the closest coordinate
         else if distance >= safeDistance {
-            return maximumSpeed
+            return previousAverageSpeed
         }
         // Base speed on previous or upcoming turn penalty
         else {
             let reversedTurnPenalty = maximumTurnPenalty - closestLocation.turnPenalty
-            return reversedTurnPenalty.scale(minimumIn: minimumTurnPenalty, maximumIn: maximumTurnPenalty, minimumOut: minimumSpeed, maximumOut: maximumSpeed)
+            return reversedTurnPenalty.scale(minimumIn: minimumTurnPenalty, maximumIn: maximumTurnPenalty)
         }
     }
 }
 
 extension Double {
-    fileprivate func scale(minimumIn: Double, maximumIn: Double, minimumOut: Double, maximumOut: Double) -> Double {
-        return ((maximumOut - minimumOut) * (self - minimumIn) / (maximumIn - minimumIn)) + minimumOut
+    fileprivate func scale(minimumIn: Double, maximumIn: Double) -> Double {
+        return previousAverageSpeed * (self - minimumIn) / (maximumIn - minimumIn)
     }
 }
 
