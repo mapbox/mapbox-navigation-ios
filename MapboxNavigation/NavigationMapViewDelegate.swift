@@ -83,6 +83,8 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
     
     /**
      Asks the receiver to return an MGLShape that describes the geometry of the route.
+        
+     Resulting `MGLShape` will then be styled using `NavigationMapView.navigationMapView(_: mainRouteStyleLayerWithIdentifier: source:)` provided style or a default congestion style if above delegate method was not implemented. In latter case, consider modifing your custom `MGLShape` `attributes` to have 'isAlternateRoute' key set to 'false'. Otherwise style predicate condition will filter out the shape.
      - note: The returned value represents the route in full detail. For example, individual `MGLPolyline` objects in an `MGLShapeCollectionFeature` object can represent traffic congestion segments. For improved performance, you should also implement `navigationMapView(_:simplifiedShapeFor:)`, which defines the overall route as a single feature.
      - parameter mapView: The NavigationMapView.
      - parameter routes: The routes that the sender is asking about. The first route will always be rendered as the main route, while all subsequent routes will be rendered as alternative routes.
@@ -92,6 +94,8 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
     
     /**
      Asks the receiver to return an MGLShape that describes the geometry of the route at lower zoomlevels.
+     
+     Resulting `MGLShape` will then be styled using `NavigationMapView.navigationMapView(_: mainRouteCasingStyleLayerWithIdentifier: source:)` provided style or a default style if above delegate method was not implemented. In latter case, consider modifing your custom `MGLShape` `attributes` to have 'isAlternateRoute' key set to 'false'. Otherwise style predicate condition will filter out the shape.
      - note: The returned value represents the simplfied route. It is designed to be used with `navigationMapView(_:shapeFor:), and if used without its parent method, can cause unexpected behavior.
      - parameter mapView: The NavigationMapView.
      - parameter route: The route that the sender is asking about.
