@@ -20,7 +20,6 @@ extension NavigationView {
         bottomBannerContainerView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         bottomBannerContainerView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         bottomBannerContainerView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        bottomBannerContainerView.heightAnchor.constraint(equalToConstant: 80.0).isActive = true
         
         mapView.attributionButton.trailingAnchor.constraint(equalTo: safeTrailingAnchor, constant: -8).isActive = true
         mapView.logoView.leadingAnchor.constraint(equalTo: safeLeadingAnchor, constant: 8).isActive = true
