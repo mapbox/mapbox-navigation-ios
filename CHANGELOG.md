@@ -6,9 +6,9 @@
 
 * MapboxNavigationNative dependency was updated to v22.0.5 and MapboxCommon to v7.1.2. ([#2648](https://github.com/mapbox/mapbox-navigation-ios/pull/2648))
 
-### Offline
+### User location
 
-* Added Offline Service support for Maps and Navigation. To allow Mapbox Maps SDK to pick up downloaded regions, `OfflineService` has to be instantiated prior to `MGLMapView`. In case of offline navigation `MapboxNavigationService` and `PassiveLocationDataSource` has to contain `tilesVersion` parameter of downloaded Navigation region. Undeprecated `NavigationDirections`, `OfflineRouteCompletionHandler` and `NavigationDirections.calculate(_:offline:completionHandler:)` and introduced `NavigationDirections.configureRouter(tilesVersion:)` to be able to request route in offline. ([#2653](https://github.com/mapbox/mapbox-navigation-ios/pull/2653))
+* Fixed issues which was causing unsmooth user puck updates on iOS and inability to zoom-in to current location at the start of navigation on CarPlay by updating to Mapbox Maps SDK for iOS v6.2.2. ([#2699](https://github.com/mapbox/mapbox-navigation-ios/pull/2699))
 
 ### Other changes
 
@@ -16,18 +16,15 @@
 * Fixed an issue where `NavigationMapView` redrew at a low frame rate even when the device was plugged in. ([#2643](https://github.com/mapbox/mapbox-navigation-ios/pull/2643))
 * Fixed an issue where the route line flickered when refreshing. ([#2642](https://github.com/mapbox/mapbox-navigation-ios/pull/2642))
 * Fixed an issue where the End of route view UI is broken prior to iOS 11. ([#2690](https://github.com/mapbox/mapbox-navigation-ios/pull/2690))
-
-## v1.0.1
-
-### User location
-
-* Fixed issues which was causing unsmooth user puck updates on iOS and inability to zoom-in to current location at the start of navigation on CarPlay by updating to Mapbox Maps SDK for iOS v6.2.2. ([#2699](https://github.com/mapbox/mapbox-navigation-ios/pull/2699))
+* Fixed an issue where completed waypoints remained on map after rerouting. ([#2378](https://github.com/mapbox/mapbox-navigation-ios/pull/2378))
+* Fixed an issue where positioning icon was not highlighted on CarPlay when using iOS 14.0. ([#2681](https://github.com/mapbox/mapbox-navigation-ios/issues/2681))
+* Fixed an issue where ETA label font was too small during turn-by-turn navigation. ([#2679](https://github.com/mapbox/mapbox-navigation-ios/pull/2679))
 
 ## v1.0.0
 
 ### Packaging
 
-* By default, usage of Mapbox APIs is now [billed](https://www.mapbox.com/pricing/#navmaus) together based on [monthly active users](https://docs.mapbox.com/help/glossary/monthly-active-users/) rather than individually by HTTP request. Learn more in the [pricing by product documentation](https://docs.mapbox.com/accounts/overview/pricing/#navigation-sdk-for-ios-and-android). If you prefer to still use request-based billing, set the `MBXNavigationBillingMethod` key in Info.plist to `request`. ([#2405](https://github.com/mapbox/mapbox-navigation-ios/pull/2405))
+* By default, usage of Mapbox APIs is now [billed](https://www.mapbox.com/pricing/#navmaus) together based on [monthly active users](https://docs.mapbox.com/help/glossary/monthly-active-users/) rather than individually by HTTP request. Learn more in the [pricing by product documentation](https://docs.mapbox.com/accounts/overview/pricing/#navigation-sdk-for-ios-and-android). ([#2405](https://github.com/mapbox/mapbox-navigation-ios/pull/2405))
 * Carthage v0.35 or above is now required for installing this SDK if you use Carthage. ([`81a36d0`](https://github.com/mapbox/mapbox-navigation-ios/commit/81a36d090e8a0602b7144ee7697b7857675b496f)) 
 * MapboxNavigation depends on Mapbox Maps SDK for iOS v6.0.0, and MapboxCoreNavigation depends on builds of MapboxNavigationNative and MapboxCommon that require authentication. Before CocoaPods or Carthage can download Mapbox.framework, MapboxNavigationNative.framework, and MapboxCommon.framework, you need to create a special-purpose access token. See [the updated installation instructions in the readme](./README.md#installing-the-latest-prerelease) for more details. ([#2437](https://github.com/mapbox/mapbox-navigation-ios/pull/2437), [#2477](https://github.com/mapbox/mapbox-navigation-ios/pull/2477))
 * If you install this SDK using Carthage, you need to also add MapboxCommon.framework to your application target’s Embed Frameworks build phase. ([#2477](https://github.com/mapbox/mapbox-navigation-ios/pull/2477))

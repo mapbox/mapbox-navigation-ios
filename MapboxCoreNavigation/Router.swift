@@ -40,9 +40,8 @@ public protocol Router: class, CLLocationManagerDelegate {
      - parameter routeIndex: The index of the route within the original `RouteResponse` object.
      - parameter directions: The Directions object that created `route`.
      - parameter source: The data source for the RouteController.
-     - parameter tilesVersion: Version of tiles downloaded via Offline Service.
      */
-    init(along route: Route, routeIndex: Int, options: RouteOptions, directions: Directions, dataSource source: RouterDataSource, tilesVersion: String?)
+    init(along route: Route, routeIndex: Int, options: RouteOptions, directions: Directions, dataSource source: RouterDataSource)
     
     /**
      Details about the user’s progress along the current route, leg, and step.

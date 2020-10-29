@@ -27,7 +27,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      
      In cases where you need to update the route after navigation has started, you can set a new route here and `NavigationViewController` will update its UI accordingly.
      */
-    var indexedRoute: IndexedRoute {
+    public var indexedRoute: IndexedRoute {
         get {
             return navigationService.indexedRoute
         }
@@ -255,10 +255,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     required public init(for route: Route, routeIndex: Int, routeOptions: RouteOptions, navigationOptions: NavigationOptions? = nil) {
         super.init(nibName: nil, bundle: nil)
         
-        self.navigationService = navigationOptions?.navigationService ?? MapboxNavigationService(route: route,
-                                                                                                 routeIndex: routeIndex,
-                                                                                                 routeOptions: routeOptions,
-                                                                                                 tilesVersion: navigationOptions?.tilesVersion)
+        self.navigationService = navigationOptions?.navigationService ?? MapboxNavigationService(route: route, routeIndex: routeIndex, routeOptions: routeOptions)
         self.navigationService.delegate = self
 
         let credentials = navigationService.directions.credentials

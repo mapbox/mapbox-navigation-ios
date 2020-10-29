@@ -20,6 +20,11 @@ open class RouteController: NSObject {
         public static let shouldPreventReroutesWhenArrivingAtWaypoint: Bool = true
         public static let shouldDisableBatteryMonitoring: Bool = true
     }
+
+    lazy var navigator: Navigator = {
+        let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
+        return Navigator(profile: settingsProfile, config: NavigatorConfig(), customConfig: "", tilesConfig: TilesConfig())
+    }()
     
     public var indexedRoute: IndexedRoute {
         get {
@@ -63,8 +68,6 @@ open class RouteController: NSObject {
     var previousArrivalWaypoint: Waypoint?
     
     var isFirstLocation: Bool = true
-    
-    var navigator: Navigator
     
     /**
      Details about the user’s progress along the current route, leg, and step.
@@ -147,33 +150,12 @@ open class RouteController: NSObject {
         return snappedLocation ?? rawLocation
     }
     
-    required public init(along route: Route,
-                         routeIndex: Int,
-                         options: RouteOptions,
-                         directions: Directions = Directions.shared,
-                         dataSource source: RouterDataSource,
-                         tilesVersion: String? = nil) {
+    required public init(along route: Route, routeIndex: Int, options: RouteOptions, directions: Directions = Directions.shared, dataSource source: RouterDataSource) {
         self.directions = directions
         self._routeProgress = RouteProgress(route: route, routeIndex: routeIndex, options: options)
         self.dataSource = source
         self.refreshesRoute = options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled
         UIDevice.current.isBatteryMonitoringEnabled = true
-        
-        let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
-        var tilesConfig = TilesConfig()
-        
-        // In case if `tilesVersion` was provided configure `Navigator` to use it, so that sideloaded
-        // tiles (e.g. via Offline Service) can be used.
-        if let tilesVersion = tilesVersion {
-            let endpointConfig = TileEndpointConfiguration(directions: directions, tilesVersion: tilesVersion)
-            tilesConfig = TilesConfig(tilesPath: Bundle.mapboxCoreNavigation.suggestedTileURL(version: tilesVersion)?.path ?? "",
-                                      inMemoryTileCache: nil,
-                                      mapMatchingSpatialCache: nil,
-                                      threadsCount: nil,
-                                      endpointConfig: endpointConfig)
-        }
-        
-        navigator = Navigator(profile: settingsProfile, config: NavigatorConfig(), customConfig: "", tilesConfig: tilesConfig)
         
         super.init()
         
