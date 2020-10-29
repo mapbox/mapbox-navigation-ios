@@ -253,12 +253,15 @@ class RouteMapViewController: UIViewController {
     }
 
     @objc func toggleOverview(_ sender: Any) {
+        let bottomBannerHeight = bottomBannerContainerView.bounds.height
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
         if let shape = router.route.shape,
             let userLocation = router.location {
             mapView.setOverheadCameraView(from: userLocation, along: shape, for: contentInset(forOverviewing: true))
         }
         isInOverviewMode = true
+        bottomBannerContainerView.heightAnchor.constraint(equalToConstant: bottomBannerHeight).isActive = true
+        mapView.attributionButton.bottomAnchor.constraint(equalTo: bottomBannerContainerView.topAnchor, constant: -10).isActive = true
     }
 
     @objc func toggleMute(_ sender: UIButton) {
