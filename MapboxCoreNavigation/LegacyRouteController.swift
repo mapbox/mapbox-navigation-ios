@@ -12,6 +12,9 @@ protocol RouteControllerDataSource: class {
 
 @available(*, deprecated, renamed: "RouteController")
 open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationManagerDelegate {
+    public var supportsElectronicHorizon: Bool { return false }
+
+    public var electronicHorizonDelegate: ElectronicHorizonDelegate?
     
     public weak var delegate: RouterDelegate?
 

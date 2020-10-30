@@ -32,6 +32,9 @@ public protocol Router: class, CLLocationManagerDelegate {
      The route controller’s delegate.
      */
     var delegate: RouterDelegate? { get set }
+
+    var supportsElectronicHorizon: Bool { get }
+    var electronicHorizonDelegate: ElectronicHorizonDelegate? { get set }
     
     /**
      Intializes a new `RouteController`.
