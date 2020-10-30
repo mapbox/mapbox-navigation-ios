@@ -13,7 +13,20 @@ import Turf
  `RouteController` is responsible for the core navigation logic whereas
  `NavigationViewController` is responsible for displaying a default drop-in navigation UI.
  */
-open class RouteController: NSObject {
+open class RouteController: NSObject, ElectronicHorizonObserver {
+    public func onElectronicHorizonUpdated(for horizon: ElectronicHorizon, type: ElectronicHorizonResultType) {
+        let edge = horizon.start
+        let names = edge.names.compactMap { roadInfo -> String? in
+            roadInfo.name
+        }
+        print("wayID: \(edge.wayId), names: \(names), speed: \(edge.speed)")
+    }
+
+    public func onPositionUpdated(for position: GraphPosition) {
+    }
+
+    public var peer: MBXPeerWrapper?
+
     public enum DefaultBehavior {
         public static let shouldRerouteFromLocation: Bool = true
         public static let shouldDiscardLocation: Bool = true
@@ -22,10 +35,43 @@ open class RouteController: NSObject {
         public static let shouldDisableBatteryMonitoring: Bool = true
     }
 
-    lazy var navigator: Navigator = {
+    var navigator: Navigator?
+
+    private var isConfigured: Bool = false
+    /**
+     Creates a cache for tiles of the given version and configures the navigator to use this cache.
+     */
+    func configureNavigator(withTilesVersion tilesVersion: String) throws -> Navigator {
+        // ~/Library/Caches/tld.app.bundle.id/.mapbox/2020_08_08-03_00_00/
+        guard var tilesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first else {
+            preconditionFailure("No Caches directory to create the tile directory inside")
+        }
+        if let bundleIdentifier = Bundle.main.bundleIdentifier ?? Bundle.mapboxCoreNavigation.bundleIdentifier {
+            tilesURL.appendPathComponent(bundleIdentifier, isDirectory: true)
+        }
+        tilesURL.appendPathComponent(".mapbox", isDirectory: true)
+        tilesURL.appendPathComponent(tilesVersion, isDirectory: true)
+        // Tiles with different versions shouldn't be mixed, it may cause inappropriate Navigator's behaviour
+        try FileManager.default.createDirectory(at: tilesURL, withIntermediateDirectories: true, attributes: nil)
+        return configureNavigator(withURL: tilesURL, tilesVersion: tilesVersion)
+    }
+
+    func configureNavigator(withURL tilesURL: URL, tilesVersion: String) -> Navigator {
+        let endpointConfig = TileEndpointConfiguration(directions: directions, tilesVersion: tilesVersion)
+        let tilesConfig = TilesConfig(tilesPath: tilesURL.path,
+                                      inMemoryTileCache: nil,
+                                      mapMatchingSpatialCache: nil,
+                                      threadsCount: nil,
+                                      endpointConfig: endpointConfig)
+
         let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
-        return Navigator(profile: settingsProfile, config: NavigatorConfig(), customConfig: "", tilesConfig: TilesConfig())
-    }()
+
+        let electronicHorizonOptions = ElectronicHorizonOptions(length: 2000, expansion: 1, branchLength: 50, includeGeometries: true)
+        let navigatorConfig = NavigatorConfig()
+        navigatorConfig.electronicHorizonOptions = electronicHorizonOptions
+
+        return Navigator(profile: settingsProfile, config: navigatorConfig , customConfig: "", tilesConfig: tilesConfig)
+    }
     
     public var indexedRoute: IndexedRoute {
         get {
@@ -95,8 +141,7 @@ open class RouteController: NSObject {
             return nil
         }
 
-        let status = navigator.status(at: locationUpdateDate)
-        guard status.routeState == .tracking || status.routeState == .complete else {
+        guard let status = navigator?.status(at: locationUpdateDate), status.routeState == .tracking || status.routeState == .complete else {
             return nil
         }
         return CLLocation(status.location)
@@ -162,9 +207,25 @@ open class RouteController: NSObject {
         
         updateNavigator(with: _routeProgress)
         updateObservation(for: _routeProgress)
+
+        directions.fetchAvailableOfflineVersions { [weak self] (versions, error) in
+            guard let self = self, let latestVersion = versions?.first(where: { !$0.isEmpty }), error == nil else {
+                return
+            }
+
+            do {
+                let navigator = try self.configureNavigator(withTilesVersion: latestVersion)
+                navigator.setElectronicHorizonObserverFor(self)
+                self.navigator = navigator
+            } catch {
+                let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
+                self.navigator = Navigator(profile: settingsProfile, config: NavigatorConfig(), customConfig: "", tilesConfig: TilesConfig())
+            }
+        }
     }
     
     deinit {
+        navigator?.setElectronicHorizonObserverFor(nil)
         resetObservation(for: _routeProgress)
     }
     
@@ -228,7 +289,7 @@ open class RouteController: NSObject {
     /// updateRouteLeg is used to notify nav-native of the developer changing the active route-leg.
     private func updateRouteLeg(to value: Int) {
         let legIndex = UInt32(value)
-        if navigator.changeRouteLeg(forRoute: 0, leg: legIndex), let timestamp = location?.timestamp {
+        if let navigator = navigator, navigator.changeRouteLeg(forRoute: 0, leg: legIndex), let timestamp = location?.timestamp {
             updateIndexes(status: navigator.status(at: timestamp), progress: routeProgress)
         }
     }
@@ -241,24 +302,26 @@ open class RouteController: NSObject {
         }
         
         rawLocation = location
-        
-        locations.forEach { navigator.updateLocation(for: FixLocation($0)) }
 
-        let status = navigator.status(at: location.timestamp)
-        
-        // Notify observers if the step’s remaining distance has changed.
-        update(progress: routeProgress, with: CLLocation(status.location), rawLocation: location, upcomingRouteAlerts: status.upcomingRouteAlerts)
-        
-        let willReroute = !userIsOnRoute(location, status: status) && delegate?.router(self, shouldRerouteFrom: location)
-            ?? DefaultBehavior.shouldRerouteFromLocation
-        
-        updateIndexes(status: status, progress: routeProgress)
-        updateRouteLegProgress(status: status)
-        updateSpokenInstructionProgress(status: status, willReRoute: willReroute)
-        updateVisualInstructionProgress(status: status)
-        
-        if willReroute {
-            reroute(from: location, along: routeProgress)
+        if let navigator = navigator {
+            locations.forEach { navigator.updateLocation(for: FixLocation($0)) }
+
+            let status = navigator.status(at: location.timestamp)
+
+            // Notify observers if the step’s remaining distance has changed.
+            update(progress: routeProgress, with: CLLocation(status.location), rawLocation: location)
+
+            let willReroute = !userIsOnRoute(location, status: status) && delegate?.router(self, shouldRerouteFrom: location)
+                ?? DefaultBehavior.shouldRerouteFromLocation
+
+            updateIndexes(status: status, progress: routeProgress)
+            updateRouteLegProgress(status: status)
+            updateSpokenInstructionProgress(status: status, willReRoute: willReroute)
+            updateVisualInstructionProgress(status: status)
+
+            if willReroute {
+                reroute(from: location, along: routeProgress)
+            }
         }
         
         // Check for faster route proactively (if reroutesProactively is enabled)
@@ -383,15 +446,15 @@ open class RouteController: NSObject {
     }
     
     public func enableLocationRecording() {
-        navigator.toggleHistoryFor(onOff: true)
+        navigator?.toggleHistoryFor(onOff: true)
     }
     
     public func disableLocationRecording() {
-        navigator.toggleHistoryFor(onOff: false)
+        navigator?.toggleHistoryFor(onOff: false)
     }
     
     public func locationHistory() -> String? {
-        return navigator.getHistory()
+        return navigator?.getHistory()
     }
 }
 
@@ -412,10 +475,14 @@ extension RouteController: Router {
                 DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint) {
             return true
         }
-        
-        let status = status ?? navigator.status(at: location.timestamp)
-        let offRoute = status.routeState == .offRoute || status.routeState == .invalid
-        return !offRoute
+
+        if let navigator = navigator {
+            let status = status ?? navigator.status(at: location.timestamp)
+            let offRoute = status.routeState == .offRoute || status.routeState == .invalid
+            return !offRoute
+        }
+
+        return true
     }
     
     public func reroute(from location: CLLocation, along progress: RouteProgress) {
