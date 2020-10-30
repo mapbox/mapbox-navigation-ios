@@ -1,6 +1,7 @@
 import UIKit
 import MapboxCoreNavigation
 import MapboxNavigation
+import MapboxNavigationNative
 import MapboxDirections
 import Turf
 
@@ -274,6 +275,10 @@ class ViewController: UIViewController {
         let service = navigationService(route: route, routeIndex: 0, options: routeOptions)
         let navigationViewController = self.navigationViewController(navigationService: service)
 
+        if service.router.supportsElectronicHorizon {
+            service.router.electronicHorizonDelegate = self
+        }
+        
         // Render part of the route that has been traversed with full transparency, to give the illusion of a disappearing route.
         navigationViewController.routeLineTracksTraversal = true
 
@@ -624,5 +629,19 @@ extension ViewController {
         }
 
         mapView?.addAnnotations([rawTrackPolyline!, trackPolyline!])
+    }
+}
+
+extension ViewController: ElectronicHorizonDelegate {
+    func electronicHorizonDidUpdate(_ electronicHorizon: ElectronicHorizon) {
+        let edge = electronicHorizon.start
+        let names = edge.names.compactMap { roadInfo -> String? in
+            roadInfo.name
+        }
+        print("wayID: \(edge.wayId), names: \(names), speed: \(edge.speed)")
+    }
+
+    func didUpdatePosition(_ position: GraphPosition) {
+        print("ViewController didUpdatePosition: \(position.percentAlong)")
     }
 }

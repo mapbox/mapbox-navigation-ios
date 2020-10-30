@@ -14,18 +14,6 @@ import Turf
  `NavigationViewController` is responsible for displaying a default drop-in navigation UI.
  */
 open class RouteController: NSObject, ElectronicHorizonObserver {
-    public func onElectronicHorizonUpdated(for horizon: ElectronicHorizon, type: ElectronicHorizonResultType) {
-        let edge = horizon.start
-        let names = edge.names.compactMap { roadInfo -> String? in
-            roadInfo.name
-        }
-        print("wayID: \(edge.wayId), names: \(names), speed: \(edge.speed)")
-    }
-
-    public func onPositionUpdated(for position: GraphPosition) {
-    }
-
-    public var peer: MBXPeerWrapper?
 
     public enum DefaultBehavior {
         public static let shouldRerouteFromLocation: Bool = true
@@ -177,6 +165,11 @@ open class RouteController: NSObject, ElectronicHorizonObserver {
      The route controller’s delegate.
      */
     public weak var delegate: RouterDelegate?
+
+    /**
+     Delegate for Electronic Horizon Updates
+     */
+    public weak var electronicHorizonDelegate: ElectronicHorizonDelegate?
     
     /**
      The route controller’s associated location manager.
@@ -456,9 +449,23 @@ open class RouteController: NSObject, ElectronicHorizonObserver {
     public func locationHistory() -> String? {
         return navigator?.getHistory()
     }
+
+    public func onElectronicHorizonUpdated(for horizon: ElectronicHorizon, type: ElectronicHorizonResultType) {
+        electronicHorizonDelegate?.electronicHorizonDidUpdate(horizon)
+    }
+
+    public func onPositionUpdated(for position: GraphPosition) {
+        electronicHorizonDelegate?.didUpdatePosition(position)
+    }
+
+    public var peer: MBXPeerWrapper?
 }
 
 extension RouteController: Router {
+    public var supportsElectronicHorizon: Bool {
+        return true
+    }
+
     public func userIsOnRoute(_ location: CLLocation) -> Bool {
         return userIsOnRoute(location, status: nil)
     }
