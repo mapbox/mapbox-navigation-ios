@@ -6,6 +6,10 @@
 
 * Added the ability to provide more detailed `Speed limit incorrect` feedback during turn-by-turn navigation. ([#2725](https://github.com/mapbox/mapbox-navigation-ios/pull/2725))
 
+### Other changes
+
+* Fixed an issue which was causing clear map button disappearance in the example app when selecting the route. ([#2718](https://github.com/mapbox/mapbox-navigation-ios/pull/2718))
+
 ## v1.1.0
 
 ### Packaging
