@@ -116,6 +116,7 @@ open class PassiveLocationDataSource: NSObject {
         
         let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
         navigator = Navigator(profile: settingsProfile, config: NavigatorConfig() , customConfig: "", tilesConfig: tilesConfig)
+        navigator.setElectronicHorizonObserverFor(self)
         
         isConfigured = true
     }
@@ -155,6 +156,8 @@ open class PassiveLocationDataSource: NSObject {
             NotificationUserInfoKey.roadNameKey: status.roadName,
         ])
     }
+
+    public var peer: MBXPeerWrapper?
 }
 
 extension PassiveLocationDataSource: CLLocationManagerDelegate {
@@ -200,5 +203,15 @@ extension TileEndpointConfiguration {
         }
         let skuTokenProvider = SkuTokenProvider(with: directions.credentials)
         self.init(host: host, version: tilesVersion, token: accessToken, userAgent: URLSession.userAgent, navigatorVersion: "", skuTokenSource: skuTokenProvider)
+    }
+}
+
+extension PassiveLocationDataSource: ElectronicHorizonObserver {
+    public func onElectronicHorizonUpdated(for horizon: ElectronicHorizon, type: ElectronicHorizonResultType) {
+        print("1 onElectronicHorizonUpdated type: \(type)")
+    }
+
+    public func onPositionUpdated(for position: GraphPosition) {
+        print("1 onPositionUpdated ID: \(position.edgeId) percentage: \(position.percentAlong)")
     }
 }
