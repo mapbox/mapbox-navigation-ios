@@ -3,6 +3,7 @@ import MapboxCoreNavigation
 import MapboxNavigation
 import MapboxNavigationNative
 import MapboxDirections
+import Turf
 
 private typealias RouteRequestSuccess = ((RouteResponse) -> Void)
 private typealias RouteRequestFailure = ((Error) -> Void)
@@ -267,9 +268,9 @@ class ViewController: UIViewController {
         let service = navigationService(route: route, routeIndex: 0, options: routeOptions)
         let navigationViewController = self.navigationViewController(navigationService: service)
 
-        if service.router.supportsElectronicHorizon {
-            service.router.electronicHorizonDelegate = self
-        }
+//        if service.router.supportsElectronicHorizon {
+//            service.router.electronicHorizonDelegate = navigationViewController
+//        }
         
         // Render part of the route that has been traversed with full transparency, to give the illusion of a disappearing route.
         navigationViewController.routeLineTracksTraversal = true
@@ -618,16 +619,79 @@ extension ViewController {
     }
 }
 
-extension ViewController: ElectronicHorizonDelegate {
-    func electronicHorizonDidUpdate(_ electronicHorizon: ElectronicHorizon) {
+extension NavigationViewController: ElectronicHorizonDelegate {
+    public func electronicHorizonDidUpdate(_ electronicHorizon: ElectronicHorizon) {
         let edge = electronicHorizon.start
         let names = edge.names.compactMap { roadInfo -> String? in
             roadInfo.name
         }
         print("wayID: \(edge.wayId), names: \(names), speed: \(edge.speed)")
+        DispatchQueue.main.async {
+            self.updateEHorizonStyleLayer(currentEdge: edge)
+        }
     }
 
-    func didUpdatePosition(_ position: GraphPosition) {
+    public func didUpdatePosition(_ position: GraphPosition) {
         print("ViewController didUpdatePosition: \(position.percentAlong)")
+    }
+
+    private func updateEHorizonStyleLayer(currentEdge: ElectronicHorizonEdge) {
+        guard let style = mapView?.style else { return }
+        // remove any old layers
+        // look an existing layer
+
+        let layerIdentifier = "eHorizonLineLayer"
+        let sourceIdentifier = "eHorizonDataSource"
+        // gather the edge geometries
+
+        var edges = [currentEdge]
+        for edge in currentEdge.out {
+            for secondLevelEdge in edge.out {
+                for thirdLevelEdge in edge.out {
+                    for fourthLevelEdge in edge.out {
+                        for fifthLevelEdge in edge.out {
+                            edges.append(contentsOf: fifthLevelEdge.out)
+                        }
+                        edges.append(contentsOf: fourthLevelEdge.out)
+                    }
+                    edges.append(contentsOf: thirdLevelEdge.out)
+                }
+                edges.append(contentsOf: secondLevelEdge.out)
+            }
+            edges.append(edge)
+        }
+
+        let coordinatesList = edges.compactMap { (edge) -> [CLLocationCoordinate2D]? in
+            if let coordinates = edge.geometry?.compactMap({ return $0.coordinate }) {
+                return coordinates
+            }
+
+            return nil
+        }
+        let multi = MultiLineString(coordinatesList)
+
+        // add new ones
+        let multiLine = MGLMultiPolylineFeature(multi)
+        var shapeSource: MGLShapeSource
+        if let source = mapView?.style?.source(withIdentifier: sourceIdentifier) as? MGLShapeSource {
+            source.shape = multiLine
+            shapeSource = source
+        } else {
+            shapeSource = MGLShapeSource(identifier: sourceIdentifier, features: [multiLine], options: nil)
+            style.addSource(shapeSource)
+        }
+
+        let eHorizonLayer = style.layer(withIdentifier: layerIdentifier)
+
+        if let eHorizonLayer = eHorizonLayer, let topLayer = style.layers.last, topLayer.identifier != layerIdentifier {
+            // move layer to the top
+            style.removeLayer(eHorizonLayer)
+            style.addLayer(eHorizonLayer)
+        } else if eHorizonLayer == nil {
+            let lineLayer = MGLLineStyleLayer(identifier: layerIdentifier, source: shapeSource)
+            lineLayer.lineColor = NSExpression(forConstantValue: UIColor.purple)
+            lineLayer.lineWidth = NSExpression(forConstantValue: 16)
+            style.addLayer(lineLayer)
+        }
     }
 }
