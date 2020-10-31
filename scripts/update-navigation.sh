@@ -17,9 +17,6 @@ git fetch --tags
 git checkout $RELEASE_BRANCH
 VERSION=$( git describe --tags --match=v*.*.* --abbrev=0 | sed 's/^v//' )
 
-# I don't think mapbox-navigation-ios uses this branch naming convention
-# git checkout $VERSION
-
 step "Updating jazzy…"
 gem install jazzy
 

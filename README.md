@@ -22,6 +22,18 @@ Get up and running in a few minutes with our drop-in turn-by-turn navigation `Na
 
 ## [Documentation](https://docs.mapbox.com/ios/api/navigation/)
 
+After a release, follow these steps to generate and publish documentation and update the iOS site with the latest version number:
+
+1. Generate and publish the documentation.
+    - Run `./scripts/update-navigation.sh`. 
+    - This script will checkout the release branch, install dependencies, generate the documentation, and commit the generated documentation to a new branch.
+    - Create a pull request and set the base branch to `publisher-production`.
+2. Wait for new documentation to be live. 
+    - Once you merge the branch into `publisher-production`, the new version will be available within 10 minutes. 
+    - You can check the #publisher channel in Slack for a notification of when your commit has been published.
+3. Update the ios-sdk repository constants. 
+    - Complete the [Mapbox Navigation for iOS section](https://github.com/mapbox/ios-sdk#navigation-sdk-for-ios) in the ios-sdk repository README.
+
 ## Requirements
 
 The Mapbox Navigation SDK and Core Navigation are compatible with applications written in Swift 5 in Xcode 11.4.1 and above. The Mapbox Navigation and Mapbox Core Navigation frameworks run on iOS 10.0 and above.
