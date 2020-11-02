@@ -268,9 +268,9 @@ class ViewController: UIViewController {
         let service = navigationService(route: route, routeIndex: 0, options: routeOptions)
         let navigationViewController = self.navigationViewController(navigationService: service)
 
-//        if service.router.supportsElectronicHorizon {
-//            service.router.electronicHorizonDelegate = navigationViewController
-//        }
+        if service.router.supportsElectronicHorizon {
+            service.router.electronicHorizonDelegate = navigationViewController
+        }
         
         // Render part of the route that has been traversed with full transparency, to give the illusion of a disappearing route.
         navigationViewController.routeLineTracksTraversal = true
@@ -625,7 +625,7 @@ extension NavigationViewController: ElectronicHorizonDelegate {
         let names = edge.names.compactMap { roadInfo -> String? in
             roadInfo.name
         }
-        print("wayID: \(edge.wayId), names: \(names), speed: \(edge.speed)")
+        print("wayID: \(edge.wayId), names: \(names), speed: \(edge.speed), probability: \(edge.probability)")
         DispatchQueue.main.async {
             self.updateEHorizonStyleLayer(currentEdge: edge)
         }
@@ -690,8 +690,87 @@ extension NavigationViewController: ElectronicHorizonDelegate {
         } else if eHorizonLayer == nil {
             let lineLayer = MGLLineStyleLayer(identifier: layerIdentifier, source: shapeSource)
             lineLayer.lineColor = NSExpression(forConstantValue: UIColor.purple)
-            lineLayer.lineWidth = NSExpression(forConstantValue: 16)
+            lineLayer.lineWidth = NSExpression(forConstantValue: 8)
+            lineLayer.lineCap = NSExpression(forConstantValue: "round")
+            lineLayer.lineOpacity = NSExpression(forConstantValue: 0.75)
             style.addLayer(lineLayer)
         }
     }
+
+    private func updateEHorizonStyleIndividualLayers(currentEdge: ElectronicHorizonEdge) {
+        guard let style = mapView?.style else { return }
+        let layerIdentifier = "eHorizonLineLayer"
+        let sourceIdentifier = "eHorizonDataSource"
+
+        // remove any old layers
+        for lineLayer in style.layers.filter({ layer -> Bool in
+            guard let layer = layer as? MGLLineStyleLayer else { return false }
+            return layer.identifier.contains(layerIdentifier)
+        }) {
+            style.removeLayer(lineLayer)
+        }
+
+        // remove any old sources
+        for dataSource in style.sources.filter({ source -> Bool in
+            return source.identifier.contains(sourceIdentifier)
+        }) {
+            style.removeSource(dataSource)
+        }
+
+        // gather the edge geometries
+        var edges = [EdgeLayer(edge: currentEdge, depth: 0)]
+        for edge in currentEdge.out {
+            for secondLevelEdge in edge.out {
+                for thirdLevelEdge in edge.out {
+                    for fourthLevelEdge in edge.out {
+                        for fifthLevelEdge in edge.out {
+                            edges.append(contentsOf: fifthLevelEdge.out.compactMap {
+                                return EdgeLayer(edge: $0, depth: 5)
+                            })
+                        }
+                        edges.append(contentsOf: fourthLevelEdge.out.compactMap {
+                            return EdgeLayer(edge: $0, depth: 4)
+                        })
+                    }
+                    edges.append(contentsOf: thirdLevelEdge.out.compactMap {
+                        return EdgeLayer(edge: $0, depth: 3)
+                    })
+                }
+                edges.append(contentsOf: secondLevelEdge.out.compactMap {
+                    return EdgeLayer(edge: $0, depth: 2)
+                })
+            }
+            edges.append(EdgeLayer(edge: edge, depth: 1))
+        }
+
+        let coordinatesList = edges.compactMap { (edge) -> [CLLocationCoordinate2D]? in
+            if let coordinates = edge.edge.geometry?.compactMap({ return $0.coordinate }) {
+                return coordinates
+            }
+
+            return nil
+        }
+
+        let opacity: [Double] = [0.9, 0.75, 0.5, 0.25, 0.1, 0.05]
+
+        for (index, line) in coordinatesList.enumerated() {
+            let lineString = LineString(line)
+            let lineFeature = MGLPolylineFeature(lineString)
+            let shapeSource = MGLShapeSource(identifier: sourceIdentifier + "-\(index)", features: [lineFeature], options: nil)
+            style.addSource(shapeSource)
+
+            let lineLayer = MGLLineStyleLayer(identifier: layerIdentifier + "-\(index)", source: shapeSource)
+            lineLayer.lineColor = NSExpression(forConstantValue: UIColor.purple)
+            lineLayer.lineWidth = NSExpression(forConstantValue: 8)
+            lineLayer.lineCap = NSExpression(forConstantValue: "round")
+            let edge = edges[index]
+            lineLayer.lineOpacity = NSExpression(forConstantValue: opacity[edge.depth])
+            style.addLayer(lineLayer)
+        }
+    }
+}
+
+struct EdgeLayer {
+    let edge: ElectronicHorizonEdge
+    let depth: Int
 }
