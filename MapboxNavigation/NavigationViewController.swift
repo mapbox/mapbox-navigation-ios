@@ -811,27 +811,33 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
             if banner.isDisplayingPreviewInstructions {
                 mapViewController?.recenter(self)
             }
-        
-        case .right where !banner.isDisplayingSteps:
-            guard let currentStepIndex = banner.currentPreviewStep?.1 else { return }
-            let remainingSteps = progress.remainingSteps
-            let prevStepIndex = currentStepIndex.advanced(by: -1)
-            guard prevStepIndex >= 0 else { return }
-            
-            let prevStep = remainingSteps[prevStepIndex]
-            preview(step: prevStep, in: banner, remaining: remainingSteps, route: route)
-            
-        case .left where !banner.isDisplayingSteps:
-            let remainingSteps = navigationService.router.routeProgress.remainingSteps
-            let currentStepIndex = banner.currentPreviewStep?.1
-            let nextStepIndex = currentStepIndex?.advanced(by: 1) ?? 0
-            guard nextStepIndex < remainingSteps.count else { return }
-            
-            let nextStep = remainingSteps[nextStepIndex]
-            preview(step: nextStep, in: banner, remaining: remainingSteps, route: route)
-            
         default:
-            return
+            break
+        }
+        
+        if !banner.isDisplayingSteps {
+            switch (direction, UIApplication.shared.userInterfaceLayoutDirection) {
+            case (.right, .leftToRight), (.left, .rightToLeft):
+                guard let currentStepIndex = banner.currentPreviewStep?.1 else { return }
+                let remainingSteps = progress.remainingSteps
+                let prevStepIndex = currentStepIndex.advanced(by: -1)
+                guard prevStepIndex >= 0 else { return }
+                
+                let prevStep = remainingSteps[prevStepIndex]
+                preview(step: prevStep, in: banner, remaining: remainingSteps, route: route)
+                
+            case (.left, .leftToRight), (.right, .rightToLeft):
+                let remainingSteps = navigationService.router.routeProgress.remainingSteps
+                let currentStepIndex = banner.currentPreviewStep?.1
+                let nextStepIndex = currentStepIndex?.advanced(by: 1) ?? 0
+                guard nextStepIndex < remainingSteps.count else { return }
+                
+                let nextStep = remainingSteps[nextStepIndex]
+                preview(step: nextStep, in: banner, remaining: remainingSteps, route: route)
+            
+            default:
+                break
+            }
         }
     }
     
