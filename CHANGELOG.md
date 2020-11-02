@@ -21,6 +21,7 @@
 * Fixed an issue where ETA label font was too small during turn-by-turn navigation. ([#2679](https://github.com/mapbox/mapbox-navigation-ios/pull/2679))
 * Fixed an issue with `NavigationMapViewDelegate.navigationMapView(_:shapeFor:)` and `NavigationMapViewDelegate.navigationMapView(_:simplifiedShapeFor:)` methods were not correctly called for route shape customization ([#2623](https://github.com/mapbox/mapbox-navigation-ios/pull/2623))
 * Fixed an issue where the banner indicating simulation mode displayed a very large speed factor in the Hebrew location. ([#2714](https://github.com/mapbox/mapbox-navigation-ios/pull/2714))
+* Fixed an issue where incorrect speed multiplier value was shown after arriving to the intermediate waypoint. ([#2710](https://github.com/mapbox/mapbox-navigation-ios/pull/2710))
 
 ## v1.0.0
 
