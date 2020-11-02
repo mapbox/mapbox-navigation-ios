@@ -123,6 +123,11 @@ open class InstructionsCardViewController: UIViewController {
     @objc func orientationDidChange(_ notification: Notification) {
         instructionsCardLayout.invalidateLayout()
         handlePagingforScrollToItem(indexPath: indexBeforeSwipe)
+//        guard let visibleCell = instructionsCardLayout.collectionView?.visibleCells.first else { return }
+//        guard let indexPath = instructionsCardLayout.collectionView?.indexPath(for: visibleCell) else { return }
+//        instructionsCardLayout.collectionView?.isPagingEnabled = false
+//        instructionsCardLayout.collectionView?.scrollToItem(at: indexPath, at: .left, animated: true)
+//        instructionsCardLayout.collectionView?.isPagingEnabled = false
     }
     
     func addSubviews() {
@@ -179,17 +184,9 @@ open class InstructionsCardViewController: UIViewController {
     
     func snapToIndexPath(_ indexPath: IndexPath) {
         guard let itemCount = steps?.count, itemCount >= 0 && indexPath.row < itemCount else { return }
-        handlePagingforScrollToItem(indexPath: indexPath)
-    }
-    
-    public func handlePagingforScrollToItem(indexPath: IndexPath) {
-        if #available(iOS 14.0, *) {
-            instructionsCardLayout.collectionView?.isPagingEnabled = false
-            instructionsCardLayout.collectionView?.scrollToItem(at: indexPath, at: direction, animated: true)
-            instructionsCardLayout.collectionView?.isPagingEnabled = true
-            return
-        }
-        instructionsCardLayout.collectionView?.scrollToItem(at: indexPath, at: direction, animated: true)
+        instructionsCardLayout.collectionView?.isPagingEnabled = false
+        instructionsCardLayout.collectionView?.scrollToItem(at: indexPath, at: .left, animated: true)
+        instructionsCardLayout.collectionView?.isPagingEnabled = true
     }
     
     public func stopPreview() {
@@ -296,7 +293,7 @@ extension InstructionsCardViewController: UICollectionViewDataSource {
 
 extension InstructionsCardViewController: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
+        print("!!! cardSize from InstructionsCardViewController: \(cardSize)")
         return cardSize
     }
 }
