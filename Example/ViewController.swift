@@ -645,20 +645,20 @@ extension NavigationViewController: ElectronicHorizonDelegate {
         // gather the edge geometries
 
         var edges = [currentEdge]
-        for edge in currentEdge.out {
-            for secondLevelEdge in edge.out {
-                for thirdLevelEdge in edge.out {
-                    for fourthLevelEdge in edge.out {
-                        for fifthLevelEdge in edge.out {
-                            edges.append(contentsOf: fifthLevelEdge.out)
+        for firstLevelEdge in currentEdge.out {
+            edges.append(firstLevelEdge)
+            for secondLevelEdge in firstLevelEdge.out {
+                edges.append(secondLevelEdge)
+                for thirdLevelEdge in secondLevelEdge.out {
+                    edges.append(thirdLevelEdge)
+                    for fourthLevelEdge in thirdLevelEdge.out {
+                        edges.append(fourthLevelEdge)
+                        for fifthLevelEdge in fourthLevelEdge.out {
+                            edges.append(fifthLevelEdge)
                         }
-                        edges.append(contentsOf: fourthLevelEdge.out)
                     }
-                    edges.append(contentsOf: thirdLevelEdge.out)
                 }
-                edges.append(contentsOf: secondLevelEdge.out)
             }
-            edges.append(edge)
         }
 
         let coordinatesList = edges.compactMap { (edge) -> [CLLocationCoordinate2D]? in
@@ -719,28 +719,17 @@ extension NavigationViewController: ElectronicHorizonDelegate {
 
         // gather the edge geometries
         var edges = [EdgeLayer(edge: currentEdge, depth: 0)]
-        for edge in currentEdge.out {
-            for secondLevelEdge in edge.out {
-                for thirdLevelEdge in edge.out {
-                    for fourthLevelEdge in edge.out {
-                        for fifthLevelEdge in edge.out {
-                            edges.append(contentsOf: fifthLevelEdge.out.compactMap {
-                                return EdgeLayer(edge: $0, depth: 5)
-                            })
-                        }
-                        edges.append(contentsOf: fourthLevelEdge.out.compactMap {
-                            return EdgeLayer(edge: $0, depth: 4)
-                        })
+        for firstLevelEdge in currentEdge.out {
+            edges.append(EdgeLayer(edge: firstLevelEdge, depth: 1))
+            for secondLevelEdge in firstLevelEdge.out {
+                edges.append(EdgeLayer(edge: secondLevelEdge, depth: 2))
+                for thirdLevelEdge in secondLevelEdge.out {
+                    edges.append(EdgeLayer(edge: thirdLevelEdge, depth: 3))
+                    for fourthLevelEdge in thirdLevelEdge.out {
+                        edges.append(EdgeLayer(edge: fourthLevelEdge, depth: 4))
                     }
-                    edges.append(contentsOf: thirdLevelEdge.out.compactMap {
-                        return EdgeLayer(edge: $0, depth: 3)
-                    })
                 }
-                edges.append(contentsOf: secondLevelEdge.out.compactMap {
-                    return EdgeLayer(edge: $0, depth: 2)
-                })
             }
-            edges.append(EdgeLayer(edge: edge, depth: 1))
         }
 
         let coordinatesList = edges.compactMap { (edge) -> [CLLocationCoordinate2D]? in
@@ -751,20 +740,20 @@ extension NavigationViewController: ElectronicHorizonDelegate {
             return nil
         }
 
-        let opacity: [Double] = [0.9, 0.75, 0.5, 0.25, 0.1, 0.05]
-
         for (index, line) in coordinatesList.enumerated() {
             let lineString = LineString(line)
             let lineFeature = MGLPolylineFeature(lineString)
             let shapeSource = MGLShapeSource(identifier: sourceIdentifier + "-\(index)", features: [lineFeature], options: nil)
             style.addSource(shapeSource)
 
+            let edge = edges[index]
             let lineLayer = MGLLineStyleLayer(identifier: layerIdentifier + "-\(index)", source: shapeSource)
-            lineLayer.lineColor = NSExpression(forConstantValue: UIColor.purple)
+//            lineLayer.lineColor = NSExpression(forConstantValue: UIColor.purple)
+            let color = UIColor(hue: 247.0/360.0, saturation: 1.0 - (CGFloat(edge.depth) * 0.2), brightness: 0.59, alpha: 1.0)
+            lineLayer.lineColor = NSExpression(forConstantValue: color)
             lineLayer.lineWidth = NSExpression(forConstantValue: 8)
             lineLayer.lineCap = NSExpression(forConstantValue: "round")
-            let edge = edges[index]
-            lineLayer.lineOpacity = NSExpression(forConstantValue: opacity[edge.depth])
+
             style.addLayer(lineLayer)
         }
     }
