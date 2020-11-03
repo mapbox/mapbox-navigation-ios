@@ -270,6 +270,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         let bottomBanner = navigationOptions?.bottomBanner ?? {
             let viewController: BottomBannerViewController = .init()
             viewController.delegate = self
+            viewController.isDefaultBottomBanner = true
             return viewController
         }()
         bottomViewController = bottomBanner

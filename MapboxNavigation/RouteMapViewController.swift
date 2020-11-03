@@ -87,7 +87,8 @@ class RouteMapViewController: UIViewController {
     }
     var currentLegIndexMapped = 0
     var currentStepIndexMapped = 0
-
+    var isDefaultBottomBanner = false
+    
     /**
      A Boolean value that determines whether the map annotates the locations at which instructions are spoken for debugging purposes.
      */
@@ -112,7 +113,6 @@ class RouteMapViewController: UIViewController {
         self.init()
         self.navService = navigationService
         self.delegate = delegate
-        automaticallyAdjustsScrollViewInsets = false
         let topContainer = navigationView.topBannerContainerView
         
         embed(topBanner, in: topContainer) { (parent, banner) -> [NSLayoutConstraint] in
@@ -122,6 +122,9 @@ class RouteMapViewController: UIViewController {
         
         topContainer.backgroundColor = .clear
         
+        if let bottomBanner = bottomBanner as? BottomBannerViewController, bottomBanner.isDefaultBottomBanner {
+            isDefaultBottomBanner = true
+        }
         let bottomContainer = navigationView.bottomBannerContainerView
         embed(bottomBanner, in: bottomContainer) { (parent, banner) -> [NSLayoutConstraint] in
             banner.view.translatesAutoresizingMaskIntoConstraints = false
@@ -253,15 +256,12 @@ class RouteMapViewController: UIViewController {
     }
 
     @objc func toggleOverview(_ sender: Any) {
-        let bottomBannerHeight = bottomBannerContainerView.bounds.height
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
         if let shape = router.route.shape,
             let userLocation = router.location {
             mapView.setOverheadCameraView(from: userLocation, along: shape, for: contentInset(forOverviewing: true))
         }
         isInOverviewMode = true
-        bottomBannerContainerView.heightAnchor.constraint(equalToConstant: bottomBannerHeight).isActive = true
-        mapView.attributionButton.bottomAnchor.constraint(equalTo: bottomBannerContainerView.topAnchor, constant: -10).isActive = true
     }
 
     @objc func toggleMute(_ sender: UIButton) {
@@ -295,6 +295,7 @@ class RouteMapViewController: UIViewController {
         }
         
         updateMapViewContentInsets()
+        updateMapViewComponents()
     }
     
     func updateMapViewContentInsets(animated: Bool = false, completion: CompletionHandler? = nil) {
@@ -351,6 +352,33 @@ class RouteMapViewController: UIViewController {
     
     @objc func resetFrameRate(_ sender: UIGestureRecognizer) {
         mapView.preferredFramesPerSecond = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
+    }
+    
+    /**
+     In case when default bottom banner view is used update `logoView` and `attributionButton` margins to prevent incorrect alignment
+     reported in https://github.com/mapbox/mapbox-navigation-ios/issues/2561. To be able to successfully update margins
+     `RouteMapViewController.automaticallyAdjustsScrollViewInsets` should be set to `true`.
+     */
+    func updateMapViewComponents() {
+        if !isDefaultBottomBanner { return }
+        
+        let bottomBannerHeight = bottomBannerContainerView.bounds.height
+        let defaultOffset: CGFloat = 10.0
+        mapView.logoViewPosition = .bottomLeft
+        if #available(iOS 11.0, *) {
+            let safeAreaOffset = isDefaultBottomBanner ? view.safeAreaInsets.bottom : 0.0
+            mapView.logoViewMargins = CGPoint(x: defaultOffset, y: bottomBannerHeight - safeAreaOffset + defaultOffset)
+        } else {
+            mapView.logoViewMargins = CGPoint(x: defaultOffset, y: bottomBannerHeight + defaultOffset)
+        }
+        
+        mapView.attributionButtonPosition = .bottomRight
+        if #available(iOS 11.0, *) {
+            let safeAreaOffset = isDefaultBottomBanner ? view.safeAreaInsets.bottom : 0.0
+            mapView.attributionButtonMargins = CGPoint(x: defaultOffset, y: bottomBannerHeight - safeAreaOffset + defaultOffset)
+        } else {
+            mapView.attributionButtonMargins = CGPoint(x: defaultOffset, y: bottomBannerHeight + defaultOffset)
+        }
     }
     
     func contentInset(forOverviewing overviewing: Bool) -> UIEdgeInsets {

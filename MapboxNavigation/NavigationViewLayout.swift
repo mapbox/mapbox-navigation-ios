@@ -21,9 +21,6 @@ extension NavigationView {
         bottomBannerContainerView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         bottomBannerContainerView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         
-        mapView.attributionButton.trailingAnchor.constraint(equalTo: safeTrailingAnchor, constant: -8).isActive = true
-        mapView.logoView.leadingAnchor.constraint(equalTo: safeLeadingAnchor, constant: 8).isActive = true
-        
         wayNameView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         wayNameView.bottomAnchor.constraint(equalTo: bottomBannerContainerView.topAnchor, constant: -10).isActive = true
         

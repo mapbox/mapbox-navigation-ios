@@ -73,6 +73,7 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
     
     var verticalCompactConstraints = [NSLayoutConstraint]()
     var verticalRegularConstraints = [NSLayoutConstraint]()
+    var isDefaultBottomBanner = false
     
     var congestionLevel: CongestionLevel = .unknown {
         didSet {
