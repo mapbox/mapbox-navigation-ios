@@ -287,9 +287,9 @@ extension MapboxNavigationService {
         public init(rawValue: String) {
             self.rawValue = rawValue
         }
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.locationAuthorizationDidChange` notification. The corresponding value is a CLAccuracyAuthorization` indicating the current location authorization setting. */
+        public static let locationAuthorizationKey: NotificationUserInfoKey = .init(rawValue: "locationAuthorization")
     }
-
-    /**
-     A key in the user info dictionary of a `Notification.Name.locationAuthorizationDidChange` notification. The corresponding value is a `Int` object the current location authorization setting. */
-    public static let locationAuthorizationKey: NotificationUserInfoKey = .init(rawValue: "locationAuthorization")
 }
