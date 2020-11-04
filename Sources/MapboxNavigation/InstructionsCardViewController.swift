@@ -185,13 +185,15 @@ open class InstructionsCardViewController: UIViewController {
     func snapToIndexPath(_ indexPath: IndexPath) {
         guard let itemCount = steps?.count, itemCount >= 0 && indexPath.row < itemCount else { return }
         instructionsCardLayout.collectionView?.isPagingEnabled = false
-        instructionsCardLayout.collectionView?.scrollToItem(at: indexPath, at: .left, animated: true)
+        let direction: UICollectionView.ScrollPosition = UIApplication.shared.userInterfaceLayoutDirection == .leftToRight ? .left : .right
+        instructionsCardLayout.collectionView?.scrollToItem(at: indexPath, at: direction, animated: true)
         instructionsCardLayout.collectionView?.isPagingEnabled = true
     }
     
     public func stopPreview() {
         guard isInPreview else { return }
-        instructionCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .left, animated: false)
+        let direction: UICollectionView.ScrollPosition = UIApplication.shared.userInterfaceLayoutDirection == .leftToRight ? .left : .right
+        instructionCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: direction, animated: false)
         isInPreview = false
     }
     
@@ -221,6 +223,7 @@ open class InstructionsCardViewController: UIViewController {
         let itemCount = steps?.count ?? 0
         let velocityThreshold: CGFloat = 0.4
         
+        // TODO: FIX HARD-CODED LEFT AND RIGHT
         let hasVelocityToSlideToNext = indexBeforeSwipe.row + 1 < itemCount && velocity.x > velocityThreshold
         let hasVelocityToSlidePrev = indexBeforeSwipe.row - 1 >= 0 && velocity.x < -velocityThreshold
         let didSwipe = hasVelocityToSlideToNext || hasVelocityToSlidePrev
