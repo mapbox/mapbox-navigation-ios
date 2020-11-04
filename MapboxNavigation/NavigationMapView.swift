@@ -63,8 +63,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     let sourceOptions: [MGLShapeSourceOption: Any] = [.maximumZoomLevel: 16]
 
     struct SourceIdentifier {
-        static let allRoutes = "\(identifierNamespace).allRoutes"
-
         static let waypoint = "\(identifierNamespace).waypoints"
         static let waypointCircle = "\(identifierNamespace).waypointsCircle"
         static let waypointSymbol = "\(identifierNamespace).waypointsSymbol"
@@ -94,6 +92,14 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         static let buildingExtrusion = "\(identifierNamespace).buildingExtrusion"
     }
+    
+    enum IdentifierType: Int {
+        case source
+        
+        case route
+        
+        case routeCasing
+    }
 
     // MARK: - Instance Properties
     @objc dynamic public var trafficUnknownColor: UIColor = .trafficUnknown
@@ -121,18 +127,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     var routes: [Route]?
     var isAnimatingToOverheadMode = false
     
-    var mainRouteLayerIdentifier: String? {
-        guard let route = routes?.first?.description else { return nil }
-        
-        return "\(route.description)_route"
-    }
-    
-    var mainRouteCasingLayerIdentifier: String? {
-        guard let route = routes?.first?.description else { return nil }
-        
-        return "\(route.description)_casing"
-    }
-    
     var shouldPositionCourseViewFrameByFrame = false {
         didSet {
             if shouldPositionCourseViewFrameByFrame {
@@ -143,11 +137,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     
     var showsRoute: Bool {
         get {
-            guard let mainRouteLayerIdentifier = mainRouteLayerIdentifier,
-                  let mainRouteCasingLayerIdentifier = mainRouteCasingLayerIdentifier else { return false }
+            guard let mainRouteLayerIdentifier = identifier(routes?.first, identifierType: .route),
+                  let mainRouteCasingLayerIdentifier = identifier(routes?.first, identifierType: .routeCasing) else { return false }
             
             return style?.layer(withIdentifier: mainRouteLayerIdentifier) != nil &&
-                   style?.layer(withIdentifier: mainRouteCasingLayerIdentifier) != nil
+                style?.layer(withIdentifier: mainRouteCasingLayerIdentifier) != nil
         }
     }
     
@@ -481,9 +475,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         var parentLayer: MGLStyleLayer? = nil
         for (index, element) in routes.enumerated() {
-            let routeSourceIdentifier = "\(element.description)_source"
-            let routeIdentifier = "\(element.description)_route"
-            let routeCasingIdentifier = "\(element.description)_casing"
+            guard let routeSourceIdentifier = identifier(element, identifierType: .source),
+                  let routeIdentifier = identifier(element, identifierType: .route),
+                  let routeCasingIdentifier = identifier(element, identifierType: .routeCasing) else { continue }
             
             let routeShape = navigationMapViewDelegate?.navigationMapView(self, shapeFor: [element]) ??
                 shape(for: element, legIndex: 0, isAlternateRoute: index != 0 ? true : false)
@@ -525,6 +519,22 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     // MARK: - Route line insertion methods
+    
+    func identifier(_ route: Route?, identifierType: IdentifierType) -> String? {
+        guard let route = route else { return nil }
+        let identifier = Unmanaged.passUnretained(route).toOpaque()
+        
+        switch identifierType {
+        case .source:
+            return "\(identifier)_source"
+            
+        case .route:
+            return "\(identifier)_route"
+            
+        case .routeCasing:
+            return "\(identifier)_casing"
+        }
+    }
     
     func addRouteSource(_ style: MGLStyle, identifier: String, shape: MGLShape?) -> MGLSource {
         if let routeSource = style.source(withIdentifier: identifier) as? MGLShapeSource {
@@ -696,8 +706,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      - parameter routeProgress: Current route progress.
      */
     public func updateRoute(_ routeProgress: RouteProgress) {
-        guard let mainRouteLayerIdentifier = mainRouteLayerIdentifier,
-              let mainRouteCasingLayerIdentifier = mainRouteCasingLayerIdentifier else { return }
+        guard let mainRouteLayerIdentifier = identifier(routes?.first, identifierType: .route),
+              let mainRouteCasingLayerIdentifier = identifier(routes?.first, identifierType: .routeCasing) else { return }
         
         guard let mainRouteLayer = style?.layer(withIdentifier: mainRouteLayerIdentifier) as? MGLLineStyleLayer,
               let mainRouteCasingLayer = style?.layer(withIdentifier: mainRouteCasingLayerIdentifier) as? MGLLineStyleLayer else { return }
@@ -718,10 +728,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         var gradientStops = [CGFloat: UIColor]()
         
         // In case if mainRouteLayer was already added - extract congestion segments out of it.
-        if let identifier = mainRouteLayerIdentifier, let mainRouteLayer = style?.layer(withIdentifier: identifier) as? MGLLineStyleLayer,
-            // lineGradient contains 4 arguments, last one (stops) allows to store line gradient stops, if they're present - reuse them.
-            let lineGradients = mainRouteLayer.lineGradient?.arguments?[3],
-            let stops = lineGradients.expressionValue(with: nil, context: nil) as? NSDictionary {
+        if let identifier = identifier(routes?.first, identifierType: .route), let mainRouteLayer = style?.layer(withIdentifier: identifier) as? MGLLineStyleLayer,
+           // lineGradient contains 4 arguments, last one (stops) allows to store line gradient stops, if they're present - reuse them.
+           let lineGradients = mainRouteLayer.lineGradient?.arguments?[3],
+           let stops = lineGradients.expressionValue(with: nil, context: nil) as? NSDictionary {
             
             for (key, value) in stops {
                 if let key = key as? CGFloat, let value = (value as? NSExpression)?.expressionValue(with: nil, context: nil) as? UIColor {
@@ -854,10 +864,18 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         var sourceIdentifiers = Set<String>()
         var layerIdentifiers = Set<String>()
-        routes?.enumerated().forEach {
-            sourceIdentifiers.insert("\($0.element.description)_source")
-            layerIdentifiers.insert("\($0.element.description)_route")
-            layerIdentifiers.insert("\($0.element.description)_casing")
+        routes?.forEach {
+            if let identifier = identifier($0, identifierType: .source) {
+                sourceIdentifiers.insert(identifier)
+            }
+            
+            if let identifier = identifier($0, identifierType: .route) {
+                layerIdentifiers.insert(identifier)
+            }
+            
+            if let identifier = identifier($0, identifierType: .routeCasing) {
+                layerIdentifiers.insert(identifier)
+            }
         }
         
         style.remove(layerIdentifiers.compactMap({ style.layer(withIdentifier: $0) }))
