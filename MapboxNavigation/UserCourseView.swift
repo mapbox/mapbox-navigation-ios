@@ -1,9 +1,7 @@
 import UIKit
 import Turf
 import Mapbox
-import MapboxCoreNavigation
 
-let PuckSize: CGFloat = 45
 /**
  A protocol that represents a `UIView` which tracks the user’s location and course on a `NavigationMapView`.
  */
@@ -35,12 +33,9 @@ public extension CourseUpdatable {
 /**
  A view representing the user’s location on screen.
  */
-
 public class UserPuckCourseView: UIView, CourseUpdatable {
     private var lastLocationUpdate: Date?
     private var staleTimer: Timer!
-    
-    private var approximateModeActivated: Bool = false
 
     /// Time interval tick at which Puck view is transitioning into 'stale' state
     public var staleRefreshInterval: TimeInterval = 1 {
@@ -59,20 +54,8 @@ public class UserPuckCourseView: UIView, CourseUpdatable {
         let duration: TimeInterval = animated ? 1 : 0
         UIView.animate(withDuration: duration, delay: 0, options: [.beginFromCurrentState, .curveLinear], animations: {
             let angle = tracksUserCourse ? 0 : CLLocationDegrees(direction - location.course)
-            let dataSource = PassiveLocationDataSource()
-            let locationManager = PassiveLocationManager(dataSource: dataSource)
-            if #available(iOS 14.0, *) {
-                if (locationManager.accuracyAuthorization() ==
-                    MBNavigationAccuracyAuthorization(rawValue: 1)) {
-                    self.approximateModeActivated = true
-                    // ToDo: switch the puckView to UserApproximateStyleKitView
-                } else {
-                     // ToDo: switch the puckView to UserPuckStyleKitView
-                }
-            } else {
-                // ToDo: switch the puckView to UserPuckStyleKitView
-            }
             self.puckView.layer.setAffineTransform(CGAffineTransform.identity.rotated(by: -CGFloat(angle.toRadians())))
+        
             var transform = CATransform3DRotate(CATransform3DIdentity, CGFloat(CLLocationDegrees(pitch).toRadians()), 1.0, 0, 0)
             transform = CATransform3DScale(transform, tracksUserCourse ? 1 : 0.5, tracksUserCourse ? 1 : 0.5, 1)
             transform.m34 = -1.0 / 1000 // (-1 / distance to projection plane)
@@ -83,9 +66,6 @@ public class UserPuckCourseView: UIView, CourseUpdatable {
     // Sets the color on the user puck
     @objc public dynamic var puckColor: UIColor = #colorLiteral(red: 0.149, green: 0.239, blue: 0.341, alpha: 1) {
         didSet {
-            if approximateModeActivated {
-                puckColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            }
             puckView.puckColor = puckColor
         }
     }
@@ -93,9 +73,6 @@ public class UserPuckCourseView: UIView, CourseUpdatable {
     // Sets the color on the user puck in 'stale' state. Puck will gradually transition the color as long as location updates are missing
     @objc public dynamic var stalePuckColor: UIColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1) {
         didSet {
-            if approximateModeActivated {
-                stalePuckColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            }
             puckView.stalePuckColor = stalePuckColor
         }
     }
@@ -113,15 +90,6 @@ public class UserPuckCourseView: UIView, CourseUpdatable {
             puckView.shadowColor = shadowColor
         }
     }
-    
-    /*
-     Todo: mapView could not be identified, used to calculate the haloView radius
-    func calculateHaloViewRadius(location: CLLocation) -> Double {
-        guard let mapView = mapView else { return 100.0 }
-        return round(2 * location.horizontalAccuracy / mapView.metersPerPoint(atLatitude: location.coordinate.latitude))
-    }
-     */
-    
     
     var puckView: UserPuckStyleKitView!
     
@@ -176,50 +144,6 @@ public class UserPuckCourseView: UIView, CourseUpdatable {
     }
 }
 
-class UserApproximateStyleKitView: UIView {
-    var puckColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)  {
-        didSet {
-            setNeedsDisplay()
-        }
-    }
-    
-    var stalePuckColor: UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) {
-        didSet {
-            setNeedsDisplay()
-        }
-    }
-
-    var fillColor: UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-    var shadowColor: UIColor = #colorLiteral(red: 0.149, green: 0.239, blue: 0.341, alpha: 0.16)
-    var staleRatio: CGFloat = 0 {
-        didSet {
-            setNeedsDisplay()
-        }
-    }
-    var opacity: CGFloat = 0.25
-    var boarderSize = 2.0
-    var radius = 100.0
-    
-    override func draw(_ rect: CGRect) {
-           super.draw(rect)
-           drawHaloView()
-       }
-    
-    func drawHaloView() {
-        let haloPath = UIBezierPath(arcCenter: center, radius: CGFloat(radius), startAngle: 0, endAngle: 2.0 * CGFloat.pi, clockwise: true)
-        
-        let haloLayer = CAShapeLayer()
-        haloLayer.path = haloPath.cgPath
-                
-        haloLayer.fillColor = puckColor.cgColor
-        haloLayer.strokeColor = stalePuckColor.cgColor
-        haloLayer.lineWidth = CGFloat(boarderSize)
-        haloLayer.shadowColor = shadowColor.cgColor
-        haloLayer.opacity = Float(opacity)
-        haloLayer.borderWidth = CGFloat(boarderSize)
-        layer.addSublayer(haloLayer)
-    }
-}
 
 class UserPuckStyleKitView: UIView {
     private typealias ColorComponents = (hue: CGFloat, saturation: CGFloat, brightness: CGFloat, alpha: CGFloat)
@@ -257,7 +181,6 @@ class UserPuckStyleKitView: UIView {
             setNeedsDisplay()
         }
     }
-    
     
     private func colorComponents(_ color: UIColor) -> ColorComponents {
         var hue: CGFloat = 0, saturation: CGFloat = 0, brightness: CGFloat = 0, alpha: CGFloat = 0

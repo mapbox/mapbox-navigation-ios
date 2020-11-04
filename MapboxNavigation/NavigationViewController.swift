@@ -696,6 +696,7 @@ extension NavigationViewController: NavigationServiceDelegate {
         if #available(iOS 14.0, *), accuracyAuthorization == .reducedAccuracy {
             let title = NSLocalizedString("ENABLE_PRECISE_LOCATION", bundle: .mapboxNavigation, value: "Enable precise location to navigate", comment: "Label indicating precise location is off and needs to be turned on to navigate")
             showStatus(title: title, spinner: false, duration: 20, animated: true, interactive: false)
+            mapView?.reducedAccuracyActivatedMode = true
         } else {
             //Fallback on earlier versions
             return
