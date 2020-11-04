@@ -184,7 +184,7 @@ public extension Notification.Name {
     /**
      Posted when user changes location authorization settings.
      
-     The user info dictionary indicates which keys and values changed.
+     The user info dictionary contains the key `MapboxNavigationService.NotificationUserInfoKey.locationAuthorizationKey`.
     */
     static let locationAuthorizationDidChange: Notification.Name = .init(rawValue: "LocationAuthorizationDidChange")
  
