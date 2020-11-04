@@ -425,7 +425,6 @@ extension MapboxNavigationService: CLLocationManagerDelegate {
             let info: [NotificationUserInfoKey: Any] = [
                 MapboxNavigationService.locationAuthorizationKey: manager.value(forKey: "accuracyAuthorization") ?? 0
             ]
-            
             NotificationCenter.default.post(name: .locationAuthorizationDidChange, object: manager, userInfo: info)
             delegate?.navigationServiceDidChangeAuthorization(self, didChangeAuthorizationFor: manager)
         } else {
