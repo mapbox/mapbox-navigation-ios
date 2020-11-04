@@ -298,12 +298,13 @@ class RouteMapViewController: UIViewController {
         }
         
         updateMapViewContentInsets()
-        updateMapViewComponents()
     }
     
     func updateMapViewContentInsets(animated: Bool = false, completion: CompletionHandler? = nil) {
         mapView.setContentInset(contentInset(forOverviewing: isInOverviewMode), animated: animated, completionHandler: completion)
         mapView.setNeedsUpdateConstraints()
+        
+        updateMapViewComponents()
     }
 
     @objc func applicationWillEnterForeground(notification: NSNotification) {
