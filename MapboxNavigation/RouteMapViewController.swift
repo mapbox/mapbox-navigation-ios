@@ -366,6 +366,9 @@ class RouteMapViewController: UIViewController {
      to prevent spontaneous changes to `MGLMapView.contentInset`.
      */
     func updateMapViewComponents() {
+        // FIXME: Current implementation is considered as a workaround of Mapbox Maps SDK issue reported in:
+        // https://github.com/mapbox/mapbox-gl-native-ios/issues/533 and should be revised after root cause is fixed.
+        
         automaticallyAdjustsScrollViewInsets = true
         
         let bottomBannerHeight = bottomBannerContainerView.bounds.height
