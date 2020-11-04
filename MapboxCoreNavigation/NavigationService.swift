@@ -421,7 +421,6 @@ extension MapboxNavigationService: CLLocationManagerDelegate {
     
     public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         if #available(iOS 14.0, *) {
-            
             let info: [NotificationUserInfoKey: Any] = [
                 MapboxNavigationService.locationAuthorizationKey: manager.value(forKey: "accuracyAuthorization") ?? 0
             ]
