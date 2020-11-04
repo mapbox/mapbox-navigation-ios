@@ -131,6 +131,7 @@ class RouteMapViewController: UIViewController {
         bottomContainer.backgroundColor = .clear
         
         view.bringSubviewToFront(topBannerContainerView)
+
     }
 
     override func loadView() {
