@@ -87,7 +87,6 @@ class RouteMapViewController: UIViewController {
     }
     var currentLegIndexMapped = 0
     var currentStepIndexMapped = 0
-    var isDefaultBottomBanner = false
     
     /**
      A Boolean value that determines whether the map annotates the locations at which instructions are spoken for debugging purposes.
@@ -123,9 +122,6 @@ class RouteMapViewController: UIViewController {
         
         topContainer.backgroundColor = .clear
         
-        if let bottomBanner = bottomBanner as? BottomBannerViewController, bottomBanner.isDefaultBottomBanner {
-            isDefaultBottomBanner = true
-        }
         let bottomContainer = navigationView.bottomBannerContainerView
         embed(bottomBanner, in: bottomContainer) { (parent, banner) -> [NSLayoutConstraint] in
             banner.view.translatesAutoresizingMaskIntoConstraints = false
@@ -363,29 +359,32 @@ class RouteMapViewController: UIViewController {
     }
     
     /**
-     In case when default bottom banner view is used update `logoView` and `attributionButton` margins to prevent incorrect alignment
+     Method updates `logoView` and `attributionButton` margins to prevent incorrect alignment
      reported in https://github.com/mapbox/mapbox-navigation-ios/issues/2561. To be able to successfully update margins
-     `RouteMapViewController.automaticallyAdjustsScrollViewInsets` should be set to `true`.
+     `RouteMapViewController.automaticallyAdjustsScrollViewInsets` should be set to `true` and then switched back to `false`
+     to prevent spontaneous changes to `MGLMapView.contentInset`.
      */
-    func updateMapViewComponents() {        
+    func updateMapViewComponents() {
         automaticallyAdjustsScrollViewInsets = true
         
         let bottomBannerHeight = bottomBannerContainerView.bounds.height
+        let bottomBannerVerticalOffset = UIScreen.main.bounds.height - bottomBannerHeight - bottomBannerContainerView.frame.origin.y
         let defaultOffset: CGFloat = 10.0
+        let x: CGFloat = defaultOffset
+        let y: CGFloat = bottomBannerHeight + defaultOffset + bottomBannerVerticalOffset
+        
         mapView.logoViewPosition = .bottomLeft
         if #available(iOS 11.0, *) {
-            let safeAreaOffset = isDefaultBottomBanner ? view.safeAreaInsets.bottom : 0.0
-            mapView.logoViewMargins = CGPoint(x: defaultOffset, y: bottomBannerHeight - safeAreaOffset + defaultOffset)
+            mapView.logoViewMargins = CGPoint(x: x, y: y - view.safeAreaInsets.bottom)
         } else {
-            mapView.logoViewMargins = CGPoint(x: defaultOffset, y: bottomBannerHeight + defaultOffset)
+            mapView.logoViewMargins = CGPoint(x: x, y: y)
         }
         
         mapView.attributionButtonPosition = .bottomRight
         if #available(iOS 11.0, *) {
-            let safeAreaOffset = isDefaultBottomBanner ? view.safeAreaInsets.bottom : 0.0
-            mapView.attributionButtonMargins = CGPoint(x: defaultOffset, y: bottomBannerHeight - safeAreaOffset + defaultOffset)
+            mapView.attributionButtonMargins = CGPoint(x: x, y: y - view.safeAreaInsets.bottom)
         } else {
-            mapView.attributionButtonMargins = CGPoint(x: defaultOffset, y: bottomBannerHeight + defaultOffset)
+            mapView.attributionButtonMargins = CGPoint(x: x, y: y)
         }
         
         automaticallyAdjustsScrollViewInsets = false
