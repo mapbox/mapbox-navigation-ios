@@ -113,6 +113,7 @@ class RouteMapViewController: UIViewController {
         self.init()
         self.navService = navigationService
         self.delegate = delegate
+        automaticallyAdjustsScrollViewInsets = false
         let topContainer = navigationView.topBannerContainerView
         
         embed(topBanner, in: topContainer) { (parent, banner) -> [NSLayoutConstraint] in
@@ -212,6 +213,7 @@ class RouteMapViewController: UIViewController {
 
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground(notification:)), name: UIApplication.willEnterForegroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChange(_:)), name: UIDevice.orientationDidChangeNotification, object: nil)
         subscribeToKeyboardNotifications()
     }
 
@@ -262,6 +264,7 @@ class RouteMapViewController: UIViewController {
             mapView.setOverheadCameraView(from: userLocation, along: shape, for: contentInset(forOverviewing: true))
         }
         isInOverviewMode = true
+        updateMapViewComponents()
     }
 
     @objc func toggleMute(_ sender: UIButton) {
@@ -305,6 +308,10 @@ class RouteMapViewController: UIViewController {
 
     @objc func applicationWillEnterForeground(notification: NSNotification) {
         mapView.updateCourseTracking(location: router.location, animated: false)
+    }
+    
+    @objc func orientationDidChange(_ notification: Notification) {
+        updateMapViewComponents()
     }
 
     func updateMapOverlays(for routeProgress: RouteProgress) {
@@ -359,8 +366,8 @@ class RouteMapViewController: UIViewController {
      reported in https://github.com/mapbox/mapbox-navigation-ios/issues/2561. To be able to successfully update margins
      `RouteMapViewController.automaticallyAdjustsScrollViewInsets` should be set to `true`.
      */
-    func updateMapViewComponents() {
-        if !isDefaultBottomBanner { return }
+    func updateMapViewComponents() {        
+        automaticallyAdjustsScrollViewInsets = true
         
         let bottomBannerHeight = bottomBannerContainerView.bounds.height
         let defaultOffset: CGFloat = 10.0
@@ -379,6 +386,8 @@ class RouteMapViewController: UIViewController {
         } else {
             mapView.attributionButtonMargins = CGPoint(x: defaultOffset, y: bottomBannerHeight + defaultOffset)
         }
+        
+        automaticallyAdjustsScrollViewInsets = false
     }
     
     func contentInset(forOverviewing overviewing: Bool) -> UIEdgeInsets {
