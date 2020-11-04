@@ -87,7 +87,7 @@ class RouteMapViewController: UIViewController {
     }
     var currentLegIndexMapped = 0
     var currentStepIndexMapped = 0
-    
+
     /**
      A Boolean value that determines whether the map annotates the locations at which instructions are spoken for debugging purposes.
      */
@@ -215,6 +215,7 @@ class RouteMapViewController: UIViewController {
 
     func suspendNotifications() {
         NotificationCenter.default.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
         unsubscribeFromKeyboardNotifications()
     }
 
