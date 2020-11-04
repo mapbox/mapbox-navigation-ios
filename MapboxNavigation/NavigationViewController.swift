@@ -688,10 +688,9 @@ extension NavigationViewController: NavigationServiceDelegate {
         return navigationComponents.allSatisfy { $0.navigationServiceShouldDisableBatteryMonitoring(service) }
     }
     
-    public func navigationServiceDidChangeAuthorization(_ service: NavigationService, _ manager: CLLocationManager) {
+    public func navigationServiceDidChangeAuthorization(_ service: NavigationService, didChangeAuthorizationFor locationManager: CLLocationManager) {
         // CLLocationManager.accuracyAuthorization was introduced in the iOS 14 SDK in Xcode 12, so Xcode 11 doesn’t recognize it.
-        guard let accuracyAuthorizationValue = manager.value(forKey: "accuracyAuthorization") as? Int
-        else { return }
+        guard let accuracyAuthorizationValue = locationManager.value(forKey: "accuracyAuthorization") as? Int else { return }
         let accuracyAuthorization = MBNavigationAccuracyAuthorization(rawValue: accuracyAuthorizationValue)
         
         if #available(iOS 14.0, *), accuracyAuthorization == .reducedAccuracy {

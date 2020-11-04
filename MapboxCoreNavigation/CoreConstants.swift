@@ -219,12 +219,6 @@ extension RouteController {
         public static let rawLocationKey: NotificationUserInfoKey = .init(rawValue: "rawLocation")
         
         /**
-         A key in the user info dictionary of a `Notification.Name.locationAuthorizationDidChange` notification. The corresponding value is a `Int` object the current location authorization setting. */
-         
-        public static let locationAuthorizationKey: NotificationUserInfoKey = .init(rawValue: "locationAuthorization")
-         
-        
-        /**
          A key in the user info dictionary of a `Notification.Name.routeControllerDidFailToReroute` notification. The corresponding value is an `NSError` object indicating why `RouteController` was unable to calculate a new route.
          */
         public static let routingErrorKey: NotificationUserInfoKey = .init(rawValue: "error")
@@ -281,4 +275,21 @@ extension PassiveLocationDataSource {
          */
         public static let roadNameKey: NotificationUserInfoKey = .init(rawValue: "roadName")
     }
+}
+
+extension MapboxNavigationService {
+    /**
+     Keys in the user info dictionaries of various notifications posted by instances of `NavigationService`.
+     */
+    public struct NotificationUserInfoKey: Hashable, Equatable, RawRepresentable {
+        public typealias RawValue = String
+        public var rawValue: String
+        public init(rawValue: String) {
+            self.rawValue = rawValue
+        }
+    }
+
+    /**
+     A key in the user info dictionary of a `Notification.Name.locationAuthorizationDidChange` notification. The corresponding value is a `Int` object the current location authorization setting. */
+    public static let locationAuthorizationKey: NotificationUserInfoKey = .init(rawValue: "locationAuthorization")
 }
