@@ -114,6 +114,7 @@ public enum IncorrectVisualSubtype: String {
     case exitInfoIncorrect
     case laneGuidanceIncorrect
     case roadKnownByDifferentName
+    case incorrectSpeedLimit
     case other
 }
 

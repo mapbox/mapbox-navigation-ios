@@ -112,6 +112,9 @@
 /* Specific route feedback that a maneuver specified was incorrect. */
 "INCORRECT_VISUAL_MANEUVER_INCORRECT_FEEDBACK" = "Maneuver incorrect";
 
+/* Specific route feedback that a speed limit is incorrect. */
+"INCORRECT_SPEED_LIMIT" = "Speed limit incorrect";
+
 /* Specific route feedback that a visual instruction problem was encountered but not listed as a choice. */
 "INCORRECT_VISUAL_OTHER_FEEDBACK" = "Other";
 
