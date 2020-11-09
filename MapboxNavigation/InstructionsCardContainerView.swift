@@ -136,6 +136,10 @@ public class InstructionsCardContainerView: StylableView {
         if requiresGradient {
             let gradientLayer = CAGradientLayer()
             view.layer.insertSublayer(gradientLayer, at: 0)
+
+            if view == self {
+                self.gradientLayer = gradientLayer
+            }
         }
         
         if let gradientLayer = view.layer.sublayers?.first as? CAGradientLayer {
@@ -164,6 +168,9 @@ public class InstructionsCardContainerView: StylableView {
     
     override public func layoutSubviews() {
         super.layoutSubviews()
+        if let gradientLayer = gradientLayer {
+            gradientLayer.frame = bounds
+        }
     }
     
     private func gradientLayer(for view: UIView, with colors:[CGColor]? = nil) -> CAGradientLayer? {
