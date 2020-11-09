@@ -1,26 +1,27 @@
-<!-- ⚠️ TEMPLATE ⚠️ -->
-<!-- Template for GitHub PR descriptions. Use it as a guide on how to describe your work. Feel free to remove any section when you're opening a PR if you think it does not apply for your committed changes. -->
+### Description
+<!--
+Include issue references (e.g., fixes [#issue](link))
+include check boxs to describe the tesps to do or have been done
+Include necessary implementation details, including clarifications, disclaimers etc, related to the approach used(e.g. I opted to use this algorithm because ... and test it in this way ...).
+-->
 
-## Description
+### Changelog
+<!--
+Include changelog entry (e.g. Fixed an unexpected change in recenter button when resuming the app.).
+See https://github.com/mapbox/navigation-sdks/blob/main/documentation/android-changelog-guidelines.md.
+You can remove the changelog block and add a `skip changelog` label, when applicable.
+ -->
+ <changelog></changelog>
 
-### Goal
+### Screenshots or Gifs
+<!-- Include media files to provide additional context. It's REALLY useful for UI related PRs (e.g. ![screenshot gif](link)) -->
 
-Please describe the PR goals with a simple description of the issue.  Just the stuff needed to implement the fix / feature and a simple rationale strategy. It could contain many check points as following:
 
-- [x] I have fixed [#issue](link) or I have done some steps
-- [ ] Some steps will be done
-
-### Implementation
-
-Please include all the relevant things implemented and also rationale, clarifications / disclaimers etc. related to the approach used. It could be as self code companion comments
-
-## Testing with Screenshots or Gifs
-
-Please describe the manual tests steps that you ran to verify your changes. 
-
- 1.
- 2.
- 3.
-
- Please include all the media files to give some context about what's being implemented or fixed. It's not mandatory to upload screenshots or gifs, but for most of the cases it becomes really handy to get into the scope of the feature / bug being fixed and also it's REALLY useful for UI related PRs ![screenshot gif](link)
-
+<!--
+---------- CHECKLIST ----------
+1. Add related labels (`bug`, `feature`, `new API(s)`, `SEMVER-MAJOR`, `needs-backporting`, etc.).
+2. Update progress status on the project board.
+3. Request a review from the team, if not a draft.
+4. Add targeted milestone, when applicable.
+5. Create ticket tracking addition of public documentation pages entry, when applicable.
+-->
