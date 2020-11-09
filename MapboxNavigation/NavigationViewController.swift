@@ -699,6 +699,7 @@ extension NavigationViewController: NavigationServiceDelegate {
             mapView?.reducedAccuracyActivatedMode = true
         } else {
             //Fallback on earlier versions
+            mapView?.reducedAccuracyActivatedMode = false
             return
         }
     }

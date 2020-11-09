@@ -120,9 +120,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     @objc dynamic public var buildingDefaultColor: UIColor = .defaultBuildingColor
     @objc dynamic public var buildingHighlightColor: UIColor = .defaultBuildingHighlightColor
     @objc dynamic public var reducedAccuracyActivatedMode: Bool = false {
-            didSet {
-                userCourseView = reducedAccuracyActivatedMode ? UserHaloCourseView(frame: CGRect(origin: .zero, size: 75.0)) : UserPuckCourseView(frame: CGRect(origin: .zero, size: 75.0))
-            }
+        didSet {
+            userCourseView = reducedAccuracyActivatedMode ? UserHaloCourseView(frame: CGRect(origin: .zero, size: 75.0)) : UserPuckCourseView(frame: CGRect(origin: .zero, size: 75.0))
+        }
     }
     
     var userLocationForCourseTracking: CLLocation?
