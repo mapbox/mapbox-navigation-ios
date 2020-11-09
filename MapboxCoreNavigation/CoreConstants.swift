@@ -180,6 +180,14 @@ public extension Notification.Name {
      The user info dictionary indicates which keys and values changed.
      */
     static let navigationSettingsDidChange: Notification.Name = .init(rawValue: "NavigationSettingsDidChange")
+    
+    /**
+     Posted when user changes location authorization settings.
+     
+     The user info dictionary contains the key `MapboxNavigationService.NotificationUserInfoKey.locationAuthorizationKey`.
+    */
+    static let locationAuthorizationDidChange: Notification.Name = .init(rawValue: "LocationAuthorizationDidChange")
+ 
 }
 
 extension RouteController {
@@ -266,5 +274,22 @@ extension PassiveLocationDataSource {
          - seealso: `WayNameView`
          */
         public static let roadNameKey: NotificationUserInfoKey = .init(rawValue: "roadName")
+    }
+}
+
+extension MapboxNavigationService {
+    /**
+     Keys in the user info dictionaries of various notifications posted by instances of `NavigationService`.
+     */
+    public struct NotificationUserInfoKey: Hashable, Equatable, RawRepresentable {
+        public typealias RawValue = String
+        public var rawValue: String
+        public init(rawValue: String) {
+            self.rawValue = rawValue
+        }
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.locationAuthorizationDidChange` notification. The corresponding value is a CLAccuracyAuthorization` indicating the current location authorization setting. */
+        public static let locationAuthorizationKey: NotificationUserInfoKey = .init(rawValue: "locationAuthorization")
     }
 }

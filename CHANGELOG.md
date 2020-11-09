@@ -1,5 +1,10 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v1.2.0
+### User Location
+* Added the `NavigationServiceDelegate.navigationService(_:didChangeAuthorizationFor:)` method and `Notification.Name.locationAuthorizationDidChange` to detect when the user changes the Location Services permissions for the current application, including for approximate location on iOS 14. ([#2693](https://github.com/mapbox/mapbox-navigation-ios/pull/2693))
+* When approximate location is enabled on iOS 14, a banner appears reminding the user to disable approximate location to continue navigating. ([#2693](https://github.com/mapbox/mapbox-navigation-ios/pull/2693))
+
 ## v1.1.0
 
 ### Packaging
@@ -19,6 +24,10 @@
 * Fixed an issue where completed waypoints remained on map after rerouting. ([#2378](https://github.com/mapbox/mapbox-navigation-ios/pull/2378))
 * Fixed an issue where positioning icon was not highlighted on CarPlay when using iOS 14.0. ([#2681](https://github.com/mapbox/mapbox-navigation-ios/issues/2681))
 * Fixed an issue where ETA label font was too small during turn-by-turn navigation. ([#2679](https://github.com/mapbox/mapbox-navigation-ios/pull/2679))
+* Fixed an issue with `NavigationMapViewDelegate.navigationMapView(_:shapeFor:)` and `NavigationMapViewDelegate.navigationMapView(_:simplifiedShapeFor:)` methods were not correctly called for route shape customization ([#2623](https://github.com/mapbox/mapbox-navigation-ios/pull/2623))
+* Fixed an issue where the banner indicating simulation mode displayed a very large speed factor in the Hebrew location. ([#2714](https://github.com/mapbox/mapbox-navigation-ios/pull/2714))
+* Fixed an issue where incorrect speed multiplier value was shown after arriving to the intermediate waypoint. ([#2710](https://github.com/mapbox/mapbox-navigation-ios/pull/2710))
+
 
 ## v1.0.0
 

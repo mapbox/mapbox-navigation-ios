@@ -140,6 +140,16 @@ public protocol NavigationServiceDelegate: class, UnimplementedLogging {
     func navigationService(_ service: NavigationService, shouldPreventReroutesWhenArrivingAt waypoint: Waypoint) -> Bool
     
     /**
+     Called when the location manager's accuracy authorization changed.
+     
+     You can implement this method to allow the navigation service to check if the user changed accuracy authorization, especially if reducedAccuracy is enabled. This method is only relevant for iOS 14 and above.
+     
+     - parameter service: The navigation service that will alert that user that reducedAccuracy is enabled.
+     - parameter manager: The location manager.
+     */
+    func navigationServiceDidChangeAuthorization(_ service: NavigationService, didChangeAuthorizationFor locationManager: CLLocationManager)
+    
+    /**
      Called when the navigation service will disable battery monitoring.
      
      Implementing this method will allow developers to change whether battery monitoring is disabled when `NavigationService` is deinited.
@@ -281,6 +291,10 @@ public extension NavigationServiceDelegate {
     func navigationService(_ service: NavigationService, shouldPreventReroutesWhenArrivingAt waypoint: Waypoint) -> Bool {
         logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
         return MapboxNavigationService.Default.shouldPreventReroutesWhenArrivingAtWaypoint
+    }
+    
+    func navigationServiceDidChangeAuthorization(_ service: NavigationService, didChangeAuthorizationFor locationManager: CLLocationManager) {
+        logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
     }
     
     /**
