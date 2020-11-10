@@ -2,6 +2,7 @@ import UIKit
 import MapboxCoreNavigation
 import MapboxNavigation
 import MapboxDirections
+import Turf
 
 private typealias RouteRequestSuccess = ((RouteResponse) -> Void)
 private typealias RouteRequestFailure = ((Error) -> Void)
@@ -48,7 +49,197 @@ class ViewController: UIViewController {
             startButton.isEnabled = true
             mapView?.show(routes)
             mapView?.showWaypoints(on: currentRoute)
+            if let style = mapView?.style {
+                // show route Duration and Toll annotations
+                updateAnnotationSymbolImages(style)
+                updateRouteAnnotations(routes, style: style)
+            }
         }
+    }
+
+    fileprivate let dateComponentsFormatter = DateComponentsFormatter()
+
+    // Regenerate the annotation "bubble" images for any changes in dynamic UIColors.
+    private func updateAnnotationSymbolImages(_ style: MGLStyle) {
+        let capInsetHeight = CGFloat(22)
+        let capInsetWidth = CGFloat(11)
+        let capInsets = UIEdgeInsets(top: capInsetHeight, left: capInsetWidth, bottom: capInsetHeight, right: capInsetWidth)
+        if let image = UIImage(named: "RouteInfoAnnotationLeftHanded") {
+            let regularRouteImage = image.tint(UIColor.white).resizableImage(withCapInsets: capInsets, resizingMode: .stretch)
+            style.setImage(regularRouteImage, forName: "RouteInfoAnnotationLeftHanded")
+
+            let selectedRouteImage = image.tint(#colorLiteral(red: 0.337254902, green: 0.6588235294, blue: 0.9843137255, alpha: 1)).resizableImage(withCapInsets: capInsets, resizingMode: .stretch)
+            style.setImage(selectedRouteImage, forName: "RouteInfoAnnotationLeftHanded-Selected")
+        }
+
+        if let image = UIImage(named: "RouteInfoAnnotationRightHanded") {
+            let regularRouteImage = image.tint(UIColor.white).resizableImage(withCapInsets: capInsets, resizingMode: .stretch)
+            style.setImage(regularRouteImage, forName: "RouteInfoAnnotationRightHanded")
+
+            let selectedRouteImage = image.tint(#colorLiteral(red: 0.337254902, green: 0.6588235294, blue: 0.9843137255, alpha: 1)).resizableImage(withCapInsets: capInsets, resizingMode: .stretch)
+            style.setImage(selectedRouteImage, forName: "RouteInfoAnnotationRightHanded-Selected")
+        }
+    }
+
+    private func removeRouteAnnotationsLayerFromStyle(_ style: MGLStyle) {
+        if let annotationsLayer = style.layer(withIdentifier: annotationLayerIdentifier + "-shape") {
+            style.removeLayer(annotationsLayer)
+        }
+
+        if let annotationsSource = style.source(withIdentifier: annotationLayerIdentifier + "-source") {
+            style.removeSource(annotationsSource)
+        }
+    }
+
+    let annotationLayerIdentifier = "RouteETAAnnotations"
+
+    private func updateRouteAnnotations(_ routes: [Route]?, style: MGLStyle) {
+        // remove any existing route annotation
+        removeRouteAnnotationsLayerFromStyle(style)
+
+        guard waypoints.count > 0, let routes = routes, let mapView = mapView else { return }
+
+        let visibleCoordinateBounds = mapView.coordinateBoundsInset(CGSize(width: 40, height: 60))
+        let visibleBoundingBox = BoundingBox(coordinateBounds: visibleCoordinateBounds)
+
+        let tollRoutes = routes.filter { route -> Bool in
+            return (route.tollIntersections?.count ?? 0) > 0
+        }
+        let routesContainTolls = tollRoutes.count > 0
+
+        guard let selectedRoute = routes.first else { return }
+
+        guard let visibleSelectedRoute = selectedRoute.shapes(within: visibleBoundingBox), let selectedRouteShape = visibleSelectedRoute.first else { return }
+
+        let selectedRouteCoordinate = selectedRouteShape.coordinateAtNormalizedPosition(0.25)!
+
+        var selectedRouteTailPosition = RouteETAAnnotationTailPosition.right
+
+
+        if let currentLocation = mapView.userLocation?.location?.coordinate {
+            selectedRouteTailPosition = selectedRouteCoordinate.longitude > currentLocation.longitude ? .left : .right
+        }
+
+        var features = [MGLPointFeature]()
+        for (index, route) in routes.dropFirst().enumerated() {
+            guard let visibleShapes = route.shapes(within: visibleBoundingBox), let visibleSegment = visibleShapes.first else { continue }
+
+            let lineOffset = index % 2 == 0 ? Double(0.75) : Double(0.25)
+
+            var coordinate = kCLLocationCoordinate2DInvalid
+
+            if #available(iOS 13.0, *) {
+                let elementCoordinates = visibleSegment.coordinates
+
+                var difference = [CLLocationCoordinate2D]()
+                var matching = [CLLocationCoordinate2D]()
+
+                for coordinate in elementCoordinates {
+                    if let indexedCoordinate = selectedRouteShape.closestCoordinate(to: coordinate) {
+                        if coordinate.distance(to: indexedCoordinate.coordinate) > 10 {
+                            difference.append(coordinate)
+                        } else {
+                            matching.append(coordinate)
+                        }
+                    }
+                }
+
+                let line = LineString(difference)
+
+                if let distance = line.distance(), let earlyCoordinate = line.coordinateFromStart(distance: distance * 0.25 ), let midCoordinate = line.coordinateFromStart(distance: distance * 0.5), let lateCoordinate = line.coordinateFromStart(distance: distance * 0.75) {
+                    coordinate = selectedRouteCoordinate.distance(to: earlyCoordinate) > selectedRouteCoordinate.distance(to: lateCoordinate) ? earlyCoordinate : lateCoordinate
+
+                    coordinate = selectedRouteCoordinate.distance(to: coordinate) > selectedRouteCoordinate.distance(to: midCoordinate) ? coordinate : midCoordinate
+                } else {
+                    coordinate = line.coordinateFromStart(distance: route.distance * lineOffset) ?? kCLLocationCoordinate2DInvalid
+                }
+            } else {
+                coordinate = route.shape?.coordinateFromStart(distance: route.distance * lineOffset) ?? kCLLocationCoordinate2DInvalid
+            }
+
+            let text = annotationLabelForRoute(route, tolls: routesContainTolls)
+
+            let point = MGLPointFeature()
+            point.coordinate = coordinate
+            let tailPosition = selectedRouteTailPosition == .left ? RouteETAAnnotationTailPosition.right : RouteETAAnnotationTailPosition.left
+            let imageName = tailPosition == .left ? "RouteInfoAnnotationLeftHanded" : "RouteInfoAnnotationRightHanded"
+            point.attributes = ["selected": false, "tailPosition": tailPosition.rawValue, "text": text, "imageName": imageName]
+
+            features.append(point)
+        }
+
+        let text = annotationLabelForRoute(selectedRoute, tolls: routesContainTolls)
+
+        let point = MGLPointFeature()
+        point.coordinate = selectedRouteCoordinate
+        point.attributes = ["selected": true, "tailPosition": selectedRouteTailPosition.rawValue, "text": text, "imageName": selectedRouteTailPosition == .left ? "RouteInfoAnnotationLeftHanded-Selected" : "RouteInfoAnnotationRightHanded-Selected"]
+
+        features.append(point)
+
+        let dataSource: MGLShapeSource
+        if let source = style.source(withIdentifier: annotationLayerIdentifier + "-source") as? MGLShapeSource {
+            dataSource = source
+        } else {
+            dataSource = MGLShapeSource(identifier: annotationLayerIdentifier + "-source", features: features, options: nil)
+            style.addSource(dataSource)
+        }
+
+        let shapeLayer: MGLSymbolStyleLayer
+
+        if let layer = style.layer(withIdentifier: annotationLayerIdentifier + "-shape") as? MGLSymbolStyleLayer {
+            shapeLayer = layer
+        } else {
+            shapeLayer = MGLSymbolStyleLayer(identifier: annotationLayerIdentifier + "-shape", source: dataSource)
+        }
+
+        shapeLayer.text = NSExpression(forKeyPath: "text")
+        let fontSizeByZoomLevel = [
+            13: NSExpression(forConstantValue: 16),
+            15.5: NSExpression(forConstantValue: 20)
+        ]
+        shapeLayer.textFontSize = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", fontSizeByZoomLevel)
+
+        shapeLayer.textColor = NSExpression(forConditional: NSPredicate(format: "selected == true"),
+                                            trueExpression: NSExpression(forConstantValue: UIColor.white),
+                     falseExpression: NSExpression(forConstantValue: UIColor.black))
+
+        shapeLayer.textFontNames = NSExpression(forConstantValue: ["DIN Pro Medium"])
+        shapeLayer.textAllowsOverlap = NSExpression(forConstantValue: false)
+        shapeLayer.textJustification = NSExpression(forConstantValue: "left")
+        shapeLayer.symbolZOrder = NSExpression(forConstantValue: NSValue(mglSymbolZOrder: .auto))
+        shapeLayer.symbolSortKey = NSExpression(forConditional: NSPredicate(format: "selected == true"),
+                                                trueExpression: NSExpression(forConstantValue: 0),
+                                                   falseExpression: NSExpression(forConstantValue: 1))
+        shapeLayer.iconAnchor = NSExpression(forConditional: NSPredicate(format: "tailPosition == 0"),
+                                             trueExpression: NSExpression(forConstantValue: "bottom-left"),
+                                                falseExpression: NSExpression(forConstantValue: "bottom-right"))
+        shapeLayer.textAnchor = shapeLayer.iconAnchor
+        shapeLayer.iconTextFit = NSExpression(forConstantValue: "both")
+
+        shapeLayer.iconImageName = NSExpression(forKeyPath: "imageName")
+        shapeLayer.iconOffset = NSExpression(forConditional: NSPredicate(format: "tailPosition == 0"),
+                                             trueExpression: NSExpression(forConstantValue: CGVector(dx: 0.5, dy: -1.0)),
+                      falseExpression: NSExpression(forConstantValue: CGVector(dx: -0.5, dy: -1.0)))
+        shapeLayer.textOffset = shapeLayer.iconOffset
+        shapeLayer.iconAllowsOverlap = NSExpression(forConstantValue: true)
+
+        style.addLayer(shapeLayer)
+    }
+
+    private func annotationLabelForRoute(_ route: Route, tolls: Bool) -> String {
+        var eta = dateComponentsFormatter.string(from: route.expectedTravelTime) ?? ""
+
+        let hasTolls = (route.tollIntersections?.count ?? 0) > 0
+        if hasTolls {
+            eta += "\nTolls"
+            if let symbol = Locale.current.currencySymbol {
+                eta += " " + symbol
+            }
+        } else if tolls {
+            eta += "\nNo Tolls"
+        }
+
+        return eta
     }
     
     weak var activeNavigationViewController: NavigationViewController?
@@ -94,6 +285,10 @@ class ViewController: UIViewController {
         if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
             appDelegate.currentAppRootViewController = self
         }
+
+        dateComponentsFormatter.maximumUnitCount = 3
+        dateComponentsFormatter.allowedUnits = [.hour, .minute]
+        dateComponentsFormatter.unitsStyle = .short
     }
     
     deinit {
@@ -185,6 +380,10 @@ class ViewController: UIViewController {
         startButton.isEnabled = false
         clearMap.isHidden = true
         longPressHintView.isHidden = false
+
+        if let style = mapView?.style {
+            removeRouteAnnotationsLayerFromStyle(style)
+        }
         
         mapView?.unhighlightBuildings()
         mapView?.removeRoutes()
@@ -420,7 +619,7 @@ extension ViewController: MGLMapViewDelegate {
         guard mapView == self.mapView else {
             return
         }
-        
+
         self.mapView?.localizeLabels()
         
         if let routes = response?.routes, let currentRoute = routes.first, let coords = currentRoute.shape?.coordinates {
@@ -450,6 +649,12 @@ extension ViewController: MGLMapViewDelegate {
             if buildingHighlightCoordinates.count > 0 {
                 foundAllBuildings = navMapView.highlightBuildings(at: buildingHighlightCoordinates, in3D: false)
             }
+        }
+    }
+
+    func mapView(_ mapView: MGLMapView, regionDidChangeWith reason: MGLCameraChangeReason, animated: Bool) {
+        if let style = mapView.style, let routes = response?.routes {
+            updateRouteAnnotations(routes, style: style)
         }
     }
 }
@@ -611,4 +816,9 @@ extension ViewController {
         
         mapView?.addAnnotations([rawTrackPolyline!, trackPolyline!])
     }
+}
+
+enum RouteETAAnnotationTailPosition: Int {
+    case left
+    case right
 }

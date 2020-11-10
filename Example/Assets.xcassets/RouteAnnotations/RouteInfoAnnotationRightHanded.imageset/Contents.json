@@ -1,0 +1,29 @@
+{
+  "images" : [
+    {
+      "filename" : "RightHandUpDown.pdf",
+      "idiom" : "universal",
+      "resizing" : {
+        "cap-insets" : {
+          "bottom" : 22,
+          "left" : 11,
+          "right" : 11,
+          "top" : 22
+        },
+        "center" : {
+          "height" : 2,
+          "mode" : "stretch",
+          "width" : 1
+        },
+        "mode" : "9-part"
+      }
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  },
+  "properties" : {
+    "preserves-vector-representation" : true
+  }
+}
