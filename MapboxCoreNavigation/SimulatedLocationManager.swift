@@ -4,9 +4,8 @@ import Turf
 
 fileprivate let maximumSpeed: CLLocationSpeed = 30 // ~108 kmh
 fileprivate let minimumSpeed: CLLocationSpeed = 6 // ~21 kmh
-// add variables to document the average speed from past route info
-fileprivate var previousAverageSpeed: Double = 30
-fileprivate var previousSpeedCount: Double = 0
+// previousSpeed will be used when routeProgress info could not be retrived
+fileprivate var previousSpeed: Double = 30
 fileprivate var distanceFilter: CLLocationDistance = 10
 fileprivate var verticalAccuracy: CLLocationAccuracy = 10
 fileprivate var horizontalAccuracy: CLLocationAccuracy = 40
@@ -14,8 +13,6 @@ fileprivate var horizontalAccuracy: CLLocationAccuracy = 40
 fileprivate let maximumTurnPenalty: CLLocationDirection = 90
 // maximumSpeed will be used when a location have minimumTurnPenalty
 fileprivate let minimumTurnPenalty: CLLocationDirection = 0
-// Go maximum speed if distance to nearest coordinate is >= `safeDistance`
-fileprivate let safeDistance: CLLocationDistance = 50
 
 fileprivate class SimulatedLocation: CLLocation {
     var turnPenalty: Double = 0
@@ -81,7 +78,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
      */
     public init(route: Route) {
         super.init()
-        commonInit(for: route, currentDistance: 0, currentSpeed: 30)
+        commonInit(for: route, currentDistance: 0, currentSpeed: 0)
     }
 
     /**
@@ -157,10 +154,6 @@ open class SimulatedLocationManager: NavigationLocationManager {
         guard let closestCoordinate = polyline.closestCoordinate(to: newCoordinate) else { return }
         
         let closestLocation = locations[closestCoordinate.index]
-        let distanceToClosest = closestLocation.distance(from: CLLocation(newCoordinate))
-        
-        let distance = min(max(distanceToClosest, 10), safeDistance)
-        let coordinatesNearby = polyline.trimmed(from: newCoordinate, distance: 100)!.coordinates
         
         // Simulate speed based on expected segment travel time
         if let expectedSegmentTravelTimes = routeProgress?.currentLeg.expectedSegmentTravelTimes,
@@ -171,14 +164,9 @@ open class SimulatedLocationManager: NavigationLocationManager {
             let distance = shape.coordinates[closestCoordinateOnRoute.index].distance(to: nextCoordinateOnRoute)
             // add upper bound to route generated speed
             currentSpeed =  min(max(distance / time, 2), maximumSpeed)
-            if previousSpeedCount == 0 {
-                previousAverageSpeed = currentSpeed
-            } else {
-                previousAverageSpeed = (previousAverageSpeed * previousSpeedCount + currentSpeed) / (previousSpeedCount + 1)
-            }
-            previousSpeedCount += 1
+            previousSpeed = currentSpeed
         } else {
-            currentSpeed = calculateCurrentSpeed(distance: distance, coordinatesNearby: coordinatesNearby, closestLocation: closestLocation)
+            currentSpeed = calculateCurrentSpeed(closestLocation: closestLocation)
         }
         
         let location = CLLocation(coordinate: newCoordinate,
@@ -195,26 +183,17 @@ open class SimulatedLocationManager: NavigationLocationManager {
         currentDistance = calculateCurrentDistance(currentDistance)
     }
     
-    private func calculateCurrentSpeed(distance: CLLocationDistance, coordinatesNearby: [CLLocationCoordinate2D]? = nil, closestLocation: SimulatedLocation) -> CLLocationSpeed {
-        // More than 10 nearby coordinates indicates that we are in a roundabout or similar complex shape.
-        if let coordinatesNearby = coordinatesNearby, coordinatesNearby.count >= 10 {
-            return minimumSpeed
-        }
-        // Maximum speed if we are a safe distance from the closest coordinate
-        else if distance >= safeDistance {
-            return previousAverageSpeed
-        }
+    private func calculateCurrentSpeed(closestLocation: SimulatedLocation) -> CLLocationSpeed {
         // Base speed on previous or upcoming turn penalty
-        else {
-            let reversedTurnPenalty = maximumTurnPenalty - closestLocation.turnPenalty
-            return reversedTurnPenalty.scale(minimumIn: minimumTurnPenalty, maximumIn: maximumTurnPenalty)
-        }
+        let reversedTurnPenalty = maximumTurnPenalty - closestLocation.turnPenalty
+        return reversedTurnPenalty.scale(minimumIn: minimumTurnPenalty, maximumIn: maximumTurnPenalty)
     }
 }
 
 extension Double {
     fileprivate func scale(minimumIn: Double, maximumIn: Double) -> Double {
-        return previousAverageSpeed * (self - minimumIn) / (maximumIn - minimumIn)
+        let penaltyCalculatedSpeed = previousSpeed * (self - minimumIn) / (maximumIn - minimumIn)
+        return max(penaltyCalculatedSpeed, minimumSpeed)
     }
 }
 
