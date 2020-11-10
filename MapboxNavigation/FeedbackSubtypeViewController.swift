@@ -53,6 +53,7 @@ class FeedbackSubtypeViewController: FeedbackViewController {
                         FeedbackType.incorrectVisual(subtype: .exitInfoIncorrect),
                         FeedbackType.incorrectVisual(subtype: .laneGuidanceIncorrect),
                         FeedbackType.incorrectVisual(subtype: .roadKnownByDifferentName),
+                        FeedbackType.incorrectVisual(subtype: .incorrectSpeedLimit),
                         FeedbackType.incorrectVisual(subtype: .other)].map { $0.generateFeedbackItem() }
             case .confusingAudio(_):
                 return [FeedbackType.confusingAudio(subtype: .guidanceTooEarly),

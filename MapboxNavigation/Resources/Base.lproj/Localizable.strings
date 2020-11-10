@@ -94,6 +94,9 @@
 /* Label indicating the device volume is too low to hear spoken instructions and needs to be manually increased */
 "INAUDIBLE_INSTRUCTIONS_CTA" = "Adjust Volume to Hear Instructions";
 
+/* Specific route feedback that a speed limit is incorrect. */
+"INCORRECT_SPEED_LIMIT" = "Speed limit incorrect";
+
 /* Specific route feedback that an exit was incorrect. */
 "INCORRECT_VISUAL_EXIT_INFO_INCORRECT_FEEDBACK" = "Exit info incorrect";
 
