@@ -15,8 +15,14 @@
 
 ### User Location
 <<<<<<< HEAD
+<<<<<<< HEAD
 * Created the `UserHaloCourseView` similar to `UserCourseView` for approximate location on iOS 14 during the navigation to represent user location. Allow the switch between `UserHaloCourseView` and `UserCourseView` when precise mode is changed. ([#2664](https://github.com/mapbox/mapbox-navigation-ios/pull/2664))
 
+=======
+* Created a `UserHaloCourseView` similar to `UserCourseView` for approximate location on iOS 14 during the navigation to represent user location. Allow the switch between `UserHaloCourseView` and `UserCourseView` when precise mode is changed. ([#2664](https://github.com/mapbox/mapbox-navigation-ios/pull/2664))
+* Added the `NavigationServiceDelegate.navigationService(_:didChangeAuthorizationFor:)` method and `Notification.Name.locationAuthorizationDidChange` to detect when the user changes the Location Services permissions for the current application, including for approximate location on iOS 14. ([#2693](https://github.com/mapbox/mapbox-navigation-ios/pull/2693))
+* When approximate location is enabled on iOS 14, a banner appears reminding the user to disable approximate location to continue navigating. ([#2693](https://github.com/mapbox/mapbox-navigation-ios/pull/2693))
+>>>>>>> b910962f... update changelog
 
 ## v1.1.0
 
