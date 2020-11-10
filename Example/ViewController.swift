@@ -469,8 +469,7 @@ extension ViewController: NavigationMapViewDelegate {
     func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route) {
         guard let routes = response?.routes else { return }
         guard let index = routes.firstIndex(where: { $0 === route }) else { return }
-        self.response!.routes!.remove(at: index)
-        self.response!.routes!.insert(route, at: 0)
+        self.response?.routes?.swapAt(index, 0)
     }
 
     private func presentWaypointRemovalAlert(completionHandler approve: @escaping ((UIAlertAction) -> Void)) {
