@@ -845,7 +845,11 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
         guard let upcomingStep = legProgress.upcomingStep else { return }
         
         let previewBanner: CompletionHandler = {
-            banner.preview(step: legProgress.currentStep, maneuverStep: upcomingStep, distance: legProgress.currentStep.distance, steps: remaining)
+            // Since Mapbox SDK v6.2.0-beta.1 `MGLMapView.setCenter(_:zoomLevel:direction:animated:completionHandler:)` method is calling `completionHandler`
+            // synchronously, this prevents from well-timed maneuver redrawing in `ManeuverView`. Workaround is to perform asynchronous redrawing on main queue.
+            DispatchQueue.main.async {
+                banner.preview(step: legProgress.currentStep, maneuverStep: upcomingStep, distance: legProgress.currentStep.distance, steps: remaining)
+            }
         }
         
         mapViewController?.center(on: upcomingStep, route: route, legIndex: legIndex, stepIndex: nextStepIndex, animated: animated, completion: previewBanner)
