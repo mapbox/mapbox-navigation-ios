@@ -420,6 +420,11 @@
 		DADD82802161EC0300B8B47D /* UIViewAnimationOptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DADD827F2161EC0300B8B47D /* UIViewAnimationOptionsTests.swift */; };
 		DAE22A2921C9DEDA00CA269D /* MGLVectorTileSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE22A2821C9DEDA00CA269D /* MGLVectorTileSourceTests.swift */; };
 		DAFA92071F01735000A7FB09 /* DistanceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */; };
+		F4052062255A16DC00F3DD47 /* MGLMapView+Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4052061255A16DC00F3DD47 /* MGLMapView+Example.swift */; };
+		F405206A255A171800F3DD47 /* Turf+Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4052069255A171800F3DD47 /* Turf+Example.swift */; };
+		F4052084255A178C00F3DD47 /* Route+Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4052083255A178C00F3DD47 /* Route+Example.swift */; };
+		F405208C255A17D300F3DD47 /* Locale+Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = F405208B255A17D300F3DD47 /* Locale+Example.swift */; };
+		F405209A255A180500F3DD47 /* UIImage+Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4052099255A180500F3DD47 /* UIImage+Example.swift */; };
 		F4BF512E24EAD7A50066A49B /* FeedbackSubtypeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BF512D24EAD7A50066A49B /* FeedbackSubtypeCollectionViewCell.swift */; };
 		F4C5A26F24EF1D16004ED0DD /* FeedbackSubtypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C5A26E24EF1D16004ED0DD /* FeedbackSubtypeViewController.swift */; };
 /* End PBXBuildFile section */
@@ -1097,6 +1102,11 @@
 		DAFEB36D2093A11F00A86A83 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DAFEB36E2093A3E000A86A83 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DAFEB36F2093A3EF00A86A83 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ko; path = Resources/ko.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
+		F4052061255A16DC00F3DD47 /* MGLMapView+Example.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MGLMapView+Example.swift"; sourceTree = "<group>"; };
+		F4052069255A171800F3DD47 /* Turf+Example.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Turf+Example.swift"; sourceTree = "<group>"; };
+		F4052083255A178C00F3DD47 /* Route+Example.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Route+Example.swift"; sourceTree = "<group>"; };
+		F405208B255A17D300F3DD47 /* Locale+Example.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Locale+Example.swift"; sourceTree = "<group>"; };
+		F4052099255A180500F3DD47 /* UIImage+Example.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Example.swift"; sourceTree = "<group>"; };
 		F4BF512D24EAD7A50066A49B /* FeedbackSubtypeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackSubtypeCollectionViewCell.swift; sourceTree = "<group>"; };
 		F4C5A26E24EF1D16004ED0DD /* FeedbackSubtypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackSubtypeViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1499,6 +1509,7 @@
 				3529FCF121A5C5B300AEA9AA /* ResizableView.swift */,
 				3529FCF521A5C5D900AEA9AA /* UIViewController.swift */,
 				3529FCF721A5C62400AEA9AA /* SettingsViewController.swift */,
+				F40520A1255A183B00F3DD47 /* Extensions */,
 			);
 			name = Example;
 			sourceTree = "<group>";
@@ -1837,6 +1848,18 @@
 				5A43FC8A24B488DC00BF7943 /* PassiveLocationDataSourceTests.swift */,
 			);
 			path = MapboxCoreNavigationTests;
+			sourceTree = "<group>";
+		};
+		F40520A1255A183B00F3DD47 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				F4052061255A16DC00F3DD47 /* MGLMapView+Example.swift */,
+				F4052069255A171800F3DD47 /* Turf+Example.swift */,
+				F4052083255A178C00F3DD47 /* Route+Example.swift */,
+				F405208B255A17D300F3DD47 /* Locale+Example.swift */,
+				F4052099255A180500F3DD47 /* UIImage+Example.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2597,13 +2620,18 @@
 				358D14681E5E3B7700ADE590 /* ViewController.swift in Sources */,
 				3529FCF821A5C62400AEA9AA /* SettingsViewController.swift in Sources */,
 				3529FCF421A5C5C600AEA9AA /* SettingsItems.swift in Sources */,
+				F4052084255A178C00F3DD47 /* Route+Example.swift in Sources */,
 				3529FCF221A5C5B400AEA9AA /* ResizableView.swift in Sources */,
 				C5D9800D1EFA8BA9006DBF2E /* CustomViewController.swift in Sources */,
+				F405206A255A171800F3DD47 /* Turf+Example.swift in Sources */,
+				F405209A255A180500F3DD47 /* UIImage+Example.swift in Sources */,
 				AED6285622CBE4CE00058A51 /* ViewController+GuidanceCards.swift in Sources */,
 				C51FC31720F689F800400CE7 /* CustomStyles.swift in Sources */,
 				6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */,
+				F405208C255A17D300F3DD47 /* Locale+Example.swift in Sources */,
 				358D14661E5E3B7700ADE590 /* AppDelegate.swift in Sources */,
 				3529FCF621A5C5D900AEA9AA /* UIViewController.swift in Sources */,
+				F4052062255A16DC00F3DD47 /* MGLMapView+Example.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
