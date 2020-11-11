@@ -22,7 +22,6 @@ public class UserHaloCourseView: UIView, CourseUpdatable {
         }, completion: nil)
     }
 
-
     // Sets the inner fill color of the user halo
     @objc public dynamic var haloColor: UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.5) {
         didSet {
@@ -64,7 +63,6 @@ public class UserHaloCourseView: UIView, CourseUpdatable {
         addSubview(haloView)
     }
 
-
     @objc func locationDidUpdate(_ notification: NSNotification) {
         lastLocationUpdate = Date()
     }
@@ -94,17 +92,16 @@ class UserHaloStyleKitView: UIView {
         drawHaloView()
     }
 
-    var borderSize = 5.0
-
     func drawHaloView() {
+        let borderWidth = 5.0
         let haloPath = UIBezierPath(arcCenter: center, radius: CGFloat(haloRadius), startAngle: 0, endAngle: 2.0 * CGFloat.pi, clockwise: true)
-
         let haloLayer = CAShapeLayer()
+        
         haloLayer.path = haloPath.cgPath
         haloLayer.fillColor = haloColor.cgColor
         haloLayer.strokeColor = haloRingColor.cgColor
-        haloLayer.lineWidth = CGFloat(borderSize)
-        haloLayer.borderWidth = CGFloat(borderSize)
+        haloLayer.lineWidth = CGFloat(borderWidth)
+        haloLayer.borderWidth = CGFloat(borderWidth)
         layer.addSublayer(haloLayer)
     }
 }
