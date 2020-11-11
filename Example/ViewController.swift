@@ -145,11 +145,11 @@ class ViewController: UIViewController {
 
             var coordinate = kCLLocationCoordinate2DInvalid
 
-            let lineOffset = index % 2 == 0 ? 0.35 : 0.75
+            let lineOffset = index % 2 == 0 ? Double.random(in: 0...0.3) : Double.random(in: 0.65...0.8)
             if let continuousLine = visibleAlternateSteps.continuousShapeFromFirstElement(), let distance = continuousLine.distance(), let routelineCoordinate = continuousLine.coordinateFromStart(distance: distance * lineOffset) {
                 coordinate = routelineCoordinate
 
-                style.addDebugLineLayer(identifier: UUID().uuidString, coordinates: continuousLine.coordinates, color: .random)
+//                style.addDebugLineLayer(identifier: UUID().uuidString, coordinates: continuousLine.coordinates, color: .random)
             }
 
             let text = annotationLabelForRoute(route, tolls: routesContainTolls)
@@ -159,7 +159,7 @@ class ViewController: UIViewController {
             point.coordinate = coordinate
             let tailPosition = selectedRouteTailPosition == .left ? RouteETAAnnotationTailPosition.right : RouteETAAnnotationTailPosition.left
             let imageName = tailPosition == .left ? "RouteInfoAnnotationLeftHanded" : "RouteInfoAnnotationRightHanded"
-            point.attributes = ["selected": false, "tailPosition": tailPosition.rawValue, "text": text, "imageName": imageName]
+            point.attributes = ["selected": false, "tailPosition": tailPosition.rawValue, "text": text, "imageName": imageName, "sortOrder": -index]
 
             features.append(point)
         }
@@ -209,7 +209,7 @@ class ViewController: UIViewController {
         shapeLayer.symbolZOrder = NSExpression(forConstantValue: NSValue(mglSymbolZOrder: MGLSymbolZOrder.auto))
         shapeLayer.symbolSortKey = NSExpression(forConditional: NSPredicate(format: "selected == true"),
                                                 trueExpression: NSExpression(forConstantValue: 1),
-                                                   falseExpression: NSExpression(forConstantValue: 0))
+                                                   falseExpression: NSExpression(format: "sortOrder"))
         shapeLayer.iconAnchor = NSExpression(forConditional: NSPredicate(format: "tailPosition == 0"),
                                              trueExpression: NSExpression(forConstantValue: "bottom-left"),
                                                 falseExpression: NSExpression(forConstantValue: "bottom-right"))
@@ -236,6 +236,8 @@ class ViewController: UIViewController {
                 eta += " " + symbol
             }
         } else if tolls {
+            // If one of the routes has tolls, but this one does not then it needs to explicitly say that it has no tolls
+            // If no routes have tolls at all then we can omit this portion of the string.
             eta += "\n" + NSLocalizedString("ROUTE_HAS_NO_TOLLS", value: "No Tolls", comment: "This route does not have tolls")
         }
 
