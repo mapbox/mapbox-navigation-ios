@@ -5,10 +5,10 @@
 "CARPLAY_ARRIVED" = "Ви прибули";
 
 /* Message on arrival action sheet */
-"CARPLAY_ARRIVED_MESSAGE" = "Що бажаєте зробити далі?";
+"CARPLAY_ARRIVED_MESSAGE" = "Що ви хотіли б зробити?";
 
 /* Name of the waypoint associated with the current location */
-"CARPLAY_CURRENT_LOCATION" = "Поточне місце розташування";
+"CARPLAY_CURRENT_LOCATION" = "Поточне місцезнаходження";
 
 /* Title for dismiss button */
 "CARPLAY_DISMISS" = "Відхилити";
@@ -17,40 +17,61 @@
 "CARPLAY_END" = "Завершити";
 
 /* Title on the exit button in the arrival form */
-"CARPLAY_EXIT_NAVIGATION" = "Вийти з навігації";
+"CARPLAY_EXIT_NAVIGATION" = "Завершити навігацію";
 
 /* Title for feedback template in CarPlay */
-"CARPLAY_FEEDBACK" = "Відгук";
+"CARPLAY_FEEDBACK" = "Зворотній зв'язок";
 
 /* Title for start button in CPTripPreviewTextConfiguration */
-"CARPLAY_GO" = "Go";
+"CARPLAY_GO" = "Розпочати";
 
 /* Title for alternative routes in CPTripPreviewTextConfiguration */
-"CARPLAY_MORE_ROUTES" = "Ще маршрути";
+"CARPLAY_MORE_ROUTES" = "Додаткові маршрути";
 
 /* Title for mute button */
-"CARPLAY_MUTE" = "Mute";
+"CARPLAY_MUTE" = "Вимкнути звук";
 
 /* Title for overview button in CPTripPreviewTextConfiguration */
-"CARPLAY_OVERVIEW" = "Overview";
+"CARPLAY_OVERVIEW" = "Огляд";
 
 /* Title for rating template in CarPlay */
-"CARPLAY_RATE_RIDE" = "Rate your ride";
+"CARPLAY_RATE_RIDE" = "Оцініть вашу поїздку";
 
 /* Title on rate button in CarPlay */
-"CARPLAY_RATE_TRIP" = "Оцінити вашу подорож";
+"CARPLAY_RATE_TRIP" = "Оцініть вашу подорож";
 
 /* Message when search returned zero results in CarPlay */
-"CARPLAY_SEARCH_NO_RESULTS" = "Немає результатів";
+"CARPLAY_SEARCH_NO_RESULTS" = "Результати відсутні";
 
 /* Alert title that shows when feedback has been submitted */
 "CARPLAY_SUBMITTED_FEEDBACK" = "Надіслано";
 
 /* Title for unmute button */
-"CARPLAY_UNMUTE" = "Unmute";
+"CARPLAY_UNMUTE" = "Увімкнути звук";
+
+/* Specific route feedback that audio guidance provided was confusing. */
+"CONFUSING_AUDIO_FEEDBACK" = "Неточна аудіо інструкція";
+
+/* Specific route feedback that audio guidance was provided too early before a maneuever. */
+"CONFUSING_AUDIO_GUIDANCE_TOO_EARLY_FEEDBACK" = "Вказівка була оголошена занадто рано";
+
+/* Specific route feedback that audio guidance was provided too late for a maneuever. */
+"CONFUSING_AUDIO_GUIDANCE_TOO_LATE_FEEDBACK" = "Вказівка була оголошена занадто пізно";
+
+/* Specific route feedback that an audio guidance problem was encountered but not listed as a choice. */
+"CONFUSING_AUDIO_OTHER_FEEDBACK" = "Інше";
+
+/* Specific route feedback that audio guidance used incorrect pronunciation. */
+"CONFUSING_AUDIO_PRONUNCIATION_INCORRECT_FEEDBACK" = "Неправильна вимова";
+
+/* Specific route feedback that audio guidance repeated a road name. */
+"CONFUSING_AUDIO_ROADNAME_REPEATED_FEEDBACK" = "Назва дороги була повторена";
 
 /* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "Закрити";
+
+/* Label indicating precise location is off and needs to be turned on to navigate */
+"ENABLE_PRECISE_LOCATION" = "Увімкніть точне місцезнаходження для навігації";
 
 /* Title used for arrival */
 "END_OF_ROUTE_ARRIVED" = "Ви прибули";
@@ -58,20 +79,53 @@
 /* Comment Placeholder Text */
 "END_OF_ROUTE_TITLE" = "Що можна покращити?";
 
-/* Error message when the SDK is unable to read a spoken instruction. */
-"FAILED_INSTRUCTION" = "Не можливо прочитати інструкцію вголос.";
-
 /* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "Знайдено швидший маршрут";
 
 /* Message confirming that the user has successfully sent feedback */
-"FEEDBACK_THANK_YOU" = "Дякуємо за повідомлення!";
+"FEEDBACK_THANK_YOU" = "Дякуємо за зворотній зв'язок!";
 
 /* Title of view controller for sending feedback */
-"FEEDBACK_TITLE" = "Повідомлення про проблему";
+"FEEDBACK_TITLE" = "Повідомити про проблему";
+
+/* Specific route feedback that a illegal route problem was encountered but not listed as a choice. */
+"ILLEGAL_ROUTE_OTHER_FEEDBACK" = "Інше";
 
 /* Label indicating the device volume is too low to hear spoken instructions and needs to be manually increased */
-"INAUDIBLE_INSTRUCTIONS_CTA" = "Adjust Volume to Hear Instructions";
+"INAUDIBLE_INSTRUCTIONS_CTA" = "Відрегулюйте гучність щоб чути інструкції";
+
+/* Specific route feedback that a speed limit is incorrect. */
+"INCORRECT_SPEED_LIMIT" = "Неправильне обмеження швидкості";
+
+/* Specific route feedback that an exit was incorrect. */
+"INCORRECT_VISUAL_EXIT_INFO_INCORRECT_FEEDBACK" = "Неправильна інформація про з'їзд";
+
+/* General category of route feedback where visual instruction was incorrect. */
+"INCORRECT_VISUAL_FEEDBACK" = "Інструкція некоректна";
+
+/* Specific route feedback that an instruction was missing. */
+"INCORRECT_VISUAL_INSTRUCTION_MISSING_FEEDBACK" = "Інструкція відсутня";
+
+/* Specific route feedback for an unnecessary instruction. */
+"INCORRECT_VISUAL_INSTRUCTION_UNNECESSARY_FEEDBACK" = "Інструкція не обов'язкова";
+
+/* Specific route feedback that the wrong lane was specified. */
+"INCORRECT_VISUAL_LANE_GUIDANCE_INCORRECT_FEEDBACK" = "Вказівка смуги некоректна";
+
+/* Specific route feedback that a maneuver specified was incorrect. */
+"INCORRECT_VISUAL_MANEUVER_INCORRECT_FEEDBACK" = "Неправильний маневр";
+
+/* Specific route feedback that a visual instruction problem was encountered but not listed as a choice. */
+"INCORRECT_VISUAL_OTHER_FEEDBACK" = "Інше";
+
+/* Specific route feedback that a road is known by another name. */
+"INCORRECT_VISUAL_ROAD_NAME_DIFFERENT_FEEDBACK" = "Дорога відома під іншою назвою";
+
+/* Specific route feedback for incorrect street name. */
+"INCORRECT_VISUAL_STREET_NAME_INCORRECT_FEEDBACK" = "Назва вулиці некоректна";
+
+/* Specific route feedback for incorrect turn arrow being shown. */
+"INCORRECT_VISUAL_TURN_ICON_INCORRECT_FEEDBACK" = "Знак повороту некоректний";
 
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@ та %2$@";
@@ -79,11 +133,23 @@
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "<%@";
 
+/* Title for button that cancels user's submission of feedback on navigation session issues. */
+"NAVIGATION_REPORT_CANCEL" = "Скасувати";
+
+/* Title for button that submits user's feedback on multiple navigation session issues. 1 is the number of items */
+"NAVIGATION_REPORT_ISSUES" = "Надіслати %ld пункт(ів)";
+
 /* Accessibility value of label indicating the absence of a rating */
 "NO_RATING" = "Рейтинг не встановлено.";
 
+/* General category of route feedback where user position is incorrect. */
+"POSITIONING" = "Позиціонування";
+
+/* Specific route feedback that user positioning is incorrect. */
+"POSITIONING_USER" = "Ваше місцезнаходження.";
+
 /* Rating Reset To Zero Accessability Hint */
-"RATING_ACCESSIBILITY_RESET" = "Тицьніть, щоб скинути рейтинг.";
+"RATING_ACCESSIBILITY_RESET" = "Натисніть, щоб встановити нульовий рейтинг.";
 
 /* Format for accessibility label of button for setting a rating; 1 = number of stars */
 "RATING_ACCESSIBILITY_SET" = "Встановити %ld-зірковий рейтинг";
@@ -97,8 +163,59 @@
 /* Button title for resume tracking */
 "RESUME" = "Продовжити";
 
+/* Specific route feedback that a road closure type was encountered but not listed as a choice. */
+"ROAD_CLOSURE_OTHER_FEEDBACK" = "Інше";
+
+/* Specific route feedback that user was offered an alternative that was unexpected. */
+"ROUTE_QUALITY_ALTERNATIVE_ROUTE_NOT_EXPECTED_FEEDBACK" = "Неочікуваний альтернативний маршрут";
+
+/* General category of route feedback where route quality was poor. */
+"ROUTE_QUALITY_FEEDBACK" = "Якість маршруту";
+
+/* Specific route feedback that route suggested an illegal roadway. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_CARS_NOT_ALLOWED_FEEDBACK" = "Автомобілі не дозволені на вулиці";
+
+/* General route feedback that route contained illegal instructions. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_FEEDBACK" = "Нелегальний маршрут";
+
+/* Specific route feedback that route travelled wrong way on a one-way road. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_ONE_WAY_FEEDBACK" = "Проїзд по дорозі з одностороннім рухом у протилежному напрямку";
+
+/* Specific route feedback that route suggested an illegal turn. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_TURN_NOT_ALLOWED_FEEDBACK" = "Поворот не дозволений";
+
+/* Specific route feedback that route suggested an illegal unprotected turn. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_UNPROTECTED_TURN_FEEDBACK" = "Незахищений поворот на перехресті";
+
+/* Specific route feedback that route contained non-existant roads. */
+"ROUTE_QUALITY_INCLUDED_MISSING_ROADS_FEEDBACK" = "Маршрут складається з доріг, які відсутні";
+
+/* Specific route feedback that route was not drivable. */
+"ROUTE_QUALITY_NON_DRIVABLE_FEEDBACK" = "Маршрут не придатний для проїзду автомобіля";
+
+/* Specific route feedback that route was not ideal according to user. */
+"ROUTE_QUALITY_NOT_PREFERRED_FEEDBACK" = "Маршрут, якому не недається перевага";
+
+/* Specific route feedback that a route quality problem was encountered but not listed as a choice. */
+"ROUTE_QUALITY_OTHER_FEEDBACK" = "Інше";
+
+/* General route feedback that route contained closed road. */
+"ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK" = "Дорога закрита";
+
+/* Specifc route feedback that route contained road that is permanently closed. */
+"ROUTE_QUALITY_ROAD_CLOSURE_PERMANENT_FEEDBACK" = "Вулиця заблокована на постійній основі";
+
+/* Specifc route feedback that route contained road not shown on map. */
+"ROUTE_QUALITY_ROAD_MISSING_FROM_MAP_FEEDBACK" = "Дорога відсутня на карті";
+
+/* Specific route feedback that route contained impassible, narrow roads. */
+"ROUTE_QUALITY_ROADS_TOO_NARROW_FEEDBACK" = "Маршрут містить дороги які занадто вузькі для проїзду";
+
+/* Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible. */
+"SPEED_LIMIT_LEGEND" = "Максимум";
+
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
-"USER_IN_SIMULATION_MODE" = "Simulating Navigation at %@×";
+"USER_IN_SIMULATION_MODE" = "Симуляція навігації %@×";
 
 /* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
 "WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%1$@, через %2$@";
