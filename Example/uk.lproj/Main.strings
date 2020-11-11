@@ -3,7 +3,7 @@
 "1vl-kS-fBt.normalTitle" = "Продовжити до наступного пункту призначення";
 
 /* Class = "UILabel"; text = "Long press to select a destination"; ObjectID = "dEY-t6-Ect"; */
-"dEY-t6-Ect.text" = "Натисніть та утримуйте, щоб вибрати пункт призначення.";
+"dEY-t6-Ect.text" = "Натисніть та утримуйте, щоб обрати пункт призначення";
 
 /* Class = "UIButton"; normalTitle = "Simulate Locations"; ObjectID = "iiq-Gf-SKY"; */
 "iiq-Gf-SKY.normalTitle" = "Симулювати місцезнаходження";
