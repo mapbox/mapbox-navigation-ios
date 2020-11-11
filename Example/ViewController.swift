@@ -111,54 +111,50 @@ class ViewController: UIViewController {
 
         guard let visibleSelectedRoute = selectedRoute.shapes(within: visibleBoundingBox), let selectedRouteShape = visibleSelectedRoute.first else { return }
 
-        let selectedRouteCoordinate = selectedRouteShape.coordinateAtNormalizedPosition(0.25)!
+        guard let selectedRouteCoordinate = selectedRouteShape.coordinateAtNormalizedPosition(0.25) else { return }
 
         var selectedRouteTailPosition = RouteETAAnnotationTailPosition.right
-
 
         if let currentLocation = mapView.userLocation?.location?.coordinate {
             selectedRouteTailPosition = selectedRouteCoordinate.longitude > currentLocation.longitude ? .left : .right
         }
 
         var features = [MGLPointFeature]()
-        for (index, route) in routes.dropFirst().enumerated() {
-            guard let visibleShapes = route.shapes(within: visibleBoundingBox), let visibleSegment = visibleShapes.first else { continue }
 
-            let lineOffset = index % 2 == 0 ? Double(0.75) : Double(0.25)
+        // we will look for a set of RouteSteps unique to each alternate route, then find a coordinate along that line
+        // to use as the position of the annotation callout
+        var excludedSteps = selectedRoute.legs.compactMap { return $0.steps }.reduce([], +)
+        for (index, route) in routes.dropFirst().enumerated() {
+            let allSteps = route.legs.compactMap { return $0.steps }.reduce([], +)
+            let alternateSteps = allSteps.filter { step -> Bool in
+                for existingStep in excludedSteps {
+                    if step == existingStep {
+                        return false
+                    }
+                }
+                return true
+            }
+
+            excludedSteps.append(contentsOf: alternateSteps)
+            let visibleAlternateSteps = alternateSteps.filter { $0.intersects(visibleBoundingBox) }
+
+//            for step in visibleAlternateSteps {
+//                guard let shape = step.shape else { continue }
+//                style.addDebugLineLayer(identifier: UUID().uuidString, coordinates: shape.coordinates, color: UIColor.random)
+//            }
 
             var coordinate = kCLLocationCoordinate2DInvalid
 
-            if #available(iOS 13.0, *) {
-                let elementCoordinates = visibleSegment.coordinates
+            let lineOffset = index % 2 == 0 ? 0.35 : 0.75
+            if let continuousLine = visibleAlternateSteps.continuousShapeFromFirstElement(), let distance = continuousLine.distance(), let routelineCoordinate = continuousLine.coordinateFromStart(distance: distance * lineOffset) {
+                coordinate = routelineCoordinate
 
-                var difference = [CLLocationCoordinate2D]()
-                var matching = [CLLocationCoordinate2D]()
-
-                for coordinate in elementCoordinates {
-                    if let indexedCoordinate = selectedRouteShape.closestCoordinate(to: coordinate) {
-                        if coordinate.distance(to: indexedCoordinate.coordinate) > 10 {
-                            difference.append(coordinate)
-                        } else {
-                            matching.append(coordinate)
-                        }
-                    }
-                }
-
-                let line = LineString(difference)
-
-                if let distance = line.distance(), let earlyCoordinate = line.coordinateFromStart(distance: distance * 0.25 ), let midCoordinate = line.coordinateFromStart(distance: distance * 0.5), let lateCoordinate = line.coordinateFromStart(distance: distance * 0.75) {
-                    coordinate = selectedRouteCoordinate.distance(to: earlyCoordinate) > selectedRouteCoordinate.distance(to: lateCoordinate) ? earlyCoordinate : lateCoordinate
-
-                    coordinate = selectedRouteCoordinate.distance(to: coordinate) > selectedRouteCoordinate.distance(to: midCoordinate) ? coordinate : midCoordinate
-                } else {
-                    coordinate = line.coordinateFromStart(distance: route.distance * lineOffset) ?? kCLLocationCoordinate2DInvalid
-                }
-            } else {
-                coordinate = route.shape?.coordinateFromStart(distance: route.distance * lineOffset) ?? kCLLocationCoordinate2DInvalid
+                style.addDebugLineLayer(identifier: UUID().uuidString, coordinates: continuousLine.coordinates, color: .random)
             }
 
             let text = annotationLabelForRoute(route, tolls: routesContainTolls)
 
+            // Create the feature for this route annotation. Set the styling attributes that will be used to render the annotation in the style layer.
             let point = MGLPointFeature()
             point.coordinate = coordinate
             let tailPosition = selectedRouteTailPosition == .left ? RouteETAAnnotationTailPosition.right : RouteETAAnnotationTailPosition.left
@@ -176,6 +172,10 @@ class ViewController: UIViewController {
 
         features.append(point)
 
+        addRouteAnnotationLayer(features: features, style: style)
+    }
+
+    private func addRouteAnnotationLayer(features: [MGLPointFeature], style: MGLStyle) {
         let dataSource: MGLShapeSource
         if let source = style.source(withIdentifier: annotationLayerIdentifier + "-source") as? MGLShapeSource {
             dataSource = source
@@ -204,12 +204,12 @@ class ViewController: UIViewController {
                      falseExpression: NSExpression(forConstantValue: UIColor.black))
 
         shapeLayer.textFontNames = NSExpression(forConstantValue: ["DIN Pro Medium"])
-        shapeLayer.textAllowsOverlap = NSExpression(forConstantValue: false)
+        shapeLayer.textAllowsOverlap = NSExpression(forConstantValue: true)
         shapeLayer.textJustification = NSExpression(forConstantValue: "left")
-        shapeLayer.symbolZOrder = NSExpression(forConstantValue: NSValue(mglSymbolZOrder: .auto))
+        shapeLayer.symbolZOrder = NSExpression(forConstantValue: NSValue(mglSymbolZOrder: MGLSymbolZOrder.auto))
         shapeLayer.symbolSortKey = NSExpression(forConditional: NSPredicate(format: "selected == true"),
-                                                trueExpression: NSExpression(forConstantValue: 0),
-                                                   falseExpression: NSExpression(forConstantValue: 1))
+                                                trueExpression: NSExpression(forConstantValue: 1),
+                                                   falseExpression: NSExpression(forConstantValue: 0))
         shapeLayer.iconAnchor = NSExpression(forConditional: NSPredicate(format: "tailPosition == 0"),
                                              trueExpression: NSExpression(forConstantValue: "bottom-left"),
                                                 falseExpression: NSExpression(forConstantValue: "bottom-right"))
@@ -231,12 +231,12 @@ class ViewController: UIViewController {
 
         let hasTolls = (route.tollIntersections?.count ?? 0) > 0
         if hasTolls {
-            eta += "\nTolls"
+            eta += "\n" + NSLocalizedString("ROUTE_HAS_TOLLS", value: "Tolls", comment: "This route does have tolls")
             if let symbol = Locale.current.currencySymbol {
                 eta += " " + symbol
             }
         } else if tolls {
-            eta += "\nNo Tolls"
+            eta += "\n" + NSLocalizedString("ROUTE_HAS_NO_TOLLS", value: "No Tolls", comment: "This route does not have tolls")
         }
 
         return eta
@@ -383,6 +383,7 @@ class ViewController: UIViewController {
 
         if let style = mapView?.style {
             removeRouteAnnotationsLayerFromStyle(style)
+            style.removeDebugLineLayers()
         }
         
         mapView?.unhighlightBuildings()
@@ -821,4 +822,10 @@ extension ViewController {
 enum RouteETAAnnotationTailPosition: Int {
     case left
     case right
+}
+
+extension UIColor {
+    static var random: UIColor {
+        return UIColor(red: .random(in: 0...1), green: .random(in: 0...1), blue: .random(in: 0...1), alpha: 1.0)
+    }
 }
