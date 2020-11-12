@@ -47,6 +47,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     public var tapGestureDistanceThreshold: CGFloat = 50
     
     /**
+     A collection of road classes for which a color substitution should occur.
+     */
+    public var trafficOverrideRoadClasses: [RoadClasses] = []
+    
+    /**
      The object that acts as the navigation delegate of the map view.
      */
     public weak var navigationMapViewDelegate: NavigationMapViewDelegate?
@@ -1035,6 +1040,50 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         return MGLShapeCollectionFeature(shapes: [mainRoute])
     }
     
+    /**
+     Returns an array of `RoadClasses` for specific leg.
+     
+     - parameter leg: Leg of the route.
+     - returns: A list of `RoadClasses` for specific `RouteLeg`. `RoadClasses` will be set to `nil` if it's not present in `Intersection`.
+     */
+    func roadClasses(_ leg: RouteLeg) -> [RoadClasses?] {
+        // Iterate over `Intersection` segments for specific `RouteLeg` and leave only valid ones.
+        // Array of segment indexes can look like this: [0, 3, 24, 28, 48, 50, 51, 53].
+        var intersectionsIndexesByStep = [Int]()
+        leg.intersectionsIndexesByStep.compactMap({ $0 }).forEach {
+            intersectionsIndexesByStep.append(contentsOf: $0.compactMap({ $0 }))
+        }
+        
+        // Iterate over each `Intersection` and save `RoadClasses`.
+        // Array of `RoadClasses` can look like this:
+        // [Optional(toll,motorway), ... , Optional(), Optional(toll,motorway), nil]
+        var roadClassesInLeg = [RoadClasses?]()
+        leg.steps.forEach {
+            $0.intersections?.forEach {
+                roadClassesInLeg.append($0.outletRoadClasses)
+            }
+        }
+    
+        // Iterate over each `Intersection` segment and fill it in with appropriate `RoadClasses`.
+        // At the end amount of `RoadClasses` should be equal to the last segment index.
+        var roadClasses = [RoadClasses?]()
+        for (index, _) in intersectionsIndexesByStep.enumerated() {
+            let nextIndex = index + 1
+            
+            if intersectionsIndexesByStep.indices.contains(nextIndex),
+               roadClassesInLeg.indices.contains(index) {
+                let currentIndex = intersectionsIndexesByStep[index]
+                let nextIndex = intersectionsIndexesByStep[nextIndex]
+                
+                for _ in currentIndex..<nextIndex {
+                    roadClasses.append(roadClassesInLeg[index])
+                }
+            }
+        }
+        
+        return roadClasses
+    }
+    
     func addCongestion(to route: Route, legIndex: Int?) -> [MGLPolylineFeature]? {
         guard let coordinates = route.shape?.coordinates else { return nil }
 
@@ -1051,8 +1100,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 
                     return index == 0 ? stepCoordinates : allCoordinates + stepCoordinates.suffix(from: 1)
                 }
-
-                let mergedCongestionSegments = combine(legCoordinates, with: legCongestion)
+                
+                let mergedCongestionSegments = combine(legCoordinates,
+                                                       with: legCongestion,
+                                                       roadClasses: roadClasses(leg),
+                                                       trafficOverrideRoadClasses: trafficOverrideRoadClasses)
 
                 lines = mergedCongestionSegments.map { (congestionSegment: CongestionSegment) -> MGLPolylineFeature in
                     let polyline = MGLPolylineFeature(coordinates: congestionSegment.0, count: UInt(congestionSegment.0.count))
@@ -1084,20 +1136,45 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      
      This method coalesces consecutive line segments that have the same congestion level.
      
-     - coordinates: The coordinates of a leg.
-     - congestions: The congestion levels along a leg. There should be one fewer congestion levels than coordinates.
+     For each item in the` CongestionSegment` collection a `CongestionLevel` substitution will take place that has a road class contained in the `trafficOverrideRoadClasses` collection.
+     For each of these items the `CongestionLevel` for `.unknown` traffic congestion will be replaced with the `.low` traffic congestion.
+     
+     - parameter coordinates: The coordinates of a leg.
+     - parameter congestions: The congestion levels along a leg. There should be one fewer congestion levels than coordinates.
+     - parameter roadClasses: A collection of road classes for each geometry index in `Intersection`. There should be the same amount of `roadClasses` and `congestions`.
+     - parameter trafficOverrideRoadClasses: A collection of road classes for which a `CongestionLevel` substitution should occur.
+     - returns: A list of `CongestionSegment` tuples with coordinate and congestion level.
      */
-    func combine(_ coordinates: [CLLocationCoordinate2D], with congestions: [CongestionLevel]) -> [CongestionSegment] {
+    func combine(_ coordinates: [CLLocationCoordinate2D],
+                 with congestions: [CongestionLevel],
+                 roadClasses: [RoadClasses?]? = nil,
+                 trafficOverrideRoadClasses: [RoadClasses]? = nil) -> [CongestionSegment] {
         var segments: [CongestionSegment] = []
         segments.reserveCapacity(congestions.count)
+        
+        var index = 0
         for (firstSegment, congestionLevel) in zip(zip(coordinates, coordinates.suffix(from: 1)), congestions) {
             let coordinates = [firstSegment.0, firstSegment.1]
-            if segments.last?.1 == congestionLevel {
+            
+            var overriddenCongestionLevel = congestionLevel
+            if let roadClasses = roadClasses,
+               let trafficOverrideRoadClasses = trafficOverrideRoadClasses,
+               roadClasses.indices.contains(index),
+               let roadClass = roadClasses[index],
+               trafficOverrideRoadClasses.contains(roadClass),
+               congestionLevel == .unknown {
+                overriddenCongestionLevel = .low
+            }
+            
+            if segments.last?.1 == overriddenCongestionLevel {
                 segments[segments.count - 1].0 += coordinates
             } else {
-                segments.append((coordinates, congestionLevel))
+                segments.append((coordinates, overriddenCongestionLevel))
             }
+            
+            index += 1
         }
+        
         return segments
     }
 
