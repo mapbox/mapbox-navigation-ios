@@ -221,6 +221,12 @@ open class InstructionsCardViewController: UIViewController {
             let blah = currentStepIndex ?? 0
             let sub = cardSize.width * CGFloat(itemCount - blah)
             estimatedIndex = abs(Int(round((collectionView.contentOffset.x - sub + collectionView.contentInset.right) / (cardSize.width + 10.0))))
+        if UIApplication.shared.userInterfaceLayoutDirection == .leftToRight {
+            estimatedIndex = Int(round((collectionView.contentOffset.x + collectionView.contentInset.left) / (cardSize.width + 10.0)))
+        } else {
+            // let sub = cardSize.width * CGFloat(itemCount - currentStepIndex!)
+            collectionView.semanticContentAttribute = .forceRightToLeft
+            estimatedIndex = Int(round((collectionView.contentOffset.x + collectionView.contentInset.right) / (cardSize.width + 10.0)))
         }
         let indexInBounds = max(0, min(itemCount - 1, estimatedIndex))
         return IndexPath(row: indexInBounds, section: 0)
@@ -228,7 +234,6 @@ open class InstructionsCardViewController: UIViewController {
     
     fileprivate func scrollTargetIndexPath(for scrollView: UIScrollView, with velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) -> IndexPath {
         targetContentOffset.pointee = scrollView.contentOffset
-        
         let itemCount = steps?.count ?? 0
         let velocityThreshold: CGFloat = 0.4
         
