@@ -251,6 +251,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         installUserCourseView()
         showsUserLocation = false
+        
+        if let firstRoute = routes?.first {
+            initPrimaryRoutePoints(route: firstRoute)
+        }
     }
     
     open override func layoutMarginsDidChange() {
@@ -709,6 +713,153 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
 
     // MARK: - Vanishing route line methods
+
+    public var MAX_ELAPSED_SINCE_INDEX_UPDATE_NANO = 1500000000 //1.5s
+    public var vanishPoint: Double = 0.0
+    public var vanishPointOffset: Double = 0.0
+    public var vanishingPointUpdateInhibited: Bool = true
+    public var primaryRoutePoints: RoutePoints?
+    public var primaryRouteLineGranularDistances: RouteLineGranularDistances?
+    public var primaryRouteRemainingDistancesIndex: Int?
+    public var lastIndexUpdateTimeNano: UInt64 = 0
+    public var newFractionTraveled: Double = 0.0
+    
+    public struct RoutePoints {
+        var nestedList: [[[CLLocationCoordinate2D]]]
+        var flatList: [CLLocationCoordinate2D]
+    }
+    
+    public struct RouteLineGranularDistances {
+        var distance: Double
+        var distanceArray: [RouteLineDistancesIndex?]
+    }
+    
+    public struct RouteLineDistancesIndex {
+        var point: CLLocationCoordinate2D
+        var distanceRemaining: Double
+    }
+    
+    public func initPrimaryRoutePoints(route: Route) {
+        primaryRoutePoints = parseRoutePoints(route: route)
+        primaryRouteLineGranularDistances = calculateRouteGranularDistances(coordinates: primaryRoutePoints!.flatList)
+    }
+    
+    public func parseRoutePoints(route: Route) -> RoutePoints {
+        let nestedList = route.legs.map { (routeLeg: RouteLeg) -> [[CLLocationCoordinate2D]] in
+            return routeLeg.steps.map { (routeStep: RouteStep) -> [CLLocationCoordinate2D] in
+                if let routeShape = routeStep.shape {
+                    if !routeShape.coordinates.isEmpty {
+                        return routeShape.coordinates
+                    } else { return [] }
+                } else {
+                    return []
+                }
+            }
+        }
+        let flatList = nestedList.flatMap { $0.flatMap { $0.flatMap { $0 } } }
+        return RoutePoints(nestedList: nestedList, flatList: flatList)
+    }
+    
+    public func updateUpcomingRoutePointIndex(routeProgress: RouteProgress) {
+        let currentLegProgress = routeProgress.currentLegProgress
+        let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
+        if currentLegProgress != nil && currentStepProgress != nil && primaryRoutePoints != nil {
+            let completeRoutePoints = primaryRoutePoints!
+            var allRemainingPoints = getSlicedLinePointsCount(currentLegProgress: currentLegProgress, currentStepProgress: currentStepProgress)
+            let currentLegSteps = completeRoutePoints.nestedList[routeProgress.legIndex] // 3 list of coordinates
+            if currentLegProgress.stepIndex < currentLegSteps.count {
+                let startIndex = currentLegProgress.stepIndex + 1
+                let endIndex = currentLegSteps.count - 1
+                allRemainingPoints += currentLegSteps.prefix(endIndex).suffix(from: startIndex).flatMap{ $0.flatMap{ $0 } }.count
+            }
+            for index in stride(from: routeProgress.legIndex, to: completeRoutePoints.nestedList.count, by: 1) {
+                allRemainingPoints += completeRoutePoints.nestedList[index].flatMap{ $0 }.count
+            }
+            let allPoints = completeRoutePoints.flatList.count
+            primaryRouteRemainingDistancesIndex = allPoints - allRemainingPoints - 1
+        }
+        primaryRouteRemainingDistancesIndex = nil
+        lastIndexUpdateTimeNano = DispatchTime.now().uptimeNanoseconds
+    }
+    
+    public func getSlicedLinePointsCount(currentLegProgress: RouteLegProgress, currentStepProgress: RouteStepProgress) -> Int {
+        if let shape = currentStepProgress.step.shape {
+            if !shape.coordinates.isEmpty {
+                let firstHalfLine = shape.trimmed(from: shape.coordinates[0], distance: currentStepProgress.distanceTraveled)
+                if let startSecondLinePoint = firstHalfLine?.coordinates.last {
+                    if let trimmedLine = shape.trimmed(from: startSecondLinePoint, distance: currentStepProgress.step.distance) {
+                        return trimmedLine.coordinates.count - 1
+                    }
+                }
+            }
+        }
+        return 0
+    }
+    
+    public func calculateRouteGranularDistances(coordinates: [CLLocationCoordinate2D]) -> RouteLineGranularDistances? {
+        if coordinates.isEmpty {
+            return nil
+        } else {
+            return calculateGranularDistances(points: coordinates)
+        }
+    }
+    
+    public func calculateGranularDistances(points: [CLLocationCoordinate2D]) -> RouteLineGranularDistances? {
+        var distance = 0.0
+        var indexArray = [RouteLineDistancesIndex?](repeating: nil, count: points.count)
+        for index in stride(from: points.count - 1, to: 1, by: -1) {
+            let curr = points[index]
+            let prev = points[index - 1]
+            distance += calculateDistance(point1: curr, point2: prev)
+            indexArray.insert(RouteLineDistancesIndex(point: prev, distanceRemaining: distance), at: index - 1)
+        }
+        indexArray.insert(RouteLineDistancesIndex(point: points[points.count - 1], distanceRemaining: 0.0), at: points.count - 1)
+        return RouteLineGranularDistances(distance: distance, distanceArray: indexArray)
+    }
+    
+    public func calculateDistance(point1: CLLocationCoordinate2D, point2: CLLocationCoordinate2D) -> Double {
+        let distanceArray: [Double] = [
+            (projectX(x: point1.longitude) - projectX(x: point2.longitude)),
+            (projectY(y: point1.latitude) - projectY(y: point2.latitude))
+        ]
+        return (distanceArray[0] * distanceArray[0] + distanceArray[1] * distanceArray[1]).squareRoot()
+    }
+    
+    public func projectX(x: Double) -> Double {
+        return x / 360.0 + 0.5
+    }
+    
+    public func projectY(y: Double) -> Double {
+        let sinValue = sin(y * Double.pi / 180)
+        let newYValue = 0.5 - 0.25 * log((1 + sinValue) / (1 - sinValue)) / Double.pi
+        if newYValue < 0 {
+            return 0.0
+        } else if newYValue > 1 {
+            return 1.1
+        } else {
+            return newYValue
+        }
+    }
+    
+    public func updateTraveledRouteLine(point: CLLocationCoordinate2D) {
+        if DispatchTime.now().uptimeNanoseconds - lastIndexUpdateTimeNano > MAX_ELAPSED_SINCE_INDEX_UPDATE_NANO {
+            return
+        }
+        if primaryRouteLineGranularDistances != nil && primaryRouteRemainingDistancesIndex != nil {
+            let granularDistances = primaryRouteLineGranularDistances!
+            let index = primaryRouteRemainingDistancesIndex!
+            let traveledIndex = granularDistances.distanceArray[index]!
+            let upcomingPoint = traveledIndex.point
+            let remainingDistance = traveledIndex.distanceRemaining + calculateDistance(point1: upcomingPoint, point2: point)
+            
+            if granularDistances.distance >= remainingDistance {
+                let fractionTraveled = (1.0 - remainingDistance / granularDistances.distance)
+                if fractionTraveled >= 0 {
+                    newFractionTraveled = fractionTraveled
+                }
+            }
+        }
+    }
     
     /**
      Updates the route style layer and its casing style layer to gradually disappear as the user location puck travels along the displayed route.
@@ -722,7 +873,12 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         guard let mainRouteLayer = style?.layer(withIdentifier: mainRouteLayerIdentifier) as? MGLLineStyleLayer,
               let mainRouteCasingLayer = style?.layer(withIdentifier: mainRouteCasingLayerIdentifier) as? MGLLineStyleLayer else { return }
         
-        let fractionTraveled = routeProgress.fractionTraveled
+        var fractionTraveled: Double
+        if newFractionTraveled != 0.0 {
+            fractionTraveled = newFractionTraveled
+        } else {
+            fractionTraveled = routeProgress.fractionTraveled
+        }
         
         // In case if route was fully travelled - remove main route and its casing.
         if fractionTraveled >= 1.0 {
@@ -897,6 +1053,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         style.remove(Set(sourceIdentifiers.compactMap({ style.source(withIdentifier: $0) })))
         
         routes = nil
+        vanishPointOffset = 0.0
+        primaryRoutePoints = nil
+        primaryRouteLineGranularDistances = nil
     }
     
     /**
