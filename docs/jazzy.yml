@@ -94,6 +94,7 @@ custom_categories:
       - BottomBannerViewControllerDelegate
       - SpeedLimitView
       - UserPuckCourseView
+      - UserHaloCourseView
       - CourseUpdatable
       - NavigationComponent
   - name: Guidance Instruction UI
