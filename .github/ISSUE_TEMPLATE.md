@@ -14,7 +14,7 @@ Before continuing, can you check if the answer is available within:
 
 **Mapbox Navigation SDK version:**
 
-### Steps to trigger behavior
+### Steps to reproduce
 
  1.
  2.
