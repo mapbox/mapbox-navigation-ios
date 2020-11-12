@@ -2,8 +2,6 @@ import UIKit
 import Turf
 import Mapbox
 
-let PuckSize: CGFloat = 45
-
 /**
  A protocol that represents a `UIView` which tracks the user’s location and course on a `NavigationMapView`.
  */
@@ -38,7 +36,7 @@ public extension CourseUpdatable {
 public class UserPuckCourseView: UIView, CourseUpdatable {
     private var lastLocationUpdate: Date?
     private var staleTimer: Timer!
-    
+
     /// Time interval tick at which Puck view is transitioning into 'stale' state
     public var staleRefreshInterval: TimeInterval = 1 {
         didSet {
@@ -57,7 +55,7 @@ public class UserPuckCourseView: UIView, CourseUpdatable {
         UIView.animate(withDuration: duration, delay: 0, options: [.beginFromCurrentState, .curveLinear], animations: {
             let angle = tracksUserCourse ? 0 : CLLocationDegrees(direction - location.course)
             self.puckView.layer.setAffineTransform(CGAffineTransform.identity.rotated(by: -CGFloat(angle.toRadians())))
-            
+        
             var transform = CATransform3DRotate(CATransform3DIdentity, CGFloat(CLLocationDegrees(pitch).toRadians()), 1.0, 0, 0)
             transform = CATransform3DScale(transform, tracksUserCourse ? 1 : 0.5, tracksUserCourse ? 1 : 0.5, 1)
             transform.m34 = -1.0 / 1000 // (-1 / distance to projection plane)
@@ -78,7 +76,7 @@ public class UserPuckCourseView: UIView, CourseUpdatable {
             puckView.stalePuckColor = stalePuckColor
         }
     }
-    
+
     // Sets the fill color on the circle around the user puck
     @objc public dynamic var fillColor: UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) {
         didSet {
@@ -145,6 +143,7 @@ public class UserPuckCourseView: UIView, CourseUpdatable {
         lastLocationUpdate = Date()
     }
 }
+
 
 class UserPuckStyleKitView: UIView {
     private typealias ColorComponents = (hue: CGFloat, saturation: CGFloat, brightness: CGFloat, alpha: CGFloat)
