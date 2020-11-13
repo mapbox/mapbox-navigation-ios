@@ -13,3 +13,13 @@ Before continuing, can you check if the answer is available within:
 <!-- Please note which version of the Mapbox Navigation SDK you are using. -->
 
 **Mapbox Navigation SDK version:**
+
+### Steps to reproduce
+
+ 1.
+ 2.
+ 3.
+
+### Expected behavior
+
+### Actual behavior
