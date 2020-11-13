@@ -271,10 +271,12 @@ class ViewController: UIViewController {
         
         // Example of building highlighting in 3D.
         navigationViewController.waypointStyle = .extrudedBuilding
-        navigationViewController.detailedFeedbackEnabled = true
         
         // Show second level of detail for feedback items.
         navigationViewController.detailedFeedbackEnabled = true
+        
+        // Override traffic congestion level from `.unknown` to `.low` for `RoadClasses` passed in `trafficOverrideRoadClasses`.
+        navigationViewController.mapView?.trafficOverrideRoadClasses = [.motorway]
         
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
@@ -408,6 +410,12 @@ class ViewController: UIViewController {
         mapView.showsUserLocation = true
         mapView.userTrackingMode = .follow
         mapView.showsUserHeadingIndicator = true
+        
+        // Use map style which allows to show road traffic.
+        mapView.styleURL = MGLStyle.navigationDayStyleURL
+        
+        // Override traffic congestion level from `.unknown` to `.low` for `RoadClasses` passed in `trafficOverrideRoadClasses`.
+        mapView.trafficOverrideRoadClasses = [.motorway]
     }
     
     func uninstall(_ mapView: NavigationMapView) {

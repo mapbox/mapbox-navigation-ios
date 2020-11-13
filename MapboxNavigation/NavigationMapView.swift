@@ -47,7 +47,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     public var tapGestureDistanceThreshold: CGFloat = 50
     
     /**
-     A collection of road classes for which a color substitution should occur.
+     A collection of road classes for which a congestion level substitution should occur.
+     
+     For any road class included in the `trafficOverrideRoadClasses`, all route segments with an `.unknown` traffic congestion level and a matching `MapboxDirections.RoadClass`
+     will be replaced with the `.low` congestion level.
      */
     public var trafficOverrideRoadClasses: [RoadClasses] = []
     
@@ -1143,7 +1146,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      
      This method coalesces consecutive line segments that have the same congestion level.
      
-     For each item in the` CongestionSegment` collection a `CongestionLevel` substitution will take place that has a road class contained in the `trafficOverrideRoadClasses` collection.
+     For each item in the`CongestionSegment` collection a `CongestionLevel` substitution will take place that has a road class contained in the `trafficOverrideRoadClasses` collection.
      For each of these items the `CongestionLevel` for `.unknown` traffic congestion will be replaced with the `.low` traffic congestion.
      
      - parameter coordinates: The coordinates of a leg.
