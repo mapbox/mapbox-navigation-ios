@@ -1047,11 +1047,13 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      - returns: A list of `RoadClasses` for specific `RouteLeg`. `RoadClasses` will be set to `nil` if it's not present in `Intersection`.
      */
     func roadClasses(_ leg: RouteLeg) -> [RoadClasses?] {
-        // Iterate over `Intersection` segments for specific `RouteLeg` and leave only valid ones.
+        // Iterate over `RouteStep`s and pick only valid segment indices for specific `Intersection`.
         // Array of segment indexes can look like this: [0, 3, 24, 28, 48, 50, 51, 53].
-        var intersectionsIndexesByStep = [Int]()
-        leg.intersectionsIndexesByStep.compactMap({ $0 }).forEach {
-            intersectionsIndexesByStep.append(contentsOf: $0.compactMap({ $0 }))
+        var segmentIndicesByIntersection = [Int]()
+        leg.steps.forEach {
+            if let segmentIndices = $0.segmentIndicesByIntersection?.compactMap({ $0 }) {
+                segmentIndicesByIntersection.append(contentsOf: segmentIndices)
+            }
         }
         
         // Iterate over each `Intersection` and save `RoadClasses`.
@@ -1060,20 +1062,25 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         var roadClassesInLeg = [RoadClasses?]()
         leg.steps.forEach {
             $0.intersections?.forEach {
-                roadClassesInLeg.append($0.outletRoadClasses)
+                var roadClass = $0.outletRoadClasses
+                if let roadClasses = roadClass, roadClasses.isEmpty {
+                    roadClass = nil
+                }
+                
+                roadClassesInLeg.append(roadClass)
             }
         }
     
         // Iterate over each `Intersection` segment and fill it in with appropriate `RoadClasses`.
         // At the end amount of `RoadClasses` should be equal to the last segment index.
         var roadClasses = [RoadClasses?]()
-        for (index, _) in intersectionsIndexesByStep.enumerated() {
+        for (index, _) in segmentIndicesByIntersection.enumerated() {
             let nextIndex = index + 1
             
-            if intersectionsIndexesByStep.indices.contains(nextIndex),
+            if segmentIndicesByIntersection.indices.contains(nextIndex),
                roadClassesInLeg.indices.contains(index) {
-                let currentIndex = intersectionsIndexesByStep[index]
-                let nextIndex = intersectionsIndexesByStep[nextIndex]
+                let currentIndex = segmentIndicesByIntersection[index]
+                let nextIndex = segmentIndicesByIntersection[nextIndex]
                 
                 for _ in currentIndex..<nextIndex {
                     roadClasses.append(roadClassesInLeg[index])
@@ -1161,9 +1168,14 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                let trafficOverrideRoadClasses = trafficOverrideRoadClasses,
                roadClasses.indices.contains(index),
                let roadClass = roadClasses[index],
-               trafficOverrideRoadClasses.contains(roadClass),
                congestionLevel == .unknown {
-                overriddenCongestionLevel = .low
+                
+                for element in trafficOverrideRoadClasses {
+                    if roadClass.contains(element) {
+                        overriddenCongestionLevel = .low
+                        break
+                    }
+                }
             }
             
             if segments.last?.1 == overriddenCongestionLevel {
