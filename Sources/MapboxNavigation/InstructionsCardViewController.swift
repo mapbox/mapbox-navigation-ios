@@ -184,10 +184,15 @@ open class InstructionsCardViewController: UIViewController {
     
     func snapToIndexPath(_ indexPath: IndexPath) {
         guard let itemCount = steps?.count, itemCount >= 0 && indexPath.row < itemCount else { return }
-        instructionsCardLayout.collectionView?.isPagingEnabled = false
+        
         let direction: UICollectionView.ScrollPosition = UIApplication.shared.userInterfaceLayoutDirection == .leftToRight ? .left : .right
+        if #available(iOS 14.0, *) {
+            instructionsCardLayout.collectionView?.isPagingEnabled = false
+            instructionsCardLayout.collectionView?.scrollToItem(at: indexPath, at: direction, animated: true)
+            instructionsCardLayout.collectionView?.isPagingEnabled = true
+            return
+        }
         instructionsCardLayout.collectionView?.scrollToItem(at: indexPath, at: direction, animated: true)
-        instructionsCardLayout.collectionView?.isPagingEnabled = true
     }
     
     public func stopPreview() {
