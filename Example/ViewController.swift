@@ -111,13 +111,9 @@ class ViewController: UIViewController {
 
         guard let visibleSelectedRoute = selectedRoute.shapes(within: visibleBoundingBox), let selectedRouteShape = visibleSelectedRoute.first else { return }
 
-        guard let selectedRouteCoordinate = selectedRouteShape.coordinateAtNormalizedPosition(0.25) else { return }
+        guard let selectedRouteCoordinate = selectedRouteShape.coordinateAtNormalizedPosition(Double.random(in: 0.10...0.3)) else { return }
 
-        var selectedRouteTailPosition = RouteETAAnnotationTailPosition.right
-
-        if let currentLocation = mapView.userLocation?.location?.coordinate {
-            selectedRouteTailPosition = selectedRouteCoordinate.longitude > currentLocation.longitude ? .left : .right
-        }
+        let selectedRouteTailPosition = mapView.convert(selectedRouteCoordinate, toPointTo: nil).x <= mapView.bounds.width / 2 ? RouteETAAnnotationTailPosition.left : RouteETAAnnotationTailPosition.right
 
         var features = [MGLPointFeature]()
 
@@ -145,19 +141,60 @@ class ViewController: UIViewController {
 
             var coordinate = kCLLocationCoordinate2DInvalid
 
-            let lineOffset = index % 2 == 0 ? Double.random(in: 0...0.3) : Double.random(in: 0.65...0.8)
-            if let continuousLine = visibleAlternateSteps.continuousShapeFromFirstElement(), let distance = continuousLine.distance(), let routelineCoordinate = continuousLine.coordinateFromStart(distance: distance * lineOffset) {
-                coordinate = routelineCoordinate
+            if let continuousLine = visibleAlternateSteps.continuousShape(), continuousLine.coordinates.count > 0 {
+                coordinate = continuousLine.coordinates[0]//routelineCoordinate
 
-//                style.addDebugLineLayer(identifier: UUID().uuidString, coordinates: continuousLine.coordinates, color: .random)
+                // Simplify LineStrings with many vertices
+                let simplifiedLine = continuousLine.coordinates.count < 100 ? continuousLine : continuousLine.simplified
+//                style.addDebugLineLayer(identifier: UUID().uuidString, coordinates: simplifiedLine.coordinates, color: .random)
+
+                var furthestDistance: CLLocationDistance = 0
+                var furthestVertex = kCLLocationCoordinate2DInvalid
+                for vertex in simplifiedLine.coordinates {
+                    let distanceToSelectedRoute = vertex.distance(to: selectedRouteCoordinate)
+
+                    if distanceToSelectedRoute > furthestDistance {
+                        furthestDistance = distanceToSelectedRoute
+                        furthestVertex = vertex
+                    }
+                }
+
+                let distanceSortedVertices = simplifiedLine.coordinates.sorted {
+                    $0.distance(to: selectedRouteCoordinate) < $1.distance(to: selectedRouteCoordinate)
+                }
+
+//                for (index, vertex) in distanceSortedVertices.enumerated() {
+//                    style.addDebugCircleLayer(identifier: UUID().uuidString, coordinate: vertex, color: UIColor(white: CGFloat(index) / CGFloat(distanceSortedVertices.count), alpha: 1.0))
+//                }
+
+                for vertex in distanceSortedVertices {
+                    print(vertex.distance(to: selectedRouteCoordinate))
+                    if vertex.distance(to: selectedRouteCoordinate) >= furthestDistance * 0.75 {
+                        furthestVertex = vertex
+                        break
+                    }
+                }
+
+                if furthestVertex != kCLLocationCoordinate2DInvalid {
+                    coordinate = continuousLine.closestCoordinate(to: furthestVertex)?.coordinate ?? furthestVertex
+                }
             }
 
             let text = annotationLabelForRoute(route, tolls: routesContainTolls)
 
+            let unprojectedCoordinate = mapView.convert(coordinate, toPointTo: nil)
+
             // Create the feature for this route annotation. Set the styling attributes that will be used to render the annotation in the style layer.
             let point = MGLPointFeature()
             point.coordinate = coordinate
-            let tailPosition = selectedRouteTailPosition == .left ? RouteETAAnnotationTailPosition.right : RouteETAAnnotationTailPosition.left
+            var tailPosition = selectedRouteTailPosition == .left ? RouteETAAnnotationTailPosition.right : RouteETAAnnotationTailPosition.left
+
+            if tailPosition == .left && unprojectedCoordinate.x > mapView.bounds.width * 0.75 {
+                tailPosition = .right
+            } else if tailPosition == .right && unprojectedCoordinate.x < mapView.bounds.width * 0.25 {
+                tailPosition = .left
+            }
+
             let imageName = tailPosition == .left ? "RouteInfoAnnotationLeftHanded" : "RouteInfoAnnotationRightHanded"
             point.attributes = ["selected": false, "tailPosition": tailPosition.rawValue, "text": text, "imageName": imageName, "sortOrder": -index]
 
@@ -386,6 +423,7 @@ class ViewController: UIViewController {
         if let style = mapView?.style {
             removeRouteAnnotationsLayerFromStyle(style)
             style.removeDebugLineLayers()
+            style.removeDebugCircleLayers()
         }
         
         mapView?.unhighlightBuildings()
@@ -655,11 +693,11 @@ extension ViewController: MGLMapViewDelegate {
         }
     }
 
-    func mapView(_ mapView: MGLMapView, regionDidChangeWith reason: MGLCameraChangeReason, animated: Bool) {
-        if let style = mapView.style, let routes = response?.routes {
-            updateRouteAnnotations(routes, style: style)
-        }
-    }
+//    func mapView(_ mapView: MGLMapView, regionDidChangeWith reason: MGLCameraChangeReason, animated: Bool) {
+//        if let style = mapView.style, let routes = response?.routes {
+//            updateRouteAnnotations(routes, style: style)
+//        }
+//    }
 }
 
 // MARK: - NavigationMapViewDelegate

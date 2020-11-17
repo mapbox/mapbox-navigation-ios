@@ -122,13 +122,13 @@ extension RouteStep: Hashable {
 }
 
 extension Array where Element == RouteStep {
-    func continuousShapeFromFirstElement() -> LineString? {
+    func continuousShape(tolerance: CLLocationDistance = 100) -> LineString? {
         guard count > 0 else { return nil }
         guard count > 1 else { return self[0].shape }
         var continuousLine = [CLLocationCoordinate2D]()
         
         for index in 0...count-2 {
-            if let currentStepFinalCoordinate = self[index].finalCoordinate, currentStepFinalCoordinate.distance(to: self[index+1].maneuverLocation) < 10, let coordinates = self[index].shape?.coordinates {
+            if let currentStepFinalCoordinate = self[index].finalCoordinate, currentStepFinalCoordinate.distance(to: self[index+1].maneuverLocation) < tolerance, let coordinates = self[index].shape?.coordinates {
                 continuousLine.append(contentsOf: coordinates)
             }
         }
