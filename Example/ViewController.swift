@@ -7,6 +7,11 @@ import Turf
 private typealias RouteRequestSuccess = ((RouteResponse) -> Void)
 private typealias RouteRequestFailure = ((Error) -> Void)
 
+private enum RouteETAAnnotationTailPosition: Int {
+    case left
+    case right
+}
+
 class ViewController: UIViewController {
     // MARK: - IBOutlets
     @IBOutlet weak var longPressHintView: UIView!
@@ -134,11 +139,6 @@ class ViewController: UIViewController {
             excludedSteps.append(contentsOf: alternateSteps)
             let visibleAlternateSteps = alternateSteps.filter { $0.intersects(visibleBoundingBox) }
 
-//            for step in visibleAlternateSteps {
-//                guard let shape = step.shape else { continue }
-//                style.addDebugLineLayer(identifier: UUID().uuidString, coordinates: shape.coordinates, color: UIColor.random)
-//            }
-
             var coordinate = kCLLocationCoordinate2DInvalid
 
             if let continuousLine = visibleAlternateSteps.continuousShape(), continuousLine.coordinates.count > 0 {
@@ -146,7 +146,6 @@ class ViewController: UIViewController {
 
                 // Simplify LineStrings with many vertices
                 let simplifiedLine = continuousLine.coordinates.count < 100 ? continuousLine : continuousLine.simplified
-//                style.addDebugLineLayer(identifier: UUID().uuidString, coordinates: simplifiedLine.coordinates, color: .random)
 
                 var furthestDistance: CLLocationDistance = 0
                 var furthestVertex = kCLLocationCoordinate2DInvalid
@@ -163,12 +162,7 @@ class ViewController: UIViewController {
                     $0.distance(to: selectedRouteCoordinate) < $1.distance(to: selectedRouteCoordinate)
                 }
 
-//                for (index, vertex) in distanceSortedVertices.enumerated() {
-//                    style.addDebugCircleLayer(identifier: UUID().uuidString, coordinate: vertex, color: UIColor(white: CGFloat(index) / CGFloat(distanceSortedVertices.count), alpha: 1.0))
-//                }
-
                 for vertex in distanceSortedVertices {
-                    print(vertex.distance(to: selectedRouteCoordinate))
                     if vertex.distance(to: selectedRouteCoordinate) >= furthestDistance * 0.75 {
                         furthestVertex = vertex
                         break
@@ -693,11 +687,11 @@ extension ViewController: MGLMapViewDelegate {
         }
     }
 
-//    func mapView(_ mapView: MGLMapView, regionDidChangeWith reason: MGLCameraChangeReason, animated: Bool) {
-//        if let style = mapView.style, let routes = response?.routes {
-//            updateRouteAnnotations(routes, style: style)
-//        }
-//    }
+    func mapView(_ mapView: MGLMapView, regionDidChangeWith reason: MGLCameraChangeReason, animated: Bool) {
+        if let style = mapView.style, let routes = response?.routes {
+            updateRouteAnnotations(routes, style: style)
+        }
+    }
 }
 
 // MARK: - NavigationMapViewDelegate
@@ -856,16 +850,5 @@ extension ViewController {
         }
         
         mapView?.addAnnotations([rawTrackPolyline!, trackPolyline!])
-    }
-}
-
-enum RouteETAAnnotationTailPosition: Int {
-    case left
-    case right
-}
-
-extension UIColor {
-    static var random: UIColor {
-        return UIColor(red: .random(in: 0...1), green: .random(in: 0...1), blue: .random(in: 0...1), alpha: 1.0)
     }
 }
