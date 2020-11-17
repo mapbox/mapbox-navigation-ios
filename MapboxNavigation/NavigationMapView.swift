@@ -765,21 +765,39 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         return RoutePoints(nestedList: nestedList, flatList: flatList)
     }
     
+    /**
+    Find and cache the index of the upcoming [RouteLineDistancesIndex].
+    */
     public func updateUpcomingRoutePointIndex(routeProgress: RouteProgress) {
         let currentLegProgress = routeProgress.currentLegProgress
         let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
         if currentLegProgress != nil && currentStepProgress != nil && primaryRoutePoints != nil {
             let completeRoutePoints = primaryRoutePoints!
+            /**
+            Find the count of remaining points in the current step.
+            */
             var allRemainingPoints = getSlicedLinePointsCount(currentLegProgress: currentLegProgress, currentStepProgress: currentStepProgress)
-            let currentLegSteps = completeRoutePoints.nestedList[routeProgress.legIndex] // 3 list of coordinates
+            
+            /**
+            Add to the count of remaining points all of the remaining points on the current leg, after the current step.
+            */
+            let currentLegSteps = completeRoutePoints.nestedList[routeProgress.legIndex]
             if currentLegProgress.stepIndex < currentLegSteps.count {
                 let startIndex = currentLegProgress.stepIndex + 1
                 let endIndex = currentLegSteps.count - 1
                 allRemainingPoints += currentLegSteps.prefix(endIndex).suffix(from: startIndex).flatMap{ $0.flatMap{ $0 } }.count
             }
-            for index in stride(from: routeProgress.legIndex, to: completeRoutePoints.nestedList.count, by: 1) {
+            
+            /**
+            Add to the count of remaining points all of the remaining legs.
+            */
+            for index in stride(from: routeProgress.legIndex + 1, to: completeRoutePoints.nestedList.count, by: 1) {
                 allRemainingPoints += completeRoutePoints.nestedList[index].flatMap{ $0 }.count
             }
+            
+            /**
+            After calculating the number of remaining points and the number of all points,  calculate the index of the upcoming point.
+            */
             let allPoints = completeRoutePoints.flatList.count
             primaryRouteRemainingDistancesIndex = allPoints - allRemainingPoints - 1
         } else {
@@ -787,18 +805,25 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
     
-    public func getSlicedLinePointsCount(currentLegProgress: RouteLegProgress, currentStepProgress: RouteStepProgress) -> Int {
-        if let shape = currentStepProgress.step.shape {
-            if !shape.coordinates.isEmpty {
-                let firstHalfLine = shape.trimmed(from: shape.coordinates[0], distance: currentStepProgress.distanceTraveled)
-                if let startSecondLinePoint = firstHalfLine?.coordinates.last {
-                    if let trimmedLine = shape.trimmed(from: startSecondLinePoint, distance: currentStepProgress.step.distance) {
-                        return trimmedLine.coordinates.count - 1
-                    }
-                }
+    private func getSlicedLinePointsCount(currentLegProgress: RouteLegProgress, currentStepProgress: RouteStepProgress) -> Int {
+        let startDistance = currentStepProgress.distanceTraveled
+        let stopDistance = currentStepProgress.step.distance
+        var slicedLine: Turf.LineString?
+        
+        /**
+        Implement the Turf.lineSliceAlong(lineString, startDistance, stopDistance) to return a sliced lineString.
+        */
+        if let lineString = currentStepProgress.step.shape {
+            if let midPoint = lineString.coordinateFromStart(distance: startDistance) {
+                slicedLine = lineString.trimmed(from: midPoint, distance: stopDistance - startDistance)
             }
         }
-        return 0
+        
+        if slicedLine != nil {
+            return slicedLine!.coordinates.count - 1
+        } else {
+            return 0
+        }
     }
 
     private func calculateRouteGranularDistances(coordinates: [CLLocationCoordinate2D]) -> RouteLineGranularDistances? {
@@ -849,14 +874,25 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
     
+    /**
+     Updates the route line appearance from the origin point to the indicated point
+     - parameter point: current position of the puck
+     */
     public func updateTraveledRouteLine(point: CLLocationCoordinate2D) {
         if primaryRouteLineGranularDistances != nil && primaryRouteRemainingDistancesIndex != nil {
             let granularDistances = primaryRouteLineGranularDistances!
             let index = primaryRouteRemainingDistancesIndex!
             let traveledIndex = granularDistances.distanceArray[index]
             let upcomingPoint = traveledIndex.point
+            
+            /**
+             Take the remaining distance from the upcoming point on the route and extends it by the exact position of the puck.
+             */
             let remainingDistance = traveledIndex.distanceRemaining + calculateDistance(point1: upcomingPoint, point2: point)
             
+            /**
+             Calculate the percentage of the route traveled.
+             */
             if granularDistances.distance >= remainingDistance {
                 let fractionTraveled = (1.0 - remainingDistance / granularDistances.distance)
                 if fractionTraveled >= 0 {
