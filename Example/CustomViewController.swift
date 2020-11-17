@@ -89,6 +89,9 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
         let routeProgress = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as! RouteProgress
         let location = notification.userInfo![RouteController.NotificationUserInfoKey.locationKey] as! CLLocation
         
+        // update the route point index
+        mapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
+        
         // Add maneuver arrow
         if routeProgress.currentLegProgress.followOnStep != nil {
             mapView.addArrow(route: routeProgress.route, legIndex: routeProgress.legIndex, stepIndex: routeProgress.currentLegProgress.stepIndex + 1)

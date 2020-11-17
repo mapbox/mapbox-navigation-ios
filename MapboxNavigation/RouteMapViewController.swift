@@ -107,8 +107,6 @@ class RouteMapViewController: UIViewController {
      A Boolean value that determines whether the map altitude should change based on internal conditions.
     */
     var suppressAutomaticAltitudeChanges: Bool = false
-    
-    var vanishingRouteLineUpdateIntervalNano: UInt64 = 62500000
 
     convenience init(navigationService: NavigationService, delegate: RouteMapViewControllerDelegate? = nil, topBanner: ContainerViewController, bottomBanner: ContainerViewController) {
         self.init()
@@ -514,6 +512,10 @@ class RouteMapViewController: UIViewController {
 // MARK: - NavigationComponent
 extension RouteMapViewController: NavigationComponent {
     func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
+        
+        //Update the route point index
+        mapView.updateUpcomingRoutePointIndex(routeProgress: progress)
+        
         let route = progress.route
         let legIndex = progress.legIndex
         let stepIndex = progress.currentLegProgress.stepIndex
@@ -536,13 +538,8 @@ extension RouteMapViewController: NavigationComponent {
         }
         
         if routeLineTracksTraversal {
+            mapView.updateTraveledRouteLine(point: location.coordinate)
             mapView.updateRoute(progress)
-
-            let currentTimeNano = DispatchTime.now().uptimeNanoseconds
-            if currentTimeNano - mapView.lastIndexUpdateTimeNano >= vanishingRouteLineUpdateIntervalNano {
-                mapView.updateTraveledRouteLine(point: rawLocation.coordinate)
-                mapView.lastIndexUpdateTimeNano = currentTimeNano
-            }
         }
         
         navigationView.speedLimitView.signStandard = progress.currentLegProgress.currentStep.speedLimitSignStandard
@@ -584,14 +581,10 @@ extension RouteMapViewController: NavigationComponent {
     func navigationService(_ service: NavigationService, didRefresh routeProgress: RouteProgress) {
         mapView.show([routeProgress.route], legIndex: routeProgress.legIndex)
         if routeLineTracksTraversal {
-            mapView.updateRoute(routeProgress)
-            guard let location = routeProgress.currentLegProgress.currentStep.shape?.coordinates[0] else { return }
-            let currentTimeNano = DispatchTime.now().uptimeNanoseconds
-            
-            if currentTimeNano - mapView.lastIndexUpdateTimeNano >= vanishingRouteLineUpdateIntervalNano {
-                mapView.updateTraveledRouteLine(point: location)
-                mapView.lastIndexUpdateTimeNano = currentTimeNano
+            if let location = router.location {
+                mapView.updateTraveledRouteLine(point: location.coordinate)
             }
+            mapView.updateRoute(routeProgress)
         }
     }
 }

@@ -324,6 +324,9 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
         let routeProgress = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as! RouteProgress
         let location = notification.userInfo![RouteController.NotificationUserInfoKey.locationKey] as! CLLocation
         
+        // Update the route point index
+        mapView?.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
+        
         // Update the user puck
         mapView?.updatePreferredFrameRate(for: routeProgress)
         let camera = MGLMapCamera(lookingAtCenter: location.coordinate, altitude: 120, pitch: 60, heading: location.course)

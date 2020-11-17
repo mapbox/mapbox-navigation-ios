@@ -121,7 +121,13 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
     
-    var userLocationForCourseTracking: CLLocation?
+    var userLocationForCourseTracking: CLLocation? {
+        didSet {
+            if let location = userLocationForCourseTracking {
+                updateTraveledRouteLine(point: location.coordinate)
+            }
+        }
+    }
     var animatesUserLocation: Bool = false
     var altitude: CLLocationDistance
     var routes: [Route]?
@@ -714,37 +720,36 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 
     // MARK: - Vanishing route line methods
 
-    public var MAX_ELAPSED_SINCE_INDEX_UPDATE_NANO = 1500000000 //1.5s
-    public var vanishPoint: Double = 0.0
-    public var vanishPointOffset: Double = 0.0
-    public var vanishingPointUpdateInhibited: Bool = true
-    public var primaryRoutePoints: RoutePoints?
-    public var primaryRouteLineGranularDistances: RouteLineGranularDistances?
-    public var primaryRouteRemainingDistancesIndex: Int?
-    public var lastIndexUpdateTimeNano: UInt64 = 0
-    public var newFractionTraveled: Double = 0.0
+    private var primaryRoutePoints: RoutePoints?
+    private var primaryRouteLineGranularDistances: RouteLineGranularDistances?
+    private var primaryRouteRemainingDistancesIndex: Int?
+    fileprivate var newFractionTraveled: Double = 0.0
     
-    public struct RoutePoints {
+    private struct RoutePoints {
         var nestedList: [[[CLLocationCoordinate2D]]]
         var flatList: [CLLocationCoordinate2D]
     }
     
-    public struct RouteLineGranularDistances {
+    private struct RouteLineGranularDistances {
         var distance: Double
-        var distanceArray: [RouteLineDistancesIndex?]
+        var distanceArray: [RouteLineDistancesIndex]
     }
     
-    public struct RouteLineDistancesIndex {
+    private struct RouteLineDistancesIndex {
         var point: CLLocationCoordinate2D
         var distanceRemaining: Double
     }
     
-    public func initPrimaryRoutePoints(route: Route) {
+    private func initPrimaryRoutePoints(route: Route) {
         primaryRoutePoints = parseRoutePoints(route: route)
-        primaryRouteLineGranularDistances = calculateRouteGranularDistances(coordinates: primaryRoutePoints!.flatList)
+        primaryRouteLineGranularDistances = calculateRouteGranularDistances(coordinates: primaryRoutePoints?.flatList ?? [])
     }
     
-    public func parseRoutePoints(route: Route) -> RoutePoints {
+    /**
+    Tranform the route data into nested arrays of legs -> steps -> coordinates.
+    The first and last point of adjacent steps overlap and are duplicated.
+    */
+    private func parseRoutePoints(route: Route) -> RoutePoints {
         let nestedList = route.legs.map { (routeLeg: RouteLeg) -> [[CLLocationCoordinate2D]] in
             return routeLeg.steps.map { (routeStep: RouteStep) -> [CLLocationCoordinate2D] in
                 if let routeShape = routeStep.shape {
@@ -777,9 +782,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             }
             let allPoints = completeRoutePoints.flatList.count
             primaryRouteRemainingDistancesIndex = allPoints - allRemainingPoints - 1
+        } else {
+            primaryRouteRemainingDistancesIndex = nil
         }
-        primaryRouteRemainingDistancesIndex = nil
-        lastIndexUpdateTimeNano = DispatchTime.now().uptimeNanoseconds
     }
     
     public func getSlicedLinePointsCount(currentLegProgress: RouteLegProgress, currentStepProgress: RouteStepProgress) -> Int {
@@ -795,8 +800,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
         return 0
     }
-    
-    public func calculateRouteGranularDistances(coordinates: [CLLocationCoordinate2D]) -> RouteLineGranularDistances? {
+
+    private func calculateRouteGranularDistances(coordinates: [CLLocationCoordinate2D]) -> RouteLineGranularDistances? {
         if coordinates.isEmpty {
             return nil
         } else {
@@ -804,32 +809,35 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
     
-    public func calculateGranularDistances(points: [CLLocationCoordinate2D]) -> RouteLineGranularDistances? {
+    private func calculateGranularDistances(points: [CLLocationCoordinate2D]) -> RouteLineGranularDistances {
         var distance = 0.0
         var indexArray = [RouteLineDistancesIndex?](repeating: nil, count: points.count)
-        for index in stride(from: points.count - 1, to: 1, by: -1) {
+        for index in stride(from: points.count - 1, to: 0, by: -1) {
             let curr = points[index]
             let prev = points[index - 1]
             distance += calculateDistance(point1: curr, point2: prev)
-            indexArray.insert(RouteLineDistancesIndex(point: prev, distanceRemaining: distance), at: index - 1)
+            indexArray[index - 1] = RouteLineDistancesIndex(point: prev, distanceRemaining: distance)
         }
-        indexArray.insert(RouteLineDistancesIndex(point: points[points.count - 1], distanceRemaining: 0.0), at: points.count - 1)
-        return RouteLineGranularDistances(distance: distance, distanceArray: indexArray)
+        indexArray[points.count - 1] = RouteLineDistancesIndex(point: points[points.count - 1], distanceRemaining: 0.0)
+        return RouteLineGranularDistances(distance: distance, distanceArray: indexArray.compactMap{ $0 })
     }
-    
-    public func calculateDistance(point1: CLLocationCoordinate2D, point2: CLLocationCoordinate2D) -> Double {
+
+    /**
+    Calculates the distance between 2 points using [EPSG:3857 projection](https://epsg.io/3857).
+    */
+    private func calculateDistance(point1: CLLocationCoordinate2D, point2: CLLocationCoordinate2D) -> Double {
         let distanceArray: [Double] = [
-            (projectX(x: point1.longitude) - projectX(x: point2.longitude)),
-            (projectY(y: point1.latitude) - projectY(y: point2.latitude))
+            (projectX(point1.longitude) - projectX(point2.longitude)),
+            (projectY(point1.latitude) - projectY(point2.latitude))
         ]
         return (distanceArray[0] * distanceArray[0] + distanceArray[1] * distanceArray[1]).squareRoot()
     }
-    
-    public func projectX(x: Double) -> Double {
+
+    private func projectX(_ x: Double) -> Double {
         return x / 360.0 + 0.5
     }
     
-    public func projectY(y: Double) -> Double {
+    private func projectY(_ y: Double) -> Double {
         let sinValue = sin(y * Double.pi / 180)
         let newYValue = 0.5 - 0.25 * log((1 + sinValue) / (1 - sinValue)) / Double.pi
         if newYValue < 0 {
@@ -842,13 +850,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     public func updateTraveledRouteLine(point: CLLocationCoordinate2D) {
-        if DispatchTime.now().uptimeNanoseconds - lastIndexUpdateTimeNano > MAX_ELAPSED_SINCE_INDEX_UPDATE_NANO {
-            return
-        }
         if primaryRouteLineGranularDistances != nil && primaryRouteRemainingDistancesIndex != nil {
             let granularDistances = primaryRouteLineGranularDistances!
             let index = primaryRouteRemainingDistancesIndex!
-            let traveledIndex = granularDistances.distanceArray[index]!
+            let traveledIndex = granularDistances.distanceArray[index]
             let upcomingPoint = traveledIndex.point
             let remainingDistance = traveledIndex.distanceRemaining + calculateDistance(point1: upcomingPoint, point2: point)
             
@@ -1053,7 +1058,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         style.remove(Set(sourceIdentifiers.compactMap({ style.source(withIdentifier: $0) })))
         
         routes = nil
-        vanishPointOffset = 0.0
         primaryRoutePoints = nil
         primaryRouteLineGranularDistances = nil
     }
