@@ -10,6 +10,24 @@ extension MGLMapView {
 
 
 extension MGLStyle {
+
+    func addDebugCircleLayer(identifier: String, coordinate: CLLocationCoordinate2D, color: UIColor = UIColor.purple) {
+        let point = MGLPointFeature()
+        point.coordinate = coordinate
+
+        let dataSource = MGLShapeSource(identifier: "addDebugCircleLayer" + identifier, features: [point], options: nil)
+        addSource(dataSource)
+
+        let circle = MGLCircleStyleLayer(identifier: "addDebugCircleLayer" + identifier, source: dataSource)
+        circle.circleRadius = NSExpression(forConstantValue: 10)
+        circle.circleOpacity = NSExpression(forConstantValue: 0.75)
+        circle.circleColor = NSExpression(forConstantValue: color)
+        circle.circleStrokeWidth = NSExpression(forConstantValue: NSNumber(4))
+        circle.circleStrokeColor = NSExpression(forConstantValue: UIColor.white)
+
+        addLayer(circle)
+    }
+
     func addDebugLineLayer(identifier: String, coordinates: [CLLocationCoordinate2D], color: UIColor = UIColor.purple) {
 //        removeDebugLineLayers()
 
@@ -20,7 +38,7 @@ extension MGLStyle {
 
         let lineLayer = MGLLineStyleLayer(identifier: "addDebugLineLayer" + identifier, source: shapeSource)
         lineLayer.lineColor = NSExpression(forConstantValue: color)
-        lineLayer.lineWidth = NSExpression(forConstantValue: 24)
+        lineLayer.lineWidth = NSExpression(forConstantValue: 8)
         lineLayer.lineCap = NSExpression(forConstantValue: "round")
         addLayer(lineLayer)
     }
@@ -69,6 +87,23 @@ extension MGLStyle {
         // remove any old sources
         for dataSource in sources.filter({ source -> Bool in
             return source.identifier.contains("addDebugPolygonLayer")
+        }) {
+            removeSource(dataSource)
+        }
+    }
+
+    func removeDebugCircleLayers() {
+        // remove any old layers
+        for lineLayer in layers.filter({ layer -> Bool in
+            guard let layer = layer as? MGLCircleStyleLayer else { return false }
+            return layer.identifier.contains("addDebugCircleLayer")
+        }) {
+            removeLayer(lineLayer)
+        }
+
+        // remove any old sources
+        for dataSource in sources.filter({ source -> Bool in
+            return source.identifier.contains("addDebugCircleLayer")
         }) {
             removeSource(dataSource)
         }
