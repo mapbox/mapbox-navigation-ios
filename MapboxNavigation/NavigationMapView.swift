@@ -474,35 +474,41 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         self.routes = routes
         
         var parentLayer: MGLStyleLayer? = nil
-        for (index, element) in routes.enumerated() {
-            guard let routeSourceIdentifier = identifier(element, identifierType: .source),
-                  let routeIdentifier = identifier(element, identifierType: .route),
-                  let routeCasingIdentifier = identifier(element, identifierType: .routeCasing) else { continue }
+        for (index, route) in routes.enumerated() {
+            guard let routeSourceIdentifier = identifier(route, identifierType: .source),
+                  let routeCasingSourceIdentifier = identifier(route, identifierType: .source, isMainRouteCasingSource: true),
+                  let routeIdentifier = identifier(route, identifierType: .route),
+                  let routeCasingIdentifier = identifier(route, identifierType: .routeCasing) else { continue }
             
-            let routeShape = navigationMapViewDelegate?.navigationMapView(self, shapeFor: [element]) ??
-                shape(for: element, legIndex: 0, isAlternateRoute: index != 0 ? true : false)
-            
-            var routeSource = addRouteSource(style, identifier: routeSourceIdentifier, shape: routeShape)
-            
+            // In case of main route there is the ability to provide custom `MGLShape` for either route or route casing by implemeting
+            // `NavigationMapViewDelegate.navigationMapView(_:shapeFor:)` or `NavigationMapViewDelegate.navigationMapView(_:simplifiedShapeFor:)`.
             if index == 0 {
+                let routeShape = navigationMapViewDelegate?.navigationMapView(self, shapeFor: [route]) ??
+                    shape(for: route, legIndex: legIndex, isAlternateRoute: false)
+                
+                let routeSource = addRouteSource(style, identifier: routeSourceIdentifier, shape: routeShape)
+                
                 let mainRouteLayer = addMainRouteLayer(style,
                                                        source: routeSource,
                                                        identifier: routeIdentifier,
-                                                       lineGradient: routeLineGradient(element, fractionTraveled: 0.0))
+                                                       lineGradient: routeLineGradient(route, fractionTraveled: 0.0))
                 
-                let mainRouteCasingShape = navigationMapViewDelegate?.navigationMapView(self, simplifiedShapeFor: element) ??
-                    shape(forCasingOf: element, legIndex: legIndex)
+                let mainRouteCasingShape = navigationMapViewDelegate?.navigationMapView(self, simplifiedShapeFor: route) ??
+                    shape(forCasingOf: route, legIndex: legIndex)
                 
-                routeSource = addRouteSource(style, identifier: routeSourceIdentifier, shape: mainRouteCasingShape)
+                let routeCasingSource = addRouteSource(style, identifier: routeCasingSourceIdentifier, shape: mainRouteCasingShape)
                 
                 parentLayer = addMainRouteCasingLayer(style,
-                                                      source: routeSource,
+                                                      source: routeCasingSource,
                                                       identifier: routeCasingIdentifier,
                                                       lineGradient: routeCasingGradient(0.0),
                                                       below: mainRouteLayer)
                 
                 continue
             }
+            
+            let routeShape = shape(for: route, legIndex: legIndex, isAlternateRoute: true)
+            let routeSource = addRouteSource(style, identifier: routeSourceIdentifier, shape: routeShape)
             
             if let tempLayer = parentLayer {
                 let alternativeRouteLayer = addAlternativeRoutesLayer(style,
@@ -520,12 +526,16 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     
     // MARK: - Route line insertion methods
     
-    func identifier(_ route: Route?, identifierType: IdentifierType) -> String? {
+    func identifier(_ route: Route?, identifierType: IdentifierType, isMainRouteCasingSource: Bool = false) -> String? {
         guard let route = route else { return nil }
         let identifier = Unmanaged.passUnretained(route).toOpaque()
         
         switch identifierType {
         case .source:
+            if isMainRouteCasingSource {
+                return "\(identifier)_casing_source"
+            }
+            
             return "\(identifier)_source"
             
         case .route:
@@ -864,16 +874,20 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         var sourceIdentifiers = Set<String>()
         var layerIdentifiers = Set<String>()
-        routes?.forEach {
-            if let identifier = identifier($0, identifierType: .source) {
+        routes?.enumerated().forEach {
+            if $0.offset == 0, let identifier = identifier($0.element, identifierType: .source, isMainRouteCasingSource: true) {
                 sourceIdentifiers.insert(identifier)
             }
             
-            if let identifier = identifier($0, identifierType: .route) {
+            if let identifier = identifier($0.element, identifierType: .source) {
+                sourceIdentifiers.insert(identifier)
+            }
+            
+            if let identifier = identifier($0.element, identifierType: .route) {
                 layerIdentifiers.insert(identifier)
             }
             
-            if let identifier = identifier($0, identifierType: .routeCasing) {
+            if let identifier = identifier($0.element, identifierType: .routeCasing) {
                 layerIdentifiers.insert(identifier)
             }
         }
