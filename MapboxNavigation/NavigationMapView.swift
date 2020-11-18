@@ -121,13 +121,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
     
-    var userLocationForCourseTracking: CLLocation? {
-        didSet {
-            if let location = userLocationForCourseTracking {
-                updateTraveledRouteLine(point: location.coordinate)
-            }
-        }
-    }
+    var userLocationForCourseTracking: CLLocation?
     var animatesUserLocation: Bool = false
     var altitude: CLLocationDistance
     var routes: [Route]?
@@ -723,7 +717,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     private var primaryRoutePoints: RoutePoints?
     private var primaryRouteLineGranularDistances: RouteLineGranularDistances?
     private var primaryRouteRemainingDistancesIndex: Int?
-    fileprivate var newFractionTraveled: Double = 0.0
+    public var newFractionTraveled: Double = 0.0
     
     private struct RoutePoints {
         var nestedList: [[[CLLocationCoordinate2D]]]

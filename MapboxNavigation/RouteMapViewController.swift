@@ -512,10 +512,6 @@ class RouteMapViewController: UIViewController {
 // MARK: - NavigationComponent
 extension RouteMapViewController: NavigationComponent {
     func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
-        
-        //Update the route point index
-        mapView.updateUpcomingRoutePointIndex(routeProgress: progress)
-        
         let route = progress.route
         let legIndex = progress.legIndex
         let stepIndex = progress.currentLegProgress.stepIndex
@@ -538,6 +534,7 @@ extension RouteMapViewController: NavigationComponent {
         }
         
         if routeLineTracksTraversal {
+            mapView.updateUpcomingRoutePointIndex(routeProgress: progress)
             mapView.updateTraveledRouteLine(point: location.coordinate)
             mapView.updateRoute(progress)
         }
@@ -581,8 +578,11 @@ extension RouteMapViewController: NavigationComponent {
     func navigationService(_ service: NavigationService, didRefresh routeProgress: RouteProgress) {
         mapView.show([routeProgress.route], legIndex: routeProgress.legIndex)
         if routeLineTracksTraversal {
+            mapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
             if let location = router.location {
                 mapView.updateTraveledRouteLine(point: location.coordinate)
+            } else {
+                mapView.newFractionTraveled = 0.0
             }
             mapView.updateRoute(routeProgress)
         }
