@@ -15,11 +15,6 @@ extension Route {
         #endif
     }
 
-    func stepsIntersecting(boundingBox: Turf.BoundingBox) -> [RouteStep]? {
-        let steps = legs.compactMap { return $0.steps }.reduce([], +)
-        return steps.filter { return $0.intersects(boundingBox) }
-    }
-
     // returns the list of line segments along the route that fall within given bounding box. Returns nil if there are none. Line segments are defined by the route shape coordinates that lay within the bounding box
     func shapes(within: Turf.BoundingBox) -> [LineString]? {
         guard let coordinates = shape?.coordinates else { return nil }
