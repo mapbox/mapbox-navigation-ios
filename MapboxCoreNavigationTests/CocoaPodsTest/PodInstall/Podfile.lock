@@ -1,30 +1,30 @@
 PODS:
-  - Mapbox-iOS-SDK (6.2.2):
+  - Mapbox-iOS-SDK (6.3.0):
     - MapboxMobileEvents (~> 0.10.4)
   - MapboxAccounts (2.3.0)
   - MapboxCommon (7.1.1)
-  - MapboxCoreNavigation (1.1.0-beta.2):
+  - MapboxCoreNavigation (1.1.0):
     - MapboxAccounts (~> 2.3.0)
-    - MapboxDirections (~> 1.0)
+    - MapboxDirections (~> 1.1)
     - MapboxMobileEvents (~> 0.10.2)
     - MapboxNavigationNative (~> 25.0)
     - Turf (~> 1.0)
-  - MapboxDirections (1.0.0):
-    - Polyline (~> 4.2)
+  - MapboxDirections (1.1.0):
+    - Polyline (~> 5.0)
     - Turf (~> 1.0)
   - MapboxMobileEvents (0.10.5)
-  - MapboxNavigation (1.1.0-beta.2):
+  - MapboxNavigation (1.1.0):
     - Mapbox-iOS-SDK (~> 6.0)
-    - MapboxCoreNavigation (= 1.1.0-beta.2)
+    - MapboxCoreNavigation (= 1.1.0)
     - MapboxMobileEvents (~> 0.10.2)
     - MapboxSpeech (~> 1.0)
     - Solar (~> 2.1)
   - MapboxNavigationNative (25.1.0):
     - MapboxCommon (= 7.1.1)
   - MapboxSpeech (1.0.0)
-  - Polyline (4.2.1)
+  - Polyline (5.0.2)
   - Solar (2.1.0)
-  - Turf (1.0.0)
+  - Turf (1.1.0)
 
 DEPENDENCIES:
   - MapboxCoreNavigation (from `../../../`)
@@ -50,19 +50,19 @@ EXTERNAL SOURCES:
     :path: "../../../"
 
 SPEC CHECKSUMS:
-  Mapbox-iOS-SDK: 3f83697efa97f3c21ea7f65c1e75205e1dc030ee
+  Mapbox-iOS-SDK: 6a67397df2bcafe5d2851604192aa8de6f8d6c89
   MapboxAccounts: 84abfdde95d9dc483f604c1b0fe1861edf691ce7
   MapboxCommon: 3629f4cd7905bba428089813bf57ddefb9f7914f
-  MapboxCoreNavigation: 6dcc91fef632980a3f45e21771e053836420ea28
-  MapboxDirections: 35c071db30397f06708ae305287f10395586e154
+  MapboxCoreNavigation: e7b80a0857df5287199432e6edc1d424df3620fc
+  MapboxDirections: f47e5648051967c502897cf808090874e3f81c5d
   MapboxMobileEvents: 7f6fb7fb0360302f524d198d36ccec3a0beae523
-  MapboxNavigation: b8ae02a1cb97c1175267e1b79cd46d52afc799a8
+  MapboxNavigation: 691654844491013223c083f519754886fa33b248
   MapboxNavigationNative: 0b477fb814d8706d2313f7bb70a43c73a7f4e3f3
   MapboxSpeech: 4b3aea42e35d056fae1d7ad847a9fc0f412d911e
-  Polyline: 0e9890790292741c8186201a536b6bb6a78d02dd
+  Polyline: fce41d72e1146c41c6d081f7656827226f643dff
   Solar: 2dc6e7cc39186cb0c8228fa08df76fb50c7d8f24
-  Turf: 29b37f6d67f184a7b2d00f594c3e20b3e5474b7d
+  Turf: 62a818ddce6c1af8d54da9d56232088d170ab27b
 
 PODFILE CHECKSUM: d4084fe664fbacd0cffd88ab45eaed1ad907ad1d
 
-COCOAPODS: 1.10.0.rc.1
+COCOAPODS: 1.8.4
