@@ -56,7 +56,6 @@ class ViewController: UIViewController {
             mapView?.showWaypoints(on: currentRoute)
             if let style = mapView?.style {
                 // show route Duration and Toll annotations
-                updateAnnotationSymbolImages(style)
                 updateRouteAnnotations(routes, style: style)
             }
         }
@@ -64,7 +63,6 @@ class ViewController: UIViewController {
 
     fileprivate let dateComponentsFormatter = DateComponentsFormatter()
 
-    // Regenerate the annotation "bubble" images for any changes in dynamic UIColors.
     private func updateAnnotationSymbolImages(_ style: MGLStyle) {
         let capInsetHeight = CGFloat(22)
         let capInsetWidth = CGFloat(11)
@@ -85,18 +83,6 @@ class ViewController: UIViewController {
             style.setImage(selectedRouteImage, forName: "RouteInfoAnnotationRightHanded-Selected")
         }
     }
-
-    private func removeRouteAnnotationsLayerFromStyle(_ style: MGLStyle) {
-        if let annotationsLayer = style.layer(withIdentifier: annotationLayerIdentifier + "-shape") {
-            style.removeLayer(annotationsLayer)
-        }
-
-        if let annotationsSource = style.source(withIdentifier: annotationLayerIdentifier + "-source") {
-            style.removeSource(annotationsSource)
-        }
-    }
-
-    let annotationLayerIdentifier = "RouteETAAnnotations"
 
     private func updateRouteAnnotations(_ routes: [Route]?, style: MGLStyle) {
         // remove any existing route annotation
@@ -122,7 +108,7 @@ class ViewController: UIViewController {
 
         var features = [MGLPointFeature]()
 
-        // we will look for a set of RouteSteps unique to each alternate route, then find a coordinate along that line
+        // we will look for a set of RouteSteps unique to each alternate route, then find a coordinate along that portion of the route line
         // to use as the position of the annotation callout
         var excludedSteps = selectedRoute.legs.compactMap { return $0.steps }.reduce([], +)
         for (index, route) in routes.dropFirst().enumerated() {
@@ -141,27 +127,22 @@ class ViewController: UIViewController {
 
             var coordinate = kCLLocationCoordinate2DInvalid
 
+            // Obtain a polyline of the set of steps. We'll look for a good spot along this line to place the annotation
             if let continuousLine = visibleAlternateSteps.continuousShape(), continuousLine.coordinates.count > 0 {
-                coordinate = continuousLine.coordinates[0]//routelineCoordinate
+                coordinate = continuousLine.coordinates[0]
 
-                // Simplify LineStrings with many vertices
+                // We don't need a full resolution polyline in order to find our spot so simplify and complex shapes with many vertices
                 let simplifiedLine = continuousLine.coordinates.count < 100 ? continuousLine : continuousLine.simplified
 
-                var furthestDistance: CLLocationDistance = 0
-                var furthestVertex = kCLLocationCoordinate2DInvalid
-                for vertex in simplifiedLine.coordinates {
-                    let distanceToSelectedRoute = vertex.distance(to: selectedRouteCoordinate)
-
-                    if distanceToSelectedRoute > furthestDistance {
-                        furthestDistance = distanceToSelectedRoute
-                        furthestVertex = vertex
-                    }
-                }
-
+                // find the vertex that is the furthest from the location of the selected route's annotation
                 let distanceSortedVertices = simplifiedLine.coordinates.sorted {
                     $0.distance(to: selectedRouteCoordinate) < $1.distance(to: selectedRouteCoordinate)
                 }
 
+                let furthestDistance = distanceSortedVertices.last?.distance(to: selectedRouteCoordinate) ?? 0
+                var furthestVertex = kCLLocationCoordinate2DInvalid
+
+                // look for a vertex that is "far enough" from the selected annotation coordinate. We do this so we don't always put the annotations at the end of the route line.
                 for vertex in distanceSortedVertices {
                     if vertex.distance(to: selectedRouteCoordinate) >= furthestDistance * 0.75 {
                         furthestVertex = vertex
@@ -174,8 +155,9 @@ class ViewController: UIViewController {
                 }
             }
 
-            let text = annotationLabelForRoute(route, tolls: routesContainTolls)
+            let labelText = annotationLabelForRoute(route, tolls: routesContainTolls)
 
+            // convert our coordinate to screen space so we make some choices on which side of the coordinate the label ends up on
             let unprojectedCoordinate = mapView.convert(coordinate, toPointTo: nil)
 
             // Create the feature for this route annotation. Set the styling attributes that will be used to render the annotation in the style layer.
@@ -183,6 +165,7 @@ class ViewController: UIViewController {
             point.coordinate = coordinate
             var tailPosition = selectedRouteTailPosition == .left ? RouteETAAnnotationTailPosition.right : RouteETAAnnotationTailPosition.left
 
+            // pick the orientation of the bubble stem based on how close to the edge of the screen it is
             if tailPosition == .left && unprojectedCoordinate.x > mapView.bounds.width * 0.75 {
                 tailPosition = .right
             } else if tailPosition == .right && unprojectedCoordinate.x < mapView.bounds.width * 0.25 {
@@ -190,23 +173,26 @@ class ViewController: UIViewController {
             }
 
             let imageName = tailPosition == .left ? "RouteInfoAnnotationLeftHanded" : "RouteInfoAnnotationRightHanded"
-            point.attributes = ["selected": false, "tailPosition": tailPosition.rawValue, "text": text, "imageName": imageName, "sortOrder": -index]
+            point.attributes = ["selected": false, "tailPosition": tailPosition.rawValue, "text": labelText, "imageName": imageName, "sortOrder": -index]
 
             features.append(point)
         }
 
-        let text = annotationLabelForRoute(selectedRoute, tolls: routesContainTolls)
+        // add the annotation for the selected annotation last so it ends up ordered on top of the others
+        let labelText = annotationLabelForRoute(selectedRoute, tolls: routesContainTolls)
 
         let point = MGLPointFeature()
         point.coordinate = selectedRouteCoordinate
-        point.attributes = ["selected": true, "tailPosition": selectedRouteTailPosition.rawValue, "text": text, "imageName": selectedRouteTailPosition == .left ? "RouteInfoAnnotationLeftHanded-Selected" : "RouteInfoAnnotationRightHanded-Selected"]
-
+        point.attributes = ["selected": true, "tailPosition": selectedRouteTailPosition.rawValue, "text": labelText, "imageName": selectedRouteTailPosition == .left ? "RouteInfoAnnotationLeftHanded-Selected" : "RouteInfoAnnotationRightHanded-Selected"]
         features.append(point)
 
-        addRouteAnnotationLayer(features: features, style: style)
+        // add the features to the style
+        addRouteAnnotationSymbolLayer(features: features, style: style)
     }
 
-    private func addRouteAnnotationLayer(features: [MGLPointFeature], style: MGLStyle) {
+    private let annotationLayerIdentifier = "RouteETAAnnotations"
+
+    private func addRouteAnnotationSymbolLayer(features: [MGLPointFeature], style: MGLStyle) {
         let dataSource: MGLShapeSource
         if let source = style.source(withIdentifier: annotationLayerIdentifier + "-source") as? MGLShapeSource {
             dataSource = source
@@ -257,6 +243,17 @@ class ViewController: UIViewController {
         style.addLayer(shapeLayer)
     }
 
+    private func removeRouteAnnotationsLayerFromStyle(_ style: MGLStyle) {
+        if let annotationsLayer = style.layer(withIdentifier: annotationLayerIdentifier + "-shape") {
+            style.removeLayer(annotationsLayer)
+        }
+
+        if let annotationsSource = style.source(withIdentifier: annotationLayerIdentifier + "-source") {
+            style.removeSource(annotationsSource)
+        }
+    }
+
+    // This function generates the text for the label to be shown on screen. It will include estimated duration and info on Tolls, if applicable
     private func annotationLabelForRoute(_ route: Route, tolls: Bool) -> String {
         var eta = dateComponentsFormatter.string(from: route.expectedTravelTime) ?? ""
 
@@ -656,7 +653,9 @@ extension ViewController: MGLMapViewDelegate {
         }
 
         self.mapView?.localizeLabels()
-        
+
+        self.updateAnnotationSymbolImages(style)
+
         if let routes = response?.routes, let currentRoute = routes.first, let coords = currentRoute.shape?.coordinates {
             mapView.setVisibleCoordinateBounds(MGLPolygon(coordinates: coords, count: UInt(coords.count)).overlayBounds, animated: false)
             self.mapView?.show(routes)

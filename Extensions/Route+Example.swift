@@ -55,22 +55,9 @@ extension Route {
             return LineString(coordinateList)
         }
     }
-
-    func stepsNotAlong(routeShape: LineString) -> [RouteStep]? {
-        let steps = legs.compactMap { return $0.steps }.reduce([], +)
-        let stepsNotOnRoute = steps.filter {
-            let beginsOn = $0.beginsOn(routeShape)
-            if !beginsOn { return true }
-            let endsOn = $0.endsOn(routeShape)
-            if !endsOn { return true }
-            return false
-        }
-        return stepsNotOnRoute
-    }
 }
 
 extension RouteStep {
-    
     func intersects(_ boundingBox: Turf.BoundingBox) -> Bool {
         guard let coordinates = shape?.coordinates else { return false }
 
@@ -81,54 +68,19 @@ extension RouteStep {
         }
         return false
     }
-
-    var initialCoordinate: CLLocationCoordinate2D? {
-        return shape?.coordinates.first
-    }
-
-    var finalCoordinate: CLLocationCoordinate2D? {
-        return shape?.coordinates.last
-    }
-
-    func beginsOn(_ line: LineString, tolerance: CLLocationDistance = 10) -> Bool {
-
-        guard let initialCoordinate = initialCoordinate, let closestCoordinate = line.closestCoordinate(to: initialCoordinate) else { return false }
-
-
-        let distanceAtStart = closestCoordinate.coordinate.distance(to: initialCoordinate)
-        return distanceAtStart <= tolerance
-    }
-
-    func endsOn(_ line: LineString, tolerance: CLLocationDistance = 10) -> Bool {
-
-        guard let finalCoordinate = finalCoordinate, let closestCoordinate = line.closestCoordinate(to: finalCoordinate) else { return false }
-
-
-        let distanceAtStart = closestCoordinate.coordinate.distance(to: finalCoordinate)
-        return distanceAtStart <= tolerance
-    }
-}
-
-extension CLLocationCoordinate2D: Hashable {
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(latitude)
-        hasher.combine(longitude)
-    }
-}
-extension RouteStep: Hashable {
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(shape?.coordinates)
-    }
 }
 
 extension Array where Element == RouteStep {
+    // Find the longest contiguous series of RouteSteps connected to the first one.
+    //
+    // tolerance: -- Maximum distance between the end of one RouteStep and the start of the next to still consider them connected. Defaults to 100 meters
     func continuousShape(tolerance: CLLocationDistance = 100) -> LineString? {
         guard count > 0 else { return nil }
         guard count > 1 else { return self[0].shape }
         var continuousLine = [CLLocationCoordinate2D]()
         
         for index in 0...count-2 {
-            if let currentStepFinalCoordinate = self[index].finalCoordinate, currentStepFinalCoordinate.distance(to: self[index+1].maneuverLocation) < tolerance, let coordinates = self[index].shape?.coordinates {
+            if let currentStepFinalCoordinate = self[index].shape?.coordinates.last, currentStepFinalCoordinate.distance(to: self[index+1].maneuverLocation) < tolerance, let coordinates = self[index].shape?.coordinates {
                 continuousLine.append(contentsOf: coordinates)
             }
         }
