@@ -90,26 +90,36 @@ class ViewController: UIViewController {
 
         guard waypoints.count > 0, let routes = routes, let mapView = mapView else { return }
 
-        let visibleCoordinateBounds = mapView.coordinateBoundsInset(CGSize(width: 40, height: 60))
-        let visibleBoundingBox = BoundingBox(coordinateBounds: visibleCoordinateBounds)
+        let visibleBoundingBox = BoundingBox(coordinateBounds: mapView.visibleCoordinateBounds)
 
         let tollRoutes = routes.filter { route -> Bool in
             return (route.tollIntersections?.count ?? 0) > 0
         }
         let routesContainTolls = tollRoutes.count > 0
 
+        // Run through our heurstic algorithm looking for a good coordinate along each route line to place it's route annotation
         guard let selectedRoute = routes.first else { return }
 
         guard let visibleSelectedRoute = selectedRoute.shapes(within: visibleBoundingBox), let selectedRouteShape = visibleSelectedRoute.first else { return }
 
-        guard let selectedRouteCoordinate = selectedRouteShape.coordinateAtNormalizedPosition(Double.random(in: 0.10...0.3)) else { return }
+        // simplify the polyline of the selected route shape to reduce number of points considered
+        let selectedRouteLine = selectedRouteShape.coordinates.count < 100 ? selectedRouteShape : selectedRouteShape.simplified
+
+        // filter to only vertices that are onscreen
+        let visibleRouteCoordinates = selectedRouteLine.coordinates.filter {
+            let unprojectedPoint = mapView.convert($0, toPointTo: nil)
+            return mapView.bounds.contains(unprojectedPoint)
+        }
+
+        // pick a random vertex as our annotation coordinate
+        guard let selectedRouteCoordinate = visibleRouteCoordinates.randomElement() else { return }
 
         let selectedRouteTailPosition = mapView.convert(selectedRouteCoordinate, toPointTo: nil).x <= mapView.bounds.width / 2 ? RouteETAAnnotationTailPosition.left : RouteETAAnnotationTailPosition.right
 
         var features = [MGLPointFeature]()
 
         // we will look for a set of RouteSteps unique to each alternate route, then find a coordinate along that portion of the route line
-        // to use as the position of the annotation callout
+        // to use as the position of the annotation callout for that route
         var excludedSteps = selectedRoute.legs.compactMap { return $0.steps }.reduce([], +)
         for (index, route) in routes.dropFirst().enumerated() {
             let allSteps = route.legs.compactMap { return $0.steps }.reduce([], +)
@@ -135,8 +145,12 @@ class ViewController: UIViewController {
                 let simplifiedLine = continuousLine.coordinates.count < 100 ? continuousLine : continuousLine.simplified
 
                 // find the on-screen vertex that is the furthest from the location of the selected route's annotation
+                // this will usually yield a coordinate that is visually far enough to not overlap
                 let distanceSortedVertices = simplifiedLine.coordinates
-                    .filter { return visibleBoundingBox.contains($0) }
+                    .filter {
+                        let unprojectedPoint = mapView.convert($0, toPointTo: nil)
+                        return mapView.bounds.contains(unprojectedPoint)
+                    }
                     .sorted { $0.distance(to: selectedRouteCoordinate) < $1.distance(to: selectedRouteCoordinate) }
 
                 let furthestDistance = distanceSortedVertices.last?.distance(to: selectedRouteCoordinate) ?? 0
@@ -155,6 +169,7 @@ class ViewController: UIViewController {
                 }
             }
 
+            // form the appropriate text string for the annotation
             let labelText = annotationLabelForRoute(route, tolls: routesContainTolls)
 
             // convert our coordinate to screen space so we make some choices on which side of the coordinate the label ends up on
