@@ -7,7 +7,7 @@ import Turf
 private typealias RouteRequestSuccess = ((RouteResponse) -> Void)
 private typealias RouteRequestFailure = ((Error) -> Void)
 
-private enum RouteETAAnnotationTailPosition: Int {
+private enum RouteDurationAnnotationTailPosition: Int {
     case left
     case right
 }
@@ -114,7 +114,7 @@ class ViewController: UIViewController {
         // pick a random vertex as our annotation coordinate
         guard let selectedRouteCoordinate = visibleRouteCoordinates.randomElement() else { return }
 
-        let selectedRouteTailPosition = mapView.convert(selectedRouteCoordinate, toPointTo: nil).x <= mapView.bounds.width / 2 ? RouteETAAnnotationTailPosition.left : RouteETAAnnotationTailPosition.right
+        let selectedRouteTailPosition = mapView.convert(selectedRouteCoordinate, toPointTo: nil).x <= mapView.bounds.width / 2 ? RouteDurationAnnotationTailPosition.left : RouteDurationAnnotationTailPosition.right
 
         var features = [MGLPointFeature]()
 
@@ -178,7 +178,7 @@ class ViewController: UIViewController {
             // Create the feature for this route annotation. Set the styling attributes that will be used to render the annotation in the style layer.
             let point = MGLPointFeature()
             point.coordinate = coordinate
-            var tailPosition = selectedRouteTailPosition == .left ? RouteETAAnnotationTailPosition.right : RouteETAAnnotationTailPosition.left
+            var tailPosition = selectedRouteTailPosition == .left ? RouteDurationAnnotationTailPosition.right : RouteDurationAnnotationTailPosition.left
 
             // pick the orientation of the bubble "stem" based on how close to the edge of the screen it is
             if tailPosition == .left && unprojectedCoordinate.x > mapView.bounds.width * 0.75 {
