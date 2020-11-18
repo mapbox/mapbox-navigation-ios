@@ -2,13 +2,6 @@ import Foundation
 import Mapbox
 import Turf
 
-extension MGLMapView {
-    func coordinateBoundsInset(_ inset: CGSize) -> MGLCoordinateBounds {
-        return convert(bounds.insetBy(dx: inset.width, dy: inset.height), toCoordinateBoundsFrom: nil)
-    }
-}
-
-
 extension MGLStyle {
 
     func addDebugCircleLayer(identifier: String, coordinate: CLLocationCoordinate2D, color: UIColor = UIColor.purple) {
