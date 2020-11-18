@@ -131,13 +131,13 @@ class ViewController: UIViewController {
             if let continuousLine = visibleAlternateSteps.continuousShape(), continuousLine.coordinates.count > 0 {
                 coordinate = continuousLine.coordinates[0]
 
-                // We don't need a full resolution polyline in order to find our spot so simplify and complex shapes with many vertices
+                // We don't need a full resolution polyline in order to find our spot so simplify any complex shapes with many vertices
                 let simplifiedLine = continuousLine.coordinates.count < 100 ? continuousLine : continuousLine.simplified
 
-                // find the vertex that is the furthest from the location of the selected route's annotation
-                let distanceSortedVertices = simplifiedLine.coordinates.sorted {
-                    $0.distance(to: selectedRouteCoordinate) < $1.distance(to: selectedRouteCoordinate)
-                }
+                // find the on-screen vertex that is the furthest from the location of the selected route's annotation
+                let distanceSortedVertices = simplifiedLine.coordinates
+                    .filter { return visibleBoundingBox.contains($0) }
+                    .sorted { $0.distance(to: selectedRouteCoordinate) < $1.distance(to: selectedRouteCoordinate) }
 
                 let furthestDistance = distanceSortedVertices.last?.distance(to: selectedRouteCoordinate) ?? 0
                 var furthestVertex = kCLLocationCoordinate2DInvalid
@@ -165,7 +165,7 @@ class ViewController: UIViewController {
             point.coordinate = coordinate
             var tailPosition = selectedRouteTailPosition == .left ? RouteETAAnnotationTailPosition.right : RouteETAAnnotationTailPosition.left
 
-            // pick the orientation of the bubble stem based on how close to the edge of the screen it is
+            // pick the orientation of the bubble "stem" based on how close to the edge of the screen it is
             if tailPosition == .left && unprojectedCoordinate.x > mapView.bounds.width * 0.75 {
                 tailPosition = .right
             } else if tailPosition == .right && unprojectedCoordinate.x < mapView.bounds.width * 0.25 {
