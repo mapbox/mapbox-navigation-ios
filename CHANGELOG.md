@@ -11,7 +11,7 @@
 * Fixed an issue which was causing clear map button disappearance in the example app when selecting the route. ([#2718](https://github.com/mapbox/mapbox-navigation-ios/pull/2718))
 * Fixed an issue where maneuver icon was not shown after selecting specific step. ([#2722](https://github.com/mapbox/mapbox-navigation-ios/issues/2722))
 * Fixed an issue which was preventing the ability to customize the bottom banner height. ([#2705](https://github.com/mapbox/mapbox-navigation-ios/pull/2705))
-* Added Ukrainian localization. ([#2735](https://github.com/mapbox/mapbox-navigation-ios/pull/2735)
+* Added Ukrainian localization. ([#2735](https://github.com/mapbox/mapbox-navigation-ios/pull/2735))
 
 ### User Location
 * Created the `UserHaloCourseView` similar to `UserCourseView` for approximate location on iOS 14 during the navigation to represent user location. Allow the switch between `UserHaloCourseView` and `UserCourseView` when precise mode is changed. ([#2664](https://github.com/mapbox/mapbox-navigation-ios/pull/2664))
