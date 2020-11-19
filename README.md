@@ -47,8 +47,8 @@ To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
    # Latest stable release
    pod 'MapboxNavigation', '~> 1.1'
    # Latest prerelease
-   pod 'MapboxCoreNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v1.1.0'
-   pod 'MapboxNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v1.1.0'
+   pod 'MapboxCoreNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v1.2.0-alpha.1'
+   pod 'MapboxNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v1.2.0-alpha.1'
    ```
 
 1. Run `pod repo update && pod install` and open the resulting Xcode workspace.
@@ -75,7 +75,7 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
    # Latest stable release
    github "mapbox/mapbox-navigation-ios" ~> 1.1
    # Latest prerelease
-   github "mapbox/mapbox-navigation-ios" "v1.1.0"
+   github "mapbox/mapbox-navigation-ios" "v1.2.0-alpha.1"
    ```
 
 1. Run `./Carthage/Checkouts/mapbox-navigation-ios/scripts/wcarthage.sh bootstrap --platform iOS --cache-builds --use-netrc`. (wcarthage.sh is a temporary replacement for `carthage` to work around [a linker error in Xcode 12](https://github.com/Carthage/Carthage/issues/3019).)
