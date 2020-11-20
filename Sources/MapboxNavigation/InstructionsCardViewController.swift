@@ -253,15 +253,21 @@ open class InstructionsCardViewController: UIViewController {
                 print("!!! BOOO")
             } else if hasVelocityToSlidePrev, UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
                 scrollTargetIndexPath = IndexPath(row: indexBeforeSwipe.row + 1, section: 0)
-                print("!!! FOOO")
+                print("!!! COOO")
             } else {
                 scrollTargetIndexPath = IndexPath(row: indexBeforeSwipe.row - 1, section: 0)
             }
         } else {
-            if scrollView.contentOffset.x - contentOffsetBeforeSwipe.x < -cardSize.width / 2 {
+            if scrollView.contentOffset.x - contentOffsetBeforeSwipe.x < -cardSize.width / 2, UIApplication.shared.userInterfaceLayoutDirection == .leftToRight {
                 scrollTargetIndexPath = IndexPath(row: indexBeforeSwipe.row - 1, section: 0)
-            } else if scrollView.contentOffset.x - contentOffsetBeforeSwipe.x > cardSize.width / 2 {
+            } else if scrollView.contentOffset.x - contentOffsetBeforeSwipe.x > cardSize.width / 2, UIApplication.shared.userInterfaceLayoutDirection == .leftToRight {
                 scrollTargetIndexPath = IndexPath(row: indexBeforeSwipe.row + 1, section: 0)
+            } else if contentOffsetBeforeSwipe.x - scrollView.contentOffset.x < -cardSize.width / 2, UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
+                scrollTargetIndexPath = IndexPath(row: indexBeforeSwipe.row + 1, section: 0)
+                print("DOOO")
+            } else if contentOffsetBeforeSwipe.x - scrollView.contentOffset.x > cardSize.width / 2, UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
+                scrollTargetIndexPath = IndexPath(row: indexBeforeSwipe.row - 1, section: 0)
+                print("FOOO")
             } else {
                 scrollTargetIndexPath = indexBeforeSwipe
             }
