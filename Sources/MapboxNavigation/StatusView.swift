@@ -46,6 +46,22 @@ public class StatusView: UIControl {
         }
     }
     
+    var statuses: [StatusView.Status] = []
+    
+    public struct Status: Identifiable {
+        public var id: String
+//        let title: String
+        var spinner: Bool = false
+        let duration: TimeInterval
+        var animated: Bool = true
+        var interactive: Bool = false
+        var priority: Priority
+    }
+    
+    struct Priority: RawRepresentable {
+        public var rawValue: Int
+    }
+    
     public override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
@@ -117,6 +133,35 @@ public class StatusView: UIControl {
         }
     }
     
+    // fix name (method to deal with hiding/showing status banners and updating statuses array)
+    func manageStatuses(showSpinner: Bool) {
+        
+        
+        if statuses.isEmpty {
+            let hide = {
+                self.isHidden = true
+                self.textLabel.alpha = 0
+                self.activityIndicatorView.isHidden = true
+            }
+        } else {
+            // find status with "highest" priority
+            
+            
+            let show = {
+                self.isHidden = false
+                self.textLabel.alpha = 1
+                if (showSpinner) { self.activityIndicatorView.isHidden = false }
+                self.superview?.layoutIfNeeded()
+            }
+        }
+    }
+    
+    func hideStatus(banner: Status) {
+        guard let row = statuses.firstIndex(where: {$0.id == banner.id}) else { return }
+        manageStatuses(showSpinner: true)
+        statuses.remove(at: row)
+    }
+    
     public func showStatus(title: String, spinner spin: Bool = false, duration: TimeInterval, animated: Bool = true, interactive: Bool = false) {
         show(title, showSpinner: spin, interactive: interactive)
         guard duration < .infinity else { return }
@@ -126,6 +171,17 @@ public class StatusView: UIControl {
     func showSimulationStatus(speed: Int) {
         let format = NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation at %@×", comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled.")
         let title = String.localizedStringWithFormat(format, NumberFormatter.localizedString(from: speed as NSNumber, number: .decimal))
+        
+        // create simulation status and append to array of statuses
+        let simulationStatus = Status(id: title, duration: .infinity, interactive: true, priority: StatusView.Priority(rawValue: 2))
+        if let row = statuses.firstIndex(where: {$0.id.contains("Simulating Navigation")}) {
+            statuses[row] = simulationStatus
+        } else {
+            statuses.append(simulationStatus)
+        }
+                
+        print("!!! statuses in StatusView.showSimulationStatus: \(statuses)")
+        
         showStatus(title: title, duration: .infinity, interactive: true)
     }
     

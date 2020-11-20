@@ -401,6 +401,11 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         guard AVAudioSession.sharedInstance().outputVolume <= NavigationViewMinimumVolumeForWarning else { return }
         
         let title = NSLocalizedString("INAUDIBLE_INSTRUCTIONS_CTA", bundle: .mapboxNavigation, value: "Adjust Volume to Hear Instructions", comment: "Label indicating the device volume is too low to hear spoken instructions and needs to be manually increased")
+        
+        // create low volume notification status and append to array of statuses
+        let lowVolumeStatus = StatusView.Status(id: title, duration: 3, animated: true, priority: StatusView.Priority(rawValue: 3))
+        StatusView().statuses.append(lowVolumeStatus)
+        
         showStatus(title: title, spinner: false, duration: 3, animated: true, interactive: false)
     }
     
@@ -732,6 +737,17 @@ extension NavigationViewController: NavigationServiceDelegate {
         
         if #available(iOS 14.0, *), accuracyAuthorization == .reducedAccuracy {
             let title = NSLocalizedString("ENABLE_PRECISE_LOCATION", bundle: .mapboxNavigation, value: "Enable precise location to navigate", comment: "Label indicating precise location is off and needs to be turned on to navigate")
+            
+            // create authorization status and append to array of statuses
+            let authorizationStatus = StatusView.Status(id: title, duration: 20, priority: StatusView.Priority(rawValue: 1))
+            
+            if let row = StatusView().statuses.firstIndex(where: {$0.id == title}) {
+                StatusView().statuses[row] = authorizationStatus
+            } else {
+                StatusView().statuses.append(authorizationStatus)
+            }
+            print("!!! statuses: \(StatusView().statuses)")
+            
             showStatus(title: title, spinner: false, duration: 20, animated: true, interactive: false)
             mapView?.reducedAccuracyActivatedMode = true
         } else {
