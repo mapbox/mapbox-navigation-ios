@@ -1050,46 +1050,19 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      - returns: A list of `RoadClasses` for specific `RouteLeg`. `RoadClasses` will be set to `nil` if it's not present in `Intersection`.
      */
     func roadClasses(_ leg: RouteLeg) -> [RoadClasses?] {
-        // Iterate over `RouteStep`s and pick only valid segment indices for specific `Intersection`.
+        // Pick only valid segment indices for specific `Intersection` in `RouteStep`.
         // Array of segment indexes can look like this: [0, 3, 24, 28, 48, 50, 51, 53].
-        var segmentIndicesByIntersection = [Int]()
-        leg.steps.forEach {
-            if let segmentIndices = $0.segmentIndicesByIntersection?.compactMap({ $0 }) {
-                segmentIndicesByIntersection.append(contentsOf: segmentIndices)
-            }
-        }
+        let segmentIndices = leg.steps.compactMap({ $0.segmentIndicesByIntersection?.compactMap({ $0 }) }).reduce([], +)
         
-        // Iterate over each `Intersection` and save `RoadClasses`.
-        // Array of `RoadClasses` can look like this:
-        // [Optional(toll,motorway), ... , Optional(), Optional(toll,motorway), nil]
-        var roadClassesInLeg = [RoadClasses?]()
-        leg.steps.forEach {
-            $0.intersections?.forEach {
-                var roadClass = $0.outletRoadClasses
-                if let roadClasses = roadClass, roadClasses.isEmpty {
-                    roadClass = nil
-                }
-                
-                roadClassesInLeg.append(roadClass)
-            }
-        }
-    
-        // Iterate over each `Intersection` segment and fill it in with appropriate `RoadClasses`.
+        // Pick `RoadClasses` in specific `Intersection` of `RouteStep`. It's possible that `RoadClasses` can be empty instead of `nil`, if so,
+        // replace it with `nil`, instead of removing. It is expected that number of `segmentIndices` will be equal to number of `roadClassesInLeg`.
+        // Array of `RoadClasses` can look like this: [Optional(toll,motorway), ... , Optional(toll,motorway), nil]
+        let roadClassesInLeg = leg.steps.compactMap({ $0.intersections?.map({ !($0.outletRoadClasses?.isEmpty ?? false) ? $0.outletRoadClasses : nil }) }).reduce([], +)
+        
+        // Map each `RoadClasses` to the amount of two adjacent `segmentIndices`.
         // At the end amount of `RoadClasses` should be equal to the last segment index.
-        var roadClasses = [RoadClasses?]()
-        for (index, _) in segmentIndicesByIntersection.enumerated() {
-            let nextIndex = index + 1
-            
-            if segmentIndicesByIntersection.indices.contains(nextIndex),
-               roadClassesInLeg.indices.contains(index) {
-                let currentIndex = segmentIndicesByIntersection[index]
-                let nextIndex = segmentIndicesByIntersection[nextIndex]
-                
-                for _ in currentIndex..<nextIndex {
-                    roadClasses.append(roadClassesInLeg[index])
-                }
-            }
-        }
+        let roadClasses = segmentIndices.enumerated().map({ segmentIndices.indices.contains($0.offset + 1) && roadClassesInLeg.indices.contains($0.offset) ?
+                                                            Array(repeating: roadClassesInLeg[$0.offset], count: segmentIndices[$0.offset + 1] - segmentIndices[$0.offset]) : [] }).reduce([], +)
         
         return roadClasses
     }
