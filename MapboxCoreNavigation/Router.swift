@@ -33,9 +33,6 @@ public protocol Router: class, CLLocationManagerDelegate {
      */
     var delegate: RouterDelegate? { get set }
 
-    var supportsElectronicHorizon: Bool { get }
-    var electronicHorizonDelegate: ElectronicHorizonDelegate? { get set }
-    
     /**
      Intializes a new `RouteController`.
      
@@ -96,6 +93,18 @@ public protocol Router: class, CLLocationManagerDelegate {
     func enableLocationRecording()
     func disableLocationRecording()
     func locationHistory() -> String?
+
+    /**
+     Optional support for Electronic Horizon provided by Navigator class.
+     */
+    var supportsElectronicHorizon: Bool { get }
+
+    /**
+     Delegate to receive Electronic Horizon updates from Navigator.
+     Ignored if supportsElectronicHorizon is false.
+     */
+    var electronicHorizonDelegate: ElectronicHorizonDelegate? { get set }
+
 }
 
 protocol InternalRouter: class {
