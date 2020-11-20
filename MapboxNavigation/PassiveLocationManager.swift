@@ -1,6 +1,7 @@
 import UIKit
 import Mapbox
 import MapboxCoreNavigation
+import MapboxNavigationNative
 
 /**
  An object that notifies a map view when the user’s location changes, minimizing the noise that normally accompanies location updates from a `CLLocationManager` object.
@@ -25,6 +26,8 @@ open class PassiveLocationManager: NSObject, MGLLocationManager {
      The location manager’s delegate.
      */
     public weak var delegate: MGLLocationManagerDelegate?
+
+    public weak var electronicHorizonDelegate: ElectronicHorizonDelegate?
     
     /**
      The location manager’s data source, which detects the user’s location as it changes.
@@ -117,5 +120,13 @@ extension PassiveLocationManager: PassiveLocationDataSourceDelegate {
     
     public func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didFailWithError error: Error) {
         delegate?.locationManager(self, didFailWithError: error)
+    }
+
+    public func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didUpdateElectronicHorizon horizon: ElectronicHorizon, type: ElectronicHorizonResultType) {
+        electronicHorizonDelegate?.electronicHorizonDidUpdate(horizon, type: type)
+    }
+
+    public func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didUpdateElectronicHorizonPosition position: GraphPosition) {
+        electronicHorizonDelegate?.didUpdatePosition(position)
     }
 }

@@ -190,6 +190,10 @@ public protocol PassiveLocationDataSourceDelegate: class {
     
     /// - seealso: `CLLocationManagerDelegate.locationManager(_:didFailWithError:)`
     func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didFailWithError error: Error)
+
+    func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didUpdateElectronicHorizon horizon: ElectronicHorizon, type: ElectronicHorizonResultType)
+
+    func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didUpdateElectronicHorizonPosition position: GraphPosition)
 }
 
 extension TileEndpointConfiguration {
@@ -208,10 +212,10 @@ extension TileEndpointConfiguration {
 
 extension PassiveLocationDataSource: ElectronicHorizonObserver {
     public func onElectronicHorizonUpdated(for horizon: ElectronicHorizon, type: ElectronicHorizonResultType) {
-        print("1 onElectronicHorizonUpdated type: \(type)")
+        delegate?.passiveLocationDataSource(self, didUpdateElectronicHorizon: horizon, type: type)
     }
 
     public func onPositionUpdated(for position: GraphPosition) {
-        print("1 onPositionUpdated ID: \(position.edgeId) percentage: \(position.percentAlong)")
+        delegate?.passiveLocationDataSource(self, didUpdateElectronicHorizonPosition: position)
     }
 }
