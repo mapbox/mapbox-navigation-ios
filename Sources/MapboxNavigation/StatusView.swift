@@ -46,8 +46,8 @@ public class StatusView: UIControl {
         }
     }
     
-    var statuses: [StatusView.Status] = []
-    
+    static var statuses: [StatusView.Status] = []
+
     public struct Status: Identifiable {
         public var id: String
 //        let title: String
@@ -100,6 +100,7 @@ public class StatusView: UIControl {
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(StatusView.tap(_:)))
         addGestureRecognizer(tapRecognizer)
+        
     }
     
     @objc func pan(_ sender: UIPanGestureRecognizer) {
@@ -137,7 +138,7 @@ public class StatusView: UIControl {
     func manageStatuses(showSpinner: Bool) {
         
         
-        if statuses.isEmpty {
+        if StatusView.statuses.isEmpty {
             let hide = {
                 self.isHidden = true
                 self.textLabel.alpha = 0
@@ -145,7 +146,7 @@ public class StatusView: UIControl {
             }
         } else {
             // find status with "highest" priority
-            
+            let highestPriorityStatus = StatusView.statuses.max(by: {$0.priority.rawValue < $1.priority.rawValue})
             
             let show = {
                 self.isHidden = false
@@ -157,9 +158,9 @@ public class StatusView: UIControl {
     }
     
     func hideStatus(banner: Status) {
-        guard let row = statuses.firstIndex(where: {$0.id == banner.id}) else { return }
+        guard let row = StatusView.statuses.firstIndex(where: {$0.id == banner.id}) else { return }
+        StatusView.statuses.remove(at: row)
         manageStatuses(showSpinner: true)
-        statuses.remove(at: row)
     }
     
     public func showStatus(title: String, spinner spin: Bool = false, duration: TimeInterval, animated: Bool = true, interactive: Bool = false) {
@@ -174,13 +175,13 @@ public class StatusView: UIControl {
         
         // create simulation status and append to array of statuses
         let simulationStatus = Status(id: title, duration: .infinity, interactive: true, priority: StatusView.Priority(rawValue: 2))
-        if let row = statuses.firstIndex(where: {$0.id.contains("Simulating Navigation")}) {
-            statuses[row] = simulationStatus
+        if let row = StatusView.statuses.firstIndex(where: {$0.id.contains("Simulating Navigation")}) {
+            StatusView.statuses[row] = simulationStatus
         } else {
-            statuses.append(simulationStatus)
+            StatusView.statuses.append(simulationStatus)
         }
                 
-        print("!!! statuses in StatusView.showSimulationStatus: \(statuses)")
+        print("!!! statuses in StatusView.showSimulationStatus: \(StatusView.statuses)")
         
         showStatus(title: title, duration: .infinity, interactive: true)
     }

@@ -404,7 +404,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         
         // create low volume notification status and append to array of statuses
         let lowVolumeStatus = StatusView.Status(id: title, duration: 3, animated: true, priority: StatusView.Priority(rawValue: 3))
-        StatusView().statuses.append(lowVolumeStatus)
+        StatusView.statuses.append(lowVolumeStatus)
         
         showStatus(title: title, spinner: false, duration: 3, animated: true, interactive: false)
     }
@@ -741,12 +741,12 @@ extension NavigationViewController: NavigationServiceDelegate {
             // create authorization status and append to array of statuses
             let authorizationStatus = StatusView.Status(id: title, duration: 20, priority: StatusView.Priority(rawValue: 1))
             
-            if let row = StatusView().statuses.firstIndex(where: {$0.id == title}) {
-                StatusView().statuses[row] = authorizationStatus
+            if let row = StatusView.statuses.firstIndex(where: {$0.id == title}) {
+                StatusView.statuses[row] = authorizationStatus
             } else {
-                StatusView().statuses.append(authorizationStatus)
+                StatusView.statuses.append(authorizationStatus)
             }
-            print("!!! statuses: \(StatusView().statuses)")
+            print("!!! statuses: \(StatusView.statuses)")
             
             showStatus(title: title, spinner: false, duration: 20, animated: true, interactive: false)
             mapView?.reducedAccuracyActivatedMode = true

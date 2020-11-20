@@ -402,7 +402,7 @@ extension TopBannerViewController: NavigationComponent {
             
             // create faster route status and append to array of statuses
             let fasterRouteStatus = StatusView.Status(id: title, duration: 3, priority: StatusView.Priority(rawValue: 0))
-            StatusView().statuses.append(fasterRouteStatus)
+            StatusView.statuses.append(fasterRouteStatus)
             
             statusView.showStatus(title: title, spinner: true, duration: 3)
         }
