@@ -738,7 +738,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         var gradientStops = [CGFloat: UIColor]()
         
         // In case if mainRouteLayer was already added - extract congestion segments out of it.
-        if let identifier = identifier(routes?.first, identifierType: .route), let mainRouteLayer = style?.layer(withIdentifier: identifier) as? MGLLineStyleLayer,
+        if let identifier = identifier(routes?.first, identifierType: .route),
+           let mainRouteLayer = style?.layer(withIdentifier: identifier) as? MGLLineStyleLayer,
            // lineGradient contains 4 arguments, last one (stops) allows to store line gradient stops, if they're present - reuse them.
            let lineGradients = mainRouteLayer.lineGradient?.arguments?[3],
            let stops = lineGradients.expressionValue(with: nil, context: nil) as? NSDictionary {
