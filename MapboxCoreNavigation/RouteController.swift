@@ -451,7 +451,7 @@ open class RouteController: NSObject, ElectronicHorizonObserver {
     }
 
     public func onElectronicHorizonUpdated(for horizon: ElectronicHorizon, type: ElectronicHorizonResultType) {
-        electronicHorizonDelegate?.electronicHorizonDidUpdate(horizon)
+        electronicHorizonDelegate?.electronicHorizonDidUpdate(horizon, type: type)
     }
 
     public func onPositionUpdated(for position: GraphPosition) {
