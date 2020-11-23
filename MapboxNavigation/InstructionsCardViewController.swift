@@ -122,11 +122,9 @@ open class InstructionsCardViewController: UIViewController {
     @objc func orientationDidChange(_ notification: Notification) {
         instructionsCardLayout.invalidateLayout()
         
-//        guard let visibleCell = instructionsCardLayout.collectionView?.visibleCells.first else { return }
-//        guard let indexPath = instructionsCardLayout.collectionView?.indexPath(for: visibleCell) else { return }
-//        instructionsCardLayout.collectionView?.isPagingEnabled = false
-//        instructionsCardLayout.collectionView?.scrollToItem(at: indexPath, at: .left, animated: true)
-//        instructionsCardLayout.collectionView?.isPagingEnabled = false
+        instructionsCardLayout.collectionView?.isPagingEnabled = false
+        instructionsCardLayout.collectionView?.scrollToItem(at: indexBeforeSwipe, at: .left, animated: true)
+        instructionsCardLayout.collectionView?.isPagingEnabled = true
     }
     
     func addSubviews() {
