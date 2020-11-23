@@ -259,6 +259,12 @@ class MapboxCoreNavigationTests: XCTestCase {
         }
         
         for location in trace {
+            // Attempt to snarf visual and spoken instructions by calling methods which internally call
+            // `Navigator.getStatusForMonotonicTimestampNanoseconds(_:)` multiple times.
+            let _ = navigation.router.userIsOnRoute(location)
+            let _ = navigation.router.location
+            let _ = (navigation.router as? RouteController)?.snappedLocation
+            
             navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [location])
         }
         

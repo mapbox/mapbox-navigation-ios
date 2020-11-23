@@ -258,7 +258,6 @@
 		64847A041F04629D003F3A69 /* Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64847A031F04629D003F3A69 /* Feedback.swift */; };
 		7C12F2D8225B7C320010A931 /* DCA-Arboretum-dummy-faster-route.json in Resources */ = {isa = PBXBuildFile; fileRef = 7C12F2D7225B7C310010A931 /* DCA-Arboretum-dummy-faster-route.json */; };
 		8AA849E924E722410008EE59 /* WaypointStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA849E824E722410008EE59 /* WaypointStyle.swift */; };
-		8AA92C3B24B3FDBA00D15974 /* route-with-voice-instructions.json in Resources */ = {isa = PBXBuildFile; fileRef = 8AA92C3A24B3FDBA00D15974 /* route-with-voice-instructions.json */; };
 		8D07C5A820B612310093D779 /* EmptyStyle.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D07C5A720B612310093D779 /* EmptyStyle.json */; };
 		8D1A5CD2212DDFCD0059BA4A /* DispatchTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D1A5CD1212DDFCD0059BA4A /* DispatchTimer.swift */; };
 		8D24A2F62040960C0098CBF8 /* UIEdgeInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D24A2F52040960C0098CBF8 /* UIEdgeInsets.swift */; };
@@ -868,7 +867,6 @@
 		64847A031F04629D003F3A69 /* Feedback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Feedback.swift; sourceTree = "<group>"; };
 		7C12F2D7225B7C310010A931 /* DCA-Arboretum-dummy-faster-route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "DCA-Arboretum-dummy-faster-route.json"; sourceTree = "<group>"; };
 		8AA849E824E722410008EE59 /* WaypointStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaypointStyle.swift; sourceTree = "<group>"; };
-		8AA92C3A24B3FDBA00D15974 /* route-with-voice-instructions.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-with-voice-instructions.json"; sourceTree = "<group>"; };
 		8B808F852487CFEC00EEE453 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Main.strings; sourceTree = "<group>"; };
 		8B808F862487CFEC00EEE453 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Navigation.strings; sourceTree = "<group>"; };
 		8B808F892487CFEC00EEE453 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1225,7 +1223,6 @@
 		165F91502204D50B0036CB9E /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
-				8AA92C3A24B3FDBA00D15974 /* route-with-voice-instructions.json */,
 				439FFC222304BC23004C20AA /* route-with-tertiary.json */,
 				35CDA8862190F50C0072B675 /* DCA-Arboretum.json */,
 				35C8DC0E2191DE940053328C /* DCA-Arboretum.trace.json */,
@@ -2230,7 +2227,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8AA92C3B24B3FDBA00D15974 /* route-with-voice-instructions.json in Resources */,
 				3557506D21A827E800AEF9B6 /* li.tar in Resources */,
 				35CDA88D2190F5210072B675 /* DCA-Arboretum.json in Resources */,
 				35CDA8912190F6980072B675 /* route-for-lane-testing.json in Resources */,
