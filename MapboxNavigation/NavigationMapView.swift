@@ -49,10 +49,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      A collection of road classes for which a congestion level substitution should occur.
      
-     For any road class included in the `trafficOverrideRoadClasses`, all route segments with an `.unknown` traffic congestion level and a matching `MapboxDirections.RoadClass`
-     will be replaced with the `.low` congestion level.
+     For any road class included in the `trafficOverrideRoadClasses`, all route segments with an `CongestionLevel.unknown` traffic congestion level and a matching `MapboxDirections.RoadClass`
+     will be replaced with the `CongestionLevel.low` congestion level.
      */
-    public var trafficOverrideRoadClasses: [RoadClasses] = []
+    public var trafficOverrideRoadClasses: RoadClasses? = nil
     
     /**
      The object that acts as the navigation delegate of the map view.
@@ -1125,13 +1125,13 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      - parameter coordinates: The coordinates of a leg.
      - parameter congestions: The congestion levels along a leg. There should be one fewer congestion levels than coordinates.
      - parameter roadClasses: A collection of road classes for each geometry index in `Intersection`. There should be the same amount of `roadClasses` and `congestions`.
-     - parameter trafficOverrideRoadClasses: A collection of road classes for which a `CongestionLevel` substitution should occur.
+     - parameter trafficOverrideRoadClasses: Road classes for which a `CongestionLevel` substitution should occur.
      - returns: A list of `CongestionSegment` tuples with coordinate and congestion level.
      */
     func combine(_ coordinates: [CLLocationCoordinate2D],
                  with congestions: [CongestionLevel],
                  roadClasses: [RoadClasses?]? = nil,
-                 trafficOverrideRoadClasses: [RoadClasses]? = nil) -> [CongestionSegment] {
+                 trafficOverrideRoadClasses: RoadClasses? = nil) -> [CongestionSegment] {
         var segments: [CongestionSegment] = []
         segments.reserveCapacity(congestions.count)
         
@@ -1146,11 +1146,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                let roadClass = roadClasses[index],
                congestionLevel == .unknown {
                 
-                for element in trafficOverrideRoadClasses {
-                    if roadClass.contains(element) {
-                        overriddenCongestionLevel = .low
-                        break
-                    }
+                if !trafficOverrideRoadClasses.intersection(roadClass).isEmpty {
+                    overriddenCongestionLevel = .low
                 }
             }
             
