@@ -61,8 +61,6 @@ class ViewController: UIViewController {
         }
     }
 
-    fileprivate let dateComponentsFormatter = DateComponentsFormatter()
-
     private func updateAnnotationSymbolImages(_ style: MGLStyle) {
         let capInsetHeight = CGFloat(22)
         let capInsetWidth = CGFloat(11)
@@ -270,7 +268,7 @@ class ViewController: UIViewController {
 
     // This function generates the text for the label to be shown on screen. It will include estimated duration and info on Tolls, if applicable
     private func annotationLabelForRoute(_ route: Route, tolls: Bool) -> String {
-        var eta = dateComponentsFormatter.string(from: route.expectedTravelTime) ?? ""
+        var eta = DateComponentsFormatter.shortDateComponentsFormatter.string(from: route.expectedTravelTime) ?? ""
 
         let hasTolls = (route.tollIntersections?.count ?? 0) > 0
         if hasTolls {
@@ -330,10 +328,6 @@ class ViewController: UIViewController {
         if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
             appDelegate.currentAppRootViewController = self
         }
-
-        dateComponentsFormatter.maximumUnitCount = 3
-        dateComponentsFormatter.allowedUnits = [.hour, .minute]
-        dateComponentsFormatter.unitsStyle = .short
     }
     
     deinit {
