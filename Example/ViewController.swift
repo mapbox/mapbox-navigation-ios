@@ -203,7 +203,7 @@ class ViewController: UIViewController {
         addRouteAnnotationSymbolLayer(features: features, style: style)
     }
 
-    private let annotationLayerIdentifier = "RouteETAAnnotations"
+    private let annotationLayerIdentifier = "RouteDurationAnnotations"
 
     private func addRouteAnnotationSymbolLayer(features: [MGLPointFeature], style: MGLStyle) {
         let dataSource: MGLShapeSource
