@@ -410,6 +410,11 @@
 		F4A415F8255DEAD500373466 /* Simplify.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A415F6255DEAD500373466 /* Simplify.swift */; };
 		F4BF512E24EAD7A50066A49B /* FeedbackSubtypeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BF512D24EAD7A50066A49B /* FeedbackSubtypeCollectionViewCell.swift */; };
 		F4C5A26F24EF1D16004ED0DD /* FeedbackSubtypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C5A26E24EF1D16004ED0DD /* FeedbackSubtypeViewController.swift */; };
+		F4FD7739256D886E007C525A /* DateComponentsFormatter+MGLNavigationAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FD7738256D886E007C525A /* DateComponentsFormatter+MGLNavigationAdditions.swift */; };
+		F4FD7740256D89C6007C525A /* Turf+Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4052069255A171800F3DD47 /* Turf+Example.swift */; };
+		F4FD7747256D89CA007C525A /* Route+Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4052083255A178C00F3DD47 /* Route+Example.swift */; };
+		F4FD774E256D89CD007C525A /* Locale+Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = F405208B255A17D300F3DD47 /* Locale+Example.swift */; };
+		F4FD7755256D89D0007C525A /* UIImage+Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4052099255A180500F3DD47 /* UIImage+Example.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1059,6 +1064,7 @@
 		F4A415F6255DEAD500373466 /* Simplify.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Simplify.swift; path = Example/Simplify.swift; sourceTree = "<group>"; };
 		F4BF512D24EAD7A50066A49B /* FeedbackSubtypeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackSubtypeCollectionViewCell.swift; sourceTree = "<group>"; };
 		F4C5A26E24EF1D16004ED0DD /* FeedbackSubtypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackSubtypeViewController.swift; sourceTree = "<group>"; };
+		F4FD7738256D886E007C525A /* DateComponentsFormatter+MGLNavigationAdditions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateComponentsFormatter+MGLNavigationAdditions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1702,6 +1708,7 @@
 				C5A7EC5B1FD610A80008B9BA /* VisualInstructionComponent.swift */,
 				350E2C5E22707EB80014CEB3 /* UIScreen.swift */,
 				CFD47D8F20FD85EC00BC1E49 /* MGLAccountManager.swift */,
+				F4FD7738256D886E007C525A /* DateComponentsFormatter+MGLNavigationAdditions.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -2602,6 +2609,7 @@
 				DA8F3A7623B5D84900B56786 /* SpeedLimitView.swift in Sources */,
 				8AA849E924E722410008EE59 /* WaypointStyle.swift in Sources */,
 				359D1B281FFE70D30052FA42 /* NavigationView.swift in Sources */,
+				F4FD7739256D886E007C525A /* DateComponentsFormatter+MGLNavigationAdditions.swift in Sources */,
 				C5FFAC1520D96F5C009E7F98 /* CarPlayNavigationViewController.swift in Sources */,
 				8DE879661FBB9980002F06C0 /* EndOfRouteViewController.swift in Sources */,
 				AE47A33422B1F6AE0096458C /* InstructionsCardContainerView.swift in Sources */,
@@ -2786,11 +2794,15 @@
 				C53F2EE420EBC95600D9798F /* ViewController.swift in Sources */,
 				C53F2EE520EBC95600D9798F /* CustomViewController.swift in Sources */,
 				DA303CAA21B7A93400F921DC /* ResizableView.swift in Sources */,
+				F4FD7740256D89C6007C525A /* Turf+Example.swift in Sources */,
+				F4FD7755256D89D0007C525A /* UIImage+Example.swift in Sources */,
 				C53F2EE720EBC95600D9798F /* WaypointConfirmationViewController.swift in Sources */,
 				C5DE4B6220F6B6B3007AFBE6 /* CustomStyles.swift in Sources */,
+				F4FD774E256D89CD007C525A /* Locale+Example.swift in Sources */,
 				DA8805002316EAED00B54D87 /* ViewController+GuidanceCards.swift in Sources */,
 				35379CFD21480C0500FD402E /* AppDelegate+CarPlay.swift in Sources */,
 				C53F2EE820EBC95600D9798F /* AppDelegate.swift in Sources */,
+				F4FD7747256D89CA007C525A /* Route+Example.swift in Sources */,
 				DA303CA621B7A90100F921DC /* UIViewController.swift in Sources */,
 				F4A415F8255DEAD500373466 /* Simplify.swift in Sources */,
 				3577B878214FF35800094294 /* FavoritesList.swift in Sources */,
