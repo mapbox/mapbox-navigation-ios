@@ -404,9 +404,9 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         
         // create low volume notification status and append to array of statuses
         let lowVolumeStatus = StatusView.Status(id: title, duration: 3, animated: true, priority: StatusView.Priority(rawValue: 3))
-        StatusView.statuses.append(lowVolumeStatus)
+        addNewStatus(status: lowVolumeStatus)
         
-        showStatus(title: title, spinner: false, duration: 3, animated: true, interactive: false)
+        // showStatus(title: title, spinner: false, duration: 3, animated: true, interactive: false)
     }
     
     
@@ -470,6 +470,12 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     public func showStatus(title: String, spinner: Bool, duration: TimeInterval, animated: Bool, interactive: Bool) {
         navigationComponents.compactMap({ $0 as? NavigationStatusPresenter }).forEach {
             $0.showStatus(title: title, spinner: spinner, duration: duration, animated: animated, interactive: interactive)
+        }
+    }
+    
+    public func addNewStatus(status: StatusView.Status) {
+        navigationComponents.compactMap({ $0 as? NavigationStatusPresenter }).forEach {
+            $0.addNewStatus(status: status)
         }
     }
 }
@@ -738,20 +744,11 @@ extension NavigationViewController: NavigationServiceDelegate {
         if #available(iOS 14.0, *), accuracyAuthorization == .reducedAccuracy {
             let title = NSLocalizedString("ENABLE_PRECISE_LOCATION", bundle: .mapboxNavigation, value: "Enable precise location to navigate", comment: "Label indicating precise location is off and needs to be turned on to navigate")
             
-            // create authorization status and append to array of statuses
+            // create authorization status
             let authorizationStatus = StatusView.Status(id: title, duration: 20, priority: StatusView.Priority(rawValue: 1))
-            
-            if let row = StatusView.statuses.firstIndex(where: {$0.id == title}) {
-                StatusView.statuses[row] = authorizationStatus
-            } else {
-                StatusView.statuses.append(authorizationStatus)
-            }
-            print("!!! statuses: \(StatusView.statuses)")
-            
+            addNewStatus(status: authorizationStatus)
             mapView?.reducedAccuracyActivatedMode = true
-            StatusView().manageStatuses()
-            
-            // showStatus(title: title, spinner: false, duration: 20, animated: true, interactive: false)
+            // TODO: automatically hide banner when precise location is switched on
         } else {
             //Fallback on earlier versions
             mapView?.reducedAccuracyActivatedMode = false

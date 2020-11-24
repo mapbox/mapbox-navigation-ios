@@ -388,13 +388,7 @@ extension TopBannerViewController: NavigationComponent {
         
         // create rerouting status and append to array of statuses
         let reroutingStatus = StatusView.Status(id: title, duration: 20, priority: StatusView.Priority(rawValue: 0))
-        if let row = StatusView.statuses.firstIndex(where: {$0.id == title}) {
-            StatusView.statuses[row] = reroutingStatus
-        } else {
-            StatusView.statuses.append(reroutingStatus)
-        }
-        print("!!! statuses: \(StatusView.statuses)")
-        StatusView().manageStatuses()
+        addNewStatus(status: reroutingStatus)
     }
     
     public func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
@@ -412,9 +406,7 @@ extension TopBannerViewController: NavigationComponent {
             
             // create faster route status and append to array of statuses
             let fasterRouteStatus = StatusView.Status(id: title, duration: 3, priority: StatusView.Priority(rawValue: 0))
-            StatusView.statuses.append(fasterRouteStatus)
-            
-            statusView.showStatus(title: title, spinner: true, duration: 3)
+            statusView.addNewStatus(status: fasterRouteStatus)
         }
     }
     
@@ -478,6 +470,10 @@ extension TopBannerViewController: CarPlayConnectionObserver {
 extension TopBannerViewController: NavigationStatusPresenter {
     public func showStatus(title: String, spinner spin: Bool, duration time: TimeInterval, animated: Bool, interactive: Bool) {
         statusView.showStatus(title: title, spinner: spin, duration: time, animated: animated, interactive: interactive)
+    }
+    
+    public func addNewStatus(status: StatusView.Status) {
+        statusView.addNewStatus(status: status)
     }
 }
 

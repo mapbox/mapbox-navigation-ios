@@ -47,7 +47,7 @@ public class StatusView: UIControl {
         }
     }
     
-    static var statuses: [StatusView.Status] = []
+    var statuses: [Status] = []
 
     public struct Status: Identifiable {
         public var id: String
@@ -141,51 +141,41 @@ public class StatusView: UIControl {
         }
     }
     
+    func addNewStatus(status: Status) {
+        guard let firstWord = status.id.components(separatedBy: " ").first else { return }
+        if let row = statuses.firstIndex(where: {$0.id.contains(firstWord)}) {
+            statuses[row] = status
+        } else {
+            statuses.append(status)
+        }
+        manageStatuses()
+    }
+    
     // fix name (method to deal with hiding/showing status banners and updating statuses array)
     func manageStatuses(status: Status? = nil) {
         
-//        if status != nil {
-//            guard let row = StatusView.statuses.firstIndex(where: {$0.id == status?.id}) else { return }
-//            StatusView.statuses.remove(at: row)
-//        }
+        print("!!! current label: \(String(describing: self.textLabel.text))")
         
+        print("!!! statuses: \(statuses)")
+
         // if we hide a Status and there are no Statuses left in the statuses array, we want to hide the status view entirely
-        if StatusView.statuses.isEmpty {
+        if statuses.isEmpty {
             print("!!! statuses is empty")
-            hide(delay: (status?.duration ?? 0), animated: (status?.animated ?? true))
+            // HIDE STATUS VIEW ENTIRELY
         } else {
             // if we hide a Status and there are Statuses left in the statuses array, we want to show the Status with the highest priority
             // find status with "highest" priority
-            guard let highestPriorityStatus = StatusView.statuses.min(by: {$0.priority.rawValue > $1.priority.rawValue}) else { return }
+
+            guard let highestPriorityStatus = statuses.min(by: {$0.priority.rawValue < $1.priority.rawValue}) else { return }
             print("!!! \(String(describing: highestPriorityStatus))")
             
-            isEnabled = highestPriorityStatus.interactive
-            textLabel.text = highestPriorityStatus.id
-            activityIndicatorView.hidesWhenStopped = true
-            if (!highestPriorityStatus.spinner) { activityIndicatorView.stopAnimating() }
-
-            guard !isCurrentlyVisible, isHidden else { return }
-                    
-            let show = {
-                self.isHidden = false
-                self.textLabel.alpha = 1
-                if (highestPriorityStatus.spinner) { self.activityIndicatorView.isHidden = false }
-                self.superview?.layoutIfNeeded()
-            }
-            
-            UIView.defaultAnimation(0.3, animations:show, completion:{ _ in
-                self.isCurrentlyVisible = true
-                guard highestPriorityStatus.spinner else { return }
-                self.activityIndicatorView.startAnimating()
-            })
-            //guard highestPriorityStatus.duration < .infinity else { return }
-            //hide(delay: highestPriorityStatus.duration, animated: highestPriorityStatus.animated)
+            // SHOW STATUS
         }
     }
     
     func hideStatus(banner: Status) {
-        guard let row = StatusView.statuses.firstIndex(where: {$0.id == banner.id}) else { return }
-        let removedStatus = StatusView.statuses.remove(at: row)
+        guard let row = statuses.firstIndex(where: {$0.id == banner.id}) else { return }
+        let removedStatus = statuses.remove(at: row)
         manageStatuses(status: removedStatus)
     }
     
@@ -199,15 +189,9 @@ public class StatusView: UIControl {
         let format = NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation at %@×", comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled.")
         let title = String.localizedStringWithFormat(format, NumberFormatter.localizedString(from: speed as NSNumber, number: .decimal))
         
-        // create simulation status and append to array of statuses
-        let simulationStatus = Status(id: title, duration: .infinity, interactive: true, priority: StatusView.Priority(rawValue: 2))
-        if let row = StatusView.statuses.firstIndex(where: {$0.id.contains("Simulating Navigation")}) {
-            StatusView.statuses[row] = simulationStatus
-        } else {
-            StatusView.statuses.append(simulationStatus)
-        }
-        manageStatuses()
-        // showStatus(title: title, duration: .infinity, interactive: true)
+        // create simulation status
+        let simulationStatus = Status(id: title, duration: 1000, interactive: true, priority: StatusView.Priority(rawValue: 2))
+        addNewStatus(status: simulationStatus)
     }
     
     /**
