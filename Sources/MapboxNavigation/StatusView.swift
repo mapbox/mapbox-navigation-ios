@@ -39,7 +39,7 @@ public class StatusView: UIControl {
         fatalError()
     }
     
-    // TODO: find a way to handle values attached to statuses
+    // TODO: find a way to handle values attached to Statuses
     var value: Double = 0 {
         didSet {
             sendActions(for: .valueChanged)
@@ -62,6 +62,11 @@ public class StatusView: UIControl {
     // TODO: define set of constants for priority
     struct Priority: RawRepresentable {
         public var rawValue: Int
+//        — Highest Priority —
+//            rerouting (rawValue = 0)
+//            enable precise location (rawValue = 1)
+//            simulation banner (rawValue = 2)
+//        — Lowest Priority —
     }
     
     public override init(frame: CGRect) {
@@ -137,69 +142,55 @@ public class StatusView: UIControl {
     }
     
     // fix name (method to deal with hiding/showing status banners and updating statuses array)
-    func manageStatuses() {
+    func manageStatuses(status: Status? = nil) {
         
+//        if status != nil {
+//            guard let row = StatusView.statuses.firstIndex(where: {$0.id == status?.id}) else { return }
+//            StatusView.statuses.remove(at: row)
+//        }
         
+        // if we hide a Status and there are no Statuses left in the statuses array, we want to hide the status view entirely
         if StatusView.statuses.isEmpty {
-            let hide = {
-                self.isHidden = true
-                self.textLabel.alpha = 0
-                self.activityIndicatorView.isHidden = true
-            }
-            
-            let animate = {
-                let fireTime = DispatchTime.now() + delay
-                DispatchQueue.main.asyncAfter(deadline: fireTime, execute: {
-                    guard !self.isHidden, self.isCurrentlyVisible else { return }
-                    
-                    self.activityIndicatorView.stopAnimating()
-                    UIView.defaultAnimation(0.3, delay: 0, animations: hide, completion: { _ in
-                        self.isCurrentlyVisible = false
-                    })
-                })
-            }
-            
-            if animated {
-                animate()
-            } else {
-                hide()
-            }
-            
+            print("!!! statuses is empty")
+            hide(delay: (status?.duration ?? 0), animated: (status?.animated ?? true))
         } else {
+            // if we hide a Status and there are Statuses left in the statuses array, we want to show the Status with the highest priority
             // find status with "highest" priority
-            let highestPriorityStatus = StatusView.statuses.max(by: {$0.priority.rawValue < $1.priority.rawValue})
-            let showSpinner = highestPriorityStatus?.spinner ?? false
+            guard let highestPriorityStatus = StatusView.statuses.min(by: {$0.priority.rawValue > $1.priority.rawValue}) else { return }
+            print("!!! \(String(describing: highestPriorityStatus))")
             
-            isEnabled = ((highestPriorityStatus?.interactive) != nil)
-            textLabel.text = highestPriorityStatus?.id
+            isEnabled = highestPriorityStatus.interactive
+            textLabel.text = highestPriorityStatus.id
             activityIndicatorView.hidesWhenStopped = true
-            if (!showSpinner) { activityIndicatorView.stopAnimating() }
+            if (!highestPriorityStatus.spinner) { activityIndicatorView.stopAnimating() }
 
             guard !isCurrentlyVisible, isHidden else { return }
                     
             let show = {
                 self.isHidden = false
                 self.textLabel.alpha = 1
-                if (showSpinner) { self.activityIndicatorView.isHidden = false }
+                if (highestPriorityStatus.spinner) { self.activityIndicatorView.isHidden = false }
                 self.superview?.layoutIfNeeded()
             }
             
             UIView.defaultAnimation(0.3, animations:show, completion:{ _ in
                 self.isCurrentlyVisible = true
-                guard showSpinner else { return }
+                guard highestPriorityStatus.spinner else { return }
                 self.activityIndicatorView.startAnimating()
             })
+            //guard highestPriorityStatus.duration < .infinity else { return }
+            //hide(delay: highestPriorityStatus.duration, animated: highestPriorityStatus.animated)
         }
     }
     
     func hideStatus(banner: Status) {
         guard let row = StatusView.statuses.firstIndex(where: {$0.id == banner.id}) else { return }
         let removedStatus = StatusView.statuses.remove(at: row)
-        manageStatuses()
+        manageStatuses(status: removedStatus)
     }
     
     public func showStatus(title: String, spinner spin: Bool = false, duration: TimeInterval, animated: Bool = true, interactive: Bool = false) {
-        show(title, showSpinner: spin, interactive: interactive)
+        // show(title, showSpinner: spin, interactive: interactive)
         guard duration < .infinity else { return }
         hide(delay: duration, animated: animated)
     }
@@ -215,31 +206,31 @@ public class StatusView: UIControl {
         } else {
             StatusView.statuses.append(simulationStatus)
         }
-        
-        showStatus(title: title, duration: .infinity, interactive: true)
+        manageStatuses()
+        // showStatus(title: title, duration: .infinity, interactive: true)
     }
     
     /**
      Shows the status view with an optional spinner.
      */
-    public func show(_ title: String, showSpinner: Bool, interactive: Bool = false) {
-        isEnabled = interactive
-        textLabel.text = title
+    public func show(status: Status) {
+        isEnabled = status.interactive
+        textLabel.text = status.id
         activityIndicatorView.hidesWhenStopped = true
-        if (!showSpinner) { activityIndicatorView.stopAnimating() }
+        if (!status.spinner) { activityIndicatorView.stopAnimating() }
 
         guard !isCurrentlyVisible, isHidden else { return }
                 
         let show = {
             self.isHidden = false
             self.textLabel.alpha = 1
-            if (showSpinner) { self.activityIndicatorView.isHidden = false }
+            if (status.spinner) { self.activityIndicatorView.isHidden = false }
             self.superview?.layoutIfNeeded()
         }
         
         UIView.defaultAnimation(0.3, animations:show, completion:{ _ in
             self.isCurrentlyVisible = true
-            guard showSpinner else { return }
+            guard status.spinner else { return }
             self.activityIndicatorView.startAnimating()
         })
     }
