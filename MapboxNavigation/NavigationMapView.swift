@@ -714,27 +714,27 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 
     // MARK: - Vanishing route line methods
 
-    private var primaryRoutePoints: RoutePoints?
-    private var primaryRouteLineGranularDistances: RouteLineGranularDistances?
-    private var primaryRouteRemainingDistancesIndex: Int?
-    public var newFractionTraveled: Double = 0.0
+    var primaryRoutePoints: RoutePoints?
+    var primaryRouteLineGranularDistances: RouteLineGranularDistances?
+    var primaryRouteRemainingDistancesIndex: Int?
+    public var fractionTraveled: Double = 0.0
     
-    private struct RoutePoints {
+    struct RoutePoints {
         var nestedList: [[[CLLocationCoordinate2D]]]
         var flatList: [CLLocationCoordinate2D]
     }
     
-    private struct RouteLineGranularDistances {
+    struct RouteLineGranularDistances {
         var distance: Double
         var distanceArray: [RouteLineDistancesIndex]
     }
     
-    private struct RouteLineDistancesIndex {
+    struct RouteLineDistancesIndex {
         var point: CLLocationCoordinate2D
         var distanceRemaining: Double
     }
     
-    private func initPrimaryRoutePoints(route: Route) {
+    func initPrimaryRoutePoints(route: Route) {
         primaryRoutePoints = parseRoutePoints(route: route)
         primaryRouteLineGranularDistances = calculateRouteGranularDistances(coordinates: primaryRoutePoints?.flatList ?? [])
     }
@@ -755,7 +755,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 }
             }
         }
-        let flatList = nestedList.flatMap { $0.flatMap { $0.flatMap { $0 } } }
+        let flatList = nestedList.flatMap { $0.flatMap { $0.compactMap { $0 } } }
         return RoutePoints(nestedList: nestedList, flatList: flatList)
     }
     
@@ -765,7 +765,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     public func updateUpcomingRoutePointIndex(routeProgress: RouteProgress) {
         let currentLegProgress = routeProgress.currentLegProgress
         let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
-        if currentLegProgress != nil && currentStepProgress != nil && primaryRoutePoints != nil {
+        if primaryRoutePoints != nil {
             let completeRoutePoints = primaryRoutePoints!
             /**
             Find the count of remaining points in the current step.
@@ -776,10 +776,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             Add to the count of remaining points all of the remaining points on the current leg, after the current step.
             */
             let currentLegSteps = completeRoutePoints.nestedList[routeProgress.legIndex]
-            if currentLegProgress.stepIndex < currentLegSteps.count {
-                let startIndex = currentLegProgress.stepIndex + 1
-                let endIndex = currentLegSteps.count - 1
-                allRemainingPoints += currentLegSteps.prefix(endIndex).suffix(from: startIndex).flatMap{ $0.flatMap{ $0 } }.count
+            let startIndex = currentLegProgress.stepIndex + 1
+            let endIndex = currentLegSteps.count - 1
+            if startIndex < endIndex {
+                allRemainingPoints += currentLegSteps.prefix(endIndex).suffix(from: startIndex).flatMap{ $0.compactMap{ $0 } }.count
             }
             
             /**
@@ -806,7 +806,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         /**
         Implement the Turf.lineSliceAlong(lineString, startDistance, stopDistance) to return a sliced lineString.
-        */
+         */
         if let lineString = currentStepProgress.step.shape {
             if let midPoint = lineString.coordinateFromStart(distance: startDistance) {
                 slicedLine = lineString.trimmed(from: midPoint, distance: stopDistance - startDistance)
@@ -842,7 +842,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
 
     /**
-    Calculates the distance between 2 points using [EPSG:3857 projection](https://epsg.io/3857).
+     Calculates the distance between 2 points using [EPSG:3857 projection](https://epsg.io/3857).
     */
     private func calculateDistance(point1: CLLocationCoordinate2D, point2: CLLocationCoordinate2D) -> Double {
         let distanceArray: [Double] = [
@@ -870,28 +870,25 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     
     /**
      Updates the route line appearance from the origin point to the indicated point
-     - parameter point: current position of the puck
+     - parameter coordinate: current position of the puck
      */
-    public func updateTraveledRouteLine(point: CLLocationCoordinate2D) {
-        if primaryRouteLineGranularDistances != nil && primaryRouteRemainingDistancesIndex != nil {
-            let granularDistances = primaryRouteLineGranularDistances!
-            let index = primaryRouteRemainingDistancesIndex!
-            let traveledIndex = granularDistances.distanceArray[index]
-            let upcomingPoint = traveledIndex.point
-            
-            /**
-             Take the remaining distance from the upcoming point on the route and extends it by the exact position of the puck.
-             */
-            let remainingDistance = traveledIndex.distanceRemaining + calculateDistance(point1: upcomingPoint, point2: point)
-            
-            /**
-             Calculate the percentage of the route traveled.
-             */
-            if granularDistances.distance >= remainingDistance {
-                let fractionTraveled = (1.0 - remainingDistance / granularDistances.distance)
-                if fractionTraveled >= 0 {
-                    newFractionTraveled = fractionTraveled
-                }
+    func updateTraveledRouteLine(_ coordinate: CLLocationCoordinate2D) {
+        guard let granularDistances = primaryRouteLineGranularDistances,let index = primaryRouteRemainingDistancesIndex else { return }
+        let traveledIndex = granularDistances.distanceArray[index]
+        let upcomingPoint = traveledIndex.point
+        
+        /**
+         Take the remaining distance from the upcoming point on the route and extends it by the exact position of the puck.
+         */
+        let remainingDistance = traveledIndex.distanceRemaining + calculateDistance(point1: upcomingPoint, point2: coordinate)
+        
+        /**
+         Calculate the percentage of the route traveled.
+         */
+        if granularDistances.distance >= remainingDistance {
+            let offSet = (1.0 - remainingDistance / granularDistances.distance)
+            if offSet >= 0 {
+                fractionTraveled = offSet
             }
         }
     }
@@ -908,15 +905,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         guard let mainRouteLayer = style?.layer(withIdentifier: mainRouteLayerIdentifier) as? MGLLineStyleLayer,
               let mainRouteCasingLayer = style?.layer(withIdentifier: mainRouteCasingLayerIdentifier) as? MGLLineStyleLayer else { return }
         
-        var fractionTraveled: Double
-        if newFractionTraveled != 0.0 {
-            fractionTraveled = newFractionTraveled
-        } else {
+        if fractionTraveled == 0.0 {
             fractionTraveled = routeProgress.fractionTraveled
-        }
-        
-        // In case if route was fully travelled - remove main route and its casing.
-        if fractionTraveled >= 1.0 {
+        } else if fractionTraveled >= 1.0 {
+            // In case if route was fully travelled - remove main route and its casing.
             style?.remove([mainRouteLayer, mainRouteCasingLayer])
             return
         }
@@ -1312,7 +1304,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         userCourseView.center = convert(location.coordinate, toPointTo: self)
     }
     
-    //TODO: Change to point-based distance calculation
     private func waypoints(on routes: [Route], closeTo point: CGPoint) -> [Waypoint]? {
         let tapCoordinate = convert(point, toCoordinateFrom: self)
         let multipointRoutes = routes.filter { $0.legs.count > 1}
@@ -1323,8 +1314,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         //lets sort the array in order of closest to tap
         let closest = waypoints.sorted { (left, right) -> Bool in
-            let leftDistance = left.coordinate.distance(to: tapCoordinate)
-            let rightDistance = right.coordinate.distance(to: tapCoordinate)
+            let leftDistance = calculateDistance(point1: left.coordinate, point2: tapCoordinate)
+            let rightDistance = calculateDistance(point1: right.coordinate, point2: tapCoordinate)
             return leftDistance < rightDistance
         }
         

@@ -309,6 +309,8 @@
 		AE87207E22CF97B900D7DAB7 /* InstructionsCardCollectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE87207D22CF97B900D7DAB7 /* InstructionsCardCollectionDelegate.swift */; };
 		AEC3AC9A2106703100A26F34 /* HighwayShield.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC3AC992106703100A26F34 /* HighwayShield.swift */; };
 		AED6285622CBE4CE00058A51 /* ViewController+GuidanceCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED6285522CBE4CE00058A51 /* ViewController+GuidanceCards.swift */; };
+		B401074A256C8053003176E6 /* vanish_point_test.json in Resources */ = {isa = PBXBuildFile; fileRef = B4010749256C8052003176E6 /* vanish_point_test.json */; };
+		B4010758256C820F003176E6 /* vanish_point_test.json in Resources */ = {isa = PBXBuildFile; fileRef = B4010757256C820F003176E6 /* vanish_point_test.json */; };
 		B430D2FA25534FDC0088CC23 /* UserHaloCourseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B430D2F925534FDC0088CC23 /* UserHaloCourseView.swift */; };
 		C51511D120EAC89D00372A91 /* CPMapTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51511D020EAC89D00372A91 /* CPMapTemplate.swift */; };
 		C51DF8661F38C31C006C6A15 /* Locale.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51DF8651F38C31C006C6A15 /* Locale.swift */; };
@@ -932,6 +934,8 @@
 		AED2156E208F7FEA009AA673 /* NavigationViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewControllerTests.swift; sourceTree = "<group>"; };
 		AED6285522CBE4CE00058A51 /* ViewController+GuidanceCards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ViewController+GuidanceCards.swift"; path = "Example/ViewController+GuidanceCards.swift"; sourceTree = "<group>"; };
 		AEF2C8F12072B603007B061F /* routeWithTunnels_9thStreetDC.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = routeWithTunnels_9thStreetDC.json; sourceTree = "<group>"; };
+		B4010749256C8052003176E6 /* vanish_point_test.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = vanish_point_test.json; sourceTree = "<group>"; };
+		B4010757256C820F003176E6 /* vanish_point_test.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = vanish_point_test.json; sourceTree = "<group>"; };
 		B430D2F925534FDC0088CC23 /* UserHaloCourseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHaloCourseView.swift; sourceTree = "<group>"; };
 		C51511D020EAC89D00372A91 /* CPMapTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPMapTemplate.swift; sourceTree = "<group>"; };
 		C51DF8651F38C31C006C6A15 /* Locale.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Locale.swift; sourceTree = "<group>"; };
@@ -1223,6 +1227,7 @@
 		165F91502204D50B0036CB9E /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
+				B4010757256C820F003176E6 /* vanish_point_test.json */,
 				439FFC222304BC23004C20AA /* route-with-tertiary.json */,
 				35CDA8862190F50C0072B675 /* DCA-Arboretum.json */,
 				35C8DC0E2191DE940053328C /* DCA-Arboretum.trace.json */,
@@ -1401,6 +1406,7 @@
 		355DB5731EFA73410091BFB7 /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
+				B4010749256C8052003176E6 /* vanish_point_test.json */,
 				35EB9A6920A1A89500CB1225 /* turn_left.data */,
 				8D07C5A720B612310093D779 /* EmptyStyle.json */,
 				355DB5741EFA78070091BFB7 /* GGPark-to-BernalHeights.route */,
@@ -2200,6 +2206,7 @@
 				3540514D1F73F3BB00ED572D /* route-with-straight-roundabout.json in Resources */,
 				8D07C5A820B612310093D779 /* EmptyStyle.json in Resources */,
 				35C11359215BADF900CC2929 /* sthlm-double-back-replay.json in Resources */,
+				B401074A256C8053003176E6 /* vanish_point_test.json in Resources */,
 				8D86AE8921C31C640064A304 /* waypoint-after-turn.json in Resources */,
 				AE5F8771209A082500F58FDB /* route-with-banner-instructions.json in Resources */,
 				DAA96D18215A961D00BEF703 /* route-doubling-back.json in Resources */,
@@ -2228,6 +2235,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3557506D21A827E800AEF9B6 /* li.tar in Resources */,
+				B4010758256C820F003176E6 /* vanish_point_test.json in Resources */,
 				35CDA88D2190F5210072B675 /* DCA-Arboretum.json in Resources */,
 				35CDA8912190F6980072B675 /* route-for-lane-testing.json in Resources */,
 				3557506F21A8293E00AEF9B6 /* tiles in Resources */,

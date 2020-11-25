@@ -535,7 +535,7 @@ extension RouteMapViewController: NavigationComponent {
         
         if routeLineTracksTraversal {
             mapView.updateUpcomingRoutePointIndex(routeProgress: progress)
-            mapView.updateTraveledRouteLine(point: location.coordinate)
+            mapView.updateTraveledRouteLine(location.coordinate)
             mapView.updateRoute(progress)
         }
         
@@ -580,9 +580,9 @@ extension RouteMapViewController: NavigationComponent {
         if routeLineTracksTraversal {
             mapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
             if let location = router.location {
-                mapView.updateTraveledRouteLine(point: location.coordinate)
+                mapView.updateTraveledRouteLine(location.coordinate)
             } else {
-                mapView.newFractionTraveled = 0.0
+                mapView.fractionTraveled = 0.0
             }
             mapView.updateRoute(routeProgress)
         }
