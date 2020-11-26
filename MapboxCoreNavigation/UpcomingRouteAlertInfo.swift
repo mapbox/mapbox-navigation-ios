@@ -7,16 +7,17 @@ import MapboxDirections
  `UpcomingRouteAlertInfo` encapsulates information about various incoming events. Common attributes like location, distance to the event, length and other is provided for each POI, while specific meta data is supplied via `alert` property.
  */
 public struct UpcomingRouteAlertInfo {
-    public enum RouteAlertType {
+    public enum RouteAlert {
         case incident(Incident)
         case tunnel(TunnelInfo)
         case borderCrossing(BorderCrossingInfo)
         case tollCollection(TollCollection)
         case serviceArea(RestStop)
+        case restrictedArea
     }
     
     /// Alert data with specific info. Contents depend on exact alert type.
-    public let alert: RouteAlertType
+    public let alert: RouteAlert
     
     /// Distance to route alert relative to start of the route, meters.
     public let distance: CLLocationDistance
@@ -42,7 +43,7 @@ public struct UpcomingRouteAlertInfo {
     /// Segment index in corresponding `Route.shape` where this alert ends.
     public let endSegmentIndex: UInt32
     
-    init?(_ upcomingAlert: UpcomingRouteAlert) {
+    init(_ upcomingAlert: UpcomingRouteAlert) {
         self.distance = upcomingAlert.alert.distance
         self.distanceToStart = upcomingAlert.distanceToStart
         self.length = upcomingAlert.alert.length?.doubleValue
@@ -54,31 +55,31 @@ public struct UpcomingRouteAlertInfo {
         switch upcomingAlert.alert.type {
         case .kIncident:
             guard let incidentInfo = upcomingAlert.alert.incidentInfo else {
-                return nil
+                preconditionFailure("Alert of type \(upcomingAlert.alert.type) did not contain an info data.")
             }
             self.alert = .incident(Incident(incidentInfo))
         case .kTunnelEntrance:
             guard let tunnelInfo = upcomingAlert.alert.tunnelInfo else {
-                return nil
+                preconditionFailure("Alert of type \(upcomingAlert.alert.type) did not contain an info data.")
             }
             self.alert = .tunnel(TunnelInfo(tunnelInfo))
         case .kBorderCrossing:
             guard let adminInfo = upcomingAlert.alert.borderCrossingInfo else {
-                return nil
+                preconditionFailure("Alert of type \(upcomingAlert.alert.type) did not contain an info data.")
             }
             self.alert = .borderCrossing(BorderCrossingInfo(adminInfo))
         case .kTollCollectionPoint:
             guard let tollInfo = upcomingAlert.alert.tollCollectionInfo else {
-                return nil
+                preconditionFailure("Alert of type \(upcomingAlert.alert.type) did not contain an info data.")
             }
             self.alert = .tollCollection(TollCollection(tollInfo))
         case .kServiceArea:
             guard let serviceAreaInfo = upcomingAlert.alert.serviceAreaInfo else {
-                return nil
+                preconditionFailure("Alert of type \(upcomingAlert.alert.type) did not contain an info data.")
             }
             self.alert = .serviceArea(RestStop(serviceAreaInfo))
-        default:
-            return nil
+        case .kRestrictedArea:
+            self.alert = .restrictedArea
         }
     }
 }
