@@ -475,6 +475,10 @@ extension TopBannerViewController: NavigationStatusPresenter {
     public func addNewStatus(status: StatusView.Status) {
         statusView.addNewStatus(status: status)
     }
+    
+    public func hideStatus(status: StatusView.Status) {
+        statusView.hideStatus(status: status)
+    }
 }
 
 extension TopBannerViewController: NavigationMapInteractionObserver {

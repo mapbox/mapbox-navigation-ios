@@ -151,30 +151,26 @@ public class StatusView: UIControl {
         manageStatuses()
     }
     
-    // fix name (method to deal with hiding/showing status banners and updating statuses array)
+    // fix (method to deal with hiding/showing status banners and updating statuses array)
     func manageStatuses(status: Status? = nil) {
-        
-        print("!!! current label: \(String(describing: self.textLabel.text))")
-        
-        print("!!! statuses: \(statuses)")
+        // print("!!! current label: \(String(describing: self.textLabel.text))")
 
-        // if we hide a Status and there are no Statuses left in the statuses array, we want to hide the status view entirely
+        // if we hide a Status and there are no Statuses left in the statuses array, hide the status view entirely
         if statuses.isEmpty {
-            print("!!! statuses is empty")
-            // HIDE STATUS VIEW ENTIRELY
+            hide(delay: status?.duration ?? 0, animated: status?.animated ?? true)
         } else {
-            // if we hide a Status and there are Statuses left in the statuses array, we want to show the Status with the highest priority
+            // if we hide a Status and there are Statuses left in the statuses array, show the Status with the highest priority
             // find status with "highest" priority
-
             guard let highestPriorityStatus = statuses.min(by: {$0.priority.rawValue < $1.priority.rawValue}) else { return }
-            print("!!! \(String(describing: highestPriorityStatus))")
+            // check what banner is currently visible, if it's the highestPriorityStatus already, then we don't do anything
+            
             
             // SHOW STATUS
         }
     }
     
-    func hideStatus(banner: Status) {
-        guard let row = statuses.firstIndex(where: {$0.id == banner.id}) else { return }
+    func hideStatus(status: Status) {
+        guard let row = statuses.firstIndex(where: {$0.id == status.id}) else { return }
         let removedStatus = statuses.remove(at: row)
         manageStatuses(status: removedStatus)
     }

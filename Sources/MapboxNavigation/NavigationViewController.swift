@@ -467,6 +467,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         UNUserNotificationCenter.current().add(notificationRequest, withCompletionHandler: nil)
     }
     
+    // TODO: DELETE THIS METHOD
     public func showStatus(title: String, spinner: Bool, duration: TimeInterval, animated: Bool, interactive: Bool) {
         navigationComponents.compactMap({ $0 as? NavigationStatusPresenter }).forEach {
             $0.showStatus(title: title, spinner: spinner, duration: duration, animated: animated, interactive: interactive)
@@ -476,6 +477,12 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     public func addNewStatus(status: StatusView.Status) {
         navigationComponents.compactMap({ $0 as? NavigationStatusPresenter }).forEach {
             $0.addNewStatus(status: status)
+        }
+    }
+    
+    public func hideStatus(status: StatusView.Status) {
+        navigationComponents.compactMap({ $0 as? NavigationStatusPresenter }).forEach {
+            $0.hideStatus(status: status)
         }
     }
 }
@@ -740,20 +747,23 @@ extension NavigationViewController: NavigationServiceDelegate {
         // CLLocationManager.accuracyAuthorization was introduced in the iOS 14 SDK in Xcode 12, so Xcode 11 doesn’t recognize it.
         guard let accuracyAuthorizationValue = locationManager.value(forKey: "accuracyAuthorization") as? Int else { return }
         let accuracyAuthorization = MBNavigationAccuracyAuthorization(rawValue: accuracyAuthorizationValue)
-        
+        let previousAuthorizationValue = 1 - accuracyAuthorizationValue
+                
+        // create authorization status
+        let title = NSLocalizedString("ENABLE_PRECISE_LOCATION", bundle: .mapboxNavigation, value: "Enable precise location to navigate", comment: "Label indicating precise location is off and needs to be turned on to navigate")
+        let authorizationStatus = StatusView.Status(id: title, duration: 20, priority: StatusView.Priority(rawValue: 1))
+                
         if #available(iOS 14.0, *), accuracyAuthorization == .reducedAccuracy {
-            let title = NSLocalizedString("ENABLE_PRECISE_LOCATION", bundle: .mapboxNavigation, value: "Enable precise location to navigate", comment: "Label indicating precise location is off and needs to be turned on to navigate")
-            
-            // create authorization status
-            let authorizationStatus = StatusView.Status(id: title, duration: 20, priority: StatusView.Priority(rawValue: 1))
             addNewStatus(status: authorizationStatus)
             mapView?.reducedAccuracyActivatedMode = true
-            // TODO: automatically hide banner when precise location is switched on
+        } else if #available(iOS 14.0, *), previousAuthorizationValue == 0 {
+            hideStatus(status: authorizationStatus)
         } else {
             //Fallback on earlier versions
             mapView?.reducedAccuracyActivatedMode = false
             return
         }
+
     }
     
     // MARK: - Building Extrusion Highlighting
