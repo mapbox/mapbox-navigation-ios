@@ -7,7 +7,7 @@ import MapboxDirections
  `RouteAlert` encapsulates information about various incoming events. Common attributes like location, distance to the event, length and other is provided for each POI, while specific meta data is supplied via `alert` property.
  */
 public struct RouteAlert {
-    public enum RouteAlert {
+    public enum Alert {
         case incident(Incident)
         case tunnel(Tunnel)
         case borderCrossing(BorderCrossing)
@@ -17,7 +17,7 @@ public struct RouteAlert {
     }
     
     /// Alert data with specific info. Contents depend on exact alert type.
-    public let alert: RouteAlert
+    public let alert: Alert
     
     /// Distance to route alert relative to start of the route, meters.
     public let distance: CLLocationDistance
