@@ -506,11 +506,12 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 
                 let routeCasingSource = addRouteSource(style, identifier: routeCasingSourceIdentifier, shape: mainRouteCasingShape)
                 
-                let mainRouteCasingLineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", NSDictionary(dictionary: routeCasingGradient(0.0)))
+
+                let mainRouteCasingLayerGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", NSDictionary(dictionary: routeCasingGradient(0.0)))
                 parentLayer = addMainRouteCasingLayer(style,
                                                       source: routeCasingSource,
                                                       identifier: routeCasingIdentifier,
-                                                      lineGradient: mainRouteCasingLineGradient,
+                                                      lineGradient: mainRouteCasingLayerGradient,
                                                       below: mainRouteLayer)
                 
                 continue
@@ -531,8 +532,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                                                               below: alternativeRouteLayer)
             }
         }
-        if let firstRoute = routes.first {
-            initPrimaryRoutePoints(route: firstRoute)
+        if routeLineTracksTraversal{
+            if let firstRoute = routes.first {
+                initPrimaryRoutePoints(route: firstRoute)
+            }
         }
     }
     
