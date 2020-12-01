@@ -3,9 +3,9 @@ import Foundation
 import MapboxNavigationNative
 
 /**
- `TunnelInfo` is used for naming incoming tunnels, together with route alerts.
+ `Tunnel` is used for naming incoming tunnels, together with route alerts.
  */
-public struct TunnelInfo {
+public struct Tunnel {
     public let name: String
     
     init(_ tunnelInfo: RouteAlertTunnelInfo) {

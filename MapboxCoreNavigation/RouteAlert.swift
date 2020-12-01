@@ -4,13 +4,13 @@ import MapboxNavigationNative
 import MapboxDirections
 
 /**
- `UpcomingRouteAlertInfo` encapsulates information about various incoming events. Common attributes like location, distance to the event, length and other is provided for each POI, while specific meta data is supplied via `alert` property.
+ `RouteAlert` encapsulates information about various incoming events. Common attributes like location, distance to the event, length and other is provided for each POI, while specific meta data is supplied via `alert` property.
  */
-public struct UpcomingRouteAlertInfo {
+public struct RouteAlert {
     public enum RouteAlert {
         case incident(Incident)
-        case tunnel(TunnelInfo)
-        case borderCrossing(BorderCrossingInfo)
+        case tunnel(Tunnel)
+        case borderCrossing(BorderCrossing)
         case tollCollection(TollCollection)
         case serviceArea(RestStop)
         case restrictedArea
@@ -62,12 +62,12 @@ public struct UpcomingRouteAlertInfo {
             guard let tunnelInfo = upcomingAlert.alert.tunnelInfo else {
                 preconditionFailure("Alert of type \(upcomingAlert.alert.type) did not contain an info data.")
             }
-            self.alert = .tunnel(TunnelInfo(tunnelInfo))
+            self.alert = .tunnel(Tunnel(tunnelInfo))
         case .kBorderCrossing:
             guard let adminInfo = upcomingAlert.alert.borderCrossingInfo else {
                 preconditionFailure("Alert of type \(upcomingAlert.alert.type) did not contain an info data.")
             }
-            self.alert = .borderCrossing(BorderCrossingInfo(adminInfo))
+            self.alert = .borderCrossing(BorderCrossing(adminInfo))
         case .kTollCollectionPoint:
             guard let tollInfo = upcomingAlert.alert.tollCollectionInfo else {
                 preconditionFailure("Alert of type \(upcomingAlert.alert.type) did not contain an info data.")

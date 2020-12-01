@@ -12,7 +12,7 @@ extension AdministrationRegion {
 /**
  `BorderCrossingInfo` encapsulates a border crossing, specifying crossing region codes.
  */
-public struct BorderCrossingInfo {
+public struct BorderCrossing {
     public let from: AdministrationRegion
     public let to: AdministrationRegion
     
