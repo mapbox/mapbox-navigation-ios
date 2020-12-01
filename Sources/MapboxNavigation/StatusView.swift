@@ -153,8 +153,7 @@ public class StatusView: UIControl {
     
     // fix (method to deal with hiding/showing status banners and updating statuses array)
     func manageStatuses(status: Status? = nil) {
-        // print("!!! current label: \(String(describing: self.textLabel.text))")
-
+        
         // if we hide a Status and there are no Statuses left in the statuses array, hide the status view entirely
         if statuses.isEmpty {
             hide(delay: status?.duration ?? 0, animated: status?.animated ?? true)
@@ -163,14 +162,29 @@ public class StatusView: UIControl {
             // find status with "highest" priority
             guard let highestPriorityStatus = statuses.min(by: {$0.priority.rawValue < $1.priority.rawValue}) else { return }
             // check what banner is currently visible, if it's the highestPriorityStatus already, then we don't do anything
-            
-            
-            // SHOW STATUS
+            // ^ is this a case we'll ever run into?
+            print("!!! highest priority status: \(highestPriorityStatus)")
+            if highestPriorityStatus.id == self.textLabel.text {
+                return
+            } else {
+                // show status by updating the label for the specified duration
+                updateLabel(status: highestPriorityStatus)
+                show(status: highestPriorityStatus)
+                // guard highestPriorityStatus.duration < .infinity else { return }
+                hideStatus(usingStatus: highestPriorityStatus)
+            }
         }
     }
     
-    func hideStatus(status: Status) {
-        guard let row = statuses.firstIndex(where: {$0.id == status.id}) else { return }
+    // "hides" current status label by updating to a new label
+    func updateLabel(status: Status) {
+        textLabel.text = status.id
+    }
+    
+    // hide a status using either the status id or the status itself
+    func hideStatus(usingStatusId: String? = "", usingStatus: Status? = nil, delay: TimeInterval = 0) {
+        guard let firstWord = usingStatusId?.components(separatedBy: " ").first else { return }
+        guard let row = statuses.firstIndex(where: {$0.id == usingStatus?.id || $0.id.contains(firstWord)}) else { return }
         let removedStatus = statuses.remove(at: row)
         manageStatuses(status: removedStatus)
     }

@@ -45,5 +45,5 @@ public protocol NavigationStatusPresenter: class {
     
     func addNewStatus(status: StatusView.Status)
     
-    func hideStatus(status: StatusView.Status)
+    func hideStatus(usingStatusId: String?, usingStatus: StatusView.Status?, delay: TimeInterval)
 }

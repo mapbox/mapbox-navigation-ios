@@ -399,6 +399,7 @@ extension TopBannerViewController: NavigationComponent {
             statusView.showSimulationStatus(speed: Int(service.simulationSpeedMultiplier))
         } else {
             statusView.hide(delay: 2, animated: true)
+            // statusView.hideStatus("simulating")
         }
         
         if (proactive) {
@@ -418,6 +419,7 @@ extension TopBannerViewController: NavigationComponent {
     public func navigationService(_ service: NavigationService, willEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
         guard reason == .manual else { return }
         statusView.hide(delay: 0, animated: true)
+        // statusView.hide("simulating")
     }
     
     private func embed(_ child: UIViewController, in container: UIView, constrainedBy constraints: ((UIViewController, UIViewController) -> [NSLayoutConstraint])? = nil) {
@@ -468,6 +470,10 @@ extension TopBannerViewController: CarPlayConnectionObserver {
 }
 
 extension TopBannerViewController: NavigationStatusPresenter {
+    public func hideStatus(usingStatusId: String? = "", usingStatus: StatusView.Status? = nil, delay: TimeInterval = 0) {
+        statusView.hideStatus(usingStatusId: usingStatusId, usingStatus: usingStatus, delay: delay)
+    }
+    
     public func showStatus(title: String, spinner spin: Bool, duration time: TimeInterval, animated: Bool, interactive: Bool) {
         statusView.showStatus(title: title, spinner: spin, duration: time, animated: animated, interactive: interactive)
     }
@@ -476,9 +482,6 @@ extension TopBannerViewController: NavigationStatusPresenter {
         statusView.addNewStatus(status: status)
     }
     
-    public func hideStatus(status: StatusView.Status) {
-        statusView.hideStatus(status: status)
-    }
 }
 
 extension TopBannerViewController: NavigationMapInteractionObserver {

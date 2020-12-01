@@ -33,6 +33,7 @@ public enum MapOrnamentPosition {
  `CarPlayNavigationViewController` manages the corresponding user interface on a CarPlay screen.
  */
 open class NavigationViewController: UIViewController, NavigationStatusPresenter {
+    
     /**
      A `Route` object constructed by [MapboxDirections](https://docs.mapbox.com/ios/api/directions/) along with its index in a `RouteResponse`.
       
@@ -480,11 +481,12 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         }
     }
     
-    public func hideStatus(status: StatusView.Status) {
+    public func hideStatus(usingStatusId: String? = "", usingStatus: StatusView.Status? = nil, delay: TimeInterval = 0) {
         navigationComponents.compactMap({ $0 as? NavigationStatusPresenter }).forEach {
-            $0.hideStatus(status: status)
+            $0.hideStatus(usingStatusId: usingStatusId, usingStatus: usingStatus, delay: 0)
         }
     }
+    
 }
 
 //MARK: - RouteMapViewControllerDelegate
@@ -748,16 +750,17 @@ extension NavigationViewController: NavigationServiceDelegate {
         guard let accuracyAuthorizationValue = locationManager.value(forKey: "accuracyAuthorization") as? Int else { return }
         let accuracyAuthorization = MBNavigationAccuracyAuthorization(rawValue: accuracyAuthorizationValue)
         let previousAuthorizationValue = 1 - accuracyAuthorizationValue
-                
+                        
         // create authorization status
         let title = NSLocalizedString("ENABLE_PRECISE_LOCATION", bundle: .mapboxNavigation, value: "Enable precise location to navigate", comment: "Label indicating precise location is off and needs to be turned on to navigate")
-        let authorizationStatus = StatusView.Status(id: title, duration: 20, priority: StatusView.Priority(rawValue: 1))
-                
+        let authorizationStatus = StatusView.Status(id: title, duration: .infinity, priority: StatusView.Priority(rawValue: 1))
+        
         if #available(iOS 14.0, *), accuracyAuthorization == .reducedAccuracy {
             addNewStatus(status: authorizationStatus)
             mapView?.reducedAccuracyActivatedMode = true
-        } else if #available(iOS 14.0, *), previousAuthorizationValue == 0 {
-            hideStatus(status: authorizationStatus)
+        } else if #available(iOS 14.0, *), previousAuthorizationValue == 1 {
+            print("!!! hide enable precise location banner")
+            hideStatus(usingStatus: authorizationStatus)
         } else {
             //Fallback on earlier versions
             mapView?.reducedAccuracyActivatedMode = false
