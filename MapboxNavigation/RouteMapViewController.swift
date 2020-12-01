@@ -97,7 +97,11 @@ class RouteMapViewController: UIViewController {
         return UIEdgeInsets(top: topBannerContainerView.bounds.height, left: 20, bottom: bottomBannerContainerView.bounds.height, right: 20)
     }
     
-    var routeLineTracksTraversal = false
+    var routeLineTracksTraversal = false {
+        didSet {
+            mapView.routeLineTracksTraversal = routeLineTracksTraversal
+        }
+    }
 
     typealias LabelRoadNameCompletionHandler = (_ defaultRaodNameAssigned: Bool) -> Void
 

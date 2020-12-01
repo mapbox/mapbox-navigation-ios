@@ -252,8 +252,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         installUserCourseView()
         showsUserLocation = false
         
-        if let firstRoute = routes?.first {
-            initPrimaryRoutePoints(route: firstRoute)
+        if routeLineTracksTraversal {
+            if let firstRoute = routes?.first{
+                initPrimaryRoutePoints(route: firstRoute)
+            }
         }
     }
     
@@ -492,20 +494,23 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 
                 let routeSource = addRouteSource(style, identifier: routeSourceIdentifier, shape: routeShape)
                 
+                let mainRouteLayerLineStops = routeLineGradient(route, fractionTraveled: 0.0)
+                let mainRouteLayerLineGradient = (mainRouteLayerLineStops != nil) ? NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", NSDictionary(dictionary: mainRouteLayerLineStops!)) : nil
                 let mainRouteLayer = addMainRouteLayer(style,
                                                        source: routeSource,
                                                        identifier: routeIdentifier,
-                                                       lineGradient: routeLineGradient(route, fractionTraveled: 0.0))
+                                                       lineGradient: mainRouteLayerLineGradient)
                 
                 let mainRouteCasingShape = navigationMapViewDelegate?.navigationMapView(self, simplifiedShapeFor: route) ??
                     shape(forCasingOf: route, legIndex: legIndex)
                 
                 let routeCasingSource = addRouteSource(style, identifier: routeCasingSourceIdentifier, shape: mainRouteCasingShape)
                 
+                let mainRouteCasingLineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", NSDictionary(dictionary: routeCasingGradient(0.0)))
                 parentLayer = addMainRouteCasingLayer(style,
                                                       source: routeCasingSource,
                                                       identifier: routeCasingIdentifier,
-                                                      lineGradient: routeCasingGradient(0.0),
+                                                      lineGradient: mainRouteCasingLineGradient,
                                                       below: mainRouteLayer)
                 
                 continue
@@ -525,6 +530,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                                                               identifier: routeCasingIdentifier,
                                                               below: alternativeRouteLayer)
             }
+        }
+        if let firstRoute = routes.first {
+            initPrimaryRoutePoints(route: firstRoute)
         }
     }
     
@@ -717,6 +725,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     var primaryRoutePoints: RoutePoints?
     var primaryRouteLineGranularDistances: RouteLineGranularDistances?
     var primaryRouteRemainingDistancesIndex: Int?
+    var routeLineTracksTraversal: Bool = false
+    private var startDate = Date()
+    private var counter: Int = 0
+    private var lastUpdateMilliSeconds: Double = 0.0
     public var fractionTraveled: Double = 0.0
     
     struct RoutePoints {
@@ -743,7 +755,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     Tranform the route data into nested arrays of legs -> steps -> coordinates.
     The first and last point of adjacent steps overlap and are duplicated.
     */
-    private func parseRoutePoints(route: Route) -> RoutePoints {
+    func parseRoutePoints(route: Route) -> RoutePoints {
         let nestedList = route.legs.map { (routeLeg: RouteLeg) -> [[CLLocationCoordinate2D]] in
             return routeLeg.steps.map { (routeStep: RouteStep) -> [CLLocationCoordinate2D] in
                 if let routeShape = routeStep.shape {
@@ -799,7 +811,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
     
-    private func getSlicedLinePointsCount(currentLegProgress: RouteLegProgress, currentStepProgress: RouteStepProgress) -> Int {
+    func getSlicedLinePointsCount(currentLegProgress: RouteLegProgress, currentStepProgress: RouteStepProgress) -> Int {
         let startDistance = currentStepProgress.distanceTraveled
         let stopDistance = currentStepProgress.step.distance
         var slicedLine: Turf.LineString?
@@ -820,7 +832,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
 
-    private func calculateRouteGranularDistances(coordinates: [CLLocationCoordinate2D]) -> RouteLineGranularDistances? {
+    func calculateRouteGranularDistances(coordinates: [CLLocationCoordinate2D]) -> RouteLineGranularDistances? {
         if coordinates.isEmpty {
             return nil
         } else {
@@ -828,7 +840,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
     
-    private func calculateGranularDistances(points: [CLLocationCoordinate2D]) -> RouteLineGranularDistances {
+    func calculateGranularDistances(points: [CLLocationCoordinate2D]) -> RouteLineGranularDistances {
         var distance = 0.0
         var indexArray = [RouteLineDistancesIndex?](repeating: nil, count: points.count)
         for index in stride(from: points.count - 1, to: 0, by: -1) {
@@ -844,7 +856,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Calculates the distance between 2 points using [EPSG:3857 projection](https://epsg.io/3857).
     */
-    private func calculateDistance(point1: CLLocationCoordinate2D, point2: CLLocationCoordinate2D) -> Double {
+    func calculateDistance(point1: CLLocationCoordinate2D, point2: CLLocationCoordinate2D) -> Double {
         let distanceArray: [Double] = [
             (projectX(point1.longitude) - projectX(point2.longitude)),
             (projectY(point1.latitude) - projectY(point2.latitude))
@@ -852,11 +864,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         return (distanceArray[0] * distanceArray[0] + distanceArray[1] * distanceArray[1]).squareRoot()
     }
 
-    private func projectX(_ x: Double) -> Double {
+    func projectX(_ x: Double) -> Double {
         return x / 360.0 + 0.5
     }
     
-    private func projectY(_ y: Double) -> Double {
+    func projectY(_ y: Double) -> Double {
         let sinValue = sin(y * Double.pi / 180)
         let newYValue = 0.5 - 0.25 * log((1 + sinValue) / (1 - sinValue)) / Double.pi
         if newYValue < 0 {
@@ -912,12 +924,48 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             style?.remove([mainRouteLayer, mainRouteCasingLayer])
             return
         }
+
+        let mainRouteLayerGradientStops = routeLineGradient(routeProgress.route, fractionTraveled: fractionTraveled)
+        let mainRouteLayerGradient = (mainRouteLayerGradientStops != nil) ? NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", NSDictionary(dictionary: mainRouteLayerGradientStops!)) : nil
+        mainRouteLayer.lineGradient = mainRouteLayerGradient
         
-        mainRouteLayer.lineGradient = routeLineGradient(routeProgress.route, fractionTraveled: fractionTraveled)
-        mainRouteCasingLayer.lineGradient = routeCasingGradient(fractionTraveled)
+        let mainRouteCasingLayerGradient = routeCasingGradient(fractionTraveled)
+        mainRouteCasingLayer.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", NSDictionary(dictionary: mainRouteCasingLayerGradient))
+        
+        let traveledDifference = (fractionTraveled - fractionTraveled.nextDown) / 20
+        startDate = Date()
+        counter = 0
+        lastUpdateMilliSeconds = 0
+        Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true, block: { timer in
+            let timePassedInMilliseconds = Date().timeIntervalSince(self.startDate) * 1000
+            let timeDiff = timePassedInMilliseconds - self.lastUpdateMilliSeconds
+            if self.lastUpdateMilliSeconds != 0 && (timeDiff > 40 || timeDiff < 60) {
+                return
+            }
+            self.counter += 1
+            self.lastUpdateMilliSeconds = timePassedInMilliseconds
+            let newFractionTraveled = self.fractionTraveled + Double(self.counter) * traveledDifference
+            let newNextDown = self.fractionTraveled + (Double(self.counter) + 1) * traveledDifference
+            
+            if mainRouteLayerGradientStops != nil {
+                var mainLayerStops = mainRouteLayerGradientStops!
+                mainLayerStops[CGFloat(newNextDown)] = self.traversedRouteColor
+                mainLayerStops[CGFloat(newFractionTraveled)] = mainRouteLayerGradientStops![CGFloat(self.fractionTraveled)]
+                mainRouteLayer.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", NSDictionary(dictionary: mainLayerStops))
+            }
+            
+            var mainCasingLayerStops = mainRouteCasingLayerGradient
+            mainCasingLayerStops[CGFloat(newNextDown)] = self.traversedRouteColor
+            mainCasingLayerStops[CGFloat(newFractionTraveled)] = self.routeCasingColor
+            mainRouteCasingLayer.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", NSDictionary(dictionary: mainCasingLayerStops))
+
+            if self.counter >= 20 {
+                timer.invalidate()
+            }
+        })
     }
     
-    private func routeLineGradient(_ route: Route, fractionTraveled: Double) -> NSExpression? {
+    private func routeLineGradient(_ route: Route, fractionTraveled: Double) -> [CGFloat: UIColor]? {
         var gradientStops = [CGFloat: UIColor]()
         
         // In case if mainRouteLayer was already added - extract congestion segments out of it.
@@ -1034,20 +1082,20 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             // [0.4109119609930762 = nil,
             // 0.4109119609930761 = nil]
             // Passing NSDictionary with all data from original Dictionary to NSExpression fixes issue.
-            return NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", NSDictionary(dictionary: filteredGradientStops))
+            return filteredGradientStops
         }
         
         return nil
     }
     
-    private func routeCasingGradient(_ fractionTraveled: Double) -> NSExpression {
+    private func routeCasingGradient(_ fractionTraveled: Double) -> [CGFloat: UIColor] {
         let percentTraveled = CGFloat(fractionTraveled)
         var gradientStops = [CGFloat: UIColor]()
         gradientStops[0.0] = traversedRouteColor
         gradientStops[percentTraveled.nextDown] = traversedRouteColor
         gradientStops[percentTraveled] = routeCasingColor
         
-        return NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", NSDictionary(dictionary: gradientStops))
+        return gradientStops
     }
     
     /**
