@@ -12,6 +12,9 @@
 * Fixed an issue where maneuver icon was not shown after selecting specific step. ([#2722](https://github.com/mapbox/mapbox-navigation-ios/issues/2722))
 * Fixed an issue which was preventing the ability to customize the bottom banner height. ([#2705](https://github.com/mapbox/mapbox-navigation-ios/pull/2705))
 * Added Ukrainian localization. ([#2735](https://github.com/mapbox/mapbox-navigation-ios/pull/2735)
+* Fixed an issue which was preventing the ability to scroll between instructions cards on iOS 14 ([#2755](https://github.com/mapbox/mapbox-navigation-ios/pull/2755))
+* Fixed an instructions cards layout issue that arose when changing orientation (portrait to landscape) ([#2755](https://github.com/mapbox/mapbox-navigation-ios/pull/2755))
+* Fixed swiping for right-to-left languages for the traditional top banner to be more intuitive ([#2755](https://github.com/mapbox/mapbox-navigation-ios/pull/2755))
 
 ## v1.1.0
 
