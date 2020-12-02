@@ -585,8 +585,6 @@ extension RouteMapViewController: NavigationComponent {
             mapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
             if let location = router.location {
                 mapView.updateTraveledRouteLine(location.coordinate)
-            } else {
-                mapView.fractionTraveled = 0.0
             }
             mapView.updateRoute(routeProgress)
         }

@@ -728,6 +728,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     private var startDate = Date()
     public var fractionTraveled: Double = 0.0
     var preFractionTraveled: Double = 0.0
+    var timer: Timer? = nil
     
     struct RoutePoints {
         var nestedList: [[[CLLocationCoordinate2D]]]
@@ -916,20 +917,26 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         guard let mainRouteLayer = style?.layer(withIdentifier: mainRouteLayerIdentifier) as? MGLLineStyleLayer,
               let mainRouteCasingLayer = style?.layer(withIdentifier: mainRouteCasingLayerIdentifier) as? MGLLineStyleLayer else { return }
         
-        if fractionTraveled == 0.0 {
-            fractionTraveled = routeProgress.fractionTraveled
-        } else if fractionTraveled >= 1.0 {
+        if fractionTraveled >= 1.0 {
             // In case if route was fully travelled - remove main route and its casing.
             style?.remove([mainRouteLayer, mainRouteCasingLayer])
             return
         }
         
+        timer?.invalidate()
+        timer = nil
         let traveledDifference = fractionTraveled - preFractionTraveled
+        if traveledDifference == 0.0 {
+            return
+        }
         startDate = Date()
-        Timer.scheduledTimer(withTimeInterval: 0.02, repeats: true, block: { timer in
+        timer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true, block: { timer in
             let timePassedInMilliseconds = Date().timeIntervalSince(self.startDate) * 1000
+            if timePassedInMilliseconds >= 970 {
+                timer.invalidate()
+                return
+            }
             let newFractionTraveled = self.preFractionTraveled + traveledDifference * timePassedInMilliseconds.truncatingRemainder(dividingBy: 1000) / 1000
-            
             let mainRouteLayerGradient = self.routeLineGradient(routeProgress.route, fractionTraveled: newFractionTraveled)
             if mainRouteLayerGradient == nil {
                 return
@@ -938,10 +945,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             
             mainRouteLayer.lineGradient = mainRouteLayerGradient
             mainRouteCasingLayer.lineGradient = mainCasingLayerStops
-
         })
     }
-    
     
     private func routeLineGradient(_ route: Route, fractionTraveled: Double) -> NSExpression? {
         var gradientStops = [CGFloat: UIColor]()
@@ -1034,7 +1039,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 gradientStops[segmentEndPercentTraveled.nextDown] = associatedCongestionColor
             }
         }
-        
         let percentTraveled = CGFloat(fractionTraveled)
         
         // Filter out only the stops that are greater than or equal to the percent of the route traveled.
@@ -1062,7 +1066,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             // Passing NSDictionary with all data from original Dictionary to NSExpression fixes issue.
             return NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", NSDictionary(dictionary: filteredGradientStops))
         }
-
         return nil
     }
     
