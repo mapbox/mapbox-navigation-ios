@@ -730,9 +730,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     var primaryRouteRemainingDistancesIndex: Int?
     var routeLineTracksTraversal: Bool = false
     private var startDate = Date()
-    private var counter: Int = 0
-    private var lastUpdateMilliSeconds: Double = 0.0
     public var fractionTraveled: Double = 0.0
+    var preFractionTraveled: Double = 0.0
     
     struct RoutePoints {
         var nestedList: [[[CLLocationCoordinate2D]]]
@@ -903,6 +902,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         if granularDistances.distance >= remainingDistance {
             let offSet = (1.0 - remainingDistance / granularDistances.distance)
             if offSet >= 0 {
+                preFractionTraveled = fractionTraveled
                 fractionTraveled = offSet
             }
         }
@@ -930,42 +930,61 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 
         let mainRouteLayerGradientStops = routeLineGradient(routeProgress.route, fractionTraveled: fractionTraveled)
         let mainRouteLayerGradient = (mainRouteLayerGradientStops != nil) ? NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", NSDictionary(dictionary: mainRouteLayerGradientStops!)) : nil
-        mainRouteLayer.lineGradient = mainRouteLayerGradient
         
-        let mainRouteCasingLayerGradient = routeCasingGradient(fractionTraveled)
-        mainRouteCasingLayer.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", NSDictionary(dictionary: mainRouteCasingLayerGradient))
+        if mainRouteLayerGradient == nil {
+            mainRouteLayer.lineGradient = mainRouteLayerGradient
+            mainRouteCasingLayer.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", NSDictionary(dictionary: routeCasingGradient(fractionTraveled)))
+            return
+        }
         
-        let traveledDifference = (fractionTraveled - fractionTraveled.nextDown) / 20
+        let traveledDifference = fractionTraveled - preFractionTraveled
         startDate = Date()
-        counter = 0
-        lastUpdateMilliSeconds = 0
         Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true, block: { timer in
             let timePassedInMilliseconds = Date().timeIntervalSince(self.startDate) * 1000
-            let timeDiff = timePassedInMilliseconds - self.lastUpdateMilliSeconds
-            if self.lastUpdateMilliSeconds != 0 && (timeDiff > 40 || timeDiff < 60) {
-                return
-            }
-            self.counter += 1
-            self.lastUpdateMilliSeconds = timePassedInMilliseconds
-            let newFractionTraveled = self.fractionTraveled + Double(self.counter) * traveledDifference
-            let newNextDown = self.fractionTraveled + (Double(self.counter) + 1) * traveledDifference
+            let newFractionTraveled = self.preFractionTraveled + traveledDifference * timePassedInMilliseconds.truncatingRemainder(dividingBy: 1000) / 1000
             
-            if mainRouteLayerGradientStops != nil {
-                var mainLayerStops = mainRouteLayerGradientStops!
-                mainLayerStops[CGFloat(newNextDown)] = self.traversedRouteColor
-                mainLayerStops[CGFloat(newFractionTraveled)] = mainRouteLayerGradientStops![CGFloat(self.fractionTraveled)]
-                mainRouteLayer.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", NSDictionary(dictionary: mainLayerStops))
-            }
+            guard let filteredGradientStops = self.filterRouteLineGradient(gradientStops: mainRouteLayerGradientStops!, fractionTraveled: newFractionTraveled)  else { return }
+            mainRouteLayer.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", NSDictionary(dictionary: filteredGradientStops))
             
-            var mainCasingLayerStops = mainRouteCasingLayerGradient
-            mainCasingLayerStops[CGFloat(newNextDown)] = self.traversedRouteColor
-            mainCasingLayerStops[CGFloat(newFractionTraveled)] = self.routeCasingColor
+            let mainCasingLayerStops = self.routeCasingGradient(newFractionTraveled)
             mainRouteCasingLayer.lineGradient = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", NSDictionary(dictionary: mainCasingLayerStops))
 
-            if self.counter >= 20 {
+            if timePassedInMilliseconds >= 1000 {
                 timer.invalidate()
             }
         })
+    }
+    
+    private func filterRouteLineGradient(gradientStops: [CGFloat: UIColor], fractionTraveled: Double) -> [CGFloat: UIColor]? {
+        let percentTraveled = CGFloat(fractionTraveled)
+        
+        // Filter out only the stops that are greater than or equal to the percent of the route traveled.
+        var filteredGradientStops = gradientStops.filter { key, value in
+            return key >= percentTraveled
+        }
+        
+        // Then, get the lowest value from the above and fade the range from zero that lowest value,
+        // which represents the % of the route traveled.
+        if let minStop = filteredGradientStops.min(by: { $0.0 < $1.0 }) {
+            filteredGradientStops[0.0] = traversedRouteColor
+            filteredGradientStops[percentTraveled.nextDown] = traversedRouteColor
+            filteredGradientStops[percentTraveled] = minStop.value
+        }
+        
+        // It's not possible to create line gradient in case if there are no route gradient stops.
+        if !filteredGradientStops.isEmpty {
+            // Dictionary usage is causing crashes in Release mode (when built with optimization SWIFT_OPTIMIZATION_LEVEL = -O flag).
+            // Even though Dictionary contains valid objects prior to passing it to NSExpression:
+            // [0.4109119609930762: UIExtendedSRGBColorSpace 0.952941 0.65098 0.309804 1,
+            // 0.4109119609930761: UIExtendedSRGBColorSpace 0.337255 0.658824 0.984314 1]
+            // keys become nil in NSExpression arguments list:
+            // [0.4109119609930762 = nil,
+            // 0.4109119609930761 = nil]
+            // Passing NSDictionary with all data from original Dictionary to NSExpression fixes issue.
+            return filteredGradientStops
+        }
+
+        return nil
     }
     
     private func routeLineGradient(_ route: Route, fractionTraveled: Double) -> [CGFloat: UIColor]? {
@@ -1059,36 +1078,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 gradientStops[segmentEndPercentTraveled.nextDown] = associatedCongestionColor
             }
         }
-                
-        let percentTraveled = CGFloat(fractionTraveled)
         
-        // Filter out only the stops that are greater than or equal to the percent of the route traveled.
-        var filteredGradientStops = gradientStops.filter { key, value in
-            return key >= percentTraveled
-        }
-        
-        // Then, get the lowest value from the above and fade the range from zero that lowest value,
-        // which represents the % of the route traveled.
-        if let minStop = filteredGradientStops.min(by: { $0.0 < $1.0 }) {
-            filteredGradientStops[0.0] = traversedRouteColor
-            filteredGradientStops[percentTraveled.nextDown] = traversedRouteColor
-            filteredGradientStops[percentTraveled] = minStop.value
-        }
-        
-        // It's not possible to create line gradient in case if there are no route gradient stops.
-        if !filteredGradientStops.isEmpty {
-            // Dictionary usage is causing crashes in Release mode (when built with optimization SWIFT_OPTIMIZATION_LEVEL = -O flag).
-            // Even though Dictionary contains valid objects prior to passing it to NSExpression:
-            // [0.4109119609930762: UIExtendedSRGBColorSpace 0.952941 0.65098 0.309804 1,
-            // 0.4109119609930761: UIExtendedSRGBColorSpace 0.337255 0.658824 0.984314 1]
-            // keys become nil in NSExpression arguments list:
-            // [0.4109119609930762 = nil,
-            // 0.4109119609930761 = nil]
-            // Passing NSDictionary with all data from original Dictionary to NSExpression fixes issue.
-            return filteredGradientStops
-        }
-        
-        return nil
+        return filterRouteLineGradient(gradientStops: gradientStops, fractionTraveled: fractionTraveled)
     }
     
     private func routeCasingGradient(_ fractionTraveled: Double) -> [CGFloat: UIColor] {
