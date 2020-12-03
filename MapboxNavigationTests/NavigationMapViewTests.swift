@@ -105,7 +105,7 @@ class NavigationMapViewTests: XCTestCase, MGLMapViewDelegate {
         XCTAssertNil(mapView!.annotations)
     }
     
-    func testUpdateVanishingPoint() {
+    func setUpVanishingRouteLine() -> Route {
         let routeData = Fixture.JSONFromFileNamed(name: "vanish_point_test")
         let routeOptions = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2DMake(-122.5237734,37.9753973),
@@ -118,13 +118,17 @@ class NavigationMapViewTests: XCTestCase, MGLMapViewDelegate {
         guard let route = testRoute else {
             preconditionFailure("Route is invalid.")
         }
-        
+        return route
+    }
+    
+    func testUpdateVanishingPoint() {
+        let route = setUpVanishingRouteLine()
         let navigationMapView = NavigationMapView(frame: CGRect(origin: .zero, size: .iPhone6Plus), styleURL: Fixture.blankStyle)
         let shape = route.shape!
         let targetPoint = Turf.mid(shape.coordinates[6], shape.coordinates[7])
         //which is between route.legs[0].steps[1].shape!.coordinates[3] and  route.legs[0].steps[1].shape!.coordinates[4]
         let traveledCoordinates = Array(route.legs[0].steps[1].shape!.coordinates[0...3])
-        let stepTraveledDistanceSep = navigationMapView.calculateGranularDistances(points:traveledCoordinates).distance
+        let stepTraveledDistanceSep = navigationMapView.calculateGranularDistances(traveledCoordinates).distance
 
         let testRouteProgress: RouteProgress = RouteProgress(route: route, routeIndex: 0, options: routeOptions, legIndex: 0, spokenInstructionIndex: 0)
         testRouteProgress.currentLegProgress = RouteLegProgress(leg: route.legs[0], stepIndex: 1, spokenInstructionIndex: 0)
@@ -139,6 +143,18 @@ class NavigationMapViewTests: XCTestCase, MGLMapViewDelegate {
         let expectedTraveledFraction = 0.06383308537010246
         XCTAssertEqual(navigationMapView.fractionTraveled, expectedTraveledFraction)
     }
+    
+    func testParseRoutePoints() {
+        let route = setUpVanishingRouteLine()
+        let navigationMapView = NavigationMapView(frame: CGRect(origin: .zero, size: .iPhone6Plus), styleURL: Fixture.blankStyle)
+        
+        navigationMapView.initPrimaryRoutePoints(route: route)
+        let nestedList = navigationMapView.primaryRoutePoints!.nestedList
+        let flatList = navigationMapView.primaryRoutePoints!.flatList
+        XCTAssertEqual(nestedList.first!.count, 8)
+        XCTAssertEqual(flatList.count, 33)
+    }
+
 }
 
 class PersistentAnnotation: MGLPointAnnotation { }
