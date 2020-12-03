@@ -533,10 +533,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                                                               below: alternativeRouteLayer)
             }
         }
-        if routeLineTracksTraversal{
-            if let firstRoute = routes.first {
-                initPrimaryRoutePoints(route: firstRoute)
-            }
+        if routeLineTracksTraversal, let firstRoute = routes.first {
+            initPrimaryRoutePoints(route: firstRoute)
         }
     }
     
