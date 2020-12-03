@@ -153,7 +153,7 @@ public class StatusView: UIControl {
     
     // fix (method to deal with hiding/showing status banners and updating statuses array)
     func manageStatuses(status: Status? = nil) {
-        
+        print("statuses: \(statuses)")
         // if we hide a Status and there are no Statuses left in the statuses array, hide the status view entirely
         if statuses.isEmpty {
             hide(delay: status?.duration ?? 0, animated: status?.animated ?? true)

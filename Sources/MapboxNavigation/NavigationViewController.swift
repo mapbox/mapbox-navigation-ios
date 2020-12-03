@@ -52,6 +52,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         }
     }
     
+    public var counter = 0
+    
     /**
      A `Route` object constructed by [MapboxDirections](https://docs.mapbox.com/ios/api/directions/).
      */
@@ -745,6 +747,8 @@ extension NavigationViewController: NavigationServiceDelegate {
         return navigationComponents.allSatisfy { $0.navigationServiceShouldDisableBatteryMonitoring(service) }
     }
     
+    // var isFirstCalled: Bool = false
+    
     public func navigationServiceDidChangeAuthorization(_ service: NavigationService, didChangeAuthorizationFor locationManager: CLLocationManager) {
         // CLLocationManager.accuracyAuthorization was introduced in the iOS 14 SDK in Xcode 12, so Xcode 11 doesn’t recognize it.
         guard let accuracyAuthorizationValue = locationManager.value(forKey: "accuracyAuthorization") as? Int else { return }
@@ -753,12 +757,12 @@ extension NavigationViewController: NavigationServiceDelegate {
                         
         // create authorization status
         let title = NSLocalizedString("ENABLE_PRECISE_LOCATION", bundle: .mapboxNavigation, value: "Enable precise location to navigate", comment: "Label indicating precise location is off and needs to be turned on to navigate")
-        let authorizationStatus = StatusView.Status(id: title, duration: .infinity, priority: StatusView.Priority(rawValue: 1))
+        let authorizationStatus = StatusView.Status(id: title, duration: 5, priority: StatusView.Priority(rawValue: 1))
         
         if #available(iOS 14.0, *), accuracyAuthorization == .reducedAccuracy {
             addNewStatus(status: authorizationStatus)
             mapView?.reducedAccuracyActivatedMode = true
-        } else if #available(iOS 14.0, *), previousAuthorizationValue == 1 {
+        } else if #available(iOS 14.0, *), previousAuthorizationValue == 1, counter != 0 {
             print("!!! hide enable precise location banner")
             hideStatus(usingStatus: authorizationStatus)
         } else {
@@ -766,7 +770,8 @@ extension NavigationViewController: NavigationServiceDelegate {
             mapView?.reducedAccuracyActivatedMode = false
             return
         }
-
+        // isFirstCalled = true
+        counter += 1
     }
     
     // MARK: - Building Extrusion Highlighting
