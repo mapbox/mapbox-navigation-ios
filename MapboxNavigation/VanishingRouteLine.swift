@@ -21,8 +21,8 @@ extension NavigationMapView {
     
     // MARK: - Vanishing route line methods
     func initPrimaryRoutePoints(route: Route) {
-        primaryRoutePoints = parseRoutePoints(route: route)
-        primaryRouteLineGranularDistances = calculateRouteGranularDistances(coordinates: primaryRoutePoints?.flatList ?? [])
+        routePoints = parseRoutePoints(route: route)
+        routeLineGranularDistances = calculateRouteGranularDistances(coordinates: routePoints?.flatList ?? [])
     }
     
     
@@ -50,8 +50,8 @@ extension NavigationMapView {
      Find and cache the index of the upcoming [RouteLineDistancesIndex].
     */
     public func updateUpcomingRoutePointIndex(routeProgress: RouteProgress) {
-        guard let completeRoutePoints = primaryRoutePoints else {
-            primaryRouteRemainingDistancesIndex = nil
+        guard let completeRoutePoints = routePoints else {
+            routeRemainingDistancesIndex = nil
             return
         }
         let currentLegProgress = routeProgress.currentLegProgress
@@ -82,7 +82,7 @@ extension NavigationMapView {
          After calculating the number of remaining points and the number of all points,  calculate the index of the upcoming point.
         */
         let allPoints = completeRoutePoints.flatList.count
-        primaryRouteRemainingDistancesIndex = allPoints - allRemainingPoints - 1
+        routeRemainingDistancesIndex = allPoints - allRemainingPoints - 1
     }
     
     func getSlicedLinePointsCount(currentLegProgress: RouteLegProgress, currentStepProgress: RouteStepProgress) -> Int {
@@ -107,11 +107,10 @@ extension NavigationMapView {
     }
     
     func calculateRouteGranularDistances(coordinates: [CLLocationCoordinate2D]) -> RouteLineGranularDistances? {
-        if coordinates.isEmpty {
-            return nil
-        } else {
+        if !coordinates.isEmpty {
             return calculateGranularDistances(coordinates)
         }
+        return nil
     }
     
     func calculateGranularDistances(_ coordinates: [CLLocationCoordinate2D]) -> RouteLineGranularDistances {
@@ -158,15 +157,15 @@ extension NavigationMapView {
      Updates the route line appearance from the origin point to the indicated point
      - parameter coordinate: current position of the puck
      */
-    func updateTraveledRouteLine(_ coordinate: CLLocationCoordinate2D) {
-        guard let granularDistances = primaryRouteLineGranularDistances,let index = primaryRouteRemainingDistancesIndex else { return }
+    func updateTraveledRouteLine(_ coordinate: CLLocationCoordinate2D?) {
+        guard let granularDistances = routeLineGranularDistances,let index = routeRemainingDistancesIndex, let location = coordinate else { return }
         let traveledIndex = granularDistances.distanceArray[index]
         let upcomingPoint = traveledIndex.point
         
         /**
          Take the remaining distance from the upcoming point on the route and extends it by the exact position of the puck.
          */
-        let remainingDistance = traveledIndex.distanceRemaining + calculateDistance(coordinate1: upcomingPoint, coordinate2: coordinate)
+        let remainingDistance = traveledIndex.distanceRemaining + calculateDistance(coordinate1: upcomingPoint, coordinate2: location)
         
         /**
          Calculate the percentage of the route traveled.
@@ -195,17 +194,20 @@ extension NavigationMapView {
         if fractionTraveled >= 1.0 {
             // In case if route was fully travelled - remove main route and its casing.
             style?.remove([mainRouteLayer, mainRouteCasingLayer])
+            fractionTraveled = 0.0
+            preFractionTraveled = 0.0
             return
         }
         
-        timer?.invalidate()
-        timer = nil
+        vanishingRouteLineUpdateTimer?.invalidate()
+        vanishingRouteLineUpdateTimer = nil
+        
         let traveledDifference = fractionTraveled - preFractionTraveled
         if traveledDifference == 0.0 {
             return
         }
         let startDate = Date()
-        timer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true, block: { timer in
+        vanishingRouteLineUpdateTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true, block: { timer in
             let timePassedInMilliseconds = Date().timeIntervalSince(startDate) * 1000
             if timePassedInMilliseconds >= 980 {
                 timer.invalidate()

@@ -126,13 +126,13 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     var altitude: CLLocationDistance
     var routes: [Route]?
     var isAnimatingToOverheadMode = false
-    var primaryRoutePoints: RoutePoints?
-    var primaryRouteLineGranularDistances: RouteLineGranularDistances?
-    var primaryRouteRemainingDistancesIndex: Int?
+    var routePoints: RoutePoints?
+    var routeLineGranularDistances: RouteLineGranularDistances?
+    var routeRemainingDistancesIndex: Int?
     var routeLineTracksTraversal: Bool = false
     var fractionTraveled: Double = 0.0
     var preFractionTraveled: Double = 0.0
-    var timer: Timer? = nil
+    var vanishingRouteLineUpdateTimer: Timer? = nil
     
     var shouldPositionCourseViewFrameByFrame = false {
         didSet {
@@ -259,9 +259,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         installUserCourseView()
         showsUserLocation = false
         
-        if routeLineTracksTraversal, let firstRoute = routes?.first {
-            initPrimaryRoutePoints(route: firstRoute)
-        }
     }
     
     open override func layoutMarginsDidChange() {
@@ -494,6 +491,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             // In case of main route there is the ability to provide custom `MGLShape` for either route or route casing by implemeting
             // `NavigationMapViewDelegate.navigationMapView(_:shapeFor:)` or `NavigationMapViewDelegate.navigationMapView(_:simplifiedShapeFor:)`.
             if index == 0 {
+                
+                if routeLineTracksTraversal {
+                    initPrimaryRoutePoints(route: route)
+                }
+                
                 let routeShape = navigationMapViewDelegate?.navigationMapView(self, shapeFor: [route]) ??
                     shape(for: route, legIndex: legIndex, isAlternateRoute: false)
                 
@@ -532,9 +534,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                                                               identifier: routeCasingIdentifier,
                                                               below: alternativeRouteLayer)
             }
-        }
-        if routeLineTracksTraversal, let firstRoute = routes.first {
-            initPrimaryRoutePoints(route: firstRoute)
         }
     }
     
@@ -752,8 +751,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         style.remove(Set(sourceIdentifiers.compactMap({ style.source(withIdentifier: $0) })))
         
         routes = nil
-        primaryRoutePoints = nil
-        primaryRouteLineGranularDistances = nil
+        routePoints = nil
+        routeLineGranularDistances = nil
     }
     
     /**

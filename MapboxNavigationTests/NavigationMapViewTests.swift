@@ -106,7 +106,7 @@ class NavigationMapViewTests: XCTestCase, MGLMapViewDelegate {
     }
     
     func setUpVanishingRouteLine() -> Route {
-        let routeData = Fixture.JSONFromFileNamed(name: "vanish_point_test")
+        let routeData = Fixture.JSONFromFileNamed(name: "route-for-vanishing-route-line")
         let routeOptions = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2DMake(-122.5237734,37.9753973),
             CLLocationCoordinate2DMake(-122.5264995,37.9709171)
@@ -149,10 +149,13 @@ class NavigationMapViewTests: XCTestCase, MGLMapViewDelegate {
         let navigationMapView = NavigationMapView(frame: CGRect(origin: .zero, size: .iPhone6Plus), styleURL: Fixture.blankStyle)
         
         navigationMapView.initPrimaryRoutePoints(route: route)
-        let nestedList = navigationMapView.primaryRoutePoints!.nestedList
-        let flatList = navigationMapView.primaryRoutePoints!.flatList
-        XCTAssertEqual(nestedList.first!.count, 8)
-        XCTAssertEqual(flatList.count, 33)
+        let nestedList = navigationMapView.routePoints?.nestedList
+        let flatList = navigationMapView.routePoints?.flatList
+        let distanceArray = navigationMapView.routeLineGranularDistances?.distanceArray
+        XCTAssertEqual(nestedList?.first?.count, 8)
+        XCTAssertEqual(flatList?.count, 33)
+        XCTAssertEqual(distanceArray?.count, 33)
+        XCTAssertEqual(distanceArray?[32].distanceRemaining, 0)
     }
 
 }

@@ -15,7 +15,7 @@
 
 ### Vanishing route line
 
-* Added the ability to synchronize route progress, puck and vanishing route line with a location based distance calculation implementation.  ([#2737](https://github.com/mapbox/mapbox-navigation-ios/pull/2737))
+* Added the ability to synchronize route progress, puck and vanishing route line with a location based distance calculation implementation. ([#2737](https://github.com/mapbox/mapbox-navigation-ios/pull/2737))
 
 ### Other changes
 
