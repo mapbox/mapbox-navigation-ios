@@ -76,6 +76,7 @@ open class InstructionsCardViewController: UIViewController {
     fileprivate var contentOffsetBeforeSwipe = CGPoint(x: 0, y: 0)
     fileprivate var indexBeforeSwipe = IndexPath(row: 0, section: 0)
     fileprivate let cardCollectionCellIdentifier = NSStringFromClass(InstructionsCardCell.self)
+    fileprivate let direction: UICollectionView.ScrollPosition = UIApplication.shared.userInterfaceLayoutDirection == .leftToRight ? .left : .right
     
     override open func viewDidLoad() {
         super.viewDidLoad()
@@ -121,10 +122,7 @@ open class InstructionsCardViewController: UIViewController {
     
     @objc func orientationDidChange(_ notification: Notification) {
         instructionsCardLayout.invalidateLayout()
-        
-        instructionsCardLayout.collectionView?.isPagingEnabled = false
-        instructionsCardLayout.collectionView?.scrollToItem(at: indexBeforeSwipe, at: .left, animated: true)
-        instructionsCardLayout.collectionView?.isPagingEnabled = true
+        handlePagingforScrollToItem(indexPath: indexBeforeSwipe)
     }
     
     func addSubviews() {
@@ -181,7 +179,10 @@ open class InstructionsCardViewController: UIViewController {
     
     func snapToIndexPath(_ indexPath: IndexPath) {
         guard let itemCount = steps?.count, itemCount >= 0 && indexPath.row < itemCount else { return }
-        let direction: UICollectionView.ScrollPosition = UIApplication.shared.userInterfaceLayoutDirection == .leftToRight ? .left : .right
+        handlePagingforScrollToItem(indexPath: indexPath)
+    }
+    
+    public func handlePagingforScrollToItem(indexPath: IndexPath) {
         if #available(iOS 14.0, *) {
             instructionsCardLayout.collectionView?.isPagingEnabled = false
             instructionsCardLayout.collectionView?.scrollToItem(at: indexPath, at: direction, animated: true)
