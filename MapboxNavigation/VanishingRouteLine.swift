@@ -22,7 +22,7 @@ extension NavigationMapView {
     // MARK: - Vanishing route line methods
     func initPrimaryRoutePoints(route: Route) {
         routePoints = parseRoutePoints(route: route)
-        routeLineGranularDistances = calculateRouteGranularDistances(coordinates: routePoints?.flatList ?? [])
+        routeLineGranularDistances = calculateGranularDistances(routePoints?.flatList ?? [])
     }
     
     
@@ -88,32 +88,21 @@ extension NavigationMapView {
     func getSlicedLinePointsCount(currentLegProgress: RouteLegProgress, currentStepProgress: RouteStepProgress) -> Int {
         let startDistance = currentStepProgress.distanceTraveled
         let stopDistance = currentStepProgress.step.distance
-        var slicedLine: Turf.LineString?
         
         /**
          Implement the Turf.lineSliceAlong(lineString, startDistance, stopDistance) to return a sliced lineString.
          */
-        if let lineString = currentStepProgress.step.shape {
-            if let midPoint = lineString.coordinateFromStart(distance: startDistance) {
-                slicedLine = lineString.trimmed(from: midPoint, distance: stopDistance - startDistance)
-            }
+        if let lineString = currentStepProgress.step.shape,
+           let midPoint = lineString.coordinateFromStart(distance: startDistance),
+           let slicedLine = lineString.trimmed(from: midPoint, distance: stopDistance - startDistance) {
+            return slicedLine.coordinates.count - 1
         }
-        
-        if slicedLine != nil {
-            return slicedLine!.coordinates.count - 1
-        } else {
-            return 0
-        }
+         
+        return 0
     }
     
-    func calculateRouteGranularDistances(coordinates: [CLLocationCoordinate2D]) -> RouteLineGranularDistances? {
-        if !coordinates.isEmpty {
-            return calculateGranularDistances(coordinates)
-        }
-        return nil
-    }
-    
-    func calculateGranularDistances(_ coordinates: [CLLocationCoordinate2D]) -> RouteLineGranularDistances {
+    func calculateGranularDistances(_ coordinates: [CLLocationCoordinate2D]) -> RouteLineGranularDistances? {
+        if coordinates.isEmpty { return nil }
         var distance = 0.0
         var indexArray = [RouteLineDistancesIndex?](repeating: nil, count: coordinates.count)
         for index in stride(from: coordinates.count - 1, to: 0, by: -1) {

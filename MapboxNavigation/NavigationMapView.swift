@@ -492,19 +492,17 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             // `NavigationMapViewDelegate.navigationMapView(_:shapeFor:)` or `NavigationMapViewDelegate.navigationMapView(_:simplifiedShapeFor:)`.
             if index == 0 {
                 
-                if routeLineTracksTraversal {
-                    initPrimaryRoutePoints(route: route)
-                }
-                
                 let routeShape = navigationMapViewDelegate?.navigationMapView(self, shapeFor: [route]) ??
                     shape(for: route, legIndex: legIndex, isAlternateRoute: false)
                 
                 let routeSource = addRouteSource(style, identifier: routeSourceIdentifier, shape: routeShape)
                 
+                let fractionTraveledForGradient = routeLineTracksTraversal ? fractionTraveled : 0.0
+                
                 let mainRouteLayer = addMainRouteLayer(style,
                                                        source: routeSource,
                                                        identifier: routeIdentifier,
-                                                       lineGradient: routeLineGradient(route, fractionTraveled: 0.0))
+                                                       lineGradient: routeLineGradient(route, fractionTraveled: fractionTraveledForGradient))
                 
                 let mainRouteCasingShape = navigationMapViewDelegate?.navigationMapView(self, simplifiedShapeFor: route) ??
                     shape(forCasingOf: route, legIndex: legIndex)
@@ -514,8 +512,12 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 parentLayer = addMainRouteCasingLayer(style,
                                                       source: routeCasingSource,
                                                       identifier: routeCasingIdentifier,
-                                                      lineGradient: routeCasingGradient(0.0),
+                                                      lineGradient: routeCasingGradient(fractionTraveledForGradient),
                                                       below: mainRouteLayer)
+                
+                if routeLineTracksTraversal {
+                    initPrimaryRoutePoints(route: route)
+                }
                 
                 continue
             }

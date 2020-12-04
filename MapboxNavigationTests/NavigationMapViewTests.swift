@@ -128,7 +128,10 @@ class NavigationMapViewTests: XCTestCase, MGLMapViewDelegate {
         let targetPoint = Turf.mid(shape.coordinates[6], shape.coordinates[7])
         //which is between route.legs[0].steps[1].shape!.coordinates[3] and  route.legs[0].steps[1].shape!.coordinates[4]
         let traveledCoordinates = Array(route.legs[0].steps[1].shape!.coordinates[0...3])
-        let stepTraveledDistanceSep = navigationMapView.calculateGranularDistances(traveledCoordinates).distance
+        let stepTraveledDistancePrep = navigationMapView.calculateGranularDistances(traveledCoordinates)?.distance
+        guard let stepTraveledDistanceSep = stepTraveledDistancePrep else {
+            preconditionFailure("Granular distances are invalid")
+        }
 
         let testRouteProgress: RouteProgress = RouteProgress(route: route, routeIndex: 0, options: routeOptions, legIndex: 0, spokenInstructionIndex: 0)
         testRouteProgress.currentLegProgress = RouteLegProgress(leg: route.legs[0], stepIndex: 1, spokenInstructionIndex: 0)
