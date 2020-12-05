@@ -84,7 +84,11 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
      traversed section of a route, override the `traversedRouteColor` property
      for the `NavigationMapView.appearance()`.
      */
-    public var routeLineTracksTraversal: Bool = false
+    public var routeLineTracksTraversal: Bool = false {
+        didSet {
+            mapView?.routeLineTracksTraversal = routeLineTracksTraversal
+        }
+    }
     
     var edgePadding: UIEdgeInsets {
         let padding:CGFloat = 15
@@ -352,6 +356,8 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
         }
         
         if routeLineTracksTraversal {
+            mapView?.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
+            mapView?.updateTraveledRouteLine(location.coordinate)
             mapView?.updateRoute(routeProgress)
         }
     }

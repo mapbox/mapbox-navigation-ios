@@ -97,7 +97,11 @@ class RouteMapViewController: UIViewController {
         return UIEdgeInsets(top: topBannerContainerView.bounds.height, left: 20, bottom: bottomBannerContainerView.bounds.height, right: 20)
     }
     
-    var routeLineTracksTraversal = false
+    var routeLineTracksTraversal = false {
+        didSet {
+            mapView.routeLineTracksTraversal = routeLineTracksTraversal
+        }
+    }
 
     typealias LabelRoadNameCompletionHandler = (_ defaultRaodNameAssigned: Bool) -> Void
 
@@ -534,6 +538,8 @@ extension RouteMapViewController: NavigationComponent {
         }
         
         if routeLineTracksTraversal {
+            mapView.updateUpcomingRoutePointIndex(routeProgress: progress)
+            mapView.updateTraveledRouteLine(location.coordinate)
             mapView.updateRoute(progress)
         }
         
@@ -576,6 +582,8 @@ extension RouteMapViewController: NavigationComponent {
     func navigationService(_ service: NavigationService, didRefresh routeProgress: RouteProgress) {
         mapView.show([routeProgress.route], legIndex: routeProgress.legIndex)
         if routeLineTracksTraversal {
+            mapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
+            mapView.updateTraveledRouteLine(router.location?.coordinate)
             mapView.updateRoute(routeProgress)
         }
     }

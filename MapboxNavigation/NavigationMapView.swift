@@ -126,6 +126,13 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     var altitude: CLLocationDistance
     var routes: [Route]?
     var isAnimatingToOverheadMode = false
+    var routePoints: RoutePoints?
+    var routeLineGranularDistances: RouteLineGranularDistances?
+    var routeRemainingDistancesIndex: Int?
+    var routeLineTracksTraversal: Bool = false
+    var fractionTraveled: Double = 0.0
+    var preFractionTraveled: Double = 0.0
+    var vanishingRouteLineUpdateTimer: Timer? = nil
     
     var shouldPositionCourseViewFrameByFrame = false {
         didSet {
@@ -251,6 +258,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         installUserCourseView()
         showsUserLocation = false
+        
     }
     
     open override func layoutMarginsDidChange() {
@@ -483,15 +491,18 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             // In case of main route there is the ability to provide custom `MGLShape` for either route or route casing by implemeting
             // `NavigationMapViewDelegate.navigationMapView(_:shapeFor:)` or `NavigationMapViewDelegate.navigationMapView(_:simplifiedShapeFor:)`.
             if index == 0 {
+                
                 let routeShape = navigationMapViewDelegate?.navigationMapView(self, shapeFor: [route]) ??
                     shape(for: route, legIndex: legIndex, isAlternateRoute: false)
                 
                 let routeSource = addRouteSource(style, identifier: routeSourceIdentifier, shape: routeShape)
                 
+                let fractionTraveledForGradient = routeLineTracksTraversal ? fractionTraveled : 0.0
+                
                 let mainRouteLayer = addMainRouteLayer(style,
                                                        source: routeSource,
                                                        identifier: routeIdentifier,
-                                                       lineGradient: routeLineGradient(route, fractionTraveled: 0.0))
+                                                       lineGradient: routeLineGradient(route, fractionTraveled: fractionTraveledForGradient))
                 
                 let mainRouteCasingShape = navigationMapViewDelegate?.navigationMapView(self, simplifiedShapeFor: route) ??
                     shape(forCasingOf: route, legIndex: legIndex)
@@ -501,8 +512,12 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 parentLayer = addMainRouteCasingLayer(style,
                                                       source: routeCasingSource,
                                                       identifier: routeCasingIdentifier,
-                                                      lineGradient: routeCasingGradient(0.0),
+                                                      lineGradient: routeCasingGradient(fractionTraveledForGradient),
                                                       below: mainRouteLayer)
+                
+                if routeLineTracksTraversal {
+                    initPrimaryRoutePoints(route: route)
+                }
                 
                 continue
             }
@@ -707,165 +722,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         return alternativeRoutesCasingLayer
     }
-
-    // MARK: - Vanishing route line methods
-    
-    /**
-     Updates the route style layer and its casing style layer to gradually disappear as the user location puck travels along the displayed route.
-     
-     - parameter routeProgress: Current route progress.
-     */
-    public func updateRoute(_ routeProgress: RouteProgress) {
-        guard let mainRouteLayerIdentifier = identifier(routes?.first, identifierType: .route),
-              let mainRouteCasingLayerIdentifier = identifier(routes?.first, identifierType: .routeCasing) else { return }
-        
-        guard let mainRouteLayer = style?.layer(withIdentifier: mainRouteLayerIdentifier) as? MGLLineStyleLayer,
-              let mainRouteCasingLayer = style?.layer(withIdentifier: mainRouteCasingLayerIdentifier) as? MGLLineStyleLayer else { return }
-        
-        let fractionTraveled = routeProgress.fractionTraveled
-        
-        // In case if route was fully travelled - remove main route and its casing.
-        if fractionTraveled >= 1.0 {
-            style?.remove([mainRouteLayer, mainRouteCasingLayer])
-            return
-        }
-        
-        mainRouteLayer.lineGradient = routeLineGradient(routeProgress.route, fractionTraveled: fractionTraveled)
-        mainRouteCasingLayer.lineGradient = routeCasingGradient(fractionTraveled)
-    }
-    
-    private func routeLineGradient(_ route: Route, fractionTraveled: Double) -> NSExpression? {
-        var gradientStops = [CGFloat: UIColor]()
-        
-        // In case if mainRouteLayer was already added - extract congestion segments out of it.
-        if let identifier = identifier(routes?.first, identifierType: .route),
-           let mainRouteLayer = style?.layer(withIdentifier: identifier) as? MGLLineStyleLayer,
-           // lineGradient contains 4 arguments, last one (stops) allows to store line gradient stops, if they're present - reuse them.
-           let lineGradients = mainRouteLayer.lineGradient?.arguments?[3],
-           let stops = lineGradients.expressionValue(with: nil, context: nil) as? NSDictionary {
-            
-            for (key, value) in stops {
-                if let key = key as? CGFloat, let value = (value as? NSExpression)?.expressionValue(with: nil, context: nil) as? UIColor {
-                    gradientStops[key] = value
-                }
-            }
-        } else {
-            /**
-             We will keep track of this value as we iterate through
-             the various congestion segments.
-             */
-            var distanceTraveled = fractionTraveled
-
-            /**
-             Begin by calculating individual congestion segments associated
-             with a congestion level, represented as `MGLPolylineFeature`s.
-             */
-            guard let congestionSegments = addCongestion(to: route, legIndex: 0) else { return nil }
-
-            /**
-             To create the stops dictionary that represents the route line expressed
-             as gradients, for every congestion segment we need one pair of dictionary
-             entries to represent the color to be displayed between that range. Depending
-             on the index of the congestion segment, the pair's first or second key
-             will have a buffer value added or subtracted to make room for a gradient
-             transition between congestion segments.
-
-                green       gradient       red
-                           transition
-             |-----------|~~~~~~~~~~~~|----------|
-             0         0.499        0.501       1.0
-             */
-            for (index, line) in congestionSegments.enumerated() {
-                line.getCoordinates(line.coordinates, range: NSMakeRange(0, Int(line.pointCount)))
-                // `UnsafeMutablePointer` is needed here to get the line’s coordinates.
-                let buffPtr = UnsafeMutableBufferPointer(start: line.coordinates, count: Int(line.pointCount))
-                let lineCoordinates = Array(buffPtr)
-
-                // Get congestion color for the stop.
-                let congestionLevel = line.attributes["congestion"] as? String
-                let associatedCongestionColor = congestionColor(for: congestionLevel)
-
-                // Measure the line length of the traffic segment.
-                let lineString = LineString(lineCoordinates)
-                guard let distance = lineString.distance() else { return nil }
-
-                /**
-                 If this is the first congestion segment, then the starting
-                 percentage point will be zero.
-                 */
-                if index == congestionSegments.startIndex {
-                    distanceTraveled = distanceTraveled + distance
-
-                    let segmentEndPercentTraveled = CGFloat((distanceTraveled / route.distance))
-                    gradientStops[segmentEndPercentTraveled.nextDown] = associatedCongestionColor
-                    continue
-                }
-
-                /**
-                 If this is the last congestion segment, then the ending
-                 percentage point will be 1.0, to represent 100%.
-                 */
-                if index == congestionSegments.endIndex - 1 {
-                    let segmentEndPercentTraveled = CGFloat(1.0)
-                    gradientStops[segmentEndPercentTraveled.nextDown] = associatedCongestionColor
-                    continue
-                }
-
-                /**
-                 If this is not the first or last congestion segment, then
-                 the starting and ending percent values traveled for this segment
-                 will be a fractional amount more/less than the actual values.
-                 */
-                let segmentStartPercentTraveled = CGFloat((distanceTraveled / route.distance))
-                gradientStops[segmentStartPercentTraveled.nextUp] = associatedCongestionColor
-
-                distanceTraveled = distanceTraveled + distance
-
-                let segmentEndPercentTraveled = CGFloat((distanceTraveled / route.distance))
-                gradientStops[segmentEndPercentTraveled.nextDown] = associatedCongestionColor
-            }
-        }
-                
-        let percentTraveled = CGFloat(fractionTraveled)
-        
-        // Filter out only the stops that are greater than or equal to the percent of the route traveled.
-        var filteredGradientStops = gradientStops.filter { key, value in
-            return key >= percentTraveled
-        }
-        
-        // Then, get the lowest value from the above and fade the range from zero that lowest value,
-        // which represents the % of the route traveled.
-        if let minStop = filteredGradientStops.min(by: { $0.0 < $1.0 }) {
-            filteredGradientStops[0.0] = traversedRouteColor
-            filteredGradientStops[percentTraveled.nextDown] = traversedRouteColor
-            filteredGradientStops[percentTraveled] = minStop.value
-        }
-        
-        // It's not possible to create line gradient in case if there are no route gradient stops.
-        if !filteredGradientStops.isEmpty {
-            // Dictionary usage is causing crashes in Release mode (when built with optimization SWIFT_OPTIMIZATION_LEVEL = -O flag).
-            // Even though Dictionary contains valid objects prior to passing it to NSExpression:
-            // [0.4109119609930762: UIExtendedSRGBColorSpace 0.952941 0.65098 0.309804 1,
-            // 0.4109119609930761: UIExtendedSRGBColorSpace 0.337255 0.658824 0.984314 1]
-            // keys become nil in NSExpression arguments list:
-            // [0.4109119609930762 = nil,
-            // 0.4109119609930761 = nil]
-            // Passing NSDictionary with all data from original Dictionary to NSExpression fixes issue.
-            return NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", NSDictionary(dictionary: filteredGradientStops))
-        }
-        
-        return nil
-    }
-    
-    private func routeCasingGradient(_ fractionTraveled: Double) -> NSExpression {
-        let percentTraveled = CGFloat(fractionTraveled)
-        var gradientStops = [CGFloat: UIColor]()
-        gradientStops[0.0] = traversedRouteColor
-        gradientStops[percentTraveled.nextDown] = traversedRouteColor
-        gradientStops[percentTraveled] = routeCasingColor
-        
-        return NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", NSDictionary(dictionary: gradientStops))
-    }
     
     /**
      Removes route line and route line casing from map
@@ -897,6 +753,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         style.remove(Set(sourceIdentifiers.compactMap({ style.source(withIdentifier: $0) })))
         
         routes = nil
+        routePoints = nil
+        routeLineGranularDistances = nil
     }
     
     /**
@@ -1119,7 +977,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         userCourseView.center = convert(location.coordinate, toPointTo: self)
     }
     
-    //TODO: Change to point-based distance calculation
     private func waypoints(on routes: [Route], closeTo point: CGPoint) -> [Waypoint]? {
         let tapCoordinate = convert(point, toCoordinateFrom: self)
         let multipointRoutes = routes.filter { $0.legs.count > 1}
@@ -1130,8 +987,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         //lets sort the array in order of closest to tap
         let closest = waypoints.sorted { (left, right) -> Bool in
-            let leftDistance = left.coordinate.distance(to: tapCoordinate)
-            let rightDistance = right.coordinate.distance(to: tapCoordinate)
+            let leftDistance = calculateDistance(coordinate1: left.coordinate, coordinate2: tapCoordinate)
+            let rightDistance = calculateDistance(coordinate1: right.coordinate, coordinate2: tapCoordinate)
             return leftDistance < rightDistance
         }
         
@@ -1309,23 +1166,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         return symbol
     }
 
-    /**
-     Given a congestion level, return its associated color.
-     */
-    private func congestionColor(for congestionLevel: String?) -> UIColor {
-        switch congestionLevel {
-        case "low":
-            return trafficLowColor
-        case "moderate":
-            return trafficModerateColor
-        case "heavy":
-            return trafficHeavyColor
-        case "severe":
-            return trafficSevereColor
-        default:
-            return trafficUnknownColor
-        }
-    }
     
     /**
      Attempts to localize road labels into the local language and other labels
