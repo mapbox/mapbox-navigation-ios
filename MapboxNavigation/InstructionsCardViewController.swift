@@ -17,7 +17,7 @@ open class InstructionsCardViewController: UIViewController {
         if let customSize = cardCollectionDelegate?.instructionsCardCollection(self, cardSizeFor: traitCollection) {
             cardSize = customSize
         }
-        
+
         return cardSize
     }
     
@@ -76,6 +76,7 @@ open class InstructionsCardViewController: UIViewController {
     fileprivate var contentOffsetBeforeSwipe = CGPoint(x: 0, y: 0)
     fileprivate var indexBeforeSwipe = IndexPath(row: 0, section: 0)
     fileprivate let cardCollectionCellIdentifier = NSStringFromClass(InstructionsCardCell.self)
+    fileprivate let direction: UICollectionView.ScrollPosition = UIApplication.shared.userInterfaceLayoutDirection == .leftToRight ? .left : .right
     
     override open func viewDidLoad() {
         super.viewDidLoad()
@@ -121,6 +122,7 @@ open class InstructionsCardViewController: UIViewController {
     
     @objc func orientationDidChange(_ notification: Notification) {
         instructionsCardLayout.invalidateLayout()
+        handlePagingforScrollToItem(indexPath: indexBeforeSwipe)
     }
     
     func addSubviews() {
@@ -177,7 +179,17 @@ open class InstructionsCardViewController: UIViewController {
     
     func snapToIndexPath(_ indexPath: IndexPath) {
         guard let itemCount = steps?.count, itemCount >= 0 && indexPath.row < itemCount else { return }
-        instructionsCardLayout.collectionView?.scrollToItem(at: indexPath, at: .left, animated: true)
+        handlePagingforScrollToItem(indexPath: indexPath)
+    }
+    
+    public func handlePagingforScrollToItem(indexPath: IndexPath) {
+        if #available(iOS 14.0, *) {
+            instructionsCardLayout.collectionView?.isPagingEnabled = false
+            instructionsCardLayout.collectionView?.scrollToItem(at: indexPath, at: direction, animated: true)
+            instructionsCardLayout.collectionView?.isPagingEnabled = true
+            return
+        }
+        instructionsCardLayout.collectionView?.scrollToItem(at: indexPath, at: direction, animated: true)
     }
     
     public func stopPreview() {
@@ -284,6 +296,7 @@ extension InstructionsCardViewController: UICollectionViewDataSource {
 
 extension InstructionsCardViewController: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
         return cardSize
     }
 }
