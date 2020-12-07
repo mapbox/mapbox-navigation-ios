@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
   # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.name = "MapboxCoreNavigation"
-  s.version = '1.2.0-alpha.2'
+  s.version = '1.2.0-alpha.3'
   s.summary = "Core components for turn-by-turn navigation on iOS."
 
   s.description  = <<-DESC

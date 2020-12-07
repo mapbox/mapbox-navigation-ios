@@ -5,12 +5,11 @@
 ### User interface
 
 * Fixed an issue which was causing clear map button disappearance in the example app when selecting the route. ([#2718](https://github.com/mapbox/mapbox-navigation-ios/pull/2718))
-* Fixed an issue where maneuver icon was not shown after selecting specific step. ([#2722](https://github.com/mapbox/mapbox-navigation-ios/issues/2722))
+* Fixed an issue where maneuver icon was not shown after selecting specific step. ([#2728](https://github.com/mapbox/mapbox-navigation-ios/pull/2728))
 * Fixed an issue which was preventing the ability to customize the bottom banner height. ([#2705](https://github.com/mapbox/mapbox-navigation-ios/pull/2705))
-* Added method to handle paging for iOS 14 that was causing swipe problems with instructions cards ([#2755](https://github.com/mapbox/mapbox-navigation-ios/pull/2755)): 
-  * Fixed an issue which was preventing the ability to scroll between instructions cards on iOS 14 using workaround. ([#2755](https://github.com/mapbox/mapbox-navigation-ios/issues/2695))
-  * Fixed an instructions cards layout issue that arose when changing orientation (portrait to landscape). 
-* Fixed swiping for right-to-left languages for the traditional top banner to be more intuitive. ([#2755](https://github.com/mapbox/mapbox-navigation-ios/issues/2626))
+* Fixed an issue which was preventing the ability to scroll between instructions cards on iOS 14 using workaround. ([#2755](https://github.com/mapbox/mapbox-navigation-ios/pull/2755))
+* Fixed an instructions cards layout issue that arose when changing orientation (portrait to landscape). ([#2755](https://github.com/mapbox/mapbox-navigation-ios/pull/2755))
+* Fixed swiping for right-to-left languages for the traditional top banner to be more intuitive. ([#2755](https://github.com/mapbox/mapbox-navigation-ios/pull/2755))
 * Added the ability to style each route line differently using such delegate methods ([#2719](https://github.com/mapbox/mapbox-navigation-ios/pull/2719)):
   * `NavigationMapViewDelegate.navigationMapView(_:mainRouteStyleLayerWithIdentifier:source:)` to style the main route.
   * `NavigationMapViewDelegate.navigationMapView(_:mainRouteCasingStyleLayerWithIdentifier:source:)` to style the casing of the main route.
@@ -46,7 +45,7 @@
 * Fixed an issue where the route line flickered when refreshing. ([#2642](https://github.com/mapbox/mapbox-navigation-ios/pull/2642))
 * Fixed an issue where the End of route view UI is broken prior to iOS 11. ([#2690](https://github.com/mapbox/mapbox-navigation-ios/pull/2690))
 * Fixed an issue where completed waypoints remained on map after rerouting. ([#2378](https://github.com/mapbox/mapbox-navigation-ios/pull/2378))
-* Fixed an issue where positioning icon was not highlighted on CarPlay when using iOS 14.0. ([#2681](https://github.com/mapbox/mapbox-navigation-ios/issues/2681))
+* Fixed an issue where positioning icon was not highlighted on CarPlay when using iOS 14.0. ([#2697](https://github.com/mapbox/mapbox-navigation-ios/pull/2697))
 * Fixed an issue where ETA label font was too small during turn-by-turn navigation. ([#2679](https://github.com/mapbox/mapbox-navigation-ios/pull/2679))
 * Fixed an issue with `NavigationMapViewDelegate.navigationMapView(_:shapeFor:)` and `NavigationMapViewDelegate.navigationMapView(_:simplifiedShapeFor:)` methods were not correctly called for route shape customization ([#2623](https://github.com/mapbox/mapbox-navigation-ios/pull/2623))
 * Fixed an issue where the banner indicating simulation mode displayed a very large speed factor in the Hebrew location. ([#2714](https://github.com/mapbox/mapbox-navigation-ios/pull/2714))
