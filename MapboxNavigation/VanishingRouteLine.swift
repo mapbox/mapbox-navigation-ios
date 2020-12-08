@@ -202,8 +202,33 @@ extension NavigationMapView {
                 timer.invalidate()
                 return
             }
+            
+            guard let style = self.style,
+                  let routeSourceIdentifier = self.identifier(routeProgress.route, identifierType: .source),
+                  let routeIdentifier = self.identifier(routeProgress.route, identifierType: .route) else { return }
+            
+            let routeShape = self.navigationMapViewDelegate?.navigationMapView(self, shapeFor: [routeProgress.route]) ??
+                self.shape(for: routeProgress.route, legIndex: routeProgress.legIndex, isAlternateRoute: false)
+            self.mainRouteSourceShape = routeShape
+            
+            let routeSource = self.addRouteSource(style, identifier: routeSourceIdentifier, shape: routeShape)
+            
             let newFractionTraveled = self.preFractionTraveled + traveledDifference * timePassedInMilliseconds.truncatingRemainder(dividingBy: 1000) / 1000
-            guard let mainRouteLayerGradient = self.routeLineGradient(routeProgress.route, fractionTraveled: newFractionTraveled) else { return }
+            let overriddenRouteLayer = self.navigationMapViewDelegate?.navigationMapView(self,
+                                                                                         mainRouteStyleLayerWithIdentifier: routeIdentifier,
+                                                                                         source: routeSource)
+            
+            var overriddenCongestionSegments: [MGLPolylineFeature]? = nil
+            if let shape = self.navigationMapViewDelegate?.navigationMapView(self, shapeFor: [routeProgress.route]) as? MGLShapeCollectionFeature,
+               let congestionSegments = shape.shapes as? Array<MGLPolylineFeature> {
+                overriddenCongestionSegments = congestionSegments
+            }
+            
+            let mainRouteLayerGradient = self.routeLineGradient(routeProgress.route,
+                                                                fractionTraveled: newFractionTraveled,
+                                                                overriddenRouteLayer: overriddenRouteLayer,
+                                                                congestionSegments: overriddenCongestionSegments)
+            
             let mainCasingLayerStops = self.routeCasingGradient(newFractionTraveled)
             
             mainRouteLayer.lineGradient = mainRouteLayerGradient
@@ -211,95 +236,85 @@ extension NavigationMapView {
         })
     }
     
-    func routeLineGradient(_ route: Route, fractionTraveled: Double) -> NSExpression? {
+    func routeLineGradient(_ route: Route,
+                           fractionTraveled: Double,
+                           overriddenRouteLayer: MGLStyleLayer? = nil,
+                           congestionSegments: [MGLPolylineFeature]? = nil) -> NSExpression? {
         var gradientStops = [CGFloat: UIColor]()
         
         // In case if mainRouteLayer was already added - extract congestion segments out of it.
         if let identifier = identifier(routes?.first, identifierType: .route),
-           let mainRouteLayer = style?.layer(withIdentifier: identifier) as? MGLLineStyleLayer,
-           // lineGradient contains 4 arguments, last one (stops) allows to store line gradient stops, if they're present - reuse them.
-           let lineGradients = mainRouteLayer.lineGradient?.arguments?[3],
-           let stops = lineGradients.expressionValue(with: nil, context: nil) as? NSDictionary {
+           let mainRouteLayer = style?.layer(withIdentifier: identifier) as? MGLLineStyleLayer {
             
-            for (key, value) in stops {
-                if let key = key as? CGFloat, let value = (value as? NSExpression)?.expressionValue(with: nil, context: nil) as? UIColor {
-                    gradientStops[key] = value
+            // lineGradient contains 4 arguments, last one (stops) allows to store line gradient stops, if they're present - reuse them.
+            if let overriddenRouteLayer = overriddenRouteLayer as? MGLLineStyleLayer {
+                if let lineGradients = overriddenRouteLayer.lineGradient?.arguments?[3],
+                   let stops = lineGradients.expressionValue(with: nil, context: nil) as? NSDictionary {
+                    for (key, value) in stops {
+                        if let key = key as? CGFloat, let value = (value as? NSExpression)?.expressionValue(with: nil, context: nil) as? UIColor {
+                            gradientStops[key] = value
+                        }
+                    }
+                } else if let congestionSegments = congestionSegments {
+                    gradientStops = getGradientStops(route,
+                                                     fractionTraveled: fractionTraveled,
+                                                     congestionSegments: congestionSegments)
+                } else if let lineColor = mainRouteLayer.lineColor.expressionValue(with: nil, context: nil) as? UIColor, !lineColor.isEqual(UIColor.black) {
+                    return routeGradient(fractionTraveled, routeColor: lineColor)
+                } else {
+                    guard var defaultCongestionSegments = addCongestion(to: route, legIndex: 0) else { return nil }
+                    if let congestionSegments = congestionSegments {
+                        defaultCongestionSegments = congestionSegments
+                    }
+                    
+                    gradientStops = getGradientStops(route,
+                                                     fractionTraveled: fractionTraveled,
+                                                     congestionSegments: defaultCongestionSegments)
                 }
+            } else {
+                guard var defaultCongestionSegments = addCongestion(to: route, legIndex: 0) else { return nil }
+                if let congestionSegments = congestionSegments {
+                    defaultCongestionSegments = congestionSegments
+                }
+                
+                gradientStops = getGradientStops(route,
+                                                 fractionTraveled: fractionTraveled,
+                                                 congestionSegments: defaultCongestionSegments)
             }
         } else {
-            /**
-             We will keep track of this value as we iterate through
-             the various congestion segments.
-             */
-            var distanceTraveled = fractionTraveled
-
-            /**
-             Begin by calculating individual congestion segments associated
-             with a congestion level, represented as `MGLPolylineFeature`s.
-             */
-            guard let congestionSegments = addCongestion(to: route, legIndex: 0) else { return nil }
-
-            /**
-             To create the stops dictionary that represents the route line expressed
-             as gradients, for every congestion segment we need one pair of dictionary
-             entries to represent the color to be displayed between that range. Depending
-             on the index of the congestion segment, the pair's first or second key
-             will have a buffer value added or subtracted to make room for a gradient
-             transition between congestion segments.
-
-                green       gradient       red
-                           transition
-             |-----------|~~~~~~~~~~~~|----------|
-             0         0.499        0.501       1.0
-             */
-            for (index, line) in congestionSegments.enumerated() {
-                line.getCoordinates(line.coordinates, range: NSMakeRange(0, Int(line.pointCount)))
-                // `UnsafeMutablePointer` is needed here to get the line’s coordinates.
-                let buffPtr = UnsafeMutableBufferPointer(start: line.coordinates, count: Int(line.pointCount))
-                let lineCoordinates = Array(buffPtr)
-
-                // Get congestion color for the stop.
-                let congestionLevel = line.attributes["congestion"] as? String
-                let associatedCongestionColor = congestionColor(for: congestionLevel)
-
-                // Measure the line length of the traffic segment.
-                let lineString = LineString(lineCoordinates)
-                guard let distance = lineString.distance() else { return nil }
-
-                /**
-                 If this is the first congestion segment, then the starting
-                 percentage point will be zero.
-                 */
-                if index == congestionSegments.startIndex {
-                    distanceTraveled = distanceTraveled + distance
-
-                    let segmentEndPercentTraveled = CGFloat((distanceTraveled / route.distance))
-                    gradientStops[segmentEndPercentTraveled.nextDown] = associatedCongestionColor
-                    continue
+            if let mainRouteLayer = overriddenRouteLayer as? MGLLineStyleLayer {
+                if let lineGradients = mainRouteLayer.lineGradient?.arguments?[3],
+                   let stops = lineGradients.expressionValue(with: nil, context: nil) as? NSDictionary {
+                    for (key, value) in stops {
+                        if let key = key as? CGFloat, let value = (value as? NSExpression)?.expressionValue(with: nil, context: nil) as? UIColor {
+                            gradientStops[key] = value
+                        }
+                    }
+                } else if let congestionSegments = congestionSegments {
+                    gradientStops = getGradientStops(route,
+                                                     fractionTraveled: fractionTraveled,
+                                                     congestionSegments: congestionSegments)
+                } else if let lineColor = mainRouteLayer.lineColor.expressionValue(with: nil, context: nil) as? UIColor, !lineColor.isEqual(UIColor.black) {
+                    return routeGradient(fractionTraveled, routeColor: lineColor)
+                } else {
+                    guard var defaultCongestionSegments = addCongestion(to: route, legIndex: 0) else { return nil }
+                    if let congestionSegments = congestionSegments {
+                        defaultCongestionSegments = congestionSegments
+                    }
+                    
+                    gradientStops = getGradientStops(route,
+                                                     fractionTraveled: fractionTraveled,
+                                                     congestionSegments: defaultCongestionSegments)
                 }
-
-                /**
-                 If this is the last congestion segment, then the ending
-                 percentage point will be 1.0, to represent 100%.
-                 */
-                if index == congestionSegments.endIndex - 1 {
-                    let segmentEndPercentTraveled = CGFloat(1.0)
-                    gradientStops[segmentEndPercentTraveled.nextDown] = associatedCongestionColor
-                    continue
+            } else {
+                guard var defaultCongestionSegments = addCongestion(to: route, legIndex: 0) else { return nil }
+                if let congestionSegments = congestionSegments {
+                    defaultCongestionSegments = congestionSegments
                 }
-
-                /**
-                 If this is not the first or last congestion segment, then
-                 the starting and ending percent values traveled for this segment
-                 will be a fractional amount more/less than the actual values.
-                 */
-                let segmentStartPercentTraveled = CGFloat((distanceTraveled / route.distance))
-                gradientStops[segmentStartPercentTraveled.nextUp] = associatedCongestionColor
-
-                distanceTraveled = distanceTraveled + distance
-
-                let segmentEndPercentTraveled = CGFloat((distanceTraveled / route.distance))
-                gradientStops[segmentEndPercentTraveled.nextDown] = associatedCongestionColor
+                
+                gradientStops = getGradientStops(route,
+                                                 fractionTraveled: fractionTraveled,
+                                                 congestionSegments: defaultCongestionSegments)
             }
         }
         let percentTraveled = CGFloat(fractionTraveled)
@@ -360,4 +375,94 @@ extension NavigationMapView {
         }
     }
     
+    func getGradientStops(_ route: Route, fractionTraveled: Double, congestionSegments: [MGLPolylineFeature]?) -> [CGFloat: UIColor] {
+        /**
+         Begin by calculating individual congestion segments associated
+         with a congestion level, represented as `MGLPolylineFeature`s.
+         */
+        guard let congestionSegments = congestionSegments else { return [:] }
+        
+        var gradientStops = [CGFloat: UIColor]()
+        
+        /**
+         We will keep track of this value as we iterate through
+         the various congestion segments.
+         */
+        var distanceTraveled = fractionTraveled
+        
+        /**
+         To create the stops dictionary that represents the route line expressed
+         as gradients, for every congestion segment we need one pair of dictionary
+         entries to represent the color to be displayed between that range. Depending
+         on the index of the congestion segment, the pair's first or second key
+         will have a buffer value added or subtracted to make room for a gradient
+         transition between congestion segments.
+         
+         green       gradient       red
+         transition
+         |-----------|~~~~~~~~~~~~|----------|
+         0         0.499        0.501       1.0
+         */
+        for (index, line) in congestionSegments.enumerated() {
+            line.getCoordinates(line.coordinates, range: NSMakeRange(0, Int(line.pointCount)))
+            // `UnsafeMutablePointer` is needed here to get the line’s coordinates.
+            let buffPtr = UnsafeMutableBufferPointer(start: line.coordinates, count: Int(line.pointCount))
+            let lineCoordinates = Array(buffPtr)
+            
+            // Get congestion color for the stop.
+            let congestionLevel = line.attributes["congestion"] as? String
+            let associatedCongestionColor = congestionColor(for: congestionLevel)
+            
+            // Measure the line length of the traffic segment.
+            let lineString = LineString(lineCoordinates)
+            guard let distance = lineString.distance() else { return [:] }
+            
+            /**
+             If this is the first congestion segment, then the starting
+             percentage point will be zero.
+             */
+            if index == congestionSegments.startIndex {
+                distanceTraveled = distanceTraveled + distance
+                
+                let segmentEndPercentTraveled = CGFloat((distanceTraveled / route.distance))
+                gradientStops[segmentEndPercentTraveled.nextDown] = associatedCongestionColor
+                continue
+            }
+            
+            /**
+             If this is the last congestion segment, then the ending
+             percentage point will be 1.0, to represent 100%.
+             */
+            if index == congestionSegments.endIndex - 1 {
+                let segmentEndPercentTraveled = CGFloat(1.0)
+                gradientStops[segmentEndPercentTraveled.nextDown] = associatedCongestionColor
+                continue
+            }
+            
+            /**
+             If this is not the first or last congestion segment, then
+             the starting and ending percent values traveled for this segment
+             will be a fractional amount more/less than the actual values.
+             */
+            let segmentStartPercentTraveled = CGFloat((distanceTraveled / route.distance))
+            gradientStops[segmentStartPercentTraveled.nextUp] = associatedCongestionColor
+            
+            distanceTraveled = distanceTraveled + distance
+            
+            let segmentEndPercentTraveled = CGFloat((distanceTraveled / route.distance))
+            gradientStops[segmentEndPercentTraveled.nextDown] = associatedCongestionColor
+        }
+        
+        return gradientStops
+    }
+    
+    func routeGradient(_ fractionTraveled: Double, routeColor: UIColor) -> NSExpression {
+        let percentTraveled = CGFloat(fractionTraveled)
+        var gradientStops = [CGFloat: UIColor]()
+        gradientStops[0.0] = traversedRouteColor
+        gradientStops[percentTraveled.nextDown] = traversedRouteColor
+        gradientStops[percentTraveled] = routeColor
+        
+        return NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($lineProgress, 'linear', nil, %@)", NSDictionary(dictionary: gradientStops))
+    }
 }

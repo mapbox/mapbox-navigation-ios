@@ -227,6 +227,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     
     private lazy var mapTapGesture = UITapGestureRecognizer(target: self, action: #selector(didRecieveTap(sender:)))
     
+    var mainRouteSourceShape: MGLShape? = nil
+    
     //MARK: - Initalizers
     
     public override init(frame: CGRect) {
@@ -494,15 +496,31 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 
                 let routeShape = navigationMapViewDelegate?.navigationMapView(self, shapeFor: [route]) ??
                     shape(for: route, legIndex: legIndex, isAlternateRoute: false)
+                mainRouteSourceShape = routeShape
                 
                 let routeSource = addRouteSource(style, identifier: routeSourceIdentifier, shape: routeShape)
                 
                 let fractionTraveledForGradient = routeLineTracksTraversal ? fractionTraveled : 0.0
+
+                let overriddenRouteLayer = navigationMapViewDelegate?.navigationMapView(self,
+                                                                                        mainRouteStyleLayerWithIdentifier: routeIdentifier,
+                                                                                        source: routeSource)
+                
+                var overriddenCongestionSegments: [MGLPolylineFeature]? = nil
+                if let shape = navigationMapViewDelegate?.navigationMapView(self, shapeFor: [route]) as? MGLShapeCollectionFeature,
+                   let congestionSegments = shape.shapes as? Array<MGLPolylineFeature> {
+                    overriddenCongestionSegments = congestionSegments
+                }
+                
+                let lineGradient = routeLineGradient(route,
+                                                     fractionTraveled: fractionTraveledForGradient,
+                                                     overriddenRouteLayer: overriddenRouteLayer,
+                                                     congestionSegments: overriddenCongestionSegments)
                 
                 let mainRouteLayer = addMainRouteLayer(style,
                                                        source: routeSource,
                                                        identifier: routeIdentifier,
-                                                       lineGradient: routeLineGradient(route, fractionTraveled: fractionTraveledForGradient))
+                                                       lineGradient: lineGradient)
                 
                 let mainRouteCasingShape = navigationMapViewDelegate?.navigationMapView(self, simplifiedShapeFor: route) ??
                     shape(forCasingOf: route, legIndex: legIndex)
@@ -512,7 +530,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 parentLayer = addMainRouteCasingLayer(style,
                                                       source: routeCasingSource,
                                                       identifier: routeCasingIdentifier,
-                                                      lineGradient: routeCasingGradient(fractionTraveledForGradient),
+                                                      lineGradient: routeGradient(fractionTraveledForGradient, routeColor: routeCasingColor),
                                                       below: mainRouteLayer)
                 
                 if routeLineTracksTraversal {
@@ -755,6 +773,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         routes = nil
         routePoints = nil
         routeLineGranularDistances = nil
+        mainRouteSourceShape = nil
     }
     
     /**
