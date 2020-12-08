@@ -7,10 +7,3 @@ extension Turf.BoundingBox {
         self.init(coordinateBounds.sw, coordinateBounds.ne)
     }
 }
-
-extension LineString {
-    var simplified: LineString {
-        let simplifiedCoordinates = Simplify.simplify(coordinates, tolerance: 0.001)
-        return LineString(simplifiedCoordinates)
-    }
-}
