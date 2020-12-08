@@ -223,7 +223,6 @@ open class InstructionsCardViewController: UIViewController {
         if didSwipe {
             if hasVelocityToSlideToNext {
                 scrollTargetIndexPath = IndexPath(row: indexBeforeSwipe.row + 1, section: 0)
-                print("!!! BOOO")
             } else {
                 scrollTargetIndexPath = IndexPath(row: indexBeforeSwipe.row - 1, section: 0)
             }
