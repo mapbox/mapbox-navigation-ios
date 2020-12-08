@@ -406,8 +406,6 @@
 		F4052084255A178C00F3DD47 /* Route+Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4052083255A178C00F3DD47 /* Route+Example.swift */; };
 		F405208C255A17D300F3DD47 /* Locale+Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = F405208B255A17D300F3DD47 /* Locale+Example.swift */; };
 		F405209A255A180500F3DD47 /* UIImage+Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4052099255A180500F3DD47 /* UIImage+Example.swift */; };
-		F4A415F7255DEAD500373466 /* Simplify.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A415F6255DEAD500373466 /* Simplify.swift */; };
-		F4A415F8255DEAD500373466 /* Simplify.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A415F6255DEAD500373466 /* Simplify.swift */; };
 		F4BF512E24EAD7A50066A49B /* FeedbackSubtypeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BF512D24EAD7A50066A49B /* FeedbackSubtypeCollectionViewCell.swift */; };
 		F4C5A26F24EF1D16004ED0DD /* FeedbackSubtypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C5A26E24EF1D16004ED0DD /* FeedbackSubtypeViewController.swift */; };
 		F4FD7739256D886E007C525A /* DateComponentsFormatter+MGLNavigationAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FD7738256D886E007C525A /* DateComponentsFormatter+MGLNavigationAdditions.swift */; };
@@ -1061,7 +1059,6 @@
 		F4052083255A178C00F3DD47 /* Route+Example.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Route+Example.swift"; sourceTree = "<group>"; };
 		F405208B255A17D300F3DD47 /* Locale+Example.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Locale+Example.swift"; sourceTree = "<group>"; };
 		F4052099255A180500F3DD47 /* UIImage+Example.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Example.swift"; sourceTree = "<group>"; };
-		F4A415F6255DEAD500373466 /* Simplify.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Simplify.swift; path = Example/Simplify.swift; sourceTree = "<group>"; };
 		F4BF512D24EAD7A50066A49B /* FeedbackSubtypeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackSubtypeCollectionViewCell.swift; sourceTree = "<group>"; };
 		F4C5A26E24EF1D16004ED0DD /* FeedbackSubtypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackSubtypeViewController.swift; sourceTree = "<group>"; };
 		F4FD7738256D886E007C525A /* DateComponentsFormatter+MGLNavigationAdditions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateComponentsFormatter+MGLNavigationAdditions.swift"; sourceTree = "<group>"; };
@@ -1426,7 +1423,6 @@
 		35B711DB1E5E7B70001EDA8D /* Example */ = {
 			isa = PBXGroup;
 			children = (
-				F4A415F6255DEAD500373466 /* Simplify.swift */,
 				35002D721E5F6C830090E733 /* Supporting files */,
 				358D14651E5E3B7700ADE590 /* AppDelegate.swift */,
 				35379CFB21480BFB00FD402E /* AppDelegate+CarPlay.swift */,
@@ -2687,7 +2683,6 @@
 				F4052084255A178C00F3DD47 /* Route+Example.swift in Sources */,
 				3529FCF221A5C5B400AEA9AA /* ResizableView.swift in Sources */,
 				C5D9800D1EFA8BA9006DBF2E /* CustomViewController.swift in Sources */,
-				F4A415F7255DEAD500373466 /* Simplify.swift in Sources */,
 				F405206A255A171800F3DD47 /* Turf+Example.swift in Sources */,
 				F405209A255A180500F3DD47 /* UIImage+Example.swift in Sources */,
 				AED6285622CBE4CE00058A51 /* ViewController+GuidanceCards.swift in Sources */,
@@ -2804,7 +2799,6 @@
 				C53F2EE820EBC95600D9798F /* AppDelegate.swift in Sources */,
 				F4FD7747256D89CA007C525A /* Route+Example.swift in Sources */,
 				DA303CA621B7A90100F921DC /* UIViewController.swift in Sources */,
-				F4A415F8255DEAD500373466 /* Simplify.swift in Sources */,
 				3577B878214FF35800094294 /* FavoritesList.swift in Sources */,
 				DA303CA921B7A93100F921DC /* SettingsItems.swift in Sources */,
 				DA303CA721B7A91C00F921DC /* SettingsViewController.swift in Sources */,

@@ -98,11 +98,11 @@ class ViewController: UIViewController {
         // Run through our heurstic algorithm looking for a good coordinate along each route line to place it's route annotation
         guard let selectedRoute = routes.first else { return }
 
-        guard let visibleSelectedRoute = selectedRoute.shapes(within: visibleBoundingBox), let selectedRouteShape = visibleSelectedRoute.first else { return }
+        guard let visibleSelectedRoute = selectedRoute.shapes(within: visibleBoundingBox), var selectedRouteShape = visibleSelectedRoute.first else { return }
 
+        selectedRouteShape.simplified(tolerance: 0.001, highestQuality: false)
         // simplify the polyline of the selected route shape to reduce number of points considered
-        let selectedRouteLine = selectedRouteShape.coordinates.count < 100 ? selectedRouteShape : selectedRouteShape.simplified
-
+        let selectedRouteLine = selectedRouteShape.coordinates.count < 100 ? selectedRouteShape : selectedRouteShape
         // filter to only vertices that are onscreen
         let visibleRouteCoordinates = selectedRouteLine.coordinates.filter {
             let unprojectedPoint = mapView.convert($0, toPointTo: nil)
@@ -140,7 +140,7 @@ class ViewController: UIViewController {
                 coordinate = continuousLine.coordinates[0]
 
                 // We don't need a full resolution polyline in order to find our spot so simplify any complex shapes with many vertices
-                let simplifiedLine = continuousLine.coordinates.count < 100 ? continuousLine : continuousLine.simplified
+                let simplifiedLine = continuousLine.coordinates.count < 100 ? continuousLine : continuousLine.simplify(tolerance: 0.001, highestQuality: false)
 
                 // find the on-screen vertex that is the furthest from the location of the selected route's annotation
                 // this will usually yield a coordinate that is visually far enough to not overlap
