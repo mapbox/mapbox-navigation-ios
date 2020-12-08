@@ -174,6 +174,14 @@ public class StatusView: UIControl {
         }
     }
     
+    func highestPriority(status: Status) {
+        if status.duration != .infinity {
+            hideStatus(usingStatus: status)
+        } else {
+            
+        }
+    }
+    
     // hide a status using either the status id or the status itself
     func hideStatus(usingStatusId: String? = "", usingStatus: Status? = nil, delay: TimeInterval = 0) {
         guard let firstWord = usingStatusId?.components(separatedBy: " ").first else { return }
