@@ -52,7 +52,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         }
     }
     
-    public var counter = 0
+    var authorizationChangeIsFirstCalled = true
     
     /**
      A `Route` object constructed by [MapboxDirections](https://docs.mapbox.com/ios/api/directions/).
@@ -757,21 +757,19 @@ extension NavigationViewController: NavigationServiceDelegate {
                         
         // create authorization status
         let title = NSLocalizedString("ENABLE_PRECISE_LOCATION", bundle: .mapboxNavigation, value: "Enable precise location to navigate", comment: "Label indicating precise location is off and needs to be turned on to navigate")
-        let authorizationStatus = StatusView.Status(id: title, duration: 5, priority: StatusView.Priority(rawValue: 1))
+        let authorizationStatus = StatusView.Status(id: title, duration: .infinity, priority: StatusView.Priority(rawValue: 1))
         
         if #available(iOS 14.0, *), accuracyAuthorization == .reducedAccuracy {
             addNewStatus(status: authorizationStatus)
             mapView?.reducedAccuracyActivatedMode = true
-        } else if #available(iOS 14.0, *), previousAuthorizationValue == 1, counter != 0 {
-            print("!!! hide enable precise location banner")
+        } else if #available(iOS 14.0, *), previousAuthorizationValue == 1, authorizationChangeIsFirstCalled == false {
             hideStatus(usingStatus: authorizationStatus)
         } else {
             //Fallback on earlier versions
             mapView?.reducedAccuracyActivatedMode = false
             return
         }
-        // isFirstCalled = true
-        counter += 1
+        authorizationChangeIsFirstCalled = false
     }
     
     // MARK: - Building Extrusion Highlighting

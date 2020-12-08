@@ -159,7 +159,6 @@ public class StatusView: UIControl {
             hide(delay: status?.duration ?? 0, animated: status?.animated ?? true)
         } else {
             // if we hide a Status and there are Statuses left in the statuses array, show the Status with the highest priority
-            // find status with "highest" priority
             guard let highestPriorityStatus = statuses.min(by: {$0.priority.rawValue < $1.priority.rawValue}) else { return }
             // check what banner is currently visible, if it's the highestPriorityStatus already, then we don't do anything
             // ^ is this a case we'll ever run into?
@@ -168,17 +167,11 @@ public class StatusView: UIControl {
                 return
             } else {
                 // show status by updating the label for the specified duration
-                updateLabel(status: highestPriorityStatus)
                 show(status: highestPriorityStatus)
-                // guard highestPriorityStatus.duration < .infinity else { return }
-                hideStatus(usingStatus: highestPriorityStatus)
+                // hideStatus(usingStatus: highestPriorityStatus)
+                hide(delay: highestPriorityStatus.duration)
             }
         }
-    }
-    
-    // "hides" current status label by updating to a new label
-    func updateLabel(status: Status) {
-        textLabel.text = status.id
     }
     
     // hide a status using either the status id or the status itself
@@ -200,7 +193,7 @@ public class StatusView: UIControl {
         let title = String.localizedStringWithFormat(format, NumberFormatter.localizedString(from: speed as NSNumber, number: .decimal))
         
         // create simulation status
-        let simulationStatus = Status(id: title, duration: 1000, interactive: true, priority: StatusView.Priority(rawValue: 2))
+        let simulationStatus = Status(id: title, duration: .infinity, interactive: true, priority: StatusView.Priority(rawValue: 2))
         addNewStatus(status: simulationStatus)
     }
     
