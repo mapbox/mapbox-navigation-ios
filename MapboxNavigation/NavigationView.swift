@@ -75,6 +75,13 @@ open class NavigationView: UIView {
     lazy var muteButton = FloatingButton.rounded(image: Images.volumeUp, selectedImage: Images.volumeOff)
     lazy var reportButton = FloatingButton.rounded(image: Images.feedback)
     
+    lazy var floatingButtons: [Button]? = [overviewButton, muteButton, reportButton] {
+        didSet {
+            clearStackViews()
+            setupStackViews()
+        }
+    }
+    
     lazy var resumeButton: ResumeButton = .forAutoLayout()
     
     lazy var wayNameView: WayNameView = {
@@ -131,8 +138,17 @@ open class NavigationView: UIView {
         setupConstraints()
     }
     
+    func clearStackViews() {
+        let oldFloatingButtons: [UIView] = floatingStackView.subviews
+        for floatingButton in oldFloatingButtons {
+            floatingStackView.removeArrangedSubview(floatingButton)
+        }
+    }
+    
     func setupStackViews() {
-        floatingStackView.addArrangedSubviews([overviewButton, muteButton, reportButton])
+        if let newFloatingButtons = floatingButtons {
+            floatingStackView.addArrangedSubviews(newFloatingButtons)
+        }
     }
     
     func setupViews() {
