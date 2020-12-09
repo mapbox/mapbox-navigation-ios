@@ -54,7 +54,7 @@ open class RouteController: NSObject, ElectronicHorizonObserver {
 
         let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
 
-        let electronicHorizonOptions = ElectronicHorizonOptions(length: 500, expansion: 0, branchLength: 50, includeGeometries: false)
+        let electronicHorizonOptions = ElectronicHorizonOptions(length: 500, expansion: 1, branchLength: 50, includeGeometries: true)
         let navigatorConfig = NavigatorConfig()
         navigatorConfig.electronicHorizonOptions = electronicHorizonOptions
 
