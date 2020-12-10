@@ -200,6 +200,16 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     
     var bottomViewController: ContainerViewController?
     
+    public typealias FloatingButtonsPositions = NavigationView.FloatingButtonsPositions
+    
+    open var floatingButtonsPosition: FloatingButtonsPositions? {
+        get {
+            return mapViewController?.floatingButtonsPosition
+        }
+        set {
+            mapViewController?.floatingButtonsPosition = newValue
+        }
+    }
     
     open var floatingButtons: [Button]? {
         get {
@@ -298,10 +308,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         self.mapViewController = mapViewController
         mapViewController.destination = route.legs.last?.destination
         mapViewController.view.translatesAutoresizingMaskIntoConstraints = false
-        
-        if let customizedFloatingButtons = navigationOptions?.floatingButtons {
-            floatingButtons = customizedFloatingButtons
-        }
         
         embed(mapViewController, in: view) { (parent, map) -> [NSLayoutConstraint] in
             return map.view.constraintsForPinning(to: parent.view)

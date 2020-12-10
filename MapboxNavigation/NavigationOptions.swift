@@ -40,10 +40,6 @@ open class NavigationOptions: NavigationCustomizable {
      */
     open var bottomBanner: ContainerViewController?
     
-    /**
-     The array of floating buttons to embed into the top section of the UI.
-     */
-    open var floatingButtons: [Button]?
     
     // This makes the compiler happy.
     required public init() {
@@ -59,14 +55,13 @@ open class NavigationOptions: NavigationCustomizable {
      - parameter topBanner: The container view controller that presents the top banner.
      - parameter bottomBanner: The container view controller that presents the bottom banner.
      */
-    public convenience init(styles: [Style]? = nil, navigationService: NavigationService? = nil, voiceController: RouteVoiceController? = nil, topBanner: ContainerViewController? = nil, bottomBanner: ContainerViewController? = nil, floatingButtons: [Button]? = nil) {
+    public convenience init(styles: [Style]? = nil, navigationService: NavigationService? = nil, voiceController: RouteVoiceController? = nil, topBanner: ContainerViewController? = nil, bottomBanner: ContainerViewController? = nil) {
         self.init()
         self.styles = styles
         self.navigationService = navigationService
         self.voiceController = voiceController
         self.topBanner = topBanner
         self.bottomBanner = bottomBanner
-        self.floatingButtons = floatingButtons
     }
     
     /**
