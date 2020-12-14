@@ -4,7 +4,7 @@
 
 ### Packaging
 
-* `MapboxNavigationNative` version bumped to v26.3, `MapboxCommon` updated to v9.1.0 and `MapboxDirections.swift` to v1.2  ([#2694](https://github.com/mapbox/mapbox-navigation-ios/pull/2694)
+* Increased the minimum versions of `MapboxNavigationNative` to v26.3, `MapboxCommon` to v9.1.0 and `MapboxDirections` to v1.2. ([#2694](https://github.com/mapbox/mapbox-navigation-ios/pull/2694))
 
 ### User interface
 

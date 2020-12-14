@@ -7,12 +7,19 @@ import MapboxDirections
  `RouteAlert` encapsulates information about various incoming events. Common attributes like location, distance to the event, length and other is provided for each POI, while specific meta data is supplied via `alert` property.
  */
 public struct RouteAlert {
+    /// Enumeration used for encapsulating additional details to describe specific type of alert
     public enum Alert {
+        /// Incident alert with details
         case incident(Incident)
+        /// Tunnel alert with details
         case tunnel(Tunnel)
+        /// Border alert crossing with details
         case borderCrossing(BorderCrossing)
+        /// Toll collect alert with details
         case tollCollection(TollCollection)
+        /// Service area alert with details
         case serviceArea(RestStop)
+        /// Restricted area alert
         case restrictedArea
     }
     
