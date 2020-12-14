@@ -151,31 +151,30 @@ public class StatusView: UIControl {
         manageStatuses()
     }
     
-    // fix (method to deal with hiding/showing status banners and updating statuses array)
+    /**
+     Manages showing and hiding Statuses and the status view.
+     */
     func manageStatuses(status: Status? = nil) {
         print("statuses: \(statuses)")
         // if we hide a Status and there are no Statuses left in the statuses array, hide the status view entirely
         if statuses.isEmpty {
             hide(delay: status?.duration ?? 0, animated: status?.animated ?? true)
         } else {
-            // if we hide a Status and there are Statuses left in the statuses array, show the Status with the highest priority
+            // if we hide a Status and there are Statuses left in the statuses array, show the Status with highest priority
             guard let highestPriorityStatus = statuses.min(by: {$0.priority.rawValue < $1.priority.rawValue}) else { return }
-            // check what banner is currently visible, if it's the highestPriorityStatus already, then we don't do anything
-            // ^ is this a case we'll ever run into?
             print("!!! highest priority status: \(highestPriorityStatus)")
-            if highestPriorityStatus.id == self.textLabel.text {
-                return
-            } else {
-                // show status by updating the label for the specified duration
-                show(status: highestPriorityStatus)
-                DispatchQueue.main.asyncAfter(deadline: .now() + highestPriorityStatus.duration) {
-                    self.hideStatus(usingStatus: highestPriorityStatus)
-                }
+            // show status by updating the label for the specified duration
+            // ADD conditional: is highestPriorityStatus == currentStatus??
+            show(status: highestPriorityStatus)
+            DispatchQueue.main.asyncAfter(deadline: .now() + highestPriorityStatus.duration) {
+                self.hideStatus(usingStatus: highestPriorityStatus)
             }
         }
     }
-
-    // hide a status using either the status id or the status itself
+    
+    /**
+     Hides a given Status without hiding the status view.
+     */
     func hideStatus(usingStatusId: String? = "", usingStatus: Status? = nil) {
         guard let firstWord = usingStatusId?.components(separatedBy: " ").first else { return }
         guard let row = statuses.firstIndex(where: {$0.id == usingStatus?.id || $0.id.contains(firstWord)}) else { return }
@@ -186,8 +185,6 @@ public class StatusView: UIControl {
     func showSimulationStatus(speed: Int) {
         let format = NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation at %@×", comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled.")
         let title = String.localizedStringWithFormat(format, NumberFormatter.localizedString(from: speed as NSNumber, number: .decimal))
-        
-        // create simulation status
         let simulationStatus = Status(id: title, duration: .infinity, interactive: true, priority: StatusView.Priority(rawValue: 2))
         addNewStatus(status: simulationStatus)
     }

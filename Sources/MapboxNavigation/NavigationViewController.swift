@@ -474,9 +474,9 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         }
     }
     
-    public func hideStatus(usingStatusId: String? = "", usingStatus: StatusView.Status? = nil, delay: TimeInterval = 0) {
+    public func hideStatus(usingStatusId: String? = "", usingStatus: StatusView.Status? = nil) {
         navigationComponents.compactMap({ $0 as? NavigationStatusPresenter }).forEach {
-            $0.hideStatus(usingStatusId: usingStatusId, usingStatus: usingStatus, delay: 0)
+            $0.hideStatus(usingStatusId: usingStatusId, usingStatus: usingStatus)
         }
     }
     

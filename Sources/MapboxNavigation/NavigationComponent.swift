@@ -37,10 +37,9 @@ public protocol CarPlayConnectionObserver: class {
  */
 public protocol NavigationStatusPresenter: class {
     /**
-     Shows the status view for a specified amount of time.
+     Shows a Status for a specified amount of time.
      */
-    
     func addNewStatus(status: StatusView.Status)
     
-    func hideStatus(usingStatusId: String?, usingStatus: StatusView.Status?, delay: TimeInterval)
+    func hideStatus(usingStatusId: String?, usingStatus: StatusView.Status?)
 }
