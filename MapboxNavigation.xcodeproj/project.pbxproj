@@ -302,7 +302,7 @@
 		B430D2FA25534FDC0088CC23 /* UserHaloCourseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B430D2F925534FDC0088CC23 /* UserHaloCourseView.swift */; };
 		B48CEFC125796FD300696BB3 /* route-for-vanishing-route-line.json in Resources */ = {isa = PBXBuildFile; fileRef = B48CEFAB25796F5A00696BB3 /* route-for-vanishing-route-line.json */; };
 		B4F7631C2578751300177B33 /* VanishingRouteLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F7631B2578751300177B33 /* VanishingRouteLine.swift */; };
-		C3A17C60258283730078C98B /* StatusViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A17C5F258283730078C98B /* StatusViewTests.swift */; };
+		C3D225512587F411007DBCDF /* StatusViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D225502587F411007DBCDF /* StatusViewTests.swift */; };
 		C51511D120EAC89D00372A91 /* CPMapTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51511D020EAC89D00372A91 /* CPMapTemplate.swift */; };
 		C51DF8661F38C31C006C6A15 /* Locale.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51DF8651F38C31C006C6A15 /* Locale.swift */; };
 		C51FC31720F689F800400CE7 /* CustomStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51FC31620F689F800400CE7 /* CustomStyles.swift */; };
@@ -886,12 +886,16 @@
 		AED6285522CBE4CE00058A51 /* ViewController+GuidanceCards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ViewController+GuidanceCards.swift"; path = "Example/ViewController+GuidanceCards.swift"; sourceTree = "<group>"; };
 		AEF2C8F12072B603007B061F /* routeWithTunnels_9thStreetDC.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = routeWithTunnels_9thStreetDC.json; sourceTree = "<group>"; };
 <<<<<<< HEAD
+<<<<<<< HEAD
 		B430D2F925534FDC0088CC23 /* UserHaloCourseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHaloCourseView.swift; sourceTree = "<group>"; };
 		B48CEFAB25796F5A00696BB3 /* route-for-vanishing-route-line.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-for-vanishing-route-line.json"; sourceTree = "<group>"; };
 		B4F7631B2578751300177B33 /* VanishingRouteLine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VanishingRouteLine.swift; sourceTree = "<group>"; };
 =======
 		C3A17C5F258283730078C98B /* StatusViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusViewTests.swift; sourceTree = "<group>"; };
 >>>>>>> 2ebefc72... reflect added test file
+=======
+		C3D225502587F411007DBCDF /* StatusViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusViewTests.swift; sourceTree = "<group>"; };
+>>>>>>> 12d09fe6... test cases pass as expected
 		C51511D020EAC89D00372A91 /* CPMapTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPMapTemplate.swift; sourceTree = "<group>"; };
 		C51DF8651F38C31C006C6A15 /* Locale.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Locale.swift; sourceTree = "<group>"; };
 		C51FC31620F689F800400CE7 /* CustomStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CustomStyles.swift; path = Example/CustomStyles.swift; sourceTree = "<group>"; };
@@ -1374,6 +1378,7 @@
 		35B711D01E5E7AD2001EDA8D /* MapboxNavigationTests */ = {
 			isa = PBXGroup;
 			children = (
+				C3D225502587F411007DBCDF /* StatusViewTests.swift */,
 				16E11B53212B3D4700027CD3 /* Extensions and Categories */,
 				355DB5731EFA73410091BFB7 /* Fixtures */,
 				3527D2B61EC45FBD00C07FC9 /* Fixtures.xcassets */,
@@ -1410,7 +1415,6 @@
 				35BC7177226F6667003BB5F1 /* CompassViewTests.swift */,
 				35E5B962227B4B620033A124 /* CarPlayCompassViewTests.swift */,
 				355B469A22B902C9009CE634 /* SKUTests.swift */,
-				C3A17C5F258283730078C98B /* StatusViewTests.swift */,
 			);
 			name = MapboxNavigationTests;
 			path = Tests/MapboxNavigationTests;
@@ -2683,7 +2687,7 @@
 				8D9CD7FF20880581004DC4B3 /* XCTestCase.swift in Sources */,
 				35DC585D1FABC61100B5A956 /* InstructionsBannerViewIntegrationTests.swift in Sources */,
 				3502231A205BC94E00E1449A /* Constants.swift in Sources */,
-				C3A17C60258283730078C98B /* StatusViewTests.swift in Sources */,
+				C3D225512587F411007DBCDF /* StatusViewTests.swift in Sources */,
 				DA0557252155040700A1F2AA /* RouteTests.swift in Sources */,
 				C55C299920D2E2F600B0406C /* NavigationMapViewTests.swift in Sources */,
 				4341758423061666004264A9 /* SnapshotTest+Mapbox.swift in Sources */,
