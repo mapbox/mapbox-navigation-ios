@@ -275,8 +275,9 @@ class ViewController: UIViewController {
         // Show second level of detail for feedback items.
         navigationViewController.detailedFeedbackEnabled = true
         
-        // Override traffic congestion level from `.unknown` to `.low` for `RoadClasses` passed in `trafficOverrideRoadClasses`.
-        navigationViewController.mapView?.trafficOverrideRoadClasses = [.motorway]
+        // Override traffic congestion level from `.unknown` to `.low`
+        // for `MapboxStreetsRoadClass` passed in `trafficOverrideStreetsRoadClasses`.
+        navigationViewController.mapView?.trafficOverrideStreetsRoadClasses = [.motorway]
         
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
@@ -414,8 +415,9 @@ class ViewController: UIViewController {
         // Use map style which allows to show road traffic.
         mapView.styleURL = MGLStyle.navigationDayStyleURL
         
-        // Override traffic congestion level from `.unknown` to `.low` for `RoadClasses` passed in `trafficOverrideRoadClasses`.
-        mapView.trafficOverrideRoadClasses = [.motorway]
+        // Override traffic congestion level from `.unknown` to `.low`
+        // for `MapboxStreetsRoadClass` passed in `trafficOverrideStreetsRoadClasses`.
+        mapView.trafficOverrideStreetsRoadClasses = [.motorway]
     }
     
     func uninstall(_ mapView: NavigationMapView) {

@@ -111,7 +111,7 @@
                             "is_urban": false,
                             "admin_index": 0,
                             "mapbox_streets_v8": {
-                                "class": "tunnel"
+                                "class": "street"
                             }
                         },
                         {
