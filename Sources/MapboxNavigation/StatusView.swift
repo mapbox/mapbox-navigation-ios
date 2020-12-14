@@ -168,9 +168,8 @@ public class StatusView: UIControl {
             } else {
                 // show status by updating the label for the specified duration
                 show(status: highestPriorityStatus)
-                // hideStatus(usingStatus: highestPriorityStatus)
-                hide(delay: highestPriorityStatus.duration)
-            }
+                
+                hideStatus(usingStatus: highestPriorityStatus)            }
         }
     }
     
