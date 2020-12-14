@@ -40,7 +40,6 @@ open class NavigationOptions: NavigationCustomizable {
      */
     open var bottomBanner: ContainerViewController?
     
-    
     // This makes the compiler happy.
     required public init() {
         // do nothing

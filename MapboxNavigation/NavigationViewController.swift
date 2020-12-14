@@ -211,7 +211,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         }
     }
     
-    open var floatingButtons: [Button]? {
+    open var floatingButtons: [String:Button]? {
         get {
             return mapViewController?.floatingButtons
         }
