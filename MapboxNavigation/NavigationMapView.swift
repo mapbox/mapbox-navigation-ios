@@ -1055,7 +1055,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         let segmentIndices = leg.steps.compactMap({ $0.segmentIndicesByIntersection?.compactMap({ $0 }) }).reduce([], +)
         
         // Pick `MapboxStreetsRoadClass` in specific `Intersection` of `RouteStep`.
-        // It is expected that number of `segmentIndices` will be equal to number of `roadClassesInLeg`.
+        // It is expected that number of `segmentIndices` will be equal to number of `streetsRoadClassesInLeg`.
         // Array of `MapboxStreetsRoadClass` can look like this: [Optional(motorway), ... , Optional(motorway), nil]
         let streetsRoadClassesInLeg = leg.steps.compactMap({ $0.intersections?.map({ $0.outletMapboxStreetsRoadClass }) }).reduce([], +)
         
