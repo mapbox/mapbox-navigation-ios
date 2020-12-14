@@ -1144,11 +1144,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                let trafficOverrideStreetsRoadClasses = trafficOverrideStreetsRoadClasses,
                streetsRoadClasses.indices.contains(index),
                let streetsRoadClass = streetsRoadClasses[index],
-               congestionLevel == .unknown {
-                
-                if trafficOverrideStreetsRoadClasses.contains(streetsRoadClass) {
-                    overriddenCongestionLevel = .low
-                }
+               congestionLevel == .unknown,
+               trafficOverrideStreetsRoadClasses.contains(streetsRoadClass) {
+                overriddenCongestionLevel = .low
             }
             
             if segments.last?.1 == overriddenCongestionLevel {
