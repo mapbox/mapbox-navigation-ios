@@ -26,7 +26,7 @@ class RouteMapViewController: UIViewController {
         }
     }
     
-    var floatingButtons: [String:Button]? {
+    var floatingButtons: [UIButton]? {
         get {
             return navigationView.floatingButtons
         }

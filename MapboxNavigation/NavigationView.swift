@@ -96,9 +96,9 @@ open class NavigationView: UIView {
         }
     }
     
-    var floatingButtons : [String:Button]? {
+    var floatingButtons : [UIButton]? {
         didSet {
-            clearStackViews(oldValue)
+            clearStackViews()
             setupStackViews()
         }
     }
@@ -155,12 +155,12 @@ open class NavigationView: UIView {
     }
     
     func commonInit() {
-        floatingButtons = ["overviewButton": overviewButton, "muteButton": muteButton, "reportButton": reportButton]
+        floatingButtons = [overviewButton, muteButton, reportButton]
         setupViews()
         setupConstraints()
     }
     
-    func clearStackViews( _ floatingButtons: [String: Button]?) {
+    func clearStackViews() {
         let oldFloatingButtons: [UIView] = floatingStackView.subviews
         for floatingButton in oldFloatingButtons {
             floatingStackView.removeArrangedSubview(floatingButton)
@@ -170,8 +170,7 @@ open class NavigationView: UIView {
     
     func setupStackViews() {
         if let buttons = floatingButtons {
-            let newFloatingButtons = Array(buttons.values)
-            floatingStackView.addArrangedSubviews(newFloatingButtons)
+            floatingStackView.addArrangedSubviews(buttons)
         }
     }
     
