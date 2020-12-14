@@ -408,8 +408,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         // create low volume notification status and append to array of statuses
         let lowVolumeStatus = StatusView.Status(id: title, duration: 3, animated: true, priority: StatusView.Priority(rawValue: 3))
         addNewStatus(status: lowVolumeStatus)
-        
-        // showStatus(title: title, spinner: false, duration: 3, animated: true, interactive: false)
     }
     
     
@@ -468,13 +466,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         
         let notificationRequest = UNNotificationRequest(identifier: identifier, content: content, trigger: nil)
         UNUserNotificationCenter.current().add(notificationRequest, withCompletionHandler: nil)
-    }
-    
-    // TODO: DELETE THIS METHOD
-    public func showStatus(title: String, spinner: Bool, duration: TimeInterval, animated: Bool, interactive: Bool) {
-        navigationComponents.compactMap({ $0 as? NavigationStatusPresenter }).forEach {
-            $0.showStatus(title: title, spinner: spinner, duration: duration, animated: animated, interactive: interactive)
-        }
     }
     
     public func addNewStatus(status: StatusView.Status) {

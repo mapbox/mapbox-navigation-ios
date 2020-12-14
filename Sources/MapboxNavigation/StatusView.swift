@@ -174,27 +174,13 @@ public class StatusView: UIControl {
             }
         }
     }
-    
-    func highestPriority(status: Status) {
-        if status.duration != .infinity {
-            hideStatus(usingStatus: status)
-        } else {
-            
-        }
-    }
-    
+
     // hide a status using either the status id or the status itself
-    func hideStatus(usingStatusId: String? = "", usingStatus: Status? = nil, delay: TimeInterval = 0) {
+    func hideStatus(usingStatusId: String? = "", usingStatus: Status? = nil) {
         guard let firstWord = usingStatusId?.components(separatedBy: " ").first else { return }
         guard let row = statuses.firstIndex(where: {$0.id == usingStatus?.id || $0.id.contains(firstWord)}) else { return }
         let removedStatus = statuses.remove(at: row)
         manageStatuses(status: removedStatus)
-    }
-    
-    public func showStatus(title: String, spinner spin: Bool = false, duration: TimeInterval, animated: Bool = true, interactive: Bool = false) {
-        // show(title, showSpinner: spin, interactive: interactive)
-        guard duration < .infinity else { return }
-        hide(delay: duration, animated: animated)
     }
     
     func showSimulationStatus(speed: Int) {
