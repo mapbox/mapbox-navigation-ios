@@ -145,6 +145,13 @@ open class RouteProgress: Codable {
     }
     
     /**
+     Upcoming `RouteAlerts` as reported by the navigation engine.
+     
+     The contents of the array depend on user's current progress along the route and are modified on each location update. This array contains only the alerts that the user has not passed. Some events may have non-zero length and are also included while the user is traversing it. You can use this property to get information about incoming points of interest.
+     */
+    public internal(set) var upcomingRouteAlerts: [RouteAlert] = []
+    
+    /**
      Returns an array of `CLLocationCoordinate2D` of the coordinates along the current step and any adjacent steps.
      
      - important: The adjacent steps may be part of legs other than the current leg.
