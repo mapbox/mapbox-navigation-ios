@@ -755,7 +755,7 @@ extension NavigationViewController: NavigationServiceDelegate {
                         
         // create authorization status
         let title = NSLocalizedString("ENABLE_PRECISE_LOCATION", bundle: .mapboxNavigation, value: "Enable precise location to navigate", comment: "Label indicating precise location is off and needs to be turned on to navigate")
-        let authorizationStatus = StatusView.Status(id: title, duration: 10, priority: StatusView.Priority(rawValue: 1))
+        let authorizationStatus = StatusView.Status(id: title, duration: .infinity, priority: StatusView.Priority(rawValue: 1))
         
         if #available(iOS 14.0, *), accuracyAuthorization == .reducedAccuracy {
             addNewStatus(status: authorizationStatus)

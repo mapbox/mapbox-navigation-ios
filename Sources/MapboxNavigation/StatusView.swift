@@ -168,8 +168,10 @@ public class StatusView: UIControl {
             } else {
                 // show status by updating the label for the specified duration
                 show(status: highestPriorityStatus)
-                
-                hideStatus(usingStatus: highestPriorityStatus)            }
+                DispatchQueue.main.asyncAfter(deadline: .now() + highestPriorityStatus.duration) {
+                    self.hideStatus(usingStatus: highestPriorityStatus)
+                }
+            }
         }
     }
     
