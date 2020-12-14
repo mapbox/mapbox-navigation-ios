@@ -263,17 +263,12 @@
 		6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */; };
 		64847A041F04629D003F3A69 /* Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64847A031F04629D003F3A69 /* Feedback.swift */; };
 		7C12F2D8225B7C320010A931 /* DCA-Arboretum-dummy-faster-route.json in Resources */ = {isa = PBXBuildFile; fileRef = 7C12F2D7225B7C310010A931 /* DCA-Arboretum-dummy-faster-route.json */; };
-		8A1BA8C4255B82FB004B499B /* route-with-missing-road-classes.json in Resources */ = {isa = PBXBuildFile; fileRef = 8AE53F28255B811700D1B668 /* route-with-missing-road-classes.json */; };
-		8A485FDD255F2ADE00DCAC7F /* route-with-road-classes-single-congestion.json in Resources */ = {isa = PBXBuildFile; fileRef = 8A485FDB255F2ADE00DCAC7F /* route-with-road-classes-single-congestion.json */; };
-		8A485FDE255F2ADE00DCAC7F /* route-with-mixed-road-classes.json in Resources */ = {isa = PBXBuildFile; fileRef = 8A485FDC255F2ADE00DCAC7F /* route-with-mixed-road-classes.json */; };
-		8A485FEB255F2D5A00DCAC7F /* route-with-mixed-road-classes.json in Resources */ = {isa = PBXBuildFile; fileRef = 8A485FDC255F2ADE00DCAC7F /* route-with-mixed-road-classes.json */; };
-		8A485FF2255F2D5E00DCAC7F /* route-with-road-classes-single-congestion.json in Resources */ = {isa = PBXBuildFile; fileRef = 8A485FDB255F2ADE00DCAC7F /* route-with-road-classes-single-congestion.json */; };
-		8A485FFA255F333C00DCAC7F /* route-with-not-present-road-classes.json in Resources */ = {isa = PBXBuildFile; fileRef = 8A485FF9255F333C00DCAC7F /* route-with-not-present-road-classes.json */; };
-		8A486007255F339100DCAC7F /* route-with-not-present-road-classes.json in Resources */ = {isa = PBXBuildFile; fileRef = 8A485FF9255F333C00DCAC7F /* route-with-not-present-road-classes.json */; };
-		8A48600F255F396D00DCAC7F /* route-with-same-congestion-different-road-classes.json in Resources */ = {isa = PBXBuildFile; fileRef = 8A48600E255F396D00DCAC7F /* route-with-same-congestion-different-road-classes.json */; };
-		8A48601C255F3B5D00DCAC7F /* route-with-same-congestion-different-road-classes.json in Resources */ = {isa = PBXBuildFile; fileRef = 8A48600E255F396D00DCAC7F /* route-with-same-congestion-different-road-classes.json */; };
 		8AA849E924E722410008EE59 /* WaypointStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA849E824E722410008EE59 /* WaypointStyle.swift */; };
-		8AE53F29255B811800D1B668 /* route-with-missing-road-classes.json in Resources */ = {isa = PBXBuildFile; fileRef = 8AE53F28255B811700D1B668 /* route-with-missing-road-classes.json */; };
+		8AC6191025881F8D00430AA8 /* route-with-mixed-road-classes.json in Resources */ = {isa = PBXBuildFile; fileRef = 8AC6190B25881F8D00430AA8 /* route-with-mixed-road-classes.json */; };
+		8AC6191125881F8D00430AA8 /* route-with-missing-road-classes.json in Resources */ = {isa = PBXBuildFile; fileRef = 8AC6190C25881F8D00430AA8 /* route-with-missing-road-classes.json */; };
+		8AC6191225881F8D00430AA8 /* route-with-not-present-road-classes.json in Resources */ = {isa = PBXBuildFile; fileRef = 8AC6190D25881F8D00430AA8 /* route-with-not-present-road-classes.json */; };
+		8AC6191325881F8D00430AA8 /* route-with-road-classes-single-congestion.json in Resources */ = {isa = PBXBuildFile; fileRef = 8AC6190E25881F8D00430AA8 /* route-with-road-classes-single-congestion.json */; };
+		8AC6191425881F8D00430AA8 /* route-with-same-congestion-different-road-classes.json in Resources */ = {isa = PBXBuildFile; fileRef = 8AC6190F25881F8D00430AA8 /* route-with-same-congestion-different-road-classes.json */; };
 		8D07C5A820B612310093D779 /* EmptyStyle.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D07C5A720B612310093D779 /* EmptyStyle.json */; };
 		8D1A5CD2212DDFCD0059BA4A /* DispatchTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D1A5CD1212DDFCD0059BA4A /* DispatchTimer.swift */; };
 		8D24A2F62040960C0098CBF8 /* UIEdgeInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D24A2F52040960C0098CBF8 /* UIEdgeInsets.swift */; };
@@ -890,12 +885,12 @@
 		6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WaypointConfirmationViewController.swift; path = Example/WaypointConfirmationViewController.swift; sourceTree = "<group>"; };
 		64847A031F04629D003F3A69 /* Feedback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Feedback.swift; sourceTree = "<group>"; };
 		7C12F2D7225B7C310010A931 /* DCA-Arboretum-dummy-faster-route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "DCA-Arboretum-dummy-faster-route.json"; sourceTree = "<group>"; };
-		8A485FDB255F2ADE00DCAC7F /* route-with-road-classes-single-congestion.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-with-road-classes-single-congestion.json"; sourceTree = "<group>"; };
-		8A485FDC255F2ADE00DCAC7F /* route-with-mixed-road-classes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-with-mixed-road-classes.json"; sourceTree = "<group>"; };
-		8A485FF9255F333C00DCAC7F /* route-with-not-present-road-classes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-with-not-present-road-classes.json"; sourceTree = "<group>"; };
-		8A48600E255F396D00DCAC7F /* route-with-same-congestion-different-road-classes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-with-same-congestion-different-road-classes.json"; sourceTree = "<group>"; };
 		8AA849E824E722410008EE59 /* WaypointStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaypointStyle.swift; sourceTree = "<group>"; };
-		8AE53F28255B811700D1B668 /* route-with-missing-road-classes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-with-missing-road-classes.json"; sourceTree = "<group>"; };
+		8AC6190B25881F8D00430AA8 /* route-with-mixed-road-classes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-with-mixed-road-classes.json"; sourceTree = "<group>"; };
+		8AC6190C25881F8D00430AA8 /* route-with-missing-road-classes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-with-missing-road-classes.json"; sourceTree = "<group>"; };
+		8AC6190D25881F8D00430AA8 /* route-with-not-present-road-classes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-with-not-present-road-classes.json"; sourceTree = "<group>"; };
+		8AC6190E25881F8D00430AA8 /* route-with-road-classes-single-congestion.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-with-road-classes-single-congestion.json"; sourceTree = "<group>"; };
+		8AC6190F25881F8D00430AA8 /* route-with-same-congestion-different-road-classes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-with-same-congestion-different-road-classes.json"; sourceTree = "<group>"; };
 		8B808F852487CFEC00EEE453 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Main.strings; sourceTree = "<group>"; };
 		8B808F862487CFEC00EEE453 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Navigation.strings; sourceTree = "<group>"; };
 		8B808F892487CFEC00EEE453 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1254,6 +1249,11 @@
 		165F91502204D50B0036CB9E /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
+				8AC6190C25881F8D00430AA8 /* route-with-missing-road-classes.json */,
+				8AC6190B25881F8D00430AA8 /* route-with-mixed-road-classes.json */,
+				8AC6190D25881F8D00430AA8 /* route-with-not-present-road-classes.json */,
+				8AC6190E25881F8D00430AA8 /* route-with-road-classes-single-congestion.json */,
+				8AC6190F25881F8D00430AA8 /* route-with-same-congestion-different-road-classes.json */,
 				439FFC222304BC23004C20AA /* route-with-tertiary.json */,
 				35CDA8862190F50C0072B675 /* DCA-Arboretum.json */,
 				35C8DC0E2191DE940053328C /* DCA-Arboretum.trace.json */,
@@ -1446,11 +1446,6 @@
 			isa = PBXGroup;
 			children = (
 				B48CEFAB25796F5A00696BB3 /* route-for-vanishing-route-line.json */,
-				8A48600E255F396D00DCAC7F /* route-with-same-congestion-different-road-classes.json */,
-				8A485FF9255F333C00DCAC7F /* route-with-not-present-road-classes.json */,
-				8A485FDC255F2ADE00DCAC7F /* route-with-mixed-road-classes.json */,
-				8A485FDB255F2ADE00DCAC7F /* route-with-road-classes-single-congestion.json */,
-				8AE53F28255B811700D1B668 /* route-with-missing-road-classes.json */,
 				35EB9A6920A1A89500CB1225 /* turn_left.data */,
 				8D07C5A720B612310093D779 /* EmptyStyle.json */,
 				355DB5741EFA78070091BFB7 /* GGPark-to-BernalHeights.route */,
@@ -2243,23 +2238,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				DA1755F92357B7A100B06C1D /* md5_crazy_strings.txt in Resources */,
-				8A485FDD255F2ADE00DCAC7F /* route-with-road-classes-single-congestion.json in Resources */,
 				351030111F54B72000E3B7E7 /* route-for-lane-testing.json in Resources */,
 				3527D2B91EC4619400C07FC9 /* Fixtures.xcassets in Resources */,
 				355DB5771EFA780E0091BFB7 /* UnionSquare-to-GGPark.route in Resources */,
 				3597ABD421553F6800C12785 /* sthlm-double-back.json in Resources */,
 				355DB5751EFA78070091BFB7 /* GGPark-to-BernalHeights.route in Resources */,
-				8AE53F29255B811800D1B668 /* route-with-missing-road-classes.json in Resources */,
 				35EB9A6A20A1AB7C00CB1225 /* turn_left.data in Resources */,
 				3540514D1F73F3BB00ED572D /* route-with-straight-roundabout.json in Resources */,
 				8D07C5A820B612310093D779 /* EmptyStyle.json in Resources */,
-				8A48600F255F396D00DCAC7F /* route-with-same-congestion-different-road-classes.json in Resources */,
 				35C11359215BADF900CC2929 /* sthlm-double-back-replay.json in Resources */,
 				8D86AE8921C31C640064A304 /* waypoint-after-turn.json in Resources */,
 				AE5F8771209A082500F58FDB /* route-with-banner-instructions.json in Resources */,
-				8A485FFA255F333C00DCAC7F /* route-with-not-present-road-classes.json in Resources */,
 				DAA96D18215A961D00BEF703 /* route-doubling-back.json in Resources */,
-				8A485FDE255F2ADE00DCAC7F /* route-with-mixed-road-classes.json in Resources */,
 				35DC9D8F1F4321CC001ECD64 /* route-with-lanes.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2284,17 +2274,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8A1BA8C4255B82FB004B499B /* route-with-missing-road-classes.json in Resources */,
 				3557506D21A827E800AEF9B6 /* li.tar in Resources */,
+				8AC6191425881F8D00430AA8 /* route-with-same-congestion-different-road-classes.json in Resources */,
 				35CDA88D2190F5210072B675 /* DCA-Arboretum.json in Resources */,
 				35CDA8912190F6980072B675 /* route-for-lane-testing.json in Resources */,
 				B48CEFC125796FD300696BB3 /* route-for-vanishing-route-line.json in Resources */,
 				3557506F21A8293E00AEF9B6 /* tiles in Resources */,
 				35CDA8902190F6980072B675 /* route-doubling-back.json in Resources */,
 				35CDA8952190F6980072B675 /* route-with-straight-roundabout.json in Resources */,
-				8A48601C255F3B5D00DCAC7F /* route-with-same-congestion-different-road-classes.json in Resources */,
 				35F9BC2F2296FCD300364A10 /* 9-legged-route.json in Resources */,
-				8A486007255F339100DCAC7F /* route-with-not-present-road-classes.json in Resources */,
+				8AC6191225881F8D00430AA8 /* route-with-not-present-road-classes.json in Resources */,
 				35CDA8982190F6980072B675 /* turn_left.data in Resources */,
 				35CDA8962190F6980072B675 /* sthlm-double-back-replay.json in Resources */,
 				35CDA8922190F6980072B675 /* route-with-banner-instructions.json in Resources */,
@@ -2302,16 +2291,17 @@
 				355832AD2192F7E300141922 /* PipeFittersUnion-FourSeasonsBoston.trace.json in Resources */,
 				35CDA8942190F6980072B675 /* route-with-lanes.json in Resources */,
 				8D86AE8C21C31F210064A304 /* waypoint-after-turn.json in Resources */,
+				8AC6191125881F8D00430AA8 /* route-with-missing-road-classes.json in Resources */,
 				35CDA8972190F6980072B675 /* sthlm-double-back.json in Resources */,
 				35CDA88F2190F6980072B675 /* EmptyStyle.json in Resources */,
 				35CDA8992190F6980072B675 /* UnionSquare-to-GGPark.route in Resources */,
 				357DEC44221AEE150019BAEC /* multileg-route.json in Resources */,
 				35C8DBF6219194380053328C /* routeWithTunnels_9thStreetDC.json in Resources */,
-				8A485FF2255F2D5E00DCAC7F /* route-with-road-classes-single-congestion.json in Resources */,
-				8A485FEB255F2D5A00DCAC7F /* route-with-mixed-road-classes.json in Resources */,
+				8AC6191025881F8D00430AA8 /* route-with-mixed-road-classes.json in Resources */,
 				35C8DBF52191940C0053328C /* straight-line.json in Resources */,
 				7C12F2D8225B7C320010A931 /* DCA-Arboretum-dummy-faster-route.json in Resources */,
 				4341758223060A17004264A9 /* route-with-tertiary.json in Resources */,
+				8AC6191325881F8D00430AA8 /* route-with-road-classes-single-congestion.json in Resources */,
 				35C8DC0F2191DE940053328C /* DCA-Arboretum.trace.json in Resources */,
 				35CDA8932190F6980072B675 /* route-with-instructions.json in Resources */,
 				35C8DBF8219198320053328C /* route.json in Resources */,
