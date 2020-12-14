@@ -49,10 +49,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      A collection of street road classes for which a congestion level substitution should occur.
      
-     For any road class included in the `trafficOverrideStreetsRoadClasses`, all route segments with an `CongestionLevel.unknown` traffic congestion level and a matching `MapboxDirections.MapboxStreetsRoadClass`
+     For any street road class included in the `trafficOverrideStreetsRoadClasses`, all route segments with an `CongestionLevel.unknown` traffic congestion level and a matching `MapboxDirections.MapboxStreetsRoadClass`
      will be replaced with the `CongestionLevel.low` congestion level.
      */
-    public var trafficOverrideStreetsRoadClasses: [MapboxStreetsRoadClass]? = nil
+    public var trafficOverrideStreetsRoadClasses: Set<MapboxStreetsRoadClass>? = nil
     
     /**
      The object that acts as the navigation delegate of the map view.
@@ -1131,7 +1131,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     func combine(_ coordinates: [CLLocationCoordinate2D],
                  with congestions: [CongestionLevel],
                  streetsRoadClasses: [MapboxStreetsRoadClass?]? = nil,
-                 trafficOverrideStreetsRoadClasses: [MapboxStreetsRoadClass]? = nil) -> [CongestionSegment] {
+                 trafficOverrideStreetsRoadClasses: Set<MapboxStreetsRoadClass>? = nil) -> [CongestionSegment] {
         var segments: [CongestionSegment] = []
         segments.reserveCapacity(congestions.count)
         

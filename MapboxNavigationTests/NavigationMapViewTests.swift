@@ -373,6 +373,13 @@ class NavigationMapViewTests: XCTestCase, MGLMapViewDelegate {
             XCTAssertEqual(congestionLevel($0.element), expectedCongestionLevels[$0.offset])
         }
     }
+    
+    func testTrafficOverrideStreetsRoadClassesRemovesDuplicates() {
+        let navigationMapView = NavigationMapView(frame: CGRect(origin: .zero, size: .iPhone6Plus), styleURL: Fixture.blankStyle)
+        navigationMapView.trafficOverrideStreetsRoadClasses = [.aerialway, .construction, .construction, .golf]
+        
+        XCTAssertEqual(navigationMapView.trafficOverrideStreetsRoadClasses?.count, 3)
+    }
 }
 
 class PersistentAnnotation: MGLPointAnnotation { }
