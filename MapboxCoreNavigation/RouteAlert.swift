@@ -57,7 +57,10 @@ public struct RouteAlert {
             guard let incidentInfo = upcomingAlert.alert.incidentInfo else {
                 preconditionFailure("Alert of type \(upcomingAlert.alert.type) did not contain an info data.")
             }
-            self.alert = .incident(Incident(incidentInfo))
+            guard let incident = Incident(incidentInfo) else {
+                preconditionFailure("Alert of type \(upcomingAlert.alert.type) had unrecognized Incident type: \(incidentInfo.type).")
+            }
+            self.alert = .incident(incident)
         case .kTunnelEntrance:
             guard let tunnelInfo = upcomingAlert.alert.tunnelInfo else {
                 preconditionFailure("Alert of type \(upcomingAlert.alert.type) did not contain an info data.")
