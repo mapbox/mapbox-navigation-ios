@@ -128,10 +128,11 @@ open class InstructionsCardViewController: UIViewController {
     @objc func orientationDidChange(_ notification: Notification) {
         instructionsCardLayout.invalidateLayout()
 
-        guard let visibleCell = instructionsCardLayout.collectionView?.visibleCells.first else { return }
-        guard let indexPath = instructionsCardLayout.collectionView?.indexPath(for: visibleCell) else { return }
-        guard let cell = instructionCollectionView.cellForItem(at: indexPath) else { return }
-        cellTransform(for: cell)
+        if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
+            instructionsCardLayout.collectionView?.visibleCells.forEach { cell in guard let cell = cell as? UICollectionViewCell else { return }
+                cellTransform(for: cell)
+            }
+        }
     }
     
     open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -206,12 +207,6 @@ open class InstructionsCardViewController: UIViewController {
               cell.subviews.count > 1 else {
             return nil
         }
-        
-//        if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
-//            DispatchQueue.main.asyncAfter(deadline: .now()) {
-//                cell.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
-//            }
-//        }
         
         return cell.subviews[1] as? InstructionsCardContainerView
     }
