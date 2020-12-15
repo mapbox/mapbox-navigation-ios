@@ -208,6 +208,7 @@ jobs:
             - run:
                 name: Upload code coverage to s3
                 command: |
+                    cd scripts && npm install aws-sdk
                     scripts/publish_codecoverage.js --component mapbox-navigation-ios
 
   xcode-11-examples:
