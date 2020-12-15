@@ -202,6 +202,13 @@ jobs:
           condition: << parameters.codecoverage >>
           steps:
             - run: bash <(curl -s https://codecov.io/bash)
+      - when:
+          condition: << parameters.codecoverage >>
+          steps:
+            - run:
+                name: Upload code coverage to s3
+                command: |
+                    scripts/publish/publish_codecoverage.js --component mapbox-navigation-ios
 
   xcode-11-examples:
     parameters:
