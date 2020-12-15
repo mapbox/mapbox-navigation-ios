@@ -209,7 +209,7 @@ jobs:
                 name: Upload code coverage to s3
                 command: |
                     cd scripts && npm install aws-sdk
-                    ./publish_codecoverage.js --component mapbox-navigation-ios
+                    ./publish_codecoverage.js --component mapbox-navigation-ios --token ${CODECOV_TOKEN}
 
   xcode-11-examples:
     parameters:
