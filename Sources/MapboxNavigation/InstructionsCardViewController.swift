@@ -127,11 +127,16 @@ open class InstructionsCardViewController: UIViewController {
     
     @objc func orientationDidChange(_ notification: Notification) {
         instructionsCardLayout.invalidateLayout()
-        
-//        guard let cell = instructionCollectionView.cellForItem(at: indexPath)
-//        if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
-//            cell.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
-//        }
+
+        guard let visibleCell = instructionsCardLayout.collectionView?.visibleCells.first else { return }
+        guard let indexPath = instructionsCardLayout.collectionView?.indexPath(for: visibleCell) else { return }
+        guard let cell = instructionCollectionView.cellForItem(at: indexPath) else { return }
+        cellTransform(for: cell)
+    }
+    
+    open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        instructionsCardLayout.invalidateLayout()
     }
     
     func addSubviews() {
@@ -202,10 +207,11 @@ open class InstructionsCardViewController: UIViewController {
             return nil
         }
         
-        if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
-            DispatchQueue.main.asyncAfter(deadline: .now())
-            cell.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
-        }
+//        if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
+//            DispatchQueue.main.asyncAfter(deadline: .now()) {
+//                cell.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
+//            }
+//        }
         
         return cell.subviews[1] as? InstructionsCardContainerView
     }
@@ -294,6 +300,12 @@ extension InstructionsCardViewController: UICollectionViewDataSource {
         }
         
         return cell
+    }
+    
+    func cellTransform(for cell: UICollectionViewCell) {
+        if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
+            cell.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
+        }
     }
 }
 
