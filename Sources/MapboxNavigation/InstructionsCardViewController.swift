@@ -127,6 +127,11 @@ open class InstructionsCardViewController: UIViewController {
     
     @objc func orientationDidChange(_ notification: Notification) {
         instructionsCardLayout.invalidateLayout()
+        
+//        guard let cell = instructionCollectionView.cellForItem(at: indexPath)
+//        if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
+//            cell.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
+//        }
     }
     
     func addSubviews() {
@@ -195,6 +200,11 @@ open class InstructionsCardViewController: UIViewController {
         guard let cell = instructionCollectionView.cellForItem(at: indexPath),
               cell.subviews.count > 1 else {
             return nil
+        }
+        
+        if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
+            DispatchQueue.main.asyncAfter(deadline: .now())
+            cell.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
         }
         
         return cell.subviews[1] as? InstructionsCardContainerView
