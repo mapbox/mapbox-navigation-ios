@@ -19,10 +19,18 @@ step-library:
           - nav-cache-pod-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "MapboxCoreNavigationTests/CocoaPodsTest/PodInstall/Podfile.lock" }}
           - nav-cache-pod-v1
 
-  - &install-cocoapods
+  - &restore-cache-cocoapods-installation
       restore_cache:
-          key: 1-gems-{{ checksum "Gemfile.lock" }}
-      run: bundle check || bundle install --path vendor/bundle --clean
+        keys:
+          - 1-gems-{{ checksum "Gemfile.lock" }}
+
+  - &install-cocoapods-installation
+      run:
+        name: Install cocoapods
+        command: |
+          bundle check || bundle install --path vendor/bundle --clean
+
+  - &save-cache-cocoapods-installation
       save_cache:
           key: 1-gems-{{ checksum "Gemfile.lock" }}
           paths:
@@ -131,12 +139,12 @@ jobs:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
       - checkout
-      - *install-cocoapods
+      - *install-cocoapods-installation
       - *prepare-mapbox-file
       - *prepare-netrc-file
       - *update-carthage-version
       - *restore-cache-podmaster
-      - *restore-cache-cocoapods
+      - *restore-cache-cocoapods-installation
       - when:
           condition: << parameters.update >>
           steps:
@@ -153,6 +161,7 @@ jobs:
             - run: bundle exec pod lib lint MapboxCoreNavigation.podspec
       - *save-cache-podmaster
       - *save-cache-cocoapods
+      - *save-cache-cocoapods-installation
 
   build-job:
     parameters:
