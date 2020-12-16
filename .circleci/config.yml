@@ -18,6 +18,16 @@ step-library:
         keys:
           - nav-cache-pod-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "MapboxCoreNavigationTests/CocoaPodsTest/PodInstall/Podfile.lock" }}
           - nav-cache-pod-v1
+
+  - &install-cocoapods
+      steps:
+        - restore_cache:
+            key: 1-gems-{{ checksum "Gemfile.lock" }}
+        - run: bundle check || bundle install --path vendor/bundle --clean
+        - save_cache:
+            key: 1-gems-{{ checksum "Gemfile.lock" }}
+            paths:
+              - vendor/bundle
   
   - &save-cache-cocoapods
       save_cache:
@@ -122,6 +132,7 @@ jobs:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
       - checkout
+      - *install-cocoapods
       - *prepare-mapbox-file
       - *prepare-netrc-file
       - *update-carthage-version
@@ -130,17 +141,17 @@ jobs:
       - when:
           condition: << parameters.update >>
           steps:
-            - run: cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall && pod update --repo-update
+            - run: cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall && bundle exec pod update --repo-update
       - unless:
           condition: << parameters.update >>
           steps:
-            - run: cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall && pod install --repo-update
+            - run: cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall && bundle exec pod install --repo-update
       - run: cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall && xcodebuild -workspace PodInstall.xcworkspace -scheme PodInstall -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=iPhone 8 Plus' clean build | xcpretty
       - when:
           condition: << parameters.lint >>
           steps:
             - run: find . -path '*.podspec' -exec perl -pi -e 's/.+\.social_media_url.+//' {} \;
-            - run: pod lib lint MapboxCoreNavigation.podspec
+            - run: bundle exec pod lib lint MapboxCoreNavigation.podspec
       - *save-cache-podmaster
       - *save-cache-cocoapods
 
