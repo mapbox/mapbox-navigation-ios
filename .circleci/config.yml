@@ -20,14 +20,13 @@ step-library:
           - nav-cache-pod-v1
 
   - &install-cocoapods
-      steps:
-        - restore_cache:
-            key: 1-gems-{{ checksum "Gemfile.lock" }}
-        - run: bundle check || bundle install --path vendor/bundle --clean
-        - save_cache:
-            key: 1-gems-{{ checksum "Gemfile.lock" }}
-            paths:
-              - vendor/bundle
+      restore_cache:
+          key: 1-gems-{{ checksum "Gemfile.lock" }}
+      run: bundle check || bundle install --path vendor/bundle --clean
+      save_cache:
+          key: 1-gems-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
   
   - &save-cache-cocoapods
       save_cache:
