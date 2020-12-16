@@ -145,6 +145,7 @@ jobs:
       - *update-carthage-version
       - *restore-cache-podmaster
       - *restore-cache-cocoapods-installation
+      - *restore-cache-cocoapods
       - when:
           condition: << parameters.update >>
           steps:
