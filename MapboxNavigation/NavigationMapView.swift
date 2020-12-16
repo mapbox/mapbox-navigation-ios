@@ -49,10 +49,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      A collection of street road classes for which a congestion level substitution should occur.
      
-     For any street road class included in the `trafficOverrideStreetsRoadClasses`, all route segments with an `CongestionLevel.unknown` traffic congestion level and a matching `MapboxDirections.MapboxStreetsRoadClass`
+     For any street road class included in the `roadClassesWithOverriddenCongestionLevels`, all route segments with an `CongestionLevel.unknown` traffic congestion level and a matching `MapboxDirections.MapboxStreetsRoadClass`
      will be replaced with the `CongestionLevel.low` congestion level.
      */
-    public var trafficOverrideStreetsRoadClasses: Set<MapboxStreetsRoadClass>? = nil
+    public var roadClassesWithOverriddenCongestionLevels: Set<MapboxStreetsRoadClass>? = nil
     
     /**
      The object that acts as the navigation delegate of the map view.
@@ -1087,7 +1087,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 let mergedCongestionSegments = combine(legCoordinates,
                                                        with: legCongestion,
                                                        streetsRoadClasses: streetsRoadClasses(leg),
-                                                       trafficOverrideStreetsRoadClasses: trafficOverrideStreetsRoadClasses)
+                                                       roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
 
                 lines = mergedCongestionSegments.map { (congestionSegment: CongestionSegment) -> MGLPolylineFeature in
                     let polyline = MGLPolylineFeature(coordinates: congestionSegment.0, count: UInt(congestionSegment.0.count))
@@ -1119,19 +1119,19 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      
      This method coalesces consecutive line segments that have the same congestion level.
      
-     For each item in the`CongestionSegment` collection a `CongestionLevel` substitution will take place that has a streets road class contained in the `trafficOverrideStreetsRoadClasses` collection.
+     For each item in the`CongestionSegment` collection a `CongestionLevel` substitution will take place that has a streets road class contained in the `roadClassesWithOverriddenCongestionLevels` collection.
      For each of these items the `CongestionLevel` for `.unknown` traffic congestion will be replaced with the `.low` traffic congestion.
      
      - parameter coordinates: The coordinates of a leg.
      - parameter congestions: The congestion levels along a leg. There should be one fewer congestion levels than coordinates.
      - parameter streetsRoadClasses: A collection of streets road classes for each geometry index in `Intersection`. There should be the same amount of `streetsRoadClasses` and `congestions`.
-     - parameter trafficOverrideStreetsRoadClasses: Streets road classes for which a `CongestionLevel` substitution should occur.
+     - parameter roadClassesWithOverriddenCongestionLevels: Streets road classes for which a `CongestionLevel` substitution should occur.
      - returns: A list of `CongestionSegment` tuples with coordinate and congestion level.
      */
     func combine(_ coordinates: [CLLocationCoordinate2D],
                  with congestions: [CongestionLevel],
                  streetsRoadClasses: [MapboxStreetsRoadClass?]? = nil,
-                 trafficOverrideStreetsRoadClasses: Set<MapboxStreetsRoadClass>? = nil) -> [CongestionSegment] {
+                 roadClassesWithOverriddenCongestionLevels: Set<MapboxStreetsRoadClass>? = nil) -> [CongestionSegment] {
         var segments: [CongestionSegment] = []
         segments.reserveCapacity(congestions.count)
         
@@ -1141,11 +1141,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             
             var overriddenCongestionLevel = congestionLevel
             if let streetsRoadClasses = streetsRoadClasses,
-               let trafficOverrideStreetsRoadClasses = trafficOverrideStreetsRoadClasses,
+               let roadClassesWithOverriddenCongestionLevels = roadClassesWithOverriddenCongestionLevels,
                streetsRoadClasses.indices.contains(index),
                let streetsRoadClass = streetsRoadClasses[index],
                congestionLevel == .unknown,
-               trafficOverrideStreetsRoadClasses.contains(streetsRoadClass) {
+               roadClassesWithOverriddenCongestionLevels.contains(streetsRoadClass) {
                 overriddenCongestionLevel = .low
             }
             
