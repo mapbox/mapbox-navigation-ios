@@ -130,7 +130,7 @@ open class InstructionsCardViewController: UIViewController {
 
         if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
             instructionsCardLayout.collectionView?.visibleCells.forEach { cell in guard let cell = cell as? UICollectionViewCell else { return }
-                cellTransform(for: cell)
+                cell.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
             }
         }
     }
@@ -295,12 +295,6 @@ extension InstructionsCardViewController: UICollectionViewDataSource {
         }
         
         return cell
-    }
-    
-    func cellTransform(for cell: UICollectionViewCell) {
-        if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
-            cell.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
-        }
     }
 }
 
