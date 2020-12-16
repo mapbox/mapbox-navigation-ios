@@ -15,9 +15,7 @@ class RouteMapViewController: UIViewController {
     var topBannerContainerView: BannerContainerView { return navigationView.topBannerContainerView }
     var bottomBannerContainerView: BannerContainerView { return navigationView.bottomBannerContainerView }
     
-    typealias FloatingButtonsPositions = NavigationView.FloatingButtonsPositions
-    
-    var floatingButtonsPosition: FloatingButtonsPositions? {
+    var floatingButtonsPosition: MapOrnamentPosition {
         get {
             return navigationView.floatingButtonsPosition
         }

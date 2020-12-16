@@ -75,10 +75,6 @@ open class NavigationView: UIView {
     lazy var muteButton = FloatingButton.rounded(image: Images.volumeUp, selectedImage: Images.volumeOff)
     lazy var reportButton = FloatingButton.rounded(image: Images.feedback)
     
-    public enum FloatingButtonsPositions {
-        case topRight, topLeft
-    }
-    
     func reinstallConstraints() {
         if let activeFloatingStackView = self.constraints(affecting: self.floatingStackView) {
             NSLayoutConstraint.deactivate(activeFloatingStackView)
@@ -90,7 +86,7 @@ open class NavigationView: UIView {
         setupConstraints()
     }
     
-    var floatingButtonsPosition: FloatingButtonsPositions? = .topRight {
+    var floatingButtonsPosition: MapOrnamentPosition = .topTrailing {
         didSet {
             reinstallConstraints()
         }

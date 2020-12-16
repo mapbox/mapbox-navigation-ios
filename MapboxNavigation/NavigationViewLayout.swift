@@ -28,10 +28,10 @@ extension NavigationView {
         speedLimitView.heightAnchor.constraint(equalToConstant: FloatingButton.buttonSize.height).isActive = true
         
         switch floatingButtonsPosition {
-        case .topLeft:
+        case .topLeading:
             floatingStackView.leadingAnchor.constraint(equalTo: safeLeadingAnchor, constant: 10).isActive = true
             speedLimitView.trailingAnchor.constraint(equalTo: safeTrailingAnchor, constant: -10).isActive = true
-        default:
+        case .topTrailing:
             floatingStackView.trailingAnchor.constraint(equalTo: safeTrailingAnchor, constant: -10).isActive = true
             speedLimitView.leadingAnchor.constraint(equalTo: safeLeadingAnchor, constant: 10).isActive = true
         }
