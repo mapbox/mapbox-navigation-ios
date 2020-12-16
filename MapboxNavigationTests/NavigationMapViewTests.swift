@@ -275,7 +275,7 @@ class NavigationMapViewTests: XCTestCase, MGLMapViewDelegate {
         
         // Make sure that at certain indexes `MapboxStreetsRoadClass` is not present and assigned to `nil`.
         route.legs.forEach {
-            let streetsRoadClasses = navigationMapView.streetsRoadClasses($0)
+            let streetsRoadClasses = $0.streetsRoadClasses
             
             for index in 24...27 {
                 XCTAssertEqual(streetsRoadClasses[index], nil)
@@ -290,7 +290,7 @@ class NavigationMapViewTests: XCTestCase, MGLMapViewDelegate {
         
         // Make sure that number of `MapboxStreetsRoadClass` is equal to number of congestion levels.
         route.legs.forEach {
-            let streetsRoadClasses = navigationMapView.streetsRoadClasses($0)
+            let streetsRoadClasses = $0.streetsRoadClasses
             let segmentCongestionLevels = $0.segmentCongestionLevels
             
             XCTAssertEqual(streetsRoadClasses.count, segmentCongestionLevels?.count)
@@ -323,7 +323,7 @@ class NavigationMapViewTests: XCTestCase, MGLMapViewDelegate {
         }
         
         route.legs.forEach {
-            let streetsRoadClasses = navigationMapView.streetsRoadClasses($0)
+            let streetsRoadClasses = $0.streetsRoadClasses
 
             XCTAssertEqual(streetsRoadClasses.count, 0)
         }
