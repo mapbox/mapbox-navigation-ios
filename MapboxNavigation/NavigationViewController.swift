@@ -222,7 +222,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     }
     
     /**
-     The  floating buttons in an array of UIButton in navigation view. The default floating buttons include the overview button, mute button and feedback report button. The default type of the floatingButton is `FloatingButton`, which is declared with `FloatingButton.rounded(image:selectedImage:size:)` to be consistent.
+     The  floating buttons in an array of UIButton in navigation view. The default floating buttons include the overview button, mute button and feedback report button. The default type of the floatingButtons is `FloatingButton`, which is declared with `FloatingButton.rounded(image:selectedImage:size:)` to be consistent.
      */
     open var floatingButtons: [UIButton]? {
         get {
