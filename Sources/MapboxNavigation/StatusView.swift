@@ -39,7 +39,6 @@ public class StatusView: UIControl {
         fatalError()
     }
     
-    // TODO: find a way to handle values attached to Statuses
     var value: Double = 0 {
         didSet {
             sendActions(for: .valueChanged)
@@ -59,7 +58,6 @@ public class StatusView: UIControl {
         var priority: Priority
     }
     
-    // TODO: define set of constants for priority
     struct Priority: RawRepresentable {
         public var rawValue: Int
 //        — Highest Priority —
@@ -155,18 +153,14 @@ public class StatusView: UIControl {
      Manages showing and hiding Statuses and the status view.
      */
     func manageStatuses(status: Status? = nil) {
-        print("statuses: \(statuses)")
-        // if we hide a Status and there are no Statuses left in the statuses array, hide the status view entirely
         if statuses.isEmpty {
             hide(delay: status?.duration ?? 0, animated: status?.animated ?? true)
         } else {
             // if we hide a Status and there are Statuses left in the statuses array, show the Status with highest priority
             guard let highestPriorityStatus = statuses.min(by: {$0.priority.rawValue < $1.priority.rawValue}) else { return }
-            print("!!! highest priority status: \(highestPriorityStatus)")
-            // show status by updating the label for the specified duration
-            // ADD conditional: is highestPriorityStatus == currentStatus??
             show(status: highestPriorityStatus)
             DispatchQueue.main.asyncAfter(deadline: .now() + highestPriorityStatus.duration) {
+                print("!!! triggered async to hide status")
                 self.hideStatus(usingStatus: highestPriorityStatus)
             }
         }
