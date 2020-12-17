@@ -17,11 +17,11 @@ public typealias ContainerViewController = UIViewController & NavigationComponen
  */
 public enum MapOrnamentPosition {
     /**
-     A setting of `.topLeading` will display the view during navigation on the top left in the left-to-right language, and top right in the right-to-left language.
+     The top-left corner when using a left-to-right language or the top-right corner when using a right-to-left language.
      */
     case topLeading
     /**
-     A setting of `.topTrailing` will display the view during navigation on the top right in the left-to-right language, and top left in the right-to-left language.
+     The top-right corner when using a left-to-right language or the top-left corner when using a right-to-left language.
      */
     case topTrailing
 }

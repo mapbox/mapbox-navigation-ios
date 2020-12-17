@@ -66,12 +66,12 @@ open class CancelButton: Button { }
 open class DismissButton: Button { }
 
 /**
- A floating button during the navigation view with images and default size to keep consistent.
+ A rounded button with an icon that is designed to float above `NavigationMapView`.
  */
 @objc(MBFloatingButton)
 open class FloatingButton: Button {
     /**
-     The default `CGSize` of  a `FloatingButton` in the navigation view.
+     The default size of a floating button.
      */
     public static let buttonSize = CGSize(width: 50, height: 50)
     
@@ -105,7 +105,7 @@ open class FloatingButton: Button {
      
      - parameter image: The `UIImage` of this button.
      - parameter selectedImage: The `UIImage` of this button when selected.
-     - parameter size: The size of this button, is default as the `FloatingButton.buttonSize` to keep consistent.
+     - parameter size: The size of this button,  or `FloatingButton.buttonSize` if this argument is not specified.
      */
     public class func rounded<T: FloatingButton>(image: UIImage? = nil, selectedImage: UIImage? = nil, size: CGSize = FloatingButton.buttonSize) -> T {
         let button = T.init(type: .custom)
