@@ -38,6 +38,7 @@
 * Added the `RouteProgress.upcomingRouteAlerts` property to track upcoming points along the route experiencing conditions that may require the user’s attention. The `UpcomingRouteAlertInfo.alert` property contains one of the following types with more details about the alert: `Incident`, `TunnelInfo`, `BorderCrossingInfo`, `TollCollection`, and `RestStop`. ([#2694](https://github.com/mapbox/mapbox-navigation-ios/pull/2694))
 * Added a new `NavigationMapView.roadClassesWithOverriddenCongestionLevels` property. For any road class in it all route segments with an `CongestionLevel.unknown` traffic congestion level and a matching `Intersection.outletMapboxStreetsRoadClass` will be replaced with the `CongestionLevel.low` congestion level. ([#2741](https://github.com/mapbox/mapbox-navigation-ios/pull/2741)) 
 * Added a new `RouteLeg.streetsRoadClasses` property, which allows to get a collection of `MapboxStreetsRoadClass` objects for specific `RouteLeg`. ([#2741](https://github.com/mapbox/mapbox-navigation-ios/pull/2741)) 
+* `NavigationAnnotation` was made public to provide a way to detect annotations created by `NavigationMapView`. ([#2769](https://github.com/mapbox/mapbox-navigation-ios/pull/2769))
 
 ## v1.1.0
 

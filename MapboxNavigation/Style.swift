@@ -581,8 +581,10 @@ open class BottomBannerView: UIView { }
 
 open class BottomPaddingView: BottomBannerView { }
 
-/// :nodoc:
-class NavigationAnnotation: MGLPointAnnotation { }
+/**
+ `NavigationAnnotation` is an annotation, which is used to mark final destination on `NavigationMapView`.
+ */
+public class NavigationAnnotation: MGLPointAnnotation { }
 
 /// :nodoc:
 @objc(MBMarkerView)
