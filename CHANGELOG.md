@@ -9,6 +9,8 @@
 
 ### Map
 
+* Added the ability to customize the floating buttons in navigation view. The floating buttons could be edited with `NavigationViewController.floatingButtons`, the position of the floating buttons could be edited with `NavigationViewController.floatingButtonsPosition`.  ([#2763](https://github.com/mapbox/mapbox-navigation-ios/pull/2763))
+* Fixed an issue which was causing clear map button disappearance in the example app when selecting the route. ([#2718](https://github.com/mapbox/mapbox-navigation-ios/pull/2718))
 * Fixed an issue where maneuver icon was not shown after selecting specific step. ([#2728](https://github.com/mapbox/mapbox-navigation-ios/pull/2728))
 * Added the ability to style each route line differently using such delegate methods ([#2719](https://github.com/mapbox/mapbox-navigation-ios/pull/2719)):
   * `NavigationMapViewDelegate.navigationMapView(_:mainRouteStyleLayerWithIdentifier:source:)` to style the main route.

@@ -15,6 +15,24 @@ class RouteMapViewController: UIViewController {
     var topBannerContainerView: BannerContainerView { return navigationView.topBannerContainerView }
     var bottomBannerContainerView: BannerContainerView { return navigationView.bottomBannerContainerView }
     
+    var floatingButtonsPosition: MapOrnamentPosition {
+        get {
+            return navigationView.floatingButtonsPosition
+        }
+        set {
+            navigationView.floatingButtonsPosition = newValue
+        }
+    }
+    
+    var floatingButtons: [UIButton]? {
+        get {
+            return navigationView.floatingButtons
+        }
+        set {
+            navigationView.floatingButtons = newValue
+        }
+    }
+    
     lazy var endOfRouteViewController: EndOfRouteViewController = {
         let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
         let viewController = storyboard.instantiateViewController(withIdentifier: "EndOfRouteViewController") as! EndOfRouteViewController

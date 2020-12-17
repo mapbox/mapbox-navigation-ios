@@ -65,10 +65,16 @@ open class CancelButton: Button { }
 @objc(MBDismissButton)
 open class DismissButton: Button { }
 
-/// :nodoc:
+/**
+ A rounded button with an icon that is designed to float above `NavigationMapView`.
+ */
 @objc(MBFloatingButton)
 open class FloatingButton: Button {
-    static let buttonSize = CGSize(width: 50, height: 50)
+    /**
+     The default size of a floating button.
+     */
+    public static let buttonSize = CGSize(width: 50, height: 50)
+    
     static let sizeConstraintPriority = UILayoutPriority(999.0) //Don't fight with the stack view (superview) when it tries to hide buttons.
     
     lazy var widthConstraint: NSLayoutConstraint = {
@@ -94,7 +100,14 @@ open class FloatingButton: Button {
         }
     }
     
-    class func rounded<T: FloatingButton>(image: UIImage? = nil, selectedImage: UIImage? = nil, size: CGSize = FloatingButton.buttonSize) -> T {
+    /**
+     Return a `FloatingButton` with given images and size.
+     
+     - parameter image: The `UIImage` of this button.
+     - parameter selectedImage: The `UIImage` of this button when selected.
+     - parameter size: The size of this button,  or `FloatingButton.buttonSize` if this argument is not specified.
+     */
+    public class func rounded<T: FloatingButton>(image: UIImage? = nil, selectedImage: UIImage? = nil, size: CGSize = FloatingButton.buttonSize) -> T {
         let button = T.init(type: .custom)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.constrainedSize = size

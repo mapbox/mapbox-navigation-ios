@@ -13,6 +13,20 @@ import Mapbox
 public typealias ContainerViewController = UIViewController & NavigationComponent
 
 /**
+ The position of speed limit view and floating buttons, including the overview, mute and feedback report in a navigation view.
+ */
+public enum MapOrnamentPosition {
+    /**
+     The top-left corner when using a left-to-right language or the top-right corner when using a right-to-left language.
+     */
+    case topLeading
+    /**
+     The top-right corner when using a left-to-right language or the top-left corner when using a right-to-left language.
+     */
+    case topTrailing
+}
+
+/**
  `NavigationViewController` is a fully-featured user interface for turn-by-turn navigation. Do not confuse it with the `NavigationController` class in UIKit.
  
  You initialize a navigation view controller based on a predefined `Route` and `NavigationOptions`. As the user progresses along the route, the navigation view controller shows their surroundings and the route line on a map. Banners above and below the map display key information pertaining to the route. A list of steps and a feedback mechanism are accessible via the navigation view controller.
@@ -199,6 +213,32 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     var topViewController: ContainerViewController?
     
     var bottomViewController: ContainerViewController?
+    
+    /**
+     The position of floating buttons in a navigation view. The default value is `MapOrnamentPosition.topTrailing`.
+     */
+    open var floatingButtonsPosition: MapOrnamentPosition? {
+        get {
+            return mapViewController?.floatingButtonsPosition
+        }
+        set {
+            if let newPosition = newValue {
+                mapViewController?.floatingButtonsPosition = newPosition
+            }
+        }
+    }
+    
+    /**
+     The  floating buttons in an array of UIButton in navigation view. The default floating buttons include the overview, mute and feedback report button. The default type of the floatingButtons is `FloatingButton`, which is declared with `FloatingButton.rounded(image:selectedImage:size:)` to be consistent.
+     */
+    open var floatingButtons: [UIButton]? {
+        get {
+            return mapViewController?.floatingButtons
+        }
+        set {
+            mapViewController?.floatingButtons = newValue
+        }
+    }
     
     var navigationComponents: [NavigationComponent] {
         var components: [NavigationComponent] = []

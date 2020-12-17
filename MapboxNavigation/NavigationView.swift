@@ -75,6 +75,30 @@ open class NavigationView: UIView {
     lazy var muteButton = FloatingButton.rounded(image: Images.volumeUp, selectedImage: Images.volumeOff)
     lazy var reportButton = FloatingButton.rounded(image: Images.feedback)
     
+    func reinstallConstraints() {
+        if let activeFloatingStackView = self.constraints(affecting: self.floatingStackView) {
+            NSLayoutConstraint.deactivate(activeFloatingStackView)
+        }
+        if let activeSpeedLimitView = self.constraints(affecting: self.speedLimitView) {
+            NSLayoutConstraint.deactivate(activeSpeedLimitView)
+        }
+
+        setupConstraints()
+    }
+    
+    var floatingButtonsPosition: MapOrnamentPosition = .topTrailing {
+        didSet {
+            reinstallConstraints()
+        }
+    }
+    
+    var floatingButtons : [UIButton]? {
+        didSet {
+            clearStackViews()
+            setupStackViews()
+        }
+    }
+    
     lazy var resumeButton: ResumeButton = .forAutoLayout()
     
     lazy var wayNameView: WayNameView = {
@@ -127,17 +151,26 @@ open class NavigationView: UIView {
     }
     
     func commonInit() {
+        floatingButtons = [overviewButton, muteButton, reportButton]
         setupViews()
         setupConstraints()
     }
     
+    func clearStackViews() {
+        let oldFloatingButtons: [UIView] = floatingStackView.subviews
+        for floatingButton in oldFloatingButtons {
+            floatingStackView.removeArrangedSubview(floatingButton)
+            floatingButton.removeFromSuperview()
+        }
+    }
+    
     func setupStackViews() {
-        floatingStackView.addArrangedSubviews([overviewButton, muteButton, reportButton])
+        if let buttons = floatingButtons {
+            floatingStackView.addArrangedSubviews(buttons)
+        }
     }
     
     func setupViews() {
-        setupStackViews()
-        
         let children: [UIView] = [
             mapView,
             topBannerContainerView,
