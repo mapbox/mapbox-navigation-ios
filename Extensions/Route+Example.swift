@@ -4,15 +4,12 @@ import Turf
 
 extension Route {
     var tollIntersections: [Intersection]? {
-        return nil // Stubbed out until SDK includes new Intersection toll attributes
-        #if NavSDK_Includes_Toll_Intersections
         let allSteps = legs.compactMap { return $0.steps }.reduce([], +)
 
         let allIntersections = allSteps.compactMap { return $0.intersections }.reduce([], +)
         let intersectionsWithTolls = allIntersections.filter { return $0.tollCollection != nil }
 
         return intersectionsWithTolls
-        #endif
     }
 
     // returns the list of line segments along the route that fall within given bounding box. Returns nil if there are none. Line segments are defined by the route shape coordinates that lay within the bounding box
