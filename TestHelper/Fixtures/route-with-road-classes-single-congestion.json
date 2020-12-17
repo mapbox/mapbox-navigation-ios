@@ -1,0 +1,464 @@
+{
+    "routeIndex": "0",
+    "distance": 1582.758,
+    "duration": 271.613,
+    "duration_typical": 271.613,
+    "geometry": "iwpj`Bqfqk_@l@mA~CwFnCcF~CwFxCoFnCeF~CkF~CsFxCgF~CmF~CcF~CgF~CeFvCgF~CeF`DcF~CgF~CmFvC_FfDkF~CeF~CcFxCeFr@kAjBwC~CeF~CkFLUpCqE~CaFvCcFfDkFxCaF~CgF~CiF~CcF~CeF~CgF~CgF~CeF~CkFxCcFfDmF~CgF~CgFvC}E~CcFnDcGhWeb@zhFwrIxf@ux@`r@{hAvpA}tB",
+    "weight": 260.313,
+    "weight_name": "auto",
+    "legs": [
+        {
+            "distance": 1582.758,
+            "duration": 271.613,
+            "duration_typical": 271.613,
+            "summary": "A4",
+            "admins": [
+                {
+                    "iso_3166_1": "PL",
+                    "iso_3166_1_alpha3": "POL"
+                }
+            ],
+            "steps": [
+                {
+                    "distance": 1582.757,
+                    "duration": 271.613,
+                    "duration_typical": 271.613,
+                    "geometry": "iwpj`Bqfqk_@l@mA~CwFnCcF~CwFxCoFnCeF~CkF~CsFxCgF~CmF~CcF~CgF~CeFvCgF~CeF`DcF~CgF~CmFvC_FfDkF~CeF~CcFxCeFr@kAjBwC~CeF~CkFLUpCqE~CaFvCcFfDkFxCaF~CgF~CiF~CcF~CeF~CgF~CgF~CeF~CkFxCcFfDmF~CgF~CgFvC}E~CcFnDcGhWeb@zhFwrIxf@ux@`r@{hAvpA}tB",
+                    "name": "",
+                    "ref": "A4",
+                    "mode": "driving",
+                    "maneuver": {
+                        "location": [
+                            16.983162,
+                            51.045254
+                        ],
+                        "bearing_before": 0.0,
+                        "bearing_after": 135.0,
+                        "instruction": "Drive southeast on A4.",
+                        "type": "depart"
+                    },
+                    "voiceInstructions": [
+                        {
+                            "distanceAlongGeometry": 1582.757,
+                            "announcement": "Drive southeast on A4.",
+                            "ssmlAnnouncement": "\u003cspeak\u003e\u003camazon:effect name\u003d\"drc\"\u003e\u003cprosody rate\u003d\"1.08\"\u003eDrive southeast on A4.\u003c/prosody\u003e\u003c/amazon:effect\u003e\u003c/speak\u003e"
+                        },
+                        {
+                            "distanceAlongGeometry": 1536.091,
+                            "announcement": "In 1 mile, You will arrive at your destination.",
+                            "ssmlAnnouncement": "\u003cspeak\u003e\u003camazon:effect name\u003d\"drc\"\u003e\u003cprosody rate\u003d\"1.08\"\u003eIn 1 mile, You will arrive at your destination.\u003c/prosody\u003e\u003c/amazon:effect\u003e\u003c/speak\u003e"
+                        },
+                        {
+                            "distanceAlongGeometry": 804.672,
+                            "announcement": "In a half mile, You will arrive at your destination.",
+                            "ssmlAnnouncement": "\u003cspeak\u003e\u003camazon:effect name\u003d\"drc\"\u003e\u003cprosody rate\u003d\"1.08\"\u003eIn a half mile, You will arrive at your destination.\u003c/prosody\u003e\u003c/amazon:effect\u003e\u003c/speak\u003e"
+                        },
+                        {
+                            "distanceAlongGeometry": 111.111,
+                            "announcement": "You have arrived at your destination.",
+                            "ssmlAnnouncement": "\u003cspeak\u003e\u003camazon:effect name\u003d\"drc\"\u003e\u003cprosody rate\u003d\"1.08\"\u003eYou have arrived at your destination.\u003c/prosody\u003e\u003c/amazon:effect\u003e\u003c/speak\u003e"
+                        }
+                    ],
+                    "bannerInstructions": [
+                        {
+                            "distanceAlongGeometry": 1582.757,
+                            "primary": {
+                                "text": "You will arrive at your destination",
+                                "components": [
+                                    {
+                                        "text": "You will arrive at your destination",
+                                        "type": "text"
+                                    }
+                                ],
+                                "type": "arrive",
+                                "modifier": "straight"
+                            }
+                        },
+                        {
+                            "distanceAlongGeometry": 111.111,
+                            "primary": {
+                                "text": "You have arrived at your destination",
+                                "components": [
+                                    {
+                                        "text": "You have arrived at your destination",
+                                        "type": "text"
+                                    }
+                                ],
+                                "type": "arrive",
+                                "modifier": "straight"
+                            }
+                        }
+                    ],
+                    "driving_side": "right",
+                    "weight": 260.313,
+                    "intersections": [
+                        {
+                            "location": [
+                                16.983162,
+                                51.045254
+                            ],
+                            "bearings": [
+                                135
+                            ],
+                            "classes": [
+                                "toll",
+                                "tunnel"
+                            ],
+                            "entry": [
+                                true
+                            ],
+                            "out": 0,
+                            "geometry_index": 0,
+                            "is_urban": false,
+                            "admin_index": 0,
+                            "mapbox_streets_v8": {
+                                "class": "golf"
+                            }
+                        },
+                        {
+                            "location": [
+                                16.983438,
+                                51.045078
+                            ],
+                            "bearings": [
+                                135,
+                                315
+                            ],
+                            "classes": [
+                                "toll",
+                                "tunnel"
+                            ],
+                            "entry": [
+                                true,
+                                false
+                            ],
+                            "in": 1,
+                            "out": 0,
+                            "geometry_index": 3,
+                            "is_urban": false,
+                            "admin_index": 0,
+                            "mapbox_streets_v8": {
+                                "class": "golf"
+                            }
+                        },
+                        {
+                            "location": [
+                                16.985809,
+                                51.043472
+                            ],
+                            "bearings": [
+                                138,
+                                318
+                            ],
+                            "classes": [
+                                "toll",
+                                "tunnel"
+                            ],
+                            "entry": [
+                                true,
+                                false
+                            ],
+                            "in": 1,
+                            "out": 0,
+                            "geometry_index": 24,
+                            "is_urban": false,
+                            "admin_index": 0,
+                            "mapbox_streets_v8": {
+                                "class": "golf"
+                            }
+                        },
+                        {
+                            "location": [
+                                16.98613,
+                                51.043251
+                            ],
+                            "bearings": [
+                                138,
+                                318
+                            ],
+                            "classes": [
+                                "toll",
+                                "tunnel"
+                            ],
+                            "entry": [
+                                true,
+                                false
+                            ],
+                            "in": 1,
+                            "out": 0,
+                            "geometry_index": 28,
+                            "is_urban": false,
+                            "admin_index": 0,
+                            "mapbox_streets_v8": {
+                                "class": "golf"
+                            }
+                        },
+                        {
+                            "location": [
+                                16.98844,
+                                51.041656
+                            ],
+                            "bearings": [
+                                138,
+                                318
+                            ],
+                            "classes": [
+                                "toll",
+                                "tunnel"
+                            ],
+                            "entry": [
+                                true,
+                                false
+                            ],
+                            "in": 1,
+                            "out": 0,
+                            "geometry_index": 48,
+                            "is_urban": false,
+                            "admin_index": 0,
+                            "mapbox_streets_v8": {
+                                "class": "golf"
+                            }
+                        },
+                        {
+                            "location": [
+                                16.994438,
+                                51.037525
+                            ],
+                            "bearings": [
+                                138,
+                                318
+                            ],
+                            "classes": [
+                                "toll",
+                                "tunnel"
+                            ],
+                            "entry": [
+                                true,
+                                false
+                            ],
+                            "in": 1,
+                            "out": 0,
+                            "geometry_index": 50,
+                            "is_urban": false,
+                            "admin_index": 0,
+                            "mapbox_streets_v8": {
+                                "class": "golf"
+                            }
+                        },
+                        {
+                            "location": [
+                                16.995361,
+                                51.036888
+                            ],
+                            "bearings": [
+                                138,
+                                318
+                            ],
+                            "classes": [
+                                "toll",
+                                "tunnel"
+                            ],
+                            "entry": [
+                                true,
+                                false
+                            ],
+                            "in": 1,
+                            "out": 0,
+                            "geometry_index": 51,
+                            "is_urban": false,
+                            "admin_index": 0,
+                            "mapbox_streets_v8": {
+                                "class": "golf"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "distance": 0.0,
+                    "duration": 0.0,
+                    "duration_typical": 0.0,
+                    "geometry": "ug|i`B{`ol_@??",
+                    "name": "",
+                    "ref": "A4",
+                    "mode": "driving",
+                    "maneuver": {
+                        "location": [
+                            16.99843,
+                            51.034763
+                        ],
+                        "bearing_before": 138.0,
+                        "bearing_after": 0.0,
+                        "instruction": "You have arrived at your destination.",
+                        "type": "arrive"
+                    },
+                    "voiceInstructions": [
+                        
+                    ],
+                    "bannerInstructions": [
+                        
+                    ],
+                    "driving_side": "right",
+                    "weight": 0.0,
+                    "intersections": [
+                        {
+                            "location": [
+                                16.99843,
+                                51.034763
+                            ],
+                            "bearings": [
+                                318
+                            ],
+                            "entry": [
+                                true
+                            ],
+                            "in": 0,
+                            "geometry_index": 53,
+                            "admin_index": 0
+                        }
+                    ]
+                }
+            ],
+            "annotation": {
+                "distance": [
+                    3.7,
+                    12.4,
+                    11.4,
+                    12.4,
+                    12.0,
+                    11.4,
+                    12.2,
+                    12.3,
+                    11.8,
+                    12.2,
+                    12.0,
+                    12.1,
+                    12.0,
+                    11.8,
+                    12.0,
+                    12.0,
+                    12.1,
+                    12.2,
+                    11.6,
+                    12.5,
+                    12.0,
+                    12.0,
+                    11.7,
+                    4.0,
+                    8.0,
+                    12.0,
+                    12.2,
+                    1.2,
+                    10.9,
+                    11.9,
+                    11.7,
+                    12.5,
+                    11.6,
+                    12.1,
+                    12.1,
+                    12.0,
+                    12.0,
+                    12.1,
+                    12.1,
+                    12.0,
+                    12.2,
+                    11.7,
+                    12.5,
+                    12.1,
+                    12.1,
+                    11.5,
+                    12.0,
+                    13.3,
+                    58.5,
+                    564.2,
+                    95.9,
+                    122.9,
+                    196.6
+                ],
+                "congestion": [
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown"
+                ]
+            }
+        }
+    ],
+    "routeOptions": {
+        "baseUrl": "https://api.mapbox.com",
+        "user": "mapbox",
+        "profile": "driving-traffic",
+        "coordinates": [
+            [
+                16.983119,
+                51.045222
+            ],
+            [
+                16.99842,
+                51.034759
+            ]
+        ],
+        "alternatives": true,
+        "language": "en",
+        "continue_straight": false,
+        "roundabout_exits": false,
+        "geometries": "polyline6",
+        "overview": "full",
+        "steps": true,
+        "annotations": "congestion,distance",
+        "voice_instructions": true,
+        "banner_instructions": true,
+        "voice_units": "imperial",
+        "access_token": "token",
+        "uuid": "id"
+    },
+    "voiceLocale": "en-US"
+}
