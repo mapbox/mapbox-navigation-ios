@@ -16,7 +16,14 @@ public typealias ContainerViewController = UIViewController & NavigationComponen
  The position of speed limit view and floating buttons, including the overview, mute and feedback report in a navigation view.
  */
 public enum MapOrnamentPosition {
-    case topLeading, topTrailing
+    /**
+     A setting of `.topLeading` will display the view during navigation on the top left in the left-to-right language, and top right in the right-to-left language.
+     */
+    case topLeading
+    /**
+     A setting of `.topTrailing` will display the view during navigation on the top right in the left-to-right language, and top left in the right-to-left language.
+     */
+    case topTrailing
 }
 
 /**

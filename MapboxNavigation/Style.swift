@@ -65,10 +65,16 @@ open class CancelButton: Button { }
 @objc(MBDismissButton)
 open class DismissButton: Button { }
 
-/// :nodoc:
+/**
+ A floating button during the navigation view with images and default size to keep consistent.
+ */
 @objc(MBFloatingButton)
 open class FloatingButton: Button {
-    static let buttonSize = CGSize(width: 50, height: 50)
+    /**
+     The default `CGSize` of  a `FloatingButton` in the navigation view.
+     */
+    public static let buttonSize = CGSize(width: 50, height: 50)
+    
     static let sizeConstraintPriority = UILayoutPriority(999.0) //Don't fight with the stack view (superview) when it tries to hide buttons.
     
     lazy var widthConstraint: NSLayoutConstraint = {
@@ -94,7 +100,14 @@ open class FloatingButton: Button {
         }
     }
     
-    class func rounded<T: FloatingButton>(image: UIImage? = nil, selectedImage: UIImage? = nil, size: CGSize = FloatingButton.buttonSize) -> T {
+    /**
+     Return a `FloatingButton` with given images and size.
+     
+     - parameter image: The `UIImage` of this button.
+     - parameter selectedImage: The `UIImage` of this button when selected.
+     - parameter size: The size of this button, is default as the `FloatingButton.buttonSize` to keep consistent.
+     */
+    public class func rounded<T: FloatingButton>(image: UIImage? = nil, selectedImage: UIImage? = nil, size: CGSize = FloatingButton.buttonSize) -> T {
         let button = T.init(type: .custom)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.constrainedSize = size
