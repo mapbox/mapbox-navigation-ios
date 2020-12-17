@@ -4,7 +4,8 @@
 
 ### Packaging
 
-* Increased the minimum versions of `MapboxNavigationNative` to v26.3, `MapboxCommon` to v9.1.0 and `MapboxDirections` to v1.2. ([#2694](https://github.com/mapbox/mapbox-navigation-ios/pull/2694))
+* Increased the minimum versions of `MapboxNavigationNative` to v28.1, `MapboxCommon` to v9.1.0 and `MapboxDirections` to v1.2. ([#2694](https://github.com/mapbox/mapbox-navigation-ios/pull/2694), [#2770](https://github.com/mapbox/mapbox-navigation-ios/pull/2770))
+* Installing MapboxCoreNavigation using CocoaPods no longer overrides the `EXCLUDED_ARCHS` build setting of your application’s target. Installing MapboxNavigation still overrides this setting. ([#2770](https://github.com/mapbox/mapbox-navigation-ios/pull/2770))
 * Added a Ukrainian localization. ([#2735](https://github.com/mapbox/mapbox-navigation-ios/pull/2735))
 
 ### Map
