@@ -5,30 +5,36 @@
 ### Packaging
 
 * Increased the minimum versions of `MapboxNavigationNative` to v26.3, `MapboxCommon` to v9.1.0 and `MapboxDirections` to v1.2. ([#2694](https://github.com/mapbox/mapbox-navigation-ios/pull/2694))
+* Added a Ukrainian localization. ([#2735](https://github.com/mapbox/mapbox-navigation-ios/pull/2735))
 
-### User interface
+### Map
 
-* Fixed an issue which was causing clear map button disappearance in the example app when selecting the route. ([#2718](https://github.com/mapbox/mapbox-navigation-ios/pull/2718))
 * Fixed an issue where maneuver icon was not shown after selecting specific step. ([#2728](https://github.com/mapbox/mapbox-navigation-ios/pull/2728))
-* Fixed an issue which was preventing the ability to customize the bottom banner height. ([#2705](https://github.com/mapbox/mapbox-navigation-ios/pull/2705))
-* Fixed an issue which was preventing the ability to scroll between instructions cards on iOS 14 using workaround. ([#2755](https://github.com/mapbox/mapbox-navigation-ios/pull/2755))
-* Fixed an instructions cards layout issue that arose when changing orientation (portrait to landscape). ([#2755](https://github.com/mapbox/mapbox-navigation-ios/pull/2755))
-* Fixed swiping for right-to-left languages for the traditional top banner to be more intuitive. ([#2755](https://github.com/mapbox/mapbox-navigation-ios/pull/2755))
 * Added the ability to style each route line differently using such delegate methods ([#2719](https://github.com/mapbox/mapbox-navigation-ios/pull/2719)):
   * `NavigationMapViewDelegate.navigationMapView(_:mainRouteStyleLayerWithIdentifier:source:)` to style the main route.
   * `NavigationMapViewDelegate.navigationMapView(_:mainRouteCasingStyleLayerWithIdentifier:source:)` to style the casing of the main route.
   * `NavigationMapViewDelegate.navigationMapView(_:alternativeRouteStyleLayerWithIdentifier:source:)` to style alternative route.
   * `NavigationMapViewDelegate.navigationMapView(_:alternativeRouteCasingStyleLayerWithIdentifier:source:)` to style the casing of alternative route.
+* Fixed an issue where the route line periodically peeked out from behind the user puck even though `NavigationViewController.routeLineTracksTraversal` was enabled. ([#2737](https://github.com/mapbox/mapbox-navigation-ios/pull/2737))
+* Created the `UserHaloCourseView` similar to `UserCourseView` for approximate location on iOS 14 during the navigation to represent user location. Allow the switch between `UserHaloCourseView` and `UserCourseView` when precise mode is changed. ([#2664](https://github.com/mapbox/mapbox-navigation-ios/pull/2664))
 
-### Vanishing route line
+### Instruction banners
 
-* Added the ability to synchronize route progress, puck and vanishing route line with a location based distance calculation implementation. ([#2737](https://github.com/mapbox/mapbox-navigation-ios/pull/2737))
+* Fixed an issue which was preventing the ability to customize the bottom banner height. ([#2705](https://github.com/mapbox/mapbox-navigation-ios/pull/2705))
+* Fixed an issue which was preventing the ability to scroll between instructions cards on iOS 14 using workaround. ([#2755](https://github.com/mapbox/mapbox-navigation-ios/pull/2755))
+* Fixed an instructions cards layout issue that arose when changing orientation (portrait to landscape). ([#2755](https://github.com/mapbox/mapbox-navigation-ios/pull/2755))
+* Fixed swiping for right-to-left languages for the traditional top banner to be more intuitive. ([#2755](https://github.com/mapbox/mapbox-navigation-ios/pull/2755))
+
+### Location tracking
+
+* Fixed potential crashes when using `PassiveLocationManager` or `PassiveLocationDataSource`. ([#2694](https://github.com/mapbox/mapbox-navigation-ios/pull/2694))
+* Fixed repeated rerouting when traveling alongside a freeway off-ramp. ([#2694](https://github.com/mapbox/mapbox-navigation-ios/pull/2694))
+* Fixed an issue where `RouteController` snapped the user’s location to the opposite side of a divided highway. ([#2694](https://github.com/mapbox/mapbox-navigation-ios/pull/2694))
+* Fixed an issue where `RouteController` got stuck after making a U-turn. ([#2694](https://github.com/mapbox/mapbox-navigation-ios/pull/2694))
 
 ### Other changes
 
-* Added Ukrainian localization. ([#2735](https://github.com/mapbox/mapbox-navigation-ios/pull/2735))
-* Created the `UserHaloCourseView` similar to `UserCourseView` for approximate location on iOS 14 during the navigation to represent user location. Allow the switch between `UserHaloCourseView` and `UserCourseView` when precise mode is changed. ([#2664](https://github.com/mapbox/mapbox-navigation-ios/pull/2664))
-* Added the ability to provide more detailed `Speed limit incorrect` feedback during turn-by-turn navigation. ([#2725](https://github.com/mapbox/mapbox-navigation-ios/pull/2725))
+* The user can now report feedback about an incorrect speed limit in the speed limit view. ([#2725](https://github.com/mapbox/mapbox-navigation-ios/pull/2725))
 * Added the `RouteProgress.upcomingRouteAlerts` property to track upcoming points along the route experiencing conditions that may require the user’s attention. The `UpcomingRouteAlertInfo.alert` property contains one of the following types with more details about the alert: `Incident`, `TunnelInfo`, `BorderCrossingInfo`, `TollCollection`, and `RestStop`. ([#2694](https://github.com/mapbox/mapbox-navigation-ios/pull/2694)
 
 ## v1.1.0
