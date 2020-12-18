@@ -193,7 +193,11 @@ public protocol PassiveLocationDataSourceDelegate: class {
 
     func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didUpdateElectronicHorizon horizon: ElectronicHorizon, type: ElectronicHorizonResultType)
 
-    func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didUpdateElectronicHorizonPosition position: GraphPosition)
+    func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didUpdateElectronicHorizonPosition position: GraphPosition, distances: [String : RoadObjectDistanceInfo])
+
+    func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, roadObjectDidEnter roadObject: String, fromStart: Bool)
+
+    func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, roadObjectDidExit roadObject: String, fromEnd: Bool)
 }
 
 extension TileEndpointConfiguration {
@@ -211,11 +215,20 @@ extension TileEndpointConfiguration {
 }
 
 extension PassiveLocationDataSource: ElectronicHorizonObserver {
+
+    public func onRoadObjectEnter(forRoadObjectId roadObjectId: String, enterFromStart: Bool) {
+        delegate?.passiveLocationDataSource(self, roadObjectDidEnter: roadObjectId, fromStart: enterFromStart)
+    }
+
+    public func onRoadObjectExit(forRoadObjectId roadObjectId: String, exitFromEnd: Bool) {
+        delegate?.passiveLocationDataSource(self, roadObjectDidExit: roadObjectId, fromEnd: exitFromEnd)
+    }
+
     public func onElectronicHorizonUpdated(for horizon: ElectronicHorizon, type: ElectronicHorizonResultType) {
         delegate?.passiveLocationDataSource(self, didUpdateElectronicHorizon: horizon, type: type)
     }
 
-    public func onPositionUpdated(for position: GraphPosition) {
-        delegate?.passiveLocationDataSource(self, didUpdateElectronicHorizonPosition: position)
+    public func onPositionUpdated(for position: GraphPosition, distances: [String : RoadObjectDistanceInfo]) {
+        delegate?.passiveLocationDataSource(self, didUpdateElectronicHorizonPosition: position, distances: distances)
     }
 }
