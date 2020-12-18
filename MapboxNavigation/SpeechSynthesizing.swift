@@ -1,4 +1,3 @@
-
 import Foundation
 import MapboxDirections
 import MapboxCoreNavigation

@@ -1,6 +1,5 @@
 import UIKit
 import MapboxCoreNavigation
-import AVFoundation
 
 extension FeedbackViewController: UIViewControllerTransitioningDelegate {
     public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {

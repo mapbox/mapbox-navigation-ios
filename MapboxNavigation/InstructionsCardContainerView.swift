@@ -1,6 +1,5 @@
 import UIKit
 import MapboxDirections
-import MapboxCoreNavigation
 
 /**
  The `InstructionsCardContainerViewDelegate` protocol defines a method that allows an object to customize presented visual instructions within the instructions container view.

@@ -1,7 +1,5 @@
 import UIKit
 import MapboxDirections
-import MapboxCoreNavigation
-import Turf
 
 /// A view that contains a simple image indicating a type of maneuver.
 @IBDesignable

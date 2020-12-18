@@ -1,5 +1,4 @@
 import MapboxDirections
-import MapboxCoreNavigation
 
 /// :nodoc:
 public protocol InstructionsCardCollectionDelegate: InstructionsCardContainerViewDelegate {

@@ -1,11 +1,8 @@
 import UIKit
 import MapboxCoreNavigation
 import MapboxDirections
-import MapboxSpeech
 import AVFoundation
-import UserNotifications
 import MobileCoreServices
-import Mapbox
 
 /**
  A container view controller is a view controller that behaves as a navigation component; that is, it responds as the user progresses along a route according to the `NavigationServiceDelegate` protocol.
