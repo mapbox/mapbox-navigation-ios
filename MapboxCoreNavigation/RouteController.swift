@@ -14,7 +14,6 @@ import Turf
  `NavigationViewController` is responsible for displaying a default drop-in navigation UI.
  */
 open class RouteController: NSObject, ElectronicHorizonObserver {
-
     public enum DefaultBehavior {
         public static let shouldRerouteFromLocation: Bool = true
         public static let shouldDiscardLocation: Bool = true
@@ -54,7 +53,7 @@ open class RouteController: NSObject, ElectronicHorizonObserver {
 
         let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
 
-        let electronicHorizonOptions = ElectronicHorizonOptions(length: 500, expansion: 1, branchLength: 50, includeGeometries: true)
+        let electronicHorizonOptions = ElectronicHorizonOptions(length: 500, expansion: 1, branchLength: 50, includeGeometries: true, doNotRecalculateInUncertainState: true)
         let navigatorConfig = NavigatorConfig()
         navigatorConfig.electronicHorizonOptions = electronicHorizonOptions
 
@@ -276,7 +275,7 @@ open class RouteController: NSObject, ElectronicHorizonObserver {
         let activeGuidanceOptions = ActiveGuidanceOptions(mode: mode(progress.routeOptions.profileIdentifier),
                                                           geometryEncoding: geometryEncoding(progress.routeOptions.shapeFormat),
                                                           waypoints: waypoints)
-        navigator.setRouteForRouteResponse(routeJSONString, route: 0, leg: UInt32(routeProgress.legIndex), options: activeGuidanceOptions)
+        navigator?.setRouteForRouteResponse(routeJSONString, route: 0, leg: UInt32(routeProgress.legIndex), options: activeGuidanceOptions)
     }
     
     /// updateRouteLeg is used to notify nav-native of the developer changing the active route-leg.
@@ -302,7 +301,7 @@ open class RouteController: NSObject, ElectronicHorizonObserver {
             let status = navigator.status(at: location.timestamp)
 
             // Notify observers if the step’s remaining distance has changed.
-            update(progress: routeProgress, with: CLLocation(status.location), rawLocation: location)
+            update(progress: routeProgress, with: CLLocation(status.location), rawLocation: location, upcomingRouteAlerts: status.upcomingRouteAlerts)
 
             let willReroute = !userIsOnRoute(location, status: status) && delegate?.router(self, shouldRerouteFrom: location)
                 ?? DefaultBehavior.shouldRerouteFromLocation
@@ -450,12 +449,22 @@ open class RouteController: NSObject, ElectronicHorizonObserver {
         return navigator?.getHistory()
     }
 
+    // MARK: - ElectronicHorizonDelegate
+
     public func onElectronicHorizonUpdated(for horizon: ElectronicHorizon, type: ElectronicHorizonResultType) {
         electronicHorizonDelegate?.electronicHorizonDidUpdate(horizon, type: type)
     }
 
-    public func onPositionUpdated(for position: GraphPosition) {
-        electronicHorizonDelegate?.didUpdatePosition(position)
+    public func onPositionUpdated(for position: GraphPosition, distances: [String : RoadObjectDistanceInfo]) {
+        electronicHorizonDelegate?.didUpdatePosition(position, distances: distances)
+    }
+
+    public func onRoadObjectEnter(forRoadObjectId roadObjectId: String, enterFromStart: Bool) {
+        electronicHorizonDelegate?.roadObjectEnter(roadObjectId: roadObjectId, fromStart: enterFromStart)
+    }
+
+    public func onRoadObjectExit(forRoadObjectId roadObjectId: String, exitFromEnd: Bool) {
+        electronicHorizonDelegate?.roadObjectExit(roadObjectId: roadObjectId, fromEnd: exitFromEnd)
     }
 
     public var peer: MBXPeerWrapper?

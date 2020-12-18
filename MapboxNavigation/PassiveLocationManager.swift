@@ -126,7 +126,15 @@ extension PassiveLocationManager: PassiveLocationDataSourceDelegate {
         electronicHorizonDelegate?.electronicHorizonDidUpdate(horizon, type: type)
     }
 
-    public func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didUpdateElectronicHorizonPosition position: GraphPosition) {
-        electronicHorizonDelegate?.didUpdatePosition(position)
+    public func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didUpdateElectronicHorizonPosition position: GraphPosition, distances: [String : RoadObjectDistanceInfo]) {
+        electronicHorizonDelegate?.didUpdatePosition(position, distances: distances)
+    }
+
+    public func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, roadObjectDidEnter roadObject: String, fromStart: Bool) {
+        electronicHorizonDelegate?.roadObjectEnter(roadObjectId: roadObject, fromStart: fromStart)
+    }
+
+    public func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, roadObjectDidExit roadObject: String, fromEnd: Bool) {
+        electronicHorizonDelegate?.roadObjectExit(roadObjectId: roadObject, fromEnd: fromEnd)
     }
 }

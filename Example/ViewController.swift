@@ -3,7 +3,6 @@ import MapboxCoreNavigation
 import MapboxNavigation
 import MapboxNavigationNative
 import MapboxDirections
-import Turf
 
 private typealias RouteRequestSuccess = ((RouteResponse) -> Void)
 private typealias RouteRequestFailure = ((Error) -> Void)
@@ -32,7 +31,7 @@ class ViewController: UIViewController {
             }
         }
     }
-    var waypoints: [Waypoint] = [] {
+    var waypoints: [MapboxDirections.Waypoint] = [] {
         didSet {
             waypoints.forEach {
                 $0.coordinateAccuracy = -1
@@ -462,7 +461,7 @@ extension ViewController: MGLMapViewDelegate {
 
 // MARK: - NavigationMapViewDelegate
 extension ViewController: NavigationMapViewDelegate {
-    func navigationMapView(_ mapView: NavigationMapView, didSelect waypoint: Waypoint) {
+    func navigationMapView(_ mapView: NavigationMapView, didSelect waypoint: MapboxDirections.Waypoint) {
         guard let responseOptions = response?.options, case let .route(routeOptions) = responseOptions else { return }
         let modifiedOptions = routeOptions.without(waypoint: waypoint)
 
@@ -535,7 +534,7 @@ extension ViewController: NavigationViewControllerDelegate {
     // If you implement this method, return true to preserve this behavior.
     // Return false to remain on the current leg, for example to allow the user to provide input.
     // If you return false, you must manually advance to the next leg. See the example above in `confirmationControllerDidConfirm(_:)`.
-    func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool {
+    func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: MapboxDirections.Waypoint) -> Bool {
         // When the user arrives, present a view controller that prompts the user to continue to their next destination
         // This type of screen could show information about a destination, pickup/dropoff confirmation, instructions upon arrival, etc.
         
@@ -624,7 +623,15 @@ extension NavigationViewController: ElectronicHorizonDelegate {
         logUnimplemented(protocolType: ElectronicHorizonDelegate.self,  level: .info)
     }
 
-    public func didUpdatePosition(_ position: GraphPosition) {
+    public func didUpdatePosition(_ position: GraphPosition, distances: [String : RoadObjectDistanceInfo]) {
+        logUnimplemented(protocolType: ElectronicHorizonDelegate.self,  level: .info)
+    }
+
+    public func roadObjectEnter(roadObjectId: String, fromStart: Bool) {
+        logUnimplemented(protocolType: ElectronicHorizonDelegate.self,  level: .info)
+    }
+
+    public func roadObjectExit(roadObjectId: String, fromEnd: Bool) {
         logUnimplemented(protocolType: ElectronicHorizonDelegate.self,  level: .info)
     }
 }
