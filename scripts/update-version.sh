@@ -32,7 +32,7 @@ find . -type f -name '*.podspec' -exec sed -i '' "s/^ *s.version *=.*$/  s.versi
 
 step "Updating CocoaPods installation test fixture…"
 
-cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall/
+cd Tests/CocoaPodsTest/PodInstall/
 pod update
 cd -
 

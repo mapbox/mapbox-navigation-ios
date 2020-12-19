@@ -16,7 +16,7 @@ step-library:
   - &restore-cache-cocoapods
       restore_cache:
         keys:
-          - nav-cache-pod-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "MapboxCoreNavigationTests/CocoaPodsTest/PodInstall/Podfile.lock" }}
+          - nav-cache-pod-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Tests/CocoaPodsTest/PodInstall/Podfile.lock" }}
           - nav-cache-pod-v1
 
   - &restore-cache-cocoapods-installation
@@ -38,9 +38,9 @@ step-library:
   
   - &save-cache-cocoapods
       save_cache:
-        key: nav-cache-pod-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "MapboxCoreNavigationTests/CocoaPodsTest/PodInstall/Podfile.lock" }}
+        key: nav-cache-pod-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Tests/CocoaPodsTest/PodInstall/Podfile.lock" }}
         paths:
-          - MapboxCoreNavigationTests/CocoaPodsTest/PodInstall/Pods
+          - Tests/CocoaPodsTest/PodInstall/Pods
 
   - &restore-cache-podmaster
       restore_cache:
@@ -149,12 +149,12 @@ jobs:
       - when:
           condition: << parameters.update >>
           steps:
-            - run: cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall && bundle exec pod update --repo-update
+            - run: cd Tests/CocoaPodsTest/PodInstall && bundle exec pod update --repo-update
       - unless:
           condition: << parameters.update >>
           steps:
-            - run: cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall && bundle exec pod install --repo-update
-      - run: cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall && xcodebuild -workspace PodInstall.xcworkspace -scheme PodInstall -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=iPhone 8 Plus' clean build | xcpretty
+            - run: cd Tests/CocoaPodsTest/PodInstall && bundle exec pod install --repo-update
+      - run: cd Tests/CocoaPodsTest/PodInstall && xcodebuild -workspace PodInstall.xcworkspace -scheme PodInstall -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=iPhone 8 Plus' clean build | xcpretty
       - when:
           condition: << parameters.lint >>
           steps:
