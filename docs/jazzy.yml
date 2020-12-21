@@ -29,7 +29,6 @@ custom_categories:
       - MultiplexedSpeechSynthesizer
       - SpeechError
       - SpeechFailureAction
-      - SpokenInstructionErrorCode
       - NavigationOptions
       - NavigationView
   - name: Core Navigation Logic

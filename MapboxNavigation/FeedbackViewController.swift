@@ -1,6 +1,5 @@
 import UIKit
 import MapboxCoreNavigation
-import AVFoundation
 
 extension FeedbackViewController: UIViewControllerTransitioningDelegate {
     public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
@@ -76,18 +75,18 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
      */
     public var sections: [FeedbackItem] {
         [FeedbackType.incorrectVisual(subtype: nil),
-        FeedbackType.confusingAudio(subtype: nil),
-        FeedbackType.illegalRoute(subtype: nil),
-        FeedbackType.roadClosure(subtype: nil),
-        FeedbackType.routeQuality(subtype: nil),
-        FeedbackType.positioning(subtype: nil)].map { $0.generateFeedbackItem() }
+         FeedbackType.confusingAudio(subtype: nil),
+         FeedbackType.illegalRoute(subtype: nil),
+         FeedbackType.roadClosure(subtype: nil),
+         FeedbackType.routeQuality(subtype: nil),
+         FeedbackType.positioning(subtype: nil)].map { $0.generateFeedbackItem() }
     }
 
     /**
      Controls whether or not the feedback view controller shows a second level of detail for feedback items.
      When disabled, feedback will be submitted on a single tap of a top level category.
      When enabled, a first tap reveals an instance of FeedbackSubtypeViewController. A second tap on an item there will submit a feedback.
-    */
+     */
     public var detailedFeedbackEnabled: Bool = false
     
     public weak var delegate: FeedbackViewControllerDelegate?

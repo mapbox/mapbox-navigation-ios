@@ -1,6 +1,5 @@
 import UIKit
 
-
 public class StyleKitMarker: NSObject {
 
     //// Drawing Methods

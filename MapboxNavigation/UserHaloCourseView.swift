@@ -1,15 +1,14 @@
 import UIKit
 
 /**
-A view representing the user’s reduced accuracy location on screen.
-*/
-
+ A view representing the user’s reduced accuracy location on screen.
+ */
 public class UserHaloCourseView: UIView, CourseUpdatable {
     private var lastLocationUpdate: Date?
 
     /**
-    Transforms the location of the user halo.
-    */
+     Transforms the location of the user halo.
+     */
     public func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, tracksUserCourse: Bool) {
         let duration: TimeInterval = animated ? 1 : 0
         UIView.animate(withDuration: duration, delay: 0, options: [.beginFromCurrentState, .curveLinear], animations: {

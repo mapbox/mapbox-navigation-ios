@@ -1,6 +1,5 @@
 import UIKit
 import MapboxDirections
-import MapboxCoreNavigation
 
 /// :nodoc:
 public class InstructionsCardCell: UICollectionViewCell {

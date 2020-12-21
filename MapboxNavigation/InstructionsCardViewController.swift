@@ -200,8 +200,8 @@ open class InstructionsCardViewController: UIViewController {
     
     public func instructionContainerView(at indexPath: IndexPath) -> InstructionsCardContainerView? {
         guard let cell = instructionCollectionView.cellForItem(at: indexPath),
-            cell.subviews.count > 1 else {
-                return nil
+              cell.subviews.count > 1 else {
+            return nil
         }
         
         return cell.subviews[1] as? InstructionsCardContainerView

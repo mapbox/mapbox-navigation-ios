@@ -1,7 +1,5 @@
 import UIKit
 import Mapbox
-import Turf
-import MapboxCoreNavigation
 
 /**
  A control indicating the direction that the vehicle is traveling towards.

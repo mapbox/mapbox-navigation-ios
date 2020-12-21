@@ -287,8 +287,8 @@ open class TopBannerViewController: UIViewController {
             for child in children {
                 child.alpha = 1.0
             }
-            }, completion: { _ in
-                completion?()
+        }, completion: { _ in
+            completion?()
         })
     }
     

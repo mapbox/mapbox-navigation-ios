@@ -1,7 +1,5 @@
 import UIKit
 import MapboxDirections
-import MapboxCoreNavigation
-import Turf
 
 /// A view that contains a simple image indicating a type of maneuver.
 @IBDesignable
@@ -100,8 +98,8 @@ open class ManeuverView: UIView {
         let resizing: ManeuversStyleKit.ResizingBehavior = .aspectFit
 
         #if TARGET_INTERFACE_BUILDER
-            ManeuversStyleKit.drawFork(frame: bounds, resizing: resizing, primaryColor: currentPrimaryColor, secondaryColor: currentSecondaryColor)
-            return
+        ManeuversStyleKit.drawFork(frame: bounds, resizing: resizing, primaryColor: currentPrimaryColor, secondaryColor: currentSecondaryColor)
+        return
         #endif
 
         guard let visualInstruction = visualInstruction else {

@@ -1,7 +1,7 @@
 import Foundation
 import CoreLocation
 #if os(iOS)
-    import UIKit
+import UIKit
 #endif
 
 extension UIDevice {
@@ -10,9 +10,9 @@ extension UIDevice {
      */
     public var isPluggedIn: Bool {
         #if os(iOS)
-            return [.charging, .full].contains(UIDevice.current.batteryState)
+        return [.charging, .full].contains(UIDevice.current.batteryState)
         #else
-            return false
+        return false
         #endif
     }
 }

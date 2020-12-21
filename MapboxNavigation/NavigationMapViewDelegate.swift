@@ -14,7 +14,7 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
      - parameter identifier: The style identifier.
      - parameter source: The source containing the route data that this method would style.
      - returns: An MGLStyleLayer that is applied to the main route line.
-    */
+     */
     func navigationMapView(_ mapView: NavigationMapView, mainRouteStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
 
     /**
@@ -24,7 +24,7 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
      - parameter identifier: The style identifier.
      - parameter source: The source containing the route data that this method would style.
      - returns: An MGLStyleLayer that is applied as a casing around the main route line.
-    */
+     */
     func navigationMapView(_ mapView: NavigationMapView, mainRouteCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
 
     /**
@@ -34,7 +34,7 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
      - parameter identifier: The style identifier.
      - parameter source: The source containing the route data that this method would style.
      - returns: An MGLStyleLayer that is applied to alternative routes.
-    */
+     */
     func navigationMapView(_ mapView: NavigationMapView, alternativeRouteStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
 
     /**
@@ -44,7 +44,7 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
      - parameter identifier: The style identifier.
      - parameter source: The source containing the route data that this method would style.
      - returns: An MGLStyleLayer that is applied as a casing around alternative route lines.
-    */
+     */
     func navigationMapView(_ mapView: NavigationMapView, alternativeRouteCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
     /**
@@ -118,7 +118,6 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
      - returns: A CGPoint (in regular coordinate-space) that represents the point on-screen where the user location icon should be drawn.
      */
     func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint
-    
 }
 
 public extension NavigationMapViewDelegate {

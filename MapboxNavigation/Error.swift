@@ -10,25 +10,25 @@ import AVKit
  */
 public enum SpeechFailureAction: String {
     /**
-    A failure occurred while attempting to mix audio.
+     A failure occurred while attempting to mix audio.
      */
     case mix
     /**
-    A failure occurred while attempting to duck audio.
+     A failure occurred while attempting to duck audio.
      */
     case duck
     /**
-    A failure occurred while attempting to unduck audio.
+     A failure occurred while attempting to unduck audio.
      */
     case unduck
     /**
-    A failure occurred while attempting to play audio.
+     A failure occurred while attempting to play audio.
      */
     case play
 }
 
 /**
-    A error type returned when encountering errors in the speech engine.
+ A error type returned when encountering errors in the speech engine.
  */
 public enum SpeechError: LocalizedError {
     /**
@@ -74,5 +74,4 @@ public enum SpeechError: LocalizedError {
      - parameter locale: Offending locale
      */
     case unsupportedLocale(locale: Locale)
-    
 }

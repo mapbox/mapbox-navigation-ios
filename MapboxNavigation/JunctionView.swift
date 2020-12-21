@@ -62,7 +62,6 @@ public class JunctionView: UIImageView {
                 }
             }
         }
-        
     }
     
     /**
@@ -96,7 +95,6 @@ public class JunctionView: UIImageView {
             show()
             isCurrentlyVisible = true
         }
-         
     }
     
     /**

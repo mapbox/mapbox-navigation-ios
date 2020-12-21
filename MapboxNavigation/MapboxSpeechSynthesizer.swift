@@ -1,4 +1,3 @@
-
 import AVFoundation
 import MapboxCoreNavigation
 import MapboxDirections
@@ -62,11 +61,11 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
         self.remoteSpeechSynthesizer = SpeechSynthesizer(accessToken: accessToken, host: hostString)
     }
     
-    deinit {        
+    deinit {
         deinitAudioPlayer()
     }
     
-    // MARK: - Methods
+    // MARK: - Public methods
     
     open func prepareIncomingSpokenInstructions(_ instructions: [SpokenInstruction], locale: Locale? = nil) {
         
@@ -143,7 +142,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
         }
     }
     
-    // MARK: - Private Methods
+    // MARK: - Private methods
     
     /**
      Fetches and plays an instruction.

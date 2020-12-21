@@ -1,6 +1,4 @@
 import UIKit
-import Turf
-import Mapbox
 
 /**
  A protocol that represents a `UIView` which tracks the user’s location and course on a `NavigationMapView`.
@@ -122,10 +120,10 @@ public class UserPuckCourseView: UIView, CourseUpdatable {
     
     private func initTimer() {
         staleTimer = Timer(timeInterval: staleRefreshInterval,
-                                target: self,
-                                selector: #selector(refreshPuckStaleState),
-                                userInfo: nil,
-                                repeats: true)
+                           target: self,
+                           selector: #selector(refreshPuckStaleState),
+                           userInfo: nil,
+                           repeats: true)
         RunLoop.current.add(staleTimer, forMode: .common)
     }
     

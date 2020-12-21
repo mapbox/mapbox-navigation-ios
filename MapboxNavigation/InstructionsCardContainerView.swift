@@ -1,6 +1,5 @@
 import UIKit
 import MapboxDirections
-import MapboxCoreNavigation
 
 /**
  The `InstructionsCardContainerViewDelegate` protocol defines a method that allows an object to customize presented visual instructions within the instructions container view.
@@ -168,8 +167,8 @@ public class InstructionsCardContainerView: StylableView {
     
     private func gradientLayer(for view: UIView, with colors:[CGColor]? = nil) -> CAGradientLayer? {
         guard !view.isHidden, let sublayers = view.layer.sublayers,
-            let firstLayer = sublayers.first as? CAGradientLayer,
-            let layerColors = firstLayer.colors as? [CGColor], layerColors.count == 2 else {
+              let firstLayer = sublayers.first as? CAGradientLayer,
+              let layerColors = firstLayer.colors as? [CGColor], layerColors.count == 2 else {
             return nil
         }
         
@@ -284,10 +283,10 @@ public class InstructionsCardContainerView: StylableView {
 extension InstructionsCardContainerView: InstructionsCardContainerViewDelegate {
     public func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
         if let primaryLabel = label as? PrimaryLabel,
-            let presented = delegate?.primaryLabel(primaryLabel, willPresent: instruction, as: presented) {
+           let presented = delegate?.primaryLabel(primaryLabel, willPresent: instruction, as: presented) {
             return presented
         } else if let secondaryLabel = label as? SecondaryLabel,
-            let presented = delegate?.secondaryLabel(secondaryLabel, willPresent: instruction, as: presented) {
+                  let presented = delegate?.secondaryLabel(secondaryLabel, willPresent: instruction, as: presented) {
             return presented
         } else {
             let highlighted = instructionsCardView.distanceFromCurrentLocation < InstructionsCardConstants.highlightDistance

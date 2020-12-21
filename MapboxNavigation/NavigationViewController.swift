@@ -1,11 +1,8 @@
 import UIKit
 import MapboxCoreNavigation
 import MapboxDirections
-import MapboxSpeech
 import AVFoundation
-import UserNotifications
 import MobileCoreServices
-import Mapbox
 
 /**
  A container view controller is a view controller that behaves as a navigation component; that is, it responds as the user progresses along a route according to the `NavigationServiceDelegate` protocol.
@@ -193,7 +190,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
 
     /**
      Controls whether or not the FeedbackViewController shows a second level of detail for feedback items.
-    */
+     */
     public var detailedFeedbackEnabled: Bool = false {
         didSet {
             mapViewController?.detailedFeedbackEnabled = detailedFeedbackEnabled

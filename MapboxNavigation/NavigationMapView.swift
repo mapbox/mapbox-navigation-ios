@@ -328,10 +328,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         let conservativeFramesPerSecond = UIDevice.current.isPluggedIn ? FrameIntervalOptions.pluggedInFramesPerSecond : minimumFramesPerSecond
         
         if let upcomingStep = routeProgress.currentLegProgress.upcomingStep,
-            upcomingStep.maneuverDirection == .straightAhead || upcomingStep.maneuverDirection == .slightLeft || upcomingStep.maneuverDirection == .slightRight {
+           upcomingStep.maneuverDirection == .straightAhead || upcomingStep.maneuverDirection == .slightLeft || upcomingStep.maneuverDirection == .slightRight {
             preferredFramesPerSecond = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFramesPerSecond : conservativeFramesPerSecond
         } else if durationUntilNextManeuver > FrameIntervalOptions.durationUntilNextManeuver &&
-            durationSincePreviousManeuver > FrameIntervalOptions.durationSincePreviousManeuver {
+                    durationSincePreviousManeuver > FrameIntervalOptions.durationSincePreviousManeuver {
             preferredFramesPerSecond = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFramesPerSecond : conservativeFramesPerSecond
         } else {
             preferredFramesPerSecond = FrameIntervalOptions.pluggedInFramesPerSecond
@@ -449,8 +449,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     
     public func showcase(_ routes: [Route], animated: Bool = false) {
         guard let active = routes.first,
-            let coords = active.shape?.coordinates,
-            !coords.isEmpty else { return } //empty array
+              let coords = active.shape?.coordinates,
+              !coords.isEmpty else { return } //empty array
         
         removeArrow()
         removeRoutes()
@@ -834,7 +834,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      */
     public func addArrow(route: Route, legIndex: Int, stepIndex: Int) {
         guard route.legs.indices.contains(legIndex),
-            route.legs[legIndex].steps.indices.contains(stepIndex) else { return }
+              route.legs[legIndex].steps.indices.contains(stepIndex) else { return }
         
         let step = route.legs[legIndex].steps[stepIndex]
         let maneuverCoordinate = step.maneuverLocation
@@ -964,8 +964,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /** Modifies the gesture recognizers to also disable course tracking. */
     func makeGestureRecognizersRespectCourseTracking() {
         for gestureRecognizer in gestureRecognizers ?? []
-            where gestureRecognizer is UIPanGestureRecognizer || gestureRecognizer is UIRotationGestureRecognizer {
-                gestureRecognizer.addTarget(self, action: #selector(disableUserCourseTracking))
+        where gestureRecognizer is UIPanGestureRecognizer || gestureRecognizer is UIRotationGestureRecognizer {
+            gestureRecognizer.addTarget(self, action: #selector(disableUserCourseTracking))
         }
     }
     
@@ -1202,7 +1202,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         return symbol
     }
 
-    
     /**
      Attempts to localize road labels into the local language and other labels
      into the system’s preferred language.
@@ -1243,7 +1242,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         for layer in style.layers where layer is MGLSymbolStyleLayer {
             let layer = layer as! MGLSymbolStyleLayer
             guard let sourceIdentifier = layer.sourceIdentifier,
-                streetsSourceIdentifiers.contains(sourceIdentifier) else {
+                  streetsSourceIdentifiers.contains(sourceIdentifier) else {
                 continue
             }
             guard let text = layer.text else {

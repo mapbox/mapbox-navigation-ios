@@ -29,7 +29,7 @@ extension NavigationMapView {
     /**
      Tranform the route data into nested arrays of legs -> steps -> coordinates.
      The first and last point of adjacent steps overlap and are duplicated.
-    */
+     */
     func parseRoutePoints(route: Route) -> RoutePoints {
         let nestedList = route.legs.map { (routeLeg: RouteLeg) -> [[CLLocationCoordinate2D]] in
             return routeLeg.steps.map { (routeStep: RouteStep) -> [CLLocationCoordinate2D] in
@@ -48,7 +48,7 @@ extension NavigationMapView {
     
     /**
      Find and cache the index of the upcoming [RouteLineDistancesIndex].
-    */
+     */
     public func updateUpcomingRoutePointIndex(routeProgress: RouteProgress) {
         guard let completeRoutePoints = routePoints else {
             routeRemainingDistancesIndex = nil
@@ -57,13 +57,13 @@ extension NavigationMapView {
         let currentLegProgress = routeProgress.currentLegProgress
         let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
         /**
-        Find the count of remaining points in the current step.
-        */
+         Find the count of remaining points in the current step.
+         */
         var allRemainingPoints = getSlicedLinePointsCount(currentLegProgress: currentLegProgress, currentStepProgress: currentStepProgress)
         
         /**
          Add to the count of remaining points all of the remaining points on the current leg, after the current step.
-        */
+         */
         let currentLegSteps = completeRoutePoints.nestedList[routeProgress.legIndex]
         let startIndex = currentLegProgress.stepIndex + 1
         let endIndex = currentLegSteps.count - 1
@@ -73,14 +73,14 @@ extension NavigationMapView {
         
         /**
          Add to the count of remaining points all of the remaining legs.
-        */
+         */
         for index in stride(from: routeProgress.legIndex + 1, to: completeRoutePoints.nestedList.count, by: 1) {
             allRemainingPoints += completeRoutePoints.nestedList[index].flatMap{ $0 }.count
         }
         
         /**
          After calculating the number of remaining points and the number of all points,  calculate the index of the upcoming point.
-        */
+         */
         let allPoints = completeRoutePoints.flatList.count
         routeRemainingDistancesIndex = allPoints - allRemainingPoints - 1
     }
@@ -117,7 +117,7 @@ extension NavigationMapView {
     
     /**
      Calculates the distance between 2 points using [EPSG:3857 projection](https://epsg.io/3857).
-    */
+     */
     func calculateDistance(coordinate1: CLLocationCoordinate2D, coordinate2: CLLocationCoordinate2D) -> Double {
         let distanceArray: [Double] = [
             (projectX(coordinate1.longitude) - projectX(coordinate2.longitude)),

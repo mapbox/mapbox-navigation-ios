@@ -24,8 +24,7 @@ struct RecentItem: Codable, Equatable {
     static func loadDefaults() -> [RecentItem] {
         let data = try? Data(contentsOf: RecentItem.filePathUrl)
         let decoder = JSONDecoder()
-        if let data = data,
-            let recentItems = try? decoder.decode([RecentItem].self, from: data) {
+        if let data = data, let recentItems = try? decoder.decode([RecentItem].self, from: data) {
             return recentItems.sorted(by: { $0.timestamp > $1.timestamp })
         }
         

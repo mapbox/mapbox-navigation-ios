@@ -203,8 +203,8 @@ open class LaneView: UIView {
         }
         
         #if TARGET_INTERFACE_BUILDER
-            isValid = true
-            LanesStyleKit.drawLaneRightOnly(primaryColor: appropriatePrimaryColor, secondaryColor: appropriateSecondaryColor)
+        isValid = true
+        LanesStyleKit.drawLaneRightOnly(primaryColor: appropriatePrimaryColor, secondaryColor: appropriateSecondaryColor)
         #endif
     }
 }

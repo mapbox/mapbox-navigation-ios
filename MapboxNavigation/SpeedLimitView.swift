@@ -1,6 +1,5 @@
 import UIKit
 import MapboxDirections
-import MapboxCoreNavigation
 
 /**
  A view that displays a speed limit and resembles a real-world speed limit sign.
