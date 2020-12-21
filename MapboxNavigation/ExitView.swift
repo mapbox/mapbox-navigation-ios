@@ -1,6 +1,6 @@
 import UIKit
 
-enum ExitSide: String{
+enum ExitSide: String {
     case left, right
     
     var exitImage: UIImage {

@@ -120,10 +120,10 @@ public class UserPuckCourseView: UIView, CourseUpdatable {
     
     private func initTimer() {
         staleTimer = Timer(timeInterval: staleRefreshInterval,
-                                target: self,
-                                selector: #selector(refreshPuckStaleState),
-                                userInfo: nil,
-                                repeats: true)
+                           target: self,
+                           selector: #selector(refreshPuckStaleState),
+                           userInfo: nil,
+                           repeats: true)
         RunLoop.current.add(staleTimer, forMode: .common)
     }
     

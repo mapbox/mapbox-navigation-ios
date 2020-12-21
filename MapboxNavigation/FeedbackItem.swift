@@ -7,7 +7,6 @@ extension UIImage {
     }
 }
 
-
 public extension FeedbackType {
 
     // TODO: Localize these strings
@@ -95,31 +94,30 @@ public extension FeedbackType {
         var imageName = ""
 
         switch self {
-            case .general:
-                imageName = "feedback"
-            case .incorrectVisual(_):
-                imageName = "incorrect_visual"
-            case .confusingAudio(_):
-                imageName = "confusing_audio"
-            case .routeQuality(_):
-                imageName = "route_quality"
-            case .illegalRoute(_):
-                imageName = "illegal_route"
-            case .roadClosure(_):
-                imageName = "road_closure"
-            case .positioning(_):
-                imageName = "positioning"
+        case .general:
+            imageName = "feedback"
+        case .incorrectVisual(_):
+            imageName = "incorrect_visual"
+        case .confusingAudio(_):
+            imageName = "confusing_audio"
+        case .routeQuality(_):
+            imageName = "route_quality"
+        case .illegalRoute(_):
+            imageName = "illegal_route"
+        case .roadClosure(_):
+            imageName = "road_closure"
+        case .positioning(_):
+            imageName = "positioning"
         }
 
         return .feedbackImage(named: imageName)
     }
 
-
     /// Generates a `FeedbackItem` for a given `FeedbackType`
     /// - Returns: A `FeedbackItem` model object used to render UI
     func generateFeedbackItem() -> FeedbackItem {
         return FeedbackItem(title: self.title, image: self.image, feedbackType: self)
-   }
+    }
 }
 
 /**

@@ -56,10 +56,10 @@ extension CarPlaySearchController: CPSearchTemplateDelegate {
     
     public func searchTemplate(_ searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void) {
         guard let userInfo = item.userInfo as? [String: Any],
-            let placemark = userInfo[CarPlaySearchController.CarPlayGeocodedPlacemarkKey] as? GeocodedPlacemark,
-            let location = placemark.location else {
-                completionHandler()
-                return
+              let placemark = userInfo[CarPlaySearchController.CarPlayGeocodedPlacemarkKey] as? GeocodedPlacemark,
+              let location = placemark.location else {
+            completionHandler()
+            return
         }
         
         CarPlaySearchController.recentItems.add(RecentItem(placemark))
@@ -104,10 +104,10 @@ extension CarPlaySearchController: CPSearchTemplateDelegate {
     @available(iOS 12.0, *)
     public func selectResult(item: CPListItem, completionHandler: @escaping () -> Void) {
         guard let userInfo = item.userInfo as? [String: Any],
-            let placemark = userInfo[CarPlaySearchController.CarPlayGeocodedPlacemarkKey] as? GeocodedPlacemark,
-            let location = placemark.routableLocations?.first ?? placemark.location else {
-                completionHandler()
-                return
+              let placemark = userInfo[CarPlaySearchController.CarPlayGeocodedPlacemarkKey] as? GeocodedPlacemark,
+              let location = placemark.routableLocations?.first ?? placemark.location else {
+            completionHandler()
+            return
         }
         
         CarPlaySearchController.recentItems.add(RecentItem(placemark))
@@ -148,8 +148,8 @@ extension CarPlaySearchController: CPListTemplateDelegate {
     public func listTemplate(_ listTemplate: CPListTemplate, didSelect item: CPListItem, completionHandler: @escaping () -> Void) {
         // Selected a search item from the extended list?
         if let userInfo = item.userInfo as? [String: Any],
-            let placemark = userInfo[CarPlaySearchController.CarPlayGeocodedPlacemarkKey] as? GeocodedPlacemark,
-            let location = placemark.location {
+           let placemark = userInfo[CarPlaySearchController.CarPlayGeocodedPlacemarkKey] as? GeocodedPlacemark,
+           let location = placemark.location {
             let destinationWaypoint = Waypoint(location: location)
             delegate?.popTemplate(animated: false)
             delegate?.previewRoutes(to: destinationWaypoint, completionHandler: completionHandler)
@@ -178,7 +178,7 @@ extension GeocodedPlacemark {
             }
             
             if let regionCode = administrativeRegion?.code,
-                let abbreviatedRegion = regionCode.components(separatedBy: "-").last, (abbreviatedRegion as NSString).intValue == 0 {
+               let abbreviatedRegion = regionCode.components(separatedBy: "-").last, (abbreviatedRegion as NSString).intValue == 0 {
                 // Cut off country and postal code and add abbreviated state/region code at the end.
                 
                 let stitle = lines.prefix(2).joined(separator: NSLocalizedString("ADDRESS_LINE_SEPARATOR", value: ", ", comment: "Delimiter between lines in an address when displayed inline"))

@@ -23,8 +23,8 @@ extension VisualInstruction {
         let image = mv.imageRepresentation
         return shouldFlipImage(side: side) ? image?.withHorizontallyFlippedOrientation() : image
     }
-
-#if canImport(CarPlay)
+    
+    #if canImport(CarPlay)
     /// Returns a `CPImageSet` representing the maneuver.
     @available(iOS 12.0, *)
     public func maneuverImageSet(side: DrivingSide) -> CPImageSet? {
@@ -48,7 +48,7 @@ extension VisualInstruction {
             return [.left, .slightLeft, .sharpLeft].contains(maneuverDirection ?? .straightAhead)
         }
     }
-
+    
     /**
      Glanceable instruction given the available space, appearance styling, and attachments.
      
@@ -75,5 +75,5 @@ extension VisualInstruction {
         
         return instructionLabel.attributedText
     }
-#endif
+    #endif
 }

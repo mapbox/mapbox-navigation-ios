@@ -98,8 +98,8 @@ open class ManeuverView: UIView {
         let resizing: ManeuversStyleKit.ResizingBehavior = .aspectFit
 
         #if TARGET_INTERFACE_BUILDER
-            ManeuversStyleKit.drawFork(frame: bounds, resizing: resizing, primaryColor: currentPrimaryColor, secondaryColor: currentSecondaryColor)
-            return
+        ManeuversStyleKit.drawFork(frame: bounds, resizing: resizing, primaryColor: currentPrimaryColor, secondaryColor: currentSecondaryColor)
+        return
         #endif
 
         guard let visualInstruction = visualInstruction else {

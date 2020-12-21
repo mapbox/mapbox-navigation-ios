@@ -190,7 +190,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
 
     /**
      Controls whether or not the FeedbackViewController shows a second level of detail for feedback items.
-    */
+     */
     public var detailedFeedbackEnabled: Bool = false {
         didSet {
             mapViewController?.detailedFeedbackEnabled = detailedFeedbackEnabled

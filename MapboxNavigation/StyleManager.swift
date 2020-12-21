@@ -122,9 +122,9 @@ open class StyleManager {
         guard let location = delegate?.location(for:self) else { return }
         
         guard let solar = Solar(date: date, coordinate: location.coordinate),
-            let sunrise = solar.sunrise,
-            let sunset = solar.sunset else {
-                return
+              let sunrise = solar.sunrise,
+              let sunset = solar.sunset else {
+            return
         }
         
         guard let interval = solar.date.intervalUntilTimeOfDayChanges(sunrise: sunrise, sunset: sunset) else {
@@ -194,9 +194,9 @@ open class StyleManager {
     
     func styleType(for location: CLLocation) -> StyleType {
         guard let solar = Solar(date: date, coordinate: location.coordinate),
-            let sunrise = solar.sunrise,
-            let sunset = solar.sunset else {
-                return .day
+              let sunrise = solar.sunrise,
+              let sunset = solar.sunset else {
+            return .day
         }
         
         return solar.date.isNighttime(sunrise: sunrise, sunset: sunset) ? .night : .day
@@ -206,7 +206,7 @@ open class StyleManager {
         NotificationCenter.default.post(name: .styleManagerDidApplyStyle, object: self, userInfo: [
             StyleManagerNotificationUserInfoKey.styleKey: style,
             StyleManagerNotificationUserInfoKey.styleManagerKey: self
-            ])
+        ])
     }
     
     func forceRefreshAppearanceIfNeeded() {

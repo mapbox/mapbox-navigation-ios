@@ -1359,7 +1359,7 @@
 				8A0E0A6E257AE59100C2E924 /* Instructions */,
 				8A0E0A6D257AE4B300C2E924 /* Cache */,
 				8A0E0A5F257AD9FC00C2E924 /* Style */,
-				8A0E0A38257AD85A00C2E924 /* EndOfRoute */,
+				8A0E0A38257AD85A00C2E924 /* End of Route */,
 				8A0E09FB257ACD4100C2E924 /* Speech */,
 				8A0E09FA257ACD2C00C2E924 /* Puck */,
 				8A0E09F9257ACACC00C2E924 /* Feedback */,
@@ -1589,13 +1589,13 @@
 			name = Speech;
 			sourceTree = "<group>";
 		};
-		8A0E0A38257AD85A00C2E924 /* EndOfRoute */ = {
+		8A0E0A38257AD85A00C2E924 /* End of Route */ = {
 			isa = PBXGroup;
 			children = (
 				8DB63A391FBBCA2200928389 /* RatingControl.swift */,
 				8DE879651FBB9980002F06C0 /* EndOfRouteViewController.swift */,
 			);
-			name = EndOfRoute;
+			name = "End of Route";
 			sourceTree = "<group>";
 		};
 		8A0E0A5F257AD9FC00C2E924 /* Style */ = {
