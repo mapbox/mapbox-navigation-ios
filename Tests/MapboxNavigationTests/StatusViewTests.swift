@@ -19,7 +19,6 @@ class StatusViewTests: XCTestCase {
     
     func testWithDelayLongerThanDuration() {
         let seconds = 10.0
-//        Thread.sleep(forTimeInterval: seconds)
         XCTAssertTrue(statusView.isHidden)
         addNewStatus(status: firstStatus())
         XCTAssertFalse(statusView.isHidden)

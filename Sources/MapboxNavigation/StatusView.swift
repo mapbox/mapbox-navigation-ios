@@ -211,11 +211,19 @@ public class StatusView: UIControl {
     /**
      Hides the status view.
      */
-    public func hide(delay: TimeInterval = 0, animated: Bool = true) {
+    public func hide(with status: Status? = nil, delay: TimeInterval = 0, animated: Bool = true) {
+        
+        var boolFlag = true
+        var alpha = 0
+        if status != nil {
+            boolFlag = false
+            alpha = 1
+        }
+        
         let hide = {
-            self.isHidden = true
-            self.textLabel.alpha = 0
-            self.activityIndicatorView.isHidden = true
+            self.isHidden = boolFlag
+            self.textLabel.alpha = CGFloat(alpha)
+            self.activityIndicatorView.isHidden = boolFlag
         }
         
         let animate = {
