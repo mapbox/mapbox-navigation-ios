@@ -159,10 +159,7 @@ public class StatusView: UIControl {
             // if we hide a Status and there are Statuses left in the statuses array, show the Status with highest priority
             guard let highestPriorityStatus = statuses.min(by: {$0.priority.rawValue < $1.priority.rawValue}) else { return }
             show(status: highestPriorityStatus)
-//            DispatchQueue.main.asyncAfter(deadline: .now() + highestPriorityStatus.duration) {
-                print("!!! triggered async to hide status")
-                self.hide(with: highestPriorityStatus)
-//            }
+            hide(with: highestPriorityStatus, delay: highestPriorityStatus.duration)
         }
     }
     
