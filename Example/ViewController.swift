@@ -298,8 +298,6 @@ class ViewController: UIViewController {
         self?.presentAlert(message: error.localizedDescription)
     }
 
-    private var foundAllBuildings = false
-
     // MARK: - Init
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -384,7 +382,7 @@ class ViewController: UIViewController {
 
         // Example of highlighting buildings in 2d and directly using the API on NavigationMapView.
         let buildingHighlightCoordinates = waypoints.compactMap { $0.targetCoordinate }
-        foundAllBuildings = mapView.highlightBuildings(at: buildingHighlightCoordinates, in3D: false)
+        mapView.highlightBuildings(at: buildingHighlightCoordinates, in3D: false)
 
         requestRoute()
     }
@@ -675,10 +673,10 @@ extension ViewController: MGLMapViewDelegate {
     }
 
     func mapViewRegionIsChanging(_ mapView: MGLMapView) {
-        if activeNavigationViewController == nil, foundAllBuildings == false, let navMapView = mapView as? NavigationMapView {
+        if activeNavigationViewController == nil, let navMapView = mapView as? NavigationMapView {
             let buildingHighlightCoordinates = waypoints.compactMap { $0.targetCoordinate }
             if buildingHighlightCoordinates.count > 0 {
-                foundAllBuildings = navMapView.highlightBuildings(at: buildingHighlightCoordinates, in3D: false)
+                navMapView.highlightBuildings(at: buildingHighlightCoordinates, in3D: false)
             }
         }
     }

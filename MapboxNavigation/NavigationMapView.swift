@@ -1364,15 +1364,9 @@ extension NavigationMapView {
      - parameter coordinates: Coordinates which represent building locations.
      - parameter extrudesBuildings: Switch which allows to highlight buildings in either 2D or 3D. Defaults to true.
      
-     - returns: Bool indicating if number of buildings found equals number of coordinates supplied.
      */
-    @discardableResult public func highlightBuildings(at coordinates: [CLLocationCoordinate2D], in3D extrudesBuildings: Bool = true) -> Bool {
-//        let foundBuildingIds = Set(coordinates.compactMap({ buildingIdentifier(at: $0) }))
-//        highlightBuildings(with: foundBuildingIds, in3D: extrudesBuildings)
-//        return foundBuildingIds.count == coordinates.count
-
-        self.highlightBuildings(coordinates, in3D: extrudesBuildings, extrudeAll: false)
-        return 0
+    public func highlightBuildings(at coordinates: [CLLocationCoordinate2D], in3D extrudesBuildings: Bool = true) {
+        self.highlightBuildings(with: coordinates, in3D: extrudesBuildings, extrudeAll: true)
     }
     
     /**
@@ -1403,8 +1397,6 @@ extension NavigationMapView {
         
         let highlightedBuildingsLayer = MGLFillExtrusionStyleLayer(identifier: StyleLayerIdentifier.buildingExtrusion, source: buildingsSource)
         highlightedBuildingsLayer.sourceLayerIdentifier = "building"
-        highlightedBuildingsLayer.fillExtrusionColor = NSExpression(forConstantValue: buildingDefaultColor)
-        highlightedBuildingsLayer.fillExtrusionOpacity = NSExpression(forConstantValue: 0.05)
         highlightedBuildingsLayer.fillExtrusionHeightTransition = MGLTransition(duration: 0.8, delay: 0)
         highlightedBuildingsLayer.fillExtrusionOpacityTransition = MGLTransition(duration: 0.8, delay: 0)
         
@@ -1426,44 +1418,8 @@ extension NavigationMapView {
         
         return nil
     }
-    
-    private func highlightBuildings(with identifiers: Set<Int64>, in3D: Bool = false, extrudeAll: Bool = false) {
-        // In case if set with highlighted building identifiers is empty - do nothing.
-        if identifiers.isEmpty { return }
-        // Add layer which will be used to highlight buildings if it wasn't added yet.
-        guard let highlightedBuildingsLayer = addBuildingsLayer() else { return }
-        
-        if extrudeAll {
-            highlightedBuildingsLayer.predicate = NSPredicate(format: "extrude = 'true' AND underground = 'false'")
-        } else {
-            // Form a predicate to filter out the other buildings from the datasource so only the desired ones are included.
-            highlightedBuildingsLayer.predicate = NSPredicate(format: "extrude = 'true' AND underground = 'false' AND $featureIdentifier IN %@", identifiers.map { $0 })
-        }
-        
-        // Buildings with identifiers will be highlighted with provided color. Rest of the buildings will be highlighted, but kept at a uniform color.
-        let highlightedBuildingsHeightExpression = NSExpression(format: "TERNARY(%@ = TRUE AND (%@ = TRUE OR $featureIdentifier IN %@), height, 0)", in3D as NSValue, extrudeAll as NSValue, identifiers.map { $0 })
-        let colorsByBuilding = Dictionary(identifiers.map { (NSExpression(forConstantValue: $0), NSExpression(forConstantValue: buildingHighlightColor)) }) { (_, last) in last }
-        let highlightedBuildingsColorExpression = NSExpression(forMGLMatchingKey: NSExpression(forVariable: "featureIdentifier"), in: colorsByBuilding, default: NSExpression(forConstantValue: buildingDefaultColor))
-        
-        let fillExtrusionHeightStops = [0: NSExpression(forConstantValue: 0),
-                                        13: NSExpression(forConstantValue: 0),
-                                        13.25: highlightedBuildingsHeightExpression]
-        
-        let fillExtrusionBaseStops = [0: NSExpression(forConstantValue: 0),
-                                      13: NSExpression(forConstantValue: 0),
-                                      13.25: NSExpression(forKeyPath: "min_height")]
-        
-        let opacityStops = [13: 0.5, 17: 0.8]
-        
-        highlightedBuildingsLayer.fillExtrusionHeight = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", fillExtrusionHeightStops)
-        highlightedBuildingsLayer.fillExtrusionBase = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", fillExtrusionBaseStops)
-        highlightedBuildingsLayer.fillExtrusionColor = highlightedBuildingsColorExpression
-        highlightedBuildingsLayer.fillExtrusionOpacity = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", opacityStops)
-    }
 
     private func highlightBuildings(with coordinates: [CLLocationCoordinate2D], in3D: Bool = false, extrudeAll: Bool = false) {
-        // In case if set with highlighted building identifiers is empty - do nothing.
-        if identifiers.isEmpty { return }
         // Add layer which will be used to highlight buildings if it wasn't added yet.
         guard let highlightedBuildingsLayer = addBuildingsLayer() else { return }
 
@@ -1471,7 +1427,7 @@ extension NavigationMapView {
 
         let distancePredicates = coordinates.compactMap { (coordinate) -> NSPredicate? in
             let point = MGLPointFeature()
-            point.coordinate = coordinates
+            point.coordinate = coordinate
             return NSPredicate(format: "mgl_distanceFrom:(%@) < 1", point)
         }
 
@@ -1483,30 +1439,33 @@ extension NavigationMapView {
             highlightedBuildingsLayer.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [buildingPredicate, distanceCompoundPredicate])
         }
 
+        let highlightedBuildingsHeightExpression: NSExpression
+        let highlightedBuildingsBaseHeightExpression: NSExpression
 
+        if extrudeAll {
+            highlightedBuildingsHeightExpression = NSExpression(forKeyPath: "height")
+            highlightedBuildingsBaseHeightExpression = NSExpression(forKeyPath: "min_height")
+        } else {
+            highlightedBuildingsHeightExpression = NSExpression(forConditional: distanceCompoundPredicate,
+                                                              trueExpression: NSExpression(forKeyPath: "height"),
+                                                              falseExpression: NSExpression(forConstantValue: 0))
 
-        // Buildings with identifiers will be highlighted with provided color. Rest of the buildings will be highlighted, but kept at a uniform color.
-//        let highlightedBuildingsHeightExpression = NSExpression(format: "TERNARY(%@ = TRUE AND (%@ = TRUE OR $featureIdentifier IN %@), height, 0)", in3D as NSValue, extrudeAll as NSValue, identifiers.map { $0 })
-//        let colorsByBuilding = Dictionary(identifiers.map { (NSExpression(forConstantValue: $0), NSExpression(forConstantValue: buildingHighlightColor)) }) { (_, last) in last }
-//        let highlightedBuildingsColorExpression = NSExpression(forMGLMatchingKey: NSExpression(forVariable: "featureIdentifier"), in: colorsByBuilding, default: NSExpression(forConstantValue: buildingDefaultColor))
-
-        let highlightedBuildingsHeightExpression = NSExpression(forConditional: distanceCompoundPredicate,
-                                                                trueExpression: NSExpression(forKeyPath: "height"),
-                                                                falseExpression: NSExpression(forConstantValue: 0))
+            highlightedBuildingsBaseHeightExpression = NSExpression(forConditional: distanceCompoundPredicate,
+                                                              trueExpression: NSExpression(forKeyPath: "min_height"),
+                                                              falseExpression: NSExpression(forConstantValue: 0))
+        }
 
         let highlightedBuildingsColorExpression = NSExpression(forConditional: distanceCompoundPredicate,
                                                                trueExpression: NSExpression(forConstantValue: buildingHighlightColor),
                                                                falseExpression: NSExpression(forConstantValue: buildingDefaultColor))
 
-        let fillExtrusionHeightStops = [0: NSExpression(forConstantValue: 0),
-                                        13: NSExpression(forConstantValue: 0),
-                                        13.25: highlightedBuildingsHeightExpression]
+        let fillExtrusionHeightStops = [16: NSExpression(forConstantValue: 0),
+                                        16.25: highlightedBuildingsHeightExpression]
 
-        let fillExtrusionBaseStops = [0: NSExpression(forConstantValue: 0),
-                                      13: NSExpression(forConstantValue: 0),
-                                      13.25: NSExpression(forKeyPath: "min_height")]
+        let fillExtrusionBaseStops = [16: NSExpression(forConstantValue: 0),
+                                      16.25: highlightedBuildingsBaseHeightExpression]
 
-        let opacityStops = [13: 0.5, 17: 0.8]
+        let opacityStops = [16: 0.0, 16.25: 0.5, 17: 0.8]
 
         highlightedBuildingsLayer.fillExtrusionHeight = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", fillExtrusionHeightStops)
         highlightedBuildingsLayer.fillExtrusionBase = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", fillExtrusionBaseStops)

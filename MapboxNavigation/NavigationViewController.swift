@@ -280,7 +280,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     private var approachingDestinationThreshold: CLLocationDistance = 250.0
     private var passedApproachingDestinationThreshold: Bool = false
     private var currentLeg: RouteLeg?
-    private var foundAllBuildings = false
     
     /**
      Initializes a navigation view controller that presents the user interface for following a predefined route based on the given options.
@@ -758,7 +757,6 @@ extension NavigationViewController: NavigationServiceDelegate {
             currentLeg = progress.currentLeg
             passedApproachingDestinationThreshold = false
             mapViewController?.suppressAutomaticAltitudeChanges = false
-            foundAllBuildings = false
             mapView.altitude = mapView.defaultAltitude
         }
         
@@ -779,8 +777,8 @@ extension NavigationViewController: NavigationServiceDelegate {
             mapView.altitude = altitude
         }
         
-        if !foundAllBuildings, passedApproachingDestinationThreshold, let currentLegWaypoint = progress.currentLeg.destination?.targetCoordinate {
-            foundAllBuildings = mapView.highlightBuildings(at: [currentLegWaypoint], in3D: waypointStyle == .extrudedBuilding ? true : false)
+        if passedApproachingDestinationThreshold, let currentLegWaypoint = progress.currentLeg.destination?.targetCoordinate {
+            mapView.highlightBuildings(at: [currentLegWaypoint], in3D: waypointStyle == .extrudedBuilding ? true : false)
         }
     }
     
