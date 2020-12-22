@@ -159,10 +159,10 @@ public class StatusView: UIControl {
             // if we hide a Status and there are Statuses left in the statuses array, show the Status with highest priority
             guard let highestPriorityStatus = statuses.min(by: {$0.priority.rawValue < $1.priority.rawValue}) else { return }
             show(status: highestPriorityStatus)
-            DispatchQueue.main.asyncAfter(deadline: .now() + highestPriorityStatus.duration) {
+//            DispatchQueue.main.asyncAfter(deadline: .now() + highestPriorityStatus.duration) {
                 print("!!! triggered async to hide status")
-                self.hideStatus(usingStatus: highestPriorityStatus)
-            }
+                self.hide(with: highestPriorityStatus)
+//            }
         }
     }
     
@@ -213,28 +213,29 @@ public class StatusView: UIControl {
      */
     public func hide(with status: Status? = nil, delay: TimeInterval = 0, animated: Bool = true) {
         
-        var boolFlag = true
-        var alpha = 0
-        if status != nil {
-            boolFlag = false
-            alpha = 1
-        }
-        
         let hide = {
-            self.isHidden = boolFlag
-            self.textLabel.alpha = CGFloat(alpha)
-            self.activityIndicatorView.isHidden = boolFlag
+            if status == nil {
+                self.isHidden = true
+                self.textLabel.alpha = 0
+                self.activityIndicatorView.isHidden = true
+            } else {
+                self.hideStatus(usingStatus: status)
+            }
         }
         
         let animate = {
             let fireTime = DispatchTime.now() + delay
             DispatchQueue.main.asyncAfter(deadline: fireTime, execute: {
-                guard !self.isHidden, self.isCurrentlyVisible else { return }
-                
-                self.activityIndicatorView.stopAnimating()
-                UIView.defaultAnimation(0.3, delay: 0, animations: hide, completion: { _ in
-                    self.isCurrentlyVisible = false
-                })
+                if status == nil {
+                    guard !self.isHidden, self.isCurrentlyVisible else { return }
+                    
+                    self.activityIndicatorView.stopAnimating()
+                    UIView.defaultAnimation(0.3, delay: 0, animations: hide, completion: { _ in
+                        self.isCurrentlyVisible = false
+                    })
+                } else {
+                    self.hideStatus(usingStatus: status)
+                }
             })
         }
         
