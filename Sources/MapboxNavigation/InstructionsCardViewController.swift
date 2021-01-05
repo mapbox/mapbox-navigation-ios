@@ -303,7 +303,8 @@ extension UICollectionViewFlowLayout {
 
 extension InstructionsCardViewController: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return cardSize
+        
+        return CGSize(width: cardSize.width, height: cardSize.height - 10)
     }
 }
 
