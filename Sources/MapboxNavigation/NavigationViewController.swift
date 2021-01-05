@@ -468,15 +468,21 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         UNUserNotificationCenter.current().add(notificationRequest, withCompletionHandler: nil)
     }
     
+    public func showStatus(title: String, spinner: Bool, duration: TimeInterval, animated: Bool, interactive: Bool) {
+        navigationComponents.compactMap({ $0 as? NavigationStatusPresenter }).forEach {
+            $0.showStatus(title: title, spinner: spinner, duration: duration, animated: animated, interactive: interactive)
+        }
+    }
+    
     public func addNewStatus(status: StatusView.Status) {
         navigationComponents.compactMap({ $0 as? NavigationStatusPresenter }).forEach {
             $0.addNewStatus(status: status)
         }
     }
     
-    public func hideStatus(usingStatusId: String? = "", usingStatus: StatusView.Status? = nil) {
+    public func hideStatus(using status: StatusView.Status) {
         navigationComponents.compactMap({ $0 as? NavigationStatusPresenter }).forEach {
-            $0.hideStatus(usingStatusId: usingStatusId, usingStatus: usingStatus)
+            $0.hideStatus(using: status)
         }
     }
     
@@ -746,13 +752,13 @@ extension NavigationViewController: NavigationServiceDelegate {
                         
         // create authorization status
         let title = NSLocalizedString("ENABLE_PRECISE_LOCATION", bundle: .mapboxNavigation, value: "Enable precise location to navigate", comment: "Label indicating precise location is off and needs to be turned on to navigate")
-        let authorizationStatus = StatusView.Status(id: title, duration: 10, priority: StatusView.Priority(rawValue: 1))
+        let authorizationStatus = StatusView.Status(id: title, duration: .infinity, priority: StatusView.Priority(rawValue: 1))
         
         if #available(iOS 14.0, *), accuracyAuthorization == .reducedAccuracy {
             addNewStatus(status: authorizationStatus)
             mapView?.reducedAccuracyActivatedMode = true
         } else if #available(iOS 14.0, *), previousAuthorizationValue == 1, didChangeAuthorizationIsFirstCalled == false {
-            hideStatus(usingStatus: authorizationStatus)
+            hideStatus(using: authorizationStatus)
         } else {
             //Fallback on earlier versions
             mapView?.reducedAccuracyActivatedMode = false

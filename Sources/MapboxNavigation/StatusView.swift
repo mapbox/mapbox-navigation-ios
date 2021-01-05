@@ -139,6 +139,13 @@ public class StatusView: UIControl {
         }
     }
     
+    @available(*, deprecated, message: "Add a status using addNewStatus instead")
+    public func showStatus(title: String, spinner spin: Bool = false, duration: TimeInterval, animated: Bool = true, interactive: Bool = false) {
+        // show(title, showSpinner: spin, interactive: interactive)
+        guard duration < .infinity else { return }
+        hide(delay: duration, animated: animated)
+    }
+    
     func addNewStatus(status: Status) {
         guard let firstWord = status.id.components(separatedBy: " ").first else { return }
         if let row = statuses.firstIndex(where: {$0.id.contains(firstWord)}) {
@@ -166,9 +173,9 @@ public class StatusView: UIControl {
     /**
      Hides a given Status without hiding the status view.
      */
-    func hideStatus(usingStatusId: String? = "", usingStatus: Status? = nil) {
-        guard let firstWord = usingStatusId?.components(separatedBy: " ").first else { return }
-        guard let row = statuses.firstIndex(where: {$0.id == usingStatus?.id || $0.id.contains(firstWord)}) else { return }
+    func hideStatus(using status: Status?) {
+        guard let firstWord = status?.id.components(separatedBy: " ").first else { return }
+        guard let row = statuses.firstIndex(where: {$0.id.contains(firstWord)}) else { return }
         let removedStatus = statuses.remove(at: row)
         manageStatuses(status: removedStatus)
     }
@@ -209,14 +216,14 @@ public class StatusView: UIControl {
      Hides the status view.
      */
     public func hide(with status: Status? = nil, delay: TimeInterval = 0, animated: Bool = true) {
-        
+        print("!!! status to hide: \(String(describing: status))")
         let hide = {
             if status == nil {
                 self.isHidden = true
                 self.textLabel.alpha = 0
                 self.activityIndicatorView.isHidden = true
             } else {
-                self.hideStatus(usingStatus: status)
+                self.hideStatus(using: status)
             }
         }
         
@@ -224,6 +231,7 @@ public class StatusView: UIControl {
             let fireTime = DispatchTime.now() + delay
             DispatchQueue.main.asyncAfter(deadline: fireTime, execute: {
                 if status == nil {
+                    print("!!! HIDE STATUS VIEW ENTIRELY")
                     guard !self.isHidden, self.isCurrentlyVisible else { return }
                     
                     self.activityIndicatorView.stopAnimating()
@@ -231,7 +239,8 @@ public class StatusView: UIControl {
                         self.isCurrentlyVisible = false
                     })
                 } else {
-                    self.hideStatus(usingStatus: status)
+                    print("!!! HIDE STATUS ITSELF")
+                    self.hideStatus(using: status)
                 }
             })
         }
