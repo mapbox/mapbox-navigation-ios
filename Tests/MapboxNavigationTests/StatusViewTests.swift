@@ -38,7 +38,7 @@ class StatusViewTests: XCTestCase {
         XCTAssertTrue(statusView.isHidden)
         XCTAssertEqual(self.statusView.statuses.count, 0)
     }
-
+    
     func testFirstAndThird() {
         addNewStatus(status: firstStatus())
         addNewStatus(status: thirdStatus())
