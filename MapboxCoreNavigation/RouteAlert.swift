@@ -59,33 +59,46 @@ public struct RouteAlert {
         self.beginSegmentIndex = upcomingAlert.alert.beginGeometryIndex
         self.endSegmentIndex = upcomingAlert.alert.endGeometryIndex
         
+        
         switch upcomingAlert.alert.type {
         case .kIncident:
             guard let incidentInfo = upcomingAlert.alert.incidentInfo else {
-                preconditionFailure("Alert of type \(upcomingAlert.alert.type) did not contain an info data.")
+                print("Alert of type \(upcomingAlert.alert.type) did not contain an info data.")
+                self.alert = .restrictedArea
+                return
             }
             guard let incident = Incident(incidentInfo) else {
-                preconditionFailure("Alert of type \(upcomingAlert.alert.type) had unrecognized Incident type: \(incidentInfo.type).")
+                print("Alert of type \(upcomingAlert.alert.type) had unrecognized Incident type: \(incidentInfo.type).")
+                self.alert = .restrictedArea
+                return
             }
             self.alert = .incident(incident)
         case .kTunnelEntrance:
             guard let tunnelInfo = upcomingAlert.alert.tunnelInfo else {
-                preconditionFailure("Alert of type \(upcomingAlert.alert.type) did not contain an info data.")
+                print("Alert of type \(upcomingAlert.alert.type) did not contain an info data.")
+                self.alert = .restrictedArea
+                return
             }
             self.alert = .tunnel(Tunnel(tunnelInfo))
         case .kBorderCrossing:
             guard let adminInfo = upcomingAlert.alert.borderCrossingInfo else {
-                preconditionFailure("Alert of type \(upcomingAlert.alert.type) did not contain an info data.")
+                print("Alert of type \(upcomingAlert.alert.type) did not contain an info data.")
+                self.alert = .restrictedArea
+                return
             }
             self.alert = .borderCrossing(BorderCrossing(adminInfo))
         case .kTollCollectionPoint:
             guard let tollInfo = upcomingAlert.alert.tollCollectionInfo else {
-                preconditionFailure("Alert of type \(upcomingAlert.alert.type) did not contain an info data.")
+                print("Alert of type \(upcomingAlert.alert.type) did not contain an info data.")
+                self.alert = .restrictedArea
+                return
             }
             self.alert = .tollCollection(TollCollection(tollInfo))
         case .kServiceArea:
             guard let serviceAreaInfo = upcomingAlert.alert.serviceAreaInfo else {
-                preconditionFailure("Alert of type \(upcomingAlert.alert.type) did not contain an info data.")
+                print("Alert of type \(upcomingAlert.alert.type) did not contain an info data.")
+                self.alert = .restrictedArea
+                return
             }
             self.alert = .serviceArea(RestStop(serviceAreaInfo))
         case .kRestrictedArea:
