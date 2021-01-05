@@ -101,11 +101,6 @@ open class InstructionsCardViewController: UIViewController {
         instructionCollectionView.isPagingEnabled = true
         instructionCollectionView.translatesAutoresizingMaskIntoConstraints = false
         
-        if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
-            instructionCollectionView.semanticContentAttribute = .forceLeftToRight
-            instructionCollectionView.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
-        }
-        
         addSubviews()
         setConstraints()
         addObservers()
@@ -127,12 +122,7 @@ open class InstructionsCardViewController: UIViewController {
     
     @objc func orientationDidChange(_ notification: Notification) {
         instructionsCardLayout.invalidateLayout()
-
-        if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
-            instructionsCardLayout.collectionView?.visibleCells.forEach { cell in guard let cell = cell as? UICollectionViewCell else { return }
-                cell.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
-            }
-        }
+        handlePagingforScrollToItem(indexPath: indexBeforeSwipe)
     }
     
     open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -193,7 +183,17 @@ open class InstructionsCardViewController: UIViewController {
     
     func snapToIndexPath(_ indexPath: IndexPath) {
         guard let itemCount = steps?.count, itemCount >= 0 && indexPath.row < itemCount else { return }
-        instructionsCardLayout.collectionView?.scrollToItem(at: indexPath, at: .left, animated: true)
+        handlePagingforScrollToItem(indexPath: indexPath)
+    }
+    
+    public func handlePagingforScrollToItem(indexPath: IndexPath) {
+        if #available(iOS 14.0, *) {
+            instructionsCardLayout.collectionView?.isPagingEnabled = false
+            instructionsCardLayout.collectionView?.scrollToItem(at: indexPath, at: direction, animated: true)
+            instructionsCardLayout.collectionView?.isPagingEnabled = true
+            return
+        }
+        instructionsCardLayout.collectionView?.scrollToItem(at: indexPath, at: direction, animated: true)
     }
     
     public func stopPreview() {
@@ -225,6 +225,7 @@ open class InstructionsCardViewController: UIViewController {
         targetContentOffset.pointee = scrollView.contentOffset
         let itemCount = steps?.count ?? 0
         let velocityThreshold: CGFloat = 0.4
+        
         let hasVelocityToSlideToNext = indexBeforeSwipe.row + 1 < itemCount && velocity.x > velocityThreshold
         let hasVelocityToSlidePrev = indexBeforeSwipe.row - 1 >= 0 && velocity.x < -velocityThreshold
         let didSwipe = hasVelocityToSlideToNext || hasVelocityToSlidePrev
@@ -290,11 +291,13 @@ extension InstructionsCardViewController: UICollectionViewDataSource {
         let distance = firstStep ? distanceRemaining : step.distance
         cell.configure(for: step, distance: distance)
         
-        if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
-            cell.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
-        }
-        
         return cell
+    }
+}
+
+extension UICollectionViewFlowLayout {
+    open override var flipsHorizontallyInOppositeLayoutDirection: Bool {
+        return true
     }
 }
 
