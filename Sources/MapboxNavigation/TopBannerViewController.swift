@@ -399,7 +399,6 @@ extension TopBannerViewController: NavigationComponent {
             statusView.showSimulationStatus(speed: Int(service.simulationSpeedMultiplier))
         } else {
             statusView.hide(delay: 2, animated: true)
-            // statusView.hideStatus("simulating")
         }
         
         if (proactive) {

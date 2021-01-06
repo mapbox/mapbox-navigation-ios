@@ -39,13 +39,13 @@ class StatusViewTests: XCTestCase {
         XCTAssertEqual(self.statusView.statuses.count, 0)
     }
     
-    func testFirstAndThird() {
+    func testWithInfinite() {
         addNewStatus(status: firstStatus())
         addNewStatus(status: thirdStatus())
         XCTAssertEqual(self.statusView.statuses.count, 2)
         let path = #keyPath(UIView.isHidden)
         let expectation = XCTKVOExpectation(keyPath: path, object: statusView, expectedValue: true)
-        self.wait(for: [expectation], timeout: 15.0)
+        XCTWaiter.wait(for: [expectation], timeout: 15.0)
         XCTAssertFalse(statusView.isHidden)
         XCTAssertEqual(self.statusView.statuses.count, 1)
     }

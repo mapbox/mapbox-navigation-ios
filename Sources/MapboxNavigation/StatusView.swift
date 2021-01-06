@@ -216,7 +216,6 @@ public class StatusView: UIControl {
      Hides the status view.
      */
     public func hide(with status: Status? = nil, delay: TimeInterval = 0, animated: Bool = true) {
-        print("!!! status to hide: \(String(describing: status))")
         let hide = {
             if status == nil {
                 self.isHidden = true
@@ -231,7 +230,6 @@ public class StatusView: UIControl {
             let fireTime = DispatchTime.now() + delay
             DispatchQueue.main.asyncAfter(deadline: fireTime, execute: {
                 if status == nil {
-                    print("!!! HIDE STATUS VIEW ENTIRELY")
                     guard !self.isHidden, self.isCurrentlyVisible else { return }
                     
                     self.activityIndicatorView.stopAnimating()
@@ -239,7 +237,6 @@ public class StatusView: UIControl {
                         self.isCurrentlyVisible = false
                     })
                 } else {
-                    print("!!! HIDE STATUS ITSELF")
                     self.hideStatus(using: status)
                 }
             })
