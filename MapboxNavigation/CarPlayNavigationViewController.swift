@@ -132,7 +132,9 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
     
     override public func viewDidLoad() {
         super.viewDidLoad()
-        
+
+        // maybe ask the delegate for their own mapview in case they want to subclass?
+        // Might not be generally necessaery if there is a delegate pattern way to override camera behavior
         let mapView = NavigationMapView(frame: view.bounds)
         mapView.translatesAutoresizingMaskIntoConstraints = false
         mapView.compassView.isHidden = true
@@ -327,10 +329,13 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
     @objc func progressDidChange(_ notification: NSNotification) {
         let routeProgress = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as! RouteProgress
         let location = notification.userInfo![RouteController.NotificationUserInfoKey.locationKey] as! CLLocation
+
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "MapView-WTF"), object: mapView)
         
         // Update the user puck
         mapView?.updatePreferredFrameRate(for: routeProgress)
-        let camera = MGLMapCamera(lookingAtCenter: location.coordinate, altitude: 120, pitch: 60, heading: location.course)
+        // I think we should ask the delegate for this to override the camera (if desired)
+        let camera = MGLMapCamera(lookingAtCenter: location.coordinate, altitude: 300, pitch: 40, heading: location.course)
         mapView?.updateCourseTracking(location: location, camera: camera, animated: true)
         
         let congestionLevel = routeProgress.averageCongestionLevelRemainingOnLeg ?? .unknown

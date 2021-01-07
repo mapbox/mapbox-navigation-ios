@@ -547,6 +547,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         topDownCamera.pitch = 0
         mapView.setCamera(topDownCamera, animated: false)
 
+        //blargy
         mapView.showcase([route])
         
         delegate?.carPlayManager(self, selectedPreviewFor: trip, using: routeChoice)
