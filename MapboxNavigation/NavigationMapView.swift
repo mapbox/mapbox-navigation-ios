@@ -364,7 +364,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         guard tracksUserCourse else { return }
         tracksUserCourse = false
     }
-    
+
     public func updateCourseTracking(location: CLLocation?, camera: MGLMapCamera? = nil, animated: Bool = false) {
         // While animating to overhead mode, don't animate the puck.
         let duration: TimeInterval = animated && !isAnimatingToOverheadMode ? 1 : 0
@@ -384,7 +384,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             
             let newCamera = camera ?? MGLMapCamera(lookingAtCenter: location.coordinate, altitude: altitude, pitch: 45, heading: location.course)
             let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: .linear) : nil
-            setCamera(newCamera, withDuration: duration, animationTimingFunction: function, completionHandler: nil)
+//            setCamera(newCamera, withDuration: duration, animationTimingFunction: function, completionHandler: nil)
+
+            let desiredPosition = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+            let magicPadding = UIEdgeInsets(top: bounds.height - safeArea.top, left: bounds.width - safeArea.left, bottom: 0, right:-(safeArea.right))
+            setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: magicPadding, completionHandler: nil)
         } else {
             // Animate course view updates in overview mode
             UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear], animations: centerUserCourseView)
@@ -446,7 +450,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      Showcases route array. Adds routes and waypoints to map, and sets camera to point encompassing the route.
      */
     public static let defaultPadding: UIEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
-    
+
     public func showcase(_ routes: [Route], animated: Bool = false) {
         guard let active = routes.first,
               let coords = active.shape?.coordinates,
