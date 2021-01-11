@@ -61,6 +61,18 @@ class PassiveLocationDataSourceTests: XCTestCase {
         
         func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didFailWithError error: Error) {
         }
+
+        func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didUpdateElectronicHorizon horizon: ElectronicHorizon, type: ElectronicHorizonResultType) {
+        }
+
+        func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didUpdateElectronicHorizonPosition position: GraphPosition, distances: [String : RoadObjectDistanceInfo]) {
+        }
+
+        func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, roadObjectDidEnter roadObject: String, fromStart: Bool) {
+        }
+
+        func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, roadObjectDidExit roadObject: String, fromEnd: Bool) {
+        }
     }
     
     func testManualLocations() {
