@@ -386,8 +386,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: .linear) : nil
 //            setCamera(newCamera, withDuration: duration, animationTimingFunction: function, completionHandler: nil)
 
-            let desiredPosition = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-            let magicPadding = UIEdgeInsets(top: bounds.height - safeArea.top, left: bounds.width - safeArea.left, bottom: 0, right:-(safeArea.right))
+            let desiredPosition = UIEdgeInsets(top: 0, left: -bounds.width / 2, bottom: 80, right: 0)
+            let magicPadding = UIEdgeInsets(top: bounds.height - safeArea.top + desiredPosition.top, left: bounds.width - safeArea.left + desiredPosition.left, bottom: 0 + desiredPosition.bottom, right:desiredPosition.right - safeArea.right)
             setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: magicPadding, completionHandler: nil)
         } else {
             // Animate course view updates in overview mode

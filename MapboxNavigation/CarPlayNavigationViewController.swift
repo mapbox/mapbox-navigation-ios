@@ -335,7 +335,7 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
         // Update the user puck
         mapView?.updatePreferredFrameRate(for: routeProgress)
         // I think we should ask the delegate for this to override the camera (if desired)
-        let camera = MGLMapCamera(lookingAtCenter: location.coordinate, altitude: 300, pitch: 40, heading: location.course)
+        let camera = MGLMapCamera(lookingAtCenter: location.coordinate, altitude: 1200, pitch: 55, heading: location.course)
         mapView?.updateCourseTracking(location: location, camera: camera, animated: true)
         
         let congestionLevel = routeProgress.averageCongestionLevelRemainingOnLeg ?? .unknown
