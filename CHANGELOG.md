@@ -4,7 +4,7 @@
 
 ### Packaging
 
-* Increased the minimum versions of `MapboxNavigationNative` to v28.1, `MapboxCommon` to v9.1.0 and `MapboxDirections` to v1.2. ([#2694](https://github.com/mapbox/mapbox-navigation-ios/pull/2694), [#2770](https://github.com/mapbox/mapbox-navigation-ios/pull/2770))
+* Increased the minimum versions of `MapboxNavigationNative` to v29.0, `MapboxCommon` to v9.1.0 and `MapboxDirections` to v1.2. ([#2694](https://github.com/mapbox/mapbox-navigation-ios/pull/2694), [#2770](https://github.com/mapbox/mapbox-navigation-ios/pull/2770), [#2781](https://github.com/mapbox/mapbox-navigation-ios/pull/2781))
 * Installing MapboxCoreNavigation using CocoaPods no longer overrides the `EXCLUDED_ARCHS` build setting of your application’s target. Installing MapboxNavigation still overrides this setting. ([#2770](https://github.com/mapbox/mapbox-navigation-ios/pull/2770))
 * Added a Ukrainian localization. ([#2735](https://github.com/mapbox/mapbox-navigation-ios/pull/2735))
 
@@ -32,6 +32,8 @@
 
 * Fixed potential crashes when using `PassiveLocationManager` or `PassiveLocationDataSource`. ([#2694](https://github.com/mapbox/mapbox-navigation-ios/pull/2694))
 * Fixed repeated rerouting when traveling alongside a freeway off-ramp. ([#2694](https://github.com/mapbox/mapbox-navigation-ios/pull/2694))
+* Fixed repeated rerouting when starting a new leg while the user is too far from the new leg’s origin. ([#2781](https://github.com/mapbox/mapbox-navigation-ios/pull/2781))
+* `RouteController` more reliably detects when the user has gone off-route. ([#2781](https://github.com/mapbox/mapbox-navigation-ios/pull/2781))
 * Fixed an issue where `RouteController` snapped the user’s location to the opposite side of a divided highway. ([#2694](https://github.com/mapbox/mapbox-navigation-ios/pull/2694))
 * Fixed an issue where `RouteController` got stuck after making a U-turn. ([#2694](https://github.com/mapbox/mapbox-navigation-ios/pull/2694))
 
