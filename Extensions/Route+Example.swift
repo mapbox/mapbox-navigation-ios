@@ -4,7 +4,7 @@ import Turf
 
 extension Route {
     var tollIntersections: [Intersection]? {
-        let allSteps = legs.compactMap { return $0.steps }.reduce([], +)
+        let allSteps = legs.flatMap { return $0.steps }
 
         let allIntersections = allSteps.compactMap { return $0.intersections }.reduce([], +)
         let intersectionsWithTolls = allIntersections.filter { return $0.tollCollection != nil }

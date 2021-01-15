@@ -104,20 +104,13 @@ class ViewController: UIViewController {
         // First, we will look for a set of RouteSteps unique to each route
         var excludedSteps = [RouteStep]()
         for (index, route) in routes.enumerated() {
-            let allSteps = route.legs.compactMap { return $0.steps }.reduce([], +)
-            let alternateSteps = allSteps.filter { step -> Bool in
-                for existingStep in excludedSteps {
-                    if step == existingStep {
-                        return false
-                    }
-                }
-                return true
-            }
+            let allSteps = route.legs.flatMap { return $0.steps }
+            let alternateSteps = allSteps.filter { !excludedSteps.contains($0) }
 
             excludedSteps.append(contentsOf: alternateSteps)
             let visibleAlternateSteps = alternateSteps.filter { $0.intersects(visibleBoundingBox) }
 
-            var coordinate = kCLLocationCoordinate2DInvalid
+            var coordinate: CLLocationCoordinate2D?
 
             // Obtain a polyline of the set of steps. We'll look for a good spot along this line to place the annotation.
             // We will consider a good spot to be somewhere near the middle of the line, making sure that the coordinate is visible on-screen.
@@ -155,17 +148,19 @@ class ViewController: UIViewController {
                 }
             }
 
+            guard let annotationCoordinate = coordinate else { return }
+
             // form the appropriate text string for the annotation
             let labelText = self.annotationLabelForRoute(route, tolls: routesContainTolls)
 
             // Create the feature for this route annotation. Set the styling attributes that will be used to render the annotation in the style layer.
             let point = MGLPointFeature()
-            point.coordinate = coordinate
+            point.coordinate = annotationCoordinate
             
             var tailPosition = randomTailPosition
 
             // convert our coordinate to screen space so we can make a choice on which side of the coordinate the label ends up on
-            let unprojectedCoordinate = mapView.convert(coordinate, toPointTo: nil)
+            let unprojectedCoordinate = mapView.convert(annotationCoordinate, toPointTo: nil)
 
             // pick the orientation of the bubble "stem" based on how close to the edge of the screen it is
             if tailPosition == .left && unprojectedCoordinate.x > mapView.bounds.width * 0.75 {
