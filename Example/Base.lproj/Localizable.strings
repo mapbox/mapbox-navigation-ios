@@ -16,3 +16,9 @@
 /* Title of alert confirming waypoint removal */
 "REMOVE_WAYPOINT_CONFIRM_TITLE" = "Remove Waypoint?";
 
+/* This route does not have tolls */
+"ROUTE_HAS_NO_TOLLS" = "No Tolls";
+
+/* This route does have tolls */
+"ROUTE_HAS_TOLLS" = "Tolls";
+
