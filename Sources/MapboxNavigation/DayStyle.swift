@@ -30,6 +30,8 @@ extension UIColor {
     
     class var defaultBuildingColor: UIColor { get { return #colorLiteral(red: 0.9833194452, green: 0.9843137255, blue: 0.9331936657, alpha: 0.8019049658) } }
     class var defaultBuildingHighlightColor: UIColor { get { return #colorLiteral(red: 0.337254902, green: 0.6588235294, blue: 0.9843137255, alpha: 0.949406036) } }
+
+    class var defaultRouteDurationAnnotationSelectedColor: UIColor { get { return #colorLiteral(red: 0.337254902, green: 0.6588235294, blue: 0.9843137255, alpha: 1) } }
 }
 
 extension UIColor {
@@ -153,6 +155,7 @@ open class DayStyle: Style {
         NavigationMapView.appearance().trafficUnknownColor = .trafficUnknown
         NavigationMapView.appearance().buildingDefaultColor = .defaultBuildingColor
         NavigationMapView.appearance().buildingHighlightColor = .defaultBuildingHighlightColor
+        NavigationMapView.appearance().routeDurationAnnotationSelectedColor = .defaultRouteDurationAnnotationSelectedColor
         NavigationView.appearance().backgroundColor = #colorLiteral(red: 0.764706, green: 0.752941, blue: 0.733333, alpha: 1)
         NextBannerView.appearance().backgroundColor = #colorLiteral(red: 0.9675388083, green: 0.9675388083, blue: 0.9675388083, alpha: 1)
         NextBannerView.appearance(whenContainedInInstancesOf:[InstructionsCardContainerView.self]).backgroundColor = #colorLiteral(red: 0.9675388083, green: 0.9675388083, blue: 0.9675388083, alpha: 1)

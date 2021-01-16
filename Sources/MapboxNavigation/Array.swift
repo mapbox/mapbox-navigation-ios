@@ -1,3 +1,6 @@
+import MapboxDirections
+import Turf
+
 extension Array {
     /**
      Conditionally remove each element depending on the elements immediately preceding and following it.
@@ -30,5 +33,24 @@ extension Array where Element: NSAttributedString {
             joinedAttributedString.append(element)
         }
         return joinedAttributedString
+    }
+}
+
+extension Array where Element == RouteStep {
+    // Find the longest contiguous series of RouteSteps connected to the first one.
+    //
+    // tolerance: -- Maximum distance between the end of one RouteStep and the start of the next to still consider them connected. Defaults to 100 meters
+    func continuousShape(tolerance: CLLocationDistance = 100) -> LineString? {
+        guard count > 0 else { return nil }
+        guard count > 1 else { return self[0].shape }
+        var continuousLine = [CLLocationCoordinate2D]()
+
+        for index in 0...count-2 {
+            if let currentStepFinalCoordinate = self[index].shape?.coordinates.last, currentStepFinalCoordinate.distance(to: self[index+1].maneuverLocation) < tolerance, let coordinates = self[index].shape?.coordinates {
+                continuousLine.append(contentsOf: coordinates)
+            }
+        }
+
+        return LineString(continuousLine)
     }
 }

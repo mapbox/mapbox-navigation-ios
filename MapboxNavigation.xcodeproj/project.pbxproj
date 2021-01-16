@@ -402,17 +402,10 @@
 		DADD82802161EC0300B8B47D /* UIViewAnimationOptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DADD827F2161EC0300B8B47D /* UIViewAnimationOptionsTests.swift */; };
 		DAE22A2921C9DEDA00CA269D /* MGLVectorTileSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE22A2821C9DEDA00CA269D /* MGLVectorTileSourceTests.swift */; };
 		DAFA92071F01735000A7FB09 /* DistanceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */; };
-		F405206A255A171800F3DD47 /* Turf+Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4052069255A171800F3DD47 /* Turf+Example.swift */; };
-		F4052084255A178C00F3DD47 /* Route+Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4052083255A178C00F3DD47 /* Route+Example.swift */; };
-		F405208C255A17D300F3DD47 /* Locale+Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = F405208B255A17D300F3DD47 /* Locale+Example.swift */; };
-		F405209A255A180500F3DD47 /* UIImage+Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4052099255A180500F3DD47 /* UIImage+Example.swift */; };
+		F452634C25B2506A00F7A464 /* Turf.swift in Sources */ = {isa = PBXBuildFile; fileRef = F452634B25B2506A00F7A464 /* Turf.swift */; };
 		F4BF512E24EAD7A50066A49B /* FeedbackSubtypeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BF512D24EAD7A50066A49B /* FeedbackSubtypeCollectionViewCell.swift */; };
 		F4C5A26F24EF1D16004ED0DD /* FeedbackSubtypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C5A26E24EF1D16004ED0DD /* FeedbackSubtypeViewController.swift */; };
 		F4FD7739256D886E007C525A /* DateComponentsFormatter+MGLNavigationAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FD7738256D886E007C525A /* DateComponentsFormatter+MGLNavigationAdditions.swift */; };
-		F4FD7740256D89C6007C525A /* Turf+Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4052069255A171800F3DD47 /* Turf+Example.swift */; };
-		F4FD7747256D89CA007C525A /* Route+Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4052083255A178C00F3DD47 /* Route+Example.swift */; };
-		F4FD774E256D89CD007C525A /* Locale+Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = F405208B255A17D300F3DD47 /* Locale+Example.swift */; };
-		F4FD7755256D89D0007C525A /* UIImage+Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4052099255A180500F3DD47 /* UIImage+Example.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1055,10 +1048,7 @@
 		DAFEB36D2093A11F00A86A83 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DAFEB36E2093A3E000A86A83 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DAFEB36F2093A3EF00A86A83 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ko; path = Resources/ko.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
-		F4052069255A171800F3DD47 /* Turf+Example.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Turf+Example.swift"; sourceTree = "<group>"; };
-		F4052083255A178C00F3DD47 /* Route+Example.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Route+Example.swift"; sourceTree = "<group>"; };
-		F405208B255A17D300F3DD47 /* Locale+Example.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Locale+Example.swift"; sourceTree = "<group>"; };
-		F4052099255A180500F3DD47 /* UIImage+Example.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Example.swift"; sourceTree = "<group>"; };
+		F452634B25B2506A00F7A464 /* Turf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Turf.swift; sourceTree = "<group>"; };
 		F4BF512D24EAD7A50066A49B /* FeedbackSubtypeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackSubtypeCollectionViewCell.swift; sourceTree = "<group>"; };
 		F4C5A26E24EF1D16004ED0DD /* FeedbackSubtypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackSubtypeViewController.swift; sourceTree = "<group>"; };
 		F4FD7738256D886E007C525A /* DateComponentsFormatter+MGLNavigationAdditions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateComponentsFormatter+MGLNavigationAdditions.swift"; sourceTree = "<group>"; };
@@ -1436,7 +1426,6 @@
 				3529FCF121A5C5B300AEA9AA /* ResizableView.swift */,
 				3529FCF521A5C5D900AEA9AA /* UIViewController.swift */,
 				3529FCF721A5C62400AEA9AA /* SettingsViewController.swift */,
-				F40520A1255A183B00F3DD47 /* Extensions */,
 			);
 			name = Example;
 			sourceTree = "<group>";
@@ -1705,6 +1694,7 @@
 				350E2C5E22707EB80014CEB3 /* UIScreen.swift */,
 				CFD47D8F20FD85EC00BC1E49 /* MGLAccountManager.swift */,
 				F4FD7738256D886E007C525A /* DateComponentsFormatter+MGLNavigationAdditions.swift */,
+				F452634B25B2506A00F7A464 /* Turf.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -1869,17 +1859,6 @@
 			);
 			name = CMapboxCoreNavigation;
 			path = Sources/CMapboxCoreNavigation;
-			sourceTree = "<group>";
-		};
-		F40520A1255A183B00F3DD47 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				F4052069255A171800F3DD47 /* Turf+Example.swift */,
-				F4052083255A178C00F3DD47 /* Route+Example.swift */,
-				F405208B255A17D300F3DD47 /* Locale+Example.swift */,
-				F4052099255A180500F3DD47 /* UIImage+Example.swift */,
-			);
-			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2561,6 +2540,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F452634C25B2506A00F7A464 /* Turf.swift in Sources */,
 				351BEBF11E5BCC63006FE110 /* MGLMapView.swift in Sources */,
 				DA443DDE2278C90E00ED1307 /* CPTrip.swift in Sources */,
 				2B72EC5E241276D10003B370 /* RouteVoiceController.swift in Sources */,
@@ -2680,15 +2660,11 @@
 				358D14681E5E3B7700ADE590 /* ViewController.swift in Sources */,
 				3529FCF821A5C62400AEA9AA /* SettingsViewController.swift in Sources */,
 				3529FCF421A5C5C600AEA9AA /* SettingsItems.swift in Sources */,
-				F4052084255A178C00F3DD47 /* Route+Example.swift in Sources */,
 				3529FCF221A5C5B400AEA9AA /* ResizableView.swift in Sources */,
 				C5D9800D1EFA8BA9006DBF2E /* CustomViewController.swift in Sources */,
-				F405206A255A171800F3DD47 /* Turf+Example.swift in Sources */,
-				F405209A255A180500F3DD47 /* UIImage+Example.swift in Sources */,
 				AED6285622CBE4CE00058A51 /* ViewController+GuidanceCards.swift in Sources */,
 				C51FC31720F689F800400CE7 /* CustomStyles.swift in Sources */,
 				6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */,
-				F405208C255A17D300F3DD47 /* Locale+Example.swift in Sources */,
 				358D14661E5E3B7700ADE590 /* AppDelegate.swift in Sources */,
 				3529FCF621A5C5D900AEA9AA /* UIViewController.swift in Sources */,
 			);
@@ -2789,15 +2765,11 @@
 				C53F2EE420EBC95600D9798F /* ViewController.swift in Sources */,
 				C53F2EE520EBC95600D9798F /* CustomViewController.swift in Sources */,
 				DA303CAA21B7A93400F921DC /* ResizableView.swift in Sources */,
-				F4FD7740256D89C6007C525A /* Turf+Example.swift in Sources */,
-				F4FD7755256D89D0007C525A /* UIImage+Example.swift in Sources */,
 				C53F2EE720EBC95600D9798F /* WaypointConfirmationViewController.swift in Sources */,
 				C5DE4B6220F6B6B3007AFBE6 /* CustomStyles.swift in Sources */,
-				F4FD774E256D89CD007C525A /* Locale+Example.swift in Sources */,
 				DA8805002316EAED00B54D87 /* ViewController+GuidanceCards.swift in Sources */,
 				35379CFD21480C0500FD402E /* AppDelegate+CarPlay.swift in Sources */,
 				C53F2EE820EBC95600D9798F /* AppDelegate.swift in Sources */,
-				F4FD7747256D89CA007C525A /* Route+Example.swift in Sources */,
 				DA303CA621B7A90100F921DC /* UIViewController.swift in Sources */,
 				3577B878214FF35800094294 /* FavoritesList.swift in Sources */,
 				DA303CA921B7A93100F921DC /* SettingsItems.swift in Sources */,

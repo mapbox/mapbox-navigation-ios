@@ -166,6 +166,12 @@
 /* Specific route feedback that a road closure type was encountered but not listed as a choice. */
 "ROAD_CLOSURE_OTHER_FEEDBACK" = "Other";
 
+/* This route does not have tolls */
+"ROUTE_HAS_NO_TOLLS" = "No Tolls";
+
+/* This route does have tolls */
+"ROUTE_HAS_TOLLS" = "Tolls";
+
 /* Specific route feedback that user was offered an alternative that was unexpected. */
 "ROUTE_QUALITY_ALTERNATIVE_ROUTE_NOT_EXPECTED_FEEDBACK" = "Alternative route not expected";
 
