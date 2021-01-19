@@ -39,8 +39,6 @@ public protocol NavigationStatusPresenter: class {
     /**
      Shows a Status for a specified amount of time.
      */
-    func showStatus(title: String, spinner: Bool, duration: TimeInterval, animated: Bool, interactive: Bool)
-    
     func addNewStatus(status: StatusView.Status)
     
     func hideStatus(using: StatusView.Status)

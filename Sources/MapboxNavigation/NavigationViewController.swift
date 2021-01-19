@@ -468,12 +468,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         UNUserNotificationCenter.current().add(notificationRequest, withCompletionHandler: nil)
     }
     
-    public func showStatus(title: String, spinner: Bool, duration: TimeInterval, animated: Bool, interactive: Bool) {
-        navigationComponents.compactMap({ $0 as? NavigationStatusPresenter }).forEach {
-            $0.showStatus(title: title, spinner: spinner, duration: duration, animated: animated, interactive: interactive)
-        }
-    }
-    
     public func addNewStatus(status: StatusView.Status) {
         navigationComponents.compactMap({ $0 as? NavigationStatusPresenter }).forEach {
             $0.addNewStatus(status: status)

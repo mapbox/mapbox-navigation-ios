@@ -469,10 +469,6 @@ extension TopBannerViewController: CarPlayConnectionObserver {
 }
 
 extension TopBannerViewController: NavigationStatusPresenter {
-    public func showStatus(title: String, spinner spin: Bool, duration time: TimeInterval, animated: Bool, interactive: Bool) {
-        statusView.showStatus(title: title, spinner: spin, duration: time, animated: animated, interactive: interactive)
-    }
-    
     public func hideStatus(using status: StatusView.Status) {
         statusView.hideStatus(using: status)
     }

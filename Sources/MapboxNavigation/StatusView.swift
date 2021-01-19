@@ -58,7 +58,7 @@ public class StatusView: UIControl {
         var priority: Priority
     }
     
-    struct Priority: RawRepresentable {
+    public struct Priority: RawRepresentable {
         public var rawValue: Int
 //        — Highest Priority —
 //            rerouting (rawValue = 0)
