@@ -59,7 +59,13 @@ public class StatusView: UIControl {
     }
     
     public struct Priority: RawRepresentable {
+        public typealias RawValue = Int
+
         public var rawValue: Int
+
+        public init(rawValue: Int) {
+            self.rawValue = rawValue
+        }
 //        — Highest Priority —
 //            rerouting (rawValue = 0)
 //            enable precise location (rawValue = 1)
@@ -146,6 +152,9 @@ public class StatusView: UIControl {
         hide(delay: duration, animated: animated)
     }
     
+    /**
+     Adds a new status to statuses array.
+     */
     func addNewStatus(status: Status) {
         guard let firstWord = status.id.components(separatedBy: " ").first else { return }
         if let row = statuses.firstIndex(where: {$0.id.contains(firstWord)}) {
@@ -157,7 +166,7 @@ public class StatusView: UIControl {
     }
     
     /**
-     Manages showing and hiding Statuses and the status view.
+     Manages showing and hiding Statuses and the status view itself.
      */
     func manageStatuses(status: Status? = nil) {
         if statuses.isEmpty {
