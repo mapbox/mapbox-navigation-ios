@@ -43,14 +43,17 @@ extension Array where Element == RouteStep {
     func continuousShape(tolerance: CLLocationDistance = 100) -> LineString? {
         guard count > 0 else { return nil }
         guard count > 1 else { return self[0].shape }
-        var continuousLine = [CLLocationCoordinate2D]()
 
-        for index in 0...count-2 {
-            if let currentStepFinalCoordinate = self[index].shape?.coordinates.last, currentStepFinalCoordinate.distance(to: self[index+1].maneuverLocation) < tolerance, let coordinates = self[index].shape?.coordinates {
-                continuousLine.append(contentsOf: coordinates)
-            }
+        let filteredStepShapes = zip(compactMap { $0.shape }, suffix(from: 1).compactMap { $0.shape }).filter({
+            guard let maneuverLocation = $1.coordinates.first else { return false }
+
+            return $0.coordinates.last?.distance(to: maneuverLocation) ?? Double.greatestFiniteMagnitude < tolerance
+        })
+
+        let coordinates = filteredStepShapes.flatMap { (firstLine, secondLine) -> [CLLocationCoordinate2D] in
+            return firstLine.coordinates
         }
 
-        return LineString(continuousLine)
+        return LineString(coordinates)
     }
 }

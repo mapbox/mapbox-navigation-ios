@@ -82,6 +82,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         static let instruction = "\(identifierNamespace).instruction"
         
         static let buildingExtrusion = "\(identifierNamespace).buildingExtrusion"
+        static let routeDurationAnnotations = "\(identifierNamespace).RouteDurationAnnotations"
     }
     
     struct StyleLayerIdentifier {
@@ -99,6 +100,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         static let instructionCircle = "\(identifierNamespace).instructionCircle"
         
         static let buildingExtrusion = "\(identifierNamespace).buildingExtrusion"
+        static let routeDurationAnnotations = "\(identifierNamespace).RouteDurationAnnotations"
     }
     
     enum IdentifierType: Int {
@@ -129,8 +131,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
 
-    @objc dynamic public var routeDurationAnnotationSelectedColor: UIColor = .defaultRouteDurationAnnotationSelectedColor
-
+    @objc dynamic public var routeDurationAnnotationSelectedColor: UIColor = .selectedRouteDurationAnnotationColor
+    @objc dynamic public var routeDurationAnnotationColor: UIColor = .routeDurationAnnotationColor
+    @objc dynamic public var routeDurationAnnotationSelectedTextColor: UIColor = .selectedRouteDurationAnnotationTextColor
+    @objc dynamic public var routeDurationAnnotationTextColor: UIColor = .routeDurationAnnotationTextColor
+    @objc dynamic public var routeDurationAnnotationFontName: String = "DIN Pro Medium"
     var userLocationForCourseTracking: CLLocation?
     var animatesUserLocation: Bool = false
     var altitude: CLLocationDistance
@@ -961,19 +966,27 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         ].compactMap { style.source(withIdentifier: $0) }))
     }
 
+    /**
+     Shows a callout containing the duration of each route.
+     Useful as a way to give the user more information when picking between multiple route alternatives.
+     If the route contains any tolled segments then the callout will specify that as well.
+     */
     public func showRouteDurationAnnotations(_ routes: [Route]?) {
-        guard let style = style else { return }
-        updateAnnotationSymbolImages(style)
-        updateRouteDurationAnnotations(routes, style: style)
+        guard let visibleRoutes = self.routes, visibleRoutes.count > 0 else { return }
+        updateAnnotationSymbolImages()
+        updateRouteDurationAnnotations(routes)
     }
 
-    private func updateAnnotationSymbolImages(_ style: MGLStyle) {
-        guard style.image(forName: "RouteInfoAnnotationLeftHanded") == nil, style.image(forName: "RouteInfoAnnotationRightHanded") == nil else { return }
+    /**
+     Updates the image assets in the map style for the route duration annotations. Useful when the desired callout colors change, such as when transitioning between light and dark mode on iOS 13 and later.
+     */
+    private func updateAnnotationSymbolImages() {
+        guard let style = style, style.image(forName: "RouteInfoAnnotationLeftHanded") == nil, style.image(forName: "RouteInfoAnnotationRightHanded") == nil else { return }
         let capInsetHeight = CGFloat(22)
         let capInsetWidth = CGFloat(11)
         let capInsets = UIEdgeInsets(top: capInsetHeight, left: capInsetWidth, bottom: capInsetHeight, right: capInsetWidth)
         if let image =  Bundle.mapboxNavigation.image(named: "RouteInfoAnnotationLeftHanded") {
-            let regularRouteImage = image.tint(UIColor.white).resizableImage(withCapInsets: capInsets, resizingMode: .stretch)
+            let regularRouteImage = image.tint(routeDurationAnnotationColor).resizableImage(withCapInsets: capInsets, resizingMode: .stretch)
             style.setImage(regularRouteImage, forName: "RouteInfoAnnotationLeftHanded")
 
             let selectedRouteImage = image.tint(routeDurationAnnotationSelectedColor).resizableImage(withCapInsets: capInsets, resizingMode: .stretch)
@@ -981,7 +994,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
 
         if let image = Bundle.mapboxNavigation.image(named: "RouteInfoAnnotationRightHanded") {
-            let regularRouteImage = image.tint(UIColor.white).resizableImage(withCapInsets: capInsets, resizingMode: .stretch)
+            let regularRouteImage = image.tint(routeDurationAnnotationColor).resizableImage(withCapInsets: capInsets, resizingMode: .stretch)
             style.setImage(regularRouteImage, forName: "RouteInfoAnnotationRightHanded")
 
             let selectedRouteImage = image.tint(routeDurationAnnotationSelectedColor).resizableImage(withCapInsets: capInsets, resizingMode: .stretch)
@@ -989,7 +1002,12 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
 
-    private func updateRouteDurationAnnotations(_ routes: [Route]?, style: MGLStyle) {
+    /**
+     Remove any old route duration callouts and generate new ones for each passed in route.
+     */
+    private func updateRouteDurationAnnotations(_ routes: [Route]?) {
+        guard let style = style else { return }
+        
         // remove any existing route annotation
         removeRouteDurationAnnotationsLayerFromStyle(style)
 
@@ -1093,24 +1111,25 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         self.addRouteAnnotationSymbolLayer(features: features)
     }
 
-    private let annotationLayerIdentifier = "RouteDurationAnnotations"
-
+    /**
+     Add the MGLSymbolStyleLayer for the route duration annotations.
+     */
     private func addRouteAnnotationSymbolLayer(features: [MGLPointFeature]) {
         guard let style = style else { return }
         let dataSource: MGLShapeSource
-        if let source = style.source(withIdentifier: annotationLayerIdentifier + "-source") as? MGLShapeSource {
+        if let source = style.source(withIdentifier: SourceIdentifier.routeDurationAnnotations) as? MGLShapeSource {
             dataSource = source
         } else {
-            dataSource = MGLShapeSource(identifier: annotationLayerIdentifier + "-source", features: features, options: nil)
+            dataSource = MGLShapeSource(identifier: SourceIdentifier.routeDurationAnnotations, features: features, options: nil)
             style.addSource(dataSource)
         }
 
         let shapeLayer: MGLSymbolStyleLayer
 
-        if let layer = style.layer(withIdentifier: annotationLayerIdentifier + "-shape") as? MGLSymbolStyleLayer {
+        if let layer = style.layer(withIdentifier: StyleLayerIdentifier.routeDurationAnnotations) as? MGLSymbolStyleLayer {
             shapeLayer = layer
         } else {
-            shapeLayer = MGLSymbolStyleLayer(identifier: annotationLayerIdentifier + "-shape", source: dataSource)
+            shapeLayer = MGLSymbolStyleLayer(identifier: StyleLayerIdentifier.routeDurationAnnotations, source: dataSource)
         }
 
         shapeLayer.text = NSExpression(forKeyPath: "text")
@@ -1121,10 +1140,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         shapeLayer.textFontSize = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", fontSizeByZoomLevel)
 
         shapeLayer.textColor = NSExpression(forConditional: NSPredicate(format: "selected == true"),
-                                            trueExpression: NSExpression(forConstantValue: UIColor.white),
-                     falseExpression: NSExpression(forConstantValue: UIColor.black))
+                                            trueExpression: NSExpression(forConstantValue: routeDurationAnnotationSelectedTextColor),
+                     falseExpression: NSExpression(forConstantValue: routeDurationAnnotationTextColor))
 
-        shapeLayer.textFontNames = NSExpression(forConstantValue: ["DIN Pro Medium"])
+        shapeLayer.textFontNames = NSExpression(forConstantValue: [self.routeDurationAnnotationFontName])
         shapeLayer.textAllowsOverlap = NSExpression(forConstantValue: true)
         shapeLayer.textJustification = NSExpression(forConstantValue: "left")
         shapeLayer.symbolZOrder = NSExpression(forConstantValue: NSValue(mglSymbolZOrder: MGLSymbolZOrder.auto))
@@ -1147,17 +1166,23 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         style.addLayer(shapeLayer)
     }
 
+    /**
+     Removes all visible route duration callouts.
+     */
     public func removeRouteDurationAnnotations() {
         guard let style = style else { return }
         removeRouteDurationAnnotationsLayerFromStyle(style)
     }
 
+    /**
+     Remove the underlying style layers and data sources for the route duration annotations.
+     */
     private func removeRouteDurationAnnotationsLayerFromStyle(_ style: MGLStyle) {
-        if let annotationsLayer = style.layer(withIdentifier: annotationLayerIdentifier + "-shape") {
+        if let annotationsLayer = style.layer(withIdentifier: StyleLayerIdentifier.routeDurationAnnotations) {
             style.removeLayer(annotationsLayer)
         }
 
-        if let annotationsSource = style.source(withIdentifier: annotationLayerIdentifier + "-source") {
+        if let annotationsSource = style.source(withIdentifier: SourceIdentifier.routeDurationAnnotations) {
             style.removeSource(annotationsSource)
         }
     }
