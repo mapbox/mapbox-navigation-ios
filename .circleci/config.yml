@@ -84,7 +84,7 @@ step-library:
   - &install-dependencies
       unless:
         condition:
-          equal: [ "12.0.0", << parameters.xcode >> ]
+          equal: [ "12.1.0", << parameters.xcode >> ]
         steps:
           run:
             name: Install Dependencies
@@ -95,7 +95,7 @@ step-library:
   - &install-dependencies-12
       when:
         condition:
-          equal: [ "12.0.0", << parameters.xcode >> ]
+          equal: [ "12.1.0", << parameters.xcode >> ]
         steps:
           run:
             name: Install Dependencies
