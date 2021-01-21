@@ -12,13 +12,14 @@ class GuidanceCardsSnapshotTests: SnapshotTest {
         CLLocationCoordinate2D(latitude: 39.749216, longitude: -105.008272),
         CLLocationCoordinate2D(latitude: 39.694833, longitude: -104.976949),
     ])
-    
+        
     override func setUp() {
         super.setUp()
         recordMode = false
     }
     
-    func testRegularManeuver() {
+    
+        func disableTestRegularManeuver() {
         let route = Fixture.route(from: "route-with-tertiary", options: tertiaryRouteOptions)
         
         let host = UIViewController(nibName: nil, bundle: nil)
@@ -40,7 +41,7 @@ class GuidanceCardsSnapshotTests: SnapshotTest {
         verify(host, for: Device.iPhone8Plus.portrait)
     }
     
-    func testLanesManeuver() {
+    func disableTestLanesManeuver() {
         let route = Fixture.route(from: "route-with-tertiary", options: tertiaryRouteOptions)
         
         let host = UIViewController(nibName: nil, bundle: nil)
@@ -63,7 +64,7 @@ class GuidanceCardsSnapshotTests: SnapshotTest {
         verify(host, for: Device.iPhone8Plus.portrait)
     }
     
-    func testTertiaryManeuver() {
+    func disableTestTertiaryManeuver() {
         let route = Fixture.route(from: "route-with-tertiary", options: tertiaryRouteOptions)
         
         let host = UIViewController(nibName: nil, bundle: nil)
