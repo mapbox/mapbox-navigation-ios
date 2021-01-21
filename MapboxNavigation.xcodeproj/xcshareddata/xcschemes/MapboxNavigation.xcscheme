@@ -68,6 +68,14 @@
                BlueprintName = "MapboxNavigationTests"
                ReferencedContainer = "container:MapboxNavigation.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "GuidanceCardsSnapshotTests">
+               </Test>
+               <Test
+                  Identifier = "GuidanceCardsSnapshotTests/testRegularManeuver()">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
    </TestAction>
