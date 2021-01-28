@@ -67,7 +67,6 @@ open class NavigationMapView: UIView {
     struct IdentifierString {
         static let identifier = Bundle.mapboxNavigation.bundleIdentifier ?? ""
         static let arrowImage = "triangle-tip-navigation"
-        static let waypointCircle = "\(identifier)_waypointsCircle"
         static let arrowSource = "\(identifier)_arrowSource"
         static let arrow = "\(identifier)_arrow"
         static let arrowStrokeSource = "\(identifier)arrowStrokeSource"
@@ -78,6 +77,9 @@ open class NavigationMapView: UIView {
         static let instructionSource = "\(identifier)_instructionSource"
         static let instructionLabel = "\(identifier)_instructionLabel"
         static let instructionCircle = "\(identifier)_instructionCircle"
+        static let waypointSource = "\(identifier)_waypointSource"
+        static let waypointCircle = "\(identifier)_waypointCircle"
+        static let waypointSymbol = "\(identifier)_waypointSymbol"
     }
     
     @objc dynamic public var trafficUnknownColor: UIColor = .trafficUnknown
@@ -611,8 +613,63 @@ open class NavigationMapView: UIView {
      Adds the route waypoints to the map given the current leg index. Previous waypoints for completed legs will be omitted.
      */
     public func showWaypoints(on route: Route, legIndex: Int = 0) {
-        // TODO: Implement ability to show waypoints.
-        
+        let waypoints: [Waypoint] = Array(route.legs.dropLast().compactMap({$0.destination}))
+
+        var features = [Feature]()
+        for (waypointIndex, waypoint) in waypoints.enumerated() {
+            var feature = Feature(Point(waypoint.coordinate))
+            feature.properties = [
+                "waypointCompleted": waypointIndex < legIndex,
+                "name": waypointIndex + 1
+            ]
+            features.append(feature)
+        }
+
+        if route.legs.count > 1 { // are we on a multipoint route?
+            routes = [route]
+
+            if let _ = try? mapView.style.getSource(identifier: IdentifierString.waypointSource, type: GeoJSONSource.self).get() {
+                let geoJSON = FeatureCollection(features: features)
+                let _ = mapView.style.updateGeoJSON(for: IdentifierString.waypointSource, with: geoJSON)
+            } else {
+                var waypointSource = GeoJSONSource()
+                waypointSource.data = .featureCollection(.init(features: features))
+                let sourceResult = mapView.style.addSource(source: waypointSource, identifier: IdentifierString.waypointSource)
+                handleResult(sourceResult)
+                // create circle layer
+                var circles = CircleLayer(id: IdentifierString.waypointCircle)
+                circles.source = IdentifierString.waypointSource
+                let opacity: Value = .constant(getOpacity(waypoints: waypoints, legIndex: legIndex))
+                circles.paint?.circleColor = .constant(.init(color: UIColor(red:0.9, green:0.9, blue:0.9, alpha:1.0)))
+                circles.paint?.circleOpacity = opacity
+                circles.paint?.circleRadius = .constant(.init(10))
+                circles.paint?.circleStrokeColor = .constant(.init(color: UIColor.black))
+                circles.paint?.circleStrokeWidth = .constant(.init(1))
+                circles.paint?.circleStrokeOpacity = opacity
+
+                // create symbol layer
+                var symbols = SymbolLayer(id: IdentifierString.waypointSymbol)
+                symbols.source = IdentifierString.waypointSource
+                symbols.layout?.textField = .expression(Exp(.toString){ Exp(.get){ "name" } })
+                symbols.layout?.textSize = .constant(.init(10))
+                symbols.paint?.textOpacity = opacity
+                symbols.paint?.textHaloWidth = .constant(.init(0.25))
+                symbols.paint?.textHaloColor = .constant(.init(color: UIColor.black))
+
+                // add layers
+                if let arrows = try? mapView.style.getLayer(with: IdentifierString.arrowCasingSymbol, type: LineLayer.self).get() {
+                    let layerResult = mapView.style.addLayer(layer: circles, layerPosition: LayerPosition(above: arrows.id))
+                    handleResult(layerResult)
+                } else {
+                    guard let layerIdentifier = identifier(route, identifierType: .route) else { return }
+                    let circlesResult = mapView.style.addLayer(layer: circles, layerPosition: LayerPosition(above: layerIdentifier))
+                    handleResult(circlesResult)
+                }
+                let symbolResult = mapView.style.addLayer(layer: symbols, layerPosition: LayerPosition(above: circles.id))
+                handleResult(symbolResult)
+            }
+        }
+
         if let lastLeg = route.legs.last, let destinationCoordinate = lastLeg.destination?.coordinate {
             mapView.annotationManager.removeAnnotations(annotationsToRemove())
             
@@ -620,6 +677,15 @@ open class NavigationMapView: UIView {
             destinationAnnotation.title = "navigation_annotation"
             mapView.annotationManager.addAnnotation(destinationAnnotation)
         }
+    }
+    
+    func getOpacity(waypoints: [Waypoint], legIndex: Int) -> Double {
+        for (waypointIndex, _) in waypoints.enumerated() {
+            if waypointIndex < legIndex {
+                return 0.5
+            }
+        }
+        return 1
     }
     
     public func removeRoutes() {
@@ -673,6 +739,11 @@ open class NavigationMapView: UIView {
     
     public func removeWaypoints() {
         mapView.annotationManager.removeAnnotations(annotationsToRemove())
+        
+        let layerSet: Set = [IdentifierString.waypointCircle,
+                             IdentifierString.waypointSymbol]
+        mapView.style.removeLayers(layerSet)
+        mapView.style.removeSources([IdentifierString.waypointSource])
     }
     
     func annotationsToRemove() -> [Annotation] {
