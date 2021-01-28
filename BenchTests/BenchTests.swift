@@ -10,6 +10,7 @@ class BenchTests: XCTestCase, CLLocationManagerDelegate {
     
     override func setUp() {
         super.setUp()
+        // TODO: Use `accessToken` provided by `AccountManager`.
         MGLAccountManager.accessToken = token
     }
     

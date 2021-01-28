@@ -1,5 +1,6 @@
 import MapboxCoreNavigation
 import MapboxNavigation
+import MapboxMaps
 import MapboxDirections
 
 extension ViewController: InstructionsCardCollectionDelegate {
@@ -14,17 +15,20 @@ extension ViewController: InstructionsCardCollectionDelegate {
         }
         
         // find the upcoming manuever step, and update instructions banner to show preview
-        guard stepIndex + 1 < leg.steps.endIndex, let mapView = activeNavigationViewController?.mapView else { return }
+        guard stepIndex + 1 < leg.steps.endIndex, let navigationMapView = activeNavigationViewController?.mapView else { return }
         let maneuverStep = leg.steps[stepIndex + 1]
         
         // stop tracking user, and move camera to step location
-        mapView.tracksUserCourse = false
-        mapView.userTrackingMode = .none
-        mapView.enableFrameByFrameCourseViewTracking(for: 1)
-        mapView.setCenter(maneuverStep.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: maneuverStep.initialHeading!, animated: true, completionHandler: nil)
+        navigationMapView.tracksUserCourse = false
+        navigationMapView.enableFrameByFrameCourseViewTracking(for: 1)
+        
+        let camera = CameraOptions(center: maneuverStep.maneuverLocation,
+                                   zoom: navigationMapView.mapView.zoom,
+                                   bearing: maneuverStep.initialHeading!)
+        navigationMapView.mapView.cameraManager.setCamera(to: camera, animated: true, duration: 1.0, completion: nil)
         
         // add arrow to map for preview instruction
-        mapView.addArrow(route: route, legIndex: legIndex, stepIndex: stepIndex + 1)
+        navigationMapView.addArrow(route: route, legIndex: legIndex, stepIndex: stepIndex + 1)
     }
     
     public func primaryLabel(_ primaryLabel: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {

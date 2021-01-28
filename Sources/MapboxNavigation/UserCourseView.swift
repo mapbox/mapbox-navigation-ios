@@ -1,4 +1,5 @@
 import UIKit
+import CoreLocation
 
 /**
  A protocol that represents a `UIView` which tracks the user’s location and course on a `NavigationMapView`.

@@ -1,5 +1,4 @@
 import UIKit
-import Mapbox
 import MapboxCoreNavigation
 
 /**
@@ -9,7 +8,8 @@ import MapboxCoreNavigation
  
  This class depends on `PassiveLocationDataSource` to detect the user’s location as it changes. If you want location updates but do not need to display them on a map and do not want a dependency on the MapboxNavigation module, you can use `PassiveLocationDataSource` instead of this class.
  */
-open class PassiveLocationManager: NSObject, MGLLocationManager {
+// TODO: Port `MGLLocationManager` functionality.
+open class PassiveLocationManager: NSObject {
     /**
      Initializes the location manager with the given data source.
      
@@ -20,11 +20,6 @@ open class PassiveLocationManager: NSObject, MGLLocationManager {
         super.init()
         dataSource.delegate = self
     }
-    
-    /**
-     The location manager’s delegate.
-     */
-    public weak var delegate: MGLLocationManagerDelegate?
     
     /**
      The location manager’s data source, which detects the user’s location as it changes.
@@ -65,8 +60,7 @@ open class PassiveLocationManager: NSObject, MGLLocationManager {
 
     public func startUpdatingLocation() {
         dataSource.startUpdatingLocation { (error) in
-            guard let error = error else { return }
-            self.delegate?.locationManager(self, didFailWithError: error)
+
         }
     }
 
@@ -99,23 +93,18 @@ open class PassiveLocationManager: NSObject, MGLLocationManager {
 extension PassiveLocationManager: PassiveLocationDataSourceDelegate {
     @available(iOS 14.0, *)
     public func passiveLocationDataSourceDidChangeAuthorization(_ dataSource: PassiveLocationDataSource) {
-        // MGLLocationManager.locationManagerDidChangeAuthorization(_:) was introduced in Mapbox Maps SDK for iOS v6.2.0, but v6.0.0–v6.1.x are still supported.
-        let locationManagerDidChangeAuthorization = Selector(("locationManagerDidChangeAuthorization:" as NSString) as String)
-        guard let delegate = delegate, delegate.responds(to: locationManagerDidChangeAuthorization) else {
-            return
-        }
-        delegate.perform(locationManagerDidChangeAuthorization, with: self)
+
     }
     
     public func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didUpdateLocation location: CLLocation, rawLocation: CLLocation) {
-        delegate?.locationManager(self, didUpdate: [location])
+    
     }
     
     public func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didUpdateHeading newHeading: CLHeading) {
-        delegate?.locationManager(self, didUpdate: newHeading)
+    
     }
     
     public func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didFailWithError error: Error) {
-        delegate?.locationManager(self, didFailWithError: error)
+
     }
 }

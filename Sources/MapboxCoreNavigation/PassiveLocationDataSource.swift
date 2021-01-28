@@ -110,6 +110,7 @@ open class PassiveLocationDataSource: NSObject {
         let endpointConfig = TileEndpointConfiguration(directions: directions, tilesVersion: tilesVersion)
         let tilesConfig = TilesConfig(tilesPath: tilesURL.path,
                                       inMemoryTileCache: nil,
+                                      onDiskTileCache: nil,
                                       mapMatchingSpatialCache: nil,
                                       threadsCount: nil,
                                       endpointConfig: endpointConfig)
@@ -199,6 +200,14 @@ extension TileEndpointConfiguration {
             preconditionFailure("No access token specified in Info.plist")
         }
         let skuTokenProvider = SkuTokenProvider(with: directions.credentials)
-        self.init(host: host, version: tilesVersion, token: accessToken, userAgent: URLSession.userAgent, navigatorVersion: "", skuTokenSource: skuTokenProvider)
+        
+        // TODO: Provide correct dataset.
+        self.init(host: host,
+                  dataset: "mapbox/driving",
+                  version: tilesVersion,
+                  token: accessToken,
+                  userAgent: URLSession.userAgent,
+                  navigatorVersion: "",
+                  skuTokenSource: skuTokenProvider)
     }
 }

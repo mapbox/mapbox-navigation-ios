@@ -4,7 +4,7 @@ import MapboxNavigation
 // MARK: CustomDayStyle
 
 /**
- To find more pieces of the UI to customize, checkout DayStyle.swift.
+ To find more pieces of the UI to customize, check out DayStyle.swift.
  */
 class CustomDayStyle: DayStyle {
     required init() {
@@ -21,6 +21,7 @@ class CustomDayStyle: DayStyle {
 }
 
 // MARK: CustomNightStyle
+
 class CustomNightStyle: NightStyle {
     required init() {
         super.init()

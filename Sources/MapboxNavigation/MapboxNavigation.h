@@ -7,4 +7,4 @@ FOUNDATION_EXPORT double MapboxNavigationVersionNumber;
 FOUNDATION_EXPORT const unsigned char MapboxNavigationVersionString[];
 
 #import "CLLocationManager+MGLNavigationAdditions.h"
-#import "MGLMapView+MGLNavigationAdditions.h"
+#import "Utils.h"

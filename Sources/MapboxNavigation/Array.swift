@@ -1,3 +1,5 @@
+import Foundation
+
 extension Array {
     /**
      Conditionally remove each element depending on the elements immediately preceding and following it.

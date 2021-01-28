@@ -1,4 +1,5 @@
 import UIKit
+import CoreLocation
 
 /**
  A view representing the user’s reduced accuracy location on screen.

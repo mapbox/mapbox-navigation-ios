@@ -1,4 +1,5 @@
-import Foundation
+import UIKit
+import MapboxMaps
 
 extension UIColor {
     class var defaultRouteCasing: UIColor { get { return .defaultTintStroke } }
@@ -51,7 +52,8 @@ extension UIFont {
 open class DayStyle: Style {
     public required init() {
         super.init()
-        mapStyleURL = MGLStyle.navigationDayStyleURL
+        
+        mapStyleURL = MapboxMaps.Style.navigationDayStyleURL
         previewMapStyleURL = mapStyleURL
         styleType = .day
         statusBarStyle = .default

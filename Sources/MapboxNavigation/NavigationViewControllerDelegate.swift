@@ -7,7 +7,7 @@ import MapboxCoreNavigation
  
  For convenience, several location-related methods in the `NavigationServiceDelegate` protocol have corresponding methods in this protocol.
  */
-public protocol NavigationViewControllerDelegate: VisualInstructionDelegate{
+public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     /**
      Called when the navigation view controller is dismissed, such as when the user ends a trip.
      
@@ -101,69 +101,8 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate{
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, didRefresh routeProgress: RouteProgress)
 
-    /**
-     Returns an `MGLStyleLayer` that determines the appearance of the main route line.
+    // TODO: Add delegate methods, which allow to customize main and alternative route lines, waypoints and their shapes.
 
-     If this method is unimplemented, the navigation view controller’s map view draws the route line using an `MGLLineStyleLayer`.
-    */
-    func navigationViewController(_ navigationViewController: NavigationViewController, mainRouteStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
-
-    /**
-     Returns an `MGLStyleLayer` that determines the appearance of the casing around the main route line.
-
-     If this method is unimplemented, the navigation view controller’s map view draws the casing for the main route line using an `MGLLineStyleLayer`.
-    */
-    func navigationViewController(_ navigationViewController: NavigationViewController, mainRouteCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
-
-    /**
-     Returns an `MGLStyleLayer` that determines the appearance of alternative route lines.
-
-     If this method is unimplemented, the navigation view controller’s map view draws the alternative route lines using an `MGLLineStyleLayer`.
-    */
-    func navigationViewController(_ navigationViewController: NavigationViewController, alternativeRouteStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
-
-    /**
-     Returns an `MGLStyleLayer` that determines the appearance of the casing around the alternative route lines.
-
-     If this method is unimplemented, the navigation view controller’s map view draws the casing for the alternative route lines using an `MGLLineStyleLayer`.
-    */
-    func navigationViewController(_ navigationViewController: NavigationViewController, alternativeRouteCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
-    
-    /**
-     Returns an `MGLShape` that represents the path of the route line.
-     
-     If this method is unimplemented, the navigation view controller’s map view represents the route line using an `MGLPolylineFeature` based on `route`’s `coordinates` property.
-     */
-    func navigationViewController(_ navigationViewController: NavigationViewController, shapeFor routes: [Route]) -> MGLShape?
-    
-    /**
-     Returns an `MGLShape` that represents the path of the route line’s casing.
-     
-     If this method is unimplemented, the navigation view controller’s map view represents the route line’s casing using an `MGLPolylineFeature` identical to the one returned by `navigationViewController(_:shapeFor:)`.
-     */
-    func navigationViewController(_ navigationViewController: NavigationViewController, simplifiedShapeFor route: Route) -> MGLShape?
-    
-    /**
-     Returns an `MGLStyleLayer` that marks the location of each destination along the route when there are multiple destinations. The returned layer is added to the map below the layer returned by `navigationViewController(_:waypointSymbolStyleLayerWithIdentifier:source:)`.
-     
-     If this method is unimplemented, the navigation view controller’s map view marks each destination waypoint with a circle.
-     */
-    func navigationViewController(_ navigationViewController: NavigationViewController, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
-    
-    /**
-     Returns an `MGLStyleLayer` that places an identifying symbol on each destination along the route when there are multiple destinations. The returned layer is added to the map above the layer returned by `navigationViewController(_:waypointStyleLayerWithIdentifier:source:)`.
-     
-     If this method is unimplemented, the navigation view controller’s map view labels each destination waypoint with a number, starting with 1 at the first destination, 2 at the second destination, and so on.
-     */
-    func navigationViewController(_ navigationViewController: NavigationViewController, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
-    
-    /**
-     Returns an `MGLShape` that represents the destination waypoints along the route (that is, excluding the origin).
-     
-     If this method is unimplemented, the navigation map view represents the route waypoints using `navigationViewController(_:shapeFor:legIndex:)`.
-     */
-    func navigationViewController(_ navigationViewController: NavigationViewController, shapeFor waypoints: [Waypoint], legIndex: Int) -> MGLShape?
-    
     /**
      Called when the user taps to select a route on the navigation view controller’s map view.
      - parameter navigationViewController: The navigation view controller presenting the route that the user selected.
@@ -265,68 +204,7 @@ public extension NavigationViewControllerDelegate {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
     }
 
-    /**
-     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
-     */
-    func navigationViewController(_ navigationViewController: NavigationViewController, mainRouteStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
-        return nil
-    }
-
-    func navigationViewController(_ navigationViewController: NavigationViewController, mainRouteCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
-        return nil
-    }
-
-    func navigationViewController(_ navigationViewController: NavigationViewController, alternativeRouteStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
-        return nil
-    }
-
-    func navigationViewController(_ navigationViewController: NavigationViewController, alternativeRouteCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
-        return nil
-    }
-    
-    /**
-     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
-     */
-    func navigationViewController(_ navigationViewController: NavigationViewController, shapeFor routes: [Route]) -> MGLShape? {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
-        return nil
-    }
-    
-    /**
-     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
-     */
-    func navigationViewController(_ navigationViewController: NavigationViewController, simplifiedShapeFor route: Route) -> MGLShape? {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
-        return nil
-    }
-    
-    /**
-     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
-     */
-    func navigationViewController(_ navigationViewController: NavigationViewController, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
-        return nil
-    }
-    
-    /**
-     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
-     */
-    func navigationViewController(_ navigationViewController: NavigationViewController, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
-        return nil
-    }
-    
-    /**
-     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
-     */
-    func navigationViewController(_ navigationViewController: NavigationViewController, shapeFor waypoints: [Waypoint], legIndex: Int) -> MGLShape? {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
-        return nil
-    }
+    // TODO: Add pass-through delegate methods, which allow to customize main and alternative route lines, waypoints and their shapes.
     
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.

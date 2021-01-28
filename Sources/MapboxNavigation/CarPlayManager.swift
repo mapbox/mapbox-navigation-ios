@@ -4,21 +4,6 @@ import MapboxCoreNavigation
 import MapboxDirections
 
 /**
- The activity during which a `CPTemplate` is displayed. This enumeration is used to distinguish between different templates during different phases of user interaction.
- */
-@available(iOS 12.0, *)
-public enum CarPlayActivity: Int {
-    /// The user is browsing the map or searching for a destination.
-    case browsing
-    /// The user is panning while browsing the map interface.
-    case panningInBrowsingMode
-    /// The user is previewing a route or selecting among multiple routes.
-    case previewing
-    /// The user is actively navigating along a route.
-    case navigating
-}
-
-/**
  `CarPlayManager` is the main object responsible for orchestrating interactions with a Mapbox map on CarPlay.
  
  Messages declared in the `CPApplicationDelegate` protocol should be sent to this object in the containing application's application delegate. Implement `CarPlayManagerDelegate` in the containing application and assign an instance to the `delegate` property of your `CarPlayManager` instance.
@@ -166,17 +151,13 @@ public class CarPlayManager: NSObject {
         return userTrackingButton
     }()
     
-    @available(*, deprecated, renamed: "trackingStateButton")
-    public var overviewButton: CPMapButton {
-        get { return userTrackingButton }
-    }
-    
     /**
      The main map view displayed inside CarPlay.
      */
+    // TODO: Consider renaming to `navigationMapView`.
     public var mapView: NavigationMapView? {
         let mapViewController = carPlayMapViewController
-        return mapViewController?.mapView
+        return mapViewController?.navigationMapView
     }
     
     /**
@@ -233,7 +214,8 @@ public class CarPlayManager: NSObject {
     }
 }
 
-// MARK: CPApplicationDelegate
+// MARK: - CPApplicationDelegate methods
+
 @available(iOS 12.0, *)
 extension CarPlayManager: CPApplicationDelegate {
     public func application(_ application: UIApplication, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPWindow) {
@@ -260,7 +242,7 @@ extension CarPlayManager: CPApplicationDelegate {
 
     public func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPWindow) {
         CarPlayManager.isConnected = false
-        self.interfaceController = nil        
+        self.interfaceController = nil
         
         window.rootViewController = nil
         window.isHidden = true
@@ -336,7 +318,8 @@ extension CarPlayManager: CPApplicationDelegate {
     }
 }
 
-// MARK: CPInterfaceControllerDelegate
+// MARK: - CPInterfaceControllerDelegate methods
+
 @available(iOS 12.0, *)
 extension CarPlayManager: CPInterfaceControllerDelegate {
     public func templateWillAppear(_ template: CPTemplate, animated: Bool) {
@@ -348,10 +331,18 @@ extension CarPlayManager: CPInterfaceControllerDelegate {
     public func templateDidAppear(_ template: CPTemplate, animated: Bool) {
         guard interfaceController?.topTemplate == mainMapTemplate else { return }
         if template == interfaceController?.rootTemplate, let mapViewController = carPlayMapViewController {
-            let mapView = mapViewController.mapView
-            mapView.removeRoutes()
-            mapView.removeWaypoints()
-            mapView.setUserTrackingMode(.followWithCourse, animated: true, completionHandler: nil)
+            let navigationMapView = mapViewController.navigationMapView
+            navigationMapView.removeRoutes()
+            navigationMapView.removeWaypoints()
+            
+            // Since tracking mode is no longer part of `MapView` functionality camera is used directly to
+            // zoom-in to most recent location.
+            let latestLocation = navigationMapView.mapView.locationManager.latestLocation
+            navigationMapView.mapView.cameraManager.setCamera(centerCoordinate: latestLocation?.coordinate,
+                                                              zoom: 12.0,
+                                                              bearing: latestLocation?.course,
+                                                              pitch: 0,
+                                                              animated: true)
         }
     }
     public func templateWillDisappear(_ template: CPTemplate, animated: Bool) {
@@ -374,14 +365,13 @@ extension CarPlayManager: CPInterfaceControllerDelegate {
 extension CarPlayManager {
     public func previewRoutes(to destination: Waypoint, completionHandler: @escaping CompletionHandler) {
         guard let rootViewController = carPlayMapViewController,
-              let userLocation = rootViewController.mapView.userLocation,
-              let location = userLocation.location else {
+              let userLocation = rootViewController.navigationMapView.mapView.locationManager.latestLocation else {
             completionHandler()
             return
         }
         
         let name = NSLocalizedString("CARPLAY_CURRENT_LOCATION", bundle: .mapboxNavigation, value: "Current Location", comment: "Name of the waypoint associated with the current location")
-        let origin = Waypoint(location: location, heading: userLocation.heading, name: name)
+        let origin = Waypoint(location: userLocation.internalLocation, heading: userLocation.heading, name: name)
         
         previewRoutes(between: [origin, destination], completionHandler: completionHandler)
     }
@@ -455,9 +445,11 @@ extension CarPlayManager {
     }
 }
 
-// MARK: CPMapTemplateDelegate
+// MARK: - CPMapTemplateDelegate methods
+
 @available(iOS 12.0, *)
 extension CarPlayManager: CPMapTemplateDelegate {
+    
     public func mapTemplate(_ mapTemplate: CPMapTemplate, startedTrip trip: CPTrip, using routeChoice: CPRouteChoice) {
         guard let interfaceController = interfaceController,
               let carPlayMapViewController = carPlayMapViewController else {
@@ -495,9 +487,9 @@ extension CarPlayManager: CPMapTemplateDelegate {
         carPlayMapViewController.isOverviewingRoutes = false
         carPlayMapViewController.present(navigationViewController, animated: true, completion: nil)
 
-        let mapView = carPlayMapViewController.mapView
-        mapView.removeRoutes()
-        mapView.removeWaypoints()
+        let navigationMapView = carPlayMapViewController.navigationMapView
+        navigationMapView.removeRoutes()
+        navigationMapView.removeWaypoints()
 
         delegate?.carPlayManager(self, didBeginNavigationWith: service)
     }
@@ -535,19 +527,18 @@ extension CarPlayManager: CPMapTemplateDelegate {
             return
         }
         carPlayMapViewController.isOverviewingRoutes = true
-        let mapView = carPlayMapViewController.mapView
+        let navigationMapView = carPlayMapViewController.navigationMapView
         let (route, _, _) = routeChoice.userInfo as! (Route, Int, RouteOptions)
         
         let estimates = CPTravelEstimates(distanceRemaining: Measurement(distance: route.distance).localized(),
                                           timeRemaining: route.expectedTravelTime)
         mapTemplate.updateEstimates(estimates, for: trip)
 
-        //FIXME: Unable to tilt map during route selection -- https://github.com/mapbox/mapbox-gl-native/issues/2259
-        let topDownCamera = mapView.camera
+        // FIXME: Unable to tilt map during route selection -- https://github.com/mapbox/mapbox-gl-native/issues/2259
+        let topDownCamera = navigationMapView.mapView.cameraView.camera
         topDownCamera.pitch = 0
-        mapView.setCamera(topDownCamera, animated: false)
-
-        mapView.showcase([route])
+        navigationMapView.mapView.cameraManager.setCamera(to: topDownCamera, completion: nil)
+        navigationMapView.showcase([route])
         
         delegate?.carPlayManager(self, selectedPreviewFor: trip, using: routeChoice)
     }
@@ -556,9 +547,9 @@ extension CarPlayManager: CPMapTemplateDelegate {
         guard let carPlayMapViewController = carPlayMapViewController else {
             return
         }
-        let mapView = carPlayMapViewController.mapView
-        mapView.removeRoutes()
-        mapView.removeWaypoints()
+        let navigationMapView = carPlayMapViewController.navigationMapView
+        navigationMapView.removeRoutes()
+        navigationMapView.removeWaypoints()
         delegate?.carPlayManagerDidEndNavigation(self)
     }
 
@@ -569,11 +560,9 @@ extension CarPlayManager: CPMapTemplateDelegate {
     }
     
     public func mapTemplate(_ mapTemplate: CPMapTemplate, didEndPanGestureWithVelocity velocity: CGPoint) {
-        if mapTemplate == interfaceController?.rootTemplate, let carPlayMapViewController = carPlayMapViewController {
-            carPlayMapViewController.recenterButton.isHidden = carPlayMapViewController.mapView.userTrackingMode != .none
-        }
+        // TODO: Find a way to control `recenterButton` visibility.
 
-        //We want the panning surface to have "friction". If the user did not "flick" fast/hard enough, do not update the map with a final animation.
+        // We want the panning surface to have "friction". If the user did not "flick" fast/hard enough, do not update the map with a final animation.
         guard sqrtf(Float(velocity.x * velocity.x + velocity.y * velocity.y)) > 100 else {
             return
         }
@@ -598,12 +587,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
     }
     
     public func mapTemplateWillDismissPanningInterface(_ mapTemplate: CPMapTemplate) {
-        guard let carPlayMapViewController = carPlayMapViewController else {
-            return
-        }
-        
-        let mode = carPlayMapViewController.mapView.userTrackingMode
-        carPlayMapViewController.recenterButton.isHidden = mode != .none
+        // TODO: Find a way to control `recenterButton` visibility.
     }
 
     public func mapTemplate(_ mapTemplate: CPMapTemplate, didUpdatePanGestureWithTranslation translation: CGPoint, velocity: CGPoint) {
@@ -611,49 +595,47 @@ extension CarPlayManager: CPMapTemplateDelegate {
     }
     
     private func updatePan(by offset: CGPoint, mapTemplate: CPMapTemplate, animated: Bool) {
-        let mapView: NavigationMapView
+        let navigationMapView: NavigationMapView
         if let navigationViewController = currentNavigator, mapTemplate == navigationViewController.mapTemplate {
-            mapView = navigationViewController.mapView!
+            navigationMapView = navigationViewController.navigationMapView!
         } else if let carPlayMapViewController = carPlayMapViewController {
-            mapView = carPlayMapViewController.mapView
+            navigationMapView = carPlayMapViewController.navigationMapView
         } else {
             return
         }
 
-        let coordinate = self.coordinate(of: offset, in: mapView)
-        mapView.setCenter(coordinate, animated: animated)
+        let coordinate = self.coordinate(of: offset, in: navigationMapView)
+        navigationMapView.mapView.cameraManager.setCamera(centerCoordinate: coordinate, animated: true)
     }
 
-    func coordinate(of offset: CGPoint, in mapView: NavigationMapView) -> CLLocationCoordinate2D {
-        let contentFrame = mapView.bounds.inset(by: mapView.contentInset)
+    func coordinate(of offset: CGPoint, in navigationMapView: NavigationMapView) -> CLLocationCoordinate2D {
+        let contentFrame = navigationMapView.bounds.inset(by: navigationMapView.mapView.safeAreaInsets)
         let centerPoint = CGPoint(x: contentFrame.midX, y: contentFrame.midY)
         let endCameraPoint = CGPoint(x: centerPoint.x - offset.x, y: centerPoint.y - offset.y)
 
-        return mapView.convert(endCameraPoint, toCoordinateFrom: mapView)
+        return navigationMapView.mapView.coordinate(for: endCameraPoint)
     }
 
     public func mapTemplate(_ mapTemplate: CPMapTemplate, panWith direction: CPMapTemplate.PanDirection) {
-        guard let carPlayMapViewController = carPlayMapViewController else {
-            return
-        }
+        guard let carPlayMapViewController = carPlayMapViewController else { return }
 
         // Determine the screen distance to pan by based on the distance from the visual center to the closest side.
-        let mapView = carPlayMapViewController.mapView
-        let contentFrame = mapView.bounds.inset(by: mapView.contentInset)
-        let increment = min(mapView.bounds.width, mapView.bounds.height) / 2.0
+        let navigationMapView = carPlayMapViewController.navigationMapView
+        let contentFrame = navigationMapView.bounds.inset(by: navigationMapView.mapView.safeAreaInsets)
+        let increment = min(navigationMapView.bounds.width, navigationMapView.bounds.height) / 2.0
         
         // Calculate the distance in physical units from the visual center to where it would be after panning downwards.
         let downshiftedCenter = CGPoint(x: contentFrame.midX, y: contentFrame.midY + increment)
-        let downshiftedCenterCoordinate = mapView.convert(downshiftedCenter, toCoordinateFrom: mapView)
-        let distance = mapView.centerCoordinate.distance(to: downshiftedCenterCoordinate)
+        let downshiftedCenterCoordinate = navigationMapView.mapView.coordinate(for: downshiftedCenter)
+        let distance = navigationMapView.mapView.centerCoordinate.distance(to: downshiftedCenterCoordinate)
         
         // Shift the center coordinate by that distance in the specified direction.
         guard let relativeDirection = CLLocationDirection(panDirection: direction) else {
             return
         }
-        let shiftedDirection = (mapView.direction + relativeDirection).wrap(min: 0, max: 360)
-        let shiftedCenterCoordinate = mapView.centerCoordinate.coordinate(at: distance, facing: shiftedDirection)
-        mapView.setCenter(shiftedCenterCoordinate, animated: true)
+        let shiftedDirection = (Double(navigationMapView.mapView.cameraView.bearing) + relativeDirection).wrap(min: 0, max: 360)
+        let shiftedCenterCoordinate = navigationMapView.mapView.centerCoordinate.coordinate(at: distance, facing: shiftedDirection)
+        navigationMapView.mapView.cameraManager.setCamera(centerCoordinate: shiftedCenterCoordinate, animated: true)
     }
 
     private func popToRootTemplate(interfaceController: CPInterfaceController?, animated: Bool) {
@@ -672,7 +654,8 @@ extension CarPlayManager: CPMapTemplateDelegate {
     }
 }
 
-// MARK: CarPlayNavigationDelegate
+// MARK: - CarPlayNavigationDelegate methods
+
 @available(iOS 12.0, *)
 extension CarPlayManager: CarPlayNavigationDelegate {
     public func carPlayNavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool) {

@@ -22,6 +22,8 @@
 	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>MBXAccessToken</key>
+	<string>PASTE MAPBOX ACCESS TOKEN HERE</string>
 	<key>MGLMapboxAccessToken</key>
 	<string>PASTE MAPBOX ACCESS TOKEN HERE</string>
 	<key>MGLMapboxMetricsEnabledSettingShownInApp</key>

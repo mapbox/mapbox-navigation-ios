@@ -19,14 +19,16 @@ let CarPlayWaypointKey: String = "MBCarPlayWaypoint"
  */
 @available(iOS 12.0, *)
 extension AppDelegate: CPApplicationDelegate {
-    // MARK: CPApplicationDelegate
+    
+    // MARK: - CPApplicationDelegate methods
     
     func application(_ application: UIApplication, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPWindow) {
         carPlayManager.delegate = self
         carPlaySearchController.delegate = self
         carPlayManager.application(application, didConnectCarInterfaceController: interfaceController, to: window)
         
-        if let navigationViewController = self.window!.rootViewController?.presentedViewController as? NavigationViewController, let service = navigationViewController.navigationService {
+        if let navigationViewController = self.window?.rootViewController?.presentedViewController as? NavigationViewController,
+           let service = navigationViewController.navigationService {
             carPlayManager.beginNavigationWithCarPlay(using: service.router.location!.coordinate, navigationService: service)
         }
     }

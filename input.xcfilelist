@@ -9,4 +9,3 @@ $(SRCROOT)/Carthage/Build/iOS/Polyline.framework
 $(SRCROOT)/Carthage/Build/iOS/Quick.framework
 $(SRCROOT)/Carthage/Build/iOS/MapboxGeocoder.framework
 $(SRCROOT)/Carthage/Build/iOS/MapboxSpeech.framework
-$(SRCROOT)/Carthage/Build/iOS/Mapbox.framework

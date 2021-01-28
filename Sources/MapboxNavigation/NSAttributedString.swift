@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 
 extension NSAttributedString {
     static func + (left: NSAttributedString, right: NSAttributedString) -> NSAttributedString {
