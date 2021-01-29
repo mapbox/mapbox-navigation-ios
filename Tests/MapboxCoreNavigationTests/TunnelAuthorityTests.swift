@@ -3,7 +3,8 @@ import Turf
 import Polyline
 import MapKit
 import MapboxDirections
-import TestHelper
+#if !SWIFT_PACKAGE
+@testable import TestHelper
 @testable import MapboxCoreNavigation
 
 
@@ -83,3 +84,4 @@ class TunnelAuthorityTests: XCTestCase {
         XCTAssertTrue(betweenTunnels, "Answer should be true, we are between two tunnels")
     }
 }
+#endif

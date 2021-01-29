@@ -2,6 +2,7 @@ import XCTest
 import Quick
 import Nimble
 import MapboxDirections
+#if !SWIFT_PACKAGE
 import TestHelper
 @testable import MapboxCoreNavigation
 
@@ -25,3 +26,4 @@ class MapboxNavigationServiceSpec: QuickSpec {
         }
     }
 }
+#endif

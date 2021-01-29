@@ -47,12 +47,30 @@
         }
       },
       {
+        "package": "Nimble",
+        "repositoryURL": "https://github.com/Quick/Nimble.git",
+        "state": {
+          "branch": null,
+          "revision": "7a46a5fc86cb917f69e3daf79fcb045283d8f008",
+          "version": "8.1.2"
+        }
+      },
+      {
         "package": "Polyline",
         "repositoryURL": "https://github.com/raphaelmor/Polyline.git",
         "state": {
           "branch": null,
           "revision": "36f7b1222aaf8fa741d0d179c12e186998d97f42",
           "version": "5.0.2"
+        }
+      },
+      {
+        "package": "Quick",
+        "repositoryURL": "https://github.com/Quick/Quick.git",
+        "state": {
+          "branch": null,
+          "revision": "09b3becb37cb2163919a3842a4c5fa6ec7130792",
+          "version": "2.2.1"
         }
       },
       {

@@ -5,7 +5,7 @@ import XCTest
 class SkuTokenProviderTests: XCTestCase {
     func testGetTokenMethodReturnsNonEmptySkuToken() {
         // Given
-        let tokenProvider = SkuTokenProvider(with: DirectionsCredentials())
+        let tokenProvider = SkuTokenProvider(with: DirectionsCredentials(accessToken: "pk.feedCafeDadeDeadBeef-BadeBede.FadeCafeDadeDeed-BadeBede"))
         
         // When
         let skuToken = tokenProvider.getToken()

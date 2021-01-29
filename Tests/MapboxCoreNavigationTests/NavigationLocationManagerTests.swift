@@ -1,4 +1,5 @@
 import XCTest
+import CoreLocation
 import MapboxCoreNavigation
 
 class NavigationLocationManagerTests: XCTestCase {
