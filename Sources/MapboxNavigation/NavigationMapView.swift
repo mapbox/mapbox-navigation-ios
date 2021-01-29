@@ -75,6 +75,9 @@ open class NavigationMapView: UIView {
         static let arrowSymbolSource = "\(identifier)_arrowSymbolSource"
         static let arrowSymbol = "\(identifier)_arrowSymbol"
         static let arrowCasingSymbol = "\(identifier)_arrowCasingSymbol"
+        static let instructionSource = "\(identifier)_instructionSource"
+        static let instructionLabel = "\(identifier)_instructionLabel"
+        static let instructionCircle = "\(identifier)_instructionCircle"
     }
     
     @objc dynamic public var trafficUnknownColor: UIColor = .trafficUnknown
@@ -468,8 +471,7 @@ open class NavigationMapView: UIView {
         geoJSONSource.lineMetrics = true
         
         guard let sourceIdentifier = identifier(route, identifierType: .source) else { return nil }
-        let sourceResult = mapView.style.addSource(source: geoJSONSource, identifier: sourceIdentifier)
-        handleResult(sourceResult)
+        mapView.style.addSource(source: geoJSONSource, identifier: sourceIdentifier)
         
         let fractionTraveledForStops = routeLineTracksTraversal ? fractionTraveled : 0.0
         guard let layerIdentifier = identifier(route, identifierType: .route) else { return nil }
@@ -480,10 +482,8 @@ open class NavigationMapView: UIView {
         lineLayer.layout?.lineJoin = .round
         lineLayer.layout?.lineCap = .round
         
-        var layerResult: Result<Bool, MapboxMaps.LayerError>
         if let _ = try? mapView.style.getSource(identifier: IdentifierString.arrowSource, type: GeoJSONSource.self).get() {
-            layerResult = mapView.style.addLayer(layer: lineLayer, layerPosition: LayerPosition(below: IdentifierString.arrowStroke))
-            handleResult(layerResult)
+            mapView.style.addLayer(layer: lineLayer, layerPosition: LayerPosition(below: IdentifierString.arrowStroke))
         } else {
             // FIXME: After removing final destination annotation its layer is not removed, so route lines
             // should be added below annotation layer to prevent overlapping.
@@ -493,8 +493,7 @@ open class NavigationMapView: UIView {
                 layerPosition = LayerPosition(below: identifier)
             }
             
-            layerResult = mapView.style.addLayer(layer: lineLayer, layerPosition: layerPosition)
-            handleResult(layerResult)
+            mapView.style.addLayer(layer: lineLayer, layerPosition: layerPosition)
         }
         
         let gradientStops = routeLineGradient(route, fractionTraveled: fractionTraveledForStops)
@@ -516,8 +515,7 @@ open class NavigationMapView: UIView {
         geoJSONSource.lineMetrics = true
         
         guard let sourceIdentifier = identifier(route, identifierType: .source, isMainRouteCasingSource: true) else { return nil }
-        let sourceResult = mapView.style.addSource(source: geoJSONSource, identifier: sourceIdentifier)
-        handleResult(sourceResult)
+        mapView.style.addSource(source: geoJSONSource, identifier: sourceIdentifier)
         
         let fractionTraveledForStops = routeLineTracksTraversal ? fractionTraveled : 0.0
         guard let layerIdentifier = identifier(route, identifierType: .routeCasing) else { return nil }
@@ -529,8 +527,7 @@ open class NavigationMapView: UIView {
         lineLayer.layout?.lineJoin = .round
         lineLayer.layout?.lineCap = .round
         
-        let layerResult = mapView.style.addLayer(layer: lineLayer, layerPosition: LayerPosition(below: parentLayerIndentifier))
-        handleResult(layerResult)
+        mapView.style.addLayer(layer: lineLayer, layerPosition: LayerPosition(below: parentLayerIndentifier))
         
         let gradientStops = routeCasingGradient(fractionTraveledForStops)
         if let data = routeLineGradientExpression(gradientStops).data(using: .utf8),
@@ -551,8 +548,7 @@ open class NavigationMapView: UIView {
         geoJSONSource.lineMetrics = true
         
         guard let sourceIdentifier = identifier(route, identifierType: .source) else { return nil }
-        let sourceResult = mapView.style.addSource(source: geoJSONSource, identifier: sourceIdentifier)
-        handleResult(sourceResult)
+        mapView.style.addSource(source: geoJSONSource, identifier: sourceIdentifier)
         
         guard let layerIdentifier = identifier(route, identifierType: .route) else { return nil }
         var lineLayer = LineLayer(id: layerIdentifier)
@@ -563,8 +559,7 @@ open class NavigationMapView: UIView {
         lineLayer.layout?.lineJoin = .round
         lineLayer.layout?.lineCap = .round
 
-        let layerResult = mapView.style.addLayer(layer: lineLayer, layerPosition: LayerPosition(below: parentLayerIndentifier))
-        handleResult(layerResult)
+        mapView.style.addLayer(layer: lineLayer, layerPosition: LayerPosition(below: parentLayerIndentifier))
         
         return layerIdentifier
     }
@@ -577,8 +572,7 @@ open class NavigationMapView: UIView {
         geoJSONSource.lineMetrics = true
         
         guard let sourceIdentifier = identifier(route, identifierType: .source) else { return nil }
-        let sourceResult = mapView.style.addSource(source: geoJSONSource, identifier: sourceIdentifier)
-        handleResult(sourceResult)
+        mapView.style.addSource(source: geoJSONSource, identifier: sourceIdentifier)
         
         guard let layerIdentifier = identifier(route, identifierType: .routeCasing) else { return nil }
         var lineLayer = LineLayer(id: layerIdentifier)
@@ -589,8 +583,7 @@ open class NavigationMapView: UIView {
         lineLayer.layout?.lineJoin = .round
         lineLayer.layout?.lineCap = .round
         
-        let layerResult = mapView.style.addLayer(layer: lineLayer, layerPosition: LayerPosition(below: parentLayerIndentifier))
-        handleResult(layerResult)
+        mapView.style.addLayer(layer: lineLayer, layerPosition: LayerPosition(below: parentLayerIndentifier))
         
         return layerIdentifier
     }
@@ -707,15 +700,12 @@ open class NavigationMapView: UIView {
                 arrow.paint?.lineWidth = .constant(.init(14.0))
                 arrow.paint?.lineColor = .constant(.init(color: maneuverArrowColor))
                 
-                let sourceResult = mapView.style.addSource(source: arrowSource, identifier: IdentifierString.arrowSource)
-                handleResult(sourceResult)
+                mapView.style.addSource(source: arrowSource, identifier: IdentifierString.arrowSource)
                 arrow.source = IdentifierString.arrowSource
                 if let _ = try? mapView.style.getLayer(with: IdentifierString.waypointCircle, type: LineLayer.self).get() {
-                    let layerResult = mapView.style.addLayer(layer: arrow, layerPosition: LayerPosition(above: mainRouteLayerIdentifier, below: IdentifierString.waypointCircle))
-                    handleResult(layerResult)
+                    mapView.style.addLayer(layer: arrow, layerPosition: LayerPosition(above: mainRouteLayerIdentifier, below: IdentifierString.waypointCircle))
                 } else {
-                    let layerResult = mapView.style.addLayer(layer: arrow, layerPosition: LayerPosition(above: mainRouteLayerIdentifier))
-                    handleResult(layerResult)
+                    mapView.style.addLayer(layer: arrow, layerPosition: LayerPosition(above: mainRouteLayerIdentifier))
                 }
             }
             
@@ -733,11 +723,9 @@ open class NavigationMapView: UIView {
                 arrowStroke.paint?.lineWidth = .constant(.init(16.0))
                 arrowStroke.paint?.lineColor = .constant(.init(color: maneuverArrowStrokeColor))
                 
-                let sourceResult = mapView.style.addSource(source: arrowStrokeSource, identifier: IdentifierString.arrowStrokeSource)
-                handleResult(sourceResult)
+                mapView.style.addSource(source: arrowStrokeSource, identifier: IdentifierString.arrowStrokeSource)
                 arrowStroke.source = IdentifierString.arrowStrokeSource
-                let layerResult = mapView.style.addLayer(layer: arrowStroke, layerPosition: LayerPosition(above: mainRouteLayerIdentifier))
-                handleResult(layerResult)
+                mapView.style.addLayer(layer: arrowStroke, layerPosition: LayerPosition(above: mainRouteLayerIdentifier))
             }
             
             let point = Point(shaftStrokeCoordinates.last!)
@@ -769,14 +757,11 @@ open class NavigationMapView: UIView {
                 arrowSymbolLayerCasing.layout?.iconSize = .constant(.init(2.5))
                 arrowSymbolLayerCasing.layout?.iconAllowOverlap = arrowSymbolLayer.layout?.iconAllowOverlap
                 
-                let sourceResult = mapView.style.addSource(source: arrowSymbolSource, identifier: IdentifierString.arrowSymbolSource)
-                handleResult(sourceResult)
+                mapView.style.addSource(source: arrowSymbolSource, identifier: IdentifierString.arrowSymbolSource)
                 arrowSymbolLayer.source = IdentifierString.arrowSymbolSource
                 arrowSymbolLayerCasing.source = IdentifierString.arrowSymbolSource
-                var layerResult = mapView.style.addLayer(layer: arrowSymbolLayer)
-                handleResult(layerResult)
-                layerResult = mapView.style.addLayer(layer: arrowSymbolLayerCasing, layerPosition: LayerPosition(below: IdentifierString.arrowSymbol))
-                handleResult(layerResult)
+                mapView.style.addLayer(layer: arrowSymbolLayer)
+                mapView.style.addLayer(layer: arrowSymbolLayerCasing, layerPosition: LayerPosition(below: IdentifierString.arrowSymbol))
             }
         }
     }
@@ -806,7 +791,53 @@ open class NavigationMapView: UIView {
     }
     
     public func showVoiceInstructionsOnMap(route: Route) {
-        // TODO: Implement ability to show voice instructions.
+        var featureCollection = FeatureCollection(features: [])
+        
+        for (legIndex, leg) in route.legs.enumerated() {
+            for (stepIndex, step) in leg.steps.enumerated() {
+                for instruction in step.instructionsSpokenAlongStep! {
+                    let coordinate = LineString(route.legs[legIndex].steps[stepIndex].shape!.coordinates.reversed()).coordinateFromStart(distance: instruction.distanceAlongStep)!
+                    var feature = Feature(Point(coordinate))
+                    feature.properties = [
+                        "instruction": instruction.text
+                    ]
+                    featureCollection.features.append(feature)
+                }
+            }
+        }
+
+        if let _ = try? mapView.style.getSource(identifier: IdentifierString.instructionSource, type: GeoJSONSource.self).get() {
+            _ = mapView.style.updateGeoJSON(for: IdentifierString.instructionSource, with: featureCollection)
+        } else {
+            var source = GeoJSONSource()
+            source.data = .featureCollection(featureCollection)
+            mapView.style.addSource(source: source, identifier: IdentifierString.instructionSource)
+            
+            var symbolLayer = SymbolLayer(id: IdentifierString.instructionLabel)
+            symbolLayer.source = IdentifierString.instructionSource
+            
+            let instruction = Exp(.toString) {
+                Exp(.get) {
+                    "instruction"
+                }
+            }
+            
+            symbolLayer.layout?.textField = .expression(instruction)
+            symbolLayer.layout?.textSize = .constant(14)
+            symbolLayer.paint?.textHaloWidth = .constant(1)
+            symbolLayer.paint?.textHaloColor = .constant(.init(color: .white))
+            symbolLayer.paint?.textOpacity = .constant(0.75)
+            symbolLayer.layout?.textAnchor = .bottom
+            symbolLayer.layout?.textJustify = .left
+            mapView.style.addLayer(layer: symbolLayer)
+            
+            var circleLayer = CircleLayer(id: IdentifierString.instructionCircle)
+            circleLayer.source = IdentifierString.instructionSource
+            circleLayer.paint?.circleRadius = .constant(5)
+            circleLayer.paint?.circleOpacity = .constant(0.75)
+            circleLayer.paint?.circleColor = .constant(.init(color: .white))
+            mapView.style.addLayer(layer: circleLayer)
+        }
     }
     
     /**
@@ -924,13 +955,12 @@ open class NavigationMapView: UIView {
             })
         }
         
-        if let pan = sender as? UIPanGestureRecognizer {
-            if sender.state == .ended || sender.state == .cancelled {
-                let velocity = pan.velocity(in: self)
-                let didFling = sqrt(velocity.x * velocity.x + velocity.y * velocity.y) > 100
-                if didFling {
-                    enableFrameByFrameCourseViewTracking(for: 1)
-                }
+        if let panGesture = sender as? UIPanGestureRecognizer,
+           sender.state == .ended || sender.state == .cancelled {
+            let velocity = panGesture.velocity(in: self)
+            let didFling = sqrt(velocity.x * velocity.x + velocity.y * velocity.y) > 100
+            if didFling {
+                enableFrameByFrameCourseViewTracking(for: 1)
             }
         }
         
@@ -967,29 +997,5 @@ open class NavigationMapView: UIView {
                               tracksUserCourse: tracksUserCourse)
         
         userCourseView.center = mapView.screenCoordinate(for: location.coordinate).point
-    }
-    
-    func handleResult(_ result: Result<Bool, MapboxMaps.SourceError>) {
-        switch result {
-        case .success(_):
-            NSLog("Successfully added source.")
-            break
-            
-        case .failure(let error):
-            NSLog("Failed to add source with error: \(error.localizedDescription).")
-            break
-        }
-    }
-    
-    func handleResult(_ result: Result<Bool, MapboxMaps.LayerError>) {
-        switch result {
-        case .success(_):
-            NSLog("Successfully added layer.")
-            break
-            
-        case .failure(let error):
-            NSLog("Failed to add layer with error: \(error.localizedDescription).")
-            break
-        }
     }
 }
