@@ -1,5 +1,5 @@
-
 import Foundation
+import CoreLocation
 import MapboxDirections
 
 /**
