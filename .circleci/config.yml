@@ -221,6 +221,7 @@ jobs:
       - when:
           condition: << parameters.spm >>
           steps:
+            - run: for ip in $(dig @8.8.8.8 github.com +short); do ssh-keyscan github.com,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts
             - run: mv MapboxNavigation.xcodeproj MapboxNavigation.xcodeproj-aside
             - run: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigation build <<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >>
             - run: mv MapboxNavigation.xcodeproj-aside MapboxNavigation.xcodeproj
