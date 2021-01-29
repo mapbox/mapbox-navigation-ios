@@ -16,6 +16,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var clearMap: UIButton!
     @IBOutlet weak var bottomBarBackground: UIView!
     
+    var trackLineString = LineString([])
+    var rawTrackLineString = LineString([])
+    
     typealias RouteRequestSuccess = ((RouteResponse) -> Void)
     typealias RouteRequestFailure = ((Error) -> Void)
     
@@ -60,9 +63,9 @@ class ViewController: UIViewController {
         view.addSubview(navigationMapView)
         
         navigationMapView.navigationMapViewDelegate = self
-        navigationMapView.mapView.update {
-            $0.location.showUserLocation = true
-        }
+        navigationMapView.mapView.on(.styleLoadingFinished, handler: { [weak self] _ in
+            self?.addFreeDriveLayers()
+        })
         
         // TODO: Provide a reliable way of setting camera to current coordinate.
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
@@ -500,15 +503,69 @@ extension ViewController: VisualInstructionDelegate {
 }
 
 // MARK: - Free driving methods
-// TODO: Implement ability to draw free driving related polylines.
 
 extension ViewController {
     
     func trackLocations(_ navigationMapView: NavigationMapView) {
+        let passiveLocationDataSource = PassiveLocationDataSource()
+        let passiveLocationManager = PassiveLocationManager(dataSource: passiveLocationDataSource)
+        navigationMapView.mapView.locationManager.overrideLocationProvider(with: passiveLocationManager)
+        navigationMapView.mapView.update {
+            $0.location.showUserLocation = true
+        }
         
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(didUpdatePassiveLocation),
+                                               name: .passiveLocationDataSourceDidUpdate,
+                                               object: passiveLocationDataSource)
+        
+        trackLineString.coordinates = []
+        rawTrackLineString.coordinates = []
     }
     
     @objc func didUpdatePassiveLocation(_ notification: Notification) {
+        if let roadName = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.roadNameKey] as? String {
+            title = roadName
+        }
         
+        if let location = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.locationKey] as? CLLocation {
+            trackLineString.coordinates.append(contentsOf: [location.coordinate])
+        }
+        
+        if let rawLocation = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.rawLocationKey] as? CLLocation {
+            rawTrackLineString.coordinates.append(contentsOf: [rawLocation.coordinate])
+        }
+        
+        updateFreeDriveLayers()
+    }
+    
+    func addFreeDriveLayers() {
+        var trackSource = GeoJSONSource()
+        trackSource.data = .geometry(.lineString(trackLineString))
+        _ = navigationMapView.mapView.style.addSource(source: trackSource, identifier: "trackSourceIdentifier")
+        
+        var trackLineLayer = LineLayer(id: "trackLayerIdentifier")
+        trackLineLayer.source = "trackSourceIdentifier"
+        trackLineLayer.paint?.lineWidth = .constant(3.0)
+        trackLineLayer.paint?.lineColor = .constant(.init(color: .darkGray))
+        _ = navigationMapView.mapView.style.addLayer(layer: trackLineLayer, layerPosition: nil)
+        
+        var rawTrackSource = GeoJSONSource()
+        rawTrackSource.data = .geometry(.lineString(trackLineString))
+        _ = navigationMapView.mapView.style.addSource(source: rawTrackSource, identifier: "rawTrackSourceIdentifier")
+        
+        var rawTrackLineLayer = LineLayer(id: "rawTrackLayerIdentifier")
+        rawTrackLineLayer.source = "rawTrackSourceIdentifier"
+        rawTrackLineLayer.paint?.lineWidth = .constant(3.0)
+        rawTrackLineLayer.paint?.lineColor = .constant(.init(color: .lightGray))
+        _ = navigationMapView.mapView.style.addLayer(layer: rawTrackLineLayer, layerPosition: nil)
+    }
+    
+    func updateFreeDriveLayers() {
+        let trackFeature = Feature(geometry: .lineString(trackLineString))
+        _ = navigationMapView.mapView.style.updateGeoJSON(for: "trackSourceIdentifier", with: trackFeature)
+        
+        let rawTrackFeature = Feature(geometry: .lineString(rawTrackLineString))
+        _ = navigationMapView.mapView.style.updateGeoJSON(for: "rawTrackSourceIdentifier", with: rawTrackFeature)
     }
 }

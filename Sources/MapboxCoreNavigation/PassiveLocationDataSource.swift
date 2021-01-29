@@ -170,6 +170,12 @@ extension PassiveLocationDataSource: CLLocationManagerDelegate {
     public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         delegate?.passiveLocationDataSource(self, didFailWithError: error)
     }
+    
+    public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if #available(iOS 14.0, *) {
+            delegate?.passiveLocationDataSourceDidChangeAuthorization(self)
+        }
+    }
 }
 
 /**
