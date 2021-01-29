@@ -540,25 +540,8 @@ extension ViewController {
     }
     
     func addFreeDriveLayers() {
-        var trackSource = GeoJSONSource()
-        trackSource.data = .geometry(.lineString(trackLineString))
-        _ = navigationMapView.mapView.style.addSource(source: trackSource, identifier: "trackSourceIdentifier")
-        
-        var trackLineLayer = LineLayer(id: "trackLayerIdentifier")
-        trackLineLayer.source = "trackSourceIdentifier"
-        trackLineLayer.paint?.lineWidth = .constant(3.0)
-        trackLineLayer.paint?.lineColor = .constant(.init(color: .darkGray))
-        _ = navigationMapView.mapView.style.addLayer(layer: trackLineLayer, layerPosition: nil)
-        
-        var rawTrackSource = GeoJSONSource()
-        rawTrackSource.data = .geometry(.lineString(trackLineString))
-        _ = navigationMapView.mapView.style.addSource(source: rawTrackSource, identifier: "rawTrackSourceIdentifier")
-        
-        var rawTrackLineLayer = LineLayer(id: "rawTrackLayerIdentifier")
-        rawTrackLineLayer.source = "rawTrackSourceIdentifier"
-        rawTrackLineLayer.paint?.lineWidth = .constant(3.0)
-        rawTrackLineLayer.paint?.lineColor = .constant(.init(color: .lightGray))
-        _ = navigationMapView.mapView.style.addLayer(layer: rawTrackLineLayer, layerPosition: nil)
+        addLayer("trackSourceIdentifier", layerIdentifier: "trackLayerIdentifier", color: .darkGray)
+        addLayer("rawTrackSourceIdentifier", layerIdentifier: "rawTrackLayerIdentifier", color: .lightGray)
     }
     
     func updateFreeDriveLayers() {
@@ -567,5 +550,17 @@ extension ViewController {
         
         let rawTrackFeature = Feature(geometry: .lineString(rawTrackLineString))
         _ = navigationMapView.mapView.style.updateGeoJSON(for: "rawTrackSourceIdentifier", with: rawTrackFeature)
+    }
+    
+    func addLayer(_ sourceIdentifier: String, layerIdentifier: String, color: UIColor) {
+        var source = GeoJSONSource()
+        source.data = .geometry(.lineString(trackLineString))
+        _ = navigationMapView.mapView.style.addSource(source: source, identifier: sourceIdentifier)
+        
+        var layer = LineLayer(id: layerIdentifier)
+        layer.source = sourceIdentifier
+        layer.paint?.lineWidth = .constant(3.0)
+        layer.paint?.lineColor = .constant(.init(color: color))
+        _ = navigationMapView.mapView.style.addLayer(layer: layer)
     }
 }

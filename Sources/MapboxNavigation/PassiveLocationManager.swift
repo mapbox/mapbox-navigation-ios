@@ -14,11 +14,10 @@ open class PassiveLocationManager: NSObject, LocationProvider {
      Initializes the location manager with the given data source.
      
      - parameter dataSource: A data source that detects the user’s location as it changes.
-     - parameter locationOptions: Options, which are used to configure a `LocationProvider`.
      */
-    public init(dataSource: PassiveLocationDataSource, locationOptions: LocationOptions? = nil) {
+    public init(dataSource: PassiveLocationDataSource) {
         self.dataSource = dataSource
-        self.locationProviderOptions = locationOptions ?? LocationOptions()
+        self.locationProviderOptions = LocationOptions()
         
         super.init()
         dataSource.delegate = self
