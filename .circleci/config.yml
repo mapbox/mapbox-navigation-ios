@@ -175,6 +175,9 @@ jobs:
       iOS:
         type: string
         default: "13.4.1"
+      spm:
+        type: boolean
+        default: false
       test:
         type: boolean
         default: true
@@ -208,20 +211,34 @@ jobs:
           name: pre-start simulator
           command: xcrun instruments -w "<< parameters.device >> (<< parameters.iOS >>) [" || true
       - *verify-missing-localizable-strings
-      - run:
-          name: MapboxCoreNavigation
-          command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build <<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >> 
+      - when:
+          condition:
+            not: << parameters.spm >>
+          steps:
+            - run:
+                name: MapboxCoreNavigation
+                command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build <<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >>
+      - when:
+          condition: << parameters.spm >>
+          steps:
+            - run: mv MapboxNavigation.xcodeproj MapboxNavigation.xcodeproj-aside
+            - run: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigation build <<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >>
+            - run: mv MapboxNavigation.xcodeproj-aside MapboxNavigation.xcodeproj
       - when:
           condition: << parameters.codecoverage >>
           steps:
             - run: bash <(curl -s https://codecov.io/bash)
-      - run:
-          name: MapboxNavigation
-          command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build <<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >> 
       - when:
-          condition: << parameters.codecoverage >>
+          condition:
+            not: << parameters.spm >>
           steps:
-            - run: bash <(curl -s https://codecov.io/bash)
+            - run:
+                name: MapboxNavigation
+                command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build <<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >>
+            - when:
+                condition: << parameters.codecoverage >>
+                steps:
+                  - run: bash <(curl -s https://codecov.io/bash)
 
   xcode-11-examples:
     parameters:
@@ -262,6 +279,12 @@ workflows:
           xcode: "12.0.0"
           iOS: "14.0"
           test: false
+          device: "iPhone 8 Plus"
+      - build-job:
+          name: "Xcode_12.0_iOS_14.0_SPM"
+          xcode: "12.0.0"
+          iOS: "14.0"
+          spm: true
           device: "iPhone 8 Plus"
       - build-job:
           name: "Xcode_11.5_iOS_13.5"
