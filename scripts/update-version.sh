@@ -32,7 +32,7 @@ find . -type f -name '*.podspec' -exec sed -i '' "s/^ *s.version *=.*$/  s.versi
 
 step "Updating CocoaPods installation test fixture…"
 
-cd MapboxCoreNavigationTests/CocoaPodsTest/PodInstall/
+cd Tests/CocoaPodsTest/PodInstall/
 pod update
 cd -
 
@@ -43,10 +43,10 @@ sed -i '' -E "s/## *main/## ${SHORT_VERSION}/g" CHANGELOG.md
 # Skip updating the installation instructions for patch releases or prereleases.
 if [[ $SHORT_VERSION == $SEM_VERSION && $SHORT_VERSION == *.0 ]]; then
     step "Updating readmes to version ${SEM_VERSION}…"
-    sed -i '' -E "s/~> *[^']+/~> ${MINOR_VERSION}/g" README.md custom-navigation.md
+    sed -i '' -E "s/~> *[^']+/~> ${MINOR_VERSION}/g; s/from: \"*[^\"]+/from: \"${SEM_VERSION}/g; s/`[^`]+` as the minimum version/`${SEM_VERSION}` as the minimum version/g" README.md custom-navigation.md
 elif [[ $SHORT_VERSION != $SEM_VERSION ]]; then
     step "Updating readmes to version ${SEM_VERSION}…"
-    sed -i '' -E "s/:tag => 'v[^']+'/:tag => 'v${SEM_VERSION}'/g; s/\"mapbox\/mapbox-navigation-ios\" \"v[^\"]+\"/\"mapbox\/mapbox-navigation-ios\" \"v${SEM_VERSION}\"/g" README.md custom-navigation.md
+    sed -i '' -E "s/:tag => 'v[^']+'/:tag => 'v${SEM_VERSION}'/g; s/\"mapbox\/mapbox-navigation-ios\" \"v[^\"]+\"/\"mapbox\/mapbox-navigation-ios\" \"v${SEM_VERSION}\"/g; s/\.exact\(\"*[^\"]+/.exact(\"${SEM_VERSION}/g" README.md custom-navigation.md
 fi
 
 step "Updating copyright year to ${YEAR}…"

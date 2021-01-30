@@ -1,6 +1,9 @@
 import Foundation
 import MapboxDirections
 import MapboxNavigationNative
+#if SWIFT_PACKAGE
+import CMapboxCoreNavigation
+#endif
 
 class SkuTokenProvider: SkuTokenSource {
     var peer: MBXPeerWrapper?
