@@ -8,16 +8,22 @@ Before reporting a bug here, please determine whether the issue lies with the na
 
 * For general questions and troubleshooting help, please contact the [Mapbox support](https://www.mapbox.com/contact/support/) team.
 * Report problems with the map’s contents or routing problems, especially problems specific to a particular route or region, using the [Mapbox Feedback](https://apps.mapbox.com/feedback/) tool.
-* Report problems in guidance instructions in the [OSRM Text Instructions](https://github.com/Project-OSRM/osrm-text-instructions/) repository.
+* Report problems in guidance instructions in the [OSRM Text Instructions](https://github.com/Project-OSRM/osrm-text-instructions/) repository (for Directions API profiles powered by OSRM) or the [Valhalla](https://github.com/valhalla/valhalla/) repository (for profiles powered by Valhalla).
 
 When reporting a bug in the navigation SDK itself, please indicate:
 
-* The navigation SDK version
-* Whether you installed the SDK using CocoaPods or Carthage
-* The iOS version, iPhone model, and Xcode version, as applicable
+* The version of MapboxNavigation or MapboxCoreNavigation you installed
+* The version of CocoaPods, Carthage, or Swift Package Manager that you used to install the package
+* The version of Xcode you used to build the package
+* The iOS version and device model on which you experienced the issue
+* Any relevant settings in `NavigationRouteOptions` or `NavigationMatchOptions`
 * Any relevant language settings
 
-## Building the SDK
+## Setting up a development environment
+
+To contribute code changes to this project, use either Carthage or Swift Package Manager to set up a development environment. Carthage and the Xcode project in this repository are important for making sure dependent projects can use Carthage and for checking your work in the included Example or Example-CarPlay application. Swift Package Manager only builds MapboxCoreNavigation.
+
+### Using Carthage
 
 To build this SDK, you need Xcode 11.4.1 and [Carthage](https://github.com/Carthage/Carthage/) v0.35:
 
@@ -38,13 +44,19 @@ To build this SDK, you need Xcode 11.4.1 and [Carthage](https://github.com/Carth
 
 1. Once the Carthage build finishes, open `MapboxNavigation.xcodeproj` in Xcode and build the MapboxNavigation scheme. Switch to the Example or Example-CarPlay scheme to see the SDK in action.
 
-## Testing the SDK
+### Using Swift Package Manager
 
-It is important to test the SDK using the `iPhone 8 Plus` simulator for the `FBSnapshotter` tests.
+In Xcode, go to Source Control ‣ Clone, enter `https://github.com/mapbox/mapbox-navigation-ios.git`, and click Clone.
 
-## Opening a pull request
+Alternatively, on the command line:
 
-Pull requests are appreciated. If your PR includes any changes that would impact developers or end users, please mention those changes in the “main” section of [CHANGELOG.md](CHANGELOG.md), noting the PR number. Examples of noteworthy changes include new features, fixes for user-visible bugs, and renamed or deleted public symbols.
+```bash
+git clone https://github.com/mapbox/mapbox-navigation-ios.git
+cd mapbox-navigation-ios/
+open Package.swift
+```
+
+The resulting package only includes MapboxCoreNavigation and MapboxCoreNavigationTests. It does not include MapboxNavigation, MapboxNavigationTests, or the example applications, so make sure to [build and test the SDK in the Xcode workspace](#using-carthage) before opening a pull request.
 
 ## Making any symbol public
 
@@ -82,7 +94,8 @@ The Mapbox Navigation SDK for iOS features several translations contributed thro
 While you’re there, please consider also translating the following related projects:
 
 * [Mapbox Maps SDK for iOS](https://www.transifex.com/mapbox/mapbox-gl-native/), which is responsible for the map view and minor UI elements such as the compass ([instructions](https://github.com/mapbox/mapbox-gl-native-ios/blob/master/platform/ios/DEVELOPING.md#adding-a-localization))
-* [OSRM Text Instructions](https://www.transifex.com/project-osrm/osrm-text-instructions/), which the Mapbox Directions API uses to generate textual and verbal turn instructions ([instructions](https://github.com/Project-OSRM/osrm-text-instructions/blob/master/CONTRIBUTING.md#adding-or-updating-a-localization))
+* [OSRM Text Instructions](https://www.transifex.com/project-osrm/osrm-text-instructions/), which some Mapbox Directions API profiles use to generate textual and verbal turn instructions ([instructions](https://github.com/Project-OSRM/osrm-text-instructions/blob/master/CONTRIBUTING.md#adding-or-updating-a-localization))
+* [Valhalla Phrases](https://www.transifex.com/valhalla/valhalla-phrases/), which some Mapbox Directions API profiles use to generate textual and verbal turn instructions ([instructions](https://github.com/valhalla/valhalla/tree/master/locales#contributing-translations))
 * [Mapbox Navigation SDK for Android](https://www.transifex.com/mapbox/mapbox-navigation-sdk-for-android/), the analogous library for Android applications ([instructions](https://github.com/mapbox/mapbox-navigation-android/blob/master/CONTRIBUTING.md#adding-or-updating-a-localization))
 
 Once you’ve finished translating the iOS navigation SDK into a new language in Transifex, open an issue in this repository asking to pull in your localization. Or do it yourself and open a pull request with the results:
@@ -96,3 +109,27 @@ The .strings files should still be in the original English – that’s expecte
 1. Run `tx pull -a` to fetch translations from Transifex. You can restrict the operation to just the new language using `tx pull -l xyz`, where _xyz_ is the language code.
 1. To facilitate diffing and merging, convert any added .strings files from UTF-16 encoding to UTF-8 encoding. You can convert the file encoding using Xcode’s File inspector or by running `scripts/convert_string_files.sh`.
 1. For each of the localizable files in the project, open the file, then, in the File inspector, check the box for your new localization.
+
+## Adding tests
+
+### Adding a unit test suite
+
+1. Add a Unit Test Case Class file to the MapboxCoreNavigationTests group in MapboxNavigation.xcodeproj. It will be located in Tests/MapboxCoreNavigationTests/.
+1. If a unit test requires a fixture, add a file to Tests/MapboxCoreNavigationTests/Fixtures/. Import `TestHelper` and call `Fixture.stringFromFileNamed(name:)` or `Fixture.JSONFromFileNamed(name:)`. 
+
+### Adding a snapshot test suite
+
+1. Add a file to the MapboxNavigationTests group in MapboxNavigation.xcodeproj. It will be located in Tests/MapboxNavigationTests/.
+1. Import `SnappyShrimp` and subclass `SnapshotTest`, or import `FBSnapshotTestCase` and subclass `FBSnapshotTestCase`.
+1. Add the expected screenshot image to Tests/MapboxNavigationTests/ReferenceImages/MapboxNavigationTests._TestSuiteName_ with a file name like `testLanesManeuver_iPhone_8_Plus_Portrait_iOS_12.1@3x.png` that indicates the test case name, device, iOS version, and resolution. Make sure the screenshot was taken on an iOS version and device that is consistent with the existing reference images.
+1. Call `verify(_:)`.
+
+### Running unit tests
+
+Go to Product ‣ Test in Xcode. Snapshot tests will only pass if you select iPhone 8 Plus as the target device.
+
+## Opening a pull request
+
+Pull requests are appreciated. If your PR includes any changes that would impact developers or end users, please mention those changes in the “main” section of [CHANGELOG.md](CHANGELOG.md), noting the PR number. Examples of noteworthy changes include new features, fixes for user-visible bugs, and renamed or deleted public symbols.
+
+Before we can merge your PR, it must pass automated continuous integration checks in each of the supported environments, as well as a check to ensure that code coverage has not decreased significantly.
