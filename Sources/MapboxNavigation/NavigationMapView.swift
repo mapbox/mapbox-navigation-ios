@@ -6,6 +6,11 @@ import Turf
 
 let identifierNamespace = Bundle.mapboxNavigation.bundleIdentifier ?? ""
 
+private enum RouteDurationAnnotationTailPosition: Int {
+    case left
+    case right
+}
+
 /**
  `NavigationMapView` is a subclass of `MGLMapView` with convenience functions for adding `Route` lines to a map.
  */
@@ -1703,9 +1708,4 @@ extension NavigationMapView {
         highlightedBuildingsLayer.fillExtrusionColor = highlightedBuildingsColorExpression
         highlightedBuildingsLayer.fillExtrusionOpacity = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", opacityStops)
     }
-}
-
-private enum RouteDurationAnnotationTailPosition: Int {
-    case left
-    case right
 }

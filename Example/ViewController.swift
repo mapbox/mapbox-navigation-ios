@@ -7,11 +7,6 @@ import Turf
 private typealias RouteRequestSuccess = ((RouteResponse) -> Void)
 private typealias RouteRequestFailure = ((Error) -> Void)
 
-private enum RouteDurationAnnotationTailPosition: Int {
-    case left
-    case right
-}
-
 class ViewController: UIViewController {
     // MARK: - IBOutlets
     @IBOutlet weak var longPressHintView: UIView!
