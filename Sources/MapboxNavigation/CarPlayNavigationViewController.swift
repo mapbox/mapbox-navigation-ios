@@ -433,18 +433,67 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
         
         var maneuvers: [CPManeuver] = [primaryManeuver]
         
-        // Add tertiary text if available. TODO: handle lanes.
-        if let tertiaryInstruction = visualInstruction.tertiaryInstruction, tertiaryInstruction.laneComponents.isEmpty {
-            let tertiaryManeuver = CPManeuver()
-            tertiaryManeuver.symbolSet = tertiaryInstruction.maneuverImageSet(side: visualInstruction.drivingSide)
-            
-            if let text = tertiaryInstruction.text {
-                tertiaryManeuver.instructionVariants = [text]
-            }
-            if let attributedTertiary = tertiaryInstruction.carPlayManeuverLabelAttributedText(bounds: bounds, shieldHeight: shieldHeight, window: carPlayManager.carWindow) {
-                let attributedTertiary = NSMutableAttributedString(attributedString: attributedTertiary)
-                attributedTertiary.canonicalizeAttachments(maximumImageSize: maximumImageSize, imageRendererFormat: imageRendererFormat)
-                tertiaryManeuver.attributedInstructionVariants = [attributedTertiary]
+        // Add tertiary text and lane visual instructions if available.
+        if let tertiaryInstruction = visualInstruction.tertiaryInstruction {
+            if tertiaryInstruction.laneComponents.isEmpty {
+                let tertiaryManeuver = CPManeuver()
+                tertiaryManeuver.symbolSet = tertiaryInstruction.maneuverImageSet(side: visualInstruction.drivingSide)
+
+                if let text = tertiaryInstruction.text {
+                    tertiaryManeuver.instructionVariants = [text]
+                }
+                if let attributedTertiary = tertiaryInstruction.carPlayManeuverLabelAttributedText(bounds: bounds, shieldHeight: shieldHeight, window: carPlayManager.carWindow) {
+                    let attributedTertiary = NSMutableAttributedString(attributedString: attributedTertiary)
+                    attributedTertiary.canonicalizeAttachments(maximumImageSize: maximumImageSize, imageRendererFormat: imageRendererFormat)
+                    tertiaryManeuver.attributedInstructionVariants = [attributedTertiary]
+                }
+
+                if let upcomingStep = navigationService.routeProgress.currentLegProgress.upcomingStep {
+                    let distance = Measurement(distance: upcomingStep.distance).localized()
+                    tertiaryManeuver.initialTravelEstimates = CPTravelEstimates(distanceRemaining: distance, timeRemaining: upcomingStep.expectedTravelTime)
+                }
+
+                maneuvers.append(tertiaryManeuver)
+            } else {
+                // lanes
+                let tertiaryManeuver = CPManeuver()
+                let lanesImageMaxSize = CGSize(width: 120, height: 18)
+
+                if #available(iOS 13.0, *) {
+                    let lightTraitCollection = UITraitCollection(userInterfaceStyle: .light)
+                    let darkTraitCollection = UITraitCollection(userInterfaceStyle: .dark)
+
+                    var lightLanesImage = tertiaryInstruction.lanesImage(side: visualInstruction.drivingSide, useableColor: LaneView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).primaryColor.resolvedColor(with: lightTraitCollection), unuseableColor: LaneView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).secondaryColor.resolvedColor(with: lightTraitCollection), size: CGSize(width: CGFloat(tertiaryInstruction.laneComponents.count) * lanesImageMaxSize.height, height: lanesImageMaxSize.height), scale: (carPlayManager.carWindow?.screen ?? UIScreen.main).scale)
+
+                    var darkLanesImage = tertiaryInstruction.lanesImage(side: visualInstruction.drivingSide, useableColor: LaneView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).primaryColor.resolvedColor(with: darkTraitCollection), unuseableColor: LaneView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).secondaryColor.resolvedColor(with: darkTraitCollection), size: CGSize(width: CGFloat(tertiaryInstruction.laneComponents.count) * lanesImageMaxSize.height, height: lanesImageMaxSize.height), scale: (carPlayManager.carWindow?.screen ?? UIScreen.main).scale)
+
+                    if let image = lightLanesImage, let darkImage = darkLanesImage, image.size.width > lanesImageMaxSize.width {
+                        let aspectRatio = lanesImageMaxSize.width / image.size.width
+                        let scaledSize = CGSize(width: lanesImageMaxSize.width, height: lanesImageMaxSize.height * aspectRatio)
+                        lightLanesImage = image.scaled(scaledSize)
+                        darkLanesImage = darkImage.scaled(scaledSize)
+                    }
+
+                    if let lightLanesImage = lightLanesImage, let darkLanesImage = darkLanesImage {
+                        tertiaryManeuver.symbolSet = CPImageSet(lightContentImage: lightLanesImage, darkContentImage: darkLanesImage)
+                        tertiaryManeuver.userInfo = tertiaryInstruction
+                        maneuvers.append(tertiaryManeuver)
+                    }
+                } else {
+                    var lanesImage = tertiaryInstruction.lanesImage(side: visualInstruction.drivingSide, useableColor: LaneView.appearance().primaryColor, unuseableColor: LaneView.appearance().secondaryColor, size: CGSize(width: CGFloat(tertiaryInstruction.laneComponents.count) * lanesImageMaxSize.height, height: lanesImageMaxSize.height), scale: (carPlayManager.carWindow?.screen ?? UIScreen.main).scale)
+
+                    if let image = lanesImage, image.size.width > lanesImageMaxSize.width {
+                        let aspectRatio = lanesImageMaxSize.width / image.size.width
+                        let scaledSize = CGSize(width: lanesImageMaxSize.width, height: lanesImageMaxSize.height * aspectRatio)
+                        lanesImage = image.scaled(scaledSize)
+                    }
+
+                    if let lanesImage = lanesImage {
+                        tertiaryManeuver.symbolSet = CPImageSet(lightContentImage: lanesImage, darkContentImage: lanesImage)
+                        tertiaryManeuver.userInfo = tertiaryInstruction
+                        maneuvers.append(tertiaryManeuver)
+                    }
+                }
             }
             
             if let upcomingStep = navigationService.routeProgress.currentLegProgress.upcomingStep {

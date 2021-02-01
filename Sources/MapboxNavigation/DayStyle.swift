@@ -18,6 +18,9 @@ extension UIColor {
     class var defaultLaneArrowSecondary: UIColor { get { return #colorLiteral(red: 0.6196078431, green: 0.6196078431, blue: 0.6196078431, alpha: 1) } }
     class var defaultLaneArrowPrimaryHighlighted: UIColor { get { return #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) } }
     class var defaultLaneArrowSecondaryHighlighted: UIColor { get { return #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) } }
+
+    class var defaultLaneArrowPrimaryCarPlay: UIColor { get { return #colorLiteral(red: 0.7649999857, green: 0.7649999857, blue: 0.7570000291, alpha: 1) } }
+    class var defaultLaneArrowSecondaryCarPlay: UIColor { get { return #colorLiteral(red: 0.4198532104, green: 0.4398920536, blue: 0.4437610507, alpha: 1) } }
     
     class var trafficUnknown: UIColor { get { return defaultRouteLayer } }
     class var trafficLow: UIColor { get { return defaultRouteLayer } }
@@ -119,10 +122,12 @@ open class DayStyle: Style {
         InstructionsCardContainerView.appearance(whenContainedInInstancesOf: [InstructionsCardCell.self]).highlightedBackgroundColor = UIColor(red: 0.26, green: 0.39, blue: 0.98, alpha: 1.0)
         InstructionsCardContainerView.appearance(whenContainedInInstancesOf: [InstructionsCardCell.self]).clipsToBounds = true
         InstructionsCardContainerView.appearance(whenContainedInInstancesOf: [InstructionsCardCell.self]).cornerRadius = 20
-        LaneView.appearance().primaryColor = .defaultLaneArrowPrimary
-        LaneView.appearance().secondaryColor = .defaultLaneArrowSecondary
-        LaneView.appearance().primaryColorHighlighted = .defaultLaneArrowPrimaryHighlighted
-        LaneView.appearance().secondaryColorHighlighted = .defaultLaneArrowSecondaryHighlighted
+        LaneView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).primaryColor = .defaultLaneArrowPrimaryCarPlay
+        LaneView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).secondaryColor = .defaultLaneArrowSecondaryCarPlay
+        LaneView.appearance(whenContainedInInstancesOf: [LanesView.self]).primaryColor = .defaultLaneArrowPrimary
+        LaneView.appearance(whenContainedInInstancesOf: [LanesView.self]).secondaryColor = .defaultLaneArrowSecondary
+        LaneView.appearance(whenContainedInInstancesOf: [LanesView.self]).primaryColorHighlighted = .defaultLaneArrowPrimaryHighlighted
+        LaneView.appearance(whenContainedInInstancesOf: [LanesView.self]).secondaryColorHighlighted = .defaultLaneArrowSecondaryHighlighted
         LanesView.appearance().backgroundColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
         LineView.appearance().lineColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.1)
         ManeuverView.appearance().backgroundColor = .clear
