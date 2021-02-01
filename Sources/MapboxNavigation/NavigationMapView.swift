@@ -482,20 +482,6 @@ open class NavigationMapView: UIView {
         lineLayer.layout?.lineJoin = .round
         lineLayer.layout?.lineCap = .round
         
-        if let _ = try? mapView.style.getSource(identifier: IdentifierString.arrowSource, type: GeoJSONSource.self).get() {
-            mapView.style.addLayer(layer: lineLayer, layerPosition: LayerPosition(below: IdentifierString.arrowStroke))
-        } else {
-            // FIXME: After removing final destination annotation its layer is not removed, so route lines
-            // should be added below annotation layer to prevent overlapping.
-            let identifier = "com.mapbox.AnnotationManager.DefaultSymbolStylelayer"
-            var layerPosition: LayerPosition? = nil
-            if let _ = try? mapView.__map.getStyleLayers().filter({ $0.id == identifier }).first {
-                layerPosition = LayerPosition(below: identifier)
-            }
-            
-            mapView.style.addLayer(layer: lineLayer, layerPosition: layerPosition)
-        }
-        
         let gradientStops = routeLineGradient(route, fractionTraveled: fractionTraveledForStops)
         if let data = routeLineGradientExpression(gradientStops).data(using: .utf8),
            let value = try? JSONSerialization.jsonObject(with: data, options: []) {
@@ -503,6 +489,39 @@ open class NavigationMapView: UIView {
                                                                        property: "line-gradient",
                                                                        value: value)
         }
+        
+        var parentLayer: String? {
+            var parentLayer: String? = nil
+            let identifiers = [
+                IdentifierString.arrow,
+                IdentifierString.arrowSymbol,
+                IdentifierString.arrowCasingSymbol,
+                IdentifierString.arrowStroke,
+                IdentifierString.waypointCircle
+            ]
+            
+            guard let layers = try? mapView.__map.getStyleLayers().reversed() else { return nil }
+            for layer in layers {
+                if !(layer.type == "symbol") && !identifiers.contains(layer.id) {
+                    let source = try? mapView.__map.getStyleLayerProperty(forLayerId: layer.id, property: "source").value as? String
+                    let sourceLayer = try? mapView.__map.getStyleLayerProperty(forLayerId: layer.id, property: "source-layer").value as? String
+                    
+                    if let source = source,
+                       source.isEmpty,
+                       let sourceLayer = sourceLayer,
+                       sourceLayer.isEmpty {
+                        continue
+                    }
+                    
+                    parentLayer = layer.id
+                    break
+                }
+            }
+            
+            return parentLayer
+        }
+        
+        mapView.style.addLayer(layer: lineLayer, layerPosition: LayerPosition(above: parentLayer))
         
         return layerIdentifier
     }
