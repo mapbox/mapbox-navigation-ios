@@ -61,6 +61,7 @@ open class PassiveLocationManager: NSObject, LocationProvider {
         return dataSource.systemLocationManager.heading
     }
     
+    // TODO: Consider replacing with public property.
     public func setDelegate(_ delegate: LocationProviderDelegate) {
         self.delegate = delegate
     }
