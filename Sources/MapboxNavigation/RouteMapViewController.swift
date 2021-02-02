@@ -715,14 +715,204 @@ extension RouteMapViewController: NavigationViewDelegate {
             labelRoadNameCompletionHandler(true)
         }
     }
+    
+    func tileSetIdentifiers(_ identifier: String, type: String) -> [String] {
+        do {
+            if type == "vector",
+               let properties = try navigationMapView.mapView.__map.getStyleSourceProperties(forSourceId: identifier).value as? Dictionary<String, Any>,
+               let url = properties["url"] as? String,
+               let configurationURL = URL(string: url),
+               configurationURL.scheme == "mapbox",
+               let tileSetIdentifiers = configurationURL.host?.components(separatedBy: ",") {
+                return tileSetIdentifiers
+            }
+        } catch {
+            NSLog("Failed to get source properties with error: \(error.localizedDescription)")
+        }
+        
+        return []
+    }
+    
+    func isMapboxStreets(_ identifiers: [String]) -> Bool {
+        return identifiers.contains("mapbox.mapbox-streets-v8") || identifiers.contains("mapbox.mapbox-streets-v7")
+    }
 
     func labelCurrentRoadFeature(at location: CLLocation) {
-        // TODO: Implement ability to name current road feature.
+        guard let stepShape = router.routeProgress.currentLegProgress.currentStep.shape, !stepShape.coordinates.isEmpty else {
+            return
+        }
+        
+        do {
+            let streetsSources = try navigationMapView.mapView.__map.getStyleSources().compactMap {
+                $0
+            }.filter {
+                let identifiers = tileSetIdentifiers($0.id, type: $0.type)
+                return isMapboxStreets(identifiers)
+            }
+            
+            // Add Mapbox Streets if the map does not already have it
+            if streetsSources.isEmpty {
+                var source = VectorSource()
+                source.url = "mapbox://mapbox.mapbox-streets-v8"
+                navigationMapView.mapView.style.addSource(source: source, identifier: "com.mapbox.MapboxStreets")
+            }
+            
+            guard let mapboxStreetsSource = streetsSources.first else { return }
+            
+            let identifierNamespace = Bundle.mapboxNavigation.bundleIdentifier ?? ""
+            let roadLabelStyleLayerIdentifier = "\(identifierNamespace).roadLabels"
+            let roadLabelLayer = try? navigationMapView.mapView.style.getLayer(with: roadLabelStyleLayerIdentifier, type: LineLayer.self).get()
+            
+            if roadLabelLayer == nil {
+                var sourceLayerIdentifier: String? {
+                    let identifiers = tileSetIdentifiers(mapboxStreetsSource.id, type: mapboxStreetsSource.type)
+                    if isMapboxStreets(identifiers) {
+                        let roadLabelLayerIdentifiersByTileSetIdentifier = [
+                            "mapbox.mapbox-streets-v8": "road",
+                            "mapbox.mapbox-streets-v7": "road_label",
+                        ]
+                        
+                        return identifiers.compactMap({ roadLabelLayerIdentifiersByTileSetIdentifier[$0] }).first
+                    }
+                    
+                    return nil
+                }
+                
+                var streetLabelLayer = LineLayer(id: roadLabelStyleLayerIdentifier)
+                streetLabelLayer.source = mapboxStreetsSource.id
+                streetLabelLayer.sourceLayer = sourceLayerIdentifier
+                streetLabelLayer.paint?.lineOpacity = .constant(1.0)
+                streetLabelLayer.paint?.lineWidth = .constant(20.0)
+                streetLabelLayer.paint?.lineColor = .constant(.init(color: .white))
+                
+                if ![DirectionsProfileIdentifier.walking, DirectionsProfileIdentifier.cycling].contains(router.routeProgress.routeOptions.profileIdentifier) {
+                    // TODO: Filter out to road classes valid for motor transport.
+                }
+                
+                let firstLayerIdentifier = try? navigationMapView.mapView.__map.getStyleLayers().first?.id
+                navigationMapView.mapView.style.addLayer(layer: streetLabelLayer, layerPosition: .init(below: firstLayerIdentifier))
+            }
+            
+            let closestCoordinate = location.coordinate
+            let position = self.navigationMapView.mapView.point(for: closestCoordinate)
+            self.navigationMapView.mapView.visibleFeatures(at: position, styleLayers: Set([roadLabelStyleLayerIdentifier]), completion: { result in
+                switch result {
+                case .success(let features):
+                    var smallestLabelDistance = Double.infinity
+                    var currentName: String?
+                    var currentShieldName: NSAttributedString?
+                    let slicedLine = stepShape.sliced(from: closestCoordinate)!
+                    
+                    for feature in features {
+                        var allLines: [LineString] = []
+
+                        if let line = feature.geometry.value as? LineString {
+                            allLines.append(line)
+                        } else if let multiLines = feature.geometry.value as? MultiLineString {
+                            for line in multiLines.coordinates {
+                                allLines.append(LineString(line))
+                            }
+                        }
+
+                        for lineString in allLines {
+                            let lookAheadDistance: CLLocationDistance = 10
+                            guard let pointAheadFeature = lineString.sliced(from: closestCoordinate)!.coordinateFromStart(distance: lookAheadDistance) else { continue }
+                            guard let pointAheadUser = slicedLine.coordinateFromStart(distance: lookAheadDistance) else { continue }
+                            guard let reversedPoint = LineString(lineString.coordinates.reversed()).sliced(from: closestCoordinate)!.coordinateFromStart(distance: lookAheadDistance) else { continue }
+                            
+                            let distanceBetweenPointsAhead = pointAheadFeature.distance(to: pointAheadUser)
+                            let distanceBetweenReversedPoint = reversedPoint.distance(to: pointAheadUser)
+                            let minDistanceBetweenPoints = min(distanceBetweenPointsAhead, distanceBetweenReversedPoint)
+                            
+                            if minDistanceBetweenPoints < smallestLabelDistance {
+                                smallestLabelDistance = minDistanceBetweenPoints
+                                
+                                let roadNameRecord = self.roadFeature(for: feature)
+                                currentShieldName = roadNameRecord.shieldName
+                                currentName = roadNameRecord.roadName
+                            }
+                        }
+                    }
+                    
+                    let hasWayName = currentName != nil || currentShieldName != nil
+                    if smallestLabelDistance < 5 && hasWayName {
+                        if let currentShieldName = currentShieldName {
+                            self.navigationView.wayNameView.attributedText = currentShieldName
+                        } else if let currentName = currentName {
+                            self.navigationView.wayNameView.text = currentName
+                        }
+                        self.navigationView.wayNameView.isHidden = false
+                    } else {
+                        self.navigationView.wayNameView.isHidden = true
+                    }
+                case .failure:
+                    NSLog("Failed to find visible features.")
+                }
+            })
+        } catch {
+            NSLog("Failed to get style sources with error: \(error.localizedDescription)")
+        }
+    }
+
+    private func roadFeature(for line: Feature) -> (roadName: String?, shieldName: NSAttributedString?) {
+        var currentShieldName: NSAttributedString?, currentRoadName: String?
+        
+        if let ref = line.properties?["ref"] as? String,
+           let shield = line.properties?["shield"] as? String,
+           let reflen = line.properties?["reflen"] as? Int {
+            let textColor = roadShieldTextColor(line: line) ?? .black
+            let imageName = "\(shield)-\(reflen)"
+            currentShieldName = roadShieldAttributedText(for: ref, textColor: textColor, imageName: imageName)
+        }
+        
+        if let roadName = line.properties?["name"] as? String {
+            currentRoadName = roadName
+        }
+        
+        if let compositeShieldImage = currentShieldName, let roadName = currentRoadName {
+            let compositeShield = NSMutableAttributedString(string: " \(roadName)")
+            compositeShield.insert(compositeShieldImage, at: 0)
+            currentShieldName = compositeShield
+        }
+        
+        return (roadName: currentRoadName, shieldName: currentShieldName)
+    }
+    
+    func roadShieldTextColor(line: Feature) -> UIColor? {
+        guard let shield = line.properties?["shield"] as? String else {
+            return nil
+        }
+        
+        // shield_text_color is present in Mapbox Streets source v8 but not v7.
+        guard let shieldTextColor = line.properties?["shield_text_color"] as? String else {
+            let currentShield = HighwayShield.RoadType(rawValue: shield)
+            return currentShield?.textColor
+        }
+        
+        switch shieldTextColor {
+        case "black":
+            return .black
+        case "blue":
+            return .blue
+        case "white":
+            return .white
+        case "yellow":
+            return .yellow
+        case "orange":
+            return .orange
+        default:
+            return .black
+        }
     }
 
     private func roadShieldAttributedText(for text: String, textColor: UIColor, imageName: String) -> NSAttributedString? {
-        // TODO: Implement ability to create `ShieldAttachment`.
-        return nil
+        guard let image = navigationMapView.mapView.style.getStyleImage(with: imageName)?.cgImage() else { return nil }
+        let attachment = ShieldAttachment()
+        attachment.image = UIImage(cgImage: image.takeUnretainedValue()).withCenteredText(text,
+                                                                                          color: textColor,
+                                                                                          font: UIFont.boldSystemFont(ofSize: UIFont.systemFontSize),
+                                                                                          scale: UIScreen.main.scale)
+        return NSAttributedString(attachment: attachment)
     }
 
     func showRouteIfNeeded() {
