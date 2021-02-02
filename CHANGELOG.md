@@ -1,5 +1,10 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v1.2.1
+
+* Increased the minimum versions of `MapboxNavigationNative` to v30.0 and `MapboxCommon` to v9.2.0. ([#2793](https://github.com/mapbox/mapbox-navigation-ios/pull/2793))
+* Fixed an issue that caused the App Store to reject some application submissions with error ITMS-90338. ([#2793](https://github.com/mapbox/mapbox-navigation-ios/pull/2793))
+
 ## v1.2.0
 
 ### Packaging
