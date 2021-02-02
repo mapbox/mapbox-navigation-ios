@@ -16,8 +16,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var clearMap: UIButton!
     @IBOutlet weak var bottomBarBackground: UIView!
     
-    var trackLineString = LineString([])
-    var rawTrackLineString = LineString([])
+    var trackStyledFeature: StyledFeature!
+    var rawTrackStyledFeature: StyledFeature!
     
     typealias RouteRequestSuccess = ((RouteResponse) -> Void)
     typealias RouteRequestFailure = ((Error) -> Void)
@@ -58,49 +58,7 @@ class ViewController: UIViewController {
     
     weak var activeNavigationViewController: NavigationViewController?
     
-    private func configure(_ navigationMapView: NavigationMapView) {
-        navigationMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.addSubview(navigationMapView)
-        
-        navigationMapView.navigationMapViewDelegate = self
-        navigationMapView.mapView.on(.styleLoadingFinished, handler: { [weak self] _ in
-            self?.addFreeDriveLayers()
-        })
-        
-        // TODO: Provide a reliable way of setting camera to current coordinate.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            if let coordinate = navigationMapView.mapView.locationManager.latestLocation?.coordinate {
-                navigationMapView.mapView.cameraManager.setCamera(to: CameraOptions(center: coordinate, zoom: 13),
-                                                                  animated: true,
-                                                                  completion: nil)
-            }
-        }
-        
-        setupGestureRecognizers()
-        setupPerformActionBarButtonItem()
-        
-        trackLocations(navigationMapView)
-    }
-    
-    private func uninstall(_ navigationMapView: NavigationMapView) {
-        NotificationCenter.default.removeObserver(self, name: .passiveLocationDataSourceDidUpdate, object: nil)
-        navigationMapView.removeFromSuperview()
-    }
-    
-    private func clearMapView() {
-        startButton.isEnabled = false
-        clearMap.isHidden = true
-        longPressHintView.isHidden = false
-        
-        // TODO: Unhighlight buildings when clearing map.
-        navigationMapView.removeRoutes()
-        navigationMapView.removeWaypoints()
-        waypoints.removeAll()
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
+    // MARK: - UIViewController lifecycle methods
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -114,6 +72,51 @@ class ViewController: UIViewController {
         super.viewDidAppear(animated)
 
         requestNotificationCenterAuthorization()
+    }
+    
+    private func configure(_ navigationMapView: NavigationMapView) {
+        setupPassiveLocationManager(navigationMapView)
+        
+        navigationMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.addSubview(navigationMapView)
+        
+        navigationMapView.navigationMapViewDelegate = self
+        navigationMapView.mapView.on(.styleLoadingFinished, handler: { [weak self] _ in
+            guard let self = self else { return }
+            self.addStyledFeature(self.trackStyledFeature)
+            self.addStyledFeature(self.rawTrackStyledFeature)
+        })
+        navigationMapView.mapView.update {
+            $0.location.showUserLocation = true
+        }
+        
+        // TODO: Provide a reliable way of setting camera to current coordinate.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            if let coordinate = navigationMapView.mapView.locationManager.latestLocation?.coordinate {
+                navigationMapView.mapView.cameraManager.setCamera(to: CameraOptions(center: coordinate, zoom: 13),
+                                                                  animated: true,
+                                                                  completion: nil)
+            }
+        }
+        
+        setupGestureRecognizers()
+        setupPerformActionBarButtonItem()
+    }
+    
+    private func uninstall(_ navigationMapView: NavigationMapView) {
+        unsubscribeFromFreeDriveNotifications()
+        navigationMapView.removeFromSuperview()
+    }
+    
+    private func clearMapView() {
+        startButton.isEnabled = false
+        clearMap.isHidden = true
+        longPressHintView.isHidden = false
+        
+        // TODO: Unhighlight buildings when clearing map.
+        navigationMapView.removeRoutes()
+        navigationMapView.removeWaypoints()
+        waypoints.removeAll()
     }
     
     func requestNotificationCenterAuthorization() {
@@ -136,7 +139,7 @@ class ViewController: UIViewController {
         presentActionsAlertController()
     }
     
-    // MARK: - CarPlay navigation methods.
+    // MARK: - CarPlay navigation methods
     
     public func beginNavigationWithCarplay(navigationService: NavigationService) {
         let navigationViewController = activeNavigationViewController ?? self.navigationViewController(navigationService: navigationService)
@@ -500,67 +503,4 @@ extension ViewController: NavigationViewControllerDelegate {
 
 extension ViewController: VisualInstructionDelegate {
 
-}
-
-// MARK: - Free driving methods
-
-extension ViewController {
-    
-    func trackLocations(_ navigationMapView: NavigationMapView) {
-        let passiveLocationDataSource = PassiveLocationDataSource()
-        let passiveLocationManager = PassiveLocationManager(dataSource: passiveLocationDataSource)
-        navigationMapView.mapView.locationManager.overrideLocationProvider(with: passiveLocationManager)
-        navigationMapView.mapView.update {
-            $0.location.showUserLocation = true
-        }
-        
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(didUpdatePassiveLocation),
-                                               name: .passiveLocationDataSourceDidUpdate,
-                                               object: passiveLocationDataSource)
-        
-        trackLineString.coordinates = []
-        rawTrackLineString.coordinates = []
-    }
-    
-    @objc func didUpdatePassiveLocation(_ notification: Notification) {
-        if let roadName = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.roadNameKey] as? String {
-            title = roadName
-        }
-        
-        if let location = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.locationKey] as? CLLocation {
-            trackLineString.coordinates.append(contentsOf: [location.coordinate])
-        }
-        
-        if let rawLocation = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.rawLocationKey] as? CLLocation {
-            rawTrackLineString.coordinates.append(contentsOf: [rawLocation.coordinate])
-        }
-        
-        updateFreeDriveLayers()
-    }
-    
-    func addFreeDriveLayers() {
-        addLayer("trackSourceIdentifier", layerIdentifier: "trackLayerIdentifier", color: .darkGray)
-        addLayer("rawTrackSourceIdentifier", layerIdentifier: "rawTrackLayerIdentifier", color: .lightGray)
-    }
-    
-    func updateFreeDriveLayers() {
-        let trackFeature = Feature(geometry: .lineString(trackLineString))
-        _ = navigationMapView.mapView.style.updateGeoJSON(for: "trackSourceIdentifier", with: trackFeature)
-        
-        let rawTrackFeature = Feature(geometry: .lineString(rawTrackLineString))
-        _ = navigationMapView.mapView.style.updateGeoJSON(for: "rawTrackSourceIdentifier", with: rawTrackFeature)
-    }
-    
-    func addLayer(_ sourceIdentifier: String, layerIdentifier: String, color: UIColor) {
-        var source = GeoJSONSource()
-        source.data = .geometry(.lineString(trackLineString))
-        _ = navigationMapView.mapView.style.addSource(source: source, identifier: sourceIdentifier)
-        
-        var layer = LineLayer(id: layerIdentifier)
-        layer.source = sourceIdentifier
-        layer.paint?.lineWidth = .constant(3.0)
-        layer.paint?.lineColor = .constant(.init(color: color))
-        _ = navigationMapView.mapView.style.addLayer(layer: layer)
-    }
 }
