@@ -10,7 +10,7 @@ extension MapView {
     /**
      Returns a set of source identifiers for tilesets that are or include the Mapbox Incidents source.
      */
-    func sourceIdentifiers(forTileSetIdentifier tileSetIdentifier: String) -> Set<String> {
+    func sourceIdentifiers(_ tileSetIdentifier: String) -> Set<String> {
         do {
             return Set(try __map.getStyleSources().compactMap {
                 $0
@@ -33,7 +33,7 @@ extension MapView {
      - parameter layerIdentifier: Identifier of the layer in the tile set; in other words, a source layer identifier. Not to be confused with a style layer.
      */
     func showsTileSet(withIdentifier tileSetIdentifier: String, layerIdentifier: String) -> Bool {
-        let incidentsSourceIdentifiers = sourceIdentifiers(forTileSetIdentifier: tileSetIdentifier)
+        let incidentsSourceIdentifiers = sourceIdentifiers(tileSetIdentifier)
         
         do {
             for layer in try __map.getStyleLayers() {
@@ -47,7 +47,7 @@ extension MapView {
                 }
             }
         } catch {
-            NSLog("Error occured while retrieving layers. Error: \(error.localizedDescription)")
+            NSLog("Error occured while retrieving layers. Error: \(error.localizedDescription).")
         }
         
         return false
@@ -61,7 +61,7 @@ extension MapView {
      - parameter layerIdentifier: Identifier of the layer in the tile set; in other words, a source layer identifier. Not to be confused with a style layer.
      */
     func setShowsTileSet(_ isVisible: Bool, withIdentifier tileSetIdentifier: String, layerIdentifier: String) {
-        let incidentsSourceIdentifiers = sourceIdentifiers(forTileSetIdentifier: tileSetIdentifier)
+        let incidentsSourceIdentifiers = sourceIdentifiers(tileSetIdentifier)
         
         do {
             for layer in try __map.getStyleLayers() {
@@ -75,7 +75,7 @@ extension MapView {
                 }
             }
         } catch {
-            NSLog("Error occured while retrieving layers. Error: \(error.localizedDescription)")
+            NSLog("Error occured while retrieving layers. Error: \(error.localizedDescription).")
         }
     }
 
