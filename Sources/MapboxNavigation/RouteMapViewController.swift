@@ -760,7 +760,25 @@ extension RouteMapViewController: NavigationViewDelegate {
             streetLabelLayer.paint?.lineColor = .constant(.init(color: .white))
             
             if ![DirectionsProfileIdentifier.walking, DirectionsProfileIdentifier.cycling].contains(router.routeProgress.routeOptions.profileIdentifier) {
-                // TODO: Filter out to road classes valid for motor transport.
+                // Filter out to road classes valid only for motor transport.
+                let filter = Exp(.inExpression) {
+                    "class"
+                    "motorway"
+                    "motorway_link"
+                    "trunk"
+                    "trunk_link"
+                    "primary"
+                    "primary_link"
+                    "secondary"
+                    "secondary_link"
+                    "tertiary"
+                    "tertiary_link"
+                    "street"
+                    "street_limited"
+                    "roundabout"
+                }
+                
+                streetLabelLayer.filter = filter
             }
             
             let firstLayerIdentifier = try? mapView.__map.getStyleLayers().first?.id
