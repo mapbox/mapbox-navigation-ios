@@ -433,11 +433,13 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
         
         var maneuvers: [CPManeuver] = [primaryManeuver]
         
-        // Add tertiary instructions, if available
+        // Add tertiary information, if available
         if let tertiaryInstruction = visualInstruction.tertiaryInstruction {
+            let tertiaryManeuver = CPManeuver()
             if tertiaryInstruction.containsLaneIndications {
                 // create lanes visual banner
-                let tertiaryManeuver = CPManeuver()
+                // The `lanesImageMaxSize` size is an estimate of the CarPlay Lane Configuration View
+                // The dimensions are specified in the CarPlay App Programming Guide - https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf
                 let lanesImageMaxSize = CGSize(width: 120, height: 18)
 
                 let lightUseableColor: UIColor
@@ -455,6 +457,7 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
                     darkUseableColor = LaneView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).primaryColor.resolvedColor(with: darkTraitCollection)
                     darkUnuseableColor = LaneView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).secondaryColor.resolvedColor(with: darkTraitCollection)
                 } else {
+                    // No light/dark traits are supported
                     lightUseableColor = LaneView.appearance().primaryColor
                     lightUnuseableColor = LaneView.appearance().secondaryColor
 
@@ -475,11 +478,9 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
                 if let image = lightLanesImage, let darkImage = darkLanesImage {
                     tertiaryManeuver.symbolSet = CPImageSet(lightContentImage: image, darkContentImage: darkImage)
                     tertiaryManeuver.userInfo = tertiaryInstruction
-                    maneuvers.append(tertiaryManeuver)
                 }
             } else {
                 // add tertiary maneuver text
-                let tertiaryManeuver = CPManeuver()
                 tertiaryManeuver.symbolSet = tertiaryInstruction.maneuverImageSet(side: visualInstruction.drivingSide)
 
                 if let text = tertiaryInstruction.text {
@@ -490,20 +491,13 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
                     attributedTertiary.canonicalizeAttachments(maximumImageSize: maximumImageSize, imageRendererFormat: imageRendererFormat)
                     tertiaryManeuver.attributedInstructionVariants = [attributedTertiary]
                 }
-
-                if let upcomingStep = navigationService.routeProgress.currentLegProgress.upcomingStep {
-                    let distance = Measurement(distance: upcomingStep.distance).localized()
-                    tertiaryManeuver.initialTravelEstimates = CPTravelEstimates(distanceRemaining: distance, timeRemaining: upcomingStep.expectedTravelTime)
-                }
-
-                maneuvers.append(tertiaryManeuver)
             }
-            
+
             if let upcomingStep = navigationService.routeProgress.currentLegProgress.upcomingStep {
                 let distance = Measurement(distance: upcomingStep.distance).localized()
                 tertiaryManeuver.initialTravelEstimates = CPTravelEstimates(distanceRemaining: distance, timeRemaining: upcomingStep.expectedTravelTime)
             }
-            
+
             maneuvers.append(tertiaryManeuver)
         }
         

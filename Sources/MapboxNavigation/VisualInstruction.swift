@@ -12,7 +12,11 @@ extension VisualInstruction {
             return false
         }
     }
-    
+
+    var containsLaneIndications: Bool {
+        return laneComponents.count > 0
+    }
+
     func maneuverImage(side: DrivingSide, color: UIColor, size: CGSize) -> UIImage? {
         let mv = ManeuverView()
         mv.frame = CGRect(origin: .zero, size: size)

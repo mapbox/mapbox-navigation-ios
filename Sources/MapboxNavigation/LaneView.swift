@@ -3,7 +3,6 @@ import MapboxDirections
 
 /// :nodoc:
 open class LaneView: UIView {
-
     var indications: LaneIndication? {
         didSet {
             setNeedsDisplay()

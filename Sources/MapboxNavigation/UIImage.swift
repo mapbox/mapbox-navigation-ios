@@ -33,4 +33,14 @@ extension UIImage {
             (text as NSString).draw(in: rect.offsetBy(dx: 0, dy: (constrainedSize.height - font.lineHeight) / 2).integral, withAttributes: textFontAttributes)
         }
     }
+
+    func scaled(_ size: CGSize) -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(size, false, scale)
+        self.draw(in: CGRect(origin: .zero, size: size))
+
+        let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+
+        return scaledImage
+    }
 }
