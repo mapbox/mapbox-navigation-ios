@@ -636,27 +636,27 @@ open class NavigationMapView: UIView {
                 waypointSource.data = .featureCollection(.init(features: features))
                 let sourceResult = mapView.style.addSource(source: waypointSource, identifier: IdentifierString.waypointSource)
                 handleResult(sourceResult)
-                // create circle layer
+
                 var circles = CircleLayer(id: IdentifierString.waypointCircle)
                 circles.source = IdentifierString.waypointSource
-                let opacity: Value = .constant(getOpacity(waypoints: waypoints, legIndex: legIndex))
+                let opacity = Exp(.switchCase){ Exp(.any){ Exp(.get) { "waypointCompleted" } }
+                    0.5
+                    1 }
                 circles.paint?.circleColor = .constant(.init(color: UIColor(red:0.9, green:0.9, blue:0.9, alpha:1.0)))
-                circles.paint?.circleOpacity = opacity
+                circles.paint?.circleOpacity = .expression(opacity)
                 circles.paint?.circleRadius = .constant(.init(10))
                 circles.paint?.circleStrokeColor = .constant(.init(color: UIColor.black))
                 circles.paint?.circleStrokeWidth = .constant(.init(1))
-                circles.paint?.circleStrokeOpacity = opacity
+                circles.paint?.circleStrokeOpacity = .expression(opacity)
 
-                // create symbol layer
                 var symbols = SymbolLayer(id: IdentifierString.waypointSymbol)
                 symbols.source = IdentifierString.waypointSource
                 symbols.layout?.textField = .expression(Exp(.toString){ Exp(.get){ "name" } })
                 symbols.layout?.textSize = .constant(.init(10))
-                symbols.paint?.textOpacity = opacity
+                symbols.paint?.textOpacity = .expression(opacity)
                 symbols.paint?.textHaloWidth = .constant(.init(0.25))
                 symbols.paint?.textHaloColor = .constant(.init(color: UIColor.black))
 
-                // add layers
                 if let arrows = try? mapView.style.getLayer(with: IdentifierString.arrowCasingSymbol, type: LineLayer.self).get() {
                     let layerResult = mapView.style.addLayer(layer: circles, layerPosition: LayerPosition(above: arrows.id))
                     handleResult(layerResult)
@@ -677,15 +677,6 @@ open class NavigationMapView: UIView {
             destinationAnnotation.title = "navigation_annotation"
             mapView.annotationManager.addAnnotation(destinationAnnotation)
         }
-    }
-    
-    func getOpacity(waypoints: [Waypoint], legIndex: Int) -> Double {
-        for (waypointIndex, _) in waypoints.enumerated() {
-            if waypointIndex < legIndex {
-                return 0.5
-            }
-        }
-        return 1
     }
     
     public func removeRoutes() {
