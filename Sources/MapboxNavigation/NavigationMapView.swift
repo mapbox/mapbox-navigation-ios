@@ -634,8 +634,7 @@ open class NavigationMapView: UIView {
             } else {
                 var waypointSource = GeoJSONSource()
                 waypointSource.data = .featureCollection(.init(features: features))
-                let sourceResult = mapView.style.addSource(source: waypointSource, identifier: IdentifierString.waypointSource)
-                handleResult(sourceResult)
+                mapView.style.addSource(source: waypointSource, identifier: IdentifierString.waypointSource)
 
                 var circles = CircleLayer(id: IdentifierString.waypointCircle)
                 circles.source = IdentifierString.waypointSource
@@ -658,15 +657,12 @@ open class NavigationMapView: UIView {
                 symbols.paint?.textHaloColor = .constant(.init(color: UIColor.black))
 
                 if let arrows = try? mapView.style.getLayer(with: IdentifierString.arrowCasingSymbol, type: LineLayer.self).get() {
-                    let layerResult = mapView.style.addLayer(layer: circles, layerPosition: LayerPosition(above: arrows.id))
-                    handleResult(layerResult)
+                    mapView.style.addLayer(layer: circles, layerPosition: LayerPosition(above: arrows.id))
                 } else {
                     guard let layerIdentifier = identifier(route, identifierType: .route) else { return }
-                    let circlesResult = mapView.style.addLayer(layer: circles, layerPosition: LayerPosition(above: layerIdentifier))
-                    handleResult(circlesResult)
+                    mapView.style.addLayer(layer: circles, layerPosition: LayerPosition(above: layerIdentifier))
                 }
-                let symbolResult = mapView.style.addLayer(layer: symbols, layerPosition: LayerPosition(above: circles.id))
-                handleResult(symbolResult)
+                mapView.style.addLayer(layer: symbols, layerPosition: LayerPosition(above: circles.id))
             }
         }
 
