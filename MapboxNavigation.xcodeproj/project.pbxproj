@@ -252,6 +252,7 @@
 		8A07D32025CA0B50005E1790 /* MapboxCommon.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A07D31725CA0B50005E1790 /* MapboxCommon.xcframework */; };
 		8A07D32125CA0B50005E1790 /* MapboxCommon.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8A07D31725CA0B50005E1790 /* MapboxCommon.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8A0E0A52257AD9C300C2E924 /* NightStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0E0A51257AD9C300C2E924 /* NightStyle.swift */; };
+		8A17635B25CC89D800737520 /* Expression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A17635A25CC89D800737520 /* Expression.swift */; };
 		8A41F56125BF60A400BD6FCF /* Utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 8A41F56025BF60A400BD6FCF /* Utils.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8A41F5B225BF61AE00BD6FCF /* CarPlayActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A41F5B125BF61AE00BD6FCF /* CarPlayActivity.swift */; };
 		8A41F5EC25BF624900BD6FCF /* MapOrnamentPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A41F5EB25BF624900BD6FCF /* MapOrnamentPosition.swift */; };
@@ -838,6 +839,7 @@
 		8A07D31625CA0B50005E1790 /* Turf.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Turf.xcframework; path = Sources/MapboxNavigation/MapboxMaps/Turf.xcframework; sourceTree = "<group>"; };
 		8A07D31725CA0B50005E1790 /* MapboxCommon.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxCommon.xcframework; path = Sources/MapboxNavigation/MapboxMaps/MapboxCommon.xcframework; sourceTree = "<group>"; };
 		8A0E0A51257AD9C300C2E924 /* NightStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightStyle.swift; sourceTree = "<group>"; };
+		8A17635A25CC89D800737520 /* Expression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expression.swift; sourceTree = "<group>"; };
 		8A41F56025BF60A400BD6FCF /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
 		8A41F5B125BF61AE00BD6FCF /* CarPlayActivity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CarPlayActivity.swift; sourceTree = "<group>"; };
 		8A41F5EB25BF624900BD6FCF /* MapOrnamentPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapOrnamentPosition.swift; sourceTree = "<group>"; };
@@ -1736,6 +1738,7 @@
 				C5A7EC5B1FD610A80008B9BA /* VisualInstructionComponent.swift */,
 				350E2C5E22707EB80014CEB3 /* UIScreen.swift */,
 				CFD47D8F20FD85EC00BC1E49 /* AccountManager.swift */,
+				8A17635A25CC89D800737520 /* Expression.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -2646,6 +2649,7 @@
 				4316D95C24340555000DD8F8 /* Match.swift in Sources */,
 				8DEB4066220CE596008BAAB4 /* NavigationMapViewDelegate.swift in Sources */,
 				359D283C1F9DC14F00FDE9C9 /* UICollectionView.swift in Sources */,
+				8A17635B25CC89D800737520 /* Expression.swift in Sources */,
 				F4C5A26F24EF1D16004ED0DD /* FeedbackSubtypeViewController.swift in Sources */,
 				8D24A2F820409A890098CBF8 /* CGSize.swift in Sources */,
 				35CB1E131F97DD740011CC44 /* FeedbackItem.swift in Sources */,

@@ -479,8 +479,7 @@ open class NavigationMapView: UIView {
         guard let layerIdentifier = identifier(route, identifierType: .route) else { return nil }
         var lineLayer = LineLayer(id: layerIdentifier)
         lineLayer.source = sourceIdentifier
-        // TODO: Implement ability to change `lineWidth` depending on zoom level.
-        lineLayer.paint?.lineWidth = .constant(.init(8.0))
+        lineLayer.paint?.lineWidth = .expression(Expression.routeLineWidthExpression())
         lineLayer.layout?.lineJoin = .round
         lineLayer.layout?.lineCap = .round
         
@@ -543,8 +542,7 @@ open class NavigationMapView: UIView {
         var lineLayer = LineLayer(id: layerIdentifier)
         lineLayer.source = sourceIdentifier
         lineLayer.paint?.lineColor = .constant(.init(color: routeCasingColor))
-        // TODO: Implement ability to change `lineWidth` depending on zoom level.
-        lineLayer.paint?.lineWidth = .constant(.init(12.0))
+        lineLayer.paint?.lineWidth = .expression(Expression.routeLineWidthExpression(1.5))
         lineLayer.layout?.lineJoin = .round
         lineLayer.layout?.lineCap = .round
         
@@ -575,8 +573,7 @@ open class NavigationMapView: UIView {
         var lineLayer = LineLayer(id: layerIdentifier)
         lineLayer.source = sourceIdentifier
         lineLayer.paint?.lineColor = .constant(.init(color: routeAlternateColor))
-        // TODO: Implement ability to change `lineWidth` depending on zoom level.
-        lineLayer.paint?.lineWidth = .constant(.init(8.0))
+        lineLayer.paint?.lineWidth = .expression(Expression.routeLineWidthExpression())
         lineLayer.layout?.lineJoin = .round
         lineLayer.layout?.lineCap = .round
 
@@ -599,8 +596,7 @@ open class NavigationMapView: UIView {
         var lineLayer = LineLayer(id: layerIdentifier)
         lineLayer.source = sourceIdentifier
         lineLayer.paint?.lineColor = .constant(.init(color: routeAlternateCasingColor))
-        // TODO: Implement ability to change `lineWidth` depending on zoom level.
-        lineLayer.paint?.lineWidth = .constant(.init(12.0))
+        lineLayer.paint?.lineWidth = .expression(Expression.routeLineWidthExpression(1.5))
         lineLayer.layout?.lineJoin = .round
         lineLayer.layout?.lineCap = .round
         
@@ -773,8 +769,7 @@ open class NavigationMapView: UIView {
                 arrow.minZoom = Double(minimumZoomLevel)
                 arrow.layout?.lineCap = .butt
                 arrow.layout?.lineJoin = .round
-                // TODO: Implement ability to change `lineWidth` depending on zoom level.
-                arrow.paint?.lineWidth = .constant(.init(14.0))
+                arrow.paint?.lineWidth = .expression(Expression.routeLineWidthExpression(0.7))
                 arrow.paint?.lineColor = .constant(.init(color: maneuverArrowColor))
                 
                 mapView.style.addSource(source: arrowSource, identifier: IdentifierString.arrowSource)
@@ -796,8 +791,7 @@ open class NavigationMapView: UIView {
                 arrowStroke.minZoom = arrow.minZoom
                 arrowStroke.layout?.lineCap = arrow.layout?.lineCap
                 arrowStroke.layout?.lineJoin = arrow.layout?.lineJoin
-                // TODO: Implement ability to change `lineWidth` depending on zoom level.
-                arrowStroke.paint?.lineWidth = .constant(.init(16.0))
+                arrowStroke.paint?.lineWidth = .expression(Expression.routeLineWidthExpression(0.8))
                 arrowStroke.paint?.lineColor = .constant(.init(color: maneuverArrowStrokeColor))
                 
                 mapView.style.addSource(source: arrowStrokeSource, identifier: IdentifierString.arrowStrokeSource)
@@ -820,8 +814,7 @@ open class NavigationMapView: UIView {
                 arrowSymbolLayer.paint?.iconColor = .constant(.init(color: maneuverArrowColor))
                 arrowSymbolLayer.layout?.iconRotationAlignment = .map
                 arrowSymbolLayer.layout?.iconRotate = .constant(.init(shaftDirection))
-                // TODO: Implement ability to change `iconSize` depending on zoom level.
-                arrowSymbolLayer.layout?.iconSize = .constant(.init(2))
+                arrowSymbolLayer.layout?.iconSize = .expression(Expression.routeLineWidthExpression(0.12))
                 arrowSymbolLayer.layout?.iconAllowOverlap = .constant(true)
                 
                 var arrowSymbolLayerCasing = SymbolLayer(id: IdentifierString.arrowCasingSymbol)
@@ -830,8 +823,7 @@ open class NavigationMapView: UIView {
                 arrowSymbolLayerCasing.paint?.iconColor = .constant(.init(color: maneuverArrowStrokeColor))
                 arrowSymbolLayerCasing.layout?.iconRotationAlignment = arrowSymbolLayer.layout?.iconRotationAlignment
                 arrowSymbolLayerCasing.layout?.iconRotate = arrowSymbolLayer.layout?.iconRotate
-                // TODO: Implement ability to change `iconSize` depending on zoom level.
-                arrowSymbolLayerCasing.layout?.iconSize = .constant(.init(2.5))
+                arrowSymbolLayerCasing.layout?.iconSize = .expression(Expression.routeLineWidthExpression(0.14))
                 arrowSymbolLayerCasing.layout?.iconAllowOverlap = arrowSymbolLayer.layout?.iconAllowOverlap
                 
                 mapView.style.addSource(source: arrowSymbolSource, identifier: IdentifierString.arrowSymbolSource)

@@ -255,7 +255,7 @@ extension NavigationMapView {
         for (index, feature) in congestionSegments.enumerated() {
             // Get congestion color for the stop.
             
-            let congestionLevel = feature.properties?[MBCongestionAttribute] as? String
+            let congestionLevel = feature.properties?[CongestionAttribute] as? String
             let associatedCongestionColor = congestionColor(for: congestionLevel)
             
             // Measure the line length of the traffic segment.
@@ -385,9 +385,9 @@ extension NavigationMapView {
                 legFeatures = mergedCongestionSegments.map { (congestionSegment: CongestionSegment) -> Feature in
                     var feature = Feature(LineString(congestionSegment.0))
                     feature.properties = [
-                        MBCongestionAttribute: String(describing: congestionSegment.1),
+                        CongestionAttribute: String(describing: congestionSegment.1),
                         "isAlternateRoute": false,
-                        MBCurrentLegAttribute: (legIndex != nil) ? index == legIndex : index == 0
+                        CurrentLegAttribute: (legIndex != nil) ? index == legIndex : index == 0
                     ]
                     
                     return feature
@@ -396,7 +396,7 @@ extension NavigationMapView {
                 var feature = Feature(LineString(shape.coordinates))
                 feature.properties = [
                     "isAlternateRoute": false,
-                    MBCurrentLegAttribute: (legIndex != nil) ? index == legIndex : index == 0
+                    CurrentLegAttribute: (legIndex != nil) ? index == legIndex : index == 0
                 ]
                 legFeatures = [feature]
             }

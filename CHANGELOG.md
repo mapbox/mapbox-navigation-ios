@@ -1,5 +1,13 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v2.0.0
+
+### Other changes
+
+* Renamed public constant `Constants.MBRouteLineWidthByZoomLevel` to public variable `Constants.MBRouteLineWidthByZoomLevel`, which now accepts `Double` for keys and values.
+* Renamed public property `MBCurrentLegAttribute` to `CurrentLegAttribute`.
+* Renamed public property `MBCongestionAttribute` to `CongestionAttribute`.
+
 ## v1.3.0
 
 * MapboxCoreNavigation can now be installed using Swift Package Manager. ([#2771](https://github.com/mapbox/mapbox-navigation-ios/pull/2771))
