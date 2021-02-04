@@ -83,7 +83,8 @@ open class LanesView: UIView, NavigationComponent {
         
         let subviews = tertiaryInstruction.components.compactMap { (component) -> LaneView? in
             if case let .lane(indications: indications, isUsable: isUsable) = component {
-                return LaneView(indications: indications, isUsable: isUsable)
+                let maneuverDirection = visualInstruction?.primaryInstruction.maneuverDirection ?? ManeuverDirection(rawValue: indications.description)
+                return LaneView(indications: indications, isUsable: isUsable, direction: maneuverDirection)
             } else {
                 return nil
             }

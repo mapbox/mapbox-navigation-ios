@@ -23,6 +23,48 @@ extension VisualInstruction {
         let image = mv.imageRepresentation
         return shouldFlipImage(side: side) ? image?.withHorizontallyFlippedOrientation() : image
     }
+
+    func laneImage(side: DrivingSide, indication: LaneIndication, maneuverDirection: ManeuverDirection?, isUsable: Bool, useableColor: UIColor, unuseableColor: UIColor, size: CGSize) -> UIImage? {
+        let laneView = LaneView()
+        laneView.frame = CGRect(origin: .zero, size: size)
+        if isUsable {
+            laneView.primaryColor = useableColor
+            laneView.secondaryColor = unuseableColor
+        } else {
+            laneView.primaryColor = unuseableColor
+            laneView.secondaryColor = unuseableColor
+        }
+        laneView.backgroundColor = .clear
+        laneView.maneuverDirection = maneuverDirection
+        laneView.indications = indication
+        laneView.isValid = isUsable
+        let image = laneView.imageRepresentation
+        return shouldFlipImage(side: side) ? image?.withHorizontallyFlippedOrientation() : image
+    }
+
+    func lanesImage(side: DrivingSide, direction: ManeuverDirection?, useableColor: UIColor, unuseableColor: UIColor, size: CGSize, scale: CGFloat) -> UIImage? {
+        let subimages = components.compactMap { (component) -> UIImage? in
+            if case let .lane(indications: indications, isUsable: isUsable) = component {
+                return laneImage(side: side, indication: indications, maneuverDirection: direction, isUsable: isUsable, useableColor: useableColor, unuseableColor: unuseableColor, size: CGSize(width: size.height, height: size.height))
+            } else {
+                return nil
+            }
+        }
+
+        guard subimages.count > 0 else { return nil }
+
+        UIGraphicsBeginImageContextWithOptions(size, false, scale)
+
+        for (index, image) in subimages.enumerated() {
+            let areaSize = CGRect(x: CGFloat(index) * size.height, y: 0, width: size.height, height: size.height)
+            image.draw(in: areaSize)
+        }
+
+        let newImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+
+        return newImage
+    }
     
     #if canImport(CarPlay)
     /// Returns a `CPImageSet` representing the maneuver.

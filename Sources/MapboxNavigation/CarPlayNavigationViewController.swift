@@ -433,9 +433,52 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
         
         var maneuvers: [CPManeuver] = [primaryManeuver]
         
-        // Add tertiary text and lane visual instructions if available.
+        // Add tertiary instructions, if available
         if let tertiaryInstruction = visualInstruction.tertiaryInstruction {
-            if tertiaryInstruction.laneComponents.isEmpty {
+            if tertiaryInstruction.containsLaneIndications {
+                // create lanes visual banner
+                let tertiaryManeuver = CPManeuver()
+                let lanesImageMaxSize = CGSize(width: 120, height: 18)
+
+                let lightUseableColor: UIColor
+                let lightUnuseableColor: UIColor
+                let darkUseableColor: UIColor
+                let darkUnuseableColor: UIColor
+
+                if #available(iOS 13.0, *) {
+                    let lightTraitCollection = UITraitCollection(userInterfaceStyle: .light)
+                    let darkTraitCollection = UITraitCollection(userInterfaceStyle: .dark)
+
+                    lightUseableColor = LaneView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).primaryColor.resolvedColor(with: lightTraitCollection)
+                    lightUnuseableColor = LaneView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).secondaryColor.resolvedColor(with: lightTraitCollection)
+
+                    darkUseableColor = LaneView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).primaryColor.resolvedColor(with: darkTraitCollection)
+                    darkUnuseableColor = LaneView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).secondaryColor.resolvedColor(with: darkTraitCollection)
+                } else {
+                    lightUseableColor = LaneView.appearance().primaryColor
+                    lightUnuseableColor = LaneView.appearance().secondaryColor
+
+                    darkUseableColor = LaneView.appearance().primaryColor
+                    darkUnuseableColor = LaneView.appearance().secondaryColor
+                }
+
+                var lightLanesImage = tertiaryInstruction.lanesImage(side: visualInstruction.drivingSide, direction: visualInstruction.primaryInstruction.maneuverDirection, useableColor: lightUseableColor, unuseableColor: lightUnuseableColor, size: CGSize(width: CGFloat(tertiaryInstruction.laneComponents.count) * lanesImageMaxSize.height, height: lanesImageMaxSize.height), scale: (carPlayManager.carWindow?.screen ?? UIScreen.main).scale)
+
+                var darkLanesImage = tertiaryInstruction.lanesImage(side: visualInstruction.drivingSide, direction: visualInstruction.primaryInstruction.maneuverDirection, useableColor: darkUseableColor, unuseableColor: darkUnuseableColor, size: CGSize(width: CGFloat(tertiaryInstruction.laneComponents.count) * lanesImageMaxSize.height, height: lanesImageMaxSize.height), scale: (carPlayManager.carWindow?.screen ?? UIScreen.main).scale)
+
+                if let image = lightLanesImage, let darkImage = darkLanesImage, image.size.width > lanesImageMaxSize.width {
+                    let aspectRatio = lanesImageMaxSize.width / image.size.width
+                    let scaledSize = CGSize(width: lanesImageMaxSize.width, height: lanesImageMaxSize.height * aspectRatio)
+                    lightLanesImage = image.scaled(scaledSize)
+                    darkLanesImage = darkImage.scaled(scaledSize)
+                }
+                if let image = lightLanesImage, let darkImage = darkLanesImage {
+                    tertiaryManeuver.symbolSet = CPImageSet(lightContentImage: image, darkContentImage: darkImage)
+                    tertiaryManeuver.userInfo = tertiaryInstruction
+                    maneuvers.append(tertiaryManeuver)
+                }
+            } else {
+                // add tertiary maneuver text
                 let tertiaryManeuver = CPManeuver()
                 tertiaryManeuver.symbolSet = tertiaryInstruction.maneuverImageSet(side: visualInstruction.drivingSide)
 
@@ -454,46 +497,6 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
                 }
 
                 maneuvers.append(tertiaryManeuver)
-            } else {
-                // lanes
-                let tertiaryManeuver = CPManeuver()
-                let lanesImageMaxSize = CGSize(width: 120, height: 18)
-
-                if #available(iOS 13.0, *) {
-                    let lightTraitCollection = UITraitCollection(userInterfaceStyle: .light)
-                    let darkTraitCollection = UITraitCollection(userInterfaceStyle: .dark)
-
-                    var lightLanesImage = tertiaryInstruction.lanesImage(side: visualInstruction.drivingSide, useableColor: LaneView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).primaryColor.resolvedColor(with: lightTraitCollection), unuseableColor: LaneView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).secondaryColor.resolvedColor(with: lightTraitCollection), size: CGSize(width: CGFloat(tertiaryInstruction.laneComponents.count) * lanesImageMaxSize.height, height: lanesImageMaxSize.height), scale: (carPlayManager.carWindow?.screen ?? UIScreen.main).scale)
-
-                    var darkLanesImage = tertiaryInstruction.lanesImage(side: visualInstruction.drivingSide, useableColor: LaneView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).primaryColor.resolvedColor(with: darkTraitCollection), unuseableColor: LaneView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).secondaryColor.resolvedColor(with: darkTraitCollection), size: CGSize(width: CGFloat(tertiaryInstruction.laneComponents.count) * lanesImageMaxSize.height, height: lanesImageMaxSize.height), scale: (carPlayManager.carWindow?.screen ?? UIScreen.main).scale)
-
-                    if let image = lightLanesImage, let darkImage = darkLanesImage, image.size.width > lanesImageMaxSize.width {
-                        let aspectRatio = lanesImageMaxSize.width / image.size.width
-                        let scaledSize = CGSize(width: lanesImageMaxSize.width, height: lanesImageMaxSize.height * aspectRatio)
-                        lightLanesImage = image.scaled(scaledSize)
-                        darkLanesImage = darkImage.scaled(scaledSize)
-                    }
-
-                    if let lightLanesImage = lightLanesImage, let darkLanesImage = darkLanesImage {
-                        tertiaryManeuver.symbolSet = CPImageSet(lightContentImage: lightLanesImage, darkContentImage: darkLanesImage)
-                        tertiaryManeuver.userInfo = tertiaryInstruction
-                        maneuvers.append(tertiaryManeuver)
-                    }
-                } else {
-                    var lanesImage = tertiaryInstruction.lanesImage(side: visualInstruction.drivingSide, useableColor: LaneView.appearance().primaryColor, unuseableColor: LaneView.appearance().secondaryColor, size: CGSize(width: CGFloat(tertiaryInstruction.laneComponents.count) * lanesImageMaxSize.height, height: lanesImageMaxSize.height), scale: (carPlayManager.carWindow?.screen ?? UIScreen.main).scale)
-
-                    if let image = lanesImage, image.size.width > lanesImageMaxSize.width {
-                        let aspectRatio = lanesImageMaxSize.width / image.size.width
-                        let scaledSize = CGSize(width: lanesImageMaxSize.width, height: lanesImageMaxSize.height * aspectRatio)
-                        lanesImage = image.scaled(scaledSize)
-                    }
-
-                    if let lanesImage = lanesImage {
-                        tertiaryManeuver.symbolSet = CPImageSet(lightContentImage: lanesImage, darkContentImage: lanesImage)
-                        tertiaryManeuver.userInfo = tertiaryInstruction
-                        maneuvers.append(tertiaryManeuver)
-                    }
-                }
             }
             
             if let upcomingStep = navigationService.routeProgress.currentLegProgress.upcomingStep {

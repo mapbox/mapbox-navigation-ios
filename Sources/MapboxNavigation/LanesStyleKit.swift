@@ -21,7 +21,7 @@ public class LanesStyleKit : NSObject {
     @objc dynamic public class func drawLaneStraightRight(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 30, height: 30), resizing: ResizingBehavior = .aspectFit, primaryColor: UIColor = UIColor(red: 0.000, green: 0.000, blue: 0.000, alpha: 1.000), size: CGSize = CGSize(width: 32, height: 32), flipHorizontally: Bool = false) {
         //// General Declarations
         let context = UIGraphicsGetCurrentContext()!
-        
+
         //// Resize to Target Frame
         context.saveGState()
         let resizedFrame: CGRect = resizing.apply(rect: CGRect(x: 0, y: 0, width: 30, height: 30), target: targetFrame)
@@ -132,7 +132,7 @@ public class LanesStyleKit : NSObject {
     @objc dynamic public class func drawLaneStraightOnly(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 30, height: 30), resizing: ResizingBehavior = .aspectFit, primaryColor: UIColor = UIColor(red: 0.000, green: 0.000, blue: 0.000, alpha: 1.000), secondaryColor: UIColor = UIColor(red: 0.618, green: 0.618, blue: 0.618, alpha: 1.000), size: CGSize = CGSize(width: 32, height: 32), flipHorizontally: Bool = false) {
         //// General Declarations
         let context = UIGraphicsGetCurrentContext()!
-        
+
         //// Resize to Target Frame
         context.saveGState()
         let resizedFrame: CGRect = resizing.apply(rect: CGRect(x: 0, y: 0, width: 30, height: 30), target: targetFrame)
@@ -243,7 +243,7 @@ public class LanesStyleKit : NSObject {
     @objc dynamic public class func drawLaneRight(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 30, height: 30), resizing: ResizingBehavior = .aspectFit, primaryColor: UIColor = UIColor(red: 0.000, green: 0.000, blue: 0.000, alpha: 1.000), size: CGSize = CGSize(width: 32, height: 32), flipHorizontally: Bool = false) {
         //// General Declarations
         let context = UIGraphicsGetCurrentContext()!
-        
+
         //// Resize to Target Frame
         context.saveGState()
         let resizedFrame: CGRect = resizing.apply(rect: CGRect(x: 0, y: 0, width: 30, height: 30), target: targetFrame)
@@ -310,10 +310,10 @@ public class LanesStyleKit : NSObject {
 
     }
 
-    @objc dynamic public class func drawLaneRightOnly(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 30, height: 30), resizing: ResizingBehavior = .aspectFit, primaryColor: UIColor = UIColor(red: 0.000, green: 0.000, blue: 0.000, alpha: 1.000), secondaryColor: UIColor = UIColor(red: 0.618, green: 0.618, blue: 0.618, alpha: 1.000), size: CGSize = CGSize(width: 32, height: 32), flipHorizontally: Bool = false) {
+    @objc dynamic public class func drawLaneRightOnly(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 30, height: 30), resizing: ResizingBehavior = .aspectFit, turnArrowColor: UIColor = UIColor(red: 0.000, green: 0.000, blue: 0.000, alpha: 1.000), straightArrowColor: UIColor = UIColor(red: 0.618, green: 0.618, blue: 0.618, alpha: 1.000), size: CGSize = CGSize(width: 32, height: 32), flipHorizontally: Bool = false) {
         //// General Declarations
         let context = UIGraphicsGetCurrentContext()!
-        
+
         //// Resize to Target Frame
         context.saveGState()
         let resizedFrame: CGRect = resizing.apply(rect: CGRect(x: 0, y: 0, width: 30, height: 30), target: targetFrame)
@@ -338,7 +338,7 @@ public class LanesStyleKit : NSObject {
 
         //// Rectangle Drawing
         let rectanglePath = UIBezierPath(rect: CGRect(x: -5.98, y: -3.42, width: 4, height: 16))
-        secondaryColor.setFill()
+        straightArrowColor.setFill()
         rectanglePath.fill()
 
 
@@ -364,7 +364,7 @@ public class LanesStyleKit : NSObject {
         bezierPath.addCurve(to: CGPoint(x: -3.96, y: -12.42), controlPoint1: CGPoint(x: -9.7, y: -4.52), controlPoint2: CGPoint(x: -4.01, y: -12.36))
         bezierPath.addLine(to: CGPoint(x: -3.96, y: -12.42))
         bezierPath.close()
-        secondaryColor.setFill()
+        straightArrowColor.setFill()
         bezierPath.fill()
 
 
@@ -398,7 +398,7 @@ public class LanesStyleKit : NSObject {
         bezier2Path.addLine(to: CGPoint(x: 4.27, y: 4.16))
         bezier2Path.addLine(to: CGPoint(x: 3.01, y: 4.16))
         bezier2Path.usesEvenOddFillRule = true
-        primaryColor.setFill()
+        turnArrowColor.setFill()
         bezier2Path.fill()
 
 
@@ -409,7 +409,7 @@ public class LanesStyleKit : NSObject {
         bezier3Path.addCurve(to: CGPoint(x: -1.98, y: 4.19), controlPoint1: CGPoint(x: -3.95, y: 6.81), controlPoint2: CGPoint(x: -3.25, y: 5.23))
         bezier3Path.addCurve(to: CGPoint(x: 2.86, y: 2.19), controlPoint1: CGPoint(x: -0.75, y: 3.19), controlPoint2: CGPoint(x: 0.95, y: 2.19))
         bezier3Path.addLine(to: CGPoint(x: 5.05, y: 2.19))
-        primaryColor.setStroke()
+        turnArrowColor.setStroke()
         bezier3Path.lineWidth = 4
         bezier3Path.stroke()
 
@@ -424,7 +424,7 @@ public class LanesStyleKit : NSObject {
     @objc dynamic public class func drawLaneStraight(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 30, height: 30), resizing: ResizingBehavior = .aspectFit, primaryColor: UIColor = UIColor(red: 0.000, green: 0.000, blue: 0.000, alpha: 1.000), size: CGSize = CGSize(width: 32, height: 32)) {
         //// General Declarations
         let context = UIGraphicsGetCurrentContext()!
-        
+
         //// Resize to Target Frame
         context.saveGState()
         let resizedFrame: CGRect = resizing.apply(rect: CGRect(x: 0, y: 0, width: 30, height: 30), target: targetFrame)
@@ -483,7 +483,7 @@ public class LanesStyleKit : NSObject {
     @objc dynamic public class func drawLaneUturn(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 30, height: 30), resizing: ResizingBehavior = .aspectFit, primaryColor: UIColor = UIColor(red: 0.000, green: 0.000, blue: 0.000, alpha: 1.000), size: CGSize = CGSize(width: 32, height: 32), flipHorizontally: Bool = false) {
         //// General Declarations
         let context = UIGraphicsGetCurrentContext()!
-        
+
         //// Resize to Target Frame
         context.saveGState()
         let resizedFrame: CGRect = resizing.apply(rect: CGRect(x: 0, y: 0, width: 30, height: 30), target: targetFrame)
@@ -556,7 +556,7 @@ public class LanesStyleKit : NSObject {
     @objc dynamic public class func drawLaneSlightRight(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 30, height: 30), resizing: ResizingBehavior = .aspectFit, primaryColor: UIColor = UIColor(red: 0.000, green: 0.000, blue: 0.000, alpha: 1.000), size: CGSize = CGSize(width: 32, height: 32), flipHorizontally: Bool = false) {
         //// General Declarations
         let context = UIGraphicsGetCurrentContext()!
-        
+
         //// Resize to Target Frame
         context.saveGState()
         let resizedFrame: CGRect = resizing.apply(rect: CGRect(x: 0, y: 0, width: 30, height: 30), target: targetFrame)

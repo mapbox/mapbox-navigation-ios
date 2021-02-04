@@ -13,11 +13,11 @@ extension UIColor {
     class var defaultTurnArrowPrimaryHighlighted: UIColor { get { return #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) } }
     class var defaultTurnArrowSecondary: UIColor { get { return #colorLiteral(red: 0.6196078431, green: 0.6196078431, blue: 0.6196078431, alpha: 1) } }
     class var defaultTurnArrowSecondaryHighlighted: UIColor { get { return UIColor.white.withAlphaComponent(0.4) } }
-    
+
     class var defaultLaneArrowPrimary: UIColor { get { return #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1) } }
     class var defaultLaneArrowSecondary: UIColor { get { return #colorLiteral(red: 0.6196078431, green: 0.6196078431, blue: 0.6196078431, alpha: 1) } }
     class var defaultLaneArrowPrimaryHighlighted: UIColor { get { return #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) } }
-    class var defaultLaneArrowSecondaryHighlighted: UIColor { get { return #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) } }
+    class var defaultLaneArrowSecondaryHighlighted: UIColor { get { return #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1) } }
 
     class var defaultLaneArrowPrimaryCarPlay: UIColor { get { return #colorLiteral(red: 0.7649999857, green: 0.7649999857, blue: 0.7570000291, alpha: 1) } }
     class var defaultLaneArrowSecondaryCarPlay: UIColor { get { return #colorLiteral(red: 0.4198532104, green: 0.4398920536, blue: 0.4437610507, alpha: 1) } }

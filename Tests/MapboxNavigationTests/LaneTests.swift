@@ -31,7 +31,7 @@ class LaneTests: FBSnapshotTestCase {
                 let groupView = UIStackView(orientation: .vertical, autoLayout: true)
                 groupView.alignment = .center
                 
-                let laneView = LaneView(indications: lane.indications, isUsable: true)
+                let laneView = LaneView(indications: lane.indications, isUsable: true, direction: ManeuverDirection(rawValue: lane.indications.description))
                 laneView.drivingSide = lane.drivingSide
                 
                 laneView.backgroundColor = .white
