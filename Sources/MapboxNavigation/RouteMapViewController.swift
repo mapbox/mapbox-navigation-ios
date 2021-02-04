@@ -525,7 +525,12 @@ class RouteMapViewController: UIViewController {
                                                                            edgePadding: insets,
                                                                            bearing: CGFloat(navigationMapView.mapView.bearing),
                                                                            pitch: 0)
-            
+            let zoomLevel = CGFloat(ZoomLevelForAltitude(navigationMapView.altitude,
+                                                         0,
+                                                         userLocation.latitude,
+                                                         navigationMapView.bounds.size))
+            newCamera.zoom = zoomLevel
+
             navigationMapView.mapView.cameraManager.setCamera(to: newCamera, completion: nil)
         }
     }
