@@ -483,12 +483,8 @@ open class NavigationMapView: UIView {
         lineLayer.layout?.lineJoin = .round
         lineLayer.layout?.lineCap = .round
         
-        let gradientStops = routeLineGradient(route, fractionTraveled: fractionTraveledForStops)
-        if let data = routeLineGradientExpression(gradientStops).data(using: .utf8),
-           let value = try? JSONSerialization.jsonObject(with: data, options: []) {
-            let _ = try? mapView.__map.setStyleLayerPropertyForLayerId(layerIdentifier,
-                                                                       property: "line-gradient",
-                                                                       value: value)
+        if let gradientStops = routeLineGradient(route, fractionTraveled: fractionTraveledForStops) {
+            lineLayer.paint?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops)))
         }
         
         var parentLayer: String? {
@@ -549,12 +545,7 @@ open class NavigationMapView: UIView {
         mapView.style.addLayer(layer: lineLayer, layerPosition: LayerPosition(below: parentLayerIndentifier))
         
         let gradientStops = routeCasingGradient(fractionTraveledForStops)
-        if let data = routeLineGradientExpression(gradientStops).data(using: .utf8),
-           let value = try? JSONSerialization.jsonObject(with: data, options: []) {
-            let _ = try? mapView.__map.setStyleLayerPropertyForLayerId(layerIdentifier,
-                                                                       property: "line-gradient",
-                                                                       value: value)
-        }
+        lineLayer.paint?.lineGradient = .expression(Expression.routeLineGradientExpression(gradientStops))
 
         return layerIdentifier
     }

@@ -207,23 +207,15 @@ extension NavigationMapView {
             guard let mainRouteLayerGradient = self.routeLineGradient(routeProgress.route, fractionTraveled: newFractionTraveled) else { return }
             let mainRouteCasingLayerGradient = self.routeCasingGradient(newFractionTraveled)
             
-            if let data = self.routeLineGradientExpression(mainRouteLayerGradient).data(using: .utf8),
-               let value = try? JSONSerialization.jsonObject(with: data, options: []) {
-                let _ = try? self.mapView.__map.setStyleLayerPropertyForLayerId(mainRouteLayerIdentifier,
-                                                                                property: "line-gradient",
-                                                                                value: value)
-            }
+            guard var mainRouteLineLayer = try? self.mapView.style.getLayer(with: mainRouteLayerIdentifier, type: LineLayer.self).get(),
+                  var mainRouteLineCasingLayer = try? self.mapView.style.getLayer(with: mainRouteCasingLayerIdentifier, type: LineLayer.self).get() else { return }
             
-            if let data = self.routeLineGradientExpression(mainRouteCasingLayerGradient).data(using: .utf8),
-               let value = try? JSONSerialization.jsonObject(with: data, options: []) {
-                let _ = try? self.mapView.__map.setStyleLayerPropertyForLayerId(mainRouteCasingLayerIdentifier,
-                                                                                property: "line-gradient",
-                                                                                value: value)
-            }
+            mainRouteLineLayer.paint?.lineGradient = .expression((Expression.routeLineGradientExpression(mainRouteLayerGradient)))
+            mainRouteLineCasingLayer.paint?.lineGradient = .expression((Expression.routeLineGradientExpression(mainRouteCasingLayerGradient)))
         })
     }
     
-    func routeLineGradient(_ route: Route, fractionTraveled: Double) -> [CGFloat: UIColor]? {
+    func routeLineGradient(_ route: Route, fractionTraveled: Double) -> [Double: UIColor]? {
         var gradientStops = [CGFloat: UIColor]()
         
         /**
@@ -313,17 +305,27 @@ extension NavigationMapView {
             filteredGradientStops[percentTraveled] = minStop.value
         }
         
-        return filteredGradientStops
+        var resultGradientStops = [Double: UIColor]()
+        filteredGradientStops.forEach {
+            resultGradientStops[Double($0.0)] = $0.1
+        }
+        
+        return resultGradientStops.filter({ $0.0 >= 0.0 })
     }
     
-    func routeCasingGradient(_ fractionTraveled: Double) -> [CGFloat: UIColor] {
+    func routeCasingGradient(_ fractionTraveled: Double) -> [Double: UIColor] {
         let percentTraveled = CGFloat(fractionTraveled)
         var gradientStops = [CGFloat: UIColor]()
         gradientStops[0.0] = traversedRouteColor
         gradientStops[percentTraveled.nextDown] = traversedRouteColor
-        gradientStops[percentTraveled] = routeCasingColor
+        gradientStops[percentTraveled != 0.0 ? percentTraveled : 1.0] = routeCasingColor
         
-        return gradientStops
+        var resultGradientStops = [Double: UIColor]()
+        gradientStops.forEach {
+            resultGradientStops[Double($0.0)] = $0.1
+        }
+        
+        return resultGradientStops.filter({ $0.0 >= 0.0 })
     }
     
     /**
@@ -342,24 +344,6 @@ extension NavigationMapView {
         default:
             return trafficUnknownColor
         }
-    }
-    
-    func routeLineGradientExpression(_ gradientStops: [CGFloat: UIColor]?) -> String {
-        var expression = "[\"interpolate\",[\"linear\"],[\"line-progress\"],"
-        let sortedGradientStops = gradientStops?.sorted(by: { $0.0 < $1.0 }).filter({ $0.0 >= 0.0 })
-        sortedGradientStops?.forEach {
-            let ciColor = CIColor(color: $0.value)
-            
-            let color = """
-                \($0.key),"rgba(\(ciColor.red * 255.0), \(ciColor.green * 255.0), \(ciColor.blue * 255.0), \(ciColor.alpha))",
-                """
-            
-            expression.append(color)
-        }
-        
-        expression.append("]")
-        
-        return expression
     }
     
     func addCongestion(to route: Route, legIndex: Int?) -> [Feature] {
