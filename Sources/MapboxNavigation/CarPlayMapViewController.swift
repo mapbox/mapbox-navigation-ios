@@ -203,7 +203,7 @@ public class CarPlayMapViewController: UIViewController {
         let pitch: CGFloat = 60
         if let altitude = altitude,
            let latitude = navigationMapView.mapView.locationManager.latestLocation?.internalLocation.coordinate.latitude {
-            camera.zoom = CGFloat(ZoomLevelForAltitude(altitude, pitch, latitude, .zero))
+            camera.zoom = CGFloat(ZoomLevelForAltitude(altitude, pitch, latitude, navigationMapView.mapView.bounds.size))
         }
         
         camera.pitch = pitch

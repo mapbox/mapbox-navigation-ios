@@ -325,7 +325,7 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
         let zoom = CGFloat(ZoomLevelForAltitude(120,
                                                 pitch,
                                                 location.coordinate.latitude,
-                                                navigationMapView?.bounds.size ?? .zero))
+                                                navigationMapView?.mapView.bounds.size ?? .zero))
         
         let camera = CameraOptions(center: location.coordinate,
                                    zoom: zoom,
