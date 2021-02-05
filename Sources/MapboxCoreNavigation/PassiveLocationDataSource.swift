@@ -213,9 +213,9 @@ extension TileEndpointConfiguration {
         }
         let skuTokenProvider = SkuTokenProvider(with: directions.credentials)
         
-        // TODO: Provide correct dataset.
+
         self.init(host: host,
-                  dataset: "mapbox/driving",
+                  dataset: "mapbox",    // TODO: Same as Android, double check the dataset is valid.
                   version: tilesVersion,
                   token: accessToken,
                   userAgent: URLSession.userAgent,
