@@ -23,8 +23,11 @@ open class PassiveLocationDataSource: NSObject {
         self.directions = directions
         
         let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
-        self.navigator = Navigator(profile: settingsProfile, config: NavigatorConfig() , customConfig: "", tilesConfig: TilesConfig())
-        
+        self.navigator = try! Navigator(profile: settingsProfile,
+                                        config: NavigatorConfig(),
+                                        customConfig: "",
+                                        tilesConfig: TilesConfig())
+
         self.systemLocationManager = systemLocationManager ?? NavigationLocationManager()
         
         super.init()
@@ -116,7 +119,10 @@ open class PassiveLocationDataSource: NSObject {
                                       endpointConfig: endpointConfig)
         
         let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
-        navigator = Navigator(profile: settingsProfile, config: NavigatorConfig() , customConfig: "", tilesConfig: tilesConfig)
+        navigator = try! Navigator(profile: settingsProfile,
+                                   config: NavigatorConfig(),
+                                   customConfig: "",
+                                   tilesConfig: tilesConfig)
         
         isConfigured = true
     }
@@ -135,7 +141,7 @@ open class PassiveLocationDataSource: NSObject {
 
     private func didUpdate(locations: [CLLocation]) {
         for location in locations {
-            navigator.updateLocation(for: FixLocation(location))
+            try! navigator.updateLocation(for: FixLocation(location))
         }
 
         guard let lastRawLocation = locations.last else {

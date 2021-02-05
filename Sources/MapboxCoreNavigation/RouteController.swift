@@ -23,8 +23,15 @@ open class RouteController: NSObject {
     }
 
     lazy var navigator: Navigator = {
-        let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
-        return Navigator(profile: settingsProfile, config: NavigatorConfig(), customConfig: "", tilesConfig: TilesConfig())
+        let settingsProfile = SettingsProfile(
+            application: ProfileApplication.kMobile,
+            platform: ProfilePlatform.KIOS
+        )
+
+        return try! Navigator(profile: settingsProfile,
+                              config: NavigatorConfig(),
+                              customConfig: "",
+                              tilesConfig: TilesConfig())
     }()
     
     public var indexedRoute: IndexedRoute {
@@ -222,13 +229,16 @@ open class RouteController: NSObject {
         let activeGuidanceOptions = ActiveGuidanceOptions(mode: mode(progress.routeOptions.profileIdentifier),
                                                           geometryEncoding: geometryEncoding(progress.routeOptions.shapeFormat),
                                                           waypoints: waypoints)
-        navigator.setRouteForRouteResponse(routeJSONString, route: 0, leg: UInt32(routeProgress.legIndex), options: activeGuidanceOptions)
+        try! navigator.setRouteForRouteResponse(routeJSONString,
+                                                route: 0,
+                                                leg: UInt32(routeProgress.legIndex),
+                                                options: activeGuidanceOptions)
     }
     
     /// updateRouteLeg is used to notify nav-native of the developer changing the active route-leg.
     private func updateRouteLeg(to value: Int) {
         let legIndex = UInt32(value)
-        if navigator.changeRouteLeg(forRoute: 0, leg: legIndex), let timestamp = location?.timestamp {
+        if try! navigator.changeRouteLeg(forRoute: 0, leg: legIndex), let timestamp = location?.timestamp {
             updateIndexes(status: navigator.status(at: timestamp), progress: routeProgress)
         }
     }
@@ -242,7 +252,7 @@ open class RouteController: NSObject {
         
         rawLocation = location
         
-        locations.forEach { navigator.updateLocation(for: FixLocation($0)) }
+        locations.forEach { try! navigator.updateLocation(for: FixLocation($0)) }
 
         let status = navigator.status(at: location.timestamp)
         
@@ -383,15 +393,15 @@ open class RouteController: NSObject {
     }
     
     public func enableLocationRecording() {
-        navigator.toggleHistoryFor(onOff: true)
+        try! navigator.toggleHistoryFor(onOff: true)
     }
     
     public func disableLocationRecording() {
-        navigator.toggleHistoryFor(onOff: false)
+        try! navigator.toggleHistoryFor(onOff: false)
     }
     
     public func locationHistory() -> String? {
-        return navigator.getHistory()
+        return try? String(decoding: navigator.getHistory(), as: UTF8.self)
     }
 }
 
