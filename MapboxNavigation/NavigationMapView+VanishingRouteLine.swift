@@ -306,11 +306,12 @@ extension NavigationMapView {
         }
         
         var resultGradientStops = [Double: UIColor]()
-        filteredGradientStops.forEach {
-            resultGradientStops[Double($0.0)] = $0.1
+
+        filteredGradientStops.filter({ $0.0 >= 0.0 }).forEach {
+            resultGradientStops[Double($0.0).round(16)] = $0.1
         }
         
-        return resultGradientStops.filter({ $0.0 >= 0.0 })
+        return resultGradientStops
     }
     
     func routeCasingGradient(_ fractionTraveled: Double) -> [Double: UIColor] {
@@ -321,11 +322,11 @@ extension NavigationMapView {
         gradientStops[percentTraveled != 0.0 ? percentTraveled : 1.0] = routeCasingColor
         
         var resultGradientStops = [Double: UIColor]()
-        gradientStops.forEach {
+        gradientStops.filter({ $0.0 >= 0.0 }).forEach {
             resultGradientStops[Double($0.0)] = $0.1
         }
         
-        return resultGradientStops.filter({ $0.0 >= 0.0 })
+        return resultGradientStops
     }
     
     /**
