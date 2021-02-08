@@ -210,8 +210,8 @@ extension NavigationMapView {
             guard var mainRouteLineLayer = try? self.mapView.style.getLayer(with: mainRouteLayerIdentifier, type: LineLayer.self).get(),
                   var mainRouteLineCasingLayer = try? self.mapView.style.getLayer(with: mainRouteCasingLayerIdentifier, type: LineLayer.self).get() else { return }
             
-            mainRouteLineLayer.paint?.lineGradient = .expression((Expression.routeLineGradientExpression(mainRouteLayerGradient)))
-            mainRouteLineCasingLayer.paint?.lineGradient = .expression((Expression.routeLineGradientExpression(mainRouteCasingLayerGradient)))
+            mainRouteLineLayer.paint?.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteLayerGradient))
+            mainRouteLineCasingLayer.paint?.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteCasingLayerGradient))
         })
     }
     
@@ -261,8 +261,13 @@ extension NavigationMapView {
             if index == congestionSegments.startIndex {
                 distanceTraveled = distanceTraveled + distance
 
-                let segmentEndPercentTraveled = CGFloat((distanceTraveled / route.distance))
+                let segmentEndPercentTraveled = CGFloat(distanceTraveled / route.distance)
                 gradientStops[segmentEndPercentTraveled.nextDown] = associatedCongestionColor
+                
+                if index + 1 < congestionSegments.count {
+                    gradientStops[segmentEndPercentTraveled.nextUp] = congestionColor(for: congestionSegments[index + 1].properties?["congestion"] as? String)
+                }
+                
                 continue
             }
             
@@ -281,13 +286,17 @@ extension NavigationMapView {
              the starting and ending percent values traveled for this segment
              will be a fractional amount more/less than the actual values.
              */
-            let segmentStartPercentTraveled = CGFloat((distanceTraveled / route.distance))
+            let segmentStartPercentTraveled = CGFloat(distanceTraveled / route.distance)
             gradientStops[segmentStartPercentTraveled.nextUp] = associatedCongestionColor
             
             distanceTraveled = distanceTraveled + distance
             
-            let segmentEndPercentTraveled = CGFloat((distanceTraveled / route.distance))
+            let segmentEndPercentTraveled = CGFloat(distanceTraveled / route.distance)
             gradientStops[segmentEndPercentTraveled.nextDown] = associatedCongestionColor
+            
+            if index + 1 < congestionSegments.count {
+                gradientStops[segmentEndPercentTraveled.nextUp] = congestionColor(for: congestionSegments[index + 1].properties?["congestion"] as? String)
+            }
         }
         
         let percentTraveled = CGFloat(fractionTraveled)
