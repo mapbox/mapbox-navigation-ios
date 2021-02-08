@@ -121,5 +121,52 @@ extension VisualInstruction {
         
         return instructionLabel.attributedText
     }
+
+    /// Returns a `CPImageSet` representing the maneuver lane configuration.
+    @available(iOS 12.0, *)
+    public func lanesImageSet(side: DrivingSide, direction: ManeuverDirection?, scale: CGFloat)  -> CPImageSet? {
+        // create lanes visual banner
+        // The `lanesImageMaxSize` size is an estimate of the CarPlay Lane Configuration View
+        // The dimensions are specified in the CarPlay App Programming Guide - https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf
+        let lanesImageMaxSize = CGSize(width: 120, height: 18)
+
+        let lightUsableColor: UIColor
+        let lightUnuseableColor: UIColor
+        let darkUsableColor: UIColor
+        let darkUnuseableColor: UIColor
+
+        if #available(iOS 13.0, *) {
+            let lightTraitCollection = UITraitCollection(userInterfaceStyle: .light)
+            let darkTraitCollection = UITraitCollection(userInterfaceStyle: .dark)
+
+            lightUsableColor = LaneView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).primaryColor.resolvedColor(with: lightTraitCollection)
+            lightUnuseableColor = LaneView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).secondaryColor.resolvedColor(with: lightTraitCollection)
+
+            darkUsableColor = LaneView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).primaryColor.resolvedColor(with: darkTraitCollection)
+            darkUnuseableColor = LaneView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).secondaryColor.resolvedColor(with: darkTraitCollection)
+        } else {
+            // No light/dark traits are supported
+            lightUsableColor = LaneView.appearance().primaryColor
+            lightUnuseableColor = LaneView.appearance().secondaryColor
+
+            darkUsableColor = LaneView.appearance().primaryColor
+            darkUnuseableColor = LaneView.appearance().secondaryColor
+        }
+
+        var lightLanesImage = lanesImage(side: side, direction: direction, useableColor: lightUsableColor, unuseableColor: lightUnuseableColor, size: CGSize(width: CGFloat(laneComponents.count) * lanesImageMaxSize.height, height: lanesImageMaxSize.height), scale: scale)
+
+        var darkLanesImage = lanesImage(side: side, direction: direction, useableColor: darkUsableColor, unuseableColor: darkUnuseableColor, size: CGSize(width: CGFloat(laneComponents.count) * lanesImageMaxSize.height, height: lanesImageMaxSize.height), scale: scale)
+
+        if let image = lightLanesImage, let darkImage = darkLanesImage, image.size.width > lanesImageMaxSize.width {
+            let aspectRatio = lanesImageMaxSize.width / image.size.width
+            let scaledSize = CGSize(width: lanesImageMaxSize.width, height: lanesImageMaxSize.height * aspectRatio)
+            lightLanesImage = image.scaled(to: scaledSize)
+            darkLanesImage = darkImage.scaled(to: scaledSize)
+        }
+        if let image = lightLanesImage, let darkImage = darkLanesImage {
+            return CPImageSet(lightContentImage: image, darkContentImage: darkImage)
+        }
+        return nil
+    }
     #endif
 }

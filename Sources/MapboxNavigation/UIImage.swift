@@ -34,7 +34,7 @@ extension UIImage {
         }
     }
 
-    func scaled(_ size: CGSize) -> UIImage? {
+    func scaled(to: CGSize) -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(size, false, scale)
         self.draw(in: CGRect(origin: .zero, size: size))
 

@@ -122,8 +122,17 @@ open class LaneView: UIView {
                     }
                 } else {
                     // pick the color of the two parts (straight & turn) depending on which direction is being suggested
-                    let turnArrowColor = (self.maneuverDirection != ManeuverDirection.straightAhead) ? appropriatePrimaryColor : appropriateSecondaryColor
-                    let straightArrowColor = (self.maneuverDirection == ManeuverDirection.straightAhead) ? appropriatePrimaryColor : appropriateSecondaryColor
+                    let turnArrowColor: UIColor
+                    let straightArrowColor: UIColor
+                    switch self.maneuverDirection {
+                    case .straightAhead:
+                        straightArrowColor = appropriatePrimaryColor
+                        turnArrowColor = appropriateSecondaryColor
+                    default:
+                        straightArrowColor = appropriateSecondaryColor
+                        turnArrowColor = appropriatePrimaryColor
+                    }
+
                     LanesStyleKit.drawLaneRightOnly(frame: bounds, resizing: resizing, turnArrowColor: turnArrowColor, straightArrowColor: straightArrowColor)
                 }
             } else if indications.isSuperset(of: [.straightAhead, .sharpLeft]) || indications.isSuperset(of: [.straightAhead, .left]) || indications.isSuperset(of: [.straightAhead, .slightLeft]) {
@@ -141,8 +150,18 @@ open class LaneView: UIView {
                     LanesStyleKit.drawLaneSlightRight(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor)
                 } else {
                     // pick the color of the two parts (straight & turn) depending on which direction is being suggested
-                    let turnArrowColor = (self.maneuverDirection != ManeuverDirection.straightAhead) ? appropriatePrimaryColor : appropriateSecondaryColor
-                    let straightArrowColor = (self.maneuverDirection == ManeuverDirection.straightAhead) ? appropriatePrimaryColor : appropriateSecondaryColor
+                    let turnArrowColor: UIColor
+                    let straightArrowColor: UIColor
+
+                    switch self.maneuverDirection {
+                    case .straightAhead:
+                        straightArrowColor = appropriatePrimaryColor
+                        turnArrowColor = appropriateSecondaryColor
+                    default:
+                        straightArrowColor = appropriateSecondaryColor
+                        turnArrowColor = appropriatePrimaryColor
+                    }
+
                     LanesStyleKit.drawLaneRightOnly(frame: bounds, resizing: resizing, turnArrowColor: turnArrowColor, straightArrowColor: straightArrowColor, flipHorizontally: true)
                 }
             } else if indications.description.components(separatedBy: ",").count >= 2 {
