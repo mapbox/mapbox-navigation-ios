@@ -1,3 +1,5 @@
+import CoreLocation
+import CoreGraphics
 import Foundation
 import MapboxMaps
 import MapboxDirections

@@ -1,6 +1,5 @@
 import Foundation
 import CoreLocation
-import MapboxCommon
 import MapboxNavigationNative
 import MapboxMobileEvents
 import MapboxDirections

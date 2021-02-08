@@ -1,3 +1,4 @@
+import CoreLocation
 import MapboxMaps
 
 // TODO: Implement the ability to highlight/unhighlight buildings in 2D/3D.

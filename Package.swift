@@ -6,35 +6,37 @@ import PackageDescription
 let package = Package(
     name: "MapboxNavigation",
     defaultLocalization: "en",
-    platforms: [.iOS(.v10)],
+    platforms: [.iOS(.v11)],
     products: [
-        // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "MapboxCoreNavigation",
             targets: [
                 "CMapboxCoreNavigation",
                 "MapboxCoreNavigation",
             ]),
+        .library(
+            name: "MapboxNavigation",
+            targets: [
+                "MapboxNavigation"
+            ])
     ],
     dependencies: [
-        // Dependencies declare other packages that this package depends on.
         .package(name: "MapboxAccounts", url: "https://github.com/mapbox/mapbox-accounts-ios.git", from: "2.3.1"),
-        .package(name: "MapboxCommon", url: "https://github.com/mapbox/mapbox-common-ios.git", .exact("10.0.0-beta.8")),
-        .package(name: "MapboxDirections", url: "https://github.com/mapbox/mapbox-directions-swift.git", from: "1.2.0"),
-        .package(name: "MapboxMobileEvents", url: "https://github.com/mapbox/mapbox-events-ios.git", from: "0.10.6"),
+        .package(name: "MapboxDirections", url: "https://github.com/mapbox/mapbox-directions-swift.git", .branch("release-v2.0")),
+        .package(name: "MapboxMobileEvents", url: "https://github.com/mapbox/mapbox-events-ios.git", from: "0.12.0-alpha.1"),
         .package(name: "MapboxNavigationNative", url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", from: "40.0.2"),
+        .package(name: "MapboxMaps", url: "https://github.com/mapbox/mapbox-maps-ios.git", from: "10.0.0-beta.12"),
+        .package(name: "Solar", url: "https://github.com/ceeK/Solar.git", .branch("master")),
+        .package(name: "MapboxSpeech", url: "https://github.com/mapbox/mapbox-speech-swift.git", from: "1.0.0"),
         .package(name: "Quick", url: "https://github.com/Quick/Quick.git", from: "2.0.0"),
         .package(name: "Nimble", url: "https://github.com/Quick/Nimble.git", from: "8.0.0"),
     ],
     targets: [
-        // Targets are the basic building blocks of a package. A target can define a module or a test suite.
-        // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "MapboxCoreNavigation",
             dependencies: [
                 "CMapboxCoreNavigation",
                 "MapboxAccounts",
-                "MapboxCommon",
                 "MapboxDirections",
                 "MapboxMobileEvents",
                 "MapboxNavigationNative",
@@ -45,6 +47,16 @@ let package = Package(
             dependencies: [
                 "MapboxAccounts",
             ]),
+        .target(
+            name: "MapboxNavigation",
+            dependencies: [
+                "MapboxCoreNavigation",
+                "MapboxDirections",
+                "MapboxMaps",
+                "MapboxSpeech",
+                "Solar",
+            ],
+            exclude: ["Info.plist"]),
         .testTarget(
             name: "MapboxCoreNavigationTests",
             dependencies: [
@@ -58,4 +70,3 @@ let package = Package(
             ]),
     ]
 )
-

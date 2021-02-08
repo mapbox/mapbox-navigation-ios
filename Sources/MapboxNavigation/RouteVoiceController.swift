@@ -1,5 +1,6 @@
 import Foundation
 import AVFoundation
+import UIKit
 import MapboxDirections
 import MapboxCoreNavigation
 import MapboxSpeech

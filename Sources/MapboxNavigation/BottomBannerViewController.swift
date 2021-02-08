@@ -1,3 +1,4 @@
+import CoreLocation
 import UIKit
 import MapboxCoreNavigation
 import MapboxDirections

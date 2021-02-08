@@ -15,17 +15,26 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-common-ios.git",
         "state": {
           "branch": null,
-          "revision": "4ac87e66fe51917de3b8d3e7978490617ba76ec5",
-          "version": "10.0.0-beta.8"
+          "revision": "49cb6783a3ae9e1a4bcda66e48e39d2c5c8cc4c5",
+          "version": "10.0.0-beta.9.2"
+        }
+      },
+      {
+        "package": "MapboxCoreMaps",
+        "repositoryURL": "https://github.com/mapbox/mapbox-core-maps-ios.git",
+        "state": {
+          "branch": null,
+          "revision": "85e5a0347c984d1afb59519e212fec0f3970d677",
+          "version": "10.0.0-beta.14.2"
         }
       },
       {
         "package": "MapboxDirections",
         "repositoryURL": "https://github.com/mapbox/mapbox-directions-swift.git",
         "state": {
-          "branch": null,
-          "revision": "457fdba8cd39783d5ffb2c2ccdfa033d38e7cc8b",
-          "version": "1.2.0"
+          "branch": "release-v2.0",
+          "revision": "9af4ddd923031fb283e30c401db27e11c0058098",
+          "version": null
         }
       },
       {
@@ -33,8 +42,17 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-events-ios.git",
         "state": {
           "branch": null,
-          "revision": "6e4aa13817d59038bf762032e938fe0f7b95b589",
-          "version": "0.10.8"
+          "revision": "13d72356759a883a98d2a3d28a39d07fdd02700c",
+          "version": "0.12.0-alpha.1"
+        }
+      },
+      {
+        "package": "MapboxMaps",
+        "repositoryURL": "https://github.com/mapbox/mapbox-maps-ios.git",
+        "state": {
+          "branch": null,
+          "revision": "0565cbc82f736b05311cda7904846368a46237cb",
+          "version": "10.0.0-beta.13.1"
         }
       },
       {
@@ -44,6 +62,15 @@
           "branch": null,
           "revision": "2c6bd1e94975df5c0b6f75e459e9defebcba5468",
           "version": "40.0.2"
+        }
+      },
+      {
+        "package": "MapboxSpeech",
+        "repositoryURL": "https://github.com/mapbox/mapbox-speech-swift.git",
+        "state": {
+          "branch": null,
+          "revision": "aadf7ee8d71ba3ee2159df7b438793c8c5834400",
+          "version": "1.0.0"
         }
       },
       {
@@ -74,6 +101,15 @@
         }
       },
       {
+        "package": "Solar",
+        "repositoryURL": "https://github.com/ceeK/Solar.git",
+        "state": {
+          "branch": "master",
+          "revision": "f0a693e138b22743317c56d4edb2cc00cc987a2f",
+          "version": null
+        }
+      },
+      {
         "package": "SwiftCLI",
         "repositoryURL": "https://github.com/jakeheis/SwiftCLI",
         "state": {
@@ -87,8 +123,8 @@
         "repositoryURL": "https://github.com/mapbox/turf-swift.git",
         "state": {
           "branch": null,
-          "revision": "ed6f8dd1036c7ece722c7b2548f1f454f491d91e",
-          "version": "1.2.0"
+          "revision": "d347d3651823422bd7b645d8691f3816e26cac73",
+          "version": "2.0.0-alpha.2"
         }
       }
     ]

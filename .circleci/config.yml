@@ -211,7 +211,7 @@ jobs:
           steps:
             - run: for ip in $(dig @8.8.8.8 github.com +short); do ssh-keyscan github.com,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts
             - run: mv MapboxNavigation.xcodeproj MapboxNavigation.xcodeproj-aside
-            - run: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigation build <<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >>
+            - run: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigation-Package build <<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >>
             - run: mv MapboxNavigation.xcodeproj-aside MapboxNavigation.xcodeproj
       - when:
           condition: << parameters.codecoverage >>
@@ -275,8 +275,9 @@ workflows:
           name: "Xcode_12.4_iOS_14.4_SPM"
           xcode: "12.4.0"
           iOS: "14.4"
-          spm: true
           device: "iPhone 8 Plus"
+          spm: true
+          codecoverage: true
       - pod-job:
           name: "Xcode_12.0_iOS_14.0_CP_install"
           update: false
