@@ -84,7 +84,7 @@ step-library:
   - &install-dependencies
       unless:
         condition:
-          equal: [ "12.0.0", << parameters.xcode >> ]
+          equal: [ "12.1.0", << parameters.xcode >> ]
         steps:
           run:
             name: Install Dependencies
@@ -95,7 +95,7 @@ step-library:
   - &install-dependencies-12
       when:
         condition:
-          equal: [ "12.0.0", << parameters.xcode >> ]
+          equal: [ "12.1.0", << parameters.xcode >> ]
         steps:
           run:
             name: Install Dependencies
@@ -276,10 +276,9 @@ workflows:
   workflow:
     jobs:
       - build-job:
-          name: "Xcode_12.0_iOS_14.0"
-          xcode: "12.0.0"
-          iOS: "14.0"
-          test: false
+          name: "Xcode_12.1_iOS_14.1"
+          xcode: "12.1.0"
+          iOS: "14.1"
           device: "iPhone 8 Plus"
       - build-job:
           name: "Xcode_12.0_iOS_14.0_SPM"

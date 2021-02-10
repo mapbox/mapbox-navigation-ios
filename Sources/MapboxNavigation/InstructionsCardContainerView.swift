@@ -71,9 +71,7 @@ public class InstructionsCardContainerView: StylableView {
     @objc dynamic public var highlightedBackgroundColor: UIColor = UIColor(red: 0.26, green: 0.39, blue: 0.98, alpha: 1.0)
     
     public weak var delegate: InstructionsCardContainerViewDelegate?
-    
-    private var gradientLayer: CAGradientLayer!
-    
+
     required public init() {
         super.init(frame: .zero)
     }
@@ -163,6 +161,12 @@ public class InstructionsCardContainerView: StylableView {
     
     override public func layoutSubviews() {
         super.layoutSubviews()
+
+        let gradientViews = [self, instructionsCardView, lanesView, nextBannerView]
+        gradientViews.forEach { view in
+            guard let layer = gradientLayer(for: view) else { return }
+            layer.frame = view.bounds
+        }
     }
     
     private func gradientLayer(for view: UIView, with colors:[CGColor]? = nil) -> CAGradientLayer? {

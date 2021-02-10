@@ -226,6 +226,7 @@ open class StyleManager {
         forceRefreshAppearance()
     }
     
+    // workaround to refresh appearance by removing all views and then adding them again
     func forceRefreshAppearance() {
         for window in UIApplication.shared.windows {
             for view in window.subviews {
