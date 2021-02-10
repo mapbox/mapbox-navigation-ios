@@ -657,6 +657,7 @@ class FakeCPInterfaceController: CPInterfaceController {
         }
     }
     
+    @available(iOS 14.0, *)
     override func setRootTemplate(_ rootTemplate: CPTemplate, animated: Bool, completion: ((Bool, Error?) -> Void)? = nil) {
         _rootTemplate = rootTemplate
         completion?(true, nil)
