@@ -133,7 +133,7 @@ open class LaneView: UIView {
                         turnArrowColor = appropriatePrimaryColor
                     }
 
-                    LanesStyleKit.drawLaneRightOnly(frame: bounds, resizing: resizing, turnArrowColor: turnArrowColor, straightArrowColor: straightArrowColor)
+                    LanesStyleKit.drawLaneRightOnly(frame: bounds, resizing: resizing, primaryColor: turnArrowColor, secondaryColor: straightArrowColor)
                 }
             } else if indications.isSuperset(of: [.straightAhead, .sharpLeft]) || indications.isSuperset(of: [.straightAhead, .left]) || indications.isSuperset(of: [.straightAhead, .slightLeft]) {
                 if !isValid {
@@ -162,7 +162,7 @@ open class LaneView: UIView {
                         turnArrowColor = appropriatePrimaryColor
                     }
 
-                    LanesStyleKit.drawLaneRightOnly(frame: bounds, resizing: resizing, turnArrowColor: turnArrowColor, straightArrowColor: straightArrowColor, flipHorizontally: true)
+                    LanesStyleKit.drawLaneRightOnly(frame: bounds, resizing: resizing, primaryColor: turnArrowColor, secondaryColor: straightArrowColor, flipHorizontally: true)
                 }
             } else if indications.description.components(separatedBy: ",").count >= 2 {
                 // Hack:
@@ -218,7 +218,7 @@ open class LaneView: UIView {
         
         #if TARGET_INTERFACE_BUILDER
         isValid = true
-        LanesStyleKit.drawLaneRightOnly(turnArrowColor: appropriatePrimaryColor, straightArrowColor: appropriateSecondaryColor)
+        LanesStyleKit.drawLaneRightOnly(primaryColor: appropriatePrimaryColor, secondaryColor: appropriateSecondaryColor)
         #endif
     }
 }
