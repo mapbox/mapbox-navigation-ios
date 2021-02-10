@@ -127,7 +127,7 @@ extension VisualInstruction {
     public func lanesImageSet(side: DrivingSide, direction: ManeuverDirection?, scale: CGFloat)  -> CPImageSet? {
         // create lanes visual banner
         // The `lanesImageMaxSize` size is an estimate of the CarPlay Lane Configuration View
-        // The dimensions are specified in the CarPlay App Programming Guide - https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf
+        // The dimensions are specified in the CarPlay App Programming Guide - https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf#page=38
         let lanesImageMaxSize = CGSize(width: 120, height: 18)
 
         let lightUsableColor: UIColor
