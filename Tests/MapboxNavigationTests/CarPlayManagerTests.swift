@@ -639,5 +639,27 @@ class FakeCPInterfaceController: CPInterfaceController {
             return templateStack
         }
     }
+    
+    var _rootTemplate = CPTemplate()
+    override var rootTemplate: CPTemplate {
+        if #available(iOS 14.0, *) {
+            return _rootTemplate
+        } else {
+            return super.rootTemplate
+        }
+    }
+    
+    override func setRootTemplate(_ rootTemplate: CPTemplate, animated: Bool) {
+        if #available(iOS 14.0, *) {
+            _rootTemplate = rootTemplate
+        } else {
+            super.setRootTemplate(rootTemplate, animated: animated)
+        }
+    }
+    
+    override func setRootTemplate(_ rootTemplate: CPTemplate, animated: Bool, completion: ((Bool, Error?) -> Void)? = nil) {
+        _rootTemplate = rootTemplate
+        completion?(true, nil)
+    }
 }
 #endif
