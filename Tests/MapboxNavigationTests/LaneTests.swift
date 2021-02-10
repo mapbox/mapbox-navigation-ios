@@ -31,7 +31,7 @@ class LaneTests: FBSnapshotTestCase {
                 let groupView = UIStackView(orientation: .vertical, autoLayout: true)
                 groupView.alignment = .center
                 
-                let laneView = LaneView(indications: lane.indications, isUsable: true)
+                let laneView = LaneView(indications: lane.indications, isUsable: true, direction: ManeuverDirection(rawValue: lane.indications.description))
                 laneView.drivingSide = lane.drivingSide
                 
                 laneView.backgroundColor = .white
@@ -64,26 +64,27 @@ struct TestableLane {
     var description: String
     var indications: LaneIndication
     var drivingSide: DrivingSide
+    var maneuverDirection: ManeuverDirection
     
     static func testableLanes(drivingSide: DrivingSide) -> [TestableLane] {
-        let namedIndications: [(String, LaneIndication)]
+        let namedIndications: [(String, LaneIndication, ManeuverDirection)]
         
         namedIndications = [
-            ("Sharp Left, Straight Ahead",      [.sharpLeft, .straightAhead]),
-            ("Straight Ahead, Sharp Left",      [.straightAhead, .sharpLeft]),
-            ("Left",                            [.left]),
-            ("Slight Left",                     [.slightLeft]),
-            ("Sharp Left",                      [.sharpLeft]),
-            ("Straight Ahead",                  [.straightAhead]),
-            ("u-Turn",                          [.uTurn]),
-            ("Sharp Right",                     [.sharpRight]),
-            ("Slight Right",                    [.slightRight]),
-            ("Right",                           [.right]),
-            ("Sharp Right, Straight Ahead",     [.sharpRight, .straightAhead]),
-            ("Straight Ahead, Sharp Right",     [.straightAhead, .sharpRight]),
+            ("Sharp Left, Straight Ahead",      [.sharpLeft, .straightAhead], .sharpLeft),
+            ("Straight Ahead, Sharp Left",      [.straightAhead, .sharpLeft], .straightAhead),
+            ("Left",                            [.left], .left),
+            ("Slight Left",                     [.slightLeft], .slightLeft),
+            ("Sharp Left",                      [.sharpLeft], .sharpLeft),
+            ("Straight Ahead",                  [.straightAhead], .straightAhead),
+            ("u-Turn",                          [.uTurn], .uTurn),
+            ("Sharp Right",                     [.sharpRight], .sharpRight),
+            ("Slight Right",                    [.slightRight], .slightRight),
+            ("Right",                           [.right], .right),
+            ("Sharp Right, Straight Ahead",     [.sharpRight, .straightAhead], .sharpRight),
+            ("Straight Ahead, Sharp Right",     [.straightAhead, .sharpRight], .straightAhead),
         ]
         
-        return namedIndications.map { TestableLane(description: $0.0, indications: $0.1, drivingSide: drivingSide) }
+        return namedIndications.map { TestableLane(description: $0.0, indications: $0.1, drivingSide: drivingSide, maneuverDirection: $0.2) }
     }
 }
 

@@ -117,7 +117,7 @@ extension UIView {
     
     var imageRepresentation: UIImage? {
         let size = CGSize(width: frame.size.width, height: frame.size.height)
-        UIGraphicsBeginImageContextWithOptions(size, false, UIScreen.main.scale)
+        UIGraphicsBeginImageContextWithOptions(size, false, (window?.screen ?? UIScreen.main).scale)
         guard let currentContext = UIGraphicsGetCurrentContext() else { return nil }
         layer.render(in:currentContext)
         let image = UIGraphicsGetImageFromCurrentImageContext()

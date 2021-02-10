@@ -663,6 +663,13 @@ extension CarPlayManager: CPMapTemplateDelegate {
             interfaceController.popToRootTemplate(animated: animated)
         }
     }
+
+    public func mapTemplate(_ mapTemplate: CPMapTemplate, displayStyleFor maneuver: CPManeuver) -> CPManeuverDisplayStyle {
+        if let visualInstruction = maneuver.userInfo as? VisualInstruction, visualInstruction.containsLaneIndications {
+            return .symbolOnly
+        }
+        return []
+    }
 }
 
 // MARK: CarPlayNavigationDelegate

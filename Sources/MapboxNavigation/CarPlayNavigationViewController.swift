@@ -433,25 +433,35 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
         
         var maneuvers: [CPManeuver] = [primaryManeuver]
         
-        // Add tertiary text if available. TODO: handle lanes.
-        if let tertiaryInstruction = visualInstruction.tertiaryInstruction, tertiaryInstruction.laneComponents.isEmpty {
+        // Add tertiary information, if available
+        if let tertiaryInstruction = visualInstruction.tertiaryInstruction {
             let tertiaryManeuver = CPManeuver()
-            tertiaryManeuver.symbolSet = tertiaryInstruction.maneuverImageSet(side: visualInstruction.drivingSide)
-            
-            if let text = tertiaryInstruction.text {
-                tertiaryManeuver.instructionVariants = [text]
+            if tertiaryInstruction.containsLaneIndications {
+                // add lanes visual banner
+                if let imageSet = visualInstruction.tertiaryInstruction?.lanesImageSet(side: visualInstruction.drivingSide, direction: visualInstruction.primaryInstruction.maneuverDirection, scale: (carPlayManager.carWindow?.screen ?? UIScreen.main).scale) {
+                    tertiaryManeuver.symbolSet = imageSet
+                }
+
+                tertiaryManeuver.userInfo = tertiaryInstruction
+            } else {
+                // add tertiary maneuver text
+                tertiaryManeuver.symbolSet = tertiaryInstruction.maneuverImageSet(side: visualInstruction.drivingSide)
+
+                if let text = tertiaryInstruction.text {
+                    tertiaryManeuver.instructionVariants = [text]
+                }
+                if let attributedTertiary = tertiaryInstruction.carPlayManeuverLabelAttributedText(bounds: bounds, shieldHeight: shieldHeight, window: carPlayManager.carWindow) {
+                    let attributedTertiary = NSMutableAttributedString(attributedString: attributedTertiary)
+                    attributedTertiary.canonicalizeAttachments(maximumImageSize: maximumImageSize, imageRendererFormat: imageRendererFormat)
+                    tertiaryManeuver.attributedInstructionVariants = [attributedTertiary]
+                }
             }
-            if let attributedTertiary = tertiaryInstruction.carPlayManeuverLabelAttributedText(bounds: bounds, shieldHeight: shieldHeight, window: carPlayManager.carWindow) {
-                let attributedTertiary = NSMutableAttributedString(attributedString: attributedTertiary)
-                attributedTertiary.canonicalizeAttachments(maximumImageSize: maximumImageSize, imageRendererFormat: imageRendererFormat)
-                tertiaryManeuver.attributedInstructionVariants = [attributedTertiary]
-            }
-            
+
             if let upcomingStep = navigationService.routeProgress.currentLegProgress.upcomingStep {
                 let distance = Measurement(distance: upcomingStep.distance).localized()
                 tertiaryManeuver.initialTravelEstimates = CPTravelEstimates(distanceRemaining: distance, timeRemaining: upcomingStep.expectedTravelTime)
             }
-            
+
             maneuvers.append(tertiaryManeuver)
         }
         
