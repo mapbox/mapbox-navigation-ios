@@ -1,5 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v1.3.0
+
+* MapboxCoreNavigation can now be installed using Swift Package Manager. ([#2771](https://github.com/mapbox/mapbox-navigation-ios/pull/2771))
+
 ## v1.2.1
 
 * Increased the minimum versions of `MapboxNavigationNative` to v30.0 and `MapboxCommon` to v9.2.0. ([#2793](https://github.com/mapbox/mapbox-navigation-ios/pull/2793))
