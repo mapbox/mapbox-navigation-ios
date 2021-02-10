@@ -446,7 +446,7 @@ class RouteMapViewController: UIViewController {
         if overviewing {
             insets += NavigationMapView.courseViewMinimumInsets
             
-            let routeLineWidths = RouteLineWidthByZoomLevel.compactMap { $0.value }
+            let routeLineWidths = RouteLineWidthByZoomLevel.map { $0.value }
             insets += UIEdgeInsets(floatLiteral: Double(routeLineWidths.max() ?? 0))
         } else if navigationMapView.tracksUserCourse {
             // Puck position calculation - position it just above the bottom of the content area.

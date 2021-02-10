@@ -4,9 +4,9 @@
 
 ### Other changes
 
-* Renamed public constant `Constants.MBRouteLineWidthByZoomLevel` to public variable `Constants.MBRouteLineWidthByZoomLevel`, which now accepts `Double` for keys and values.
-* Renamed public property `MBCurrentLegAttribute` to `CurrentLegAttribute`.
-* Renamed public property `MBCongestionAttribute` to `CongestionAttribute`.
+* Renamed public constant `Constants.MBRouteLineWidthByZoomLevel` to public variable `Constants.MBRouteLineWidthByZoomLevel`, which now accepts `Double` for keys and values. [#17](https://github.com/mapbox/mapbox-navigation-ios-internal/pull/17)
+* Renamed public property `MBCurrentLegAttribute` to `CurrentLegAttribute`. [#17](https://github.com/mapbox/mapbox-navigation-ios-internal/pull/17)
+* Renamed public property `MBCongestionAttribute` to `CongestionAttribute`. [#17](https://github.com/mapbox/mapbox-navigation-ios-internal/pull/17)
 
 ## v1.3.0
 
