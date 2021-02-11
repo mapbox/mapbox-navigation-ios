@@ -50,12 +50,13 @@ public class JunctionView: UIImageView {
                 let stringURL = baseURLString + "&access_token=" + accessToken
 
                 guard let guidanceViewImageURL = URL(string: stringURL) else { return }
-                imageRepository.imageWithURL(guidanceViewImageURL, cacheKey: guidanceView.cacheKey!) { [unowned self] (downloadedImage) in
-                    
-                    self.isCurrentlyVisible = true
-                    self.isHidden = !self.isCurrentlyVisible
-                    
+                imageRepository.imageWithURL(guidanceViewImageURL, cacheKey: guidanceView.cacheKey!) { [weak self] (downloadedImage) in
                     DispatchQueue.main.async {
+                        guard let self = self else { return }
+                        
+                        self.isCurrentlyVisible = true
+                        self.isHidden = !self.isCurrentlyVisible
+                        
                         self.image = downloadedImage
                         self.show(animated: true)
                     }
