@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
 
   # ―――  Spec License  ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.license = { :type => "ISC", :file => "LICENSE.md" }
+  s.license = { :type => "Mapbox Terms of Service", :file => "LICENSE.md" }
 
   # ――― Author Metadata  ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
