@@ -2,11 +2,38 @@
 
 ## v2.0.0
 
+### Packaging
+
+* Mapbox Navigation SDK for iOS no longer depends on `Mapbox-iOS-SDK`.
+
+### Map
+
+* `MBXAccessToken` is now required for `MapboxMaps`, and must be set in the Info.plist file.
+
+### Location tracking
+
+* `PassiveLocationManager` now conforms to `LocationProvider` protocol instead of `MGLLocationManager`.
+* Type of `PassiveLocationManager.delegate` property was changed from `MGLLocationManagerDelegate` to `LocationProviderDelegate`.
+* `PassiveLocationManager.accuracyAuthorization()` was replaced with `PassiveLocationManager.accuracyAuthorization` property, which now returns `CLAccuracyAuthorization` instead of `MBNavigationAccuracyAuthorization`.
+
 ### Other changes
 
+* Removed obsoleted `NavigationMapView.navigationMapDelegate`, which was replaced by `NavigationMapView.navigationMapViewDelegate`.
+* Removed deprecated `InstructionsBannerViewDelegate.didDragInstructionsBanner(_:)` method.
+* Removed `NavigationAnnotation`.
+* `NavigationMapView.updateCourseTracking(location:camera:animated:)` no longer accepts `MGLMapCamera` as parameter, and uses `CameraOptions` instead.
+* `NavigationMapView.showsUserLocation` was removed, because `NavigationMapView` is no longer inherited from `MGLMapView`. `NavigationMapView.mapView` is now exposed as public property instead.
+* `NavigationViewController.pendingCamera` type was changed from `MGLMapCamera` to `CameraOptions`.
+* Removed `NavigationViewController.origin` property, which was not used.
+* Removed deprecated `CarPlayManager.overviewButton`.
+* Removed unused `CarPlayNavigationViewController.drivingSide` property.
 * Renamed public constant `Constants.MBRouteLineWidthByZoomLevel` to public variable `Constants.MBRouteLineWidthByZoomLevel`, which now accepts `Double` for keys and values. ([#17](https://github.com/mapbox/mapbox-navigation-ios-internal/pull/17))
 * Renamed public property `MBCurrentLegAttribute` to `CurrentLegAttribute`. ([#17](https://github.com/mapbox/mapbox-navigation-ios-internal/pull/17))
 * Renamed public property `MBCongestionAttribute` to `CongestionAttribute`. ([#17](https://github.com/mapbox/mapbox-navigation-ios-internal/pull/17))
+
+### CarPlay
+
+* Removed deprecated `CarPlayNavigationDelegate.carPlayNavigationViewControllerDidArrive(_:)`.
 
 ## v1.3.0
 
