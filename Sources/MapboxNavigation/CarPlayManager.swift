@@ -152,10 +152,9 @@ public class CarPlayManager: NSObject {
     }()
     
     /**
-     The main map view displayed inside CarPlay.
+     The main `NavigationMapView` displayed inside CarPlay.
      */
-    // TODO: Consider renaming to `navigationMapView`.
-    public var mapView: NavigationMapView? {
+    public var navigationMapView: NavigationMapView? {
         let mapViewController = carPlayMapViewController
         return mapViewController?.navigationMapView
     }

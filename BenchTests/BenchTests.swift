@@ -1,6 +1,7 @@
 import XCTest
 import TestHelper
 import MapboxDirections
+import MapboxMaps
 @testable import MapboxCoreNavigation
 @testable import MapboxNavigation
 @testable import Bench
@@ -10,8 +11,8 @@ class BenchTests: XCTestCase, CLLocationManagerDelegate {
     
     override func setUp() {
         super.setUp()
-        // TODO: Use `accessToken` provided by `AccountManager`.
-        MGLAccountManager.accessToken = token
+        
+        AccountManager.shared.accessToken = token
     }
     
     func testControlFirstRoute() {

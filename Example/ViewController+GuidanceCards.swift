@@ -15,7 +15,7 @@ extension ViewController: InstructionsCardCollectionDelegate {
         }
         
         // find the upcoming manuever step, and update instructions banner to show preview
-        guard stepIndex + 1 < leg.steps.endIndex, let navigationMapView = activeNavigationViewController?.mapView else { return }
+        guard stepIndex + 1 < leg.steps.endIndex, let navigationMapView = activeNavigationViewController?.navigationMapView else { return }
         let maneuverStep = leg.steps[stepIndex + 1]
         
         // stop tracking user, and move camera to step location

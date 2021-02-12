@@ -86,12 +86,11 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     }
     
     /**
-     The main map view displayed inside the view controller.
+     The `NavigationMapView` displayed inside the view controller.
      
-     - note: Do not change this map view’s `NavigationMapView.navigationMapDelegate` property; instead, implement the corresponding methods on `NavigationViewControllerDelegate`.
+     - note: Do not change `NavigationMapView.delegate` property; instead, implement the corresponding methods on `NavigationViewControllerDelegate`.
      */
-    // TODO: Consider renaming to `navigationMapView`.
-    @objc public var mapView: NavigationMapView? {
+    @objc public var navigationMapView: NavigationMapView? {
         get {
             return mapViewController?.navigationMapView
         }
@@ -716,10 +715,10 @@ extension NavigationViewController: NavigationServiceDelegate {
         if #available(iOS 14.0, *), accuracyAuthorization == .reducedAccuracy {
             let title = NSLocalizedString("ENABLE_PRECISE_LOCATION", bundle: .mapboxNavigation, value: "Enable precise location to navigate", comment: "Label indicating precise location is off and needs to be turned on to navigate")
             showStatus(title: title, spinner: false, duration: 20, animated: true, interactive: false)
-            mapView?.reducedAccuracyActivatedMode = true
+            navigationMapView?.reducedAccuracyActivatedMode = true
         } else {
             // Fallback on earlier versions
-            mapView?.reducedAccuracyActivatedMode = false
+            navigationMapView?.reducedAccuracyActivatedMode = false
             return
         }
     }
@@ -754,8 +753,8 @@ extension NavigationViewController: StyleManagerDelegate {
     }
     
     private func updateMapStyle(_ style: Style) {
-        if mapView?.mapView.style.styleURL.url != style.mapStyleURL {
-            mapView?.mapView.style.styleURL = StyleURL.custom(url: style.mapStyleURL)
+        if navigationMapView?.mapView.style.styleURL.url != style.mapStyleURL {
+            navigationMapView?.mapView.style.styleURL = StyleURL.custom(url: style.mapStyleURL)
         }
         
         currentStatusBarStyle = style.statusBarStyle ?? .default
@@ -764,7 +763,6 @@ extension NavigationViewController: StyleManagerDelegate {
     
     public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
         // TODO: Implement the ability to reload style.
-        // mapView?.reloadStyle(self)
     }
 }
 

@@ -202,7 +202,7 @@ class NavigationViewControllerTests: XCTestCase {
         let options = NavigationOptions(styles: [TestableDayStyle()], navigationService: service)
         let navigationViewController = NavigationViewController(for: initialRoute, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
         let styleLoadedExpectation = XCTestExpectation(description: "MapView style loading expectation.")
-        navigationViewController.mapView?.mapView.on(.styleLoadingFinished, handler: { _ in
+        navigationViewController.navigationMapView?.mapView.on(.styleLoadingFinished, handler: { _ in
             styleLoadedExpectation.fulfill()
         })
         
@@ -211,10 +211,10 @@ class NavigationViewControllerTests: XCTestCase {
         navigationViewController.indexedRoute = (initialRoute, 0)
 
         runUntil({
-            return !navigationViewController.mapView!.mapView.annotationManager.annotations.isEmpty
+            return !navigationViewController.navigationMapView!.mapView.annotationManager.annotations.isEmpty
         })
         
-        guard let annotations = navigationViewController.mapView?.mapView.annotationManager.annotations.compactMap({ $0.value as? PointAnnotation }) else {
+        guard let annotations = navigationViewController.navigationMapView?.mapView.annotationManager.annotations.compactMap({ $0.value as? PointAnnotation }) else {
             return XCTFail("No point annotations found.")
         }
 
@@ -227,7 +227,7 @@ class NavigationViewControllerTests: XCTestCase {
         // Set the second route.
         navigationViewController.indexedRoute = (newRoute, 0)
         
-        guard let newAnnotations = navigationViewController.mapView?.mapView.annotationManager.annotations.compactMap({ $0.value as? PointAnnotation }) else {
+        guard let newAnnotations = navigationViewController.navigationMapView?.mapView.annotationManager.annotations.compactMap({ $0.value as? PointAnnotation }) else {
             return XCTFail("New annotations not found.")
         }
         

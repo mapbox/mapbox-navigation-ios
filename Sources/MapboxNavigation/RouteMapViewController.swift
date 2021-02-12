@@ -288,7 +288,7 @@ class RouteMapViewController: UIViewController {
         // TODO: Verify that camera is positioned correctly.
         let camera = CameraOptions(center: step.maneuverLocation,
                                    zoom: navigationMapView.mapView.zoom,
-                                   bearing: step.initialHeading!)
+                                   bearing: step.initialHeading ?? CLLocationDirection(navigationMapView.mapView.cameraView.bearing))
         
         navigationMapView.mapView.cameraManager.setCamera(to: camera,
                                                           animated: animated,
