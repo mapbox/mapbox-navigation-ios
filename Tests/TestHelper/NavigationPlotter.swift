@@ -1,6 +1,6 @@
 import Foundation
 import Turf
-import Mapbox
+import MapboxMaps
 import MapboxDirections
 @testable import MapboxCoreNavigation
 @testable import MapboxNavigation
@@ -110,8 +110,10 @@ extension MatchPlotter {
 
 extension CoordinatePlotter {
     public func draw(on plotter: NavigationPlotter) {
+        guard let mapView = plotter.navigationMapView?.mapView else { return }
+        
         for (i, coordinate) in coordinates.enumerated() {
-            let position = plotter.mapView!.convert(coordinate, toPointTo: plotter)
+            let position = mapView.point(for: coordinate, in: plotter)
             let centeredPosition = CGPoint(x: position.x - Constants.dotSize.width / 2,
                                            y: position.y - Constants.dotSize.height / 2)
             plotter.drawDot(at: centeredPosition, color: color)
@@ -125,8 +127,10 @@ extension CoordinatePlotter {
 
 extension LocationPlotter {
     public func draw(on plotter: NavigationPlotter) {
+        guard let mapView = plotter.navigationMapView?.mapView else { return }
+        
         for (i, location) in locations.enumerated() {
-            let position = plotter.mapView!.convert(location.coordinate, toPointTo: plotter)
+            let position = mapView.point(for: location.coordinate, in: plotter)
             let centeredPosition = CGPoint(x: position.x - Constants.dotSize.width / 2,
                                            y: position.y - Constants.dotSize.height / 2)
             plotter.drawDot(at: centeredPosition, color: color)
@@ -146,8 +150,8 @@ extension LinePlotter {
 }
 
 public class NavigationPlotter: UIView {
-    var mapView: NavigationMapView?
-    var coordinateBounds: MGLCoordinateBounds?
+    var navigationMapView: NavigationMapView?
+    var coordinateBounds: CoordinateBounds?
     public var routePlotters: [RoutePlotter]? { didSet { setNeedsDisplay() } }
     public var matchPlotters: [MatchPlotter]? { didSet { setNeedsDisplay() } }
     public var coordinatePlotters: [CoordinatePlotter]? { didSet { setNeedsDisplay() } }
@@ -155,10 +159,14 @@ public class NavigationPlotter: UIView {
     public var linePlotters: [LinePlotter]? { didSet { setNeedsDisplay() } }
     
     func updateCoordinateBounds() {
-        coordinateBounds = allBoundingCoordinates.bounds
-        mapView = NavigationMapView(frame: bounds)
+        navigationMapView = NavigationMapView(frame: bounds)
         let padding = UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50)
-        mapView?.setVisibleCoordinateBounds(coordinateBounds!, edgePadding: padding, animated: false, completionHandler: nil)
+        
+        coordinateBounds = allBoundingCoordinates.bounds
+        
+        if let coordinateBounds = coordinateBounds {
+            navigationMapView?.mapView.cameraManager.transitionCoordinateBounds(to: coordinateBounds, edgePadding: padding, completion: nil)
+        }
     }
     
     public override init(frame: CGRect) {
@@ -207,12 +215,12 @@ public class NavigationPlotter: UIView {
     }
     
     func drawLines(between coordinates: [CLLocationCoordinate2D]?, color: UIColor = UIColor.route, lineWidth: CGFloat = 4, drawDotIndicator: Bool = true, drawTextIndicator: Bool = true) {
-        guard let coordinates = coordinates else { return }
+        guard let coordinates = coordinates, let navigationMapView = navigationMapView else { return }
         let path = UIBezierPath()
         for coordinate in coordinates {
-            let position = mapView!.convert(coordinate, toPointTo: self)
+            let position = navigationMapView.mapView.point(for: coordinate)
             if coordinate == coordinates.first {
-                path.move(to: mapView!.convert(coordinates.first!, toPointTo: self))
+                path.move(to: navigationMapView.mapView.point(for: coordinates.first!))
             } else {
                 path.addLine(to: position)
             }
@@ -223,7 +231,7 @@ public class NavigationPlotter: UIView {
         path.stroke()
         
         for (i, coordinate) in coordinates.enumerated() {
-            let position = mapView!.convert(coordinate, toPointTo: self)
+            let position = navigationMapView.mapView.point(for: coordinate)
             let centeredPosition = CGPoint(x: position.x - Constants.dotSize.width / 2,
                                            y: position.y - Constants.dotSize.height / 2)
             if drawDotIndicator {
@@ -328,7 +336,8 @@ extension UIView {
 }
 
 extension Array where Element == CLLocationCoordinate2D {
-    fileprivate var bounds: MGLCoordinateBounds {
+    
+    fileprivate var bounds: CoordinateBounds {
         var maximumLatitude: CLLocationDegrees = -80
         var minimumLatitude: CLLocationDegrees = 80
         var maximumLongitude: CLLocationDegrees = -180
@@ -341,10 +350,10 @@ extension Array where Element == CLLocationCoordinate2D {
             minimumLongitude = Swift.min(minimumLongitude, coordinate.longitude)
         }
         
-        let sw = CLLocationCoordinate2D(latitude: minimumLatitude, longitude: minimumLongitude)
-        let ne = CLLocationCoordinate2D(latitude: maximumLatitude, longitude: maximumLongitude)
+        let southwest = CLLocationCoordinate2D(latitude: minimumLatitude, longitude: minimumLongitude)
+        let northeast = CLLocationCoordinate2D(latitude: maximumLatitude, longitude: maximumLongitude)
         
-        return MGLCoordinateBounds(sw: sw, ne: ne)
+        return CoordinateBounds(southwest: southwest, northeast: northeast)
     }
 }
 

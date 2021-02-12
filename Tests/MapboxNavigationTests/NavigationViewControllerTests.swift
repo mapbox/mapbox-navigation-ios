@@ -1,6 +1,7 @@
 import XCTest
 import MapboxDirections
 import Turf
+import MapboxMaps
 @testable import TestHelper
 @testable import MapboxCoreNavigation
 @testable import MapboxNavigation
@@ -200,30 +201,41 @@ class NavigationViewControllerTests: XCTestCase {
         let service = MapboxNavigationService(route: initialRoute, routeIndex: 0, routeOptions: routeOptions,  directions: DirectionsSpy(), simulating: .never)
         let options = NavigationOptions(styles: [TestableDayStyle()], navigationService: service)
         let navigationViewController = NavigationViewController(for: initialRoute, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
-        let styleLoaded = keyValueObservingExpectation(for: navigationViewController, keyPath: "mapView.style", expectedValue: nil)
+        let styleLoadedExpectation = XCTestExpectation(description: "MapView style loading expectation.")
+        navigationViewController.mapView?.mapView.on(.styleLoadingFinished, handler: { _ in
+            styleLoadedExpectation.fulfill()
+        })
         
-        //wait for the style to load -- routes won't show without it.
-        wait(for: [styleLoaded], timeout: 5)
+        // Wait for the style to load - routes won't show without it.
+        wait(for: [styleLoadedExpectation], timeout: 5)
         navigationViewController.indexedRoute = (initialRoute, 0)
 
         runUntil({
-            return !navigationViewController.mapView!.annotations!.isEmpty
+            return !navigationViewController.mapView!.mapView.annotationManager.annotations.isEmpty
         })
         
-        guard let annotations = navigationViewController.mapView?.annotations?.compactMap({ $0 as? MGLPointAnnotation }) else {
+        guard let annotations = navigationViewController.mapView?.mapView.annotationManager.annotations.compactMap({ $0.value as? PointAnnotation }) else {
             return XCTFail("No point annotations found.")
         }
+
+        guard let firstDestination = initialRoute.legs.last?.destination?.coordinate else {
+            return XCTFail("PointAnnotation is not valid.")
+        }
         
-        let firstDestination = initialRoute.legs.last!.destination!.coordinate
         XCTAssert(annotations.contains { $0.coordinate.distance(to: firstDestination) < 1 }, "Destination annotation does not exist on map")
         
-        //lets set the second route
+        // Set the second route.
         navigationViewController.indexedRoute = (newRoute, 0)
         
-        guard let newAnnotations = navigationViewController.mapView?.annotations else { return XCTFail("New annotations not found.")}
-        let secondDestination = newRoute.legs.last!.destination!.coordinate
-
-        //do we have a destination on the second route?
+        guard let newAnnotations = navigationViewController.mapView?.mapView.annotationManager.annotations.compactMap({ $0.value as? PointAnnotation }) else {
+            return XCTFail("New annotations not found.")
+        }
+        
+        guard let secondDestination = newRoute.legs.last?.destination?.coordinate else {
+            return XCTFail("PointAnnotation is not valid.")
+        }
+        
+        // Verify that there is a destination on the second route.
         XCTAssert(newAnnotations.contains { $0.coordinate.distance(to: secondDestination) < 1 }, "New destination annotation does not exist on map")
     }
     
@@ -280,11 +292,12 @@ class NavigationViewControllerTests: XCTestCase {
 }
 
 extension NavigationViewControllerTests: NavigationViewControllerDelegate, StyleManagerDelegate {
-    func location(for styleManager: StyleManager) -> CLLocation? {
+    
+    func location(for styleManager: MapboxNavigation.StyleManager) -> CLLocation? {
         return dependencies.poi.first!
     }
     
-    func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
+    func styleManagerDidRefreshAppearance(_ styleManager: MapboxNavigation.StyleManager) {
         updatedStyleNumberOfTimes += 1
     }
     
