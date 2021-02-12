@@ -374,7 +374,10 @@ extension NavigationMapView {
                     return index == 0 ? stepCoordinates : allCoordinates + stepCoordinates.suffix(from: 1)
                 }
                 
-                let mergedCongestionSegments = combine(legCoordinates, with: legCongestion)
+                let mergedCongestionSegments = combine(legCoordinates,
+                                                       with: legCongestion,
+                                                       streetsRoadClasses: leg.streetsRoadClasses,
+                                                       roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
                 
                 legFeatures = mergedCongestionSegments.map { (congestionSegment: CongestionSegment) -> Feature in
                     var feature = Feature(LineString(congestionSegment.0))
@@ -401,17 +404,48 @@ extension NavigationMapView {
         return features
     }
     
-    func combine(_ coordinates: [CLLocationCoordinate2D], with congestions: [CongestionLevel]) -> [CongestionSegment] {
+    /**
+     Returns an array of congestion segments by associating the given congestion levels with the coordinates of the respective line segments that they apply to.
+     
+     This method coalesces consecutive line segments that have the same congestion level.
+     
+     For each item in the`CongestionSegment` collection a `CongestionLevel` substitution will take place that has a streets road class contained in the `roadClassesWithOverriddenCongestionLevels` collection.
+     For each of these items the `CongestionLevel` for `.unknown` traffic congestion will be replaced with the `.low` traffic congestion.
+     
+     - parameter coordinates: The coordinates of a leg.
+     - parameter congestions: The congestion levels along a leg. There should be one fewer congestion levels than coordinates.
+     - parameter streetsRoadClasses: A collection of streets road classes for each geometry index in `Intersection`. There should be the same amount of `streetsRoadClasses` and `congestions`.
+     - parameter roadClassesWithOverriddenCongestionLevels: Streets road classes for which a `CongestionLevel` substitution should occur.
+     - returns: A list of `CongestionSegment` tuples with coordinate and congestion level.
+     */
+    func combine(_ coordinates: [CLLocationCoordinate2D],
+                 with congestions: [CongestionLevel],
+                 streetsRoadClasses: [MapboxStreetsRoadClass?]? = nil,
+                 roadClassesWithOverriddenCongestionLevels: Set<MapboxStreetsRoadClass>? = nil) -> [CongestionSegment] {
         var segments: [CongestionSegment] = []
         segments.reserveCapacity(congestions.count)
         
+        var index = 0
         for (firstSegment, congestionLevel) in zip(zip(coordinates, coordinates.suffix(from: 1)), congestions) {
             let coordinates = [firstSegment.0, firstSegment.1]
-            if segments.last?.1 == congestionLevel {
+            
+            var overriddenCongestionLevel = congestionLevel
+            if let streetsRoadClasses = streetsRoadClasses,
+               let roadClassesWithOverriddenCongestionLevels = roadClassesWithOverriddenCongestionLevels,
+               streetsRoadClasses.indices.contains(index),
+               let streetsRoadClass = streetsRoadClasses[index],
+               congestionLevel == .unknown,
+               roadClassesWithOverriddenCongestionLevels.contains(streetsRoadClass) {
+                overriddenCongestionLevel = .low
+            }
+            
+            if segments.last?.1 == overriddenCongestionLevel {
                 segments[segments.count - 1].0 += coordinates
             } else {
-                segments.append((coordinates, congestionLevel))
+                segments.append((coordinates, overriddenCongestionLevel))
             }
+            
+            index += 1
         }
         
         return segments
