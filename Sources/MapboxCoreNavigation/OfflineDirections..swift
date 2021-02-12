@@ -123,7 +123,10 @@ public class NavigationDirections: Directions {
                                           endpointConfig: nil)
 
             let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
-            self.navigator = Navigator(profile: settingsProfile, config: NavigatorConfig() , customConfig: "", tilesConfig: tilesConfig)
+            self.navigator = try! Navigator(profile: settingsProfile,
+                                            config: NavigatorConfig(),
+                                            customConfig: "",
+                                            tilesConfig: tilesConfig)
 
             DispatchQueue.main.async {
                 completionHandler(tilesURL)
@@ -158,11 +161,32 @@ public class NavigationDirections: Directions {
             let tilePath = filePathURL.path
             let outputPath = outputDirectoryURL.path
 
+            let settingsProfile = SettingsProfile(
+                application: ProfileApplication.kMobile,
+                platform: ProfilePlatform.KIOS
+            )
+
+            let configFactory = try! ConfigFactory.build(for: settingsProfile,
+                                                         config: NavigatorConfig(),
+                                                         customConfig: "")
+            let historyRecorder = try! HistoryRecorderHandle.build(forConfig: configFactory)
+            let runloopExecutor = try! RunLoopExecutorFactory.build()
+            let cacheHandle = try! CacheFactory.build(for: TilesConfig(),
+                                           config: configFactory,
+                                           runLoop: runloopExecutor,
+                                           historyRecorder: historyRecorder)
+
             let navigator: Navigator = {
-                let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
-                return Navigator(profile: settingsProfile, config: NavigatorConfig(), customConfig: "", tilesConfig: TilesConfig())
+                return try! Navigator(config: configFactory,
+                                      runLoopExecutor: runloopExecutor,
+                                      cache: cacheHandle,
+                                      historyRecorder: historyRecorder)
             }()
-            let numberOfTiles = navigator.unpackTiles(forPackedTilesPath: tilePath, outputDirectory: outputPath)
+
+            let numberOfTiles =
+                try! MapboxNavigationNative.Router.unpackTiles(forPackedTilesPath: tilePath,
+                                                               outputDirectory: outputPath)
+
 
             // Report 100% progress
             progressHandler?(totalPackedBytes, totalPackedBytes)
@@ -207,9 +231,10 @@ public class NavigationDirections: Directions {
         let session: Directions.Session = (options: options, credentials: self.credentials)
 
         NavigationDirectionsConstants.offlineSerialQueue.async { [weak self] in
-            guard let result = self?.navigator.getRouteForDirectionsUri(url.absoluteString) else {
-                return
-            }
+            guard let result = self?
+                    .navigator
+                    .getRouteForDirectionsUri(url.absoluteString)
+            else { return }
 
             guard let data = result.json.data(using: .utf8) else {
                 DispatchQueue.main.async {
@@ -244,7 +269,10 @@ public class NavigationDirections: Directions {
 
             if _navigator == nil {
                 let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
-                self._navigator = Navigator(profile: settingsProfile, config: NavigatorConfig(), customConfig: "", tilesConfig: TilesConfig())
+                self._navigator = try! Navigator(profile: settingsProfile,
+                                                 config: NavigatorConfig(),
+                                                 customConfig: "",
+                                                 tilesConfig: TilesConfig())
             }
 
             return _navigator
