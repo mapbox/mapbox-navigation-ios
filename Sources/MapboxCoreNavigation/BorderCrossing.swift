@@ -4,7 +4,7 @@ import MapboxNavigationNative
 import MapboxDirections
 
 extension AdministrativeRegion {
-    init(_ adminInfo: AdminInfo) {
+    init(_ adminInfo: RouteAlertAdminInfo) {
         self.init(countryCode: adminInfo.iso_3166_1, countryCodeAlpha3: adminInfo.iso_3166_1_alpha3)
     }
 }
@@ -16,7 +16,7 @@ public struct BorderCrossing {
     public let from: AdministrativeRegion
     public let to: AdministrativeRegion
     
-    init(_ borderCrossing: BorderCrossingInfo) {
+    init(_ borderCrossing: RouteAlertBorderCrossingInfo) {
         from = AdministrativeRegion(borderCrossing.from)
         to = AdministrativeRegion(borderCrossing.to)
     }

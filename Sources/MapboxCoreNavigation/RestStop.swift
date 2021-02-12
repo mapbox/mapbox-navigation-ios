@@ -4,11 +4,11 @@ import MapboxNavigationNative
 import MapboxDirections
 
 extension RestStop {
-    init(_ serviceArea: ServiceAreaInfo) {
+    init(_ serviceArea: RouteAlertServiceAreaInfo) {
         switch serviceArea.type {
-        case .restArea:
+        case .kRestArea:
             self.init(type: .restArea)
-        case .serviceArea:
+        case .kServiceArea:
             self.init(type: .serviceArea)
         }
     }

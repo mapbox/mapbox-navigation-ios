@@ -11,7 +11,7 @@ public struct Tunnel {
      */
     public let name: String?
     
-    init(_ tunnelInfo: TunnelInfo) {
+    init(_ tunnelInfo: RouteAlertTunnelInfo) {
         name = tunnelInfo.name
     }
 }

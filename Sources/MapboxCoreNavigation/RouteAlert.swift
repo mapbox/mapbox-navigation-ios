@@ -60,7 +60,7 @@ public struct RouteAlert {
         self.endSegmentIndex = upcomingAlert.alert.endGeometryIndex
         
         switch upcomingAlert.alert.type {
-        case .incident:
+        case .kIncident:
             guard let incidentInfo = upcomingAlert.alert.incidentInfo else {
                 preconditionFailure("Alert of type \(upcomingAlert.alert.type) did not contain an info data.")
             }
@@ -68,27 +68,27 @@ public struct RouteAlert {
                 preconditionFailure("Alert of type \(upcomingAlert.alert.type) had unrecognized Incident type: \(incidentInfo.type).")
             }
             self.alert = .incident(incident)
-        case .tunnelEntrance:
+        case .kTunnelEntrance:
             guard let tunnelInfo = upcomingAlert.alert.tunnelInfo else {
                 preconditionFailure("Alert of type \(upcomingAlert.alert.type) did not contain an info data.")
             }
             self.alert = .tunnel(Tunnel(tunnelInfo))
-        case .borderCrossing:
+        case .kBorderCrossing:
             guard let adminInfo = upcomingAlert.alert.borderCrossingInfo else {
                 preconditionFailure("Alert of type \(upcomingAlert.alert.type) did not contain an info data.")
             }
             self.alert = .borderCrossing(BorderCrossing(adminInfo))
-        case .tollCollectionPoint:
+        case .kTollCollectionPoint:
             guard let tollInfo = upcomingAlert.alert.tollCollectionInfo else {
                 preconditionFailure("Alert of type \(upcomingAlert.alert.type) did not contain an info data.")
             }
             self.alert = .tollCollection(TollCollection(tollInfo))
-        case .serviceArea:
+        case .kServiceArea:
             guard let serviceAreaInfo = upcomingAlert.alert.serviceAreaInfo else {
                 preconditionFailure("Alert of type \(upcomingAlert.alert.type) did not contain an info data.")
             }
             self.alert = .serviceArea(RestStop(serviceAreaInfo))
-        case .restrictedArea:
+        case .kRestrictedArea:
             self.alert = .restrictedArea
         }
     }

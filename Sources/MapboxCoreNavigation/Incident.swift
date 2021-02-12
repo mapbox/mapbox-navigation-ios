@@ -4,32 +4,32 @@ import MapboxNavigationNative
 import MapboxDirections
 
 extension Incident {
-    init?(_ incidentInfo: IncidentInfo) {
+    init?(_ incidentInfo: RouteAlertIncidentInfo) {
         var incidentType: Incident.Kind!
         switch incidentInfo.type {
-        case .accident:
+        case .kAccident:
             incidentType = .accident
-        case .congestion:
+        case .kCongestion:
             incidentType = .congestion
-        case .construction:
+        case .kConstruction:
             incidentType = .construction
-        case .disabledVehicle:
+        case .kDisabledVehicle:
             incidentType = .disabledVehicle
-        case .laneRestriction:
+        case .kLaneRestriction:
             incidentType = .laneRestriction
-        case .massTransit:
+        case .kMassTransit:
             incidentType = .massTransit
-        case .miscellaneous:
+        case .kMiscellaneous:
             incidentType = .miscellaneous
-        case .otherNews:
+        case .kOtherNews:
             incidentType = .otherNews
-        case .plannedEvent:
+        case .kPlannedEvent:
             incidentType = .plannedEvent
-        case .roadClosure:
+        case .kRoadClosure:
             incidentType = .roadClosure
-        case .roadHazard:
+        case .kRoadHazard:
             incidentType = .roadHazard
-        case .weather:
+        case .kWeather:
             incidentType = .weather
         }
         
@@ -43,7 +43,7 @@ extension Incident {
                   creationDate: incidentInfo.creationTime ?? Date.distantPast,
                   startDate: incidentInfo.startTime ?? Date.distantPast,
                   endDate: incidentInfo.endTime ?? Date.distantPast,
-                  impact: String(incidentInfo.impact.rawValue),
+                  impact: incidentInfo.impact ?? "",
                   subtype: incidentInfo.subType,
                   subtypeDescription: incidentInfo.subTypeDescription,
                   alertCodes: Set(incidentInfo.alertcCodes.map { $0.intValue }),
