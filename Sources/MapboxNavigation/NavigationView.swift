@@ -58,7 +58,7 @@ open class NavigationView: UIView {
     
     lazy var navigationMapView: NavigationMapView = {
         let navigationMapView: NavigationMapView = .forAutoLayout(frame: self.bounds)
-        navigationMapView.navigationMapViewDelegate = delegate
+        navigationMapView.delegate = delegate
         navigationMapView.courseTrackingDelegate = delegate
         
         return navigationMapView
@@ -188,7 +188,7 @@ open class NavigationView: UIView {
     }
     
     private func updateDelegates() {
-        navigationMapView.navigationMapViewDelegate = delegate
+        navigationMapView.delegate = delegate
         navigationMapView.courseTrackingDelegate = delegate
     }
 }

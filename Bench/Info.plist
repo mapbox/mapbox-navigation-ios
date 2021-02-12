@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>MGLMapboxAccessToken</key>
-	<string>PASTE MAPBOX ACCESS TOKEN HERE</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
@@ -22,6 +20,10 @@
 	<string>42</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>MBXAccessToken</key>
+	<string>PASTE MAPBOX ACCESS TOKEN HERE</string>
+	<key>MGLMapboxAccessToken</key>
+	<string>PASTE MAPBOX ACCESS TOKEN HERE</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Location Usage Description</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

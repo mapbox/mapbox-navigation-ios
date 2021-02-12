@@ -53,7 +53,6 @@ open class NavigationMapView: UIView {
      For any street road class included in the `roadClassesWithOverriddenCongestionLevels`, all route segments with an `CongestionLevel.unknown` traffic congestion level and a matching `MapboxDirections.MapboxStreetsRoadClass`
      will be replaced with the `CongestionLevel.low` congestion level.
      */
-    // TODO: Implement the ability to override congestion levels.
     public var roadClassesWithOverriddenCongestionLevels: Set<MapboxStreetsRoadClass>? = nil
     
     enum IdentifierType: Int {
@@ -109,8 +108,7 @@ open class NavigationMapView: UIView {
     /**
      The object that acts as the navigation delegate of the map view.
      */
-    // TODO: Consider renaming to `delegate`.
-    public weak var navigationMapViewDelegate: NavigationMapViewDelegate?
+    public weak var delegate: NavigationMapViewDelegate?
     
     /**
      The object that acts as the course tracking delegate of the map view.
@@ -185,7 +183,7 @@ open class NavigationMapView: UIView {
      - seealso: NavigationMapViewDelegate.navigationMapViewUserAnchorPoint(_:)
      */
     var userAnchorPoint: CGPoint {
-        if let anchorPoint = navigationMapViewDelegate?.navigationMapViewUserAnchorPoint(self), anchorPoint != .zero {
+        if let anchorPoint = delegate?.navigationMapViewUserAnchorPoint(self), anchorPoint != .zero {
             return anchorPoint
         }
         // TODO: Verify whether content insets verification is required.
@@ -939,11 +937,11 @@ open class NavigationMapView: UIView {
         
         let waypointTest = waypoints(on: routes, closeTo: tapPoint)
         if let selected = waypointTest?.first {
-            navigationMapViewDelegate?.navigationMapView(self, didSelect: selected)
+            delegate?.navigationMapView(self, didSelect: selected)
             return
         } else if let routes = self.routes(closeTo: tapPoint) {
             guard let selectedRoute = routes.first else { return }
-            navigationMapViewDelegate?.navigationMapView(self, didSelect: selectedRoute)
+            delegate?.navigationMapView(self, didSelect: selectedRoute)
         }
     }
     

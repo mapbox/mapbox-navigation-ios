@@ -138,7 +138,7 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
         navigationMapView.defaultAltitude = 500
         navigationMapView.zoomedOutMotorwayAltitude = 1000
         navigationMapView.longManeuverDistance = 500
-        navigationMapView.navigationMapViewDelegate = self
+        navigationMapView.delegate = self
         navigationMapView.recenterMap()
         
         navigationMapView.mapView.on(.styleLoadingFinished) { [weak self] _ in

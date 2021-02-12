@@ -80,7 +80,7 @@ class ViewController: UIViewController {
         navigationMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(navigationMapView)
         
-        navigationMapView.navigationMapViewDelegate = self
+        navigationMapView.delegate = self
         navigationMapView.mapView.on(.styleLoadingFinished, handler: { [weak self] _ in
             guard let self = self else { return }
             self.addStyledFeature(self.trackStyledFeature)
