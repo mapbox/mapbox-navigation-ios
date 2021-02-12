@@ -42,6 +42,7 @@
 		2BE7013D25359C7B00F46E4E /* RouteAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE7013C25359C7B00F46E4E /* RouteAlert.swift */; };
 		2BE7016925371E3400F46E4E /* Incident.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE7016825371E3400F46E4E /* Incident.swift */; };
 		2BE70189253734A000F46E4E /* TollCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE7012C2535946300F46E4E /* TollCollection.swift */; };
+		2EBF20AE25D6F89000DB7BF2 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBF20AD25D6F89000DB7BF2 /* Utils.swift */; };
 		35002D611E5F6ADB0090E733 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35002D5F1E5F6ADB0090E733 /* Assets.xcassets */; };
 		35002D691E5F6B2F0090E733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35002D661E5F6B1B0090E733 /* Main.storyboard */; };
 		3502231A205BC94E00E1449A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35022319205BC94E00E1449A /* Constants.swift */; };
@@ -250,7 +251,6 @@
 		8A0E0A52257AD9C300C2E924 /* NightStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0E0A51257AD9C300C2E924 /* NightStyle.swift */; };
 		8A17635B25CC89D800737520 /* Expression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A17635A25CC89D800737520 /* Expression.swift */; };
 		8A1763D025CCC38C00737520 /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1763CF25CCC38C00737520 /* Double.swift */; };
-		8A41F56125BF60A400BD6FCF /* Utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 8A41F56025BF60A400BD6FCF /* Utils.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8A41F5B225BF61AE00BD6FCF /* CarPlayActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A41F5B125BF61AE00BD6FCF /* CarPlayActivity.swift */; };
 		8A41F5EC25BF624900BD6FCF /* MapOrnamentPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A41F5EB25BF624900BD6FCF /* MapOrnamentPosition.swift */; };
 		8A41F63C25BF631500BD6FCF /* NavigationMapView+VanishingRouteLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A41F63A25BF631500BD6FCF /* NavigationMapView+VanishingRouteLine.swift */; };
@@ -391,7 +391,6 @@
 		DA3DA6D823E4D78E004B7B5B /* MapboxAccounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3504DF7322B79AF300D2FD3C /* MapboxAccounts.framework */; };
 		DA3DA6DA23E4D7B5004B7B5B /* MapboxAccounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3504DF7322B79AF300D2FD3C /* MapboxAccounts.framework */; };
 		DA443DDE2278C90E00ED1307 /* CPTrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA443DDD2278C90E00ED1307 /* CPTrip.swift */; };
-		DA5B9522251AEE58007FE6AC /* CLLocationManager+MGLNavigationAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = DA5B9521251AEE58007FE6AC /* CLLocationManager+MGLNavigationAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DA66063023B32F99007832E5 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA66062F23B32F99007832E5 /* Array.swift */; };
 		DA754E1823AC56E5007E16B5 /* MBXAccounts+CoreNavigationAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = DA754E1623AC56E5007E16B5 /* MBXAccounts+CoreNavigationAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DA754E1923AC56E5007E16B5 /* MBXAccounts+CoreNavigationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DA754E1723AC56E5007E16B5 /* MBXAccounts+CoreNavigationAdditions.m */; };
@@ -626,6 +625,7 @@
 		2BE701342535948100F46E4E /* RestStop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestStop.swift; sourceTree = "<group>"; };
 		2BE7013C25359C7B00F46E4E /* RouteAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteAlert.swift; sourceTree = "<group>"; };
 		2BE7016825371E3400F46E4E /* Incident.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Incident.swift; sourceTree = "<group>"; };
+		2EBF20AD25D6F89000DB7BF2 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		35002D5D1E5F6ABB0090E733 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		35002D5F1E5F6ADB0090E733 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		35002D671E5F6B1B0090E733 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -830,7 +830,6 @@
 		8A0E0A51257AD9C300C2E924 /* NightStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightStyle.swift; sourceTree = "<group>"; };
 		8A17635A25CC89D800737520 /* Expression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expression.swift; sourceTree = "<group>"; };
 		8A1763CF25CCC38C00737520 /* Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Double.swift; sourceTree = "<group>"; };
-		8A41F56025BF60A400BD6FCF /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
 		8A41F5B125BF61AE00BD6FCF /* CarPlayActivity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CarPlayActivity.swift; sourceTree = "<group>"; };
 		8A41F5EB25BF624900BD6FCF /* MapOrnamentPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapOrnamentPosition.swift; sourceTree = "<group>"; };
 		8A41F63A25BF631500BD6FCF /* NavigationMapView+VanishingRouteLine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NavigationMapView+VanishingRouteLine.swift"; sourceTree = "<group>"; };
@@ -1001,7 +1000,6 @@
 		DA545AC41FAA86450090908E /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DA5AD03C1FEBA03700FC7D7B /* bg */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = bg; path = bg.lproj/Main.strings; sourceTree = "<group>"; };
 		DA5AD0401FEBA23200FC7D7B /* bg */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = bg; path = bg.lproj/Localizable.strings; sourceTree = "<group>"; };
-		DA5B9521251AEE58007FE6AC /* CLLocationManager+MGLNavigationAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CLLocationManager+MGLNavigationAdditions.h"; sourceTree = "<group>"; };
 		DA625E901F10557300FBE176 /* fa */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fa; path = fa.lproj/Main.strings; sourceTree = "<group>"; };
 		DA625E921F1055DE00FBE176 /* fa */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fa; path = fa.lproj/Navigation.strings; sourceTree = "<group>"; };
 		DA625E931F105B1900FBE176 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
@@ -1340,9 +1338,9 @@
 		351BEC201E5BD4DC006FE110 /* Supporting files */ = {
 			isa = PBXGroup;
 			children = (
-				8A41F56025BF60A400BD6FCF /* Utils.h */,
 				351BEC211E5BD506006FE110 /* Resources */,
 				351BEBDA1E5BCC28006FE110 /* Info.plist */,
+				2EBF20AD25D6F89000DB7BF2 /* Utils.swift */,
 			);
 			name = "Supporting files";
 			sourceTree = "<group>";
@@ -1706,7 +1704,6 @@
 				C51511D020EAC89D00372A91 /* CPMapTemplate.swift */,
 				DA443DDD2278C90E00ED1307 /* CPTrip.swift */,
 				35BF8CA31F28EBD8003F6125 /* String.swift */,
-				DA5B9521251AEE58007FE6AC /* CLLocationManager+MGLNavigationAdditions.h */,
 				8D24A2F920449B430098CBF8 /* Dictionary.swift */,
 				351BEBDF1E5BCC63006FE110 /* MapView.swift */,
 				353E3C8E20A3501C00FD1789 /* MapboxMapsStyle.swift */,
@@ -1897,8 +1894,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DA5B9522251AEE58007FE6AC /* CLLocationManager+MGLNavigationAdditions.h in Headers */,
-				8A41F56125BF60A400BD6FCF /* Utils.h in Headers */,
 				35D825FE1E6A2EC60088F83B /* MapboxNavigation.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2646,6 +2641,7 @@
 				C5A6B2DD1F4CE8E8004260EA /* StyleType.swift in Sources */,
 				C5381F03204E052A00A5493E /* UIDevice.swift in Sources */,
 				351BEC021E5BCC63006FE110 /* UIView.swift in Sources */,
+				2EBF20AE25D6F89000DB7BF2 /* Utils.swift in Sources */,
 				160D8279205996DA00D278D6 /* DataCache.swift in Sources */,
 				351BEBF21E5BCC63006FE110 /* Style.swift in Sources */,
 				43FB386923A202420064481E /* Route.swift in Sources */,

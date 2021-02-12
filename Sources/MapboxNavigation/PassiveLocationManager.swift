@@ -48,13 +48,11 @@ open class PassiveLocationManager: NSObject, LocationProvider {
     public var locationProviderOptions: LocationOptions
     
     public var accuracyAuthorization: CLAccuracyAuthorization {
-        // CLLocationManager.accuracyAuthorization was introduced in the iOS 14 SDK in Xcode 12, so Xcode 11 doesn’t recognize it.
-        guard let accuracyAuthorizationValue = dataSource.systemLocationManager.value(forKey: "accuracyAuthorization") as? Int,
-              let accuracyAuthorization = MBNavigationAccuracyAuthorization(rawValue: accuracyAuthorizationValue) else {
+        if #available(iOS 14.0, *) {
+            return dataSource.systemLocationManager.accuracyAuthorization
+        } else {
             return .fullAccuracy
         }
-        
-        return accuracyAuthorization
     }
     
     public var heading: CLHeading? {
