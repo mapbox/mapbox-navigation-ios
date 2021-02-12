@@ -60,7 +60,7 @@ public struct RouteAlert {
         self.endSegmentIndex = upcomingAlert.alert.endGeometryIndex
         
         switch upcomingAlert.alert.type {
-        case .kIncident:
+        case .incident:
             guard let incidentInfo = upcomingAlert.alert.incidentInfo else {
                 preconditionFailure("Alert of type \(upcomingAlert.alert.type) did not contain an info data.")
             }
@@ -68,27 +68,27 @@ public struct RouteAlert {
                 preconditionFailure("Alert of type \(upcomingAlert.alert.type) had unrecognized Incident type: \(incidentInfo.type).")
             }
             self.alert = .incident(incident)
-        case .kTunnelEntrance:
+        case .tunnelEntrance:
             guard let tunnelInfo = upcomingAlert.alert.tunnelInfo else {
                 preconditionFailure("Alert of type \(upcomingAlert.alert.type) did not contain an info data.")
             }
             self.alert = .tunnel(Tunnel(tunnelInfo))
-        case .kBorderCrossing:
+        case .borderCrossing:
             guard let adminInfo = upcomingAlert.alert.borderCrossingInfo else {
                 preconditionFailure("Alert of type \(upcomingAlert.alert.type) did not contain an info data.")
             }
             self.alert = .borderCrossing(BorderCrossing(adminInfo))
-        case .kTollCollectionPoint:
+        case .tollCollectionPoint:
             guard let tollInfo = upcomingAlert.alert.tollCollectionInfo else {
                 preconditionFailure("Alert of type \(upcomingAlert.alert.type) did not contain an info data.")
             }
             self.alert = .tollCollection(TollCollection(tollInfo))
-        case .kServiceArea:
+        case .serviceArea:
             guard let serviceAreaInfo = upcomingAlert.alert.serviceAreaInfo else {
                 preconditionFailure("Alert of type \(upcomingAlert.alert.type) did not contain an info data.")
             }
             self.alert = .serviceArea(RestStop(serviceAreaInfo))
-        case .kRestrictedArea:
+        case .restrictedArea:
             self.alert = .restrictedArea
         }
     }

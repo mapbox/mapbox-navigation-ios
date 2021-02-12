@@ -4,11 +4,11 @@ import MapboxNavigationNative
 import MapboxDirections
 
 extension TollCollection {
-    init(_ tollInfo: RouteAlertTollCollectionInfo) {
+    init(_ tollInfo: TollCollectionInfo) {
         switch tollInfo.type {
-        case .kTollBooth:
+        case .tollBooth:
             self.init(type: .booth)
-        case .kTollGantry:
+        case .tollGantry:
             self.init(type: .gantry)
         }
     }
