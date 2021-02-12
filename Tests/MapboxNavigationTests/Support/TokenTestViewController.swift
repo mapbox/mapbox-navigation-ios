@@ -35,10 +35,7 @@ class TokenTestViewController: UIViewController {
         NotificationCenter.default.post(name: UIApplication.didReceiveMemoryWarningNotification,
                                         object: nil)
         
-        MGLOfflineStorage.shared.clearAmbientCache { _ in
-            self.mapView = NavigationMapView(frame: self.view.bounds)
-            self.view.addSubview(self.mapView!)
-        }
+        // TODO: Find a way to clean offline storage.
     }
     
     override func viewDidLoad() {

@@ -1,5 +1,4 @@
 import XCTest
-import Mapbox
 import MapboxCoreNavigation
 import MapboxDirections
 import MapboxSpeech
