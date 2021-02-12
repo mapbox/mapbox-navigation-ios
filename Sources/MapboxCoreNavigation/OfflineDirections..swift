@@ -231,33 +231,58 @@ public class NavigationDirections: Directions {
         let session: Directions.Session = (options: options, credentials: self.credentials)
 
         NavigationDirectionsConstants.offlineSerialQueue.async { [weak self] in
-            guard let result = self?
-                    .navigator
-                    .getRouteForDirectionsUri(url.absoluteString)
-            else { return }
+            let settingsProfile = SettingsProfile(
+                application: ProfileApplication.kMobile,
+                platform: ProfilePlatform.KIOS
+            )
 
-            guard let data = result.json.data(using: .utf8) else {
-                DispatchQueue.main.async {
-                    completionHandler(session, .failure(.invalidResponse))
-                }
-                return
-            }
-            DispatchQueue.main.async {
+            let configFactory = try! ConfigFactory.build(for: settingsProfile,
+                                                         config: NavigatorConfig(),
+                                                         customConfig: "")
 
-                do {
-                    let decoder = JSONDecoder()
-                    decoder.userInfo[.options] = options
-                    decoder.userInfo[.credentials] = session.credentials
-                    let response = try decoder.decode(RouteResponse.self, from: data)
-                    guard let routes = response.routes, !routes.isEmpty else {
-                        return completionHandler(session, .failure(.standard(.unableToRoute)))
+            let historyRecorder = try! HistoryRecorderHandle.build(forConfig: configFactory)
+
+            let runloopExecutor = try! RunLoopExecutorFactory.build()
+            let cacheHandle = try! CacheFactory.build(for: TilesConfig(),
+                                           config: configFactory,
+                                           runLoop: runloopExecutor,
+                                           historyRecorder: historyRecorder)
+
+            let router =
+                try! MapboxNavigationNative.Router(cache: cacheHandle,
+                                                   historyRecorder: historyRecorder)
+
+            try! router.getRouteForDirectionsUri(
+                url.absoluteString,
+                callback: { result in
+                    if ((result?.isValue()) != nil) {
+                        let resultT = result?.value as! RouterResult
+
+                        guard let data = resultT.json.data(using: .utf8) else {
+                            DispatchQueue.main.async {
+                                completionHandler(session, .failure(.invalidResponse))
+                            }
+                            return
+                        }
+                        DispatchQueue.main.async {
+
+                            do {
+                                let decoder = JSONDecoder()
+                                decoder.userInfo[.options] = options
+                                decoder.userInfo[.credentials] = session.credentials
+                                let response = try decoder.decode(RouteResponse.self, from: data)
+                                guard let routes = response.routes, !routes.isEmpty else {
+                                    return completionHandler(session, .failure(.standard(.unableToRoute)))
+                                }
+                                return completionHandler(session, .success(response))
+                            }
+                            catch {
+                                return completionHandler(session, .failure(.unknown(underlying: error)))
+                            }
+                        }
                     }
-                    return completionHandler(session, .success(response))
-                }
-                catch {
-                    return completionHandler(session, .failure(.unknown(underlying: error)))
-                }
-            }
+                 }
+            )
         }
     }
 
