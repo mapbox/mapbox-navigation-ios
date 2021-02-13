@@ -69,25 +69,18 @@ open class PassiveLocationDataSource: NSObject {
             return
         }
         
-        directions.fetchAvailableOfflineVersions { [weak self] (versions, error) in
-            guard let self = self, let latestVersion = versions?.first(where: { !$0.isEmpty }), error == nil else {
-                completionHandler?(error)
-                return
-            }
-            
-            do {
-                try self.configureNavigator(withTilesVersion: latestVersion)
-                completionHandler?(nil)
-            } catch {
-                completionHandler?(error)
-            }
+        do {
+            try self.configureNavigator(withTilesVersion: nil)
+            completionHandler?(nil)
+        } catch {
+            completionHandler?(error)
         }
     }
     
     /**
      Creates a cache for tiles of the given version and configures the navigator to use this cache.
      */
-    func configureNavigator(withTilesVersion tilesVersion: String) throws {
+    func configureNavigator(withTilesVersion tilesVersion: String?) throws {
         guard !isConfigured else {
             return
         }
@@ -100,16 +93,16 @@ open class PassiveLocationDataSource: NSObject {
             tilesURL.appendPathComponent(bundleIdentifier, isDirectory: true)
         }
         tilesURL.appendPathComponent(".mapbox", isDirectory: true)
-        tilesURL.appendPathComponent(tilesVersion, isDirectory: true)
         // Tiles with different versions shouldn't be mixed, it may cause inappropriate Navigator's behaviour
         try FileManager.default.createDirectory(at: tilesURL, withIntermediateDirectories: true, attributes: nil)
         configureNavigator(withURL: tilesURL, tilesVersion: tilesVersion)
     }
 
-    func configureNavigator(withURL tilesURL: URL, tilesVersion: String) {
-        let endpointConfig = TileEndpointConfiguration(directions: directions, tilesVersion: tilesVersion)
+    func configureNavigator(withURL tilesURL: URL, tilesVersion: String?) {
+        let endpointConfig = TileEndpointConfiguration(directions: directions, tilesVersion: tilesVersion, minimumDaysToPersistVersion: nil)
         let tilesConfig = TilesConfig(tilesPath: tilesURL.path,
                                       inMemoryTileCache: nil,
+                                      onDiskTileCache: nil,
                                       mapMatchingSpatialCache: nil,
                                       threadsCount: nil,
                                       endpointConfig: endpointConfig)
@@ -192,13 +185,17 @@ public protocol PassiveLocationDataSourceDelegate: class {
 extension TileEndpointConfiguration {
     /**
      Initializes an object that configures a navigator to obtain routing tiles of the given version from an endpoint, using credentials that are consistent with the given directions service.
+     
+     - parameter tilesVersion: Routing tile version.
+     - parameter minimumDaysToPersistVersion: The minimum age in days that a tile version much reach before a new version can be requested from the tile endpoint.
+     - parameter removesOldLocalVersions: Whether to automatically remove older versions from the cache. By default, older versions are automatically removed.
      */
-    convenience init(directions: Directions, tilesVersion: String) {
+    convenience init(directions: Directions, tilesVersion: String?, minimumDaysToPersistVersion: Int?, removesOldLocalVersions: Bool = true) {
         let host = directions.credentials.host.absoluteString
         guard let accessToken = directions.credentials.accessToken, !accessToken.isEmpty else {
             preconditionFailure("No access token specified in Info.plist")
         }
         let skuTokenProvider = SkuTokenProvider(with: directions.credentials)
-        self.init(host: host, version: tilesVersion, token: accessToken, userAgent: URLSession.userAgent, navigatorVersion: "", skuTokenSource: skuTokenProvider)
+        self.init(host: host, version: tilesVersion ?? "", token: accessToken, userAgent: URLSession.userAgent, navigatorVersion: "", skuTokenSource: skuTokenProvider, minDiffInDaysToConsiderServerVersion: minimumDaysToPersistVersion as NSNumber?, disableCleanOlderLocalVersions: !removesOldLocalVersions)
     }
 }

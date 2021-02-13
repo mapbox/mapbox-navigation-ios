@@ -117,6 +117,7 @@ public class NavigationDirections: Directions {
         NavigationDirectionsConstants.offlineSerialQueue.sync {
             let tilesConfig = TilesConfig(tilesPath: tilesURL.path,
                                           inMemoryTileCache: nil,
+                                          onDiskTileCache: nil,
                                           mapMatchingSpatialCache: nil,
                                           threadsCount: nil,
                                           endpointConfig: nil)
