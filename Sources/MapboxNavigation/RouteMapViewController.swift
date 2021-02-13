@@ -355,7 +355,7 @@ class RouteMapViewController: UIViewController {
     }
     
     @objc func orientationDidChange(_ notification: Notification) {
-        updateMapViewComponents()
+        updateMapViewContentInsets()
     }
 
     func updateMapOverlays(for routeProgress: RouteProgress) {
