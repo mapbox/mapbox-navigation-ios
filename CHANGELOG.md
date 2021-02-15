@@ -2,9 +2,13 @@
 
 ## v2.0.0
 
+### License
+
+* Mapbox Navigation SDK for iOS was updated from ISC License to Mapbox Terms of Service. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+
 ### Packaging
 
-* Mapbox Navigation SDK for iOS no longer depends on `Mapbox-iOS-SDK`.
+* Mapbox Navigation SDK for iOS no longer depends on `Mapbox-iOS-SDK`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 
 ### Map
 
