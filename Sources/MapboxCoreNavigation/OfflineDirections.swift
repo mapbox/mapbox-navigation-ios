@@ -161,32 +161,9 @@ public class NavigationDirections: Directions {
             let tilePath = filePathURL.path
             let outputPath = outputDirectoryURL.path
 
-            let settingsProfile = SettingsProfile(
-                application: ProfileApplication.kMobile,
-                platform: ProfilePlatform.KIOS
-            )
-
-            let configFactory = try! ConfigFactory.build(for: settingsProfile,
-                                                         config: NavigatorConfig(),
-                                                         customConfig: "")
-            let historyRecorder = try! HistoryRecorderHandle.build(forConfig: configFactory)
-            let runloopExecutor = try! RunLoopExecutorFactory.build()
-            let cacheHandle = try! CacheFactory.build(for: TilesConfig(),
-                                           config: configFactory,
-                                           runLoop: runloopExecutor,
-                                           historyRecorder: historyRecorder)
-
-            let navigator: Navigator = {
-                return try! Navigator(config: configFactory,
-                                      runLoopExecutor: runloopExecutor,
-                                      cache: cacheHandle,
-                                      historyRecorder: historyRecorder)
-            }()
-
             let numberOfTiles =
                 try! MapboxNavigationNative.Router.unpackTiles(forPackedTilesPath: tilePath,
                                                                outputDirectory: outputPath)
-
 
             // Report 100% progress
             progressHandler?(totalPackedBytes, totalPackedBytes)
