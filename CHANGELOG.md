@@ -8,6 +8,7 @@
 * Fixed an issue where lane guidance icons would indicate the wrong arrow for certain maneuvers. ([#2796](https://github.com/mapbox/mapbox-navigation-ios/pull/2796), [#2809](https://github.com/mapbox/mapbox-navigation-ios/pull/2809))
 * Fixed a crash showing a junction view. ([#2805](https://github.com/mapbox/mapbox-navigation-ios/pull/2805))
 * Fixed an issue with CarPlay visual instructions where U-Turn maneuver icons were not being flipped properly based on regional driving side ([#2803](https://github.com/mapbox/mapbox-navigation-ios/pull/2803)) 
+* Fixed swiping for right-to-left languages for the Guidance Card UI to be more intuitive. ([#2724](https://github.com/mapbox/mapbox-navigation-ios/pull/2724))
 
 ## v1.2.1
 
@@ -41,7 +42,6 @@
 * Fixed an issue which was preventing the ability to scroll between instructions cards on iOS 14 using workaround. ([#2755](https://github.com/mapbox/mapbox-navigation-ios/pull/2755))
 * Fixed an instructions cards layout issue that arose when changing orientation (portrait to landscape). ([#2755](https://github.com/mapbox/mapbox-navigation-ios/pull/2755))
 * Fixed swiping for right-to-left languages for the traditional top banner to be more intuitive. ([#2755](https://github.com/mapbox/mapbox-navigation-ios/pull/2755))
-* Fixed swiping for right-to-left languages for the Guidance Card UI to be more intuitive. ([#2724](https://github.com/mapbox/mapbox-navigation-ios/pull/2724))
 * Fixed an issue which was returning incorrect card width after multiple rotations on iPads by adding `InstructionsCardViewController.viewWillTransition(to:with:)`. ([#2724](https://github.com/mapbox/mapbox-navigation-ios/pull/2724))
 
 ### Location tracking
