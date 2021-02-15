@@ -104,7 +104,7 @@ step-library:
           run:
             name: Install Dependencies
             command: |
-              ./scripts/wcarthage.sh bootstrap --platform ios --cache-builds --configuration Debug --no-use-binaries --use-netrc
+              carthage bootstrap --platform ios --cache-builds --configuration Debug --no-use-binaries --use-netrc
 
   - &build-Example
       run:
