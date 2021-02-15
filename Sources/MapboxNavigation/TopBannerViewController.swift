@@ -384,9 +384,6 @@ extension TopBannerViewController: NavigationComponent {
     public func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {
         let title = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
         lanesView.hide()
-        // statusView.show(title, showSpinner: true)
-        
-        // create rerouting status and append to array of statuses
         let reroutingStatus = StatusView.Status(id: title, duration: 20, priority: StatusView.Priority(rawValue: 0))
         addNewStatus(status: reroutingStatus)
     }
@@ -418,7 +415,6 @@ extension TopBannerViewController: NavigationComponent {
     public func navigationService(_ service: NavigationService, willEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
         guard reason == .manual else { return }
         statusView.hide(delay: 0, animated: true)
-        // statusView.hide("simulating")
     }
     
     private func embed(_ child: UIViewController, in container: UIView, constrainedBy constraints: ((UIViewController, UIViewController) -> [NSLayoutConstraint])? = nil) {

@@ -9,6 +9,7 @@
 * Fixed a crash showing a junction view. ([#2805](https://github.com/mapbox/mapbox-navigation-ios/pull/2805))
 * Fixed an issue with CarPlay visual instructions where U-Turn maneuver icons were not being flipped properly based on regional driving side ([#2803](https://github.com/mapbox/mapbox-navigation-ios/pull/2803)) 
 * Fixed swiping for right-to-left languages for the Guidance Card UI to be more intuitive. ([#2724](https://github.com/mapbox/mapbox-navigation-ios/pull/2724))
+* Refactored `StatusView.swift` to allow the to use of multilpe status banners. Statuses can be added with `addNewStatus(status:)` and hidden with `hideStatus(using:)`. ([#2747](https://github.com/mapbox/mapbox-navigation-ios/pull/2747))
 
 ## v1.2.1
 

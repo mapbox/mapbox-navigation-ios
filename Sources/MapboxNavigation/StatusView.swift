@@ -147,7 +147,6 @@ public class StatusView: UIControl {
     
     @available(*, deprecated, message: "Add a status using addNewStatus instead")
     public func showStatus(title: String, spinner spin: Bool = false, duration: TimeInterval, animated: Bool = true, interactive: Bool = false) {
-        // show(title, showSpinner: spin, interactive: interactive)
         guard duration < .infinity else { return }
         hide(delay: duration, animated: animated)
     }

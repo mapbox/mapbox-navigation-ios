@@ -753,6 +753,7 @@ extension NavigationViewController: NavigationServiceDelegate {
             mapView?.reducedAccuracyActivatedMode = true
         } else if #available(iOS 14.0, *), previousAuthorizationValue == 1, didChangeAuthorizationIsFirstCalled == false {
             hideStatus(using: authorizationStatus)
+            mapView?.reducedAccuracyActivatedMode = false
         } else {
             //Fallback on earlier versions
             mapView?.reducedAccuracyActivatedMode = false
