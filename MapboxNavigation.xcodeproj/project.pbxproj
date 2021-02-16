@@ -103,7 +103,6 @@
 		3573EA71215A5A9F009899D7 /* RouteControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3573EA70215A5A9F009899D7 /* RouteControllerSnapshotTests.swift */; };
 		3575671E22C53EA400002D95 /* MMEEventsManager+Spy.h in Headers */ = {isa = PBXBuildFile; fileRef = 3575671C22C53EA400002D95 /* MMEEventsManager+Spy.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3575671F22C53EA400002D95 /* MMEEventsManager+Spy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3575671D22C53EA400002D95 /* MMEEventsManager+Spy.m */; };
-		3575672022C53EF800002D95 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
 		3577B878214FF35800094294 /* FavoritesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3577B877214FF35800094294 /* FavoritesList.swift */; };
 		357DEC44221AEE150019BAEC /* multileg-route.json in Resources */ = {isa = PBXBuildFile; fileRef = 357DEC43221AEE150019BAEC /* multileg-route.json */; };
 		3582A25020EEC46B0029C5DE /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3582A24F20EEC46B0029C5DE /* Router.swift */; };
@@ -140,7 +139,6 @@
 		35C8DBF6219194380053328C /* routeWithTunnels_9thStreetDC.json in Resources */ = {isa = PBXBuildFile; fileRef = AEF2C8F12072B603007B061F /* routeWithTunnels_9thStreetDC.json */; };
 		35C8DBF8219198320053328C /* route.json in Resources */ = {isa = PBXBuildFile; fileRef = 35C8DBF7219198310053328C /* route.json */; };
 		35C8DBFD2191D0370053328C /* CoreLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C8DBFC2191D0370053328C /* CoreLocation.swift */; };
-		35C8DBFE2191D0BD0053328C /* Turf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CC14141F799496009E872A /* Turf.framework */; };
 		35C8DC0B2191DAD20053328C /* MapboxCoreNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */; };
 		35C8DC0C2191DAD20053328C /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigation.framework */; };
 		35C8DC0D2191DAD20053328C /* TestHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CDA85E2190F2A30072B675 /* TestHelper.framework */; };
@@ -164,9 +162,6 @@
 		35CDA8572190F0670072B675 /* MapboxGeocoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3507F9F92134305C0086B39E /* MapboxGeocoder.framework */; };
 		35CDA86E2190F2A40072B675 /* TestHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 35CDA8602190F2A40072B675 /* TestHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		35CDA8782190F2F00072B675 /* Fixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CDA8772190F2F00072B675 /* Fixture.swift */; };
-		35CDA8792190F3460072B675 /* MapboxCoreNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */; };
-		35CDA87A2190F3460072B675 /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigation.framework */; };
-		35CDA87B2190F3580072B675 /* MapboxDirections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01B81E66256600D765C2 /* MapboxDirections.framework */; };
 		35CDA87C2190F3990072B675 /* TestHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CDA85E2190F2A30072B675 /* TestHelper.framework */; };
 		35CDA88D2190F5210072B675 /* DCA-Arboretum.json in Resources */ = {isa = PBXBuildFile; fileRef = 35CDA8862190F50C0072B675 /* DCA-Arboretum.json */; };
 		35CDA88F2190F6980072B675 /* EmptyStyle.json in Resources */ = {isa = PBXBuildFile; fileRef = 35CDA88A2190F5120072B675 /* EmptyStyle.json */; };
@@ -1031,11 +1026,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35CDA87B2190F3580072B675 /* MapboxDirections.framework in Frameworks */,
-				3575672022C53EF800002D95 /* MapboxMobileEvents.framework in Frameworks */,
-				35CDA8792190F3460072B675 /* MapboxCoreNavigation.framework in Frameworks */,
-				35CDA87A2190F3460072B675 /* MapboxNavigation.framework in Frameworks */,
-				35C8DBFE2191D0BD0053328C /* Turf.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
