@@ -166,9 +166,6 @@
 		35CDA81321908F310072B675 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35CDA81121908F310072B675 /* LaunchScreen.storyboard */; };
 		35CDA81E21908F320072B675 /* BenchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CDA81D21908F320072B675 /* BenchTests.swift */; };
 		35CDA8362190ADD80072B675 /* ControlRouteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CDA8352190ADD80072B675 /* ControlRouteViewController.swift */; };
-		35CDA84B2190EFDA0072B675 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
-		35CDA84F2190EFDA0072B675 /* MapboxDirections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01B81E66256600D765C2 /* MapboxDirections.framework */; };
-		35CDA8572190F0670072B675 /* MapboxGeocoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3507F9F92134305C0086B39E /* MapboxGeocoder.framework */; };
 		35CDA86E2190F2A40072B675 /* TestHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 35CDA8602190F2A40072B675 /* TestHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		35CDA8782190F2F00072B675 /* Fixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CDA8772190F2F00072B675 /* Fixture.swift */; };
 		35CDA8792190F3460072B675 /* MapboxCoreNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */; };
@@ -358,10 +355,6 @@
 		DA3525702010A5210048DDFC /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = DA35256E2010A5200048DDFC /* Localizable.stringsdict */; };
 		DA3D113225B0AB8600A6AB8C /* Mapbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35A1D3651E6624EF00A48FE8 /* Mapbox.framework */; };
 		DA3D113425B0ABA900A6AB8C /* MapboxNavigationNative.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35C98734212E042C00808B82 /* MapboxNavigationNative.framework */; };
-		DA3D113625B0ABBA00A6AB8C /* MapboxSpeech.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A9DDBD202E12EE007D52DA /* MapboxSpeech.framework */; };
-		DA3D113825B0ABC500A6AB8C /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01BC1E66259600D765C2 /* Polyline.framework */; };
-		DA3D113A25B0ABCF00A6AB8C /* Solar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C57607B01F4CC97D00C27423 /* Solar.framework */; };
-		DA3D113C25B0ABE000A6AB8C /* Turf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CC14141F799496009E872A /* Turf.framework */; };
 		DA3DA6D823E4D78E004B7B5B /* MapboxAccounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3504DF7322B79AF300D2FD3C /* MapboxAccounts.framework */; };
 		DA3DA6DA23E4D7B5004B7B5B /* MapboxAccounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3504DF7322B79AF300D2FD3C /* MapboxAccounts.framework */; };
 		DA443DDE2278C90E00ED1307 /* CPTrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA443DDD2278C90E00ED1307 /* CPTrip.swift */; };
@@ -1084,17 +1077,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				DA3D113225B0AB8600A6AB8C /* Mapbox.framework in Frameworks */,
-				DA3D113A25B0ABCF00A6AB8C /* Solar.framework in Frameworks */,
 				DA0A4B7C24D0BF6500D6B4F8 /* MapboxCommon.framework in Frameworks */,
-				DA3D113C25B0ABE000A6AB8C /* Turf.framework in Frameworks */,
 				35CDA87C2190F3990072B675 /* TestHelper.framework in Frameworks */,
-				35CDA8572190F0670072B675 /* MapboxGeocoder.framework in Frameworks */,
 				DA3D113425B0ABA900A6AB8C /* MapboxNavigationNative.framework in Frameworks */,
-				35CDA84F2190EFDA0072B675 /* MapboxDirections.framework in Frameworks */,
-				DA3D113825B0ABC500A6AB8C /* Polyline.framework in Frameworks */,
-				35CDA84B2190EFDA0072B675 /* MapboxMobileEvents.framework in Frameworks */,
 				DA3DA6DA23E4D7B5004B7B5B /* MapboxAccounts.framework in Frameworks */,
-				DA3D113625B0ABBA00A6AB8C /* MapboxSpeech.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
