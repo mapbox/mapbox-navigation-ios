@@ -215,7 +215,7 @@ extension TileEndpointConfiguration {
         
 
         self.init(host: host,
-                  dataset: "mapbox",    // TODO: Same as Android, double check the dataset is valid.
+                  dataset: "mapbox/driving",
                   version: tilesVersion,
                   token: accessToken,
                   userAgent: URLSession.userAgent,
