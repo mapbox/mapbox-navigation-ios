@@ -12,7 +12,6 @@
 		160D8279205996DA00D278D6 /* DataCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160D8278205996DA00D278D6 /* DataCache.swift */; };
 		160D827B2059973C00D278D6 /* DataCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160D827A2059973C00D278D6 /* DataCacheTests.swift */; };
 		162039CF216C348500875F5C /* NavigationEventsManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162039CE216C348500875F5C /* NavigationEventsManagerTests.swift */; };
-		1622E882215D776C006A2E5F /* MapboxNavigationNative.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35C98734212E042C00808B82 /* MapboxNavigationNative.framework */; };
 		166224452025699600EA4824 /* ImageRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166224442025699600EA4824 /* ImageRepositoryTests.swift */; };
 		1662244720256C0700EA4824 /* ImageLoadingURLProtocolSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1662244620256C0700EA4824 /* ImageLoadingURLProtocolSpy.swift */; };
 		1662244B2029059C00EA4824 /* ImageCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1662244A2029059C00EA4824 /* ImageCacheTests.swift */; };
@@ -47,7 +46,6 @@
 		3502231A205BC94E00E1449A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35022319205BC94E00E1449A /* Constants.swift */; };
 		35025F3F1F051DD2002BA3EA /* DialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35025F3E1F051DD2002BA3EA /* DialogViewController.swift */; };
 		3504DF7722B79B2E00D2FD3C /* MapboxAccounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3504DF7322B79AF300D2FD3C /* MapboxAccounts.framework */; };
-		3507F9FB2134309E0086B39E /* MapboxGeocoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3507F9F92134305C0086B39E /* MapboxGeocoder.framework */; };
 		350E2C5F22707EB80014CEB3 /* UIScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 350E2C5E22707EB80014CEB3 /* UIScreen.swift */; };
 		3510300F1F54B67000E3B7E7 /* LaneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3510300E1F54B67000E3B7E7 /* LaneTests.swift */; };
 		351030111F54B72000E3B7E7 /* route-for-lane-testing.json in Resources */ = {isa = PBXBuildFile; fileRef = 351030101F54B72000E3B7E7 /* route-for-lane-testing.json */; };
@@ -304,19 +302,9 @@
 		C53F2EE520EBC95600D9798F /* CustomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D9800C1EFA8BA9006DBF2E /* CustomViewController.swift */; };
 		C53F2EE720EBC95600D9798F /* WaypointConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */; };
 		C53F2EE820EBC95600D9798F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358D14651E5E3B7700ADE590 /* AppDelegate.swift */; };
-		C53F2EEA20EBC95600D9798F /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigation.framework */; };
-		C53F2EEB20EBC95600D9798F /* MapboxDirections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01B81E66256600D765C2 /* MapboxDirections.framework */; };
-		C53F2EEC20EBC95600D9798F /* Solar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C57607B01F4CC97D00C27423 /* Solar.framework */; };
-		C53F2EED20EBC95600D9798F /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
-		C53F2EEE20EBC95600D9798F /* Turf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CC14141F799496009E872A /* Turf.framework */; };
-		C53F2EEF20EBC95600D9798F /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01BC1E66259600D765C2 /* Polyline.framework */; };
-		C53F2EF020EBC95600D9798F /* MapboxSpeech.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A9DDBD202E12EE007D52DA /* MapboxSpeech.framework */; };
-		C53F2EF120EBC95600D9798F /* Mapbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35A1D3651E6624EF00A48FE8 /* Mapbox.framework */; };
 		C53F2EF320EBC95600D9798F /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = C57AD98920EAA39A0087B24B /* Entitlements.plist */; };
 		C53F2EF420EBC95600D9798F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35002D661E5F6B1B0090E733 /* Main.storyboard */; };
 		C53F2EF620EBC95600D9798F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35002D5F1E5F6ADB0090E733 /* Assets.xcassets */; };
-		C53F2EFC20EBC95600D9798F /* MapboxCoreNavigation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C53F2EFF20EBC95600D9798F /* MapboxNavigation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C54C655220336F2600D338E0 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54C655120336F2600D338E0 /* Constants.swift */; };
 		C551B0E620D42222009A986F /* NavigationLocationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C551B0E520D42222009A986F /* NavigationLocationManagerTests.swift */; };
 		C55C299920D2E2F600B0406C /* NavigationMapViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55C299820D2E2F600B0406C /* NavigationMapViewTests.swift */; };
@@ -348,7 +336,6 @@
 		CFD47D9020FD85EC00BC1E49 /* MGLAccountManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD47D8F20FD85EC00BC1E49 /* MGLAccountManager.swift */; };
 		DA0557252155040700A1F2AA /* RouteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0557242155040700A1F2AA /* RouteTests.swift */; };
 		DA0A4B7C24D0BF6500D6B4F8 /* MapboxCommon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA0A4B7724D0BC7000D6B4F8 /* MapboxCommon.framework */; };
-		DA0A4B7E24D0BF6A00D6B4F8 /* MapboxCommon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA0A4B7724D0BC7000D6B4F8 /* MapboxCommon.framework */; };
 		DA0A4B8124D1C9B200D6B4F8 /* Navigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0A4B8024D1C9B200D6B4F8 /* Navigator.swift */; };
 		DA1755F82357B6BD00B06C1D /* StringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A60EC820A2417200C21178 /* StringTests.swift */; };
 		DA1755F92357B7A100B06C1D /* md5_crazy_strings.txt in Resources */ = {isa = PBXBuildFile; fileRef = C5A60ECA20A241B600C21178 /* md5_crazy_strings.txt */; };
@@ -370,7 +357,6 @@
 		DA3D113825B0ABC500A6AB8C /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01BC1E66259600D765C2 /* Polyline.framework */; };
 		DA3D113A25B0ABCF00A6AB8C /* Solar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C57607B01F4CC97D00C27423 /* Solar.framework */; };
 		DA3D113C25B0ABE000A6AB8C /* Turf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CC14141F799496009E872A /* Turf.framework */; };
-		DA3DA6D823E4D78E004B7B5B /* MapboxAccounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3504DF7322B79AF300D2FD3C /* MapboxAccounts.framework */; };
 		DA3DA6DA23E4D7B5004B7B5B /* MapboxAccounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3504DF7322B79AF300D2FD3C /* MapboxAccounts.framework */; };
 		DA443DDE2278C90E00ED1307 /* CPTrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA443DDD2278C90E00ED1307 /* CPTrip.swift */; };
 		DA5B9522251AEE58007FE6AC /* CLLocationManager+MGLNavigationAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = DA5B9521251AEE58007FE6AC /* CLLocationManager+MGLNavigationAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -494,20 +480,6 @@
 			remoteGlobalIDString = 358D14621E5E3B7700ADE590;
 			remoteInfo = "Example-Swift";
 		};
-		C53F2EE020EBC95600D9798F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = C5ADFBC81DDCC7840011824B;
-			remoteInfo = MapboxCoreNavigation;
-		};
-		C53F2EE220EBC95600D9798F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 351BEBD61E5BCC28006FE110;
-			remoteInfo = MapboxNavigation;
-		};
 		C5ADFBD41DDCC7840011824B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
@@ -516,21 +488,6 @@
 			remoteInfo = MapboxCoreNavigation;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		C53F2EF920EBC95600D9798F /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				C53F2EFC20EBC95600D9798F /* MapboxCoreNavigation.framework in Embed Frameworks */,
-				C53F2EFF20EBC95600D9798F /* MapboxNavigation.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		1603C890214351EE00167D95 /* Cedar.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cedar.framework; path = Carthage/Build/iOS/Cedar.framework; sourceTree = "<group>"; };
@@ -1106,18 +1063,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C53F2EEA20EBC95600D9798F /* MapboxNavigation.framework in Frameworks */,
-				C53F2EEB20EBC95600D9798F /* MapboxDirections.framework in Frameworks */,
-				DA3DA6D823E4D78E004B7B5B /* MapboxAccounts.framework in Frameworks */,
-				1622E882215D776C006A2E5F /* MapboxNavigationNative.framework in Frameworks */,
-				C53F2EEC20EBC95600D9798F /* Solar.framework in Frameworks */,
-				C53F2EED20EBC95600D9798F /* MapboxMobileEvents.framework in Frameworks */,
-				DA0A4B7E24D0BF6A00D6B4F8 /* MapboxCommon.framework in Frameworks */,
-				C53F2EEE20EBC95600D9798F /* Turf.framework in Frameworks */,
-				3507F9FB2134309E0086B39E /* MapboxGeocoder.framework in Frameworks */,
-				C53F2EEF20EBC95600D9798F /* Polyline.framework in Frameworks */,
-				C53F2EF020EBC95600D9798F /* MapboxSpeech.framework in Frameworks */,
-				C53F2EF120EBC95600D9798F /* Mapbox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1978,15 +1923,12 @@
 				C53F2EE320EBC95600D9798F /* Sources */,
 				C53F2EE920EBC95600D9798F /* Frameworks */,
 				C53F2EF220EBC95600D9798F /* Resources */,
-				C53F2EF920EBC95600D9798F /* Embed Frameworks */,
 				C53F2F0320EBC95600D9798F /* Apply Mapbox Access Token */,
 				DA3D112B25B0AB0100A6AB8C /* Copy Frameworks with Carthage */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				C53F2EDF20EBC95600D9798F /* PBXTargetDependency */,
-				C53F2EE120EBC95600D9798F /* PBXTargetDependency */,
 			);
 			name = "Example-CarPlay";
 			productName = "Example-Swift";
@@ -2883,16 +2825,6 @@
 			target = 358D14621E5E3B7700ADE590 /* Example */;
 			targetProxy = 8DBCA7772080174600981EB2 /* PBXContainerItemProxy */;
 		};
-		C53F2EDF20EBC95600D9798F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = C5ADFBC81DDCC7840011824B /* MapboxCoreNavigation */;
-			targetProxy = C53F2EE020EBC95600D9798F /* PBXContainerItemProxy */;
-		};
-		C53F2EE120EBC95600D9798F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 351BEBD61E5BCC28006FE110 /* MapboxNavigation */;
-			targetProxy = C53F2EE220EBC95600D9798F /* PBXContainerItemProxy */;
-		};
 		C5ADFBD51DDCC7840011824B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C5ADFBC81DDCC7840011824B /* MapboxCoreNavigation */;
@@ -3436,7 +3368,6 @@
 		C53F2F0520EBC95600D9798F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "${SRCROOT}/Example/Entitlements.plist";
@@ -3465,7 +3396,6 @@
 		C53F2F0620EBC95600D9798F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "${SRCROOT}/Example/Entitlements.plist";
