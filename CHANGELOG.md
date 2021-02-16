@@ -4,7 +4,7 @@
 
 * MapboxCoreNavigation can now be installed using Swift Package Manager. ([#2771](https://github.com/mapbox/mapbox-navigation-ios/pull/2771))
 * The CarPlay guidance panel now shows lane guidance. ([#1885](https://github.com/mapbox/mapbox-navigation-ios/pull/1885))
-* Fixed an issue where lane guidance icons would indicate the wrong arrow for certain maneuvers. ([#2796](https://github.com/mapbox/mapbox-navigation-ios/pull/2796)) 
+* Fixed an issue where lane guidance icons would indicate the wrong arrow for certain maneuvers. ([#2796](https://github.com/mapbox/mapbox-navigation-ios/pull/2796), [#2809](https://github.com/mapbox/mapbox-navigation-ios/pull/2809) 
 * Fixed a crash showing a junction view. ([#2805](https://github.com/mapbox/mapbox-navigation-ios/pull/2805))
 
 ## v1.2.1
