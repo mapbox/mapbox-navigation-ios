@@ -391,6 +391,7 @@
 		DA67EA5623CAF345001686EA /* MGLShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA67EA5523CAF345001686EA /* MGLShape.swift */; };
 		DA754E1823AC56E5007E16B5 /* MBXAccounts+CoreNavigationAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = DA754E1623AC56E5007E16B5 /* MBXAccounts+CoreNavigationAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DA754E1923AC56E5007E16B5 /* MBXAccounts+CoreNavigationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DA754E1723AC56E5007E16B5 /* MBXAccounts+CoreNavigationAdditions.m */; };
+		DA85D5EF25DB4AA4008A2AD4 /* LaneViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA85D5EE25DB4AA3008A2AD4 /* LaneViewTests.swift */; };
 		DA8805002316EAED00B54D87 /* ViewController+GuidanceCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED6285522CBE4CE00058A51 /* ViewController+GuidanceCards.swift */; };
 		DA8F3A7623B5D84900B56786 /* SpeedLimitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8F3A7523B5D84900B56786 /* SpeedLimitView.swift */; };
 		DA8F3A7823B5DB7900B56786 /* SpeedLimitStyleKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8F3A7723B5DB7900B56786 /* SpeedLimitStyleKit.swift */; };
@@ -1002,6 +1003,7 @@
 		DA754E1723AC56E5007E16B5 /* MBXAccounts+CoreNavigationAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "MBXAccounts+CoreNavigationAdditions.m"; path = "include/MBXAccounts+CoreNavigationAdditions.m"; sourceTree = "<group>"; };
 		DA8264851F2AAD8400454B24 /* zh-Hant */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Main.strings"; sourceTree = "<group>"; };
 		DA8264871F2AADC200454B24 /* zh-Hant */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Navigation.strings"; sourceTree = "<group>"; };
+		DA85D5EE25DB4AA3008A2AD4 /* LaneViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaneViewTests.swift; sourceTree = "<group>"; };
 		DA8F3A7523B5D84900B56786 /* SpeedLimitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedLimitView.swift; sourceTree = "<group>"; };
 		DA8F3A7723B5DB7900B56786 /* SpeedLimitStyleKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeedLimitStyleKit.swift; sourceTree = "<group>"; };
 		DA9059B0223B1347006E8B46 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = hu; path = Resources/hu.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
@@ -1382,6 +1384,7 @@
 				8DFD949D221F66BE00152F45 /* BottomBannerSnapshotTests.swift */,
 				AE47A33622B27D8D0096458C /* InstructionsCardCollectionTests.swift */,
 				3510300E1F54B67000E3B7E7 /* LaneTests.swift */,
+				DA85D5EE25DB4AA3008A2AD4 /* LaneViewTests.swift */,
 				35B1AEBB20AD9B3C00C8544E /* LeaksSpec.swift */,
 				35B1AEBD20AD9C7800C8544E /* LeakTest.swift */,
 				3540514E1F73F3F300ED572D /* ManeuverViewTests.swift */,
@@ -2678,6 +2681,7 @@
 				355B469B22B902C9009CE634 /* SKUTests.swift in Sources */,
 				DAD17202214DB12B009C8161 /* CPMapTemplateTests.swift in Sources */,
 				35EFD009207CA5E800BF3873 /* ManeuverViewTests.swift in Sources */,
+				DA85D5EF25DB4AA4008A2AD4 /* LaneViewTests.swift in Sources */,
 				35A262B92050A5CD00AEFF6D /* InstructionsBannerViewSnapshotTests.swift in Sources */,
 				8D5CF3B0215054AF005592D6 /* FBSnapshotTestCase.swift in Sources */,
 				16AC9D11212E356200CECE44 /* CPMapTemplate+MBTestable.mm in Sources */,
