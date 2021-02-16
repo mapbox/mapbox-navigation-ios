@@ -256,6 +256,8 @@
 		3A94D82425DC0A86003E3732 /* Solar.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7D325DC0668003E3732 /* Solar.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3A94D82525DC0A86003E3732 /* Turf.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7DD25DC066B003E3732 /* Turf.xcframework */; };
 		3A94D82625DC0A86003E3732 /* Turf.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7DD25DC066B003E3732 /* Turf.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3A94D83C25DC0C02003E3732 /* MapboxSpeech.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7BF25DC0659003E3732 /* MapboxSpeech.xcframework */; };
+		3A94D84325DC0C0E003E3732 /* Solar.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7D325DC0668003E3732 /* Solar.xcframework */; };
 		3EA9301B03F8679BEDD4795F /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA93A10227A7DAF1861D9F5 /* Cache.swift */; };
 		3EA9369C33A8F10DAE9043AA /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA934C5D8DBAA19DB0F5271 /* ImageDownloader.swift */; };
 		3EA9371104016CD402547F1A /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA938479CF48D7AD1B6369B /* ImageCache.swift */; };
@@ -1125,6 +1127,8 @@
 				354A01BF1E6625D100D765C2 /* Mapbox.framework in Frameworks */,
 				35C98738212E045300808B82 /* MapboxNavigationNative.framework in Frameworks */,
 				3A94D80725DC0A0E003E3732 /* Turf.xcframework in Frameworks */,
+				3A94D83C25DC0C02003E3732 /* MapboxSpeech.xcframework in Frameworks */,
+				3A94D84325DC0C0E003E3732 /* Solar.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
