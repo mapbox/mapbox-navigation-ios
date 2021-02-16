@@ -239,6 +239,9 @@
 		3A94D7FE25DC09E8003E3732 /* Polyline.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7C925DC0664003E3732 /* Polyline.xcframework */; };
 		3A94D7FF25DC09E8003E3732 /* Turf.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7DD25DC066B003E3732 /* Turf.xcframework */; };
 		3A94D80725DC0A0E003E3732 /* Turf.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7DD25DC066B003E3732 /* Turf.xcframework */; };
+		3A94D80F25DC0A31003E3732 /* MapboxDirections.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7A125DC0635003E3732 /* MapboxDirections.xcframework */; };
+		3A94D81025DC0A31003E3732 /* MapboxMobileEvents.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7B525DC0655003E3732 /* MapboxMobileEvents.xcframework */; };
+		3A94D81125DC0A31003E3732 /* Turf.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7DD25DC066B003E3732 /* Turf.xcframework */; };
 		3EA9301B03F8679BEDD4795F /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA93A10227A7DAF1861D9F5 /* Cache.swift */; };
 		3EA9369C33A8F10DAE9043AA /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA934C5D8DBAA19DB0F5271 /* ImageDownloader.swift */; };
 		3EA9371104016CD402547F1A /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA938479CF48D7AD1B6369B /* ImageCache.swift */; };
@@ -1166,6 +1169,9 @@
 			files = (
 				35CDA8792190F3460072B675 /* MapboxCoreNavigation.framework in Frameworks */,
 				35CDA87A2190F3460072B675 /* MapboxNavigation.framework in Frameworks */,
+				3A94D80F25DC0A31003E3732 /* MapboxDirections.xcframework in Frameworks */,
+				3A94D81025DC0A31003E3732 /* MapboxMobileEvents.xcframework in Frameworks */,
+				3A94D81125DC0A31003E3732 /* Turf.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
