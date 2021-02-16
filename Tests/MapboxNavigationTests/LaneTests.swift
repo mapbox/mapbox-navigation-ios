@@ -31,7 +31,7 @@ class LaneTests: FBSnapshotTestCase {
                 let groupView = UIStackView(orientation: .vertical, autoLayout: true)
                 groupView.alignment = .center
                 
-                let laneView = LaneView(indications: lane.indications, isUsable: true, direction: ManeuverDirection(rawValue: lane.indications.description))
+                let laneView = LaneView(indications: lane.indications, isUsable: true, direction: lane.maneuverDirection)
                 laneView.drivingSide = lane.drivingSide
                 
                 laneView.backgroundColor = .white
@@ -71,7 +71,7 @@ struct TestableLane {
         
         namedIndications = [
             ("Sharp Left, Straight Ahead",      [.sharpLeft, .straightAhead], .sharpLeft),
-            ("Straight Ahead, Sharp Left",      [.straightAhead, .sharpLeft], .straightAhead),
+            ("Straight Ahead, Sharp Left",      [.straightAhead, .sharpLeft], .sharpLeft),
             ("Left",                            [.left], .left),
             ("Slight Left",                     [.slightLeft], .slightLeft),
             ("Sharp Left",                      [.sharpLeft], .sharpLeft),
@@ -81,7 +81,7 @@ struct TestableLane {
             ("Slight Right",                    [.slightRight], .slightRight),
             ("Right",                           [.right], .right),
             ("Sharp Right, Straight Ahead",     [.sharpRight, .straightAhead], .sharpRight),
-            ("Straight Ahead, Sharp Right",     [.straightAhead, .sharpRight], .straightAhead),
+            ("Straight Ahead, Sharp Right",     [.straightAhead, .sharpRight], .sharpRight),
         ]
         
         return namedIndications.map { TestableLane(description: $0.0, indications: $0.1, drivingSide: drivingSide, maneuverDirection: $0.2) }
