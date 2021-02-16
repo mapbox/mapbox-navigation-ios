@@ -220,6 +220,20 @@
 		3A94D7D525DC0668003E3732 /* Solar.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7D325DC0668003E3732 /* Solar.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3A94D7DE25DC066B003E3732 /* Turf.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7DD25DC066B003E3732 /* Turf.xcframework */; };
 		3A94D7DF25DC066B003E3732 /* Turf.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7DD25DC066B003E3732 /* Turf.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3A94D7E725DC0998003E3732 /* MapboxDirections.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7A125DC0635003E3732 /* MapboxDirections.xcframework */; };
+		3A94D7E825DC0998003E3732 /* MapboxDirections.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7A125DC0635003E3732 /* MapboxDirections.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3A94D7E925DC0998003E3732 /* MapboxGeocoder.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7AB25DC064B003E3732 /* MapboxGeocoder.xcframework */; };
+		3A94D7EA25DC0998003E3732 /* MapboxGeocoder.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7AB25DC064B003E3732 /* MapboxGeocoder.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3A94D7EB25DC0999003E3732 /* MapboxMobileEvents.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7B525DC0655003E3732 /* MapboxMobileEvents.xcframework */; };
+		3A94D7EC25DC0999003E3732 /* MapboxMobileEvents.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7B525DC0655003E3732 /* MapboxMobileEvents.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3A94D7ED25DC0999003E3732 /* MapboxSpeech.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7BF25DC0659003E3732 /* MapboxSpeech.xcframework */; };
+		3A94D7EE25DC0999003E3732 /* MapboxSpeech.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7BF25DC0659003E3732 /* MapboxSpeech.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3A94D7EF25DC0999003E3732 /* Polyline.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7C925DC0664003E3732 /* Polyline.xcframework */; };
+		3A94D7F025DC0999003E3732 /* Polyline.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7C925DC0664003E3732 /* Polyline.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3A94D7F125DC0999003E3732 /* Solar.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7D325DC0668003E3732 /* Solar.xcframework */; };
+		3A94D7F225DC0999003E3732 /* Solar.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7D325DC0668003E3732 /* Solar.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3A94D7F325DC0999003E3732 /* Turf.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7DD25DC066B003E3732 /* Turf.xcframework */; };
+		3A94D7F425DC0999003E3732 /* Turf.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7DD25DC066B003E3732 /* Turf.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3EA9301B03F8679BEDD4795F /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA93A10227A7DAF1861D9F5 /* Cache.swift */; };
 		3EA9369C33A8F10DAE9043AA /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA934C5D8DBAA19DB0F5271 /* ImageDownloader.swift */; };
 		3EA9371104016CD402547F1A /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA938479CF48D7AD1B6369B /* ImageCache.swift */; };
@@ -556,8 +570,15 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				3A94D7EE25DC0999003E3732 /* MapboxSpeech.xcframework in Embed Frameworks */,
+				3A94D7F225DC0999003E3732 /* Solar.xcframework in Embed Frameworks */,
+				3A94D7EA25DC0998003E3732 /* MapboxGeocoder.xcframework in Embed Frameworks */,
 				C53F2EFC20EBC95600D9798F /* MapboxCoreNavigation.framework in Embed Frameworks */,
 				C53F2EFF20EBC95600D9798F /* MapboxNavigation.framework in Embed Frameworks */,
+				3A94D7E825DC0998003E3732 /* MapboxDirections.xcframework in Embed Frameworks */,
+				3A94D7F425DC0999003E3732 /* Turf.xcframework in Embed Frameworks */,
+				3A94D7EC25DC0999003E3732 /* MapboxMobileEvents.xcframework in Embed Frameworks */,
+				3A94D7F025DC0999003E3732 /* Polyline.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1142,8 +1163,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A94D7F325DC0999003E3732 /* Turf.xcframework in Frameworks */,
+				3A94D7ED25DC0999003E3732 /* MapboxSpeech.xcframework in Frameworks */,
 				C53F2EEA20EBC95600D9798F /* MapboxNavigation.framework in Frameworks */,
+				3A94D7EB25DC0999003E3732 /* MapboxMobileEvents.xcframework in Frameworks */,
+				3A94D7F125DC0999003E3732 /* Solar.xcframework in Frameworks */,
 				DA3DA6D823E4D78E004B7B5B /* MapboxAccounts.framework in Frameworks */,
+				3A94D7E725DC0998003E3732 /* MapboxDirections.xcframework in Frameworks */,
+				3A94D7EF25DC0999003E3732 /* Polyline.xcframework in Frameworks */,
+				3A94D7E925DC0998003E3732 /* MapboxGeocoder.xcframework in Frameworks */,
 				1622E882215D776C006A2E5F /* MapboxNavigationNative.framework in Frameworks */,
 				DA0A4B7E24D0BF6A00D6B4F8 /* MapboxCommon.framework in Frameworks */,
 				C53F2EF120EBC95600D9798F /* Mapbox.framework in Frameworks */,
