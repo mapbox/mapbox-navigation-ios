@@ -242,6 +242,20 @@
 		3A94D80F25DC0A31003E3732 /* MapboxDirections.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7A125DC0635003E3732 /* MapboxDirections.xcframework */; };
 		3A94D81025DC0A31003E3732 /* MapboxMobileEvents.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7B525DC0655003E3732 /* MapboxMobileEvents.xcframework */; };
 		3A94D81125DC0A31003E3732 /* Turf.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7DD25DC066B003E3732 /* Turf.xcframework */; };
+		3A94D81925DC0A85003E3732 /* MapboxDirections.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7A125DC0635003E3732 /* MapboxDirections.xcframework */; };
+		3A94D81A25DC0A85003E3732 /* MapboxDirections.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7A125DC0635003E3732 /* MapboxDirections.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3A94D81B25DC0A85003E3732 /* MapboxGeocoder.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7AB25DC064B003E3732 /* MapboxGeocoder.xcframework */; };
+		3A94D81C25DC0A85003E3732 /* MapboxGeocoder.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7AB25DC064B003E3732 /* MapboxGeocoder.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3A94D81D25DC0A85003E3732 /* MapboxMobileEvents.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7B525DC0655003E3732 /* MapboxMobileEvents.xcframework */; };
+		3A94D81E25DC0A86003E3732 /* MapboxMobileEvents.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7B525DC0655003E3732 /* MapboxMobileEvents.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3A94D81F25DC0A86003E3732 /* MapboxSpeech.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7BF25DC0659003E3732 /* MapboxSpeech.xcframework */; };
+		3A94D82025DC0A86003E3732 /* MapboxSpeech.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7BF25DC0659003E3732 /* MapboxSpeech.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3A94D82125DC0A86003E3732 /* Polyline.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7C925DC0664003E3732 /* Polyline.xcframework */; };
+		3A94D82225DC0A86003E3732 /* Polyline.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7C925DC0664003E3732 /* Polyline.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3A94D82325DC0A86003E3732 /* Solar.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7D325DC0668003E3732 /* Solar.xcframework */; };
+		3A94D82425DC0A86003E3732 /* Solar.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7D325DC0668003E3732 /* Solar.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3A94D82525DC0A86003E3732 /* Turf.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7DD25DC066B003E3732 /* Turf.xcframework */; };
+		3A94D82625DC0A86003E3732 /* Turf.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7DD25DC066B003E3732 /* Turf.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3EA9301B03F8679BEDD4795F /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA93A10227A7DAF1861D9F5 /* Cache.swift */; };
 		3EA9369C33A8F10DAE9043AA /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA934C5D8DBAA19DB0F5271 /* ImageDownloader.swift */; };
 		3EA9371104016CD402547F1A /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA938479CF48D7AD1B6369B /* ImageCache.swift */; };
@@ -568,6 +582,23 @@
 				3A94D7DF25DC066B003E3732 /* Turf.xcframework in Embed Frameworks */,
 				3A94D7B725DC0655003E3732 /* MapboxMobileEvents.xcframework in Embed Frameworks */,
 				3A94D7CB25DC0664003E3732 /* Polyline.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3A94D82725DC0A86003E3732 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				3A94D82225DC0A86003E3732 /* Polyline.xcframework in Embed Frameworks */,
+				3A94D81C25DC0A85003E3732 /* MapboxGeocoder.xcframework in Embed Frameworks */,
+				3A94D81A25DC0A85003E3732 /* MapboxDirections.xcframework in Embed Frameworks */,
+				3A94D82625DC0A86003E3732 /* Turf.xcframework in Embed Frameworks */,
+				3A94D82425DC0A86003E3732 /* Solar.xcframework in Embed Frameworks */,
+				3A94D82025DC0A86003E3732 /* MapboxSpeech.xcframework in Embed Frameworks */,
+				3A94D81E25DC0A86003E3732 /* MapboxMobileEvents.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1145,8 +1176,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A94D82525DC0A86003E3732 /* Turf.xcframework in Frameworks */,
+				3A94D81F25DC0A86003E3732 /* MapboxSpeech.xcframework in Frameworks */,
 				DA3D113225B0AB8600A6AB8C /* Mapbox.framework in Frameworks */,
+				3A94D81D25DC0A85003E3732 /* MapboxMobileEvents.xcframework in Frameworks */,
+				3A94D82325DC0A86003E3732 /* Solar.xcframework in Frameworks */,
 				DA0A4B7C24D0BF6500D6B4F8 /* MapboxCommon.framework in Frameworks */,
+				3A94D81925DC0A85003E3732 /* MapboxDirections.xcframework in Frameworks */,
+				3A94D82125DC0A86003E3732 /* Polyline.xcframework in Frameworks */,
+				3A94D81B25DC0A85003E3732 /* MapboxGeocoder.xcframework in Frameworks */,
 				35CDA87C2190F3990072B675 /* TestHelper.framework in Frameworks */,
 				DA3D113425B0ABA900A6AB8C /* MapboxNavigationNative.framework in Frameworks */,
 				DA3DA6DA23E4D7B5004B7B5B /* MapboxAccounts.framework in Frameworks */,
@@ -2001,6 +2039,7 @@
 				35CDA80421908F2F0072B675 /* Resources */,
 				35CDA88E2190F59E0072B675 /* Apply Mapbox Access Token */,
 				DA3D113F25B0ABF900A6AB8C /* Copy Frameworks with Carthage */,
+				3A94D82725DC0A86003E3732 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
