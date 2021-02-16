@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -206,6 +206,20 @@
 		3A163AE0249901C300D66A0D /* RouteStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A163ADF249901C300D66A0D /* RouteStateTests.swift */; };
 		3A163AE3249901D000D66A0D /* FixLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A163AE2249901D000D66A0D /* FixLocation.swift */; };
 		3A8187C924BDAE9C00708F19 /* URLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8187C824BDAE9C00708F19 /* URLSession.swift */; };
+		3A94D7A225DC0635003E3732 /* MapboxDirections.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7A125DC0635003E3732 /* MapboxDirections.xcframework */; };
+		3A94D7A325DC0635003E3732 /* MapboxDirections.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7A125DC0635003E3732 /* MapboxDirections.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3A94D7AC25DC064B003E3732 /* MapboxGeocoder.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7AB25DC064B003E3732 /* MapboxGeocoder.xcframework */; };
+		3A94D7AD25DC064B003E3732 /* MapboxGeocoder.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7AB25DC064B003E3732 /* MapboxGeocoder.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3A94D7B625DC0655003E3732 /* MapboxMobileEvents.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7B525DC0655003E3732 /* MapboxMobileEvents.xcframework */; };
+		3A94D7B725DC0655003E3732 /* MapboxMobileEvents.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7B525DC0655003E3732 /* MapboxMobileEvents.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3A94D7C025DC0659003E3732 /* MapboxSpeech.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7BF25DC0659003E3732 /* MapboxSpeech.xcframework */; };
+		3A94D7C125DC0659003E3732 /* MapboxSpeech.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7BF25DC0659003E3732 /* MapboxSpeech.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3A94D7CA25DC0664003E3732 /* Polyline.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7C925DC0664003E3732 /* Polyline.xcframework */; };
+		3A94D7CB25DC0664003E3732 /* Polyline.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7C925DC0664003E3732 /* Polyline.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3A94D7D425DC0668003E3732 /* Solar.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7D325DC0668003E3732 /* Solar.xcframework */; };
+		3A94D7D525DC0668003E3732 /* Solar.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7D325DC0668003E3732 /* Solar.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3A94D7DE25DC066B003E3732 /* Turf.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7DD25DC066B003E3732 /* Turf.xcframework */; };
+		3A94D7DF25DC066B003E3732 /* Turf.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D7DD25DC066B003E3732 /* Turf.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3EA9301B03F8679BEDD4795F /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA93A10227A7DAF1861D9F5 /* Cache.swift */; };
 		3EA9369C33A8F10DAE9043AA /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA934C5D8DBAA19DB0F5271 /* ImageDownloader.swift */; };
 		3EA9371104016CD402547F1A /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA938479CF48D7AD1B6369B /* ImageCache.swift */; };
@@ -523,8 +537,15 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				3A94D7C125DC0659003E3732 /* MapboxSpeech.xcframework in Embed Frameworks */,
+				3A94D7D525DC0668003E3732 /* Solar.xcframework in Embed Frameworks */,
+				3A94D7AD25DC064B003E3732 /* MapboxGeocoder.xcframework in Embed Frameworks */,
 				354A01D51E6626AC00D765C2 /* MapboxCoreNavigation.framework in Embed Frameworks */,
 				35D4282B1FA0DF1D00176028 /* MapboxNavigation.framework in Embed Frameworks */,
+				3A94D7A325DC0635003E3732 /* MapboxDirections.xcframework in Embed Frameworks */,
+				3A94D7DF25DC066B003E3732 /* Turf.xcframework in Embed Frameworks */,
+				3A94D7B725DC0655003E3732 /* MapboxMobileEvents.xcframework in Embed Frameworks */,
+				3A94D7CB25DC0664003E3732 /* Polyline.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -762,6 +783,13 @@
 		3A163ADF249901C300D66A0D /* RouteStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteStateTests.swift; sourceTree = "<group>"; };
 		3A163AE2249901D000D66A0D /* FixLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixLocation.swift; sourceTree = "<group>"; };
 		3A8187C824BDAE9C00708F19 /* URLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSession.swift; sourceTree = "<group>"; };
+		3A94D7A125DC0635003E3732 /* MapboxDirections.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxDirections.xcframework; path = Carthage/Build/MapboxDirections.xcframework; sourceTree = "<group>"; };
+		3A94D7AB25DC064B003E3732 /* MapboxGeocoder.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxGeocoder.xcframework; path = Carthage/Build/MapboxGeocoder.xcframework; sourceTree = "<group>"; };
+		3A94D7B525DC0655003E3732 /* MapboxMobileEvents.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxMobileEvents.xcframework; path = Carthage/Build/MapboxMobileEvents.xcframework; sourceTree = "<group>"; };
+		3A94D7BF25DC0659003E3732 /* MapboxSpeech.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxSpeech.xcframework; path = Carthage/Build/MapboxSpeech.xcframework; sourceTree = "<group>"; };
+		3A94D7C925DC0664003E3732 /* Polyline.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Polyline.xcframework; path = Carthage/Build/Polyline.xcframework; sourceTree = "<group>"; };
+		3A94D7D325DC0668003E3732 /* Solar.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Solar.xcframework; path = Carthage/Build/Solar.xcframework; sourceTree = "<group>"; };
+		3A94D7DD25DC066B003E3732 /* Turf.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Turf.xcframework; path = Carthage/Build/Turf.xcframework; sourceTree = "<group>"; };
 		3EA93170CB959F3065ACFFC3 /* SpeechAPISpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeechAPISpy.swift; sourceTree = "<group>"; };
 		3EA93230997B8D59E3B76C8C /* InstructionPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionPresenter.swift; sourceTree = "<group>"; };
 		3EA934C5D8DBAA19DB0F5271 /* ImageDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
@@ -1043,8 +1071,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A94D7DE25DC066B003E3732 /* Turf.xcframework in Frameworks */,
+				3A94D7C025DC0659003E3732 /* MapboxSpeech.xcframework in Frameworks */,
 				35E9B0AD1F9E0F8F00BF84AB /* MapboxNavigation.framework in Frameworks */,
+				3A94D7B625DC0655003E3732 /* MapboxMobileEvents.xcframework in Frameworks */,
+				3A94D7D425DC0668003E3732 /* Solar.xcframework in Frameworks */,
 				35C98736212E045200808B82 /* MapboxNavigationNative.framework in Frameworks */,
+				3A94D7A225DC0635003E3732 /* MapboxDirections.xcframework in Frameworks */,
+				3A94D7CA25DC0664003E3732 /* Polyline.xcframework in Frameworks */,
+				3A94D7AC25DC064B003E3732 /* MapboxGeocoder.xcframework in Frameworks */,
 				3504DF7522B79B1D00D2FD3C /* MapboxAccounts.framework in Frameworks */,
 				DA0A4B7824D0BC7000D6B4F8 /* MapboxCommon.framework in Frameworks */,
 				354A01C21E66265100D765C2 /* Mapbox.framework in Frameworks */,
@@ -1565,6 +1600,13 @@
 		A9E2B43473B53369153F54C6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3A94D7DD25DC066B003E3732 /* Turf.xcframework */,
+				3A94D7D325DC0668003E3732 /* Solar.xcframework */,
+				3A94D7C925DC0664003E3732 /* Polyline.xcframework */,
+				3A94D7BF25DC0659003E3732 /* MapboxSpeech.xcframework */,
+				3A94D7B525DC0655003E3732 /* MapboxMobileEvents.xcframework */,
+				3A94D7AB25DC064B003E3732 /* MapboxGeocoder.xcframework */,
+				3A94D7A125DC0635003E3732 /* MapboxDirections.xcframework */,
 				355B469E22B904D2009CE634 /* OHHTTPStubs.framework */,
 				3504DF7322B79AF300D2FD3C /* MapboxAccounts.framework */,
 				8DFD949F2224ABE900152F45 /* SnappyShrimp.framework */,
