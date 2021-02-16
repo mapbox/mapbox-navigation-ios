@@ -2015,7 +2015,6 @@
 				C5ADFBCE1DDCC7840011824B /* Sources */,
 				C5ADFBCF1DDCC7840011824B /* Frameworks */,
 				C5ADFBD01DDCC7840011824B /* Resources */,
-				352BBC3A1E5E69A700703DF1 /* Carthage copy frameworks */,
 			);
 			buildRules = (
 			);
@@ -2288,25 +2287,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		352BBC3A1E5E69A700703DF1 /* Carthage copy frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/iOS/MapboxDirections.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Polyline.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/MapboxMobileEvents.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Quick.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Nimble.framework",
-			);
-			name = "Carthage copy frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
-		};
 		355832AE2192FAA300141922 /* Apply Mapbox Access Token */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
