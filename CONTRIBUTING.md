@@ -40,7 +40,7 @@ To build this SDK, you need Xcode 11.4.1 and [Carthage](https://github.com/Carth
    rm -rf ~/Library/Caches/carthage/ ~/Library/Caches/org.carthage.CarthageKit/binaries/{MapboxAccounts,MapboxCommon-ios,MapboxNavigationNative,mapbox-ios-sdk-dynamic}
    ```
 
-1. Run `carthage bootstrap --platform iOS --cache-builds --use-netrc`.
+1. Run `carthage bootstrap --platform iOS --use-xcframeworks --cache-builds --use-netrc`.
 
 1. Once the Carthage build finishes, open `MapboxNavigation.xcodeproj` in Xcode and build the MapboxNavigation scheme. Switch to the Example or Example-CarPlay scheme to see the SDK in action.
 
