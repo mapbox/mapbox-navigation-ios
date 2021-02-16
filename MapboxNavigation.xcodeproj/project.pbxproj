@@ -2312,18 +2312,6 @@
 			);
 			inputPaths = (
 				"$(SRCROOT)/Carthage/Build/iOS/Mapbox.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/MapboxDirections.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Polyline.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/FBSnapshotTestCase.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/MapboxMobileEvents.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Solar.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Turf.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/MapboxSpeech.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Quick.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Nimble.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Cedar.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/SnappyShrimp.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/OHHTTPStubs.framework",
 			);
 			name = "Carthage copy frameworks";
 			outputPaths = (
