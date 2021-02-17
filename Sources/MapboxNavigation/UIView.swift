@@ -122,7 +122,11 @@ extension UIView {
         layer.render(in:currentContext)
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        return image
+
+        // Check the transform property to see if the view was flipped.
+        // If it was then we need to apply a flip transform here as well since layer.render() ignores the view's transform when it is rendered
+        let isFlipped = transform.a == -1
+        return isFlipped ? image?.withHorizontallyFlippedOrientation() : image
     }
 }
 
