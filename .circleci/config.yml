@@ -82,20 +82,9 @@ step-library:
           git diff --exit-code -- */*/*.lproj
 
   - &install-dependencies
-      unless:
-        condition:
-          equal: [ "12.1.0", << parameters.xcode >> ]
-        steps:
-          run:
-            name: Install Dependencies
-            command: |
-              carthage bootstrap --platform ios --cache-builds --configuration Debug --no-use-binaries --use-netrc
-              carthage outdated --xcode-warnings # prints warnings if there are outdated carthage dependencies
-
-  - &install-dependencies-12
       when:
         condition:
-          equal: [ "12.1.0", << parameters.xcode >> ]
+          not: << parameters.spm >>
         steps:
           run:
             name: Install Dependencies
@@ -106,7 +95,7 @@ step-library:
       run:
         name: Build Example
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=13.4.1,name=iPhone 8 Plus' -project MapboxNavigation.xcodeproj -scheme Example clean build | xcpretty
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=14.4,name=iPhone 8 Plus' -project MapboxNavigation.xcodeproj -scheme Example clean build | xcpretty
 
   - &trigger-metrics
       run:
@@ -126,10 +115,10 @@ jobs:
         default: false
       iOS:
         type: string
-        default: "13.4.1"
+        default: "14.4"
       xcode:
         type: string
-        default: "11.4.1"
+        default: "12.4.0"
       lint:
         type: boolean
         default: false
@@ -168,13 +157,13 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "11.4.1"
+        default: "12.4.0"
       device:
         type: string
         default: "iPhone 8 Plus"
       iOS:
         type: string
-        default: "13.4.1"
+        default: "14.4"
       spm:
         type: boolean
         default: false
@@ -202,7 +191,6 @@ jobs:
           steps:
             - run: rm -rf Cartfile.private && rm -rf Cartfile.resolved
       - *install-dependencies
-      - *install-dependencies-12
       - *save-cache
       - run:
           name: Install prerequisites
@@ -241,11 +229,14 @@ jobs:
                 steps:
                   - run: bash <(curl -s https://codecov.io/bash)
 
-  xcode-11-examples:
+  xcode-12-examples:
     parameters:
       xcode:
         type: string
-        default: "11.4.1"
+        default: "12.4.0"
+      spm:
+        type: boolean
+        default: false
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -264,7 +255,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "11.4.1"
+        default: "12.4.0"
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -276,32 +267,16 @@ workflows:
   workflow:
     jobs:
       - build-job:
-          name: "Xcode_12.1_iOS_14.1"
-          xcode: "12.1.0"
-          iOS: "14.1"
+          name: "Xcode_12.2_iOS_14.2"
+          xcode: "12.2.0"
+          iOS: "14.2"
           device: "iPhone 8 Plus"
       - build-job:
-          name: "Xcode_12.0_iOS_14.0_SPM"
-          xcode: "12.0.0"
-          iOS: "14.0"
+          name: "Xcode_12.4_iOS_14.4_SPM"
+          xcode: "12.4.0"
+          iOS: "14.4"
           spm: true
           device: "iPhone 8 Plus"
-      - build-job:
-          name: "Xcode_11.5_iOS_13.5"
-          xcode: "11.5.0"
-          iOS: "13.5"
-          device: "iPhone 8 Plus"
-      - build-job:
-          name: "Xcode_11.4.1_iOS_12.2"
-          xcode: "11.4.1"
-          iOS: "12.2"
-          codecoverage: true
-      - build-job:
-          name: "Xcode_11.4.1_iOS_10.3.1"
-          xcode: "11.4.1"
-          iOS: "10.3.1"
-          test: false
-          device: "iPhone 7 Plus"
       - pod-job:
           name: "Xcode_12.0_iOS_14.0_CP_install"
           update: false
@@ -313,18 +288,7 @@ workflows:
           xcode: "12.0.0"
           iOS: "14.0"
           lint: true
-      - pod-job:
-          name: "Xcode_11.4.1_iOS_12.2_CP_install"
-          update: false
-          xcode: "11.4.1"
-          iOS: "12.2"
-      - pod-job:
-          name: "Xcode_11.4.1_iOS_12.2_CP_update"
-          update: true
-          xcode: "11.4.1"
-          iOS: "12.2"
-          lint: true
-      - xcode-11-examples
+      - xcode-12-examples
       - ios-trigger-metrics:
           filters:
             branches:
