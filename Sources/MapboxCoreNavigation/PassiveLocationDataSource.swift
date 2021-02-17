@@ -99,7 +99,7 @@ open class PassiveLocationDataSource: NSObject {
     }
 
     func configureNavigator(withURL tilesURL: URL, tilesVersion: String?) {
-        let endpointConfig = TileEndpointConfiguration(directions: directions, tilesVersion: tilesVersion, minimumDaysToPersistVersion: nil)
+        let endpointConfig = TileEndpointConfiguration(credentials: directions.credentials, tilesVersion: tilesVersion, minimumDaysToPersistVersion: nil)
         let tilesConfig = TilesConfig(tilesPath: tilesURL.path,
                                       inMemoryTileCache: nil,
                                       onDiskTileCache: nil,
@@ -184,18 +184,19 @@ public protocol PassiveLocationDataSourceDelegate: class {
 
 extension TileEndpointConfiguration {
     /**
-     Initializes an object that configures a navigator to obtain routing tiles of the given version from an endpoint, using credentials that are consistent with the given directions service.
+     Initializes an object that configures a navigator to obtain routing tiles of the given version from an endpoint, using the given credentials.
      
+     - parameter credentials: Credentials for accessing road network data.
      - parameter tilesVersion: Routing tile version.
      - parameter minimumDaysToPersistVersion: The minimum age in days that a tile version much reach before a new version can be requested from the tile endpoint.
      - parameter removesOldLocalVersions: Whether to automatically remove older versions from the cache. By default, older versions are automatically removed.
      */
-    convenience init(directions: Directions, tilesVersion: String?, minimumDaysToPersistVersion: Int?, removesOldLocalVersions: Bool = true) {
-        let host = directions.credentials.host.absoluteString
-        guard let accessToken = directions.credentials.accessToken, !accessToken.isEmpty else {
+    convenience init(credentials: DirectionsCredentials, tilesVersion: String?, minimumDaysToPersistVersion: Int?, removesOldLocalVersions: Bool = true) {
+        let host = credentials.host.absoluteString
+        guard let accessToken = credentials.accessToken, !accessToken.isEmpty else {
             preconditionFailure("No access token specified in Info.plist")
         }
-        let skuTokenProvider = SkuTokenProvider(with: directions.credentials)
+        let skuTokenProvider = SkuTokenProvider(with: credentials)
         self.init(host: host, version: tilesVersion ?? "", token: accessToken, userAgent: URLSession.userAgent, navigatorVersion: "", skuTokenSource: skuTokenProvider, minDiffInDaysToConsiderServerVersion: minimumDaysToPersistVersion as NSNumber?, disableCleanOlderLocalVersions: !removesOldLocalVersions)
     }
 }
