@@ -210,7 +210,6 @@
 		3A163AE0249901C300D66A0D /* RouteStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A163ADF249901C300D66A0D /* RouteStateTests.swift */; };
 		3A163AE3249901D000D66A0D /* FixLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A163AE2249901D000D66A0D /* FixLocation.swift */; };
 		3A8187C924BDAE9C00708F19 /* URLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8187C824BDAE9C00708F19 /* URLSession.swift */; };
-		3A94D71F25DAB827003E3732 /* OfflineDirections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A94D71E25DAB827003E3732 /* OfflineDirections.swift */; };
 		3A94D89925DD44B1003E3732 /* IncidentImpact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A94D89825DD44B1003E3732 /* IncidentImpact.swift */; };
 		3A94D8A225DD454A003E3732 /* IncidentImpactTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A94D8A125DD454A003E3732 /* IncidentImpactTests.swift */; };
 		3EA9301B03F8679BEDD4795F /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA93A10227A7DAF1861D9F5 /* Cache.swift */; };
@@ -798,7 +797,6 @@
 		3A163ADF249901C300D66A0D /* RouteStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteStateTests.swift; sourceTree = "<group>"; };
 		3A163AE2249901D000D66A0D /* FixLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixLocation.swift; sourceTree = "<group>"; };
 		3A8187C824BDAE9C00708F19 /* URLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSession.swift; sourceTree = "<group>"; };
-		3A94D71E25DAB827003E3732 /* OfflineDirections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineDirections.swift; sourceTree = "<group>"; };
 		3A94D89825DD44B1003E3732 /* IncidentImpact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncidentImpact.swift; sourceTree = "<group>"; };
 		3A94D8A125DD454A003E3732 /* IncidentImpactTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncidentImpactTests.swift; sourceTree = "<group>"; };
 		3EA93170CB959F3065ACFFC3 /* SpeechAPISpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeechAPISpy.swift; sourceTree = "<group>"; };
@@ -1842,7 +1840,6 @@
 				353E68FB1EF0B7F8007B2AE5 /* NavigationLocationManager.swift */,
 				C5E7A31B1F4F6828001CB015 /* NavigationRouteOptions.swift */,
 				35375EC01F31FA86004CE727 /* NavigationSettings.swift */,
-				3A94D71E25DAB827003E3732 /* OfflineDirections.swift */,
 				351174F31EF1C0530065E248 /* ReplayLocationManager.swift */,
 				C5ADFBF91DDCC9580011824B /* LegacyRouteController.swift */,
 				8D2AA744211CDD4000EB7F72 /* NavigationService.swift */,
@@ -2821,7 +2818,6 @@
 				C5E7A31C1F4F6828001CB015 /* NavigationRouteOptions.swift in Sources */,
 				352F464D20EB74C200147886 /* NavigationEventsManager.swift in Sources */,
 				351174F41EF1C0530065E248 /* ReplayLocationManager.swift in Sources */,
-				3A94D71F25DAB827003E3732 /* OfflineDirections.swift in Sources */,
 				2BE701172535940D00F46E4E /* Tunnel.swift in Sources */,
 				C5C94C1C1DDCD2340097296A /* LegacyRouteController.swift in Sources */,
 				3A8187C924BDAE9C00708F19 /* URLSession.swift in Sources */,
