@@ -24,8 +24,12 @@ extension VisualInstruction {
         mv.backgroundColor = .clear
         mv.scale = UIScreen.main.scale
         mv.visualInstruction = self
+        mv.drivingSide = side
         let image = mv.imageRepresentation
-        return shouldFlipImage(side: side) ? image?.withHorizontallyFlippedOrientation() : image
+        // Check the ManeuverView's transform property to see if the image view was flipped due to the regional driving side.
+        // If it was then we need to apply a flip transform here as well since imageRepresentation ignores view's transforms when it is rendered
+        let viewIsFlippedHorizontally = mv.transform.a == -1
+        return viewIsFlippedHorizontally ? image?.withHorizontallyFlippedOrientation() : image
     }
 
     func laneImage(side: DrivingSide, indication: LaneIndication, maneuverDirection: ManeuverDirection?, isUsable: Bool, useableColor: UIColor, unuseableColor: UIColor, size: CGSize) -> UIImage? {
@@ -42,8 +46,13 @@ extension VisualInstruction {
         laneView.maneuverDirection = maneuverDirection
         laneView.indications = indication
         laneView.isValid = isUsable
+        laneView.drivingSide = side
         let image = laneView.imageRepresentation
-        return shouldFlipImage(side: side) ? image?.withHorizontallyFlippedOrientation() : image
+
+        // Check the LaneView's transform property to see if the view was flipped due to the driving side.
+        // If it was then we need to apply a flip transform here as well since imageRepresentation ignores view's transforms when it is rendered
+        let viewIsFlippedHorizontally = laneView.transform.a == -1
+        return viewIsFlippedHorizontally ? image?.withHorizontallyFlippedOrientation() : image
     }
 
     func lanesImage(side: DrivingSide, direction: ManeuverDirection?, useableColor: UIColor, unuseableColor: UIColor, size: CGSize, scale: CGFloat) -> UIImage? {
