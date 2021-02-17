@@ -1,4 +1,3 @@
-
 import Foundation
 import MapboxNavigationNative
 import MapboxDirections
@@ -43,7 +42,7 @@ extension Incident {
                   creationDate: incidentInfo.creationTime ?? Date.distantPast,
                   startDate: incidentInfo.startTime ?? Date.distantPast,
                   endDate: incidentInfo.endTime ?? Date.distantPast,
-                  impact: incidentInfo.impact.rawValue.description,
+                  impact: incidentInfo.impact.toString(),
                   subtype: incidentInfo.subType,
                   subtypeDescription: incidentInfo.subTypeDescription,
                   alertCodes: Set(incidentInfo.alertcCodes.map { $0.intValue }),
