@@ -182,5 +182,3 @@ We welcome feedback and code contributions! Please see [CONTRIBUTING.md](./CONTR
 ## License
 
 The Mapbox Navigation SDK for iOS is released under the Mapbox Terms of Service. See [LICENSE.md](./LICENSE.md) for details.
-
-The Mapbox Navigation SDK for iOS depends on private binary distributions of the Mapbox Maps SDK for iOS and MapboxNavigationNative. These binaries may be used with a Mapbox account and under the [Mapbox Terms of Service](https://www.mapbox.com/tos/). If you do not wish to use these binaries, make sure you swap out these dependencies in the [Cartfile](./Cartfile#L3) or override them in your Podfile.
