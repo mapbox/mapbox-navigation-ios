@@ -73,11 +73,10 @@ class PassiveLocationDataSourceTests: XCTestCase {
         let locationManager = PassiveLocationDataSource()
         do {
             try locationManager.configureNavigator(withTilesVersion: tilesVersion)
+            try locationManager.configureNavigator(withURL: filePathURL, tilesVersion: tilesVersion)
         } catch {
             XCTAssertTrue(false)
         }
-
-        locationManager.configureNavigator(withURL: filePathURL, tilesVersion: tilesVersion)
 
         let locationUpdateExpectation = expectation(description: "Location manager takes some time to start mapping locations to a road graph")
         locationUpdateExpectation.expectedFulfillmentCount = 1
