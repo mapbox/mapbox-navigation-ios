@@ -400,8 +400,8 @@ open class RouteController: NSObject {
         try! navigator.toggleHistoryFor(onOff: false)
     }
     
-    public func locationHistory() -> String? {
-        return try? String(decoding: navigator.getHistory(), as: UTF8.self)
+    public func locationHistory() -> Data? {
+        return try? navigator.getHistory()
     }
 }
 

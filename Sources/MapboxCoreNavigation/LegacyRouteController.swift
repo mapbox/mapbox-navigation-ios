@@ -582,7 +582,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     }
     
     /// Required through `Router` protocol. No-op
-    public func locationHistory() -> String? {
+    public func locationHistory() -> Data? {
         return nil
     }
 }
