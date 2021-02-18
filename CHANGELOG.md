@@ -36,6 +36,9 @@
 * Renamed public constant `Constants.MBRouteLineWidthByZoomLevel` to public variable `Constants.MBRouteLineWidthByZoomLevel`, which now accepts `Double` for keys and values. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Renamed public property `MBCurrentLegAttribute` to `CurrentLegAttribute`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Renamed public property `MBCongestionAttribute` to `CongestionAttribute`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* Fixed a potential hang when `PassiveLocationDataSource` fails to download routing tiles.
+* Fixed an issue where `RouteController` or `PassiveLocationDataSource` sometimes snapped the user’s location assuming a path that violated a turn restriction.
+* Improved performance and decreased memory usage when downloading routing tiles.
 
 ### CarPlay
 
