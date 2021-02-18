@@ -1,7 +1,7 @@
 import MapboxNavigationNative
 
-extension IncidentImpact {
-    func toString() -> String {
+extension IncidentImpact: CustomStringConvertible {
+    public var description: String {
         switch self {
         case .unknown:
             return "unknown"
