@@ -23,8 +23,11 @@ open class PassiveLocationDataSource: NSObject {
         self.directions = directions
         
         let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
-        self.navigator = Navigator(profile: settingsProfile, config: NavigatorConfig() , customConfig: "", tilesConfig: TilesConfig())
-        
+        self.navigator = try! Navigator(profile: settingsProfile,
+                                        config: NavigatorConfig(),
+                                        customConfig: "",
+                                        tilesConfig: TilesConfig())
+
         self.systemLocationManager = systemLocationManager ?? NavigationLocationManager()
         
         super.init()
@@ -103,10 +106,10 @@ open class PassiveLocationDataSource: NSObject {
         tilesURL.appendPathComponent(tilesVersion, isDirectory: true)
         // Tiles with different versions shouldn't be mixed, it may cause inappropriate Navigator's behaviour
         try FileManager.default.createDirectory(at: tilesURL, withIntermediateDirectories: true, attributes: nil)
-        configureNavigator(withURL: tilesURL, tilesVersion: tilesVersion)
+        try configureNavigator(withURL: tilesURL, tilesVersion: tilesVersion)
     }
 
-    func configureNavigator(withURL tilesURL: URL, tilesVersion: String) {
+    func configureNavigator(withURL tilesURL: URL, tilesVersion: String) throws {
         let endpointConfig = TileEndpointConfiguration(directions: directions, tilesVersion: tilesVersion)
         let tilesConfig = TilesConfig(tilesPath: tilesURL.path,
                                       inMemoryTileCache: nil,
@@ -116,7 +119,10 @@ open class PassiveLocationDataSource: NSObject {
                                       endpointConfig: endpointConfig)
         
         let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
-        navigator = Navigator(profile: settingsProfile, config: NavigatorConfig() , customConfig: "", tilesConfig: tilesConfig)
+        navigator = try Navigator(profile: settingsProfile,
+                                  config: NavigatorConfig(),
+                                  customConfig: "",
+                                  tilesConfig: tilesConfig)
         
         isConfigured = true
     }
@@ -135,7 +141,7 @@ open class PassiveLocationDataSource: NSObject {
 
     private func didUpdate(locations: [CLLocation]) {
         for location in locations {
-            navigator.updateLocation(for: FixLocation(location))
+            _ = try? navigator.updateLocation(for: FixLocation(location))
         }
 
         guard let lastRawLocation = locations.last else {
@@ -207,7 +213,7 @@ extension TileEndpointConfiguration {
         }
         let skuTokenProvider = SkuTokenProvider(with: directions.credentials)
         
-        // TODO: Provide correct dataset.
+
         self.init(host: host,
                   dataset: "mapbox/driving",
                   version: tilesVersion,

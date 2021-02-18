@@ -92,7 +92,7 @@ public protocol Router: class, CLLocationManagerDelegate {
     
     func enableLocationRecording()
     func disableLocationRecording()
-    func locationHistory() -> String?
+    func locationHistory() -> Data?
 }
 
 protocol InternalRouter: class {
