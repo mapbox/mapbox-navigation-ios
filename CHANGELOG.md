@@ -22,7 +22,7 @@
 
 ### Other changes
 
-* Removed obsoleted `NavigationMapView.navigationMapDelegate`, which was replaced by `NavigationMapView.navigationMapViewDelegate`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* Removed obsoleted `NavigationMapView.navigationMapDelegate`, which was replaced by `NavigationMapView.delegate`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * `NavigationMapView.navigationMapViewDelegate` was renamed to `NavigationMapView.delegate`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * `NavigationMapViewController.mapView` was renamed to `NavigationMapViewController.navigationMapView`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Removed deprecated `InstructionsBannerViewDelegate.didDragInstructionsBanner(_:)` method. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
@@ -36,14 +36,16 @@
 * Renamed public constant `Constants.MBRouteLineWidthByZoomLevel` to public variable `Constants.MBRouteLineWidthByZoomLevel`, which now accepts `Double` for keys and values. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Renamed public property `MBCurrentLegAttribute` to `CurrentLegAttribute`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Renamed public property `MBCongestionAttribute` to `CongestionAttribute`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
-* Fixed a potential hang when `PassiveLocationDataSource` fails to download routing tiles.
-* Fixed an issue where `RouteController` or `PassiveLocationDataSource` sometimes snapped the user’s location assuming a path that violated a turn restriction.
-* Improved performance and decreased memory usage when downloading routing tiles.
+* Fixed a potential hang when `PassiveLocationDataSource` fails to download routing tiles. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* Fixed an issue where `RouteController` or `PassiveLocationDataSource` sometimes snapped the user’s location assuming a path that violated a turn restriction. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* Improved performance and decreased memory usage when downloading routing tiles. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* `NavigationViewController.mapView` was renamed to `NavigationViewController.navigationMapView`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 
 ### CarPlay
 
 * Removed deprecated `CarPlayNavigationDelegate.carPlayNavigationViewControllerDidArrive(_:)`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * `CarPlayManager.mapView` was renamed to `CarPlayManager.navigationMapView`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* Renamed `CarPlayManager.mapView` to `CarPlayManager.navigationMapView`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 
 ## v1.3.0
 
