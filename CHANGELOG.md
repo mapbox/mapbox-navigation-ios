@@ -2,49 +2,49 @@
 
 ## v2.0.0
 
-### License
-
-* Mapbox Navigation SDK for iOS was updated from ISC License to Mapbox Terms of Service. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
-
 ### Packaging
 
-* Mapbox Navigation SDK for iOS no longer depends on `Mapbox-iOS-SDK`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* The Mapbox Navigation SDK for iOS license has changed from the ISC License to the Mapbox Terms of Service. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* You can now install MapboxNavigation using Swift Package Manager, but you can no longer install it using Carthage. If you previously installed MapboxNavigation using Carthage, use Swift Package Manager instead. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* MapboxNavigation now depends on [MapboxMaps v10.0.0](https://github.com/mapbox/mapbox-maps-ios/), MapboxNavigationNative v42.0.1, and MapboxDirections v2.0.0-alpha.1. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* MapboxNavigation and MapboxCoreNavigation require iOS 11.0 or above to run. iOS 10._x_ is no longer supported. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* Xcode 12.4 or above is now required for building this SDK from source.
 
 ### Map
 
 * `MBXAccessToken` is now required for `MapboxMaps`, and must be set in the Info.plist file. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* Removed obsoleted `NavigationMapView.navigationMapDelegate`, which was replaced by `NavigationMapView.delegate`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* `NavigationMapView.navigationMapViewDelegate` was renamed to `NavigationMapView.delegate`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* `NavigationMapViewController.mapView` was renamed to `NavigationMapViewController.navigationMapView`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* Removed `NavigationAnnotation`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* `NavigationMapView.updateCourseTracking(location:camera:animated:)` no longer accepts `MGLMapCamera` as parameter, and uses `CameraOptions` instead. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* `NavigationMapView.showsUserLocation` was removed, because `NavigationMapView` is no longer inherited from `MGLMapView`. `NavigationMapView.mapView` is now exposed as public property instead. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* `NavigationViewController.pendingCamera` type was changed from `MGLMapCamera` to `CameraOptions`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* Renamed public constant `Constants.MBRouteLineWidthByZoomLevel` to public variable `Constants.MBRouteLineWidthByZoomLevel`, which now accepts `Double` for keys and values. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* Renamed public property `MBCurrentLegAttribute` to `CurrentLegAttribute`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* Renamed public property `MBCongestionAttribute` to `CongestionAttribute`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* `NavigationViewController.mapView` was renamed to `NavigationViewController.navigationMapView`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 
 ### Location tracking
 
 * `PassiveLocationManager` now conforms to `LocationProvider` protocol instead of `MGLLocationManager`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Type of `PassiveLocationManager.delegate` property was changed from `MGLLocationManagerDelegate` to `LocationProviderDelegate`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * `PassiveLocationManager.accuracyAuthorization()` was replaced with `PassiveLocationManager.accuracyAuthorization` property, which now returns `CLAccuracyAuthorization` instead of `MBNavigationAccuracyAuthorization`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
-
-### Other changes
-
-* Removed obsoleted `NavigationMapView.navigationMapDelegate`, which was replaced by `NavigationMapView.delegate`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
-* `NavigationMapView.navigationMapViewDelegate` was renamed to `NavigationMapView.delegate`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
-* `NavigationMapViewController.mapView` was renamed to `NavigationMapViewController.navigationMapView`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
-* Removed deprecated `InstructionsBannerViewDelegate.didDragInstructionsBanner(_:)` method. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
-* Removed `NavigationAnnotation`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
-* `NavigationMapView.updateCourseTracking(location:camera:animated:)` no longer accepts `MGLMapCamera` as parameter, and uses `CameraOptions` instead. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
-* `NavigationMapView.showsUserLocation` was removed, because `NavigationMapView` is no longer inherited from `MGLMapView`. `NavigationMapView.mapView` is now exposed as public property instead. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
-* `NavigationViewController.pendingCamera` type was changed from `MGLMapCamera` to `CameraOptions`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
-* Removed `NavigationViewController.origin` property, which was not used. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
-* Removed deprecated `CarPlayManager.overviewButton`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
-* Removed unused `CarPlayNavigationViewController.drivingSide` property. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
-* Renamed public constant `Constants.MBRouteLineWidthByZoomLevel` to public variable `Constants.MBRouteLineWidthByZoomLevel`, which now accepts `Double` for keys and values. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
-* Renamed public property `MBCurrentLegAttribute` to `CurrentLegAttribute`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
-* Renamed public property `MBCongestionAttribute` to `CongestionAttribute`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Fixed a potential hang when `PassiveLocationDataSource` fails to download routing tiles. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Fixed an issue where `RouteController` or `PassiveLocationDataSource` sometimes snapped the user’s location assuming a path that violated a turn restriction. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Improved performance and decreased memory usage when downloading routing tiles. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
-* `NavigationViewController.mapView` was renamed to `NavigationViewController.navigationMapView`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 
 ### CarPlay
 
 * Removed deprecated `CarPlayNavigationDelegate.carPlayNavigationViewControllerDidArrive(_:)`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * `CarPlayManager.mapView` was renamed to `CarPlayManager.navigationMapView`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* Removed deprecated `CarPlayManager.overviewButton`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* Removed unused `CarPlayNavigationViewController.drivingSide` property. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+
+### Other changes
+
+* Removed deprecated `InstructionsBannerViewDelegate.didDragInstructionsBanner(_:)` method. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* Removed `NavigationViewController.origin` property, which was not used. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 
 ## v1.3.0
 
