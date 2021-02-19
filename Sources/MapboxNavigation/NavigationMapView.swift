@@ -103,6 +103,9 @@ open class NavigationMapView: UIView {
         }
     }
     
+    /**
+     `MapView`, which is added on top of `NavigationMapView` and allows to render navigation related components.
+     */
     public private(set) var mapView: MapView!
     
     /**
@@ -295,6 +298,7 @@ open class NavigationMapView: UIView {
     open override func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         
+        // TODO: Verify that image is correctly drawn when `NavigationMapView` is created in storyboard.
         let image = UIImage(named: "feedback-map-error", in: .mapboxNavigation, compatibleWith: nil)
         let imageView = UIImageView(image: image)
         imageView.contentMode = .center
