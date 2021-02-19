@@ -30,9 +30,34 @@ The Mapbox Navigation SDK is also available [for Android](https://github.com/map
 
 ## Installation
 
+### Using Swift Package Manager
+
+To install the MapboxNavigation framework in an application using [Swift Package Manager](https://swift.org/package-manager/):
+
+1. Go to your [Mapbox account dashboard](https://account.mapbox.com/) and create an access token that has the `DOWNLOADS:READ` scope. **PLEASE NOTE: This is not the same as your production Mapbox API token. Make sure to keep it private and do not insert it into any Info.plist file.** Create a file named `.netrc` in your home directory if it doesn’t already exist, then add the following lines to the end of the file:
+   ```
+   machine api.mapbox.com
+     login mapbox
+     password PRIVATE_MAPBOX_API_TOKEN
+   ```
+   where _PRIVATE_MAPBOX_API_TOKEN_ is your Mapbox API token with the `DOWNLOADS:READ` scope. 
+
+1. In Xcode, go to File ‣ Swift Packages ‣ Add Package Dependency.
+
+1. Enter `https://github.com/mapbox/mapbox-navigation-ios.git` as the package repository and click Next.
+
+1. Set Rules to Version, Up to Next Major, and enter `2.0.0-alpha.1` as the minimum version requirement. Click Next.
+
+To install the MapboxCoreNavigation framework in another package rather than an application, run `swift package init` to create a Package.swift, then add the following dependency:
+
+```swift
+// Latest prerelease
+.package(name: "MapboxNavigation", url: "https://github.com/mapbox/mapbox-navigation-ios.git", from: "2.0.0-alpha.1")
+```
+
 ### Using CocoaPods
 
-To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
+To install the MapboxNavigation framework using [CocoaPods](https://cocoapods.org/):
 
 1. Go to your [Mapbox account dashboard](https://account.mapbox.com/) and create an access token that has the `DOWNLOADS:READ` scope. **PLEASE NOTE: This is not the same as your production Mapbox API token. Make sure to keep it private and do not insert it into any Info.plist file.** Create a file named `.netrc` in your home directory if it doesn’t already exist, then add the following lines to the end of the file:
    ```
@@ -55,7 +80,7 @@ To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
 
 ### Using Carthage
 
-To install Mapbox Navigation using [Carthage](https://github.com/Carthage/Carthage/) v0.35 or above:
+To install the MapboxNavigation framework using [Carthage](https://github.com/Carthage/Carthage/) v0.35 or above:
 
 1. Go to your [Mapbox account dashboard](https://account.mapbox.com/) and create an access token that has the `DOWNLOADS:READ` scope. **PLEASE NOTE: This is not the same as your production Mapbox API token. Make sure to keep it private and do not insert it into any Info.plist file.** Create a file named `.netrc` in your home directory if it doesn’t already exist, then add the following lines to the end of the file:
    ```
@@ -74,17 +99,13 @@ To install Mapbox Navigation using [Carthage](https://github.com/Carthage/Cartha
    ```cartfile
    # Latest stable release
    github "mapbox/mapbox-navigation-ios" ~> 1.2
-   # Latest prerelease
-   github "mapbox/mapbox-navigation-ios" "v1.2.0-rc.1"
    ```
 
 1. Run `./Carthage/Checkouts/mapbox-navigation-ios/scripts/wcarthage.sh bootstrap --platform iOS --cache-builds --use-netrc`. (wcarthage.sh is a temporary replacement for `carthage` to work around [a linker error in Xcode 12](https://github.com/Carthage/Carthage/issues/3019).)
 
 1. Follow the rest of [Carthage’s iOS integration instructions](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos). Your application target’s Embed Frameworks build phase should include `MapboxNavigation.framework`, `MapboxCoreNavigation.framework`, `MapboxNavigationNative.framework`, `MapboxCommon.framework`, and `MapboxAccounts.framework`.
 
-### Using Swift Package Manager
-
-The MapboxNavigation framework [does not yet support Swift Package Manager](https://github.com/mapbox/mapbox-navigation-ios/issues/2629) either on the command line or in Xcode. However, if you are building a user interface from scratch, you can [install just the MapboxCoreNavigation framework using SPM](./custom-navigation.md#using-swift-package-manager). 
+The MapboxNavigation framework no longer supports Carthage. However, if you are building a user interface from scratch, you can [install just the MapboxCoreNavigation framework using Carthage](./custom-navigation.md#using-carthage).
 
 ## Configuration
 
