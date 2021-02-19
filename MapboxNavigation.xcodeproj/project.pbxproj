@@ -152,7 +152,6 @@
 		35C8DC0F2191DE940053328C /* DCA-Arboretum.trace.json in Resources */ = {isa = PBXBuildFile; fileRef = 35C8DC0E2191DE940053328C /* DCA-Arboretum.trace.json */; };
 		35C8DC112191E1140053328C /* DirectionsSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C8DC102191E1140053328C /* DirectionsSpy.swift */; };
 		35C8DC122191E15A0053328C /* DummyURLSessionDataTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16435E04206EE37800AF48B6 /* DummyURLSessionDataTask.swift */; };
-		35C8DC152191E4420053328C /* SpeechAPISpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA93170CB959F3065ACFFC3 /* SpeechAPISpy.swift */; };
 		35C8DC162191E5D50053328C /* NavigationEventsManagerTestDoubles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16120A4C20645D6E007EA21D /* NavigationEventsManagerTestDoubles.swift */; };
 		35C8DC172191E5DB0053328C /* NavigationServiceTestDoubles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA93EBD6E6BEC966BBE51D6 /* NavigationServiceTestDoubles.swift */; };
 		35C98731212E02B500808B82 /* RouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C98730212E02B500808B82 /* RouteController.swift */; };
@@ -374,6 +373,7 @@
 		DA0A4B8124D1C9B200D6B4F8 /* Navigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0A4B8024D1C9B200D6B4F8 /* Navigator.swift */; };
 		DA1755F82357B6BD00B06C1D /* StringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A60EC820A2417200C21178 /* StringTests.swift */; };
 		DA1755F92357B7A100B06C1D /* md5_crazy_strings.txt in Resources */ = {isa = PBXBuildFile; fileRef = C5A60ECA20A241B600C21178 /* md5_crazy_strings.txt */; };
+		DA1A1AE325E072F90097BBD7 /* SpeechSynthesizerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA93170CB959F3065ACFFC3 /* SpeechSynthesizerSpy.swift */; };
 		DA303C9521B728DD00F921DC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DA303C9321B728DD00F921DC /* Localizable.strings */; };
 		DA303C9621B728DD00F921DC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DA303C9321B728DD00F921DC /* Localizable.strings */; };
 		DA303C9F21B76B5C00F921DC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DA303C9D21B76B5C00F921DC /* LaunchScreen.storyboard */; };
@@ -795,7 +795,7 @@
 		3A163ADF249901C300D66A0D /* RouteStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteStateTests.swift; sourceTree = "<group>"; };
 		3A163AE2249901D000D66A0D /* FixLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixLocation.swift; sourceTree = "<group>"; };
 		3A8187C824BDAE9C00708F19 /* URLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSession.swift; sourceTree = "<group>"; };
-		3EA93170CB959F3065ACFFC3 /* SpeechAPISpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeechAPISpy.swift; sourceTree = "<group>"; };
+		3EA93170CB959F3065ACFFC3 /* SpeechSynthesizerSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeechSynthesizerSpy.swift; sourceTree = "<group>"; };
 		3EA93230997B8D59E3B76C8C /* InstructionPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionPresenter.swift; sourceTree = "<group>"; };
 		3EA934C5D8DBAA19DB0F5271 /* ImageDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
 		3EA938479CF48D7AD1B6369B /* ImageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
@@ -1465,6 +1465,7 @@
 			isa = PBXGroup;
 			children = (
 				35CDA81D21908F320072B675 /* BenchTests.swift */,
+				3EA93170CB959F3065ACFFC3 /* SpeechSynthesizerSpy.swift */,
 				35CDA81F21908F320072B675 /* Info.plist */,
 			);
 			path = BenchTests;
@@ -1485,7 +1486,6 @@
 				16120A4C20645D6E007EA21D /* NavigationEventsManagerTestDoubles.swift */,
 				3559FE4E21C3195700B6613F /* NavigationPlotter.swift */,
 				3EA93EBD6E6BEC966BBE51D6 /* NavigationServiceTestDoubles.swift */,
-				3EA93170CB959F3065ACFFC3 /* SpeechAPISpy.swift */,
 				35CDA8602190F2A40072B675 /* TestHelper.h */,
 				3557506E21A8293E00AEF9B6 /* tiles */,
 				35CDA8812190F5080072B675 /* turn_left.data */,
@@ -2737,6 +2737,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				35CDA81E21908F320072B675 /* BenchTests.swift in Sources */,
+				DA1A1AE325E072F90097BBD7 /* SpeechSynthesizerSpy.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2747,7 +2748,6 @@
 				35C8DC172191E5DB0053328C /* NavigationServiceTestDoubles.swift in Sources */,
 				3537DCE721E6447600E78CE6 /* Date.swift in Sources */,
 				35C8DC122191E15A0053328C /* DummyURLSessionDataTask.swift in Sources */,
-				35C8DC152191E4420053328C /* SpeechAPISpy.swift in Sources */,
 				35CDA8782190F2F00072B675 /* Fixture.swift in Sources */,
 				3559FE4F21C3195700B6613F /* NavigationPlotter.swift in Sources */,
 				3575671F22C53EA400002D95 /* MMEEventsManager+Spy.m in Sources */,
