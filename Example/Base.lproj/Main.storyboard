@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="aCx-td-5El">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="aCx-td-5El">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -42,14 +42,14 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tgD-cs-dAn">
                                 <rect key="frame" x="0.0" y="623" width="375" height="44"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iiq-Gf-SKY">
+                                    <button opaque="NO" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iiq-Gf-SKY">
                                         <rect key="frame" x="8" y="0.0" width="130" height="44"/>
                                         <state key="normal" title="Simulate Locations"/>
                                         <connections>
                                             <action selector="simulateButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="76o-Mq-vnj"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nMe-Tl-a1N">
+                                    <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nMe-Tl-a1N">
                                         <rect key="frame" x="256" y="0.0" width="111" height="44"/>
                                         <state key="normal" title="Start Navigation"/>
                                         <connections>
@@ -69,6 +69,7 @@
                                 </constraints>
                             </view>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="eNZ-Hz-1oT"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
                         <constraints>
@@ -83,11 +84,10 @@
                             <constraint firstItem="tgD-cs-dAn" firstAttribute="top" secondItem="Tfo-Ic-OqD" secondAttribute="bottom" constant="15" id="sdu-md-ykj"/>
                             <constraint firstItem="eNZ-Hz-1oT" firstAttribute="trailing" secondItem="Tfo-Ic-OqD" secondAttribute="trailing" constant="16" id="veQ-GA-9Zk"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="eNZ-Hz-1oT"/>
                     </view>
                     <navigationItem key="navigationItem" title="Mapbox Navigation" id="zxr-0T-HBr">
                         <barButtonItem key="leftBarButtonItem" id="XbQ-fY-lUb">
-                            <button key="customView" hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="6ux-mK-LQF">
+                            <button key="customView" hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="6ux-mK-LQF">
                                 <rect key="frame" x="16" y="7" width="83" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Clear map"/>
@@ -139,14 +139,14 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xEg-9E-ca4" userLabel="Recenter">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xEg-9E-ca4" userLabel="Recenter">
                                 <rect key="frame" x="8" y="577" width="62" height="30"/>
                                 <state key="normal" title="Recenter"/>
                                 <connections>
                                     <action selector="recenterMap:" destination="j9p-fX-jo4" eventType="touchUpInside" id="xjV-KY-kRg"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="68P-Cf-VxO">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="68P-Cf-VxO">
                                 <rect key="frame" x="157.5" y="587" width="60" height="60"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -186,7 +186,7 @@
                                     <constraint firstAttribute="height" constant="125" id="JIN-44-TWV"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ocq-gm-39c">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ocq-gm-39c">
                                 <rect key="frame" x="297" y="145" width="68" height="30"/>
                                 <state key="normal" title="Feedback"/>
                                 <connections>
@@ -194,6 +194,7 @@
                                 </connections>
                             </button>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="KG0-bP-EJe"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="KG0-bP-EJe" firstAttribute="bottom" secondItem="68P-Cf-VxO" secondAttribute="bottom" constant="20" id="27M-O0-dTb"/>
@@ -214,15 +215,11 @@
                             <constraint firstItem="ocq-gm-39c" firstAttribute="top" secondItem="Zeb-q8-C2a" secondAttribute="bottom" constant="20" id="yJM-zZ-jVy"/>
                             <constraint firstItem="Zeb-q8-C2a" firstAttribute="leading" secondItem="KG0-bP-EJe" secondAttribute="leading" id="zYT-mW-YMn"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="KG0-bP-EJe"/>
-                        <userDefinedRuntimeAttributes>
-                            <userDefinedRuntimeAttribute type="string" keyPath="styleURL__" value="mapbox://styles/mapbox-map-design/ckd6dqf981hi71iqlyn3e896y"/>
-                        </userDefinedRuntimeAttributes>
                     </view>
                     <connections>
                         <outlet property="cancelButton" destination="68P-Cf-VxO" id="SlV-gp-9jp"/>
                         <outlet property="instructionsBannerView" destination="Zeb-q8-C2a" id="Bhs-wQ-4bY"/>
-                        <outlet property="mapView" destination="bFk-po-evo" id="k8H-sF-UE1"/>
+                        <outlet property="navigationMapView" destination="bFk-po-evo" id="STp-UK-eUQ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bbz-fl-vkV" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -237,7 +234,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1vl-kS-fBt">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1vl-kS-fBt">
                                 <rect key="frame" x="91" y="318.5" width="193" height="30"/>
                                 <state key="normal" title="Continue to next destination"/>
                                 <connections>
@@ -245,12 +242,12 @@
                                 </connections>
                             </button>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="WE2-2K-5tX"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="1vl-kS-fBt" firstAttribute="centerY" secondItem="wgq-AG-cad" secondAttribute="centerY" id="1Ro-0J-G3Q"/>
                             <constraint firstItem="1vl-kS-fBt" firstAttribute="centerX" secondItem="WE2-2K-5tX" secondAttribute="centerX" id="NCF-wB-Ww5"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="WE2-2K-5tX"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Obi-w3-SAb" userLabel="First Responder" sceneMemberID="firstResponder"/>

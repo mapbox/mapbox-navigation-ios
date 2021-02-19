@@ -2,7 +2,9 @@ import UIKit
 import MapboxCoreNavigation
 import MapboxNavigation
 import MapboxDirections
+import MapboxMaps
 
+// FIXME: Currently if `MapView` is created using storyboard crash occurs.
 class CustomViewController: UIViewController {
     
     var navigationService: NavigationService!
@@ -30,6 +32,8 @@ class CustomViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        navigationMapView.mapView.style.styleURL = .custom(url: URL(string: "mapbox://styles/mapbox-map-design/ckd6dqf981hi71iqlyn3e896y")!)
         
         let locationManager = simulateLocation ? SimulatedLocationManager(route: userIndexedRoute!.0) : NavigationLocationManager()
         navigationService = MapboxNavigationService(route: userIndexedRoute!.0, routeIndex: userIndexedRoute!.1, routeOptions: userRouteOptions!, locationSource: locationManager, simulating: simulateLocation ? .always : .onPoorGPS)
