@@ -4,5 +4,3 @@ binary "https://api.mapbox.com/downloads/v2/carthage/mobile-navigation-native/Ma
 github "mapbox/mapbox-directions-swift" ~> 1.2.0
 github "mapbox/turf-swift" ~> 1.0
 github "mapbox/mapbox-events-ios" ~> 0.10.2
-github "ceeK/Solar" ~> 2.1.0
-github "mapbox/mapbox-speech-swift" ~> 1.0
