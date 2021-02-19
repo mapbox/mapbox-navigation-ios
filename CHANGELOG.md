@@ -45,7 +45,6 @@
 
 * Removed deprecated `CarPlayNavigationDelegate.carPlayNavigationViewControllerDidArrive(_:)`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * `CarPlayManager.mapView` was renamed to `CarPlayManager.navigationMapView`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
-* Renamed `CarPlayManager.mapView` to `CarPlayManager.navigationMapView`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 
 ## v1.3.0
 
