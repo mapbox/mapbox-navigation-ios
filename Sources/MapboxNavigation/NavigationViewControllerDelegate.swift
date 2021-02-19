@@ -1,6 +1,8 @@
 import Foundation
+import MapboxMaps
 import MapboxDirections
 import MapboxCoreNavigation
+import Turf
 
 /**
  The `NavigationViewControllerDelegate` protocol provides methods for configuring the map view shown by a `NavigationViewController` and responding to the cancellation of a navigation session.
@@ -101,8 +103,26 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, didRefresh routeProgress: RouteProgress)
 
-    // TODO: Add delegate methods, which allow to customize main and alternative route lines, waypoints and their shapes.
+    /**
+     Returns an `CircleLayer` that marks the location of each destination along the route when there are multiple destinations. The returned layer is added to the map below the layer returned by `navigationViewController(_:waypointSymbolLayerWithIdentifier:sourceIdentifier:)`.
+     
+     If this method is unimplemented, the navigation view controller’s map view marks each destination waypoint with a circle.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, waypointCircleLayerWithIdentifier identifier: String, sourceIdentifier: String) -> CircleLayer?
 
+    /**
+     Returns a `SymbolLayer` that places an identifying symbol on each destination along the route when there are multiple destinations. The returned layer is added to the map above the layer returned by `navigationViewController(_:waypointCircleLayerWithIdentifier:sourceIdentifier:)`.
+     
+     If this method is unimplemented, the navigation view controller’s map view labels each destination waypoint with a number, starting with 1 at the first destination, 2 at the second destination, and so on.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, waypointSymbolLayerWithIdentifier identifier: String, sourceIdentifier: String) -> SymbolLayer?
+    
+    /**
+     Returns a `FeatureCollection` that represents the destination waypoints along the route (that is, excluding the origin).
+     
+     If this method is unimplemented, the navigation view controller's map view draws the waypoints using default 'FeatureCollection`.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, shapeFor waypoints: [Waypoint], legIndex: Int) -> FeatureCollection?
     /**
      Called when the user taps to select a route on the navigation view controller’s map view.
      - parameter navigationViewController: The navigation view controller presenting the route that the user selected.
@@ -204,8 +224,30 @@ public extension NavigationViewControllerDelegate {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
     }
 
-    // TODO: Add pass-through delegate methods, which allow to customize main and alternative route lines, waypoints and their shapes.
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, waypointCircleLayerWithIdentifier identifier: String, source: GeoJSONSource) -> CircleLayer? {
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
+        return nil
+    }
     
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, waypointSymbolLayerWithIdentifier identifier: String, source: GeoJSONSource) -> SymbolLayer? {
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
+        return nil
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, shapeFor waypoints: [Waypoint], legIndex: Int) -> FeatureCollection? {
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
+        return nil
+    }
+
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */

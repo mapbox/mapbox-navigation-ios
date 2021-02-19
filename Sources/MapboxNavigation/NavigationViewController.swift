@@ -7,6 +7,7 @@ import UserNotifications
 import MobileCoreServices
 import MapboxMaps
 import MapboxCoreMaps
+import Turf
 
 /**
  A container view controller is a view controller that behaves as a navigation component; that is, it responds as the user progresses along a route according to the `NavigationServiceDelegate` protocol.
@@ -493,10 +494,20 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
 // MARK: - RouteMapViewControllerDelegate methods
 
 extension NavigationViewController: RouteMapViewControllerDelegate {
+    
+    public func navigationMapView(_ navigationMapView: NavigationMapView, waypointCircleLayerWithIdentifier identifier: String, sourceIdentifier: String) -> CircleLayer? {
+        delegate?.navigationViewController(self, waypointCircleLayerWithIdentifier: identifier, sourceIdentifier: sourceIdentifier)
+    }
+    
+    public func navigationMapView(_ navigationMapView: NavigationMapView, waypointSymbolLayerWithIdentifier identifier: String, sourceIdentifier: String) -> SymbolLayer? {
+        delegate?.navigationViewController(self, waypointSymbolLayerWithIdentifier: identifier, sourceIdentifier: sourceIdentifier)
+    }
+    
+    public func navigationMapView(_ navigationMapView: NavigationMapView, shapeFor waypoints: [Waypoint], legIndex: Int) -> FeatureCollection? {
+        delegate?.navigationViewController(self, shapeFor: waypoints, legIndex: legIndex)
+    }
 
-    // TODO: Add logging with warning regarding unimplemented delegate methods, which allow to customize main and alternative route lines, waypoints and their shapes.
-
-    public func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route) {
+    public func navigationMapView(_ navigationMapView: NavigationMapView, didSelect route: Route) {
         delegate?.navigationViewController(self, didSelect: route)
     }
     
@@ -509,8 +520,8 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
         }
     }
     
-    public func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint {
-        return delegate?.navigationViewController(self, mapViewUserAnchorPoint: mapView) ?? .zero
+    public func navigationMapViewUserAnchorPoint(_ navigationMapView: NavigationMapView) -> CGPoint {
+        return delegate?.navigationViewController(self, mapViewUserAnchorPoint: navigationMapView) ?? .zero
     }
     
     func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool {

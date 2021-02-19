@@ -1,59 +1,108 @@
 import Foundation
 import MapboxDirections
 import MapboxCoreNavigation
+import MapboxMaps
+import Turf
 
 /**
  The `NavigationMapViewDelegate` provides methods for configuring the NavigationMapView, as well as responding to events triggered by the NavigationMapView.
  */
 public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
-
-    // TODO: Add delegate methods, which allow to customize main and alternative route lines, waypoints and their shapes.
+    /**
+     Asks the receiver to return a `CircleLayer` for waypoints, given an identifier and source.
+     This method is invoked any time waypoints are added or shown.
+     - parameter navigationMapView: The `NavigationMapView`.
+     - parameter identifier: The style identifier.
+     - parameter source: The Layer source containing the waypoint data that this method would style.
+     - returns: A `CircleLayer` that the map applies to all waypoints.
+     */
+    func navigationMapView(_ navigationMapView: NavigationMapView, waypointCircleLayerWithIdentifier identifier: String, sourceIdentifier: String) -> CircleLayer?
     
     /**
+     Asks the receiver to return a `SymbolLayer` for waypoint symbols, given an identifier and source.
+     This method is invoked any time waypoints are added or shown.
+     - parameter navigationMapView: The `NavigationMapView`.
+     - parameter identifier: The style identifier.
+     - parameter source: The Layer source containing the waypoint data that this method would style.
+     - returns: A `SymbolLayer` that the map applies to all waypoint symbols.
+     */
+    func navigationMapView(_ navigationMapView: NavigationMapView, waypointSymbolLayerWithIdentifier identifier: String, sourceIdentifier: String) -> SymbolLayer?
+
+    /**
      Tells the receiver that the user has selected a route by interacting with the map view.
-     - parameter mapView: The NavigationMapView.
+     - parameter navigationMapView: The `NavigationMapView`.
      - parameter route: The route that was selected.
      */
-    func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route)
+    func navigationMapView(_ navigationMapView: NavigationMapView, didSelect route: Route)
     
     /**
      Tells the receiver that a waypoint was selected.
-     - parameter mapView: The NavigationMapView.
+     - parameter navigationMapView: The `NavigationMapView`.
      - parameter waypoint: The waypoint that was selected.
      */
-    func navigationMapView(_ mapView: NavigationMapView, didSelect waypoint: Waypoint)
+    func navigationMapView(_ navigationMapView: NavigationMapView, didSelect waypoint: Waypoint)
     
     /**
-     Asks the receiver to return a CGPoint to serve as the anchor for the user icon.
-     - important: The return value should be returned in the normal UIKit coordinate-space, NOT CoreAnimation's unit coordinate-space.
-     - parameter mapView: The NavigationMapView.
-     - returns: A CGPoint (in regular coordinate-space) that represents the point on-screen where the user location icon should be drawn.
+     Asks the receiver to return a `FeatureCollection` that describes the geometry of the waypoint.
+     - parameter navigationMapView: The `NavigationMapView`.
+     - parameter waypoints: The waypoints to be displayed on the map.
+     - returns: Optionally, a `FeatureCollection` that defines the shape of the waypoint, or `nil` to use default behavior.
      */
-    func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint
+    func navigationMapView(_ navigationMapView: NavigationMapView, shapeFor waypoints: [Waypoint], legIndex: Int) -> FeatureCollection?
+    
+    /**
+     Asks the receiver to return a `CGPoint` to serve as the anchor for the user icon.
+     - important: The return value should be returned in the normal UIKit coordinate-space, NOT CoreAnimation's unit coordinate-space.
+     - parameter navigationMapView: The `NavigationMapView`.
+     - returns: A `CGPoint` (in regular coordinate-space) that represents the point on-screen where the user location icon should be drawn.
+     */
+    func navigationMapViewUserAnchorPoint(_ navigationMapView: NavigationMapView) -> CGPoint
 }
 
 public extension NavigationMapViewDelegate {
     
-    // TODO: Add logging with warning regarding unimplemented delegate methods, which allow to customize main and alternative route lines, waypoints and their shapes.
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationMapView(_ navigationMapView: NavigationMapView, waypointCircleLayerWithIdentifier identifier: String, source: GeoJSONSource) -> CircleLayer? {
+        logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
+        return nil
+    }
     
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
-    func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route) {
+    func navigationMapView(_ navigationMapView: NavigationMapView, waypointSymbolLayerWithIdentifier identifier: String, source: GeoJSONSource) -> SymbolLayer? {
+        logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
+        return nil
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationMapView(_ navigationMapView: NavigationMapView, didSelect route: Route) {
         logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
     }
     
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
-    func navigationMapView(_ mapView: NavigationMapView, didSelect waypoint: Waypoint) {
+    func navigationMapView(_ navigationMapView: NavigationMapView, didSelect waypoint: Waypoint) {
         logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
     }
     
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
-    func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint {
+    func navigationMapView(_ navigationMapView: NavigationMapView, shapeFor waypoints: [Waypoint], legIndex: Int) -> FeatureCollection? {
+        logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
+        return nil
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationMapViewUserAnchorPoint(_ navigationMapView: NavigationMapView) -> CGPoint {
         logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
         return .zero
     }

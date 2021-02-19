@@ -671,25 +671,34 @@ extension RouteMapViewController: NavigationViewDelegate {
     }
 
     // MARK: - NavigationMapViewDelegate methods
-
-    // TODO: Add pass-through delegate methods, which allow to customize main and alternative route lines, waypoints and their shapes.
+    func navigationMapView(_ navigationMapView: NavigationMapView, waypointCircleLayerWithIdentifier identifier: String, sourceIdentifier: String) -> CircleLayer? {
+        delegate?.navigationMapView(navigationMapView, waypointCircleLayerWithIdentifier: identifier, sourceIdentifier: sourceIdentifier)
+    }
     
-    func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route) {
-        delegate?.navigationMapView(mapView, didSelect: route)
+    func navigationMapView(_ navigationMapView: NavigationMapView, waypointSymbolLayerWithIdentifier identifier: String, sourceIdentifier: String) -> SymbolLayer? {
+        delegate?.navigationMapView(navigationMapView, waypointSymbolLayerWithIdentifier: identifier, sourceIdentifier: sourceIdentifier)
+    }
+    
+    func navigationMapView(_ navigationMapView: NavigationMapView, didSelect route: Route) {
+        delegate?.navigationMapView(navigationMapView, didSelect: route)
     }
 
-    func navigationMapView(_ mapView: NavigationMapView, didSelect waypoint: Waypoint) {
-        delegate?.navigationMapView(mapView, didSelect: waypoint)
+    func navigationMapView(_ navigationMapView: NavigationMapView, didSelect waypoint: Waypoint) {
+        delegate?.navigationMapView(navigationMapView, didSelect: waypoint)
+    }
+    
+    func navigationMapView(_ navigationMapView: NavigationMapView, shapeFor waypoints: [Waypoint], legIndex: Int) -> FeatureCollection? {
+        delegate?.navigationMapView(navigationMapView, shapeFor: waypoints, legIndex: legIndex)
     }
 
-    func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint {
+    func navigationMapViewUserAnchorPoint(_ navigationMapView: NavigationMapView) -> CGPoint {
         // If the end of route component is showing, then put the anchor point slightly above the middle of the map.
         if navigationView.endOfRouteView != nil, let show = navigationView.endOfRouteShowConstraint, show.isActive {
-            return CGPoint(x: mapView.bounds.midX, y: (mapView.bounds.height * 0.4))
+            return CGPoint(x: navigationMapView.bounds.midX, y: (navigationMapView.bounds.height * 0.4))
         }
 
         // Otherwise, ask the delegate or return .zero.
-        return delegate?.navigationMapViewUserAnchorPoint(mapView) ?? .zero
+        return delegate?.navigationMapViewUserAnchorPoint(navigationMapView) ?? .zero
     }
 
     // TODO: Improve documentation.

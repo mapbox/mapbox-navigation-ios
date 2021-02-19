@@ -12,7 +12,7 @@ import CarPlay
  - seealso: NavigationViewController
  */
 @available(iOS 12.0, *)
-public class CarPlayNavigationViewController: UIViewController, NavigationMapViewDelegate {
+public class CarPlayNavigationViewController: UIViewController {
     /**
      The view controller’s delegate.
      */
@@ -138,7 +138,6 @@ public class CarPlayNavigationViewController: UIViewController, NavigationMapVie
         navigationMapView.defaultAltitude = 500
         navigationMapView.zoomedOutMotorwayAltitude = 1000
         navigationMapView.longManeuverDistance = 500
-        navigationMapView.delegate = self
         navigationMapView.recenterMap()
         
         navigationMapView.mapView.on(.styleLoadingFinished) { [weak self] _ in

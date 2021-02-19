@@ -613,37 +613,21 @@ open class NavigationMapView: UIView {
             ]
             features.append(feature)
         }
+        
+        let shape = delegate?.navigationMapView(self, shapeFor: waypoints, legIndex: legIndex) ?? FeatureCollection(features: features)
 
         if route.legs.count > 1 { // are we on a multipoint route?
             routes = [route]
 
             if let _ = try? mapView.style.getSource(identifier: IdentifierString.waypointSource, type: GeoJSONSource.self).get() {
-                let geoJSON = FeatureCollection(features: features)
-                let _ = mapView.style.updateGeoJSON(for: IdentifierString.waypointSource, with: geoJSON)
+                let _ = mapView.style.updateGeoJSON(for: IdentifierString.waypointSource, with: shape)
             } else {
                 var waypointSource = GeoJSONSource()
-                waypointSource.data = .featureCollection(.init(features: features))
+                waypointSource.data = .featureCollection(shape)
                 mapView.style.addSource(source: waypointSource, identifier: IdentifierString.waypointSource)
 
-                var circles = CircleLayer(id: IdentifierString.waypointCircle)
-                circles.source = IdentifierString.waypointSource
-                let opacity = Exp(.switchCase){ Exp(.any){ Exp(.get) { "waypointCompleted" } }
-                    0.5
-                    1 }
-                circles.paint?.circleColor = .constant(.init(color: UIColor(red:0.9, green:0.9, blue:0.9, alpha:1.0)))
-                circles.paint?.circleOpacity = .expression(opacity)
-                circles.paint?.circleRadius = .constant(.init(10))
-                circles.paint?.circleStrokeColor = .constant(.init(color: UIColor.black))
-                circles.paint?.circleStrokeWidth = .constant(.init(1))
-                circles.paint?.circleStrokeOpacity = .expression(opacity)
-
-                var symbols = SymbolLayer(id: IdentifierString.waypointSymbol)
-                symbols.source = IdentifierString.waypointSource
-                symbols.layout?.textField = .expression(Exp(.toString){ Exp(.get){ "name" } })
-                symbols.layout?.textSize = .constant(.init(10))
-                symbols.paint?.textOpacity = .expression(opacity)
-                symbols.paint?.textHaloWidth = .constant(.init(0.25))
-                symbols.paint?.textHaloColor = .constant(.init(color: UIColor.black))
+                let circles = delegate?.navigationMapView(self, waypointCircleLayerWithIdentifier: IdentifierString.waypointCircle, sourceIdentifier: IdentifierString.waypointSource) ?? defaultWaypointCircleLayer()
+                let symbols = delegate?.navigationMapView(self, waypointSymbolLayerWithIdentifier: IdentifierString.waypointSymbol, sourceIdentifier: IdentifierString.waypointSource) ?? defaultWaypointSymbolLayer()
 
                 if let arrows = try? mapView.style.getLayer(with: IdentifierString.arrowCasingSymbol, type: LineLayer.self).get() {
                     mapView.style.addLayer(layer: circles, layerPosition: LayerPosition(above: arrows.id))
@@ -662,6 +646,50 @@ open class NavigationMapView: UIView {
             destinationAnnotation.title = "navigation_annotation"
             mapView.annotationManager.addAnnotation(destinationAnnotation)
         }
+    }
+    
+    func defaultWaypointCircleLayer() -> CircleLayer {
+        var circles = CircleLayer(id: IdentifierString.waypointCircle)
+        circles.source = IdentifierString.waypointSource
+        let opacity = Exp(.switchCase) {
+            Exp(.any) {
+                Exp(.get) {
+                    "waypointCompleted"
+                }
+            }
+            0.5
+            1
+        }
+        circles.paint?.circleColor = .constant(.init(color: UIColor(red:0.9, green:0.9, blue:0.9, alpha:1.0)))
+        circles.paint?.circleOpacity = .expression(opacity)
+        circles.paint?.circleRadius = .constant(.init(10))
+        circles.paint?.circleStrokeColor = .constant(.init(color: UIColor.black))
+        circles.paint?.circleStrokeWidth = .constant(.init(1))
+        circles.paint?.circleStrokeOpacity = .expression(opacity)
+        return circles
+    }
+    
+    func defaultWaypointSymbolLayer() -> SymbolLayer {
+        var symbols = SymbolLayer(id: IdentifierString.waypointSymbol)
+        symbols.source = IdentifierString.waypointSource
+        symbols.layout?.textField = .expression(Exp(.toString){
+                                                    Exp(.get){
+                                                        "name"
+                                                    }
+                                                })
+        symbols.layout?.textSize = .constant(.init(10))
+        symbols.paint?.textOpacity = .expression(Exp(.switchCase) {
+            Exp(.any) {
+                Exp(.get) {
+                    "waypointCompleted"
+                }
+            }
+            0.5
+            1
+        })
+        symbols.paint?.textHaloWidth = .constant(.init(0.25))
+        symbols.paint?.textHaloColor = .constant(.init(color: UIColor.black))
+        return symbols
     }
     
     public func removeRoutes() {
