@@ -89,10 +89,6 @@ public protocol Router: class, CLLocationManagerDelegate {
      This is a convienence method provided to advance the leg index of any given router without having to worry about the internal data structure of the router.
      */
     func advanceLegIndex()
-    
-    func enableLocationRecording()
-    func disableLocationRecording()
-    func locationHistory() -> Data?
 }
 
 protocol InternalRouter: class {

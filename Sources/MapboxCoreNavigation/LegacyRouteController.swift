@@ -570,19 +570,4 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
             fatalError()
         }
     }
-    
-    /// Required through `Router` protocol. No-op
-    public func enableLocationRecording() {
-        // no-op
-    }
-    /// Required through `Router` protocol. No-op
-
-    public func disableLocationRecording() {
-        // no-op
-    }
-    
-    /// Required through `Router` protocol. No-op
-    public func locationHistory() -> Data? {
-        return nil
-    }
 }

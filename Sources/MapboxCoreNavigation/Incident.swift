@@ -42,11 +42,28 @@ extension Incident {
                   creationDate: incidentInfo.creationTime ?? Date.distantPast,
                   startDate: incidentInfo.startTime ?? Date.distantPast,
                   endDate: incidentInfo.endTime ?? Date.distantPast,
-                  impact: incidentInfo.impact.description,
+                  impact: .init(incidentInfo.impact),
                   subtype: incidentInfo.subType,
                   subtypeDescription: incidentInfo.subTypeDescription,
                   alertCodes: Set(incidentInfo.alertcCodes.map { $0.intValue }),
                   lanesBlocked: BlockedLanes(descriptions: incidentInfo.lanesBlocked),
                   shapeIndexRange: -1 ..< -1)
+    }
+}
+
+extension Incident.Impact {
+    init(_ incidentImpact: IncidentImpact) {
+        switch incidentImpact {
+        case .unknown:
+            self = .unknown
+        case .critical:
+            self = .critical
+        case .major:
+            self = .major
+        case .minor:
+            self = .minor
+        case .low:
+            self = .low
+        }
     }
 }

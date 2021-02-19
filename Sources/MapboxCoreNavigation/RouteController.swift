@@ -20,18 +20,29 @@ open class RouteController: NSObject {
         public static let shouldPreventReroutesWhenArrivingAtWaypoint: Bool = true
         public static let shouldDisableBatteryMonitoring: Bool = true
     }
+    
+    struct NavigatorResources {
+        let navigator: Navigator
+        let historyRecorder: HistoryRecorderHandle
+    }
 
-    lazy var navigator: Navigator = {
+    lazy var navigatorResources: NavigatorResources = {
         let settingsProfile = SettingsProfile(
             application: ProfileApplication.kMobile,
             platform: ProfilePlatform.KIOS
         )
-
-        return try! Navigator(profile: settingsProfile,
-                              config: NavigatorConfig(),
-                              customConfig: "",
-                              tilesConfig: TilesConfig())
+        
+        let config = try! ConfigFactory.build(for: settingsProfile, config: NavigatorConfig(), customConfig: "")
+        let runLoopExecutor = try! RunLoopExecutorFactory.build()
+        let historyRecorder = try! HistoryRecorderHandle.build(forConfig: config)
+        let cache = try! CacheFactory.build(for: TilesConfig(), config: config, runLoop: runLoopExecutor, historyRecorder: historyRecorder)
+        let navigator = try! Navigator(config: config, runLoopExecutor: runLoopExecutor, cache: cache, historyRecorder: historyRecorder)
+        return NavigatorResources(navigator: navigator, historyRecorder: historyRecorder)
     }()
+    
+    var navigator: Navigator {
+        return navigatorResources.navigator
+    }
     
     public var indexedRoute: IndexedRoute {
         get {
@@ -392,15 +403,15 @@ open class RouteController: NSObject {
     }
     
     public func enableLocationRecording() {
-        try! navigator.toggleHistoryFor(onOff: true)
+        try! navigatorResources.historyRecorder.enable(forEnabled: true)
     }
     
     public func disableLocationRecording() {
-        try! navigator.toggleHistoryFor(onOff: false)
+        try! navigatorResources.historyRecorder.enable(forEnabled: false)
     }
     
-    public func locationHistory() -> Data? {
-        return try? navigator.getHistory()
+    public func locationHistory() throws -> Data {
+        return try navigatorResources.historyRecorder.getHistory()
     }
 }
 
