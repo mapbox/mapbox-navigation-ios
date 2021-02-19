@@ -401,7 +401,7 @@ open class NavigationMapView: UIView {
         
         userCourseView.update(location: location,
                               pitch: mapView.cameraView.pitch,
-                              direction: location.course,
+                              direction: mapView.bearing,
                               animated: animated,
                               tracksUserCourse: tracksUserCourse)
     }
@@ -1024,7 +1024,6 @@ open class NavigationMapView: UIView {
         
         if sender.state == .changed {
             guard let location = userLocationForCourseTracking else { return }
-            
             updateCourseView(to: location)
         }
     }
@@ -1050,7 +1049,7 @@ open class NavigationMapView: UIView {
     private func updateCourseView(to location: CLLocation, pitch: CGFloat? = nil, direction: CLLocationDirection? = nil, animated: Bool = false) {
         userCourseView.update(location: location,
                               pitch: pitch ?? mapView.cameraView.pitch,
-                              direction: direction ?? location.course,
+                              direction: direction ?? mapView.bearing,
                               animated: animated,
                               tracksUserCourse: tracksUserCourse)
         
