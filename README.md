@@ -2,7 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/mapbox/mapbox-navigation-ios.svg?style=svg)](https://circleci.com/gh/mapbox/mapbox-navigation-ios)
 [![codecov](https://codecov.io/gh/mapbox/mapbox-navigation-ios/branch/main/graph/badge.svg)](https://codecov.io/gh/mapbox/mapbox-navigation-ios)
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+[![SPM compatible](https://img.shields.io/badge/SPM-compatible-4BC51D.svg?style=flat)](https://swift.org/package-manager/)
 [![CocoaPods](https://img.shields.io/cocoapods/v/MapboxNavigation.svg)](https://cocoapods.org/pods/MapboxNavigation/)
 
 <img alt="Mapbox Navigation SDK" src="./docs/img/navigation.png" width="258" align="right" />
