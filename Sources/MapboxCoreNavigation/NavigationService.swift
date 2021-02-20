@@ -559,7 +559,7 @@ private extension Double {
 private func checkForUpdates() {
     #if TARGET_IPHONE_SIMULATOR
     guard (NSClassFromString("XCTestCase") == nil) else { return } // Short-circuit when running unit tests
-    guard let version = Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString") else { return }
+    guard let version = Bundle.mapboxCoreNavigation.object(forInfoDictionaryKey: "CFBundleShortVersionString") else { return }
     let latestVersion = String(describing: version)
     _ = URLSession.shared.dataTask(with: URL(string: "https://docs.mapbox.com/ios/navigation/latest_version.txt")!, completionHandler: { (data, response, error) in
         if let _ = error { return }
