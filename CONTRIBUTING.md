@@ -142,9 +142,9 @@ Before we can merge your PR, it must pass automated continuous integration check
 
 ## Contributor License Agreement
 
-Thank you for contributing to the Mapbox Navigation SDK for iOS ("the SDK")! This Contributor License Agreement (“Agreement”) sets out the terms governing any source code, object code, bug fixes, configuration changes, tools, specifications, documentation, data, materials, feedback, information or other works of authorship that you submit, beginning January 25, 2021, in any form and in any manner, to the SDK (https://github.com/mapbox/mapbox-navigation-ios) (collectively “Contributions”).
+Thank you for contributing to the Mapbox Navigation SDK for iOS ("the SDK")! This Contributor License Agreement (“Agreement”) sets out the terms governing any source code, object code, bug fixes, configuration changes, tools, specifications, documentation, data, materials, feedback, information or other works of authorship that you submit, beginning February 19, 2021, in any form and in any manner, to the SDK (https://github.com/mapbox/mapbox-navigation-ios) (collectively “Contributions”).
 
-You agree that the following terms apply to all of your Contributions beginning January 25, 2021. Except for the licenses you grant under this Agreement, you retain all of your right, title and interest in and to your Contributions.
+You agree that the following terms apply to all of your Contributions beginning February 19, 2021. Except for the licenses you grant under this Agreement, you retain all of your right, title and interest in and to your Contributions.
 
 **Disclaimer.** To the fullest extent permitted under applicable law, you provide your Contributions on an "as-is" basis, without any warranties or conditions, express or implied, including, without limitation, any implied warranties or conditions of non-infringement, merchantability or fitness for a particular purpose. You have no obligation to provide support for your Contributions, but you may offer support to the extent you desire.
 
