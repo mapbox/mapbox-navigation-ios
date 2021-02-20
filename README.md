@@ -72,8 +72,8 @@ To install the MapboxNavigation framework using [CocoaPods](https://cocoapods.or
    # Latest stable release
    pod 'MapboxNavigation', '~> 1.2'
    # Latest prerelease
-   pod 'MapboxCoreNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v1.2.0-rc.1'
-   pod 'MapboxNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v1.2.0-rc.1'
+   pod 'MapboxCoreNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v2.0.0-alpha.1'
+   pod 'MapboxNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v2.0.0-alpha.1'
    ```
 
 1. Run `pod repo update && pod install` and open the resulting Xcode workspace.
@@ -105,7 +105,7 @@ To install the MapboxNavigation framework using [Carthage](https://github.com/Ca
 
 1. Follow the rest of [Carthage’s iOS integration instructions](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos). Your application target’s Embed Frameworks build phase should include `MapboxNavigation.framework`, `MapboxCoreNavigation.framework`, `MapboxNavigationNative.framework`, `MapboxCommon.framework`, and `MapboxAccounts.framework`.
 
-The MapboxNavigation framework no longer supports Carthage. However, if you are building a user interface from scratch, you can [install just the MapboxCoreNavigation framework using Carthage](./custom-navigation.md#using-carthage).
+MapboxNavigation no longer supports Carthage as of v2.0.0-alpha.1. However, if you are building a user interface from scratch, you can [install just the MapboxCoreNavigation framework using Carthage](./custom-navigation.md#using-carthage).
 
 ## Configuration
 
