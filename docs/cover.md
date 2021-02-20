@@ -8,9 +8,34 @@ The Mapbox Navigation SDK and Core Navigation are compatible with applications w
 
 ## Installation
 
+### Using Swift Package Manager
+
+To install the MapboxNavigation framework in an application using [Swift Package Manager](https://swift.org/package-manager/):
+
+1. Go to your [Mapbox account dashboard](https://account.mapbox.com/) and create an access token that has the `DOWNLOADS:READ` scope. **PLEASE NOTE: This is not the same as your production Mapbox API token. Make sure to keep it private and do not insert it into any Info.plist file.** Create a file named `.netrc` in your home directory if it doesn’t already exist, then add the following lines to the end of the file:
+   ```
+   machine api.mapbox.com
+     login mapbox
+     password PRIVATE_MAPBOX_API_TOKEN
+   ```
+   where _PRIVATE_MAPBOX_API_TOKEN_ is your Mapbox API token with the `DOWNLOADS:READ` scope. 
+
+1. In Xcode, go to File ‣ Swift Packages ‣ Add Package Dependency.
+
+1. Enter `https://github.com/mapbox/mapbox-navigation-ios.git` as the package repository and click Next.
+
+1. Set Rules to Version, Up to Next Major, and enter `${MINOR_VERSION}` as the minimum version requirement. Click Next.
+
+To install the MapboxCoreNavigation framework in another package rather than an application, run `swift package init` to create a Package.swift, then add the following dependency:
+
+```swift
+// Latest prerelease
+.package(name: "MapboxNavigation", url: "https://github.com/mapbox/mapbox-navigation-ios.git", from: "${MINOR_VERSION}")
+```
+
 ### Using CocoaPods
 
-To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
+To install the MapboxNavigation framework using [CocoaPods](https://cocoapods.org/):
 
 1. Go to your [Mapbox account dashboard](https://account.mapbox.com/) and create an access token that has the `DOWNLOADS:READ` scope. **PLEASE NOTE: This is not the same as your production Mapbox API token. Make sure to keep it private and do not insert it into any Info.plist file.** Create a file named `.netrc` in your home directory if it doesn’t already exist, then add the following lines to the end of the file:
    ```
@@ -22,33 +47,14 @@ To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
 
 1. Create a [Podfile](https://guides.cocoapods.org/syntax/podfile.html) with the following specification:
    ```ruby
-   pod 'MapboxCoreNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => '${MINOR_VERSION}'
-   pod 'MapboxNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => '${MINOR_VERSION}'
+   # Latest stable release
+   pod 'MapboxNavigation', '~> ${MINOR_VERSION}'
+   # Latest prerelease
+   pod 'MapboxCoreNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v${MINOR_VERSION}'
+   pod 'MapboxNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v${MINOR_VERSION}'
    ```
 
 1. Run `pod repo update && pod install` and open the resulting Xcode workspace.
-
-### Using Carthage
-
-Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/Carthage/Carthage/):
-
-1. Go to your [Mapbox account dashboard](https://account.mapbox.com/) and create an access token that has the `DOWNLOADS:READ` scope. **PLEASE NOTE: This is not the same as your production Mapbox API token. Make sure to keep it private and do not insert it into any Info.plist file.** Create a file named `.netrc` in your home directory if it doesn’t already exist, then add the following lines to the end of the file:
-   ```
-   machine api.mapbox.com
-     login mapbox
-     password PRIVATE_MAPBOX_API_TOKEN
-   ```
-   where _PRIVATE_MAPBOX_API_TOKEN_ is your Mapbox API token with the `DOWNLOADS:READ` scope. 
-
-1. _(Optional)_ Clear your Carthage caches:
-   ```bash
-   rm -rf ~/Library/Caches/carthage/ ~/Library/Caches/org.carthage.CarthageKit/binaries/{MapboxAccounts,MapboxCommon-ios,MapboxNavigationNative,mapbox-ios-sdk-dynamic}
-   ```
-
-1. Create a [Cartfile](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#github-repositories) with the following dependency:
-   ```cartfile
-   github "mapbox/mapbox-navigation-ios" "${MINOR_VERSION}"
-   ```
 
 ## Configuration
 
