@@ -87,7 +87,6 @@
 		354A9BCB20EA9BDA00F03325 /* EventDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 354A9BCA20EA9BDA00F03325 /* EventDetails.swift */; };
 		354A9BCD20EA9C8100F03325 /* CoreFeedbackEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 354A9BCC20EA9C8100F03325 /* CoreFeedbackEvent.swift */; };
 		3557506D21A827E800AEF9B6 /* li.tar in Resources */ = {isa = PBXBuildFile; fileRef = 3557506C21A827E800AEF9B6 /* li.tar */; };
-		3557506F21A8293E00AEF9B6 /* tiles in Resources */ = {isa = PBXBuildFile; fileRef = 3557506E21A8293E00AEF9B6 /* tiles */; };
 		355832AB2192F60800141922 /* PipeFittersUnion-FourSeasonsBoston.json in Resources */ = {isa = PBXBuildFile; fileRef = 355832AA2192F60800141922 /* PipeFittersUnion-FourSeasonsBoston.json */; };
 		355832AD2192F7E300141922 /* PipeFittersUnion-FourSeasonsBoston.trace.json in Resources */ = {isa = PBXBuildFile; fileRef = 355832AC2192F7E300141922 /* PipeFittersUnion-FourSeasonsBoston.trace.json */; };
 		3559FE4F21C3195700B6613F /* NavigationPlotter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3559FE4E21C3195700B6613F /* NavigationPlotter.swift */; };
@@ -583,7 +582,6 @@
 		354A9BCA20EA9BDA00F03325 /* EventDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetails.swift; sourceTree = "<group>"; };
 		354A9BCC20EA9C8100F03325 /* CoreFeedbackEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreFeedbackEvent.swift; sourceTree = "<group>"; };
 		3557506C21A827E800AEF9B6 /* li.tar */ = {isa = PBXFileReference; lastKnownFileType = archive.tar; path = li.tar; sourceTree = "<group>"; };
-		3557506E21A8293E00AEF9B6 /* tiles */ = {isa = PBXFileReference; lastKnownFileType = folder; path = tiles; sourceTree = "<group>"; };
 		355832AA2192F60800141922 /* PipeFittersUnion-FourSeasonsBoston.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "PipeFittersUnion-FourSeasonsBoston.json"; sourceTree = "<group>"; };
 		355832AC2192F7E300141922 /* PipeFittersUnion-FourSeasonsBoston.trace.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "PipeFittersUnion-FourSeasonsBoston.trace.json"; sourceTree = "<group>"; };
 		3559FE4E21C3195700B6613F /* NavigationPlotter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationPlotter.swift; sourceTree = "<group>"; };
@@ -1347,7 +1345,6 @@
 				3559FE4E21C3195700B6613F /* NavigationPlotter.swift */,
 				3EA93EBD6E6BEC966BBE51D6 /* NavigationServiceTestDoubles.swift */,
 				35CDA8602190F2A40072B675 /* TestHelper.h */,
-				3557506E21A8293E00AEF9B6 /* tiles */,
 				35CDA8812190F5080072B675 /* turn_left.data */,
 				35CDA88B2190F5130072B675 /* UnionSquare-to-GGPark.route */,
 				3575671C22C53EA400002D95 /* MMEEventsManager+Spy.h */,
@@ -1892,6 +1889,7 @@
 				35CDA85A2190F2A30072B675 /* Sources */,
 				35CDA85B2190F2A30072B675 /* Frameworks */,
 				35CDA85C2190F2A30072B675 /* Resources */,
+				DA21580D25E09C1C0086B294 /* Copy Tiles */,
 			);
 			buildRules = (
 			);
@@ -2165,7 +2163,6 @@
 				35CDA88D2190F5210072B675 /* DCA-Arboretum.json in Resources */,
 				35CDA8912190F6980072B675 /* route-for-lane-testing.json in Resources */,
 				B48CEFC125796FD300696BB3 /* route-for-vanishing-route-line.json in Resources */,
-				3557506F21A8293E00AEF9B6 /* tiles in Resources */,
 				35CDA8902190F6980072B675 /* route-doubling-back.json in Resources */,
 				35CDA8952190F6980072B675 /* route-with-straight-roundabout.json in Resources */,
 				35F9BC2F2296FCD300364A10 /* 9-legged-route.json in Resources */,
@@ -2321,6 +2318,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# This Run Script build phase helps to keep the navigation SDK’s developers from exposing their own access tokens during development. See <https://www.mapbox.com/help/ios-private-access-token/> for more information. If you are developing an application privately, you may add the MGLMapboxAccessToken key directly to your Info.plist file and delete this build phase.\n\ntoken_file=~/.mapbox\ntoken_file2=~/mapbox\ntoken=\"$(cat $token_file 2>/dev/null || cat $token_file2 2>/dev/null)\"\nif [ \"$token\" ]; then\n  plutil -replace MGLMapboxAccessToken -string $token \"$TARGET_BUILD_DIR/$INFOPLIST_PATH\"\n  plutil -replace MBXAccessToken -string $token \"$TARGET_BUILD_DIR/$INFOPLIST_PATH\"\nelse\n  echo 'warning: Missing Mapbox access token'\n  open 'https://www.mapbox.com/account/access-tokens/'\n  echo \"warning: Get an access token from <https://www.mapbox.com/account/access-tokens/>, then create a new file at $token_file or $token_file2 that contains the access token.\"\nfi\n";
+		};
+		DA21580D25E09C1C0086B294 /* Copy Tiles */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/TestHelper/tiles",
+			);
+			name = "Copy Tiles";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(TARGET_BUILD_DIR)/tiles",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\ncp -r $SRCROOT/TestHelper/tiles $TARGET_BUILD_DIR\n";
 		};
 		DA408F661FB3CA3C004D9661 /* Apply Mapbox Access Token */ = {
 			isa = PBXShellScriptBuildPhase;
