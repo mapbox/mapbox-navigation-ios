@@ -46,6 +46,7 @@
 
 * Removed deprecated `InstructionsBannerViewDelegate.didDragInstructionsBanner(_:)` method. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Removed `NavigationViewController.origin` property, which was not used. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* Unified usage and configuration of `Navigator` instance under `NavigationProvider`. This also includes single entry point for configuring used tiles version and tile storage location. ([#2823](https://github.com/mapbox/mapbox-navigation-ios/pull/2823)) 
 
 ## v1.3.0
 

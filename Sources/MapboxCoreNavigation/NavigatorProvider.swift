@@ -50,8 +50,9 @@ public class NavigatorProvider {
                 
                 let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
                 
-                let endpointConfig = TileEndpointConfiguration(directions: Directions.shared,
-                                                               tilesVersion: tilesVersion)
+                let endpointConfig = TileEndpointConfiguration(credentials: Directions.shared.credentials,
+                                                               tilesVersion: tilesVersion,
+                                                               minimumDaysToPersistVersion: nil)
                 let navigatorTilesConfig = TilesConfig(tilesPath: tilesPath,
                                                        inMemoryTileCache: nil,
                                                        onDiskTileCache: nil,

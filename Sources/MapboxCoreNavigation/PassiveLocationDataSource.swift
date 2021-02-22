@@ -138,12 +138,12 @@ extension TileEndpointConfiguration {
     /**
      Initializes an object that configures a navigator to obtain routing tiles of the given version from an endpoint, using credentials that are consistent with the given directions service.
      */
-    convenience init(directions: Directions, tilesVersion: String) {
-        let host = directions.credentials.host.absoluteString
-        guard let accessToken = directions.credentials.accessToken, !accessToken.isEmpty else {
+    convenience init(credentials: DirectionsCredentials, tilesVersion: String, minimumDaysToPersistVersion: Int?) {
+        let host = credentials.host.absoluteString
+        guard let accessToken = credentials.accessToken, !accessToken.isEmpty else {
             preconditionFailure("No access token specified in Info.plist")
         }
-        let skuTokenProvider = SkuTokenProvider(with: directions.credentials)
+        let skuTokenProvider = SkuTokenProvider(with: credentials)
         
         self.init(host: host,
                   dataset: "mapbox/driving",
@@ -152,6 +152,6 @@ extension TileEndpointConfiguration {
                   userAgent: URLSession.userAgent,
                   navigatorVersion: "",
                   skuTokenSource: skuTokenProvider,
-                  minDiffInDaysToConsiderServerVersion: 0)
+                  minDiffInDaysToConsiderServerVersion: minimumDaysToPersistVersion as NSNumber?)
     }
 }
