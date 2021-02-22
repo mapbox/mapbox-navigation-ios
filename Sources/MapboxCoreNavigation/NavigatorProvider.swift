@@ -75,7 +75,7 @@ public class NavigatorProvider {
                                                                            cache: cacheHandle,
                                                                            historyRecorder: historyRecorder),
                                                  history: historyRecorder)
-                print(tilesPath)
+                
                 _sharedNavigatorWithHistory = navigator
             }
         }
