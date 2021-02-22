@@ -48,7 +48,7 @@ To install the MapboxNavigation framework in an application using [Swift Package
 
 1. Set Rules to Version, Up to Next Major, and enter `2.0.0-alpha.1` as the minimum version requirement. Click Next.
 
-To install the MapboxCoreNavigation framework in another package rather than an application, run `swift package init` to create a Package.swift, then add the following dependency:
+To install the MapboxNavigation framework in another package rather than an application, run `swift package init` to create a Package.swift, then add the following dependency:
 
 ```swift
 // Latest prerelease
