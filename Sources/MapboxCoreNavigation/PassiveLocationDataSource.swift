@@ -136,7 +136,11 @@ public protocol PassiveLocationDataSourceDelegate: class {
 
 extension TileEndpointConfiguration {
     /**
-     Initializes an object that configures a navigator to obtain routing tiles of the given version from an endpoint, using credentials that are consistent with the given directions service.
+     Initializes an object that configures a navigator to obtain routing tiles of the given version from an endpoint, using the given credentials.
+              
+           - parameter credentials: Credentials for accessing road network data.
+           - parameter tilesVersion: Routing tile version.
+           - parameter minimumDaysToPersistVersion: The minimum age in days that a tile version much reach before a new version can be requested from the tile endpoint.
      */
     convenience init(credentials: DirectionsCredentials, tilesVersion: String, minimumDaysToPersistVersion: Int?) {
         let host = credentials.host.absoluteString
@@ -144,6 +148,7 @@ extension TileEndpointConfiguration {
             preconditionFailure("No access token specified in Info.plist")
         }
         let skuTokenProvider = SkuTokenProvider(with: credentials)
+        
         
         self.init(host: host,
                   dataset: "mapbox/driving",
