@@ -43,7 +43,10 @@ open class NightStyle: DayStyle {
         FloatingButton.appearance().tintColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         GenericRouteShield.appearance().foregroundColor = .white
         InstructionsBannerView.appearance().backgroundColor = backgroundColor
-        LaneView.appearance().primaryColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
+        LaneView.appearance().primaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        LaneView.appearance().secondaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.3)
+        LaneView.appearance(whenContainedInInstancesOf: [LanesView.self]).primaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        LaneView.appearance(whenContainedInInstancesOf: [LanesView.self]).secondaryColor = #colorLiteral(red: 0.4198532104, green: 0.4398920536, blue: 0.4437610507, alpha: 1)
         LanesView.appearance().backgroundColor = backgroundColor
         ManeuverView.appearance().backgroundColor = .clear
         ManeuverView.appearance(whenContainedInInstancesOf: [InstructionsBannerView.self]).primaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
