@@ -135,6 +135,10 @@ open class DayStyle: Style {
         LaneView.appearance(whenContainedInInstancesOf: [LanesView.self]).secondaryColor = .defaultLaneArrowSecondary
         LaneView.appearance(whenContainedInInstancesOf: [LanesView.self]).primaryColorHighlighted = .defaultLaneArrowPrimaryHighlighted
         LaneView.appearance(whenContainedInInstancesOf: [LanesView.self]).secondaryColorHighlighted = .defaultLaneArrowSecondaryHighlighted
+        LaneView.appearance().primaryColor = .defaultLaneArrowPrimaryCarPlay
+        LaneView.appearance().secondaryColor = .defaultLaneArrowSecondaryCarPlay
+        LaneView.appearance().primaryColorHighlighted = .defaultLaneArrowPrimaryHighlighted
+        LaneView.appearance().secondaryColorHighlighted = .defaultLaneArrowSecondaryHighlighted
         LanesView.appearance().backgroundColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
         LineView.appearance().lineColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.1)
         ManeuverView.appearance().backgroundColor = .clear
