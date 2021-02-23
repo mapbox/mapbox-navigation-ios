@@ -1,10 +1,8 @@
 PODS:
-  - MapboxAccounts (2.3.1)
   - MapboxCommon (10.0.0-beta.9.2)
   - MapboxCoreMaps (10.0.0-beta.14.2):
     - MapboxCommon (= 10.0.0-beta.9.2)
   - MapboxCoreNavigation (2.0.0-alpha.1):
-    - MapboxAccounts (~> 2.3.0)
     - MapboxDirections-pre (= 2.0.0-alpha.1)
     - MapboxMobileEvents (~> 0.10.2)
     - MapboxNavigationNative (~> 42.0.1)
@@ -37,7 +35,6 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - MapboxAccounts
     - MapboxCommon
     - MapboxCoreMaps
     - MapboxDirections-pre
@@ -56,10 +53,9 @@ EXTERNAL SOURCES:
     :path: "../../../"
 
 SPEC CHECKSUMS:
-  MapboxAccounts: e40ef575df5d8b7ef33d0504ff2d393f4fde0455
   MapboxCommon: 03585d87e103f600c24124e0c8754dc7bfd4defd
   MapboxCoreMaps: 6f9a2d33408e0c03e92da6c403df03a9c6077bbb
-  MapboxCoreNavigation: 7e078899f49615e3f1fe83f3871650365f2cb533
+  MapboxCoreNavigation: f5bf7cfa5e0c8dc98a45b51f7d4d12810f246d2f
   MapboxDirections-pre: 497919348230853183a6f48e238b06e94053a31c
   MapboxMaps: 2da7a7cb0c9353252381bbce6e3c6fbc908c98e1
   MapboxMobileEvents: d0a581dedd8f47411cc65ea520b965e83914316e

@@ -2,15 +2,6 @@
   "object": {
     "pins": [
       {
-        "package": "MapboxAccounts",
-        "repositoryURL": "https://github.com/mapbox/mapbox-accounts-ios.git",
-        "state": {
-          "branch": null,
-          "revision": "cd438c7a5d41c520379a09d12340124c980a7225",
-          "version": "2.3.1"
-        }
-      },
-      {
         "package": "MapboxCommon",
         "repositoryURL": "https://github.com/mapbox/mapbox-common-ios.git",
         "state": {
