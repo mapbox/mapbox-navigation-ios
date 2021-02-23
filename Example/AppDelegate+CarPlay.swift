@@ -147,6 +147,10 @@ extension AppDelegate: CarPlayManagerDelegate {
             return nil
         }
     }
+
+    func carPlayManager(_ carPlayManager: CarPlayManager, didPresent navigationViewController: CarPlayNavigationViewController) {
+        // no-op
+    }
 }
 
 @available(iOS 12.0, *)

@@ -493,7 +493,10 @@ extension CarPlayManager: CPMapTemplateDelegate {
         currentNavigator = navigationViewController
 
         carPlayMapViewController.isOverviewingRoutes = false
-        carPlayMapViewController.present(navigationViewController, animated: true, completion: nil)
+        navigationViewController.modalPresentationStyle = .fullScreen
+        carPlayMapViewController.present(navigationViewController, animated: true) {
+            self.delegate?.carPlayManager(self, didPresent: navigationViewController)
+        }
 
         let mapView = carPlayMapViewController.mapView
         mapView.removeRoutes()
@@ -702,6 +705,51 @@ extension CarPlayManager: MapTemplateProviderDelegate {
     
     func mapTemplateProvider(_ provider: MapTemplateProvider, mapTemplate: CPMapTemplate, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, for activity: CarPlayActivity) -> [CPBarButton]? {
         return delegate?.carPlayManager(self, trailingNavigationBarButtonsCompatibleWith: traitCollection, in: mapTemplate, for: activity)
+    }
+}
+
+@available(iOS 13.0, *)
+extension CarPlayManager {
+    public func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPWindow) {
+        CarPlayManager.isConnected = true
+        interfaceController.delegate = self
+        self.interfaceController = interfaceController
+
+        if let shouldDisableIdleTimer = delegate?.carplayManagerShouldDisableIdleTimer(self) {
+            UIApplication.shared.isIdleTimerDisabled = shouldDisableIdleTimer
+        } else {
+            UIApplication.shared.isIdleTimerDisabled = true
+        }
+
+        let carPlayMapViewController = CarPlayMapViewController(styles: styles)
+        window.rootViewController = carPlayMapViewController
+        self.carWindow = window
+
+        let mapTemplate = self.mapTemplate(for: interfaceController)
+        mainMapTemplate = mapTemplate
+        interfaceController.setRootTemplate(mapTemplate, animated: false)
+
+        eventsManager.sendCarPlayConnectEvent()
+    }
+
+    public func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPWindow) {
+        CarPlayManager.isConnected = false
+        self.interfaceController = nil
+
+        window.rootViewController = nil
+        window.isHidden = true
+        window.removeFromSuperview()
+
+        mainMapTemplate = nil
+        carWindow = nil
+
+        eventsManager.sendCarPlayDisconnectEvent()
+
+        if let shouldDisableIdleTimer = delegate?.carplayManagerShouldDisableIdleTimer(self) {
+            UIApplication.shared.isIdleTimerDisabled = !shouldDisableIdleTimer
+        } else {
+            UIApplication.shared.isIdleTimerDisabled = false
+        }
     }
 }
 
