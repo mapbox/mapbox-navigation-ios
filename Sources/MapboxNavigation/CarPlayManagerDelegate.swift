@@ -153,6 +153,8 @@ public protocol CarPlayManagerDelegate: class, UnimplementedLogging {
      - returns: A Boolean value indicating whether to disable idle timer when carplay is connected and enable when disconnected.
      */
     func carplayManagerShouldDisableIdleTimer(_ carPlayManager: CarPlayManager) -> Bool
+
+    func carPlayManager(_ carPlayManager: CarPlayManager, didPresent navigationViewController: CarPlayNavigationViewController) -> ()
 }
 
 @available(iOS 12.0, *)
