@@ -1,7 +1,6 @@
 import MapboxNavigationNative
 import CoreLocation
 import MapboxDirections
-import MapboxAccounts
 
 /**
  An object that notifies its delegate when the user’s location changes, minimizing the noise that normally accompanies location updates from a `CLLocationManager` object.

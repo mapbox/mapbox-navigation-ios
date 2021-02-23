@@ -1,8 +1,6 @@
 import UIKit
 import CoreLocation
 import MapboxDirections
-import MapboxAccounts
-
 
 public enum SimulationIntent: Int{
     case manual, poorGPS
@@ -338,8 +336,6 @@ public class MapboxNavigationService: NSObject, NavigationService {
     }
     
     public func stop() {
-        
-        MBXAccounts.resetSession()
         
         nativeLocationSource.stopUpdatingHeading()
         nativeLocationSource.stopUpdatingLocation()

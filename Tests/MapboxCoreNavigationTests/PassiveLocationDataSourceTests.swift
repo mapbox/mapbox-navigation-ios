@@ -4,7 +4,6 @@ import MapboxNavigationNative
 import TestHelper
 import XCTest
 @testable import MapboxCoreNavigation
-import MapboxAccounts
 
 class Road {
     let from: CLLocationCoordinate2D
