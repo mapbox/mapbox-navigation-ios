@@ -39,7 +39,7 @@ class Navigator {
     
     var cacheHandle: CacheHandle!
     
-    var graphAccessor: GraphAccessor!
+    public var graphAccessor: GraphAccessor!
     
     /**
      Provides a new or an existing `MapboxCoreNavigation.Navigator` instance. Upon first initialization will trigger creation of `MapboxNavigationNative.Navigator` and `HistoryRecorderHandle` instances,
