@@ -39,6 +39,8 @@ class Navigator {
     
     var cacheHandle: CacheHandle!
     
+    var graphAccessor: GraphAccessor!
+    
     /**
      Provides a new or an existing `MapboxCoreNavigation.Navigator` instance. Upon first initialization will trigger creation of `MapboxNavigationNative.Navigator` and `HistoryRecorderHandle` instances,
      satisfying provided configuration (`tilesVersion` and `tilesURL`).
@@ -82,6 +84,8 @@ class Navigator {
                                                        config: configFactory,
                                                        runLoop: runloopExecutor,
                                                        historyRecorder: instance.historyRecorder)
+        
+        instance.graphAccessor = try! GraphAccessor(cache: instance.cacheHandle)
         
         instance.navigator = try! MapboxNavigationNative.Navigator(config: configFactory,
                                                                    runLoopExecutor: runloopExecutor,

@@ -26,6 +26,12 @@ open class PassiveLocationDataSource: NSObject {
         super.init()
         
         self.systemLocationManager.delegate = self
+
+        try! self.navigator.setElectronicHorizonObserverFor(self)
+    }
+
+    deinit {
+        try! self.navigator.setElectronicHorizonObserverFor(nil)
     }
     
     /**
@@ -49,6 +55,11 @@ open class PassiveLocationDataSource: NSObject {
      The location data source’s delegate.
      */
     public weak var delegate: PassiveLocationDataSourceDelegate?
+
+    /**
+     Delegate for Electronic Horizon updates.
+     */
+    public weak var electronicHorizonDelegate: ElectronicHorizonDelegate?
     
     /**
      Starts the generation of location updates with an optional completion handler that gets called when the location data source is ready to receive snapped location updates.
@@ -56,6 +67,19 @@ open class PassiveLocationDataSource: NSObject {
     public func startUpdatingLocation() {
         systemLocationManager.startUpdatingLocation()
     }
+
+    /**
+     Sets electronic horizon options. Pass `nil` to reset to defaults.
+     */
+    public func set(electronicHorizonOptions: ElectronicHorizonOptions?) {
+        try! navigator.setElectronicHorizonOptionsFor(electronicHorizonOptions)
+    }
+
+    public var roadObjectsStore: RoadObjectsStore {
+        return try! navigator.roadObjectStore()
+    }
+
+    public var peer: MBXPeerWrapper?
     
     /**
      Manually sets the current location.
@@ -141,6 +165,20 @@ extension PassiveLocationDataSource: CLLocationManagerDelegate {
         if #available(iOS 14.0, *) {
             delegate?.passiveLocationDataSourceDidChangeAuthorization(self)
         }
+    }
+}
+
+extension PassiveLocationDataSource: ElectronicHorizonObserver {
+    public func onPositionUpdated(for position: ElectronicHorizonPosition, distances: [String : RoadObjectDistanceInfo]) {
+        electronicHorizonDelegate?.didUpdatePosition(position, distances: distances)
+    }
+
+    public func onRoadObjectEnter(for info: RoadObjectEnterExitInfo) {
+        electronicHorizonDelegate?.roadObjectDidEnter(info)
+    }
+
+    public func onRoadObjectExit(for info: RoadObjectEnterExitInfo) {
+        electronicHorizonDelegate?.roadObjectDidExit(info)
     }
 }
 

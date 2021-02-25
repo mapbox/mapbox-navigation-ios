@@ -131,6 +131,11 @@ open class RouteController: NSObject {
      The route controller’s delegate.
      */
     public weak var delegate: RouterDelegate?
+
+    /**
+     Delegate for Electronic Horizon updates.
+     */
+    public weak var electronicHorizonDelegate: ElectronicHorizonDelegate?
     
     /**
      The route controller’s associated location manager.
@@ -165,6 +170,7 @@ open class RouteController: NSObject {
     
     deinit {
         resetObservation(for: _routeProgress)
+        try! navigator.setElectronicHorizonObserverFor(nil)
     }
     
     func resetObservation(for progress: RouteProgress) {
@@ -394,6 +400,19 @@ open class RouteController: NSObject {
     public func locationHistory() throws -> Data {
         return try Navigator.shared.history()
     }
+
+    /**
+     Sets electronic horizon options. Pass `nil` to reset to defaults.
+     */
+    public func set(electronicHorizonOptions: ElectronicHorizonOptions?) {
+        try! navigator.setElectronicHorizonOptionsFor(electronicHorizonOptions)
+    }
+
+    public var roadObjectsStore: RoadObjectsStore {
+        return try! navigator.roadObjectStore()
+    }
+
+    public var peer: MBXPeerWrapper?
 }
 
 extension RouteController: Router {
@@ -464,3 +483,17 @@ extension RouteController: Router {
 }
 
 extension RouteController: InternalRouter { }
+
+extension RouteController: ElectronicHorizonObserver {
+    public func onPositionUpdated(for position: ElectronicHorizonPosition, distances: [String : RoadObjectDistanceInfo]) {
+        electronicHorizonDelegate?.didUpdatePosition(position, distances: distances)
+    }
+
+    public func onRoadObjectEnter(for info: RoadObjectEnterExitInfo) {
+        electronicHorizonDelegate?.roadObjectDidEnter(info)
+    }
+
+    public func onRoadObjectExit(for info: RoadObjectEnterExitInfo) {
+        electronicHorizonDelegate?.roadObjectDidExit(info)
+    }
+}
