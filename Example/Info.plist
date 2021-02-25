@@ -46,7 +46,7 @@
 					<key>UISceneConfigurationName</key>
 					<string>ExampleCarPlayApplicationConfiguration</string>
 					<key>UISceneDelegateClassName</key>
-					<string>Example.CarPlaySceneDelegate</string>
+					<string>Example_CarPlay.CarPlaySceneDelegate</string>
 				</dict>
 			</array>
 			<key>UIWindowSceneSessionRoleApplication</key>
@@ -57,7 +57,7 @@
 					<key>UISceneConfigurationName</key>
 					<string>ExampleAppConfiguration</string>
 					<key>UISceneDelegateClassName</key>
-					<string>$(EXECUTABLE_NAME).AppDelegate</string>
+					<string>Example_CarPlay.AppDelegate</string>
 					<key>UISceneStoryboardFile</key>
 					<string>Main</string>
 				</dict>
