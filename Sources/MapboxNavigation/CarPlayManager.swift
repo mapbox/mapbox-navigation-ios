@@ -692,7 +692,7 @@ extension CarPlayManager: CarPlayNavigationDelegate {
 
         interfaceController.setRootTemplate(mapTemplate, animated: true)
         popToRootTemplate(interfaceController: interfaceController, animated: true)
-        
+
         delegate?.carPlayManagerDidEndNavigation(self)
     }
 }

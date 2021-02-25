@@ -188,4 +188,41 @@ extension AppDelegate: CPListTemplateDelegate {
         completionHandler()
     }
 }
+
+@available(iOS 13.0, *)
+extension AppDelegate: UIWindowSceneDelegate {
+
+    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+
+        if connectingSceneSession.role == .carTemplateApplication {
+            return UISceneConfiguration(name: "ExampleCarPlayApplicationConfiguration", sessionRole: connectingSceneSession.role)
+        }
+        return UISceneConfiguration(name: "ExampleAppConfiguration", sessionRole: connectingSceneSession.role)
+    }
+
+    func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
+
+    }
+}
+
+@available(iOS 13.0, *)
+class CarPlaySceneDelegate: NSObject, CPTemplateApplicationSceneDelegate {
+
+    func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene,
+                                  didConnect interfaceController: CPInterfaceController, to window: CPWindow) {
+
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        appDelegate.carPlayManager.delegate = appDelegate
+        appDelegate.carPlaySearchController.delegate = appDelegate
+        appDelegate.carPlayManager.templateApplicationScene(templateApplicationScene, didConnectCarInterfaceController: interfaceController, to: window)
+    }
+
+    func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene,
+                                  didDisconnect interfaceController: CPInterfaceController, from window: CPWindow) {
+
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        appDelegate.carPlayManager.templateApplicationScene(templateApplicationScene, didDisconnectCarInterfaceController: interfaceController, from: window)
+    }
+}
+
 #endif
