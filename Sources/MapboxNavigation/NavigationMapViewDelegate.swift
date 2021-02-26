@@ -65,7 +65,7 @@ public extension NavigationMapViewDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
-    func navigationMapView(_ navigationMapView: NavigationMapView, waypointCircleLayerWithIdentifier identifier: String, source: GeoJSONSource) -> CircleLayer? {
+    func navigationMapView(_ navigationMapView: NavigationMapView, waypointCircleLayerWithIdentifier identifier: String, sourceIdentifier: String) -> CircleLayer? {
         logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
         return nil
     }
@@ -73,7 +73,7 @@ public extension NavigationMapViewDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
-    func navigationMapView(_ navigationMapView: NavigationMapView, waypointSymbolLayerWithIdentifier identifier: String, source: GeoJSONSource) -> SymbolLayer? {
+    func navigationMapView(_ navigationMapView: NavigationMapView, waypointSymbolLayerWithIdentifier identifier: String, sourceIdentifier: String) -> SymbolLayer? {
         logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
         return nil
     }
