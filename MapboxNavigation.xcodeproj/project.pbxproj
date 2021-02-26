@@ -352,8 +352,16 @@
 		DA303CA621B7A90100F921DC /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCF521A5C5D900AEA9AA /* UIViewController.swift */; };
 		DA3525702010A5210048DDFC /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = DA35256E2010A5200048DDFC /* Localizable.stringsdict */; };
 		DA443DDE2278C90E00ED1307 /* CPTrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA443DDD2278C90E00ED1307 /* CPTrip.swift */; };
-		DA5F446525F0744C00F573EC /* ElectronicHorizonDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F446425F0744C00F573EC /* ElectronicHorizonDelegate.swift */; };
+		DA5F446525F0744C00F573EC /* EHorizonDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F446425F0744C00F573EC /* EHorizonDelegate.swift */; };
 		DA5F448825F079F300F573EC /* EHorizonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F447E25F079AA00F573EC /* EHorizonTests.swift */; };
+		DA5F449A25F07A5C00F573EC /* EHorizon.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F449925F07A5C00F573EC /* EHorizon.swift */; };
+		DA5F44AA25F07A6800F573EC /* EHorizonObjectType.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A325F07A6500F573EC /* EHorizonObjectType.swift */; };
+		DA5F44AB25F07A6800F573EC /* EHorizonResultType.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A425F07A6500F573EC /* EHorizonResultType.swift */; };
+		DA5F44AC25F07A6800F573EC /* EHorizonGraphPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A525F07A6500F573EC /* EHorizonGraphPosition.swift */; };
+		DA5F44AD25F07A6800F573EC /* EHorizonObjectEnterExitInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A625F07A6500F573EC /* EHorizonObjectEnterExitInfo.swift */; };
+		DA5F44AE25F07A6800F573EC /* EHorizonObjectDistanceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A725F07A6500F573EC /* EHorizonObjectDistanceInfo.swift */; };
+		DA5F44AF25F07A6800F573EC /* EHorizonPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A825F07A6500F573EC /* EHorizonPosition.swift */; };
+		DA5F44B025F07A6800F573EC /* EHorizonEdge.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A925F07A6700F573EC /* EHorizonEdge.swift */; };
 		DA66063023B32F99007832E5 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA66062F23B32F99007832E5 /* Array.swift */; };
 		DA754E1923AC56E5007E16B5 /* MBXAccountsLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = DA754E1723AC56E5007E16B5 /* MBXAccountsLoader.m */; };
 		DA85D5EF25DB4AA4008A2AD4 /* LaneViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA85D5EE25DB4AA3008A2AD4 /* LaneViewTests.swift */; };
@@ -899,8 +907,16 @@
 		DA545AC41FAA86450090908E /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DA5AD03C1FEBA03700FC7D7B /* bg */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = bg; path = bg.lproj/Main.strings; sourceTree = "<group>"; };
 		DA5AD0401FEBA23200FC7D7B /* bg */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = bg; path = bg.lproj/Localizable.strings; sourceTree = "<group>"; };
-		DA5F446425F0744C00F573EC /* ElectronicHorizonDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ElectronicHorizonDelegate.swift; sourceTree = "<group>"; };
+		DA5F446425F0744C00F573EC /* EHorizonDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EHorizonDelegate.swift; sourceTree = "<group>"; };
 		DA5F447E25F079AA00F573EC /* EHorizonTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EHorizonTests.swift; sourceTree = "<group>"; };
+		DA5F449925F07A5C00F573EC /* EHorizon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EHorizon.swift; sourceTree = "<group>"; };
+		DA5F44A325F07A6500F573EC /* EHorizonObjectType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EHorizonObjectType.swift; sourceTree = "<group>"; };
+		DA5F44A425F07A6500F573EC /* EHorizonResultType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EHorizonResultType.swift; sourceTree = "<group>"; };
+		DA5F44A525F07A6500F573EC /* EHorizonGraphPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EHorizonGraphPosition.swift; sourceTree = "<group>"; };
+		DA5F44A625F07A6500F573EC /* EHorizonObjectEnterExitInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EHorizonObjectEnterExitInfo.swift; sourceTree = "<group>"; };
+		DA5F44A725F07A6500F573EC /* EHorizonObjectDistanceInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EHorizonObjectDistanceInfo.swift; sourceTree = "<group>"; };
+		DA5F44A825F07A6500F573EC /* EHorizonPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EHorizonPosition.swift; sourceTree = "<group>"; };
+		DA5F44A925F07A6700F573EC /* EHorizonEdge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EHorizonEdge.swift; sourceTree = "<group>"; };
 		DA625E901F10557300FBE176 /* fa */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fa; path = fa.lproj/Main.strings; sourceTree = "<group>"; };
 		DA625E921F1055DE00FBE176 /* fa */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fa; path = fa.lproj/Navigation.strings; sourceTree = "<group>"; };
 		DA625E931F105B1900FBE176 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
@@ -1761,7 +1777,15 @@
 		DA5F446325F0744C00F573EC /* EHorizon */ = {
 			isa = PBXGroup;
 			children = (
-				DA5F446425F0744C00F573EC /* ElectronicHorizonDelegate.swift */,
+				DA5F449925F07A5C00F573EC /* EHorizon.swift */,
+				DA5F446425F0744C00F573EC /* EHorizonDelegate.swift */,
+				DA5F44A925F07A6700F573EC /* EHorizonEdge.swift */,
+				DA5F44A525F07A6500F573EC /* EHorizonGraphPosition.swift */,
+				DA5F44A725F07A6500F573EC /* EHorizonObjectDistanceInfo.swift */,
+				DA5F44A625F07A6500F573EC /* EHorizonObjectEnterExitInfo.swift */,
+				DA5F44A325F07A6500F573EC /* EHorizonObjectType.swift */,
+				DA5F44A825F07A6500F573EC /* EHorizonPosition.swift */,
+				DA5F44A425F07A6500F573EC /* EHorizonResultType.swift */,
 			);
 			path = EHorizon;
 			sourceTree = "<group>";
@@ -2622,6 +2646,8 @@
 			files = (
 				354A9BCB20EA9BDA00F03325 /* EventDetails.swift in Sources */,
 				8D1A5CD2212DDFCD0059BA4A /* DispatchTimer.swift in Sources */,
+				DA5F44AB25F07A6800F573EC /* EHorizonResultType.swift in Sources */,
+				DA5F44AE25F07A6800F573EC /* EHorizonObjectDistanceInfo.swift in Sources */,
 				C561735B1F182113005954F6 /* RouteStep.swift in Sources */,
 				354A9BC620EA991900F03325 /* SessionState.swift in Sources */,
 				35C98733212E037900808B82 /* RouteState.swift in Sources */,
@@ -2635,18 +2661,21 @@
 				DA754E1923AC56E5007E16B5 /* MBXAccountsLoader.m in Sources */,
 				2BE701252535943900F46E4E /* BorderCrossing.swift in Sources */,
 				3582A25020EEC46B0029C5DE /* Router.swift in Sources */,
+				DA5F449A25F07A5C00F573EC /* EHorizon.swift in Sources */,
 				8D75F991212B5C7F00F99CF3 /* TunnelAuthority.swift in Sources */,
 				C5E7A31C1F4F6828001CB015 /* NavigationRouteOptions.swift in Sources */,
 				352F464D20EB74C200147886 /* NavigationEventsManager.swift in Sources */,
 				351174F41EF1C0530065E248 /* ReplayLocationManager.swift in Sources */,
 				2BE701172535940D00F46E4E /* Tunnel.swift in Sources */,
 				8A3A219025EEC00200EDA999 /* CoreNavigationNavigator.swift in Sources */,
+				DA5F44AF25F07A6800F573EC /* EHorizonPosition.swift in Sources */,
 				DABA591525E58D5600D0C1DB /* Accounts.swift in Sources */,
 				C5C94C1C1DDCD2340097296A /* LegacyRouteController.swift in Sources */,
 				3A8187C924BDAE9C00708F19 /* URLSession.swift in Sources */,
 				359574A81F28CC5A00838209 /* CLLocation.swift in Sources */,
 				8DCE1050210FC5880048B0FB /* EndOfRouteFeedback.swift in Sources */,
-				DA5F446525F0744C00F573EC /* ElectronicHorizonDelegate.swift in Sources */,
+				DA5F446525F0744C00F573EC /* EHorizonDelegate.swift in Sources */,
+				DA5F44AD25F07A6800F573EC /* EHorizonObjectEnterExitInfo.swift in Sources */,
 				35C98731212E02B500808B82 /* RouteController.swift in Sources */,
 				DA0A4B8124D1C9B200D6B4F8 /* Navigator.swift in Sources */,
 				5A3D212E24DADFA000EA652A /* SkuTokenProvider.swift in Sources */,
@@ -2658,9 +2687,11 @@
 				35A43F77223BD632000CB367 /* RouteLeg.swift in Sources */,
 				4303A3992332CD6200B5737D /* UnimplementedLogging.swift in Sources */,
 				3A163AE3249901D000D66A0D /* FixLocation.swift in Sources */,
+				DA5F44AA25F07A6800F573EC /* EHorizonObjectType.swift in Sources */,
 				8D2AA745211CDD4000EB7F72 /* NavigationService.swift in Sources */,
 				2B7ACA9C25E3F84700B0ACFD /* PredictiveCacheOptions.swift in Sources */,
 				35A5413B1EFC052700E49846 /* RouteOptions.swift in Sources */,
+				DA5F44AC25F07A6800F573EC /* EHorizonGraphPosition.swift in Sources */,
 				353E69041EF0C4E5007B2AE5 /* SimulatedLocationManager.swift in Sources */,
 				DAFA92071F01735000A7FB09 /* DistanceFormatter.swift in Sources */,
 				2B955B1C25EFDDCB00BBFEC6 /* Directions.swift in Sources */,
@@ -2676,6 +2707,7 @@
 				2B7ACA9B25E3F84700B0ACFD /* PredictiveCacheManager.swift in Sources */,
 				35C77F621FE8219900338416 /* NavigationSettings.swift in Sources */,
 				C51DF8661F38C31C006C6A15 /* Locale.swift in Sources */,
+				DA5F44B025F07A6800F573EC /* EHorizonEdge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -59,7 +59,7 @@ open class PassiveLocationDataSource: NSObject {
     /**
      Delegate for Electronic Horizon updates.
      */
-    public weak var electronicHorizonDelegate: ElectronicHorizonDelegate?
+    public weak var electronicHorizonDelegate: EHorizonDelegate?
     
     /**
      Starts the generation of location updates with an optional completion handler that gets called when the location data source is ready to receive snapped location updates.
@@ -170,15 +170,18 @@ extension PassiveLocationDataSource: CLLocationManagerDelegate {
 
 extension PassiveLocationDataSource: ElectronicHorizonObserver {
     public func onPositionUpdated(for position: ElectronicHorizonPosition, distances: [String : RoadObjectDistanceInfo]) {
-        electronicHorizonDelegate?.didUpdatePosition(position, distances: distances)
+        electronicHorizonDelegate?.didUpdatePosition(
+            EHorizonPosition(position),
+            distances: Dictionary(uniqueKeysWithValues:distances.map { key, value in (key, EHorizonObjectDistanceInfo(value)) })
+        )
     }
 
     public func onRoadObjectEnter(for info: RoadObjectEnterExitInfo) {
-        electronicHorizonDelegate?.roadObjectDidEnter(info)
+        electronicHorizonDelegate?.didEnterObject(EHorizonObjectEnterExitInfo(info))
     }
 
     public func onRoadObjectExit(for info: RoadObjectEnterExitInfo) {
-        electronicHorizonDelegate?.roadObjectDidExit(info)
+        electronicHorizonDelegate?.didExitRoadObject(EHorizonObjectEnterExitInfo(info))
     }
 }
 

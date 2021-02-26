@@ -135,7 +135,7 @@ open class RouteController: NSObject {
     /**
      Delegate for Electronic Horizon updates.
      */
-    public weak var electronicHorizonDelegate: ElectronicHorizonDelegate?
+    public weak var electronicHorizonDelegate: EHorizonDelegate?
     
     /**
      The route controller’s associated location manager.
@@ -486,14 +486,17 @@ extension RouteController: InternalRouter { }
 
 extension RouteController: ElectronicHorizonObserver {
     public func onPositionUpdated(for position: ElectronicHorizonPosition, distances: [String : RoadObjectDistanceInfo]) {
-        electronicHorizonDelegate?.didUpdatePosition(position, distances: distances)
+        electronicHorizonDelegate?.didUpdatePosition(
+            EHorizonPosition(position),
+            distances: Dictionary(uniqueKeysWithValues:distances.map { key, value in (key, EHorizonObjectDistanceInfo(value)) })
+        )
     }
 
     public func onRoadObjectEnter(for info: RoadObjectEnterExitInfo) {
-        electronicHorizonDelegate?.roadObjectDidEnter(info)
+        electronicHorizonDelegate?.didEnterObject(EHorizonObjectEnterExitInfo(info))
     }
 
     public func onRoadObjectExit(for info: RoadObjectEnterExitInfo) {
-        electronicHorizonDelegate?.roadObjectDidExit(info)
+        electronicHorizonDelegate?.didExitRoadObject(EHorizonObjectEnterExitInfo(info))
     }
 }

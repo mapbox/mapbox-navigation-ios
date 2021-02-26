@@ -1,7 +1,9 @@
 import Foundation
 import MapboxNavigationNative
 
-public protocol ElectronicHorizonDelegate: class {
+public typealias EHorizonDistancesKey = String
+
+public protocol EHorizonDelegate: class {
 
     /**
      Might be called multiple times when the position changes
@@ -9,18 +11,18 @@ public protocol ElectronicHorizonDelegate: class {
      - parameter position: Current electronic horizon position (map matched position + e-horizon tree)
      - parameter distances: Map road object id -> RoadObjectDistanceInfo for upcoming road objects
      */
-    func didUpdatePosition(_ position: ElectronicHorizonPosition, distances: [String : RoadObjectDistanceInfo])
+    func didUpdatePosition(_ position: EHorizonPosition, distances: [EHorizonDistancesKey : EHorizonObjectDistanceInfo])
 
     /**
      Called when entry to line-like (i.e. which has length != null) road object was detected
      - parameter info: Contains info related to the object
      */
 
-    func roadObjectDidEnter(_ objectEnterExitInfo: RoadObjectEnterExitInfo)
+    func didEnterObject(_ objectEnterExitInfo: EHorizonObjectEnterExitInfo)
 
     /**
      Called when exit from line-like (i.e. which has length != null) road object was detected
      - parameter info: Contains info related to the object
      */
-    func roadObjectDidExit(_ objectEnterExitInfo: RoadObjectEnterExitInfo)
+    func didExitRoadObject(_ objectEnterExitInfo: EHorizonObjectEnterExitInfo)
 }

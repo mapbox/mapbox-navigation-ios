@@ -25,7 +25,7 @@ class EHorizonTests: XCTestCase {
     var peer: MBXPeerWrapper?
 }
 
-extension EHorizonTests: ElectronicHorizonDelegate {
+extension EHorizonTests: EHorizonDelegate {
     func didUpdatePosition(_ position: ElectronicHorizonPosition, distances: [String : RoadObjectDistanceInfo]) {
         let graphPosition = try! position.position()
         _ = try! Navigator.shared.graphAccessor.getEdgeMetadata(forEdgeId: graphPosition.edgeId)
