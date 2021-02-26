@@ -249,5 +249,12 @@ public extension CarPlayManagerDelegate {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self,  level: .debug)
         return false
     }
+
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager, didPresent navigationViewController: CarPlayNavigationViewController) {
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self,  level: .debug)
+    }
 }
 #endif
