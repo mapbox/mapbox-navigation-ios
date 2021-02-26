@@ -229,7 +229,7 @@ public extension NavigationViewControllerDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
-    func navigationViewController(_ navigationViewController: NavigationViewController, waypointCircleLayerWithIdentifier identifier: String, source: GeoJSONSource) -> CircleLayer? {
+    func navigationViewController(_ navigationViewController: NavigationViewController, waypointCircleLayerWithIdentifier identifier: String, sourceIdentifier: String) -> CircleLayer? {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
         return nil
     }
@@ -237,7 +237,7 @@ public extension NavigationViewControllerDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
-    func navigationViewController(_ navigationViewController: NavigationViewController, waypointSymbolLayerWithIdentifier identifier: String, source: GeoJSONSource) -> SymbolLayer? {
+    func navigationViewController(_ navigationViewController: NavigationViewController, waypointSymbolLayerWithIdentifier identifier: String, sourceIdentifier: String) -> SymbolLayer? {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
         return nil
     }
