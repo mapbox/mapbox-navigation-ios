@@ -22,6 +22,7 @@
 * Fixed an issue with CarPlay visual instructions where U-Turn maneuver icons were not being flipped properly based on regional driving side ([#2803](https://github.com/mapbox/mapbox-navigation-ios/pull/2803)) 
 * Fixed swiping for right-to-left languages for the Guidance Card UI to be more intuitive. ([#2724](https://github.com/mapbox/mapbox-navigation-ios/pull/2724))
 * `NavigationViewController` can now manage multiple status banners one after another. Renamed the `NavigationViewController.showStatus(title:spinner:duration:animated:interactive:)` method to `NavigationViewController.show(_:)` and added a corresponding `NavigationViewController.hide(_:)` method. Renamed the `NavigationStatusPresenter.showStatus(title:spinner:duration:animated:interactive:)` method to `NavigationStatusPresenter.show(_:)` and added a `NavigationStatusPresenter.hide(_:)` method. ([#2747](https://github.com/mapbox/mapbox-navigation-ios/pull/2747))
+* Add support for iOS 13's UIScene based CarPlay API ([#2832](https://github.com/mapbox/mapbox-navigation-ios/pull/2832))
 
 ## v1.2.1
 

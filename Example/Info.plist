@@ -57,7 +57,7 @@
 					<key>UISceneConfigurationName</key>
 					<string>ExampleAppConfiguration</string>
 					<key>UISceneDelegateClassName</key>
-					<string>Example_CarPlay.AppDelegate</string>
+					<string>$(EXECUTABLE_NAME).AppDelegate</string>
 					<key>UISceneStoryboardFile</key>
 					<string>Main</string>
 				</dict>
