@@ -4,10 +4,27 @@ import MapboxDirections
 
 extension Navigator {
     
+    /**
+     Tiles version string. If not specified explicitly - will be automatically resolved
+     to the latest version.
+     
+     This property can only be modified before creating `Navigator` shared instance, all
+     further changes to this property will have no effect.
+     */
     static var tilesVersion: String = ""
     
+    /**
+     A local path to the tiles storage location. If not specified - will be automatically defaulted
+     to the cache subdirectory.
+     
+     This property can only be modified before creating `Navigator` shared instance, all
+     further changes to this property will have no effect.
+     */
     static var tilesURL: URL? = nil
     
+    /**
+     Shared instance on `Navigator`.
+     */
     static let shared: Navigator = {
         return navigatorWithHistoryRecorder.0
     }()
@@ -28,8 +45,12 @@ extension Navigator {
         return navigatorWithHistoryRecorder.1
     }()
     
-    static private let internalQueue = DispatchQueue(label: "com.mapbox.coreNavigation.Navigator.internalQueue")
+    private static let internalQueue = DispatchQueue(label: "com.mapbox.coreNavigation.navigator.internalQueue")
     
+    /**
+     Provides a new or an existing one `Navigator` instance along with related `HistoryRecorderHandle`,
+     satisfying provided configuration (`tilesVersion` and `tilesURL`).
+     */
     private static let navigatorWithHistoryRecorder: (Navigator, HistoryRecorderHandle) = {
         var navigator: Navigator!
         var historyRecorder: HistoryRecorderHandle!
