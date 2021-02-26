@@ -90,6 +90,7 @@ open class PassiveLocationDataSource: NSObject {
             NotificationUserInfoKey.rawLocationKey: lastRawLocation,
             NotificationUserInfoKey.matchesKey: matches,
             NotificationUserInfoKey.roadNameKey: status.roadName,
+            NotificationUserInfoKey.speedLimitKey: status.speedLimit
         ])
     }
 }

@@ -18,6 +18,7 @@ class ViewController: UIViewController {
     
     var trackStyledFeature: StyledFeature!
     var rawTrackStyledFeature: StyledFeature!
+    var speedLimitView: SpeedLimitView
     
     typealias RouteRequestSuccess = ((RouteResponse) -> Void)
     typealias RouteRequestFailure = ((Error) -> Void)
@@ -137,6 +138,16 @@ class ViewController: UIViewController {
 
     @IBAction func startButtonPressed(_ sender: Any) {
         presentActionsAlertController()
+    }
+    
+    func observeSpeedNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(updateSpeedLimitView(notification:)), name:.passiveLocationDataSourceDidUpdate, object: nil)
+    }
+    
+    @objc func updateSpeedLimitView(notification: Notification) {
+        speedLimitView.speedLimit = notification.userInfo?["speedLimit"] as? Measurement<UnitSpeed>
+//        FIX SIGN STANDARD
+        speedLimitView.signStandard = .mutcd
     }
     
     // MARK: - CarPlay navigation methods

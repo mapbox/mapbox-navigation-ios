@@ -274,6 +274,11 @@ extension PassiveLocationDataSource {
          - seealso: `WayNameView`
          */
         public static let roadNameKey: NotificationUserInfoKey = .init(rawValue: "roadName")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.passiveLocationDataSourceDidUpdate` notification. The corresponding value is a TYPE representating the speed of the current road.
+         */
+        public static let speedLimitKey: NotificationUserInfoKey = .init(rawValue: "speedLimit")
     }
 }
 
