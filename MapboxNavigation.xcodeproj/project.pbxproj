@@ -905,7 +905,7 @@
 		C53C19751F38EADE008DB406 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C53C19771F38EAE4008DB406 /* ca */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ca; path = ca.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C53C197A1F38EAEA008DB406 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
-		C53F2F0720EBC95600D9798F /* Example-CarPlay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Example-CarPlay.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C53F2F0720EBC95600D9798F /* Example_CarPlay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example_CarPlay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxMobileEvents.framework; path = Carthage/Build/iOS/MapboxMobileEvents.framework; sourceTree = "<group>"; };
 		C54C655120336F2600D338E0 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		C551B0E520D42222009A986F /* NavigationLocationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationLocationManagerTests.swift; sourceTree = "<group>"; };
@@ -1779,7 +1779,7 @@
 				351BEBD71E5BCC28006FE110 /* MapboxNavigation.framework */,
 				358D14631E5E3B7700ADE590 /* Example.app */,
 				35B711CF1E5E7AD2001EDA8D /* MapboxNavigationTests.xctest */,
-				C53F2F0720EBC95600D9798F /* Example-CarPlay.app */,
+				C53F2F0720EBC95600D9798F /* Example_CarPlay.app */,
 				35CDA80621908F2F0072B675 /* Bench.app */,
 				35CDA81921908F320072B675 /* BenchTests.xctest */,
 				35CDA85E2190F2A30072B675 /* TestHelper.framework */,
@@ -2026,9 +2026,9 @@
 			productReference = 35CDA85E2190F2A30072B675 /* TestHelper.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		C53F2EDE20EBC95600D9798F /* Example-CarPlay */ = {
+		C53F2EDE20EBC95600D9798F /* Example_CarPlay */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C53F2F0420EBC95600D9798F /* Build configuration list for PBXNativeTarget "Example-CarPlay" */;
+			buildConfigurationList = C53F2F0420EBC95600D9798F /* Build configuration list for PBXNativeTarget "Example_CarPlay" */;
 			buildPhases = (
 				C53F2EE320EBC95600D9798F /* Sources */,
 				C53F2EE920EBC95600D9798F /* Frameworks */,
@@ -2043,9 +2043,9 @@
 				C53F2EDF20EBC95600D9798F /* PBXTargetDependency */,
 				C53F2EE120EBC95600D9798F /* PBXTargetDependency */,
 			);
-			name = "Example-CarPlay";
+			name = Example_CarPlay;
 			productName = "Example-Swift";
-			productReference = C53F2F0720EBC95600D9798F /* Example-CarPlay.app */;
+			productReference = C53F2F0720EBC95600D9798F /* Example_CarPlay.app */;
 			productType = "com.apple.product-type.application";
 		};
 		C5ADFBC81DDCC7840011824B /* MapboxCoreNavigation */ = {
@@ -2202,7 +2202,7 @@
 			projectRoot = "";
 			targets = (
 				358D14621E5E3B7700ADE590 /* Example */,
-				C53F2EDE20EBC95600D9798F /* Example-CarPlay */,
+				C53F2EDE20EBC95600D9798F /* Example_CarPlay */,
 				C5ADFBC81DDCC7840011824B /* MapboxCoreNavigation */,
 				351BEBD61E5BCC28006FE110 /* MapboxNavigation */,
 				35CDA85D2190F2A30072B675 /* TestHelper */,
@@ -3847,7 +3847,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C53F2F0420EBC95600D9798F /* Build configuration list for PBXNativeTarget "Example-CarPlay" */ = {
+		C53F2F0420EBC95600D9798F /* Build configuration list for PBXNativeTarget "Example_CarPlay" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C53F2F0520EBC95600D9798F /* Debug */,

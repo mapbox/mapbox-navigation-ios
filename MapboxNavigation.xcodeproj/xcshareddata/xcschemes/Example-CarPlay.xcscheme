@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C53F2EDE20EBC95600D9798F"
-               BuildableName = "Example-CarPlay.app"
-               BlueprintName = "Example-CarPlay"
+               BuildableName = "Example_CarPlay.app"
+               BlueprintName = "Example_CarPlay"
                ReferencedContainer = "container:MapboxNavigation.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -31,8 +31,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C53F2EDE20EBC95600D9798F"
-            BuildableName = "Example-CarPlay.app"
-            BlueprintName = "Example-CarPlay"
+            BuildableName = "Example_CarPlay.app"
+            BlueprintName = "Example_CarPlay"
             ReferencedContainer = "container:MapboxNavigation.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -54,8 +54,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C53F2EDE20EBC95600D9798F"
-            BuildableName = "Example-CarPlay.app"
-            BlueprintName = "Example-CarPlay"
+            BuildableName = "Example_CarPlay.app"
+            BlueprintName = "Example_CarPlay"
             ReferencedContainer = "container:MapboxNavigation.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -71,8 +71,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C53F2EDE20EBC95600D9798F"
-            BuildableName = "Example-CarPlay.app"
-            BlueprintName = "Example-CarPlay"
+            BuildableName = "Example_CarPlay.app"
+            BlueprintName = "Example_CarPlay"
             ReferencedContainer = "container:MapboxNavigation.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

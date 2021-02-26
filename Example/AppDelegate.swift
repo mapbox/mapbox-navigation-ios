@@ -54,3 +54,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 }
+
+@available(iOS 13.0, *)
+extension AppDelegate: UIWindowSceneDelegate {
+
+    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+
+        if connectingSceneSession.role == .carTemplateApplication {
+            return UISceneConfiguration(name: "ExampleCarPlayApplicationConfiguration", sessionRole: connectingSceneSession.role)
+        }
+        return UISceneConfiguration(name: "ExampleAppConfiguration", sessionRole: connectingSceneSession.role)
+    }
+
+    func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
+
+    }
+}

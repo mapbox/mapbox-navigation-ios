@@ -190,22 +190,6 @@ extension AppDelegate: CPListTemplateDelegate {
 }
 
 @available(iOS 13.0, *)
-extension AppDelegate: UIWindowSceneDelegate {
-
-    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
-
-        if connectingSceneSession.role == .carTemplateApplication {
-            return UISceneConfiguration(name: "ExampleCarPlayApplicationConfiguration", sessionRole: connectingSceneSession.role)
-        }
-        return UISceneConfiguration(name: "ExampleAppConfiguration", sessionRole: connectingSceneSession.role)
-    }
-
-    func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
-
-    }
-}
-
-@available(iOS 13.0, *)
 class CarPlaySceneDelegate: NSObject, CPTemplateApplicationSceneDelegate {
 
     func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene,
