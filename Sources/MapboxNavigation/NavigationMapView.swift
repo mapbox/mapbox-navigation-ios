@@ -500,12 +500,9 @@ open class NavigationMapView: UIView {
             guard let layers = try? mapView.__map.getStyleLayers().reversed() else { return nil }
             for layer in layers {
                 if !(layer.type == "symbol") && !identifiers.contains(layer.id) {
-                    let source = try? mapView.__map.getStyleLayerProperty(forLayerId: layer.id, property: "source").value as? String
                     let sourceLayer = try? mapView.__map.getStyleLayerProperty(forLayerId: layer.id, property: "source-layer").value as? String
                     
-                    if let source = source,
-                       source.isEmpty,
-                       let sourceLayer = sourceLayer,
+                    if let sourceLayer = sourceLayer,
                        sourceLayer.isEmpty {
                         continue
                     }
