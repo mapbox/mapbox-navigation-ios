@@ -243,9 +243,7 @@ open class NavigationMapView: UIView {
         altitude = defaultAltitude
         super.init(coder: coder)
         
-        mapView = MapView(coder: coder)
-        addSubview(mapView)
-        
+        setupMapView(self.bounds)
         commonInit()
     }
     
