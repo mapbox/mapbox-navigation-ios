@@ -22,7 +22,6 @@ open class PassiveLocationDataSource: NSObject {
         self.directions = directions
 
         self.systemLocationManager = systemLocationManager ?? NavigationLocationManager()
-        self.navigatorWithHistory = NavigatorProvider.sharedWeakNavigator()
         
         super.init()
         
@@ -43,9 +42,8 @@ open class PassiveLocationDataSource: NSObject {
      The underlying navigator that performs map matching.
      */
     var navigator: Navigator {
-        navigatorWithHistory.navigator
+        return Navigator.shared
     }
-    private var navigatorWithHistory: NavigatorWithHistory
     
     /**
      The location data source’s delegate.

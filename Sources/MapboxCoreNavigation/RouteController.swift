@@ -27,12 +27,8 @@ open class RouteController: NSObject {
     }
 
     var navigator: Navigator {
-        _navigatorWithHistory.navigator
+        Navigator.shared
     }
-    private var historyHandler: HistoryRecorderHandle {
-        _navigatorWithHistory.history
-    }
-    private lazy var _navigatorWithHistory: NavigatorWithHistory = NavigatorProvider.sharedWeakNavigator()
     
     public var indexedRoute: IndexedRoute {
         get {
@@ -393,15 +389,15 @@ open class RouteController: NSObject {
     }
     
     public func enableLocationRecording() {
-        try! historyHandler.enable(forEnabled: true)
+        try! Navigator.enableHistoryRecorder()
     }
     
     public func disableLocationRecording() {
-        try! historyHandler.enable(forEnabled: false)
+        try! Navigator.disableHistoryRecorder()
     }
     
     public func locationHistory() throws -> Data {
-        return try historyHandler.getHistory()
+        return try Navigator.history()
     }
 }
 
