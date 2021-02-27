@@ -26,8 +26,6 @@ open class PassiveLocationDataSource: NSObject {
         super.init()
         
         self.systemLocationManager.delegate = self
-
-        try! self.navigator.setElectronicHorizonObserverFor(self)
     }
 
     deinit {
@@ -59,7 +57,15 @@ open class PassiveLocationDataSource: NSObject {
     /**
      Delegate for Electronic Horizon updates.
      */
-    public weak var electronicHorizonDelegate: EHorizonDelegate?
+    public weak var electronicHorizonDelegate: EHorizonDelegate? {
+        didSet {
+            if delegate != nil {
+                try! self.navigator.setElectronicHorizonObserverFor(self)
+            } else {
+                try! self.navigator.setElectronicHorizonObserverFor(nil)
+            }
+        }
+    }
     
     /**
      Starts the generation of location updates with an optional completion handler that gets called when the location data source is ready to receive snapped location updates.
