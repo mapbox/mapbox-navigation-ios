@@ -77,8 +77,8 @@ open class PassiveLocationDataSource: NSObject {
     /**
      Sets electronic horizon options. Pass `nil` to reset to defaults.
      */
-    public func set(electronicHorizonOptions: ElectronicHorizonOptions?) {
-        try! navigator.setElectronicHorizonOptionsFor(electronicHorizonOptions)
+    public func set(electronicHorizonOptions: EHorizonOptions?) {
+        try! navigator.setElectronicHorizonOptionsFor(electronicHorizonOptions?.nativeOptions)
     }
     
     public var graphAccessor: GraphAccessor {
