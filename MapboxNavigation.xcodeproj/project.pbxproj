@@ -366,6 +366,13 @@
 		DA5F44C625F07AB700F573EC /* GraphAccessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44C325F07AB500F573EC /* GraphAccessor.swift */; };
 		DA5F44C725F07AB700F573EC /* RoadName.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44C425F07AB500F573EC /* RoadName.swift */; };
 		DA5F44C825F07AB700F573EC /* RoadClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44C525F07AB600F573EC /* RoadClass.swift */; };
+		DA5F44D225F07D0400F573EC /* EHorizonDistanceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44D125F07D0300F573EC /* EHorizonDistanceInfo.swift */; };
+		DA5F44DC25F07D1500F573EC /* EHorizonObjectEdgeLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44DB25F07D1400F573EC /* EHorizonObjectEdgeLocation.swift */; };
+		DA5F44E825F07D2800F573EC /* EHorizonObjectLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44E525F07D2600F573EC /* EHorizonObjectLocation.swift */; };
+		DA5F44E925F07D2800F573EC /* EHorizonObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44E625F07D2700F573EC /* EHorizonObjectMetadata.swift */; };
+		DA5F44EA25F07D2800F573EC /* EHorizonObjectProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44E725F07D2700F573EC /* EHorizonObjectProvider.swift */; };
+		DA5F44F525F07D3B00F573EC /* RoadObjectsStoreDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44F325F07D3A00F573EC /* RoadObjectsStoreDelegate.swift */; };
+		DA5F44F625F07D3B00F573EC /* RoadObjectsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44F425F07D3B00F573EC /* RoadObjectsStore.swift */; };
 		DA66063023B32F99007832E5 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA66062F23B32F99007832E5 /* Array.swift */; };
 		DA754E1923AC56E5007E16B5 /* MBXAccountsLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = DA754E1723AC56E5007E16B5 /* MBXAccountsLoader.m */; };
 		DA85D5EF25DB4AA4008A2AD4 /* LaneViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA85D5EE25DB4AA3008A2AD4 /* LaneViewTests.swift */; };
@@ -925,6 +932,13 @@
 		DA5F44C325F07AB500F573EC /* GraphAccessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphAccessor.swift; sourceTree = "<group>"; };
 		DA5F44C425F07AB500F573EC /* RoadName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadName.swift; sourceTree = "<group>"; };
 		DA5F44C525F07AB600F573EC /* RoadClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadClass.swift; sourceTree = "<group>"; };
+		DA5F44D125F07D0300F573EC /* EHorizonDistanceInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EHorizonDistanceInfo.swift; sourceTree = "<group>"; };
+		DA5F44DB25F07D1400F573EC /* EHorizonObjectEdgeLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EHorizonObjectEdgeLocation.swift; sourceTree = "<group>"; };
+		DA5F44E525F07D2600F573EC /* EHorizonObjectLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EHorizonObjectLocation.swift; sourceTree = "<group>"; };
+		DA5F44E625F07D2700F573EC /* EHorizonObjectMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EHorizonObjectMetadata.swift; sourceTree = "<group>"; };
+		DA5F44E725F07D2700F573EC /* EHorizonObjectProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EHorizonObjectProvider.swift; sourceTree = "<group>"; };
+		DA5F44F325F07D3A00F573EC /* RoadObjectsStoreDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadObjectsStoreDelegate.swift; sourceTree = "<group>"; };
+		DA5F44F425F07D3B00F573EC /* RoadObjectsStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadObjectsStore.swift; sourceTree = "<group>"; };
 		DA625E901F10557300FBE176 /* fa */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fa; path = fa.lproj/Main.strings; sourceTree = "<group>"; };
 		DA625E921F1055DE00FBE176 /* fa */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fa; path = fa.lproj/Navigation.strings; sourceTree = "<group>"; };
 		DA625E931F105B1900FBE176 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
@@ -1787,17 +1801,24 @@
 			children = (
 				DA5F449925F07A5C00F573EC /* EHorizon.swift */,
 				DA5F446425F0744C00F573EC /* EHorizonDelegate.swift */,
+				DA5F44D125F07D0300F573EC /* EHorizonDistanceInfo.swift */,
 				DA5F44A925F07A6700F573EC /* EHorizonEdge.swift */,
 				DA5F44B925F07AA500F573EC /* EHorizonEdgeMetadata.swift */,
 				DA5F44A525F07A6500F573EC /* EHorizonGraphPosition.swift */,
 				DA5F44A725F07A6500F573EC /* EHorizonObjectDistanceInfo.swift */,
+				DA5F44DB25F07D1400F573EC /* EHorizonObjectEdgeLocation.swift */,
 				DA5F44A625F07A6500F573EC /* EHorizonObjectEnterExitInfo.swift */,
+				DA5F44E525F07D2600F573EC /* EHorizonObjectLocation.swift */,
+				DA5F44E625F07D2700F573EC /* EHorizonObjectMetadata.swift */,
+				DA5F44E725F07D2700F573EC /* EHorizonObjectProvider.swift */,
 				DA5F44A325F07A6500F573EC /* EHorizonObjectType.swift */,
 				DA5F44A825F07A6500F573EC /* EHorizonPosition.swift */,
 				DA5F44A425F07A6500F573EC /* EHorizonResultType.swift */,
 				DA5F44C325F07AB500F573EC /* GraphAccessor.swift */,
 				DA5F44C525F07AB600F573EC /* RoadClass.swift */,
 				DA5F44C425F07AB500F573EC /* RoadName.swift */,
+				DA5F44F425F07D3B00F573EC /* RoadObjectsStore.swift */,
+				DA5F44F325F07D3A00F573EC /* RoadObjectsStoreDelegate.swift */,
 			);
 			path = EHorizon;
 			sourceTree = "<group>";
@@ -2664,7 +2685,9 @@
 				C561735B1F182113005954F6 /* RouteStep.swift in Sources */,
 				354A9BC620EA991900F03325 /* SessionState.swift in Sources */,
 				35C98733212E037900808B82 /* RouteState.swift in Sources */,
+				DA5F44D225F07D0400F573EC /* EHorizonDistanceInfo.swift in Sources */,
 				C582FD5F203626E900A9086E /* CLLocationDirection.swift in Sources */,
+				DA5F44DC25F07D1500F573EC /* EHorizonObjectEdgeLocation.swift in Sources */,
 				3582A25220EFA9680029C5DE /* RouterDelegate.swift in Sources */,
 				353E68FC1EF0B7F8007B2AE5 /* NavigationLocationManager.swift in Sources */,
 				2BE7013D25359C7B00F46E4E /* RouteAlert.swift in Sources */,
@@ -2679,10 +2702,12 @@
 				C5E7A31C1F4F6828001CB015 /* NavigationRouteOptions.swift in Sources */,
 				352F464D20EB74C200147886 /* NavigationEventsManager.swift in Sources */,
 				351174F41EF1C0530065E248 /* ReplayLocationManager.swift in Sources */,
+				DA5F44EA25F07D2800F573EC /* EHorizonObjectProvider.swift in Sources */,
 				2BE701172535940D00F46E4E /* Tunnel.swift in Sources */,
 				8A3A219025EEC00200EDA999 /* CoreNavigationNavigator.swift in Sources */,
 				DA5F44AF25F07A6800F573EC /* EHorizonPosition.swift in Sources */,
 				DA5F44BA25F07AA500F573EC /* EHorizonEdgeMetadata.swift in Sources */,
+				DA5F44E825F07D2800F573EC /* EHorizonObjectLocation.swift in Sources */,
 				DABA591525E58D5600D0C1DB /* Accounts.swift in Sources */,
 				C5C94C1C1DDCD2340097296A /* LegacyRouteController.swift in Sources */,
 				3A8187C924BDAE9C00708F19 /* URLSession.swift in Sources */,
@@ -2705,6 +2730,7 @@
 				8D2AA745211CDD4000EB7F72 /* NavigationService.swift in Sources */,
 				2B7ACA9C25E3F84700B0ACFD /* PredictiveCacheOptions.swift in Sources */,
 				35A5413B1EFC052700E49846 /* RouteOptions.swift in Sources */,
+				DA5F44F525F07D3B00F573EC /* RoadObjectsStoreDelegate.swift in Sources */,
 				DA5F44C725F07AB700F573EC /* RoadName.swift in Sources */,
 				DA5F44AC25F07A6800F573EC /* EHorizonGraphPosition.swift in Sources */,
 				353E69041EF0C4E5007B2AE5 /* SimulatedLocationManager.swift in Sources */,
@@ -2717,12 +2743,14 @@
 				C5CFE4881EF2FD4C006F48E8 /* MMEEventsManager.swift in Sources */,
 				C578DA081EFD0FFF0052079F /* ProcessInfo.swift in Sources */,
 				64847A041F04629D003F3A69 /* Feedback.swift in Sources */,
+				DA5F44E925F07D2800F573EC /* EHorizonObjectMetadata.swift in Sources */,
 				2BE7016925371E3400F46E4E /* Incident.swift in Sources */,
 				C58D6BAD1DDCF2AE00387F53 /* CoreConstants.swift in Sources */,
 				2B7ACA9B25E3F84700B0ACFD /* PredictiveCacheManager.swift in Sources */,
 				35C77F621FE8219900338416 /* NavigationSettings.swift in Sources */,
 				DA5F44C825F07AB700F573EC /* RoadClass.swift in Sources */,
 				C51DF8661F38C31C006C6A15 /* Locale.swift in Sources */,
+				DA5F44F625F07D3B00F573EC /* RoadObjectsStore.swift in Sources */,
 				DA5F44B025F07A6800F573EC /* EHorizonEdge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

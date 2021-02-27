@@ -1,4 +1,3 @@
-import MapboxNavigationNative
 @testable import MapboxCoreNavigation
 import XCTest
 
@@ -17,11 +16,9 @@ class EHorizonTests: XCTestCase {
     }
 
     func testFreeDriveEHorizon() {
-        try! passiveLocationDataSource.roadObjectsStore.setObserverForOptions(self)
+        passiveLocationDataSource.roadObjectsStore.delegate = self
         passiveLocationDataSource.electronicHorizonDelegate = self
     }
-
-    var peer: MBXPeerWrapper?
 }
 
 extension EHorizonTests: EHorizonDelegate {
@@ -36,12 +33,12 @@ extension EHorizonTests: EHorizonDelegate {
     func didExitRoadObject(_ objectEnterExitInfo: EHorizonObjectEnterExitInfo) {}
 }
 
-extension EHorizonTests: RoadObjectsStoreObserver {
-    func onRoadObjectAdded(forId id: String) {
-        _ = try! passiveLocationDataSource.roadObjectsStore.getRoadObjectMetadata(forRoadObjectId: id)
+extension EHorizonTests: RoadObjectsStoreDelegate {
+    func didAddRoadObject(with id: RoadObjectId) {
+        _ = passiveLocationDataSource.roadObjectsStore.getRoadObjectMetadata(for: id)
     }
 
-    func onRoadObjectUpdated(forId id: String) {}
+    func didUpdateRoadObject(with id: RoadObjectId) {}
 
-    func onRoadObjectRemoved(forId id: String) {}
+    func didRemoveRoadObject(with id: RoadObjectId) {}
 }
