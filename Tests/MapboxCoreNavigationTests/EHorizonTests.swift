@@ -3,7 +3,6 @@ import MapboxNavigationNative
 import XCTest
 
 // Happy path repeating EH General Usage Example
-// https://github.com/mapbox/mapbox-navigation-native/blob/0e5ec2b339a129aa67138a4f2cb25a47d909a611/docs/eh_integration.md#general-usage-example
 class EHorizonTests: XCTestCase {
     var passiveLocationDataSource: PassiveLocationDataSource!
 
@@ -26,15 +25,15 @@ class EHorizonTests: XCTestCase {
 }
 
 extension EHorizonTests: EHorizonDelegate {
-    func didUpdatePosition(_ position: ElectronicHorizonPosition, distances: [String : RoadObjectDistanceInfo]) {
-        let graphPosition = try! position.position()
-        _ = try! Navigator.shared.graphAccessor.getEdgeMetadata(forEdgeId: graphPosition.edgeId)
-        _ = try! Navigator.shared.graphAccessor.getEdgeShape(forEdgeId: graphPosition.edgeId)
+    func didUpdatePosition(_ position: EHorizonPosition, distances: [EHorizonDistancesKey : EHorizonObjectDistanceInfo]) {
+        let graphPosition = position.position
+        _ = passiveLocationDataSource.graphAccessor.getEdgeMetadata(for: graphPosition.edgeId)
+        _ = passiveLocationDataSource.graphAccessor.getEdgeShape(for: graphPosition.edgeId)
     }
 
-    func roadObjectDidEnter(_ objectEnterExitInfo: RoadObjectEnterExitInfo) {}
+    func didEnterObject(_ objectEnterExitInfo: EHorizonObjectEnterExitInfo) {}
 
-    func roadObjectDidExit(_ objectEnterExitInfo: RoadObjectEnterExitInfo) {}
+    func didExitRoadObject(_ objectEnterExitInfo: EHorizonObjectEnterExitInfo) {}
 }
 
 extension EHorizonTests: RoadObjectsStoreObserver {

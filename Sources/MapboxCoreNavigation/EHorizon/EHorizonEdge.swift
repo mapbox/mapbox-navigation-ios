@@ -27,6 +27,6 @@ public struct EHorizonEdge {
         self.id = UInt(native.id)
         self.level = UInt(native.level)
         self.probability = native.probability
-        self.out = native.out.map { .init($0) }
+        self.out = native.out.map(EHorizonEdge.init)
     }
 }

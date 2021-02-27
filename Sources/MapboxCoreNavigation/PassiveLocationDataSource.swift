@@ -74,6 +74,10 @@ open class PassiveLocationDataSource: NSObject {
     public func set(electronicHorizonOptions: ElectronicHorizonOptions?) {
         try! navigator.setElectronicHorizonOptionsFor(electronicHorizonOptions)
     }
+    
+    public var graphAccessor: GraphAccessor {
+        return Navigator.shared.graphAccessor
+    }
 
     public var roadObjectsStore: RoadObjectsStore {
         return try! navigator.roadObjectStore()
