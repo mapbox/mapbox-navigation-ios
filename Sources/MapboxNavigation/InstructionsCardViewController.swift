@@ -125,6 +125,11 @@ open class InstructionsCardViewController: UIViewController {
         handlePagingforScrollToItem(indexPath: indexBeforeSwipe)
     }
     
+    open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        instructionsCardLayout.invalidateLayout()
+    }
+    
     func addSubviews() {
         [instructionCollectionView, junctionView].forEach(view.addSubview(_:))
     }
@@ -166,7 +171,6 @@ open class InstructionsCardViewController: UIViewController {
         guard let legProgress = routeProgress?.currentLegProgress else { return }
         let remainingSteps = legProgress.remainingSteps
         guard let currentCardStep = remainingSteps.first else { return }
-        
         for index in indexPaths.startIndex..<indexPaths.endIndex {
             let indexPath = indexPaths[index]
             if let container = instructionContainerView(at: indexPath), indexPath.row < remainingSteps.endIndex {
@@ -214,13 +218,11 @@ open class InstructionsCardViewController: UIViewController {
         
         let estimatedIndex = Int(round((collectionView.contentOffset.x + collectionView.contentInset.left) / (cardSize.width + 10.0)))
         let indexInBounds = max(0, min(itemCount - 1, estimatedIndex))
-        
         return IndexPath(row: indexInBounds, section: 0)
     }
     
     fileprivate func scrollTargetIndexPath(for scrollView: UIScrollView, with velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) -> IndexPath {
         targetContentOffset.pointee = scrollView.contentOffset
-        
         let itemCount = steps?.count ?? 0
         let velocityThreshold: CGFloat = 0.4
         
@@ -245,7 +247,6 @@ open class InstructionsCardViewController: UIViewController {
                 scrollTargetIndexPath = indexBeforeSwipe
             }
         }
-        
         return scrollTargetIndexPath
     }
 }
@@ -294,10 +295,16 @@ extension InstructionsCardViewController: UICollectionViewDataSource {
     }
 }
 
+extension UICollectionViewFlowLayout {
+    open override var flipsHorizontallyInOppositeLayoutDirection: Bool {
+        return true
+    }
+}
+
 extension InstructionsCardViewController: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        return cardSize
+        return CGSize(width: cardSize.width, height: cardSize.height - 10)
     }
 }
 
