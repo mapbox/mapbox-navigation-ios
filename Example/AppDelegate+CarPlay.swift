@@ -1,6 +1,5 @@
 import UIKit
 import MapboxNavigation
-#if canImport(CarPlay)
 import CarPlay
 import MapboxCoreNavigation
 import MapboxDirections
@@ -208,5 +207,3 @@ class CarPlaySceneDelegate: NSObject, CPTemplateApplicationSceneDelegate {
         appDelegate.carPlayManager.templateApplicationScene(templateApplicationScene, didDisconnectCarInterfaceController: interfaceController, from: window)
     }
 }
-
-#endif

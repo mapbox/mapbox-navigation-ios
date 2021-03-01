@@ -1,5 +1,4 @@
 import Foundation
-#if canImport(CarPlay)
 import CarPlay
 
 /**
@@ -229,5 +228,4 @@ extension CarPlayMapViewController: StyleManagerDelegate {
         mapView.reloadStyle(self)
     }
 }
-#endif
 

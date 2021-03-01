@@ -5,7 +5,6 @@ import MapboxMobileEvents
 @testable import TestHelper
 @testable import MapboxNavigation
 
-#if canImport(CarPlay)
 import CarPlay
 
 // For some reason XCTest bundles ignore @available annotations and these tests are run on iOS < 12 :(
@@ -669,4 +668,3 @@ class FakeCPInterfaceController: CPInterfaceController {
         }
     }
 }
-#endif

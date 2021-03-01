@@ -1,4 +1,3 @@
-#if canImport(CarPlay)
 import CarPlay
 import MapboxCoreNavigation
 import MapboxDirections
@@ -783,15 +782,3 @@ internal class MapTemplateProvider: NSObject {
         return CPMapTemplate()
     }
 }
-
-#else
-/**
- CarPlay support requires iOS 12.0 or above and the CarPlay framework.
- */
-public class CarPlayManager: NSObject {
-    /**
-     A Boolean value indicating whether the phone is connected to CarPlay.
-     */
-    public static var isConnected = false
-}
-#endif

@@ -1,4 +1,3 @@
-#if canImport(CarPlay)
 import CarPlay
 import MapboxDirections
 
@@ -39,9 +38,3 @@ public class CarPlaySearchController: NSObject {
      */
     public weak var delegate: CarPlaySearchControllerDelegate?
 }
-#else
-/**
- CarPlay support requires iOS 12.0 or above and the CarPlay framework.
- */
-public class CarPlaySearchController: NSObject {}
-#endif

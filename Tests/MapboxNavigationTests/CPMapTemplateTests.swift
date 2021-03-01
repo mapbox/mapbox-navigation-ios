@@ -1,6 +1,5 @@
 import XCTest
 @testable import MapboxNavigation
-#if canImport(CarPlay)
 import CarPlay
 
 @available(iOS 12.0, *)
@@ -20,4 +19,3 @@ class CPMapTemplateTests: XCTestCase {
         XCTAssertNil(CLLocationDirection(panDirection: []))
     }
 }
-#endif

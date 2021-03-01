@@ -20,9 +20,7 @@ open class NightStyle: DayStyle {
         Button.appearance().textColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         CancelButton.appearance().tintColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         
-        #if canImport(CarPlay)
         CarPlayCompassView.appearance().backgroundColor = backgroundColor
-        #endif
         
         DismissButton.appearance().backgroundColor = backgroundColor
         DismissButton.appearance().textColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)

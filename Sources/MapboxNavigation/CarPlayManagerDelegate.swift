@@ -1,4 +1,3 @@
-#if canImport(CarPlay)
 import CarPlay
 import Turf
 import MapboxCoreNavigation
@@ -257,4 +256,3 @@ public extension CarPlayManagerDelegate {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self,  level: .debug)
     }
 }
-#endif
