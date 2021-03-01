@@ -465,16 +465,10 @@ extension TopBannerViewController: CarPlayConnectionObserver {
 }
 
 extension TopBannerViewController: NavigationStatusPresenter {
-    /**
-     Shows a Status for a specified amount of time.
-     */
     public func show(_ status: StatusView.Status) {
         statusView.show(status)
     }
     
-    /**
-     Hides a given Status without hiding the status view.
-     */
     public func hide(_ status: StatusView.Status) {
         statusView.hide(status)
     }
