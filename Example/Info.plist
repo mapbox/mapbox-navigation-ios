@@ -46,7 +46,7 @@
 					<key>UISceneConfigurationName</key>
 					<string>ExampleCarPlayApplicationConfiguration</string>
 					<key>UISceneDelegateClassName</key>
-					<string>Example_CarPlay.CarPlaySceneDelegate</string>
+					<string>Example.CarPlaySceneDelegate</string>
 				</dict>
 			</array>
 			<key>UIWindowSceneSessionRoleApplication</key>
