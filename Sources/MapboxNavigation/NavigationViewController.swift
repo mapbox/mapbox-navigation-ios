@@ -406,8 +406,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         let title = NSLocalizedString("INAUDIBLE_INSTRUCTIONS_CTA", bundle: .mapboxNavigation, value: "Adjust Volume to Hear Instructions", comment: "Label indicating the device volume is too low to hear spoken instructions and needs to be manually increased")
         
         // create low volume notification status and append to array of statuses
-        let lowVolumeStatus = StatusView.Status(id: title, duration: 3, animated: true, priority: StatusView.Priority(rawValue: 3))
-        addNewStatus(status: lowVolumeStatus)
+        let lowVolumeStatus = StatusView.Status(identifier: "INAUDIBLE_INSTRUCTIONS_CTA", title: title, duration: 3, animated: true, priority: StatusView.Priority(rawValue: 3))
+        show(lowVolumeStatus)
     }
     
     
@@ -468,18 +468,30 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         UNUserNotificationCenter.current().add(notificationRequest, withCompletionHandler: nil)
     }
     
-    public func addNewStatus(status: StatusView.Status) {
+    /**
+     Shows a Status for a specified amount of time.
+     */
+    public func show(_ status: StatusView.Status) {
         navigationComponents.compactMap({ $0 as? NavigationStatusPresenter }).forEach {
-            $0.addNewStatus(status: status)
+            $0.show(status)
         }
     }
     
-    public func hideStatus(using status: StatusView.Status) {
+    /**
+     Hides a given Status without hiding the status view.
+     */
+    public func hide(_ status: StatusView.Status) {
         navigationComponents.compactMap({ $0 as? NavigationStatusPresenter }).forEach {
-            $0.hideStatus(using: status)
+            $0.hide(status)
         }
     }
     
+    @available(*, deprecated, message: "Add a status using show(_:) instead")
+    public func showStatus(title: String, spinner spin: Bool, duration: TimeInterval, animated: Bool, interactive: Bool) {
+        navigationComponents.compactMap({ $0 as? NavigationStatusPresenter }).forEach {
+            $0.showStatus(title: title, spinner: spin, duration: duration, animated: animated, interactive: interactive)
+        }
+    }
 }
 
 //MARK: - RouteMapViewControllerDelegate
@@ -746,13 +758,13 @@ extension NavigationViewController: NavigationServiceDelegate {
                         
         // create authorization status
         let title = NSLocalizedString("ENABLE_PRECISE_LOCATION", bundle: .mapboxNavigation, value: "Enable precise location to navigate", comment: "Label indicating precise location is off and needs to be turned on to navigate")
-        let authorizationStatus = StatusView.Status(id: title, duration: .infinity, priority: StatusView.Priority(rawValue: 1))
+        let authorizationStatus = StatusView.Status(identifier: "ENABLE_PRECISE_LOCATION", title: title, duration: .infinity, priority: StatusView.Priority(rawValue: 1))
         
         if #available(iOS 14.0, *), accuracyAuthorization == .reducedAccuracy {
-            addNewStatus(status: authorizationStatus)
+            show(authorizationStatus)
             mapView?.reducedAccuracyActivatedMode = true
         } else if #available(iOS 14.0, *), previousAuthorizationValue == 1, didChangeAuthorizationIsFirstCalled == false {
-            hideStatus(using: authorizationStatus)
+            hide(authorizationStatus)
             mapView?.reducedAccuracyActivatedMode = false
         } else {
             //Fallback on earlier versions

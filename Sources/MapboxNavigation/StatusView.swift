@@ -48,9 +48,12 @@ public class StatusView: UIControl {
     
     var statuses: [Status] = []
 
-    public struct Status: Identifiable {
-        public var id: String
-//        let title: String
+    /**
+    `Status` is a struct which stores information to be displayed by the `StatusView`
+     */
+    public struct Status {
+        public var identifier: String
+        let title: String
         var spinner: Bool = false
         let duration: TimeInterval
         var animated: Bool = true
@@ -58,6 +61,9 @@ public class StatusView: UIControl {
         var priority: Priority
     }
     
+    /**
+     `Priority` is used to display `Status`es by importance
+     */
     public struct Priority: RawRepresentable {
         public typealias RawValue = Int
 
@@ -145,18 +151,21 @@ public class StatusView: UIControl {
         }
     }
     
-    @available(*, deprecated, message: "Add a status using addNewStatus instead")
+    /**
+     Shows the status view for a specified amount of time.
+     `showStatus()` uses a default value for priority and the title input as identifier. To use these variables, use `show(_:)`
+     */
+    @available(*, deprecated, message: "Add a status using show(_:) instead")
     public func showStatus(title: String, spinner spin: Bool = false, duration: TimeInterval, animated: Bool = true, interactive: Bool = false) {
-        guard duration < .infinity else { return }
-        hide(delay: duration, animated: animated)
+        let status = Status(identifier: title, title: title, spinner: spin, duration: duration, animated: animated, interactive: interactive, priority: StatusView.Priority(rawValue: 1))
+        show(status)
     }
     
     /**
      Adds a new status to statuses array.
      */
-    func addNewStatus(status: Status) {
-        guard let firstWord = status.id.components(separatedBy: " ").first else { return }
-        if let row = statuses.firstIndex(where: {$0.id.contains(firstWord)}) {
+    func show(_ status: Status) {
+        if let row = statuses.firstIndex(where: {$0.identifier.contains(status.identifier)}) {
             statuses[row] = status
         } else {
             statuses.append(status)
@@ -181,9 +190,9 @@ public class StatusView: UIControl {
     /**
      Hides a given Status without hiding the status view.
      */
-    func hideStatus(using status: Status?) {
-        guard let firstWord = status?.id.components(separatedBy: " ").first else { return }
-        guard let row = statuses.firstIndex(where: {$0.id.contains(firstWord)}) else { return }
+    func hide(_ status: Status?) {
+        guard let identifier = status?.identifier else { return }
+        guard let row = statuses.firstIndex(where: {$0.identifier.contains(identifier)}) else { return }
         let removedStatus = statuses.remove(at: row)
         manageStatuses(status: removedStatus)
     }
@@ -191,8 +200,8 @@ public class StatusView: UIControl {
     func showSimulationStatus(speed: Int) {
         let format = NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation at %@×", comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled.")
         let title = String.localizedStringWithFormat(format, NumberFormatter.localizedString(from: speed as NSNumber, number: .decimal))
-        let simulationStatus = Status(id: title, duration: .infinity, interactive: true, priority: StatusView.Priority(rawValue: 2))
-        addNewStatus(status: simulationStatus)
+        let simulationStatus = Status(identifier: "USER_IN_SIMULATION_MODE", title: title, duration: .infinity, interactive: true, priority: StatusView.Priority(rawValue: 2))
+        show(simulationStatus)
     }
     
     /**
@@ -200,7 +209,7 @@ public class StatusView: UIControl {
      */
     public func show(status: Status) {
         isEnabled = status.interactive
-        textLabel.text = status.id
+        textLabel.text = status.title
         activityIndicatorView.hidesWhenStopped = true
         if (!status.spinner) { activityIndicatorView.stopAnimating() }
 
@@ -230,7 +239,7 @@ public class StatusView: UIControl {
                 self.textLabel.alpha = 0
                 self.activityIndicatorView.isHidden = true
             } else {
-                self.hideStatus(using: status)
+                self.hide(status)
             }
         }
         
@@ -245,7 +254,7 @@ public class StatusView: UIControl {
                         self.isCurrentlyVisible = false
                     })
                 } else {
-                    self.hideStatus(using: status)
+                    self.hide(status)
                 }
             })
         }

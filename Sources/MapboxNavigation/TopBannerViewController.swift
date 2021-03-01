@@ -384,8 +384,8 @@ extension TopBannerViewController: NavigationComponent {
     public func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {
         let title = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
         lanesView.hide()
-        let reroutingStatus = StatusView.Status(id: title, duration: 20, priority: StatusView.Priority(rawValue: 0))
-        addNewStatus(status: reroutingStatus)
+        let reroutingStatus = StatusView.Status(identifier: "REROUTING", title: title, duration: 20, priority: StatusView.Priority(rawValue: 0))
+        show(reroutingStatus)
     }
     
     public func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
@@ -402,8 +402,8 @@ extension TopBannerViewController: NavigationComponent {
             let title = NSLocalizedString("FASTER_ROUTE_FOUND", bundle: .mapboxNavigation, value: "Faster Route Found", comment: "Indicates a faster route was found")
             
             // create faster route status and append to array of statuses
-            let fasterRouteStatus = StatusView.Status(id: title, duration: 3, priority: StatusView.Priority(rawValue: 0))
-            statusView.addNewStatus(status: fasterRouteStatus)
+            let fasterRouteStatus = StatusView.Status(identifier: "FASTER_ROUTE_FOUND", title: title, duration: 3, priority: StatusView.Priority(rawValue: 0))
+            statusView.show(fasterRouteStatus)
         }
     }
     
@@ -465,14 +465,24 @@ extension TopBannerViewController: CarPlayConnectionObserver {
 }
 
 extension TopBannerViewController: NavigationStatusPresenter {
-    public func hideStatus(using status: StatusView.Status) {
-        statusView.hideStatus(using: status)
+    /**
+     Shows a Status for a specified amount of time.
+     */
+    public func show(_ status: StatusView.Status) {
+        statusView.show(status)
     }
     
-    public func addNewStatus(status: StatusView.Status) {
-        statusView.addNewStatus(status: status)
+    /**
+     Hides a given Status without hiding the status view.
+     */
+    public func hide(_ status: StatusView.Status) {
+        statusView.hide(status)
     }
     
+    @available(*, deprecated, message: "Add a status using show(_:) instead")
+    public func showStatus(title: String, spinner spin: Bool, duration: TimeInterval, animated: Bool, interactive: Bool) {
+        statusView.showStatus(title: title, spinner: spin, duration: duration, animated: animated, interactive: interactive)
+    }
 }
 
 extension TopBannerViewController: NavigationMapInteractionObserver {
