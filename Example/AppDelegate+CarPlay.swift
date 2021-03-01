@@ -207,5 +207,3 @@ class CarPlaySceneDelegate: NSObject, CPTemplateApplicationSceneDelegate {
         appDelegate.carPlayManager.templateApplicationScene(templateApplicationScene, didDisconnectCarInterfaceController: interfaceController, from: window)
     }
 }
-
-#endif
