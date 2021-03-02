@@ -44,12 +44,8 @@ open class RouteController: NSObject, ElectronicHorizonObserver {
     }
 
     func configureNavigator(withURL tilesURL: URL, tilesVersion: String) -> Navigator {
-        let endpointConfig = TileEndpointConfiguration(directions: directions, tilesVersion: tilesVersion)
-        let tilesConfig = TilesConfig(tilesPath: tilesURL.path,
-                                      inMemoryTileCache: nil,
-                                      mapMatchingSpatialCache: nil,
-                                      threadsCount: nil,
-                                      endpointConfig: endpointConfig)
+        let endpointConfig = TileEndpointConfiguration(credentials: directions.credentials, tilesVersion: tilesVersion, minimumDaysToPersistVersion: nil)
+        let tilesConfig = TilesConfig(tilesPath: tilesURL.path, inMemoryTileCache: nil, onDiskTileCache: nil, mapMatchingSpatialCache: nil, threadsCount: nil, endpointConfig: endpointConfig)
 
         let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
 
