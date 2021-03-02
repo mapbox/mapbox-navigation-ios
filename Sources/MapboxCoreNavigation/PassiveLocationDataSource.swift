@@ -80,17 +80,32 @@ open class PassiveLocationDataSource: NSObject {
 
         let status = navigator.status(at: lastRawLocation.timestamp)
         let lastLocation = CLLocation(status.location)
+        var speedLimit: Measurement<UnitSpeed>? = nil
+        var signStandard: SignStandard = .mutcd
 
         delegate?.passiveLocationDataSource(self, didUpdateLocation: lastLocation, rawLocation: lastRawLocation)
         let matches = status.map_matcher_output.matches.map {
             Match(legs: [], shape: nil, distance: -1, expectedTravelTime: -1, confidence: $0.proba, weight: .routability(value: 1))
+        }
+        
+        if let speed = status.speedLimit?.speedKmph as? Double {
+            if status.speedLimit?.localeUnit == SpeedLimitUnit.milesPerHour {
+                speedLimit = Measurement(value: round(speed/1.609), unit: UnitSpeed.milesPerHour)
+            } else {
+                speedLimit = Measurement(value: speed, unit: UnitSpeed.kilometersPerHour)
+            }
+        }
+
+        if status.speedLimit?.localeSign == SpeedLimitSign.vienna {
+            signStandard = .viennaConvention
         }
         NotificationCenter.default.post(name: .passiveLocationDataSourceDidUpdate, object: self, userInfo: [
             NotificationUserInfoKey.locationKey: lastLocation,
             NotificationUserInfoKey.rawLocationKey: lastRawLocation,
             NotificationUserInfoKey.matchesKey: matches,
             NotificationUserInfoKey.roadNameKey: status.roadName,
-            NotificationUserInfoKey.speedLimitKey: status.speedLimit
+            NotificationUserInfoKey.speedLimitKey: speedLimit,
+            NotificationUserInfoKey.signStandardKey: signStandard
         ])
     }
 }

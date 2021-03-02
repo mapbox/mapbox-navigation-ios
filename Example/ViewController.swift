@@ -18,7 +18,8 @@ class ViewController: UIViewController {
     
     var trackStyledFeature: StyledFeature!
     var rawTrackStyledFeature: StyledFeature!
-    var speedLimitView: SpeedLimitView
+    var speedLimitView: SpeedLimitView!
+    var speedLimitViewPosition: MapOrnamentPosition = .topTrailing
     
     typealias RouteRequestSuccess = ((RouteResponse) -> Void)
     typealias RouteRequestFailure = ((Error) -> Void)
@@ -60,6 +61,30 @@ class ViewController: UIViewController {
     weak var activeNavigationViewController: NavigationViewController?
     
     // MARK: - UIViewController lifecycle methods
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupSpeedLimitView()
+        observeSpeedNotifications()
+        view.addSubview(speedLimitView)
+    }
+    
+    func setupSpeedLimitView() {
+        let speedLimitView = SpeedLimitView()
+        speedLimitView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(speedLimitView)
+        speedLimitView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
+        speedLimitView.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        speedLimitView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        switch speedLimitViewPosition {
+        case .topLeading:
+            speedLimitView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10).isActive = true
+        case .topTrailing:
+            speedLimitView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10).isActive = true
+        }
+        
+        self.speedLimitView = speedLimitView
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -145,9 +170,8 @@ class ViewController: UIViewController {
     }
     
     @objc func updateSpeedLimitView(notification: Notification) {
-        speedLimitView.speedLimit = notification.userInfo?["speedLimit"] as? Measurement<UnitSpeed>
-//        FIX SIGN STANDARD
-        speedLimitView.signStandard = .mutcd
+        speedLimitView.speedLimit = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.speedLimitKey] as? Measurement<UnitSpeed>
+        speedLimitView.signStandard = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.signStandardKey] as? SignStandard
     }
     
     // MARK: - CarPlay navigation methods
