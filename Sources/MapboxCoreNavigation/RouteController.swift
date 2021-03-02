@@ -21,11 +21,6 @@ open class RouteController: NSObject {
         public static let shouldDisableBatteryMonitoring: Bool = true
     }
     
-    struct NavigatorResources {
-        let navigator: Navigator
-        let historyRecorder: HistoryRecorderHandle
-    }
-
     var navigator: MapboxNavigationNative.Navigator {
         return Navigator.shared.navigator
     }
