@@ -21,7 +21,7 @@ let package = Package(
             ])
     ],
     dependencies: [
-        .package(name: "MapboxDirections", url: "https://github.com/mapbox/mapbox-directions-swift.git", .exact("2.0.0-alpha.1")),
+        .package(name: "MapboxDirections", url: "https://github.com/mapbox/mapbox-directions-swift.git", .revision("b18218815528bbfdfb06ac4f211a6da12a376e0e")),
         .package(name: "MapboxGeocoder", url: "https://github.com/mapbox/MapboxGeocoder.swift.git", from: "0.13.0"),
         .package(name: "MapboxMobileEvents", url: "https://github.com/mapbox/mapbox-events-ios.git", from: "0.12.0-alpha.1"),
         .package(name: "MapboxNavigationNative", url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", from: "42.0.1"),

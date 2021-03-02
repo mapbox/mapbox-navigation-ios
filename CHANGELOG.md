@@ -13,7 +13,7 @@
 
 ### Map
 
-* `MBXAccessToken` is now required for `MapboxMaps`, and must be set in the Info.plist file. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* To gain access to Mapbox server APIs, set `MBXAccessToken` in your Info.plist. `MGLMapboxAccessToken` is still supported but is now deprecated. ([#2837](https://github.com/mapbox/mapbox-navigation-ios/pull/2837))
 * Removed obsoleted `NavigationMapView.navigationMapDelegate`, which was replaced by `NavigationMapView.delegate`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * `NavigationMapView.navigationMapViewDelegate` was renamed to `NavigationMapView.delegate`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * `NavigationMapViewController.mapView` was renamed to `NavigationMapViewController.navigationMapView`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
