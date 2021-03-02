@@ -227,6 +227,7 @@
 		8A0E0A52257AD9C300C2E924 /* NightStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0E0A51257AD9C300C2E924 /* NightStyle.swift */; };
 		8A17635B25CC89D800737520 /* Expression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A17635A25CC89D800737520 /* Expression.swift */; };
 		8A1763D025CCC38C00737520 /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1763CF25CCC38C00737520 /* Double.swift */; };
+		8A3A219025EEC00200EDA999 /* CoreNavigationNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A3A218F25EEC00200EDA999 /* CoreNavigationNavigator.swift */; };
 		8A41F5B225BF61AE00BD6FCF /* CarPlayActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A41F5B125BF61AE00BD6FCF /* CarPlayActivity.swift */; };
 		8A41F5EC25BF624900BD6FCF /* MapOrnamentPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A41F5EB25BF624900BD6FCF /* MapOrnamentPosition.swift */; };
 		8A41F63C25BF631500BD6FCF /* NavigationMapView+VanishingRouteLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A41F63A25BF631500BD6FCF /* NavigationMapView+VanishingRouteLine.swift */; };
@@ -717,6 +718,7 @@
 		8A0E0A51257AD9C300C2E924 /* NightStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightStyle.swift; sourceTree = "<group>"; };
 		8A17635A25CC89D800737520 /* Expression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expression.swift; sourceTree = "<group>"; };
 		8A1763CF25CCC38C00737520 /* Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Double.swift; sourceTree = "<group>"; };
+		8A3A218F25EEC00200EDA999 /* CoreNavigationNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreNavigationNavigator.swift; sourceTree = "<group>"; };
 		8A41F5B125BF61AE00BD6FCF /* CarPlayActivity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CarPlayActivity.swift; sourceTree = "<group>"; };
 		8A41F5EB25BF624900BD6FCF /* MapOrnamentPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapOrnamentPosition.swift; sourceTree = "<group>"; };
 		8A41F63A25BF631500BD6FCF /* NavigationMapView+VanishingRouteLine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NavigationMapView+VanishingRouteLine.swift"; sourceTree = "<group>"; };
@@ -1696,6 +1698,7 @@
 				35C98730212E02B500808B82 /* RouteController.swift */,
 				5A39B9272498F9890026DFD1 /* PassiveLocationDataSource.swift */,
 				5A3D212D24DADF9F00EA652A /* SkuTokenProvider.swift */,
+				8A3A218F25EEC00200EDA999 /* CoreNavigationNavigator.swift */,
 			);
 			name = MapboxCoreNavigation;
 			path = Sources/MapboxCoreNavigation;
@@ -2613,6 +2616,7 @@
 				352F464D20EB74C200147886 /* NavigationEventsManager.swift in Sources */,
 				351174F41EF1C0530065E248 /* ReplayLocationManager.swift in Sources */,
 				2BE701172535940D00F46E4E /* Tunnel.swift in Sources */,
+				8A3A219025EEC00200EDA999 /* CoreNavigationNavigator.swift in Sources */,
 				DABA591525E58D5600D0C1DB /* Accounts.swift in Sources */,
 				C5C94C1C1DDCD2340097296A /* LegacyRouteController.swift in Sources */,
 				3A8187C924BDAE9C00708F19 /* URLSession.swift in Sources */,

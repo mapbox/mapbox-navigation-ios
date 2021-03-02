@@ -16,16 +16,10 @@ open class PassiveLocationDataSource: NSObject {
      - parameter directions: The directions service that allows the location data source to access road network data. If this argument is omitted, the shared `Directions` object is used.
      - parameter systemLocationManager: The location manager that provides raw locations for the receiver to match against the road network.
      
-     - postcondition: Call `startUpdatingLocation(completionHandler:)` afterwards to begin receiving location updates.
+     - postcondition: Call `startUpdatingLocation()` afterwards to begin receiving location updates.
      */
     public required init(directions: Directions = Directions.shared, systemLocationManager: NavigationLocationManager? = nil) {
         self.directions = directions
-        
-        let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
-        self.navigator = try! Navigator(profile: settingsProfile,
-                                        config: NavigatorConfig(),
-                                        customConfig: "",
-                                        tilesConfig: TilesConfig())
 
         self.systemLocationManager = systemLocationManager ?? NavigationLocationManager()
         
@@ -47,14 +41,9 @@ open class PassiveLocationDataSource: NSObject {
     /**
      The underlying navigator that performs map matching.
      */
-    var navigator: Navigator
-    
-    /**
-     Whether the navigator’s router has been configured.
-     
-     Set this property to `true` before calling `Navigator.configureRouter(for:)` and reset it to `false` if something causes the router to be unconfigured.
-     */
-    var isConfigured = false
+    var navigator: MapboxNavigationNative.Navigator {
+        return Navigator.shared.navigator
+    }
     
     /**
      The location data source’s delegate.
@@ -64,66 +53,8 @@ open class PassiveLocationDataSource: NSObject {
     /**
      Starts the generation of location updates with an optional completion handler that gets called when the location data source is ready to receive snapped location updates.
      */
-    public func startUpdatingLocation(completionHandler: ((Error?) -> Void)? = nil) {
+    public func startUpdatingLocation() {
         systemLocationManager.startUpdatingLocation()
-        
-        guard !isConfigured else {
-            return
-        }
-        
-        directions.fetchAvailableOfflineVersions { [weak self] (versions, error) in
-            guard let self = self, let latestVersion = versions?.first(where: { !$0.isEmpty }), error == nil else {
-                completionHandler?(error)
-                return
-            }
-            
-            do {
-                try self.configureNavigator(withTilesVersion: latestVersion)
-                completionHandler?(nil)
-            } catch {
-                completionHandler?(error)
-            }
-        }
-    }
-    
-    /**
-     Creates a cache for tiles of the given version and configures the navigator to use this cache.
-     */
-    func configureNavigator(withTilesVersion tilesVersion: String) throws {
-        guard !isConfigured else {
-            return
-        }
-        
-        // ~/Library/Caches/tld.app.bundle.id/.mapbox/2020_08_08-03_00_00/
-        guard var tilesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first else {
-            preconditionFailure("No Caches directory to create the tile directory inside")
-        }
-        if let bundleIdentifier = Bundle.main.bundleIdentifier ?? Bundle.mapboxCoreNavigation.bundleIdentifier {
-            tilesURL.appendPathComponent(bundleIdentifier, isDirectory: true)
-        }
-        tilesURL.appendPathComponent(".mapbox", isDirectory: true)
-        tilesURL.appendPathComponent(tilesVersion, isDirectory: true)
-        // Tiles with different versions shouldn't be mixed, it may cause inappropriate Navigator's behaviour
-        try FileManager.default.createDirectory(at: tilesURL, withIntermediateDirectories: true, attributes: nil)
-        try configureNavigator(withURL: tilesURL, tilesVersion: tilesVersion)
-    }
-
-    func configureNavigator(withURL tilesURL: URL, tilesVersion: String) throws {
-        let endpointConfig = TileEndpointConfiguration(credentials: directions.credentials, tilesVersion: tilesVersion, minimumDaysToPersistVersion: nil)
-        let tilesConfig = TilesConfig(tilesPath: tilesURL.path,
-                                      inMemoryTileCache: nil,
-                                      onDiskTileCache: nil,
-                                      mapMatchingSpatialCache: nil,
-                                      threadsCount: nil,
-                                      endpointConfig: endpointConfig)
-        
-        let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile, platform: ProfilePlatform.KIOS)
-        navigator = try Navigator(profile: settingsProfile,
-                                  config: NavigatorConfig(),
-                                  customConfig: "",
-                                  tilesConfig: tilesConfig)
-        
-        isConfigured = true
     }
     
     /**
@@ -204,10 +135,10 @@ public protocol PassiveLocationDataSourceDelegate: class {
 extension TileEndpointConfiguration {
     /**
      Initializes an object that configures a navigator to obtain routing tiles of the given version from an endpoint, using the given credentials.
-     
-      - parameter credentials: Credentials for accessing road network data.
-      - parameter tilesVersion: Routing tile version.
-      - parameter minimumDaysToPersistVersion: The minimum age in days that a tile version much reach before a new version can be requested from the tile endpoint.
+              
+           - parameter credentials: Credentials for accessing road network data.
+           - parameter tilesVersion: Routing tile version.
+           - parameter minimumDaysToPersistVersion: The minimum age in days that a tile version much reach before a new version can be requested from the tile endpoint.
      */
     convenience init(credentials: DirectionsCredentials, tilesVersion: String, minimumDaysToPersistVersion: Int?) {
         let host = credentials.host.absoluteString
@@ -216,7 +147,7 @@ extension TileEndpointConfiguration {
         }
         let skuTokenProvider = SkuTokenProvider(with: credentials)
         
-
+        
         self.init(host: host,
                   dataset: "mapbox/driving",
                   version: tilesVersion,

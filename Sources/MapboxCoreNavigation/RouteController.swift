@@ -21,27 +21,8 @@ open class RouteController: NSObject {
         public static let shouldDisableBatteryMonitoring: Bool = true
     }
     
-    struct NavigatorResources {
-        let navigator: Navigator
-        let historyRecorder: HistoryRecorderHandle
-    }
-
-    lazy var navigatorResources: NavigatorResources = {
-        let settingsProfile = SettingsProfile(
-            application: ProfileApplication.kMobile,
-            platform: ProfilePlatform.KIOS
-        )
-        
-        let config = try! ConfigFactory.build(for: settingsProfile, config: NavigatorConfig(), customConfig: "")
-        let runLoopExecutor = try! RunLoopExecutorFactory.build()
-        let historyRecorder = try! HistoryRecorderHandle.build(forConfig: config)
-        let cache = try! CacheFactory.build(for: TilesConfig(), config: config, runLoop: runLoopExecutor, historyRecorder: historyRecorder)
-        let navigator = try! Navigator(config: config, runLoopExecutor: runLoopExecutor, cache: cache, historyRecorder: historyRecorder)
-        return NavigatorResources(navigator: navigator, historyRecorder: historyRecorder)
-    }()
-    
-    var navigator: Navigator {
-        return navigatorResources.navigator
+    var navigator: MapboxNavigationNative.Navigator {
+        return Navigator.shared.navigator
     }
     
     public var indexedRoute: IndexedRoute {
@@ -113,6 +94,7 @@ open class RouteController: NSObject {
         }
 
         let status = navigator.status(at: locationUpdateDate)
+        
         guard status.routeState == .tracking || status.routeState == .complete else {
             return nil
         }
@@ -280,7 +262,6 @@ open class RouteController: NSObject {
         if willReroute {
             reroute(from: location, along: routeProgress)
         }
-        
         // Check for faster route proactively (if reroutesProactively is enabled)
         refreshAndCheckForFasterRoute(from: location, routeProgress: routeProgress)
     }
@@ -403,15 +384,15 @@ open class RouteController: NSObject {
     }
     
     public func enableLocationRecording() {
-        try! navigatorResources.historyRecorder.enable(forEnabled: true)
+        try! Navigator.shared.enableHistoryRecorder()
     }
     
     public func disableLocationRecording() {
-        try! navigatorResources.historyRecorder.enable(forEnabled: false)
+        try! Navigator.shared.disableHistoryRecorder()
     }
     
     public func locationHistory() throws -> Data {
-        return try navigatorResources.historyRecorder.getHistory()
+        return try Navigator.shared.history()
     }
 }
 
