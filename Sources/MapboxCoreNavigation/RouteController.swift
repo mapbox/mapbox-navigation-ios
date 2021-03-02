@@ -26,8 +26,8 @@ open class RouteController: NSObject {
         let historyRecorder: HistoryRecorderHandle
     }
 
-    var navigator: Navigator {
-        Navigator.shared
+    var navigator: MapboxNavigationNative.Navigator {
+        return Navigator.shared.navigator
     }
     
     public var indexedRoute: IndexedRoute {
@@ -389,15 +389,15 @@ open class RouteController: NSObject {
     }
     
     public func enableLocationRecording() {
-        try! Navigator.enableHistoryRecorder()
+        try! Navigator.shared.enableHistoryRecorder()
     }
     
     public func disableLocationRecording() {
-        try! Navigator.disableHistoryRecorder()
+        try! Navigator.shared.disableHistoryRecorder()
     }
     
     public func locationHistory() throws -> Data {
-        return try Navigator.history()
+        return try Navigator.shared.history()
     }
 }
 
