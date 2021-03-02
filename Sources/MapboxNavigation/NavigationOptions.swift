@@ -40,6 +40,14 @@ open class NavigationOptions: NavigationCustomizable {
      */
     open var bottomBanner: ContainerViewController?
     
+    /**
+     Configuration for the Predictive Caching.
+     
+     These parameters control how navigation engine will try to predict and pre-load data related to the route.
+     `nil` value means disabling the feature.
+     */
+    open var predictiveCacheOptions: PredictiveCacheOptions?
+    
     // This makes the compiler happy.
     required public init() {
         // do nothing
@@ -53,14 +61,16 @@ open class NavigationOptions: NavigationCustomizable {
      - parameter voiceController: The voice controller that vocalizes spoken instructions along the route at the appropriate times.
      - parameter topBanner: The container view controller that presents the top banner.
      - parameter bottomBanner: The container view controller that presents the bottom banner.
+     - parameter predictiveCacheOptions: Predictive Caching setup.
      */
-    public convenience init(styles: [Style]? = nil, navigationService: NavigationService? = nil, voiceController: RouteVoiceController? = nil, topBanner: ContainerViewController? = nil, bottomBanner: ContainerViewController? = nil) {
+    public convenience init(styles: [Style]? = nil, navigationService: NavigationService? = nil, voiceController: RouteVoiceController? = nil, topBanner: ContainerViewController? = nil, bottomBanner: ContainerViewController? = nil, predictiveCacheOptions: PredictiveCacheOptions? = nil) {
         self.init()
         self.styles = styles
         self.navigationService = navigationService
         self.voiceController = voiceController
         self.topBanner = topBanner
         self.bottomBanner = bottomBanner
+        self.predictiveCacheOptions = predictiveCacheOptions
     }
     
     /**
