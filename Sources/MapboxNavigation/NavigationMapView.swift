@@ -294,7 +294,7 @@ open class NavigationMapView: UIView {
         mapView.addGestureRecognizer(mapTapGesture)
     }
     
-    public func setupPredictiveCaching(_ predictiveCacheOptions: PredictiveCacheOptions?) {
+    public func setupPredictiveCaching(_ predictiveCacheOptions: PredictiveCacheOptions) {
         let mapTileSource = try? TileStoreManager.getTileStore(for: mapView.__map.getResourceOptions())
         var mapOptions: PredictiveCacheManager.MapOptions?
         if let tileStore = mapTileSource?.value as? TileStore {
