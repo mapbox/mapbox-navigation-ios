@@ -231,6 +231,11 @@ open class NavigationMapView: UIView {
         }
     }
     
+    /**
+     A manager object, used to init and maintain predictive caching.
+     */
+    private(set) var predictiveCacheManager: PredictiveCacheManager?
+    
     public override init(frame: CGRect) {
         altitude = defaultAltitude
         super.init(frame: frame)
@@ -287,6 +292,17 @@ open class NavigationMapView: UIView {
         let mapTapGesture = UITapGestureRecognizer(target: self, action: #selector(didRecieveTap(sender:)))
         mapTapGesture.requireFailure(of: gestures)
         mapView.addGestureRecognizer(mapTapGesture)
+    }
+    
+    public func setupPredictiveCaching(_ predictiveCacheOptions: PredictiveCacheOptions?) {
+        let mapTileSource = try? TileStoreManager.getTileStore(for: mapView.__map.getResourceOptions())
+        var mapOptions: PredictiveCacheManager.MapOptions?
+        if let tileStore = mapTileSource?.value as? TileStore {
+            mapOptions = PredictiveCacheManager.MapOptions(tileStore, mapView.styleSourceDatasets(["raster", "vector"]))
+        }
+        
+        predictiveCacheManager = PredictiveCacheManager(predictiveCacheOptions: predictiveCacheOptions,
+                                                        mapOptions: mapOptions)
     }
     
     // MARK: - Overridden methods

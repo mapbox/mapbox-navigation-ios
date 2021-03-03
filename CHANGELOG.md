@@ -47,7 +47,7 @@
 
 * Removed deprecated `InstructionsBannerViewDelegate.didDragInstructionsBanner(_:)` method. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Removed `NavigationViewController.origin` property, which was not used. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
-* Added optional Predictive Caching mechanism which pre-fetches tiles which may become needed during navigation if app goes offline at some point. ([#2830](https://github.com/mapbox/mapbox-navigation-ios/pull/2830))
+* Added `PredictiveCacheOptions` to allow enabling and configuring a Predictive Caching mechanism which pre-fetches tiles which may become needed during navigation if app goes offline at some point. This can be configure either by updating `NavigationOptions` passed to `NavigationViewController` or by manually calling `NavigationMapView.setupPredictiveCaching(_:)` ([#2830](https://github.com/mapbox/mapbox-navigation-ios/pull/2830))
 
 ## v1.3.0
 
