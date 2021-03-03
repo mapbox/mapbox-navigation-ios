@@ -147,7 +147,6 @@ extension TileEndpointConfiguration {
         }
         let skuTokenProvider = SkuTokenProvider(with: credentials)
         
-        
         self.init(host: host,
                   dataset: "mapbox/driving",
                   version: tilesVersion,

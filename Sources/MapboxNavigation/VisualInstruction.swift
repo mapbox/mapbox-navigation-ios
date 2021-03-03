@@ -24,8 +24,9 @@ extension VisualInstruction {
         mv.backgroundColor = .clear
         mv.scale = UIScreen.main.scale
         mv.visualInstruction = self
+        mv.drivingSide = side
         let image = mv.imageRepresentation
-        return shouldFlipImage(side: side) ? image?.withHorizontallyFlippedOrientation() : image
+        return image
     }
 
     func laneImage(side: DrivingSide, indication: LaneIndication, maneuverDirection: ManeuverDirection?, isUsable: Bool, useableColor: UIColor, unuseableColor: UIColor, size: CGSize) -> UIImage? {
@@ -42,8 +43,10 @@ extension VisualInstruction {
         laneView.maneuverDirection = maneuverDirection
         laneView.indications = indication
         laneView.isValid = isUsable
+        laneView.drivingSide = side
         let image = laneView.imageRepresentation
-        return shouldFlipImage(side: side) ? image?.withHorizontallyFlippedOrientation() : image
+
+        return image
     }
 
     func lanesImage(side: DrivingSide, direction: ManeuverDirection?, useableColor: UIColor, unuseableColor: UIColor, size: CGSize, scale: CGFloat) -> UIImage? {
@@ -85,10 +88,11 @@ extension VisualInstruction {
     /// Returns whether the `VisualInstruction`’s maneuver image should be flipped according to the driving side.
     public func shouldFlipImage(side: DrivingSide) -> Bool {
         switch maneuverType ?? .turn {
+        case _ where maneuverDirection == .uTurn:
+            return side == .right
         case .takeRoundabout,
              .turnAtRoundabout,
-             .takeRotary,
-             _ where maneuverDirection == .uTurn:
+             .takeRotary:
             return side == .left
         default:
             return [.left, .slightLeft, .sharpLeft].contains(maneuverDirection ?? .straightAhead)
