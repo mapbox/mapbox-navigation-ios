@@ -19,12 +19,15 @@ class ViewController: UIViewController {
     var trackStyledFeature: StyledFeature!
     var rawTrackStyledFeature: StyledFeature!
     var speedLimitView: SpeedLimitView!
+    // let passiveLocationDataSource: PassiveLocationDataSource? = nil
+    let passiveLocationDataSource: PassiveLocationDataSource? = PassiveLocationDataSource()
     
     var currentEdgeIdentifier: ElectronicHorizon.Edge.Identifier?
     var nextEdgeIdentifier: ElectronicHorizon.Edge.Identifier?
     
     typealias RouteRequestSuccess = ((RouteResponse) -> Void)
     typealias RouteRequestFailure = ((Error) -> Void)
+    typealias ActionHandler = (UIAlertAction) -> Void
     
     private var foundAllBuildings = false
 
@@ -52,7 +55,7 @@ class ViewController: UIViewController {
     var response: RouteResponse? {
         didSet {
             guard let routes = response?.routes, let currentRoute = routes.first else {
-                clearMapView()
+                clearNavigationMapView()
                 return
             }
             
@@ -63,6 +66,30 @@ class ViewController: UIViewController {
     }
     
     weak var activeNavigationViewController: NavigationViewController?
+    
+    // MARK: - Initializer methods
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        commonInit()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        commonInit()
+    }
+    
+    private func commonInit() {
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+            appDelegate.currentAppRootViewController = self
+        }
+    }
+    
+    deinit {
+        if let navigationMapView = navigationMapView {
+            uninstall(navigationMapView)
+        }
+    }
     
     // MARK: - UIViewController lifecycle methods
     
@@ -90,6 +117,7 @@ class ViewController: UIViewController {
         if navigationMapView == nil {
             navigationMapView = NavigationMapView(frame: view.bounds)
         }
+        passiveLocationDataSource?.systemLocationManager.startUpdatingLocation()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -98,29 +126,21 @@ class ViewController: UIViewController {
         requestNotificationCenterAuthorization()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        passiveLocationDataSource?.systemLocationManager.stopUpdatingLocation()
+    }
+    
     private func configure(_ navigationMapView: NavigationMapView) {
-        setupPassiveLocationManager(navigationMapView)
+        setupPassiveLocationManager()
         
         navigationMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(navigationMapView)
         
         navigationMapView.delegate = self
-        navigationMapView.mapView.on(.styleLoadingFinished, handler: { [weak self] _ in
-            guard let self = self else { return }
-            self.addStyledFeature(self.trackStyledFeature)
-            self.addStyledFeature(self.rawTrackStyledFeature)
-        })
         navigationMapView.mapView.update {
             $0.location.showUserLocation = true
-        }
-        
-        // TODO: Provide a reliable way of setting camera to current coordinate.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            if let coordinate = navigationMapView.mapView.locationManager.latestLocation?.coordinate {
-                navigationMapView.mapView.cameraManager.setCamera(to: CameraOptions(center: coordinate, zoom: 13),
-                                                                  animated: true,
-                                                                  completion: nil)
-            }
         }
         
         setupGestureRecognizers()
@@ -132,7 +152,7 @@ class ViewController: UIViewController {
         navigationMapView.removeFromSuperview()
     }
     
-    private func clearMapView() {
+    private func clearNavigationMapView() {
         startButton.isEnabled = false
         clearMap.isHidden = true
         longPressHintView.isHidden = false
@@ -156,7 +176,7 @@ class ViewController: UIViewController {
     }
 
     @IBAction func clearMapPressed(_ sender: Any) {
-        clearMapView()
+        clearNavigationMapView()
     }
 
     @IBAction func startButtonPressed(_ sender: Any) {
@@ -165,13 +185,13 @@ class ViewController: UIViewController {
     
     // MARK: - CarPlay navigation methods
     
-    public func beginNavigationWithCarplay(navigationService: NavigationService) {
+    public func beginNavigationWithCarPlay(navigationService: NavigationService) {
         let navigationViewController = activeNavigationViewController ?? self.navigationViewController(navigationService: navigationService)
         navigationViewController.didConnectToCarPlay()
 
         guard activeNavigationViewController == nil else { return }
 
-        presentAndRemoveMapview(navigationViewController, completion: nil)
+        present(navigationViewController)
     }
     
     func beginCarPlayNavigation() {
@@ -186,8 +206,6 @@ class ViewController: UIViewController {
     
     private func presentActionsAlertController() {
         let alertController = UIAlertController(title: "Start Navigation", message: "Select the navigation type", preferredStyle: .actionSheet)
-        
-        typealias ActionHandler = (UIAlertAction) -> Void
         
         let basic: ActionHandler = { _ in self.startBasicNavigation() }
         let day: ActionHandler = { _ in self.startNavigation(styles: [DayStyle()]) }
@@ -230,7 +248,7 @@ class ViewController: UIViewController {
         // Example of building highlighting in 2D.
         navigationViewController.waypointStyle = .building
         
-        presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
+        present(navigationViewController, completion: beginCarPlayNavigation)
     }
     
     func startBasicNavigation() {
@@ -240,7 +258,7 @@ class ViewController: UIViewController {
         let navigationViewController = self.navigationViewController(navigationService: service)
         
         // Render part of the route that has been traversed with full transparency, to give the illusion of a disappearing route.
-        navigationViewController.routeLineTracksTraversal = true
+        navigationViewController.routeLineTracksTraversal = false
         
         // Example of building highlighting in 3D.
         navigationViewController.waypointStyle = .extrudedBuilding
@@ -250,6 +268,17 @@ class ViewController: UIViewController {
         
         // Control floating buttons position in a navigation view.
         navigationViewController.floatingButtonsPosition = .topTrailing
+        
+        // Modify default `NavigationViewportDataSource` and `NavigationCameraStateTransition` to change
+        // `NavigationCamera` behavior.
+        if let mapView = navigationViewController.navigationMapView?.mapView {
+            let customViewportDataSource = NavigationViewportDataSource(mapView)
+            customViewportDataSource.altitude = 100.0
+            navigationViewController.navigationMapView?.navigationCamera.viewportDataSource = customViewportDataSource
+            
+            let customCameraStateTransition = CustomCameraStateTransition(mapView)
+            navigationViewController.navigationMapView?.navigationCamera.cameraStateTransition = customCameraStateTransition
+        }
         
         present(navigationViewController, completion: nil)
     }
@@ -276,7 +305,7 @@ class ViewController: UIViewController {
         let navigationViewController = NavigationViewController(for: route, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
 
-        presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
+        present(navigationViewController, completion: beginCarPlayNavigation)
     }
     
     func startGuidanceCardsNavigation() {
@@ -289,7 +318,7 @@ class ViewController: UIViewController {
         let navigationViewController = NavigationViewController(for: route, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
         
-        presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
+        present(navigationViewController, completion: beginCarPlayNavigation)
     }
     
     // MARK: - UIGestureRecognizer methods
@@ -340,12 +369,16 @@ class ViewController: UIViewController {
         let alertController = UIAlertController(title: "Perform action",
                                                 message: "Select specific action to perform it", preferredStyle: .actionSheet)
         
-        typealias ActionHandler = (UIAlertAction) -> Void
-        
         let toggleDayNightStyle: ActionHandler = { _ in self.toggleDayNightStyle() }
+        let requestNavigationFollowingCamera: ActionHandler = { _ in self.requestNavigationFollowingCamera() }
+        let requestNavigationIdleCamera: ActionHandler = { _ in self.requestNavigationIdleCamera() }
+        let overrideViewportDataSourceAndCameraTransition: ActionHandler = { _ in self.overrideViewportDataSourceAndCameraTransition() }
         
         let actions: [(String, UIAlertAction.Style, ActionHandler?)] = [
             ("Toggle Day/Night Style", .default, toggleDayNightStyle),
+            ("Request Following Camera", .default, requestNavigationFollowingCamera),
+            ("Request Idle Camera", .default, requestNavigationIdleCamera),
+            ("Override camera", .default, overrideViewportDataSourceAndCameraTransition),
             ("Cancel", .cancel, nil)
         ]
         
@@ -366,6 +399,24 @@ class ViewController: UIViewController {
         } else {
             navigationMapView.mapView?.style.styleURL = StyleURL.custom(url: MapboxMaps.Style.navigationNightStyleURL)
         }
+    }
+    
+    func requestNavigationFollowingCamera() {
+        navigationMapView.navigationCamera.requestNavigationCameraToFollowing()
+    }
+    
+    func requestNavigationIdleCamera() {
+        navigationMapView.navigationCamera.requestNavigationCameraToIdle()
+    }
+    
+    func overrideViewportDataSourceAndCameraTransition() {
+        let customViewportDataSource = CustomViewportDataSource(navigationMapView.mapView)
+        // let customViewportDataSource = NavigationViewportDataSource(navigationMapView.mapView)
+        // customViewportDataSource.defaultAltitude = 300.0
+        navigationMapView.navigationCamera.viewportDataSource = customViewportDataSource
+        
+        let customCameraStateTransition = CustomCameraStateTransition(navigationMapView.mapView)
+        navigationMapView.navigationCamera.cameraStateTransition = customCameraStateTransition
     }
     
     func requestRoute() {
@@ -430,12 +481,18 @@ class ViewController: UIViewController {
         return navigationViewController
     }
     
-    func present(_ navigationViewController: NavigationViewController, completion: CompletionHandler?) {
+    func present(_ navigationViewController: NavigationViewController, completion: CompletionHandler? = nil) {
         navigationViewController.modalPresentationStyle = .fullScreen
         activeNavigationViewController = navigationViewController
         
         present(navigationViewController, animated: true) {
             completion?()
+        }
+    }
+    
+    func endCarPlayNavigation(canceled: Bool) {
+        if #available(iOS 12.0, *), let delegate = UIApplication.shared.delegate as? AppDelegate {
+            delegate.carPlayManager.currentNavigator?.exitNavigation(byCanceling: canceled)
         }
     }
     
@@ -449,17 +506,6 @@ class ViewController: UIViewController {
         let mode: SimulationMode = simulationButton.isSelected ? .always : .onPoorGPS
         
         return MapboxNavigationService(route: route, routeIndex: routeIndex, routeOptions: options, simulating: mode)
-    }
-    
-    func presentAndRemoveMapview(_ navigationViewController: NavigationViewController, completion: CompletionHandler?) {
-        navigationViewController.modalPresentationStyle = .fullScreen
-        activeNavigationViewController = navigationViewController
-        
-        present(navigationViewController, animated: true) { [weak self] in
-            completion?()
-            
-            self?.navigationMapView = nil
-        }
     }
     
     // MARK: - Utility methods
@@ -523,7 +569,9 @@ extension ViewController: NavigationViewControllerDelegate {
     }
     
     func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool) {
+        endCarPlayNavigation(canceled: canceled)
         dismissActiveNavigationViewController()
+        clearNavigationMapView()
     }
 }
 

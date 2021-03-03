@@ -8,21 +8,24 @@ public protocol CourseUpdatable where Self: UIView {
     /**
      Updates the view to reflect the given location and other camera properties.
      */
-    func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, tracksUserCourse: Bool)
+    func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, navigationCameraState: NavigationCameraState)
 }
 
 public extension CourseUpdatable {
-    func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, tracksUserCourse: Bool) {
-        applyDefaultUserPuckTransformation(location: location, pitch: pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse)
-    }
     
-    func applyDefaultUserPuckTransformation(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, tracksUserCourse: Bool) {
+    func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, navigationCameraState: NavigationCameraState) {
         let duration: TimeInterval = animated ? 1 : 0
         UIView.animate(withDuration: duration, delay: 0, options: [.beginFromCurrentState, .curveLinear], animations: {
-            let angle = tracksUserCourse ? 0 : CLLocationDegrees(direction - location.course)
-            self.layer.setAffineTransform(CGAffineTransform.identity.rotated(by: -CGFloat(angle.toRadians())))
-            var transform = CATransform3DRotate(CATransform3DIdentity, CGFloat(CLLocationDegrees(pitch).toRadians()), 1.0, 0, 0)
-            transform = CATransform3DScale(transform, tracksUserCourse ? 1 : 0.5, tracksUserCourse ? 1 : 0.5, 1)
+            let isCameraFollowing = navigationCameraState == .following
+            let angle = CGFloat(isCameraFollowing ? 0.0 : CLLocationDegrees(direction - location.course).toRadians())
+            let scale = CGFloat(isCameraFollowing ? 1.0 : 0.5)
+            
+            let isCameraTransitioning = navigationCameraState == .transitionToFollowing || navigationCameraState == .transitionToOverview
+            let pitch = CGFloat(isCameraTransitioning ? 0.0 : CLLocationDegrees(pitch).toRadians())
+            
+            self.layer.setAffineTransform(CGAffineTransform.identity.rotated(by: -angle))
+            var transform = CATransform3DRotate(CATransform3DIdentity, pitch, 1.0, 0, 0)
+            transform = CATransform3DScale(transform, scale, scale, 1)
             transform.m34 = -1.0 / 1000 // (-1 / distance to projection plane)
             self.layer.sublayerTransform = transform
         }, completion: nil)
@@ -49,14 +52,19 @@ public class UserPuckCourseView: UIView, CourseUpdatable {
     /**
      Transforms the location of the user puck.
      */
-    public func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, tracksUserCourse: Bool) {
+    public func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, navigationCameraState: NavigationCameraState) {
         let duration: TimeInterval = animated ? 1 : 0
         UIView.animate(withDuration: duration, delay: 0, options: [.beginFromCurrentState, .curveLinear], animations: {
-            let angle = tracksUserCourse ? 0 : CLLocationDegrees(direction - location.course)
-            self.puckView.layer.setAffineTransform(CGAffineTransform.identity.rotated(by: -CGFloat(angle.toRadians())))
-        
-            var transform = CATransform3DRotate(CATransform3DIdentity, CGFloat(CLLocationDegrees(pitch).toRadians()), 1.0, 0, 0)
-            transform = CATransform3DScale(transform, tracksUserCourse ? 1 : 0.5, tracksUserCourse ? 1 : 0.5, 1)
+            let isCameraFollowing = navigationCameraState == .following
+            let angle = CGFloat(isCameraFollowing ? 0.0 : CLLocationDegrees(direction - location.course).toRadians())
+            let scale = CGFloat(isCameraFollowing ? 1.0 : 0.5)
+            
+            let isCameraTransitioning = navigationCameraState == .transitionToFollowing || navigationCameraState == .transitionToOverview
+            let pitch = CGFloat(isCameraTransitioning ? 0.0 : CLLocationDegrees(pitch).toRadians())
+            
+            self.puckView.layer.setAffineTransform(CGAffineTransform.identity.rotated(by: -angle))
+            var transform = CATransform3DRotate(CATransform3DIdentity, pitch, 1.0, 0, 0)
+            transform = CATransform3DScale(transform, scale, scale, 1)
             transform.m34 = -1.0 / 1000 // (-1 / distance to projection plane)
             self.layer.sublayerTransform = transform
         }, completion: nil)

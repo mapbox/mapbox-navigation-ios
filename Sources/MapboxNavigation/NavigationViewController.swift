@@ -63,11 +63,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     }
     
     /**
-     An optional `CameraOptions` you can use to improve the initial transition from a previous viewport and prevent a trigger from an excessive significant location update.
-     */
-    public var pendingCamera: CameraOptions?
-    
-    /**
      The receiver’s delegate.
      */
     public weak var delegate: NavigationViewControllerDelegate?
@@ -389,6 +384,9 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
             return
         }
         navigationService(navigationService, didPassVisualInstructionPoint: firstInstruction, routeProgress: navigationService.routeProgress)
+        
+        // By default `NavigationCamera` in active guidance navigation should be set to `NavigationCameraState.following` state.
+        navigationMapView?.navigationCamera.requestNavigationCameraToFollowing()
     }
     
     open override func viewWillAppear(_ animated: Bool) {
@@ -524,10 +522,6 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
         }
     }
     
-    public func navigationMapViewUserAnchorPoint(_ navigationMapView: NavigationMapView) -> CGPoint {
-        return delegate?.navigationViewController(self, mapViewUserAnchorPoint: navigationMapView) ?? .zero
-    }
-    
     func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool {
         return annotatesSpokenInstructions
     }
@@ -615,16 +609,11 @@ extension NavigationViewController: NavigationServiceDelegate {
         let shouldPrevent = navigationService.delegate?.navigationService(navigationService, shouldPreventReroutesWhenArrivingAt: destination) ?? RouteController.DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint
         let userHasArrivedAndShouldPreventRerouting = shouldPrevent && !progress.currentLegProgress.userHasArrivedAtWaypoint
         
-        if snapsUserLocationAnnotationToRoute,
-            userHasArrivedAndShouldPreventRerouting {
+        if snapsUserLocationAnnotationToRoute, userHasArrivedAndShouldPreventRerouting {
             mapViewController?.labelCurrentRoad(at: rawLocation, for: location)
+            mapViewController?.navigationMapView.updateUserCourseView(location, animated: true)
         } else  {
             mapViewController?.labelCurrentRoad(at: rawLocation)
-        }
-        
-        if snapsUserLocationAnnotationToRoute,
-            userHasArrivedAndShouldPreventRerouting {
-            mapViewController?.navigationMapView.updateCourseTracking(location: location, animated: true)
         }
         
         attemptToHighlightBuildings(progress, with: location)
@@ -897,6 +886,7 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
                            steps: remaining)
         }
         
+        navigationMapView?.navigationCamera.requestNavigationCameraToIdle()
         mapViewController?.center(on: upcomingStep,
                                   route: route,
                                   legIndex: legIndex,
@@ -910,22 +900,11 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
         let legProgress = RouteLegProgress(leg: progress.route.legs[legIndex], stepIndex: stepIndex)
         let step = legProgress.currentStep
         self.preview(step: step, in: banner, remaining: progress.remainingSteps, route: progress.route, animated: false)
-        
-        // After selecting maneuver and dismissing steps table make sure to update contentInsets of NavigationMapView
-        // to correctly place selected maneuver in the center of the screen (taking into account top and bottom banner heights).
-        banner.dismissStepsTable { [weak self] in
-            self?.mapViewController?.updateMapViewContentInsets()
-        }
+        banner.dismissStepsTable()
     }
     
     public func topBanner(_ banner: TopBannerViewController, didDisplayStepsController: StepsViewController) {
         mapViewController?.recenter(self)
-    }
-}
-
-fileprivate extension Route {
-    func leg(containing step: RouteStep) -> RouteLeg? {
-        return legs.first { $0.steps.contains(step) }
     }
 }
 

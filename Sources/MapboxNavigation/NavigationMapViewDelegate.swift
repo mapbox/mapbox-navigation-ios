@@ -50,14 +50,6 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
      - returns: Optionally, a `FeatureCollection` that defines the shape of the waypoint, or `nil` to use default behavior.
      */
     func navigationMapView(_ navigationMapView: NavigationMapView, shapeFor waypoints: [Waypoint], legIndex: Int) -> FeatureCollection?
-    
-    /**
-     Asks the receiver to return a `CGPoint` to serve as the anchor for the user icon.
-     - important: The return value should be returned in the normal UIKit coordinate-space, NOT CoreAnimation's unit coordinate-space.
-     - parameter navigationMapView: The `NavigationMapView`.
-     - returns: A `CGPoint` (in regular coordinate-space) that represents the point on-screen where the user location icon should be drawn.
-     */
-    func navigationMapViewUserAnchorPoint(_ navigationMapView: NavigationMapView) -> CGPoint
 }
 
 public extension NavigationMapViewDelegate {

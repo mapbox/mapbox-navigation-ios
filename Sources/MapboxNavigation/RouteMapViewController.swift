@@ -6,7 +6,7 @@ import Turf
 import MapboxMaps
 import MapboxCoreMaps
 
-class RouteMapViewController: UIViewController {
+class RouteMapViewController: UIViewController, NavigationCameraStateObserver {
     
     var navigationView: NavigationView {
         return view as! NavigationView
@@ -53,7 +53,7 @@ class RouteMapViewController: UIViewController {
     }()
 
     private struct Actions {
-        static let overview: Selector = #selector(RouteMapViewController.toggleOverview(_:))
+        static let overview: Selector = #selector(RouteMapViewController.overview(_:))
         static let mute: Selector = #selector(RouteMapViewController.toggleMute(_:))
         static let feedback: Selector = #selector(RouteMapViewController.feedback(_:))
         static let recenter: Selector = #selector(RouteMapViewController.recenter(_:))
@@ -73,32 +73,6 @@ class RouteMapViewController: UIViewController {
     }
 
     var detailedFeedbackEnabled: Bool = false
-
-    var pendingCamera: CameraOptions? {
-        guard let parent = parent as? NavigationViewController else {
-            return nil
-        }
-        return parent.pendingCamera
-    }
-    
-    var tiltedCamera: CameraOptions {
-        get {
-            let currentCamera = navigationMapView.mapView.cameraView.camera
-            let pitch: CGFloat = 45.0
-            let zoom = CGFloat(ZoomLevelForAltitude(1000,
-                                                    pitch,
-                                                    // TODO: Find an alternative way of providing `latitude`.
-                                                    router.location?.coordinate.latitude ?? 0.0,
-                                                    navigationMapView.mapView.bounds.size))
-            
-            return CameraOptions(center: currentCamera.center,
-                                 padding: currentCamera.padding,
-                                 anchor: currentCamera.anchor,
-                                 zoom: zoom,
-                                 bearing: currentCamera.bearing,
-                                 pitch: pitch)
-        }
-    }
     
     weak var delegate: RouteMapViewControllerDelegate?
     var navigationService: NavigationService! {
@@ -112,18 +86,6 @@ class RouteMapViewController: UIViewController {
         return navigationService.router
     }
     
-    var isInOverviewMode = false {
-        didSet {
-            if isInOverviewMode {
-                navigationView.overviewButton.isHidden = true
-                navigationView.resumeButton.isHidden = false
-                navigationView.wayNameView.isHidden = true
-            } else {
-                navigationView.overviewButton.isHidden = false
-                navigationView.resumeButton.isHidden = true
-            }
-        }
-    }
     var currentLegIndexMapped = 0
     var currentStepIndexMapped = 0
 
@@ -145,11 +107,6 @@ class RouteMapViewController: UIViewController {
     typealias LabelRoadNameCompletionHandler = (_ defaultRoadNameAssigned: Bool) -> Void
 
     var labelRoadNameCompletionHandler: (LabelRoadNameCompletionHandler)?
-    
-    /**
-     A Boolean value that determines whether the map altitude should change based on internal conditions.
-     */
-    var suppressAutomaticAltitudeChanges: Bool = false
 
     convenience init(navigationService: NavigationService, delegate: RouteMapViewControllerDelegate? = nil, topBanner: ContainerViewController, bottomBanner: ContainerViewController) {
         self.init()
@@ -188,7 +145,7 @@ class RouteMapViewController: UIViewController {
         // TODO: Verify whether content insets should be changed on map view.
         view.layoutIfNeeded()
 
-        navigationMapView.tracksUserCourse = true
+        navigationMapView.navigationCamera.requestNavigationCameraToFollowing()
         
         navigationMapView.mapView.on(.styleLoadingFinished) { _ in
             self.showRouteIfNeeded()
@@ -219,20 +176,7 @@ class RouteMapViewController: UIViewController {
             $0.ornaments.showsCompass = false
         }
 
-        navigationMapView.tracksUserCourse = true
-
-        if let camera = pendingCamera {
-            navigationMapView.mapView.cameraManager.setCamera(to: camera, completion: nil)
-        } else if let location = router.location, location.course > 0 {
-            navigationMapView.updateCourseTracking(location: location)
-        } else if let coordinates = router.routeProgress.currentLegProgress.currentStep.shape?.coordinates, let firstCoordinate = coordinates.first, coordinates.count > 1 {
-            let secondCoordinate = coordinates[1]
-            let course = firstCoordinate.direction(to: secondCoordinate)
-            let newLocation = CLLocation(coordinate: router.location?.coordinate ?? firstCoordinate, altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: course, speed: 0, timestamp: Date())
-            navigationMapView.updateCourseTracking(location: newLocation)
-        } else {
-            navigationMapView.mapView.cameraManager.setCamera(to: tiltedCamera, completion: nil)
-        }
+        navigationMapView.navigationCamera.requestNavigationCameraToFollowing()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -245,14 +189,39 @@ class RouteMapViewController: UIViewController {
     }
 
     func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground(notification:)), name: UIApplication.willEnterForegroundNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChange(_:)), name: UIDevice.orientationDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(orientationDidChange(_:)),
+                                               name: UIDevice.orientationDidChangeNotification,
+                                               object: nil)
+        
+        navigationMapView.navigationCamera.registerNavigationCameraStateObserver(self)
+        
         subscribeToKeyboardNotifications()
+    }
+    
+    func navigationCameraStateDidChange(_ navigationCamera: NavigationCamera, navigationCameraState: NavigationCameraState) {
+        switch navigationCameraState {
+        case .idle:
+            break
+        case .transitionToFollowing, .following:
+            navigationView.overviewButton.isHidden = false
+            navigationView.resumeButton.isHidden = true
+            break
+        case .transitionToOverview, .overview:
+            navigationView.overviewButton.isHidden = true
+            navigationView.resumeButton.isHidden = false
+            navigationView.wayNameView.isHidden = true
+            break
+        }
     }
 
     func suspendNotifications() {
-        NotificationCenter.default.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
+        NotificationCenter.default.removeObserver(self,
+                                                  name: UIDevice.orientationDidChangeNotification,
+                                                  object: nil)
+        
+        navigationMapView.navigationCamera.unregisterNavigationCameraStateObserver(self)
+        
         unsubscribeFromKeyboardNotifications()
     }
 
@@ -265,25 +234,14 @@ class RouteMapViewController: UIViewController {
         }
         child.didMove(toParent: self)
     }
-    
-    @objc func recenter(_ sender: AnyObject) {
-        navigationMapView.tracksUserCourse = true
+
+    @objc func overview(_ sender: Any) {
         navigationMapView.enableFrameByFrameCourseViewTracking(for: 3)
-        isInOverviewMode = false
-        
-        navigationMapView.updateCourseTracking(location: navigationMapView.userLocationForCourseTracking)
-        updateCameraAltitude(for: router.routeProgress)
-        
-        navigationMapView.addArrow(route: router.route,
-                                   legIndex: router.routeProgress.legIndex,
-                                   stepIndex: router.routeProgress.currentLegProgress.stepIndex + 1)
-        
-        delegate?.mapViewController(self, didCenterOn: navigationMapView.userLocationForCourseTracking!)
+        navigationMapView.navigationCamera.requestNavigationCameraToOverview()
     }
     
     func center(on step: RouteStep, route: Route, legIndex: Int, stepIndex: Int, animated: Bool = true, completion: CompletionHandler? = nil) {
         navigationMapView.enableFrameByFrameCourseViewTracking(for: 1)
-        navigationMapView.tracksUserCourse = false
         
         // TODO: Verify that camera is positioned correctly.
         let camera = CameraOptions(center: step.maneuverLocation,
@@ -300,14 +258,17 @@ class RouteMapViewController: UIViewController {
         navigationMapView.addArrow(route: router.routeProgress.route, legIndex: legIndex, stepIndex: stepIndex)
     }
 
-    @objc func toggleOverview(_ sender: Any) {
+    @objc func recenter(_ sender: AnyObject) {
+        guard let location = navigationMapView.mostRecentUserCourseViewLocation else { return }
+        
+        navigationMapView.updateUserCourseView(location)
+        delegate?.mapViewController(self, didCenterOn: location)
+        
         navigationMapView.enableFrameByFrameCourseViewTracking(for: 3)
-        if let shape = router.route.shape,
-           let userLocation = router.location {
-            navigationMapView.setOverheadCameraView(from: userLocation, along: shape, for: contentInset(forOverviewing: true))
-        }
-        isInOverviewMode = true
-        updateMapViewComponents()
+        navigationMapView.navigationCamera.requestNavigationCameraToFollowing()
+        navigationMapView.addArrow(route: router.route,
+                                   legIndex: router.routeProgress.legIndex,
+                                   stepIndex: router.routeProgress.currentLegProgress.stepIndex + 1)
     }
 
     @objc func toggleMute(_ sender: UIButton) {
@@ -318,14 +279,10 @@ class RouteMapViewController: UIViewController {
     }
 
     @objc func feedback(_ sender: Any) {
-        showFeedback()
-    }
-
-    func showFeedback(source: FeedbackSource = .user) {
         guard let parent = parent else { return }
         let feedbackViewController = FeedbackViewController(eventsManager: navigationService.eventsManager)
         feedbackViewController.detailedFeedbackEnabled = detailedFeedbackEnabled
-        parent.present(feedbackViewController, animated: true, completion: nil)
+        parent.present(feedbackViewController, animated: true)
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -335,27 +292,12 @@ class RouteMapViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        if navigationMapView.mapView.locationManager.showUserLocation && !navigationMapView.tracksUserCourse {
-            // Don't move mapView content on rotation or when e.g. top banner expands.
-            return
-        }
-        
-        updateMapViewContentInsets()
-    }
-    
-    func updateMapViewContentInsets() {
-        navigationMapView.mapView.cameraView.padding = contentInset(forOverviewing: isInOverviewMode)
-        navigationMapView.mapView.setNeedsUpdateConstraints()
         
         updateMapViewComponents()
     }
-
-    @objc func applicationWillEnterForeground(notification: NSNotification) {
-        navigationMapView.updateCourseTracking(location: router.location, animated: false)
-    }
     
     @objc func orientationDidChange(_ notification: Notification) {
-        updateMapViewContentInsets()
+        updateMapViewComponents()
     }
 
     func updateMapOverlays(for routeProgress: RouteProgress) {
@@ -364,35 +306,6 @@ class RouteMapViewController: UIViewController {
         } else {
             navigationMapView.removeArrow()
         }
-    }
-
-    func updateCameraAltitude(for routeProgress: RouteProgress, completion: CompletionHandler? = nil) {
-        // Adjust altitude only when we user course is being tracked.
-        guard navigationMapView.tracksUserCourse else { return }
-        
-        let zoomOutAltitude = navigationMapView.zoomedOutMotorwayAltitude
-        let defaultAltitude = navigationMapView.defaultAltitude
-        let isLongRoad = routeProgress.distanceRemaining >= navigationMapView.longManeuverDistance
-        let currentStep = routeProgress.currentLegProgress.currentStep
-        let upComingStep = routeProgress.currentLegProgress.upcomingStep
-
-        // If the user is at the last turn maneuver, the map should zoom in to the default altitude.
-        let currentInstruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction
-
-        // If the user is on a motorway, not exiting, and their segment is sufficently long, the map should zoom out to the motorway altitude.
-        // otherwise, zoom in if it's the last instruction on the step.
-        let currentStepIsMotorway = currentStep.isMotorway
-        let nextStepIsMotorway = upComingStep?.isMotorway ?? false
-        if currentStepIsMotorway, nextStepIsMotorway, isLongRoad {
-            setCamera(altitude: zoomOutAltitude)
-        } else if currentInstruction == currentStep.lastInstruction {
-            setCamera(altitude: defaultAltitude)
-        }
-    }
-
-    private func setCamera(altitude: Double) {
-        guard navigationMapView.altitude != altitude else { return }
-        navigationMapView.altitude = altitude
     }
     
     /**
@@ -432,39 +345,6 @@ class RouteMapViewController: UIViewController {
                 $0.ornaments.attributionButtonMargins = CGPoint(x: x, y: y)
             }
         }
-    }
-    
-    func contentInset(forOverviewing overviewing: Bool) -> UIEdgeInsets {
-        let instructionBannerHeight = topBannerContainerView.bounds.height
-        let bottomBannerHeight = bottomBannerContainerView.bounds.height
-        
-        // Inset by the safe area to avoid notches.
-        var insets = navigationMapView.mapView.safeArea
-        insets.top += instructionBannerHeight
-        insets.bottom += bottomBannerHeight
-        
-        if overviewing {
-            insets += NavigationMapView.courseViewMinimumInsets
-            
-            let routeLineWidths = RouteLineWidthByZoomLevel.map { $0.value }
-            insets += UIEdgeInsets(floatLiteral: Double(routeLineWidths.max() ?? 0))
-        } else if navigationMapView.tracksUserCourse {
-            // Puck position calculation - position it just above the bottom of the content area.
-            var contentFrame = navigationMapView.mapView.bounds.inset(by: insets)
-
-            // Avoid letting the puck go partially off-screen, and add a comfortable padding beyond that.
-            let courseViewBounds = navigationMapView.userCourseView.bounds
-            // If it is not possible to position it right above the content area, center it at the remaining space.
-            contentFrame = contentFrame.insetBy(dx: min(NavigationMapView.courseViewMinimumInsets.left + courseViewBounds.width / 2.0, contentFrame.width / 2.0),
-                                                dy: min(NavigationMapView.courseViewMinimumInsets.top + courseViewBounds.height / 2.0, contentFrame.height / 2.0))
-            assert(!contentFrame.isInfinite)
-
-            let y = contentFrame.maxY
-            let height = navigationMapView.mapView.bounds.height
-            insets.top = height - insets.bottom - 2 * (height - insets.bottom - y)
-        }
-        
-        return insets
     }
 
     // MARK: - End of Route methods
@@ -510,7 +390,7 @@ class RouteMapViewController: UIViewController {
 
         guard duration > 0.0 else { return noAnimation() }
 
-        navigationMapView.tracksUserCourse = false
+        navigationMapView.navigationCamera.requestNavigationCameraToIdle()
         UIView.animate(withDuration: duration, delay: 0.0, options: [.curveLinear], animations: animate, completion: completion)
 
         guard let height = navigationView.endOfRouteHeightConstraint?.constant else { return }
@@ -525,11 +405,6 @@ class RouteMapViewController: UIViewController {
                                                                            edgePadding: insets,
                                                                            bearing: CGFloat(navigationMapView.mapView.bearing),
                                                                            pitch: 0)
-            let zoomLevel = CGFloat(ZoomLevelForAltitude(navigationMapView.altitude,
-                                                         0,
-                                                         userLocation.latitude,
-                                                         navigationMapView.mapView.bounds.size))
-            newCamera.zoom = zoomLevel
 
             navigationMapView.mapView.cameraManager.setCamera(to: newCamera, completion: nil)
         }
@@ -593,9 +468,7 @@ extension RouteMapViewController: NavigationComponent {
     }
     
     public func navigationService(_ service: NavigationService, didPassSpokenInstructionPoint instruction: SpokenInstruction, routeProgress: RouteProgress) {
-        if !suppressAutomaticAltitudeChanges {
-            updateCameraAltitude(for: routeProgress)
-        }
+
     }
     
     func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
@@ -612,15 +485,6 @@ extension RouteMapViewController: NavigationComponent {
         
         if annotatesSpokenInstructions {
             navigationMapView.showVoiceInstructionsOnMap(route: route)
-        }
-        
-        if isInOverviewMode {
-            if let shape = route.shape, let userLocation = router.location {
-                navigationMapView.setOverheadCameraView(from: userLocation, along: shape, for: contentInset(forOverviewing: true))
-            }
-        } else {
-            navigationMapView.tracksUserCourse = true
-            navigationView.wayNameView.isHidden = true
         }
     }
     
@@ -659,17 +523,6 @@ extension RouteMapViewController: NavigationViewDelegate {
         return delegate?.label(label, willPresent: instruction, as: presented)
     }
 
-    // MARK: - NavigationMapViewCourseTrackingDelegate methods
-    
-    func navigationMapViewDidStartTrackingCourse(_ mapView: NavigationMapView) {
-        navigationView.resumeButton.isHidden = true
-    }
-
-    func navigationMapViewDidStopTrackingCourse(_ mapView: NavigationMapView) {
-        navigationView.resumeButton.isHidden = false
-        navigationView.wayNameView.isHidden = true
-    }
-
     // MARK: - NavigationMapViewDelegate methods
     func navigationMapView(_ navigationMapView: NavigationMapView, waypointCircleLayerWithIdentifier identifier: String, sourceIdentifier: String) -> CircleLayer? {
         delegate?.navigationMapView(navigationMapView, waypointCircleLayerWithIdentifier: identifier, sourceIdentifier: sourceIdentifier)
@@ -689,16 +542,6 @@ extension RouteMapViewController: NavigationViewDelegate {
     
     func navigationMapView(_ navigationMapView: NavigationMapView, shapeFor waypoints: [Waypoint], legIndex: Int) -> FeatureCollection? {
         delegate?.navigationMapView(navigationMapView, shapeFor: waypoints, legIndex: legIndex)
-    }
-
-    func navigationMapViewUserAnchorPoint(_ navigationMapView: NavigationMapView) -> CGPoint {
-        // If the end of route component is showing, then put the anchor point slightly above the middle of the map.
-        if navigationView.endOfRouteView != nil, let show = navigationView.endOfRouteShowConstraint, show.isActive {
-            return CGPoint(x: navigationMapView.bounds.midX, y: (navigationMapView.bounds.height * 0.4))
-        }
-
-        // Otherwise, ask the delegate or return .zero.
-        return delegate?.navigationMapViewUserAnchorPoint(navigationMapView) ?? .zero
     }
 
     // TODO: Improve documentation.

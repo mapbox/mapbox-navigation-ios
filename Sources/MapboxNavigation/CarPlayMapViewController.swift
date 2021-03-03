@@ -9,7 +9,6 @@ import CarPlay
  */
 @available(iOS 12.0, *)
 public class CarPlayMapViewController: UIViewController {
-    static let defaultAltitude: CLLocationDistance = 850
     
     var styleManager: StyleManager?
     
@@ -31,13 +30,6 @@ public class CarPlayMapViewController: UIViewController {
         return coarseLocationManager
     }()
     
-    var isOverviewingRoutes: Bool = false {
-        didSet {
-            // Fix content insets in overview mode.
-            automaticallyAdjustsScrollViewInsets = !isOverviewingRoutes
-        }
-    }
-    
     var navigationMapView: NavigationMapView {
         get {
             return self.view as! NavigationMapView
@@ -49,15 +41,7 @@ public class CarPlayMapViewController: UIViewController {
      */
     public lazy var recenterButton: CPMapButton = {
         let recenter = CPMapButton { [weak self] button in
-            // Since tracking mode is no longer part of `MapView` functionality camera is used directly to
-            // zoom-in to most recent location.
-            guard let self = self else { return }
-            let latestLocation = self.navigationMapView.mapView.locationManager.latestLocation
-            self.navigationMapView.mapView.cameraManager.setCamera(centerCoordinate: latestLocation?.coordinate,
-                                                                   zoom: 12.0,
-                                                                   bearing: latestLocation?.course,
-                                                                   pitch: 0,
-                                                                   animated: true)
+            self?.navigationMapView.navigationCamera.requestNavigationCameraToFollowing()
             button.isHidden = true
         }
         
@@ -72,11 +56,13 @@ public class CarPlayMapViewController: UIViewController {
      */
     public lazy var zoomInButton: CPMapButton = {
         let zoomInButton = CPMapButton { [weak self] (button) in
-            guard let self = self else { return }
+            guard let self = self, let mapView = self.navigationMapView.mapView else { return }
             
-            let cameraOptions = self.navigationMapView.mapView.cameraView.camera
-            cameraOptions.zoom = self.navigationMapView.mapView.zoom + 1.0
-            self.navigationMapView.mapView.cameraManager.setCamera(to: cameraOptions, completion: nil)
+            self.navigationMapView.navigationCamera.requestNavigationCameraToIdle()
+            
+            let cameraOptions = mapView.cameraView.camera
+            cameraOptions.zoom = mapView.zoom + 1.0
+            mapView.cameraManager.setCamera(to: cameraOptions, completion: nil)
         }
         
         let bundle = Bundle.mapboxNavigation
@@ -90,11 +76,13 @@ public class CarPlayMapViewController: UIViewController {
      */
     public lazy var zoomOutButton: CPMapButton = {
         let zoomOutButton = CPMapButton { [weak self] button in
-            guard let self = self else { return }
-
-            let cameraOptions = self.navigationMapView.mapView.cameraView.camera
-            cameraOptions.zoom = self.navigationMapView.mapView.zoom - 1.0
-            self.navigationMapView.mapView.cameraManager.setCamera(to: cameraOptions, completion: nil)
+            guard let self = self, let mapView = self.navigationMapView.mapView else { return }
+            
+            self.navigationMapView.navigationCamera.requestNavigationCameraToIdle()
+            
+            let cameraOptions = mapView.cameraView.camera
+            cameraOptions.zoom = mapView.zoom - 1.0
+            mapView.cameraManager.setCamera(to: cameraOptions, completion: nil)
         }
         
         let bundle = Bundle.mapboxNavigation
@@ -140,7 +128,7 @@ public class CarPlayMapViewController: UIViewController {
     }
     
     override public func loadView() {
-        let navigationMapView = NavigationMapView(frame: UIScreen.main.bounds)
+        let navigationMapView = NavigationMapView(frame: UIScreen.main.bounds, navigationCameraType: .headUnit)
         navigationMapView.mapView.on(.styleLoadingFinished) { _ in
             navigationMapView.localizeLabels()
         }
@@ -152,7 +140,10 @@ public class CarPlayMapViewController: UIViewController {
         super.viewDidLoad()
         
         setupStyleManager()
-        resetCamera(animated: false, altitude: CarPlayMapViewController.defaultAltitude)
+        navigationMapView.navigationCamera.requestNavigationCameraToFollowing()
+        navigationMapView.mapView.update {
+            $0.location.showUserLocation = true
+        }
     }
     
     func setupStyleManager() {
@@ -198,48 +189,22 @@ public class CarPlayMapViewController: UIViewController {
         return closeButton
     }
     
-    func resetCamera(animated: Bool = false, altitude: CLLocationDistance? = nil) {
-        let camera = navigationMapView.mapView.cameraView.camera
-        let pitch: CGFloat = 60
-        if let altitude = altitude,
-           let latitude = navigationMapView.mapView.locationManager.latestLocation?.internalLocation.coordinate.latitude {
-            camera.zoom = CGFloat(ZoomLevelForAltitude(altitude, pitch, latitude, navigationMapView.mapView.bounds.size))
-        }
-        
-        camera.pitch = pitch
-        
-        navigationMapView.mapView.cameraManager.setCamera(to: camera, animated: animated, completion: nil)
-    }
-    
     override public func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
-        // Since tracking mode is no longer part of `MapView` functionality camera is used directly to
-        // zoom-in to most recent location.
-        guard let activeRoute = navigationMapView.routes?.first else {
-            let latestLocation = navigationMapView.mapView.locationManager.latestLocation
-            navigationMapView.mapView.cameraManager.setCamera(centerCoordinate: latestLocation?.coordinate,
-                                                              zoom: 12.0,
-                                                              bearing: latestLocation?.course,
-                                                              pitch: 0,
-                                                              animated: true)
-            
+        
+        guard let _ = navigationMapView.routes?.first else {
+            navigationMapView.navigationCamera.requestNavigationCameraToFollowing()
             return
         }
         
-        if isOverviewingRoutes {
-            // FIXME: Unable to tilt map during route selection -- https://github.com/mapbox/mapbox-gl-native/issues/2259
-            let topDownCamera = navigationMapView.mapView.cameraView.camera
-            topDownCamera.pitch = 0
-            navigationMapView.mapView.cameraManager.setCamera(to: topDownCamera, completion: nil)
-            navigationMapView.fit(to: activeRoute, animated: false)
-        }
+        // TODO: Verify whether camera related changes are required here.
     }
 }
 
 @available(iOS 12.0, *)
 extension CarPlayMapViewController: StyleManagerDelegate {
     public func location(for styleManager: StyleManager) -> CLLocation? {
-        return navigationMapView.userLocationForCourseTracking ?? navigationMapView.mapView.locationManager.latestLocation?.internalLocation ?? coarseLocationManager.location
+        return navigationMapView.mostRecentUserCourseViewLocation ?? navigationMapView.mapView.locationManager.latestLocation?.internalLocation ?? coarseLocationManager.location
     }
     
     public func styleManager(_ styleManager: StyleManager, didApply style: Style) {
