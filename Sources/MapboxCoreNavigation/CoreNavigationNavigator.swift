@@ -37,6 +37,8 @@ class Navigator {
     
     var navigator: MapboxNavigationNative.Navigator!
     
+    var cacheHandle: CacheHandle!
+    
     /**
      Provides a new or an existing `MapboxCoreNavigation.Navigator` instance. Upon first initialization will trigger creation of `MapboxNavigationNative.Navigator` and `HistoryRecorderHandle` instances,
      satisfying provided configuration (`tilesVersion` and `tilesURL`).
@@ -75,14 +77,14 @@ class Navigator {
         instance.historyRecorder = try! HistoryRecorderHandle.build(forConfig: configFactory)
         
         let runloopExecutor = try! RunLoopExecutorFactory.build()
-        let cacheHandle = try! CacheFactory.build(for: tilesConfig,
-                                                  config: configFactory,
-                                                  runLoop: runloopExecutor,
-                                                  historyRecorder: instance.historyRecorder)
+        instance.cacheHandle = try! CacheFactory.build(for: tilesConfig,
+                                                       config: configFactory,
+                                                       runLoop: runloopExecutor,
+                                                       historyRecorder: instance.historyRecorder)
         
         instance.navigator = try! MapboxNavigationNative.Navigator(config: configFactory,
                                                                    runLoopExecutor: runloopExecutor,
-                                                                   cache: cacheHandle,
+                                                                   cache: instance.cacheHandle,
                                                                    historyRecorder: instance.historyRecorder)
         
         return instance

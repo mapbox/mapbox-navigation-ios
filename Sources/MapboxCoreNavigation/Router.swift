@@ -226,7 +226,7 @@ extension InternalRouter where Self: Router {
         
         lastRerouteLocation = location
         
-        routeTask = directions.calculate(options) {(session, result) in
+        routeTask = directions.calculateWithCache(options) {(session, result) in
             
             guard case let .success(response) = result else {
                 return completion(session, result)
