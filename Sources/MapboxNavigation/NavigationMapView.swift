@@ -231,6 +231,11 @@ open class NavigationMapView: UIView {
         }
     }
     
+    /**
+     A manager object, used to init and maintain predictive caching.
+     */
+    private(set) var predictiveCacheManager: PredictiveCacheManager?
+    
     public override init(frame: CGRect) {
         altitude = defaultAltitude
         super.init(frame: frame)
@@ -260,7 +265,10 @@ open class NavigationMapView: UIView {
             fatalError("Access token was not set.")
         }
         
-        mapView = MapView(with: frame, resourceOptions: ResourceOptions(accessToken: accessToken))
+        let options = ResourceOptions(accessToken: accessToken,
+                                      tileStorePath: Bundle.mapboxNavigation.suggestedTileURL?.path)
+        
+        mapView = MapView(with: frame, resourceOptions: options)
         mapView.translatesAutoresizingMaskIntoConstraints = false
         mapView.update {
             $0.ornaments.showsScale = false
@@ -284,6 +292,24 @@ open class NavigationMapView: UIView {
         let mapTapGesture = UITapGestureRecognizer(target: self, action: #selector(didRecieveTap(sender:)))
         mapTapGesture.requireFailure(of: gestures)
         mapView.addGestureRecognizer(mapTapGesture)
+    }
+    
+    /**
+     Setups the Predictive Caching mechanism using provided Options.
+     
+     This will handle all the required manipulations to enable the feature and maintain it during the navigations. Once enabled, it will be present as long as `NavigationMapView` is retained.
+     
+     - parameter options: options, controlling caching parameters like area radius and concurrent downloading threads.
+     */
+    public func enablePredictiveCaching(options predictiveCacheOptions: PredictiveCacheOptions) {
+        let mapTileSource = try? TileStoreManager.getTileStore(for: mapView.__map.getResourceOptions())
+        var mapOptions: PredictiveCacheManager.MapOptions?
+        if let tileStore = mapTileSource?.value as? TileStore {
+            mapOptions = PredictiveCacheManager.MapOptions(tileStore, mapView.styleSourceDatasets(["raster", "vector"]))
+        }
+        
+        predictiveCacheManager = PredictiveCacheManager(predictiveCacheOptions: predictiveCacheOptions,
+                                                        mapOptions: mapOptions)
     }
     
     // MARK: - Overridden methods

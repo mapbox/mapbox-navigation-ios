@@ -199,7 +199,7 @@ class ViewController: UIViewController {
     func startNavigation(styles: [MapboxNavigation.Style]) {
         guard let response = response, let route = response.routes?.first, case let .route(routeOptions) = response.options else { return }
         
-        let options = NavigationOptions(styles: styles, navigationService: navigationService(route: route, routeIndex: 0, options: routeOptions))
+        let options = NavigationOptions(styles: styles, navigationService: navigationService(route: route, routeIndex: 0, options: routeOptions), predictiveCacheOptions: PredictiveCacheOptions())
         let navigationViewController = NavigationViewController(for: route, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
         
@@ -248,7 +248,7 @@ class ViewController: UIViewController {
         guard let response = response, let route = response.routes?.first, case let .route(routeOptions) = response.options else { return }
 
         let styles = [CustomDayStyle(), CustomNightStyle()]
-        let options = NavigationOptions(styles: styles, navigationService: navigationService(route: route, routeIndex: 0, options: routeOptions))
+        let options = NavigationOptions(styles: styles, navigationService: navigationService(route: route, routeIndex: 0, options: routeOptions), predictiveCacheOptions: PredictiveCacheOptions())
         let navigationViewController = NavigationViewController(for: route, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
 
@@ -261,7 +261,7 @@ class ViewController: UIViewController {
         let instructionsCardCollection = InstructionsCardViewController()
         instructionsCardCollection.cardCollectionDelegate = self
         
-        let options = NavigationOptions(navigationService: navigationService(route: route, routeIndex: 0, options: routeOptions), topBanner: instructionsCardCollection)
+        let options = NavigationOptions(navigationService: navigationService(route: route, routeIndex: 0, options: routeOptions), topBanner: instructionsCardCollection, predictiveCacheOptions: PredictiveCacheOptions())
         let navigationViewController = NavigationViewController(for: route, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
         
@@ -391,8 +391,8 @@ class ViewController: UIViewController {
     }
     
     func navigationViewController(navigationService: NavigationService) -> NavigationViewController {
-        let navigationOptions = NavigationOptions(navigationService: navigationService)
-
+        let navigationOptions = NavigationOptions(navigationService: navigationService, predictiveCacheOptions: PredictiveCacheOptions())
+        
         let navigationViewController = NavigationViewController(for: navigationService.route,
                                                                 routeIndex: navigationService.indexedRoute.1,
                                                                 routeOptions: navigationService.routeProgress.routeOptions,

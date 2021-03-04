@@ -291,6 +291,10 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         
         addRouteMapViewController(navigationOptions)
         setupStyleManager(navigationOptions)
+        
+        if let predictiveCacheOptions = navigationOptions?.predictiveCacheOptions {
+            navigationMapView?.enablePredictiveCaching(options: predictiveCacheOptions)
+        }
     }
     
     /**
