@@ -2,9 +2,9 @@ import Foundation
 import MapboxNavigationNative
 
 /**
- `PredictiveCacheManager` is responsible for creating and retaining `Predictive Caching` related components.
+ Proactively fetches tiles which may become necessary if the device loses its Internet connection at some point during passive or active turn-by-turn navigation.
  
- Typical usage suggests initializing an instance of `PredictiveCacheManager` and retaining it as long as caching is required.
+ Typically, you initialize an instance of this class and retain it as long as caching is required.
  */
 public class PredictiveCacheManager {
     public typealias MapOptions = (tileStore: TileStore, styleSourcePaths: [String])
@@ -12,10 +12,10 @@ public class PredictiveCacheManager {
     private(set) var controllers: [PredictiveCacheController] = []
     
     /**
-     Default initializer
-     
-     - parameter predictiveCacheOptions: `PredictiveCacheOptions` which configures various caching parameters like radiuses of current and destination locations.
-     - parameter mapOptions: A `MapOptions` which contains info about `MapView` tiles like its location and tilesets to be cached. If set to `nil` - predictive caching won't be enbled for map tiles.
+     Initializes a predictive cache.
+    
+     - parameter predictiveCacheOptions: A configuration specifying various caching parameters, such as the radii of current and destination locations.
+     - parameter mapOptions: Information about `MapView` tiles such as the location and tilesets to cache. If this argument is set to `nil`, predictive caching is disabled for map tiles.
      */
     public init(predictiveCacheOptions: PredictiveCacheOptions, mapOptions: MapOptions?) {
         self.controllers.append(initNavigatorController(options: predictiveCacheOptions))

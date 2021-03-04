@@ -1,9 +1,11 @@
 import MapboxNavigationNative
 
 /**
- `PredictiveCacheOptions` controls various configurations for a `Predictive Caching` mechanic.
+ Specifies the content that a predictive cache fetches and how it fetches the content.
+ 
+ Pass an instance of this class into the `NavigationOptions(styles:navigationService:voiceController:topBanner:bottomBanner:predictiveCacheOptions:)` initializer or `NavigationMapView.enablePredictiveCaching(options:)` method.
  */
-public class PredictiveCacheOptions {
+public struct PredictiveCacheOptions {
     
     /**
      How far around the user's location caching is going to be performed.
@@ -31,7 +33,7 @@ public class PredictiveCacheOptions {
      
      Defaults to 2 concurrent requests.
      */
-    public var maxConcurrentRequests: UInt32 = 2
+    public var maximumConcurrentRequests: UInt32 = 2
     
     public init() {
         // No-op

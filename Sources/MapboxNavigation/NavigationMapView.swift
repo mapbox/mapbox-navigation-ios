@@ -294,7 +294,14 @@ open class NavigationMapView: UIView {
         mapView.addGestureRecognizer(mapTapGesture)
     }
     
-    public func setupPredictiveCaching(_ predictiveCacheOptions: PredictiveCacheOptions) {
+    /**
+     Setups the Predictive Caching mechanism using provided Options.
+     
+     This will handle all the required manipulations to enable the feature and maintain it during the navigations. Once enabled, it will be present as long as `NavigationMapView` is retained.
+     
+     - parameter options: options, controlling caching parameters like area radius and concurrent downloading threads.
+     */
+    public func enablePredictiveCaching(options predictiveCacheOptions: PredictiveCacheOptions) {
         let mapTileSource = try? TileStoreManager.getTileStore(for: mapView.__map.getResourceOptions())
         var mapOptions: PredictiveCacheManager.MapOptions?
         if let tileStore = mapTileSource?.value as? TileStore {

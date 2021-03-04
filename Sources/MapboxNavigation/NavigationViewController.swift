@@ -293,7 +293,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         setupStyleManager(navigationOptions)
         
         if let predictiveCacheOptions = navigationOptions?.predictiveCacheOptions {
-            navigationMapView?.setupPredictiveCaching(predictiveCacheOptions)
+            navigationMapView?.enablePredictiveCaching(options: predictiveCacheOptions)
         }
     }
     
