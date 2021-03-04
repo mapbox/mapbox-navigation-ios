@@ -65,7 +65,6 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupSpeedLimitView()
-        observeSpeedNotifications()
         view.addSubview(speedLimitView)
     }
     
@@ -76,12 +75,7 @@ class ViewController: UIViewController {
         speedLimitView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
         speedLimitView.widthAnchor.constraint(equalToConstant: 50).isActive = true
         speedLimitView.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        switch speedLimitViewPosition {
-        case .topLeading:
-            speedLimitView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10).isActive = true
-        case .topTrailing:
-            speedLimitView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10).isActive = true
-        }
+        speedLimitView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10).isActive = true
         
         self.speedLimitView = speedLimitView
     }
@@ -163,15 +157,6 @@ class ViewController: UIViewController {
 
     @IBAction func startButtonPressed(_ sender: Any) {
         presentActionsAlertController()
-    }
-    
-    func observeSpeedNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(updateSpeedLimitView(notification:)), name:.passiveLocationDataSourceDidUpdate, object: nil)
-    }
-    
-    @objc func updateSpeedLimitView(notification: Notification) {
-        speedLimitView.speedLimit = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.speedLimitKey] as? Measurement<UnitSpeed>
-        speedLimitView.signStandard = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.signStandardKey] as? SignStandard
     }
     
     // MARK: - CarPlay navigation methods

@@ -276,12 +276,12 @@ extension PassiveLocationDataSource {
         public static let roadNameKey: NotificationUserInfoKey = .init(rawValue: "roadName")
         
         /**
-         A key in the user info dictionary of a `Notification.Name.passiveLocationDataSourceDidUpdate` notification. The corresponding value is a `Measurement<UnitSpeed>` representating the speed of the current road.
+         A key in the user info dictionary of a `Notification.Name.passiveLocationDataSourceDidUpdate` notification. The corresponding value is a `Measurement<UnitSpeed>` representing the maximum speed limit of the current road.
          */
         public static let speedLimitKey: NotificationUserInfoKey = .init(rawValue: "speedLimit")
         
         /**
-         A key in the user info dictionary of a `Notification.Name.passiveLocationDataSourceDidUpdate` notification. The corresponding value is a `SignStandard` representating the speed of the current road.
+         A key in the user info dictionary of a `Notification.Name.passiveLocationDataSourceDidUpdate` notification. The corresponding value is a `SignStandard` representing the sign standard used for speed limit signs along the current road.
          */
         public static let signStandardKey: NotificationUserInfoKey = .init(rawValue: "signStandard")
     }

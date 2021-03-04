@@ -1,5 +1,6 @@
 import UIKit
 import Turf
+import MapboxDirections
 import MapboxCoreNavigation
 import MapboxNavigation
 import MapboxCoreMaps
@@ -42,6 +43,9 @@ extension ViewController {
         if let rawLocation = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.rawLocationKey] as? CLLocation {
             rawTrackStyledFeature.lineString.coordinates.append(contentsOf: [rawLocation.coordinate])
         }
+        
+        speedLimitView.signStandard = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.signStandardKey] as? SignStandard
+        speedLimitView.speedLimit = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.speedLimitKey] as? Measurement<UnitSpeed>
         
         updateFreeDriveStyledFeatures()
     }

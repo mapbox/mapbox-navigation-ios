@@ -80,25 +80,34 @@ open class PassiveLocationDataSource: NSObject {
 
         let status = navigator.status(at: lastRawLocation.timestamp)
         let lastLocation = CLLocation(status.location)
-        var speedLimit: Measurement<UnitSpeed>? = nil
-        var signStandard: SignStandard = .mutcd
+        var speedLimit: Measurement<UnitSpeed>?
+        var signStandard: SignStandard?
 
         delegate?.passiveLocationDataSource(self, didUpdateLocation: lastLocation, rawLocation: lastRawLocation)
         let matches = status.map_matcher_output.matches.map {
             Match(legs: [], shape: nil, distance: -1, expectedTravelTime: -1, confidence: $0.proba, weight: .routability(value: 1))
         }
-        
-        if let speed = status.speedLimit?.speedKmph as? Double {
-            if status.speedLimit?.localeUnit == SpeedLimitUnit.milesPerHour {
-                speedLimit = Measurement(value: round(speed/1.609), unit: UnitSpeed.milesPerHour)
-            } else {
-                speedLimit = Measurement(value: speed, unit: UnitSpeed.kilometersPerHour)
-            }
+
+        switch status.speedLimit?.localeSign {
+        case .mutcd:
+            signStandard  = .mutcd
+        case .vienna:
+            signStandard = .viennaConvention
+        case .none:
+            signStandard = nil
         }
 
-        if status.speedLimit?.localeSign == SpeedLimitSign.vienna {
-            signStandard = .viennaConvention
+        if let speed = status.speedLimit?.speedKmph as? Double {
+            switch status.speedLimit?.localeUnit {
+            case .milesPerHour:
+                speedLimit = Measurement(value: speed, unit: .kilometersPerHour).converted(to: .milesPerHour)
+            case .kilometresPerHour:
+                speedLimit = Measurement(value: speed, unit: .kilometersPerHour)
+            case .none:
+                speedLimit = nil
+            }
         }
+        
         NotificationCenter.default.post(name: .passiveLocationDataSourceDidUpdate, object: self, userInfo: [
             NotificationUserInfoKey.locationKey: lastLocation,
             NotificationUserInfoKey.rawLocationKey: lastRawLocation,
