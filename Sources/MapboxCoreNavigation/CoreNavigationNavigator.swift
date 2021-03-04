@@ -72,7 +72,8 @@ class Navigator {
                                                      config: NavigatorConfig(),
                                                      customConfig: "")
         
-        instance.historyRecorder = try! HistoryRecorderHandle.build(forConfig: configFactory)
+        instance.historyRecorder = try! HistoryRecorderHandle.build(forHistoryFile: "",
+                                                                    config: configFactory)
         
         let runloopExecutor = try! RunLoopExecutorFactory.build()
         let cacheHandle = try! CacheFactory.build(for: tilesConfig,
