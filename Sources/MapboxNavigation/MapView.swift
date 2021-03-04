@@ -109,4 +109,39 @@ extension MapView {
         guard let latitude = locationManager.latestLocation?.coordinate.latitude else { return nil }
         return AltitudeForZoomLevel(Double(cameraView.zoom), cameraView.pitch, latitude, bounds.size)
     }
+    
+    /**
+     Returns a list of style source datasets (e.g. `mapbox.mapbox-streets-v8`), based on provided
+     selected style source types.
+     
+     - parameter sourceTypes: List of `MapView` source types (e.g. `vector`).
+     */
+    func styleSourceDatasets(_ sourceTypes: [String]) -> [String] {
+        do {
+            let sources = try __map.getStyleSources().filter {
+                return sourceTypes.contains($0.type)
+            }
+            
+            var datasets = [String]()
+            for source in sources {
+                let properties = try __map.getStyleSourceProperties(forSourceId: source.id)
+                
+                // Ignore composite (https://docs.mapbox.com/studio-manual/reference/styles/#source-compositing)
+                // and non-mapbox sources.
+                if let contents = properties.value as? [String: AnyObject],
+                   let urlContent = contents["url"] as? String,
+                   let url = URL(string: urlContent),
+                   url.scheme == "mapbox",
+                   let dataset = url.host {
+                    datasets.append(dataset)
+                }
+            }
+            
+            return datasets
+        } catch {
+            NSLog("Failed to retrieve style source datasets. Error: \(error.localizedDescription).")
+        }
+        
+        return []
+    }
 }
