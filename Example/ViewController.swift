@@ -49,7 +49,7 @@ class ViewController: UIViewController {
             startButton.isEnabled = true
             mapView?.show(routes)
             mapView?.showWaypoints(on: currentRoute)
-            mapView?.showRouteDurationAnnotations(routes)
+            mapView?.showRouteDurations(along: routes)
         }
     }
 
@@ -193,7 +193,7 @@ class ViewController: UIViewController {
             style.removeDebugCircleLayers()
         }
 
-        mapView?.removeRouteDurationAnnotations()
+        mapView?.removeRouteDurations()
         mapView?.unhighlightBuildings()
         mapView?.removeRoutes()
         mapView?.removeWaypoints()
@@ -435,7 +435,7 @@ extension ViewController: MGLMapViewDelegate {
             mapView.setVisibleCoordinateBounds(MGLPolygon(coordinates: coords, count: UInt(coords.count)).overlayBounds, animated: false)
             self.mapView?.show(routes)
             self.mapView?.showWaypoints(on: currentRoute)
-            self.mapView?.showRouteDurationAnnotations(routes)
+            self.mapView?.showRouteDurations(along: routes)
         }
     }
 
@@ -464,7 +464,7 @@ extension ViewController: MGLMapViewDelegate {
 
     func mapView(_ mapView: MGLMapView, regionDidChangeWith reason: MGLCameraChangeReason, animated: Bool) {
         guard reason != .programmatic, activeNavigationViewController == nil, let routes = response?.routes else { return }
-        self.mapView?.showRouteDurationAnnotations(routes)
+        self.mapView?.showRouteDurations(along: routes)
     }
 }
 

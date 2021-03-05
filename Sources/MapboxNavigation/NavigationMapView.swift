@@ -976,10 +976,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      Useful as a way to give the user more information when picking between multiple route alternatives.
      If the route contains any tolled segments then the callout will specify that as well.
      */
-    public func showRouteDurationAnnotations(_ routes: [Route]?) {
+    public func showRouteDurations(along routes: [Route]?) {
         guard let visibleRoutes = self.routes, visibleRoutes.count > 0 else { return }
         updateAnnotationSymbolImages()
-        updateRouteDurationAnnotations(routes)
+        updateRouteDurations(along: visibleRoutes)
     }
 
     /**
@@ -1010,7 +1010,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Remove any old route duration callouts and generate new ones for each passed in route.
      */
-    private func updateRouteDurationAnnotations(_ routes: [Route]?) {
+    private func updateRouteDurations(along routes: [Route]?) {
         guard let style = style else { return }
         
         // remove any existing route annotation
@@ -1174,7 +1174,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Removes all visible route duration callouts.
      */
-    public func removeRouteDurationAnnotations() {
+    public func removeRouteDurations() {
         guard let style = style else { return }
         removeRouteDurationAnnotationsLayerFromStyle(style)
     }

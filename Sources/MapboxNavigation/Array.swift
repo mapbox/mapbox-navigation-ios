@@ -44,9 +44,10 @@ extension Array where Element == RouteStep {
         guard count > 0 else { return nil }
         guard count > 1 else { return self[0].shape }
 
-        let filteredStepShapes = zip(compactMap { $0.shape }, suffix(from: 1).compactMap { $0.shape }).filter({
+        let stepShapes = compactMap { $0.shape }
+        let filteredStepShapes = zip(stepShapes, stepShapes.suffix(from: 1)).filter({
             guard let maneuverLocation = $1.coordinates.first else { return false }
-
+            
             return $0.coordinates.last?.distance(to: maneuverLocation) ?? Double.greatestFiniteMagnitude < tolerance
         })
 
