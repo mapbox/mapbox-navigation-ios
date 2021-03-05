@@ -402,8 +402,10 @@
 		DADD82802161EC0300B8B47D /* UIViewAnimationOptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DADD827F2161EC0300B8B47D /* UIViewAnimationOptionsTests.swift */; };
 		DAE22A2921C9DEDA00CA269D /* MGLVectorTileSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE22A2821C9DEDA00CA269D /* MGLVectorTileSourceTests.swift */; };
 		DAFA92071F01735000A7FB09 /* DistanceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */; };
+		F452634C25B2506A00F7A464 /* Turf.swift in Sources */ = {isa = PBXBuildFile; fileRef = F452634B25B2506A00F7A464 /* Turf.swift */; };
 		F4BF512E24EAD7A50066A49B /* FeedbackSubtypeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BF512D24EAD7A50066A49B /* FeedbackSubtypeCollectionViewCell.swift */; };
 		F4C5A26F24EF1D16004ED0DD /* FeedbackSubtypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C5A26E24EF1D16004ED0DD /* FeedbackSubtypeViewController.swift */; };
+		F4FD7739256D886E007C525A /* DateComponentsFormatter+MGLNavigationAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FD7738256D886E007C525A /* DateComponentsFormatter+MGLNavigationAdditions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1046,8 +1048,10 @@
 		DAFEB36D2093A11F00A86A83 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DAFEB36E2093A3E000A86A83 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DAFEB36F2093A3EF00A86A83 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ko; path = Resources/ko.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
+		F452634B25B2506A00F7A464 /* Turf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Turf.swift; sourceTree = "<group>"; };
 		F4BF512D24EAD7A50066A49B /* FeedbackSubtypeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackSubtypeCollectionViewCell.swift; sourceTree = "<group>"; };
 		F4C5A26E24EF1D16004ED0DD /* FeedbackSubtypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackSubtypeViewController.swift; sourceTree = "<group>"; };
+		F4FD7738256D886E007C525A /* DateComponentsFormatter+MGLNavigationAdditions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateComponentsFormatter+MGLNavigationAdditions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1689,6 +1693,8 @@
 				C5A7EC5B1FD610A80008B9BA /* VisualInstructionComponent.swift */,
 				350E2C5E22707EB80014CEB3 /* UIScreen.swift */,
 				CFD47D8F20FD85EC00BC1E49 /* MGLAccountManager.swift */,
+				F4FD7738256D886E007C525A /* DateComponentsFormatter+MGLNavigationAdditions.swift */,
+				F452634B25B2506A00F7A464 /* Turf.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -2534,6 +2540,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F452634C25B2506A00F7A464 /* Turf.swift in Sources */,
 				351BEBF11E5BCC63006FE110 /* MGLMapView.swift in Sources */,
 				DA443DDE2278C90E00ED1307 /* CPTrip.swift in Sources */,
 				2B72EC5E241276D10003B370 /* RouteVoiceController.swift in Sources */,
@@ -2578,6 +2585,7 @@
 				DA8F3A7623B5D84900B56786 /* SpeedLimitView.swift in Sources */,
 				8AA849E924E722410008EE59 /* WaypointStyle.swift in Sources */,
 				359D1B281FFE70D30052FA42 /* NavigationView.swift in Sources */,
+				F4FD7739256D886E007C525A /* DateComponentsFormatter+MGLNavigationAdditions.swift in Sources */,
 				C5FFAC1520D96F5C009E7F98 /* CarPlayNavigationViewController.swift in Sources */,
 				8DE879661FBB9980002F06C0 /* EndOfRouteViewController.swift in Sources */,
 				AE47A33422B1F6AE0096458C /* InstructionsCardContainerView.swift in Sources */,

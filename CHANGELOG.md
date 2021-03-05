@@ -35,6 +35,16 @@
   * `NavigationMapViewDelegate.navigationMapView(_:alternativeRouteCasingStyleLayerWithIdentifier:source:)` to style the casing of alternative route.
 * Fixed an issue where the route line periodically peeked out from behind the user puck even though `NavigationViewController.routeLineTracksTraversal` was enabled. ([#2737](https://github.com/mapbox/mapbox-navigation-ios/pull/2737))
 * Created the `UserHaloCourseView` similar to `UserCourseView` for approximate location on iOS 14 during the navigation to represent user location. Allow the switch between `UserHaloCourseView` and `UserCourseView` when precise mode is changed. ([#2664](https://github.com/mapbox/mapbox-navigation-ios/pull/2664))
+* Added option to show route duration callouts when previewing route alternatives ([#2734](https://github.com/mapbox/mapbox-navigation-ios/pull/2734)):
+  * `NavigationMapView.showRouteDurations(along routes:)` to show duration annotation callouts on the map for the provided routes.
+  * `NavigationMapView.removeRouteDurations()` to remove any route duration annotations currently displayed on the map.
+* Added convenience methods for visualizing geographic information on a map style as a debugging tool. ([#2734](https://github.com/mapbox/mapbox-navigation-ios/pull/2734)):
+  * `MGStyle.addDebugCircleLayer(identifier:coordinate:color:)` to add a MGLCircleStyleLayer with the specified coordinate and color.
+  * `MGStyle.removeDebugCircleLayers()` to remove from the style all MGLCircleStyleLayers added via `MGStyle.addDebugCircleLayer(identifier:coordinate:color:)`
+  * `MGStyle.addDebugLineLayer(identifier:coordinates:color:)` to add a MGLLineStyleLayer with the specified coordinates and color.
+  * `MGStyle.removeDebugLineLayers()` to remove from the style all MGLLineStyleLayers added via `MGStyle.addDebugLineLayer(identifier:coordinates:color:)`
+  * `MGStyle.addDebugPolygonLayer(identifier:coordinates:color:)` to add a MGLFillStyleLayer with the specified coordinates and color.
+  * `MGStyle.removeDebugLineLayers()` to remove from the style all MGLFillStyleLayers added via `MGStyle.addDebugPolygonLayer(identifier:coordinates:color:)`
 
 ### Instruction banners
 
