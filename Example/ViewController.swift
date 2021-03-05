@@ -18,6 +18,7 @@ class ViewController: UIViewController {
     
     var trackStyledFeature: StyledFeature!
     var rawTrackStyledFeature: StyledFeature!
+    var speedLimitView: SpeedLimitView!
     
     typealias RouteRequestSuccess = ((RouteResponse) -> Void)
     typealias RouteRequestFailure = ((Error) -> Void)
@@ -59,6 +60,24 @@ class ViewController: UIViewController {
     weak var activeNavigationViewController: NavigationViewController?
     
     // MARK: - UIViewController lifecycle methods
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupSpeedLimitView()
+        view.addSubview(speedLimitView)
+    }
+    
+    func setupSpeedLimitView() {
+        let speedLimitView = SpeedLimitView()
+        speedLimitView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(speedLimitView)
+        speedLimitView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
+        speedLimitView.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        speedLimitView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        speedLimitView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10).isActive = true
+        
+        self.speedLimitView = speedLimitView
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
