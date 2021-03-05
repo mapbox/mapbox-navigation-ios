@@ -6,7 +6,7 @@ import Turf
 import MapboxMaps
 import MapboxCoreMaps
 
-class RouteMapViewController: UIViewController, NavigationCameraStateObserver {
+class RouteMapViewController: UIViewController {
     
     var navigationView: NavigationView {
         return view as! NavigationView
@@ -194,12 +194,16 @@ class RouteMapViewController: UIViewController, NavigationCameraStateObserver {
                                                name: UIDevice.orientationDidChangeNotification,
                                                object: nil)
         
-        navigationMapView.navigationCamera.registerNavigationCameraStateObserver(self)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(navigationCameraStateDidChange(_:)),
+                                               name: .navigationCameraStateDidChange,
+                                               object: navigationMapView.navigationCamera)
         
         subscribeToKeyboardNotifications()
     }
     
-    func navigationCameraStateDidChange(_ navigationCamera: NavigationCamera, navigationCameraState: NavigationCameraState) {
+    @objc func navigationCameraStateDidChange(_ notification: Notification) {
+        guard let navigationCameraState = notification.userInfo?[NavigationCamera.NotificationUserInfoKey.stateKey] as? NavigationCameraState else { return }
         switch navigationCameraState {
         case .idle:
             break
@@ -220,7 +224,9 @@ class RouteMapViewController: UIViewController, NavigationCameraStateObserver {
                                                   name: UIDevice.orientationDidChangeNotification,
                                                   object: nil)
         
-        navigationMapView.navigationCamera.unregisterNavigationCameraStateObserver(self)
+        NotificationCenter.default.removeObserver(self,
+                                                  name: .navigationCameraStateDidChange,
+                                                  object: nil)
         
         unsubscribeFromKeyboardNotifications()
     }

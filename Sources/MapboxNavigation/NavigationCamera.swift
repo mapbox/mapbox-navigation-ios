@@ -5,9 +5,11 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
     
     public private(set) var navigationCameraState: NavigationCameraState = .idle {
         didSet {
-            navigationCameraStateObservers.forEach {
-                $0.navigationCameraStateDidChange(self, navigationCameraState: navigationCameraState)
-            }
+            NotificationCenter.default.post(name: .navigationCameraStateDidChange,
+                                            object: self,
+                                            userInfo: [
+                                                NavigationCamera.NotificationUserInfoKey.stateKey: navigationCameraState
+                                            ])
         }
     }
     
@@ -20,8 +22,6 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
     public var cameraStateTransition: CameraStateTransition
     
     weak var mapView: MapView?
-    
-    var navigationCameraStateObservers: [NavigationCameraStateObserver] = []
     
     var navigationCameraType: NavigationCameraType = .mobile
     
@@ -42,14 +42,6 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
     
     func setupGestureRegonizers() {
         makeGestureRecognizersRespectCourseTracking()
-    }
-    
-    func registerNavigationCameraStateObserver(_ navigationCameraStateObserver: NavigationCameraStateObserver) {
-        navigationCameraStateObservers.append(navigationCameraStateObserver)
-    }
-    
-    func unregisterNavigationCameraStateObserver(_ navigationCameraStateObserver: NavigationCameraStateObserver) {
-        navigationCameraStateObservers.removeAll(where: { $0 === navigationCameraStateObserver })
     }
     
     // MARK: - ViewportDataSourceDelegate methods

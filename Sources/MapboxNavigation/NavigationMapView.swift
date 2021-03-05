@@ -184,19 +184,37 @@ open class NavigationMapView: UIView {
         makeGestureRecognizersUpdateCourseView()
         setupGestureRecognizers()
         installUserCourseView()
-        registerObservers()
+        subscribeForNotifications()
     }
     
     deinit {
-        unregisterObservers()
+        unsubscribeFromNotifications()
     }
     
-    func registerObservers() {
-        navigationCamera.registerNavigationCameraStateObserver(self)
+    func subscribeForNotifications() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(navigationCameraStateDidChange(_:)),
+                                               name: .navigationCameraStateDidChange,
+                                               object: navigationCamera)
     }
     
-    func unregisterObservers() {
-        navigationCamera.unregisterNavigationCameraStateObserver(self)
+    func unsubscribeFromNotifications() {
+        NotificationCenter.default.removeObserver(self,
+                                                  name: .navigationCameraStateDidChange,
+                                                  object: nil)
+    }
+    
+    @objc func navigationCameraStateDidChange(_ notification: Notification) {
+        guard let location = mostRecentUserCourseViewLocation,
+              let navigationCameraState = notification.userInfo?[NavigationCamera.NotificationUserInfoKey.stateKey] as? NavigationCameraState else { return }
+        
+        switch navigationCameraState {
+        case .idle:
+            break
+        case .transitionToFollowing, .following, .transitionToOverview, .overview:
+            updateUserCourseView(location)
+            break
+        }
     }
     
     func setupMapView(_ frame: CGRect, navigationCameraType: NavigationCameraType = .mobile) {
@@ -958,21 +976,6 @@ open class NavigationMapView: UIView {
         if sender.state == .changed {
             guard let location = mostRecentUserCourseViewLocation else { return }
             updateUserCourseView(location)
-        }
-    }
-}
-
-extension NavigationMapView: NavigationCameraStateObserver {
-    
-    func navigationCameraStateDidChange(_ navigationCamera: NavigationCamera, navigationCameraState: NavigationCameraState) {
-        if let location = mostRecentUserCourseViewLocation {
-            switch navigationCameraState {
-            case .idle:
-                break
-            case .transitionToFollowing, .following, .transitionToOverview, .overview:
-                updateUserCourseView(location)
-                break
-            }
         }
     }
 }
