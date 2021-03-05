@@ -233,21 +233,22 @@
 				"${PODS_ROOT}/Target Support Files/Pods-PodInstall/Pods-PodInstall-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/MapboxCoreNavigation/MapboxCoreNavigation.framework",
 				"${BUILT_PRODUCTS_DIR}/MapboxDirections-pre/MapboxDirections.framework",
+				"${BUILT_PRODUCTS_DIR}/MapboxMaps/MapboxMaps.framework",
 				"${BUILT_PRODUCTS_DIR}/MapboxMobileEvents/MapboxMobileEvents.framework",
 				"${BUILT_PRODUCTS_DIR}/MapboxNavigation/MapboxNavigation.framework",
-				"${BUILT_PRODUCTS_DIR}/MapboxSpeech/MapboxSpeech.framework",
+				"${BUILT_PRODUCTS_DIR}/MapboxSpeech-pre/MapboxSpeech.framework",
 				"${BUILT_PRODUCTS_DIR}/Polyline/Polyline.framework",
 				"${BUILT_PRODUCTS_DIR}/Solar/Solar.framework",
 				"${BUILT_PRODUCTS_DIR}/Turf/Turf.framework",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/MapboxCommon/MapboxCommon.framework/MapboxCommon",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/MapboxCoreMaps/MapboxCoreMaps.framework/MapboxCoreMaps",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/MapboxMaps/MapboxMaps.framework/MapboxMaps",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/MapboxNavigationNative/MapboxNavigationNative.framework/MapboxNavigationNative",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxCoreNavigation.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxDirections.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxMaps.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxMobileEvents.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxNavigation.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxSpeech.framework",
@@ -256,7 +257,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Turf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxCommon.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxCoreMaps.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxMaps.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxNavigationNative.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
