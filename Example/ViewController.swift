@@ -19,7 +19,6 @@ class ViewController: UIViewController {
     var trackStyledFeature: StyledFeature!
     var rawTrackStyledFeature: StyledFeature!
     var speedLimitView: SpeedLimitView!
-    var speedLimitViewPosition: MapOrnamentPosition = .topTrailing
     
     typealias RouteRequestSuccess = ((RouteResponse) -> Void)
     typealias RouteRequestFailure = ((Error) -> Void)
