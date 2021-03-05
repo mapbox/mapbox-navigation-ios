@@ -108,14 +108,19 @@ open class PassiveLocationDataSource: NSObject {
             }
         }
         
-        NotificationCenter.default.post(name: .passiveLocationDataSourceDidUpdate, object: self, userInfo: [
-            NotificationUserInfoKey.locationKey: lastLocation,
-            NotificationUserInfoKey.rawLocationKey: lastRawLocation,
-            NotificationUserInfoKey.matchesKey: matches,
-            NotificationUserInfoKey.roadNameKey: status.roadName,
-            NotificationUserInfoKey.speedLimitKey: speedLimit,
-            NotificationUserInfoKey.signStandardKey: signStandard
-        ])
+        var userInfo: [NotificationUserInfoKey: Any] = [
+            .locationKey: lastLocation,
+            .rawLocationKey: lastRawLocation,
+            .matchesKey: matches,
+            .roadNameKey: status.roadName,
+        ]
+        if let speedLimit = speedLimit {
+            userInfo[.speedLimitKey] = speedLimit
+        }
+        if let signStandard = signStandard {
+            userInfo[.signStandardKey] = signStandard
+        }
+        NotificationCenter.default.post(name: .passiveLocationDataSourceDidUpdate, object: self, userInfo: userInfo)
     }
 }
 

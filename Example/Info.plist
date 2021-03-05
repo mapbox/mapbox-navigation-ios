@@ -24,8 +24,6 @@
 	<true/>
 	<key>MBXAccessToken</key>
 	<string>PASTE MAPBOX ACCESS TOKEN HERE</string>
-	<key>MGLMapboxAccessToken</key>
-	<string>PASTE MAPBOX ACCESS TOKEN HERE</string>
 	<key>MGLMapboxMetricsEnabledSettingShownInApp</key>
 	<string>YES</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>

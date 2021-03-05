@@ -6,14 +6,14 @@
 
 * The Mapbox Navigation SDK for iOS license has changed from the ISC License to the Mapbox Terms of Service. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * You can now install MapboxNavigation using Swift Package Manager, but you can no longer install it using Carthage. If you previously installed MapboxNavigation using Carthage, use Swift Package Manager instead. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
-* MapboxNavigation now depends on [MapboxMaps v10.0.0](https://github.com/mapbox/mapbox-maps-ios/), MapboxNavigationNative v42.0.1, MapboxCommon v10.0.0-beta.9.2. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
-* MapboxCoreNavigation depends on MapboxDirections v2.0.0-alpha.1 but no longer depends on MapboxAccounts. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808), [#2829](https://github.com/mapbox/mapbox-navigation-ios/pull/2829))
+* MapboxNavigation now depends on [MapboxMaps v10.0.0-beta.15](https://github.com/mapbox/mapbox-maps-ios/), MapboxNavigationNative v45.0.1 (v45.0.2 with SPM), and MapboxCommon v10.0.0-beta.12. ([#2837](https://github.com/mapbox/mapbox-navigation-ios/pull/2837))
+* MapboxCoreNavigation depends on MapboxDirections v2.0.0-alpha.2 but no longer depends on MapboxAccounts. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808), [#2829](https://github.com/mapbox/mapbox-navigation-ios/pull/2829), [#2837](https://github.com/mapbox/mapbox-navigation-ios/pull/2837))
 * MapboxNavigation and MapboxCoreNavigation require iOS 11.0 or above to run. iOS 10._x_ is no longer supported. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Xcode 12.4 or above is now required for building this SDK from source.
 
 ### Map
 
-* `MBXAccessToken` is now required for `MapboxMaps`, and must be set in the Info.plist file. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* To gain access to Mapbox server APIs, set `MBXAccessToken` in your Info.plist. `MGLMapboxAccessToken` is still supported but is now deprecated. ([#2837](https://github.com/mapbox/mapbox-navigation-ios/pull/2837))
 * Removed obsoleted `NavigationMapView.navigationMapDelegate`, which was replaced by `NavigationMapView.delegate`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * `NavigationMapView.navigationMapViewDelegate` was renamed to `NavigationMapView.delegate`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * `NavigationMapViewController.mapView` was renamed to `NavigationMapViewController.navigationMapView`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
