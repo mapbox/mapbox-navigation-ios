@@ -343,6 +343,7 @@
 		DA1A1B0425E087A20097BBD7 /* MapboxNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = DA1A1B0325E087A20097BBD7 /* MapboxNavigation */; };
 		DA2157C525E093920086B294 /* MapboxNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = DA2157C425E093920086B294 /* MapboxNavigation */; };
 		DA2157EB25E094D00086B294 /* MapboxNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = DA2157EA25E094D00086B294 /* MapboxNavigation */; };
+		DA2A01F025F308B100AAB4C6 /* EHorizonGraphPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA2A01EF25F308B100AAB4C6 /* EHorizonGraphPath.swift */; };
 		DA303C9521B728DD00F921DC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DA303C9321B728DD00F921DC /* Localizable.strings */; };
 		DA303C9621B728DD00F921DC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DA303C9321B728DD00F921DC /* Localizable.strings */; };
 		DA303C9F21B76B5C00F921DC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DA303C9D21B76B5C00F921DC /* LaunchScreen.storyboard */; };
@@ -897,6 +898,7 @@
 		DA1812052012910000C91918 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = vi; path = Resources/vi.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		DA181207201292E700C91918 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = fr; path = Resources/fr.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		DA1A1AFC25E085D40097BBD7 /*  */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ""; sourceTree = SOURCE_ROOT; };
+		DA2A01EF25F308B100AAB4C6 /* EHorizonGraphPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EHorizonGraphPath.swift; sourceTree = "<group>"; };
 		DA303C9421B728DD00F921DC /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DA303C9E21B76B5C00F921DC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DA303CA321B76CB000F921DC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = en; path = en.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
@@ -1807,6 +1809,7 @@
 				DA5F44A925F07A6700F573EC /* EHorizonEdge.swift */,
 				DA5F44B925F07AA500F573EC /* EHorizonEdgeMetadata.swift */,
 				DA5F44A525F07A6500F573EC /* EHorizonGraphPosition.swift */,
+				DA2A01EF25F308B100AAB4C6 /* EHorizonGraphPath.swift */,
 				DA5F44A725F07A6500F573EC /* EHorizonObjectDistanceInfo.swift */,
 				DA5F44DB25F07D1400F573EC /* EHorizonObjectEdgeLocation.swift */,
 				DA5F44A625F07A6500F573EC /* EHorizonObjectEnterExitInfo.swift */,
@@ -2715,6 +2718,7 @@
 				C5C94C1C1DDCD2340097296A /* LegacyRouteController.swift in Sources */,
 				3A8187C924BDAE9C00708F19 /* URLSession.swift in Sources */,
 				359574A81F28CC5A00838209 /* CLLocation.swift in Sources */,
+				DA2A01F025F308B100AAB4C6 /* EHorizonGraphPath.swift in Sources */,
 				8DCE1050210FC5880048B0FB /* EndOfRouteFeedback.swift in Sources */,
 				DA5F446525F0744C00F573EC /* EHorizonDelegate.swift in Sources */,
 				DA5F44AD25F07A6800F573EC /* EHorizonObjectEnterExitInfo.swift in Sources */,

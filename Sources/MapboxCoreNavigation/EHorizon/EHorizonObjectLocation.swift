@@ -2,23 +2,22 @@ import Foundation
 import MapboxNavigationNative
 
 /**
- Represents location of road object on road graph for point-like objects
- will contain single edge with `percentAlongBegin == percentAlongEnd`
+ The location of a road object in the road graph.
  */
-public struct EHorizonObjectLocation {
-
-    /** List of edge ids belong to object */
-    public let edges: [UInt]
-
-    /** Offset from the start of edge (0 - 1) pointing to the start of road object on the very first edge */
-    public let percentAlongBegin: Double
-
-    /** Offset from the start of edge (0 - 1) pointing to the end of road object on the very last edge */
-    public let percentAlongEnd: Double
+public enum EHorizonObjectLocation {
+    /** Location of a linear object. */
+    case path(_ path: EHorizonGraphPath)
+    
+    /** Location of a point object. */
+    case position(_ position: EHorizonGraphPosition)
 
     init(_ native: RoadObjectLocation) {
-        self.edges = native.edges.map { $0.uintValue }
-        self.percentAlongBegin = native.percentAlongBegin
-        self.percentAlongEnd = native.percentAlongEnd
+        if let path = native.path {
+            self = .path(EHorizonGraphPath(path))
+        } else if let position = native.position {
+            self = .position(EHorizonGraphPosition(position))
+        } else {
+            preconditionFailure("A road object location must have either a path or a location.")
+        }
     }
 }
