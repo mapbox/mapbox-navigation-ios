@@ -17,4 +17,17 @@ extension Expression {
             gradientStops
         }
     }
+    
+    static func buildingExtrusionHeightExpression(_ hightProperty: String) -> Expression {
+        return Exp(.interpolate) {
+            Exp(.linear)
+            Exp(.zoom)
+            13
+            0
+            13.25
+            Exp(.get) {
+                hightProperty
+            }
+        }
+    }
 }

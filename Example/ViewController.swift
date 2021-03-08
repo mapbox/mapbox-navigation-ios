@@ -23,6 +23,8 @@ class ViewController: UIViewController {
     typealias RouteRequestSuccess = ((RouteResponse) -> Void)
     typealias RouteRequestFailure = ((Error) -> Void)
     
+    private var foundAllBuildings = false
+
     var navigationMapView: NavigationMapView! {
         didSet {
             if let navigationMapView = oldValue {
@@ -132,7 +134,7 @@ class ViewController: UIViewController {
         clearMap.isHidden = true
         longPressHintView.isHidden = false
         
-        // TODO: Unhighlight buildings when clearing map.
+        navigationMapView.unhighlightBuildings()
         navigationMapView.removeRoutes()
         navigationMapView.removeWaypoints()
         waypoints.removeAll()
@@ -324,6 +326,10 @@ class ViewController: UIViewController {
         waypoint.targetCoordinate = destinationCoordinate
         waypoints.append(waypoint)
         
+        // Example of highlighting buildings in 3d and directly using the API on NavigationMapView.
+        let buildingHighlightCoordinates = waypoints.compactMap { $0.targetCoordinate }
+        navigationMapView.highlightBuildings(at: buildingHighlightCoordinates)
+
         requestRoute()
     }
     

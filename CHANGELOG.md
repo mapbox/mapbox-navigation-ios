@@ -25,6 +25,7 @@
 * Renamed public property `MBCurrentLegAttribute` to `CurrentLegAttribute`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Renamed public property `MBCongestionAttribute` to `CongestionAttribute`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * `NavigationViewController.mapView` was renamed to `NavigationViewController.navigationMapView`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* `NavigationMapView.highlightBuildings(at:in3D:)` was renamed to `NavigationMapView.highlightBuildings(at:in3D:completion:)`. ([#2827](https://github.com/mapbox/mapbox-navigation-ios/pull/2827))
 
 ### Location tracking
 
